@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import { useState } from "react";
 import { format } from "date-fns";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { PAIN_LOCATIONS, SYMPTOMS } from "../utils/constants";
@@ -92,7 +92,7 @@ function PainTracker() {
                 Location (select all that apply)
               </label>
               <div className="flex flex-wrap gap-2">
-                {PAIN_LOCATIONS.map(location => (
+                {PAIN_LOCATIONS.map((location: string) => (
                   <button
                     key={location}
                     onClick={() => toggleLocation(location)}
@@ -115,7 +115,7 @@ function PainTracker() {
                 Symptoms (select all that apply)
               </label>
               <div className="flex flex-wrap gap-2">
-                {SYMPTOMS.map(symptom => (
+                {SYMPTOMS.map((symptom: string) => (
                   <button
                     key={symptom}
                     onClick={() => toggleSymptom(symptom)}
@@ -147,8 +147,7 @@ function PainTracker() {
 
             <button
               onClick={handleAddEntry}
-              type="button"
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
             >
               Add Entry
             </button>
@@ -156,30 +155,25 @@ function PainTracker() {
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Pain History Chart</h2>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData}>
-                <XAxis dataKey="timestamp" />
-                <YAxis domain={[0, 10]} />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="pain"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+          <h2 className="text-xl font-semibold mb-4">Pain History</h2>
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold mb-4">History</h2>
-        {entries.length === 0 ? (
-          <p className="text-gray-500">No entries yet</p>
-        ) : (
+          {chartData.length > 0 ? (
+            <div className="h-64 mb-6">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <XAxis dataKey="timestamp" />
+                  <YAxis domain={[0, 10]} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="pain" stroke="#3B82F6" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="text-gray-500 text-center py-8">
+              No pain entries yet
+            </div>
+          )}
+
           <div className="space-y-4">
             {entries
               .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
@@ -215,7 +209,7 @@ function PainTracker() {
                 </div>
               ))}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

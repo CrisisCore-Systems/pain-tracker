@@ -3,4 +3,4 @@
     tailwindcss: {},
     autoprefixer: {},
   },
-}
+};

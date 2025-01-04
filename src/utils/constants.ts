@@ -1,43 +1,64 @@
-﻿export const PAIN_LOCATIONS = [
-  "Neck",
-  "Upper Back",
-  "Lower Back",
-  "Shoulders",
-  "Arms",
-  "Hands",
-  "Hips",
-  "Legs",
-  "Feet"
+export const PAIN_LOCATIONS = [
+  'head',
+  'neck',
+  'shoulders',
+  'upper back',
+  'lower back',
+  'chest',
+  'abdomen',
+  'hips',
+  'knees',
+  'ankles',
+  'feet',
+  'arms',
+  'elbows',
+  'wrists',
+  'hands'
 ] as const;
 
 export const SYMPTOMS = [
-  "Sharp",
-  "Dull",
-  "Burning",
-  "Tingling",
-  "Numbness",
-  "Stiffness",
-  "Weakness",
-  "Spasms"
+  'sharp',
+  'dull',
+  'aching',
+  'burning',
+  'tingling',
+  'numbness',
+  'stiffness',
+  'weakness',
+  'spasm',
+  'swelling',
+  'radiating',
+  'throbbing'
 ] as const;
 
-export const FUNCTIONAL_ACTIVITIES = [
-  "Walking",
-  "Standing",
-  "Sitting",
-  "Lifting",
-  "Bending",
-  "Reaching",
-  "Gripping",
-  "Driving"
-] as const;
+export const ACTIVITIES = {
+  BASIC: [
+    'walking',
+    'standing',
+    'sitting',
+    'bending',
+    'lifting',
+    'reaching',
+    'climbing stairs'
+  ],
+  HOUSEHOLD: [
+    'cooking',
+    'cleaning',
+    'laundry',
+    'shopping',
+    'yard work',
+    'home maintenance'
+  ],
+  WORK_RELATED: [
+    'typing',
+    'writing',
+    'driving',
+    'operating machinery',
+    'physical labor',
+    'prolonged sitting',
+    'prolonged standing'
+  ]
+} as const;
 
-export const MOBILITY_AIDS = [
-  "Cane",
-  "Walker",
-  "Wheelchair",
-  "Crutches",
-  "Back Brace",
-  "Wrist Brace",
-  "Knee Brace"
-] as const;
+export type PainLocation = typeof PAIN_LOCATIONS[number];
+export type Symptom = typeof SYMPTOMS[number]; 

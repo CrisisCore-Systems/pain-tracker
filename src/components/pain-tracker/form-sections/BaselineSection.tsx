@@ -1,4 +1,5 @@
-﻿import { PAIN_LOCATIONS, SYMPTOMS } from "../../../utils/constants";
+﻿import React from 'react';
+import { PAIN_LOCATIONS, SYMPTOMS } from "../../../utils/constants";
 import classNames from "classnames";
 
 interface BaselineSectionProps {
@@ -62,7 +63,7 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
           Location (select all that apply)
         </label>
         <div className="flex flex-wrap gap-2">
-          {PAIN_LOCATIONS.map(location => (
+          {PAIN_LOCATIONS.map((location: string) => (
             <button
               key={location}
               onClick={() => toggleLocation(location)}
@@ -89,7 +90,7 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
           Symptoms (select all that apply)
         </label>
         <div className="flex flex-wrap gap-2">
-          {SYMPTOMS.map(symptom => (
+          {SYMPTOMS.map((symptom: string) => (
             <button
               key={symptom}
               onClick={() => toggleSymptom(symptom)}

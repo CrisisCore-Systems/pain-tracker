@@ -68,3 +68,64 @@ export interface WCBReport {
   };
   recommendations: string[];
 }
+
+export interface Activity {
+  timestamp: string;
+  type: string;
+  duration: number;
+  painLevel: number;
+  description: string;
+  impact: 'Improved' | 'No Effect' | 'Worsened';
+  triggers: string[];
+}
+
+export interface ActivityLogEntry {
+  id: number;
+  date: string;
+  activities: Activity[];
+  dailyNotes: string;
+  overallPainLevel: number;
+  restQuality: number;
+  stressLevel: number;
+}
+
+export interface EmergencyContact {
+  id: number;
+  name: string;
+  relationship: string;
+  phoneNumber: string;
+  email?: string;
+  isHealthcareProvider: boolean;
+  specialty?: string;
+  address?: string;
+  notes?: string;
+}
+
+export interface EmergencyProtocol {
+  painThreshold: number;
+  symptoms: string[];
+  medications: Array<{
+    name: string;
+    dosage: string;
+    instructions: string;
+  }>;
+  immediateActions: string[];
+  contactPriority: number[];  // Array of EmergencyContact IDs in priority order
+  additionalInstructions: string;
+}
+
+export interface EmergencyPanelData {
+  contacts: EmergencyContact[];
+  protocols: EmergencyProtocol[];
+  medicalHistory: {
+    conditions: string[];
+    allergies: string[];
+    previousIncidents: Array<{
+      date: string;
+      description: string;
+      outcome: string;
+    }>;
+  };
+  currentPainLevel: number;
+  lastUpdated: string;
+}

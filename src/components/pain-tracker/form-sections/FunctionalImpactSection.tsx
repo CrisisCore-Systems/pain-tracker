@@ -1,41 +1,44 @@
-﻿import { FUNCTIONAL_ACTIVITIES, MOBILITY_AIDS } from "../../../utils/constants.ts";
+﻿import { ACTIVITIES } from "../../../utils/constants";
 
 interface FunctionalImpactSectionProps {
   limitedActivities: string[];
-  assistanceNeeded: string[];
   mobilityAids: string[];
   onChange: (data: Partial<{
     limitedActivities: string[];
-    assistanceNeeded: string[];
     mobilityAids: string[];
   }>) => void;
 }
 
 export function FunctionalImpactSection({
   limitedActivities,
-  assistanceNeeded,
   mobilityAids,
   onChange
 }: FunctionalImpactSectionProps) {
+  const allActivities = [
+    ...ACTIVITIES.BASIC,
+    ...ACTIVITIES.HOUSEHOLD,
+    ...ACTIVITIES.WORK_RELATED,
+    ...ACTIVITIES.SOCIAL
+  ];
+
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-lg">Functional Impact</h3>
-      
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="limited-activities" className="block text-sm font-medium text-gray-700 mb-2">
           Limited Activities
         </label>
         <select
+          id="limited-activities"
           multiple
           value={limitedActivities}
           onChange={(e) => {
-            const values = Array.from(e.target.selectedOptions, option => option.value);
-            onChange({ limitedActivities: values });
+            const selected = Array.from(e.target.selectedOptions, (option: HTMLOptionElement) => option.value);
+            onChange({ limitedActivities: selected });
           }}
-          className="w-full border rounded-md p-2"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           size={4}
         >
-          {FUNCTIONAL_ACTIVITIES.map(activity => (
+          {allActivities.map((activity: string) => (
             <option key={activity} value={activity}>
               {activity}
             </option>
@@ -44,33 +47,21 @@ export function FunctionalImpactSection({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Assistance Needed
-        </label>
-        <input
-          type="text"
-          value={assistanceNeeded.join(", ")}
-          onChange={(e) => onChange({ assistanceNeeded: e.target.value.split(", ").filter(Boolean) })}
-          className="w-full border rounded-md p-2"
-          placeholder="Enter types of assistance needed, separated by commas"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="mobility-aids" className="block text-sm font-medium text-gray-700 mb-2">
           Mobility Aids Used
         </label>
         <select
+          id="mobility-aids"
           multiple
           value={mobilityAids}
           onChange={(e) => {
-            const values = Array.from(e.target.selectedOptions, option => option.value);
-            onChange({ mobilityAids: values });
+            const selected = Array.from(e.target.selectedOptions, (option: HTMLOptionElement) => option.value);
+            onChange({ mobilityAids: selected });
           }}
-          className="w-full border rounded-md p-2"
+          className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           size={4}
         >
-          {MOBILITY_AIDS.map(aid => (
+          {ACTIVITIES.MOBILITY_AIDS?.map((aid: string) => (
             <option key={aid} value={aid}>
               {aid}
             </option>
