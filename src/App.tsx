@@ -1,5 +1,4 @@
 ﻿import { PainTracker } from "./components/pain-tracker/index.tsx";
-import type { PainEntry, WCBReport } from "./types";
 
 function App() {
   return (

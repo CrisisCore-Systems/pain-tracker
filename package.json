@@ -2,6 +2,7 @@
   "name": "pain-tracker",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "description": "A comprehensive tool for tracking and managing chronic pain and injuries",
   "author": "Pain Tracker Team",
   "license": "MIT",
