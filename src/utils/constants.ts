@@ -57,6 +57,24 @@ export const ACTIVITIES = {
     'physical labor',
     'prolonged sitting',
     'prolonged standing'
+  ],
+  SOCIAL: [
+    'socializing',
+    'dining out',
+    'attending events',
+    'traveling',
+    'exercising',
+    'hobbies',
+    'sports'
+  ],
+  MOBILITY_AIDS: [
+    'cane',
+    'walker',
+    'wheelchair',
+    'crutches',
+    'braces',
+    'orthopedic shoes',
+    'mobility scooter'
   ]
 } as const;
 
