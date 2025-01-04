@@ -1,0 +1,75 @@
+{
+  "name": "pain-tracker",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A comprehensive tool for tracking and managing chronic pain and injuries",
+  "author": "Pain Tracker Team",
+  "license": "MIT",
+  "homepage": "https://crisiscore-systems.github.io/pain-tracker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/crisiscore-systems/pain-tracker"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "prepare": "husky install",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.0.18",
+    "@radix-ui/react-alert-dialog": "^1.0.4",
+    "@react-pdf/renderer": "^4.1.6",
+    "classnames": "^2.5.1",
+    "date-fns": "^2.30.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
+    "lucide-react": "^0.284.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^2.15.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/react": "^14.1.2",
+    "@types/jest-axe": "^3.5.9",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^8.19.0",
+    "@typescript-eslint/parser": "^8.19.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "gh-pages": "^6.3.0",
+    "husky": "^8.0.3",
+    "jest-axe": "^9.0.0",
+    "jsdom": "^23.0.1",
+    "lint-staged": "^15.3.0",
+    "postcss": "^8.4.27",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.7.2",
+    "vite": "^4.4.5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^1.0.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
