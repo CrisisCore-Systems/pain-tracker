@@ -5,6 +5,7 @@ import react from "@vitejs/plugin-react";
 
 const viteConfig = defineConfig({
   plugins: [react()],
+  base: '/pain-tracker/',
   build: {
     outDir: 'dist',
     sourcemap: true,
