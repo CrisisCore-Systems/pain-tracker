@@ -53,18 +53,42 @@ export interface WCBReport {
     start: string;
     end: string;
   };
+  claimInfo?: {
+    claimNumber?: string;
+    employerInfo?: {
+      name: string;
+      contact: string;
+      position: string;
+    };
+    injuryDate: string;
+    returnToWorkDate?: string;
+  };
   painTrends: {
     average: number;
     progression: Array<{
       date: string;
       pain: number;
+      locations: string[];
+      symptoms: string[];
     }>;
     locations: Record<string, number>;
+  };
+  workImpact: {
+    missedDays: number;
+    limitations: [string, number][];
+    accommodationsNeeded: string[];
   };
   functionalAnalysis: {
     limitations: string[];
     deterioration: string[];
     improvements: string[];
+  };
+  treatments: {
+    current: Array<{
+      treatment: string;
+      frequency: number;
+    }>;
+    effectiveness: string;
   };
   recommendations: string[];
 }

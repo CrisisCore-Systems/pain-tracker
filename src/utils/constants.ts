@@ -13,7 +13,17 @@ export const PAIN_LOCATIONS = [
   'arms',
   'elbows',
   'wrists',
-  'hands'
+  'hands',
+  'right leg',
+  'left leg',
+  'right foot',
+  'left foot',
+  'right toes',
+  'left toes',
+  'outer right leg',
+  'outer left leg',
+  'inner right leg',
+  'inner left leg'
 ] as const;
 
 export const SYMPTOMS = [
@@ -28,7 +38,14 @@ export const SYMPTOMS = [
   'spasm',
   'swelling',
   'radiating',
-  'throbbing'
+  'throbbing',
+  'pins and needles',
+  'electric shock sensation',
+  'hypersensitivity',
+  'reduced sensation',
+  'muscle weakness',
+  'loss of reflexes',
+  'cramping'
 ] as const;
 
 export const ACTIVITIES = {
@@ -40,7 +57,7 @@ export const ACTIVITIES = {
     'lifting',
     'reaching',
     'climbing stairs'
-  ],
+  ] as string[],
   HOUSEHOLD: [
     'cooking',
     'cleaning',
@@ -48,7 +65,7 @@ export const ACTIVITIES = {
     'shopping',
     'yard work',
     'home maintenance'
-  ],
+  ] as string[],
   WORK_RELATED: [
     'typing',
     'writing',
@@ -57,7 +74,7 @@ export const ACTIVITIES = {
     'physical labor',
     'prolonged sitting',
     'prolonged standing'
-  ],
+  ] as string[],
   SOCIAL: [
     'socializing',
     'dining out',
@@ -66,7 +83,7 @@ export const ACTIVITIES = {
     'exercising',
     'hobbies',
     'sports'
-  ],
+  ] as string[],
   MOBILITY_AIDS: [
     'cane',
     'walker',
@@ -75,7 +92,7 @@ export const ACTIVITIES = {
     'braces',
     'orthopedic shoes',
     'mobility scooter'
-  ]
+  ] as string[]
 } as const;
 
 export type PainLocation = typeof PAIN_LOCATIONS[number];
