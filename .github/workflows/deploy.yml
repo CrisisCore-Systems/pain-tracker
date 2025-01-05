@@ -15,8 +15,13 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  BUILD_PATH: "."
+  NODE_VERSION: "20.x"
+
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     env:
       NODE_ENV: production
@@ -30,10 +35,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
       - name: Setup Pages
+        id: pages
         uses: actions/configure-pages@v4
 
       - name: Cache dependencies
@@ -44,11 +50,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -56,11 +64,12 @@ jobs:
           path: ./dist
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    name: Deploy
     needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
