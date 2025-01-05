@@ -4,12 +4,12 @@
   "version": "0.1.0",
   "type": "module",
   "description": "A comprehensive tool for tracking and managing chronic pain and injuries",
-  "author": "Pain Tracker Team",
+  "author": "CrisisCore-Systems",
   "license": "MIT",
   "homepage": "https://crisiscore-systems.github.io/pain-tracker",
   "repository": {
     "type": "git",
-    "url": "https://github.com/crisiscore-systems/pain-tracker"
+    "url": "https://github.com/CrisisCore-Systems/pain-tracker"
   },
   "scripts": {
     "dev": "vite",

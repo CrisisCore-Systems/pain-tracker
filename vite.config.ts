@@ -1,45 +1,34 @@
 ﻿/// <reference types="vitest" />
-import { defineConfig, mergeConfig } from 'vite';
-import { defineConfig as defineVitestConfig } from 'vitest/config';
-import react from "@vitejs/plugin-react";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 
-const viteConfig = defineConfig({
+// https://vitejs.dev/config/
+export default defineConfig({
   plugins: [
     react(),
     sentryVitePlugin({
       org: "crisiscore-systems",
       project: "pain-tracker",
       authToken: process.env.SENTRY_AUTH_TOKEN,
-    }),
+    })
   ],
-  base: process.env.NODE_ENV === 'production' ? '/pain-tracker/' : '/',
+  base: '/pain-tracker/',
   build: {
-    outDir: 'dist',
     sourcemap: true,
-    target: 'esnext',
+    outDir: 'dist',
     rollupOptions: {
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
           'chart-vendor': ['recharts'],
-          'pdf-vendor': ['@react-pdf/renderer', 'html2canvas', 'jspdf'],
-          'ui-vendor': ['@heroicons/react', '@radix-ui/react-alert-dialog', 'lucide-react'],
-          'utils-vendor': ['date-fns', 'classnames']
+          'date-vendor': ['date-fns']
         }
       }
-    },
-    chunkSizeWarningLimit: 500
+    }
+  },
+  server: {
+    port: 3000,
+    host: true
   }
 });
-
-const vitestConfig = defineVitestConfig({
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/test/setup.ts'],
-    watch: false
-  },
-});
-
-export default mergeConfig(viteConfig, vitestConfig);

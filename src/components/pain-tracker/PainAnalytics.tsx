@@ -1,188 +1,173 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
+import { format as formatDate } from 'date-fns';
 import type { PainEntry } from '../../types';
-import { calculatePainScore, aggregatePainData } from '../../utils/pain-tracker/calculations';
-import { loadPainEntries } from '../../utils/pain-tracker/storage';
-import type { PainScore, AggregatedPainData } from '../../utils/pain-tracker/calculations';
-import { PainTrendChart } from './PainTrendChart';
+import { analyzeTrends, calculateStatistics } from '../../utils/pain-tracker/trending';
+import { exportToCSV, exportToJSON, downloadData } from '../../utils/pain-tracker/export';
 
-export function PainAnalytics() {
-  const [entries, setEntries] = useState<PainEntry[]>([]);
-  const [currentScore, setCurrentScore] = useState<PainScore | null>(null);
-  const [aggregatedData, setAggregatedData] = useState<AggregatedPainData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+interface PainAnalyticsProps {
+  entries: PainEntry[];
+}
 
-  useEffect(() => {
-    loadData();
-  }, []);
+export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ entries }) => {
+  const trends = analyzeTrends(entries);
+  const stats = calculateStatistics(entries);
 
-  const loadData = async () => {
-    try {
-      setIsLoading(true);
-      const loadedEntries = await loadPainEntries();
-      setEntries(loadedEntries);
-      
-      if (loadedEntries.length > 0) {
-        const latestEntry = loadedEntries[loadedEntries.length - 1];
-        setCurrentScore(calculatePainScore(latestEntry));
-        setAggregatedData(aggregatePainData(loadedEntries));
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load pain data');
-    } finally {
-      setIsLoading(false);
+  const timeOfDayData = Object.entries(trends.timeOfDayPattern).map(([hour, pain]) => ({
+    hour,
+    avgPain: pain / entries.filter(e => formatDate(new Date(e.timestamp), 'HH:00') === hour).length
+  }));
+
+  const locationData = Object.entries(trends.locationFrequency).map(([location, frequency]) => ({
+    location,
+    frequency,
+    avgPain: stats.locationStats[location]?.avgPain || 0
+  }));
+
+  const symptomData = Object.entries(trends.symptomCorrelations).map(([symptom]) => ({
+    symptom,
+    frequency: stats.symptomStats[symptom]?.frequency || 0,
+    avgPain: stats.symptomStats[symptom]?.avgPain || 0
+  }));
+
+  const handleExport = (format: 'csv' | 'json') => {
+    const timestamp = formatDate(new Date(), 'yyyy-MM-dd');
+    if (format === 'csv') {
+      const csvData = exportToCSV(entries);
+      downloadData(csvData, `pain-tracker-export-${timestamp}.csv`);
+    } else {
+      const jsonData = exportToJSON(entries);
+      downloadData(jsonData, `pain-tracker-export-${timestamp}.json`);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center p-8" role="status">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-        <span className="sr-only">Loading pain data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-4 bg-red-50 text-red-700 rounded-md" role="alert">
-        <p>Error: {error}</p>
-      </div>
-    );
-  }
-
-  if (!entries.length) {
-    return (
-      <div className="p-4 bg-gray-50 text-gray-500 rounded-md" role="status">
-        <p>No pain entries recorded yet.</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-6">
-      {/* Pain Trend Chart */}
-      {entries.length > 0 && (
-        <PainTrendChart entries={entries} />
-      )}
-
-      {/* Current Pain Status */}
-      {currentScore && (
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold mb-4">Current Pain Status</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <p className="text-sm text-gray-600">Pain Score</p>
-              <p className="text-2xl font-bold" aria-label={`Pain score: ${currentScore.total.toFixed(1)}`}>
-                {currentScore.total.toFixed(1)}
-              </p>
-              <p className={`text-sm font-medium ${
-                currentScore.severity === 'severe' ? 'text-red-600' :
-                currentScore.severity === 'moderate' ? 'text-yellow-600' :
-                'text-green-600'
-              }`} role="status">
-                {currentScore.severity.charAt(0).toUpperCase() + currentScore.severity.slice(1)}
-              </p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Contributing Factors</p>
-              <ul className="text-sm" aria-label="Contributing factors">
-                <li>Locations: {currentScore.locationFactor.toFixed(1)}</li>
-                <li>Symptoms: {currentScore.symptomFactor.toFixed(1)}</li>
-              </ul>
-            </div>
+    <div className="space-y-8 p-4">
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Pain Overview</h2>
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleExport('csv')}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
+            >
+              Export CSV
+            </button>
+            <button
+              onClick={() => handleExport('json')}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+            >
+              Export JSON
+            </button>
           </div>
         </div>
-      )}
-
-      {/* Aggregated Analysis */}
-      {aggregatedData && (
-        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold mb-4">Pain Analysis</h3>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Trends */}
-            <div>
-              <h4 className="text-md font-medium mb-2">Trends</h4>
-              <div className="space-y-2">
-                <p className="text-sm">
-                  Average Pain: <span className="font-medium">{aggregatedData.averagePain.toFixed(1)}</span>
-                </p>
-                <p className="text-sm">
-                  Overall Trend:{' '}
-                  <span className={`font-medium ${
-                    aggregatedData.painTrend === 'improving' ? 'text-green-600' :
-                    aggregatedData.painTrend === 'worsening' ? 'text-red-600' :
-                    'text-yellow-600'
-                  }`} role="status">
-                    {aggregatedData.painTrend.charAt(0).toUpperCase() + aggregatedData.painTrend.slice(1)}
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            {/* Time Analysis */}
-            <div>
-              <h4 className="text-md font-medium mb-2">Time Patterns</h4>
-              <div className="space-y-2 text-sm">
-                {aggregatedData.timeAnalysis.worstTime && (
-                  <p>Worst Time: <span className="font-medium">{aggregatedData.timeAnalysis.worstTime}</span></p>
-                )}
-                {aggregatedData.timeAnalysis.bestTime && (
-                  <p>Best Time: <span className="font-medium">{aggregatedData.timeAnalysis.bestTime}</span></p>
-                )}
-              </div>
-            </div>
-
-            {/* Common Locations */}
-            <div>
-              <h4 className="text-md font-medium mb-2">Common Locations</h4>
-              <ul className="space-y-1" aria-label="Common pain locations">
-                {aggregatedData.commonLocations.slice(0, 3).map(({ location, frequency }) => (
-                  <li key={location} className="text-sm">
-                    {location} <span className="text-gray-500">({frequency} times)</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Common Symptoms */}
-            <div>
-              <h4 className="text-md font-medium mb-2">Common Symptoms</h4>
-              <ul className="space-y-1" aria-label="Common symptoms">
-                {aggregatedData.commonSymptoms.slice(0, 3).map(({ symptom, frequency }) => (
-                  <li key={symptom} className="text-sm">
-                    {symptom} <span className="text-gray-500">({frequency} times)</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="stat-card">
+            <h3 className="text-gray-600">Average Pain</h3>
+            <p className="text-2xl font-bold">{stats.mean.toFixed(1)}</p>
           </div>
-
-          {/* Functional Impact */}
-          <div className="mt-6">
-            <h4 className="text-md font-medium mb-2">Functional Impact</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Most Limited Activities</p>
-                <ul className="mt-1 space-y-1" aria-label="Most limited activities">
-                  {aggregatedData.functionalImpactSummary.mostLimitedActivities.map((activity) => (
-                    <li key={activity} className="text-sm">{activity}</li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-600">Common Mobility Aids</p>
-                <ul className="mt-1 space-y-1" aria-label="Common mobility aids">
-                  {aggregatedData.functionalImpactSummary.commonMobilityAids.map((aid) => (
-                    <li key={aid} className="text-sm">{aid}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+          <div className="stat-card">
+            <h3 className="text-gray-600">Most Common Level</h3>
+            <p className="text-2xl font-bold">{stats.mode}</p>
+          </div>
+          <div className="stat-card">
+            <h3 className="text-gray-600">Pain Trend</h3>
+            <p className="text-2xl font-bold">
+              {trends.painTrends.increasing ? '↑' : '↓'} {Math.abs(trends.painTrends.averageChange).toFixed(1)}
+            </p>
           </div>
         </div>
-      )}
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold mb-4">Pain by Time of Day</h2>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={timeOfDayData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="hour" />
+              <YAxis domain={[0, 10]} />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="avgPain"
+                stroke="#8884d8"
+                name="Average Pain Level"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Pain by Location</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={locationData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="location" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
+                <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">Symptoms Analysis</h2>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={symptomData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="symptom" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
+                <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-semibold mb-4">Tracking Summary</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="stat-card">
+            <h3 className="text-gray-600">Total Entries</h3>
+            <p className="text-2xl font-bold">{stats.timeRangeStats.totalEntries}</p>
+          </div>
+          <div className="stat-card">
+            <h3 className="text-gray-600">Tracking Since</h3>
+            <p className="text-lg">
+              {stats.timeRangeStats.start ? formatDate(new Date(stats.timeRangeStats.start), 'MMM d, yyyy') : 'N/A'}
+            </p>
+          </div>
+          <div className="stat-card">
+            <h3 className="text-gray-600">Tracking Duration</h3>
+            <p className="text-lg">
+              {stats.timeRangeStats.duration ? `${Math.floor(stats.timeRangeStats.duration / (1000 * 60 * 60 * 24))} days` : 'N/A'}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
-} 
+};
