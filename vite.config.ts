@@ -13,7 +13,7 @@ export default defineConfig({
       authToken: process.env.SENTRY_AUTH_TOKEN,
     })
   ],
-  base: process.env.NODE_ENV === 'production' ? '/pain-tracker/' : '/',
+  base: '/pain-tracker/',
   build: {
     sourcemap: true,
     outDir: 'dist',
