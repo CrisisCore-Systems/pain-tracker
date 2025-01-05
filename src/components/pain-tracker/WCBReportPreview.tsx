@@ -1,19 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { WCBReport } from '../../types';
 import { generateWCBReportPDF } from '../../utils/pdf-generator';
+import { submitToWCB, getSubmissionStatus } from '../../services/wcb-submission';
 
 interface WCBReportPreviewProps {
   report: WCBReport;
-  onSubmit?: () => void;
 }
 
-export function WCBReportPreview({ report, onSubmit }: WCBReportPreviewProps) {
+export function WCBReportPreview({ report }: WCBReportPreviewProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<{
+    status?: 'pending' | 'approved' | 'rejected' | 'requires_changes';
+    message?: string;
+    submissionId?: string;
+  }>({});
+  const [error, setError] = useState<string | null>(null);
+
   const handleDownload = async () => {
     try {
       await generateWCBReportPDF(report);
     } catch (error) {
       console.error('Error generating PDF:', error);
-      // Here you could add a toast notification or other error feedback
+      setError('Failed to generate PDF. Please try again.');
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const result = await submitToWCB(report);
+      
+      if (result.success && result.submissionId) {
+        setSubmissionStatus({
+          status: 'pending',
+          submissionId: result.submissionId
+        });
+
+        // Start polling for status
+        pollSubmissionStatus(result.submissionId);
+      } else {
+        throw new Error(result.error || 'Submission failed');
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      setError(error instanceof Error ? error.message : 'Failed to submit report');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const pollSubmissionStatus = async (submissionId: string) => {
+    try {
+      const status = await getSubmissionStatus(submissionId);
+      setSubmissionStatus(prev => ({
+        ...prev,
+        ...status
+      }));
+
+      // Continue polling if pending
+      if (status.status === 'pending') {
+        setTimeout(() => pollSubmissionStatus(submissionId), 5000);
+      }
+    } catch (error) {
+      console.error('Status check error:', error);
+      setError('Failed to check submission status');
     }
   };
 
@@ -25,19 +77,39 @@ export function WCBReportPreview({ report, onSubmit }: WCBReportPreviewProps) {
           <button
             onClick={handleDownload}
             className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+            disabled={isSubmitting}
           >
             Download PDF
           </button>
-          {onSubmit && (
-            <button
-              onClick={onSubmit}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Submit to WCB
-            </button>
-          )}
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300"
+            disabled={isSubmitting || submissionStatus.status === 'approved'}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit to WCB'}
+          </button>
         </div>
       </div>
+
+      {/* Status Messages */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded text-red-700">
+          {error}
+        </div>
+      )}
+
+      {submissionStatus.status && (
+        <div className={`mb-6 p-4 rounded ${getStatusStyles(submissionStatus.status)}`}>
+          <div className="font-medium">
+            Status: {formatStatus(submissionStatus.status)}
+          </div>
+          {submissionStatus.message && (
+            <div className="mt-2 text-sm">
+              {submissionStatus.message}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Claim Information */}
       {report.claimInfo && (
@@ -146,4 +218,24 @@ export function WCBReportPreview({ report, onSubmit }: WCBReportPreviewProps) {
       </section>
     </div>
   );
+}
+
+function getStatusStyles(status: string): string {
+  switch (status) {
+    case 'approved':
+      return 'bg-green-50 border border-green-200 text-green-700';
+    case 'rejected':
+      return 'bg-red-50 border border-red-200 text-red-700';
+    case 'requires_changes':
+      return 'bg-yellow-50 border border-yellow-200 text-yellow-700';
+    default:
+      return 'bg-blue-50 border border-blue-200 text-blue-700';
+  }
+}
+
+function formatStatus(status: string): string {
+  return status
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 } 

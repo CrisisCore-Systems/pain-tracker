@@ -1,5 +1,4 @@
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import type { WCBReport } from '../types';
 
 interface PDFOptions {
@@ -107,8 +106,8 @@ export async function generateWCBReportPDF(
     report.recommendations.forEach(recommendation => {
       yPos += 10;
       // Split long recommendations into multiple lines
-      const lines = doc.splitTextToSize(recommendation, 170);
-      lines.forEach(line => {
+      const lines = doc.splitTextToSize(recommendation, 170) as string[];
+      lines.forEach((line: string) => {
         if (yPos > 270) { // Check if we need a new page
           doc.addPage();
           yPos = 20;
@@ -120,12 +119,12 @@ export async function generateWCBReportPDF(
   }
 
   // Add footer with date and page numbers
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
+  const pageCount = (doc as any).internal.pages.length;
+  for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(10);
     doc.text(
-      `Generated on ${new Date().toLocaleDateString()} - Page ${i} of ${totalPages}`,
+      `Generated on ${new Date().toLocaleDateString()} - Page ${i} of ${pageCount}`,
       20,
       285
     );
