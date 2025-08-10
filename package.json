@@ -23,7 +23,8 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prepare": "husky install",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --dotfiles true"
+    "deploy": "gh-pages -d dist --dotfiles true",
+    "prebuild": "node scripts/check-env.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
