@@ -1,4 +1,13 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx lint-staged
+# 1) lint-staged (ok if nothing matched)
+npx lint-staged || { echo "lint-staged failed"; exit 1; }
+
+# 2) CrisisCore vector scanner (ESM)
+node scripts/check-collapse-vectors.js || { echo "CRISIS: collapse vectors detected"; exit 1; }
+
+# 3) Flat-config ESLint v9 via npx (inline rule to block direct NeuralBus)
+npx -y eslint@9 "assets/js/**/*.js" \
+  --rule 'no-restricted-globals:["error",{"name":"NeuralBus","message":"Use SafeNeuralBus (assets/security/neural-bus-safe.js)"}]' \
+  || { echo "Neural bus cascade check failed"; exit 1; }

@@ -24,7 +24,8 @@
     "prepare": "husky install",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --dotfiles true",
-    "prebuild": "node scripts/check-env.mjs"
+    "prebuild": "node scripts/check-env.mjs",
+    "proxy:start": "node scripts/api-proxy.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
