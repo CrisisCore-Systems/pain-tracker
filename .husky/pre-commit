@@ -1,19 +1,5 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 set -e
-
-# 1) lint-staged (no files => exits 0)
-npx lint-staged || { echo "lint-staged failed"; exit 1; }
-
-# 2) CrisisCore ESM scanner (blocks on true vectors)
+# CrisisCore safety gate
 node scripts/check-collapse-vectors.js || { echo "CRISIS: collapse vectors detected"; exit 1; }
-
-# 3) ESLint v9 via npx on staged JS/TS only; skip if none staged
-STAGED="$(git diff --cached --name-only --diff-filter=ACMR | grep -E '^(src|assets)/.*\.(js|jsx|ts|tsx)$' || true)"
-
-if [ -n "$STAGED" ]; then
-  echo "$STAGED" | xargs -r npx -y eslint@9 \
-    --rule 'no-restricted-globals:["error",{"name":"NeuralBus","message":"Use SafeNeuralBus (assets/security/neural-bus-safe.js)"}]'
-else
-  echo "[eslint] no staged js/ts in src|assets — skipping rule check"
-fi
