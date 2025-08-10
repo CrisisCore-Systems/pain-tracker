@@ -20,7 +20,7 @@ export async function submitToWCB(
 ): Promise<SubmissionResponse> {
   const {
     endpoint = DEFAULT_ENDPOINT,
-    apiKey = process.env.VITE_WCB_API_KEY,
+    apiKey = undefined /* proxy-auth */,
     isDraft = false
   } = options;
 
@@ -33,7 +33,8 @@ export async function submitToWCB(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        // Authorization moved to proxy
+}`,
         'X-Submission-Type': isDraft ? 'draft' : 'final'
       },
       body: JSON.stringify({
@@ -74,7 +75,7 @@ export async function getSubmissionStatus(
 }> {
   const {
     endpoint = DEFAULT_ENDPOINT,
-    apiKey = process.env.VITE_WCB_API_KEY
+    apiKey = undefined /* proxy-auth */
   } = options;
 
   if (!apiKey) {
@@ -83,7 +84,8 @@ export async function getSubmissionStatus(
 
   const response = await fetch(`${endpoint}/status/${submissionId}`, {
     headers: {
-      'Authorization': `Bearer ${apiKey}`
+      // Authorization moved to proxy
+}`
     }
   });
 
@@ -101,7 +103,7 @@ export async function updateSubmission(
 ): Promise<SubmissionResponse> {
   const {
     endpoint = DEFAULT_ENDPOINT,
-    apiKey = process.env.VITE_WCB_API_KEY,
+    apiKey = undefined /* proxy-auth */,
     isDraft = false
   } = options;
 
@@ -114,7 +116,8 @@ export async function updateSubmission(
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        // Authorization moved to proxy
+}`,
         'X-Submission-Type': isDraft ? 'draft' : 'final'
       },
       body: JSON.stringify({
