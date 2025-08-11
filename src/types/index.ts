@@ -1,4 +1,8 @@
-﻿export interface PainEntry {
+﻿// Re-export validation types to maintain compatibility
+export { PainEntry, WCBReport } from '../lib/validation';
+
+// Legacy interface for backward compatibility - use PainEntry from validation instead
+export interface LegacyPainEntry {
   id: number;
   timestamp: string;
   baselineData: {
@@ -48,7 +52,8 @@
   notes: string;
 }
 
-export interface WCBReport {
+// Legacy WCB Report interface - use WCBReport from validation instead
+export interface LegacyWCBReport {
   period: {
     start: string;
     end: string;
