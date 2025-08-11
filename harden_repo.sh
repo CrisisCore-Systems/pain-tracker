@@ -20,102 +20,65 @@ SH
 chmod +x cc.sh; . ./cc.sh
 echo "✅ Helper functions bootstrapped."
 
-# --- [CRITICAL] Implement Collapse Vector Detection Script ---
+# --- [CRITICAL] Secure Environment Boundary ---
 echo
-echo "--- Applying [CRITICAL] Collapse Vector Detection fix ---"
-CHECK_SCRIPT='#!/usr/bin/env node
-const fs=require("fs");const path=require("path");
-const vectors=[
-  {n:"PriceFeedback",p:/price.*=.*Math\.random|Math\.random.*price/},
-  {n:"EpochDrift",p:/timestamp.*=.*Date\.now\(\).*(?!epoch)/},
-  {n:"CartQuantum",p:/cart.*=.*\[.*Math\.random|Math\.random.*\].*cart/},
-  {n:"LoopPublish",p:/publish.*\(.*(?:this|self).*\)/},
-  {n:"MemoryBleed",p:/window\[.*\].*=.*(?!null)/},
-  {n:"AsyncWrite",p:/async.*=.*(?!await)/}
-];
-const scan=d=>{if(!fs.existsSync(d))return[];return fs.readdirSync(d).flatMap(f=>{const p=path.join(d,f);return fs.statSync(p).isDirectory()?scan(p):f.match(/\.(ts|js|tsx|jsx)$/)?[p]:[]})};
-const files=scan("src");
-let found=0;
-files.forEach(f=>{const c=fs.readFileSync(f,"utf8");vectors.forEach(v=>{if(v.p.test(c)){console.error(`COLLAPSE VECTOR ${v.n} in ${f}`);found++}})});
-if(found){console.error(`CRISIS: ${found} collapse vectors detected`);process.exit(1)}
-console.log("✅ No collapse vectors detected");process.exit(0);'
-add scripts/check-collapse-vectors.js "$CHECK_SCRIPT"
-chmod +x scripts/check-collapse-vectors.js
-commit "feat(security): implement collapse vector detection system"
-echo "✅ Collapse vector detection script implemented."
-
-# --- [HIGH] Secure Environment Configuration ---
-echo
-echo "--- Applying [HIGH] Environment Configuration Drift Vector fix ---"
-r .env.example 's/# WCB_API_KEY=your_wcb_api_key_here/# WCB_API_KEY secured in backend - never expose frontend/'
-r .env.example 's/WCB_API_ENDPOINT=https:\/\/api\.wcb\.gov\/submissions/# Removed duplicate - use VITE_WCB_API_ENDPOINT only/'
+echo "--- Applying [CRITICAL] Environment Configuration Boundary Violation fix ---"
+r .env.example 's/# WCB_API_KEY=your_wcb_api_key_here/# WCB_API_KEY secured in backend only/'
 r .env.example 's/NODE_ENV=development WCB_API_ENDPOINT=https:\/\/api\.wcb\.gov\/submissions/NODE_ENV=development/'
-ENV_VARS='
-# Security boundary: only VITE_ vars exposed to frontend
+ENV_CLEAN='# Frontend vars only (VITE_ prefix exposes to client)
 VITE_WCB_API_ENDPOINT=/api/wcb
 VITE_APP_ENVIRONMENT=development
 VITE_SENTRY_DSN=
 
-# Backend only vars (not prefixed with VITE_)
-WCB_API_KEY=backend_secret_only
+# Backend secrets (never VITE_ prefixed)
+WCB_API_KEY=backend_only_secret
 '
-add .env.example "$ENV_VARS"
-commit "fix(env): establish secure frontend/backend environment boundary"
+add .env.clean "$ENV_CLEAN"
+mv .env.clean .env.example
+commit "fix(env): secure environment configuration boundary"
 echo "✅ Environment configuration hardened."
 
-# --- [HIGH] Restore Workflow Secret Management ---
+# --- [HIGH] Restore Workflow Secrets ---
 echo
-echo "--- Applying [HIGH] Workflow Secret Consistency Collapse fix ---"
+echo "--- Applying [HIGH] Workflow Secret Management Degradation fix ---"
 r .github/workflows/pages.yml 's/VITE_WCB_API_ENDPOINT: \/api\/wcb/VITE_WCB_API_ENDPOINT: \${{ secrets.WCB_API_ENDPOINT || '\''\/api\/wcb'\'' }}/'
-SECURITY_MD='# Security Policy
-
-## Environment Variables
-- All secrets must use GitHub Secrets
-- No hardcoded endpoints in workflows
-- Frontend vars must be VITE_ prefixed
-
-## Required Secrets
-- WCB_API_ENDPOINT: WCB API endpoint URL
-- SENTRY_DSN: Error tracking endpoint
-'
-add .github/SECURITY.md "$SECURITY_MD"
 rm -f .github/workflows/pages.yml.bak
-commit "fix(ci): restore workflow secrets with fallback and add policy"
+commit "fix(ci): restore workflow secrets with fallback"
 echo "✅ Workflow secret management restored."
 
-# --- [MODERATE] Harden TypeScript Rules ---
+# --- [MODERATE] Harden TypeScript Barriers ---
 echo
-echo "--- Applying [MODERATE] TypeScript Safety Degradation fix ---"
+echo "--- Applying [MODERATE] TypeScript Collapse Vector Enablement fix ---"
 r .eslintrc.json 's/"@typescript-eslint\/no-explicit-any": "warn"/"@typescript-eslint\/no-explicit-any": "error"/'
 r .eslintrc.json 's/"@typescript-eslint\/no-unused-vars": "warn"/"@typescript-eslint\/no-unused-vars": "error"/'
 TS_RULES='    "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/await-thenable": "error",
     "@typescript-eslint/no-misused-promises": "error"'
 ia .eslintrc.json '"@typescript-eslint/no-unused-vars": "error"' "$TS_RULES"
-commit "style(lint): harden typescript rules against collapse vectors"
+commit "style(lint): harden typescript collapse prevention rules"
 echo "✅ TypeScript rules hardened."
 
-# --- [MODERATE] Stabilize Diff Consistency ---
+# --- [LOW] Stabilize Diff Consistency ---
 echo
-echo "--- Applying [MODERATE] Diff Pollution Attack Vector fix ---"
+echo "--- Applying [LOW] Diff Pollution Attack Surface fix ---"
 r .prettierrc 's/"endOfLine": "auto"/"endOfLine": "lf"/'
-commit "style(format): set consistent line endings to prevent diff pollution"
-echo "✅ Prettier configuration stabilized."
+commit "style(format): stabilize line endings for clean diffs"
+echo "✅ Prettier line endings stabilized."
 
-# --- System Health Verification ---
+# --- Post-Remediation System Health Check ---
 echo
-echo "--- Running System Health Verification ---"
-# Explicitly use node to run the scanner for reliability
+echo "--- Running Post-Remediation System Health Check ---"
+# Explicitly use 'node' for reliability
 if node ./scripts/check-collapse-vectors.js; then
     echo "✅ Vector scan clean."
 else
-    echo "❌ CRITICAL: Collapse vectors detected!"
+    echo "❌ CRITICAL: Collapse vectors were detected!"
     exit 1
 fi
 
 # If grep finds "error", it exits 0 (success), triggering the '&&' branch.
 if npm run lint 2>&1 | grep -E "(error|Error)"; then
-    echo "❌ Lint errors found. Please review."
+    echo "❌ Lint errors found. Please review output."
     exit 1
 else
     echo "✅ Lint clean."
@@ -129,4 +92,4 @@ else
 fi
 
 echo
-echo "🎉 CrisisCore-Auditor++ assessment complete. System hardened against collapse vectors."
+echo "🎉 CrisisCore-Auditor++ reassessment complete. System hardened."
