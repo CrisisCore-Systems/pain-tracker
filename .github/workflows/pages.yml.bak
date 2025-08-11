@@ -16,7 +16,7 @@ jobs:
           NODE_ENV: production
           VITE_APP_ENVIRONMENT: production
           VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          VITE_WCB_API_ENDPOINT: /api/wcb
+          VITE_WCB_API_ENDPOINT: ${{ secrets.WCB_API_ENDPOINT }}
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
   deploy:
