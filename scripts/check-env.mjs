@@ -7,7 +7,23 @@ const optional = {
   "VITE_SENTRY_DSN": ""
 };
 
-// Check required variables
+// Default values for required variables if not set
+const requiredDefaults = {
+  "VITE_APP_ENVIRONMENT": "development",
+  "VITE_WCB_API_ENDPOINT": "/api/wcb"
+};
+
+// Set defaults for required variables if missing
+required.forEach(key => {
+  if (!(key in process.env) || !process.env[key]) {
+    if (requiredDefaults[key]) {
+      process.env[key] = requiredDefaults[key];
+      console.log(`Using default for ${key}: ${requiredDefaults[key]}`);
+    }
+  }
+});
+
+// Check required variables after setting defaults
 const missing = required.filter(k => !(k in process.env) || !process.env[k]);
 if (missing.length) {
   console.error("Missing required environment variables:", missing.join(", "));
