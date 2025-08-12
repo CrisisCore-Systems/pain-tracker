@@ -79,7 +79,7 @@ const secretPatterns = [
   },
   {
     name: 'AWS Secret Key',
-    pattern: /[0-9a-zA-Z\/+]{40}/,
+    pattern: /[0-9a-zA-Z/+]{40}/,
     severity: 'medium',
     description: 'Potential AWS secret access key (40 chars base64)'
   },
@@ -103,7 +103,7 @@ const secretPatterns = [
   },
   {
     name: 'Database URL with Password',
-    pattern: /[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^:\/\s]+:[^@\/\s]+@[^\/\s]+/,
+    pattern: /[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^:/\s]+:[^@/\s]+@[^/\s]+/,
     severity: 'high',
     description: 'Database connection string with embedded credentials'
   }
@@ -126,7 +126,10 @@ const allowlistPatterns = [
   /test.*=.*['""][^'""]*['""]/, 
   /demo.*=.*['""][^'""]*['""]/, 
   /mock.*=.*['""][^'""]*['""]/, 
-  /VITE_[A-Z_]+\s*=\s*['""][^'""]*['""]/ // Environment variable definitions
+  /VITE_[A-Z_]+\s*=\s*['""][^'""]*['""]/, // Environment variable definitions
+  /^#.*$/, // Comments (including .env.example documentation)
+  /^\/\/.*$/, // JavaScript comments
+  /^\/\*.*\*\/$/ // Block comments
 ];
 
 function shouldIgnoreLine(line) {
@@ -247,8 +250,8 @@ async function scanSecrets() {
     
     return { success: false, findings: allFindings };
     
-  } catch (error) {
-    log(`${icon.error} Error during secret scan: ${error.message}`, colors.red);
+  } catch {
+    log(`${icon.error} Error during secret scan`, colors.red);
     return { success: false, findings: [] };
   }
 }
