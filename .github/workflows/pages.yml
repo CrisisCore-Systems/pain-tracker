@@ -9,14 +9,26 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
       - name: Build
         run: npm run build
         env:
           NODE_ENV: production
+          VITE_APP_TITLE: Pain Tracker
           VITE_APP_ENVIRONMENT: production
-          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN || '' }}
           VITE_WCB_API_ENDPOINT: ${{ secrets.WCB_API_ENDPOINT || '/api/wcb' }}
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Build failed: dist directory not found"
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "Build failed: index.html not found in dist"
+            exit 1
+          fi
+          echo "Build verification passed ✓"
       - uses: actions/upload-pages-artifact@v3
         with: { path: dist }
   deploy:
