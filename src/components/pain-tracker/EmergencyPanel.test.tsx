@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import EmergencyPanel from './EmergencyPanel';
 import { EmergencyPanelData } from '../../types';
 
@@ -49,7 +49,7 @@ describe('EmergencyPanel Component', () => {
     lastUpdated: new Date().toISOString()
   };
 
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
 
   beforeEach(() => {
     mockOnChange.mockClear();

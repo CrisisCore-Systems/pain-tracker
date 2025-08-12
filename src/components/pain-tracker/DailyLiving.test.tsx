@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import DailyLiving from './DailyLiving';
 
 describe('DailyLiving Component', () => {
@@ -10,7 +10,7 @@ describe('DailyLiving Component', () => {
     socialImpact: ['Reduced Social Activities', 'Limited Family Time']
   };
 
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
 
   beforeEach(() => {
     mockOnChange.mockClear();

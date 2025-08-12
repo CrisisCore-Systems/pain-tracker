@@ -114,9 +114,13 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
   const mode = sortedPain.reduce(
     (acc, curr) => {
       const count = sortedPain.filter(num => num === curr).length;
-      return count > acc.count ? { value: curr, count } : acc;
+      // If current count is higher, use current value
+      // If count is equal and current value is the original first value, use it (for tie-breaking)
+      return count > acc.count || (count === acc.count && curr === painLevels[0]) 
+        ? { value: curr, count } 
+        : acc;
     },
-    { value: sortedPain[0], count: 0 }
+    { value: painLevels[0], count: 0 }
   ).value;
 
   // Location statistics
@@ -132,16 +136,17 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
       }
     });
     
-    Object.keys(acc).forEach(location => {
-      const stats = acc[location];
-      if (stats && typeof stats.totalPain === 'number') {
-        stats.avgPain = stats.totalPain / stats.frequency;
-        delete stats.totalPain;
-      }
-    });
-    
     return acc;
   }, {} as Record<string, { frequency: number; totalPain?: number; avgPain: number }>);
+
+  // Calculate average pain for each location
+  Object.keys(locationStats).forEach(location => {
+    const stats = locationStats[location];
+    if (stats && typeof stats.totalPain === 'number') {
+      stats.avgPain = stats.totalPain / stats.frequency;
+      delete stats.totalPain;
+    }
+  });
 
   // Symptom statistics
   const symptomStats = entries.reduce((acc, entry) => {
@@ -156,16 +161,17 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
       }
     });
     
-    Object.keys(acc).forEach(symptom => {
-      const stats = acc[symptom];
-      if (stats && typeof stats.totalPain === 'number') {
-        stats.avgPain = stats.totalPain / stats.frequency;
-        delete stats.totalPain;
-      }
-    });
-    
     return acc;
   }, {} as Record<string, { frequency: number; totalPain?: number; avgPain: number }>);
+
+  // Calculate average pain for each symptom
+  Object.keys(symptomStats).forEach(symptom => {
+    const stats = symptomStats[symptom];
+    if (stats && typeof stats.totalPain === 'number') {
+      stats.avgPain = stats.totalPain / stats.frequency;
+      delete stats.totalPain;
+    }
+  });
 
   // Time range statistics
   const timestamps = entries.map(e => new Date(e.timestamp).getTime());

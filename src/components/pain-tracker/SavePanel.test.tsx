@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { SavePanel } from './SavePanel';
 import type { PainEntry } from '../../types';
@@ -123,16 +123,18 @@ describe('SavePanel', () => {
   });
 
   it('shows clear data button when entries exist', () => {
-    render(<SavePanel entries={mockEntries} />);
-    expect(screen.getByText('Clear All Data')).toBeDefined();
+    const onClearData = vi.fn();
+    render(<SavePanel entries={mockEntries} onClearData={onClearData} />);
+    expect(screen.getByText('Clear Data')).toBeDefined();
   });
 
   it('shows confirmation dialog when clear data clicked', () => {
-    render(<SavePanel entries={mockEntries} />);
+    const onClearData = vi.fn();
+    render(<SavePanel entries={mockEntries} onClearData={onClearData} />);
     
-    fireEvent.click(screen.getByText('Clear All Data'));
+    fireEvent.click(screen.getByText('Clear Data'));
     
-    expect(screen.getByText('Are you sure you want to clear all data?')).toBeDefined();
+    expect(screen.getByText('Are you sure you want to clear all data? This action cannot be undone.')).toBeDefined();
     expect(screen.getByText('Yes, Clear Data')).toBeDefined();
     expect(screen.getByText('Cancel')).toBeDefined();
   });
@@ -141,19 +143,20 @@ describe('SavePanel', () => {
     const onClearData = vi.fn();
     render(<SavePanel entries={mockEntries} onClearData={onClearData} />);
     
-    fireEvent.click(screen.getByText('Clear All Data'));
+    fireEvent.click(screen.getByText('Clear Data'));
     fireEvent.click(screen.getByText('Yes, Clear Data'));
     
     expect(onClearData).toHaveBeenCalled();
   });
 
   it('hides confirmation dialog when cancelled', () => {
-    render(<SavePanel entries={mockEntries} />);
+    const onClearData = vi.fn();
+    render(<SavePanel entries={mockEntries} onClearData={onClearData} />);
     
-    fireEvent.click(screen.getByText('Clear All Data'));
+    fireEvent.click(screen.getByText('Clear Data'));
     fireEvent.click(screen.getByText('Cancel'));
     
-    expect(screen.queryByText('Are you sure you want to clear all data?')).toBeNull();
+    expect(screen.queryByText('Are you sure you want to clear all data? This action cannot be undone.')).toBeNull();
   });
 
   it('formats CSV data correctly', () => {
@@ -161,7 +164,14 @@ describe('SavePanel', () => {
     
     fireEvent.click(screen.getByText('Export CSV'));
     
-    const blob = mockCreateObjectURL.mock.calls[0][0];
+    // Verify the mock was called and get the blob
+    expect(mockCreateObjectURL).toHaveBeenCalled();
+    const calls = mockCreateObjectURL.mock.calls;
+    expect(calls.length).toBeGreaterThan(0);
+    
+    const blob = calls[0][0];
+    expect(blob).toBeInstanceOf(Blob);
+    
     const reader = new FileReader();
     
     return new Promise<void>((resolve) => {
@@ -178,7 +188,6 @@ describe('SavePanel', () => {
         
         resolve();
       };
-      
       reader.readAsText(blob);
     });
   });
