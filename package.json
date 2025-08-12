@@ -22,7 +22,6 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prepare": "husky install",
-
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --dotfiles true",
     "prebuild": "node scripts/check-env.mjs",
@@ -32,13 +31,13 @@
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@react-pdf/renderer": "^4.1.6",
-
     "chart.js": "^4.4.7",
     "classnames": "^2.5.1",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "express": "^4.21.2",
     "express-rate-limit": "^7.5.1",
+    "glob": "^11.0.3",
     "html2canvas": "^1.4.1",
     "http-proxy-middleware": "^3.0.5",
     "jspdf": "^3.0.1",
@@ -51,7 +50,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
-
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
