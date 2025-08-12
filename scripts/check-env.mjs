@@ -3,8 +3,7 @@ const required = ["VITE_APP_ENVIRONMENT", "VITE_WCB_API_ENDPOINT"];
 
 // Optional environment variables with defaults
 const optional = {
-  "VITE_APP_TITLE": "Pain Tracker",
-  "VITE_SENTRY_DSN": ""
+  "VITE_APP_TITLE": "Pain Tracker"
 };
 
 // Default values for required variables if not set

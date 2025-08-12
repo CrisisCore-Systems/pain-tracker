@@ -14,7 +14,6 @@ We take security vulnerabilities seriously. If you discover a security vulnerabi
 ### Required Environment Variables for Production
 - `VITE_APP_ENVIRONMENT`: Application environment (production/development)
 - `VITE_WCB_API_ENDPOINT`: WCB API endpoint URL
-- `VITE_SENTRY_DSN`: Error tracking endpoint (optional)
 
 ### Security Best Practices
 - All secrets must use GitHub Secrets, never hardcode in source
@@ -56,7 +55,6 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 - Users control their data export and deletion
 
 ### Optional External Services
-- **Sentry**: Error tracking (opt-in, no PII collected)
 - **WCB Integration**: Work compensation board submission (explicit user action)
 
 ## Development Security
@@ -64,10 +62,9 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 ### Pre-commit Security Checks
 The following security checks run automatically:
 1. Hardcoded secret detection
-2. Sentry DSN validation
-3. Prototype pollution patterns
-4. Mathematical randomness in control flow
-5. Mutable state exposure detection
+2. Prototype pollution patterns
+3. Mathematical randomness in control flow
+4. Mutable state exposure detection
 
 ### Dependencies
 - Regular dependency updates via automated pull requests
