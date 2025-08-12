@@ -10,11 +10,6 @@ interface ImportMetaEnv {
   readonly VITE_APP_VERSION: string;
   readonly VITE_APP_BUILD_TIME: string;
   
-  // Monitoring and Analytics
-  readonly VITE_SENTRY_DSN: string;
-  readonly VITE_SENTRY_ENVIRONMENT: string;
-  readonly VITE_SENTRY_RELEASE: string;
-  
   // Feature Flags
   readonly VITE_ENABLE_ANALYTICS: string;
   readonly VITE_ENABLE_DEBUG_MODE: string;
@@ -50,7 +45,6 @@ declare global {
       environment?: string;
       version?: string;
       buildTime?: string;
-      sentryDsn?: string;
       enabledFeatures?: string[];
     };
   }
@@ -64,7 +58,6 @@ export interface AppConfig {
   environment: Environment;
   version: string;
   buildTime: string;
-  sentryDsn?: string;
   features: {
     analytics: boolean;
     debugMode: boolean;
@@ -108,7 +101,6 @@ export function getAppConfig(): AppConfig {
     environment: validateEnvironment(),
     version: env.VITE_APP_VERSION || '0.1.0',
     buildTime: env.VITE_APP_BUILD_TIME || new Date().toISOString(),
-    sentryDsn: env.VITE_SENTRY_DSN || undefined,
     features: {
       analytics: env.VITE_ENABLE_ANALYTICS === 'true',
       debugMode: env.VITE_ENABLE_DEBUG_MODE === 'true' || isDevelopment(),
