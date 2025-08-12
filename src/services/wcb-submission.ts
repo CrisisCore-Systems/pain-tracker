@@ -34,7 +34,6 @@ export async function submitToWCB(
       headers: {
         'Content-Type': 'application/json',
         // Authorization moved to proxy
-}`,
         'X-Submission-Type': isDraft ? 'draft' : 'final'
       },
       body: JSON.stringify({
@@ -85,7 +84,6 @@ export async function getSubmissionStatus(
   const response = await fetch(`${endpoint}/status/${submissionId}`, {
     headers: {
       // Authorization moved to proxy
-}`
     }
   });
 
@@ -117,7 +115,6 @@ export async function updateSubmission(
       headers: {
         'Content-Type': 'application/json',
         // Authorization moved to proxy
-}`,
         'X-Submission-Type': isDraft ? 'draft' : 'final'
       },
       body: JSON.stringify({
