@@ -1,5 +1,5 @@
 import type { PainEntry, WCBReport } from '../types';
-import { calculateOverallTrend, analyzeWorkImpact, analyzeTreatmentChanges } from './wcbAnalytics';
+import { analyzeWorkImpact, analyzeTreatmentChanges } from './wcbAnalytics';
 
 interface WCBClaimData {
   claimNumber?: string;

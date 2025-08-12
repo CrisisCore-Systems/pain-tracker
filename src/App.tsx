@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import * as Sentry from "@sentry/react";
 import { PainTracker } from "./components/pain-tracker/index.tsx";
 import { SentryTest } from "./components/SentryTest";

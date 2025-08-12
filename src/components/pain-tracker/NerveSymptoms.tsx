@@ -1,6 +1,6 @@
-import React from 'react';
+
 import type { PainEntry } from '../../types';
-import { SYMPTOMS } from '../../utils/constants';
+
 
 interface NerveSymptomsProps {
   entries: PainEntry[];

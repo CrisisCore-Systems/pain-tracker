@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { WCBReport } from '../../types';
 import { generateWCBReportPDF } from '../../utils/pdf-generator';
 import { submitToWCB, getSubmissionStatus } from '../../services/wcb-submission';

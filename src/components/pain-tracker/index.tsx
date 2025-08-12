@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect, useRef } from "react";
-import useLocalStorage from "../../hooks/useLocalStorage";
+
 import type { PainEntry } from "../../types";
 import { PainChart } from "./PainChart";
 import { PainHistory } from "./PainHistory";
