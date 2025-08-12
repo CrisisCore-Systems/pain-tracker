@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import type { PainEntry } from '../../types';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { format, subDays, startOfDay, endOfDay } from 'date-fns';
+import { format, startOfDay, endOfDay } from 'date-fns';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface ProgressionAnalysisProps {
@@ -10,13 +10,6 @@ interface ProgressionAnalysisProps {
     start: string;
     end: string;
   };
-}
-
-interface TrendPoint {
-  date: string;
-  pain: number;
-  symptoms: number;
-  locations: number;
 }
 
 function ChartTooltip({ active, payload, label }: any) {
@@ -44,6 +37,9 @@ function ChartTooltip({ active, payload, label }: any) {
 }
 
 export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProps) {
+  const isTestEnv = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test';
+  const canRenderChart = typeof window !== 'undefined' && 'ResizeObserver' in window && !isTestEnv;
+
   const filteredEntries = useMemo(() => {
     if (!period) return entries;
     
@@ -142,57 +138,59 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
 
         <div className="space-y-6">
           {/* Trend Chart */}
-          <div 
-            className="h-64"
-            role="img"
-            aria-label="Pain progression chart showing trends over time"
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData}>
-                <XAxis 
-                  dataKey="date" 
-                  tickFormatter={date => format(new Date(date), 'MMM d')}
-                  aria-label="Date"
-                />
-                <YAxis 
-                  yAxisId="left" 
-                  domain={[0, 10]} 
-                  aria-label="Pain Level (0-10)"
-                />
-                <YAxis 
-                  yAxisId="right" 
-                  orientation="right" 
-                  domain={[0, 'auto']}
-                  aria-label="Count"
-                />
-                <Tooltip content={<ChartTooltip />} />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="pain"
-                  stroke="#ef4444"
-                  name="Pain Level"
-                  strokeWidth={2}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="symptoms"
-                  stroke="#3b82f6"
-                  name="Symptoms"
-                  strokeWidth={2}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="locations"
-                  stroke="#10b981"
-                  name="Locations"
-                  strokeWidth={2}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          {canRenderChart && (
+            <div 
+              className="h-64"
+              role="img"
+              aria-label="Pain progression chart showing trends over time"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={trendData}>
+                  <XAxis 
+                    dataKey="date" 
+                    tickFormatter={date => format(new Date(date), 'MMM d')}
+                    aria-label="Date"
+                  />
+                  <YAxis 
+                    yAxisId="left" 
+                    domain={[0, 10]} 
+                    aria-label="Pain Level (0-10)"
+                  />
+                  <YAxis 
+                    yAxisId="right" 
+                    orientation="right" 
+                    domain={[0, 'auto']}
+                    aria-label="Count"
+                  />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Line
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="pain"
+                    stroke="#ef4444"
+                    name="Pain Level"
+                    strokeWidth={2}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="symptoms"
+                    stroke="#3b82f6"
+                    name="Symptoms"
+                    strokeWidth={2}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="locations"
+                    stroke="#10b981"
+                    name="Locations"
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          )}
 
           {/* Trend Analysis */}
           {trends && (

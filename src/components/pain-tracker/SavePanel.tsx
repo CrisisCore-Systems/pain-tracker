@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import type { PainEntry } from '../../types';
-import { format } from 'date-fns';
+import { format as formatDate } from 'date-fns';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface SavePanelProps {
   entries: PainEntry[];
   onClearData?: () => void;
-  onExport?: (format: 'json' | 'csv', data: string) => void;
+  onExport?: (format: 'json' | 'csv') => void;
 }
 
 export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
@@ -17,8 +17,8 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
 
   const dateRange = entries.length > 0
     ? {
-        start: format(new Date(Math.min(...entries.map(e => new Date(e.timestamp).getTime()))), 'MMM d, yyyy'),
-        end: format(new Date(Math.max(...entries.map(e => new Date(e.timestamp).getTime()))), 'MMM d, yyyy')
+        start: formatDate(new Date(Math.min(...entries.map(e => new Date(e.timestamp).getTime()))), 'MMM d, yyyy'),
+        end: formatDate(new Date(Math.max(...entries.map(e => new Date(e.timestamp).getTime()))), 'MMM d, yyyy')
       }
     : null;
 
@@ -30,7 +30,7 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
     if (format === 'json') {
       data = JSON.stringify(entries, null, 2);
       mimeType = 'application/json';
-      filename = 'pain-tracker-data.json';
+      filename = 'pain-tracker-export.json';
     } else {
       // CSV format
       const headers = [
@@ -39,16 +39,22 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
         'Locations',
         'Symptoms',
         'Limited Activities',
+        'Medications',
         'Notes'
       ];
 
       const rows = entries.map(entry => {
+        const medications = entry.medications.current
+          .map(med => `${med.name} ${med.dosage}`)
+          .join(';');
+        
         const rowData = [
-          format(new Date(entry.timestamp), 'yyyy-MM-dd HH:mm:ss'),
+          formatDate(new Date(entry.timestamp), 'yyyy-MM-dd HH:mm:ss'),
           entry.baselineData.pain.toString(),
           Array.prototype.join.call(entry.baselineData.locations, ';'),
           Array.prototype.join.call(entry.baselineData.symptoms, ';'),
           Array.prototype.join.call(entry.functionalImpact.limitedActivities, ';'),
+          medications,
           `"${entry.notes || ''}"`
         ];
         return rowData;
@@ -56,11 +62,11 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
 
       data = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
       mimeType = 'text/csv';
-      filename = 'pain-tracker-data.csv';
+      filename = 'pain-tracker-export.csv';
     }
 
     if (onExport) {
-      onExport(format, data);
+      onExport(format);
     } else {
       const blob = new Blob([data], { type: mimeType });
       const url = URL.createObjectURL(blob);
