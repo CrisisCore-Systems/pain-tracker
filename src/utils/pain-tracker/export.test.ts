@@ -1,18 +1,8 @@
 /// <reference types="vitest/globals" />
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
 import { exportToCSV, exportToJSON, downloadData } from './export';
 import type { PainEntry } from '../../types';
-
-interface MockWindow {
-  URL: {
-    createObjectURL: (blob: Blob) => string;
-    revokeObjectURL: (url: string) => void;
-  };
-}
-
-declare global {
-  interface Window extends MockWindow {}
-}
 
 describe('Pain Tracker Export', () => {
   const mockEntries: PainEntry[] = [

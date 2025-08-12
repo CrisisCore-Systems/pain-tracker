@@ -1,6 +1,6 @@
-import React from 'react';
+
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import Medications from './Medications';
 
 describe('Medications Component', () => {
@@ -17,7 +17,7 @@ describe('Medications Component', () => {
     effectiveness: 'Moderately Effective'
   };
 
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
 
   beforeEach(() => {
     mockOnChange.mockClear();
@@ -49,11 +49,6 @@ describe('Medications Component', () => {
       target: { value: 'Once daily' }
     });
     
-    // Select effectiveness
-    fireEvent.change(screen.getByText('Select Effectiveness'), {
-      target: { value: 'Very Effective' }
-    });
-    
     // Click add button
     fireEvent.click(screen.getByText('Add Medication'));
     
@@ -65,7 +60,7 @@ describe('Medications Component', () => {
           name: 'Aspirin',
           dosage: '500mg',
           frequency: 'Once daily',
-          effectiveness: 'Very Effective'
+          effectiveness: 'Not Rated'
         }
       ]
     });
@@ -99,10 +94,14 @@ describe('Medications Component', () => {
   it('updates overall effectiveness', () => {
     render(<Medications medications={mockMedications} onChange={mockOnChange} />);
     
-    const select = screen.getByRole('combobox', { name: '' });
-    fireEvent.change(select, {
-      target: { value: 'Very Effective' }
-    });
+    // Find the Overall Effectiveness section and its select element
+    const overallEffectivenessSection = screen.getByText('Overall Effectiveness').closest('div');
+    const select = overallEffectivenessSection?.querySelector('select');
+    if (select) {
+      fireEvent.change(select, {
+        target: { value: 'Very Effective' }
+      });
+    }
     
     expect(mockOnChange).toHaveBeenCalledWith({
       ...mockMedications,

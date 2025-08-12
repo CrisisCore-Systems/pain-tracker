@@ -104,12 +104,12 @@ describe('FunctionalLimitations', () => {
     expect(screen.getByText('reaching')).toBeDefined();
     
     // Check assistance needed
-    expect(screen.getByText('dressing')).toBeDefined();
-    expect(screen.getByText('bathing')).toBeDefined();
+    expect(screen.getAllByText('dressing')).toHaveLength(3); // Appears multiple times
+    expect(screen.getAllByText('bathing')).toHaveLength(2); // Also appears multiple times
     
     // Check mobility aids
-    expect(screen.getByText('cane')).toBeDefined();
-    expect(screen.getByText('walker')).toBeDefined();
+    expect(screen.getAllByText('cane')).toHaveLength(3); // Appears multiple times
+    expect(screen.getAllByText('walker')).toHaveLength(2); // Appears multiple times
   });
 
   it('calculates frequency correctly', () => {
@@ -118,8 +118,8 @@ describe('FunctionalLimitations', () => {
     // 'bending' appears in both entries
     expect(screen.getByText('Reported 2 times')).toBeDefined();
     
-    // 'lifting' appears in one entry
-    expect(screen.getByText('Reported 1 times')).toBeDefined();
+    // 'lifting' and 'reaching' appear in one entry each - but there are multiple "Reported 1 times"
+    expect(screen.getAllByText('Reported 1 times')).toHaveLength(2);
   });
 
   it('calculates average pain correctly', () => {

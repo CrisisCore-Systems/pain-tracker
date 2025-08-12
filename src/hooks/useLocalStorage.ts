@@ -1,45 +1,198 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-export default function useLocalStorage<T>(key: string, initialValue: T) {
-  // Get from local storage then
-  // parse stored json or return initialValue
-  const readValue = () => {
-    if (typeof window === "undefined") {
-      return initialValue;
-    }
+// Storage error types
+export class StorageError extends Error {
+  constructor(message: string, public operation: 'read' | 'write' | 'remove', public key?: string) {
+    super(message);
+    this.name = 'StorageError';
+  }
+}
 
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
-      return initialValue;
-    }
+// Storage quota exceeded error
+export class StorageQuotaError extends StorageError {
+  constructor(key?: string) {
+    super('Storage quota exceeded', 'write', key);
+    this.name = 'StorageQuotaError';
+  }
+}
+
+// Type-safe storage interface
+interface StorageInterface {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+  removeItem(key: string): void;
+}
+
+// Configuration options
+interface UseLocalStorageOptions<T> {
+  serializer?: {
+    parse: (value: string) => T;
+    stringify: (value: T) => string;
   };
+  onError?: (error: StorageError) => void;
+  storage?: StorageInterface;
+  syncAcrossTabs?: boolean;
+}
 
-  const [storedValue, setStoredValue] = useState<T>(readValue);
-
-  // Return a wrapped version of useState's setter function that ...
-  // ... persists the new value to localStorage.
-  const setValue = (value: T | ((val: T) => T)) => {
+// Default serializer with enhanced error handling
+const defaultSerializer = {
+  parse: <T>(value: string): T => {
     try {
-      // Allow value to be a function so we have same API as useState
+      return JSON.parse(value);
+    } catch (error) {
+      throw new StorageError(
+        `Failed to parse stored value: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        'read'
+      );
+    }
+  },
+  stringify: <T>(value: T): string => {
+    try {
+      return JSON.stringify(value);
+    } catch (error) {
+      throw new StorageError(
+        `Failed to serialize value: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        'write'
+      );
+    }
+  },
+};
+
+// Check if storage is available
+const isStorageAvailable = (storage: StorageInterface): boolean => {
+  try {
+    const testKey = '__storage_test__';
+    storage.setItem(testKey, 'test');
+    storage.removeItem(testKey);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// Enhanced useLocalStorage hook with TypeScript support
+function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+  options: UseLocalStorageOptions<T> = {}
+): [T, (value: T | ((prevValue: T) => T)) => void, () => void] {
+  const {
+    serializer = defaultSerializer,
+    onError = (error) => console.error('Storage error:', error),
+    storage = window.localStorage,
+    syncAcrossTabs = false,
+  } = options;
+
+  // Initialize state with type safety
+  const [storedValue, setStoredValue] = useState<T>(() => {
+    try {
+      // Check if storage is available
+      if (!isStorageAvailable(storage)) {
+        throw new StorageError('Storage is not available', 'read', key);
+      }
+
+      const item = storage.getItem(key);
+      if (item === null) {
+        return initialValue;
+      }
+
+      return serializer.parse(item);
+    } catch (error) {
+      const storageError = error instanceof StorageError ? error : 
+        new StorageError(`Failed to read from storage: ${error}`, 'read', key);
+      onError(storageError);
+      return initialValue;
+    }
+  });
+
+  // Enhanced setValue function with error handling and validation
+  const setValue = useCallback((value: T | ((prevValue: T) => T)) => {
+    try {
+      // Allow value to be a function so we have the same API as useState
       const valueToStore = value instanceof Function ? value(storedValue) : value;
       
+      // Validate the value before storing
+      if (valueToStore === undefined) {
+        throw new StorageError('Cannot store undefined value', 'write', key);
+      }
+
       setStoredValue(valueToStore);
 
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      // Check storage availability before writing
+      if (!isStorageAvailable(storage)) {
+        throw new StorageError('Storage is not available', 'write', key);
       }
+
+      const serializedValue = serializer.stringify(valueToStore);
+      
+      // Check if the serialized value is too large (rough estimate)
+      if (serializedValue.length > 5242880) { // 5MB limit
+        throw new StorageQuotaError(key);
+      }
+
+      storage.setItem(key, serializedValue);
     } catch (error) {
-      console.warn(`Error setting localStorage key "${key}":`, error);
+      let storageError: StorageError;
+      
+      if (error instanceof StorageError) {
+        storageError = error;
+      } else if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        storageError = new StorageQuotaError(key);
+      } else {
+        storageError = new StorageError(
+          `Failed to write to storage: ${error instanceof Error ? error.message : error}`,
+          'write',
+          key
+        );
+      }
+      
+      onError(storageError);
     }
-  };
+  }, [key, storedValue, storage, serializer, onError]);
 
+  // Remove value function
+  const removeValue = useCallback(() => {
+    try {
+      if (!isStorageAvailable(storage)) {
+        throw new StorageError('Storage is not available', 'remove', key);
+      }
+
+      storage.removeItem(key);
+      setStoredValue(initialValue);
+    } catch (error) {
+      const storageError = error instanceof StorageError ? error :
+        new StorageError(`Failed to remove from storage: ${error}`, 'remove', key);
+      onError(storageError);
+    }
+  }, [key, initialValue, storage, onError]);
+
+  // Listen for storage changes across tabs
   useEffect(() => {
-    setStoredValue(readValue());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!syncAcrossTabs) return;
 
-  return [storedValue, setValue] as const;
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === key && e.newValue !== null) {
+        try {
+          const newValue = serializer.parse(e.newValue);
+          setStoredValue(newValue);
+        } catch (error) {
+          const storageError = new StorageError(
+            `Failed to sync storage change: ${error}`,
+            'read',
+            key
+          );
+          onError(storageError);
+        }
+      } else if (e.key === key && e.newValue === null) {
+        setStoredValue(initialValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [key, initialValue, serializer, onError, syncAcrossTabs]);
+
+  return [storedValue, setValue, removeValue];
 }
+
+export default useLocalStorage;

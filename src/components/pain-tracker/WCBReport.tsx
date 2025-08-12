@@ -38,8 +38,8 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
       new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
 
-    const deterioration = [];
-    const improvements = [];
+    const deterioration: string[] = [];
+    const improvements: string[] = [];
     let prevPain = sortedEntries[0]?.baselineData.pain;
 
     sortedEntries.forEach(entry => {
@@ -57,14 +57,25 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
         average,
         progression: sortedEntries.map(e => ({
           date: e.timestamp,
-          pain: e.baselineData.pain
+          pain: e.baselineData.pain,
+          locations: e.baselineData.locations || [],
+          symptoms: e.baselineData.symptoms || []
         })),
         locations: locationFrequency
+      },
+      workImpact: {
+        missedDays: 0, // TODO: Calculate from entries
+        limitations: [], // TODO: Calculate from entries
+        accommodationsNeeded: [] // TODO: Calculate from entries
       },
       functionalAnalysis: {
         limitations,
         deterioration,
         improvements
+      },
+      treatments: {
+        current: [], // TODO: Extract from entries
+        effectiveness: '' // TODO: Analyze effectiveness
       },
       recommendations: [
         "Continue monitoring pain levels",
