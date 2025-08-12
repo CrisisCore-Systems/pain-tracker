@@ -1,27 +1,23 @@
 /// <reference types="vitest/globals" />
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import type { MockedFunction } from 'vitest';
 import { exportToCSV, exportToJSON, downloadData } from './export';
 import type { PainEntry } from '../../types';
 
-interface MockWindow {
-  URL: {
-    createObjectURL: (blob: Blob) => string;
-    revokeObjectURL: (url: string) => void;
-  };
-}
-
+// Mock window and document for testing
 declare global {
   interface Window {
     URL: {
-      createObjectURL: jest.Mock;
-      revokeObjectURL: jest.Mock;
+      createObjectURL: MockedFunction<(blob: Blob) => string>;
+      revokeObjectURL: MockedFunction<(url: string) => void>;
     };
-    document: {
-      createElement: jest.Mock;
-      body: {
-        appendChild: jest.Mock;
-        removeChild: jest.Mock;
-      };
+  }
+  
+  interface Document {
+    createElement: MockedFunction<(tagName: string) => HTMLElement>;
+    body: {
+      appendChild: MockedFunction<(node: HTMLElement) => HTMLElement>;
+      removeChild: MockedFunction<(node: HTMLElement) => HTMLElement>;
     };
   }
 }

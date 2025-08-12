@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import Medications from './Medications';
 
 describe('Medications Component', () => {
@@ -17,7 +17,7 @@ describe('Medications Component', () => {
     effectiveness: 'Moderately Effective'
   };
 
-  const mockOnChange = jest.fn();
+  const mockOnChange = vi.fn();
 
   beforeEach(() => {
     mockOnChange.mockClear();
