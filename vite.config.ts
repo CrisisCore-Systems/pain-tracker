@@ -7,11 +7,11 @@ import { sentryVitePlugin } from "@sentry/vite-plugin";
 export default defineConfig({
   plugins: [
     react(),
-    sentryVitePlugin({
+    ...(process.env.SENTRY_AUTH_TOKEN ? [sentryVitePlugin({
       org: "crisiscore-systems",
       project: "pain-tracker",
       authToken: process.env.SENTRY_AUTH_TOKEN,
-    })
+    })] : [])
   ],
   base: '/pain-tracker/',
   build: {
