@@ -15,12 +15,19 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
 
-  const dateRange = entries.length > 0
-    ? {
-        start: format(new Date(Math.min(...entries.map(e => new Date(e.timestamp).getTime()))), 'MMM d, yyyy'),
-        end: format(new Date(Math.max(...entries.map(e => new Date(e.timestamp).getTime()))), 'MMM d, yyyy')
-      }
-    : null;
+  const dateRange =
+    entries.length > 0
+      ? {
+          start: format(
+            new Date(Math.min(...entries.map(e => new Date(e.timestamp).getTime()))),
+            'MMM d, yyyy'
+          ),
+          end: format(
+            new Date(Math.max(...entries.map(e => new Date(e.timestamp).getTime()))),
+            'MMM d, yyyy'
+          ),
+        }
+      : null;
 
   const handleExport = (format: 'json' | 'csv') => {
     let data: string;
@@ -39,7 +46,7 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
         'Locations',
         'Symptoms',
         'Limited Activities',
-        'Notes'
+        'Notes',
       ];
 
       const rows = entries.map(entry => {
@@ -49,7 +56,7 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
           Array.prototype.join.call(entry.baselineData.locations, ';'),
           Array.prototype.join.call(entry.baselineData.symptoms, ';'),
           Array.prototype.join.call(entry.functionalImpact.limitedActivities, ';'),
-          `"${entry.notes || ''}"`
+          `"${entry.notes || ''}"`,
         ];
         return rowData;
       });
@@ -98,31 +105,22 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
 
   return (
     <ErrorBoundary>
-      <div 
-        className="bg-white p-6 rounded-lg shadow-md"
-        role="region"
-        aria-label="Data Management"
-      >
+      <div className="bg-white p-6 rounded-lg shadow-md" role="region" aria-label="Data Management">
         <h3 className="text-lg font-semibold mb-4">Data Management</h3>
-        
+
         <div className="space-y-4">
           {/* Entry Count and Date Range */}
-          <div 
-            className="text-sm text-gray-600"
-            aria-live="polite"
-          >
+          <div className="text-sm text-gray-600" aria-live="polite">
             <p>Total Entries: {entries.length}</p>
             {dateRange && (
-              <p>Date Range: {dateRange.start} - {dateRange.end}</p>
+              <p>
+                Date Range: {dateRange.start} - {dateRange.end}
+              </p>
             )}
           </div>
 
           {/* Export Options */}
-          <div 
-            role="group" 
-            aria-label="Export Options"
-            className="space-x-4"
-          >
+          <div role="group" aria-label="Export Options" className="space-x-4">
             <button
               onClick={() => handleExport('json')}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -151,23 +149,17 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
                   Clear Data
                 </button>
               ) : (
-                <div 
+                <div
                   role="alertdialog"
                   aria-labelledby="confirm-dialog-title"
                   aria-describedby="confirm-dialog-desc"
                   onKeyDown={handleKeyDown}
                   className="mt-4 p-4 border border-red-200 rounded-lg bg-red-50"
                 >
-                  <h4 
-                    id="confirm-dialog-title"
-                    className="text-red-700 font-medium mb-2"
-                  >
+                  <h4 id="confirm-dialog-title" className="text-red-700 font-medium mb-2">
                     Confirm Clear Data
                   </h4>
-                  <p 
-                    id="confirm-dialog-desc"
-                    className="text-red-600 mb-4"
-                  >
+                  <p id="confirm-dialog-desc" className="text-red-600 mb-4">
                     Are you sure you want to clear all data? This action cannot be undone.
                   </p>
                   <div className="space-x-4">
@@ -200,4 +192,4 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
       </div>
     </ErrorBoundary>
   );
-} 
+}

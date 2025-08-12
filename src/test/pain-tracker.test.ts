@@ -16,7 +16,7 @@ const localStorageMock = (() => {
     }),
     clear: vi.fn(() => {
       store = {};
-    })
+    }),
   };
 })();
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
@@ -28,48 +28,52 @@ const mockPainEntry: PainEntry = {
   baselineData: {
     pain: 6,
     locations: ['lower back', 'neck'],
-    symptoms: ['stiffness', 'spasm']
+    symptoms: ['stiffness', 'spasm'],
   },
   functionalImpact: {
     limitedActivities: ['bending', 'lifting'],
     assistanceNeeded: ['dressing'],
-    mobilityAids: ['cane']
+    mobilityAids: ['cane'],
   },
   medications: {
-    current: [{
-      name: 'Ibuprofen',
-      dosage: '400mg',
-      frequency: 'twice daily',
-      effectiveness: 'moderate'
-    }],
+    current: [
+      {
+        name: 'Ibuprofen',
+        dosage: '400mg',
+        frequency: 'twice daily',
+        effectiveness: 'moderate',
+      },
+    ],
     changes: 'none',
-    effectiveness: 'moderate'
+    effectiveness: 'moderate',
   },
   treatments: {
-    recent: [{
-      type: 'Physical Therapy',
-      provider: 'ABC Clinic',
-      date: '2024-01-03',
-      effectiveness: 'good'
-    }],
+    recent: [
+      {
+        type: 'Physical Therapy',
+        provider: 'ABC Clinic',
+        date: '2024-01-03',
+        effectiveness: 'good',
+      },
+    ],
     effectiveness: 'good',
-    planned: ['continue PT']
+    planned: ['continue PT'],
   },
   qualityOfLife: {
     sleepQuality: 6,
     moodImpact: 5,
-    socialImpact: ['reduced social activities']
+    socialImpact: ['reduced social activities'],
   },
   workImpact: {
     missedWork: 2,
     modifiedDuties: ['no heavy lifting'],
-    workLimitations: ['standing limited']
+    workLimitations: ['standing limited'],
   },
   comparison: {
     worseningSince: 'last week',
-    newLimitations: ['difficulty driving']
+    newLimitations: ['difficulty driving'],
   },
-  notes: 'Pain worse in morning'
+  notes: 'Pain worse in morning',
 };
 
 describe('Pain Score Calculations', () => {
@@ -82,8 +86,14 @@ describe('Pain Score Calculations', () => {
   });
 
   it('should determine correct severity levels', () => {
-    const lowPainEntry = { ...mockPainEntry, baselineData: { ...mockPainEntry.baselineData, pain: 2 } };
-    const severePainEntry = { ...mockPainEntry, baselineData: { ...mockPainEntry.baselineData, pain: 8 } };
+    const lowPainEntry = {
+      ...mockPainEntry,
+      baselineData: { ...mockPainEntry.baselineData, pain: 2 },
+    };
+    const severePainEntry = {
+      ...mockPainEntry,
+      baselineData: { ...mockPainEntry.baselineData, pain: 8 },
+    };
 
     expect(calculatePainScore(lowPainEntry).severity).toBe('low');
     expect(calculatePainScore(mockPainEntry).severity).toBe('moderate');
@@ -102,9 +112,9 @@ describe('Pain Data Aggregation', () => {
         ...mockPainEntry.baselineData,
         pain: 4,
         locations: ['lower back'],
-        symptoms: ['stiffness']
-      }
-    }
+        symptoms: ['stiffness'],
+      },
+    },
   ];
 
   it('should calculate correct average pain', () => {
@@ -117,7 +127,7 @@ describe('Pain Data Aggregation', () => {
     expect(aggregated.commonLocations).toHaveLength(2);
     expect(aggregated.commonLocations[0].location).toBe('lower back');
     expect(aggregated.commonLocations[0].frequency).toBe(2);
-    
+
     expect(aggregated.commonSymptoms).toHaveLength(2);
     expect(aggregated.commonSymptoms[0].symptom).toBe('stiffness');
     expect(aggregated.commonSymptoms[0].frequency).toBe(2);
@@ -145,16 +155,19 @@ describe('Pain Entry Storage', () => {
   it('should save and load pain entries', async () => {
     await savePainEntry(mockPainEntry);
     const loaded = await loadPainEntries();
-    
+
     expect(loaded).toHaveLength(1);
     expect(loaded[0]).toEqual(mockPainEntry);
   });
 
   it('should update existing entry', async () => {
     await savePainEntry(mockPainEntry);
-    const updatedEntry = { ...mockPainEntry, baselineData: { ...mockPainEntry.baselineData, pain: 7 } };
+    const updatedEntry = {
+      ...mockPainEntry,
+      baselineData: { ...mockPainEntry.baselineData, pain: 7 },
+    };
     await savePainEntry(updatedEntry);
-    
+
     const loaded = await loadPainEntries();
     expect(loaded).toHaveLength(1);
     expect(loaded[0].baselineData.pain).toBe(7);
@@ -164,7 +177,7 @@ describe('Pain Entry Storage', () => {
     const secondEntry = { ...mockPainEntry, id: 2 };
     await savePainEntry(mockPainEntry);
     await savePainEntry(secondEntry);
-    
+
     const loaded = await loadPainEntries();
     expect(loaded).toHaveLength(2);
   });
@@ -172,21 +185,21 @@ describe('Pain Entry Storage', () => {
   it('should clear entries', async () => {
     await savePainEntry(mockPainEntry);
     await clearPainEntries();
-    
+
     const loaded = await loadPainEntries();
     expect(loaded).toHaveLength(0);
   });
 
   it('should handle corrupted data', async () => {
     localStorageMock.setItem('pain_tracker_entries', 'invalid json');
-    
+
     await expect(loadPainEntries()).rejects.toThrow();
   });
 
   it('should validate entry structure', async () => {
     const invalidEntry = { id: 1 }; // Missing required fields
     localStorageMock.setItem('pain_tracker_entries', JSON.stringify([invalidEntry]));
-    
+
     await expect(loadPainEntries()).rejects.toThrow();
   });
-}); 
+});

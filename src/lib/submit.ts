@@ -1,1 +1,11 @@
-import{validatePain}from'./validation';import{wcbSubmit}from'./api-client';export async function submitPain(raw:any){try{const valid=validatePain(raw);await wcbSubmit(valid);return{success:true}}catch(e:any){return{success:false,error:e.message}}}
+import { validatePain } from './validation';
+import { wcbSubmit } from './api-client';
+export async function submitPain(raw: any) {
+  try {
+    const valid = validatePain(raw);
+    await wcbSubmit(valid);
+    return { success: true };
+  } catch (e: any) {
+    return { success: false, error: e.message };
+  }
+}

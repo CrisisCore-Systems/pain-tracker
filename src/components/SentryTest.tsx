@@ -5,12 +5,12 @@ export const SentryTest: React.FC = () => {
   const handleTestError = () => {
     try {
       // Throw an error that will be caught and sent to Sentry
-      throw new Error("Testing Sentry Error Tracking!");
+      throw new Error('Testing Sentry Error Tracking!');
     } catch (error) {
       // Explicitly capture the error
       Sentry.captureException(error);
       // Also send a test message
-      Sentry.captureMessage("Test message from Pain Tracker app");
+      Sentry.captureMessage('Test message from Pain Tracker app');
       // Re-throw to trigger the error boundary
       throw error;
     }
@@ -26,4 +26,4 @@ export const SentryTest: React.FC = () => {
       </button>
     </div>
   );
-}; 
+};

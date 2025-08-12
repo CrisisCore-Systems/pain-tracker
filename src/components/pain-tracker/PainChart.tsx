@@ -1,6 +1,6 @@
-﻿import { format } from "date-fns";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import type { PainEntry } from "../../types";
+﻿import { format } from 'date-fns';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import type { PainEntry } from '../../types';
 
 interface ChartData {
   timestamp: string;
@@ -8,14 +8,14 @@ interface ChartData {
 }
 
 interface PainChartProps {
-  entries: Pick<PainEntry, "timestamp" | "baselineData">[];
+  entries: Pick<PainEntry, 'timestamp' | 'baselineData'>[];
 }
 
 export function PainChart({ entries }: PainChartProps) {
   const chartData: ChartData[] = entries
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
     .map(entry => ({
-      timestamp: format(new Date(entry.timestamp), "MM/dd HH:mm"),
+      timestamp: format(new Date(entry.timestamp), 'MM/dd HH:mm'),
       pain: entry.baselineData.pain,
     }));
 
@@ -28,12 +28,7 @@ export function PainChart({ entries }: PainChartProps) {
             <XAxis dataKey="timestamp" />
             <YAxis domain={[0, 10]} />
             <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="pain"
-              stroke="#3b82f6"
-              strokeWidth={2}
-            />
+            <Line type="monotone" dataKey="pain" stroke="#3b82f6" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>

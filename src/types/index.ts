@@ -134,7 +134,7 @@ export interface EmergencyProtocol {
     instructions: string;
   }>;
   immediateActions: string[];
-  contactPriority: number[];  // Array of EmergencyContact IDs in priority order
+  contactPriority: number[]; // Array of EmergencyContact IDs in priority order
   additionalInstructions: string;
 }
 

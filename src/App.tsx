@@ -1,20 +1,20 @@
 ﻿/**
  * Pain Tracker - A comprehensive tool for tracking and managing chronic pain and injuries
  * Copyright (c) 2024 Pain Tracker. All rights reserved.
- * 
+ *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-import React, { Suspense } from "react";
-import * as Sentry from "@sentry/react";
-import { PainTracker } from "./components/pain-tracker/index.tsx";
-import { SentryTest } from "./components/SentryTest";
+import React, { Suspense } from 'react';
+import * as Sentry from '@sentry/react';
+import { PainTracker } from './components/pain-tracker/index.tsx';
+import { SentryTest } from './components/SentryTest';
 
-console.log("App component rendering");
+console.log('App component rendering');
 
 const ErrorFallback = (props: { error: unknown; resetError: () => void }) => {
-  console.error("Error caught by boundary:", props.error);
+  console.error('Error caught by boundary:', props.error);
   return (
     <div className="text-red-500 p-4">
       <h2>Something went wrong:</h2>
@@ -30,8 +30,8 @@ const ErrorFallback = (props: { error: unknown; resetError: () => void }) => {
 };
 
 function App() {
-  console.log("Inside App render function");
-  
+  console.log('Inside App render function');
+
   return (
     <Sentry.ErrorBoundary fallback={ErrorFallback}>
       <Suspense fallback={<div>Loading...</div>}>

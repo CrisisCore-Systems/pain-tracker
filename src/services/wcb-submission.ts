@@ -21,7 +21,7 @@ export async function submitToWCB(
   const {
     endpoint = DEFAULT_ENDPOINT,
     apiKey = undefined /* proxy-auth */,
-    isDraft = false
+    isDraft = false,
   } = options;
 
   if (!apiKey) {
@@ -34,17 +34,16 @@ export async function submitToWCB(
       headers: {
         'Content-Type': 'application/json',
         // Authorization moved to proxy
-}`,
-        'X-Submission-Type': isDraft ? 'draft' : 'final'
+        'X-Submission-Type': isDraft ? 'draft' : 'final',
       },
       body: JSON.stringify({
         report,
         metadata: {
           submittedAt: new Date().toISOString(),
           isDraft,
-          version: '1.0'
-        }
-      })
+          version: '1.0',
+        },
+      }),
     });
 
     if (!response.ok) {
@@ -55,13 +54,13 @@ export async function submitToWCB(
     const data = await response.json();
     return {
       success: true,
-      submissionId: data.submissionId
+      submissionId: data.submissionId,
     };
   } catch (error) {
     console.error('WCB submission error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred'
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
 }
@@ -73,10 +72,7 @@ export async function getSubmissionStatus(
   status: 'pending' | 'approved' | 'rejected' | 'requires_changes';
   message?: string;
 }> {
-  const {
-    endpoint = DEFAULT_ENDPOINT,
-    apiKey = undefined /* proxy-auth */
-  } = options;
+  const { endpoint = DEFAULT_ENDPOINT, apiKey = undefined /* proxy-auth */ } = options;
 
   if (!apiKey) {
     throw new Error('WCB API key is required to check submission status');
@@ -85,8 +81,7 @@ export async function getSubmissionStatus(
   const response = await fetch(`${endpoint}/status/${submissionId}`, {
     headers: {
       // Authorization moved to proxy
-}`
-    }
+    },
   });
 
   if (!response.ok) {
@@ -104,7 +99,7 @@ export async function updateSubmission(
   const {
     endpoint = DEFAULT_ENDPOINT,
     apiKey = undefined /* proxy-auth */,
-    isDraft = false
+    isDraft = false,
   } = options;
 
   if (!apiKey) {
@@ -117,17 +112,16 @@ export async function updateSubmission(
       headers: {
         'Content-Type': 'application/json',
         // Authorization moved to proxy
-}`,
-        'X-Submission-Type': isDraft ? 'draft' : 'final'
+        'X-Submission-Type': isDraft ? 'draft' : 'final',
       },
       body: JSON.stringify({
         report,
         metadata: {
           updatedAt: new Date().toISOString(),
           isDraft,
-          version: '1.0'
-        }
-      })
+          version: '1.0',
+        },
+      }),
     });
 
     if (!response.ok) {
@@ -138,13 +132,13 @@ export async function updateSubmission(
     const data = await response.json();
     return {
       success: true,
-      submissionId: data.submissionId
+      submissionId: data.submissionId,
     };
   } catch (error) {
     console.error('WCB update error:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error occurred'
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
-} 
+}
