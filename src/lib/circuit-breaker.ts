@@ -1,1 +1,27 @@
-export class CircuitBreaker{private f=0;private l=0;private s:'CLOSED'|'OPEN'|'HALF-OPEN'='CLOSED';constructor(private t=3,private r=30000){}get isOpen(){const n=Date.now();if(this.s==='OPEN'&&n-this.l>this.r){this.s='HALF-OPEN';this.f=Math.max(0,this.t-1)}return this.s==='OPEN'}success(){this.f=0;this.s='CLOSED'}failure(){this.f++;this.l=Date.now();if(this.f>=this.t)this.s='OPEN'}}export const wcbBreaker=new CircuitBreaker();
+export class CircuitBreaker {
+  private f = 0;
+  private l = 0;
+  private s: 'CLOSED' | 'OPEN' | 'HALF-OPEN' = 'CLOSED';
+  constructor(
+    private t = 3,
+    private r = 30000
+  ) {}
+  get isOpen() {
+    const n = Date.now();
+    if (this.s === 'OPEN' && n - this.l > this.r) {
+      this.s = 'HALF-OPEN';
+      this.f = Math.max(0, this.t - 1);
+    }
+    return this.s === 'OPEN';
+  }
+  success() {
+    this.f = 0;
+    this.s = 'CLOSED';
+  }
+  failure() {
+    this.f++;
+    this.l = Date.now();
+    if (this.f >= this.t) this.s = 'OPEN';
+  }
+}
+export const wcbBreaker = new CircuitBreaker();

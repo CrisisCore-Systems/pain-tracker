@@ -97,7 +97,7 @@ describe('NerveSymptoms', () => {
 
   it('displays nerve symptoms from entries', () => {
     render(<NerveSymptoms entries={mockEntries} />);
-    
+
     // Check symptoms
     expect(screen.getByText('tingling')).toBeDefined();
     expect(screen.getByText('numbness')).toBeDefined();
@@ -106,11 +106,11 @@ describe('NerveSymptoms', () => {
 
   it('calculates frequency correctly', () => {
     render(<NerveSymptoms entries={mockEntries} />);
-    
+
     // 'tingling' appears in both entries
     const tinglingSection = screen.getByText('tingling').closest('.bg-gray-50');
     expect(tinglingSection?.textContent).toContain('Reported 2 times');
-    
+
     // 'burning' appears in one entry
     const burningSection = screen.getByText('burning').closest('.bg-gray-50');
     expect(burningSection?.textContent).toContain('Reported 1 times');
@@ -118,7 +118,7 @@ describe('NerveSymptoms', () => {
 
   it('shows affected areas for each symptom', () => {
     render(<NerveSymptoms entries={mockEntries} />);
-    
+
     // Check locations for tingling (appears in both entries)
     const tinglingSection = screen.getByText('tingling').closest('.bg-gray-50');
     expect(tinglingSection?.textContent).toContain('lower back');
@@ -128,7 +128,7 @@ describe('NerveSymptoms', () => {
 
   it('calculates average pain correctly', () => {
     render(<NerveSymptoms entries={mockEntries} />);
-    
+
     // For 'tingling': pain levels 6 and 7, average 6.5
     const tinglingSection = screen.getByText('tingling').closest('.bg-gray-50');
     expect(tinglingSection?.textContent).toContain('Avg. Pain: 6.5');
@@ -141,7 +141,7 @@ describe('NerveSymptoms', () => {
     };
 
     render(<NerveSymptoms entries={mockEntries} period={period} />);
-    
+
     // Should only show data from Jan 2
     expect(screen.getByText('burning')).toBeDefined(); // Jan 2 symptom
     expect(screen.queryByText('numbness')).toBeNull(); // Jan 1 symptom
@@ -149,12 +149,10 @@ describe('NerveSymptoms', () => {
 
   it('sorts symptoms by frequency', () => {
     render(<NerveSymptoms entries={mockEntries} />);
-    
+
     const symptoms = screen.getAllByText(/Reported \d+ times/);
-    const frequencies = symptoms.map(el => 
-      parseInt(el.textContent?.match(/\d+/)?.[0] || '0')
-    );
-    
+    const frequencies = symptoms.map(el => parseInt(el.textContent?.match(/\d+/)?.[0] || '0'));
+
     // Check that frequencies are in descending order
     expect(frequencies).toEqual([...frequencies].sort((a, b) => b - a));
   });
@@ -171,12 +169,12 @@ describe('NerveSymptoms', () => {
     ];
 
     render(<NerveSymptoms entries={entriesWithMixedSymptoms} />);
-    
+
     // Should show nerve symptoms
     expect(screen.getByText('tingling')).toBeDefined();
-    
+
     // Should not show non-nerve symptoms
     expect(screen.queryByText('aching')).toBeNull();
     expect(screen.queryByText('stiffness')).toBeNull();
   });
-}); 
+});

@@ -1,1 +1,20 @@
-import{wcbBreaker}from'./circuit-breaker';export async function wcbSubmit(data:any){if(wcbBreaker.isOpen)throw new Error('Circuit breaker open: Too many API failures');try{const r=await fetch('/api/wcb/submissions',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!r.ok){wcbBreaker.failure();throw new Error(`WCB API error: ${r.status}`)}wcbBreaker.success();return r.json()}catch(e){wcbBreaker.failure();throw e}}
+import { wcbBreaker } from './circuit-breaker';
+export async function wcbSubmit(data: any) {
+  if (wcbBreaker.isOpen) throw new Error('Circuit breaker open: Too many API failures');
+  try {
+    const r = await fetch('/api/wcb/submissions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!r.ok) {
+      wcbBreaker.failure();
+      throw new Error(`WCB API error: ${r.status}`);
+    }
+    wcbBreaker.success();
+    return r.json();
+  } catch (e) {
+    wcbBreaker.failure();
+    throw e;
+  }
+}

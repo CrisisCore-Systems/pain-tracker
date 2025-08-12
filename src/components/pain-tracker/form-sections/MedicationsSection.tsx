@@ -9,47 +9,46 @@ interface MedicationsSectionProps {
   current: Medication[];
   changes: string;
   effectiveness: string;
-  onChange: (data: Partial<{
-    current: Medication[];
-    changes: string;
-    effectiveness: string;
-  }>) => void;
+  onChange: (
+    data: Partial<{
+      current: Medication[];
+      changes: string;
+      effectiveness: string;
+    }>
+  ) => void;
 }
 
 export function MedicationsSection({
   current,
   changes,
   effectiveness,
-  onChange
+  onChange,
 }: MedicationsSectionProps) {
   const handleMedicationChange = (index: number, field: keyof Medication, value: string) => {
     const updatedMedications = [...current];
     updatedMedications[index] = {
       ...updatedMedications[index],
-      [field]: value
+      [field]: value,
     };
     onChange({ current: updatedMedications });
   };
 
   const addMedication = () => {
     onChange({
-      current: [
-        ...current,
-        { name: "", dosage: "", frequency: "", effectiveness: "" }
-      ]
+      current: [...current, { name: '', dosage: '', frequency: '', effectiveness: '' }],
     });
   };
 
   const removeMedication = (index: number) => {
     onChange({
-      current: current.filter((_, i) => i !== index)
+      current: current.filter((_, i) => i !== index),
     });
   };
 
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-lg">Medications</h3>
-      
+
       <div className="space-y-4">
         {current.map((medication, index) => (
           <div key={index} className="p-4 border rounded-md space-y-2">
@@ -64,35 +63,29 @@ export function MedicationsSection({
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                 <input
                   type="text"
                   value={medication.name}
-                  onChange={(e) => handleMedicationChange(index, "name", e.target.value)}
+                  onChange={e => handleMedicationChange(index, 'name', e.target.value)}
                   className="w-full border rounded-md p-2"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Dosage
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Dosage</label>
                 <input
                   type="text"
                   value={medication.dosage}
-                  onChange={(e) => handleMedicationChange(index, "dosage", e.target.value)}
+                  onChange={e => handleMedicationChange(index, 'dosage', e.target.value)}
                   className="w-full border rounded-md p-2"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Frequency
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
                 <input
                   type="text"
                   value={medication.frequency}
-                  onChange={(e) => handleMedicationChange(index, "frequency", e.target.value)}
+                  onChange={e => handleMedicationChange(index, 'frequency', e.target.value)}
                   className="w-full border rounded-md p-2"
                 />
               </div>
@@ -102,7 +95,7 @@ export function MedicationsSection({
                 </label>
                 <select
                   value={medication.effectiveness}
-                  onChange={(e) => handleMedicationChange(index, "effectiveness", e.target.value)}
+                  onChange={e => handleMedicationChange(index, 'effectiveness', e.target.value)}
                   className="w-full border rounded-md p-2"
                 >
                   <option value="">Select effectiveness</option>
@@ -115,7 +108,7 @@ export function MedicationsSection({
             </div>
           </div>
         ))}
-        
+
         <button
           type="button"
           onClick={addMedication}
@@ -131,7 +124,7 @@ export function MedicationsSection({
         </label>
         <textarea
           value={changes}
-          onChange={(e) => onChange({ changes: e.target.value })}
+          onChange={e => onChange({ changes: e.target.value })}
           className="w-full border rounded-md p-2"
           rows={3}
         />
@@ -143,7 +136,7 @@ export function MedicationsSection({
         </label>
         <select
           value={effectiveness}
-          onChange={(e) => onChange({ effectiveness: e.target.value })}
+          onChange={e => onChange({ effectiveness: e.target.value })}
           className="w-full border rounded-md p-2"
         >
           <option value="">Select overall effectiveness</option>

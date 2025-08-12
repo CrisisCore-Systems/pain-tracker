@@ -1,22 +1,22 @@
-﻿import { useState } from "react";
-import { format } from "date-fns";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { PAIN_LOCATIONS, SYMPTOMS } from "../utils/constants";
-import useLocalStorage from "../hooks/useLocalStorage";
-import classNames from "classnames";
-import type { PainEntry } from "../types";
-import { PainAnalytics } from "./pain-tracker/PainAnalytics";
+﻿import { useState } from 'react';
+import { format } from 'date-fns';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { PAIN_LOCATIONS, SYMPTOMS } from '../utils/constants';
+import useLocalStorage from '../hooks/useLocalStorage';
+import classNames from 'classnames';
+import type { PainEntry } from '../types';
+import { PainAnalytics } from './pain-tracker/PainAnalytics';
 
 type SimplePainEntry = PainEntry;
 
 type ActiveTab = 'entry' | 'analytics';
 
 function PainTracker() {
-  const [entries, setEntries] = useLocalStorage<SimplePainEntry[]>("painEntries", []);
+  const [entries, setEntries] = useLocalStorage<SimplePainEntry[]>('painEntries', []);
   const [currentPain, setCurrentPain] = useState(0);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
-  const [notes, setNotes] = useState("");
+  const [notes, setNotes] = useState('');
   const [activeTab, setActiveTab] = useState<ActiveTab>('entry');
   const [limitedActivities, setLimitedActivities] = useState<string[]>([]);
   const [assistanceNeeded, setAssistanceNeeded] = useState<string[]>([]);
@@ -32,41 +32,41 @@ function PainTracker() {
       baselineData: {
         pain: currentPain,
         locations: selectedLocations,
-        symptoms: selectedSymptoms
+        symptoms: selectedSymptoms,
       },
       functionalImpact: {
         limitedActivities,
         assistanceNeeded,
-        mobilityAids
+        mobilityAids,
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality,
         moodImpact,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes
+      notes,
     };
     setEntries([...entries, newEntry]);
-    
+
     // Reset form
     setCurrentPain(0);
     setSelectedLocations([]);
@@ -77,29 +77,25 @@ function PainTracker() {
     setSleepQuality(5);
     setMoodImpact(5);
     setMissedWork(0);
-    setNotes("");
+    setNotes('');
   };
 
   const toggleLocation = (location: string) => {
     setSelectedLocations(prev =>
-      prev.includes(location)
-        ? prev.filter(l => l !== location)
-        : [...prev, location]
+      prev.includes(location) ? prev.filter(l => l !== location) : [...prev, location]
     );
   };
 
   const toggleSymptom = (symptom: string) => {
     setSelectedSymptoms(prev =>
-      prev.includes(symptom)
-        ? prev.filter(s => s !== symptom)
-        : [...prev, symptom]
+      prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
     );
   };
 
   const chartData = entries
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
     .map(entry => ({
-      timestamp: format(new Date(entry.timestamp), "MM/dd HH:mm"),
+      timestamp: format(new Date(entry.timestamp), 'MM/dd HH:mm'),
       pain: entry.baselineData.pain,
     }));
 
@@ -150,12 +146,14 @@ function PainTracker() {
                     min="0"
                     max="10"
                     value={currentPain}
-                    onChange={(e) => setCurrentPain(parseInt(e.target.value))}
+                    onChange={e => setCurrentPain(parseInt(e.target.value))}
                     className="w-full"
                   />
                   <div className="grid grid-cols-11 w-full text-xs text-gray-500 px-1">
                     {[...Array(11)].map((_, i) => (
-                      <div key={i} className="text-center">{i}</div>
+                      <div key={i} className="text-center">
+                        {i}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -172,10 +170,10 @@ function PainTracker() {
                       onClick={() => toggleLocation(location)}
                       type="button"
                       className={classNames(
-                        "px-3 py-1 rounded-full text-sm",
+                        'px-3 py-1 rounded-full text-sm',
                         selectedLocations.includes(location)
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       )}
                     >
                       {location}
@@ -195,10 +193,10 @@ function PainTracker() {
                       onClick={() => toggleSymptom(symptom)}
                       type="button"
                       className={classNames(
-                        "px-3 py-1 rounded-full text-sm",
+                        'px-3 py-1 rounded-full text-sm',
                         selectedSymptoms.includes(symptom)
-                          ? "bg-green-500 text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       )}
                     >
                       {symptom}
@@ -216,7 +214,14 @@ function PainTracker() {
                   placeholder="Enter activities (comma-separated)"
                   className="w-full border rounded p-2"
                   value={limitedActivities.join(', ')}
-                  onChange={(e) => setLimitedActivities(e.target.value.split(',').map(s => s.trim()).filter(Boolean))}
+                  onChange={e =>
+                    setLimitedActivities(
+                      e.target.value
+                        .split(',')
+                        .map(s => s.trim())
+                        .filter(Boolean)
+                    )
+                  }
                 />
               </div>
 
@@ -229,7 +234,7 @@ function PainTracker() {
                   min="0"
                   max="10"
                   value={sleepQuality}
-                  onChange={(e) => setSleepQuality(parseInt(e.target.value))}
+                  onChange={e => setSleepQuality(parseInt(e.target.value))}
                   className="w-full"
                 />
               </div>
@@ -243,7 +248,7 @@ function PainTracker() {
                   min="0"
                   max="10"
                   value={moodImpact}
-                  onChange={(e) => setMoodImpact(parseInt(e.target.value))}
+                  onChange={e => setMoodImpact(parseInt(e.target.value))}
                   className="w-full"
                 />
               </div>
@@ -256,18 +261,16 @@ function PainTracker() {
                   type="number"
                   min="0"
                   value={missedWork}
-                  onChange={(e) => setMissedWork(parseInt(e.target.value))}
+                  onChange={e => setMissedWork(parseInt(e.target.value))}
                   className="w-full border rounded p-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Notes
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
                 <textarea
                   value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
+                  onChange={e => setNotes(e.target.value)}
                   className="w-full border rounded p-2"
                   rows={3}
                 />
@@ -297,35 +300,30 @@ function PainTracker() {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="text-gray-500 text-center py-8">
-                No pain entries yet
-              </div>
+              <div className="text-gray-500 text-center py-8">No pain entries yet</div>
             )}
 
             <div className="space-y-4">
               {entries
                 .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-                .map((entry) => (
-                  <div
-                    key={entry.id}
-                    className="p-4 bg-gray-50 rounded-lg"
-                  >
+                .map(entry => (
+                  <div key={entry.id} className="p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-semibold">Pain Level: {entry.baselineData.pain}</span>
                       <span className="text-gray-500">
-                        {format(new Date(entry.timestamp), "MMM d, yyyy HH:mm")}
+                        {format(new Date(entry.timestamp), 'MMM d, yyyy HH:mm')}
                       </span>
                     </div>
                     {entry.baselineData.locations.length > 0 && (
                       <div className="mb-2">
                         <span className="text-sm text-gray-600">Locations: </span>
-                        {entry.baselineData.locations.join(", ")}
+                        {entry.baselineData.locations.join(', ')}
                       </div>
                     )}
                     {entry.baselineData.symptoms.length > 0 && (
                       <div className="mb-2">
                         <span className="text-sm text-gray-600">Symptoms: </span>
-                        {entry.baselineData.symptoms.join(", ")}
+                        {entry.baselineData.symptoms.join(', ')}
                       </div>
                     )}
                     {entry.notes && (

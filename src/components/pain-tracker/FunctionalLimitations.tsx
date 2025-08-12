@@ -18,32 +18,36 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
     : entries;
 
   // Analyze functional limitations
-  const limitationsAnalysis = filteredEntries.reduce((acc, entry) => {
-    entry.functionalImpact.limitedActivities.forEach(activity => {
-      if (!acc[activity]) {
-        acc[activity] = {
-          count: 0,
-          painLevels: [],
-          assistanceNeeded: new Set<string>(),
-          mobilityAids: new Set<string>(),
-        };
+  const limitationsAnalysis = filteredEntries.reduce(
+    (acc, entry) => {
+      entry.functionalImpact.limitedActivities.forEach(activity => {
+        if (!acc[activity]) {
+          acc[activity] = {
+            count: 0,
+            painLevels: [],
+            assistanceNeeded: new Set<string>(),
+            mobilityAids: new Set<string>(),
+          };
+        }
+        acc[activity].count += 1;
+        acc[activity].painLevels.push(entry.baselineData.pain);
+        entry.functionalImpact.assistanceNeeded.forEach(assistance =>
+          acc[activity].assistanceNeeded.add(assistance)
+        );
+        entry.functionalImpact.mobilityAids.forEach(aid => acc[activity].mobilityAids.add(aid));
+      });
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        count: number;
+        painLevels: number[];
+        assistanceNeeded: Set<string>;
+        mobilityAids: Set<string>;
       }
-      acc[activity].count += 1;
-      acc[activity].painLevels.push(entry.baselineData.pain);
-      entry.functionalImpact.assistanceNeeded.forEach(assistance => 
-        acc[activity].assistanceNeeded.add(assistance)
-      );
-      entry.functionalImpact.mobilityAids.forEach(aid => 
-        acc[activity].mobilityAids.add(aid)
-      );
-    });
-    return acc;
-  }, {} as Record<string, {
-    count: number;
-    painLevels: number[];
-    assistanceNeeded: Set<string>;
-    mobilityAids: Set<string>;
-  }>);
+    >
+  );
 
   // Convert analysis to sorted array
   const limitationsSummary = Object.entries(limitationsAnalysis)
@@ -66,14 +70,10 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
             <div className="flex justify-between items-start mb-2">
               <div>
                 <h4 className="font-medium">{limitation.activity}</h4>
-                <p className="text-sm text-gray-600">
-                  Reported {limitation.frequency} times
-                </p>
+                <p className="text-sm text-gray-600">Reported {limitation.frequency} times</p>
               </div>
               <div className="text-right">
-                <div className="font-medium">
-                  Avg. Pain: {limitation.averagePain.toFixed(1)}
-                </div>
+                <div className="font-medium">Avg. Pain: {limitation.averagePain.toFixed(1)}</div>
               </div>
             </div>
 
@@ -119,4 +119,4 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
       </div>
     </div>
   );
-} 
+}

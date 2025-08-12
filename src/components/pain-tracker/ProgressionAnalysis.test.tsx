@@ -137,7 +137,7 @@ describe('ProgressionAnalysis', () => {
 
   it('calculates and displays trends correctly', () => {
     render(<ProgressionAnalysis entries={mockEntries} />);
-    
+
     // Check for trend sections
     expect(screen.getByText('Pain Trend')).toBeDefined();
     expect(screen.getByText('Symptoms Trend')).toBeDefined();
@@ -151,7 +151,7 @@ describe('ProgressionAnalysis', () => {
     };
 
     render(<ProgressionAnalysis entries={mockEntries} period={period} />);
-    
+
     // Should only show trends for Jan 2-3
     const painTrendText = screen.getByText(/point (increasing|decreasing|stable)/);
     expect(painTrendText).toBeDefined();
@@ -160,21 +160,21 @@ describe('ProgressionAnalysis', () => {
   it('handles single day of entries', () => {
     const singleDayEntries = mockEntries.slice(0, 1);
     render(<ProgressionAnalysis entries={singleDayEntries} />);
-    
+
     // Should show data but no trends (needs at least 2 points for trends)
     expect(screen.getByText('Progression Analysis')).toBeDefined();
   });
 
   it('updates when entries change', () => {
     const { rerender } = render(<ProgressionAnalysis entries={mockEntries.slice(0, 1)} />);
-    
+
     // Initially should have no trends (1 entry)
     expect(screen.queryByText(/point (increasing|decreasing|stable)/)).toBeNull();
-    
+
     // Update with more entries
     rerender(<ProgressionAnalysis entries={mockEntries} />);
-    
+
     // Should now show trends
     expect(screen.getByText(/point (increasing|decreasing|stable)/)).toBeDefined();
   });
-}); 
+});

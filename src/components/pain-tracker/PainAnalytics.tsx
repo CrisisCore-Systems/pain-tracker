@@ -9,7 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 import { format as formatDate } from 'date-fns';
 import type { PainEntry } from '../../types';
@@ -26,19 +26,19 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ entries }) => {
 
   const timeOfDayData = Object.entries(trends.timeOfDayPattern).map(([hour, pain]) => ({
     hour,
-    avgPain: pain / entries.filter(e => formatDate(new Date(e.timestamp), 'HH:00') === hour).length
+    avgPain: pain / entries.filter(e => formatDate(new Date(e.timestamp), 'HH:00') === hour).length,
   }));
 
   const locationData = Object.entries(trends.locationFrequency).map(([location, frequency]) => ({
     location,
     frequency,
-    avgPain: stats.locationStats[location]?.avgPain || 0
+    avgPain: stats.locationStats[location]?.avgPain || 0,
   }));
 
   const symptomData = Object.entries(trends.symptomCorrelations).map(([symptom]) => ({
     symptom,
     frequency: stats.symptomStats[symptom]?.frequency || 0,
-    avgPain: stats.symptomStats[symptom]?.avgPain || 0
+    avgPain: stats.symptomStats[symptom]?.avgPain || 0,
   }));
 
   const handleExport = (format: 'csv' | 'json') => {
@@ -84,7 +84,8 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ entries }) => {
           <div className="stat-card">
             <h3 className="text-gray-600">Pain Trend</h3>
             <p className="text-2xl font-bold">
-              {trends.painTrends.increasing ? '↑' : '↓'} {Math.abs(trends.painTrends.averageChange).toFixed(1)}
+              {trends.painTrends.increasing ? '↑' : '↓'}{' '}
+              {Math.abs(trends.painTrends.averageChange).toFixed(1)}
             </p>
           </div>
         </div>
@@ -100,12 +101,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ entries }) => {
               <YAxis domain={[0, 10]} />
               <Tooltip />
               <Legend />
-              <Line
-                type="monotone"
-                dataKey="avgPain"
-                stroke="#8884d8"
-                name="Average Pain Level"
-              />
+              <Line type="monotone" dataKey="avgPain" stroke="#8884d8" name="Average Pain Level" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -157,13 +153,17 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ entries }) => {
           <div className="stat-card">
             <h3 className="text-gray-600">Tracking Since</h3>
             <p className="text-lg">
-              {stats.timeRangeStats.start ? formatDate(new Date(stats.timeRangeStats.start), 'MMM d, yyyy') : 'N/A'}
+              {stats.timeRangeStats.start
+                ? formatDate(new Date(stats.timeRangeStats.start), 'MMM d, yyyy')
+                : 'N/A'}
             </p>
           </div>
           <div className="stat-card">
             <h3 className="text-gray-600">Tracking Duration</h3>
             <p className="text-lg">
-              {stats.timeRangeStats.duration ? `${Math.floor(stats.timeRangeStats.duration / (1000 * 60 * 60 * 24))} days` : 'N/A'}
+              {stats.timeRangeStats.duration
+                ? `${Math.floor(stats.timeRangeStats.duration / (1000 * 60 * 60 * 24))} days`
+                : 'N/A'}
             </p>
           </div>
         </div>

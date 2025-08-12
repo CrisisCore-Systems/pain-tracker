@@ -37,8 +37,12 @@ vi.mock('./PainChart', () => {
   return {
     __esModule: true,
     PainChart: function MockPainChart({ entries }: { entries: PainEntry[] }) {
-      return <div role="complementary" data-testid="pain-chart" data-entries={JSON.stringify(entries)}>Pain Chart</div>;
-    }
+      return (
+        <div role="complementary" data-testid="pain-chart" data-entries={JSON.stringify(entries)}>
+          Pain Chart
+        </div>
+      );
+    },
   };
 });
 
@@ -46,8 +50,12 @@ vi.mock('./PainHistory', () => {
   return {
     __esModule: true,
     PainHistory: function MockPainHistory({ entries }: { entries: PainEntry[] }) {
-      return <div data-testid="pain-history" data-entries={JSON.stringify(entries)}>Pain History</div>;
-    }
+      return (
+        <div data-testid="pain-history" data-entries={JSON.stringify(entries)}>
+          Pain History
+        </div>
+      );
+    },
   };
 });
 
@@ -55,20 +63,24 @@ vi.mock('./PainHistory', () => {
 vi.mock('./PainEntryForm', () => {
   return {
     __esModule: true,
-    PainEntryForm: function MockPainEntryForm({ onSubmit }: { onSubmit: (data: Partial<PainEntry>) => void }) {
+    PainEntryForm: function MockPainEntryForm({
+      onSubmit,
+    }: {
+      onSubmit: (data: Partial<PainEntry>) => void;
+    }) {
       const handleSubmit = (e: React.MouseEvent) => {
         e.preventDefault();
         onSubmit({
           baselineData: {
             pain: 5,
             locations: ['back', 'neck'],
-            symptoms: ['stiffness']
+            symptoms: ['stiffness'],
           },
           qualityOfLife: {
             sleepQuality: 3,
             moodImpact: 4,
-            socialImpact: ['reduced social activities']
-          }
+            socialImpact: ['reduced social activities'],
+          },
         });
       };
 
@@ -78,33 +90,35 @@ vi.mock('./PainEntryForm', () => {
           baselineData: {
             pain: -1,
             locations: [],
-            symptoms: ['invalid symptom']
+            symptoms: ['invalid symptom'],
           },
           qualityOfLife: {
             sleepQuality: -1,
             moodImpact: 11,
-            socialImpact: []
-          }
+            socialImpact: [],
+          },
         } as Partial<PainEntry>;
 
         onSubmit(invalidData);
       };
 
       return (
-        <form 
-          data-testid="pain-form" 
+        <form
+          data-testid="pain-form"
           role="form"
           aria-label="Pain Entry Form"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={e => e.preventDefault()}
         >
-          Pain Entry Form 
-          <button type="button" onClick={handleSubmit}>Submit</button>
+          Pain Entry Form
+          <button type="button" onClick={handleSubmit}>
+            Submit
+          </button>
           <button type="button" onClick={handleInvalidSubmit} data-testid="invalid-submit">
             Submit Invalid
           </button>
         </form>
       );
-    }
+    },
   };
 });
 
@@ -116,7 +130,13 @@ interface ReportPeriod {
 vi.mock('./WCBReport', () => {
   return {
     __esModule: true,
-    WCBReportGenerator: function MockWCBReport({ entries, period }: { entries: PainEntry[], period: ReportPeriod }) {
+    WCBReportGenerator: function MockWCBReport({
+      entries,
+      period,
+    }: {
+      entries: PainEntry[];
+      period: ReportPeriod;
+    }) {
       return (
         <div data-testid="wcb-report" data-period={JSON.stringify(period)}>
           <div className="mb-4 flex gap-4">
@@ -150,7 +170,7 @@ vi.mock('./WCBReport', () => {
           <div>WCB Report</div>
         </div>
       );
-    }
+    },
   };
 });
 
@@ -176,16 +196,16 @@ describe('PainTracker', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
     render(<PainTracker />);
     const toggleButton = screen.getByText('Show WCB Report');
-    
+
     // Initially, WCB report should not be visible
     expect(screen.queryByText('WCB Report')).not.toBeInTheDocument();
-    
+
     // Click to show report
     fireEvent.click(toggleButton);
     expect(screen.getByText('WCB Report')).toBeInTheDocument();
     expect(screen.getByLabelText('Start Date')).toBeInTheDocument();
     expect(screen.getByLabelText('End Date')).toBeInTheDocument();
-    
+
     // Click to hide report
     fireEvent.click(screen.getByText('Hide WCB Report'));
     expect(screen.queryByText('WCB Report')).not.toBeInTheDocument();
@@ -202,29 +222,29 @@ describe('PainTracker', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
     render(<PainTracker />);
     const submitButton = screen.getByText('Submit');
-    
+
     // Submit a new entry
     fireEvent.click(submitButton);
-    
+
     // Verify localStorage was called with correct data
     expect(mockLocalStorage.setItem).toHaveBeenCalledTimes(1);
     const savedData = JSON.parse(mockLocalStorage.setItem.mock.calls[0][1]);
     expect(savedData).toHaveLength(1);
-    
+
     const newEntry = savedData[0];
     expect(newEntry).toMatchObject({
       baselineData: {
         pain: 5,
         locations: ['back', 'neck'],
-        symptoms: ['stiffness']
+        symptoms: ['stiffness'],
       },
       qualityOfLife: {
         sleepQuality: 3,
         moodImpact: 4,
-        socialImpact: ['reduced social activities']
-      }
+        socialImpact: ['reduced social activities'],
+      },
     });
-    
+
     // Verify timestamp and ID
     expect(newEntry.id).toBeDefined();
     expect(newEntry.timestamp).toBeDefined();
@@ -235,10 +255,10 @@ describe('PainTracker', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
     render(<PainTracker />);
     fireEvent.click(screen.getByText('Show WCB Report'));
-    
+
     const wcbReport = screen.getByTestId('wcb-report');
     const period = JSON.parse(wcbReport.dataset.period!) as ReportPeriod;
-    
+
     // Verify period is 30 days
     const endDate = new Date(period.end);
     const startDate = new Date(period.start);
@@ -247,25 +267,31 @@ describe('PainTracker', () => {
   });
 
   it('passes entries to child components', () => {
-    const testEntries = [{
-      id: mockDate.getTime(),
-      timestamp: mockDate.toISOString(),
-      baselineData: { pain: 5, locations: ['back', 'neck'], symptoms: ['stiffness'] },
-      functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
-      medications: { current: [], changes: '', effectiveness: '' },
-      treatments: { recent: [], effectiveness: '', planned: [] },
-      qualityOfLife: { sleepQuality: 3, moodImpact: 4, socialImpact: ['reduced social activities'] },
-      workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
-      comparison: { worseningSince: '', newLimitations: [] },
-      notes: ''
-    }];
+    const testEntries = [
+      {
+        id: mockDate.getTime(),
+        timestamp: mockDate.toISOString(),
+        baselineData: { pain: 5, locations: ['back', 'neck'], symptoms: ['stiffness'] },
+        functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+        medications: { current: [], changes: '', effectiveness: '' },
+        treatments: { recent: [], effectiveness: '', planned: [] },
+        qualityOfLife: {
+          sleepQuality: 3,
+          moodImpact: 4,
+          socialImpact: ['reduced social activities'],
+        },
+        workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+        comparison: { worseningSince: '', newLimitations: [] },
+        notes: '',
+      },
+    ];
     mockLocalStorage.getItem.mockReturnValue(JSON.stringify(testEntries));
-    
+
     render(<PainTracker />);
-    
+
     const chart = screen.getByTestId('pain-chart');
     const history = screen.getByTestId('pain-history');
-    
+
     expect(JSON.parse(chart.dataset.entries!)).toEqual(testEntries);
     expect(JSON.parse(history.dataset.entries!)).toEqual(testEntries);
   });
@@ -275,12 +301,12 @@ describe('PainTracker', () => {
       mockLocalStorage.getItem.mockImplementation(() => {
         throw new Error('Failed to access localStorage');
       });
-      
+
       render(<PainTracker />);
-      
+
       // Should show an error message
       expect(screen.getByText(/Unable to load pain entries/i)).toBeInTheDocument();
-      
+
       // Should still render the form for new entries
       expect(screen.getByTestId('pain-form')).toBeInTheDocument();
     });
@@ -288,14 +314,14 @@ describe('PainTracker', () => {
     it('validates pain entry data before saving', async () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       // Try to submit invalid data
       const invalidSubmitButton = screen.getByTestId('invalid-submit');
       fireEvent.click(invalidSubmitButton);
-      
+
       // Should not save to localStorage with invalid data
       expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
-      
+
       // Should show validation error message
       expect(screen.getByText(/Invalid pain entry data/i)).toBeInTheDocument();
     });
@@ -303,10 +329,10 @@ describe('PainTracker', () => {
     it('handles empty entries array gracefully', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       // Should show empty state message
       expect(screen.getByText(/No pain entries yet/i)).toBeInTheDocument();
-      
+
       // Chart should still render with empty data
       const chart = screen.getByTestId('pain-chart');
       expect(JSON.parse(chart.dataset.entries!)).toEqual([]);
@@ -316,14 +342,14 @@ describe('PainTracker', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
       fireEvent.click(screen.getByText('Show WCB Report'));
-      
+
       const wcbReport = screen.getByTestId('wcb-report');
       const period = JSON.parse(wcbReport.dataset.period!) as ReportPeriod;
-      
+
       // Verify dates are valid
       expect(() => new Date(period.start)).not.toThrow();
       expect(() => new Date(period.end)).not.toThrow();
-      
+
       // End date should not be before start date
       expect(new Date(period.end).getTime()).toBeGreaterThan(new Date(period.start).getTime());
     });
@@ -340,10 +366,10 @@ describe('PainTracker', () => {
     it('should have proper heading hierarchy', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       const mainHeading = screen.getByRole('heading', { level: 1 });
       expect(mainHeading).toHaveTextContent('Pain Tracker');
-      
+
       // All interactive elements should be reachable by keyboard
       const allButtons = screen.getAllByRole('button');
       allButtons.forEach(button => {
@@ -355,7 +381,7 @@ describe('PainTracker', () => {
     it('should have proper ARIA labels and roles', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       // Error message should have alert role
       const errorContainer = screen.queryByRole('alert');
       expect(errorContainer).not.toBeInTheDocument();
@@ -363,7 +389,7 @@ describe('PainTracker', () => {
       // Chart should have complementary role
       const chart = screen.getByRole('complementary');
       expect(chart).toBeInTheDocument();
-      
+
       // Form should be properly labeled
       const form = screen.getByRole('form');
       expect(form).toBeInTheDocument();
@@ -373,15 +399,15 @@ describe('PainTracker', () => {
     it('should handle keyboard navigation', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       const toggleButton = screen.getByText('Show WCB Report');
       toggleButton.focus();
       expect(document.activeElement).toBe(toggleButton);
-      
+
       // Simulate keyboard interaction
       fireEvent.keyDown(toggleButton, { key: 'Enter' });
       expect(screen.getByLabelText('Start Date')).toBeInTheDocument();
-      
+
       // Date inputs should be keyboard accessible
       const startDateInput = screen.getByLabelText('Start Date');
       expect(startDateInput).toHaveAttribute('type', 'date');
@@ -390,15 +416,15 @@ describe('PainTracker', () => {
     it('should maintain focus management', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       // Toggle WCB report
       const toggleButton = screen.getByText('Show WCB Report');
       fireEvent.click(toggleButton);
-      
+
       // Focus should move to the first interactive element in the report
       const startDateInput = screen.getByLabelText('Start Date');
       expect(startDateInput).toBeInTheDocument();
-      
+
       // Hide report
       fireEvent.click(toggleButton);
       expect(document.activeElement).toBe(toggleButton);
@@ -407,14 +433,14 @@ describe('PainTracker', () => {
     it('should have proper color contrast', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       const errorMessage = screen.queryByRole('alert');
       if (errorMessage) {
         // Error message should have sufficient color contrast
         expect(errorMessage).toHaveClass('text-red-700');
         expect(errorMessage).toHaveClass('bg-red-100');
       }
-      
+
       // Primary button should have sufficient contrast
       const button = screen.getByText('Show WCB Report');
       expect(button).toHaveClass('bg-blue-500');
@@ -424,15 +450,15 @@ describe('PainTracker', () => {
     it('should provide clear error messages', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />);
-      
+
       // Submit invalid data
       const invalidSubmitButton = screen.getByTestId('invalid-submit');
       fireEvent.click(invalidSubmitButton);
-      
+
       // Error message should be clear and descriptive
       const errorMessage = screen.getByRole('alert');
       expect(errorMessage).toHaveTextContent(/invalid pain entry data/i);
       expect(errorMessage).toHaveTextContent(/please check your input values/i);
     });
   });
-}); 
+});
