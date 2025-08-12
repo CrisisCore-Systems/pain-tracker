@@ -35,10 +35,28 @@ function App() {
   return (
     <Sentry.ErrorBoundary fallback={ErrorFallback}>
       <Suspense fallback={<div>Loading...</div>}>
-        <main className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8">Pain & Injury Tracking System</h1>
-          <PainTracker />
-          {process.env.NODE_ENV === 'development' && <SentryTest />}
+        <main className="min-h-screen-safe bg-gray-50">
+          {/* Mobile-optimized container with safe area support */}
+          <div className="container-mobile max-w-6xl mx-auto">
+            {/* Mobile-responsive header */}
+            <header className="py-4 sm:py-6 lg:py-8">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 text-center sm:text-left">
+                Pain & Injury Tracking System
+              </h1>
+            </header>
+            
+            {/* Main content area */}
+            <div className="pb-4 sm:pb-6 lg:pb-8">
+              <PainTracker />
+            </div>
+          </div>
+          
+          {/* Development Sentry test - only visible in dev mode */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="fixed bottom-4 right-4 z-50">
+              <SentryTest />
+            </div>
+          )}
         </main>
       </Suspense>
     </Sentry.ErrorBoundary>
