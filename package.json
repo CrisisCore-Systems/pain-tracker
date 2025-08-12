@@ -60,7 +60,7 @@
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^8.19.0",
     "@typescript-eslint/parser": "^8.19.0",
-    "@vitejs/plugin-react": "^4.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.14",
     "eslint": "^9.0.0",
     "eslint-plugin-react": "^7.32.2",
@@ -75,8 +75,8 @@
     "prettier": "^3.4.2",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.7.2",
-    "vite": "^7.1.2",
+    "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4"
+    "vitest": "^1.6.0"
   }
 }
