@@ -24,4 +24,4 @@ Object.defineProperty(window, 'matchMedia', {
 // Cleanup after each test case
 afterEach(() => {
   cleanup();
-}); 
+});

@@ -1,5 +1,5 @@
-﻿import { useMemo } from "react";
-import type { PainEntry, WCBReport } from "../../types";
+﻿import { useMemo } from 'react';
+import type { PainEntry, WCBReport } from '../../types';
 
 interface WCBReportGeneratorProps {
   entries: PainEntry[];
@@ -21,21 +21,24 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
     const average = painLevels.reduce((a, b) => a + b, 0) / painLevels.length;
 
     // Track pain locations frequency
-    const locationFrequency = filteredEntries.reduce((acc, entry) => {
-      entry.baselineData.locations.forEach(location => {
-        acc[location] = (acc[location] || 0) + 1;
-      });
-      return acc;
-    }, {} as Record<string, number>);
+    const locationFrequency = filteredEntries.reduce(
+      (acc, entry) => {
+        entry.baselineData.locations.forEach(location => {
+          acc[location] = (acc[location] || 0) + 1;
+        });
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     // Analyze functional limitations
-    const limitations = Array.from(new Set(
-      filteredEntries.flatMap(e => e.functionalImpact?.limitedActivities || [])
-    ));
+    const limitations = Array.from(
+      new Set(filteredEntries.flatMap(e => e.functionalImpact?.limitedActivities || []))
+    );
 
     // Track changes over time
-    const sortedEntries = [...filteredEntries].sort((a, b) => 
-      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    const sortedEntries = [...filteredEntries].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
 
     const deterioration = [];
@@ -44,9 +47,13 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
 
     sortedEntries.forEach(entry => {
       if (entry.baselineData.pain > prevPain + 2) {
-        deterioration.push(`Pain increased significantly on ${new Date(entry.timestamp).toLocaleDateString()}`);
+        deterioration.push(
+          `Pain increased significantly on ${new Date(entry.timestamp).toLocaleDateString()}`
+        );
       } else if (entry.baselineData.pain < prevPain - 2) {
-        improvements.push(`Pain decreased significantly on ${new Date(entry.timestamp).toLocaleDateString()}`);
+        improvements.push(
+          `Pain decreased significantly on ${new Date(entry.timestamp).toLocaleDateString()}`
+        );
       }
       prevPain = entry.baselineData.pain;
     });
@@ -57,20 +64,20 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
         average,
         progression: sortedEntries.map(e => ({
           date: e.timestamp,
-          pain: e.baselineData.pain
+          pain: e.baselineData.pain,
         })),
-        locations: locationFrequency
+        locations: locationFrequency,
       },
       functionalAnalysis: {
         limitations,
         deterioration,
-        improvements
+        improvements,
       },
       recommendations: [
-        "Continue monitoring pain levels",
-        "Follow up with healthcare provider",
-        "Modify work duties as needed"
-      ]
+        'Continue monitoring pain levels',
+        'Follow up with healthcare provider',
+        'Modify work duties as needed',
+      ],
     };
 
     return report;
@@ -93,9 +100,11 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
             <h4 className="text-sm font-medium">Common Locations:</h4>
             <ul className="list-disc pl-5">
               {Object.entries(report.painTrends.locations)
-                .sort(([,a], [,b]) => b - a)
+                .sort(([, a], [, b]) => b - a)
                 .map(([location, count]) => (
-                  <li key={location}>{location}: {count} occurrences</li>
+                  <li key={location}>
+                    {location}: {count} occurrences
+                  </li>
                 ))}
             </ul>
           </div>

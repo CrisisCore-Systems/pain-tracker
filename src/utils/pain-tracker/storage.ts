@@ -1,4 +1,4 @@
-import type { PainEntry } from "../../types";
+import type { PainEntry } from '../../types';
 
 const STORAGE_KEY = 'pain_tracker_entries';
 
@@ -23,7 +23,7 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
   try {
     const existingEntries = await loadPainEntries();
     const updatedEntries = [...existingEntries];
-    
+
     // Find and update existing entry or add new one
     const existingIndex = updatedEntries.findIndex(e => e.id === entry.id);
     if (existingIndex !== -1) {
@@ -31,9 +31,9 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
     } else {
       updatedEntries.push(entry);
     }
-    
+
     const serialized = JSON.stringify(updatedEntries);
-    
+
     try {
       localStorage.setItem(STORAGE_KEY, serialized);
     } catch (e) {
@@ -62,7 +62,7 @@ export const loadPainEntries = async (): Promise<PainEntry[]> => {
     }
 
     const entries = JSON.parse(serialized);
-    
+
     // Validate the data structure
     if (!Array.isArray(entries) || !entries.every(isValidPainEntry)) {
       throw createStorageError('PARSE_ERROR', 'Stored data is corrupted.');
@@ -97,7 +97,7 @@ export const clearPainEntries = async (): Promise<void> => {
  */
 const isValidPainEntry = (entry: unknown): entry is PainEntry => {
   if (!entry || typeof entry !== 'object') return false;
-  
+
   const e = entry as Partial<PainEntry>;
   return (
     typeof e.id === 'number' &&

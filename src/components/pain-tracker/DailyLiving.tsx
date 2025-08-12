@@ -22,7 +22,7 @@ const COMMON_SOCIAL_IMPACTS = [
   'Limited Family Time',
   'Missed Social Events',
   'Communication Difficulties',
-  'Reduced Community Participation'
+  'Reduced Community Participation',
 ];
 
 const MOOD_DESCRIPTIONS = {
@@ -35,7 +35,7 @@ const MOOD_DESCRIPTIONS = {
   7: 'Mostly Positive',
   8: 'Positive',
   9: 'Very Positive',
-  10: 'Excellent'
+  10: 'Excellent',
 };
 
 const SLEEP_DESCRIPTIONS = {
@@ -48,7 +48,7 @@ const SLEEP_DESCRIPTIONS = {
   7: 'Good',
   8: 'Very Good',
   9: 'Excellent',
-  10: 'Perfect'
+  10: 'Perfect',
 };
 
 export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProps) {
@@ -58,7 +58,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
     if (!newImpact) return;
     onChange({
       ...qualityOfLife,
-      socialImpact: [...qualityOfLife.socialImpact, newImpact]
+      socialImpact: [...qualityOfLife.socialImpact, newImpact],
     });
     setNewImpact('');
   };
@@ -66,7 +66,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
   const removeSocialImpact = (index: number) => {
     onChange({
       ...qualityOfLife,
-      socialImpact: qualityOfLife.socialImpact.filter((_, i) => i !== index)
+      socialImpact: qualityOfLife.socialImpact.filter((_, i) => i !== index),
     });
   };
 
@@ -76,7 +76,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
       ...qualityOfLife,
       socialImpact: exists
         ? qualityOfLife.socialImpact.filter(i => i !== impact)
-        : [...qualityOfLife.socialImpact, impact]
+        : [...qualityOfLife.socialImpact, impact],
     });
   };
 
@@ -91,15 +91,19 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
             min="1"
             max="10"
             value={qualityOfLife.sleepQuality}
-            onChange={(e) => onChange({
-              ...qualityOfLife,
-              sleepQuality: parseInt(e.target.value)
-            })}
+            onChange={e =>
+              onChange({
+                ...qualityOfLife,
+                sleepQuality: parseInt(e.target.value),
+              })
+            }
             className="w-full"
           />
           <div className="flex justify-between text-sm text-gray-600">
             <span>Poor</span>
-            <span>{SLEEP_DESCRIPTIONS[qualityOfLife.sleepQuality as keyof typeof SLEEP_DESCRIPTIONS]}</span>
+            <span>
+              {SLEEP_DESCRIPTIONS[qualityOfLife.sleepQuality as keyof typeof SLEEP_DESCRIPTIONS]}
+            </span>
             <span>Excellent</span>
           </div>
         </div>
@@ -114,15 +118,19 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
             min="1"
             max="10"
             value={qualityOfLife.moodImpact}
-            onChange={(e) => onChange({
-              ...qualityOfLife,
-              moodImpact: parseInt(e.target.value)
-            })}
+            onChange={e =>
+              onChange({
+                ...qualityOfLife,
+                moodImpact: parseInt(e.target.value),
+              })
+            }
             className="w-full"
           />
           <div className="flex justify-between text-sm text-gray-600">
             <span>Severe Impact</span>
-            <span>{MOOD_DESCRIPTIONS[qualityOfLife.moodImpact as keyof typeof MOOD_DESCRIPTIONS]}</span>
+            <span>
+              {MOOD_DESCRIPTIONS[qualityOfLife.moodImpact as keyof typeof MOOD_DESCRIPTIONS]}
+            </span>
             <span>No Impact</span>
           </div>
         </div>
@@ -131,11 +139,14 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
       {/* Social Impact */}
       <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Social Impact</h3>
-        
+
         {/* Current Impacts */}
         <div className="space-y-2 mb-4">
           {qualityOfLife.socialImpact.map((impact, index) => (
-            <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
+            <div
+              key={index}
+              className="flex items-center justify-between bg-gray-50 p-2 rounded-md"
+            >
               <span className="text-sm text-gray-700">{impact}</span>
               <button
                 type="button"
@@ -153,7 +164,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
         <div className="mb-4">
           <h4 className="text-sm font-medium text-gray-700 mb-2">Common Impacts</h4>
           <div className="flex flex-wrap gap-2">
-            {COMMON_SOCIAL_IMPACTS.map((impact) => (
+            {COMMON_SOCIAL_IMPACTS.map(impact => (
               <button
                 key={impact}
                 type="button"
@@ -175,7 +186,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
           <input
             type="text"
             value={newImpact}
-            onChange={(e) => setNewImpact(e.target.value)}
+            onChange={e => setNewImpact(e.target.value)}
             placeholder="Add custom social impact..."
             className="block flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           />
@@ -195,7 +206,8 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
         <h4 className="text-sm font-medium text-gray-700 mb-2">Daily Living Summary</h4>
         <ul className="list-disc pl-5 space-y-1">
           <li className="text-sm text-gray-600">
-            Sleep Quality: {SLEEP_DESCRIPTIONS[qualityOfLife.sleepQuality as keyof typeof SLEEP_DESCRIPTIONS]}
+            Sleep Quality:{' '}
+            {SLEEP_DESCRIPTIONS[qualityOfLife.sleepQuality as keyof typeof SLEEP_DESCRIPTIONS]}
           </li>
           <li className="text-sm text-gray-600">
             Mood: {MOOD_DESCRIPTIONS[qualityOfLife.moodImpact as keyof typeof MOOD_DESCRIPTIONS]}
@@ -207,4 +219,4 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
       </div>
     </div>
   );
-} 
+}

@@ -12,38 +12,38 @@ describe('PainAnalytics', () => {
       baselineData: {
         pain: 5,
         locations: ['Lower Back', 'Neck'],
-        symptoms: ['Stiffness', 'Burning']
+        symptoms: ['Stiffness', 'Burning'],
       },
       functionalImpact: {
         limitedActivities: ['Walking', 'Sitting'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 6,
         moodImpact: 5,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
+      notes: '',
     },
     {
       id: 2,
@@ -51,39 +51,39 @@ describe('PainAnalytics', () => {
       baselineData: {
         pain: 7,
         locations: ['Lower Back'],
-        symptoms: ['Stiffness']
+        symptoms: ['Stiffness'],
       },
       functionalImpact: {
         limitedActivities: ['Walking'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 5,
         moodImpact: 6,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
-    }
+      notes: '',
+    },
   ];
 
   it('renders without crashing', () => {
@@ -120,4 +120,4 @@ describe('PainAnalytics', () => {
     expect(screen.getByText('Average Pain')).toBeInTheDocument();
     expect(screen.getByText('0.0')).toBeInTheDocument();
   });
-}); 
+});

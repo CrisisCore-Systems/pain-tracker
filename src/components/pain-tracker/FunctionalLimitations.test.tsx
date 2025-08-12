@@ -97,16 +97,16 @@ describe('FunctionalLimitations', () => {
 
   it('displays limitations from entries', () => {
     render(<FunctionalLimitations entries={mockEntries} />);
-    
+
     // Check activities
     expect(screen.getByText('bending')).toBeDefined();
     expect(screen.getByText('lifting')).toBeDefined();
     expect(screen.getByText('reaching')).toBeDefined();
-    
+
     // Check assistance needed
     expect(screen.getByText('dressing')).toBeDefined();
     expect(screen.getByText('bathing')).toBeDefined();
-    
+
     // Check mobility aids
     expect(screen.getByText('cane')).toBeDefined();
     expect(screen.getByText('walker')).toBeDefined();
@@ -114,17 +114,17 @@ describe('FunctionalLimitations', () => {
 
   it('calculates frequency correctly', () => {
     render(<FunctionalLimitations entries={mockEntries} />);
-    
+
     // 'bending' appears in both entries
     expect(screen.getByText('Reported 2 times')).toBeDefined();
-    
+
     // 'lifting' appears in one entry
     expect(screen.getByText('Reported 1 times')).toBeDefined();
   });
 
   it('calculates average pain correctly', () => {
     render(<FunctionalLimitations entries={mockEntries} />);
-    
+
     // For 'bending': pain levels 6 and 7, average 6.5
     const bendingSection = screen.getByText('bending').closest('.bg-gray-50');
     expect(bendingSection?.textContent).toContain('Avg. Pain: 6.5');
@@ -137,7 +137,7 @@ describe('FunctionalLimitations', () => {
     };
 
     render(<FunctionalLimitations entries={mockEntries} period={period} />);
-    
+
     // Should only show data from Jan 2
     expect(screen.getByText('reaching')).toBeDefined(); // Jan 2 activity
     expect(screen.queryByText('lifting')).toBeNull(); // Jan 1 activity
@@ -145,13 +145,11 @@ describe('FunctionalLimitations', () => {
 
   it('sorts limitations by frequency', () => {
     render(<FunctionalLimitations entries={mockEntries} />);
-    
+
     const limitations = screen.getAllByText(/Reported \d+ times/);
-    const frequencies = limitations.map(el => 
-      parseInt(el.textContent?.match(/\d+/)?.[0] || '0')
-    );
-    
+    const frequencies = limitations.map(el => parseInt(el.textContent?.match(/\d+/)?.[0] || '0'));
+
     // Check that frequencies are in descending order
     expect(frequencies).toEqual([...frequencies].sort((a, b) => b - a));
   });
-}); 
+});

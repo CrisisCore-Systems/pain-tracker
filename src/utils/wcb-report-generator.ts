@@ -14,8 +14,8 @@ interface WCBClaimData {
 
 export function generateWCBReport(entries: PainEntry[], claimData?: WCBClaimData): WCBReport {
   // Sort entries by date
-  const sortedEntries = [...entries].sort((a, b) => 
-    new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  const sortedEntries = [...entries].sort(
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
 
   // Calculate date range
@@ -27,7 +27,7 @@ export function generateWCBReport(entries: PainEntry[], claimData?: WCBClaimData
     date: entry.timestamp,
     pain: entry.baselineData.pain,
     locations: entry.baselineData.locations,
-    symptoms: entry.baselineData.symptoms
+    symptoms: entry.baselineData.symptoms,
   }));
 
   // Analyze work impact
@@ -43,25 +43,25 @@ export function generateWCBReport(entries: PainEntry[], claimData?: WCBClaimData
   return {
     period: {
       start: startDate,
-      end: endDate
+      end: endDate,
     },
     claimInfo: claimData,
     painTrends: {
       average: calculateAveragePain(sortedEntries),
       progression: painProgression,
-      locations: analyzeLocationFrequency(sortedEntries)
+      locations: analyzeLocationFrequency(sortedEntries),
     },
     workImpact: {
       missedDays: workImpact.missedDays,
       limitations: workImpact.commonLimitations,
-      accommodationsNeeded: identifyAccommodations(sortedEntries)
+      accommodationsNeeded: identifyAccommodations(sortedEntries),
     },
     functionalAnalysis: functionalAnalysis,
     treatments: {
       current: treatments,
-      effectiveness: analyzeTreatmentEffectiveness(sortedEntries)
+      effectiveness: analyzeTreatmentEffectiveness(sortedEntries),
     },
-    recommendations
+    recommendations,
   };
 }
 
@@ -72,53 +72,53 @@ function analyzeFunctionalImpact(entries: PainEntry[]) {
   return {
     limitations: latestEntry?.functionalImpact.limitedActivities || [],
     deterioration: identifyDeteriorations(firstEntry, latestEntry),
-    improvements: identifyImprovements(firstEntry, latestEntry)
+    improvements: identifyImprovements(firstEntry, latestEntry),
   };
 }
 
 function identifyDeteriorations(first?: PainEntry, latest?: PainEntry): string[] {
   if (!first || !latest) return [];
-  
+
   const deteriorations: string[] = [];
-  
+
   // Check for new limitations
   const newLimitations = latest.functionalImpact.limitedActivities.filter(
     activity => !first.functionalImpact.limitedActivities.includes(activity)
   );
-  
+
   // Check for pain increase
   if (latest.baselineData.pain > first.baselineData.pain + 2) {
     deteriorations.push('Significant pain increase');
   }
-  
+
   // Check for new symptoms
   const newSymptoms = latest.baselineData.symptoms.filter(
     symptom => !first.baselineData.symptoms.includes(symptom)
   );
-  
+
   return [...deteriorations, ...newLimitations, ...newSymptoms];
 }
 
 function identifyImprovements(first?: PainEntry, latest?: PainEntry): string[] {
   if (!first || !latest) return [];
-  
+
   const improvements: string[] = [];
-  
+
   // Check for resolved limitations
   const resolvedLimitations = first.functionalImpact.limitedActivities.filter(
     activity => !latest.functionalImpact.limitedActivities.includes(activity)
   );
-  
+
   // Check for pain decrease
   if (latest.baselineData.pain < first.baselineData.pain - 2) {
     improvements.push('Significant pain reduction');
   }
-  
+
   // Check for resolved symptoms
   const resolvedSymptoms = first.baselineData.symptoms.filter(
     symptom => !latest.baselineData.symptoms.includes(symptom)
   );
-  
+
   return [...improvements, ...resolvedLimitations, ...resolvedSymptoms];
 }
 
@@ -127,28 +127,28 @@ function identifyAccommodations(entries: PainEntry[]): string[] {
   if (!latestEntry) return [];
 
   const accommodations: string[] = [];
-  
+
   // Check for mobility aids
   if (latestEntry.functionalImpact.mobilityAids.length > 0) {
     accommodations.push(...latestEntry.functionalImpact.mobilityAids.map(aid => `Requires ${aid}`));
   }
-  
+
   // Check work limitations
   if (latestEntry.workImpact.modifiedDuties.length > 0) {
     accommodations.push(...latestEntry.workImpact.modifiedDuties);
   }
-  
+
   return accommodations;
 }
 
 function generateRecommendations(
-  entries: PainEntry[], 
-  workImpact: { missedDays: number }, 
+  entries: PainEntry[],
+  workImpact: { missedDays: number },
   claimData?: WCBClaimData
 ): string[] {
   const recommendations: string[] = [];
   const latestEntry = entries[entries.length - 1];
-  
+
   if (!latestEntry) return recommendations;
 
   // High pain level recommendations
@@ -187,6 +187,6 @@ function analyzeLocationFrequency(entries: PainEntry[]): Record<string, number> 
 function analyzeTreatmentEffectiveness(entries: PainEntry[]): string {
   const latestEntry = entries[entries.length - 1];
   if (!latestEntry) return 'No data available';
-  
+
   return latestEntry.treatments.effectiveness || 'Not reported';
-} 
+}

@@ -1,10 +1,10 @@
-﻿import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from 'react';
 
 export default function useLocalStorage<T>(key: string, initialValue: T) {
   // Get from local storage then
   // parse stored json or return initialValue
   const readValue = () => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return initialValue;
     }
 
@@ -25,10 +25,10 @@ export default function useLocalStorage<T>(key: string, initialValue: T) {
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore = value instanceof Function ? value(storedValue) : value;
-      
+
       setStoredValue(valueToStore);
 
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {

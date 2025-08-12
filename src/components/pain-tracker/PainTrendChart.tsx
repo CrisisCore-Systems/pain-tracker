@@ -8,21 +8,13 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartOptions
+  ChartOptions,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import type { PainEntry } from '../../types';
 
 // Register ChartJS components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface PainTrendChartProps {
   entries: PainEntry[];
@@ -46,7 +38,7 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
         data: sortedEntries.map(entry => entry.baselineData.pain),
         borderColor: 'rgb(59, 130, 246)', // Blue
         backgroundColor: 'rgba(59, 130, 246, 0.5)',
-        tension: 0.3
+        tension: 0.3,
       },
       {
         label: 'Total Pain Score',
@@ -57,9 +49,9 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
         }),
         borderColor: 'rgb(239, 68, 68)', // Red
         backgroundColor: 'rgba(239, 68, 68, 0.5)',
-        tension: 0.3
-      }
-    ]
+        tension: 0.3,
+      },
+    ],
   };
 
   const options: ChartOptions<'line'> = {
@@ -71,20 +63,20 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
       },
       title: {
         display: true,
-        text: 'Pain Trend Over Time'
+        text: 'Pain Trend Over Time',
       },
       tooltip: {
         callbacks: {
-          afterBody: (context) => {
+          afterBody: context => {
             const entry = sortedEntries[context[0].dataIndex];
             return [
               '',
               'Locations: ' + entry.baselineData.locations.join(', '),
-              'Symptoms: ' + entry.baselineData.symptoms.join(', ')
+              'Symptoms: ' + entry.baselineData.symptoms.join(', '),
             ];
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       y: {
@@ -92,10 +84,10 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
         max: 12,
         title: {
           display: true,
-          text: 'Pain Level / Score'
-        }
-      }
-    }
+          text: 'Pain Level / Score',
+        },
+      },
+    },
   };
 
   return (
@@ -105,4 +97,4 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
       </div>
     </div>
   );
-} 
+}

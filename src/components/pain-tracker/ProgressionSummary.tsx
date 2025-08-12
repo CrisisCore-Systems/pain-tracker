@@ -29,15 +29,19 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h3 className="text-lg font-semibold mb-4">Progression Summary</h3>
-      
+
       <div className="space-y-4">
         <div>
           <h4 className="text-sm font-medium text-gray-700">Overall Trend</h4>
-          <p className={`text-lg font-semibold ${
-            trend.includes('deterioration') ? 'text-red-600' :
-            trend === 'Stable' ? 'text-yellow-600' :
-            'text-green-600'
-          }`}>
+          <p
+            className={`text-lg font-semibold ${
+              trend.includes('deterioration')
+                ? 'text-red-600'
+                : trend === 'Stable'
+                  ? 'text-yellow-600'
+                  : 'text-green-600'
+            }`}
+          >
             {trend}
           </p>
         </div>
@@ -53,7 +57,9 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
               <h4 className="text-sm font-medium text-gray-700">Active Pain Locations</h4>
               <ul className="mt-1 space-y-1">
                 {latestEntry.locations.map(location => (
-                  <li key={location} className="text-sm text-gray-600">{location}</li>
+                  <li key={location} className="text-sm text-gray-600">
+                    {location}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -62,7 +68,9 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
               <h4 className="text-sm font-medium text-gray-700">Current Symptoms</h4>
               <ul className="mt-1 space-y-1">
                 {latestEntry.symptoms.map(symptom => (
-                  <li key={symptom} className="text-sm text-gray-600">{symptom}</li>
+                  <li key={symptom} className="text-sm text-gray-600">
+                    {symptom}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -71,4 +79,4 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
       </div>
     </div>
   );
-} 
+}

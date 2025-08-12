@@ -9,47 +9,46 @@ interface TreatmentsSectionProps {
   recent: Treatment[];
   effectiveness: string;
   planned: string[];
-  onChange: (data: Partial<{
-    recent: Treatment[];
-    effectiveness: string;
-    planned: string[];
-  }>) => void;
+  onChange: (
+    data: Partial<{
+      recent: Treatment[];
+      effectiveness: string;
+      planned: string[];
+    }>
+  ) => void;
 }
 
 export function TreatmentsSection({
   recent,
   effectiveness,
   planned,
-  onChange
+  onChange,
 }: TreatmentsSectionProps) {
   const handleTreatmentChange = (index: number, field: keyof Treatment, value: string) => {
     const updatedTreatments = [...recent];
     updatedTreatments[index] = {
       ...updatedTreatments[index],
-      [field]: value
+      [field]: value,
     };
     onChange({ recent: updatedTreatments });
   };
 
   const addTreatment = () => {
     onChange({
-      recent: [
-        ...recent,
-        { type: "", provider: "", date: "", effectiveness: "" }
-      ]
+      recent: [...recent, { type: '', provider: '', date: '', effectiveness: '' }],
     });
   };
 
   const removeTreatment = (index: number) => {
     onChange({
-      recent: recent.filter((_, i) => i !== index)
+      recent: recent.filter((_, i) => i !== index),
     });
   };
 
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-lg">Treatments</h3>
-      
+
       <div className="space-y-4">
         {recent.map((treatment, index) => (
           <div key={index} className="p-4 border rounded-md space-y-2">
@@ -64,36 +63,30 @@ export function TreatmentsSection({
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Type
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                 <input
                   type="text"
                   value={treatment.type}
-                  onChange={(e) => handleTreatmentChange(index, "type", e.target.value)}
+                  onChange={e => handleTreatmentChange(index, 'type', e.target.value)}
                   className="w-full border rounded-md p-2"
                   placeholder="e.g., Physical Therapy, Massage"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Provider
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Provider</label>
                 <input
                   type="text"
                   value={treatment.provider}
-                  onChange={(e) => handleTreatmentChange(index, "provider", e.target.value)}
+                  onChange={e => handleTreatmentChange(index, 'provider', e.target.value)}
                   className="w-full border rounded-md p-2"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Date
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                 <input
                   type="date"
                   value={treatment.date}
-                  onChange={(e) => handleTreatmentChange(index, "date", e.target.value)}
+                  onChange={e => handleTreatmentChange(index, 'date', e.target.value)}
                   className="w-full border rounded-md p-2"
                 />
               </div>
@@ -103,7 +96,7 @@ export function TreatmentsSection({
                 </label>
                 <select
                   value={treatment.effectiveness}
-                  onChange={(e) => handleTreatmentChange(index, "effectiveness", e.target.value)}
+                  onChange={e => handleTreatmentChange(index, 'effectiveness', e.target.value)}
                   className="w-full border rounded-md p-2"
                 >
                   <option value="">Select effectiveness</option>
@@ -116,7 +109,7 @@ export function TreatmentsSection({
             </div>
           </div>
         ))}
-        
+
         <button
           type="button"
           onClick={addTreatment}
@@ -132,7 +125,7 @@ export function TreatmentsSection({
         </label>
         <select
           value={effectiveness}
-          onChange={(e) => onChange({ effectiveness: e.target.value })}
+          onChange={e => onChange({ effectiveness: e.target.value })}
           className="w-full border rounded-md p-2"
         >
           <option value="">Select overall effectiveness</option>
@@ -144,12 +137,10 @@ export function TreatmentsSection({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Planned Treatments
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Planned Treatments</label>
         <textarea
-          value={planned.join("\n")}
-          onChange={(e) => onChange({ planned: e.target.value.split("\n").filter(Boolean) })}
+          value={planned.join('\n')}
+          onChange={e => onChange({ planned: e.target.value.split('\n').filter(Boolean) })}
           className="w-full border rounded-md p-2"
           rows={3}
           placeholder="Enter each planned treatment on a new line"

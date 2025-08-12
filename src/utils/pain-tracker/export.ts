@@ -12,7 +12,7 @@ export const exportToCSV = (entries: PainEntry[]): string => {
     'Sleep Quality',
     'Mood Impact',
     'Missed Work Days',
-    'Notes'
+    'Notes',
   ].join(',');
 
   const rows = entries.map(entry => {
@@ -27,7 +27,7 @@ export const exportToCSV = (entries: PainEntry[]): string => {
       entry.qualityOfLife.sleepQuality,
       entry.qualityOfLife.moodImpact,
       entry.workImpact.missedWork,
-      `"${entry.notes.replace(/"/g, '""')}"`
+      `"${entry.notes.replace(/"/g, '""')}"`,
     ].join(',');
   });
 
@@ -40,7 +40,7 @@ export const exportToJSON = (entries: PainEntry[]): string => {
 
 export const downloadData = (data: string, filename: string): void => {
   if (typeof window === 'undefined') return;
-  
+
   const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -50,4 +50,4 @@ export const downloadData = (data: string, filename: string): void => {
   link.click();
   document.body.removeChild(link);
   window.URL.revokeObjectURL(url);
-}; 
+};

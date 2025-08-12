@@ -35,13 +35,8 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div
-          role="alert"
-          className="bg-red-50 border border-red-200 rounded-lg p-4 m-4"
-        >
-          <h2 className="text-lg font-semibold text-red-700 mb-2">
-            Something went wrong
-          </h2>
+        <div role="alert" className="bg-red-50 border border-red-200 rounded-lg p-4 m-4">
+          <h2 className="text-lg font-semibold text-red-700 mb-2">Something went wrong</h2>
           <p className="text-red-600 mb-4">
             We encountered an error while displaying this component.
           </p>
@@ -62,4 +57,4 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children;
   }
-} 
+}

@@ -1,8 +1,8 @@
 ﻿import React, { useState } from 'react';
-import type { PainEntry } from "../../types";
-import { PAIN_LOCATIONS, SYMPTOMS, type PainLocation, type Symptom } from "../../utils/constants";
-import { savePainEntry } from "../../utils/pain-tracker/storage";
-import { PainAnalytics } from "./PainAnalytics";
+import type { PainEntry } from '../../types';
+import { PAIN_LOCATIONS, SYMPTOMS, type PainLocation, type Symptom } from '../../utils/constants';
+import { savePainEntry } from '../../utils/pain-tracker/storage';
+import { PainAnalytics } from './PainAnalytics';
 
 interface ValidationErrors {
   painLevel?: string;
@@ -12,13 +12,15 @@ interface ValidationErrors {
 
 interface PainAssessmentProps {
   onSave?: (entry: PainEntry) => void;
-  initialData?: PainEntry["baselineData"];
+  initialData?: PainEntry['baselineData'];
 }
 
 export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
   const [painLevel, setPainLevel] = useState(initialData?.pain ?? 0);
-  const [locations, setLocations] = useState<PainLocation[]>(initialData?.locations as PainLocation[] ?? []);
-  const [symptoms, setSymptoms] = useState<Symptom[]>(initialData?.symptoms as Symptom[] ?? []);
+  const [locations, setLocations] = useState<PainLocation[]>(
+    (initialData?.locations as PainLocation[]) ?? []
+  );
+  const [symptoms, setSymptoms] = useState<Symptom[]>((initialData?.symptoms as Symptom[]) ?? []);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
@@ -55,7 +57,7 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
     setTouched({
       painLevel: true,
       locations: true,
-      symptoms: true
+      symptoms: true,
     });
 
     if (!validateForm()) {
@@ -76,33 +78,33 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
         functionalImpact: {
           limitedActivities: [],
           assistanceNeeded: [],
-          mobilityAids: []
+          mobilityAids: [],
         },
         medications: {
           current: [],
           changes: '',
-          effectiveness: ''
+          effectiveness: '',
         },
         treatments: {
           recent: [],
           effectiveness: '',
-          planned: []
+          planned: [],
         },
         qualityOfLife: {
           sleepQuality: 0,
           moodImpact: 0,
-          socialImpact: []
+          socialImpact: [],
         },
         workImpact: {
           missedWork: 0,
           modifiedDuties: [],
-          workLimitations: []
+          workLimitations: [],
         },
         comparison: {
           worseningSince: '',
-          newLimitations: []
+          newLimitations: [],
         },
-        notes: ''
+        notes: '',
       };
 
       await savePainEntry(newEntry);
@@ -127,19 +129,15 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
   };
 
   const toggleLocation = (location: PainLocation) => {
-    setLocations(prev => 
-      prev.includes(location) 
-        ? prev.filter(l => l !== location)
-        : [...prev, location]
+    setLocations(prev =>
+      prev.includes(location) ? prev.filter(l => l !== location) : [...prev, location]
     );
     setTouched(prev => ({ ...prev, locations: true }));
   };
 
   const toggleSymptom = (symptom: Symptom) => {
-    setSymptoms(prev => 
-      prev.includes(symptom)
-        ? prev.filter(s => s !== symptom)
-        : [...prev, symptom]
+    setSymptoms(prev =>
+      prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
     );
     setTouched(prev => ({ ...prev, symptoms: true }));
   };
@@ -148,15 +146,13 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
     <div className="space-y-8">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Pain Level (0-10)
-          </label>
+          <label className="block text-sm font-medium text-gray-700">Pain Level (0-10)</label>
           <input
             type="range"
             min="0"
             max="10"
             value={painLevel}
-            onChange={(e) => setPainLevel(Number(e.target.value))}
+            onChange={e => setPainLevel(Number(e.target.value))}
             onBlur={() => handleBlur('painLevel')}
             className="w-full mt-1"
             aria-label="Pain level slider"
@@ -171,11 +167,9 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Pain Locations
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Pain Locations</label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {PAIN_LOCATIONS.map((location) => (
+            {PAIN_LOCATIONS.map(location => (
               <label key={location} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -194,11 +188,9 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Symptoms
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Symptoms</label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {SYMPTOMS.map((symptom) => (
+            {SYMPTOMS.map(symptom => (
               <label key={symptom} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -226,9 +218,10 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
           type="submit"
           disabled={saving}
           className={`w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
-            ${saving 
-              ? 'bg-blue-400 cursor-not-allowed' 
-              : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+            ${
+              saving
+                ? 'bg-blue-400 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
             }`}
           aria-busy={saving}
         >

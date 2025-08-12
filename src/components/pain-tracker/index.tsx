@@ -1,22 +1,26 @@
-﻿import { useState, useEffect, useRef } from "react";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import type { PainEntry } from "../../types";
-import { PainChart } from "./PainChart";
-import { PainHistory } from "./PainHistory";
-import { PainEntryForm } from "./PainEntryForm";
-import { WCBReportGenerator } from "./WCBReport";
+﻿import { useState, useEffect, useRef } from 'react';
+import useLocalStorage from '../../hooks/useLocalStorage';
+import type { PainEntry } from '../../types';
+import { PainChart } from './PainChart';
+import { PainHistory } from './PainHistory';
+import { PainEntryForm } from './PainEntryForm';
+import { WCBReportGenerator } from './WCBReport';
 
 const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
   if (!entry.baselineData) return false;
-  
+
   const { pain } = entry.baselineData;
   if (typeof pain !== 'number' || pain < 0 || pain > 10) return false;
 
   if (entry.qualityOfLife) {
     const { sleepQuality, moodImpact } = entry.qualityOfLife;
     if (
-      typeof sleepQuality !== 'number' || sleepQuality < 0 || sleepQuality > 10 ||
-      typeof moodImpact !== 'number' || moodImpact < 0 || moodImpact > 10
+      typeof sleepQuality !== 'number' ||
+      sleepQuality < 0 ||
+      sleepQuality > 10 ||
+      typeof moodImpact !== 'number' ||
+      moodImpact < 0 ||
+      moodImpact > 10
     ) {
       return false;
     }
@@ -30,8 +34,8 @@ export function PainTracker() {
   const [entries, setEntries] = useState<PainEntry[]>([]);
   const [showWCBReport, setShowWCBReport] = useState(false);
   const [reportPeriod, setReportPeriod] = useState({
-    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 days ago
-    end: new Date().toISOString().split("T")[0]
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
+    end: new Date().toISOString().split('T')[0],
   });
 
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
@@ -40,13 +44,13 @@ export function PainTracker() {
   // Handle localStorage separately to catch errors
   useEffect(() => {
     try {
-      const storedEntries = localStorage.getItem("painEntries");
+      const storedEntries = localStorage.getItem('painEntries');
       if (storedEntries) {
         setEntries(JSON.parse(storedEntries));
       }
     } catch (err) {
-      setError("Unable to load pain entries. Please try refreshing the page.");
-      console.error("Error loading pain entries:", err);
+      setError('Unable to load pain entries. Please try refreshing the page.');
+      console.error('Error loading pain entries:', err);
     }
   }, []);
 
@@ -61,7 +65,7 @@ export function PainTracker() {
     try {
       // Validate entry data
       if (!validatePainEntry(entryData)) {
-        setError("Invalid pain entry data. Please check your input values.");
+        setError('Invalid pain entry data. Please check your input values.');
         return;
       }
 
@@ -72,60 +76,60 @@ export function PainTracker() {
           pain: 0,
           locations: [],
           symptoms: [],
-          ...entryData.baselineData
+          ...entryData.baselineData,
         },
         functionalImpact: {
           limitedActivities: [],
           assistanceNeeded: [],
           mobilityAids: [],
-          ...entryData.functionalImpact
+          ...entryData.functionalImpact,
         },
         medications: {
           current: [],
-          changes: "",
-          effectiveness: "",
-          ...entryData.medications
+          changes: '',
+          effectiveness: '',
+          ...entryData.medications,
         },
         treatments: {
           recent: [],
-          effectiveness: "",
+          effectiveness: '',
           planned: [],
-          ...entryData.treatments
+          ...entryData.treatments,
         },
         qualityOfLife: {
           sleepQuality: 0,
           moodImpact: 0,
           socialImpact: [],
-          ...entryData.qualityOfLife
+          ...entryData.qualityOfLife,
         },
         workImpact: {
           missedWork: 0,
           modifiedDuties: [],
           workLimitations: [],
-          ...entryData.workImpact
+          ...entryData.workImpact,
         },
         comparison: {
-          worseningSince: "",
+          worseningSince: '',
           newLimitations: [],
-          ...entryData.comparison
+          ...entryData.comparison,
         },
-        notes: entryData.notes || "",
+        notes: entryData.notes || '',
       };
 
       const updatedEntries = [...entries, newEntry];
       setEntries(updatedEntries);
-      
+
       // Save to localStorage
       try {
-        localStorage.setItem("painEntries", JSON.stringify(updatedEntries));
+        localStorage.setItem('painEntries', JSON.stringify(updatedEntries));
         setError(null);
       } catch (err) {
-        setError("Failed to save entry. Your changes may not persist after refresh.");
-        console.error("Error saving to localStorage:", err);
+        setError('Failed to save entry. Your changes may not persist after refresh.');
+        console.error('Error saving to localStorage:', err);
       }
     } catch (err) {
-      setError("Failed to add pain entry. Please try again.");
-      console.error("Error adding pain entry:", err);
+      setError('Failed to add pain entry. Please try again.');
+      console.error('Error adding pain entry:', err);
     }
   };
 
@@ -149,7 +153,11 @@ export function PainTracker() {
   return (
     <main className="max-w-6xl mx-auto p-6">
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert" aria-live="polite">
+        <div
+          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+          role="alert"
+          aria-live="polite"
+        >
           <strong className="font-bold">Error: </strong>
           <span className="block sm:inline">{error}</span>
         </div>
@@ -166,7 +174,7 @@ export function PainTracker() {
           aria-expanded={showWCBReport}
           aria-controls="wcb-report-section"
         >
-          {showWCBReport ? "Hide WCB Report" : "Show WCB Report"}
+          {showWCBReport ? 'Hide WCB Report' : 'Show WCB Report'}
         </button>
       </div>
 
@@ -182,7 +190,7 @@ export function PainTracker() {
                 id="start-date"
                 type="date"
                 value={reportPeriod.start}
-                onChange={(e) => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
+                onChange={e => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
                 className="border rounded px-2 py-1"
                 aria-label="Report start date"
               />
@@ -195,7 +203,7 @@ export function PainTracker() {
                 id="end-date"
                 type="date"
                 value={reportPeriod.end}
-                onChange={(e) => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
+                onChange={e => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
                 className="border rounded px-2 py-1"
                 aria-label="Report end date"
               />
@@ -211,7 +219,9 @@ export function PainTracker() {
       </div>
 
       {entries.length === 0 ? (
-        <p className="text-gray-500 text-center py-8" role="status">No pain entries yet. Add your first entry using the form above.</p>
+        <p className="text-gray-500 text-center py-8" role="status">
+          No pain entries yet. Add your first entry using the form above.
+        </p>
       ) : (
         <PainHistory entries={entries} />
       )}

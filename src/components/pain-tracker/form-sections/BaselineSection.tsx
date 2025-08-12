@@ -1,6 +1,6 @@
 ﻿import React from 'react';
-import { PAIN_LOCATIONS, SYMPTOMS } from "../../../utils/constants";
-import classNames from "classnames";
+import { PAIN_LOCATIONS, SYMPTOMS } from '../../../utils/constants';
+import classNames from 'classnames';
 
 interface BaselineSectionProps {
   pain: number;
@@ -33,8 +33,10 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
 
   return (
     <div className="space-y-4" role="group" aria-labelledby="pain-assessment-title">
-      <h3 id="pain-assessment-title" className="font-semibold text-lg">Pain Assessment</h3>
-      
+      <h3 id="pain-assessment-title" className="font-semibold text-lg">
+        Pain Assessment
+      </h3>
+
       <div>
         <label htmlFor="pain-level" className="block text-sm font-medium text-gray-700 mb-2">
           Pain Level: {pain}
@@ -46,13 +48,15 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
             min="0"
             max="10"
             value={pain}
-            onChange={(e) => onChange({ pain: parseInt(e.target.value) })}
+            onChange={e => onChange({ pain: parseInt(e.target.value) })}
             className="w-full"
             aria-label={`Pain level: ${pain} out of 10`}
           />
           <div className="grid grid-cols-11 w-full text-xs text-gray-500 px-1" aria-hidden="true">
             {[...Array(11)].map((_, i) => (
-              <div key={i} className="text-center">{i}</div>
+              <div key={i} className="text-center">
+                {i}
+              </div>
             ))}
           </div>
         </div>
@@ -67,13 +71,13 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
             <button
               key={location}
               onClick={() => toggleLocation(location)}
-              onKeyPress={(e) => handleKeyPress(e, () => toggleLocation(location))}
+              onKeyPress={e => handleKeyPress(e, () => toggleLocation(location))}
               type="button"
               className={classNames(
-                "px-3 py-1 rounded-full text-sm",
+                'px-3 py-1 rounded-full text-sm',
                 locations.includes(location)
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               )}
               role="checkbox"
               aria-checked={locations.includes(location)}
@@ -94,13 +98,13 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
             <button
               key={symptom}
               onClick={() => toggleSymptom(symptom)}
-              onKeyPress={(e) => handleKeyPress(e, () => toggleSymptom(symptom))}
+              onKeyPress={e => handleKeyPress(e, () => toggleSymptom(symptom))}
               type="button"
               className={classNames(
-                "px-3 py-1 rounded-full text-sm",
+                'px-3 py-1 rounded-full text-sm',
                 symptoms.includes(symptom)
-                  ? "bg-green-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               )}
               role="checkbox"
               aria-checked={symptoms.includes(symptom)}
