@@ -1,5 +1,55 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 set -e
+
+echo "🔍 Running pre-commit checks..."
+
 # CrisisCore safety gate
-node scripts/check-collapse-vectors.js || { echo "CRISIS: collapse vectors detected"; exit 1; }
+echo "🛡️  Checking for security vulnerabilities..."
+node scripts/check-collapse-vectors.js || { 
+  echo "❌ CRISIS: collapse vectors detected"; 
+  exit 1; 
+}
+
+# Type checking
+echo "📝 Running TypeScript type checking..."
+npm run typecheck || {
+  echo "❌ TypeScript type checking failed"
+  echo "💡 Fix type errors before committing"
+  exit 1
+}
+
+# Linting
+echo "🔍 Running ESLint..."
+npm run lint || {
+  echo "❌ ESLint checks failed"
+  echo "💡 Run 'npm run lint' to see issues and fix them"
+  exit 1
+}
+
+# Build verification  
+echo "🏗️  Verifying build integrity..."
+VITE_APP_ENVIRONMENT=development VITE_WCB_API_ENDPOINT=/api/wcb npm run build || {
+  echo "❌ Build verification failed"
+  echo "💡 Fix build errors before committing"
+  exit 1
+}
+
+# Security checks for hardcoded secrets
+echo "🔐 Scanning for hardcoded secrets..."
+if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+  -E "(api[_-]?key|secret|password|token).*=.*['\"][^'\"]{8,}" src/ ; then
+  echo "❌ Potential hardcoded secrets detected!"
+  echo "💡 Use environment variables instead of hardcoded secrets"
+  exit 1
+fi
+
+# Check for Sentry DSN hardcoding
+if grep -r --include="*.ts" --include="*.tsx" \
+  "https://.*@.*\.ingest\..*\.sentry\.io" src/ ; then
+  echo "❌ Hardcoded Sentry DSN detected!"
+  echo "💡 Use VITE_SENTRY_DSN environment variable instead"
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"
