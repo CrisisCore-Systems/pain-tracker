@@ -1,4 +1,4 @@
-import React from 'react';
+
 import type { PainEntry } from '../../types';
 import { calculateOverallTrend } from '../../utils/wcbAnalytics';
 

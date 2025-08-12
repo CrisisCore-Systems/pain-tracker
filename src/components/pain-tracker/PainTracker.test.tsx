@@ -1,9 +1,9 @@
-import React from 'react';
+
 import { describe, it, expect, beforeEach, beforeAll, afterEach, afterAll, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { PainTracker } from './index.tsx';
-import useLocalStorage from '../../hooks/useLocalStorage';
+
 import type { PainEntry } from '../../types';
 import '@testing-library/jest-dom';
 
@@ -116,7 +116,7 @@ interface ReportPeriod {
 vi.mock('./WCBReport', () => {
   return {
     __esModule: true,
-    WCBReportGenerator: function MockWCBReport({ entries, period }: { entries: PainEntry[], period: ReportPeriod }) {
+    WCBReportGenerator: function MockWCBReport({ period }: { entries: PainEntry[], period: ReportPeriod }) {
       return (
         <div data-testid="wcb-report" data-period={JSON.stringify(period)}>
           <div className="mb-4 flex gap-4">

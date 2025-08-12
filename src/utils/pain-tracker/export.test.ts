@@ -1,6 +1,6 @@
 /// <reference types="vitest/globals" />
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import type { MockedFunction } from 'vitest';
+
 import { exportToCSV, exportToJSON, downloadData } from './export';
 import type { PainEntry } from '../../types';
 
