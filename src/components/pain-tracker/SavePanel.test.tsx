@@ -58,21 +58,25 @@ const mockRevokeObjectURL = vi.fn();
 URL.createObjectURL = mockCreateObjectURL;
 URL.revokeObjectURL = mockRevokeObjectURL;
 
-// Mock document.createElement
-const mockAnchorElement = {
-  click: vi.fn(),
-  href: '',
-  download: '',
-};
+// Mock document.createElement and capture anchor element
+let lastCreatedAnchor: any = null;
+const mockClick = vi.fn();
 const originalCreateElement = document.createElement;
 document.createElement = vi.fn((tagName) => {
-  if (tagName === 'a') return mockAnchorElement;
+  if (tagName === 'a') {
+    const anchor = originalCreateElement.call(document, 'a');
+    anchor.click = mockClick;
+    lastCreatedAnchor = anchor;
+    return anchor;
+  }
   return originalCreateElement.call(document, tagName);
 }) as typeof document.createElement;
 
 describe('SavePanel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCreateObjectURL.mockReturnValue('mock-url');
+    lastCreatedAnchor = null;
   });
 
   it('renders without crashing', () => {
@@ -96,8 +100,8 @@ describe('SavePanel', () => {
     fireEvent.click(screen.getByText('Export JSON'));
     
     expect(mockCreateObjectURL).toHaveBeenCalledWith(expect.any(Blob));
-    expect(mockAnchorElement.download).toBe('pain-tracker-export.json');
-    expect(mockAnchorElement.click).toHaveBeenCalled();
+    expect(lastCreatedAnchor?.download).toBe('pain-tracker-export.json');
+    expect(mockClick).toHaveBeenCalled();
     expect(mockRevokeObjectURL).toHaveBeenCalled();
   });
 
@@ -107,8 +111,8 @@ describe('SavePanel', () => {
     fireEvent.click(screen.getByText('Export CSV'));
     
     expect(mockCreateObjectURL).toHaveBeenCalledWith(expect.any(Blob));
-    expect(mockAnchorElement.download).toBe('pain-tracker-export.csv');
-    expect(mockAnchorElement.click).toHaveBeenCalled();
+    expect(lastCreatedAnchor?.download).toBe('pain-tracker-export.csv');
+    expect(mockClick).toHaveBeenCalled();
     expect(mockRevokeObjectURL).toHaveBeenCalled();
   });
 
