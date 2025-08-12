@@ -8,6 +8,9 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 export default [
   js.configs.recommended,
   {
+    ignores: ['dist/**', 'node_modules/**', '*.config.cjs', '**/*.min.js'],
+  },
+  {
     files: ['**/*.{ts,tsx,js,jsx,mjs}'],
     languageOptions: {
       parser: typescriptParser,
@@ -90,10 +93,5 @@ export default [
     rules: {
       '@typescript-eslint/no-require-imports': 'off'
     }
-  },
-  {
-    // Ignore CommonJS config files with parsing issues
-    files: ['*.config.cjs'],
-    ignores: ['*.config.cjs']
   }
 ]; 

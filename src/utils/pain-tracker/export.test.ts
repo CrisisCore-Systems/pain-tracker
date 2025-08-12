@@ -11,7 +11,19 @@ interface MockWindow {
 }
 
 declare global {
-  interface Window extends MockWindow {}
+  interface Window {
+    URL: {
+      createObjectURL: jest.Mock;
+      revokeObjectURL: jest.Mock;
+    };
+    document: {
+      createElement: jest.Mock;
+      body: {
+        appendChild: jest.Mock;
+        removeChild: jest.Mock;
+      };
+    };
+  }
 }
 
 describe('Pain Tracker Export', () => {
