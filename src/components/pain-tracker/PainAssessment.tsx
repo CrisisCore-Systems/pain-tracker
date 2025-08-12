@@ -1,7 +1,7 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import type { PainEntry } from "../../types";
 import { PAIN_LOCATIONS, SYMPTOMS, type PainLocation, type Symptom } from "../../utils/constants";
-import { savePainEntry } from "../../utils/pain-tracker/storage";
+import { savePainEntry, loadPainEntries } from "../../utils/pain-tracker/storage";
 import { PainAnalytics } from "./PainAnalytics";
 
 interface ValidationErrors {
@@ -23,6 +23,19 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [entries, setEntries] = useState<PainEntry[]>([]);
+
+  useEffect(() => {
+    const loadEntries = async () => {
+      try {
+        const loadedEntries = await loadPainEntries();
+        setEntries(loadedEntries);
+      } catch (err) {
+        console.error('Failed to load pain entries:', err);
+      }
+    };
+    loadEntries();
+  }, []);
 
   const validateForm = (): boolean => {
     const errors: ValidationErrors = {};
@@ -239,7 +252,7 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
       {/* Pain Analytics Section */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Pain Analysis</h2>
-        <PainAnalytics />
+        <PainAnalytics entries={entries} />
       </div>
     </div>
   );
