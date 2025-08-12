@@ -17,9 +17,10 @@
     "noFallthroughCasesInSwitch": true,
     "allowJs": true,
     "checkJs": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["vite/client", "vitest/globals"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist", ".vite"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

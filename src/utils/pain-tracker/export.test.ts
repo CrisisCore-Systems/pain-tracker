@@ -4,24 +4,6 @@ import type { MockedFunction } from 'vitest';
 import { exportToCSV, exportToJSON, downloadData } from './export';
 import type { PainEntry } from '../../types';
 
-// Mock window and document for testing
-declare global {
-  interface Window {
-    URL: {
-      createObjectURL: MockedFunction<(blob: Blob) => string>;
-      revokeObjectURL: MockedFunction<(url: string) => void>;
-    };
-  }
-  
-  interface Document {
-    createElement: MockedFunction<(tagName: string) => HTMLElement>;
-    body: {
-      appendChild: MockedFunction<(node: HTMLElement) => HTMLElement>;
-      removeChild: MockedFunction<(node: HTMLElement) => HTMLElement>;
-    };
-  }
-}
-
 describe('Pain Tracker Export', () => {
   const mockEntries: PainEntry[] = [
     {

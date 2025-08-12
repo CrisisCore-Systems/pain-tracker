@@ -1,5 +1,10 @@
 ﻿import { useState, useEffect } from "react";
 
+/**
+ * @param {string} key
+ * @param {any} initialValue
+ * @returns {[any, function(any): void]}
+ */
 function useWCBStorage(key, initialValue) {
   // Initialize state with validation
   const [storedValue, setStoredValue] = useState(() => {
