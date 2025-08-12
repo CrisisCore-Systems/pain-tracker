@@ -7,23 +7,21 @@
  */
 
 import { Suspense } from "react";
-import * as Sentry from "@sentry/react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PainTracker } from "./components/pain-tracker/index.tsx";
-import { SentryTest } from "./components/SentryTest";
 
 console.log("App component rendering");
 
-const ErrorFallback = (props: { error: unknown; resetError: () => void }) => {
-  console.error("Error caught by boundary:", props.error);
+const ErrorFallback = () => {
   return (
     <div className="text-red-500 p-4">
-      <h2>Something went wrong:</h2>
-      <pre>{props.error instanceof Error ? props.error.message : String(props.error)}</pre>
+      <h2>Something went wrong</h2>
+      <p>Please try refreshing the page</p>
       <button
-        onClick={props.resetError}
+        onClick={() => window.location.reload()}
         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
-        Try again
+        Refresh Page
       </button>
     </div>
   );
@@ -33,15 +31,14 @@ function App() {
   console.log("Inside App render function");
   
   return (
-    <Sentry.ErrorBoundary fallback={ErrorFallback}>
+    <ErrorBoundary fallback={<ErrorFallback />}>
       <Suspense fallback={<div>Loading...</div>}>
         <main className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-8">Pain & Injury Tracking System</h1>
           <PainTracker />
-          {process.env.NODE_ENV === 'development' && <SentryTest />}
         </main>
       </Suspense>
-    </Sentry.ErrorBoundary>
+    </ErrorBoundary>
   );
 }
 
