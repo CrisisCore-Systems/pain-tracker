@@ -35,15 +35,15 @@ describe('DailyLiving Component', () => {
 
   it('displays existing social impacts', () => {
     render(<DailyLiving qualityOfLife={mockQualityOfLife} onChange={mockOnChange} />);
-    expect(screen.getByText('Reduced Social Activities')).toBeInTheDocument();
-    expect(screen.getByText('Limited Family Time')).toBeInTheDocument();
+    expect(screen.getAllByText('Reduced Social Activities')).toHaveLength(2); // Appears in list and buttons
+    expect(screen.getAllByText('Limited Family Time')).toHaveLength(2); // Appears in list and buttons
   });
 
   it('allows updating sleep quality', () => {
     render(<DailyLiving qualityOfLife={mockQualityOfLife} onChange={mockOnChange} />);
     
-    const slider = screen.getByRole('slider', { name: '' });
-    fireEvent.change(slider, { target: { value: '8' } });
+    const sliders = screen.getAllByRole('slider');
+    fireEvent.change(sliders[0], { target: { value: '8' } });
 
     expect(mockOnChange).toHaveBeenCalledWith({
       ...mockQualityOfLife,

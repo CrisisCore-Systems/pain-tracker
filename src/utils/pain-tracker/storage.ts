@@ -87,7 +87,7 @@ export const loadPainEntries = async (): Promise<PainEntry[]> => {
 export const clearPainEntries = async (): Promise<void> => {
   try {
     localStorage.removeItem(STORAGE_KEY);
-  } catch (e) {
+  } catch {
     throw createStorageError('WRITE_ERROR', 'Failed to clear pain entries.');
   }
 };

@@ -13,7 +13,7 @@ interface ActivityLogProps {
 
 export function ActivityLog({ entries, period }: ActivityLogProps) {
   const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
-  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const activityRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const filteredEntries = period
@@ -120,7 +120,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                   role="gridcell"
                   aria-selected={selectedActivity === activity}
                   aria-label={`${activity}: ${frequency} times, average pain ${averagePain.toFixed(1)}`}
-                  tabIndex={focusedIndex === index ? 0 : -1}
+                  tabIndex={activityImpact.length === 0 ? -1 : (focusedIndex === index ? 0 : -1)}
                 >
                   <div className="font-medium">{activity}</div>
                   <div className="text-sm text-gray-600">
