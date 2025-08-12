@@ -147,74 +147,124 @@ export function PainTracker() {
   };
 
   return (
-    <main className="max-w-6xl mx-auto p-6">
+    <div className="w-full space-y-4 sm:space-y-6 lg:space-y-8">
+      {/* Error message - mobile optimized */}
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert" aria-live="polite">
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">{error}</span>
+        <div className="bg-red-50 border-l-4 border-red-400 p-3 sm:p-4 rounded-r-lg shadow-sm" role="alert" aria-live="polite">
+          <div className="flex items-start">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-red-800">Error</p>
+              <p className="text-sm text-red-700 mt-1">{error}</p>
+            </div>
+          </div>
         </div>
       )}
 
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Pain Tracker</h1>
+      {/* Header section with mobile-responsive layout */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 bg-white p-4 sm:p-6 rounded-lg shadow-sm">
+        <div>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Pain Tracker</h1>
+          <p className="text-sm text-gray-600 mt-1">Track and manage your pain levels</p>
+        </div>
+        
+        {/* Mobile-optimized WCB Report toggle */}
         <button
           ref={toggleButtonRef}
           onClick={handleToggleReport}
           onKeyDown={handleKeyDown}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="touch-target w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           type="button"
           aria-expanded={showWCBReport}
           aria-controls="wcb-report-section"
         >
-          {showWCBReport ? "Hide WCB Report" : "Show WCB Report"}
+          <span className="flex items-center justify-center gap-2">
+            <svg className={`w-4 h-4 transition-transform ${showWCBReport ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+            {showWCBReport ? "Hide WCB Report" : "Show WCB Report"}
+          </span>
         </button>
       </div>
 
+      {/* WCB Report section - mobile optimized */}
       {showWCBReport && (
-        <section id="wcb-report-section" className="mb-8" aria-label="WCB Report">
-          <div className="mb-4 flex gap-4">
-            <div>
-              <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-1">
-                Start Date
-              </label>
-              <input
-                ref={startDateRef}
-                id="start-date"
-                type="date"
-                value={reportPeriod.start}
-                onChange={(e) => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
-                className="border rounded px-2 py-1"
-                aria-label="Report start date"
-              />
-            </div>
-            <div>
-              <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-1">
-                End Date
-              </label>
-              <input
-                id="end-date"
-                type="date"
-                value={reportPeriod.end}
-                onChange={(e) => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
-                className="border rounded px-2 py-1"
-                aria-label="Report end date"
-              />
+        <section id="wcb-report-section" className="bg-white rounded-lg shadow-sm overflow-hidden" aria-label="WCB Report">
+          <div className="p-4 sm:p-6 border-b border-gray-200">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">WCB Report Generator</h2>
+            
+            {/* Mobile-responsive date inputs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Date
+                </label>
+                <input
+                  ref={startDateRef}
+                  id="start-date"
+                  type="date"
+                  value={reportPeriod.start}
+                  onChange={(e) => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
+                  className="form-mobile focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  aria-label="Report start date"
+                />
+              </div>
+              <div>
+                <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-2">
+                  End Date
+                </label>
+                <input
+                  id="end-date"
+                  type="date"
+                  value={reportPeriod.end}
+                  onChange={(e) => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
+                  className="form-mobile focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  aria-label="Report end date"
+                />
+              </div>
             </div>
           </div>
-          <WCBReportGenerator entries={entries} period={reportPeriod} />
+          
+          <div className="p-4 sm:p-6">
+            <WCBReportGenerator entries={entries} period={reportPeriod} />
+          </div>
         </section>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <PainEntryForm onSubmit={handleAddEntry} />
-        <PainChart entries={entries} />
+      {/* Main content grid - mobile-first responsive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="order-1">
+          <PainEntryForm onSubmit={handleAddEntry} />
+        </div>
+        <div className="order-2">
+          <PainChart entries={entries} />
+        </div>
       </div>
 
-      {entries.length === 0 ? (
-        <p className="text-gray-500 text-center py-8" role="status">No pain entries yet. Add your first entry using the form above.</p>
-      ) : (
-        <PainHistory entries={entries} />
-      )}
-    </main>
+      {/* History section */}
+      <div className="bg-white rounded-lg shadow-sm">
+        {entries.length === 0 ? (
+          <div className="p-8 sm:p-12 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No pain entries yet</h3>
+            <p className="text-gray-600 max-w-md mx-auto" role="status">
+              Get started by adding your first pain entry using the form above. Track your pain levels, symptoms, and treatments over time.
+            </p>
+          </div>
+        ) : (
+          <div className="p-4 sm:p-6">
+            <PainHistory entries={entries} />
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
