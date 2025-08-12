@@ -22,6 +22,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prepare": "husky install",
+    "preinstall": "node scripts/skip-sentry-cli-install.cjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --dotfiles true",
     "prebuild": "node scripts/check-env.mjs",
