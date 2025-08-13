@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PainTracker } from "./components/pain-tracker/index.tsx";
 import { ThemeProvider } from "./design-system";
+import { ToastProvider } from "./components/feedback";
 
 console.log("App component rendering");
 
@@ -46,13 +47,15 @@ function App() {
   
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-background transition-colors">
-        <ErrorBoundary fallback={<ErrorFallback />}>
-          <Suspense fallback={<LoadingFallback />}>
-            <PainTracker />
-          </Suspense>
-        </ErrorBoundary>
-      </div>
+      <ToastProvider>
+        <div className="min-h-screen bg-background transition-colors">
+          <ErrorBoundary fallback={<ErrorFallback />}>
+            <Suspense fallback={<LoadingFallback />}>
+              <PainTracker />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
+      </ToastProvider>
     </ThemeProvider>
   );
 }
