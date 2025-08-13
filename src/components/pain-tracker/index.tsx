@@ -6,7 +6,12 @@ import { PainHistory } from "./PainHistory";
 import { PainEntryForm } from "./PainEntryForm";
 import { WCBReportGenerator } from "./WCBReport";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button, ThemeToggle } from "../../design-system";
-import { FileText, Plus, Activity, AlertCircle } from "lucide-react";
+import { FileText, Plus, Activity, AlertCircle, HelpCircle, PlayCircle } from "lucide-react";
+import { OnboardingFlow } from "../onboarding";
+import { EmptyState, TrackingIllustration } from "../empty-state";
+import { useToast } from "../feedback";
+import { samplePainEntries, walkthroughSteps } from "../../data/sampleData";
+import { Walkthrough } from "../tutorials";
 
 const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
   if (!entry.baselineData) return false;
@@ -31,6 +36,8 @@ export function PainTracker() {
   const [error, setError] = useState<string | null>(null);
   const [entries, setEntries] = useState<PainEntry[]>([]);
   const [showWCBReport, setShowWCBReport] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [reportPeriod, setReportPeriod] = useState({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 days ago
     end: new Date().toISOString().split("T")[0]
@@ -38,6 +45,22 @@ export function PainTracker() {
 
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
   const startDateRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
+
+  // Check for first-time user
+  useEffect(() => {
+    try {
+      const hasSeenOnboarding = localStorage.getItem('pain-tracker-onboarding-completed');
+      const hasEntries = localStorage.getItem('painEntries');
+      
+      if (!hasSeenOnboarding && !hasEntries) {
+        setShowOnboarding(true);
+      }
+    } catch (err) {
+      // Silently fail if localStorage is not available
+      console.warn('Unable to check onboarding status:', err);
+    }
+  }, []);
 
   // Handle localStorage separately to catch errors
   useEffect(() => {
@@ -59,11 +82,56 @@ export function PainTracker() {
     }
   }, [showWCBReport]);
 
+  const handleOnboardingComplete = (setupWithSampleData: boolean) => {
+    try {
+      localStorage.setItem('pain-tracker-onboarding-completed', 'true');
+    } catch (err) {
+      console.warn('Unable to save onboarding status:', err);
+    }
+    setShowOnboarding(false);
+    
+    if (setupWithSampleData) {
+      setEntries(samplePainEntries);
+      try {
+        localStorage.setItem("painEntries", JSON.stringify(samplePainEntries));
+      } catch (err) {
+        console.warn('Unable to save sample data:', err);
+      }
+      toast.success('Sample data loaded!', 'Explore the features with example pain entries. You can clear this data anytime.');
+    } else {
+      toast.info('Welcome to Pain Tracker!', 'Start by recording your first pain entry above.');
+    }
+  };
+
+  const handleOnboardingSkip = () => {
+    try {
+      localStorage.setItem('pain-tracker-onboarding-completed', 'true');
+    } catch (err) {
+      console.warn('Unable to save onboarding status:', err);
+    }
+    setShowOnboarding(false);
+    toast.info('Onboarding skipped', 'You can always access help from the help menu.');
+  };
+
+  const handleStartWalkthrough = () => {
+    setShowWalkthrough(true);
+  };
+
+  const handleWalkthroughComplete = () => {
+    setShowWalkthrough(false);
+    toast.success('Tutorial completed!', 'You\'re all set to start tracking your pain effectively.');
+  };
+
+  const handleWalkthroughSkip = () => {
+    setShowWalkthrough(false);
+  };
+
   const handleAddEntry = (entryData: Partial<PainEntry>) => {
     try {
       // Validate entry data
       if (!validatePainEntry(entryData)) {
         setError("Invalid pain entry data. Please check your input values.");
+        toast.error('Invalid Entry', 'Please check your input values and try again.');
         return;
       }
 
@@ -121,12 +189,15 @@ export function PainTracker() {
       try {
         localStorage.setItem("painEntries", JSON.stringify(updatedEntries));
         setError(null);
+        toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
       } catch (err) {
         setError("Failed to save entry. Your changes may not persist after refresh.");
+        toast.warning('Save Warning', 'Entry added but may not persist after refresh.');
         console.error("Error saving to localStorage:", err);
       }
     } catch (err) {
       setError("Failed to add pain entry. Please try again.");
+      toast.error('Save Failed', 'Unable to add pain entry. Please try again.');
       console.error("Error adding pain entry:", err);
     }
   };
@@ -158,6 +229,17 @@ export function PainTracker() {
               <h1 className="text-2xl font-bold text-foreground">Pain Tracker</h1>
             </div>
             <div className="flex items-center space-x-3">
+              <Button
+                onClick={handleStartWalkthrough}
+                variant="ghost"
+                size="sm"
+                className="hidden sm:flex"
+                type="button"
+                aria-label="Start interactive tutorial"
+              >
+                <HelpCircle className="h-4 w-4 mr-2" />
+                Help
+              </Button>
               <Button
                 ref={toggleButtonRef}
                 onClick={handleToggleReport}
@@ -239,7 +321,7 @@ export function PainTracker() {
         )}
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-          <Card className="xl:col-span-1">
+          <Card className="xl:col-span-1" data-walkthrough="pain-entry-form">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Plus className="h-5 w-5" />
@@ -254,7 +336,7 @@ export function PainTracker() {
             </CardContent>
           </Card>
 
-          <Card className="xl:col-span-1">
+          <Card className="xl:col-span-1" data-walkthrough="pain-chart">
             <CardHeader>
               <CardTitle>Pain History Chart</CardTitle>
               <CardDescription>
@@ -270,15 +352,24 @@ export function PainTracker() {
         {entries.length === 0 ? (
           <Card>
             <CardContent className="pt-8 pb-8">
-              <div className="text-center">
-                <Activity className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-2">No pain entries yet</h3>
-                <p className="text-muted-foreground mb-4">Start tracking your pain by adding your first entry above.</p>
-              </div>
+              <EmptyState
+                title="Start Your Pain Tracking Journey"
+                description="Begin by recording your first pain entry above. Track symptoms, triggers, and treatments to gain valuable insights into your pain patterns and improve your quality of life."
+                primaryAction={{
+                  label: "Take Interactive Tour",
+                  onClick: handleStartWalkthrough,
+                  icon: <PlayCircle className="h-4 w-4" />
+                }}
+                secondaryAction={{
+                  label: "View Sample Data",
+                  onClick: () => handleOnboardingComplete(true)
+                }}
+                illustration={<TrackingIllustration />}
+              />
             </CardContent>
           </Card>
         ) : (
-          <Card>
+          <Card data-walkthrough="pain-history">
             <CardHeader>
               <CardTitle>Pain History</CardTitle>
               <CardDescription>
@@ -290,6 +381,22 @@ export function PainTracker() {
             </CardContent>
           </Card>
         )}
+
+        {/* Onboarding Flow */}
+        {showOnboarding && (
+          <OnboardingFlow
+            onComplete={handleOnboardingComplete}
+            onSkip={handleOnboardingSkip}
+          />
+        )}
+
+        {/* Interactive Walkthrough */}
+        <Walkthrough
+          steps={walkthroughSteps}
+          isActive={showWalkthrough}
+          onComplete={handleWalkthroughComplete}
+          onSkip={handleWalkthroughSkip}
+        />
       </main>
     </div>
   );
