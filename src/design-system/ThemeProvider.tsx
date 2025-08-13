@@ -3,7 +3,7 @@
  * Manages dark/light mode and provides theme context throughout the app
  */
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { ThemeMode, getThemeColors } from './theme';
 
 interface ThemeContextType {
@@ -54,24 +54,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
   const colors = getThemeColors(mode);
 
-  const setMode = (newMode: ThemeMode) => {
-    setModeState(newMode);
-    try {
-      localStorage.setItem('pain-tracker-theme', newMode);
-    } catch (error) {
-      console.warn('Failed to save theme preference to localStorage:', error);
-    }
-    
-    // Update CSS custom properties
-    updateCSSVariables(newMode);
-  };
-
-  const toggleMode = () => {
-    setMode(mode === 'light' ? 'dark' : 'light');
-  };
-
   // Update CSS custom properties when mode changes
-  const updateCSSVariables = (newMode: ThemeMode) => {
+  const updateCSSVariables = useCallback((newMode: ThemeMode) => {
     const colors = getThemeColors(newMode);
     const root = document.documentElement;
     
@@ -82,7 +66,23 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     
     // Set data attribute for CSS targeting
     root.setAttribute('data-theme', newMode);
-  };
+  }, []);
+
+  const setMode = useCallback((newMode: ThemeMode) => {
+    setModeState(newMode);
+    try {
+      localStorage.setItem('pain-tracker-theme', newMode);
+    } catch (error) {
+      console.warn('Failed to save theme preference to localStorage:', error);
+    }
+    
+    // Update CSS custom properties
+    updateCSSVariables(newMode);
+  }, [updateCSSVariables]);
+
+  const toggleMode = useCallback(() => {
+    setMode(mode === 'light' ? 'dark' : 'light');
+  }, [mode, setMode]);
 
   // Listen for system theme changes
   useEffect(() => {
@@ -100,14 +100,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       }
     };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    } else {
+      // Fallback for older browsers
+      mediaQuery.addListener(handleChange);
+      return () => mediaQuery.removeListener(handleChange);
+    }
+  }, [setMode]);
 
   // Initial CSS variables setup
   useEffect(() => {
     updateCSSVariables(mode);
-  }, [mode]);
+  }, [mode, updateCSSVariables]);
 
   const value: ThemeContextType = {
     mode,
