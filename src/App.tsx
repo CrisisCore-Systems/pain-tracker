@@ -9,20 +9,34 @@
 import { Suspense } from "react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PainTracker } from "./components/pain-tracker/index.tsx";
+import { ThemeProvider } from "./design-system";
 
 console.log("App component rendering");
 
 const ErrorFallback = () => {
   return (
-    <div className="text-red-500 p-4">
-      <h2>Something went wrong</h2>
-      <p>Please try refreshing the page</p>
-      <button
-        onClick={() => window.location.reload()}
-        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Refresh Page
-      </button>
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-center p-8 bg-card rounded-lg border shadow-lg max-w-md mx-4">
+        <h2 className="text-2xl font-semibold text-destructive mb-4">Something went wrong</h2>
+        <p className="text-muted-foreground mb-6">We encountered an unexpected error. Please try refreshing the page.</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-primary text-primary-foreground px-6 py-2 rounded-md hover:bg-primary/90 transition-colors"
+        >
+          Refresh Page
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const LoadingFallback = () => {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">Loading Pain Tracker...</p>
+      </div>
     </div>
   );
 };
@@ -31,14 +45,15 @@ function App() {
   console.log("Inside App render function");
   
   return (
-    <ErrorBoundary fallback={<ErrorFallback />}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <main className="container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-8">Pain & Injury Tracking System</h1>
-          <PainTracker />
-        </main>
-      </Suspense>
-    </ErrorBoundary>
+    <ThemeProvider>
+      <div className="min-h-screen bg-background transition-colors">
+        <ErrorBoundary fallback={<ErrorFallback />}>
+          <Suspense fallback={<LoadingFallback />}>
+            <PainTracker />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+    </ThemeProvider>
   );
 }
 
