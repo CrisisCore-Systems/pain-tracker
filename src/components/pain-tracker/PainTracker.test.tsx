@@ -3,11 +3,19 @@ import { describe, it, expect, beforeEach, beforeAll, afterEach, afterAll, vi } 
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { PainTracker } from './index.tsx';
+import { ThemeProvider } from '../../design-system';
 
 import type { PainEntry } from '../../types';
 import '@testing-library/jest-dom';
 
 expect.extend(toHaveNoViolations);
+
+// Test wrapper component
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+  <ThemeProvider defaultMode="light">
+    {children}
+  </ThemeProvider>
+);
 
 // Mock console.error to avoid noise in test output
 const originalError = console.error;
@@ -168,21 +176,21 @@ describe('PainTracker', () => {
 
   it('renders without crashing', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
-    render(<PainTracker />);
+    render(<PainTracker />, { wrapper: TestWrapper });
     expect(screen.getByText('Pain Tracker')).toBeInTheDocument();
   });
 
   it('toggles WCB report visibility', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
-    render(<PainTracker />);
+    render(<PainTracker />, { wrapper: TestWrapper });
     const toggleButton = screen.getByText('Show WCB Report');
     
     // Initially, WCB report should not be visible
-    expect(screen.queryByText('WCB Report')).not.toBeInTheDocument();
+    expect(screen.queryByText('Generate a comprehensive report for WorkSafe BC submission')).not.toBeInTheDocument();
     
     // Click to show report
     fireEvent.click(toggleButton);
-    expect(screen.getByText('WCB Report')).toBeInTheDocument();
+    expect(screen.getByText('Generate a comprehensive report for WorkSafe BC submission')).toBeInTheDocument();
     expect(screen.getByLabelText('Start Date')).toBeInTheDocument();
     expect(screen.getByLabelText('End Date')).toBeInTheDocument();
     
@@ -193,14 +201,14 @@ describe('PainTracker', () => {
 
   it('shows pain entry form and chart', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
-    render(<PainTracker />);
+    render(<PainTracker />, { wrapper: TestWrapper });
     expect(screen.getByTestId('pain-chart')).toBeInTheDocument();
     expect(screen.getByTestId('pain-form')).toBeInTheDocument();
   });
 
   it('handles new pain entry submission', async () => {
     mockLocalStorage.getItem.mockReturnValue(null);
-    render(<PainTracker />);
+    render(<PainTracker />, { wrapper: TestWrapper });
     const submitButton = screen.getByText('Submit');
     
     // Submit a new entry
@@ -233,7 +241,7 @@ describe('PainTracker', () => {
 
   it('initializes report period correctly', () => {
     mockLocalStorage.getItem.mockReturnValue(null);
-    render(<PainTracker />);
+    render(<PainTracker />, { wrapper: TestWrapper });
     fireEvent.click(screen.getByText('Show WCB Report'));
     
     const wcbReport = screen.getByTestId('wcb-report');
@@ -261,7 +269,7 @@ describe('PainTracker', () => {
     }];
     mockLocalStorage.getItem.mockReturnValue(JSON.stringify(testEntries));
     
-    render(<PainTracker />);
+    render(<PainTracker />, { wrapper: TestWrapper });
     
     const chart = screen.getByTestId('pain-chart');
     const history = screen.getByTestId('pain-history');
@@ -276,7 +284,7 @@ describe('PainTracker', () => {
         throw new Error('Failed to access localStorage');
       });
       
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       // Should show an error message
       expect(screen.getByText(/Unable to load pain entries/i)).toBeInTheDocument();
@@ -287,7 +295,7 @@ describe('PainTracker', () => {
 
     it('validates pain entry data before saving', async () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       // Try to submit invalid data
       const invalidSubmitButton = screen.getByTestId('invalid-submit');
@@ -302,7 +310,7 @@ describe('PainTracker', () => {
 
     it('handles empty entries array gracefully', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       // Should show empty state message
       expect(screen.getByText(/No pain entries yet/i)).toBeInTheDocument();
@@ -314,7 +322,7 @@ describe('PainTracker', () => {
 
     it('validates report period dates', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       fireEvent.click(screen.getByText('Show WCB Report'));
       
       const wcbReport = screen.getByTestId('wcb-report');
@@ -332,14 +340,14 @@ describe('PainTracker', () => {
   describe('Accessibility', () => {
     it('should have no accessibility violations', async () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      const { container } = render(<PainTracker />);
+      const { container } = render(<PainTracker />, { wrapper: TestWrapper });
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
     it('should have proper heading hierarchy', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       const mainHeading = screen.getByRole('heading', { level: 1 });
       expect(mainHeading).toHaveTextContent('Pain Tracker');
@@ -354,7 +362,7 @@ describe('PainTracker', () => {
 
     it('should have proper ARIA labels and roles', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       // Error message should have alert role
       const errorContainer = screen.queryByRole('alert');
@@ -372,7 +380,7 @@ describe('PainTracker', () => {
 
     it('should handle keyboard navigation', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       const toggleButton = screen.getByText('Show WCB Report');
       toggleButton.focus();
@@ -389,7 +397,7 @@ describe('PainTracker', () => {
 
     it('should maintain focus management', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       // Toggle WCB report
       const toggleButton = screen.getByText('Show WCB Report');
@@ -406,7 +414,7 @@ describe('PainTracker', () => {
 
     it('should have proper color contrast', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       const errorMessage = screen.queryByRole('alert');
       if (errorMessage) {
@@ -417,13 +425,13 @@ describe('PainTracker', () => {
       
       // Primary button should have sufficient contrast
       const button = screen.getByText('Show WCB Report');
-      expect(button).toHaveClass('bg-blue-500');
-      expect(button).toHaveClass('text-white');
+      expect(button).toHaveClass('border');
+      expect(button).toHaveClass('border-input');
     });
 
     it('should provide clear error messages', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
-      render(<PainTracker />);
+      render(<PainTracker />, { wrapper: TestWrapper });
       
       // Submit invalid data
       const invalidSubmitButton = screen.getByTestId('invalid-submit');

@@ -5,6 +5,8 @@ import { PainChart } from "./PainChart";
 import { PainHistory } from "./PainHistory";
 import { PainEntryForm } from "./PainEntryForm";
 import { WCBReportGenerator } from "./WCBReport";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button, ThemeToggle } from "../../design-system";
+import { FileText, Plus, Activity, AlertCircle } from "lucide-react";
 
 const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
   if (!entry.baselineData) return false;
@@ -147,74 +149,148 @@ export function PainTracker() {
   };
 
   return (
-    <main className="max-w-6xl mx-auto p-6">
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert" aria-live="polite">
-          <strong className="font-bold">Error: </strong>
-          <span className="block sm:inline">{error}</span>
-        </div>
-      )}
-
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Pain Tracker</h1>
-        <button
-          ref={toggleButtonRef}
-          onClick={handleToggleReport}
-          onKeyDown={handleKeyDown}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          type="button"
-          aria-expanded={showWCBReport}
-          aria-controls="wcb-report-section"
-        >
-          {showWCBReport ? "Hide WCB Report" : "Show WCB Report"}
-        </button>
-      </div>
-
-      {showWCBReport && (
-        <section id="wcb-report-section" className="mb-8" aria-label="WCB Report">
-          <div className="mb-4 flex gap-4">
-            <div>
-              <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 mb-1">
-                Start Date
-              </label>
-              <input
-                ref={startDateRef}
-                id="start-date"
-                type="date"
-                value={reportPeriod.start}
-                onChange={(e) => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
-                className="border rounded px-2 py-1"
-                aria-label="Report start date"
-              />
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-3">
+              <Activity className="h-8 w-8 text-primary" />
+              <h1 className="text-2xl font-bold text-foreground">Pain Tracker</h1>
             </div>
-            <div>
-              <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 mb-1">
-                End Date
-              </label>
-              <input
-                id="end-date"
-                type="date"
-                value={reportPeriod.end}
-                onChange={(e) => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
-                className="border rounded px-2 py-1"
-                aria-label="Report end date"
-              />
+            <div className="flex items-center space-x-3">
+              <Button
+                ref={toggleButtonRef}
+                onClick={handleToggleReport}
+                onKeyDown={handleKeyDown}
+                variant="outline"
+                className="hidden sm:flex"
+                type="button"
+                aria-expanded={showWCBReport}
+                aria-controls="wcb-report-section"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                {showWCBReport ? "Hide WCB Report" : "Show WCB Report"}
+              </Button>
+              <ThemeToggle />
             </div>
           </div>
-          <WCBReportGenerator entries={entries} period={reportPeriod} />
-        </section>
-      )}
+        </div>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <PainEntryForm onSubmit={handleAddEntry} />
-        <PainChart entries={entries} />
-      </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {error && (
+          <Card className="mb-6 border-destructive/50 bg-destructive/5">
+            <CardContent className="pt-6">
+              <div className="flex items-center space-x-2" role="alert" aria-live="polite">
+                <AlertCircle className="h-5 w-5 text-destructive" />
+                <div>
+                  <strong className="font-semibold text-destructive">Error: </strong>
+                  <span className="text-destructive">{error}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
-      {entries.length === 0 ? (
-        <p className="text-gray-500 text-center py-8" role="status">No pain entries yet. Add your first entry using the form above.</p>
-      ) : (
-        <PainHistory entries={entries} />
-      )}
-    </main>
+        {showWCBReport && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="h-5 w-5" />
+                <span>WCB Report</span>
+              </CardTitle>
+              <CardDescription>
+                Generate a comprehensive report for WorkSafe BC submission
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label htmlFor="start-date" className="block text-sm font-medium text-foreground mb-2">
+                    Start Date
+                  </label>
+                  <input
+                    ref={startDateRef}
+                    id="start-date"
+                    type="date"
+                    value={reportPeriod.start}
+                    onChange={(e) => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label="Report start date"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="end-date" className="block text-sm font-medium text-foreground mb-2">
+                    End Date
+                  </label>
+                  <input
+                    id="end-date"
+                    type="date"
+                    value={reportPeriod.end}
+                    onChange={(e) => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label="Report end date"
+                  />
+                </div>
+              </div>
+              <WCBReportGenerator entries={entries} period={reportPeriod} />
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+          <Card className="xl:col-span-1">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Plus className="h-5 w-5" />
+                <span>Record Pain Entry</span>
+              </CardTitle>
+              <CardDescription>
+                Track your pain levels, symptoms, and daily impact
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PainEntryForm onSubmit={handleAddEntry} />
+            </CardContent>
+          </Card>
+
+          <Card className="xl:col-span-1">
+            <CardHeader>
+              <CardTitle>Pain History Chart</CardTitle>
+              <CardDescription>
+                Visual representation of your pain patterns over time
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PainChart entries={entries} />
+            </CardContent>
+          </Card>
+        </div>
+
+        {entries.length === 0 ? (
+          <Card>
+            <CardContent className="pt-8 pb-8">
+              <div className="text-center">
+                <Activity className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">No pain entries yet</h3>
+                <p className="text-muted-foreground mb-4">Start tracking your pain by adding your first entry above.</p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Pain History</CardTitle>
+              <CardDescription>
+                Detailed view of all your pain entries and patterns
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PainHistory entries={entries} />
+            </CardContent>
+          </Card>
+        )}
+      </main>
+    </div>
   );
 }
