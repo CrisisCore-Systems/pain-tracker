@@ -110,6 +110,14 @@ const checks = [
     run: checkMergeMarkers,
     critical: true,
     description: 'Finds unresolved merge conflicts'
+  },
+  {
+    name: 'Tree of Thought Security Analysis',
+    key: 'collapse',
+    icon: '🌳',
+    run: checkCollapseVectors,
+    critical: true,
+    description: 'Advanced security vector detection with hierarchical reasoning'
   }
 ];
 

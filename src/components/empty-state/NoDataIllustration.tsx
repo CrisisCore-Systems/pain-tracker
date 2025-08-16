@@ -70,18 +70,22 @@ export function TrackingIllustration() {
         
         {/* Calendar days */}
         {[0, 1, 2, 3, 4].map(row => 
-          [0, 1, 2, 3, 4, 5].map(col => (
-            <rect
-              key={`${row}-${col}`}
-              x={75 + col * 8}
-              y={57 + row * 7}
-              width="6"
-              height="5"
-              rx="1"
-              fill="currentColor"
-              opacity={Math.random() > 0.6 ? 0.6 : 0.2}
-            />
-          ))
+          [0, 1, 2, 3, 4, 5].map(col => {
+            // Use deterministic pattern instead of Math.random() to avoid collapse vectors
+            const isHighlighted = (row + col) % 3 === 0 || (row === 2 && col === 3);
+            return (
+              <rect
+                key={`${row}-${col}`}
+                x={75 + col * 8}
+                y={57 + row * 7}
+                width="6"
+                height="5"
+                rx="1"
+                fill="currentColor"
+                opacity={isHighlighted ? 0.6 : 0.2}
+              />
+            );
+          })
         )}
         
         {/* Heart/health icon */}

@@ -39,11 +39,22 @@ export default [
         FileReader: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
         AbortController: 'readonly',
         DOMException: 'readonly',
         StorageEvent: 'readonly',
         crypto: 'readonly',
         React: 'readonly',
+        // DOM types
+        HTMLDivElement: 'readonly',
+        HTMLParagraphElement: 'readonly',
+        HTMLHeadingElement: 'readonly',
+        MouseEvent: 'readonly',
+        Node: 'readonly',
+        MediaQueryListEvent: 'readonly',
+        // NodeJS types
+        NodeJS: 'readonly',
         // Node.js globals
         process: 'readonly',
         require: 'readonly',

@@ -30,6 +30,7 @@
     "scan-secrets": "node scripts/scan-secrets.js",
     "check-merge": "node scripts/check-merge-markers.js",
     "check-security": "npm run scan-secrets && node scripts/check-collapse-vectors.js",
+    "check-tree-reasoning": "node scripts/tree-thought-analyzer.js",
     "pre-commit": "node scripts/pre-commit.js",
     "commitlint": "commitlint"
   },
