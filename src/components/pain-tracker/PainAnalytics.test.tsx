@@ -102,10 +102,16 @@ describe('PainAnalytics', () => {
     expect(screen.getByText(/[↑↓]/)).toBeInTheDocument(); // Should show either up or down arrow
   });
 
-  it('displays tracking summary', () => {
+  it('displays new analytics tabs', () => {
     render(<PainAnalytics entries={mockEntries} />);
-    expect(screen.getByText('Total Entries')).toBeInTheDocument();
-    expect(screen.getByText('2')).toBeInTheDocument(); // Total entries count
+    expect(screen.getByText('Overview')).toBeInTheDocument();
+    expect(screen.getByText('Comparisons')).toBeInTheDocument();
+    expect(screen.getByText('Body Heatmap')).toBeInTheDocument();
+    expect(screen.getByText('Treatment Timeline')).toBeInTheDocument();
+    expect(screen.getByText('Clinical Export')).toBeInTheDocument();
+    expect(screen.getByText('Data Backup')).toBeInTheDocument();
+    expect(screen.getByText('Templates')).toBeInTheDocument();
+    expect(screen.getByText('Accessibility')).toBeInTheDocument();
   });
 
   it('renders all chart sections', () => {

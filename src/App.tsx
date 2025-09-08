@@ -11,6 +11,7 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PainTracker } from "./components/pain-tracker/index.tsx";
 import { ThemeProvider } from "./design-system";
 import { ToastProvider } from "./components/feedback";
+import './i18n/config';
 
 console.log("App component rendering");
 

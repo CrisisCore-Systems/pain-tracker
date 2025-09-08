@@ -3,7 +3,7 @@
  * Modern design tokens following Material Design 3.0 principles
  */
 
-export type ThemeMode = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark' | 'high-contrast';
 
 export interface ColorScale {
   50: string;
@@ -381,6 +381,30 @@ export const theme: Theme = {
 
 // Theme context helpers
 export const getThemeColors = (mode: ThemeMode) => {
+  if (mode === 'high-contrast') {
+    return {
+      background: '#000000',
+      foreground: '#ffffff', 
+      card: '#000000',
+      cardForeground: '#ffffff',
+      popover: '#000000',
+      popoverForeground: '#ffffff',
+      primary: '#ffff00',
+      primaryForeground: '#000000',
+      secondary: '#ffffff',
+      secondaryForeground: '#000000',
+      muted: '#333333',
+      mutedForeground: '#ffffff',
+      accent: '#00ffff',
+      accentForeground: '#000000',
+      destructive: '#ff0000',
+      destructiveForeground: '#ffffff',
+      border: '#ffffff',
+      input: '#ffffff',
+      ring: '#ffff00',
+    };
+  }
+
   if (mode === 'dark') {
     return {
       background: colors.neutral[900],
