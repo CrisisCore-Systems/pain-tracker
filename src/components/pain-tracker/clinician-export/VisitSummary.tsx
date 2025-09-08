@@ -156,7 +156,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-3">Most Affected Areas</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {topLocations.map((item, index) => (
+              {topLocations.map((item) => (
                 <div key={item.location} className="flex justify-between py-2 border-b">
                   <span>{item.location}</span>
                   <span className="font-medium">{item.count} entries</span>
@@ -270,7 +270,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
       </div>
 
       {/* Print Styles */}
-      <style jsx>{`
+      <style>{`
         @media print {
           @page {
             margin: 1in;

@@ -19,12 +19,26 @@ export const samplePainEntries: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: ['Ibuprofen 400mg'],
+      current: [
+        {
+          name: 'Ibuprofen',
+          dosage: '400mg',
+          frequency: 'Twice daily',
+          effectiveness: 'Moderate relief for 2-3 hours'
+        }
+      ],
       changes: 'Started taking ibuprofen twice daily',
       effectiveness: 'Moderate relief for 2-3 hours',
     },
     treatments: {
-      recent: ['Physiotherapy'],
+      recent: [
+        {
+          type: 'Physiotherapy',
+          provider: 'Local Physiotherapy Clinic',
+          date: '2024-01-10',
+          effectiveness: 'Some improvement in flexibility'
+        }
+      ],
       effectiveness: 'Some improvement in flexibility',
       planned: ['Follow-up with specialist'],
     },
@@ -58,12 +72,32 @@ export const samplePainEntries: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: ['Ibuprofen 400mg'],
+      current: [
+        {
+          name: 'Ibuprofen',
+          dosage: '400mg',
+          frequency: 'Once daily',
+          effectiveness: 'Good relief, lasts 4-5 hours'
+        }
+      ],
       changes: 'Reduced to once daily',
       effectiveness: 'Good relief, lasts 4-5 hours',
     },
     treatments: {
-      recent: ['Heat therapy', 'Gentle stretching'],
+      recent: [
+        {
+          type: 'Heat therapy',
+          provider: 'Self-administered',
+          date: '2024-01-12',
+          effectiveness: 'Heat helps significantly'
+        },
+        {
+          type: 'Gentle stretching',
+          provider: 'Self-administered',
+          date: '2024-01-12',
+          effectiveness: 'Moderate improvement'
+        }
+      ],
       effectiveness: 'Heat helps significantly',
       planned: ['Continue physiotherapy'],
     },
@@ -97,12 +131,32 @@ export const samplePainEntries: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: ['Ibuprofen 400mg as needed'],
+      current: [
+        {
+          name: 'Ibuprofen',
+          dosage: '400mg',
+          frequency: 'As needed',
+          effectiveness: 'Good when needed'
+        }
+      ],
       changes: 'Only taking when pain increases',
       effectiveness: 'Good when needed',
     },
     treatments: {
-      recent: ['Physiotherapy', 'Regular walking'],
+      recent: [
+        {
+          type: 'Physiotherapy',
+          provider: 'Sports Medicine Clinic',
+          date: '2024-01-14',
+          effectiveness: 'Significant improvement in mobility'
+        },
+        {
+          type: 'Regular walking',
+          provider: 'Self-administered',
+          date: '2024-01-14',
+          effectiveness: 'Good general improvement'
+        }
+      ],
       effectiveness: 'Significant improvement in mobility',
       planned: ['Gradually increase activity level'],
     },
@@ -141,7 +195,20 @@ export const samplePainEntries: PainEntry[] = [
       effectiveness: 'No longer needed for daily activities',
     },
     treatments: {
-      recent: ['Physiotherapy', 'Regular exercise routine'],
+      recent: [
+        {
+          type: 'Physiotherapy',
+          provider: 'Physical Therapy Center',
+          date: '2024-01-16',
+          effectiveness: 'Excellent progress'
+        },
+        {
+          type: 'Regular exercise routine',
+          provider: 'Self-administered',
+          date: '2024-01-16',
+          effectiveness: 'Maintaining strength and flexibility'
+        }
+      ],
       effectiveness: 'Excellent progress',
       planned: ['Maintain current exercise routine'],
     },
