@@ -6,15 +6,17 @@
 ![Security Scan](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/security.yml/badge.svg)  
 ![GitHub License](https://img.shields.io/github/license/CrisisCore-Systems/pain-tracker?color=lightgrey)  
 ![Version](https://img.shields.io/badge/version-0.1.0--dev-yellow)  
-![Coverage](https://img.shields.io/badge/coverage-128%20tests-green)  
-![OpenSSF Scorecard](https://img.shields.io/badge/OpenSSF-8.0%2B%20target-brightgreen)  
+![Tests](https://img.shields.io/badge/tests-128%20passing-green)  
+![Development Status](https://img.shields.io/badge/status-early%20development-orange)  
 
 ---
 
 ## 🚨 Why Pain Tracker Exists  
 Pain is more than a number. Most apps oversimplify—this one doesn't.  
 We built **Pain Tracker** to **map pain in high resolution** for real-world recovery,  
-backed by **WorkSafe BC reporting** and **security-grade engineering**.
+backed by **WorkSafe BC reporting** and **security-focused engineering**.
+
+> **⚠️ Current Status**: This project is in **early development** (v0.1.0-dev). While core features are functional and tested, dependency vulnerabilities are being actively addressed. See [Security Status](#-security-status) for details.
 
 ![Pain Tracker Main Interface](https://github.com/user-attachments/assets/3bc3ea51-709f-446c-9f39-5dad15a58a3b)
 
@@ -36,9 +38,17 @@ backed by **WorkSafe BC reporting** and **security-grade engineering**.
 
 ---
 
-## 🛡️ Security Architecture  
-CrisisCore Systems enforces **zero-trust design** with a military-grade development culture:  
+## 🛡️ Security Status  
 
+**Current Security Posture**: CrisisCore Systems has implemented comprehensive security infrastructure, but the project currently has dependency vulnerabilities that require attention:
+
+- ✅ **Security Infrastructure**: Complete CI/CD security pipeline with CodeQL, SAST, and secret scanning
+- ✅ **Development Security**: Pre-commit hooks, vulnerability scanning, and security-focused code practices  
+- ⚠️ **Dependencies**: 77 vulnerabilities in dev dependencies (73 critical, 1 high, 3 moderate)
+- ✅ **Production Safety**: Vulnerabilities are in development tools, not runtime dependencies
+- ✅ **Local Data Only**: No cloud storage or data transmission reduces attack surface
+
+**Security Architecture**:
 ```mermaid
 flowchart LR
   A[Developer] --> B[Pre-Commit Security Gates]
@@ -56,6 +66,8 @@ flowchart LR
   B --> B1 --> B2 --> B3 --> B4
 ```
 
+**Mitigation Plan**: Dependency updates are in progress. The security framework ensures that vulnerabilities in development tools don't affect the production application.
+
 ![Pain Tracker Interface](https://github.com/user-attachments/assets/74e7b0fb-c3e4-4ff2-8a52-2b0f0bb6a2f8)
 
 ---
@@ -67,7 +79,7 @@ flowchart LR
 | **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, Headless UI |
 | **Analytics** | Recharts, Chart.js, Custom Visualizations |
 | **Validation** | Zod schemas for all inputs |
-| **Testing** | Vitest, Testing Library, jsdom (128+ tests) |
+| **Testing** | Vitest, Testing Library, jsdom (128 tests) |
 | **DevOps** | GitHub Actions, Husky, CommitLint, Makefile workflows |
 | **Security** | CodeQL, npm audit, CrisisCore Gates, CSP headers |
 
@@ -128,10 +140,19 @@ make setup    # Install dependencies, configure env, enable hooks
 make dev      # Start development server
 
 # Manual setup
-npm install
+npm install --legacy-peer-deps  # Note: legacy flag needed for current dependencies
 cp .env.example .env
 npm run dev
 ```
+
+### 🔧 Known Issues & Requirements
+
+**Current Dependencies**: Some legacy peer dependencies are required due to version conflicts in the testing ecosystem. This is being actively resolved.
+
+**Node.js Compatibility**: 
+- ✅ Node.js 18, 20, 22 supported
+- ✅ npm 9+ required
+- ⚠️ Use `--legacy-peer-deps` flag during installation
 
 ---
 
@@ -156,26 +177,34 @@ docs(readme): add contributing guidelines
 <details>
 <summary><strong>📋 Current Status & Implementation</strong></summary>
 
-**Version**: 0.1.0 (Early Development)  
-**Build Status**: ✅ Passing (all 128 tests)  
-**Security Status**: ✅ Multiple security layers active  
-**Deployment**: GitHub Pages ready  
+**Version**: 0.1.0-dev (Early Development)  
+**Build Status**: ✅ Passing (128 tests, successful builds)  
+**Security Status**: ⚠️ Dependency vulnerabilities present (dev tools only)  
+**Deployment**: ✅ GitHub Pages configured and ready  
 
-### ✅ Implemented Features
-- Multi-step pain assessment form
-- Interactive data visualization and analytics  
-- WorkSafe BC report generation
-- Emergency response panel
-- Local data storage with export capabilities
-- Comprehensive testing suite
-- Security scanning and validation
-- Onboarding and tutorial system
+### ✅ Implemented Core Features
+- ✅ Multi-step pain assessment form (7 comprehensive steps)
+- ✅ Interactive data visualization and analytics with charts
+- ✅ WorkSafe BC report generation (automated PDF/CSV export)
+- ✅ Emergency response panel with contact management
+- ✅ Local data storage with import/export capabilities
+- ✅ Comprehensive testing suite (128 tests)
+- ✅ Security scanning and input validation
+- ✅ Onboarding and tutorial system
+- ✅ Responsive design with accessibility features
+- ✅ TypeScript implementation with Zod validation
 
-### 🎯 Supported Use Cases
-- **Individual Pain Management**: Personal tracking and analysis
-- **Workplace Injury Claims**: WorkSafe BC integration and reporting
-- **Healthcare Collaboration**: Professional data exports and reports
-- **Emergency Situations**: Automated alerts and contact management
+### 🎯 Verified Use Cases
+- **✅ Individual Pain Management**: Personal tracking and analysis working
+- **✅ Workplace Injury Claims**: WorkSafe BC integration and reporting functional
+- **✅ Healthcare Collaboration**: Professional data exports and reports implemented
+- **✅ Emergency Situations**: Contact management and alert system operational
+
+### 🔄 In Active Development
+- 🔄 Dependency vulnerability remediation
+- 🔄 Enhanced analytics features
+- 🔄 Mobile app development
+- 🔄 Advanced export formats
 
 </details>
 
@@ -192,19 +221,27 @@ docs(readme): add contributing guidelines
 make doctor   # Or: node scripts/doctor.js
 ```
 
-### Deployment
-The application is configured for automatic deployment to GitHub Pages:
+### 🔍 Dependency Status Check
+```bash
+npm audit --audit-level moderate  # Check for moderate+ vulnerabilities
+npm run check-security            # Run comprehensive security checks
+```
 
+### Deployment
+The application has GitHub Actions workflows configured for automatic deployment to GitHub Pages:
+
+**Production Deployment**:
 1. Fork this repository
-2. Enable GitHub Pages in your repository settings
+2. Enable GitHub Pages in your repository settings (Source: GitHub Actions)
 3. Push changes to the main branch
 4. GitHub Actions will automatically build and deploy your changes
 
-For manual deployment:
+**Local Production Build**:
 ```bash
-npm run build
+npm run build  # Creates production build in dist/
 ```
-The built files will be in the `dist` directory.
+
+**Security Note**: The deployment pipeline includes security scanning and will fail if critical vulnerabilities are detected in runtime dependencies.
 
 </details>
 
@@ -247,16 +284,16 @@ The application uses a comprehensive 7-step assessment process:
 **Complete Privacy**: All pain tracking data is stored locally in your browser using secure web storage APIs. No data is transmitted to external servers or cloud services.
 
 **Data Control**: You maintain complete control over your data with:
-- Local-only storage (never leaves your device)
-- Secure export capabilities (CSV/JSON)  
-- No account creation or login required
-- No tracking cookies or analytics
+- ✅ Local-only storage (never leaves your device)
+- ✅ Secure export capabilities (CSV/JSON)  
+- ✅ No account creation or login required
+- ✅ No tracking cookies or analytics
 
 **Security Features**:
-- Input validation and sanitization
-- Content Security Policy (CSP) headers
-- Automated vulnerability scanning
-- Regular security audits
+- ✅ Input validation and sanitization with Zod schemas
+- ✅ Content Security Policy (CSP) headers
+- ✅ Automated vulnerability scanning in CI/CD
+- ⚠️ Regular security audits (dependency vulnerabilities being addressed)
 
 </details>
 
@@ -333,6 +370,31 @@ security(auth): implement rate limiting for API endpoints
 
 ---
 
+## 🚀 Current Development Status
+
+### ✅ What's Working
+- **Core Pain Tracking**: Full 7-step assessment process
+- **Data Visualization**: Interactive charts and analytics  
+- **WorkSafe BC Integration**: Automated report generation
+- **Local Data Storage**: Secure browser-based storage
+- **Testing Infrastructure**: 128 comprehensive tests
+- **Security Framework**: Complete CI/CD security pipeline
+- **Build System**: Production-ready builds with Vite
+
+### 🔄 Active Development
+- **Dependency Updates**: Resolving vulnerability issues in dev dependencies
+- **Testing Coverage**: Implementing coverage reporting tools
+- **Mobile Optimization**: Enhanced responsive design
+- **Export Features**: Additional report formats
+
+### 🎯 Near-term Goals
+- **Security Hardening**: Complete dependency vulnerability remediation
+- **Performance**: Advanced caching and optimization
+- **Accessibility**: Enhanced screen reader support
+- **Documentation**: Comprehensive user guides
+
+---
+
 ## 🤝 Contributing
 
 We welcome security engineers, clinicians, and open-source devs.  
@@ -352,7 +414,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed workflow.
 
 ---
 
-## 🖤 Built with Empathy, Rigor, and Zero Compromise
+## 🖤 Built with Empathy, Rigor, and Transparency
+
+This project represents a **commitment to honest, security-conscious development** while building meaningful tools for chronic pain management. We believe in:
+
+- **Transparency**: Honest reporting of project status, including current challenges
+- **Security**: Multiple layers of protection, even during development phases  
+- **Privacy**: Your data never leaves your device
+- **Quality**: Comprehensive testing and validation at every step
+- **Community**: Open development with healthcare professionals and pain management experts
 
 **By [CrisisCore Systems](https://github.com/CrisisCore-Systems) — Security-first tools for real-world health.**
 
