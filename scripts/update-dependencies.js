@@ -5,7 +5,6 @@
  */
 
 import { execSync } from 'child_process';
-import fs from 'fs';
 
 async function updateDependencies() {
   console.log('🔧 Dependency Update Helper\n');
@@ -16,6 +15,7 @@ async function updateDependencies() {
     try {
       execSync('npm audit --audit-level=high', { stdio: 'inherit' });
     } catch (error) {
+      // Ignore error parameter
       console.log('   Found vulnerabilities to address\n');
     }
 
@@ -25,6 +25,7 @@ async function updateDependencies() {
       execSync('npm audit fix', { stdio: 'inherit' });
       console.log('   ✅ Safe fixes applied\n');
     } catch (error) {
+      // Ignore error parameter
       console.log('   ⚠️  No safe fixes available\n');
     }
 
@@ -52,6 +53,7 @@ async function updateDependencies() {
       execSync('npm audit --audit-level=high', { stdio: 'inherit' });
       console.log('   ✅ No high/critical vulnerabilities remaining');
     } catch (error) {
+      // Ignore error for final check
       console.log('   ⚠️  Still have vulnerabilities - consider:');
       console.log('       - npm audit fix --force (may have breaking changes)');
       console.log('       - Manual package updates');

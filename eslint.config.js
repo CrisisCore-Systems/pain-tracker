@@ -52,7 +52,10 @@ export default [
         HTMLHeadingElement: 'readonly',
         MouseEvent: 'readonly',
         Node: 'readonly',
+        NodeListOf: 'readonly',
+        KeyboardEvent: 'readonly',
         MediaQueryListEvent: 'readonly',
+        File: 'readonly',
         // NodeJS types
         NodeJS: 'readonly',
         // Node.js globals
@@ -77,8 +80,6 @@ export default [
     },
     rules: {
       ...typescript.configs.recommended.rules,
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],

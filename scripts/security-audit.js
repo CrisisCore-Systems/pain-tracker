@@ -6,7 +6,6 @@
 
 import { execSync } from 'child_process';
 import fs from 'fs';
-import path from 'path';
 
 const AUDIT_REPORT_FILE = 'security-audit-report.json';
 const HIGH_SEVERITY_THRESHOLD = 1; // Fail if any high/critical vulnerabilities
