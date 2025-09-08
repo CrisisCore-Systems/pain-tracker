@@ -5,21 +5,50 @@
 [![CodeQL](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/codeql.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/codeql.yml)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/CrisisCore-Systems/pain-tracker/badge)](https://securityscorecards.dev/viewer/?uri=github.com/CrisisCore-Systems/pain-tracker)
 
-A comprehensive pain tracking application that helps users monitor and analyze their pain patterns over time.
+A comprehensive pain and injury management system designed for individuals with chronic conditions and workplace injuries. Built with healthcare professionals and WorkSafe BC integration in mind.
+
+> **Current Status**: Early Development (v0.1.0) - Core features implemented and functional
 
 ## Features
 
-- Record detailed pain entries with:
-  - Pain level (0-10 scale)
-  - Pain locations
-  - Associated symptoms
-  - Functional impact
-  - Sleep and mood impact
-  - Work impact
-- Visualize pain patterns with interactive charts
-- Track trends and statistics
-- Export data in CSV and JSON formats
-- Mobile-friendly interface
+### 📊 Comprehensive Pain Tracking
+- **Multi-dimensional Pain Assessment**: 
+  - Pain intensity (0-10 scale) with visual feedback
+  - 25+ specific body locations including detailed leg/foot mapping
+  - 19+ symptom types including nerve-specific symptoms
+- **Advanced Analytics**: Interactive charts showing pain trends, location heat maps, and pattern recognition
+- **Historical Tracking**: Complete pain history with progression analysis
+
+### 🏥 Healthcare Integration
+- **WorkSafe BC Report Generation**: Automated report creation for workplace injury claims
+- **Emergency Response Panel**: Emergency contacts, protocols, and real-time pain monitoring
+- **Clinical Data Export**: Professional-grade CSV and JSON exports for healthcare providers
+
+### 💼 Workplace Injury Management
+- **Work Impact Assessment**: Track missed days, modified duties, and workplace limitations
+- **Functional Analysis**: Monitor activities of daily living and assistance requirements
+- **Return-to-Work Planning**: Document accommodations and workplace modifications
+
+### 💊 Treatment & Medication Tracking
+- **Medication Management**: Track current medications, dosages, frequency, and effectiveness
+- **Treatment Logging**: Record therapies, appointments, and treatment outcomes
+- **Progress Monitoring**: Analyze treatment effectiveness over time
+
+### 🎯 Quality of Life Metrics
+- **Sleep Quality Tracking**: Monitor how pain affects rest and recovery
+- **Mood & Social Impact**: Track emotional and social consequences of pain
+- **Activity Logging**: Record daily activities and their impact on pain levels
+
+### 🔧 Advanced Features
+- **Nerve Symptom Analysis**: Specialized tracking for neurological symptoms
+- **Functional Limitations Assessment**: Detailed mobility and capability monitoring
+- **Comparison Tracking**: Monitor changes since injury or diagnosis
+- **Onboarding & Tutorials**: Guided setup and interactive help system
+
+### 🛡️ Privacy & Security
+- **Local Data Storage**: All data remains on your device - no cloud storage
+- **Secure Architecture**: Multiple security layers and vulnerability scanning
+- **Data Portability**: Easy export and backup capabilities
 
 ## Quick Start
 
@@ -76,6 +105,29 @@ cp .env.example .env
 npm run dev
 ```
 
+## Current Status
+
+**Version**: 0.1.0 (Early Development)  
+**Build Status**: ✅ Passing (all 128 tests)  
+**Security Status**: ✅ Multiple security layers active  
+**Deployment**: GitHub Pages ready  
+
+### Implemented Features
+- ✅ Multi-step pain assessment form
+- ✅ Interactive data visualization and analytics  
+- ✅ WorkSafe BC report generation
+- ✅ Emergency response panel
+- ✅ Local data storage with export capabilities
+- ✅ Comprehensive testing suite
+- ✅ Security scanning and validation
+- ✅ Onboarding and tutorial system
+
+### Supported Use Cases
+- **Individual Pain Management**: Personal tracking and analysis
+- **Workplace Injury Claims**: WorkSafe BC integration and reporting
+- **Healthcare Collaboration**: Professional data exports and reports
+- **Emergency Situations**: Automated alerts and contact management
+
 ## Deployment
 
 The application is configured for automatic deployment to GitHub Pages:
@@ -95,26 +147,49 @@ The built files will be in the `dist` directory.
 
 ## Usage
 
-1. Record Pain Entry:
-   - Use the slider to indicate pain level
-   - Select affected locations
-   - Choose relevant symptoms
-   - Add notes and additional details
+### 📝 Recording Pain Entries
+The application uses a comprehensive 7-step assessment process:
 
-2. View Analytics:
-   - Switch to the Analytics tab
-   - View pain trends over time
-   - Analyze pain patterns by location and time of day
-   - Track symptom correlations
+1. **Pain Assessment**: Set pain level (0-10), select body locations, and identify symptoms
+2. **Functional Impact**: Document limited activities, assistance needs, and mobility aids
+3. **Medications**: Track current medications, dosages, and effectiveness
+4. **Treatments**: Record recent therapies, effectiveness, and planned treatments
+5. **Quality of Life**: Assess sleep quality, mood impact, and social effects
+6. **Work Impact**: Document missed work, modified duties, and workplace limitations
+7. **Comparison**: Track changes since injury and new limitations
 
-3. Export Data:
-   - Click "Export CSV" for spreadsheet-compatible format
-   - Click "Export JSON" for complete data backup
-   - Use exported data with healthcare providers or external tools
+### 📊 Analytics & Visualization
+- **Pain History Charts**: Interactive timeline of pain levels and trends
+- **Location Heat Maps**: Visual representation of pain patterns by body region
+- **Progression Analysis**: Track improvements or deterioration over time
+- **Treatment Effectiveness**: Analyze correlation between treatments and pain levels
 
-## Data Privacy
+### 🏥 Healthcare Features
+- **WorkSafe BC Reports**: Generate professional reports for workplace injury claims
+- **Emergency Panel**: Access emergency contacts and protocols based on current pain levels
+- **Clinical Exports**: Export detailed data in CSV/JSON formats for healthcare providers
 
-All data is stored locally in your browser. No data is sent to external servers.
+### 🔄 Data Management
+- **Local Storage**: All data stored securely in your browser
+- **Data Export**: Complete backup capabilities for data portability
+- **Sample Data**: Try the application with pre-loaded demonstration data
+- **Onboarding**: Interactive tutorial for new users
+
+## Data Privacy & Security
+
+**Complete Privacy**: All pain tracking data is stored locally in your browser using secure web storage APIs. No data is transmitted to external servers or cloud services.
+
+**Data Control**: You maintain complete control over your data with:
+- Local-only storage (never leaves your device)
+- Secure export capabilities (CSV/JSON)  
+- No account creation or login required
+- No tracking cookies or analytics
+
+**Security Features**:
+- Input validation and sanitization
+- Content Security Policy (CSP) headers
+- Automated vulnerability scanning
+- Regular security audits
 
 ## Contributing
 
@@ -242,12 +317,14 @@ This project aims to achieve:
 
 ### Technology Stack
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS + Headless UI
-- **Charts**: Recharts + Chart.js
-- **Testing**: Vitest + Testing Library + jsdom
-- **Build**: Vite with optimal chunking strategy
-- **Quality**: ESLint + Prettier + Husky + CommitLint
+- **Frontend**: React 18 + TypeScript + Vite (Hot Module Replacement)
+- **Styling**: Tailwind CSS + Headless UI + Custom Design System  
+- **Data Visualization**: Recharts + Chart.js + Custom Analytics
+- **Form Management**: Multi-step forms with validation
+- **Testing**: Vitest + Testing Library + jsdom (128+ tests)
+- **Build & Dev**: Vite with optimal chunking and tree-shaking
+- **Code Quality**: ESLint + Prettier + Husky + CommitLint
+- **Security**: Input validation (Zod), CSP headers, secret scanning
 
 ### Security Architecture
 
@@ -268,10 +345,12 @@ This project aims to achieve:
 
 ## Acknowledgments
 
-- [WorkSafe BC](https://www.worksafebc.com/) for domain expertise
-- [OpenSSF](https://openssf.org/) for security best practices
-- [React](https://reactjs.org/) team for the excellent framework
-- [Vite](https://vitejs.dev/) for the blazing fast build tool
+- [WorkSafe BC](https://www.worksafebc.com/) for workplace injury management domain expertise
+- Healthcare professionals who provided input on pain assessment methodologies
+- [OpenSSF](https://openssf.org/) for security best practices and frameworks
+- [React](https://reactjs.org/) ecosystem for robust development tools
+- [Vite](https://vitejs.dev/) for exceptional development experience
+- Pain management community for feedback and feature suggestions
 
 ---
 
