@@ -27,18 +27,20 @@ export const KeyboardNavigation: React.FC<KeyboardNavigationProps> = ({
 
       switch (event.key) {
         case 'ArrowDown':
-        case 'ArrowRight':
+        case 'ArrowRight': {
           event.preventDefault();
           const nextIndex = (currentIndex + 1) % focusableArray.length;
           focusableArray[nextIndex]?.focus();
           break;
+        }
 
         case 'ArrowUp':
-        case 'ArrowLeft':
+        case 'ArrowLeft': {
           event.preventDefault();
           const prevIndex = currentIndex <= 0 ? focusableArray.length - 1 : currentIndex - 1;
           focusableArray[prevIndex]?.focus();
           break;
+        }
 
         case 'Home':
           event.preventDefault();
