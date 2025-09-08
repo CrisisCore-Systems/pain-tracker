@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   LineChart,
   Line,
@@ -15,12 +15,24 @@ import { format as formatDate } from 'date-fns';
 import type { PainEntry } from '../../types';
 import { analyzeTrends, calculateStatistics } from '../../utils/pain-tracker/trending';
 import { exportToCSV, exportToJSON, downloadData } from '../../utils/pain-tracker/export';
+import { ComparisonAnalytics, LocationHeatmap, TreatmentOverlay } from './analytics-v2';
+import { VisitSummary, ClinicalExports } from './clinician-export';
+import { AccessibilityControls, LanguageSelector } from '../accessibility';
+import { EncryptedBackup, DataRestore } from '../data-resilience';
+import { TemplateLibrary } from '../templates';
 
 interface PainAnalyticsProps {
   entries: PainEntry[];
+  onDataRestore?: (entries: PainEntry[]) => void;
+  onApplyTemplate?: (template: Partial<PainEntry>) => void;
 }
 
-export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ entries }) => {
+export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ 
+  entries, 
+  onDataRestore = () => {}, 
+  onApplyTemplate = () => {} 
+}) => {
+  const [activeTab, setActiveTab] = useState<'overview' | 'comparison' | 'heatmap' | 'treatment' | 'clinical' | 'accessibility' | 'backup' | 'templates'>('overview');
   const trends = analyzeTrends(entries);
   const stats = calculateStatistics(entries);
 
@@ -53,121 +65,164 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ entries }) => {
   };
 
   return (
-    <div className="space-y-8 p-4">
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Pain Overview</h2>
-          <div className="flex gap-2">
-            <button
-              onClick={() => handleExport('csv')}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
-            >
-              Export CSV
-            </button>
-            <button
-              onClick={() => handleExport('json')}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
-            >
-              Export JSON
-            </button>
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="stat-card">
-            <h3 className="text-gray-600">Average Pain</h3>
-            <p className="text-2xl font-bold">{stats.mean.toFixed(1)}</p>
-          </div>
-          <div className="stat-card">
-            <h3 className="text-gray-600">Most Common Level</h3>
-            <p className="text-2xl font-bold">{stats.mode}</p>
-          </div>
-          <div className="stat-card">
-            <h3 className="text-gray-600">Pain Trend</h3>
-            <p className="text-2xl font-bold">
-              {trends.painTrends.increasing ? '↑' : '↓'} {Math.abs(trends.painTrends.averageChange).toFixed(1)}
-            </p>
-          </div>
+    <div className="space-y-6">
+      {/* Navigation Tabs */}
+      <div className="bg-white rounded-lg shadow">
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-8 px-6" aria-label="Analytics Tabs">
+            {[
+              { id: 'overview', label: 'Overview', icon: '📊' },
+              { id: 'comparison', label: 'Comparisons', icon: '📈' },
+              { id: 'heatmap', label: 'Body Heatmap', icon: '🗺️' },
+              { id: 'treatment', label: 'Treatment Timeline', icon: '💊' },
+              { id: 'clinical', label: 'Clinical Export', icon: '🏥' },
+              { id: 'backup', label: 'Data Backup', icon: '💾' },
+              { id: 'templates', label: 'Templates', icon: '📋' },
+              { id: 'accessibility', label: 'Accessibility', icon: '♿' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`
+                  flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm
+                  ${activeTab === tab.id
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }
+                `}
+              >
+                <span>{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Pain by Time of Day</h2>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={timeOfDayData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="hour" />
-              <YAxis domain={[0, 10]} />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="avgPain"
-                stroke="#8884d8"
-                name="Average Pain Level"
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      {/* Tab Content */}
+      {activeTab === 'overview' && (
+        <div className="space-y-8 p-4">
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Pain Overview</h2>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleExport('csv')}
+                  className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm"
+                >
+                  Export CSV
+                </button>
+                <button
+                  onClick={() => handleExport('json')}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm"
+                >
+                  Export JSON
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="stat-card">
+                <h3 className="text-gray-600">Average Pain</h3>
+                <p className="text-2xl font-bold">{stats.mean.toFixed(1)}</p>
+              </div>
+              <div className="stat-card">
+                <h3 className="text-gray-600">Most Common Level</h3>
+                <p className="text-2xl font-bold">{stats.mode}</p>
+              </div>
+              <div className="stat-card">
+                <h3 className="text-gray-600">Pain Trend</h3>
+                <p className="text-2xl font-bold">
+                  {trends.painTrends.increasing ? '↑' : '↓'} {Math.abs(trends.painTrends.averageChange).toFixed(1)}
+                </p>
+              </div>
+            </div>
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Pain by Location</h2>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={locationData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="location" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
-                <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">Pain by Time of Day</h2>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={timeOfDayData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="hour" />
+                  <YAxis domain={[0, 10]} />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="avgPain"
+                    stroke="#8884d8"
+                    name="Average Pain Level"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">Symptoms Analysis</h2>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={symptomData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="symptom" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
-                <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-4">Pain by Location</h2>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={locationData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="location" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
+                    <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Tracking Summary</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="stat-card">
-            <h3 className="text-gray-600">Total Entries</h3>
-            <p className="text-2xl font-bold">{stats.timeRangeStats.totalEntries}</p>
-          </div>
-          <div className="stat-card">
-            <h3 className="text-gray-600">Tracking Since</h3>
-            <p className="text-lg">
-              {stats.timeRangeStats.start ? formatDate(new Date(stats.timeRangeStats.start), 'MMM d, yyyy') : 'N/A'}
-            </p>
-          </div>
-          <div className="stat-card">
-            <h3 className="text-gray-600">Tracking Duration</h3>
-            <p className="text-lg">
-              {stats.timeRangeStats.duration ? `${Math.floor(stats.timeRangeStats.duration / (1000 * 60 * 60 * 24))} days` : 'N/A'}
-            </p>
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-semibold mb-4">Symptoms Analysis</h2>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={symptomData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="symptom" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
+                    <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {activeTab === 'comparison' && <ComparisonAnalytics entries={entries} />}
+      {activeTab === 'heatmap' && <LocationHeatmap entries={entries} />}
+      {activeTab === 'treatment' && <TreatmentOverlay entries={entries} />}
+      {activeTab === 'clinical' && (
+        <div className="space-y-6">
+          <VisitSummary entries={entries} />
+          <ClinicalExports entries={entries} />
+        </div>
+      )}
+      {activeTab === 'backup' && (
+        <div className="space-y-6">
+          <EncryptedBackup entries={entries} />
+          <DataRestore onDataRestore={onDataRestore} />
+        </div>
+      )}
+      {activeTab === 'templates' && (
+        <TemplateLibrary onApplyTemplate={onApplyTemplate} />
+      )}
+      {activeTab === 'accessibility' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <AccessibilityControls />
+            <LanguageSelector />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
