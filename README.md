@@ -1,13 +1,77 @@
-# Pain Tracker
+# 🩺 Pain Tracker | CrisisCore Systems  
+> **A Security-Hardened Health Platform for Chronic Pain and Injury Management**  
 
-[![Security Scan](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/security.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/security.yml)
-[![CI/CD Pipeline](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/codeql.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/codeql.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/CrisisCore-Systems/pain-tracker/badge)](https://securityscorecards.dev/viewer/?uri=github.com/CrisisCore-Systems/pain-tracker)
+![GitHub top language](https://img.shields.io/github/languages/top/CrisisCore-Systems/pain-tracker?color=blue&label=TypeScript)  
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/CrisisCore-Systems/pain-tracker/ci.yml?label=CI%2FCD%20Pipeline)  
+![Security Scan](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/security.yml/badge.svg)  
+![GitHub License](https://img.shields.io/github/license/CrisisCore-Systems/pain-tracker?color=lightgrey)  
+![Version](https://img.shields.io/badge/version-0.1.0--dev-yellow)  
+![Coverage](https://img.shields.io/badge/coverage-128%20tests-green)  
+![OpenSSF Scorecard](https://img.shields.io/badge/OpenSSF-8.0%2B%20target-brightgreen)  
 
-A comprehensive pain and injury management system designed for individuals with chronic conditions and workplace injuries. Built with healthcare professionals and WorkSafe BC integration in mind.
+---
 
-> **Current Status**: Early Development (v0.1.0) - Core features implemented and functional
+## 🚨 Why Pain Tracker Exists  
+Pain is more than a number. Most apps oversimplify—this one doesn't.  
+We built **Pain Tracker** to **map pain in high resolution** for real-world recovery,  
+backed by **WorkSafe BC reporting** and **security-grade engineering**.
+
+![Pain Tracker Main Interface](https://github.com/user-attachments/assets/3bc3ea51-709f-446c-9f39-5dad15a58a3b)
+
+---
+
+### 🌟 Highlights
+
+| Feature Domain               | What Sets It Apart                                              |
+|-----------------------------|---------------------------------------------------------------|
+| 📝 Pain Assessment          | 7-step multi-dimensional tracking, 25+ mapped body locations |
+| 📊 Analytics & Heatmaps     | Symptom trends, recovery progression, treatment correlations  |
+| 🏥 Healthcare Integration   | Automated WorkSafe BC claims, clinician-ready CSV/JSON exports|
+| 💊 Treatment Tracking       | Medications, therapy logs, and outcome analysis              |
+| 🧩 Quality of Life Metrics  | Mood, sleep, activity impacts                                 |
+| 🚨 Emergency Panel          | Automated protocols & alert system                           |
+| 🔒 Security by Design       | CSP, Zod validation, secret scanning, SAST pipelines         |
+
+![Pain Tracker Analytics](https://github.com/user-attachments/assets/2e684837-21b3-4bc4-aca0-22ad07b26fce)
+
+---
+
+## 🛡️ Security Architecture  
+CrisisCore Systems enforces **zero-trust design** with a military-grade development culture:  
+
+```mermaid
+flowchart LR
+  A[Developer] --> B[Pre-Commit Security Gates]
+  B --> C[GitHub Repo]
+  C --> D[CI/CD Pipeline: CodeQL, SAST, npm audit]
+  D --> E[Production: Hardened Build + Local Data Storage]
+
+  subgraph Security Gates
+    B1[Secret Scanning]
+    B2[Type Checking]
+    B3[Merge Conflict Detection]
+    B4[CrisisCore Vulnerability Rules]
+  end
+
+  B --> B1 --> B2 --> B3 --> B4
+```
+
+![Pain Tracker Interface](https://github.com/user-attachments/assets/74e7b0fb-c3e4-4ff2-8a52-2b0f0bb6a2f8)
+
+---
+
+## 🧩 Tech Stack
+
+| Layer | Tech Stack |
+|-------|------------|
+| **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, Headless UI |
+| **Analytics** | Recharts, Chart.js, Custom Visualizations |
+| **Validation** | Zod schemas for all inputs |
+| **Testing** | Vitest, Testing Library, jsdom (128+ tests) |
+| **DevOps** | GitHub Actions, Husky, CommitLint, Makefile workflows |
+| **Security** | CodeQL, npm audit, CrisisCore Gates, CSP headers |
+
+---
 
 ## Features
 
@@ -50,86 +114,85 @@ A comprehensive pain and injury management system designed for individuals with 
 - **Secure Architecture**: Multiple security layers and vulnerability scanning
 - **Data Portability**: Easy export and backup capabilities
 
-## Quick Start
+---
 
-### Option 1: Using Make (Recommended)
+## 🧰 Quick Start
+
 ```bash
+# Clone the repository
 git clone https://github.com/CrisisCore-Systems/pain-tracker.git
 cd pain-tracker
-make setup    # Install dependencies, setup environment, install hooks
+
+# Recommended setup
+make setup    # Install dependencies, configure env, enable hooks
 make dev      # Start development server
-```
 
-### Option 2: Manual Setup
-```bash
-git clone https://github.com/CrisisCore-Systems/pain-tracker.git
-cd pain-tracker
+# Manual setup
 npm install
-cp .env.example .env  # Configure your environment
-npm run dev
-```
-
-### Health Check
-```bash
-make doctor   # Or: node scripts/doctor.js
-```
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ (20+ recommended)
-- npm 9 or higher
-- Git 2.0+
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/CrisisCore-Systems/pain-tracker.git
-cd pain-tracker
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Create a `.env` file based on `.env.example`:
-```bash
 cp .env.example .env
-```
-
-4. Start the development server:
-```bash
 npm run dev
 ```
 
-## Current Status
+---
+
+## 🔥 Dev Culture & Commit Rules
+
+This repo enforces Conventional Commits and strong pre-commit enforcement:
+
+```bash
+feat(tracker): add pain heatmap visualization
+fix(api): resolve WCB integration timeout
+docs(readme): add contributing guidelines
+```
+
+**Skip tags:** `[skip lint]`, `[skip build]`, `[skip all]`
+
+---
+
+---
+
+## 🔧 Detailed Documentation
+
+<details>
+<summary><strong>📋 Current Status & Implementation</strong></summary>
 
 **Version**: 0.1.0 (Early Development)  
 **Build Status**: ✅ Passing (all 128 tests)  
 **Security Status**: ✅ Multiple security layers active  
 **Deployment**: GitHub Pages ready  
 
-### Implemented Features
-- ✅ Multi-step pain assessment form
-- ✅ Interactive data visualization and analytics  
-- ✅ WorkSafe BC report generation
-- ✅ Emergency response panel
-- ✅ Local data storage with export capabilities
-- ✅ Comprehensive testing suite
-- ✅ Security scanning and validation
-- ✅ Onboarding and tutorial system
+### ✅ Implemented Features
+- Multi-step pain assessment form
+- Interactive data visualization and analytics  
+- WorkSafe BC report generation
+- Emergency response panel
+- Local data storage with export capabilities
+- Comprehensive testing suite
+- Security scanning and validation
+- Onboarding and tutorial system
 
-### Supported Use Cases
+### 🎯 Supported Use Cases
 - **Individual Pain Management**: Personal tracking and analysis
 - **Workplace Injury Claims**: WorkSafe BC integration and reporting
 - **Healthcare Collaboration**: Professional data exports and reports
 - **Emergency Situations**: Automated alerts and contact management
 
-## Deployment
+</details>
 
+<details>
+<summary><strong>⚙️ Installation & Prerequisites</strong></summary>
+
+### Prerequisites
+- Node.js 18+ (20+ recommended)
+- npm 9 or higher
+- Git 2.0+
+
+### Health Check
+```bash
+make doctor   # Or: node scripts/doctor.js
+```
+
+### Deployment
 The application is configured for automatic deployment to GitHub Pages:
 
 1. Fork this repository
@@ -138,14 +201,15 @@ The application is configured for automatic deployment to GitHub Pages:
 4. GitHub Actions will automatically build and deploy your changes
 
 For manual deployment:
-
 ```bash
 npm run build
 ```
-
 The built files will be in the `dist` directory.
 
-## Usage
+</details>
+
+<details>
+<summary><strong>📊 Usage & Features</strong></summary>
 
 ### 📝 Recording Pain Entries
 The application uses a comprehensive 7-step assessment process:
@@ -175,7 +239,10 @@ The application uses a comprehensive 7-step assessment process:
 - **Sample Data**: Try the application with pre-loaded demonstration data
 - **Onboarding**: Interactive tutorial for new users
 
-## Data Privacy & Security
+</details>
+
+<details>
+<summary><strong>🔒 Data Privacy & Security</strong></summary>
 
 **Complete Privacy**: All pain tracking data is stored locally in your browser using secure web storage APIs. No data is transmitted to external servers or cloud services.
 
@@ -191,11 +258,10 @@ The application uses a comprehensive 7-step assessment process:
 - Automated vulnerability scanning
 - Regular security audits
 
-## Contributing
+</details>
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## Developer Workflow
+<details>
+<summary><strong>⚡ Developer Workflow</strong></summary>
 
 ### Available Commands
 
@@ -225,7 +291,6 @@ make check-pre-commit # Test pre-commit hooks
 ```
 
 ### Pre-commit Hooks
-
 This project uses modular pre-commit hooks that run:
 - 🛡️ CrisisCore collapse vector detection
 - 📝 TypeScript type checking
@@ -244,7 +309,6 @@ git commit -m "wip: experimental feature [skip all]"
 Available skip tags: `[skip typecheck]`, `[skip lint]`, `[skip build]`, `[skip secrets]`, `[skip merge]`, `[skip collapse]`, `[skip all]`
 
 ### Commit Message Format
-
 This project follows [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
@@ -265,98 +329,34 @@ docs(readme): add contribution guidelines
 security(auth): implement rate limiting for API endpoints
 ```
 
-## Security
-
-This project follows security best practices and implements multiple layers of protection:
-
-### 🛡️ Security Features
-
-- **Automated Secret Scanning**: Prevents hardcoded credentials from being committed
-- **Dependency Vulnerability Scanning**: Regular audits of npm packages
-- **Static Code Analysis**: CodeQL and custom security checks
-- **Content Security Policy**: XSS protection headers
-- **Input Validation**: Zod schema validation for all user inputs
-- **CrisisCore Security Gates**: Custom patterns to prevent specific vulnerabilities
-
-### 🔒 Security Workflow
-
-1. **Pre-commit**: Secrets are scanned before every commit
-2. **CI/CD**: Comprehensive security analysis on every PR
-3. **Dependency Monitoring**: Automated alerts for vulnerable packages
-4. **Regular Audits**: Weekly security scans and dependency updates
-
-### 📢 Reporting Security Issues
-
-**DO NOT** open public issues for security vulnerabilities.
-
-Instead, please email security concerns to: [security@crisiscore.systems](mailto:security@crisiscore.systems)
-
-We follow responsible disclosure and will:
-1. Acknowledge receipt within 24 hours
-2. Provide a detailed response within 72 hours
-3. Work with you to understand and resolve the issue
-4. Credit you in our security acknowledgments (if desired)
-
-### 🏆 Security Standards
-
-This project aims to achieve:
-- [OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/) certification
-- [OpenSSF Scorecard](https://securityscorecards.dev/) score of 8.0+
-- Zero high/critical severity vulnerabilities
-- 100% code coverage for security-critical functions
-
-### 🔐 Security Tools
-
-- **CodeQL**: GitHub's semantic code analysis
-- **npm audit**: Dependency vulnerability scanning  
-- **Custom Scanners**: CrisisCore-specific security patterns
-- **Secrets Detection**: 12+ patterns for common credential types
-- **SAST**: Static Application Security Testing
-
-## Architecture
-
-### Technology Stack
-
-- **Frontend**: React 18 + TypeScript + Vite (Hot Module Replacement)
-- **Styling**: Tailwind CSS + Headless UI + Custom Design System  
-- **Data Visualization**: Recharts + Chart.js + Custom Analytics
-- **Form Management**: Multi-step forms with validation
-- **Testing**: Vitest + Testing Library + jsdom (128+ tests)
-- **Build & Dev**: Vite with optimal chunking and tree-shaking
-- **Code Quality**: ESLint + Prettier + Husky + CommitLint
-- **Security**: Input validation (Zod), CSP headers, secret scanning
-
-### Security Architecture
-
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Developer     │───▶│   Pre-commit     │───▶│   Repository    │
-│   Environment   │    │   Security Gates │    │   (GitHub)      │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Local Tools   │    │   CI/CD Pipeline │    │   Production    │
-│   • doctor.js   │    │   • CodeQL       │    │   • Secure      │
-│   • scan-secrets│    │   • Dependency   │    │   • Monitored   │
-│   • pre-commit  │    │   • SAST Tools   │    │   • Validated   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-```
-
-## Acknowledgments
-
-- [WorkSafe BC](https://www.worksafebc.com/) for workplace injury management domain expertise
-- Healthcare professionals who provided input on pain assessment methodologies
-- [OpenSSF](https://openssf.org/) for security best practices and frameworks
-- [React](https://reactjs.org/) ecosystem for robust development tools
-- [Vite](https://vitejs.dev/) for exceptional development experience
-- Pain management community for feedback and feature suggestions
+</details>
 
 ---
 
-**Developed with ❤️ by [CrisisCore Systems](https://github.com/CrisisCore-Systems)**
+## 🤝 Contributing
 
-*Building secure, reliable tools for healthcare and safety.*
+We welcome security engineers, clinicians, and open-source devs.  
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed workflow.
+
+**For security disclosures:**  
+📧 security@crisiscore.systems
+
+---
+
+## 🏆 Acknowledgments
+
+- **[WorkSafe BC](https://www.worksafebc.com/)**: Expertise in injury reporting and claims
+- **Clinicians**: Pain assessment model refinement  
+- **[OpenSSF](https://openssf.org/)**: Security best practice frameworks
+- **The Chronic Pain Community**: Real-world feedback
+
+---
+
+## 🖤 Built with Empathy, Rigor, and Zero Compromise
+
+**By [CrisisCore Systems](https://github.com/CrisisCore-Systems) — Security-first tools for real-world health.**
+
+---
 
 ## License
 
