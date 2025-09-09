@@ -30,3 +30,9 @@ security-audit-report.json
 *.sw?
 .env*
 !.env.example
+
+# E2E test results
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
