@@ -2,7 +2,7 @@
  * Toast - Individual toast notification component
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
 
 export interface ToastData {
@@ -25,6 +25,14 @@ export function Toast({ id, type, title, message, duration = 5000, action, onDis
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
 
+  const handleDismiss = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      onDismiss(id);
+    }, 150); // Animation duration
+  }, [id, onDismiss]);
+
   useEffect(() => {
     if (duration > 0) {
       const timer = setTimeout(() => {
@@ -33,15 +41,7 @@ export function Toast({ id, type, title, message, duration = 5000, action, onDis
 
       return () => clearTimeout(timer);
     }
-  }, [duration]);
-
-  const handleDismiss = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      setIsVisible(false);
-      onDismiss(id);
-    }, 150); // Animation duration
-  };
+  }, [duration, handleDismiss]);
 
   const getIcon = () => {
     switch (type) {

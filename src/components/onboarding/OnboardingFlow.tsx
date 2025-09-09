@@ -108,8 +108,6 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
               onPrevious={handlePrevious}
               onComplete={handleComplete}
               onSkip={handleSkip}
-              currentStep={currentStep}
-              totalSteps={steps.length}
               isFirstStep={currentStep === 0}
               isLastStep={currentStep === steps.length - 1}
             />

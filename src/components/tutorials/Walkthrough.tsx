@@ -196,7 +196,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
         </div>
       </div>
 
-      <style jsx global>{`
+      <style>{`
         .walkthrough-highlight {
           position: relative;
           z-index: 45;

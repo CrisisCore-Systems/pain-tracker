@@ -10,8 +10,8 @@ interface ClinicalExportsProps {
 export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => {
   const [exportFormat, setExportFormat] = useState<'standard' | 'detailed' | 'summary'>('standard');
 
-  const generateClinicalCSV = (format: 'standard' | 'detailed' | 'summary'): string => {
-    if (format === 'summary') {
+  const generateClinicalCSV = (exportType: 'standard' | 'detailed' | 'summary'): string => {
+    if (exportType === 'summary') {
       // Summary format for quick overview
       const avgPain = entries.length > 0 
         ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
@@ -46,7 +46,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       return ['Field,Value', ...summaryData.map(([field, value]) => `"${field}","${value}"`)].join('\n');
     }
 
-    if (format === 'detailed') {
+    if (exportType === 'detailed') {
       // Detailed format for comprehensive analysis
       const headers = [
         'Date', 'Time', 'Pain Level', 'Locations', 'Symptoms',
@@ -117,10 +117,10 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
     return [headers, ...rows].join('\n');
   };
 
-  const generateClinicalJSON = (format: 'standard' | 'detailed' | 'summary'): string => {
+  const generateClinicalJSON = (exportType: 'standard' | 'detailed' | 'summary'): string => {
     const metadata = {
       exportDate: new Date().toISOString(),
-      format,
+      format: exportType,
       totalEntries: entries.length,
       dateRange: entries.length > 0 ? {
         start: entries[entries.length - 1].timestamp,
@@ -128,7 +128,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       } : null
     };
 
-    if (format === 'summary') {
+    if (exportType === 'summary') {
       const avgPain = entries.length > 0 
         ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
         : 0;
@@ -170,7 +170,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       }, null, 2);
     }
 
-    if (format === 'detailed') {
+    if (exportType === 'detailed') {
       return JSON.stringify({
         metadata,
         entries: entries.map(entry => ({
@@ -217,11 +217,11 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
     }, null, 2);
   };
 
-  const handleExport = (format: 'csv' | 'json') => {
+  const handleExport = (fileFormat: 'csv' | 'json') => {
     const timestamp = format(new Date(), 'yyyy-MM-dd-HHmm');
     const formatSuffix = exportFormat === 'standard' ? '' : `-${exportFormat}`;
     
-    if (format === 'csv') {
+    if (fileFormat === 'csv') {
       const csvData = generateClinicalCSV(exportFormat);
       downloadData(csvData, `clinical-export${formatSuffix}-${timestamp}.csv`);
     } else {

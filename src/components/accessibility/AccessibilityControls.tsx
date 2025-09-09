@@ -24,9 +24,9 @@ export const AccessibilityControls: React.FC = () => {
             </legend>
             <div className="space-y-2">
               {[
-                { value: 'light', label: 'Light Theme', icon: '☀️' },
-                { value: 'dark', label: 'Dark Theme', icon: '🌙' },
-                { value: 'high-contrast', label: 'High Contrast', icon: '⚫' }
+                { value: 'light' as const, label: 'Light Theme', icon: '☀️' },
+                { value: 'dark' as const, label: 'Dark Theme', icon: '🌙' },
+                { value: 'high-contrast' as const, label: 'High Contrast', icon: '⚫' }
               ].map((option) => (
                 <label key={option.value} className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -34,7 +34,7 @@ export const AccessibilityControls: React.FC = () => {
                     name="theme"
                     value={option.value}
                     checked={mode === option.value}
-                    onChange={() => handleThemeChange(option.value as any)}
+                    onChange={() => handleThemeChange(option.value)}
                     className="focus:ring-2 focus:ring-blue-500"
                   />
                   <span role="img" aria-hidden="true">{option.icon}</span>
