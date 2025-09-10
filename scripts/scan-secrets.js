@@ -191,7 +191,7 @@ async function scanSecrets() {
           dot: false
         });
         allFiles.push(...files);
-      } catch (error) {
+      } catch {
         // Ignore glob errors for missing patterns
       }
     }

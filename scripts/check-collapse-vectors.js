@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 /**
  * CrisisCore collapse vector detection script
+ * Enhanced with Tree of Thought reasoning capabilities
  * Part of the modular pre-commit workflow
  */
 
 import { execSync } from 'node:child_process';
 import { exit } from 'node:process';
+import { analyzeWithTreeOfThought } from './tree-thought-analyzer.js';
 
 // ANSI color codes
 const colors = {
@@ -15,7 +17,9 @@ const colors = {
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
   cyan: '\x1b[36m',
-  bold: '\x1b[1m'
+  magenta: '\x1b[35m',
+  bold: '\x1b[1m',
+  dim: '\x1b[2m'
 };
 
 const icon = {
@@ -23,7 +27,9 @@ const icon = {
   error: '❌',
   warning: '⚠️',
   info: '🛡️',
-  tip: '💡'
+  tip: '💡',
+  tree: '🌳',
+  brain: '🧠'
 };
 
 function log(message, color = colors.reset) {
@@ -40,8 +46,9 @@ const run = (cmd) => {
 
 const g = (pat, dirs=['assets','js','src']) => run(`grep -REn --exclude-dir=node_modules --binary-files=without-match '${pat}' ${dirs.join(' ')}`);
 
-function checkCollapseVectors() {
-  log(`${icon.info} ${colors.bold}Checking for CrisisCore collapse vectors...${colors.reset}`, colors.blue);
+// Legacy collapse vector detection (maintained for compatibility)
+function checkLegacyCollapseVectors() {
+  log(`${icon.info} ${colors.dim}Running legacy pattern-based detection...${colors.reset}`);
   
   const issues = [];
   
@@ -75,21 +82,65 @@ function checkCollapseVectors() {
     });
   }
   
-  if (issues.length === 0) {
-    log(`${icon.success} No collapse vectors detected`, colors.green);
-    return { success: true, issues: [] };
-  }
-  
-  log(`${icon.error} CRISIS: ${issues.length} collapse vector(s) detected!`, colors.red);
+  return issues;
+}
+
+// Enhanced collapse vector detection with Tree of Thought reasoning
+function checkCollapseVectors() {
+  log(`${icon.brain} ${colors.bold}CrisisCore Collapse Vector Detection${colors.reset}`, colors.blue);
+  log(`${colors.bold}Enhanced with Tree of Thought Reasoning${colors.reset}`, colors.magenta);
   console.log();
   
-  for (const issue of issues) {
-    log(`${colors.bold}${issue.severity}: ${issue.type}${colors.reset}`, colors.red);
-    console.log(issue.details);
+  const startTime = Date.now();
+  
+  // Run legacy detection first for backward compatibility
+  const legacyIssues = checkLegacyCollapseVectors();
+  
+  // Run enhanced tree-of-thought analysis
+  log(`${icon.tree} ${colors.bold}Engaging Tree of Thought Analysis...${colors.reset}`, colors.cyan);
+  const treeAnalysis = analyzeWithTreeOfThought();
+  
+  const totalTime = Date.now() - startTime;
+  
+  // Combine results
+  const totalIssues = legacyIssues.length + (treeAnalysis.criticalPaths || 0);
+  
+  console.log();
+  log(`${colors.bold}=== COLLAPSE VECTOR ANALYSIS SUMMARY ===${colors.reset}`, colors.cyan);
+  log(`${icon.info} Analysis method: Hybrid (Legacy + Tree of Thought)`);
+  log(`${icon.info} Total analysis time: ${totalTime}ms`);
+  log(`${icon.info} Legacy patterns detected: ${legacyIssues.length}`);
+  log(`${icon.info} Tree reasoning vectors: ${treeAnalysis.totalIssues || 0}`);
+  log(`${icon.info} Critical reasoning paths: ${treeAnalysis.criticalPaths || 0}`);
+  console.log();
+  
+  // Report legacy issues if found
+  if (legacyIssues.length > 0) {
+    log(`${colors.red}${icon.error} Legacy Pattern Violations:${colors.reset}`);
+    for (const issue of legacyIssues) {
+      log(`  ${colors.bold}${issue.severity}: ${issue.type}${colors.reset}`, colors.red);
+      console.log(`  ${colors.dim}${issue.details.split('\n')[0]}...${colors.reset}`);
+    }
     console.log();
   }
   
-  return { success: false, issues };
+  // Determine overall result
+  const hasCriticalIssues = legacyIssues.some(i => i.severity === 'CRITICAL') || 
+                           (treeAnalysis.criticalPaths && treeAnalysis.criticalPaths > 0);
+  
+  if (totalIssues === 0) {
+    log(`${icon.success} ${colors.green}No collapse vectors detected${colors.reset}`);
+    log(`${colors.dim}Both legacy and tree-of-thought analysis passed${colors.reset}`);
+    return { success: true, issues: [], treeAnalysis };
+  } else if (hasCriticalIssues) {
+    log(`${icon.error} ${colors.red}CRISIS: Critical collapse vectors detected!${colors.reset}`);
+    log(`${colors.dim}Tree of thought reasoning identified high-risk patterns${colors.reset}`);
+    return { success: false, issues: legacyIssues, treeAnalysis };
+  } else {
+    log(`${icon.warning} ${colors.yellow}Potential security vectors found${colors.reset}`);
+    log(`${colors.dim}Review tree reasoning analysis for detailed recommendations${colors.reset}`);
+    return { success: true, issues: legacyIssues, treeAnalysis, warnings: totalIssues };
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

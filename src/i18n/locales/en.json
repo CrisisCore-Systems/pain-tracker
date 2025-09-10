@@ -1,0 +1,68 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel", 
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "export": "Export",
+    "import": "Import",
+    "print": "Print"
+  },
+  "navigation": {
+    "overview": "Overview",
+    "comparisons": "Comparisons",
+    "heatmap": "Body Heatmap",
+    "treatment": "Treatment Timeline",
+    "clinical": "Clinical Export"
+  },
+  "pain": {
+    "level": "Pain Level",
+    "location": "Location",
+    "locations": "Locations",
+    "symptoms": "Symptoms",
+    "intensity": "Intensity",
+    "average": "Average Pain",
+    "current": "Current Pain",
+    "trend": "Pain Trend",
+    "assessment": "Pain Assessment"
+  },
+  "analytics": {
+    "title": "Pain Analytics",
+    "noData": "No data available",
+    "totalEntries": "Total Entries",
+    "dateRange": "Date Range",
+    "summary": "Summary",
+    "details": "Details"
+  },
+  "export": {
+    "clinical": "Clinical Data Export",
+    "visitSummary": "Visit Summary",
+    "formats": {
+      "standard": "Standard Clinical Export",
+      "detailed": "Detailed Comprehensive Export",
+      "summary": "Executive Summary Export"
+    }
+  },
+  "accessibility": {
+    "settings": "Accessibility Settings",
+    "theme": "Visual Theme",
+    "themes": {
+      "light": "Light Theme",
+      "dark": "Dark Theme",
+      "highContrast": "High Contrast"
+    },
+    "reducedMotion": "Reduced Motion",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "keyboardTips": "Keyboard Navigation Tips"
+  }
+}

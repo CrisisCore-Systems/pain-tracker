@@ -3,7 +3,7 @@
  */
 
 import { ReactNode } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
+import { Card, CardContent } from '../../design-system';
 import { Lightbulb, TrendingUp, Shield, Clock } from 'lucide-react';
 
 interface Benefit {

@@ -1,0 +1,68 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "yes": "Oui",
+    "no": "Non",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "export": "Exporter",
+    "import": "Importer",
+    "print": "Imprimer"
+  },
+  "navigation": {
+    "overview": "Aperçu",
+    "comparisons": "Comparaisons",
+    "heatmap": "Carte thermique corporelle",
+    "treatment": "Chronologie des traitements",
+    "clinical": "Exportation clinique"
+  },
+  "pain": {
+    "level": "Niveau de douleur",
+    "location": "Emplacement",
+    "locations": "Emplacements",
+    "symptoms": "Symptômes",
+    "intensity": "Intensité",
+    "average": "Douleur moyenne",
+    "current": "Douleur actuelle",
+    "trend": "Tendance de la douleur",
+    "assessment": "Évaluation de la douleur"
+  },
+  "analytics": {
+    "title": "Analyses de la douleur",
+    "noData": "Aucune donnée disponible",
+    "totalEntries": "Total des entrées",
+    "dateRange": "Plage de dates",
+    "summary": "Résumé",
+    "details": "Détails"
+  },
+  "export": {
+    "clinical": "Exportation de données cliniques",
+    "visitSummary": "Résumé de visite",
+    "formats": {
+      "standard": "Exportation clinique standard",
+      "detailed": "Exportation complète détaillée",
+      "summary": "Exportation de résumé exécutif"
+    }
+  },
+  "accessibility": {
+    "settings": "Paramètres d'accessibilité",
+    "theme": "Thème visuel",
+    "themes": {
+      "light": "Thème clair",
+      "dark": "Thème sombre",
+      "highContrast": "Contraste élevé"
+    },
+    "reducedMotion": "Mouvement réduit",
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "keyboardTips": "Conseils de navigation au clavier"
+  }
+}
