@@ -64,3 +64,17 @@ declare module '*.pdf' {
   const content: string;
   export default content;
 }
+
+// Browser API declarations - extend existing DOM types when needed
+interface Window {
+  gtag?: (...args: unknown[]) => void;
+}
+
+// Service Worker types for public/sw.js
+declare const self: ServiceWorkerGlobalScope;
+declare const caches: CacheStorage;
+
+// Extend NodeJS timeout types
+declare namespace NodeJS {
+  interface Timeout {}
+}

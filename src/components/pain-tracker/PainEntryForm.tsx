@@ -1,5 +1,6 @@
 ﻿import { useState } from "react";
 import type { PainEntry } from "../../types";
+import { usePainTrackerStore } from "../../stores/pain-tracker-store";
 import {
   BaselineSection,
   ComparisonSection,
@@ -15,7 +16,8 @@ interface PainEntryFormProps {
 }
 
 export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
-  const [currentSection, setCurrentSection] = useState(0);
+  const { ui, setCurrentFormSection } = usePainTrackerStore();
+  const currentSection = ui.currentFormSection;
   const [formData, setFormData] = useState<Omit<PainEntry, "id" | "timestamp">>({
     baselineData: {
       pain: 0,
@@ -155,7 +157,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       comparison: { worseningSince: "", newLimitations: [] },
       notes: "",
     });
-    setCurrentSection(0);
+    setCurrentFormSection(0);
   };
 
   return (
@@ -196,7 +198,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           {sections.map((section, index) => (
             <button
               key={index}
-              onClick={() => setCurrentSection(index)}
+              onClick={() => setCurrentFormSection(index)}
               role="tab"
               aria-selected={currentSection === index}
               aria-controls={`section-${index}`}
@@ -219,7 +221,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       <div className="flex gap-4">
         <button
           type="button"
-          onClick={() => setCurrentSection(prev => Math.max(0, prev - 1))}
+          onClick={() => setCurrentFormSection(Math.max(0, currentSection - 1))}
           className={`px-4 py-2 text-sm font-medium rounded-md ${
             currentSection === 0
               ? "bg-gray-100 text-gray-400 cursor-not-allowed"
@@ -234,7 +236,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
         {currentSection < sections.length - 1 ? (
           <button
             type="button"
-            onClick={() => setCurrentSection(prev => Math.min(sections.length - 1, prev + 1))}
+            onClick={() => setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))}
             className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 ml-auto"
             aria-label="Next section"
           >

@@ -2,12 +2,12 @@
  * AutoSave - Auto-save functionality for forms
  */
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Check, Cloud, CloudOff, RotateCcw } from 'lucide-react';
 
-interface AutoSaveProps {
-  data: any;
-  onSave: (data: any) => Promise<void> | void;
+interface AutoSaveProps<TData> {
+  data: TData;
+  onSave: (data: TData) => Promise<void> | void;
   delay?: number;
   storageKey?: string;
   className?: string;
@@ -15,69 +15,63 @@ interface AutoSaveProps {
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
-export function AutoSave({ 
+export function AutoSave<TData extends object>({ 
   data, 
   onSave, 
   delay = 2000, 
   storageKey,
   className = '' 
-}: AutoSaveProps) {
+}: AutoSaveProps<TData>) {
   const [status, setStatus] = useState<SaveStatus>('idle');
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
   const previousDataRef = useRef(data);
 
+  const handleSave = useCallback(async () => {
+    try {
+      setStatus('saving');
+      
+      if (storageKey) {
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      }
+      
+      await onSave(data);
+      
+      setStatus('saved');
+      setLastSaved(new Date());
+      
+      setTimeout(() => setStatus('idle'), 2000);
+    } catch (error) {
+      console.error('Auto-save failed:', error);
+      setStatus('error');
+      
+      setTimeout(() => setStatus('idle'), 3000);
+    }
+  }, [data, onSave, storageKey]);
+
   useEffect(() => {
-    // Check if data has actually changed
     if (JSON.stringify(data) === JSON.stringify(previousDataRef.current)) {
       return;
     }
 
     previousDataRef.current = data;
 
-    // Clear existing timeout
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
-    // Set status to indicate changes pending
     if (status !== 'saving') {
       setStatus('idle');
     }
 
-    // Start new timeout
-    timeoutRef.current = setTimeout(async () => {
-      try {
-        setStatus('saving');
-        
-        // Save to localStorage if storageKey provided
-        if (storageKey) {
-          localStorage.setItem(storageKey, JSON.stringify(data));
-        }
-        
-        // Call the onSave function
-        await onSave(data);
-        
-        setStatus('saved');
-        setLastSaved(new Date());
-        
-        // Reset to idle after showing saved status
-        setTimeout(() => setStatus('idle'), 2000);
-      } catch (error) {
-        console.error('Auto-save failed:', error);
-        setStatus('error');
-        
-        // Reset to idle after showing error
-        setTimeout(() => setStatus('idle'), 3000);
-      }
-    }, delay);
+    timeoutRef.current = setTimeout(handleSave, delay);
 
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [data, onSave, delay, storageKey, status]);
+  }, [data, delay, handleSave, status]);
 
   // Load from localStorage on mount
   useEffect(() => {

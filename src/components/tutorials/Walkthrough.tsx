@@ -116,6 +116,22 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
     }
   };
 
+  useEffect(() => {
+    const styleSheet = document.createElement("style");
+    styleSheet.innerHTML = `
+      .walkthrough-highlight {
+        position: relative;
+        z-index: 45;
+        box-shadow: 0 0 0 4px rgba(var(--primary), 0.5);
+        border-radius: 4px;
+      }
+    `;
+    document.head.appendChild(styleSheet);
+    return () => {
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
+
   if (!isActive || !currentStepData) return null;
 
   return (
@@ -196,14 +212,6 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
         </div>
       </div>
 
-      <style>{`
-        .walkthrough-highlight {
-          position: relative;
-          z-index: 45;
-          box-shadow: 0 0 0 4px rgba(var(--primary), 0.5);
-          border-radius: 4px;
-        }
-      `}</style>
     </>
   );
 }

@@ -59,12 +59,12 @@ URL.createObjectURL = mockCreateObjectURL;
 URL.revokeObjectURL = mockRevokeObjectURL;
 
 // Mock document.createElement and capture anchor element
-let lastCreatedAnchor: any = null;
+let lastCreatedAnchor: HTMLAnchorElement | null = null;
 const mockClick = vi.fn();
 const originalCreateElement = document.createElement;
 document.createElement = vi.fn((tagName) => {
   if (tagName === 'a') {
-    const anchor = originalCreateElement.call(document, 'a');
+    const anchor = originalCreateElement.call(document, 'a') as HTMLAnchorElement;
     anchor.click = mockClick;
     lastCreatedAnchor = anchor;
     return anchor;

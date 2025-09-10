@@ -4,6 +4,7 @@ import typescriptParser from '@typescript-eslint/parser';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import globals from 'globals';
 
 export default [
   js.configs.recommended,
@@ -22,54 +23,11 @@ export default [
         }
       },
       globals: {
-        // Browser globals
-        window: 'readonly',
-        document: 'readonly',
-        console: 'readonly',
-        localStorage: 'readonly',
-        fetch: 'readonly',
-        Blob: 'readonly',
-        HTMLElement: 'readonly',
-        HTMLButtonElement: 'readonly',
-        HTMLInputElement: 'readonly',
-        HTMLOptionElement: 'readonly',
-        RequestInit: 'readonly',
-        Response: 'readonly',
-        URL: 'readonly',
-        FileReader: 'readonly',
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
-        setInterval: 'readonly',
-        clearInterval: 'readonly',
-        AbortController: 'readonly',
-        DOMException: 'readonly',
-        StorageEvent: 'readonly',
-        crypto: 'readonly',
+        ...globals.browser,
+        ...globals.node,
+        ...globals.serviceworker,
         React: 'readonly',
-        // DOM types
-        HTMLDivElement: 'readonly',
-        HTMLParagraphElement: 'readonly',
-        HTMLHeadingElement: 'readonly',
-        MouseEvent: 'readonly',
-        Node: 'readonly',
-        NodeListOf: 'readonly',
-        KeyboardEvent: 'readonly',
-        MediaQueryListEvent: 'readonly',
-        File: 'readonly',
-        // NodeJS types
         NodeJS: 'readonly',
-        // Node.js globals
-        process: 'readonly',
-        require: 'readonly',
-        module: 'readonly',
-        // Test globals
-        describe: 'readonly',
-        it: 'readonly',
-        expect: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        vi: 'readonly',
-        jest: 'readonly'
       }
     },
     plugins: {
@@ -94,22 +52,26 @@ export default [
     }
   },
   {
-    // Special config for Node.js files
-    files: ['scripts/**/*.{js,mjs}', '*.config.{js,mjs,ts}', 'vite.config.*'],
+    // Special config for Service Worker
+    files: ['public/sw.js'],
     languageOptions: {
       globals: {
-        process: 'readonly',
-        require: 'readonly',
-        module: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        exports: 'writable',
-        global: 'readonly',
-        console: 'readonly'
+        ...globals.serviceworker,
       }
-    },
-    rules: {
-      '@typescript-eslint/no-require-imports': 'off'
+    }
+  },
+  {
+    // Special config for test files
+    files: ['**/*.test.{ts,tsx}'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        vi: 'readonly',
+      }
     }
   }
 ]; 

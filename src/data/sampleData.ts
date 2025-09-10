@@ -19,26 +19,24 @@ export const samplePainEntries: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [
-        {
-          name: 'Ibuprofen',
-          dosage: '400mg',
-          frequency: 'Twice daily',
-          effectiveness: 'Moderate relief for 2-3 hours'
-        }
-      ],
+<<<<<<< Updated upstream
+      current: [{
+        name: 'Ibuprofen',
+        dosage: '400mg',
+        frequency: 'Twice daily',
+        effectiveness: 'Moderate relief for 2-3 hours'
+      }],
       changes: 'Started taking ibuprofen twice daily',
       effectiveness: 'Moderate relief for 2-3 hours',
     },
     treatments: {
-      recent: [
-        {
-          type: 'Physiotherapy',
-          provider: 'Local Physiotherapy Clinic',
-          date: '2024-01-10',
-          effectiveness: 'Some improvement in flexibility'
-        }
-      ],
+<<<<<<< Updated upstream
+      recent: [{
+        type: 'Physiotherapy',
+        provider: 'City Physiotherapy Clinic',
+        date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+        effectiveness: 'Some improvement in flexibility'
+      }],
       effectiveness: 'Some improvement in flexibility',
       planned: ['Follow-up with specialist'],
     },
@@ -72,14 +70,13 @@ export const samplePainEntries: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [
-        {
-          name: 'Ibuprofen',
-          dosage: '400mg',
-          frequency: 'Once daily',
-          effectiveness: 'Good relief, lasts 4-5 hours'
-        }
-      ],
+<<<<<<< Updated upstream
+      current: [{
+        name: 'Ibuprofen',
+        dosage: '400mg',
+        frequency: 'Once daily',
+        effectiveness: 'Good relief, lasts 4-5 hours'
+      }],
       changes: 'Reduced to once daily',
       effectiveness: 'Good relief, lasts 4-5 hours',
     },
@@ -88,14 +85,16 @@ export const samplePainEntries: PainEntry[] = [
         {
           type: 'Heat therapy',
           provider: 'Self-administered',
-          date: '2024-01-12',
+<<<<<<< Updated upstream
+          date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
           effectiveness: 'Heat helps significantly'
         },
         {
           type: 'Gentle stretching',
           provider: 'Self-administered',
-          date: '2024-01-12',
-          effectiveness: 'Moderate improvement'
+<<<<<<< Updated upstream
+          date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+          effectiveness: 'Good improvement in mobility'
         }
       ],
       effectiveness: 'Heat helps significantly',
@@ -131,14 +130,13 @@ export const samplePainEntries: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [
-        {
-          name: 'Ibuprofen',
-          dosage: '400mg',
-          frequency: 'As needed',
-          effectiveness: 'Good when needed'
-        }
-      ],
+<<<<<<< Updated upstream
+      current: [{
+        name: 'Ibuprofen',
+        dosage: '400mg',
+        frequency: 'As needed',
+        effectiveness: 'Good when needed'
+      }],
       changes: 'Only taking when pain increases',
       effectiveness: 'Good when needed',
     },
@@ -146,15 +144,17 @@ export const samplePainEntries: PainEntry[] = [
       recent: [
         {
           type: 'Physiotherapy',
-          provider: 'Sports Medicine Clinic',
-          date: '2024-01-14',
+<<<<<<< Updated upstream
+          provider: 'City Physiotherapy Clinic',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
           effectiveness: 'Significant improvement in mobility'
         },
         {
           type: 'Regular walking',
           provider: 'Self-administered',
-          date: '2024-01-14',
-          effectiveness: 'Good general improvement'
+<<<<<<< Updated upstream
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          effectiveness: 'Improved overall fitness'
         }
       ],
       effectiveness: 'Significant improvement in mobility',
@@ -198,14 +198,16 @@ export const samplePainEntries: PainEntry[] = [
       recent: [
         {
           type: 'Physiotherapy',
-          provider: 'Physical Therapy Center',
-          date: '2024-01-16',
+<<<<<<< Updated upstream
+          provider: 'City Physiotherapy Clinic',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
           effectiveness: 'Excellent progress'
         },
         {
           type: 'Regular exercise routine',
           provider: 'Self-administered',
-          date: '2024-01-16',
+<<<<<<< Updated upstream
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
           effectiveness: 'Maintaining strength and flexibility'
         }
       ],

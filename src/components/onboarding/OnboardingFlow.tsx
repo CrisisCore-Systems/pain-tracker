@@ -56,8 +56,6 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
 
   if (!isVisible) return null;
 
-  const CurrentStepComponent = steps[currentStep].component;
-
   return (
     <div 
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -103,14 +101,30 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
           </div>
 
           <div data-onboarding-step tabIndex={-1}>
-            <CurrentStepComponent
-              onNext={handleNext}
-              onPrevious={handlePrevious}
-              onComplete={handleComplete}
-              onSkip={handleSkip}
-              isFirstStep={currentStep === 0}
-              isLastStep={currentStep === steps.length - 1}
-            />
+            {currentStep === 0 && (
+              <WelcomeScreen
+                onNext={handleNext}
+                onSkip={handleSkip}
+                isFirstStep={true}
+                isLastStep={false}
+              />
+            )}
+            {currentStep === 1 && (
+              <FeatureHighlights
+                onNext={handleNext}
+                onPrevious={handlePrevious}
+                isFirstStep={false}
+                isLastStep={false}
+              />
+            )}
+            {currentStep === 2 && (
+              <SampleDataSetup
+                onComplete={handleComplete}
+                onPrevious={handlePrevious}
+                isFirstStep={false}
+                isLastStep={true}
+              />
+            )}
           </div>
         </CardContent>
       </Card>

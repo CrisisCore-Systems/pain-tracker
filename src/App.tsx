@@ -6,12 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { PainTracker } from "./components/pain-tracker/index.tsx";
+import { PainTrackerContainer } from "./containers/PainTrackerContainer";
 import { ThemeProvider } from "./design-system";
 import { ToastProvider } from "./components/feedback";
 import './i18n/config';
+import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
+import { OfflineBanner } from "./components/pwa/OfflineIndicator";
+import { BrandedLoadingScreen } from "./components/branding/BrandedLoadingScreen";
+import { pwaManager } from "./utils/pwa-utils";
 
 console.log("App component rendering");
 
@@ -34,27 +38,30 @@ const ErrorFallback = () => {
 
 const LoadingFallback = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-muted-foreground">Loading Pain Tracker...</p>
-      </div>
-    </div>
+    <BrandedLoadingScreen message="Loading Pain Tracker Pro..." />
   );
 };
 
 function App() {
   console.log("Inside App render function");
   
+  // Initialize PWA features
+  useEffect(() => {
+    // PWA manager will initialize itself
+    pwaManager;
+  }, []);
+  
   return (
     <ThemeProvider>
       <ToastProvider>
         <div className="min-h-screen bg-background transition-colors">
+          <OfflineBanner />
           <ErrorBoundary fallback={<ErrorFallback />}>
             <Suspense fallback={<LoadingFallback />}>
-              <PainTracker />
+              <PainTrackerContainer />
             </Suspense>
           </ErrorBoundary>
+          <PWAInstallPrompt />
         </div>
       </ToastProvider>
     </ThemeProvider>

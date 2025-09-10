@@ -12,8 +12,18 @@ interface ProgressionAnalysisProps {
   };
 }
 
-function ChartTooltip({ active, payload, label }: any) {
-  if (!active || !payload) return null;
+interface ChartTooltipProps {
+  active?: boolean;
+  payload?: {
+    name: string;
+    value: number;
+    color: string;
+  }[];
+  label?: string;
+}
+
+function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
+  if (!active || !payload || !label) return null;
 
   return (
     <div className="bg-white p-3 border rounded shadow-lg" role="tooltip">
