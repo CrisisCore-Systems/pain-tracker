@@ -1,7 +1,7 @@
 import { validatePain } from './validation';
 import { wcbSubmit } from './api-client';
 
-export async function submitPain(raw: any) {
+export async function submitPain(raw: unknown) {
   try {
     const valid = validatePain(raw);
     // Convert single pain entry to submission format
@@ -11,7 +11,8 @@ export async function submitPain(raw: any) {
     };
     await wcbSubmit(submissionData);
     return { success: true };
-  } catch (e: any) {
-    return { success: false, error: e.message };
+  } catch (e: unknown) {
+    const error = e as Error;
+    return { success: false, error: error.message };
   }
 }

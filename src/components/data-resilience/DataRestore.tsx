@@ -44,7 +44,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
       } else {
         setRestoreStatus('Invalid backup file format');
       }
-    } catch (_error) {
+    } catch {
       setRestoreStatus('Error reading backup file');
     }
   };
@@ -80,7 +80,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
 
           const parsedData = JSON.parse(decryptedText);
           entries = parsedData.data || [];
-        } catch (_error) {
+        } catch {
           setRestoreStatus('Failed to decrypt backup - check your password');
           setIsRestoring(false);
           return;

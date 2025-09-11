@@ -214,7 +214,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
                   </div>
                   <select
                     value={riskFilter}
-                    onChange={(e) => setRiskFilter(e.target.value as any)}
+                    onChange={(e) => setRiskFilter(e.target.value as 'all' | 'low' | 'medium' | 'high')}
                     className="px-3 py-2 border rounded-md text-sm"
                   >
                     <option value="all">All Risk Levels</option>

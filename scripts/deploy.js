@@ -36,7 +36,6 @@ const log = (message, level = 'info') => {
     reset: '\x1b[0m'     // Reset
   };
   
-  const timestamp = new Date().toISOString();
   const prefix = {
     info: '🔍',
     success: '✅',
@@ -72,7 +71,7 @@ const getCurrentVersion = () => {
   try {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
     return packageJson.version;
-  } catch (error) {
+  } catch {
     throw new Error('Could not read current version from package.json');
   }
 };
@@ -80,7 +79,7 @@ const getCurrentVersion = () => {
 const getLatestTag = () => {
   try {
     return runCommand('git describe --tags --abbrev=0', { silent: true }).trim();
-  } catch (error) {
+  } catch {
     return null;
   }
 };
@@ -185,7 +184,7 @@ const commands = {
       runCommand(command);
       log(`Rollback to ${targetVersion} initiated`, 'success');
       log('Monitor the GitHub Actions workflow for progress', 'info');
-    } catch (error) {
+    } catch {
       log('GitHub CLI not available or not authenticated', 'warn');
       log(`Manually trigger rollback: https://github.com/${config.githubRepo}/actions`, 'info');
     }
@@ -223,7 +222,7 @@ const commands = {
       runCommand(command);
       log(`${type} release initiated`, 'success');
       log('Monitor the GitHub Actions workflow for progress', 'info');
-    } catch (error) {
+    } catch {
       log('GitHub CLI not available or not authenticated', 'warn');
       log(`Manually trigger release: https://github.com/${config.githubRepo}/actions`, 'info');
     }
@@ -246,7 +245,7 @@ const commands = {
     }
   },
 
-  async logs(environment = 'production', options = {}) {
+  async logs(environment = 'production') {
     log(`📋 Fetching deployment logs for ${environment}`);
     
     // In a real implementation, this would fetch logs from the deployment platform
@@ -255,7 +254,7 @@ const commands = {
     try {
       const command = `gh run list --workflow=${config.workflowFiles[environment] || 'pages.yml'} --limit=5`;
       runCommand(command);
-    } catch (error) {
+    } catch {
       log('GitHub CLI not available. Check logs manually:', 'warn');
       log(`https://github.com/${config.githubRepo}/actions`, 'info');
     }

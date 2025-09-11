@@ -27,14 +27,27 @@ interface PainAnalyticsProps {
   onApplyTemplate?: (template: Partial<PainEntry>) => void;
 }
 
+type TabId = 'overview' | 'comparison' | 'heatmap' | 'treatment' | 'clinical' | 'accessibility' | 'backup' | 'templates';
+
 export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ 
   entries, 
   onDataRestore = () => {}, 
   onApplyTemplate = () => {} 
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'comparison' | 'heatmap' | 'treatment' | 'clinical' | 'accessibility' | 'backup' | 'templates'>('overview');
+  const [activeTab, setActiveTab] = useState<TabId>('overview');
   const trends = analyzeTrends(entries);
   const stats = calculateStatistics(entries);
+
+  const tabs: Array<{ id: TabId; label: string; icon: string }> = [
+    { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'comparison', label: 'Comparisons', icon: '📈' },
+    { id: 'heatmap', label: 'Body Heatmap', icon: '🗺️' },
+    { id: 'treatment', label: 'Treatment Timeline', icon: '💊' },
+    { id: 'clinical', label: 'Clinical Export', icon: '🏥' },
+    { id: 'backup', label: 'Data Backup', icon: '💾' },
+    { id: 'templates', label: 'Templates', icon: '📋' },
+    { id: 'accessibility', label: 'Accessibility', icon: '♿' }
+  ];
 
   const timeOfDayData = Object.entries(trends.timeOfDayPattern).map(([hour, pain]) => ({
     hour,
@@ -70,19 +83,10 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
       <div className="bg-white rounded-lg shadow">
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8 px-6" aria-label="Analytics Tabs">
-            {[
-              { id: 'overview', label: 'Overview', icon: '📊' },
-              { id: 'comparison', label: 'Comparisons', icon: '📈' },
-              { id: 'heatmap', label: 'Body Heatmap', icon: '🗺️' },
-              { id: 'treatment', label: 'Treatment Timeline', icon: '💊' },
-              { id: 'clinical', label: 'Clinical Export', icon: '🏥' },
-              { id: 'backup', label: 'Data Backup', icon: '💾' },
-              { id: 'templates', label: 'Templates', icon: '📋' },
-              { id: 'accessibility', label: 'Accessibility', icon: '♿' }
-            ].map((tab) => (
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id)}
                 className={`
                   flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm
                   ${activeTab === tab.id

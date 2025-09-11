@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import type { PainEntry } from '../types';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { PainTrackerLayout } from '../components/layouts/PainTrackerLayout';
 import { OnboardingFlow } from '../components/onboarding';
@@ -75,7 +76,7 @@ export function PainTrackerContainer() {
     setShowWalkthrough(false);
   };
 
-  const validatePainEntry = (entry: any): boolean => {
+  const validatePainEntry = (entry: Omit<PainEntry, 'id' | 'timestamp'>): boolean => {
     if (!entry.baselineData) return false;
     
     const { pain } = entry.baselineData;
@@ -94,7 +95,7 @@ export function PainTrackerContainer() {
     return true;
   };
 
-  const handleAddEntry = (entryData: any) => {
+  const handleAddEntry = (entryData: Omit<PainEntry, 'id' | 'timestamp'>) => {
     try {
       if (!validatePainEntry(entryData)) {
         setError("Invalid pain entry data. Please check your input values.");
