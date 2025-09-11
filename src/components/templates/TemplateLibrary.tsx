@@ -219,8 +219,10 @@ const GENERAL_TEMPLATES: Template[] = [
   }
 ];
 
+type CategoryType = 'all' | 'worksafe-bc' | 'clinic' | 'general';
+
 export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplate }) => {
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'worksafe-bc' | 'clinic' | 'general'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
 
   const allTemplates = [...WORKSAFE_BC_TEMPLATES, ...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES];
@@ -256,15 +258,15 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
             Filter by Category
           </label>
           <div className="flex flex-wrap gap-2">
-            {[
+            {([
               { value: 'all', label: 'All Templates' },
               { value: 'worksafe-bc', label: 'WorkSafe BC' },
               { value: 'clinic', label: 'Clinical' },
               { value: 'general', label: 'General' }
-            ].map((category) => (
+            ] as Array<{ value: CategoryType; label: string }>).map((category) => (
               <button
                 key={category.value}
-                onClick={() => setSelectedCategory(category.value as any)}
+                onClick={() => setSelectedCategory(category.value)}
                 className={`px-3 py-1 rounded-full text-sm border ${
                   selectedCategory === category.value
                     ? 'bg-blue-500 text-white border-blue-500'

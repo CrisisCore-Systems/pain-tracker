@@ -223,6 +223,17 @@ export interface BundleEntry {
   };
 }
 
+// FHIR Validation Response
+export interface FHIRValidationResult {
+  resourceType: 'OperationOutcome';
+  issue?: Array<{
+    severity: 'fatal' | 'error' | 'warning' | 'information';
+    code: string;
+    diagnostics?: string;
+    location?: string[];
+  }>;
+}
+
 // FHIR Service Implementation
 export class FHIRService {
   private baseUrl: string;
@@ -548,7 +559,7 @@ export class FHIRService {
   }
 
   // Validation
-  async validateResource(resource: FHIRResource): Promise<any> {
+  async validateResource(resource: FHIRResource): Promise<FHIRValidationResult> {
     const response = await fetch(`${this.baseUrl}/${resource.resourceType}/$validate`, {
       method: 'POST',
       headers: this.headers,
