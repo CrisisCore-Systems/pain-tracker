@@ -129,7 +129,10 @@ const allowlistPatterns = [
   /VITE_[A-Z_]+\s*=\s*['""][^'""]*['""]/, // Environment variable definitions
   /^#.*$/, // Comments (including .env.example documentation)
   /^\/\/.*$/, // JavaScript comments
-  /^\/\*.*\*\/$/ // Block comments
+  /^\/\*.*\*\/$/, // Block comments
+  /import.*from.*['""][^'""]*['""]/, // Import statements
+  /const chars = ['"][A-Za-z0-9!@#$%^&*]+['"]/, // Character sets for password generation
+  /BrandedLoadingScreen/ // Component names that trigger false positives
 ];
 
 function shouldIgnoreLine(line) {

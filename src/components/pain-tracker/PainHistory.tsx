@@ -19,7 +19,7 @@ export function PainHistory({ entries }: PainHistoryProps) {
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4">History</h2>
       <div className="space-y-4">
-        {entries
+        {[...entries]
           .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
           .map((entry) => (
             <div
