@@ -34,7 +34,18 @@
     "pre-commit": "node scripts/pre-commit.js",
     "commitlint": "commitlint",
     "audit-security": "node scripts/security-audit.js",
-    "update-deps": "node scripts/update-dependencies.js"
+    "update-deps": "node scripts/update-dependencies.js",
+    "deploy:status": "node scripts/deploy.js status",
+    "deploy:staging": "node scripts/deploy.js deploy staging",
+    "deploy:production": "node scripts/deploy.js deploy production",
+    "deploy:rollback": "node scripts/deploy.js rollback",
+    "deploy:healthcheck": "node scripts/deploy.js healthcheck",
+    "deploy:logs": "node scripts/deploy.js logs",
+    "deploy:validate": "node scripts/deploy.js validate",
+    "release:patch": "node scripts/deploy.js release patch",
+    "release:minor": "node scripts/deploy.js release minor",
+    "release:major": "node scripts/deploy.js release major",
+    "healthcheck": "node scripts/health-check.js"
   },
   "dependencies": {
     "@commitlint/cli": "^19.8.1",
