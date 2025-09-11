@@ -5,6 +5,16 @@ export interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+interface OfflineData {
+  entries: unknown[];
+  settings: Record<string, unknown>;
+  timestamp: string;
+}
+
+interface SyncManager {
+  register(tag: string): Promise<void>;
+}
+
 export class PWAManager {
   private static instance: PWAManager;
   private installPromptEvent: BeforeInstallPromptEvent | null = null;
@@ -117,7 +127,7 @@ export class PWAManager {
     }
 
     // Check if running in mobile app mode
-    if ((window.navigator as any).standalone) {
+      if ((window.navigator as Navigator & { standalone?: boolean }).standalone) {
       this.isInstalled = true;
     }
   }
@@ -149,13 +159,14 @@ export class PWAManager {
       }
       
       // Trigger background sync if available
-      if ('sync' in this.swRegistration) {
-        try {
-          await this.swRegistration.sync.register('pain-tracker-sync');
-        } catch (error) {
-          console.error('PWA: Background sync registration failed:', error);
+        if ('sync' in this.swRegistration) {
+          try {
+            const reg = this.swRegistration as ServiceWorkerRegistration & { sync: SyncManager };
+            await reg.sync.register('pain-tracker-sync');
+          } catch (error) {
+            console.error('PWA: Background sync registration failed:', error);
+          }
         }
-      }
     }
   }
 
@@ -164,7 +175,7 @@ export class PWAManager {
   }
 
   // Push Notifications
-  async requestNotificationPermission(): Promise<NotificationPermission> {
+    async requestNotificationPermission(): Promise<NotificationPermission> {
     if (!('Notification' in window)) {
       console.warn('PWA: This browser does not support notifications');
       return 'denied';
@@ -196,12 +207,12 @@ export class PWAManager {
         return null;
       }
 
-      const subscription = await this.swRegistration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(
-          applicationServerKey
-        ) as any
-      });
+        const subscription = await this.swRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: this.urlBase64ToUint8Array(
+            applicationServerKey
+          ).buffer as ArrayBuffer
+        });
 
       console.log('PWA: Push subscription created:', subscription);
       return subscription;
@@ -260,75 +271,75 @@ export class PWAManager {
     }
   }
 
-  // Utility Methods
-  private dispatchCustomEvent(type: string, detail?: any): void {
-    const event = new CustomEvent(type, { detail });
-    window.dispatchEvent(event);
-  }
-
-  private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-      .replace(/\-/g, '+')
-      .replace(/_/g, '/');
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-  }
-
-  // Cache Management
-  async clearCaches(): Promise<void> {
-    if ('caches' in window) {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map(cacheName => caches.delete(cacheName))
-      );
-      console.log('PWA: All caches cleared');
-    }
-  }
-
-  async getCacheSize(): Promise<number> {
-    if (!('storage' in navigator && 'estimate' in navigator.storage)) {
-      return 0;
+    // Utility Methods
+    private dispatchCustomEvent(type: string, detail?: unknown): void {
+      const event = new CustomEvent(type, { detail });
+      window.dispatchEvent(event);
     }
 
-    try {
-      const estimate = await navigator.storage.estimate();
-      return estimate.usage || 0;
-    } catch (error) {
-      console.error('PWA: Failed to get cache size:', error);
-      return 0;
-    }
-  }
+    private urlBase64ToUint8Array(base64String: string): Uint8Array {
+      const padding = '='.repeat((4 - base64String.length % 4) % 4);
+      const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
 
-  // Data Management
-  async exportOfflineData(): Promise<any> {
-    // Export cached data for backup
-    const data = {
-      entries: JSON.parse(localStorage.getItem('painEntries') || '[]'),
-      settings: JSON.parse(localStorage.getItem('pain-tracker-settings') || '{}'),
-      timestamp: new Date().toISOString()
-    };
-    
-    return data;
-  }
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
 
-  async importOfflineData(data: any): Promise<void> {
-    // Import data for restore
-    if (data.entries) {
-      localStorage.setItem('painEntries', JSON.stringify(data.entries));
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
     }
-    if (data.settings) {
-      localStorage.setItem('pain-tracker-settings', JSON.stringify(data.settings));
+
+    // Cache Management
+    async clearCaches(): Promise<void> {
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+        console.log('PWA: All caches cleared');
+      }
     }
-    
-    console.log('PWA: Data imported successfully');
-  }
+
+    async getCacheSize(): Promise<number> {
+      if (!('storage' in navigator && 'estimate' in navigator.storage)) {
+        return 0;
+      }
+
+      try {
+        const estimate = await navigator.storage.estimate();
+        return estimate.usage || 0;
+      } catch (error) {
+        console.error('PWA: Failed to get cache size:', error);
+        return 0;
+      }
+    }
+
+    // Data Management
+    async exportOfflineData(): Promise<OfflineData> {
+      // Export cached data for backup
+      const data: OfflineData = {
+        entries: JSON.parse(localStorage.getItem('painEntries') || '[]'),
+        settings: JSON.parse(localStorage.getItem('pain-tracker-settings') || '{}'),
+        timestamp: new Date().toISOString()
+      };
+
+      return data;
+    }
+
+    async importOfflineData(data: OfflineData): Promise<void> {
+      // Import data for restore
+      if (data.entries) {
+        localStorage.setItem('painEntries', JSON.stringify(data.entries));
+      }
+      if (data.settings) {
+        localStorage.setItem('pain-tracker-settings', JSON.stringify(data.settings));
+      }
+
+      console.log('PWA: Data imported successfully');
+    }
 }
 
 // Export singleton instance

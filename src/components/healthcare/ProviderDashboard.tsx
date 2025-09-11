@@ -367,9 +367,9 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
             <div>
               <div className="text-sm text-muted-foreground mb-2">Conditions</div>
               <div className="flex flex-wrap gap-1">
-                {patient.conditions.map((condition) => (
-                  <span
-                    key={index}
+                  {patient.conditions.map((condition, index) => (
+                    <span
+                      key={index}
                     className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md"
                   >
                     {condition}

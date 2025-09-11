@@ -203,7 +203,7 @@ class PainAnalyticsService {
           description: `${periodicPatterns.monthly.strength > 0.5 ? 'Strong' : 'Weak'} monthly pattern detected`
         }
       ],
-      seasonalFactors: this.analyzeSeasonalFactors(entries)
+        seasonalFactors: this.analyzeSeasonalFactors()
     };
   }
 

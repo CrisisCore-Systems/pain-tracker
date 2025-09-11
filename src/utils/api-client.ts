@@ -8,10 +8,10 @@ class CircuitBreaker {
   private chk(){ if(this.s==='OPEN' && Date.now()-this.t>this.win){ this.s='HALF'; this.f=this.th-this.half; } }
 }
 export const wcbApiBreaker = new CircuitBreaker();
-export async function wcbApiRequest<T>(endpoint: string, opts: RequestInit = {}): Promise<T> {
+  export async function wcbApiRequest<T>(endpoint: string, opts: RequestInit = {}): Promise<T> {
   if (!wcbApiBreaker.isClosed) throw new Error('Circuit breaker open');
   try {
-    const base = (import.meta as any).env?.VITE_WCB_API_ENDPOINT || '/api/wcb';
+    const base = import.meta.env.VITE_WCB_API_ENDPOINT ?? '/api/wcb';
     const res = await fetch(`${base}${endpoint}`, {
       ...opts,
       headers: { 'Content-Type': 'application/json', ...(opts.headers||{}) }
