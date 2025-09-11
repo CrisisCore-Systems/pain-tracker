@@ -12,7 +12,7 @@ interface PainChartProps {
 }
 
 export function PainChart({ entries }: PainChartProps) {
-  const chartData: ChartData[] = entries
+  const chartData: ChartData[] = [...entries]
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
     .map(entry => ({
       timestamp: format(new Date(entry.timestamp), "MM/dd HH:mm"),
