@@ -123,7 +123,7 @@ export const validatePain = (data: unknown): {
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const firstError = error.errors[0];
+      const firstError = error.issues[0];
       throw new ValidationError(
         firstError.message,
         firstError.path.join('.'),
@@ -205,7 +205,7 @@ export const validatePersonalInfo = (data: unknown): z.infer<typeof PersonalInfo
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const firstError = error.errors[0];
+      const firstError = error.issues[0];
       throw new ValidationError(
         firstError.message,
         firstError.path.join('.'),

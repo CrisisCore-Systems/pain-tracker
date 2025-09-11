@@ -100,7 +100,7 @@ export async function wcbSubmit(data: SubmissionData): Promise<unknown> {
     SubmissionDataSchema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const firstError = error.errors[0];
+      const firstError = error.issues[0];
       throw new ValidationError(
         `Invalid ${firstError.path.join('.')}: ${firstError.message}`,
         firstError.path.join('.')
