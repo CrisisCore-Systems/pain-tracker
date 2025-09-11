@@ -47,6 +47,9 @@ const SubmissionDataSchema = z.object({
 
 type SubmissionData = z.infer<typeof SubmissionDataSchema>;
 
+// Export the type for use in tests
+export type { SubmissionData };
+
 // Configuration
 const API_CONFIG = {
   timeout: 30000, // 30 seconds

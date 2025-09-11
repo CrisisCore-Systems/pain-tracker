@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validatePain, validatePersonalInfo, ValidationError } from '../validation';
-import { wcbSubmit, ApiError, NetworkError } from '../api-client';
+import { wcbSubmit, ApiError, NetworkError, type SubmissionData } from '../api-client';
 
 describe('Security Validation Tests', () => {
   describe('validatePain', () => {
@@ -130,7 +130,7 @@ describe('Security Validation Tests', () => {
   describe('API Client Security', () => {
     it('should reject invalid data types', async () => {
       await expect(async () => {
-        await wcbSubmit('invalid-string' as any);
+        await wcbSubmit('invalid-string' as unknown as SubmissionData);
       }).rejects.toThrow();
     });
 
@@ -150,7 +150,7 @@ describe('Security Validation Tests', () => {
       };
 
       await expect(async () => {
-        await wcbSubmit(invalidData as any);
+        await wcbSubmit(invalidData as unknown as SubmissionData);
       }).rejects.toThrow();
     });
   });

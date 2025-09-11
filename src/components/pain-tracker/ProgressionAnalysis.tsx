@@ -30,7 +30,7 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
       <p className="font-medium mb-2">
         {format(new Date(label), 'MMM d, yyyy')}
       </p>
-      {payload.map((item: any) => (
+      {payload.map((item) => (
         <div key={item.name} className="flex items-center gap-2">
           <div
             className="w-3 h-3 rounded-full"

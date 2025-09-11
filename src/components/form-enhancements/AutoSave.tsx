@@ -89,6 +89,7 @@ export function AutoSave<TData extends object>({
         console.error('Failed to load saved data:', error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey]);
 
   const getStatusDisplay = () => {

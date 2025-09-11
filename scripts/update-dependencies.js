@@ -14,7 +14,7 @@ async function updateDependencies() {
     console.log('1. Checking current vulnerabilities...');
     try {
       execSync('npm audit --audit-level=high', { stdio: 'inherit' });
-    } catch (_error) {
+    } catch {
       // Ignore error parameter
       console.log('   Found vulnerabilities to address\n');
     }
@@ -24,7 +24,7 @@ async function updateDependencies() {
     try {
       execSync('npm audit fix', { stdio: 'inherit' });
       console.log('   ✅ Safe fixes applied\n');
-    } catch (_error) {
+    } catch {
       // Ignore error parameter
       console.log('   ⚠️  No safe fixes available\n');
     }
@@ -42,7 +42,7 @@ async function updateDependencies() {
     console.log('4. Checking for outdated packages...');
     try {
       execSync('npm outdated', { stdio: 'inherit' });
-    } catch (_error) {
+    } catch {
       // npm outdated exits with code 1 when packages are outdated
       console.log('   See above for packages that need manual updates\n');
     }
@@ -52,7 +52,7 @@ async function updateDependencies() {
     try {
       execSync('npm audit --audit-level=high', { stdio: 'inherit' });
       console.log('   ✅ No high/critical vulnerabilities remaining');
-    } catch (_error) {
+    } catch {
       // Ignore error for final check
       console.log('   ⚠️  Still have vulnerabilities - consider:');
       console.log('       - npm audit fix --force (may have breaking changes)');

@@ -131,7 +131,7 @@ async function handleAPIRequests(request) {
     }
     
     throw new Error('Network response not ok');
-  } catch (_error) {
+  } catch {
     console.log('Service Worker: Network failed for API request, trying cache');
     
     // Network failed, try cache
@@ -159,7 +159,7 @@ async function handleOtherRequests(request) {
     }
     
     throw new Error('Network response not ok');
-  } catch (_error) {
+  } catch {
     // Try cache
     const cache = await caches.open(DYNAMIC_CACHE_NAME);
     const cachedResponse = await cache.match(request);

@@ -30,6 +30,17 @@ interface TreatmentEvent {
   description: string;
 }
 
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    payload: ChartDataPoint;
+    value: number;
+    name: string;
+    color: string;
+  }>;
+  label?: string;
+}
+
 export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) => {
   const { chartData, treatmentEvents } = useMemo(() => {
     if (!entries.length) return { chartData: [], treatmentEvents: [] };
@@ -72,7 +83,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
     return { chartData, treatmentEvents };
   }, [entries]);
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (!active || !payload || !payload.length) return null;
 
     const data = payload[0].payload;
