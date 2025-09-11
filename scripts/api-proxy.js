@@ -1,9 +1,8 @@
 // @crisiscore-hardened: Secure API proxy
-/* eslint-disable @typescript-eslint/no-require-imports */
-const express = require('express');
-const cors = require('cors');
-const { createProxyMiddleware } = require('http-proxy-middleware');
-const rateLimit = require('express-rate-limit');
+import express from 'express';
+import cors from 'cors';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 app.use(cors());
