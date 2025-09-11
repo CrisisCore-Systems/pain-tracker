@@ -119,7 +119,7 @@ export async function generateWCBReportPDF(
   }
 
   // Add footer with date and page numbers
-  const pageCount = (doc as any).internal.pages.length;
+    const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(10);

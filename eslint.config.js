@@ -28,6 +28,9 @@ export default [
         ...globals.serviceworker,
         React: 'readonly',
         NodeJS: 'readonly',
+        RequestInit: 'readonly',
+        NotificationPermission: 'readonly',
+        NodeListOf: 'readonly',
       }
     },
     plugins: {

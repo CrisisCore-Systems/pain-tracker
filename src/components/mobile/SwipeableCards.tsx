@@ -162,7 +162,6 @@ export function SwipeableCards({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [goToPrevious, goToNext]);
 
-  const transform = `translateX(calc(-${currentIndex * 100}% + ${isDragging ? dragOffset : 0}px))`;
 
   return (
     <div className={`swipeable-cards relative overflow-hidden ${className}`}>

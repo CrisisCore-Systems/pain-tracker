@@ -73,8 +73,3 @@ interface Window {
 // Service Worker types for public/sw.js
 declare const self: ServiceWorkerGlobalScope;
 declare const caches: CacheStorage;
-
-// Extend NodeJS timeout types
-declare namespace NodeJS {
-  interface Timeout {}
-}

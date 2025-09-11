@@ -46,10 +46,10 @@ function App() {
   console.log("Inside App render function");
   
   // Initialize PWA features
-  useEffect(() => {
-    // PWA manager will initialize itself
-    pwaManager;
-  }, []);
+    useEffect(() => {
+      // Trigger initialization
+      pwaManager.isAppInstalled();
+    }, []);
   
   return (
     <ThemeProvider>
