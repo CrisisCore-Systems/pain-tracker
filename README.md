@@ -228,20 +228,41 @@ npm run check-security            # Run comprehensive security checks
 ```
 
 ### Deployment
-The application has GitHub Actions workflows configured for automatic deployment to GitHub Pages:
+The application has a comprehensive multi-environment deployment strategy with automated CI/CD pipelines:
 
-**Production Deployment**:
-1. Fork this repository
-2. Enable GitHub Pages in your repository settings (Source: GitHub Actions)
-3. Push changes to the main branch
-4. GitHub Actions will automatically build and deploy your changes
-
-**Local Production Build**:
+**Quick Deployment Commands**:
 ```bash
-npm run build  # Creates production build in dist/
+# Check deployment status
+make deploy-status
+
+# Deploy to staging
+make deploy-staging
+
+# Create a release (auto-deploys to production)
+make release-patch    # Bug fixes
+make release-minor    # New features
+make release-major    # Breaking changes
+
+# Run health checks
+make deploy-healthcheck
+
+# Emergency rollback (if needed)
+make deploy-rollback ENV=production VERSION=v1.2.3
 ```
 
-**Security Note**: The deployment pipeline includes security scanning and will fail if critical vulnerabilities are detected in runtime dependencies.
+**Environments**:
+- **Production**: https://crisiscore-systems.github.io/pain-tracker/ (main branch, releases)
+- **Staging**: https://crisiscore-systems.github.io/pain-tracker/staging/ (develop branch)
+- **Preview**: Automatic per-PR deployments for testing
+
+**Deployment Pipeline**:
+1. **Pull Request** → Preview deployment for testing
+2. **Merge to develop** → Staging deployment for QA
+3. **Release creation** → Production deployment with monitoring
+
+For detailed deployment procedures, rollback steps, and troubleshooting, see [Deployment Guide](docs/DEPLOYMENT.md).
+
+**Security Note**: All deployments include comprehensive security scanning and will fail if critical vulnerabilities are detected.
 
 </details>
 

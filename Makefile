@@ -122,6 +122,49 @@ deploy: ## Deploy to GitHub Pages
 	@echo "🚀 Deploying to GitHub Pages..."
 	npm run deploy
 
+deploy-status: ## Show deployment status
+	@echo "📊 Checking deployment status..."
+	npm run deploy:status
+
+deploy-staging: ## Deploy to staging environment
+	@echo "🚀 Deploying to staging..."
+	npm run deploy:staging
+
+deploy-production: ## Deploy to production environment
+	@echo "🚀 Deploying to production..."
+	npm run deploy:production
+
+deploy-rollback: ## Rollback deployment (requires environment and version)
+	@echo "🔄 Initiating rollback..."
+	@echo "Usage: make deploy-rollback ENV=production VERSION=v1.2.3"
+	@if [ -z "$(ENV)" ] || [ -z "$(VERSION)" ]; then \
+		echo "❌ ENV and VERSION parameters are required"; \
+		echo "Example: make deploy-rollback ENV=production VERSION=v1.2.3"; \
+		exit 1; \
+	fi
+	npm run deploy:rollback $(ENV) $(VERSION)
+
+deploy-healthcheck: ## Run deployment health checks
+	@echo "🔍 Running health checks..."
+	npm run deploy:healthcheck
+
+deploy-validate: ## Validate deployment configuration
+	@echo "🔍 Validating deployment setup..."
+	npm run deploy:validate
+
+# Release Management
+release-patch: ## Create patch release
+	@echo "🎯 Creating patch release..."
+	npm run release:patch
+
+release-minor: ## Create minor release
+	@echo "🎯 Creating minor release..."
+	npm run release:minor
+
+release-major: ## Create major release
+	@echo "🎯 Creating major release..."
+	npm run release:major
+
 # Maintenance
 clean: ## Clean build artifacts and dependencies
 	@echo "🧹 Cleaning build artifacts..."
