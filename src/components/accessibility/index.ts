@@ -78,6 +78,13 @@ export {
   CognitiveLoadMonitor
 } from './CognitiveLoadIndicator';
 
+export { CognitiveFogIndicator } from './CognitiveFogIndicator';
+
+export { 
+  CrisisNavigationBar,
+  CrisisCompassNavigation
+} from './CrisisNavigationPatterns';
+
 export {
   CrisisStateAdaptation
 } from './CrisisStateAdaptation';
@@ -88,12 +95,25 @@ export {
   AutoContentWarning
 } from './ContentWarning';
 
+export { EnhancedContentWarning } from './EnhancedContentWarning';
+
 export {
   ProgressiveDisclosure as EnhancedProgressiveDisclosure,
   LayeredDisclosure,
   AdaptiveDisclosure
 } from './ProgressiveDisclosurePatterns';
 
+export {
+  MedicalProgressiveDisclosure,
+  OrganizedMedicalSections
+} from './MedicalProgressiveDisclosure';
+
+export { InterfaceSimplifier } from './InterfaceSimplification';
+
+export { SmartFormSimplifier } from './SmartFormSimplifier';
+
 // Utility functions and hooks
 export * from './cognitiveLoadUtils';
 export { useCrisisDetection } from './useCrisisDetection';
+export { useCognitiveFog } from './useCognitiveFog';
+export { useInterfaceSimplification } from './useInterfaceSimplification';
