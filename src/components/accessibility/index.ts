@@ -70,3 +70,30 @@ export {
 
 // Integration summary
 export { IntegrationSummary } from './IntegrationSummary';
+
+// Enhanced trauma-informed components (new)
+export {
+  CognitiveLoadIndicator,
+  CognitiveLoadWrapper,
+  CognitiveLoadMonitor
+} from './CognitiveLoadIndicator';
+
+export {
+  CrisisStateAdaptation
+} from './CrisisStateAdaptation';
+
+export {
+  ContentWarning,
+  InlineContentWarning,
+  AutoContentWarning
+} from './ContentWarning';
+
+export {
+  ProgressiveDisclosure as EnhancedProgressiveDisclosure,
+  LayeredDisclosure,
+  AdaptiveDisclosure
+} from './ProgressiveDisclosurePatterns';
+
+// Utility functions and hooks
+export * from './cognitiveLoadUtils';
+export { useCrisisDetection } from './useCrisisDetection';

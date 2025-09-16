@@ -9,6 +9,8 @@ export interface TraumaInformedPreferences {
   showMemoryAids: boolean;
   autoSave: boolean;
   showProgress: boolean;
+  showCognitiveLoadIndicators: boolean;
+  adaptiveComplexity: boolean;
   
   // Visual Preferences
   fontSize: 'small' | 'medium' | 'large' | 'xl';
@@ -24,6 +26,18 @@ export interface TraumaInformedPreferences {
   gentleLanguage: boolean;
   hideDistressingContent: boolean;
   showComfortPrompts: boolean;
+  enableContentWarnings: boolean;
+  contentWarningLevel: 'minimal' | 'standard' | 'comprehensive';
+  
+  // Crisis Support
+  enableCrisisDetection: boolean;
+  crisisDetectionSensitivity: 'low' | 'medium' | 'high';
+  showCrisisResources: boolean;
+  
+  // Progressive Disclosure
+  enableProgressiveDisclosure: boolean;
+  defaultDisclosureLevel: 'essential' | 'helpful' | 'advanced' | 'expert';
+  adaptiveDisclosure: boolean;
   
   // Validation Technology Features
   realTimeValidation: boolean;
@@ -37,6 +51,8 @@ export const defaultPreferences: TraumaInformedPreferences = {
   showMemoryAids: true,
   autoSave: true,
   showProgress: true,
+  showCognitiveLoadIndicators: true,
+  adaptiveComplexity: true,
   fontSize: 'medium',
   contrast: 'normal',
   reduceMotion: false,
@@ -46,6 +62,14 @@ export const defaultPreferences: TraumaInformedPreferences = {
   gentleLanguage: true,
   hideDistressingContent: false,
   showComfortPrompts: true,
+  enableContentWarnings: true,
+  contentWarningLevel: 'standard',
+  enableCrisisDetection: true,
+  crisisDetectionSensitivity: 'medium',
+  showCrisisResources: true,
+  enableProgressiveDisclosure: true,
+  defaultDisclosureLevel: 'helpful',
+  adaptiveDisclosure: true,
   realTimeValidation: true,
   theme: 'auto',
   reminderFrequency: 'daily',

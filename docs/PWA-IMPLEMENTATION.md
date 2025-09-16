@@ -197,3 +197,6 @@ The PWA implementation provides a robust, offline-first experience for pain trac
 For support or questions about the PWA implementation, refer to the component documentation or contact the development team.
 
 
+
+
+

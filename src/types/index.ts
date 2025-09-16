@@ -126,6 +126,7 @@ export interface EmergencyContact {
 }
 
 export interface EmergencyProtocol {
+  name: string;
   painThreshold: number;
   symptoms: string[];
   medications: Array<{

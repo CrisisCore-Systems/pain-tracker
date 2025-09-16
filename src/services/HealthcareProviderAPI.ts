@@ -1,7 +1,7 @@
 // Healthcare Provider API Service
 // Implements secure APIs for healthcare institutions and providers
 
-import { FHIRService, FHIRBundle } from './FHIRService';
+import { FHIRBundle, FHIRPatient } from './FHIRService';
 import type { PainEntry } from '../types';
 import crypto from 'crypto';
 
@@ -92,7 +92,6 @@ export interface AlertConfiguration {
 }
 
 export class HealthcareProviderAPI {
-  private fhirService: FHIRService;
   private baseUrl: string;
   private credentials: Map<string, ProviderCredentials> = new Map();
   private webhooks: Map<string, WebhookEndpoint[]> = new Map();
@@ -100,7 +99,6 @@ export class HealthcareProviderAPI {
 
   constructor(baseUrl: string = '/api/v1/healthcare') {
     this.baseUrl = baseUrl;
-    this.fhirService = new FHIRService();
   }
 
   // Provider Authentication & Registration
@@ -127,15 +125,16 @@ export class HealthcareProviderAPI {
     return null;
   }
 
-  private async validateProviderCredentials(_credentials: ProviderCredentials): Promise<boolean> {
+  private async validateProviderCredentials(credentials: ProviderCredentials): Promise<boolean> {
     // Implement NPI verification against CMS database
     // Validate organization credentials
     // Check licensing status
+    console.log('Validating credentials for provider:', credentials.providerId);
     return true; // Simplified for demo
   }
 
   // Patient Data Access
-  async getPatients(providerId: string, _filters?: {
+  async getPatients(providerId: string, filters?: {
     since?: string;
     riskLevel?: string;
     active?: boolean;
@@ -148,7 +147,7 @@ export class HealthcareProviderAPI {
     this.validateScope(credentials, 'Patient', 'read');
 
     // Mock patient data - would integrate with actual patient database
-    return [
+    const allPatients = [
       {
         id: 'patient-001',
         fhirId: 'Patient/001',
@@ -159,7 +158,7 @@ export class HealthcareProviderAPI {
         lastEntryDate: '2025-09-14T10:30:00Z',
         totalEntries: 45,
         averagePainLevel: 5.2,
-        riskLevel: 'medium',
+        riskLevel: 'medium' as const,
         conditions: ['Chronic back pain', 'Arthritis'],
         lastSyncDate: '2025-09-15T08:00:00Z'
       },
@@ -173,11 +172,33 @@ export class HealthcareProviderAPI {
         lastEntryDate: '2025-09-15T09:15:00Z',
         totalEntries: 78,
         averagePainLevel: 7.8,
-        riskLevel: 'high',
+        riskLevel: 'high' as const,
         conditions: ['Fibromyalgia', 'Migraines'],
         lastSyncDate: '2025-09-15T08:00:00Z'
       }
     ];
+
+    // Apply filters if provided
+    let filteredPatients = allPatients;
+    
+    if (filters?.riskLevel) {
+      filteredPatients = filteredPatients.filter(p => p.riskLevel === filters.riskLevel);
+    }
+    
+    if (filters?.since) {
+      const sinceDate = new Date(filters.since);
+      filteredPatients = filteredPatients.filter(p => new Date(p.lastEntryDate) > sinceDate);
+    }
+    
+    if (filters?.active !== undefined) {
+      // For demo purposes, consider all patients active
+      // In real implementation, this would check patient active status
+      if (!filters.active) {
+        filteredPatients = [];
+      }
+    }
+
+    return filteredPatients;
   }
 
   async getPatientData(providerId: string, patientId: string, format: 'fhir' | 'summary' = 'fhir'): Promise<FHIRBundle | PatientSummary> {
@@ -398,6 +419,19 @@ export class HealthcareProviderAPI {
 
   private async createPatientBundle(patientId: string): Promise<FHIRBundle> {
     // Create FHIR bundle with patient data and related resources
+    const patientResource: FHIRPatient = {
+      resourceType: 'Patient',
+      id: patientId,
+      identifier: [{
+        system: 'http://paintracker.app/patient-id',
+        value: patientId
+      }],
+      name: [{
+        text: 'Patient Name'
+      }],
+      gender: 'unknown'
+    };
+
     return {
       resourceType: 'Bundle',
       type: 'searchset',
@@ -406,25 +440,15 @@ export class HealthcareProviderAPI {
       entry: [
         {
           fullUrl: `Patient/${patientId}`,
-          resource: {
-            resourceType: 'Patient',
-            id: patientId,
-            identifier: [{
-              system: 'http://paintracker.app/patient-id',
-              value: patientId
-            }],
-            name: [{
-              text: 'Patient Name'
-            }],
-            gender: 'unknown'
-          }
+          resource: patientResource
         }
       ]
     };
   }
 
-  private async createSyncBundle(_request: DataSyncRequest): Promise<FHIRBundle> {
+  private async createSyncBundle(request: DataSyncRequest): Promise<FHIRBundle> {
     // Create comprehensive sync bundle based on request parameters
+    console.log('Creating sync bundle for provider:', request.providerId);
     return {
       resourceType: 'Bundle',
       type: 'collection',
