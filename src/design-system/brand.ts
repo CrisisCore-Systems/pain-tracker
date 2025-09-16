@@ -1,5 +1,16 @@
 // Pain Tracker Brand Identity System
 
+// Helper function to get correct asset URLs with base path
+const getAssetUrl = (path: string): string => {
+  if (typeof window !== 'undefined') {
+    // Client-side: use import.meta.env if available
+    const baseUrl = import.meta.env?.BASE_URL || '/';
+    return `${baseUrl}${path}`.replace(/\/+/g, '/');
+  }
+  // Fallback for SSR or other contexts
+  return path.startsWith('/') ? path : `/${path}`;
+};
+
 export const brand = {
   // Brand Identity
   name: 'Pain Tracker Pro',
@@ -116,14 +127,14 @@ export const brand = {
   
   // Logo Variations
   logos: {
-    primary: '/logos/pain-tracker-logo.svg',
-    wordmark: '/logos/pain-tracker-wordmark.svg',
-    icon: '/logos/pain-tracker-icon.svg',
-    iconWhite: '/logos/pain-tracker-icon-white.svg',
+    primary: getAssetUrl('logos/pain-tracker-logo.svg'),
+    wordmark: getAssetUrl('logos/pain-tracker-wordmark.svg'),
+    icon: getAssetUrl('logos/pain-tracker-icon.svg'),
+    iconWhite: getAssetUrl('logos/pain-tracker-icon-white.svg'),
     
     // App Icons
-    appIcon: '/icons/app-icon-512.png',
-    favicon: '/icons/favicon.ico'
+    appIcon: getAssetUrl('icons/app-icon-512.png'),
+    favicon: getAssetUrl('icons/favicon.ico')
   },
   
   // Brand Voice

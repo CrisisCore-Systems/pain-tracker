@@ -68,6 +68,28 @@ declare module '*.pdf' {
 // Browser API declarations - extend existing DOM types when needed
 interface Window {
   gtag?: (...args: unknown[]) => void;
+  pwaManager?: {
+    showInstallPrompt: () => Promise<void>;
+    resetServiceWorker: () => Promise<void>;
+  };
+  forcePWASync?: () => Promise<void>;
+}
+
+// Network Information API
+interface NetworkInformation {
+  effectiveType: '2g' | '3g' | '4g' | 'slow-2g';
+  downlink: number;
+  rtt: number;
+  saveData: boolean;
+}
+
+interface Navigator {
+  connection?: NetworkInformation;
+}
+
+// Performance API extensions
+interface PerformanceEntry {
+  transferSize?: number;
 }
 
 // Service Worker types for public/sw.js

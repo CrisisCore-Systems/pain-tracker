@@ -8,6 +8,14 @@
     <meta name="author" content="CrisisCore-Systems" />
     <meta name="theme-color" content="#3B82F6" />
     
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()" />
+    
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Pain Tracker" />
@@ -23,6 +31,24 @@
   </head>
   <body>
     <div id='root'></div>
+    
+    <!-- PWA Initialization -->
+    <script>
+      // Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(registration => {
+              console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    <script src='./pwa-init.js'></script>
+    <script src='./pwa-demo.js'></script>
     <script type='module' src='./src/main.tsx'></script>
   </body>
 </html>

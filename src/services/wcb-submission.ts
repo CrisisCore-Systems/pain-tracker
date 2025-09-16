@@ -12,7 +12,7 @@ interface SubmissionOptions {
   isDraft?: boolean;
 }
 
-const DEFAULT_ENDPOINT = process.env.VITE_WCB_API_ENDPOINT || 'https://api.wcb.gov/submissions';
+const DEFAULT_ENDPOINT = import.meta.env.VITE_WCB_API_ENDPOINT || 'https://api.wcb.gov/submissions';
 
 export async function submitToWCB(
   report: WCBReport,

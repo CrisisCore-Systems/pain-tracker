@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { PainEntry } from '../types';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
-import { PainTrackerLayout } from '../components/layouts/PainTrackerLayout';
+import { TraumaInformedPainTrackerLayout } from '../components/layouts/TraumaInformedPainTrackerLayout';
 import { OnboardingFlow } from '../components/onboarding';
 import { Walkthrough } from '../components/tutorials';
 import { useToast } from '../components/feedback';
@@ -115,7 +115,7 @@ export function PainTrackerContainer() {
 
   return (
     <>
-      <PainTrackerLayout
+      <TraumaInformedPainTrackerLayout
         entries={entries}
         error={error}
         onAddEntry={handleAddEntry}

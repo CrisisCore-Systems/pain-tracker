@@ -30,6 +30,9 @@
     "scan-secrets": "node scripts/scan-secrets.js",
     "check-merge": "node scripts/check-merge-markers.js",
     "check-security": "npm run scan-secrets && node scripts/check-collapse-vectors.js",
+    "security-test": "tsx scripts/automated-security-testing.ts",
+    "security-audit": "node scripts/security-audit.js",
+    "security-full": "npm run security-test && npm run security-audit",
     "check-tree-reasoning": "node scripts/tree-thought-analyzer.js",
     "pre-commit": "node scripts/pre-commit.js",
     "commitlint": "commitlint",
@@ -82,7 +85,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
-    "@rollup/rollup-linux-x64-gnu": "^4.50.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",

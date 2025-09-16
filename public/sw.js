@@ -1,14 +1,14 @@
-// Pain Tracker Service Worker
+// Pain Tracker Service Worker - v1.2 (manifest.json fix)
 const CACHE_NAME = 'pain-tracker-v1';
-const STATIC_CACHE_NAME = 'pain-tracker-static-v1';
-const DYNAMIC_CACHE_NAME = 'pain-tracker-dynamic-v1';
+const STATIC_CACHE_NAME = 'pain-tracker-static-v1.2'; // Incremented to force cache update
+const DYNAMIC_CACHE_NAME = 'pain-tracker-dynamic-v1.2'; // Incremented to force cache update
 
 // Files to cache for offline use
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/404.html',
+  '/pain-tracker/',
+  '/pain-tracker/index.html',
+  '/pain-tracker/manifest.json',
+  '/pain-tracker/404.html',
   // Add other static assets as needed
 ];
 
@@ -67,7 +67,14 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Handle different types of requests
+  // Skip service worker for external resources (different origin)
+  if (url.origin !== location.origin) {
+    // Let external resources (like Google Fonts, CDNs) pass through normally
+    // This prevents the service worker from interfering with external requests
+    return;
+  }
+
+  // Handle different types of requests for same-origin only
   if (request.method === 'GET') {
     if (isStaticAsset(url)) {
       // Static assets: Cache First strategy
@@ -210,7 +217,7 @@ async function handleMutatingRequests(request) {
 
 // Utility functions
 function isStaticAsset(url) {
-  return url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|ico)$/);
+  return url.pathname.match(/\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|ico|json)$/);
 }
 
 function isAPIRequest(url) {
@@ -394,4 +401,4 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
-console.log('Service Worker: Loaded successfully');
+console.log('Service Worker: Loaded successfully - v1.2 with manifest.json fix');

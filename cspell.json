@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "anonymization",
+    "iarc",
+    "paintracker",
+    "enctype",
+    "multipart",
+    "webgazer",
+    "gramm",
+    "grammarly",
+    "webkitSpeechRecognition",
+    "HeadJS",
+    "cspell",
+    "tailwindcss",
+    "lucide",
+    "vite",
+    "typescript",
+    "eslint",
+    "postcss",
+    "commitlint",
+    "tsbuildinfo"
+  ],
+  "flagWords": [],
+  "ignorePaths": [
+    "node_modules/**",
+    "dist/**",
+    "build/**",
+    "*.min.js",
+    "*.map",
+    "package-lock.json",
+    "yarn.lock"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.json",
+      "words": [
+        "iarc",
+        "paintracker",
+        "enctype"
+      ]
+    },
+    {
+      "filename": "**/*.ts",
+      "words": [
+        "webgazer",
+        "webkitSpeechRecognition",
+        "HeadJS",
+        "gramm"
+      ]
+    },
+    {
+      "filename": "**/*.tsx",
+      "words": [
+        "webgazer",
+        "webkitSpeechRecognition",
+        "HeadJS",
+        "gramm"
+      ]
+    }
+  ]
+}

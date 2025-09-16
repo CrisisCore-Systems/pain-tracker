@@ -11,19 +11,19 @@
     },
     {
       "src": "logos/pain-tracker-icon.svg",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "sizes": "192x192",
       "purpose": "maskable any"
     },
     {
-      "src": "logos/pain-tracker-icon.svg"
-      "type": "image/png",
+      "src": "logos/pain-tracker-icon.svg",
+      "type": "image/svg+xml",
       "sizes": "512x512",
       "purpose": "maskable any"
     }
   ],
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/pain-tracker/",
+  "scope": "/pain-tracker/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait-primary",
@@ -55,7 +55,7 @@
       "name": "New Pain Entry",
       "short_name": "New Entry",
       "description": "Record a new pain entry",
-      "url": "/?action=new-entry",
+      "url": "/pain-tracker/?action=new-entry",
       "icons": [
         {
           "src": "icons/new-entry.png",
@@ -67,7 +67,7 @@
       "name": "View Analytics",
       "short_name": "Analytics",
       "description": "View pain analytics and insights",
-      "url": "/?view=analytics",
+      "url": "/pain-tracker/?view=analytics",
       "icons": [
         {
           "src": "icons/analytics.png",
@@ -79,7 +79,7 @@
       "name": "Emergency Panel",
       "short_name": "Emergency",
       "description": "Access emergency contacts and protocols",
-      "url": "/?view=emergency",
+      "url": "/pain-tracker/?view=emergency",
       "icons": [
         {
           "src": "icons/emergency.png",
@@ -91,12 +91,12 @@
   "protocol_handlers": [
     {
       "protocol": "web+paintracker",
-      "url": "/?data=%s"
+      "url": "/pain-tracker/?data=%s"
     }
   ],
   "file_handlers": [
     {
-      "action": "/import",
+      "action": "/pain-tracker/import",
       "accept": {
         "application/json": [".json"],
         "text/csv": [".csv"]
@@ -104,7 +104,7 @@
     }
   ],
   "share_target": {
-    "action": "/share",
+    "action": "/pain-tracker/share",
     "method": "POST",
     "enctype": "multipart/form-data",
     "params": {
