@@ -2,6 +2,13 @@
 // Focuses on emotional validation, user agency, and dignity-preserving progress reporting
 
 import type { PainEntry } from '../types';
+import { 
+  QuantifiedEmpathyMetrics, 
+  EmotionalStateMetrics,
+  HolisticWellbeingMetrics,
+  DigitalPacingSystem,
+  MoodEntry 
+} from '../types/quantified-empathy';
 
 export interface EmotionalValidationMetrics {
   validationScore: number; // 0-100 scale of how validated the user feels
@@ -119,6 +126,495 @@ export class EmpathyDrivenAnalyticsService {
 
   constructor(config: EmpathyAnalyticsConfig) {
     this.config = config;
+  }
+
+  // NEW: Quantified Empathy Metrics
+  async calculateQuantifiedEmpathy(
+    userId: string,
+    painEntries: PainEntry[],
+    moodEntries: MoodEntry[] = [],
+    emotionalState?: EmotionalStateMetrics,
+    wellbeingMetrics?: HolisticWellbeingMetrics,
+    pacingSystem?: DigitalPacingSystem
+  ): Promise<QuantifiedEmpathyMetrics> {
+    return {
+      emotionalIntelligence: await this.calculateEmotionalIntelligence(userId, moodEntries, painEntries),
+      compassionateProgress: await this.calculateCompassionateProgress(userId, painEntries, moodEntries),
+      empathyKPIs: await this.calculateEmpathyKPIs(userId, moodEntries, emotionalState),
+      humanizedMetrics: await this.calculateHumanizedMetrics(userId, painEntries, moodEntries, wellbeingMetrics)
+    };
+  }
+
+  // Calculate emotional intelligence metrics
+  private async calculateEmotionalIntelligence(
+    userId: string, 
+    moodEntries: MoodEntry[], 
+    painEntries: PainEntry[]
+  ) {
+    const recentMoodEntries = moodEntries.slice(-30); // Last 30 entries
+    
+    const selfAwareness = this.calculateSelfAwarenessEQ(recentMoodEntries);
+    const selfRegulation = this.calculateSelfRegulationEQ(recentMoodEntries);
+    const motivation = this.calculateMotivationEQ(recentMoodEntries, painEntries);
+    const empathy = this.calculateEmpathyEQ(recentMoodEntries);
+    const socialSkills = this.calculateSocialSkillsEQ(recentMoodEntries);
+
+    return {
+      selfAwareness,
+      selfRegulation,
+      motivation,
+      empathy,
+      socialSkills
+    };
+  }
+
+  // Calculate compassionate progress tracking
+  private async calculateCompassionateProgress(
+    userId: string, 
+    painEntries: PainEntry[], 
+    moodEntries: MoodEntry[]
+  ) {
+    const recentEntries = painEntries.slice(-30);
+    const recentMoodEntries = moodEntries.slice(-30);
+
+    return {
+      selfCompassion: this.calculateSelfCompassion(recentMoodEntries, recentEntries),
+      selfCriticism: this.calculateSelfCriticism(recentMoodEntries),
+      progressCelebration: this.calculateProgressCelebrationScore(recentEntries, recentMoodEntries),
+      setbackResilience: this.calculateSetbackResilience(recentEntries, recentMoodEntries),
+      hopefulness: this.calculateHopefulnessScore(recentMoodEntries)
+    };
+  }
+
+  // Calculate empathy-driven KPIs
+  private async calculateEmpathyKPIs(
+    userId: string, 
+    moodEntries: MoodEntry[], 
+    emotionalState?: EmotionalStateMetrics
+  ) {
+    const recentEntries = moodEntries.slice(-30);
+
+    return {
+      validationReceived: this.calculateValidationReceived(recentEntries, emotionalState),
+      validationGiven: this.calculateValidationGiven(recentEntries),
+      emotionalSupport: this.calculateEmotionalSupport(recentEntries),
+      understandingFelt: this.calculateUnderstandingFelt(recentEntries),
+      connectionQuality: this.calculateConnectionQualityKPI(recentEntries)
+    };
+  }
+
+  // Calculate humanized metrics
+  private async calculateHumanizedMetrics(
+    userId: string, 
+    painEntries: PainEntry[], 
+    moodEntries: MoodEntry[],
+    wellbeingMetrics?: HolisticWellbeingMetrics
+  ) {
+    const recentPainEntries = painEntries.slice(-30);
+    const recentMoodEntries = moodEntries.slice(-30);
+
+    return {
+      courageScore: this.calculateCourageScore(recentPainEntries, recentMoodEntries),
+      vulnerabilityAcceptance: this.calculateVulnerabilityAcceptance(recentMoodEntries),
+      authenticityLevel: this.calculateAuthenticityLevel(recentMoodEntries),
+      growthMindset: this.calculateGrowthMindset(recentMoodEntries, wellbeingMetrics),
+      wisdomGained: this.extractWisdomGained(recentPainEntries, recentMoodEntries)
+    };
+  }
+
+  // Emotional Intelligence calculation methods
+  private calculateSelfAwarenessEQ(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    // Self-awareness based on emotional clarity and consistency
+    const avgEmotionalClarity = moodEntries.reduce((sum, e) => sum + e.emotionalClarity, 0) / moodEntries.length;
+    const moodVariability = this.calculateMoodVariability(moodEntries);
+    
+    // Higher clarity and stable tracking = higher self-awareness
+    const clarityScore = avgEmotionalClarity * 10;
+    const consistencyBonus = Math.max(0, 20 - moodVariability);
+    
+    return Math.min(100, clarityScore + consistencyBonus);
+  }
+
+  private calculateSelfRegulationEQ(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    const avgEmotionalRegulation = moodEntries.reduce((sum, e) => sum + e.emotionalRegulation, 0) / moodEntries.length;
+    const copingStrategiesUsed = new Set();
+    
+    moodEntries.forEach(e => {
+      e.copingStrategies.forEach(strategy => copingStrategiesUsed.add(strategy));
+    });
+    
+    const regulationScore = avgEmotionalRegulation * 10;
+    const strategyBonus = Math.min(30, copingStrategiesUsed.size * 5);
+    
+    return Math.min(100, regulationScore + strategyBonus);
+  }
+
+  private calculateMotivationEQ(moodEntries: MoodEntry[], painEntries: PainEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    // Motivation based on hopefulness and persistence through challenges
+    const avgHopefulness = moodEntries.reduce((sum, e) => sum + e.hopefulness, 0) / moodEntries.length;
+    const trackingConsistency = Math.min(painEntries.length, 30) / 30; // Consistency score
+    
+    const hopefulnessScore = avgHopefulness * 10;
+    const persistenceScore = trackingConsistency * 40;
+    
+    return Math.min(100, hopefulnessScore * 0.6 + persistenceScore * 0.4);
+  }
+
+  private calculateEmpathyEQ(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    // Empathy based on social support patterns and helping behaviors
+    const socialEntries = moodEntries.filter(e => e.socialSupport !== 'none');
+    const helpingContexts = moodEntries.filter(e => 
+      e.context.toLowerCase().includes('helping') ||
+      e.context.toLowerCase().includes('supporting') ||
+      e.notes.toLowerCase().includes('helped someone')
+    );
+    
+    const socialEngagement = (socialEntries.length / moodEntries.length) * 50;
+    const helpingBehavior = (helpingContexts.length / moodEntries.length) * 50;
+    
+    return Math.min(100, socialEngagement + helpingBehavior);
+  }
+
+  private calculateSocialSkillsEQ(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    // Social skills based on communication effectiveness and relationship quality
+    const avgEmotionalClarity = moodEntries.reduce((sum, e) => sum + e.emotionalClarity, 0) / moodEntries.length;
+    const socialSupport = this.calculateAverageSocialSupport(moodEntries);
+    
+    const communicationScore = avgEmotionalClarity * 10;
+    const relationshipScore = socialSupport;
+    
+    return (communicationScore + relationshipScore) / 2;
+  }
+
+  // Compassionate Progress calculation methods
+  private calculateSelfCompassion(moodEntries: MoodEntry[], painEntries: PainEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    // Self-compassion based on self-kindness and mindful acceptance
+    const selfKindnessIndicators = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('gentle with myself') ||
+      e.notes.toLowerCase().includes('self-care') ||
+      e.copingStrategies.includes('self-compassion') ||
+      e.copingStrategies.includes('mindfulness')
+    );
+    
+    const criticalEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('should have') ||
+      e.notes.toLowerCase().includes('failed') ||
+      e.notes.toLowerCase().includes('not good enough')
+    );
+    
+    const kindnessScore = (selfKindnessIndicators.length / moodEntries.length) * 60;
+    const criticalnessPenalty = (criticalEntries.length / moodEntries.length) * 30;
+    
+    return Math.max(20, Math.min(100, 50 + kindnessScore - criticalnessPenalty));
+  }
+
+  private calculateSelfCriticism(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 30;
+    
+    const criticalEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('should have') ||
+      e.notes.toLowerCase().includes('failed') ||
+      e.notes.toLowerCase().includes('not good enough') ||
+      e.notes.toLowerCase().includes('weak') ||
+      e.notes.toLowerCase().includes('giving up')
+    );
+    
+    return Math.min(100, (criticalEntries.length / moodEntries.length) * 100);
+  }
+
+  private calculateProgressCelebrationScore(painEntries: PainEntry[], moodEntries: MoodEntry[]): number {
+    if (painEntries.length === 0 && moodEntries.length === 0) return 50;
+    
+    // Progress celebration based on positive entries and milestone recognition
+    const positiveEntries = moodEntries.filter(e => e.mood >= 7);
+    const accomplishmentEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('accomplished') ||
+      e.notes.toLowerCase().includes('proud') ||
+      e.notes.toLowerCase().includes('achieved') ||
+      e.context.toLowerCase().includes('success')
+    );
+    
+    const positivityScore = (positiveEntries.length / Math.max(moodEntries.length, 1)) * 50;
+    const accomplishmentScore = (accomplishmentEntries.length / Math.max(moodEntries.length, 1)) * 50;
+    
+    return Math.min(100, positivityScore + accomplishmentScore);
+  }
+
+  private calculateSetbackResilience(painEntries: PainEntry[], moodEntries: MoodEntry[]): number {
+    if (painEntries.length === 0 && moodEntries.length === 0) return 50;
+    
+    // Resilience based on recovery patterns after high pain or low mood episodes
+    let recoveryInstances = 0;
+    let setbackInstances = 0;
+    
+    // Analyze mood recovery patterns
+    for (let i = 1; i < moodEntries.length; i++) {
+      const current = moodEntries[i];
+      const previous = moodEntries[i - 1];
+      
+      if (previous.mood <= 4 && current.mood >= 6) { // Recovery from low mood
+        recoveryInstances++;
+      }
+      if (previous.mood <= 4) {
+        setbackInstances++;
+      }
+    }
+    
+    // Analyze pain recovery patterns
+    for (let i = 1; i < painEntries.length; i++) {
+      const current = painEntries[i];
+      const previous = painEntries[i - 1];
+      
+      if (previous.baselineData.pain >= 7 && current.baselineData.pain <= 5) { // Recovery from high pain
+        recoveryInstances++;
+      }
+      if (previous.baselineData.pain >= 7) {
+        setbackInstances++;
+      }
+    }
+    
+    const recoveryRate = setbackInstances > 0 ? (recoveryInstances / setbackInstances) : 0.5;
+    return Math.min(100, recoveryRate * 100);
+  }
+
+  private calculateHopefulnessScore(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    const avgHopefulness = moodEntries.reduce((sum, e) => sum + e.hopefulness, 0) / moodEntries.length;
+    const hopefulEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('hope') ||
+      e.notes.toLowerCase().includes('better') ||
+      e.notes.toLowerCase().includes('future') ||
+      e.notes.toLowerCase().includes('optimistic')
+    );
+    
+    const baseScore = avgHopefulness * 10;
+    const narrativeBonus = (hopefulEntries.length / moodEntries.length) * 20;
+    
+    return Math.min(100, baseScore + narrativeBonus);
+  }
+
+  // Empathy KPI calculation methods
+  private calculateValidationReceived(moodEntries: MoodEntry[], emotionalState?: EmotionalStateMetrics): number {
+    if (moodEntries.length === 0) return 40;
+    
+    const supportedEntries = moodEntries.filter(e => e.socialSupport !== 'none');
+    const validationEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('understood') ||
+      e.notes.toLowerCase().includes('supported') ||
+      e.notes.toLowerCase().includes('validated') ||
+      e.notes.toLowerCase().includes('heard')
+    );
+    
+    const supportScore = (supportedEntries.length / moodEntries.length) * 60;
+    const validationScore = (validationEntries.length / moodEntries.length) * 40;
+    
+    return Math.min(100, supportScore + validationScore);
+  }
+
+  private calculateValidationGiven(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 30;
+    
+    const givingEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('helped') ||
+      e.notes.toLowerCase().includes('supported') ||
+      e.notes.toLowerCase().includes('listened') ||
+      e.context.toLowerCase().includes('helping')
+    );
+    
+    return Math.min(100, (givingEntries.length / moodEntries.length) * 100);
+  }
+
+  private calculateEmotionalSupport(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 40;
+    
+    const avgSocialSupport = this.calculateAverageSocialSupport(moodEntries);
+    const consistentSupport = moodEntries.filter(e => 
+      e.socialSupport === 'strong' || e.socialSupport === 'moderate'
+    ).length;
+    
+    const qualityScore = avgSocialSupport;
+    const consistencyScore = (consistentSupport / moodEntries.length) * 40;
+    
+    return Math.min(100, qualityScore + consistencyScore);
+  }
+
+  private calculateUnderstandingFelt(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 40;
+    
+    const understandingEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('understood') ||
+      e.notes.toLowerCase().includes('gets it') ||
+      e.notes.toLowerCase().includes('knows how I feel') ||
+      e.socialSupport === 'strong'
+    );
+    
+    return Math.min(100, (understandingEntries.length / moodEntries.length) * 120);
+  }
+
+  private calculateConnectionQualityKPI(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 40;
+    
+    const connectionEntries = moodEntries.filter(e => 
+      e.socialSupport !== 'none' && 
+      e.mood >= 6 // Positive mood with social connection
+    );
+    
+    const avgSocialSupport = this.calculateAverageSocialSupport(moodEntries);
+    const positiveConnections = (connectionEntries.length / moodEntries.length) * 50;
+    
+    return Math.min(100, avgSocialSupport * 0.6 + positiveConnections);
+  }
+
+  // Humanized Metrics calculation methods
+  private calculateCourageScore(painEntries: PainEntry[], moodEntries: MoodEntry[]): number {
+    if (painEntries.length === 0 && moodEntries.length === 0) return 50;
+    
+    // Courage based on continuing to track despite challenges
+    const trackingConsistency = Math.min(painEntries.length, 30) / 30;
+    const challengingDays = painEntries.filter(e => e.baselineData.pain >= 7).length;
+    const courageousEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('despite') ||
+      e.notes.toLowerCase().includes('even though') ||
+      e.notes.toLowerCase().includes('courage') ||
+      e.notes.toLowerCase().includes('brave')
+    );
+    
+    const consistencyScore = trackingConsistency * 40;
+    const challengeScore = Math.min(30, challengingDays * 2);
+    const narrativeScore = (courageousEntries.length / Math.max(moodEntries.length, 1)) * 30;
+    
+    return Math.min(100, consistencyScore + challengeScore + narrativeScore);
+  }
+
+  private calculateVulnerabilityAcceptance(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    const vulnerableEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('vulnerable') ||
+      e.notes.toLowerCase().includes('afraid') ||
+      e.notes.toLowerCase().includes('scared') ||
+      e.notes.toLowerCase().includes('uncertain') ||
+      e.notes.toLowerCase().includes('don\'t know')
+    );
+    
+    const acceptanceEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('accept') ||
+      e.notes.toLowerCase().includes('okay with') ||
+      e.notes.toLowerCase().includes('allow myself')
+    );
+    
+    const vulnerabilityScore = (vulnerableEntries.length / moodEntries.length) * 50;
+    const acceptanceScore = (acceptanceEntries.length / moodEntries.length) * 50;
+    
+    return Math.min(100, vulnerabilityScore + acceptanceScore);
+  }
+
+  private calculateAuthenticityLevel(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length === 0) return 50;
+    
+    // Authenticity based on honest emotional expression and self-awareness
+    const avgEmotionalClarity = moodEntries.reduce((sum, e) => sum + e.emotionalClarity, 0) / moodEntries.length;
+    const honestEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('honestly') ||
+      e.notes.toLowerCase().includes('truth') ||
+      e.notes.toLowerCase().includes('really feel') ||
+      e.notes.toLowerCase().includes('authentic')
+    );
+    
+    const clarityScore = avgEmotionalClarity * 10;
+    const honestyScore = (honestEntries.length / moodEntries.length) * 30;
+    
+    return Math.min(100, clarityScore * 0.7 + honestyScore);
+  }
+
+  private calculateGrowthMindset(moodEntries: MoodEntry[], wellbeingMetrics?: HolisticWellbeingMetrics): number {
+    if (moodEntries.length === 0) return 50;
+    
+    const growthEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('learn') ||
+      e.notes.toLowerCase().includes('grow') ||
+      e.notes.toLowerCase().includes('improve') ||
+      e.notes.toLowerCase().includes('try') ||
+      e.notes.toLowerCase().includes('practice')
+    );
+    
+    const copingStrategiesUsed = new Set();
+    moodEntries.forEach(e => {
+      e.copingStrategies.forEach(strategy => copingStrategiesUsed.add(strategy));
+    });
+    
+    const narrativeScore = (growthEntries.length / moodEntries.length) * 60;
+    const adaptabilityScore = Math.min(40, copingStrategiesUsed.size * 5);
+    
+    return Math.min(100, narrativeScore + adaptabilityScore);
+  }
+
+  private extractWisdomGained(painEntries: PainEntry[], moodEntries: MoodEntry[]): string[] {
+    const wisdom: string[] = [];
+    
+    // Extract insights from notes
+    const insightfulEntries = moodEntries.filter(e => 
+      e.notes.toLowerCase().includes('learned') ||
+      e.notes.toLowerCase().includes('realized') ||
+      e.notes.toLowerCase().includes('understand now') ||
+      e.notes.toLowerCase().includes('insight')
+    );
+    
+    insightfulEntries.forEach(entry => {
+      if (entry.notes.length > 20) { // Meaningful insights
+        wisdom.push(entry.notes);
+      }
+    });
+    
+    // Add common wisdom themes
+    if (painEntries.length > 10) {
+      wisdom.push('Pain tracking has helped me identify patterns and triggers');
+    }
+    
+    if (moodEntries.filter(e => e.copingStrategies.length > 0).length > 5) {
+      wisdom.push('I\'ve discovered effective coping strategies that work for me');
+    }
+    
+    if (moodEntries.filter(e => e.socialSupport !== 'none').length > 3) {
+      wisdom.push('Seeking support from others is a sign of strength, not weakness');
+    }
+    
+    return wisdom.slice(0, 5); // Return top 5 insights
+  }
+
+  // Helper methods
+  private calculateMoodVariability(moodEntries: MoodEntry[]): number {
+    if (moodEntries.length < 2) return 0;
+    
+    const moods = moodEntries.map(e => e.mood);
+    const mean = moods.reduce((sum, mood) => sum + mood, 0) / moods.length;
+    const variance = moods.reduce((sum, mood) => sum + Math.pow(mood - mean, 2), 0) / moods.length;
+    
+    return Math.sqrt(variance);
+  }
+
+  private calculateAverageSocialSupport(moodEntries: MoodEntry[]): number {
+    const socialEntries = moodEntries.filter(e => e.socialSupport !== 'none');
+    if (socialEntries.length === 0) return 25;
+    
+    const supportValues = { minimal: 25, moderate: 60, strong: 90 };
+    return socialEntries.reduce((sum, e) => {
+      const value = supportValues[e.socialSupport as keyof typeof supportValues] || 25;
+      return sum + value;
+    }, 0) / socialEntries.length;
   }
 
   // Emotional Validation Analytics

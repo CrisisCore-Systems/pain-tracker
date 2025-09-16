@@ -7,6 +7,7 @@ export interface UIState {
   showWCBReport: boolean;
   showOnboarding: boolean;
   showWalkthrough: boolean;
+  showEmpathyDashboard: boolean;
   currentFormSection: number;
   reportPeriod: {
     start: string;
@@ -36,6 +37,7 @@ export interface PainTrackerState {
   setShowWCBReport: (show: boolean) => void;
   setShowOnboarding: (show: boolean) => void;
   setShowWalkthrough: (show: boolean) => void;
+  setShowEmpathyDashboard: (show: boolean) => void;
   setCurrentFormSection: (section: number) => void;
   setReportPeriod: (period: Partial<UIState['reportPeriod']>) => void;
   
@@ -67,6 +69,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             showWCBReport: false,
             showOnboarding: false,
             showWalkthrough: false,
+            showEmpathyDashboard: false,
             currentFormSection: 0,
             reportPeriod: {
               start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -155,6 +158,12 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           setShowWalkthrough: (show) => {
             set((state) => {
               state.ui.showWalkthrough = show;
+            });
+          },
+
+          setShowEmpathyDashboard: (show) => {
+            set((state) => {
+              state.ui.showEmpathyDashboard = show;
             });
           },
 

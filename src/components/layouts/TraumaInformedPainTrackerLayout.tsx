@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { AlertCircle, FileText, HelpCircle, Settings } from "lucide-react";
+import { AlertCircle, FileText, HelpCircle, Settings, Heart } from "lucide-react";
 import { PainTrackerIcon } from '../branding/BrandedLogo';
 import type { PainEntry } from "../../types";
 import { PainEntryWidget } from "../widgets/PainEntryWidget";
@@ -12,6 +12,7 @@ import { EnhancedPainVisualizationPanel } from "../widgets/EnhancedPainVisualiza
 import { PainHistoryPanel } from "../widgets/PainHistoryPanel";
 import { WCBReportPanel } from "../widgets/WCBReportPanel";
 import { EmptyStatePanel } from "../widgets/EmptyStatePanel";
+import { QuantifiedEmpathyDashboard } from "../analytics/QuantifiedEmpathyDashboard";
 import { Card, CardContent, ThemeToggle } from "../../design-system";
 import { usePainTrackerStore } from "../../stores/pain-tracker-store";
 import { 
@@ -42,11 +43,16 @@ export function TraumaInformedPainTrackerLayout({
   
   const { 
     ui,
-    setShowWCBReport
+    setShowWCBReport,
+    setShowEmpathyDashboard
   } = usePainTrackerStore();
 
   const handleToggleReport = () => {
     setShowWCBReport(!ui.showWCBReport);
+  };
+
+  const handleToggleEmpathyDashboard = () => {
+    setShowEmpathyDashboard(!ui.showEmpathyDashboard);
   };
 
   return (
@@ -95,6 +101,20 @@ export function TraumaInformedPainTrackerLayout({
               >
                 <HelpCircle className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Help</span>
+              </TouchOptimizedButton>
+
+              {/* Empathy Dashboard Toggle */}
+              <TouchOptimizedButton
+                onClick={handleToggleEmpathyDashboard}
+                variant="secondary"
+                size="normal"
+                aria-expanded={ui.showEmpathyDashboard}
+                aria-controls="empathy-dashboard-section"
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                <span className="hidden lg:inline">
+                  {ui.showEmpathyDashboard ? "Hide Analytics" : "Show Analytics"}
+                </span>
               </TouchOptimizedButton>
 
               {/* WCB Report Toggle */}
@@ -191,6 +211,34 @@ export function TraumaInformedPainTrackerLayout({
               </div>
             </CardContent>
           </Card>
+        )}
+
+        {/* Empathy Analytics Section */}
+        {ui.showEmpathyDashboard && (
+          <TraumaInformedSection
+            title="Empathy Analytics"
+            description="Quantified empathy metrics and insights for your healing journey"
+            importance="normal"
+            canCollapse={preferences.simplifiedMode}
+          >
+            <QuantifiedEmpathyDashboard
+              userId="current-user" // TODO: Replace with actual user ID when auth is implemented
+              painEntries={entries}
+              onInsightSelect={(insight) => {
+                console.log('Insight selected:', insight);
+                // TODO: Handle insight selection (e.g., show details modal)
+              }}
+              onRecommendationAccept={(recommendation) => {
+                console.log('Recommendation accepted:', recommendation);
+                // TODO: Handle recommendation acceptance
+              }}
+              onShareMetrics={(metrics) => {
+                console.log('Share metrics:', metrics);
+                // TODO: Handle metrics sharing
+              }}
+              showAdvancedMetrics={!preferences.simplifiedMode}
+            />
+          </TraumaInformedSection>
         )}
 
         {/* WCB Report Section */}

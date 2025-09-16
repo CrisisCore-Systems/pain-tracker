@@ -6,6 +6,7 @@ export { default as EmotionalValidationSystem } from './EmotionalValidationSyste
 export { default as ProgressCelebrationComponent } from './ProgressCelebrationComponent';
 export { default as UserAgencyDashboard } from './UserAgencyDashboard';
 export { default as EmpathyAnalyticsIntegration } from './EmpathyAnalyticsIntegration';
+export { QuantifiedEmpathyDashboard } from './QuantifiedEmpathyDashboard';
 
 // Re-export analytics service
 export { 
