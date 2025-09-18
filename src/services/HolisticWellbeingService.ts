@@ -833,14 +833,14 @@ export class HolisticWellbeingService {
       ? recentEntries.reduce((sum, e) => sum + e.stress, 0) / recentEntries.length
       : 5;
 
-    const copingStrategies = new Set();
+    const copingStrategiesSet = new Set<string>();
     recentEntries.forEach(e => {
-      e.copingStrategies.forEach(strategy => copingStrategies.add(strategy));
+      e.copingStrategies.forEach((strategy: string) => copingStrategiesSet.add(strategy));
     });
 
     return {
       recoveryTime: Math.max(15, avgStress * 10), // Higher stress = longer recovery
-      strategies: Array.from(copingStrategies),
+  strategies: Array.from(copingStrategiesSet.values()),
       effectiveness: {
         'deep_breathing': 85,
         'meditation': 80,
@@ -911,7 +911,7 @@ export class HolisticWellbeingService {
         frequency: 'as_needed',
         conditions: ['pain > 7'],
         customization: {
-          tone: 'supportive',
+          tone: 'gentle',
           timing: 'immediate',
           personalization: ['pain-aware', 'helpful']
         }

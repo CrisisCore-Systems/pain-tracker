@@ -5,7 +5,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { useCrisisDetection } from './useCrisisDetection';
-import { useCrisisMode } from './CrisisModeIntegration';
+import { useCrisisMode } from './useCrisisMode';
 import { StressAdaptiveButton, StressResponsiveCard, StressResponsiveText } from './StressResponsiveUI';
 import { Play, Pause, RotateCcw, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 

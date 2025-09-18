@@ -15,6 +15,8 @@ import {
   Pill,
   Thermometer,
   Activity,
+  Pause,
+  Play,
   RotateCcw,
   Save,
   Volume2,

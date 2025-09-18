@@ -1,4 +1,4 @@
-// Empathy-Driven Analytics Service
+// Empathy-Driven Analytics Service - Enhanced with AI Intelligence
 // Focuses on emotional validation, user agency, and dignity-preserving progress reporting
 
 import type { PainEntry } from '../types';
@@ -7,8 +7,11 @@ import {
   EmotionalStateMetrics,
   HolisticWellbeingMetrics,
   DigitalPacingSystem,
-  MoodEntry 
+  MoodEntry,
+  EmpathyInsight,
+  EmpathyRecommendation
 } from '../types/quantified-empathy';
+import { EmpathyIntelligenceEngine } from './EmpathyIntelligenceEngine';
 
 export interface EmotionalValidationMetrics {
   validationScore: number; // 0-100 scale of how validated the user feels
@@ -123,12 +126,21 @@ export class EmpathyDrivenAnalyticsService {
   private achievements: Map<string, Achievement[]> = new Map();
   private milestones: Map<string, Milestone[]> = new Map();
   private meaningfulMoments: Map<string, MeaningfulMoment[]> = new Map();
+  private empathyIntelligence: EmpathyIntelligenceEngine;
 
   constructor(config: EmpathyAnalyticsConfig) {
     this.config = config;
+    this.empathyIntelligence = new EmpathyIntelligenceEngine({
+      learningRate: 0.1,
+      predictionHorizon: 30,
+      personalizationDepth: 'deep',
+      culturalSensitivity: 'enhanced',
+      interventionStyle: 'adaptive',
+      privacyLevel: 'enhanced'
+    });
   }
 
-  // NEW: Quantified Empathy Metrics
+  // Enhanced: Quantified Empathy Metrics with AI Intelligence
   async calculateQuantifiedEmpathy(
     userId: string,
     painEntries: PainEntry[],
@@ -137,12 +149,42 @@ export class EmpathyDrivenAnalyticsService {
     wellbeingMetrics?: HolisticWellbeingMetrics,
     pacingSystem?: DigitalPacingSystem
   ): Promise<QuantifiedEmpathyMetrics> {
-    return {
-      emotionalIntelligence: await this.calculateEmotionalIntelligence(userId, moodEntries, painEntries),
-      compassionateProgress: await this.calculateCompassionateProgress(userId, painEntries, moodEntries),
-      empathyKPIs: await this.calculateEmpathyKPIs(userId, moodEntries, emotionalState),
-      humanizedMetrics: await this.calculateHumanizedMetrics(userId, painEntries, moodEntries, wellbeingMetrics)
-    };
+    // Use AI-powered empathy intelligence engine for enhanced analysis
+    return await this.empathyIntelligence.calculateAdvancedEmpathyMetrics(
+      userId,
+      painEntries,
+      moodEntries,
+      emotionalState,
+      wellbeingMetrics,
+      pacingSystem
+    );
+  }
+
+  // Enhanced: Generate AI-powered insights
+  async generateEmpathyInsights(
+    userId: string,
+    metrics: QuantifiedEmpathyMetrics,
+    painEntries: PainEntry[],
+    moodEntries: MoodEntry[]
+  ): Promise<EmpathyInsight[]> {
+    return await this.empathyIntelligence.generateAdvancedInsights(
+      userId,
+      metrics,
+      { painEntries, moodEntries }
+    );
+  }
+
+  // Enhanced: Generate personalized recommendations
+  async generateEmpathyRecommendations(
+    userId: string,
+    metrics: QuantifiedEmpathyMetrics,
+    insights: EmpathyInsight[]
+  ): Promise<EmpathyRecommendation[]> {
+    return await this.empathyIntelligence.generatePersonalizedRecommendations(
+      userId,
+      metrics,
+      insights
+    );
   }
 
   // Calculate emotional intelligence metrics

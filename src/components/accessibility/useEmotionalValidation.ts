@@ -26,7 +26,8 @@ interface EmotionalState {
 interface ValidationResponse {
   message: string;
   supportType: 'acknowledgment' | 'encouragement' | 'practical' | 'celebration';
-  icon: React.ComponentType;
+  // Icon components from lucide-react accept standard SVG props
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   actionSuggestions?: string[];
   affirmations?: string[];
 }

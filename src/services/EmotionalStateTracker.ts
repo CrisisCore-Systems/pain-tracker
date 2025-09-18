@@ -187,12 +187,20 @@ export class EmotionalStateTracker {
             : `Mood tends to be lower during ${season}`,
           correlation: (avgMood - overallAvg) / 5, // Normalize to -1 to 1
           confidence: Math.min(95, seasonEntries.length * 2), // More data = higher confidence
-          recommendations: this.generateSeasonalRecommendations(season, avgMood > overallAvg)
+          recommendations: this.generateSeasonalRecommendations(season)
         });
       }
     });
 
     return patterns;
+  }
+
+  // Backward compatibility shim (legacy name kept for older callers)
+  // Deprecated: use analyzeMoodPatterns instead
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private async analyzeEmotionalPatterns(userId: string, _latestEntry?: MoodEntry) {
+    const entries = this.moodEntries.get(userId) || [];
+    return this.analyzeMoodPatterns(userId, entries);
   }
 
   private identifyTriggers(moodEntries: MoodEntry[], painEntries: PainEntry[]): EmotionalTrigger[] {
@@ -237,7 +245,7 @@ export class EmotionalStateTracker {
               emotionalImpact: moodDrop,
               lastOccurrence: current.timestamp,
               description: `${trigger} caused mood drop from ${previous.mood} to ${current.mood}`,
-              warningSignsIdentified: this.identifyWarningSigns(trigger, moodEntries),
+              warningSignsIdentified: this.identifyWarningSigns(),
               preventionStrategies: this.generatePreventionStrategies(trigger)
             });
           });
@@ -265,7 +273,7 @@ export class EmotionalStateTracker {
         triggerType: type,
         timePatterns: this.analyzeTimePatterns(relatedEntries),
         contextualFactors: this.analyzeContextualFactors(relatedEntries),
-        predictiveIndicators: this.identifyPredictiveIndicators(relatedEntries, typeTriggers)
+  predictiveIndicators: this.identifyPredictiveIndicators()
       });
     });
 
@@ -528,7 +536,7 @@ export class EmotionalStateTracker {
     }, {} as { [season: string]: MoodEntry[] });
   }
 
-  private generateSeasonalRecommendations(season: string, _isPositive: boolean): string[] {
+  private generateSeasonalRecommendations(season: string): string[] {
     const baseRecommendations: { [key: string]: string[] } = {
       'Spring': ['Light therapy', 'Outdoor activities', 'Allergy management'],
       'Summer': ['Heat management', 'Hydration focus', 'UV protection'],
@@ -559,7 +567,7 @@ export class EmotionalStateTracker {
     return relevantEntries.length / 4; // Assuming monthly frequency calculation
   }
 
-  private identifyWarningSigns(_trigger: string, _entries: MoodEntry[]): string[] {
+  private identifyWarningSigns(): string[] {
     // This would be more sophisticated in a real implementation
     return ['Increased stress', 'Sleep disturbance', 'Energy drop'];
   }
@@ -608,7 +616,7 @@ export class EmotionalStateTracker {
     };
   }
 
-  private identifyPredictiveIndicators(_entries: MoodEntry[], _triggers: EmotionalTrigger[]) {
+  private identifyPredictiveIndicators() {
     return {
       earlyWarnings: ['Increased stress', 'Sleep changes', 'Mood drops'],
       behavioralChanges: ['Social withdrawal', 'Activity reduction', 'Coping strategy changes'],

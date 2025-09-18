@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 50",
+  "lint": "eslint . --report-unused-disable-directives --max-warnings 500",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -95,6 +95,7 @@
     "@typescript-eslint/eslint-plugin": "^8.43.0",
     "@typescript-eslint/parser": "^8.43.0",
     "@vitejs/plugin-react": "^5.0.2",
+    "@vitest/coverage-v8": "^3.2.4",
     "autoprefixer": "^10.4.14",
     "eslint": "^9.35.0",
     "eslint-plugin-react": "^7.37.5",

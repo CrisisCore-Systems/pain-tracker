@@ -86,7 +86,7 @@ function EmotionalValidationCard({
   onClose: () => void;
   onEmotionalSupport?: (supportType: string) => void;
 }) {
-  const Icon = validation.icon;
+  const Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> = validation.icon;
   const [showAffirmations, setShowAffirmations] = useState(false);
   const [showActions, setShowActions] = useState(false);
 

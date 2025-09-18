@@ -19,7 +19,24 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, Button, Input, Tabs, TabsContent, TabsList, TabsTrigger } from '../../design-system';
+import { Card, CardContent, CardHeader, CardTitle, Button, Input } from '../../design-system';
+// Lightweight local tab primitives (since Tabs not in design-system export)
+interface SimpleTabsProps { value: string; onValueChange: (val: string) => void; children: React.ReactNode; }
+// onValueChange kept in props shape for API parity though not used directly here
+const SimpleTabs: React.FC<SimpleTabsProps> = ({ value, children }) => <div data-active-tab={value}>{children}</div>;
+const SimpleTabsList: React.FC<{ children: React.ReactNode; }> = ({ children }) => <div className="flex flex-wrap gap-2 border-b pb-2">{children}</div>;
+const SimpleTabsTrigger: React.FC<{ value: string; activeValue: string; onSelect: (v: string) => void; children: React.ReactNode; }> = ({ value, activeValue, onSelect, children }) => (
+  <button
+    type="button"
+    onClick={() => onSelect(value)}
+    className={`text-sm px-3 py-1 rounded-md border transition-colors ${
+      activeValue === value ? 'bg-primary text-primary-foreground border-primary' : 'bg-accent/30 text-foreground border-transparent hover:bg-accent'
+    }`}
+  >{children}</button>
+);
+const SimpleTabsContent: React.FC<{ when: string; activeValue: string; children: React.ReactNode; className?: string; }> = ({ when, activeValue, children, className = '' }) => (
+  activeValue === when ? <div className={className}>{children}</div> : null
+);
 
 interface IntegrationStatus {
   fhir: {
@@ -248,17 +265,17 @@ export function InstitutionalBridgesDashboard() {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="fhir">FHIR Integration</TabsTrigger>
-          <TabsTrigger value="oauth">Authentication</TabsTrigger>
-          <TabsTrigger value="data-sharing">Data Sharing</TabsTrigger>
-          <TabsTrigger value="compliance">Compliance</TabsTrigger>
-        </TabsList>
+      <SimpleTabs value={activeTab} onValueChange={setActiveTab}>
+        <SimpleTabsList>
+          <SimpleTabsTrigger value="overview" activeValue={activeTab} onSelect={setActiveTab}>Overview</SimpleTabsTrigger>
+          <SimpleTabsTrigger value="fhir" activeValue={activeTab} onSelect={setActiveTab}>FHIR Integration</SimpleTabsTrigger>
+          <SimpleTabsTrigger value="oauth" activeValue={activeTab} onSelect={setActiveTab}>Authentication</SimpleTabsTrigger>
+          <SimpleTabsTrigger value="data-sharing" activeValue={activeTab} onSelect={setActiveTab}>Data Sharing</SimpleTabsTrigger>
+          <SimpleTabsTrigger value="compliance" activeValue={activeTab} onSelect={setActiveTab}>Compliance</SimpleTabsTrigger>
+        </SimpleTabsList>
 
         {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
+  <SimpleTabsContent when="overview" activeValue={activeTab} className="space-y-6">
           {/* Status Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
@@ -365,10 +382,10 @@ export function InstitutionalBridgesDashboard() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+  </SimpleTabsContent>
 
         {/* FHIR Integration Tab */}
-        <TabsContent value="fhir" className="space-y-6">
+  <SimpleTabsContent when="fhir" activeValue={activeTab} className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>FHIR Server Configuration</CardTitle>
@@ -433,10 +450,10 @@ export function InstitutionalBridgesDashboard() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+  </SimpleTabsContent>
 
         {/* OAuth Authentication Tab */}
-        <TabsContent value="oauth" className="space-y-6">
+  <SimpleTabsContent when="oauth" activeValue={activeTab} className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>OAuth2 Client Configuration</CardTitle>
@@ -532,10 +549,10 @@ export function InstitutionalBridgesDashboard() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+  </SimpleTabsContent>
 
         {/* Data Sharing Tab */}
-        <TabsContent value="data-sharing" className="space-y-6">
+  <SimpleTabsContent when="data-sharing" activeValue={activeTab} className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Data Sharing Agreements</CardTitle>
@@ -577,10 +594,10 @@ export function InstitutionalBridgesDashboard() {
               </Button>
             </CardContent>
           </Card>
-        </TabsContent>
+  </SimpleTabsContent>
 
         {/* Compliance Tab */}
-        <TabsContent value="compliance" className="space-y-6">
+  <SimpleTabsContent when="compliance" activeValue={activeTab} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Compliance Score */}
             <Card>
@@ -660,8 +677,8 @@ export function InstitutionalBridgesDashboard() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+        </SimpleTabsContent>
+      </SimpleTabs>
     </div>
   );
 }

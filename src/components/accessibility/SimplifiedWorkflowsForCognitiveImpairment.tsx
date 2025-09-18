@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Brain, 
-  ArrowRight, 
-  ArrowLeft, 
   Check, 
   X, 
   Pause, 
   Play, 
-  RotateCcw, 
   ChevronRight,
   ChevronLeft,
   Circle,
@@ -16,15 +13,10 @@ import {
   Lightbulb,
   HelpCircle,
   Target,
-  Star,
-  Heart,
   Zap,
   Settings,
-  Eye,
   Volume2,
-  VolumeX,
-  Maximize2,
-  Minimize2
+  
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -72,8 +64,16 @@ interface SimplifiedWorkflow {
   };
 }
 
+type AdaptiveSettings = {
+  textSize: 'normal' | 'large' | 'extra-large';
+  voiceGuidance: boolean;
+  autoAdvance: boolean;
+  showProgress: boolean;
+  allowBacktrack: boolean;
+};
+
 interface CognitiveWorkflowProps {
-  onWorkflowComplete?: (workflowId: string, results: Record<string, any>) => void;
+  onWorkflowComplete?: (workflowId: string, results: Record<string, unknown>) => void;
   onCognitiveStateChange?: (state: CognitiveState) => void;
   initialCognitiveState?: Partial<CognitiveState>;
   className?: string;
@@ -89,7 +89,7 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
     estimatedTime: 2,
     cognitiveLoad: 1,
     steps: [
-      {
+  {
         id: 'pain-level',
         title: 'Pain Level',
         description: 'How much pain do you have right now?',
@@ -230,10 +230,10 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
 
   const [selectedWorkflow, setSelectedWorkflow] = useState<SimplifiedWorkflow | null>(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [workflowResults, setWorkflowResults] = useState<Record<string, any>>({});
+  const [workflowResults, setWorkflowResults] = useState<Record<string, unknown>>({});
   const [isPaused, setIsPaused] = useState(false);
   const [showingHelp, setShowingHelp] = useState(false);
-  const [adaptiveSettings, setAdaptiveSettings] = useState({
+  const [adaptiveSettings, setAdaptiveSettings] = useState<AdaptiveSettings>({
     textSize: 'large',
     voiceGuidance: true,
     autoAdvance: false,
@@ -241,23 +241,25 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
     allowBacktrack: true
   });
 
+  const adaptInterfaceToState = useCallback((state: CognitiveState) => {
+     const adaptations: AdaptiveSettings = {
+       textSize: state.impairmentLevel === 'severe' ? 'extra-large' : 
+                 state.impairmentLevel === 'moderate' ? 'large' : 'normal',
+       voiceGuidance: state.affectedFunctions.includes('language') || state.affectedFunctions.includes('processing'),
+       autoAdvance: state.impairmentLevel === 'mild' && state.fatigueLevel < 5,
+       showProgress: state.affectedFunctions.includes('executive') || state.impairmentLevel !== 'mild',
+       allowBacktrack: state.affectedFunctions.includes('memory') || state.impairmentLevel !== 'mild'
+     };
+
+     setAdaptiveSettings(adaptations);
+   }, []);
+
   // Adapt interface based on cognitive state
   useEffect(() => {
     adaptInterfaceToState(cognitiveState);
-  }, [cognitiveState]);
+  }, [cognitiveState, adaptInterfaceToState]);
 
-  const adaptInterfaceToState = (state: CognitiveState) => {
-    const adaptations = {
-      textSize: state.impairmentLevel === 'severe' ? 'extra-large' : 
-                state.impairmentLevel === 'moderate' ? 'large' : 'normal',
-      voiceGuidance: state.affectedFunctions.includes('language') || state.affectedFunctions.includes('processing'),
-      autoAdvance: state.impairmentLevel === 'mild' && state.fatigueLevel < 5,
-      showProgress: state.affectedFunctions.includes('executive') || state.impairmentLevel !== 'mild',
-      allowBacktrack: state.affectedFunctions.includes('memory') || state.impairmentLevel !== 'mild'
-    };
-
-    setAdaptiveSettings(adaptations);
-  };
+  
 
   const updateCognitiveState = (updates: Partial<CognitiveState>) => {
     const newState = { ...cognitiveState, ...updates };
@@ -298,7 +300,7 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
     setWorkflowResults({});
   };
 
-  const updateStepResult = (stepId: string, result: any) => {
+  const updateStepResult = (stepId: string, result: unknown) => {
     setWorkflowResults(prev => ({ ...prev, [stepId]: result }));
   };
 
@@ -615,12 +617,12 @@ function WorkflowExecutionInterface({
 }: {
   workflow: SimplifiedWorkflow;
   currentStepIndex: number;
-  workflowResults: Record<string, any>;
+  workflowResults: Record<string, unknown>;
   cognitiveState: CognitiveState;
-  adaptiveSettings: any;
+  adaptiveSettings: AdaptiveSettings;
   isPaused: boolean;
   showingHelp: boolean;
-  onStepResult: (stepId: string, result: any) => void;
+  onStepResult: (stepId: string, result: unknown) => void;
   onNextStep: () => void;
   onPreviousStep: () => void;
   onPause: () => void;
@@ -632,11 +634,12 @@ function WorkflowExecutionInterface({
   const isLastStep = currentStepIndex === workflow.steps.length - 1;
   const isFirstStep = currentStepIndex === 0;
 
-  const textSizeClass = {
-    'normal': 'text-base',
-    'large': 'text-lg',
+  const sizeMap: Record<AdaptiveSettings['textSize'], string> = {
+    normal: 'text-base',
+    large: 'text-lg',
     'extra-large': 'text-xl'
-  }[adaptiveSettings.textSize] || 'text-base';
+  };
+  const textSizeClass = sizeMap[adaptiveSettings.textSize] ?? 'text-base';
 
   return (
     <div className={`fixed inset-0 bg-white z-50 overflow-auto ${className}`}>
@@ -740,7 +743,6 @@ function WorkflowExecutionInterface({
               step={currentStep}
               workflowResults={workflowResults}
               cognitiveState={cognitiveState}
-              adaptiveSettings={adaptiveSettings}
               onStepResult={onStepResult}
               textSizeClass={textSizeClass}
             />
@@ -793,20 +795,18 @@ function WorkflowStepContent({
   step,
   workflowResults,
   cognitiveState,
-  adaptiveSettings,
   onStepResult,
   textSizeClass
 }: {
   step: WorkflowStep;
-  workflowResults: Record<string, any>;
+  workflowResults: Record<string, unknown>;
   cognitiveState: CognitiveState;
-  adaptiveSettings: any;
-  onStepResult: (stepId: string, result: any) => void;
+  onStepResult: (stepId: string, result: unknown) => void;
   textSizeClass: string;
 }) {
-  const [stepValue, setStepValue] = useState(workflowResults[step.id] || '');
+  const [stepValue, setStepValue] = useState<unknown>(workflowResults[step.id] ?? '');
 
-  const handleValueChange = (value: any) => {
+  const handleValueChange = (value: unknown) => {
     setStepValue(value);
     onStepResult(step.id, value);
   };
@@ -893,27 +893,29 @@ function StepInputField({
   step,
   value,
   onChange,
-  cognitiveState,
+  cognitiveState: _cognitiveState,
   textSizeClass
 }: {
   step: WorkflowStep;
-  value: any;
-  onChange: (value: any) => void;
+  value: unknown;
+  onChange: (value: unknown) => void;
   cognitiveState: CognitiveState;
   textSizeClass: string;
 }) {
+  // intentionally unused in current UI; reserved for future adaptive inputs
+  void _cognitiveState;
   if (step.id === 'pain-level') {
     return (
       <div className="space-y-4">
         <div className="text-center">
           <div className={`text-4xl font-bold text-purple-600 mb-4`}>
-            {value || 5}/10
+            {(typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)) || 5}/10
           </div>
           <input
             type="range"
             min="1"
             max="10"
-            value={value || 5}
+            value={typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)}
             onChange={(e) => onChange(parseInt(e.target.value))}
             className="w-full h-6 bg-purple-200 rounded-lg appearance-none cursor-pointer"
           />
@@ -931,13 +933,13 @@ function StepInputField({
       <div className="space-y-4">
         <div className="text-center">
           <div className={`text-3xl font-bold text-green-600 mb-4`}>
-            {value || 5}/10
+            {(typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)) || 5}/10
           </div>
           <input
             type="range"
             min="1"
             max="10"
-            value={value || 5}
+            value={typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)}
             onChange={(e) => onChange(parseInt(e.target.value))}
             className="w-full h-6 bg-green-200 rounded-lg appearance-none cursor-pointer"
           />
@@ -952,7 +954,7 @@ function StepInputField({
 
   return (
     <textarea
-      value={value || ''}
+  value={typeof value === 'string' ? value : ''}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Type your response here..."
       className={`w-full p-4 border border-gray-300 rounded-lg ${textSizeClass}`}
@@ -966,15 +968,17 @@ function StepChoiceField({
   step,
   value,
   onChange,
-  cognitiveState,
+  cognitiveState: _cognitiveState,
   textSizeClass
 }: {
   step: WorkflowStep;
-  value: any;
-  onChange: (value: any) => void;
+  value: unknown;
+  onChange: (value: unknown) => void;
   cognitiveState: CognitiveState;
   textSizeClass: string;
 }) {
+  // intentionally unused in current UI; reserved for future adaptive inputs
+  void _cognitiveState;
   if (step.id === 'pain-location') {
     const bodyParts = ['Head', 'Neck', 'Shoulders', 'Back', 'Chest', 'Arms', 'Hands', 'Abdomen', 'Hips', 'Legs', 'Feet'];
     
@@ -1058,16 +1062,18 @@ function StepChoiceField({
 
 // Step Confirmation Field Component
 function StepConfirmationField({
-  step,
-  value,
+  step: _step,
+  value: _value,
   onChange,
   textSizeClass
 }: {
   step: WorkflowStep;
-  value: any;
-  onChange: (value: any) => void;
+  value: unknown;
+  onChange: (value: unknown) => void;
   textSizeClass: string;
 }) {
+  // mark intentionally unused
+  void _step; void _value;
   return (
     <div className="text-center space-y-4">
       <div className={`text-gray-700 ${textSizeClass}`}>
@@ -1103,7 +1109,7 @@ function StepInfoDisplay({
 
 // Workflow Help Panel Component
 function WorkflowHelpPanel({
-  workflow,
+  workflow: _workflow,
   currentStep,
   cognitiveState,
   onClose
@@ -1113,6 +1119,7 @@ function WorkflowHelpPanel({
   cognitiveState: CognitiveState;
   onClose: () => void;
 }) {
+  void _workflow;
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
       <div className="flex items-start justify-between mb-3">
@@ -1174,8 +1181,8 @@ function AdaptiveSettingsPanel({
   onSettingsChange,
   cognitiveState
 }: {
-  settings: any;
-  onSettingsChange: (settings: any) => void;
+  settings: AdaptiveSettings;
+  onSettingsChange: (settings: AdaptiveSettings) => void;
   cognitiveState: CognitiveState;
 }) {
   return (
@@ -1191,7 +1198,7 @@ function AdaptiveSettingsPanel({
             <label className="block text-sm font-medium text-gray-700 mb-2">Text Size</label>
             <select
               value={settings.textSize}
-              onChange={(e) => onSettingsChange({ ...settings, textSize: e.target.value })}
+              onChange={(e) => onSettingsChange({ ...settings, textSize: e.target.value as AdaptiveSettings['textSize'] })}
               className="w-full p-2 border border-gray-300 rounded"
             >
               <option value="normal">Normal</option>

@@ -35,16 +35,20 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
 
   // Time of day patterns
   const timeOfDayPattern = entries.reduce((acc, entry) => {
-    const hour = new Date(entry.timestamp).getHours();
-    const timeBlock = `${hour.toString().padStart(2, '0')}:00`;
+  // Use UTC to ensure deterministic buckets across environments
+  const hour = new Date(entry.timestamp).getUTCHours();
+  const timeBlock = `${hour.toString().padStart(2, '0')}:00`;
     acc[timeBlock] = (acc[timeBlock] || 0) + entry.baselineData.pain;
     return acc;
   }, {} as { [key: string]: number });
 
   // Day of week patterns
   const dayOfWeekPattern = entries.reduce((acc, entry) => {
-    const day = new Date(entry.timestamp).toLocaleDateString('en-US', { weekday: 'long' });
-    acc[day] = (acc[day] || 0) + entry.baselineData.pain;
+  // Derive weekday in UTC to avoid timezone-induced day shifts
+  const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const dayIdx = new Date(entry.timestamp).getUTCDay();
+  const dayName = weekdayNames[dayIdx];
+  acc[dayName] = (acc[dayName] || 0) + entry.baselineData.pain;
     return acc;
   }, {} as { [key: string]: number });
 

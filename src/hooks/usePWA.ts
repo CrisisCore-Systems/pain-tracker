@@ -1,34 +1,39 @@
-/**
- * Enhanced PWA Hooks for Pain Tracker
- * Provides React hooks for PWA functionality integration
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import { pwaManager } from '../utils/pwa-utils';
 import { backgroundSync } from '../lib/background-sync';
 import { offlineStorage } from '../lib/offline-storage';
 
+type SyncStatus = {
+  isSyncing: boolean;
+  pendingItems: number;
+  lastSync: string | null;
+  error: string | null;
+};
+
 // PWA Status Hook
 export function usePWAStatus() {
   const [status, setStatus] = useState({
-    isOnline: navigator.onLine,
+    isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
     isInstalled: false,
     hasServiceWorker: false,
     canInstall: false
   });
 
   useEffect(() => {
+    let mounted = true;
+
     const updateStatus = async () => {
       try {
         const diagnostics = await pwaManager.getDiagnostics();
+        if (!mounted) return;
         setStatus({
           isOnline: diagnostics.isOnline,
           isInstalled: diagnostics.isInstalled,
           hasServiceWorker: diagnostics.hasServiceWorker,
           canInstall: pwaManager.isInstallPromptAvailable()
         });
-      } catch (error) {
-        console.error('Failed to update PWA status:', error);
+      } catch (err) {
+        console.error('Failed to update PWA status:', err);
       }
     };
 
@@ -37,27 +42,27 @@ export function usePWAStatus() {
     const handleInstallAvailable = () => setStatus(prev => ({ ...prev, canInstall: true }));
     const handleInstalled = () => setStatus(prev => ({ ...prev, isInstalled: true, canInstall: false }));
 
-    // Setup event listeners
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    window.addEventListener('pwa-install-available', handleInstallAvailable);
-    window.addEventListener('pwa-installed', handleInstalled);
+  window.addEventListener('pwa-install-available', handleInstallAvailable);
+  window.addEventListener('pwa-installed', handleInstalled);
 
     updateStatus();
 
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-      window.removeEventListener('pwa-install-available', handleInstallAvailable);
-      window.removeEventListener('pwa-installed', handleInstalled);
+  window.removeEventListener('pwa-install-available', handleInstallAvailable);
+  window.removeEventListener('pwa-installed', handleInstalled);
+      mounted = false;
     };
   }, []);
 
   const install = useCallback(async () => {
     try {
       return await pwaManager.showInstallPrompt();
-    } catch (error) {
-      console.error('Failed to show install prompt:', error);
+    } catch (err) {
+      console.error('Failed to show install prompt:', err);
       return false;
     }
   }, []);
@@ -67,60 +72,57 @@ export function usePWAStatus() {
 
 // Background Sync Hook
 export function useBackgroundSync() {
-  const [syncStatus, setSyncStatus] = useState({
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>({
     isSyncing: false,
     pendingItems: 0,
-    lastSync: null as string | null,
-    error: null as string | null
+    lastSync: null,
+    error: null
   });
 
   useEffect(() => {
+    let mounted = true;
+
     const updateSyncStatus = async () => {
       try {
         const { isSyncing } = backgroundSync.getSyncStatus();
         const pendingItems = await backgroundSync.getPendingItemsCount();
         const lastSync = localStorage.getItem('last-sync-time');
-        
-        setSyncStatus({
-          isSyncing,
-          pendingItems,
-          lastSync,
-          error: null
-        });
-      } catch (error) {
-        setSyncStatus(prev => ({
-          ...prev,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        }));
+
+        if (!mounted) return;
+        setSyncStatus({ isSyncing, pendingItems, lastSync, error: null });
+      } catch (err) {
+        if (!mounted) return;
+        setSyncStatus(prev => ({ ...prev, error: err instanceof Error ? err.message : 'Unknown error' }));
       }
     };
 
-    const handleSyncCompleted = (event: any) => {
-      const stats = event.detail;
+  const handleSyncCompleted = (evt: Event) => {
+      const ev = evt as CustomEvent<{ successCount?: number; errors?: string[] }>;
+      const stats = ev.detail || { successCount: 0, errors: [] };
       setSyncStatus(prev => ({
         ...prev,
         isSyncing: false,
-        pendingItems: prev.pendingItems - stats.successCount,
+        pendingItems: Math.max(0, prev.pendingItems - (stats.successCount || 0)),
         lastSync: new Date().toISOString(),
-        error: stats.errors.length > 0 ? stats.errors[0] : null
+        error: stats.errors && stats.errors.length > 0 ? stats.errors[0] : null
       }));
     };
 
-    const handleSyncStarted = () => {
+  const handleSyncStarted = () => {
       setSyncStatus(prev => ({ ...prev, isSyncing: true, error: null }));
     };
 
-    window.addEventListener('background-sync-sync-completed', handleSyncCompleted);
-    window.addEventListener('background-sync-sync-started', handleSyncStarted);
+  window.addEventListener('background-sync-sync-completed', handleSyncCompleted);
+  window.addEventListener('background-sync-sync-started', handleSyncStarted);
 
     updateSyncStatus();
 
-    // Update every 30 seconds
     const interval = setInterval(updateSyncStatus, 30000);
 
     return () => {
-      window.removeEventListener('background-sync-sync-completed', handleSyncCompleted);
-      window.removeEventListener('background-sync-sync-started', handleSyncStarted);
+      mounted = false;
+  window.removeEventListener('background-sync-sync-completed', handleSyncCompleted);
+  window.removeEventListener('background-sync-sync-started', handleSyncStarted);
       clearInterval(interval);
     };
   }, []);
@@ -128,13 +130,19 @@ export function useBackgroundSync() {
   const forceSync = useCallback(async () => {
     try {
       setSyncStatus(prev => ({ ...prev, isSyncing: true, error: null }));
-      await backgroundSync.forcSync();
-    } catch (error) {
-      setSyncStatus(prev => ({
-        ...prev,
-        isSyncing: false,
-        error: error instanceof Error ? error.message : 'Sync failed'
-      }));
+      // Support both correct and legacy typo method names without using 'any'
+  // cspell:ignore forc
+      type MaybeForceSync = { forceSync?: () => Promise<unknown>; forcSync?: () => Promise<unknown> };
+      const svc = backgroundSync as unknown as MaybeForceSync;
+      if (typeof svc.forceSync === 'function') {
+        await svc.forceSync();
+      } else if (typeof svc.forcSync === 'function') {
+        await svc.forcSync();
+      }
+      return true;
+    } catch (err) {
+      setSyncStatus(prev => ({ ...prev, isSyncing: false, error: err instanceof Error ? err.message : 'Sync failed' }));
+      return false;
     }
   }, []);
 
@@ -150,45 +158,44 @@ export function useOfflineStorage() {
   });
 
   useEffect(() => {
+    let mounted = true;
     const initStorage = async () => {
       try {
         await offlineStorage.init();
         const usage = await offlineStorage.getStorageUsage();
-        
-        setStorageStatus({
-          isSupported: true,
-          usage,
-          isReady: true
-        });
-      } catch (error) {
-        console.error('Failed to initialize offline storage:', error);
-        setStorageStatus({
-          isSupported: false,
-          usage: { used: 0, quota: 0 },
-          isReady: false
-        });
+
+        if (!mounted) return;
+        setStorageStatus({ isSupported: true, usage, isReady: true });
+      } catch (err) {
+        console.error('Failed to initialize offline storage:', err);
+        if (!mounted) return;
+        setStorageStatus({ isSupported: false, usage: { used: 0, quota: 0 }, isReady: false });
       }
     };
 
     initStorage();
+    return () => { mounted = false; };
   }, []);
 
-  const storeData = useCallback(async (type: string, data: any) => {
+  const storeData = useCallback(async (type: string, data: unknown) => {
     try {
-      await offlineStorage.storeData(type as any, data);
+      const storageLike = offlineStorage as unknown as { storeData: (t: string, d: unknown) => Promise<number> };
+      await storageLike.storeData(type, data);
       return true;
-    } catch (error) {
-      console.error('Failed to store data:', error);
+    } catch (err) {
+      console.error('Failed to store data:', err);
       return false;
     }
   }, []);
 
   const getData = useCallback(async (type: string) => {
     try {
-      return await offlineStorage.getData(type as any);
-    } catch (error) {
-      console.error('Failed to get data:', error);
-      return [];
+      const storageLike = offlineStorage as unknown as { getData: (t: string) => Promise<Array<{ data: unknown }>> };
+      const records = await storageLike.getData(type);
+      return records.map(r => r.data);
+    } catch (err) {
+      console.error('Failed to get data:', err);
+      return [] as unknown[];
     }
   }, []);
 
@@ -196,145 +203,30 @@ export function useOfflineStorage() {
     try {
       await offlineStorage.clearAllData();
       return true;
-    } catch (error) {
-      console.error('Failed to clear data:', error);
+    } catch (err) {
+      console.error('Failed to clear data:', err);
       return false;
     }
   }, []);
 
-  return {
-    ...storageStatus,
-    storeData,
-    getData,
-    clearData
-  };
+  return { ...storageStatus, storeData, getData, clearData };
 }
 
-// PWA Analytics Hook
-export function usePWAAnalytics() {
-  const [analytics, setAnalytics] = useState({
-    cacheHitRatio: 0,
-    loadTime: 0,
-    connectionQuality: 'unknown' as string,
-    serviceWorkerVersion: 'unknown' as string
-  });
-
-  useEffect(() => {
-    const handlePerformanceMetrics = (event: any) => {
-      setAnalytics(prev => ({
-        ...prev,
-        loadTime: event.detail.loadTime || 0,
-        cacheHitRatio: parseFloat(event.detail.cacheHitRatio || '0')
-      }));
-    };
-
-    const handleConnectionTest = (event: any) => {
-      setAnalytics(prev => ({
-        ...prev,
-        connectionQuality: event.detail.quality || 'unknown'
-      }));
-    };
-
-    const handleCachePerformance = (event: any) => {
-      setAnalytics(prev => ({
-        ...prev,
-        cacheHitRatio: parseFloat(event.detail.hitRatio || '0')
-      }));
-    };
-
-    window.addEventListener('pwa-performance-metrics', handlePerformanceMetrics);
-    window.addEventListener('pwa-connection-test', handleConnectionTest);
-    window.addEventListener('pwa-cache-performance', handleCachePerformance);
-
-    return () => {
-      window.removeEventListener('pwa-performance-metrics', handlePerformanceMetrics);
-      window.removeEventListener('pwa-connection-test', handleConnectionTest);
-      window.removeEventListener('pwa-cache-performance', handleCachePerformance);
-    };
-  }, []);
-
-  return analytics;
-}
-
-// PWA Notifications Hook
-export function usePWANotifications() {
-  const [notificationStatus, setNotificationStatus] = useState({
-    permission: Notification.permission,
-    isSupported: 'Notification' in window
-  });
-
-  const requestPermission = useCallback(async () => {
-    if (!notificationStatus.isSupported) return false;
-
-    try {
-      const permission = await pwaManager.requestNotificationPermission();
-      setNotificationStatus(prev => ({ ...prev, permission }));
-      return permission === 'granted';
-    } catch (error) {
-      console.error('Failed to request notification permission:', error);
-      return false;
-    }
-  }, [notificationStatus.isSupported]);
-
-  const scheduleReminder = useCallback(async (title: string, body: string, triggerTime: Date) => {
-    if (notificationStatus.permission !== 'granted') {
-      const granted = await requestPermission();
-      if (!granted) return false;
-    }
-
-    try {
-      await pwaManager.scheduleHealthReminder(title, body, triggerTime);
-      return true;
-    } catch (error) {
-      console.error('Failed to schedule reminder:', error);
-      return false;
-    }
-  }, [notificationStatus.permission, requestPermission]);
-
-  const subscribeToPush = useCallback(async () => {
-    try {
-      const subscription = await pwaManager.subscribeToPushNotifications();
-      return subscription !== null;
-    } catch (error) {
-      console.error('Failed to subscribe to push notifications:', error);
-      return false;
-    }
-  }, []);
-
-  return {
-    ...notificationStatus,
-    requestPermission,
-    scheduleReminder,
-    subscribeToPush
-  };
-}
-
-// Complete PWA Hook that combines all functionality
+// Combined hook
 export function usePWA() {
-  const pwaStatus = usePWAStatus();
-  const syncStatus = useBackgroundSync();
-  const storageStatus = useOfflineStorage();
-  const analytics = usePWAAnalytics();
-  const notifications = usePWANotifications();
+  const status = usePWAStatus();
+  const sync = useBackgroundSync();
+  const storage = useOfflineStorage();
 
-  return {
-    status: pwaStatus,
-    sync: syncStatus,
-    storage: storageStatus,
-    analytics,
-    notifications
-  };
+  return { status, sync, storage };
 }
 
-// Utility hook for PWA health check
+// Health check hook
 export function usePWAHealthCheck() {
-  const [health, setHealth] = useState({
-    score: 0,
-    issues: [] as string[],
-    recommendations: [] as string[]
-  });
+  const [health, setHealth] = useState({ score: 0, issues: [] as string[], recommendations: [] as string[] });
 
   useEffect(() => {
+    let mounted = true;
     const checkHealth = async () => {
       const issues: string[] = [];
       const recommendations: string[] = [];
@@ -343,65 +235,54 @@ export function usePWAHealthCheck() {
       try {
         const diagnostics = await pwaManager.getDiagnostics();
 
-        // Check service worker
         if (!diagnostics.hasServiceWorker) {
           issues.push('Service Worker not active');
           recommendations.push('Enable Service Worker for offline functionality');
           score -= 30;
         }
 
-        // Check storage usage
-        const storagePercentage = diagnostics.storageUsage.quota > 0 
-          ? (diagnostics.storageUsage.used / diagnostics.storageUsage.quota) * 100 
-          : 0;
-
+        const storagePercentage = diagnostics.storageUsage.quota > 0 ? (diagnostics.storageUsage.used / diagnostics.storageUsage.quota) * 100 : 0;
         if (storagePercentage > 80) {
           issues.push('Storage usage is high');
           recommendations.push('Clear cache or unused data');
           score -= 10;
         }
 
-        // Check sync status
         if (diagnostics.pendingSyncItems > 10) {
           issues.push('Many items pending sync');
           recommendations.push('Check internet connection and force sync');
           score -= 20;
         }
 
-        // Check capabilities
         const capabilities = diagnostics.capabilities;
         if (!capabilities.pushNotifications) {
           recommendations.push('Enable push notifications for reminders');
           score -= 10;
         }
-
         if (!capabilities.persistentStorage) {
           recommendations.push('Grant persistent storage permission');
           score -= 10;
         }
 
-        setHealth({
-          score: Math.max(0, score),
-          issues,
-          recommendations
-        });
-      } catch (error) {
-        console.error('PWA health check failed:', error);
-        setHealth({
-          score: 0,
-          issues: ['Health check failed'],
-          recommendations: ['Refresh the application']
-        });
+        if (!mounted) return;
+        setHealth({ score: Math.max(0, score), issues, recommendations });
+      } catch (err) {
+        console.error('PWA health check failed:', err);
+        if (!mounted) return;
+        setHealth({ score: 0, issues: ['Health check failed'], recommendations: ['Refresh the application'] });
       }
     };
 
     checkHealth();
-
-    // Check health every 5 minutes
     const interval = setInterval(checkHealth, 5 * 60 * 1000);
-
-    return () => clearInterval(interval);
+    return () => { mounted = false; clearInterval(interval); };
   }, []);
 
   return health;
 }
+
+/**
+ * Enhanced PWA Hooks for Pain Tracker
+ * Provides React hooks for PWA functionality integration
+ */
+

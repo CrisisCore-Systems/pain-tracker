@@ -409,6 +409,21 @@ export function ContextPreservation({
   const [contextData, setContextData] = useState<Record<string, unknown>>({});
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
+  // Save context callback (hoisted above effects)
+  const saveContext = useCallback(() => {
+    const dataToSave = {
+      ...contextData,
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      localStorage.setItem(`context_${contextKey}`, JSON.stringify(dataToSave));
+      setLastSaved(new Date());
+    } catch (error) {
+      console.warn('Failed to save context:', error);
+    }
+  }, [contextData, contextKey]);
+
   // Load preserved context on mount
   useEffect(() => {
     const savedContext = localStorage.getItem(`context_${contextKey}`);
@@ -454,21 +469,7 @@ export function ContextPreservation({
       return () => window.removeEventListener('scroll', handleScroll);
     }
   }, [preserveScrollPosition, contextData.scrollPosition]);
-
-  const saveContext = useCallback(() => {
-    const dataToSave = {
-      ...contextData,
-      timestamp: new Date().toISOString()
-    };
-
-    try {
-      localStorage.setItem(`context_${contextKey}`, JSON.stringify(dataToSave));
-      setLastSaved(new Date());
-    } catch (error) {
-      console.warn('Failed to save context:', error);
-    }
-  }, [contextData, contextKey]);
-
+  
   const updateContext = useCallback((key: string, value: unknown) => {
     setContextData(prev => ({
       ...prev,

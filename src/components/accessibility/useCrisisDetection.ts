@@ -3,13 +3,13 @@
  * Monitors user behavior patterns to detect crisis states
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 type CrisisLevel = 'none' | 'mild' | 'moderate' | 'severe' | 'emergency';
 
 interface BehaviorData {
   rapidClicks: number;
-  backNavigations: number;
+  backNavigationCount: number;
   timeOnPage: number;
   errorCount: number;
   lastActive: number;
@@ -20,7 +20,7 @@ export function useCrisisDetection() {
   const [crisisLevel, setCrisisLevel] = useState<CrisisLevel>('none');
   const [behaviorData, setBehaviorData] = useState<BehaviorData>({
     rapidClicks: 0,
-    backNavigations: 0,
+    backNavigationCount: 0,
     timeOnPage: 0,
     errorCount: 0,
     lastActive: Date.now()
@@ -43,22 +43,22 @@ export function useCrisisDetection() {
     };
 
     const detectCrisisState = () => {
-      const { rapidClicks, backNavigations, errorCount, timeOnPage } = behaviorData;
+  const { rapidClicks, backNavigationCount, errorCount, timeOnPage } = behaviorData;
       
       // Emergency level indicators
-      if (rapidClicks > 10 || backNavigations > 8) {
+  if (rapidClicks > 10 || backNavigationCount > 8) {
         setCrisisLevel('emergency');
         return;
       }
       
       // Severe level indicators
-      if (rapidClicks > 7 || backNavigations > 5 || errorCount > 5) {
+  if (rapidClicks > 7 || backNavigationCount > 5 || errorCount > 5) {
         setCrisisLevel('severe');
         return;
       }
       
       // Moderate level indicators
-      if (rapidClicks > 4 || backNavigations > 3 || errorCount > 3) {
+  if (rapidClicks > 4 || backNavigationCount > 3 || errorCount > 3) {
         setCrisisLevel('moderate');
         return;
       }
@@ -89,7 +89,7 @@ export function useCrisisDetection() {
     const handleBackNavigation = () => {
       setBehaviorData(prev => ({
         ...prev,
-        backNavigations: prev.backNavigations + 1
+  backNavigationCount: prev.backNavigationCount + 1
       }));
     };
 
@@ -117,16 +117,22 @@ export function useCrisisDetection() {
     setCrisisLevel('none');
     setBehaviorData({
       rapidClicks: 0,
-      backNavigations: 0,
+  backNavigationCount: 0,
       timeOnPage: 0,
       errorCount: 0,
       lastActive: Date.now()
     });
   };
 
+  const trackHelpRequest = useCallback(() => {
+    // record that a help request occurred; use errorCount as a lightweight metric
+    setBehaviorData(prev => ({ ...prev, errorCount: prev.errorCount + 1 }));
+  }, []);
+
   return {
     crisisLevel,
     resetCrisisDetection,
     behaviorData
+  , trackHelpRequest
   };
 }

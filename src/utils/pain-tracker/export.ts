@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import type { PainEntry } from '../../types';
 
 export const exportToCSV = (entries: PainEntry[]): string => {
@@ -16,10 +15,12 @@ export const exportToCSV = (entries: PainEntry[]): string => {
   ].join(',');
 
   const rows = entries.map(entry => {
-    const date = new Date(entry.timestamp);
+    // Use the original ISO timestamp to avoid timezone differences
+    const [isoDate, isoTimeWithZone] = entry.timestamp.split('T');
+    const time = (isoTimeWithZone || '').slice(0, 5); // HH:mm from HH:mm:ssZ
     return [
-      format(date, 'yyyy-MM-dd'),
-      format(date, 'HH:mm'),
+      isoDate,
+      time,
       entry.baselineData.pain,
       `"${entry.baselineData.locations.join('; ')}"`,
       `"${entry.baselineData.symptoms.join('; ')}"`,

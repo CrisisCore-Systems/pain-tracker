@@ -81,11 +81,14 @@ export function ProgressiveDisclosure({
 
 // Memory Aid Component
 interface MemoryAidProps {
-  text: string;
+  text?: string;
   type?: 'tip' | 'reminder' | 'example';
+  // New props used by CognitiveFogNavigation
+  title?: string;
+  items?: string[];
 }
 
-export function MemoryAid({ text, type = 'tip' }: MemoryAidProps) {
+export function MemoryAid({ text, type = 'tip', title, items }: MemoryAidProps) {
   const { preferences } = useTraumaInformed();
   
   if (!preferences.showMemoryAids) return null;
@@ -95,6 +98,19 @@ export function MemoryAid({ text, type = 'tip' }: MemoryAidProps) {
     reminder: '🔔',
     example: '📝'
   };
+
+  if (title && items) {
+    return (
+      <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mt-2">
+        <div className="font-medium text-blue-800 mb-2">{title}</div>
+        <ul className="list-disc pl-5 text-sm text-blue-800 space-y-1">
+          {items.map((it, idx) => (
+            <li key={idx}>{it}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mt-2">

@@ -419,7 +419,6 @@ export class OfflineTherapeuticResourcesService {
     this.currentSession.endTime = new Date().toISOString();
     this.currentSession.completed = true;
     this.currentSession.effectiveness = outcomes.effectiveness;
-    this.currentSession.painBefore = this.currentSession.painBefore;
     this.currentSession.painAfter = outcomes.painReduction;
     this.currentSession.mood.after = outcomes.mood;
 
@@ -442,31 +441,26 @@ export class OfflineTherapeuticResourcesService {
 
   private async updateResourceAnalytics(resourceId: string, outcomes: SessionOutcomes): Promise<void> {
     try {
-      let analytics = await this.getResourceAnalytics(resourceId);
-      
-      if (!analytics) {
-        analytics = {
-          resourceId,
-          totalUses: 0,
-          effectivenessRatings: [],
-          averageEffectiveness: 0,
-          painReductions: [],
-          averagePainReduction: 0,
-          completionRate: 0,
-          averageDuration: 0,
-          lastUpdated: new Date().toISOString(),
-          trending: { daily: [], weekly: [], monthly: [] }
-        };
-      }
+      const analytics: ResourceAnalytics = (await this.getResourceAnalytics(resourceId)) ?? {
+        totalUses: 0,
+        effectivenessRatings: [],
+        averageEffectiveness: 0,
+        painReductions: [],
+        averagePainReduction: 0,
+        completionRate: 0,
+        averageDuration: 0,
+        lastUpdated: new Date().toISOString(),
+        trending: { daily: [], weekly: [], monthly: [] }
+      };
 
-      analytics.totalUses++;
+      analytics.totalUses += 1;
       analytics.effectivenessRatings.push(outcomes.effectiveness);
       analytics.painReductions.push(outcomes.painReduction);
-      
+
       if (analytics.effectivenessRatings.length > 0) {
         analytics.averageEffectiveness = analytics.effectivenessRatings.reduce((a: number, b: number) => a + b, 0) / analytics.effectivenessRatings.length;
       }
-      
+
       if (analytics.painReductions.length > 0) {
         analytics.averagePainReduction = analytics.painReductions.reduce((a: number, b: number) => a + b, 0) / analytics.painReductions.length;
       }
@@ -483,15 +477,17 @@ export class OfflineTherapeuticResourcesService {
   private async getResourceAnalytics(resourceId: string): Promise<ResourceAnalytics | null> {
     try {
       const data = await this.offlineStorage.getData('settings');
-      const analyticsEntry = data.find(item => 
+      type SettingItem = { data: unknown };
+      const analyticsEntry = (data as SettingItem[]).find((item: SettingItem) => 
         typeof item.data === 'object' && 
         item.data !== null && 
         'key' in item.data && 
         item.data.key === `resource-analytics-${resourceId}`
       );
       
-      if (analyticsEntry && typeof analyticsEntry.data === 'object' && 'value' in analyticsEntry.data) {
-        return analyticsEntry.data.value as ResourceAnalytics;
+      const entryData = analyticsEntry?.data as { value?: unknown } | undefined;
+      if (entryData && typeof entryData === 'object' && 'value' in entryData) {
+        return (entryData as { value: ResourceAnalytics }).value;
       }
       return null;
     } catch (error) {
@@ -503,7 +499,8 @@ export class OfflineTherapeuticResourcesService {
   async getAllResources(): Promise<TherapeuticResource[]> {
     try {
       const data = await this.offlineStorage.getData('settings');
-      const resourceEntries = data.filter(item => 
+      type SettingItem = { data: unknown };
+      const resourceEntries = (data as SettingItem[]).filter((item: SettingItem) => 
         typeof item.data === 'object' && 
         item.data !== null && 
         'key' in item.data && 
@@ -511,9 +508,10 @@ export class OfflineTherapeuticResourcesService {
         item.data.key.startsWith('therapeutic-resource-')
       );
 
-      return resourceEntries.map(entry => {
-        if (typeof entry.data === 'object' && entry.data !== null && 'value' in entry.data) {
-          const resourceData = entry.data.value as TherapeuticResourceData;
+      return resourceEntries.map((entry: SettingItem) => {
+        const entryData = entry.data as { value?: unknown };
+        if (typeof entryData === 'object' && entryData !== null && 'value' in entryData) {
+          const resourceData = (entryData as { value: TherapeuticResourceData }).value;
           return {
             id: resourceData.id,
             title: resourceData.title,
@@ -542,7 +540,8 @@ export class OfflineTherapeuticResourcesService {
   async getRecentSessions(limit: number = 10): Promise<CopingSession[]> {
     try {
       const data = await this.offlineStorage.getData('settings');
-      const sessionEntries = data.filter(item => 
+      type SettingItem = { data: unknown };
+      const sessionEntries = (data as SettingItem[]).filter((item: SettingItem) => 
         typeof item.data === 'object' && 
         item.data !== null && 
         'key' in item.data && 
@@ -550,15 +549,16 @@ export class OfflineTherapeuticResourcesService {
         item.data.key.startsWith('coping-session-')
       );
 
-      const sessions = sessionEntries.map(entry => {
-        if (typeof entry.data === 'object' && entry.data !== null && 'value' in entry.data) {
-          return entry.data.value as CopingSession;
+      const sessions = sessionEntries.map((entry: SettingItem) => {
+        const entryData = entry.data as { value?: unknown };
+        if (typeof entryData === 'object' && entryData !== null && 'value' in entryData) {
+          return (entryData as { value: CopingSession }).value;
         }
         throw new Error('Invalid session data format');
       });
 
       return sessions
-        .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
+        .sort((a: CopingSession, b: CopingSession) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
         .slice(0, limit);
     } catch (error) {
       console.error('Failed to get recent sessions:', error);
@@ -568,8 +568,9 @@ export class OfflineTherapeuticResourcesService {
 
   async getResourceAnalyticsSummary(): Promise<Record<string, ResourceAnalytics>> {
     try {
-      const data = await this.offlineStorage.getData('settings');
-      const analyticsEntries = data.filter(item => 
+  const data = await this.offlineStorage.getData('settings');
+  type SettingItem = { data: unknown };
+  const analyticsEntries = (data as SettingItem[]).filter((item: SettingItem) => 
         typeof item.data === 'object' && 
         item.data !== null && 
         'key' in item.data && 
@@ -579,11 +580,12 @@ export class OfflineTherapeuticResourcesService {
 
       const summary: Record<string, ResourceAnalytics> = {};
       
-      for (const entry of analyticsEntries) {
-        if (typeof entry.data === 'object' && entry.data !== null && 'key' in entry.data && 'value' in entry.data) {
-          const key = entry.data.key as string;
+      for (const entry of analyticsEntries as SettingItem[]) {
+        const entryData = entry.data as { key?: string; value?: unknown };
+        if (typeof entryData === 'object' && entryData !== null && 'key' in entryData && 'value' in entryData) {
+          const key = entryData.key as string;
           const resourceId = key.replace('resource-analytics-', '');
-          summary[resourceId] = entry.data.value as ResourceAnalytics;
+          summary[resourceId] = (entryData as { value: ResourceAnalytics }).value;
         }
       }
 

@@ -9,7 +9,7 @@ interface Achievement {
   type: 'consistency' | 'self-care' | 'courage' | 'growth' | 'connection' | 'resilience';
   title: string;
   description: string;
-  icon: React.ComponentType;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   celebrationLevel: 'gentle' | 'warm' | 'enthusiastic' | 'profound';
   personalMessage: string;
   suggestedReward?: string;

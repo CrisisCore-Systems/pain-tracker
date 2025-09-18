@@ -1,9 +1,10 @@
 // Enhanced PWA utility functions for Pain Tracker
-
 import { offlineStorage } from '../lib/offline-storage';
 import { backgroundSync } from '../lib/background-sync';
 
-export interface BeforeInstallPromptEvent extends Event {
+// Lightweight declaration for BeforeInstallPromptEvent for environments
+// where the DOM lib may not include it by default.
+interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
@@ -228,6 +229,7 @@ export class PWAManager {
 
   // Install Prompt Management
   private setupInstallPromptListener(): void {
+    // cspell:ignore beforeinstallprompt appinstalled
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.installPromptEvent = e as BeforeInstallPromptEvent;
@@ -308,7 +310,15 @@ export class PWAManager {
     if (isOnline) {
       // Trigger background sync when coming back online
       try {
-        await backgroundSync.forcSync();
+        // Support legacy typo (forcSync) and future corrected (forceSync)
+  // cspell:ignore forc
+  type MaybeForceSync = { forceSync?: () => Promise<unknown>; forcSync?: () => Promise<unknown> };
+        const svc = backgroundSync as unknown as MaybeForceSync;
+        if (typeof svc.forceSync === 'function') {
+          await svc.forceSync();
+        } else if (typeof svc.forcSync === 'function') {
+          await svc.forcSync();
+        }
         
         // Notify service worker
         if (this.swRegistration?.active) {
@@ -333,18 +343,28 @@ export class PWAManager {
   private monitorConnectionQuality(): void {
     // Monitor connection using Network Information API if available
     if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
-      
+      type NetworkInformationLike = {
+        effectiveType?: string;
+        downlink?: number;
+        rtt?: number;
+        saveData?: boolean;
+        addEventListener?: (type: string, listener: () => void) => void;
+      };
+      const connection = (navigator as Navigator & { connection?: NetworkInformationLike }).connection;
+
       const updateConnectionInfo = () => {
+        if (!connection) return;
         this.dispatchCustomEvent('pwa-connection-change', {
           effectiveType: connection.effectiveType,
           downlink: connection.downlink,
           rtt: connection.rtt,
           saveData: connection.saveData
         });
-      };
+  };
 
-      connection.addEventListener('change', updateConnectionInfo);
+      if (connection && typeof connection.addEventListener === 'function') {
+        connection.addEventListener('change', updateConnectionInfo);
+      }
       updateConnectionInfo(); // Initial check
     }
 
@@ -373,7 +393,7 @@ export class PWAManager {
           latency,
           quality: latency < 100 ? 'good' : latency < 500 ? 'moderate' : 'poor'
         });
-      } catch (error) {
+  } catch {
         this.dispatchCustomEvent('pwa-connection-test', {
           latency: -1,
           quality: 'offline'
@@ -406,11 +426,14 @@ export class PWAManager {
         
         if (slowResources.length > 0) {
           this.dispatchCustomEvent('pwa-slow-resources', {
-            resources: slowResources.map(entry => ({
-              name: entry.name,
-              duration: entry.duration,
-              size: (entry as any).transferSize || 0
-            }))
+            resources: slowResources.map(entry => {
+              const resource = entry as PerformanceResourceTiming;
+              return ({
+                name: entry.name,
+                duration: entry.duration,
+                size: resource.transferSize || 0
+              });
+            })
           });
         }
       });
@@ -461,8 +484,8 @@ export class PWAManager {
         return null;
       }
 
-      const applicationServerKey = (import.meta as any).env?.VITE_VAPID_PUBLIC_KEY;
-      if (!applicationServerKey) {
+  const applicationServerKey = (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_VAPID_PUBLIC_KEY;
+  if (!applicationServerKey) {
         console.error('PWA: VAPID public key not found');
         return null;
       }
@@ -613,7 +636,16 @@ export class PWAManager {
         if (data.syncQueue) {
           // Import sync queue items to IndexedDB
           for (const item of data.syncQueue) {
-            await offlineStorage.addToSyncQueue(item as any);
+            // Ensure item matches expected sync queue shape before adding
+            const queueItem = item as { url: string; method: string; headers?: Record<string,string>; body?: unknown; priority?: 'high'|'medium'|'low'; type?: string; metadata?: Record<string,unknown> };
+            await offlineStorage.addToSyncQueue({
+              url: queueItem.url,
+              method: queueItem.method,
+              headers: queueItem.headers || {},
+              body: typeof queueItem.body === 'string' ? queueItem.body : JSON.stringify(queueItem.body || {}),
+              priority: queueItem.priority || 'medium',
+              type: queueItem.type || 'sync'
+            });
           }
         }
 

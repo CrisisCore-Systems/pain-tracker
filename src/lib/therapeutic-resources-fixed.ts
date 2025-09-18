@@ -9,8 +9,7 @@ import type {
   SessionOutcomes as BaseSessionOutcomes, 
   ResourceRecommendation as BaseResourceRecommendation,
   TherapeuticResourceData,
-  CopingSessionData,
-  ResourceAnalyticsData
+  CopingSessionData
 } from '../types/extended-storage';
 
 // Extended UserContext for this service
@@ -184,6 +183,7 @@ export class OfflineTherapeuticResourcesService {
           instructions: [
             'Find a comfortable position lying down or seated',
             'Start with your toes - tense for 5 seconds, then relax',
+            // cspell:ignore glutes
             'Move up to calves, thighs, glutes',
             'Continue with arms, shoulders, face',
             'Notice the contrast between tension and relaxation',
@@ -196,32 +196,7 @@ export class OfflineTherapeuticResourcesService {
       ];
 
       // Crisis resources
-      const crisisResources: CrisisResource[] = [
-        {
-          id: 'crisis-text-line',
-          title: 'Crisis Text Line',
-          type: 'text',
-          contact: 'Text HOME to 741741',
-          availability: '24/7',
-          description: 'Free, confidential crisis support via text message',
-          traumaSpecific: true,
-          anonymous: true,
-          languageSupport: ['English', 'Spanish'],
-          specialties: ['mental health', 'crisis intervention', 'trauma']
-        },
-        {
-          id: 'suicide-prevention-lifeline',
-          title: 'National Suicide Prevention Lifeline',
-          type: 'hotline',
-          contact: '988',
-          availability: '24/7',
-          description: 'National network of local crisis centers providing free and confidential support',
-          traumaSpecific: false,
-          anonymous: true,
-          languageSupport: ['English', 'Spanish'],
-          specialties: ['suicide prevention', 'mental health crisis']
-        }
-      ];
+  // Crisis resources (currently returned via getCrisisInterventions on demand)
 
       // Store resources
       for (const resource of defaultResources) {
@@ -419,7 +394,6 @@ export class OfflineTherapeuticResourcesService {
     this.currentSession.endTime = new Date().toISOString();
     this.currentSession.completed = true;
     this.currentSession.effectiveness = outcomes.effectiveness;
-    this.currentSession.painBefore = this.currentSession.painBefore;
     this.currentSession.painAfter = outcomes.painReduction;
     this.currentSession.mood.after = outcomes.mood;
 
@@ -444,36 +418,33 @@ export class OfflineTherapeuticResourcesService {
     try {
       let analytics = await this.getResourceAnalytics(resourceId);
       
-      if (!analytics) {
-        analytics = {
-          resourceId,
-          totalUses: 0,
-          effectivenessRatings: [],
-          averageEffectiveness: 0,
-          painReductions: [],
-          averagePainReduction: 0,
-          completionRate: 0,
-          averageDuration: 0,
-          lastUpdated: new Date().toISOString(),
-          trending: { daily: [], weekly: [], monthly: [] }
-        };
-      }
+      const safe: ResourceAnalytics = analytics || {
+        totalUses: 0,
+        effectivenessRatings: [],
+        averageEffectiveness: 0,
+        painReductions: [],
+        averagePainReduction: 0,
+        completionRate: 0,
+        averageDuration: 0,
+        lastUpdated: new Date().toISOString(),
+        trending: { daily: [], weekly: [], monthly: [] }
+      };
 
-      analytics.totalUses++;
-      analytics.effectivenessRatings.push(outcomes.effectiveness);
-      analytics.painReductions.push(outcomes.painReduction);
-      
-      if (analytics.effectivenessRatings.length > 0) {
-        analytics.averageEffectiveness = analytics.effectivenessRatings.reduce((a: number, b: number) => a + b, 0) / analytics.effectivenessRatings.length;
+      safe.totalUses++;
+      safe.effectivenessRatings.push(outcomes.effectiveness);
+      safe.painReductions.push(outcomes.painReduction);
+
+      if (safe.effectivenessRatings.length > 0) {
+        safe.averageEffectiveness = safe.effectivenessRatings.reduce((a: number, b: number) => a + b, 0) / safe.effectivenessRatings.length;
       }
-      
-      if (analytics.painReductions.length > 0) {
-        analytics.averagePainReduction = analytics.painReductions.reduce((a: number, b: number) => a + b, 0) / analytics.painReductions.length;
+      if (safe.painReductions.length > 0) {
+        safe.averagePainReduction = safe.painReductions.reduce((a: number, b: number) => a + b, 0) / safe.painReductions.length;
       }
+      safe.lastUpdated = new Date().toISOString();
 
       await this.offlineStorage.storeData('settings', {
         key: `resource-analytics-${resourceId}`,
-        value: analytics
+        value: safe
       });
     } catch (error) {
       console.error('Failed to update resource analytics:', error);

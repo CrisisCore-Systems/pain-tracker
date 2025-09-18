@@ -1,32 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Activity, 
   TrendingUp, 
   TrendingDown, 
   Heart, 
-  Brain, 
-  Eye, 
   Zap,
   AlertTriangle,
   CheckCircle,
   MinusCircle,
   BarChart3,
-  Gauge,
   Timer,
   Pause,
   Play,
   RotateCcw,
   Settings,
-  Monitor,
-  Smartphone,
-  Volume2,
-  VolumeX
+  Monitor
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
 // Stress level types
 type StressLevel = 'low' | 'moderate' | 'high' | 'critical';
-type StressIndicator = 'heart_rate' | 'interaction_speed' | 'error_rate' | 'session_duration' | 'manual';
+// StressIndicator reserved for future use
+// type _StressIndicator = 'heart_rate' | 'interaction_speed' | 'error_rate' | 'session_duration' | 'manual';
 
 interface StressMetrics {
   level: StressLevel;
@@ -216,48 +211,18 @@ export function StressResponsiveInterfaceAdaptations({
   const sessionStart = useRef(new Date());
 
   // Stress detection hook
-  useEffect(() => {
-    if (!isMonitoring) return;
-
-    const monitoringInterval = setInterval(() => {
-      detectStressLevel();
-    }, 10000); // Check every 10 seconds
-
-    return () => clearInterval(monitoringInterval);
-  }, [isMonitoring]);
-
-  // Auto-apply interface adaptations when stress level changes
-  useEffect(() => {
-    const adaptation = interfaceAdaptations.find(a => 
-      a.triggerStressLevel.includes(currentStressMetrics.level)
-    );
-    
-    if (adaptation && adaptation.id !== currentAdaptation.id) {
-      setCurrentAdaptation(adaptation);
-      if (onInterfaceAdaptation) {
-        onInterfaceAdaptation(adaptation);
-      }
-    }
-  }, [currentStressMetrics.level]);
-
-  const detectStressLevel = () => {
+  const detectStressLevel = useCallback(() => {
     const now = new Date();
     const sessionDuration = (now.getTime() - sessionStart.current.getTime()) / (1000 * 60); // minutes
-    
-    // Calculate average interaction speed
     const avgInteractionSpeed = interactionTimes.current.length > 0
       ? interactionTimes.current.reduce((a, b) => a + b, 0) / interactionTimes.current.length
       : 500;
-
-    // Calculate error rate
     const totalInteractions = interactionTimes.current.length + errorCount.current;
     const errorRate = totalInteractions > 0 ? (errorCount.current / totalInteractions) * 100 : 0;
 
-    // Stress level detection algorithm
     let stressLevel: StressLevel = 'low';
     let confidence = 0;
 
-    // Fast interactions might indicate stress
     if (avgInteractionSpeed < 200) {
       stressLevel = 'high';
       confidence += 30;
@@ -266,7 +231,6 @@ export function StressResponsiveInterfaceAdaptations({
       confidence += 20;
     }
 
-    // High error rate indicates stress
     if (errorRate > 20) {
       stressLevel = 'critical';
       confidence += 40;
@@ -275,13 +239,11 @@ export function StressResponsiveInterfaceAdaptations({
       confidence += 25;
     }
 
-    // Long session duration might indicate difficulty
     if (sessionDuration > 30) {
       confidence += 15;
       if (stressLevel === 'low') stressLevel = 'moderate';
     }
 
-    // Include manual rating if available
     if (currentStressMetrics.indicators.manualRating) {
       const manual = currentStressMetrics.indicators.manualRating;
       if (manual >= 8) {
@@ -311,15 +273,33 @@ export function StressResponsiveInterfaceAdaptations({
     if (onStressLevelChange) {
       onStressLevelChange(newMetrics);
     }
-  };
+  }, [currentStressMetrics.indicators.manualRating, onStressLevelChange]);
 
-  const recordInteraction = (duration: number) => {
-    interactionTimes.current = [...interactionTimes.current.slice(-19), duration];
-  };
+  useEffect(() => {
+    if (!isMonitoring) return;
 
-  const recordError = () => {
-    errorCount.current += 1;
-  };
+    const monitoringInterval = setInterval(() => {
+      detectStressLevel();
+    }, 10000); // Check every 10 seconds
+
+    return () => clearInterval(monitoringInterval);
+  }, [isMonitoring, detectStressLevel]);
+
+  // Auto-apply interface adaptations when stress level changes
+  useEffect(() => {
+    const adaptation = interfaceAdaptations.find(a => 
+      a.triggerStressLevel.includes(currentStressMetrics.level)
+    );
+    
+    if (adaptation && adaptation.id !== currentAdaptation.id) {
+      setCurrentAdaptation(adaptation);
+      if (onInterfaceAdaptation) {
+        onInterfaceAdaptation(adaptation);
+      }
+    }
+  }, [currentStressMetrics.level, currentAdaptation.id, onInterfaceAdaptation]);
+
+  // Helpers kept for potential future use (intentionally unused for now)
 
   const updateManualStressRating = (rating: number) => {
     setManualStressRating(rating);
@@ -681,6 +661,7 @@ function InterfaceAdaptationPreview({
       <div className="flex items-center space-x-2 mb-4">
         <Monitor className="w-5 h-5 text-purple-600" />
         <h3 className="text-lg font-semibold text-gray-900">Active Interface Adaptation</h3>
+  <span className="ml-auto text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 capitalize">{stressLevel}</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -71,10 +71,11 @@ interface SyncQueueItem {
   metadata?: Record<string, unknown>;
 }
 
-class OfflineStorageService {
+export class OfflineStorageService {
   private dbName = 'pain-tracker-offline';
   private dbVersion = 1;
   private db: IDBDatabase | null = null;
+  private static _instance: OfflineStorageService | null = null;
 
   // Store names
   private stores = {
@@ -127,6 +128,120 @@ class OfflineStorageService {
         }
       };
     });
+  }
+
+  // Key-value helpers (backed by EnhancedLocalStorage and IndexedDB settings)
+  async setItem(key: string, value: unknown): Promise<void> {
+    try {
+      // Store in localStorage for fast access and in IndexedDB for durability
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // ignore localStorage failures
+    }
+    await this.storeData('settings', { key, value });
+  }
+
+  async getItem<T = unknown>(key: string): Promise<T | null> {
+    try {
+      const v = localStorage.getItem(key);
+      if (v !== null) return JSON.parse(v) as T;
+    } catch {
+      // ignore
+    }
+    try {
+      const settings = await this.getData('settings');
+      const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === key);
+      if (match && match.data && typeof match.data === 'object' && 'value' in match.data) {
+        return (match.data as Record<string, unknown>).value as T;
+      }
+    } catch {
+      // ignore
+    }
+    return null;
+  }
+
+  // Table-like helpers implemented via settings key prefixes: table:{tableName}:{id}
+  private makeTableKey(tableName: string, id: string): string {
+    return `table:${tableName}:${id}`;
+  }
+
+  private parseTableKey(key: string): { table: string; id: string } | null {
+    if (!key.startsWith('table:')) return null;
+    const parts = key.split(':');
+    if (parts.length < 3) return null;
+    return { table: parts[1], id: parts.slice(2).join(':') };
+    }
+
+  async getAllFromTable<T = unknown>(tableName: string): Promise<T[]> {
+    const settings = await this.getData('settings');
+    const items: T[] = [];
+    for (const entry of settings) {
+      if (entry.data && typeof entry.data === 'object' && 'key' in entry.data && 'value' in entry.data) {
+        const key = (entry.data as Record<string, unknown>).key as string;
+        const parsed = this.parseTableKey(key);
+        if (parsed && parsed.table === tableName) {
+          items.push((entry.data as Record<string, unknown>).value as T);
+        }
+      }
+    }
+    return items;
+  }
+
+  async replaceTable<T = unknown>(tableName: string, items: T[]): Promise<void> {
+    const settings = await this.getData('settings');
+    // Remove existing rows for table
+    const deletions: Promise<void>[] = [];
+    for (const entry of settings) {
+      if (entry.id !== undefined && entry.data && typeof entry.data === 'object' && 'key' in entry.data) {
+        const key = (entry.data as Record<string, unknown>).key as string;
+        const parsed = this.parseTableKey(key);
+        if (parsed && parsed.table === tableName) {
+          deletions.push(this.deleteData(entry.id));
+        }
+      }
+    }
+    await Promise.allSettled(deletions);
+    // Add new items
+    for (const item of items) {
+      const id = (item as unknown as { id?: string }).id || crypto.randomUUID();
+      await this.storeData('settings', { key: this.makeTableKey(tableName, String(id)), value: item });
+    }
+  }
+
+  async addToTable<T = unknown>(tableName: string, item: T & { id?: string }): Promise<void> {
+    const id = item.id || crypto.randomUUID();
+    await this.storeData('settings', { key: this.makeTableKey(tableName, String(id)), value: { ...item, id } });
+  }
+
+  async updateInTable<T = unknown>(tableName: string, id: string | number, item: T): Promise<void> {
+    const settings = await this.getData('settings');
+    const keyToFind = this.makeTableKey(tableName, String(id));
+    const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === keyToFind);
+    if (match && match.id !== undefined) {
+      await this.updateData(match.id, { key: keyToFind, value: item });
+    } else {
+      // If not found, add
+      await this.storeData('settings', { key: keyToFind, value: item });
+    }
+  }
+
+  async removeFromTable(tableName: string, id: string | number): Promise<void> {
+    const settings = await this.getData('settings');
+    const keyToFind = this.makeTableKey(tableName, String(id));
+    const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === keyToFind);
+    if (match && match.id !== undefined) {
+      await this.deleteData(match.id);
+    }
+  }
+
+  async getFromTable<T = unknown>(tableName: string, id: string | number): Promise<T | null> {
+    const settings = await this.getData('settings');
+    const keyToFind = this.makeTableKey(tableName, String(id));
+    const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === keyToFind);
+    if (match && match.data && typeof match.data === 'object' && 'value' in match.data) {
+      return (match.data as Record<string, unknown>).value as T;
+    }
+    return null;
   }
 
   // Data Storage Methods
@@ -408,10 +523,22 @@ class OfflineStorageService {
       });
     });
   }
+
+  // Singleton accessor
+  public static getInstance(): OfflineStorageService {
+    if (!this._instance) {
+      this._instance = new OfflineStorageService();
+    }
+    return this._instance;
+  }
 }
 
-// Export singleton instance
-export const offlineStorage = new OfflineStorageService();
+// Export singleton instance via getInstance for backward compatibility
+// Provide a static getInstance on the class for other modules that call it
+// (some code imports OfflineStorageService and calls getInstance())
+export const offlineStorage = OfflineStorageService.getInstance();
+
+// (namespace shim removed - class provides static getInstance)
 
 // Enhanced local storage with fallback to IndexedDB
 export class EnhancedLocalStorage {

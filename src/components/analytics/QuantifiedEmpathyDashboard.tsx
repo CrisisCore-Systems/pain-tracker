@@ -3,7 +3,7 @@
  * Comprehensive dashboard displaying all empathy-driven metrics with visualizations and insights
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-system';
 import { 
   Heart, Brain, Lightbulb, Target, TrendingUp, Award, 
@@ -42,8 +42,7 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
   moodEntries = [],
   onInsightSelect,
   onRecommendationAccept,
-  onShareMetrics,
-  showAdvancedMetrics = true
+  onShareMetrics
 }) => {
   // Services
   const [analyticsService] = useState(() => new EmpathyDrivenAnalyticsService({
@@ -70,9 +69,16 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
   const [insights, setInsights] = useState<EmpathyInsight[]>([]);
   const [recommendations, setRecommendations] = useState<EmpathyRecommendation[]>([]);
 
+  // Track if we're already loading to prevent concurrent loads
+  const loadingRef = useRef(false);
+
   // Load all metrics
   useEffect(() => {
+    // Prevent concurrent loads
+    if (loadingRef.current) return;
+    
     const loadAllMetrics = async () => {
+      loadingRef.current = true;
       setIsLoading(true);
       try {
         // Load emotional state metrics
@@ -109,14 +115,17 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
         console.error('Failed to load empathy metrics:', error);
       } finally {
         setIsLoading(false);
+        loadingRef.current = false;
       }
     };
 
     loadAllMetrics();
-  }, [userId, painEntries, moodEntries, timeframe, analyticsService, emotionalTracker, wellbeingService]);
+    // Only depend on essential data that should trigger reloads
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, timeframe]);
 
   // Generate insights from all metrics
-  const generateInsights = (
+  const generateInsights = useCallback((
     empathy: QuantifiedEmpathyMetrics,
     emotional: EmotionalStateMetrics,
     wellbeing: HolisticWellbeingMetrics,
@@ -185,10 +194,10 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
     }
 
     return insights;
-  };
+  }, []);
 
   // Generate recommendations from metrics
-  const generateRecommendations = (
+  const generateRecommendations = useCallback((
     empathy: QuantifiedEmpathyMetrics,
     emotional: EmotionalStateMetrics,
     wellbeing: HolisticWellbeingMetrics,
@@ -278,7 +287,7 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
     }
 
     return recommendations;
-  };
+  }, []);
 
   if (isLoading) {
     return (
@@ -434,7 +443,7 @@ const OverviewDashboard: React.FC<{
   emotional: EmotionalStateMetrics;
   wellbeing: HolisticWellbeingMetrics;
   pacing: DigitalPacingSystem;
-}> = ({ empathy, emotional, wellbeing, pacing }) => (
+}> = ({ empathy, wellbeing, pacing }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     {/* Emotional Intelligence */}
     <Card className="border-blue-200 bg-blue-50">
@@ -592,22 +601,25 @@ const EmotionalIntelligenceDashboard: React.FC<{
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {Object.entries(empathy.emotionalIntelligence).map(([key, value]) => (
-            <div key={key} className="flex items-center justify-between">
-              <span className="text-sm font-medium capitalize">
-                {key.replace(/([A-Z])/g, ' $1').trim()}
-              </span>
-              <div className="flex items-center space-x-2">
-                <div className="w-24 bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${value}%` }}
-                  />
+          {Object.entries(empathy.emotionalIntelligence).map(([key, value]) => {
+            const numeric = typeof value === 'number' ? value : 0;
+            return (
+              <div key={key} className="flex items-center justify-between">
+                <span className="text-sm font-medium capitalize">
+                  {key.replace(/([A-Z])/g, ' $1').trim()}
+                </span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${numeric}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-medium w-10 text-right">{numeric}%</span>
                 </div>
-                <span className="text-sm font-medium w-10 text-right">{value}%</span>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
@@ -621,22 +633,25 @@ const EmotionalIntelligenceDashboard: React.FC<{
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {Object.entries(empathy.empathyKPIs).map(([key, value]) => (
-            <div key={key} className="flex items-center justify-between">
-              <span className="text-sm font-medium capitalize">
-                {key.replace(/([A-Z])/g, ' $1').trim()}
-              </span>
-              <div className="flex items-center space-x-2">
-                <div className="w-24 bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${value}%` }}
-                  />
+          {Object.entries(empathy.empathyKPIs).map(([key, value]) => {
+            const numeric = typeof value === 'number' ? value : 0;
+            return (
+              <div key={key} className="flex items-center justify-between">
+                <span className="text-sm font-medium capitalize">
+                  {key.replace(/([A-Z])/g, ' $1').trim()}
+                </span>
+                <div className="flex items-center space-x-2">
+                  <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${numeric}%` }}
+                    />
+                  </div>
+                  <span className="text-sm font-medium w-10 text-right">{numeric}%</span>
                 </div>
-                <span className="text-sm font-medium w-10 text-right">{value}%</span>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
@@ -673,9 +688,9 @@ const EmotionalIntelligenceDashboard: React.FC<{
           <div>
             <h4 className="text-sm font-medium text-gray-700 mb-3">Wisdom Gained</h4>
             <div className="space-y-2">
-              {empathy.humanizedMetrics.wisdomGained.slice(0, 3).map((wisdom, index) => (
+              {Array.isArray(empathy.humanizedMetrics.wisdomGained) && empathy.humanizedMetrics.wisdomGained.slice(0, 3).map((wisdom, index) => (
                 <div key={index} className="text-sm text-gray-600 p-2 bg-gray-50 rounded">
-                  "{wisdom.length > 100 ? wisdom.substring(0, 100) + '...' : wisdom}"
+                  "{typeof wisdom === 'string' ? (wisdom.length > 100 ? wisdom.substring(0, 100) + '...' : wisdom) : ''}"
                 </div>
               ))}
             </div>
@@ -695,7 +710,8 @@ const WellbeingDashboard: React.FC<{ wellbeing: HolisticWellbeingMetrics }> = ({
       <CardTitle>Holistic Wellbeing Metrics</CardTitle>
     </CardHeader>
     <CardContent>
-      <p className="text-gray-600">Detailed wellbeing metrics visualization would be implemented here.</p>
+  <p className="text-gray-600 mb-2">Overall satisfaction: {Math.round(wellbeing.qualityOfLife.overallSatisfaction)}%</p>
+  <p className="text-gray-600 text-sm">Meaning & Purpose: {Math.round(wellbeing.qualityOfLife.meaningAndPurpose)}%</p>
     </CardContent>
   </Card>
 );
@@ -706,7 +722,8 @@ const PacingDashboard: React.FC<{ pacing: DigitalPacingSystem }> = ({ pacing }) 
       <CardTitle>Energy & Pacing Dashboard</CardTitle>
     </CardHeader>
     <CardContent>
-      <p className="text-gray-600">Energy management and pacing visualization would be implemented here.</p>
+  <p className="text-gray-600 mb-2">Current energy: {Math.round(pacing.energyManagement.currentEnergyLevel)}%</p>
+  <p className="text-gray-600 text-sm">Used spoons: {pacing.energyManagement.spoonTheory.usedSpoons}/{pacing.energyManagement.spoonTheory.totalSpoons}</p>
     </CardContent>
   </Card>
 );
@@ -812,7 +829,8 @@ const TrendsDashboard: React.FC<{
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <p className="text-gray-600">Trend analysis and data visualization would be implemented here.</p>
+      <p className="text-gray-600 mb-2">Entries: pain {painEntries.length} • mood {moodEntries.length} • timeframe {timeframe}</p>
+      <p className="text-gray-500 text-sm">Detailed visualization placeholder.</p>
     </CardContent>
   </Card>
 );

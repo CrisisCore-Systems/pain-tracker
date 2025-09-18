@@ -31,7 +31,7 @@ interface ProgressMilestone {
   milestone: string;
   meaningfulImpact: string;
   celebrationSuggestion: string;
-  icon: React.ComponentType;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   color: string;
   achieved: boolean;
   achievedDate?: Date;
@@ -371,7 +371,7 @@ function AchievementCelebrationCard({
   onClose: () => void;
   onShare: () => void;
 }) {
-  const Icon = achievement.icon;
+  const Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> = achievement.icon;
   
   const celebrationStyles = {
     gentle: 'bg-blue-50 border-blue-200 text-blue-800',
@@ -465,7 +465,7 @@ function ProgressOverview({
       
       <div className="grid gap-4">
         {milestones.map((milestone) => {
-          const Icon = milestone.icon;
+          const Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> = milestone.icon;
           const isExpanded = expandedMilestone === milestone.id;
           
           return (
@@ -533,7 +533,7 @@ function RecentAchievements({ achievements }: { achievements: Achievement[] }) {
       
       <div className="space-y-3">
         {achievements.slice(0, 5).map((achievement) => {
-          const Icon = achievement.icon;
+          const Icon: React.ComponentType<React.SVGProps<SVGSVGElement>> = achievement.icon;
           
           return (
             <div key={achievement.id} className="flex items-center space-x-3 p-2 bg-gray-50 rounded-md">

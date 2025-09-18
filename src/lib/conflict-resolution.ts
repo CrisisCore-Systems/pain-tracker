@@ -11,8 +11,8 @@ export interface DataConflict {
   entityType: 'pain-entry' | 'settings' | 'emergency-data' | 'activity-log';
   entityId: string | number;
   conflictType: 'modification' | 'deletion' | 'creation' | 'version';
-  localVersion: any;
-  remoteVersion: any;
+  localVersion: DataEntity | null;
+  remoteVersion: DataEntity | null;
   localTimestamp: string;
   remoteTimestamp: string;
   localChecksum?: string;
@@ -37,7 +37,7 @@ export interface ConflictResolutionStrategy {
 export interface ConflictResolution {
   strategy: string;
   resolved: boolean;
-  mergedData?: any;
+  mergedData?: DataEntity | Record<string, unknown> | null;
   userAction?: 'accept-local' | 'accept-remote' | 'merge' | 'manual-edit' | 'postpone';
   confidence: number; // 0-100
   requiresUserReview: boolean;
@@ -49,8 +49,44 @@ export interface MergeRule {
   field: string;
   strategy: 'last-writer-wins' | 'prefer-local' | 'prefer-remote' | 'user-decides' | 'merge-arrays' | 'sum-numbers' | 'min-value' | 'max-value';
   priority: number;
-  condition?: (local: any, remote: any) => boolean;
+  condition?: (local: unknown, remote: unknown) => boolean;
   traumaInformed?: boolean; // Protects user from losing important emotional data
+}
+
+// Internal persistence record shapes (stored under settings via key-value helpers)
+interface DeletionRecord {
+  itemId: string | number;
+  timestamp: string;
+}
+
+interface StoredConflictResolutionRecord {
+  conflictId: string;
+  resolution: ConflictResolution;
+  timestamp: string;
+}
+
+interface PostponedConflictRecord {
+  conflictId: string;
+  postponeUntil: string; // ISO
+  conflict: DataConflict;
+}
+
+// Generic entity shape for conflict comparison & merging
+export interface DataEntity {
+  id: string | number;
+  type?: 'pain-entry' | 'settings' | 'emergency-data' | 'activity-log' | string;
+  lastModified?: string;
+  timestamp?: string;
+  notes?: string;
+  baselineData?: {
+    pain?: number;
+    [k: string]: unknown;
+  };
+  qualityOfLife?: {
+    moodImpact?: unknown;
+    [k: string]: unknown;
+  };
+  [k: string]: unknown; // Allow additional dynamic fields
 }
 
 export class ConflictResolutionService {
@@ -209,7 +245,7 @@ export class ConflictResolutionService {
     ]);
   }
 
-  async detectConflicts(localData: any[], remoteData: any[]): Promise<DataConflict[]> {
+  async detectConflicts(localData: DataEntity[], remoteData: DataEntity[]): Promise<DataConflict[]> {
     const conflicts: DataConflict[] = [];
     const remoteMap = new Map(remoteData.map(item => [item.id, item]));
 
@@ -240,7 +276,7 @@ export class ConflictResolutionService {
     return conflicts;
   }
 
-  private async compareVersions(localItem: any, remoteItem: any): Promise<DataConflict | null> {
+  private async compareVersions(localItem: DataEntity, remoteItem: DataEntity): Promise<DataConflict | null> {
     // Generate checksums for comparison
     const localChecksum = await this.generateChecksum(localItem);
     const remoteChecksum = await this.generateChecksum(remoteItem);
@@ -265,15 +301,17 @@ export class ConflictResolutionService {
     const priority = this.determinePriority(localItem, remoteItem);
     const autoResolvable = this.isAutoResolvable(localItem, remoteItem);
 
+    const entityType: DataConflict['entityType'] = (['pain-entry','settings','emergency-data','activity-log'] as const)
+      .includes((localItem.type as DataConflict['entityType'])) ? (localItem.type as DataConflict['entityType']) : 'pain-entry';
     return {
-      id: `${localItem.type || 'unknown'}-${localItem.id}-${Date.now()}`,
-      entityType: localItem.type || 'pain-entry',
+      id: `${(localItem.type || 'unknown')}-${localItem.id}-${Date.now()}`,
+      entityType,
       entityId: localItem.id,
       conflictType,
       localVersion: localItem,
       remoteVersion: remoteItem,
-      localTimestamp: localItem.lastModified || localItem.timestamp,
-      remoteTimestamp: remoteItem.lastModified || remoteItem.timestamp,
+      localTimestamp: localItem.lastModified || localItem.timestamp || new Date().toISOString(),
+      remoteTimestamp: remoteItem.lastModified || remoteItem.timestamp || new Date().toISOString(),
       localChecksum,
       remoteChecksum,
       metadata: {
@@ -285,20 +323,22 @@ export class ConflictResolutionService {
     };
   }
 
-  private async handleMissingLocal(remoteItem: any): Promise<DataConflict | null> {
+  private async handleMissingLocal(remoteItem: DataEntity): Promise<DataConflict | null> {
     // Check if this was intentionally deleted locally
     const deletionRecord = await this.checkDeletionRecord(remoteItem.id);
     
     if (deletionRecord) {
+      const entityType: DataConflict['entityType'] = (['pain-entry','settings','emergency-data','activity-log'] as const)
+        .includes((remoteItem.type as DataConflict['entityType'])) ? (remoteItem.type as DataConflict['entityType']) : 'pain-entry';
       return {
         id: `deletion-${remoteItem.id}-${Date.now()}`,
-        entityType: remoteItem.type || 'pain-entry',
+        entityType,
         entityId: remoteItem.id,
         conflictType: 'deletion',
         localVersion: null,
         remoteVersion: remoteItem,
         localTimestamp: deletionRecord.timestamp,
-        remoteTimestamp: remoteItem.lastModified || remoteItem.timestamp,
+        remoteTimestamp: remoteItem.lastModified || remoteItem.timestamp || new Date().toISOString(),
         metadata: {
           userDeviceId: this.getDeviceId(),
           conflictDetectedAt: new Date().toISOString(),
@@ -381,8 +421,8 @@ export class ConflictResolutionService {
     }
 
     const mergedData = await this.applyMergeRules(
-      conflict.localVersion,
-      conflict.remoteVersion,
+      (conflict.localVersion || {}) as Record<string, unknown>,
+      (conflict.remoteVersion || {}) as Record<string, unknown>,
       traumaInformedRules
     );
 
@@ -399,10 +439,10 @@ export class ConflictResolutionService {
 
   private async applyConservativeMerge(conflict: DataConflict): Promise<ConflictResolution> {
     // Always preserve user data, merge arrays, keep both versions of conflicting fields
-    const merged = { ...conflict.remoteVersion };
+  const merged: Record<string, unknown> = { ...(conflict.remoteVersion || {}) };
     
     // Overlay local changes
-    for (const [key, value] of Object.entries(conflict.localVersion)) {
+  for (const [key, value] of Object.entries(conflict.localVersion || {})) {
       if (Array.isArray(value) && Array.isArray(merged[key])) {
         // Merge arrays and remove duplicates
         merged[key] = [...new Set([...merged[key], ...value])];
@@ -429,15 +469,15 @@ export class ConflictResolutionService {
   private async applySmartMerge(conflict: DataConflict): Promise<ConflictResolution> {
     const rules = this.mergeRules.get(conflict.entityType) || [];
     const mergedData = await this.applyMergeRules(
-      conflict.localVersion,
-      conflict.remoteVersion,
+      (conflict.localVersion || {}) as Record<string, unknown>,
+      (conflict.remoteVersion || {}) as Record<string, unknown>,
       rules
     );
 
-    const preservedUserChanges = this.checkUserChangesPreserved(
+    const preservedUserChanges = conflict.localVersion ? this.checkUserChangesPreserved(
       conflict.localVersion,
       mergedData
-    );
+    ) : true;
 
     return {
       strategy: 'smart-merge',
@@ -484,15 +524,15 @@ export class ConflictResolutionService {
     };
   }
 
-  private async applyMergeRules(local: any, remote: any, rules: MergeRule[]): Promise<any> {
-    const merged = { ...remote }; // Start with remote as base
+  private async applyMergeRules<T extends Record<string, unknown>>(local: T, remote: T, rules: MergeRule[]): Promise<T> {
+    const merged: T = { ...(remote as Record<string, unknown>) } as T; // Start with remote as base
     
     // Sort rules by priority
     const sortedRules = rules.sort((a, b) => a.priority - b.priority);
     
     for (const rule of sortedRules) {
-      const localValue = this.getValueByPath(local, rule.field);
-      const remoteValue = this.getValueByPath(remote, rule.field);
+  const localValue = this.getValueByPath(local, rule.field);
+  const remoteValue = this.getValueByPath(remote, rule.field);
       
       if (localValue === undefined && remoteValue === undefined) {
         continue;
@@ -510,7 +550,7 @@ export class ConflictResolutionService {
     return merged;
   }
 
-  private async applyMergeStrategy(local: any, remote: any, strategy: MergeRule['strategy']): Promise<any> {
+  private async applyMergeStrategy(local: unknown, remote: unknown, strategy: MergeRule['strategy']): Promise<unknown> {
     switch (strategy) {
       case 'prefer-local':
         return local !== undefined ? local : remote;
@@ -548,35 +588,39 @@ export class ConflictResolutionService {
       
       case 'user-decides':
         // Mark for user review
-        return { _conflict: true, local, remote };
+        return { _conflict: true, local, remote } as Record<string, unknown>;
       
       default:
         return local !== undefined ? local : remote;
     }
   }
 
-  private getValueByPath(obj: any, path: string): any {
+  private getValueByPath(obj: unknown, path: string): unknown {
     if (path === '*') return obj;
-    
-    return path.split('.').reduce((current, key) => {
+    const segments = path.split('.');
+    let current: unknown = obj;
+    for (const key of segments) {
       if (key.endsWith('*')) {
-        // Wildcard matching
         const prefix = key.slice(0, -1);
         if (current && typeof current === 'object') {
-          const result: any = {};
-          for (const [k, v] of Object.entries(current)) {
-            if (k.startsWith(prefix)) {
-              result[k] = v;
+          const out: Record<string, unknown> = {};
+            for (const [k, v] of Object.entries(current as Record<string, unknown>)) {
+              if (k.startsWith(prefix)) out[k] = v;
             }
-          }
-          return result;
+          current = out;
+        } else {
+          current = undefined;
         }
+      } else if (current && typeof current === 'object' && key in (current as Record<string, unknown>)) {
+        current = (current as Record<string, unknown>)[key];
+      } else {
+        return undefined;
       }
-      return current?.[key];
-    }, obj);
+    }
+    return current;
   }
 
-  private setValueByPath(obj: any, path: string, value: any): void {
+  private setValueByPath(obj: Record<string, unknown>, path: string, value: unknown): void {
     if (path === '*') {
       Object.assign(obj, value);
       return;
@@ -585,17 +629,16 @@ export class ConflictResolutionService {
     const keys = path.split('.');
     const lastKey = keys.pop()!;
     
-    const target = keys.reduce((current, key) => {
+    const target = keys.reduce<Record<string, unknown>>((current, key) => {
       if (!current[key] || typeof current[key] !== 'object') {
-        current[key] = {};
+        current[key] = {} as Record<string, unknown>;
       }
-      return current[key];
+      return current[key] as Record<string, unknown>;
     }, obj);
-
-    target[lastKey] = value;
+    target[lastKey] = value as unknown;
   }
 
-  private determinePriority(local: any, remote: any): 'high' | 'medium' | 'low' {
+  private determinePriority(local: DataEntity, remote: DataEntity): 'high' | 'medium' | 'low' {
     // Emergency data is always high priority
     if (local.type === 'emergency-data' || remote.type === 'emergency-data') {
       return 'high';
@@ -614,7 +657,7 @@ export class ConflictResolutionService {
     return 'low';
   }
 
-  private isAutoResolvable(local: any, remote: any): boolean {
+  private isAutoResolvable(local: DataEntity, remote: DataEntity): boolean {
     // Don't auto-resolve emergency data
     if (local.type === 'emergency-data' || remote.type === 'emergency-data') {
       return false;
@@ -633,7 +676,7 @@ export class ConflictResolutionService {
     return true;
   }
 
-  private checkUserChangesPreserved(original: any, merged: any): boolean {
+  private checkUserChangesPreserved(original: DataEntity, merged: Record<string, unknown> | DataEntity | null): boolean {
     // Check if critical user fields are preserved
     const criticalFields = ['notes', 'baselineData.pain', 'qualityOfLife.moodImpact'];
     
@@ -682,7 +725,7 @@ export class ConflictResolutionService {
     return 'just now';
   }
 
-  private async generateChecksum(data: any): Promise<string> {
+  private async generateChecksum(data: DataEntity): Promise<string> {
     const normalized = JSON.stringify(data, Object.keys(data).sort());
     const encoder = new TextEncoder();
     const dataBuffer = encoder.encode(normalized);
@@ -702,9 +745,13 @@ export class ConflictResolutionService {
 
   private async checkDeletionRecord(itemId: string | number): Promise<{ timestamp: string } | null> {
     try {
-      const deletionRecords = await offlineStorage.getData('deletion-record');
-      const record = deletionRecords.find(r => r.data && typeof r.data === 'object' && 'itemId' in r.data && r.data.itemId === itemId);
-      return record ? { timestamp: record.timestamp } : null;
+      // Deletion records are stored under a dedicated key in settings
+      const deletionRecords = await offlineStorage.getItem<DeletionRecord[]>('conflict:deletions');
+      if (Array.isArray(deletionRecords)) {
+        const match = deletionRecords.find(r => r.itemId === itemId);
+        return match ? { timestamp: match.timestamp } : null;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -712,11 +759,10 @@ export class ConflictResolutionService {
 
   private async storeResolution(conflictId: string, resolution: ConflictResolution): Promise<void> {
     try {
-      await offlineStorage.storeData('conflict-resolution', {
-        conflictId,
-        resolution,
-        timestamp: new Date().toISOString()
-      });
+      const key = 'conflict:resolutions';
+      const existing = await offlineStorage.getItem<StoredConflictResolutionRecord[]>(key) || [];
+      existing.push({ conflictId, resolution, timestamp: new Date().toISOString() });
+      await offlineStorage.setItem(key, existing);
     } catch (error) {
       console.error('Failed to store conflict resolution:', error);
     }
@@ -755,12 +801,15 @@ export class ConflictResolutionService {
   async postponeConflict(conflictId: string, postponeUntil: Date): Promise<void> {
     const conflict = this.conflicts.get(conflictId);
     if (conflict) {
-      // Store postponement info
-      await offlineStorage.storeData('postponed-conflict', {
-        conflictId,
-        postponeUntil: postponeUntil.toISOString(),
-        conflict
-      });
+      // Store postponement info under key-value settings
+      try {
+        const key = 'conflict:postponed';
+        const existing = await offlineStorage.getItem<PostponedConflictRecord[]>(key) || [];
+        existing.push({ conflictId, postponeUntil: postponeUntil.toISOString(), conflict });
+        await offlineStorage.setItem(key, existing);
+      } catch (error) {
+        console.error('Failed to store postponed conflict:', error);
+      }
       
       // Remove from active conflicts
       this.conflicts.delete(conflictId);

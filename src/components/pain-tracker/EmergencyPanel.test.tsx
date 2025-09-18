@@ -20,6 +20,7 @@ describe('EmergencyPanel Component', () => {
     ],
     protocols: [
       {
+  name: 'Primary Protocol',
         painThreshold: 8,
         symptoms: ['Severe Pain', 'Numbness'],
         medications: [

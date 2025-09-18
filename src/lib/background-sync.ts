@@ -20,6 +20,24 @@ interface SyncStats {
   errors: string[];
 }
 
+// Shape of items stored in the sync queue (mirrors offlineStorage SyncQueueItem)
+interface SyncQueueItemShape {
+  id?: number;
+  url: string;
+  method: string;
+  headers: Record<string, string>;
+  body?: string;
+  timestamp?: string;
+  priority: 'high' | 'medium' | 'low';
+  retryCount?: number;
+  type: string;
+  metadata?: Record<string, unknown>;
+}
+
+// Payload convenience types for public API methods
+type GenericRecord = Record<string, unknown>;
+type QueuePayload = GenericRecord | FormData | string | number | boolean | null | undefined;
+
 export class BackgroundSyncService {
   private static instance: BackgroundSyncService;
   private isOnline: boolean = navigator.onLine;
@@ -79,7 +97,7 @@ export class BackgroundSyncService {
   async queueForSync(
     url: string,
     method: string,
-    data?: any,
+    data?: QueuePayload,
     priority: 'high' | 'medium' | 'low' = 'medium'
   ): Promise<void> {
     try {
@@ -196,7 +214,7 @@ export class BackgroundSyncService {
     return stats;
   }
 
-  private async syncItem(item: any): Promise<SyncResult> {
+  private async syncItem(item: SyncQueueItemShape): Promise<SyncResult> {
     try {
       // Check if we're still online
       if (!this.isOnline) {
@@ -240,7 +258,7 @@ export class BackgroundSyncService {
     }
   }
 
-  private async scheduleRetry(item: any, result: SyncResult): Promise<void> {
+  private async scheduleRetry(item: SyncQueueItemShape, result: SyncResult): Promise<void> {
     const delay = result.retryAfter || this.getRetryDelay(item.retryCount || 0);
     
     // Clear existing timeout for this item
@@ -299,15 +317,21 @@ export class BackgroundSyncService {
     };
   }
 
-  private dispatchSyncEvent(type: string, detail: any): void {
+  private dispatchSyncEvent(type: string, detail: unknown): void {
     const event = new CustomEvent(`background-sync-${type}`, { detail });
     window.dispatchEvent(event);
   }
 
   // Public methods for managing sync
   async forcSync(): Promise<SyncStats> {
+  // cspell:ignore forc
     console.log('BackgroundSync: Force sync requested');
     return this.syncAllPendingData();
+  }
+
+  // Backwards-compatible correctly spelled alias - prefer this going forward
+  async forceSync(): Promise<SyncStats> {
+    return this.forcSync();
   }
 
   async clearFailedItems(): Promise<void> {
@@ -343,7 +367,7 @@ export class BackgroundSyncService {
   }
 
   // Emergency sync for critical data
-  async emergencySync(data: any, endpoint: string): Promise<boolean> {
+  async emergencySync(data: QueuePayload, endpoint: string): Promise<boolean> {
     if (!this.isOnline) {
       await this.queueForSync(endpoint, 'POST', data, 'high');
       return false;
@@ -385,27 +409,27 @@ export class PainTrackerSync {
     this.baseUrl = import.meta.env.VITE_API_BASE_URL || '/api';
   }
 
-  async syncPainEntry(entry: any): Promise<void> {
+  async syncPainEntry(entry: QueuePayload): Promise<void> {
     const endpoint = `${this.baseUrl}/pain-entries`;
     await this.backgroundSync.queueForSync(endpoint, 'POST', entry, 'high');
   }
 
-  async syncPainEntryUpdate(id: number, updates: any): Promise<void> {
+  async syncPainEntryUpdate(id: number, updates: QueuePayload): Promise<void> {
     const endpoint = `${this.baseUrl}/pain-entries/${id}`;
     await this.backgroundSync.queueForSync(endpoint, 'PUT', updates, 'medium');
   }
 
-  async syncEmergencyData(data: any): Promise<boolean> {
+  async syncEmergencyData(data: QueuePayload): Promise<boolean> {
     const endpoint = `${this.baseUrl}/emergency`;
     return this.backgroundSync.emergencySync(data, endpoint);
   }
 
-  async syncActivityLog(log: any): Promise<void> {
+  async syncActivityLog(log: QueuePayload): Promise<void> {
     const endpoint = `${this.baseUrl}/activity-logs`;
     await this.backgroundSync.queueForSync(endpoint, 'POST', log, 'low');
   }
 
-  async syncSettings(settings: any): Promise<void> {
+  async syncSettings(settings: QueuePayload): Promise<void> {
     const endpoint = `${this.baseUrl}/settings`;
     await this.backgroundSync.queueForSync(endpoint, 'PUT', settings, 'low');
   }
@@ -434,7 +458,7 @@ export class PainTrackerSync {
   }
 
   async forceSync(): Promise<void> {
-    const stats = await this.backgroundSync.forcSync();
+    const stats = await this.backgroundSync.forceSync();
     
     if (stats.successCount > 0) {
       localStorage.setItem('last-sync-time', new Date().toISOString());
