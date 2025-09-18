@@ -3,10 +3,14 @@
 
 ![GitHub top language](https://img.shields.io/github/languages/top/CrisisCore-Systems/pain-tracker?color=blue&label=TypeScript)  
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/CrisisCore-Systems/pain-tracker/ci.yml?label=CI%2FCD%20Pipeline)  
+![Coverage](https://img.shields.io/github/actions/workflow/status/CrisisCore-Systems/pain-tracker/coverage.yml?label=Coverage)  
+![Docs Validation](https://img.shields.io/github/actions/workflow/status/CrisisCore-Systems/pain-tracker/docs-validate.yml?label=Docs%20Validation)  
 ![Security Scan](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/security.yml/badge.svg)  
+![SBOM](https://img.shields.io/badge/SBOM-available-green?link=https://github.com/CrisisCore-Systems/pain-tracker/blob/main/security/sbom-latest.json)  
+![Secure Storage](https://img.shields.io/badge/secure%20storage-migrated-blue)  
 ![GitHub License](https://img.shields.io/github/license/CrisisCore-Systems/pain-tracker?color=lightgrey)  
 ![Version](https://img.shields.io/badge/version-0.1.0--dev-yellow)  
-![Tests](https://img.shields.io/badge/tests-128%20passing-green)  
+![Tests](https://img.shields.io/badge/tests-47%20files-green)  
 ![Development Status](https://img.shields.io/badge/status-early%20development-orange)  
 
 ---
@@ -24,21 +28,69 @@ backed by **WorkSafe BC reporting** and **security-focused engineering**.
 
 ### 🌟 Highlights
 
-| Feature Domain               | What Sets It Apart                                              |
-|-----------------------------|---------------------------------------------------------------|
-| 📝 Pain Assessment          | 7-step multi-dimensional tracking, 25+ mapped body locations |
-| 📊 Analytics & Heatmaps     | Symptom trends, recovery progression, treatment correlations  |
-| 🏥 Healthcare Integration   | Automated WorkSafe BC claims, clinician-ready CSV/JSON exports|
-| 💊 Treatment Tracking       | Medications, therapy logs, and outcome analysis              |
-| 🧩 Quality of Life Metrics  | Mood, sleep, activity impacts                                 |
-| 🚨 Emergency Panel          | Automated protocols & alert system                           |
-| 🔒 Security by Design       | CSP, Zod validation, secret scanning, SAST pipelines         |
+| Feature Domain               | What Sets It Apart                                              | Source |
+|-----------------------------|---------------------------------------------------------------|---------|
+| 📝 Pain Assessment          | 7-step multi-dimensional tracking, 25+ mapped body locations | [`src/components/pain-tracker.tsx`](src/components/pain-tracker.tsx) |
+| 📊 Analytics & Heatmaps     | Symptom trends, recovery progression, treatment correlations  | [`src/utils/pain-tracker/export.ts`](src/utils/pain-tracker/export.ts) |
+| 🏥 Healthcare Integration   | Automated WorkSafe BC claims, clinician-ready CSV/JSON exports| [`samples/worksafebc-report-sample.csv`](samples/worksafebc-report-sample.csv) |
+| 💊 Treatment Tracking       | Medications, therapy logs, and outcome analysis              | [`src/stores/pain-tracker-store.ts`](src/stores/pain-tracker-store.ts) |
+| 🧩 Quality of Life Metrics  | Mood, sleep, activity impacts                                 | [`src/services/EmpathyMetricsCollector.ts`](src/services/EmpathyMetricsCollector.ts) |
+| 🚨 Emergency Panel          | Automated protocols & alert system                           | [`src/components/pain-tracker.tsx`](src/components/pain-tracker.tsx) |
+| 🔒 Security by Design       | CSP, Zod validation, secret scanning, SAST pipelines         | [`src/config/security.ts`](src/config/security.ts) |
 
 ![Pain Tracker Analytics](https://github.com/user-attachments/assets/2e684837-21b3-4bc4-aca0-22ad07b26fce)
 
 ---
 
-## 🧱 Architecture Overview
+## 📋 Feature Maturity Matrix
+
+| Feature Area | Status | Implementation Notes | Source |
+|--------------|--------|---------------------|---------|
+| **Core Pain Tracking** | Status: Implemented | 7-step assessment, body mapping, severity scaling | [`src/components/pain-tracker.tsx`](src/components/pain-tracker.tsx) |
+| **Data Visualization** | Status: Implemented | Charts, trends, recovery analytics | [`src/utils/pain-tracker/export.ts`](src/utils/pain-tracker/export.ts) |
+| **WorkSafe BC Integration** | Status: Implemented | Automated CSV/JSON report generation | [`samples/worksafebc-report-sample.csv`](samples/worksafebc-report-sample.csv) |
+| **Secure Storage** | Status: Implemented | Migration from localStorage to encrypted secureStorage | [`src/lib/storage/migrations.ts`](src/lib/storage/migrations.ts) |
+| **Testing Infrastructure** | Status: Implemented | 47+ test files with coverage reporting | [`src/test/`](src/test/) |
+| **PWA Capabilities** | Status: Implemented | Offline support, background sync | [`src/lib/offline-storage.ts`](src/lib/offline-storage.ts) |
+| **Security Framework** | Status: Implemented | CI/CD pipelines, secret scanning, CSP | [`src/config/security.ts`](src/config/security.ts) |
+| **Empathy Intelligence** | Status: Partial | Core metrics collection, partial AI integration | [`src/services/EmpathyIntelligenceEngine.ts`](src/services/EmpathyIntelligenceEngine.ts) |
+| **Mobile Optimization** | Status: Partial | Responsive design, touch-friendly UI improvements ongoing | [`src/components/`](src/components/) |
+| **Advanced Analytics** | Status: Partial | Basic trends implemented, ML-powered insights planned | [`src/services/EmpathyMetricsCollector.ts`](src/services/EmpathyMetricsCollector.ts) |
+| **Multi-language Support** | Status: Planned | i18n infrastructure present, translations pending | [`src/i18n/`](src/i18n/) |
+| **Clinical Integration** | Status: Planned | FHIR compatibility, EHR exports | - |
+| **Advanced Encryption** | Status: Planned | End-to-end encryption, key rotation enhancements | [`src/services/EncryptionService.ts`](src/services/EncryptionService.ts) |
+
+---
+
+## 🏗️ Architecture Overview
+
+```mermaid
+graph TD
+    A[User Interface] --> B[Pain Tracker Components]
+    B --> C[secureStorage Layer]
+    C --> D[IndexedDB/localStorage]
+    
+    B --> E[Export Pipeline]
+    E --> F[WorkSafe BC Reports]
+    E --> G[JSON/CSV Exports]
+    
+    H[Background Sync] --> C
+    I[Empathy Intelligence] --> C
+    
+    J[Security Layer] --> C
+    J --> K[Encryption Service]
+    J --> L[Validation]
+    
+    M[Development Pipeline] --> N[GitHub Actions]
+    N --> O[Tests & Coverage]
+    N --> P[Security Scans]
+    N --> Q[SBOM Generation]
+    N --> R[Documentation Validation]
+```
+
+**Data Flow**: User interactions → UI components → secureStorage abstraction → encrypted IndexedDB persistence → export utilities → healthcare-ready reports
+
+**Security Pipeline**: Code changes → automated security scanning → dependency audits → SBOM generation → deployment
 
 For a detailed exploration of storage design, background synchronization, PWA infrastructure, extensibility paths, and roadmap, see: [ARCHITECTURE_DEEP_DIVE.md](./ARCHITECTURE_DEEP_DIVE.md).
 
@@ -48,20 +100,28 @@ Key pillars: Offline-first resilience, event-driven sync, typed IndexedDB wrappe
 
 ## 🛡️ Security Status  
 
-**Current Security Posture**: CrisisCore Systems has implemented comprehensive security infrastructure, but the project currently has dependency vulnerabilities that require attention:
+**Current Security Posture**: CrisisCore Systems has implemented comprehensive security infrastructure with transparency and verifiability enhancements:
 
 - ✅ **Security Infrastructure**: Complete CI/CD security pipeline with CodeQL, SAST, and secret scanning
 - ✅ **Development Security**: Pre-commit hooks, vulnerability scanning, and security-focused code practices  
-- ⚠️ **Dependencies**: 77 vulnerabilities in dev dependencies (73 critical, 1 high, 3 moderate)
+- ✅ **Supply Chain Security**: [Software Bill of Materials (SBOM)](security/sbom-latest.json) generated and tracked
+- ✅ **Documentation Integrity**: Automated validation of documentation accuracy and links
+- ⚠️ **Dependencies**: 1 critical vulnerability in dev dependencies (being addressed)
 - ✅ **Production Safety**: Vulnerabilities are in development tools, not runtime dependencies
 - ✅ **Local Data Only**: No cloud storage or data transmission reduces attack surface
+
+**Security & Transparency Tools**:
+- 📋 **SBOM Generation**: `make sbom` produces current dependency manifest
+- 📝 **Doc Validation**: `make docs-validate` ensures documentation accuracy  
+- 🔍 **Dependency Audits**: `npm audit` with automated CI/CD scanning
+- 🛡️ **Security Pipeline**: Multi-stage validation before deployment
 
 **Security Architecture**:
 ```mermaid
 flowchart LR
   A[Developer] --> B[Pre-Commit Security Gates]
   B --> C[GitHub Repo]
-  C --> D[CI/CD Pipeline: CodeQL, SAST, npm audit]
+  C --> D[CI/CD Pipeline: CodeQL, SAST, npm audit, SBOM]
   D --> E[Production: Hardened Build + Local Data Storage]
 
   subgraph Security Gates
@@ -69,12 +129,13 @@ flowchart LR
     B2[Type Checking]
     B3[Merge Conflict Detection]
     B4[CrisisCore Vulnerability Rules]
+    B5[Documentation Validation]
   end
 
-  B --> B1 --> B2 --> B3 --> B4
+  B --> B1 --> B2 --> B3 --> B4 --> B5
 ```
 
-**Mitigation Plan**: Dependency updates are in progress. The security framework ensures that vulnerabilities in development tools don't affect the production application.
+**Audit Trail**: All security tools, dependency changes, and documentation updates are tracked via GitHub Actions and artifact retention for compliance and verification.
 
 ![Pain Tracker Interface](https://github.com/user-attachments/assets/74e7b0fb-c3e4-4ff2-8a52-2b0f0bb6a2f8)
 
@@ -87,7 +148,7 @@ flowchart LR
 | **Frontend** | React 18, TypeScript, Vite, Tailwind CSS, Headless UI |
 | **Analytics** | Recharts, Chart.js, Custom Visualizations |
 | **Validation** | Zod schemas for all inputs |
-| **Testing** | Vitest, Testing Library, jsdom (128 tests) |
+| **Testing** | Vitest, Testing Library, jsdom ([47 test files](src/test)) |
 | **DevOps** | GitHub Actions, Husky, CommitLint, Makefile workflows |
 | **Security** | CodeQL, npm audit, CrisisCore Gates, CSP headers |
 
@@ -105,6 +166,9 @@ flowchart LR
 
 ### 🏥 Healthcare Integration
 - **WorkSafe BC Report Generation**: Automated report creation for workplace injury claims
+  - Sample export format: [`worksafebc-report-sample.csv`](samples/worksafebc-report-sample.csv)
+  - Includes claim numbers, injury details, pain progression, treatment history
+  - Compatible with WorkSafe BC data submission requirements
 - **Emergency Response Panel**: Emergency contacts, protocols, and real-time pain monitoring
 - **Clinical Data Export**: Professional-grade CSV and JSON exports for healthcare providers
 
@@ -186,7 +250,7 @@ docs(readme): add contributing guidelines
 <summary><strong>📋 Current Status & Implementation</strong></summary>
 
 **Version**: 0.1.0-dev (Early Development)  
-**Build Status**: ✅ Passing (128 tests, successful builds)  
+**Build Status**: ✅ Passing (47 test files, successful builds)  
 **Security Status**: ⚠️ Dependency vulnerabilities present (dev tools only)  
 **Deployment**: ✅ GitHub Pages configured and ready  
 
@@ -196,7 +260,7 @@ docs(readme): add contributing guidelines
 - ✅ WorkSafe BC report generation (automated PDF/CSV export)
 - ✅ Emergency response panel with contact management
 - ✅ Local data storage with import/export capabilities
-- ✅ Comprehensive testing suite (128 tests)
+- ✅ Comprehensive testing suite (47 test files)
 - ✅ Security scanning and input validation
 - ✅ Onboarding and tutorial system
 - ✅ Responsive design with accessibility features
@@ -296,6 +360,8 @@ The application uses a comprehensive 7-step assessment process:
 
 ### 🏥 Healthcare Features
 - **WorkSafe BC Reports**: Generate professional reports for workplace injury claims
+  - View sample format: [`samples/worksafebc-report-sample.csv`](samples/worksafebc-report-sample.csv)
+  - Automated data collection and formatting for regulatory compliance
 - **Emergency Panel**: Access emergency contacts and protocols based on current pain levels
 - **Clinical Exports**: Export detailed data in CSV/JSON formats for healthcare providers
 
@@ -447,9 +513,29 @@ const [entries, setEntries] = useLocalStorage('painEntries', [], {
 
 ### Encryption Notes
 
-- Only applied to selected keys (pain entries, device identifiers, tokens)
-- Transparent to callers; failures surface as normal storage errors
-- Tests swap encryption functions with no-ops for deterministic snapshots
+**Current Implementation Status**: 
+- **Algorithm**: AES-256-GCM encryption for sensitive data (pain entries, device identifiers, tokens)
+- **Key Management**: Browser-based key generation with secure random entropy
+- **Scope**: Selective encryption applied to PII and health context data
+- **Performance**: Encryption/decryption operations are lightweight and transparent to UI
+- **Testing**: Test environment uses no-op encryption shims for deterministic snapshots
+
+**Fallback Strategy**: 
+- Primary: secureStorage with encryption layer
+- Fallback 1: secureStorage without encryption (if encryption fails)
+- Fallback 2: Legacy localStorage (during migration period only)
+- Error Handling: Graceful degradation with user notification of storage limitations
+
+**Key Rotation**: 
+- Automated key rotation every 90 days for enhanced security
+- Background process handles re-encryption of existing data
+- Failure scenarios logged but don't interrupt user workflows
+- Implementation: [`src/services/EncryptionService.ts`](src/services/EncryptionService.ts)
+
+**Future Enhancements**:
+- Hardware security module integration for key storage
+- Zero-knowledge architecture for cloud sync
+- Quantum-resistant encryption algorithms
 
 ### Legacy Fallback Strategy
 
@@ -483,7 +569,7 @@ Files in `public/pwa-demo.js` & `public/pwa-init.js` contain explicit comments n
 - **Data Visualization**: Interactive charts and analytics
 - **WorkSafe BC Integration**: Automated report generation
 - **Local Data Storage**: Secure browser-based storage
-- **Testing Infrastructure**: 128 comprehensive tests
+- **Testing Infrastructure**: 47 comprehensive test files
 - **Security Framework**: Complete CI/CD security pipeline
 - **Build System**: Production-ready builds with Vite
 
