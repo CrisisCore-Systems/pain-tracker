@@ -3,7 +3,12 @@
 
 ![GitHub top language](https://img.shields.io/github/languages/top/CrisisCore-Systems/pain-tracker?color=blue&label=TypeScript)  
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/CrisisCore-Systems/pain-tracker/ci.yml?label=CI%2FCD%20Pipeline)  
+![Coverage](https://img.shields.io/github/actions/workflow/status/CrisisCore-Systems/pain-tracker/coverage.yml?label=Coverage)  
+![Docs Validation](https://img.shields.io/github/actions/workflow/status/CrisisCore-Systems/pain-tracker/docs-validate.yml?label=Docs%20Validation)  
 ![Security Scan](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/security.yml/badge.svg)  
+![SBOM](https://img.shields.io/badge/SBOM-available-green?link=https://github.com/CrisisCore-Systems/pain-tracker/blob/main/security/sbom-latest.json)  
+![Secure Storage](https://img.shields.io/badge/secure%20storage-AES--256-blue)  
+![Feature Matrix](https://img.shields.io/badge/features-documented-brightgreen?link=https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/FEATURE_MATRIX.md)  
 ![GitHub License](https://img.shields.io/github/license/CrisisCore-Systems/pain-tracker?color=lightgrey)  
 ![Version](https://img.shields.io/badge/version-0.1.0--dev-yellow)  
 ![Tests](https://img.shields.io/badge/tests-128%20passing-green)  
@@ -42,6 +47,8 @@ backed by **WorkSafe BC reporting** and **security-focused engineering**.
 
 For a detailed exploration of storage design, background synchronization, PWA infrastructure, extensibility paths, and roadmap, see: [ARCHITECTURE_DEEP_DIVE.md](./ARCHITECTURE_DEEP_DIVE.md).
 
+For a focused overview of system architecture, data flow, and security gates, see: [Minimal Architecture Diagram](docs/ARCHITECTURE_MINI.md).
+
 Key pillars: Offline-first resilience, event-driven sync, typed IndexedDB wrapper, prioritized queue processing, and forward-compatible shims (e.g., legacy `forcSync` → `forceSync`).
 
 ---
@@ -55,6 +62,15 @@ Key pillars: Offline-first resilience, event-driven sync, typed IndexedDB wrappe
 - ⚠️ **Dependencies**: 77 vulnerabilities in dev dependencies (73 critical, 1 high, 3 moderate)
 - ✅ **Production Safety**: Vulnerabilities are in development tools, not runtime dependencies
 - ✅ **Local Data Only**: No cloud storage or data transmission reduces attack surface
+- ✅ **SBOM Available**: Software Bill of Materials published for transparency ([View SBOM](security/sbom-latest.json))
+- ✅ **Documentation Validation**: Automated validation ensures documentation accuracy and completeness
+
+**Secure Storage Implementation**:
+- **Current Encryption**: AES-256-GCM for all sensitive data storage
+- **Key Management**: Secure key rotation with fallback mechanisms
+- **Encrypted Scope**: All pain assessments, personal data, and medical information
+- **Fallback Behavior**: In-memory key cache when secure storage writes fail
+- **Future Enhancement**: Optional IndexedDB layer for large encrypted datasets (planned)
 
 **Security Architecture**:
 ```mermaid
@@ -96,43 +112,47 @@ flowchart LR
 ## Features
 
 ### 📊 Comprehensive Pain Tracking
-- **Multi-dimensional Pain Assessment**: 
+- **Multi-dimensional Pain Assessment** ([PainEntryForm.tsx](src/components/pain-tracker/PainEntryForm.tsx)): 
   - Pain intensity (0-10 scale) with visual feedback
   - 25+ specific body locations including detailed leg/foot mapping
   - 19+ symptom types including nerve-specific symptoms
-- **Advanced Analytics**: Interactive charts showing pain trends, location heat maps, and pattern recognition
-- **Historical Tracking**: Complete pain history with progression analysis
+- **Advanced Analytics** ([PainChart.tsx](src/components/pain-tracker/PainChart.tsx) | [analytics/heuristics.ts](src/lib/analytics/heuristics.ts)): Interactive charts showing pain trends, location heat maps, and pattern recognition
+- **Historical Tracking** ([calculations.ts](src/utils/pain-tracker/calculations.ts)): Complete pain history with progression analysis
 
 ### 🏥 Healthcare Integration
-- **WorkSafe BC Report Generation**: Automated report creation for workplace injury claims
-- **Emergency Response Panel**: Emergency contacts, protocols, and real-time pain monitoring
-- **Clinical Data Export**: Professional-grade CSV and JSON exports for healthcare providers
+- **WorkSafe BC Report Generation** ([wcb-submission.ts](src/services/wcb-submission.ts) | [Sample Report](samples/worksafebc-report-sample.csv)): Automated report creation for workplace injury claims
+- **Emergency Response Panel** ([EmergencyPanel.tsx](src/components/pain-tracker/EmergencyPanel.tsx)): Emergency contacts, protocols, and real-time pain monitoring
+- **Clinical Data Export** ([export.ts](src/utils/pain-tracker/export.ts)): Professional-grade CSV and JSON exports for healthcare providers
 
 ### 💼 Workplace Injury Management
-- **Work Impact Assessment**: Track missed days, modified duties, and workplace limitations
+- **Work Impact Assessment** ([DailyLiving.tsx](src/components/pain-tracker/DailyLiving.tsx)): Track missed days, modified duties, and workplace limitations
 - **Functional Analysis**: Monitor activities of daily living and assistance requirements
 - **Return-to-Work Planning**: Document accommodations and workplace modifications
 
 ### 💊 Treatment & Medication Tracking
 - **Medication Management**: Track current medications, dosages, frequency, and effectiveness
 - **Treatment Logging**: Record therapies, appointments, and treatment outcomes
-- **Progress Monitoring**: Analyze treatment effectiveness over time
+- **Progress Monitoring** ([trending.ts](src/utils/pain-tracker/trending.ts)): Analyze treatment effectiveness over time
 
 ### 🎯 Quality of Life Metrics
 - **Sleep Quality Tracking**: Monitor how pain affects rest and recovery
-- **Mood & Social Impact**: Track emotional and social consequences of pain
+- **Mood & Social Impact** ([EmpathyMetricsCollector.ts](src/services/EmpathyMetricsCollector.ts)): Track emotional and social consequences of pain
 - **Activity Logging**: Record daily activities and their impact on pain levels
 
 ### 🔧 Advanced Features
 - **Nerve Symptom Analysis**: Specialized tracking for neurological symptoms
 - **Functional Limitations Assessment**: Detailed mobility and capability monitoring
 - **Comparison Tracking**: Monitor changes since injury or diagnosis
-- **Onboarding & Tutorials**: Guided setup and interactive help system
+- **Onboarding & Tutorials** ([FeatureHighlights.tsx](src/components/onboarding/FeatureHighlights.tsx)): Guided setup and interactive help system
 
 ### 🛡️ Privacy & Security
-- **Local Data Storage**: All data remains on your device - no cloud storage
-- **Secure Architecture**: Multiple security layers and vulnerability scanning
+- **Local Data Storage** ([storage.ts](src/utils/pain-tracker/storage.ts)): All data remains on your device - no cloud storage
+- **Secure Architecture** ([EncryptionService.ts](src/services/EncryptionService.ts) | [SecurityService.ts](src/services/SecurityService.ts)): AES-256 encryption and multiple security layers
 - **Data Portability**: Easy export and backup capabilities
+
+## 📋 Feature Maturity Matrix
+
+For a comprehensive overview of feature implementation status, see our [Feature Maturity Matrix](docs/FEATURE_MATRIX.md), which tracks 42 features across categories from "Implemented" to "Planned".
 
 ---
 

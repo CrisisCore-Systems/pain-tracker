@@ -198,13 +198,13 @@ deps-audit-fix: ## Fix dependency vulnerabilities
 	npm audit fix
 
 # Documentation
-docs-serve: ## Serve documentation locally (if available)
-	@echo "📚 Serving documentation..."
-	@if [ -f "docs/package.json" ]; then \
-		cd docs && npm run serve; \
-	else \
-		echo "❌ No documentation setup found"; \
-	fi
+sbom: ## Generate Software Bill of Materials
+	@echo "📋 Generating SBOM..."
+	npm run sbom
+
+docs-validate: ## Validate documentation
+	@echo "📚 Validating documentation..."
+	npm run docs:validate
 
 # Git helpers
 git-hooks-test: ## Test git hooks

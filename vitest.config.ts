@@ -12,7 +12,7 @@ export default defineConfig({
       enabled: isCI, // only collect & enforce in CI to speed local dev
       provider: 'v8',
       reportsDirectory: 'coverage',
-      reporter: isCI ? ['text','html'] : ['text'],
+      reporter: isCI ? ['text','html','json-summary'] : ['text'],
       // Focus coverage on core logic areas; exclude massive UI surface until component tests added
       include: [
         // Focus on core heuristic/engine/encryption logic currently covered by tests
