@@ -1,0 +1,31 @@
+# WorkSafe BC Pain Tracker Report Sample
+# Generated on: 2024-09-18
+# 
+# Column Descriptions:
+# - Date: Assessment date (YYYY-MM-DD format)
+# - Time: Assessment time (24-hour format)
+# - Pain_Level: Subjective pain rating (0-10 scale)
+# - Pain_Type: Classification of pain (sharp, dull, burning, throbbing, etc.)
+# - Location: Anatomical location of pain
+# - Duration_Minutes: Duration of current pain episode
+# - Triggers: Known triggers or activities that worsen pain
+# - Relief_Methods: Interventions that provide relief
+# - Medication: Current pain medications
+# - Functional_Impact: Impact on daily activities (1-5 scale)
+# - Sleep_Quality: Sleep disruption due to pain (1-5 scale)
+# - Work_Impact: Impact on work performance (1-5 scale)
+# - Notes: Additional clinical observations
+#
+# Privacy Note: This is anonymized sample data for demonstration purposes only
+#
+Date,Time,Pain_Level,Pain_Type,Location,Duration_Minutes,Triggers,Relief_Methods,Medication,Functional_Impact,Sleep_Quality,Work_Impact,Notes
+2024-09-01,08:30,7,Sharp,Lower Back,180,Lifting heavy objects,Heat therapy,Ibuprofen 400mg,4,3,4,Sharp pain radiating to left leg
+2024-09-01,14:15,5,Dull,Lower Back,90,Sitting for extended periods,Stretching,Ibuprofen 400mg,3,3,3,Pain decreased after movement
+2024-09-02,07:45,8,Burning,Lower Back,240,Morning stiffness,Hot shower,Naproxen 500mg,4,2,5,Severe morning pain affecting mobility
+2024-09-02,16:20,6,Throbbing,Lower Back,120,Standing for long periods,Rest,Naproxen 500mg,3,3,3,Improved with rest breaks
+2024-09-03,09:00,4,Dull,Lower Back,60,Weather change,Light exercise,Acetaminophen 500mg,2,4,2,Manageable pain level
+2024-09-04,12:30,9,Sharp,Lower Back,300,Bending forward,Ice pack,Codeine 30mg,5,1,5,Severe pain episode requiring stronger medication
+2024-09-05,08:00,3,Aching,Lower Back,45,None identified,Gentle stretching,Acetaminophen 500mg,1,4,1,Best day this week
+2024-09-06,10:15,6,Sharp,Lower Back,150,Coughing/sneezing,Heat therapy,Ibuprofen 600mg,3,3,4,Pain triggered by sudden movements
+2024-09-07,15:45,7,Burning,Lower Back,210,Prolonged driving,Position change,Ibuprofen 600mg,4,2,4,Long commute exacerbated symptoms
+2024-09-08,11:20,5,Dull,Lower Back,90,Cold weather,Warm clothing,Naproxen 250mg,2,3,3,Weather-related pain increase
