@@ -113,6 +113,15 @@ check-security: ## Run all security checks
 	node scripts/check-collapse-vectors.js
 	node scripts/scan-secrets.js
 
+sbom: ## Generate Software Bill of Materials
+	@echo "📋 Generating SBOM..."
+	npm run sbom
+	@echo "✅ SBOM generated at security/sbom-latest.json"
+
+docs-validate: ## Validate documentation links and accuracy
+	@echo "📝 Validating documentation..."
+	npm run docs:validate
+
 # Deployment
 deploy-preview: build ## Build and preview deployment
 	@echo "🌐 Building and starting preview..."

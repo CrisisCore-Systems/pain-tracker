@@ -30,3 +30,9 @@ security-audit-report.json
 *.sw?
 .env*
 !.env.example
+
+# Test coverage reports (generated)
+coverage/
+
+# Keep SBOM in repo for transparency
+# security/sbom-latest.json should be committed

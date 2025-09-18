@@ -1,0 +1,94 @@
+name: Documentation Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**/*.md'
+      - 'docs/**'
+      - 'scripts/validate-docs.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Cancel previous runs when new commits are pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-docs:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      
+      - name: Run documentation validation
+        run: npm run docs:validate
+      
+      - name: Check README exists and structure
+        run: |
+          if [ ! -f README.md ]; then
+            echo "❌ README.md not found"
+            exit 1
+          fi
+          
+          # Check for required sections
+          required_sections=("Tech Stack" "Security" "Features")
+          
+          for section in "${required_sections[@]}"; do
+            if ! grep -q "$section" README.md; then
+              echo "❌ Missing required section: $section"
+              exit 1
+            fi
+          done
+          
+          echo "✅ README.md structure validation passed"
+      
+      - name: Validate Makefile targets
+        run: |
+          # Check that documented Make targets exist
+          make_targets=("sbom" "docs-validate" "test" "build")
+          
+          for target in "${make_targets[@]}"; do
+            if ! make -n "$target" >/dev/null 2>&1; then
+              echo "❌ Missing Make target: $target"
+              exit 1
+            fi
+          done
+          
+          echo "✅ Makefile targets validation passed"
+      
+      - name: Check for broken internal links
+        run: |
+          # Find markdown files and check for broken relative links
+          find . -name "*.md" -not -path "./node_modules/*" | while read -r file; do
+            echo "Checking $file for broken links..."
+            
+            # Extract relative links (simplified check)
+            grep -o '\[.*\](\..*\.md)' "$file" | sed 's/.*(\(.*\))/\1/' | while read -r link; do
+              # Remove anchors
+              file_path=$(echo "$link" | cut -d'#' -f1)
+              
+              if [ ! -f "$file_path" ]; then
+                echo "❌ Broken link in $file: $link"
+                exit 1
+              fi
+            done
+          done
+          
+          echo "✅ Internal links validation passed"
