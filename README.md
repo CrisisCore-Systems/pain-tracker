@@ -38,6 +38,14 @@ backed by **WorkSafe BC reporting** and **security-focused engineering**.
 
 ---
 
+## 🧱 Architecture Overview
+
+For a detailed exploration of storage design, background synchronization, PWA infrastructure, extensibility paths, and roadmap, see: [ARCHITECTURE_DEEP_DIVE.md](./ARCHITECTURE_DEEP_DIVE.md).
+
+Key pillars: Offline-first resilience, event-driven sync, typed IndexedDB wrapper, prioritized queue processing, and forward-compatible shims (e.g., legacy `forcSync` → `forceSync`).
+
+---
+
 ## 🛡️ Security Status  
 
 **Current Security Posture**: CrisisCore Systems has implemented comprehensive security infrastructure, but the project currently has dependency vulnerabilities that require attention:
