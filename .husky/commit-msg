@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+# Husky v9 simplified hook (removed deprecated _/husky.sh sourcing)
 
 # Validate commit message format
 npx commitlint --edit $1
