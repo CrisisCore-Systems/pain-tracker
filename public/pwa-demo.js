@@ -3,6 +3,10 @@
  * Run this to test PWA features in the browser console
  */
 
+// SECURITY DISCLAIMER: This script is for demonstration/testing only.
+// It may use direct localStorage and unencrypted operations for clarity.
+// Do NOT store sensitive data here; production code paths use secureStorage.
+
 // Test PWA functionality
 window.testPWA = async function() {
   console.log('🔧 PWA Test Suite Starting...');

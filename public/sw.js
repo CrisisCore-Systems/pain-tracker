@@ -8,8 +8,8 @@ const STATIC_ASSETS = [
   '/pain-tracker/',
   '/pain-tracker/index.html',
   '/pain-tracker/manifest.json',
+  '/pain-tracker/offline.html',
   '/pain-tracker/404.html',
-  // Add other static assets as needed
 ];
 
 // API endpoints that should be cached
@@ -66,6 +66,26 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // Handle navigation requests (SPA navigations / document requests)
+  if (request.mode === 'navigate') {
+    event.respondWith((async () => {
+      try {
+        const networkResponse = await fetch(request);
+        // Optionally update dynamic cache
+        const navDynCache = await caches.open(DYNAMIC_CACHE_NAME);
+        navDynCache.put(request, networkResponse.clone()).catch(() => {});
+        return networkResponse;
+      } catch {
+        // Try cached index.html first, then offline.html fallback
+        const navStaticCache = await caches.open(STATIC_CACHE_NAME);
+        const offline = await navStaticCache.match('/pain-tracker/offline.html');
+        const indexFallback = await navStaticCache.match('/pain-tracker/index.html');
+        return offline || indexFallback || new Response('Offline', { status: 503 });
+      }
+    })());
+    return;
+  }
 
   // Skip service worker for external resources (different origin)
   if (url.origin !== location.origin) {
@@ -168,16 +188,17 @@ async function handleOtherRequests(request) {
     throw new Error('Network response not ok');
   } catch {
     // Try cache
-    const cache = await caches.open(DYNAMIC_CACHE_NAME);
-    const cachedResponse = await cache.match(request);
+  const otherDynCache = await caches.open(DYNAMIC_CACHE_NAME);
+  const cachedResponse = await otherDynCache.match(request);
     
     if (cachedResponse) {
       return cachedResponse;
     }
     
-    // Serve offline fallback page
-    const offlinePage = await caches.match('/404.html');
-    return offlinePage || new Response('Offline - Content not available', { 
+    // Serve offline fallback asset (non-navigation)
+  const otherStaticCache = await caches.open(STATIC_CACHE_NAME);
+  const offlinePage = await otherStaticCache.match('/pain-tracker/offline.html');
+    return offlinePage || new Response('Offline - Content not available', {
       status: 503,
       headers: { 'Content-Type': 'text/plain' }
     });
@@ -252,82 +273,58 @@ function createOfflineResponse(request) {
   });
 }
 
-// Queue failed requests for retry when online
+// Shared offline queue utilities (adapted from src/lib/offline/queue.ts)
+async function swOpenCache(name) { return caches.open(name); }
+async function swGetQueue() {
+  try {
+    const cache = await swOpenCache('offline-queue');
+    const existing = await cache.match('offline-requests');
+    if (existing) {
+      const json = await existing.json();
+      return Array.isArray(json) ? json : [];
+    }
+  } catch (e) { console.log('Service Worker: queue get error', e); }
+  return [];
+}
+async function swSaveQueue(queue) {
+  try {
+    const cache = await swOpenCache('offline-queue');
+    await cache.put('offline-requests', new Response(JSON.stringify(queue), { headers: { 'Content-Type': 'application/json' } }));
+  } catch (e) { console.log('Service Worker: queue save error', e); }
+}
 async function queueFailedRequest(request) {
-  const queue = await getQueue();
-  const requestData = {
+  const data = {
     url: request.url,
     method: request.method,
     headers: Object.fromEntries(request.headers.entries()),
-    body: request.method !== 'GET' ? await request.text() : null,
+    body: request.method !== 'GET' ? await request.clone().text() : null,
     timestamp: Date.now()
   };
-  
-  queue.push(requestData);
-  await saveQueue(queue);
-  
-  console.log('Service Worker: Queued failed request:', requestData);
+  const queue = await swGetQueue();
+  queue.push(data);
+  await swSaveQueue(queue);
+  console.log('Service Worker: Queued failed request:', data);
+  return data;
 }
-
-// Get queue from IndexedDB
-async function getQueue() {
-  try {
-    const cache = await caches.open('offline-queue');
-    const response = await cache.match('offline-requests');
-    
-    if (response) {
-      const data = await response.json();
-      return Array.isArray(data) ? data : [];
-    }
-  } catch (error) {
-    console.log('Service Worker: Error getting queue:', error);
-  }
-  
-  return [];
-}
-
-// Save queue to IndexedDB
-async function saveQueue(queue) {
-  try {
-    const cache = await caches.open('offline-queue');
-    const response = new Response(JSON.stringify(queue), {
-      headers: { 'Content-Type': 'application/json' }
-    });
-    await cache.put('offline-requests', response);
-  } catch (error) {
-    console.log('Service Worker: Error saving queue:', error);
-  }
-}
-
-// Process queued requests when back online
 async function processQueue() {
-  const queue = await getQueue();
-  const processed = [];
-  
-  for (const requestData of queue) {
+  const queue = await swGetQueue();
+  if (!queue.length) return;
+  const remaining = [];
+  for (const item of queue) {
     try {
-      const response = await fetch(requestData.url, {
-        method: requestData.method,
-        headers: requestData.headers,
-        body: requestData.body
-      });
-      
-      if (response.ok) {
-        processed.push(requestData);
-        console.log('Service Worker: Successfully processed queued request:', requestData.url);
+      const res = await fetch(item.url, { method: item.method, headers: item.headers, body: item.body });
+      if (res.ok) {
+        console.log('Service Worker: Successfully processed queued request:', item.url);
       } else {
-        console.log('Service Worker: Failed to process queued request:', requestData.url, response.status);
+        remaining.push(item);
+        console.log('Service Worker: Failed queued request:', item.url, res.status);
       }
-    } catch (error) {
-      console.log('Service Worker: Error processing queued request:', requestData.url, error);
+    } catch (e) {
+      remaining.push(item);
+      console.log('Service Worker: Error processing queued request:', item.url, e);
     }
   }
-  
-  // Remove processed requests from queue
-  if (processed.length > 0) {
-    const remainingQueue = queue.filter(req => !processed.includes(req));
-    await saveQueue(remainingQueue);
-  }
+  await swSaveQueue(remaining);
 }
 
 // Listen for online event to process queue

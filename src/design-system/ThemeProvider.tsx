@@ -4,6 +4,7 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { secureStorage } from '../lib/storage/secureStorage';
 import { ThemeMode, getThemeColors } from './theme';
 
 interface ThemeContextType {
@@ -38,7 +39,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     // Check localStorage for saved theme preference
     if (typeof window !== 'undefined') {
       try {
-        const savedMode = localStorage.getItem('pain-tracker-theme');
+  const savedMode = secureStorage.get<string>('pain-tracker-theme');
         if (savedMode === 'light' || savedMode === 'dark' || savedMode === 'high-contrast') {
           return savedMode;
         }
@@ -85,7 +86,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const setMode = useCallback((newMode: ThemeMode) => {
     setModeState(newMode);
     try {
-      localStorage.setItem('pain-tracker-theme', newMode);
+  secureStorage.set('pain-tracker-theme', newMode);
     } catch (error) {
       console.warn('Failed to save theme preference to localStorage:', error);
     }
@@ -104,7 +105,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     const mediaQueries = [
       { query: '(prefers-color-scheme: dark)', handler: (e: MediaQueryListEvent) => {
         try {
-          const savedMode = localStorage.getItem('pain-tracker-theme');
+          const savedMode = secureStorage.get<string>('pain-tracker-theme');
           // Only update if user hasn't set a preference and not already in high contrast
           if (!savedMode && mode !== 'high-contrast') {
             setMode(e.matches ? 'dark' : 'light');
@@ -115,7 +116,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       }},
       { query: '(prefers-contrast: high)', handler: (e: MediaQueryListEvent) => {
         try {
-          const savedMode = localStorage.getItem('pain-tracker-theme');
+          const savedMode = secureStorage.get<string>('pain-tracker-theme');
           // Update to high contrast if system preference changes
           if (!savedMode && e.matches) {
             setMode('high-contrast');

@@ -4,6 +4,7 @@
  */
 
 import { offlineStorage } from './offline-storage';
+import { secureStorage } from './storage/secureStorage';
 
 // Conflict resolution types
 export interface DataConflict {
@@ -735,10 +736,10 @@ export class ConflictResolutionService {
   }
 
   private getDeviceId(): string {
-    let deviceId = localStorage.getItem('device-id');
+    let deviceId = secureStorage.get<string>('device-id');
     if (!deviceId) {
       deviceId = crypto.randomUUID();
-      localStorage.setItem('device-id', deviceId);
+      secureStorage.set('device-id', deviceId, { encrypt: true });
     }
     return deviceId;
   }

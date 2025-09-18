@@ -23,6 +23,9 @@ import {
   MicroEmpathyTracking,
   PredictiveEmpathyModel
 } from '../types/quantified-empathy';
+// Newly extracted modules
+import { extractWisdomInsights } from './empathy/WisdomModule';
+import { calculateTrend as extCalculateTrend, calculateVariance as extCalculateVariance, buildPredictiveModel } from './empathy/PredictiveModule';
 
 export interface EmpathyIntelligenceConfig {
   learningRate: number; // 0-1, how quickly the AI learns patterns
@@ -370,7 +373,7 @@ export class EmpathyIntelligenceEngine {
   }
 
   private async generateWisdomProfile(userId: string, painEntries: PainEntry[], moodEntries: MoodEntry[]): Promise<WisdomProfile> {
-    const insights = await this.extractWisdomInsights(userId, painEntries, moodEntries);
+  const insights = await extractWisdomInsights(userId, painEntries, moodEntries);
     
     return {
       insights,
@@ -388,87 +391,7 @@ export class EmpathyIntelligenceEngine {
     };
   }
 
-  private async extractWisdomInsights(userId: string, _painEntries: PainEntry[], moodEntries: MoodEntry[]): Promise<WisdomInsight[]> {
-    const insights: WisdomInsight[] = [];
-    
-    // Extract wisdom from notes
-    const wisdomEntries = moodEntries.filter(e => 
-      e.notes.toLowerCase().includes('learned') ||
-      e.notes.toLowerCase().includes('realized') ||
-      e.notes.toLowerCase().includes('understand now') ||
-      e.notes.toLowerCase().includes('wisdom') ||
-      e.notes.toLowerCase().includes('insight')
-    );
-
-    wisdomEntries.forEach((entry, index) => {
-      if (entry.notes.length > 30) {
-        insights.push({
-          id: `wisdom_${userId}_${index}`,
-          category: this.categorizeWisdom(entry.notes),
-          insight: entry.notes,
-          dateGained: entry.timestamp,
-          contextualSource: entry.context,
-          applicability: this.assessApplicability(entry.notes),
-          transformativeLevel: this.assessTransformativeLevel(entry.notes),
-          sharedWith: [],
-          reinforcementLevel: this.assessReinforcement(entry.notes, moodEntries)
-        });
-      }
-    });
-
-  const top = insights.slice(0, 10);
-  // Store in wisdom database for potential future retrieval
-  this.wisdomDatabase.set(userId, top);
-  return top; // Return top 10 wisdom insights
-  }
-
-  private categorizeWisdom(insight: string): 'practical' | 'emotional' | 'spiritual' | 'relational' | 'self-knowledge' {
-    const lower = insight.toLowerCase();
-    
-    if (lower.includes('relationship') || lower.includes('people') || lower.includes('connect')) {
-      return 'relational';
-    } else if (lower.includes('feel') || lower.includes('emotion') || lower.includes('heart')) {
-      return 'emotional';
-    } else if (lower.includes('meaning') || lower.includes('purpose') || lower.includes('spiritual')) {
-      return 'spiritual';
-    } else if (lower.includes('myself') || lower.includes('i am') || lower.includes('identity')) {
-      return 'self-knowledge';
-    } else {
-      return 'practical';
-    }
-  }
-
-  private assessApplicability(insight: string): number {
-    // Simple heuristic based on language patterns
-    const actionWords = ['can', 'will', 'should', 'need to', 'must', 'always', 'never'];
-    const actionCount = actionWords.reduce((count, word) => 
-      count + (insight.toLowerCase().includes(word) ? 1 : 0), 0);
-    
-    return Math.min(100, actionCount * 20 + 40);
-  }
-
-  private assessTransformativeLevel(insight: string): number {
-    // Simple heuristic based on intensity words
-    const intensityWords = ['life-changing', 'transformed', 'completely', 'totally', 'fundamental'];
-    const intensityCount = intensityWords.reduce((count, word) => 
-      count + (insight.toLowerCase().includes(word) ? 1 : 0), 0);
-    
-    return Math.min(100, intensityCount * 30 + 30);
-  }
-
-  private assessReinforcement(insight: string, moodEntries: MoodEntry[]): number {
-    // Count how often similar themes appear
-    const keyWords = insight.toLowerCase().split(' ').filter(word => word.length > 4);
-    let reinforcementCount = 0;
-
-    moodEntries.forEach(entry => {
-      const entryWords = entry.notes.toLowerCase().split(' ');
-      const overlap = keyWords.filter(word => entryWords.includes(word));
-      if (overlap.length > 0) reinforcementCount++;
-    });
-
-    return Math.min(100, (reinforcementCount / moodEntries.length) * 100);
-  }
+  // Wisdom-related heuristics now delegated to WisdomModule (categorizeWisdom, assessApplicability, etc.)
 
   // Additional calculation methods would continue here...
   // For brevity, I'll include placeholder implementations
@@ -594,10 +517,10 @@ export class EmpathyIntelligenceEngine {
   ): Promise<RecoveryPatternAnalysis> {
     void _userId; void _moodEntries;
     const patterns = painEntries.slice(-30).map(entry => entry.baselineData.pain);
-    const trend = this.calculateTrend(patterns);
+    const trend = extCalculateTrend(patterns);
     return {
       avgRecoveryTime: Math.max(30, 120 - trend),
-      recoveryConsistency: Math.max(0, 100 - this.calculateVariance(patterns) * 10),
+      recoveryConsistency: Math.max(0, 100 - extCalculateVariance(patterns) * 10),
       recoveryStrategies: [],
       setbackPredictors: [],
       resilienceFactors: [],
@@ -841,34 +764,7 @@ export class EmpathyIntelligenceEngine {
     painEntries: PainEntry[],
     moodEntries: MoodEntry[],
     _predictionModel: PredictionModel
-  ): Promise<PredictiveEmpathyModel> {
-    void _predictionModel; void _userId;
-    const recentPain = painEntries.slice(-7).reduce((sum, e) => sum + e.baselineData.pain, 0) / Math.max(1, Math.min(7, painEntries.length || 1));
-    const recentMood = moodEntries.slice(-7).reduce((sum, e) => sum + e.mood, 0) / 7;
-    return {
-      empathyForecast: [{ timeframe: 'next week', predictedEmpathyLevel: Math.max(0, Math.min(100, recentMood * 10)), confidenceInterval: { min: 40, max: 80 }, influencingFactors: [], recommendedPreparations: [] }],
-      riskPrediction: [{ riskType: 'compassion_fatigue', riskLevel: Math.max(0, Math.min(100, recentPain * 10)), timeToRisk: 14, earlyWarningSignals: [], preventionStrategies: [], mitigation: [] }],
-      opportunityPrediction: [{ opportunityType: 'growth_window', potentialImpact: 60, timeWindow: 'next 2 weeks', preparationNeeded: [], supportRequired: [], expectedOutcomes: [] }],
-      burnoutRisk: {
-        currentRiskLevel: Math.max(0, Math.min(100, (100 - recentMood) + (recentPain * 0.5))),
-        riskFactors: ['high_pain', 'low_mood'],
-        protectiveFactors: [],
-        timeToIntervention: 7,
-        interventionStrategies: [],
-        recoveryTimeline: '2-4 weeks'
-      },
-      growthPotential: {
-        currentGrowthTrajectory: Math.max(0, Math.min(100, recentMood - (recentPain * 0.3))),
-        growthAccelerators: ['emotional_awareness', 'social_support'],
-        growthBarriers: [],
-        optimalGrowthConditions: [],
-        expectedTimeline: '1 month',
-        supportNeeded: []
-      },
-      adaptiveRecommendations: [],
-      personalizedInterventions: []
-    };
-  }
+  ): Promise<PredictiveEmpathyModel> { void _predictionModel; void _userId; return buildPredictiveModel(painEntries, moodEntries); }
 
   private async generatePatternInsights(
     _userId: string, 
@@ -934,8 +830,8 @@ export class EmpathyIntelligenceEngine {
   ): Promise<EmpathyInsight[]> {
   void _metrics;
     // Convert wisdom insights to empathy insights (celebrations)
-    const wisdoms = await this.extractWisdomInsights(_userId, _historicalData.painEntries, _historicalData.moodEntries);
-    return wisdoms.map(w => ({
+  const wisdoms = await extractWisdomInsights(_userId, _historicalData.painEntries, _historicalData.moodEntries);
+  return wisdoms.map((w: WisdomInsight) => ({
       id: w.id,
       type: 'celebration',
       title: `Wisdom: ${w.category}`,
@@ -1245,47 +1141,11 @@ export class EmpathyIntelligenceEngine {
     return Math.min(meaningScore + acceptanceBonus, 100);
   }
 
-  private calculateTrend(values: number[]): number {
-    if (values.length < 2) return 0;
-    let upward = 0, downward = 0;
-    for (let i = 1; i < values.length; i++) {
-      if (values[i] > values[i-1]) upward++;
-      else if (values[i] < values[i-1]) downward++;
-    }
-    return (upward - downward) / (values.length - 1) * 100;
-  }
-
-  private calculatePatternStability(values: number[]): number {
-    if (values.length < 2) return 50;
-    const variance = this.calculateVariance(values);
-    return Math.max(0, 100 - variance * 10);
-  }
-
-  private calculateRecoverySpeed(values: number[]): number {
-    if (values.length < 3) return 50;
-    const recent = values.slice(-3);
-    const improvement = recent[0] - recent[recent.length - 1];
-    return Math.max(0, Math.min(100, improvement * 10 + 50));
-  }
-
-  private calculateVariance(values: number[]): number {
-    if (values.length === 0) return 0;
-    const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
-    const variance = values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
-    return variance;
-  }
-
-  private analyzeDailyPatterns(values: number[]): { trend: number; stability: number } {
-    return { trend: this.calculateTrend(values), stability: this.calculatePatternStability(values) };
-  }
-
-  private analyzeWeeklyPatterns(values: number[]): { trend: number; stability: number } {
-    return { trend: this.calculateTrend(values), stability: this.calculatePatternStability(values) };
-  }
-
-  private analyzeMonthlyTrends(values: number[]): { trend: number; improvement: number } {
-    return { trend: this.calculateTrend(values), improvement: this.calculateRecoverySpeed(values) };
-  }
+  private calculatePatternStability(values: number[]): number { if (values.length < 2) return 50; const variance = extCalculateVariance(values); return Math.max(0, 100 - variance * 10); }
+  private calculateRecoverySpeed(values: number[]): number { if (values.length < 3) return 50; const recent = values.slice(-3); const improvement = recent[0] - recent[recent.length - 1]; return Math.max(0, Math.min(100, improvement * 10 + 50)); }
+  private analyzeDailyPatterns(values: number[]): { trend: number; stability: number } { return { trend: extCalculateTrend(values), stability: this.calculatePatternStability(values) }; }
+  private analyzeWeeklyPatterns(values: number[]): { trend: number; stability: number } { return { trend: extCalculateTrend(values), stability: this.calculatePatternStability(values) }; }
+  private analyzeMonthlyTrends(values: number[]): { trend: number; improvement: number } { return { trend: extCalculateTrend(values), improvement: this.calculateRecoverySpeed(values) }; }
 
   private calculateMicroMomentQuality(moodEntries: MoodEntry[]): number {
     if (moodEntries.length === 0) return 50;
@@ -1299,38 +1159,95 @@ export class EmpathyIntelligenceEngine {
   }
 
   private calculateSpiritualWisdom(_moodEntries: MoodEntry[]): number {
-  void _moodEntries;
-    return 65; // Placeholder implementation
+    // Spiritual wisdom heuristic: presence of meaning/purpose/acceptance language + regulation
+    if (_moodEntries.length === 0) return 50;
+    const spiritualWords = ['meaning', 'purpose', 'transcend', 'transcendent', 'faith', 'spiritual', 'bigger than', 'grateful'];
+    let hits = 0;
+    for (const e of _moodEntries) {
+      const n = e.notes.toLowerCase();
+      if (spiritualWords.some(w => n.includes(w))) hits++;
+    }
+    const clarity = _moodEntries.reduce((s, e) => s + e.emotionalClarity, 0) / _moodEntries.length;
+    const regulation = _moodEntries.reduce((s, e) => s + e.emotionalRegulation, 0) / _moodEntries.length;
+    const base = (hits / _moodEntries.length) * 60;
+    return Math.max(0, Math.min(100, base + (clarity + regulation) * 2));
   }
 
   private calculateRelationalWisdom(_moodEntries: MoodEntry[]): number {
-  void _moodEntries;
-    return 70; // Placeholder implementation  
+    if (_moodEntries.length === 0) return 50;
+    const relationalWords = ['relationship', 'friend', 'family', 'support', 'listened', 'helped', 'connection'];
+    let hits = 0;
+    for (const e of _moodEntries) {
+      const n = e.notes.toLowerCase();
+      if (relationalWords.some(w => n.includes(w))) hits++;
+    }
+    const socialSupportScore = _moodEntries.filter(e => e.socialSupport !== 'none').length / _moodEntries.length * 50;
+    return Math.max(0, Math.min(100, (hits / _moodEntries.length) * 50 + socialSupportScore));  
   }
 
   private calculateSelfKnowledgeWisdom(_moodEntries: MoodEntry[]): number {
-  void _moodEntries;
-    return 60; // Placeholder implementation
+    if (_moodEntries.length === 0) return 50;
+    const introspectionWords = ['i feel', 'i notice', 'i realized', 'i understand', 'i learned', 'aware', 'noticing'];
+    let hits = 0;
+    for (const e of _moodEntries) {
+      const n = e.notes.toLowerCase();
+      if (introspectionWords.some(w => n.includes(w))) hits++;
+    }
+    const clarity = _moodEntries.reduce((s, e) => s + e.emotionalClarity, 0) / _moodEntries.length;
+    return Math.max(0, Math.min(100, (hits / _moodEntries.length) * 60 + clarity * 4));
   }
 
   private calculateWisdomGrowthRate(_moodEntries: MoodEntry[]): number {
-  void _moodEntries;
-    return 15; // Placeholder implementation
+    if (_moodEntries.length < 2) return 10;
+    // Compare first half vs second half insight density
+    const mid = Math.floor(_moodEntries.length / 2);
+    const insightTerms = ['learned', 'realized', 'understand', 'insight', 'growth'];
+    const density = (slice: MoodEntry[]) => slice.filter(e => {
+      const n = e.notes.toLowerCase();
+      return insightTerms.some(w => n.includes(w));
+    }).length / Math.max(1, slice.length);
+    const first = density(_moodEntries.slice(0, mid));
+    const second = density(_moodEntries.slice(mid));
+    const growth = (second - first) * 100; // -100..100
+    return Math.max(0, Math.min(100, 40 + growth));
   }
 
   private calculateWisdomApplication(_moodEntries: MoodEntry[]): number {
-  void _moodEntries;
-    return 75; // Placeholder implementation
+    if (_moodEntries.length === 0) return 40;
+    // Application: references to acting on insight (applied, used, practiced, implemented)
+    const actionWords = ['applied', 'use', 'used', 'practice', 'practiced', 'implemented', 'shared'];
+    let actions = 0;
+    for (const e of _moodEntries) {
+      const n = e.notes.toLowerCase();
+      if (actionWords.some(w => n.includes(w))) actions++;
+    }
+    const regulation = _moodEntries.reduce((s, e) => s + e.emotionalRegulation, 0) / _moodEntries.length;
+    return Math.max(0, Math.min(100, (actions / _moodEntries.length) * 70 + regulation * 3));
   }
 
   private calculateWisdomSharing(_moodEntries: MoodEntry[]): number {
-  void _moodEntries;
-    return 55; // Placeholder implementation
+    if (_moodEntries.length === 0) return 30;
+    const shareWords = ['told', 'shared', 'explained', 'helped someone', 'wrote about'];
+    let hits = 0;
+    for (const e of _moodEntries) {
+      const n = e.notes.toLowerCase();
+      if (shareWords.some(w => n.includes(w))) hits++;
+    }
+    return Math.max(0, Math.min(100, (hits / _moodEntries.length) * 100));
   }
 
   private calculateIntegratedWisdom(_moodEntries: MoodEntry[]): number {
-  void _moodEntries;
-    return 68; // Placeholder implementation
+    if (_moodEntries.length === 0) return 40;
+    // Integration: simultaneous presence of insight + application + regulation stability
+    const insightWords = ['learned', 'realized', 'understand', 'insight'];
+    const applyWords = ['applied', 'use', 'practice', 'implemented'];
+    let integrated = 0;
+    for (const e of _moodEntries) {
+      const n = e.notes.toLowerCase();
+      if (insightWords.some(w => n.includes(w)) && applyWords.some(w => n.includes(w))) integrated++;
+    }
+    const stability = this.calculateEmotionalRegulation(_moodEntries);
+    return Math.max(0, Math.min(100, (integrated / _moodEntries.length) * 60 + stability * 0.4));
   }
 }
 

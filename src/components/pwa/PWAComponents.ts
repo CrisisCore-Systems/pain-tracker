@@ -4,14 +4,16 @@
  */
 
 // Simple PWA status component factory
+import { secureStorage } from '../../lib/storage/secureStorage';
+
 export function createPWAStatusComponent() {
   return function PWAStatus({ className = "", style = {} }) {
     // Use the PWA status from the global PWA manager
     const getPWAStatus = () => {
       const isOnline = navigator.onLine;
-      const pendingSync = parseInt(localStorage.getItem('pwa-pending-sync') || '0');
-      const isSyncing = localStorage.getItem('pwa-is-syncing') === 'true';
-      const isInstalled = localStorage.getItem('pwa-is-installed') === 'true';
+  const pendingSync = parseInt(secureStorage.get<string>('pwa-pending-sync') || '0');
+  const isSyncing = secureStorage.get<string>('pwa-is-syncing') === 'true';
+  const isInstalled = secureStorage.get<string>('pwa-is-installed') === 'true';
       
       return { isOnline, pendingSync, isSyncing, isInstalled };
     };
@@ -95,8 +97,8 @@ export function createPWAInstallButton() {
     children = "Install App",
     onInstall = () => {}
   }) {
-    const canInstall = localStorage.getItem('pwa-can-install') === 'true';
-    const isInstalled = localStorage.getItem('pwa-is-installed') === 'true';
+  const canInstall = secureStorage.get<string>('pwa-can-install') === 'true';
+  const isInstalled = secureStorage.get<string>('pwa-is-installed') === 'true';
 
     if (!canInstall || isInstalled) {
       return null;
@@ -160,8 +162,8 @@ export function createPWASyncButton() {
     onSync = () => {}
   }) {
     const isOnline = navigator.onLine;
-    const pendingSync = parseInt(localStorage.getItem('pwa-pending-sync') || '0');
-    const isSyncing = localStorage.getItem('pwa-is-syncing') === 'true';
+  const pendingSync = parseInt(secureStorage.get<string>('pwa-pending-sync') || '0');
+  const isSyncing = secureStorage.get<string>('pwa-is-syncing') === 'true';
 
     if (!isOnline || (pendingSync === 0 && !isSyncing)) {
       return null;

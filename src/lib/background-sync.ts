@@ -4,6 +4,7 @@
  */
 
 import { offlineStorage } from './offline-storage';
+import { secureStorage } from './storage/secureStorage';
 
 interface SyncResult {
   success: boolean;
@@ -106,7 +107,7 @@ export class BackgroundSyncService {
       };
 
       // Add authentication headers if available
-      const token = localStorage.getItem('auth-token');
+  const token = secureStorage.get<string>('auth-token', { encrypt: true });
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -378,7 +379,7 @@ export class BackgroundSyncService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth-token') || ''}`
+          'Authorization': `Bearer ${secureStorage.get<string>('auth-token', { encrypt: true }) || ''}`
         },
         body: JSON.stringify(data)
       });
@@ -446,7 +447,7 @@ export class PainTrackerSync {
       item.url.includes('/pain-entries')
     );
 
-    const lastSyncTime = localStorage.getItem('last-sync-time');
+  const lastSyncTime = secureStorage.get<string>('last-sync-time');
     const { isOnline, isSyncing } = this.backgroundSync.getSyncStatus();
 
     return {
@@ -461,7 +462,7 @@ export class PainTrackerSync {
     const stats = await this.backgroundSync.forceSync();
     
     if (stats.successCount > 0) {
-      localStorage.setItem('last-sync-time', new Date().toISOString());
+  secureStorage.set('last-sync-time', new Date().toISOString());
     }
   }
 }

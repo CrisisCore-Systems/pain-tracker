@@ -3,6 +3,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { secureStorage } from '../../lib/storage/secureStorage';
 import { X, Lightbulb, Info, AlertTriangle } from 'lucide-react';
 
 interface HelpHintProps {
@@ -25,7 +26,7 @@ export function HelpHint({
   // Check if hint was previously dismissed
   useEffect(() => {
     if (persistKey) {
-      const dismissed = localStorage.getItem(`hint-dismissed-${persistKey}`);
+  const dismissed = secureStorage.get<string>(`hint-dismissed-${persistKey}`);
       if (dismissed === 'true') {
         setIsVisible(false);
       }
@@ -37,7 +38,7 @@ export function HelpHint({
     
     // Remember dismissal if persistKey is provided
     if (persistKey) {
-      localStorage.setItem(`hint-dismissed-${persistKey}`, 'true');
+  secureStorage.set(`hint-dismissed-${persistKey}`, 'true');
     }
     
     onDismiss?.();

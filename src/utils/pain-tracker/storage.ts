@@ -1,4 +1,5 @@
 import type { PainEntry } from "../../types";
+import { secureStorage } from '../../lib/storage/secureStorage';
 
 const STORAGE_KEY = 'pain_tracker_entries';
 
@@ -32,14 +33,24 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
       updatedEntries.push(entry);
     }
     
-    const serialized = JSON.stringify(updatedEntries);
-    
     try {
-      localStorage.setItem(STORAGE_KEY, serialized);
+      // Store entries array directly; secureStorage will serialize
+      const result = secureStorage.set(STORAGE_KEY, updatedEntries, { encrypt: true });
+      if (!result.success) {
+        if (result.error === 'QuotaExceededError' || /quota/i.test(result.error || '')) {
+          throw createStorageError('STORAGE_FULL', 'Local storage is full. Please clear some space.');
+        }
+        // Map value too large to storage full for user friendly messaging
+        if (result.error === 'VALUE_TOO_LARGE') {
+          throw createStorageError('STORAGE_FULL', 'Pain entry data exceeds storage limits.');
+        }
+        throw createStorageError('WRITE_ERROR', 'Failed to save pain entry.');
+      }
     } catch (e) {
       if (e instanceof Error && e.name === 'QuotaExceededError') {
         throw createStorageError('STORAGE_FULL', 'Local storage is full. Please clear some space.');
       }
+      if ((e as StorageError).code) throw e;
       throw createStorageError('WRITE_ERROR', 'Failed to save pain entry.');
     }
   } catch (e) {
@@ -56,12 +67,19 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
  */
 export const loadPainEntries = async (): Promise<PainEntry[]> => {
   try {
-    const serialized = localStorage.getItem(STORAGE_KEY);
-    if (!serialized) {
-      return [];
+  let stored = secureStorage.get<unknown>(STORAGE_KEY, { encrypt: true });
+    if (!stored) {
+      // Backward compatibility / test injection path: look at raw localStorage
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      stored = raw; // attempt to parse raw
     }
-
-    const entries = JSON.parse(serialized);
+    let entries: unknown;
+    if (typeof stored === 'string') {
+      entries = JSON.parse(stored);
+    } else {
+      entries = stored;
+    }
     
     // Validate the data structure
     if (!Array.isArray(entries) || !entries.every(isValidPainEntry)) {
@@ -86,7 +104,7 @@ export const loadPainEntries = async (): Promise<PainEntry[]> => {
  */
 export const clearPainEntries = async (): Promise<void> => {
   try {
-    localStorage.removeItem(STORAGE_KEY);
+  secureStorage.remove(STORAGE_KEY, { encrypt: true });
   } catch {
     throw createStorageError('WRITE_ERROR', 'Failed to clear pain entries.');
   }

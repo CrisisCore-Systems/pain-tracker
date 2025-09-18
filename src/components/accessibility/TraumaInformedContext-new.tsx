@@ -9,6 +9,7 @@ import {
   getFontSizeValue,
   getTouchSizeValue
 } from './TraumaInformedTypes';
+import { secureStorage } from '../../lib/storage/secureStorage';
 import { TraumaInformedContext } from './TraumaInformedHooks';
 
 // Provider component
@@ -18,14 +19,23 @@ interface TraumaInformedProviderProps {
 
 export function TraumaInformedProvider({ children }: TraumaInformedProviderProps) {
   const [preferences, setPreferences] = useState<TraumaInformedPreferences>(() => {
-    const stored = localStorage.getItem('trauma-informed-preferences');
-    return stored ? { ...defaultPreferences, ...JSON.parse(stored) } : defaultPreferences;
+    const secure = secureStorage.get<TraumaInformedPreferences>('trauma-informed-preferences', { encrypt: true });
+    if (secure) return { ...defaultPreferences, ...secure };
+    try {
+      const legacy = localStorage.getItem('trauma-informed-preferences');
+      if (legacy) {
+        const parsed = JSON.parse(legacy);
+        secureStorage.set('trauma-informed-preferences', parsed, { encrypt: true });
+        return { ...defaultPreferences, ...parsed };
+      }
+    } catch {/* ignore */}
+    return defaultPreferences;
   });
 
   const updatePreferences = (updates: Partial<TraumaInformedPreferences>) => {
     const newPreferences = { ...preferences, ...updates };
     setPreferences(newPreferences);
-    localStorage.setItem('trauma-informed-preferences', JSON.stringify(newPreferences));
+    secureStorage.set('trauma-informed-preferences', newPreferences, { encrypt: true });
   };
 
   // Apply CSS custom properties when preferences change

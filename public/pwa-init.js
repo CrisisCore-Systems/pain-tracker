@@ -3,6 +3,10 @@
  * Simple vanilla JavaScript implementation for PWA features
  */
 
+// SECURITY DISCLAIMER: This initialization script is for illustrative/demo purposes.
+// It uses direct localStorage and unencrypted status flags. Avoid persisting
+// sensitive information here; production logic relies on secureStorage.
+
 // PWA Status Display
 class PWAStatusManager {
   constructor() {
@@ -69,7 +73,10 @@ class PWAStatusManager {
         this.status.pendingSync = await window.backgroundSync.getPendingItemsCount();
       }
     } catch (error) {
-      // Background sync not available
+      // Background sync not available (expected in some browsers)
+      if (process && process.env && process.env.NODE_ENV === 'development') {
+        console.debug('PWA: backgroundSync getPendingItemsCount unavailable', error);
+      }
     }
     
     this.updateDisplay();

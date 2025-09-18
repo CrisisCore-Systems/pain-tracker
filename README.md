@@ -397,13 +397,90 @@ security(auth): implement rate limiting for API endpoints
 
 </details>
 
+
+## 🔐 Secure Storage Migration (LocalStorage → secureStorage)
+
+As of v0.1.0-dev, the application is migrating all sensitive and semi-sensitive browser persistence from raw `localStorage` keys to a hardened abstraction: `secureStorage`.
+
+### Why This Change
+
+- Centralized key validation + namespacing (`pt:` prefix) prevents collisions
+- Future-proof encryption hook (already enabled for pain entries & sensitive identifiers)
+- Deterministic testing: encryption shim replaced with no-op in Vitest global setup
+- Uniform quota & error handling (graceful degradation + analytics hooks planned)
+
+### Core Pieces
+
+- `secureStorage.get/set/remove(key, { encrypt?: boolean })`
+- Migration helpers in `src/lib/storage/migrations.ts`:
+  - `migrateLegacyKey({ from, to, encrypt, transform, removeLegacy })`
+  - `migrateLegacyKeys([{ from, to, encrypt }], options?)`
+- Enhanced React hook: `useLocalStorage(key, initialValue, { secure, encrypt, namespace })`
+
+### Typical Migration Pattern
+
+```ts
+import { secureStorage } from '@/lib/storage/secureStorage';
+import { migrateLegacyKey } from '@/lib/storage/migrations';
+
+// 1. Run once (component mount or early bootstrap)
+migrateLegacyKey({
+  from: 'legacy-onboarding-complete',
+  to: 'onboardingComplete',
+  encrypt: false,
+  removeLegacy: true,
+});
+
+// 2. Use secureStorage everywhere after
+const flag = secureStorage.get('onboardingComplete');
+```
+
+### Using the Hook Securely
+
+```ts
+const [entries, setEntries] = useLocalStorage('painEntries', [], {
+  secure: true,      // uses secureStorage internally
+  encrypt: true,     // apply encryption layer (test shim neutralizes)
+  namespace: 'pt',   // optional explicit namespace override
+});
+```
+
+### Encryption Notes
+
+- Only applied to selected keys (pain entries, device identifiers, tokens)
+- Transparent to callers; failures surface as normal storage errors
+- Tests swap encryption functions with no-ops for deterministic snapshots
+
+### Legacy Fallback Strategy
+
+During migration we temporarily support reading the legacy key if the secure key is absent. After one successful write, the new key becomes the source of truth and (optionally) the legacy key is removed.
+
+### Adding a New Persisted Key (Checklist)
+
+1. Define semantic key name (camelCase) – avoid user-supplied fragments
+2. Decide if encryption needed (PII, health context, auth tokens = yes)
+3. Add migration if replacing an old raw key
+4. Use `useLocalStorage(..., { secure: true, encrypt })` or direct `secureStorage.set`
+5. Write/update tests (use factories; encryption agnostic)
+6. Avoid direct `window.localStorage` access outside controlled utilities
+
+### Demo / Non-Production Scripts
+
+Files in `public/pwa-demo.js` & `public/pwa-init.js` contain explicit comments noting they are demonstration-only and not production security models.
+
+### Open Items
+
+- Remaining raw usage candidate: `useWCBStorage.js` (planned evaluation)
+- Future: optional IndexedDB layer for large encrypted blobs
+
 ---
 
 ## 🚀 Current Development Status
 
 ### ✅ What's Working
+
 - **Core Pain Tracking**: Full 7-step assessment process
-- **Data Visualization**: Interactive charts and analytics  
+- **Data Visualization**: Interactive charts and analytics
 - **WorkSafe BC Integration**: Automated report generation
 - **Local Data Storage**: Secure browser-based storage
 - **Testing Infrastructure**: 128 comprehensive tests
@@ -411,12 +488,14 @@ security(auth): implement rate limiting for API endpoints
 - **Build System**: Production-ready builds with Vite
 
 ### 🔄 Active Development
+
 - **Dependency Updates**: Resolving vulnerability issues in dev dependencies
 - **Testing Coverage**: Implementing coverage reporting tools
 - **Mobile Optimization**: Enhanced responsive design
 - **Export Features**: Additional report formats
 
 ### 🎯 Near-term Goals
+
 - **Security Hardening**: Complete dependency vulnerability remediation
 - **Performance**: Advanced caching and optimization
 - **Accessibility**: Enhanced screen reader support
@@ -430,7 +509,7 @@ We welcome security engineers, clinicians, and open-source devs.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed workflow.
 
 **For security disclosures:**  
-📧 security@crisiscore.systems
+📧 <security@crisiscore.systems>
 
 ---
 
@@ -459,4 +538,4 @@ This project represents a **commitment to honest, security-conscious development
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

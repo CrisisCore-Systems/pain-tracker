@@ -1,6 +1,7 @@
 // Enhanced PWA utility functions for Pain Tracker
 import { offlineStorage } from '../lib/offline-storage';
 import { backgroundSync } from '../lib/background-sync';
+import { secureStorage } from '../lib/storage/secureStorage';
 
 // Lightweight declaration for BeforeInstallPromptEvent for environments
 // where the DOM lib may not include it by default.
@@ -174,6 +175,15 @@ export class PWAManager {
       console.error('PWA: Service Worker registration failed:', error);
       this.dispatchCustomEvent('pwa-sw-registration-failed', { error });
     }
+  }
+
+  /**
+   * Test hook: triggers service worker registration explicitly for unit tests.
+   * No-op if already registered or capability unsupported.
+   */
+  public async __test_registerSW(): Promise<void> {
+    if (this.swRegistration || !this.capabilities.serviceWorker) return;
+    await this.registerServiceWorker();
   }
 
   private handleServiceWorkerMessage(event: MessageEvent): void {
@@ -450,7 +460,9 @@ export class PWAManager {
 
   private getCacheHitRatio(): number {
     // This would be populated by service worker messages
-    return parseFloat(localStorage.getItem('pwa-cache-hit-ratio') || '0');
+  // Non-sensitive metric; avoid encryption overhead
+  const ratio = secureStorage.get<string>('pwa-cache-hit-ratio');
+  return parseFloat(ratio || '0');
   }
 
   isOnline(): boolean {
@@ -609,8 +621,8 @@ export class PWAManager {
         
         // Combine with localStorage data
         const localData = {
-          entries: JSON.parse(localStorage.getItem('painEntries') || '[]'),
-          settings: JSON.parse(localStorage.getItem('pain-tracker-settings') || '{}'),
+          entries: secureStorage.safeJSON('painEntries', []),
+          settings: secureStorage.safeJSON('pain-tracker-settings', {}),
           timestamp: new Date().toISOString(),
           syncQueue: offlineDataExport.syncQueue
         };
@@ -625,12 +637,8 @@ export class PWAManager {
     async importOfflineData(data: OfflineData): Promise<void> {
       try {
         // Import to localStorage
-        if (data.entries) {
-          localStorage.setItem('painEntries', JSON.stringify(data.entries));
-        }
-        if (data.settings) {
-          localStorage.setItem('pain-tracker-settings', JSON.stringify(data.settings));
-        }
+  if (data.entries) secureStorage.set('painEntries', data.entries);
+  if (data.settings) secureStorage.set('pain-tracker-settings', data.settings);
 
         // Import sync queue if available
         if (data.syncQueue) {
@@ -740,7 +748,7 @@ export class PWAManager {
     }> {
       const storageUsage = await offlineStorage.getStorageUsage();
       const pendingSyncItems = await backgroundSync.getPendingItemsCount();
-      const lastSync = localStorage.getItem('last-sync-time');
+  const lastSync = secureStorage.get<string>('last-sync-time');
 
       return {
         isInstalled: this.isInstalled,
@@ -761,13 +769,8 @@ export class PWAManager {
         // Clear IndexedDB
         await offlineStorage.clearAllData();
         
-        // Clear localStorage
-        const keys = Object.keys(localStorage);
-        keys.forEach(key => {
-          if (key.startsWith('pain-tracker') || key.startsWith('pwa-')) {
-            localStorage.removeItem(key);
-          }
-        });
+  // Clear all secureStorage-managed keys (namespaced)
+  secureStorage.keys().forEach(k => secureStorage.remove(k));
 
         console.log('PWA: All PWA data cleared');
         this.dispatchCustomEvent('pwa-data-cleared');

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { secureStorage } from '../lib/storage/secureStorage';
 
 // Storage error types
 export class StorageError extends Error {
@@ -32,6 +33,9 @@ interface UseLocalStorageOptions<T> {
   onError?: (error: StorageError) => void;
   storage?: StorageInterface;
   syncAcrossTabs?: boolean;
+  secure?: boolean; // delegate to secureStorage
+  encrypt?: boolean; // encryption flag when using secureStorage
+  namespace?: string; // namespace for secure keys
 }
 
 // Default serializer with enhanced error handling
@@ -80,7 +84,10 @@ function useLocalStorage<T>(
     serializer = defaultSerializer,
     onError = (error) => console.error('Storage error:', error),
     storage = window.localStorage,
-    syncAcrossTabs = false,
+  syncAcrossTabs = false,
+  secure = false,
+  encrypt = false,
+  namespace,
   } = options;
 
   // Initialize state with type safety
@@ -91,11 +98,12 @@ function useLocalStorage<T>(
         throw new StorageError('Storage is not available', 'read', key);
       }
 
-      const item = storage.getItem(key);
-      if (item === null) {
-        return initialValue;
+      if (secure) {
+        const secureVal = secureStorage.get<T>(key, { encrypt, namespace });
+        if (secureVal != null) return secureVal;
       }
-
+      const item = secure ? null : storage.getItem(key);
+      if (item === null) return initialValue;
       return serializer.parse(item);
     } catch (error) {
       const storageError = error instanceof StorageError ? error : 
@@ -118,18 +126,19 @@ function useLocalStorage<T>(
 
       setStoredValue(valueToStore);
 
-      // Check storage availability before writing
-      if (!isStorageAvailable(storage)) {
-        throw new StorageError('Storage is not available', 'write', key);
+      if (secure) {
+        const result = secureStorage.set(key, valueToStore as unknown as unknown, { encrypt, namespace });
+        if (!result.success) {
+          if (result.error === 'VALUE_TOO_LARGE' || /quota/i.test(result.error || '')) {
+            throw new StorageQuotaError(key);
+          }
+            throw new StorageError(`Secure storage write failed: ${result.error}`, 'write', key);
+        }
+        return;
       }
-
+      if (!isStorageAvailable(storage)) throw new StorageError('Storage is not available', 'write', key);
       const serializedValue = serializer.stringify(valueToStore);
-      
-      // Check if the serialized value is too large (rough estimate)
-      if (serializedValue.length > 5242880) { // 5MB limit
-        throw new StorageQuotaError(key);
-      }
-
+      if (serializedValue.length > 5242880) throw new StorageQuotaError(key);
       storage.setItem(key, serializedValue);
     } catch (error) {
       let storageError: StorageError;
@@ -148,23 +157,24 @@ function useLocalStorage<T>(
       
       onError(storageError);
     }
-  }, [key, storedValue, storage, serializer, onError]);
+  }, [key, storedValue, storage, serializer, onError, secure, encrypt, namespace]);
 
   // Remove value function
   const removeValue = useCallback(() => {
     try {
-      if (!isStorageAvailable(storage)) {
-        throw new StorageError('Storage is not available', 'remove', key);
+      if (secure) {
+        secureStorage.remove(key, { namespace });
+      } else {
+        if (!isStorageAvailable(storage)) throw new StorageError('Storage is not available', 'remove', key);
+        storage.removeItem(key);
       }
-
-      storage.removeItem(key);
       setStoredValue(initialValue);
     } catch (error) {
       const storageError = error instanceof StorageError ? error :
         new StorageError(`Failed to remove from storage: ${error}`, 'remove', key);
       onError(storageError);
     }
-  }, [key, initialValue, storage, onError]);
+  }, [key, initialValue, storage, onError, secure, namespace]);
 
   // Listen for storage changes across tabs
   useEffect(() => {

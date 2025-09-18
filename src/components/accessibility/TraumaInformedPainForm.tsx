@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { secureStorage } from '../../lib/storage/secureStorage';
 import { 
   ProgressiveDisclosure, 
   MemoryAid, 
@@ -71,7 +72,7 @@ export function TraumaInformedPainEntryForm({
   useEffect(() => {
     if (preferences.autoSave) {
       const timer = setTimeout(() => {
-        localStorage.setItem('pain-tracker-draft', JSON.stringify(formData));
+        secureStorage.set('pain-tracker-draft', formData, { encrypt: true });
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -80,13 +81,22 @@ export function TraumaInformedPainEntryForm({
   // Load draft on mount
   useEffect(() => {
     if (preferences.autoSave && !initialData) {
-      const draft = localStorage.getItem('pain-tracker-draft');
-      if (draft) {
-        try {
-          setFormData(JSON.parse(draft));
-        } catch (error) {
-          console.warn('Could not load draft:', error);
+      // Try secure storage first
+      const secureDraft = secureStorage.get<typeof formData>('pain-tracker-draft', { encrypt: true });
+      if (secureDraft) {
+        setFormData(secureDraft);
+        return;
+      }
+      // Legacy fallback migration
+      try {
+        const legacy = localStorage.getItem('pain-tracker-draft');
+        if (legacy) {
+          const parsed = JSON.parse(legacy);
+            secureStorage.set('pain-tracker-draft', parsed, { encrypt: true });
+          setFormData(parsed);
         }
+      } catch (error) {
+        console.warn('Could not load draft:', error);
       }
     }
   }, [preferences.autoSave, initialData]);
@@ -103,8 +113,9 @@ export function TraumaInformedPainEntryForm({
     
     if (Object.keys(newErrors).length === 0) {
       onSubmit(formData);
-      // Clear draft
-      localStorage.removeItem('pain-tracker-draft');
+  // Clear draft (both secure and legacy)
+  secureStorage.remove('pain-tracker-draft');
+  try { localStorage.removeItem('pain-tracker-draft'); } catch {/* ignore */}
     }
   };
 

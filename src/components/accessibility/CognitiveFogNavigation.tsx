@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { secureStorage } from '../../lib/storage/secureStorage';
 import { useCrisisDetection } from './useCrisisDetection';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { TouchOptimizedButton, MemoryAid } from './TraumaInformedUX';
@@ -417,7 +418,9 @@ export function ContextPreservation({
     };
 
     try {
-      localStorage.setItem(`context_${contextKey}`, JSON.stringify(dataToSave));
+      // Dynamic keys: ensure they pass allowed pattern by replacing non-alphanumerics with '-' for storage key suffix
+      const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi,'-')}`;
+      secureStorage.set(safeKey, dataToSave, { encrypt: true });
       setLastSaved(new Date());
     } catch (error) {
       console.warn('Failed to save context:', error);
@@ -426,15 +429,25 @@ export function ContextPreservation({
 
   // Load preserved context on mount
   useEffect(() => {
-    const savedContext = localStorage.getItem(`context_${contextKey}`);
-    if (savedContext) {
-      try {
-        const parsed = JSON.parse(savedContext);
+    const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi,'-')}`;
+    // Secure first
+    const secure = secureStorage.get<Record<string, unknown>>(safeKey, { encrypt: true });
+    if (secure) {
+      setContextData(secure);
+      if (secure.timestamp) try { setLastSaved(new Date(secure.timestamp as string)); } catch {/* ignore */}
+      return;
+    }
+    // Legacy fallback
+    try {
+      const legacyRaw = localStorage.getItem(safeKey);
+      if (legacyRaw) {
+        const parsed = JSON.parse(legacyRaw);
+        secureStorage.set(safeKey, parsed, { encrypt: true });
         setContextData(parsed);
-        setLastSaved(new Date(parsed.timestamp));
-      } catch (error) {
-        console.warn('Failed to load preserved context:', error);
+        if (parsed.timestamp) try { setLastSaved(new Date(parsed.timestamp)); } catch {/* ignore */}
       }
+    } catch (error) {
+      console.warn('Failed to load preserved context:', error);
     }
   }, [contextKey]);
 
@@ -478,9 +491,11 @@ export function ContextPreservation({
   }, []);
 
   const clearContext = useCallback(() => {
-    localStorage.removeItem(`context_${contextKey}`);
-    setContextData({});
-    setLastSaved(null);
+  const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi,'-')}`;
+  secureStorage.remove(safeKey);
+  try { localStorage.removeItem(safeKey); } catch {/* ignore */}
+  setContextData({});
+  setLastSaved(null);
   }, [contextKey]);
 
   return (

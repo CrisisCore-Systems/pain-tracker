@@ -69,6 +69,161 @@ interface WorkerMessage {
   progress?: number;
 }
 
+// --- Additional analytical helpers (replacing previous TODO placeholders) ---
+function movingAverage(values: number[], window: number): number[] {
+  const out: number[] = [];
+  for (let i = 0; i < values.length; i++) {
+    const start = Math.max(0, i - window + 1);
+    const slice = values.slice(start, i + 1);
+    out.push(slice.reduce((s, v) => s + v, 0) / slice.length);
+  }
+  return out;
+}
+
+function detectTrends(entries: PainEntry[], timeframe: 'week' | 'month' | 'quarter' | 'year'): HealthInsight[] {
+  if (entries.length < 5) return [];
+  const sorted = [...entries].sort((a,b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  const pains = sorted.map(e => e.baselineData.pain);
+  const ma = movingAverage(pains, 3);
+  // Simple linear regression slope
+  const n = pains.length;
+  const xs = Array.from({length:n}, (_,i)=>i+1);
+  const sumX = xs.reduce((s,v)=>s+v,0);
+  const sumY = pains.reduce((s,v)=>s+v,0);
+  const sumXY = xs.reduce((s,v,i)=>s+v*pains[i],0);
+  const sumXX = xs.reduce((s,v)=>s+v*v,0);
+  const slope = (n*sumXY - sumX*sumY) / (n*sumXX - sumX*sumX || 1);
+  const direction = slope > 0.05 ? 'increasing' : slope < -0.05 ? 'decreasing' : 'stable';
+  const changePercent = ((ma[ma.length-1] - ma[Math.max(0, ma.length-5)]) / (ma[Math.max(0, ma.length-5)] || 1)) * 100;
+  const timeframeDays = {week:7, month:30, quarter:90, year:365}[timeframe];
+  return [{
+    id: `trend-${Date.now()}`,
+    type: 'trend',
+    title: `Pain trend ${direction}`,
+    description: `Your average pain shows a ${direction} trend with an estimated ${(changePercent).toFixed(1)}% change over recent data.`,
+    confidence: Math.min(95, Math.abs(slope)*800 + 50),
+    severity: direction === 'increasing' && changePercent > 10 ? 'medium' : 'low',
+    data: { values: ma, labels: sorted.map(e => new Date(e.timestamp).toLocaleDateString()) },
+    generatedAt: new Date().toISOString(),
+    traumaInformed: true,
+    actionable: direction !== 'stable',
+    metadata: { basedOnEntries: entries.length, timeframeDays, algorithm: 'linear-regression-ma-v1', version: '1.0' }
+  }];
+}
+
+function comprehensiveCorrelationAnalysis(entries: PainEntry[]): HealthInsight[] {
+  // Extend existing simple correlations: pain vs sleepQuality, moodImpact, missedWork
+  if (entries.length < 6) return [];
+  const pairs: Array<{name:string; x:number[]; y:number[]; formatter:(c:number)=>string}> = [];
+  const sleep = entries.filter(e => e.qualityOfLife?.sleepQuality !== undefined);
+  if (sleep.length >= 5) pairs.push({name:'Sleep Quality', x:sleep.map(e=>e.qualityOfLife.sleepQuality), y:sleep.map(e=>e.baselineData.pain), formatter:(c)=> c<0? 'Better sleep linked to lower pain':'Poor sleep linked to higher pain'});
+  const moodImpact = entries.filter(e => e.qualityOfLife?.moodImpact !== undefined);
+  if (moodImpact.length >=5) pairs.push({name:'Mood Impact', x:moodImpact.map(e=>e.qualityOfLife.moodImpact), y:moodImpact.map(e=>e.baselineData.pain), formatter:(c)=> c>0? 'Higher mood impact associates with higher pain':'Higher mood impact associates with lower pain'});
+  const missed = entries.filter(e => e.workImpact?.missedWork!==undefined);
+  if (missed.length >=5) pairs.push({name:'Missed Work', x:missed.map(e=>e.workImpact.missedWork), y:missed.map(e=>e.baselineData.pain), formatter:(c)=> c>0? 'Increased missed work correlates with higher pain':'Increased missed work correlates with lower pain (unexpected)'});
+
+  const insights: HealthInsight[] = [];
+  for (const p of pairs) {
+    const corr = calculatePearsonCorrelation(p.x, p.y);
+    if (Math.abs(corr) < 0.3) continue;
+    insights.push({
+      id:`corr-${p.name}-${Date.now()}`,
+      type:'correlation',
+      title:`Correlation: ${p.name} & Pain`,
+      description:`Correlation coefficient ${(corr).toFixed(2)}. ${p.formatter(corr)}.`,
+      confidence: Math.min(90, 40 + Math.abs(corr)*60),
+      severity: Math.abs(corr) > 0.6 ? 'medium':'low',
+      data:{ correlations:[{factor1:p.name, factor2:'pain-level', strength:corr, significance: p.x.length/entries.length}] },
+      generatedAt:new Date().toISOString(),
+      traumaInformed:true,
+      actionable:true,
+      metadata:{ basedOnEntries:p.x.length, timeframeDays: Math.ceil((Date.now() - new Date(entries[0].timestamp).getTime())/86400000), algorithm:'pearson-multi-v1', version:'1.0'}
+    });
+  }
+  return insights;
+}
+
+function detectAnomalies(entries: PainEntry[]): HealthInsight[] {
+  if (entries.length < 10) return [];
+  const pains = entries.map(e=>e.baselineData.pain);
+  const mean = pains.reduce((s,v)=>s+v,0)/pains.length;
+  const variance = pains.reduce((s,v)=>s+Math.pow(v-mean,2),0)/pains.length;
+  const sd = Math.sqrt(variance);
+  const anomalies: {index:number; value:number}[] = [];
+  pains.forEach((v,i)=> { if (Math.abs(v-mean) > sd*1.5) anomalies.push({index:i,value:v}); });
+  if (!anomalies.length) return [];
+  return [{
+    id:`anomaly-${Date.now()}`,
+    type:'anomaly',
+    title:'Pain Anomalies Detected',
+    description:`Detected ${anomalies.length} entries outside normal variation (±1.5 SD).`,
+    confidence: Math.min(90, 50 + anomalies.length*5),
+    severity: anomalies.length > 3 ? 'medium':'low',
+    data:{ values: anomalies.map(a=>a.value), labels: anomalies.map(a=> new Date(entries[a.index].timestamp).toLocaleDateString())},
+    generatedAt:new Date().toISOString(),
+    traumaInformed:true,
+    actionable:true,
+    metadata:{ basedOnEntries: entries.length, timeframeDays: Math.ceil((Date.now() - new Date(entries[0].timestamp).getTime())/86400000), algorithm:'stddev-outlier-v1', version:'1.0'}
+  }];
+}
+
+function generatePredictions(entries: PainEntry[], timeframe: 'week'|'month'|'quarter'|'year'): HealthInsight[] {
+  if (entries.length < 5) return [];
+  const sorted = [...entries].sort((a,b)=> new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  const pains = sorted.map(e=>e.baselineData.pain);
+  const n=pains.length;
+  const xs = Array.from({length:n}, (_,i)=>i+1);
+  const sumX=xs.reduce((s,v)=>s+v,0), sumY=pains.reduce((s,v)=>s+v,0), sumXY=xs.reduce((s,v,i)=>s+v*pains[i],0), sumXX=xs.reduce((s,v)=>s+v*v,0);
+  const slope=(n*sumXY - sumX*sumY)/(n*sumXX - sumX*sumX || 1);
+  const intercept = (sumY - slope*sumX)/n;
+  const futurePoints = {week:7, month:14, quarter:30, year:60}[timeframe];
+  const predictions:Array<{date:string; value:number; confidence:number}> = [];
+  const lastDate = new Date(sorted[sorted.length-1].timestamp).getTime();
+  for (let i=1;i<=futurePoints;i+= Math.ceil(futurePoints/5)) {
+    const x = n + i;
+    const value = slope * x + intercept;
+    const date = new Date(lastDate + i*86400000).toISOString();
+    predictions.push({date, value: Math.max(0, Math.min(10, value)), confidence: Math.max(40, Math.min(90, 80 - Math.abs(slope)*50))});
+  }
+  return [{
+    id:`prediction-${Date.now()}`,
+    type:'prediction',
+    title:'Projected Pain Trajectory',
+    description:`Projected future pain levels based on recent linear trend (${slope>0? 'increasing':'decreasing'} slope).`,
+    confidence: Math.max(40, Math.min(85, 70 - Math.abs(slope)*30)),
+    severity: slope>0.1 ? 'medium':'low',
+    data:{ predictions },
+    generatedAt:new Date().toISOString(),
+    traumaInformed:true,
+    actionable:true,
+    metadata:{ basedOnEntries: entries.length, timeframeDays: Math.ceil((Date.now() - new Date(entries[0].timestamp).getTime())/86400000), algorithm:'linear-forecast-v1', version:'1.0'}
+  }];
+}
+
+function generateSummary(entries: PainEntry[], timeframe: 'week'|'month'|'quarter'|'year'): HealthInsight[] {
+  if (entries.length === 0) return [];
+  const pains = entries.map(e=>e.baselineData.pain);
+  const avg = pains.reduce((s,v)=>s+v,0)/pains.length;
+  const max = Math.max(...pains);
+  const min = Math.min(...pains);
+  const flareDays = pains.filter(p=>p>=7).length;
+  const range = max-min;
+  const timeframeDays = {week:7, month:30, quarter:90, year:365}[timeframe];
+  return [{
+    id:`summary-${Date.now()}`,
+    type:'recommendation',
+    title:'Pain Summary',
+    description:`Average pain ${(avg).toFixed(1)} (range ${min}-${max}). ${flareDays} flare days (>=7). Variability ${(range).toFixed(1)}.`,
+    confidence: 80,
+    severity: flareDays/entries.length > 0.3 ? 'medium':'low',
+    data:{ values:pains },
+    generatedAt:new Date().toISOString(),
+    traumaInformed:true,
+    actionable:false,
+    metadata:{ basedOnEntries: entries.length, timeframeDays, algorithm:'summary-basic-v1', version:'1.0'}
+  }];
+}
+
 // Main analysis functions
 function analyzePatterns(entries: PainEntry[]): HealthInsight[] {
   const insights: HealthInsight[] = [];
@@ -575,19 +730,19 @@ self.onmessage = function(e: MessageEvent<WorkerMessage>) {
           insights = analyzePatterns(task.data.entries);
           break;
         case 'trend-detection':
-          // TODO: Implement trend detection
+          insights = detectTrends(task.data.entries, task.data.timeframe || 'month');
           break;
         case 'correlation-analysis':
-          // TODO: Implement comprehensive correlation analysis
+          insights = comprehensiveCorrelationAnalysis(task.data.entries);
           break;
         case 'anomaly-detection':
-          // TODO: Implement anomaly detection
+          insights = detectAnomalies(task.data.entries);
           break;
         case 'prediction':
-          // TODO: Implement predictive analysis
+          insights = generatePredictions(task.data.entries, task.data.timeframe || 'month');
           break;
         case 'summary-generation':
-          // TODO: Implement summary generation
+          insights = generateSummary(task.data.entries, task.data.timeframe || 'month');
           break;
         default:
           throw new Error(`Unknown task type: ${task.type}`);

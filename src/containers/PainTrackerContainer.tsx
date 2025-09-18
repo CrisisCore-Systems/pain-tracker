@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { secureStorage } from '../lib/storage/secureStorage';
 import type { PainEntry } from '../types';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { TraumaInformedPainTrackerLayout } from '../components/layouts/TraumaInformedPainTrackerLayout';
@@ -24,7 +25,7 @@ export function PainTrackerContainer() {
   // Check for first-time user
   useEffect(() => {
     try {
-      const hasSeenOnboarding = localStorage.getItem('pain-tracker-onboarding-completed');
+  const hasSeenOnboarding = secureStorage.get<string>('pain-tracker-onboarding-completed');
       const hasEntries = entries.length > 0;
       
       if (!hasSeenOnboarding && !hasEntries) {
@@ -37,7 +38,7 @@ export function PainTrackerContainer() {
 
   const handleOnboardingComplete = (setupWithSampleData: boolean) => {
     try {
-      localStorage.setItem('pain-tracker-onboarding-completed', 'true');
+  secureStorage.set('pain-tracker-onboarding-completed', 'true');
     } catch (err) {
       console.warn('Unable to save onboarding status:', err);
     }
@@ -54,7 +55,7 @@ export function PainTrackerContainer() {
 
   const handleOnboardingSkip = () => {
     try {
-      localStorage.setItem('pain-tracker-onboarding-completed', 'true');
+  secureStorage.set('pain-tracker-onboarding-completed', 'true');
     } catch (err) {
       console.warn('Unable to save onboarding status:', err);
     }

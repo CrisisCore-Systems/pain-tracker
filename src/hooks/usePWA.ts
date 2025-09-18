@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { pwaManager } from '../utils/pwa-utils';
 import { backgroundSync } from '../lib/background-sync';
 import { offlineStorage } from '../lib/offline-storage';
+import { secureStorage } from '../lib/storage/secureStorage';
 
 type SyncStatus = {
   isSyncing: boolean;
@@ -86,7 +87,17 @@ export function useBackgroundSync() {
       try {
         const { isSyncing } = backgroundSync.getSyncStatus();
         const pendingItems = await backgroundSync.getPendingItemsCount();
-        const lastSync = localStorage.getItem('last-sync-time');
+        // Prefer secure storage value; fallback to legacy localStorage once and migrate
+        let lastSync = secureStorage.get<string>('last-sync-time');
+        if (!lastSync) {
+          try {
+            const legacy = localStorage.getItem('last-sync-time');
+            if (legacy) {
+              secureStorage.set('last-sync-time', legacy, { encrypt: true });
+              lastSync = legacy;
+            }
+          } catch {/* ignore */}
+        }
 
         if (!mounted) return;
         setSyncStatus({ isSyncing, pendingItems, lastSync, error: null });

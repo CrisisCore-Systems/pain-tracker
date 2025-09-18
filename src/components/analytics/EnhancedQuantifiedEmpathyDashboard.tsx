@@ -3,7 +3,7 @@
  * Advanced AI-powered empathy visualization with interactive insights and personalized recommendations
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-system';
 import { 
   Heart, Brain, Lightbulb, Target, TrendingUp,
@@ -12,16 +12,13 @@ import {
 } from 'lucide-react';
 import { 
   QuantifiedEmpathyMetrics,
-  EmotionalStateMetrics,
-  HolisticWellbeingMetrics,
-  DigitalPacingSystem,
   MoodEntry,
   EmpathyInsight,
   EmpathyRecommendation
 } from '../../types/quantified-empathy';
 import { EmpathyDrivenAnalyticsService } from '../../services/EmpathyDrivenAnalytics';
-import { EmotionalStateTracker } from '../../services/EmotionalStateTracker';
-import { HolisticWellbeingService } from '../../services/HolisticWellbeingService';
+import { useEmpathyMetrics } from '../../hooks/useEmpathyMetrics';
+import { useEmpathyConsent } from '../../hooks/useEmpathyConsent';
 import type { PainEntry } from '../../types';
 
 interface EnhancedEmpathyDashboardProps {
@@ -63,8 +60,6 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
     languagePreference: 'everyday'
   }));
   
-  const [emotionalTracker] = useState(() => new EmotionalStateTracker());
-  const [wellbeingService] = useState(() => new HolisticWellbeingService());
 
   // State
   const [currentView, setCurrentView] = useState<DashboardView>('overview');
@@ -72,98 +67,33 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
   
   // Enhanced Metrics state
   const [quantifiedEmpathy, setQuantifiedEmpathy] = useState<QuantifiedEmpathyMetrics | null>(null);
-  const [emotionalState, setEmotionalState] = useState<EmotionalStateMetrics | null>(null);
-  const [wellbeingMetrics, setWellbeingMetrics] = useState<HolisticWellbeingMetrics | null>(null);
-  const [pacingSystem, setPacingSystem] = useState<DigitalPacingSystem | null>(null);
+  // legacy detailed state removed; metrics now provided by hook
   const [insights, setInsights] = useState<EmpathyInsight[]>([]);
   const [recommendations, setRecommendations] = useState<EmpathyRecommendation[]>([]);
   const [isRealTimeActive, setIsRealTimeActive] = useState(realTimeMode);
 
   // Track if we're already loading to prevent concurrent loads
-  const loadingRef = useRef(false);
 
-  // Enhanced load all metrics with AI intelligence
-  useEffect(() => {
-    if (loadingRef.current) return;
-    
-    const loadAdvancedMetrics = async () => {
-      loadingRef.current = true;
-      setIsLoading(true);
-      try {
-        // Load emotional state metrics
-        const emotionalMetrics = await emotionalTracker.calculateEmotionalStateMetrics(userId, painEntries);
-        setEmotionalState(emotionalMetrics);
-
-        // Load wellbeing metrics
-        const wellbeing = await wellbeingService.calculateWellbeingMetrics(userId, painEntries, moodEntries);
-        setWellbeingMetrics(wellbeing);
-
-        // Load pacing system
-        const pacing = await wellbeingService.calculateDigitalPacing(userId, painEntries, moodEntries);
-        setPacingSystem(pacing);
-
-        // Load enhanced quantified empathy metrics with AI
-        const empathyMetrics = await analyticsService.calculateQuantifiedEmpathy(
-          userId, 
-          painEntries, 
-          moodEntries,
-          emotionalMetrics || undefined,
-          wellbeing || undefined,
-          pacing || undefined
-        );
-        setQuantifiedEmpathy(empathyMetrics);
-
-        // Generate AI-powered insights
-        const empathyInsights = await analyticsService.generateEmpathyInsights(
-          userId,
-          empathyMetrics,
-          painEntries,
-          moodEntries
-        );
-        setInsights(empathyInsights);
-
-        // Generate personalized recommendations
-        const empathyRecommendations = await analyticsService.generateEmpathyRecommendations(
-          userId,
-          empathyMetrics,
-          empathyInsights
-        );
-        setRecommendations(empathyRecommendations);
-
-      } catch (error) {
-        console.error('Error loading enhanced empathy metrics:', error);
-      } finally {
-        setIsLoading(false);
-        loadingRef.current = false;
-      }
-    };
-
-    loadAdvancedMetrics();
-  }, [userId, painEntries, moodEntries, analyticsService, emotionalTracker, wellbeingService]);
+  const { consentGranted, grantConsent } = useEmpathyConsent();
+  const metricsState = useEmpathyMetrics({ userId, painEntries, moodEntries, auto: true });
+  useEffect(() => { setIsLoading(metricsState.loading); }, [metricsState.loading]);
+  useEffect(() => { if (metricsState.data) setQuantifiedEmpathy(metricsState.data); }, [metricsState.data]);
+  useEffect(() => { setInsights(metricsState.insights); }, [metricsState.insights]);
+  useEffect(() => { setRecommendations(metricsState.recommendations); }, [metricsState.recommendations]);
 
   // Real-time updates
   useEffect(() => {
     if (!isRealTimeActive || !quantifiedEmpathy) return;
-
     const interval = setInterval(async () => {
-      // Update micro-empathy moments and real-time insights
       try {
-        const updatedMetrics = await analyticsService.calculateQuantifiedEmpathy(
-          userId, 
-          painEntries, 
-          moodEntries,
-          emotionalState || undefined,
-          wellbeingMetrics || undefined,
-          pacingSystem || undefined
-        );
+        const updatedMetrics = await analyticsService.calculateQuantifiedEmpathy(userId, painEntries, moodEntries);
         setQuantifiedEmpathy(updatedMetrics);
       } catch (error) {
         console.error('Error updating real-time empathy metrics:', error);
       }
-    }, 30000); // Update every 30 seconds
-
+    }, 30000);
     return () => clearInterval(interval);
-  }, [isRealTimeActive, quantifiedEmpathy, userId, analyticsService, painEntries, moodEntries, emotionalState, wellbeingMetrics, pacingSystem]);
+  }, [isRealTimeActive, quantifiedEmpathy, userId, analyticsService, painEntries, moodEntries]);
 
   const handleInsightSelect = useCallback((insight: EmpathyInsight) => {
     onInsightSelect?.(insight);
@@ -178,6 +108,21 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
       onShareMetrics?.(quantifiedEmpathy);
     }
   }, [quantifiedEmpathy, onShareMetrics]);
+
+  if (!consentGranted) {
+    return (
+      <Card className="w-full">
+        <CardContent className="p-8 text-center space-y-4">
+          <Heart className="w-10 h-10 mx-auto text-purple-500" />
+          <p className="text-gray-700 font-medium">Empathy analytics are privacy-protected.</p>
+          <p className="text-sm text-gray-500">Grant consent to process and view Quantified Empathy Metrics. You can revoke anytime.</p>
+          <div className="flex justify-center space-x-4">
+            <Button onClick={grantConsent} variant="default">Grant Consent</Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -195,7 +140,7 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
     );
   }
 
-  if (!quantifiedEmpathy || !emotionalState || !wellbeingMetrics || !pacingSystem) {
+  if (!quantifiedEmpathy) {
     return (
       <Card className="w-full">
         <CardContent className="flex items-center justify-center p-8">
@@ -203,6 +148,7 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
             <Heart className="w-8 h-8 mx-auto mb-4 text-gray-400" />
             <p className="text-gray-600">Building your empathy intelligence profile...</p>
             <p className="text-sm text-gray-500 mt-2">Continue tracking to unlock advanced insights!</p>
+            <div className="mt-4"><Button size="sm" onClick={metricsState.refresh}>Retry</Button></div>
           </div>
         </CardContent>
       </Card>

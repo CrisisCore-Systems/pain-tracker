@@ -4,6 +4,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { secureStorage } from '../lib/storage/secureStorage';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import type { PainEntry } from '../types';
 
@@ -42,7 +43,7 @@ export function usePainTrackerStorage() {
           const syncedCount = offlineEntries.filter(e => e.syncStatus === 'synced').length;
           const pendingCount = offlineEntries.filter(e => e.syncStatus === 'pending').length;
           const entriesSize = new Blob([JSON.stringify(entries)]).size;
-          const lastSync = localStorage.getItem('last-sync-time');
+          const lastSync = secureStorage.get<string>('last-sync-time');
 
           setStorageStats({
             totalEntries: entries.length,
@@ -138,7 +139,7 @@ export function usePainTrackerStorage() {
         if (painTrackerSync && typeof painTrackerSync.forceSync === 'function') {
           await painTrackerSync.forceSync();
         }
-        localStorage.setItem('last-sync-time', new Date().toISOString());
+  secureStorage.set('last-sync-time', new Date().toISOString());
         store.setLoading(false);
         return true;
       } catch (err) {

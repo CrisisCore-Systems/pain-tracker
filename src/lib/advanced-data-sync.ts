@@ -8,6 +8,7 @@ import type { PainEntry } from '../types';
 import type { SyncConflictData, ServerResponse } from '../types/extended-storage';
 import { ConflictResolutionService } from './conflict-resolution';
 import { OfflineStorageService } from './offline-storage';
+import { secureStorage } from './storage/secureStorage';
 
 // Sync strategy configurations
 interface SyncStrategy {
@@ -208,14 +209,11 @@ export class AdvancedDataSynchronizationService {
   }
 
   private generateClientId(): string {
-    // Generate unique client ID for this device/session
-    const stored = localStorage.getItem('sync-client-id');
-    if (stored) {
-      return stored;
-    }
-
+    // Generate unique client ID for this device/session (encrypted)
+    const stored = secureStorage.get<string>('sync-client-id', { encrypt: true });
+    if (stored) return stored;
     const clientId = crypto.randomUUID();
-    localStorage.setItem('sync-client-id', clientId);
+    secureStorage.set('sync-client-id', clientId, { encrypt: true });
     return clientId;
   }
 

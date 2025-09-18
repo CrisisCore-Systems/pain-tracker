@@ -11,6 +11,8 @@ import { OnboardingFlow } from "../onboarding";
 import { EmptyState, TrackingIllustration } from "../empty-state";
 import { useToast } from "../feedback";
 import { samplePainEntries, walkthroughSteps } from "../../data/sampleData";
+import { secureStorage } from '../../lib/storage/secureStorage';
+import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
 import { Walkthrough } from "../tutorials";
 
 const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
@@ -50,29 +52,53 @@ export function PainTracker() {
   // Check for first-time user
   useEffect(() => {
     try {
-      const hasSeenOnboarding = localStorage.getItem('pain-tracker-onboarding-completed');
-      const hasEntries = localStorage.getItem('painEntries');
-      
-      if (!hasSeenOnboarding && !hasEntries) {
+      // Prefer secure flag
+      const secureFlag = secureStorage.get<string>('pain-tracker-onboarding-completed', { encrypt: true });
+      let hasEntries = false;
+      // Check secure entries key
+      const secureEntries = secureStorage.get('pain_tracker_entries', { encrypt: true });
+      if (secureEntries && Array.isArray(secureEntries) && secureEntries.length > 0) hasEntries = true;
+      // Legacy fallback
+      if (!secureFlag) {
+        const legacyFlag = localStorage.getItem('pain-tracker-onboarding-completed');
+        if (legacyFlag) {
+          secureStorage.set('pain-tracker-onboarding-completed', legacyFlag, { encrypt: true });
+        }
+      }
+      if (!hasEntries) {
+        const legacyEntries = localStorage.getItem('painEntries');
+        if (legacyEntries) {
+          try {
+            const parsed = JSON.parse(legacyEntries);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              // migrate each silently
+              parsed.forEach(p => {
+                try { savePainEntry(p); } catch {/* ignore individual */}
+              });
+              hasEntries = true;
+            }
+          } catch {/* ignore */}
+        }
+      }
+      if (!secureFlag && !hasEntries) {
         setShowOnboarding(true);
       }
     } catch (err) {
-      // Silently fail if localStorage is not available
       console.warn('Unable to check onboarding status:', err);
     }
   }, []);
 
   // Handle localStorage separately to catch errors
   useEffect(() => {
-    try {
-      const storedEntries = localStorage.getItem("painEntries");
-      if (storedEntries) {
-        setEntries(JSON.parse(storedEntries));
+    (async () => {
+      try {
+        const loaded = await loadPainEntries();
+        setEntries(loaded);
+      } catch (err) {
+        setError("Unable to load pain entries. Please try refreshing the page.");
+        console.error("Error loading pain entries:", err);
       }
-    } catch (err) {
-      setError("Unable to load pain entries. Please try refreshing the page.");
-      console.error("Error loading pain entries:", err);
-    }
+    })();
   }, []);
 
   // Focus management for WCB report
@@ -84,19 +110,15 @@ export function PainTracker() {
 
   const handleOnboardingComplete = (setupWithSampleData: boolean) => {
     try {
-      localStorage.setItem('pain-tracker-onboarding-completed', 'true');
+      secureStorage.set('pain-tracker-onboarding-completed', 'true', { encrypt: true });
     } catch (err) {
       console.warn('Unable to save onboarding status:', err);
     }
     setShowOnboarding(false);
-    
     if (setupWithSampleData) {
       setEntries(samplePainEntries);
-      try {
-        localStorage.setItem("painEntries", JSON.stringify(samplePainEntries));
-      } catch (err) {
-        console.warn('Unable to save sample data:', err);
-      }
+      // persist each sample via savePainEntry
+      samplePainEntries.forEach(e => { try { savePainEntry(e); } catch {/* ignore individual */} });
       toast.success('Sample data loaded!', 'Explore the features with example pain entries. You can clear this data anytime.');
     } else {
       toast.info('Welcome to Pain Tracker!', 'Start by recording your first pain entry above.');
@@ -104,11 +126,7 @@ export function PainTracker() {
   };
 
   const handleOnboardingSkip = () => {
-    try {
-      localStorage.setItem('pain-tracker-onboarding-completed', 'true');
-    } catch (err) {
-      console.warn('Unable to save onboarding status:', err);
-    }
+    try { secureStorage.set('pain-tracker-onboarding-completed', 'true', { encrypt: true }); } catch {/* ignore */}
     setShowOnboarding(false);
     toast.info('Onboarding skipped', 'You can always access help from the help menu.');
   };
@@ -184,16 +202,19 @@ export function PainTracker() {
 
       const updatedEntries = [...entries, newEntry];
       setEntries(updatedEntries);
-      
-      // Save to localStorage
       try {
-        localStorage.setItem("painEntries", JSON.stringify(updatedEntries));
-        setError(null);
-        toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
+        savePainEntry(newEntry).then(() => {
+          setError(null);
+          toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
+        }).catch(err => {
+          setError('Failed to save entry. Your changes may not persist after refresh.');
+          toast.warning('Save Warning', 'Entry added but may not persist after refresh.');
+          console.error('Error saving entry:', err);
+        });
       } catch (err) {
-        setError("Failed to save entry. Your changes may not persist after refresh.");
+        setError('Failed to save entry. Your changes may not persist after refresh.');
         toast.warning('Save Warning', 'Entry added but may not persist after refresh.');
-        console.error("Error saving to localStorage:", err);
+        console.error('Error saving entry:', err);
       }
     } catch (err) {
       setError("Failed to add pain entry. Please try again.");
