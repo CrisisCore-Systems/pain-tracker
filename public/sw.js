@@ -336,7 +336,7 @@ self.addEventListener('message', (event) => {
 
 // Background sync for queued requests
 self.addEventListener('sync', (event) => {
-  if (event.tag === 'pain-tracker-sync') {
+  if (event.tag === 'pain-tracker-sync' || event.tag === 'health-data-sync') {
     event.waitUntil(processQueue());
   }
 });

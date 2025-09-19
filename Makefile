@@ -262,3 +262,12 @@ db-migrate: ## Run database migrations (if implemented)
 
 db-seed: ## Seed database with test data (if implemented)
 	@echo "💾 Database seeding not implemented yet"
+
+# SBOM and Docs Validation
+sbom: ## Generate CycloneDX SBOM (security/sbom-latest.json)
+	@echo "📦 Generating SBOM..."
+	npm run sbom || echo "⚠️ sbom script not configured yet"
+
+docs-validate: ## Validate documentation links & test drift
+	@echo "🧪 Validating documentation..."
+	npm run docs:validate || echo "⚠️ docs:validate script not configured yet"

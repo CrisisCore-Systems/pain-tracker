@@ -7,12 +7,16 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['src/test/setup.ts'],
     globals: true,
-    include: ['src/test/**/*.test.ts', 'src/test/**/*.test.tsx'],
+    // Include tests across the repo, not just under src/test
+    include: [
+      'src/**/*.test.ts',
+      'src/**/*.test.tsx'
+    ],
     coverage: {
-      enabled: isCI, // only collect & enforce in CI to speed local dev
+      enabled: true, // enable locally so coverage badge can be generated
       provider: 'v8',
       reportsDirectory: 'coverage',
-      reporter: isCI ? ['text','html'] : ['text'],
+  reporter: ['text','html','json-summary'],
       // Focus coverage on core logic areas; exclude massive UI surface until component tests added
       include: [
         // Focus on core heuristic/engine/encryption logic currently covered by tests

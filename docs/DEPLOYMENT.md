@@ -42,15 +42,18 @@ flowchart TD
 ### 1. Preview (Pull Request)
 - **Purpose**: Feature testing and review
 - **Trigger**: Pull request creation/update
+- **Status**: Currently a simulated job that stops after building and uploading preview artifacts/logs (no live URL yet)
 - **URL**: `https://crisiscore-systems.github.io/pain-tracker/preview/pr-{number}/`
 - **Lifespan**: Duration of PR + 7 days
 
+ 
 ### 2. Staging
 - **Purpose**: Integration testing and QA
 - **Trigger**: Push to `develop` branch
 - **URL**: `https://crisiscore-systems.github.io/pain-tracker/staging/`
 - **Environment**: `staging`
 
+ 
 ### 3. Production
 - **Purpose**: Live application for end users
 - **Trigger**: Release workflow on `main` branch
@@ -62,6 +65,7 @@ flowchart TD
 ### Automatic Deployments
 
 #### Preview Deployment
+
 ```bash
 # Triggered automatically on PR creation/update
 # No manual intervention required
@@ -70,7 +74,12 @@ flowchart TD
 npm run deploy:status
 ```
 
+> ℹ️ **Current limitation**: The preview workflow runs through build/test stages and uploads the generated site bundle as an artifact with accompanying logs, but it does not publish those artifacts to GitHub Pages yet.
+
+> TODO: To graduate the preview simulation into a real deployment we need to provision a GitHub token with `pages` and `contents` write scopes, decide on a persistent preview branch or PR-specific Pages environments, and update the workflow to push the built assets (or call `actions/deploy-pages`) instead of stopping at the artifact upload stage.
+
 #### Staging Deployment
+
 ```bash
 # Triggered automatically on push to develop
 git checkout develop
@@ -81,6 +90,7 @@ npm run deploy:staging
 ```
 
 #### Production Deployment
+
 ```bash
 # Triggered via release workflow
 npm run release:patch  # or minor/major
@@ -88,7 +98,8 @@ npm run release:patch  # or minor/major
 
 ### Manual Deployments
 
-#### Using npm scripts:
+#### Using npm scripts
+
 ```bash
 # Check deployment status
 npm run deploy:status
@@ -106,7 +117,8 @@ npm run deploy:healthcheck
 npm run deploy:validate
 ```
 
-#### Using Make commands:
+#### Using Make commands
+
 ```bash
 # Show deployment status
 make deploy-status
@@ -135,6 +147,7 @@ We follow [Semantic Versioning](https://semver.org/):
 ### Release Types
 
 #### Patch Release (Bug Fixes)
+
 ```bash
 npm run release:patch
 # or
@@ -142,6 +155,7 @@ make release-patch
 ```
 
 #### Minor Release (New Features)
+
 ```bash
 npm run release:minor
 # or
@@ -149,6 +163,7 @@ make release-minor
 ```
 
 #### Major Release (Breaking Changes)
+
 ```bash
 npm run release:major
 # or

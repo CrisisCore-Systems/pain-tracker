@@ -1,5 +1,7 @@
 ﻿/// <reference types="vitest" />
 import { defineConfig } from 'vite';
+import fs from 'node:fs';
+import path from 'node:path';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
@@ -12,6 +14,37 @@ const isProd = process.env.NODE_ENV === 'production';
 export default defineConfig({
   plugins: [
     react(),
+    // Write a simple meta.json with output sizes for bundle badge generation
+    {
+      name: 'write-bundle-meta',
+      apply: 'build',
+      configResolved(cfg) {
+        // @ts-expect-error Vite types
+        this.__outDir = cfg.build?.outDir || 'dist';
+      },
+      closeBundle() {
+        // @ts-expect-error passthrough
+        const outDir: string = this.__outDir || 'dist';
+        const abs = path.isAbsolute(outDir) ? outDir : path.join(process.cwd(), outDir);
+        const outputs: Record<string, { bytes: number }> = {};
+
+        function walk(dir: string) {
+          for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+            const full = path.join(dir, entry.name);
+            if (entry.isDirectory()) walk(full);
+            else if (/\.(js|css|map)$/.test(entry.name)) {
+              const stat = fs.statSync(full);
+              const rel = path.relative(abs, full).replace(/\\/g, '/');
+              outputs[rel] = { bytes: stat.size };
+            }
+          }
+        }
+
+        if (fs.existsSync(abs)) walk(abs);
+        const metaPath = path.join(abs, 'meta.json');
+        fs.writeFileSync(metaPath, JSON.stringify({ outputs }, null, 2), 'utf8');
+      }
+    },
     {
       name: 'security-headers',
       configureServer(server) {

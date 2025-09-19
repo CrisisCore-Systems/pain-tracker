@@ -1,72 +1,189 @@
 ﻿import { useMemo } from "react";
 import type { PainEntry, WCBReport } from "../../types";
+import { analyzeTreatmentChanges, analyzeWorkImpact } from "../../utils/wcbAnalytics";
 
 interface WCBReportGeneratorProps {
   entries: PainEntry[];
   period: {
     start: string;
-    end: string;
   };
+    end: string;
 }
 
+const BASE_RECOMMENDATIONS = [
+  "Continue monitoring pain levels",
+  "Follow up with healthcare provider",
+  "Modify work duties as needed"
+];
+
+const createEmptyReport = (period: WCBReport["period"]): WCBReport => ({
+  period,
+  painTrends: {
+    average: 0,
+    progression: [],
+    locations: {}
+  },
+  workImpact: {
+    missedDays: 0,
+    limitations: [],
+    accommodationsNeeded: []
+  },
+  functionalAnalysis: {
+    limitations: [],
+    deterioration: [],
+    improvements: []
+  },
+  treatments: {
+    current: [],
+    effectiveness: "No treatment data recorded."
+  },
+  recommendations: [
+    "No entries available for the selected period. Maintain regular logging to build a comprehensive record."
+  ]
+});
+
 export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps) {
-  const report = useMemo(() => {
+  const report = useMemo((): WCBReport => {
+    const periodStart = new Date(period.start);
+    const periodEnd = new Date(period.end);
+
+    if (Number.isNaN(periodStart.getTime()) || Number.isNaN(periodEnd.getTime())) {
+      return createEmptyReport(period);
+    }
+
     const filteredEntries = entries.filter(entry => {
-      const date = new Date(entry.timestamp);
-      return date >= new Date(period.start) && date <= new Date(period.end);
+      const timestamp = new Date(entry.timestamp);
+      if (Number.isNaN(timestamp.getTime())) {
+        return false;
+      }
+
+      return timestamp >= periodStart && timestamp <= periodEnd;
     });
 
-    // Calculate pain trends
-    const painLevels = filteredEntries.map(e => e.baselineData.pain);
-    const average = painLevels.reduce((a, b) => a + b, 0) / painLevels.length;
+    if (filteredEntries.length === 0) {
+      return createEmptyReport(period);
+    }
 
-    // Track pain locations frequency
-    const locationFrequency = filteredEntries.reduce((acc, entry) => {
-      entry.baselineData.locations.forEach(location => {
-        acc[location] = (acc[location] || 0) + 1;
+    const sortedEntries = [...filteredEntries].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    );
+
+    const painLevels = sortedEntries.map(entry => entry.baselineData.pain);
+    const painSum = painLevels.reduce((total, level) => total + level, 0);
+    const averagePain = painLevels.length > 0 ? painSum / painLevels.length : 0;
+
+    const locationFrequency = sortedEntries.reduce((acc, entry) => {
+      entry.baselineData.locations?.forEach(location => {
+        const normalized = location.trim() || "Unspecified";
+        acc[normalized] = (acc[normalized] || 0) + 1;
       });
       return acc;
     }, {} as Record<string, number>);
 
-    // Analyze functional limitations
-    const limitations = Array.from(new Set(
-      filteredEntries.flatMap(e => e.functionalImpact?.limitedActivities || [])
-    ));
+    const limitationSources = [
+      filteredEntries.flatMap(entry => entry.functionalImpact?.limitedActivities ?? []),
+      filteredEntries.flatMap(entry => entry.workImpact?.workLimitations ?? []),
+      filteredEntries.flatMap(entry => entry.comparison?.newLimitations ?? [])
+    ];
 
-    // Track changes over time
-    const sortedEntries = [...filteredEntries].sort((a, b) => 
-      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-    );
+    const limitations = Array.from(new Set(limitationSources.flat())).sort();
 
     const deterioration: string[] = [];
     const improvements: string[] = [];
-    let prevPain = sortedEntries[0]?.baselineData.pain;
 
-    sortedEntries.forEach(entry => {
-      if (entry.baselineData.pain > prevPain + 2) {
-        deterioration.push(`Pain increased significantly on ${new Date(entry.timestamp).toLocaleDateString()}`);
-      } else if (entry.baselineData.pain < prevPain - 2) {
-        improvements.push(`Pain decreased significantly on ${new Date(entry.timestamp).toLocaleDateString()}`);
+    sortedEntries.forEach((entry, index) => {
+      if (index === 0) {
+        return;
       }
-      prevPain = entry.baselineData.pain;
+
+      const previousPain = sortedEntries[index - 1].baselineData.pain;
+      const currentPain = entry.baselineData.pain;
+      const painDelta = currentPain - previousPain;
+      const formattedDate = new Date(entry.timestamp).toLocaleDateString();
+
+      if (painDelta >= 2) {
+        deterioration.push(`Pain increased significantly on ${formattedDate}`);
+      } else if (painDelta <= -2) {
+        improvements.push(`Pain decreased significantly on ${formattedDate}`);
+      }
     });
 
-    const report: WCBReport = {
+    const { missedDays, commonLimitations } = analyzeWorkImpact(filteredEntries);
+
+    const accommodationsNeeded = Array.from(
+      new Set(filteredEntries.flatMap(entry => entry.workImpact?.modifiedDuties ?? []))
+    ).sort();
+
+    const currentTreatments = analyzeTreatmentChanges(filteredEntries).slice(0, 5);
+
+    const treatmentEffectivenessFeedback = filteredEntries
+      .flatMap(entry => [
+        entry.treatments?.effectiveness ?? "",
+        ...((entry.treatments?.recent ?? []).map(treatment => treatment.effectiveness ?? ""))
+      ])
+      .map(effectiveness => effectiveness.trim())
+      .filter(Boolean);
+
+    let effectivenessSummary = "No treatment data recorded.";
+
+    if (treatmentEffectivenessFeedback.length > 0) {
+      const effectivenessCounts = treatmentEffectivenessFeedback.reduce(
+        (acc, feedback) => {
+          acc.set(feedback, (acc.get(feedback) ?? 0) + 1);
+          return acc;
+        },
+        new Map<string, number>()
+      );
+
+      const rankedEffectiveness = Array.from(effectivenessCounts.entries()).sort(
+        (a, b) => b[1] - a[1]
+      );
+
+      const [primaryLabel, primaryCount] = rankedEffectiveness[0];
+      const totalFeedback = treatmentEffectivenessFeedback.length;
+      const primaryShare = Math.round((primaryCount / totalFeedback) * 100);
+
+      const secondaryInsights = rankedEffectiveness
+        .slice(1)
+        .map(([label, count]) => `${label} (${count})`);
+
+      effectivenessSummary = `${primaryLabel} (${primaryShare}% of ${totalFeedback} reports)`;
+
+      if (secondaryInsights.length > 0) {
+        effectivenessSummary += `; other feedback: ${secondaryInsights.join(", ")}`;
+      }
+    }
+
+    const recommendations = [...BASE_RECOMMENDATIONS];
+
+    if (averagePain >= 7) {
+      recommendations.unshift("Elevated pain levels detected; consider clinical reassessment.");
+    }
+
+    if (missedDays > 0) {
+      recommendations.push("Document missed work days for employer or insurer discussions.");
+    }
+
+    if (accommodationsNeeded.length > 0) {
+      recommendations.push("Review workplace accommodations to ensure ongoing suitability.");
+    }
+
+    return {
       period,
       painTrends: {
-        average,
-        progression: sortedEntries.map(e => ({
-          date: e.timestamp,
-          pain: e.baselineData.pain,
-          locations: e.baselineData.locations || [],
-          symptoms: e.baselineData.symptoms || []
+        average: Number.isFinite(averagePain) ? averagePain : 0,
+        progression: sortedEntries.map(entry => ({
+          date: entry.timestamp,
+          pain: entry.baselineData.pain,
+          locations: entry.baselineData.locations ?? [],
+          symptoms: entry.baselineData.symptoms ?? []
         })),
         locations: locationFrequency
       },
       workImpact: {
-        missedDays: 0, // TODO: Calculate from entries
-        limitations: [], // TODO: Calculate from entries
-        accommodationsNeeded: [] // TODO: Calculate from entries
+        missedDays,
+        limitations: commonLimitations,
+        accommodationsNeeded
       },
       functionalAnalysis: {
         limitations,
@@ -74,17 +191,11 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
         improvements
       },
       treatments: {
-        current: [], // TODO: Extract from entries
-        effectiveness: '' // TODO: Analyze effectiveness
+        current: currentTreatments,
+        effectiveness: effectivenessSummary
       },
-      recommendations: [
-        "Continue monitoring pain levels",
-        "Follow up with healthcare provider",
-        "Modify work duties as needed"
-      ]
+      recommendations
     };
-
-    return report;
   }, [entries, period]);
 
   return (
@@ -102,13 +213,46 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <p>Average Pain Level: {report.painTrends.average.toFixed(1)}</p>
           <div className="mt-2">
             <h4 className="text-sm font-medium">Common Locations:</h4>
-            <ul className="list-disc pl-5">
-              {Object.entries(report.painTrends.locations)
-                .sort(([,a], [,b]) => b - a)
-                .map(([location, count]) => (
-                  <li key={location}>{location}: {count} occurrences</li>
+            {Object.keys(report.painTrends.locations).length === 0 ? (
+              <p className="text-sm text-gray-500">No pain location data recorded.</p>
+            ) : (
+              <ul className="list-disc pl-5">
+                {Object.entries(report.painTrends.locations)
+                  .sort(([, a], [, b]) => b - a)
+                  .map(([location, count]) => (
+                    <li key={location}>{location}: {count} occurrences</li>
+                  ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-medium">Work Impact</h3>
+          <p>Missed Days: {report.workImpact.missedDays}</p>
+          <div className="mt-2">
+            <h4 className="text-sm font-medium">Common Limitations:</h4>
+            {report.workImpact.limitations.length === 0 ? (
+              <p className="text-sm text-gray-500">No work limitations reported.</p>
+            ) : (
+              <ul className="list-disc pl-5">
+                {report.workImpact.limitations.map(([limitation, frequency]) => (
+                  <li key={limitation}>{limitation}: {frequency} occurrences</li>
                 ))}
-            </ul>
+              </ul>
+            )}
+          </div>
+          <div className="mt-2">
+            <h4 className="text-sm font-medium">Accommodations Needed:</h4>
+            {report.workImpact.accommodationsNeeded.length === 0 ? (
+              <p className="text-sm text-gray-500">No accommodations documented.</p>
+            ) : (
+              <ul className="list-disc pl-5">
+                {report.workImpact.accommodationsNeeded.map(accommodation => (
+                  <li key={accommodation}>{accommodation}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -116,11 +260,15 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <h3 className="font-medium">Functional Analysis</h3>
           <div className="mt-2">
             <h4 className="text-sm font-medium">Limitations:</h4>
-            <ul className="list-disc pl-5">
-              {report.functionalAnalysis.limitations.map(limitation => (
-                <li key={limitation}>{limitation}</li>
-              ))}
-            </ul>
+            {report.functionalAnalysis.limitations.length === 0 ? (
+              <p className="text-sm text-gray-500">No functional limitations reported.</p>
+            ) : (
+              <ul className="list-disc pl-5">
+                {report.functionalAnalysis.limitations.map(limitation => (
+                  <li key={limitation}>{limitation}</li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
@@ -130,8 +278,8 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
             <div className="mt-2">
               <h4 className="text-sm font-medium">Deterioration:</h4>
               <ul className="list-disc pl-5">
-                {report.functionalAnalysis.deterioration.map((item, i) => (
-                  <li key={i}>{item}</li>
+                {report.functionalAnalysis.deterioration.map((item, index) => (
+                  <li key={item + index}>{item}</li>
                 ))}
               </ul>
             </div>
@@ -140,19 +288,39 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
             <div className="mt-2">
               <h4 className="text-sm font-medium">Improvements:</h4>
               <ul className="list-disc pl-5">
-                {report.functionalAnalysis.improvements.map((item, i) => (
-                  <li key={i}>{item}</li>
+                {report.functionalAnalysis.improvements.map((item, index) => (
+                  <li key={item + index}>{item}</li>
                 ))}
               </ul>
             </div>
           )}
+          {report.functionalAnalysis.deterioration.length === 0 &&
+            report.functionalAnalysis.improvements.length === 0 && (
+              <p className="text-sm text-gray-500">No significant pain changes detected.</p>
+            )}
+        </div>
+
+        <div>
+          <h3 className="font-medium">Treatments</h3>
+          {report.treatments.current.length === 0 ? (
+            <p className="text-sm text-gray-500">No active treatments recorded.</p>
+          ) : (
+            <ul className="list-disc pl-5">
+              {report.treatments.current.map(treatment => (
+                <li key={treatment.treatment}>
+                  {treatment.treatment}: {treatment.frequency} entries
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-2 text-sm text-gray-700">{report.treatments.effectiveness}</p>
         </div>
 
         <div>
           <h3 className="font-medium">Recommendations</h3>
           <ul className="list-disc pl-5">
-            {report.recommendations.map((recommendation, i) => (
-              <li key={i}>{recommendation}</li>
+            {report.recommendations.map(recommendation => (
+              <li key={recommendation}>{recommendation}</li>
             ))}
           </ul>
         </div>

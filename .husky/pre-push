@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Pre-push hook: ensure dynamic badges are up to date on main branch.
+# Skips on non-main branches or if CI environment.
+
+set -euo pipefail
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD || echo "")
+if [ "$BRANCH" != "main" ]; then
+  echo "[pre-push] Not on main (current: $BRANCH) - skipping badge generation." >&2
+  exit 0
+fi
+
+if [ -n "${CI:-}" ]; then
+  echo "[pre-push] Running in CI - skip." >&2
+  exit 0
+fi
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "[pre-push] npm not available - skipping." >&2
+  exit 0
+fi
+
+echo "[pre-push] Generating dynamic badges..." >&2
+npm run -s badge:all || echo "[pre-push] badge:all failed (continuing, will not block push)." >&2
+
+# Also generate LOC badge if script exists
+if npm run | grep -q 'badge:loc'; then
+  npm run -s badge:loc || echo "[pre-push] badge:loc failed." >&2
+fi
+
+git add badges/*.json || true
+if ! git diff --cached --quiet; then
+  # Amend last commit if it is within last 5 minutes to avoid noise; else create new commit
+  LAST_COMMIT_TIME=$(git log -1 --format=%ct || echo 0)
+  NOW=$(date +%s)
+  if [ $((NOW - LAST_COMMIT_TIME)) -lt 300 ]; then
+    echo "[pre-push] Amending last commit with updated badges." >&2
+    git commit --amend --no-edit || true
+  else
+    echo "[pre-push] Creating new commit for badge updates." >&2
+    git commit -m "chore(badges): auto-update dynamic badges" || true
+  fi
+else
+  echo "[pre-push] No badge changes detected." >&2
+fi
+
+exit 0

@@ -104,6 +104,11 @@ pain-tracker-offline (Database)
 
 - **High**: Pain entries, emergency data`n`n- **Medium**: Entry updates, settings changes`n`n- **Low**: Analytics data, activity logs
 
+#### Registered Background Sync Tags
+
+- **`pain-tracker-sync`**: Default queue trigger used when connectivity is restored or a manual resync is requested.
+- **`health-data-sync`**: Additional tag enabled by `pwaManager.enableHealthDataSync()` for health-specific flows; it reuses the same offline queue processing as the default sync event.
+
 #### Retry Logic
 
 - **Initial Retry**: 1 second delay`n`n- **Second Retry**: 5 second delay`n`n- **Third Retry**: 15 second delay`n`n- **Maximum Retries**: 3 attempts`n`n- **Exponential Backoff**: For subsequent failures

@@ -1,0 +1,48 @@
+name: Coverage
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install
+        run: npm ci --legacy-peer-deps
+      - name: Run Coverage
+        run: npm run test:coverage -- --reporter=json-summary
+      - name: Generate Test Badge
+        run: node scripts/generate-test-badge.mjs
+      - name: Generate Coverage Badge
+        run: node scripts/generate-coverage-badge.mjs
+      - name: Generate Security Badge
+        run: node scripts/generate-security-badge.mjs
+      - name: Upload Coverage Summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary
+          path: coverage/coverage-summary.json
+      - name: Commit badge (push only)
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add badges/test-badge.json badges/coverage-badge.json badges/security-badge.json
+          git diff --cached --quiet || git commit -m "ci(badge): update test count badge" || echo "No changes"
+          git push
+      - name: Coverage Summary Echo
+        run: |
+          if [ -f coverage/coverage-summary.json ]; then
+            cat coverage/coverage-summary.json
+          fi
