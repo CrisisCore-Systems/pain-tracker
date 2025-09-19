@@ -284,19 +284,21 @@ describe('PainTracker', () => {
   });
 
   describe('Error Handling', () => {
-    it('handles localStorage access errors gracefully', () => {
+  it('handles localStorage access errors gracefully', async () => {
       // Mock localStorage.getItem to throw for pain entries but allow theme storage
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'painEntries') {
+      // App reads via secureStorage with namespaced key and falls back to 'pain_tracker_entries'
+      mockLocalStorage.getItem.mockImplementation((key: unknown) => {
+        const k = String(key);
+        if (k.includes('pain_tracker_entries') || k.includes('pt:pain_tracker_entries')) {
           throw new Error('Failed to access localStorage');
         }
         return null; // Allow theme and other localStorage access
       });
       
-      render(<PainTracker />, { wrapper: TestWrapper });
+  render(<PainTracker />, { wrapper: TestWrapper });
       
-      // Should show an error message
-      expect(screen.getByText(/Unable to load pain entries/i)).toBeInTheDocument();
+  // Should show an error message (async effect)
+  expect(await screen.findByText(/Unable to load pain entries/i)).toBeInTheDocument();
       
       // Should still render the form for new entries
       expect(screen.getByText(/Record Pain Entry/i)).toBeInTheDocument();

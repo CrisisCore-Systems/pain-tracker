@@ -37,8 +37,8 @@ if ! git diff --cached --quiet; then
     echo "[pre-push] Amending last commit with updated badges." >&2
     git commit --amend --no-edit || true
   else
-    echo "[pre-push] Creating new commit for badge updates." >&2
-    git commit -m "chore(badges): auto-update dynamic badges" || true
+  echo "[pre-push] Creating new commit for badge updates." >&2
+  git commit -m "chore(badges): Auto-update dynamic badges" || true
   fi
 else
   echo "[pre-push] No badge changes detected." >&2
