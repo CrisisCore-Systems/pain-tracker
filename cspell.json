@@ -38,7 +38,11 @@
     "confetti",
     "pathologizing",
     "Syncable",
-    "periodicsync"
+  "periodicsync",
+  "forcSync",
+  "brightgreen",
+  "yellowgreen",
+  "forc"
   ],
   "flagWords": [],
   "ignorePaths": [

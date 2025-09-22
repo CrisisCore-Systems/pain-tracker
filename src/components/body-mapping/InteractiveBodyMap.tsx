@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Palette, RotateCcw, Info } from 'lucide-react';
+import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
 
 interface BodyRegion {
@@ -199,7 +200,7 @@ export function InteractiveBodyMap({
                   fill="#374151"
                 >
                   {mode === 'heatmap' && getPainLevelForRegion(region.id) > 0 
-                    ? getPainLevelForRegion(region.id).toFixed(1)
+                    ? formatNumber(getPainLevelForRegion(region.id), 1)
                     : ''}
                 </text>
               </g>
@@ -213,9 +214,9 @@ export function InteractiveBodyMap({
             <div className="font-medium">
               {BODY_REGIONS.find(r => r.id === hoveredRegion)?.name}
             </div>
-            {mode === 'heatmap' && (
+              {mode === 'heatmap' && (
               <div className="text-xs">
-                Pain Level: {getPainLevelForRegion(hoveredRegion).toFixed(1)}/10
+                Pain Level: {formatNumber(getPainLevelForRegion(hoveredRegion), 1)}/10
               </div>
             )}
             {mode === 'selection' && (

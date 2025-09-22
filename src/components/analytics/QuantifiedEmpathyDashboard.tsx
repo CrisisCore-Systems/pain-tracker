@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-system';
 import { 
   Heart, Brain, Lightbulb, Target, TrendingUp, Award, 
@@ -169,7 +170,7 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
         id: 'high-life-satisfaction',
         type: 'celebration',
         title: 'Strong Life Satisfaction',
-        description: `Your overall life satisfaction of ${wellbeing.qualityOfLife.overallSatisfaction.toFixed(0)}% reflects resilience and positive adaptation despite challenges.`,
+        description: `Your overall life satisfaction of ${formatNumber(wellbeing.qualityOfLife.overallSatisfaction, 0)}% reflects resilience and positive adaptation despite challenges.`,
         confidence: 90,
         actionable: false,
         personalized: true,

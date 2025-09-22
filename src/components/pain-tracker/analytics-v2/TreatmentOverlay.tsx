@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { formatNumber } from '../../../utils/formatting';
 import {
   LineChart,
   Line,
@@ -235,7 +236,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
                   <div>• Total treatments recorded: {treatmentDates.size}</div>
                   <div>• Medication changes recorded: {medicationDates.size}</div>
                   <div>• Pain range: {Math.min(...chartData.map(d => d.pain))} - {Math.max(...chartData.map(d => d.pain))}/10</div>
-                  <div>• Average pain level: {(chartData.reduce((sum, d) => sum + d.pain, 0) / chartData.length).toFixed(1)}/10</div>
+                  <div>• Average pain level: {formatNumber((chartData.reduce((sum, d) => sum + d.pain, 0) / chartData.length), 1)}/10</div>
                 </>
               );
             })()}

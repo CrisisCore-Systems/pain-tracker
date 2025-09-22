@@ -20,6 +20,26 @@ import {
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
+// Minimal, local SpeechRecognition-like typings to avoid relying on lib.dom variants
+declare global {
+  interface Window {
+    webkitSpeechRecognition?: { new(): SpeechRecognitionLike };
+    SpeechRecognition?: { new(): SpeechRecognitionLike };
+  }
+}
+
+interface SpeechRecognitionLike {
+  continuous: boolean;
+  interimResults: boolean;
+  start(): void;
+  stop(): void;
+  onresult: (event: SpeechRecognitionEventLike) => void;
+}
+
+interface SpeechRecognitionEventLike {
+  results: Iterable<{ 0: { transcript: string } }>;
+}
+
 // Multi-modal input types
 interface InputMethod {
   id: string;
@@ -69,26 +89,23 @@ function useVoiceRecognition(): VoiceRecognitionHook {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isSupported, setIsSupported] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const win = window as unknown as Window;
+    const SpeechRecognitionCtor = win.webkitSpeechRecognition || win.SpeechRecognition;
+
+    if (SpeechRecognitionCtor) {
       setIsSupported(true);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      
+      recognitionRef.current = new SpeechRecognitionCtor();
+
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
-      
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      recognitionRef.current.onresult = (event: any) => {
+
+      recognitionRef.current.onresult = (event: SpeechRecognitionEventLike) => {
         const transcript = Array.from(event.results)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((result: any) => result[0])
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .map((result: any) => result.transcript)
+          .map(result => result[0])
+          .map(r => r.transcript)
           .join('');
         setTranscript(transcript);
       };

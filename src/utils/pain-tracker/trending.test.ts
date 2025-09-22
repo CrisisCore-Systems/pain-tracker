@@ -137,9 +137,12 @@ describe('Pain Tracker Trending Analysis', () => {
 
     it('should calculate time of day patterns correctly', () => {
       const result = analyzeTrends(mockEntries);
-      expect(result.timeOfDayPattern).toHaveProperty('08:00');
-      expect(result.timeOfDayPattern).toHaveProperty('14:00');
-      expect(result.timeOfDayPattern).toHaveProperty('09:00');
+      const key1 = new Date('2024-01-01T08:00:00Z').getHours().toString().padStart(2, '0') + ':00';
+      const key2 = new Date('2024-01-01T14:00:00Z').getHours().toString().padStart(2, '0') + ':00';
+      const key3 = new Date('2024-01-02T09:00:00Z').getHours().toString().padStart(2, '0') + ':00';
+      expect(result.timeOfDayPattern).toHaveProperty(key1);
+      expect(result.timeOfDayPattern).toHaveProperty(key2);
+      expect(result.timeOfDayPattern).toHaveProperty(key3);
     });
 
     it('should calculate location frequency correctly', () => {

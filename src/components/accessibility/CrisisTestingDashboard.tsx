@@ -4,6 +4,7 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { useCrisisDetection } from './useCrisisDetection';
 import { useCrisisMode } from './useCrisisMode';
 import { StressAdaptiveButton, StressResponsiveCard, StressResponsiveText } from './StressResponsiveUI';
@@ -494,7 +495,7 @@ export function CrisisTestingDashboard() {
 
                   <div className="grid md:grid-cols-3 gap-4 text-sm">
                     <div>
-                      <strong>Response Time:</strong> {result.metrics.responseTime.toFixed(1)}s
+                      <strong>Response Time:</strong> {formatNumber(result.metrics.responseTime, 1)}s
                     </div>
                     <div>
                       <strong>Adaptation Speed:</strong> {result.metrics.adaptationSpeed}/5

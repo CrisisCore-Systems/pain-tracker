@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatNumber } from '../../../utils/formatting';
 import { format } from 'date-fns';
 import type { PainEntry } from '../../../types';
 
@@ -134,7 +135,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-gray-50 p-3 rounded">
               <div className="text-sm text-gray-600">Average Pain Level</div>
-              <div className="text-xl font-bold">{avgPain.toFixed(1)}/10</div>
+              <div className="text-xl font-bold">{formatNumber(avgPain, 1)}/10</div>
             </div>
             <div className="bg-gray-50 p-3 rounded">
               <div className="text-sm text-gray-600">Current Pain Level</div>

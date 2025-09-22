@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { 
   Activity, 
   TrendingUp, 
@@ -631,7 +632,7 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
           <div className="text-center">
             <div className="font-medium text-gray-900">Average</div>
             <div className="text-gray-600">
-              {(history.reduce((sum, h) => sum + getStressNumeric(h.level), 0) / history.length).toFixed(1)}
+              {formatNumber(history.reduce((sum, h) => sum + getStressNumeric(h.level), 0) / history.length, 1)}
             </div>
           </div>
           <div className="text-center">

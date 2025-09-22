@@ -29,6 +29,51 @@ Object.defineProperty(window, 'matchMedia', {
   disconnect: vi.fn(),
 }));
 
+// Mock canvas getContext for chart libraries (jsdom doesn't implement canvas)
+try {
+  // Try to wire node-canvas into jsdom for higher fidelity canvas support in tests.
+  // This is optional at runtime; if `canvas` isn't installed (for contributors), we fall back to a minimal stub.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { createCanvas, CanvasRenderingContext2D } = require('canvas');
+
+  // Attach a minimal implementation to document if not present
+  // @ts-expect-error - augmenting global for test env
+  if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
+    // Replace getContext to return a real CanvasRenderingContext2D from node-canvas
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (HTMLCanvasElement.prototype as any).getContext = function (type?: string) {
+      // create a small backing canvas for Chart.js to draw into
+      const c = createCanvas(800, 600);
+      return c.getContext(type || '2d');
+    };
+  }
+} catch {
+  // canvas not installed or failed to load — fall back to previous minimal stub
+  if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (HTMLCanvasElement.prototype as any).getContext = function () {
+      // return a minimal stub that Chart.js will accept for creation
+      return {
+        canvas: this,
+        // context methods used by Chart.js internals
+        getContext: () => ({}),
+        measureText: () => ({ width: 0 }),
+        fillRect: () => {},
+        clearRect: () => {},
+        beginPath: () => {},
+        arc: () => {},
+        fill: () => {},
+        stroke: () => {},
+        moveTo: () => {},
+        lineTo: () => {},
+        closePath: () => {},
+        setLineDash: () => {},
+        getLineDash: () => [],
+      };
+  };
+  }
+}
+
 // Cleanup after each test case
 afterEach(() => {
   cleanup();

@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { PainAnalytics } from './PainAnalytics';
 import type { PainEntry } from '../../types';
+import { formatNumber } from '../../utils/formatting';
 
 describe('PainAnalytics', () => {
   const mockEntries: PainEntry[] = [
@@ -93,8 +94,8 @@ describe('PainAnalytics', () => {
 
   it('displays correct average pain', () => {
     render(<PainAnalytics entries={mockEntries} />);
-    const avgPain = (5 + 7) / 2;
-    expect(screen.getByText(avgPain.toFixed(1))).toBeInTheDocument();
+  const avgPain = (5 + 7) / 2;
+  expect(screen.getByText(formatNumber(avgPain, 1))).toBeInTheDocument();
   });
 
   it('shows pain trend information', () => {
@@ -124,6 +125,6 @@ describe('PainAnalytics', () => {
   it('handles empty entries gracefully', () => {
     render(<PainAnalytics entries={[]} />);
     expect(screen.getByText('Average Pain')).toBeInTheDocument();
-    expect(screen.getByText('0.0')).toBeInTheDocument();
+  expect(screen.getByText(formatNumber(0, 1))).toBeInTheDocument();
   });
 }); 

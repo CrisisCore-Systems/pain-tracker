@@ -2,6 +2,7 @@
 // Reinforces user control, choice, and empowerment
 
 import React, { useState, useEffect } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-system';
 import { User, Shield, CheckCircle, Lightbulb, Target, Settings, MessageSquare, Heart } from 'lucide-react';
 import type { PainEntry } from '../../types';
@@ -11,7 +12,7 @@ interface UserAgencyDashboardProps {
   userId: string;
   onChoiceMade?: (choice: string, category: string) => void;
   onGoalSet?: (goal: string) => void;
-  onPreferenceUpdated?: (preference: string, value: any) => void;
+  onPreferenceUpdated?: (preference: string, value: unknown) => void;
 }
 
 interface AgencyMetric {
@@ -306,7 +307,7 @@ export const UserAgencyDashboard: React.FC<UserAgencyDashboardProps> = ({
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-semibold text-gray-800">{metric.name}</h4>
                   <span className="text-2xl font-bold text-gray-700">
-                    {metric.value.toFixed(0)}%
+                    {formatNumber(metric.value, 0)}%
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
@@ -568,7 +569,7 @@ export const UserAgencyDashboard: React.FC<UserAgencyDashboardProps> = ({
       {/* Tab Navigation */}
       <div className="flex justify-center mb-6">
         <div className="bg-white rounded-lg p-1 border">
-          {[
+      {[
             { key: 'overview', label: 'Overview', icon: User },
             { key: 'choices', label: 'Your Choices', icon: Settings },
             { key: 'actions', label: 'Take Action', icon: Target },
@@ -576,7 +577,7 @@ export const UserAgencyDashboard: React.FC<UserAgencyDashboardProps> = ({
           ].map(({ key, label, icon: Icon }) => (
             <button
               key={key}
-              onClick={() => setActiveTab(key as any)}
+        onClick={() => setActiveTab(key as 'overview' | 'choices' | 'actions' | 'goals')}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                 activeTab === key
                   ? 'bg-blue-500 text-white'

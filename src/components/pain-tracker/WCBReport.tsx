@@ -1,4 +1,5 @@
 ﻿import { useMemo } from "react";
+import { formatNumber } from "../../utils/formatting";
 import type { PainEntry, WCBReport } from "../../types";
 import { analyzeTreatmentChanges, analyzeWorkImpact } from "../../utils/wcbAnalytics";
 
@@ -6,8 +7,8 @@ interface WCBReportGeneratorProps {
   entries: PainEntry[];
   period: {
     start: string;
-  };
     end: string;
+  };
 }
 
 const BASE_RECOMMENDATIONS = [
@@ -210,7 +211,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
 
         <div>
           <h3 className="font-medium">Pain Trends</h3>
-          <p>Average Pain Level: {report.painTrends.average.toFixed(1)}</p>
+          <p>Average Pain Level: {formatNumber(report.painTrends.average, 1)}</p>
           <div className="mt-2">
             <h4 className="text-sm font-medium">Common Locations:</h4>
             {Object.keys(report.painTrends.locations).length === 0 ? (

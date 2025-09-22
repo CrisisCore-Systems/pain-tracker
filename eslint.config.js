@@ -9,7 +9,7 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
-    ignores: ['dist/**', 'node_modules/**', '*.config.cjs', '**/*.min.js'],
+  ignores: ['dist/**', 'node_modules/**', '*.config.cjs', '**/*.min.js', 'coverage/**'],
   },
   {
     files: ['**/*.{ts,tsx,js,jsx,mjs}'],

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { PainEntry } from '../../types';
 import { format } from 'date-fns';
+import { formatNumber } from '../../utils/formatting';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface ActivityLogProps {
@@ -119,7 +120,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                   }`}
                   role="gridcell"
                   aria-selected={selectedActivity === activity}
-                  aria-label={`${activity}: ${frequency} times, average pain ${averagePain.toFixed(1)}`}
+                  aria-label={`${activity}: ${frequency} times, average pain ${formatNumber(averagePain, 1)}`}
                   tabIndex={activityImpact.length === 0 ? -1 : (focusedIndex === index ? 0 : -1)}
                 >
                   <div className="font-medium">{activity}</div>
@@ -127,7 +128,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                     Frequency: {frequency} times
                   </div>
                   <div className="text-sm text-gray-600">
-                    Avg. Pain: {averagePain.toFixed(1)}
+                    Avg. Pain: {formatNumber(averagePain, 1)}
                   </div>
                 </button>
               ))}

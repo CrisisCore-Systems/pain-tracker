@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
 import { 
   TrendingUp, TrendingDown, Minus, Heart, Activity, 
@@ -469,7 +470,7 @@ export function HolisticProgressTracker({
                 <Activity className="w-5 h-5 text-green-500" />
                 <div>
                   <p className="text-sm font-medium">Recent Avg</p>
-                  <p className="text-xs text-gray-600">{trends.recentAvg.toFixed(1)}/10</p>
+                  <p className="text-xs text-gray-600">{formatNumber(trends.recentAvg, 1)}/10</p>
                 </div>
               </div>
               

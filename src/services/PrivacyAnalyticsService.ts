@@ -5,6 +5,8 @@
  */
 
 import { securityService } from './SecurityService';
+import { formatNumber } from '../utils/formatting';
+import { localDayStart } from '../utils/dates';
 import type { PainEntry } from '../types';
 
 // Privacy configuration
@@ -292,7 +294,7 @@ export class PrivacyPreservingAnalyticsService {
 
       const insights: AggregatedInsights = {
         totalUsers: Math.round(totalUsers),
-        averagePainLevel: Number(averagePainLevel.toFixed(1)),
+  averagePainLevel: Number(formatNumber(averagePainLevel, 1)),
         commonPainLocations: commonLocations,
         usagePatterns,
         privacyMetrics: {
@@ -446,9 +448,28 @@ export class PrivacyPreservingAnalyticsService {
 
   private calculateWeeklyAverage(painEvents: AnonymizedEvent[]): number {
     if (painEvents.length === 0) return 0;
-    
-    const weeks = Math.max(1, Math.ceil(this.config.dataRetentionDays / 7));
-    return painEvents.length / weeks;
+
+    // Compute average pain over the last 7 calendar days (today + previous 6 days)
+    const now = new Date();
+    const sevenDayWindowStart = new Date(localDayStart(now).getTime());
+    sevenDayWindowStart.setDate(sevenDayWindowStart.getDate() - 6); // inclusive of today
+
+    const recent = painEvents.filter(e => {
+      // Accept Date or string timestamps
+      const t = e.timestamp instanceof Date ? e.timestamp : new Date(String(e.timestamp));
+      return t >= sevenDayWindowStart;
+    });
+
+    if (recent.length === 0) return 0;
+
+    const total = recent.reduce((sum, event) => {
+      const painLevel = (event.metadata && (event.metadata.painLevel as number)) || 0;
+      return sum + painLevel;
+    }, 0);
+
+    const avg = total / recent.length;
+    // Clamp to expected pain scale (0-10)
+    return Math.max(0, Math.min(10, avg));
   }
 
   private getCommonPainLocations(): Array<{ location: string; frequency: number }> {

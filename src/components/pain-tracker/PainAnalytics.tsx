@@ -12,8 +12,9 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { format as formatDate } from 'date-fns';
+import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
-import { analyzeTrends, calculateStatistics } from '../../utils/pain-tracker/trending';
+import { analyzeTrends, calculateStatistics, buildDailySeries } from '../../utils/pain-tracker/trending';
 import { exportToCSV, exportToJSON, downloadData } from '../../utils/pain-tracker/export';
 import { ComparisonAnalytics, LocationHeatmap, TreatmentOverlay } from './analytics-v2';
 import { VisitSummary, ClinicalExports } from './clinician-export';
@@ -38,6 +39,10 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
   const trends = analyzeTrends(entries);
   const stats = calculateStatistics(entries);
 
+  // Central daily series shared across analytics visualizations (UTC date keys)
+  const dailySeries = buildDailySeries(entries);
+  const weeklyChartData = dailySeries.slice(-7).map(d => ({ date: d.date, pain: d.pain }));
+
   const tabs: Array<{ id: TabId; label: string; icon: string }> = [
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'comparison', label: 'Comparisons', icon: '📈' },
@@ -51,7 +56,10 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
 
   const timeOfDayData = Object.entries(trends.timeOfDayPattern).map(([hour, pain]) => ({
     hour,
-    avgPain: pain / entries.filter(e => formatDate(new Date(e.timestamp), 'HH:00') === hour).length
+    avgPain: pain / Math.max(1, entries.filter(e => {
+      const h = new Date(e.timestamp).getUTCHours();
+      return `${h.toString().padStart(2, '0')}:00` === hour;
+    }).length)
   }));
 
   const locationData = Object.entries(trends.locationFrequency).map(([location, frequency]) => ({
@@ -127,7 +135,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="stat-card">
                 <h3 className="text-gray-600">Average Pain</h3>
-                <p className="text-2xl font-bold">{stats.mean.toFixed(1)}</p>
+                <p className="text-2xl font-bold">{formatNumber(stats.mean, 1)}</p>
               </div>
               <div className="stat-card">
                 <h3 className="text-gray-600">Most Common Level</h3>
@@ -136,7 +144,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
               <div className="stat-card">
                 <h3 className="text-gray-600">Pain Trend</h3>
                 <p className="text-2xl font-bold">
-                  {trends.painTrends.increasing ? '↑' : '↓'} {Math.abs(trends.painTrends.averageChange).toFixed(1)}
+                  {trends.painTrends.increasing ? '↑' : '↓'} {formatNumber(Math.abs(trends.painTrends.averageChange), 1)}
                 </p>
               </div>
             </div>
@@ -151,13 +159,29 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                   <XAxis dataKey="hour" />
                   <YAxis domain={[0, 10]} />
                   <Tooltip />
-                  <Legend />
+                  <Legend wrapperStyle={{ whiteSpace: 'normal', maxWidth: 200 }} />
                   <Line
                     type="monotone"
                     dataKey="avgPain"
                     stroke="#8884d8"
                     name="Average Pain Level"
                   />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">Weekly Trend</h2>
+            <div className="h-48">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={weeklyChartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" tickFormatter={d => formatDate(new Date(d), 'EEE')} />
+                  <YAxis domain={[0, 10]} />
+                  <Tooltip />
+                  <Legend wrapperStyle={{ whiteSpace: 'normal', maxWidth: 200 }} />
+                  <Line type="monotone" dataKey="pain" stroke="#ef4444" name="Average" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -173,7 +197,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                     <XAxis dataKey="location" />
                     <YAxis />
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{ whiteSpace: 'normal', maxWidth: 200 }} />
                     <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
                     <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
                   </BarChart>
@@ -190,7 +214,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                     <XAxis dataKey="symptom" />
                     <YAxis />
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{ whiteSpace: 'normal', maxWidth: 200 }} />
                     <Bar dataKey="frequency" fill="#8884d8" name="Frequency" />
                     <Bar dataKey="avgPain" fill="#82ca9d" name="Avg Pain" />
                   </BarChart>

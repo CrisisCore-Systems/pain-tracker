@@ -2,6 +2,8 @@ import { useMemo } from 'react';
 import type { PainEntry } from '../../types';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { format, startOfDay, endOfDay } from 'date-fns';
+import { buildDailySeries } from '../../utils/pain-tracker/trending';
+import { formatNumber } from '../../utils/formatting';
 import { ErrorBoundary } from './ErrorBoundary';
 
 interface ProgressionAnalysisProps {
@@ -38,7 +40,7 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
             aria-hidden="true"
           />
           <span className="text-sm">
-            {item.name}: {item.value.toFixed(1)}
+            {item.name}: {item.value == null ? 'No entry' : formatNumber(item.value, 1)}
           </span>
         </div>
       ))}
@@ -65,34 +67,9 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
   const trendData = useMemo(() => {
     if (!filteredEntries.length) return [];
 
-    // Group entries by date
-    const dailyData = filteredEntries.reduce((acc, entry) => {
-      const date = format(new Date(entry.timestamp), 'yyyy-MM-dd');
-      if (!acc[date]) {
-        acc[date] = {
-          painLevels: [],
-          symptoms: new Set<string>(),
-          locations: new Set<string>(),
-        };
-      }
-      acc[date].painLevels.push(entry.baselineData.pain);
-      entry.baselineData.symptoms.forEach(s => acc[date].symptoms.add(s));
-      entry.baselineData.locations.forEach(l => acc[date].locations.add(l));
-      return acc;
-    }, {} as Record<string, {
-      painLevels: number[];
-      symptoms: Set<string>;
-      locations: Set<string>;
-    }>);
-
-    // Convert to trend points
-    return Object.entries(dailyData).map(([date, data]) => ({
-      date,
-      pain: data.painLevels.reduce((a, b) => a + b, 0) / data.painLevels.length,
-      symptoms: data.symptoms.size,
-      locations: data.locations.size,
-    })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [filteredEntries]);
+  // Build daily series using the shared helper (UTC-based keys), pass period to ensure consistent buckets
+  return buildDailySeries(filteredEntries, period);
+  }, [filteredEntries, period]);
 
   const trends = useMemo(() => {
     if (trendData.length < 2) return null;
@@ -161,11 +138,13 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
                     tickFormatter={date => format(new Date(date), 'MMM d')}
                     aria-label="Date"
                   />
-                  <YAxis 
-                    yAxisId="left" 
-                    domain={[0, 10]} 
-                    aria-label="Pain Level (0-10)"
-                  />
+                    <YAxis
+                      yAxisId="left"
+                      domain={[1, 10]}
+                      aria-label="Pain Level (1-10)"
+                      allowDecimals={true}
+                      tickCount={5}
+                    />
                   <YAxis 
                     yAxisId="right" 
                     orientation="right" 
@@ -226,7 +205,7 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
                   }`}
                   aria-live="polite"
                 >
-                  {Math.abs(trends.pain.change).toFixed(1)} point {trends.pain.trend}
+                  {formatNumber(Math.abs(trends.pain.change), 1)} point {trends.pain.trend}
                 </p>
               </div>
 

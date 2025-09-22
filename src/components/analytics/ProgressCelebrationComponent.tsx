@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-system';
+import { localDayStart, isSameLocalDay } from '../../utils/dates';
 import { Trophy, Star, Heart, Sparkles, Gift, Share2, Calendar, Target } from 'lucide-react';
 import type { PainEntry } from '../../types';
 
@@ -51,14 +52,12 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
 
   const generateAchievements = () => {
     const newAchievements: CelebrationAchievement[] = [];
-    const today = new Date();
-    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const today = new Date();
+  const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    // Daily achievements
-    const todayEntries = entries.filter(entry => 
-      new Date(entry.timestamp).toDateString() === today.toDateString()
-    );
+  // Daily achievements - use local-day comparison
+  const todayEntries = entries.filter(entry => isSameLocalDay(entry.timestamp, today));
 
     if (todayEntries.length > 0) {
       newAchievements.push({
@@ -74,8 +73,8 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
       });
     }
 
-    // Weekly achievements
-    const weekEntries = entries.filter(entry => new Date(entry.timestamp) >= weekAgo);
+  // Weekly achievements - use local-day start for comparison
+  const weekEntries = entries.filter(entry => localDayStart(entry.timestamp) >= localDayStart(weekAgo));
     
     if (weekEntries.length >= 5) {
       newAchievements.push({
@@ -124,7 +123,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
     }
 
     // Growth achievements
-    const monthEntries = entries.filter(entry => new Date(entry.timestamp) >= monthAgo);
+  const monthEntries = entries.filter(entry => localDayStart(entry.timestamp) >= localDayStart(monthAgo));
     if (monthEntries.length >= 20) {
       newAchievements.push({
         id: 'growth-journey',
@@ -431,11 +430,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white p-3 rounded-lg">
                 <div className="text-2xl font-bold text-purple-600">
-                  {entries.filter(e => {
-                    const entryDate = new Date(e.timestamp);
-                    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                    return entryDate >= weekAgo;
-                  }).length}
+                  {entries.filter(e => localDayStart(e.timestamp) >= localDayStart(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))).length}
                 </div>
                 <div className="text-xs text-gray-600">Days of Self-Care</div>
               </div>

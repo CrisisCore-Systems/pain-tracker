@@ -1,5 +1,6 @@
 
 import type { PainEntry } from '../../types';
+import { formatNumber } from '../../utils/formatting';
 
 
 interface NerveSymptomsProps {
@@ -77,7 +78,7 @@ export function NerveSymptoms({ entries, period }: NerveSymptomsProps) {
               </div>
               <div className="text-right">
                 <div className="font-medium">
-                  Avg. Pain: {symptom.averagePain.toFixed(1)}
+                  Avg. Pain: {formatNumber(symptom.averagePain, 1)}
                 </div>
               </div>
             </div>

@@ -1,3 +1,28 @@
+import { secureStorage } from '../storage/secureStorage';
+
+export type MigrationFn = () => Promise<void> | void;
+
+const appliedKey = 'pt:migrations:applied';
+
+export async function runMigrations(migrations: Array<{ id: string; fn: MigrationFn }>) {
+  const appliedRaw = secureStorage.get<string>(appliedKey) || '[]';
+  let applied: string[] = [];
+  try { applied = JSON.parse(appliedRaw); } catch { applied = []; }
+
+  for (const m of migrations) {
+    if (applied.includes(m.id)) continue;
+    try {
+      await m.fn();
+      applied.push(m.id);
+      secureStorage.set(appliedKey, applied);
+    } catch (e) {
+      // swallow migration errors but log
+      console.warn('Migration failed', m.id, e);
+    }
+  }
+}
+
+export default { runMigrations };
 import { secureStorage } from './secureStorage';
 
 /**

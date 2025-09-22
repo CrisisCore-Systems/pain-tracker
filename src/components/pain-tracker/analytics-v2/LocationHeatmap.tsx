@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { formatNumber } from '../../../utils/formatting';
 import type { PainEntry } from '../../../types';
 
 interface LocationHeatmapProps {
@@ -60,7 +61,7 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
       const avgPain = stats.totalPain / stats.count;
       return {
         location,
-        avgPain: Number(avgPain.toFixed(1)),
+        avgPain: Number(formatNumber(avgPain, 1)),
         frequency: stats.count,
         intensity: avgPain / maxAvgPain
       };

@@ -1,24 +1,20 @@
 /**
- * Enhanced Pain Tracker Layout with Trauma-Informed UX
- * Integrates existing pain tracker functionality with trauma-informed design patterns
+ * Enhanced Trauma-Informed Pain Tracker Layout with Modern UX
+ * Integrates existing pain tracker functionality with modern design patterns
  */
 
 import React from 'react';
-import { AlertCircle, FileText, HelpCircle, Settings, Heart } from "lucide-react";
+import { AlertCircle, HelpCircle, Settings, BarChart3, Calendar, TrendingUp } from "lucide-react";
 import { PainTrackerIcon } from '../branding/BrandedLogo';
 import type { PainEntry } from "../../types";
-import { PainEntryWidget } from "../widgets/PainEntryWidget";
-import { EnhancedPainVisualizationPanel } from "../widgets/EnhancedPainVisualizationPanel";
 import { PainHistoryPanel } from "../widgets/PainHistoryPanel";
-import { WCBReportPanel } from "../widgets/WCBReportPanel";
-import { EmptyStatePanel } from "../widgets/EmptyStatePanel";
-import { QuantifiedEmpathyDashboard } from "../analytics/QuantifiedEmpathyDashboard";
-import { Card, CardContent, ThemeToggle } from "../../design-system";
-import { usePainTrackerStore } from "../../stores/pain-tracker-store";
-import { 
-  TraumaInformedSection, 
-  ProgressiveDisclosure, 
-  MemoryAid, 
+import { AdvancedAnalyticsDashboard } from "../analytics/AdvancedAnalyticsDashboard";
+import { DataExportModal } from "../export/DataExportModal";
+import { CustomizableDashboard } from "../dashboard/CustomizableDashboard";
+import { GoalManagerModal } from "../goals/GoalManagerModal";
+import { Card, CardContent, Button, Badge, ThemeToggle } from "../../design-system";
+import {
+  MemoryAid,
   ComfortPrompt,
   TouchOptimizedButton,
   useTraumaInformed,
@@ -40,46 +36,71 @@ export function TraumaInformedPainTrackerLayout({
 }: TraumaInformedPainTrackerLayoutProps) {
   const { preferences } = useTraumaInformed();
   const [showSettings, setShowSettings] = React.useState(false);
-  
-  const { 
-    ui,
-    setShowWCBReport,
-    setShowEmpathyDashboard
-  } = usePainTrackerStore();
+  const [activeView, setActiveView] = React.useState<'dashboard' | 'analytics' | 'history'>('dashboard');
+  const [showExportModal, setShowExportModal] = React.useState(false);
+  const [showGoalManager, setShowGoalManager] = React.useState(false);
 
-  const handleToggleReport = () => {
-    setShowWCBReport(!ui.showWCBReport);
-  };
 
-  const handleToggleEmpathyDashboard = () => {
-    setShowEmpathyDashboard(!ui.showEmpathyDashboard);
-  };
+
+  const navigationItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, description: 'Overview and quick actions' },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp, description: 'Detailed insights and trends' },
+    { id: 'history', label: 'History', icon: Calendar, description: 'Past entries and patterns' },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
       {/* Skip to main content for screen readers */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50 shadow-lg"
       >
         Skip to main content
       </a>
 
-      {/* Header with trauma-informed improvements */}
-      <header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+      {/* Modern Header with Navigation */}
+      <header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <PainTrackerIcon size={32} />
+            <div className="flex items-center space-x-4">
+              <PainTrackerIcon size={40} />
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Pain Tracker</h1>
+                <h1 className="text-2xl font-bold text-foreground">Pain Tracker Pro</h1>
                 <div className="text-xs text-muted-foreground font-medium tracking-wide">
                   AI-POWERED PAIN MANAGEMENT
                 </div>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-3">
+
+            <nav className="hidden md:flex items-center space-x-1">
+              {navigationItems.map((item) => (
+                <Button
+                  key={item.id}
+                  variant={activeView === item.id ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveView(item.id as 'dashboard' | 'analytics' | 'history')}
+                  className="flex items-center space-x-2"
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </Button>
+              ))}
+            </nav>
+
+            <div className="flex items-center space-x-2">
+              {/* Quick Stats */}
+              <div className="hidden lg:flex items-center space-x-4 text-sm text-muted-foreground">
+                <div className="flex items-center space-x-1">
+                  <Calendar className="h-4 w-4" />
+                  <span>{entries.length} entries</span>
+                </div>
+                {entries.length > 0 && (
+                  <Badge variant="outline" className="text-xs">
+                    Last: {new Date(entries[entries.length - 1]?.timestamp || '').toLocaleDateString()}
+                  </Badge>
+                )}
+              </div>
+
               {/* Accessibility Settings Button */}
               <TouchOptimizedButton
                 onClick={() => setShowSettings(!showSettings)}
@@ -88,51 +109,39 @@ export function TraumaInformedPainTrackerLayout({
                 aria-label="Open accessibility settings"
                 aria-expanded={showSettings}
               >
-                <Settings className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Settings</span>
+                <Settings className="h-4 w-4" />
               </TouchOptimizedButton>
 
-              {/* Help Button - Enhanced for trauma-informed UX */}
+              {/* Help Button */}
               <TouchOptimizedButton
                 onClick={onStartWalkthrough}
                 variant="secondary"
                 size="normal"
                 aria-label="Get help and tutorial"
               >
-                <HelpCircle className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Help</span>
-              </TouchOptimizedButton>
-
-              {/* Empathy Dashboard Toggle */}
-              <TouchOptimizedButton
-                onClick={handleToggleEmpathyDashboard}
-                variant="secondary"
-                size="normal"
-                aria-expanded={ui.showEmpathyDashboard}
-                aria-controls="empathy-dashboard-section"
-              >
-                <Heart className="h-4 w-4 mr-2" />
-                <span className="hidden lg:inline">
-                  {ui.showEmpathyDashboard ? "Hide Analytics" : "Show Analytics"}
-                </span>
-              </TouchOptimizedButton>
-
-              {/* WCB Report Toggle */}
-              <TouchOptimizedButton
-                onClick={handleToggleReport}
-                variant="secondary"
-                size="normal"
-                aria-expanded={ui.showWCBReport}
-                aria-controls="wcb-report-section"
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                <span className="hidden lg:inline">
-                  {ui.showWCBReport ? "Hide Report" : "Show Report"}
-                </span>
+                <HelpCircle className="h-4 w-4" />
               </TouchOptimizedButton>
 
               <ThemeToggle />
             </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="md:hidden pb-4">
+            <nav className="flex space-x-1">
+              {navigationItems.map((item) => (
+                <Button
+                  key={item.id}
+                  variant={activeView === item.id ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveView(item.id as 'dashboard' | 'analytics' | 'history')}
+                  className="flex-1 flex items-center justify-center space-x-1"
+                >
+                  <item.icon className="h-4 w-4" />
+                  <span className="text-xs">{item.label}</span>
+                </Button>
+              ))}
+            </nav>
           </div>
         </div>
       </header>
@@ -142,16 +151,16 @@ export function TraumaInformedPainTrackerLayout({
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
-            <div 
-              className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+            <div
+              className="fixed inset-0 transition-opacity bg-background/80 backdrop-blur-sm"
               onClick={() => setShowSettings(false)}
               aria-hidden="true"
             />
 
             {/* Settings panel */}
-            <div className="inline-block w-full max-w-5xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
+            <div className="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-card shadow-xl rounded-lg border">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-medium text-card-foreground">
                   Accessibility & Comfort Settings
                 </h2>
                 <TouchOptimizedButton
@@ -162,7 +171,7 @@ export function TraumaInformedPainTrackerLayout({
                   ✕
                 </TouchOptimizedButton>
               </div>
-              
+
               <AccessibilitySettingsPanel />
             </div>
           </div>
@@ -213,99 +222,48 @@ export function TraumaInformedPainTrackerLayout({
           </Card>
         )}
 
-        {/* Empathy Analytics Section */}
-        {ui.showEmpathyDashboard && (
-          <TraumaInformedSection
-            title="Empathy Analytics"
-            description="Quantified empathy metrics and insights for your healing journey"
-            importance="normal"
-            canCollapse={preferences.simplifiedMode}
-          >
-            <QuantifiedEmpathyDashboard
-              userId="current-user" // TODO: Replace with actual user ID when auth is implemented
-              painEntries={entries}
-              onInsightSelect={(insight) => {
-                console.log('Insight selected:', insight);
-                // TODO: Handle insight selection (e.g., show details modal)
-              }}
-              onRecommendationAccept={(recommendation) => {
-                console.log('Recommendation accepted:', recommendation);
-                // TODO: Handle recommendation acceptance
-              }}
-              onShareMetrics={(metrics) => {
-                console.log('Share metrics:', metrics);
-                // TODO: Handle metrics sharing
-              }}
-              showAdvancedMetrics={!preferences.simplifiedMode}
-            />
-          </TraumaInformedSection>
+        {/* Dashboard View */}
+        {activeView === 'dashboard' && (
+          <CustomizableDashboard
+            entries={entries}
+            onAddEntry={onAddEntry}
+            onStartWalkthrough={onStartWalkthrough}
+            onOpenGoalManager={() => setShowGoalManager(true)}
+          />
         )}
 
-        {/* WCB Report Section */}
-        {ui.showWCBReport && (
-          <TraumaInformedSection
-            title="Workers' Compensation Report"
-            description="Generate reports for your workers' compensation claim"
-            importance="normal"
-            canCollapse={preferences.simplifiedMode}
-          >
-            <WCBReportPanel entries={entries} />
-          </TraumaInformedSection>
+        {/* Analytics View */}
+        {activeView === 'analytics' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Advanced Analytics Dashboard</h2>
+                <p className="text-muted-foreground">Predictive insights and advanced visualizations for your pain journey</p>
+              </div>
+              <Button variant="outline" onClick={() => setActiveView('dashboard')}>
+                Back to Dashboard
+              </Button>
+            </div>
+
+            <AdvancedAnalyticsDashboard entries={entries} />
+          </div>
         )}
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-          {/* Pain Entry Section */}
-          <TraumaInformedSection
-            title="Record Your Pain"
-            description="Track your current pain level and symptoms"
-            importance="high"
-            canCollapse={false}
-          >
-            <PainEntryWidget onSubmit={onAddEntry} />
-          </TraumaInformedSection>
+        {/* History View */}
+        {activeView === 'history' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">Pain History</h2>
+                <p className="text-muted-foreground">Complete history of your pain entries and patterns</p>
+              </div>
+              <Button variant="outline" onClick={() => setActiveView('dashboard')}>
+                Back to Dashboard
+              </Button>
+            </div>
 
-          {/* Visualization Section */}
-          {preferences.simplifiedMode ? (
-            <ProgressiveDisclosure
-              title="Pain Visualization"
-              level="helpful"
-              memoryAid="View charts and graphs of your pain patterns"
-              defaultOpen={entries.length > 0}
-            >
-              <EnhancedPainVisualizationPanel entries={entries} />
-            </ProgressiveDisclosure>
-          ) : (
-            <TraumaInformedSection
-              title="Pain Visualization"
-              description="View patterns in your pain levels over time"
-              importance="normal"
-              canCollapse={false}
-            >
-              <EnhancedPainVisualizationPanel entries={entries} />
-            </TraumaInformedSection>
-          )}
-        </div>
-
-        {/* History or Empty State */}
-        {entries.length === 0 ? (
-          <TraumaInformedSection
-            title="Getting Started"
-            description="You haven't recorded any pain entries yet"
-            importance="high"
-            canCollapse={false}
-          >
-            <EmptyStatePanel onStartWalkthrough={onStartWalkthrough} />
-          </TraumaInformedSection>
-        ) : (
-          <TraumaInformedSection
-            title="Pain History"
-            description={`Your ${entries.length} recorded pain ${entries.length === 1 ? 'entry' : 'entries'}`}
-            importance="normal"
-            canCollapse={preferences.simplifiedMode}
-          >
             <PainHistoryPanel entries={entries} />
-          </TraumaInformedSection>
+          </div>
         )}
 
         {/* Additional Memory Aid for users with multiple entries */}
@@ -319,26 +277,47 @@ export function TraumaInformedPainTrackerLayout({
         )}
       </main>
 
-      {/* Footer with supportive messaging */}
+      {/* Modern Footer */}
       <footer className="bg-card/50 border-t mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+            <div className="text-sm text-muted-foreground text-center md:text-left">
               {preferences.gentleLanguage ? (
                 "Your health journey matters. You're doing great by tracking your symptoms."
               ) : (
-                "Pain Tracker - Manage your health information"
+                "Pain Tracker Pro - Manage your health information with confidence"
               )}
             </div>
-            
-            {preferences.showComfortPrompts && (
-              <div className="text-sm text-muted-foreground">
-                Remember to be gentle with yourself
+
+            <div className="flex items-center space-x-4">
+              {preferences.showComfortPrompts && (
+                <div className="text-sm text-muted-foreground">
+                  Remember to be gentle with yourself
+                </div>
+              )}
+
+              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                <span>v2.0.0</span>
+                <span>•</span>
+                <span>Enhanced UX</span>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </footer>
+
+      {/* Data Export Modal */}
+      <DataExportModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        entries={entries}
+      />
+
+      {/* Goal Manager Modal */}
+      <GoalManagerModal
+        isOpen={showGoalManager}
+        onClose={() => setShowGoalManager(false)}
+      />
     </div>
   );
 }

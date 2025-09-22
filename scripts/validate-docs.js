@@ -10,8 +10,8 @@
  * 0 = success
  * 1 = failures detected
  */
-const { readFileSync, existsSync, readdirSync } = require('fs');
-const { join } = require('path');
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
 const ALLOWED_STATUSES = new Set(['Implemented', 'Partial', 'Planned']);
 const ROOT = process.cwd();

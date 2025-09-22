@@ -34,21 +34,21 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
   }
 
   // Time of day patterns
+  // Use local hours so analysis reflects user's local experience.
   const timeOfDayPattern = entries.reduce((acc, entry) => {
-  // Use UTC to ensure deterministic buckets across environments
-  const hour = new Date(entry.timestamp).getUTCHours();
-  const timeBlock = `${hour.toString().padStart(2, '0')}:00`;
+    const hour = new Date(entry.timestamp).getHours();
+    const timeBlock = `${hour.toString().padStart(2, '0')}:00`;
     acc[timeBlock] = (acc[timeBlock] || 0) + entry.baselineData.pain;
     return acc;
   }, {} as { [key: string]: number });
 
   // Day of week patterns
+  // Use local weekday so results map to the user's local calendar days.
   const dayOfWeekPattern = entries.reduce((acc, entry) => {
-  // Derive weekday in UTC to avoid timezone-induced day shifts
-  const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const dayIdx = new Date(entry.timestamp).getUTCDay();
-  const dayName = weekdayNames[dayIdx];
-  acc[dayName] = (acc[dayName] || 0) + entry.baselineData.pain;
+    const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayIdx = new Date(entry.timestamp).getDay();
+    const dayName = weekdayNames[dayIdx];
+    acc[dayName] = (acc[dayName] || 0) + entry.baselineData.pain;
     return acc;
   }, {} as { [key: string]: number });
 
@@ -197,3 +197,53 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
     },
   };
 };
+
+/**
+ * Produce a daily time-series of aggregated pain, symptoms and locations.
+ * - Uses UTC dates for deterministic behavior.
+ * - If a `period` is provided it will ensure all days in the range are present.
+ */
+export function buildDailySeries(entries: PainEntry[], period?: { start: string; end: string }) {
+  const dailyData = entries.reduce((acc, entry) => {
+    // Use local date key so buckets align with user's local calendar days
+    const d = new Date(entry.timestamp);
+  // Build local YYYY-MM-DD manually
+    const localYear = d.getFullYear();
+    const localMonth = (d.getMonth() + 1).toString().padStart(2, '0');
+    const localDate = d.getDate().toString().padStart(2, '0');
+    const localKey = `${localYear}-${localMonth}-${localDate}`;
+    if (!acc[localKey]) acc[localKey] = { painLevels: [] as number[], symptoms: new Set<string>(), locations: new Set<string>() };
+    acc[localKey].painLevels.push(entry.baselineData.pain);
+    entry.baselineData.symptoms.forEach(s => acc[localKey].symptoms.add(s));
+    entry.baselineData.locations.forEach(l => acc[localKey].locations.add(l));
+    return acc;
+  }, {} as Record<string, { painLevels: number[]; symptoms: Set<string>; locations: Set<string> }>);
+
+  const entriesByDate = Object.entries(dailyData).map(([date, data]) => ({
+    date,
+    pain: data.painLevels.reduce((a, b) => a + b, 0) / data.painLevels.length,
+    symptoms: data.symptoms.size,
+    locations: data.locations.size,
+  }));
+
+  if (period) {
+    // Interpret period.start and period.end as local dates (YYYY-MM-DD)
+    const startParts = period.start.split('-').map(p => parseInt(p, 10));
+    const endParts = period.end.split('-').map(p => parseInt(p, 10));
+    const start = new Date(startParts[0], startParts[1] - 1, startParts[2]);
+    const end = new Date(endParts[0], endParts[1] - 1, endParts[2]);
+    const days: { date: string; pain: number | null; symptoms: number | null; locations: number | null }[] = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const y = d.getFullYear();
+      const m = (d.getMonth() + 1).toString().padStart(2, '0');
+      const dd = d.getDate().toString().padStart(2, '0');
+      const iso = `${y}-${m}-${dd}`;
+      const found = entriesByDate.find(e => e.date === iso);
+      if (found) days.push(found);
+      else days.push({ date: iso, pain: null, symptoms: null, locations: null });
+    }
+    return days.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  return entriesByDate.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+}

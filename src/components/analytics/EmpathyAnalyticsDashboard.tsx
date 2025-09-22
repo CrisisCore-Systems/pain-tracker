@@ -2,6 +2,7 @@
 // Displays emotional validation, progress celebration, and dignity-preserving analytics
 
 import React, { useState, useEffect } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-system';
 import { Heart, Award, User, TrendingUp, Star, Sparkles, Trophy, MessageCircle } from 'lucide-react';
 import { 
@@ -77,7 +78,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
         <CardContent>
           <div className="text-center mb-6">
             <div className="text-4xl font-bold text-pink-600 mb-2">
-              {validationMetrics?.validationScore.toFixed(0) || '0'}%
+              {validationMetrics ? formatNumber(validationMetrics.validationScore, 0) : '0'}%
             </div>
             <p className="text-gray-600">Your feelings and experiences are valid and acknowledged</p>
           </div>
@@ -255,15 +256,15 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
         <CardContent>
           <div className="text-center mb-6">
             <div className="text-4xl font-bold text-blue-600 mb-2">
-              {agencyMetrics?.decisionMakingPower.toFixed(0) || '0'}%
+              {agencyMetrics ? formatNumber(agencyMetrics.decisionMakingPower, 0) : '0'}%
             </div>
             <p className="text-gray-600">You have control and choice in your journey</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="text-center p-4 bg-white rounded-lg">
-              <div className="text-2xl font-semibold text-green-600">
-                {agencyMetrics?.selfAdvocacyScore.toFixed(0) || '0'}%
+                <div className="text-2xl font-semibold text-green-600">
+                {agencyMetrics ? formatNumber(agencyMetrics.selfAdvocacyScore, 0) : '0'}%
               </div>
               <p className="text-sm text-gray-600">Self-Advocacy</p>
             </div>

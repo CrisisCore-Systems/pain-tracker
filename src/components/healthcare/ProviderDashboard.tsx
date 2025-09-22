@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { 
   Users, 
   TrendingUp, 
@@ -161,7 +162,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.averagePainLevel.toFixed(1)}</div>
+            <div className="text-2xl font-bold">{formatNumber(stats.averagePainLevel, 1)}</div>
             <p className="text-xs text-muted-foreground">
               Across all active patients
             </p>
@@ -248,7 +249,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
                         </div>
                         <div className="flex items-center space-x-4 mt-1 text-sm text-muted-foreground">
                           <span>{patient.gender}, {new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear()} years</span>
-                          <span>Avg Pain: {patient.averagePain.toFixed(1)}</span>
+                          <span>Avg Pain: {formatNumber(patient.averagePain, 1)}</span>
                           <span>{patient.totalEntries} entries</span>
                         </div>
                         {patient.conditions.length > 0 && (
@@ -354,7 +355,7 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
             <div>
               <div className="text-sm text-muted-foreground">Avg Pain</div>
               <div className="text-lg font-semibold text-primary">
-                {patient.averagePain.toFixed(1)}/10
+                {formatNumber(patient.averagePain, 1)}/10
               </div>
             </div>
             <div>
@@ -406,7 +407,7 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
             <div>
               <div className="text-sm text-muted-foreground">7-Day Prediction</div>
               <div className="text-sm font-medium">
-                {analytics.prediction.predictedPain.toFixed(1)}/10
+                {formatNumber(analytics.prediction.predictedPain, 1)}/10
                 <span className="text-muted-foreground ml-1">
                   ({Math.round(analytics.prediction.confidence * 100)}% confidence)
                 </span>

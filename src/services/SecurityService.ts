@@ -4,6 +4,7 @@
  */
 
 import CryptoJS from 'crypto-js';
+import { formatNumber } from '../utils/formatting';
 
 // Security Event Types
 export interface SecurityEvent {
@@ -388,7 +389,7 @@ export class SecurityService {
     this.logSecurityEvent({
       type: 'audit',
       level: issues.length === 0 ? 'info' : 'warning',
-      message: `Security audit completed. Score: ${(score * 100).toFixed(1)}%`,
+  message: `Security audit completed. Score: ${formatNumber(score * 100, 1)}%`,
       metadata: {
         totalIssues: issues.length,
         criticalIssues,

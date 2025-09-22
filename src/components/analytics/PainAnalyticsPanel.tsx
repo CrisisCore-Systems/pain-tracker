@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { TrendingUp, TrendingDown, AlertTriangle, Brain, Target, Calendar } from 'lucide-react';
 import type { PainEntry } from '../../types';
 import { painAnalyticsService } from '../../services/PainAnalyticsService';
@@ -144,7 +145,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
                       factor.impact < 0 ? 'bg-green-100 text-green-600' :
                       'bg-gray-100 text-gray-600'
                     }`}>
-                      {factor.impact > 0 ? '+' : ''}{factor.impact.toFixed(1)}
+                      {factor.impact > 0 ? '+' : ''}{formatNumber(factor.impact, 1)}
                     </span>
                   </div>
                 </div>
@@ -232,7 +233,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
                             />
                           </div>
                           <span className="text-xs text-muted-foreground">
-                            {item.painCorrelation.toFixed(1)}
+                            {formatNumber(item.painCorrelation, 1)}
                           </span>
                         </div>
                       </div>
@@ -256,7 +257,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
                             />
                           </div>
                           <span className="text-xs text-muted-foreground">
-                            {item.effectivenessScore.toFixed(1)}
+                            {formatNumber(item.effectivenessScore, 1)}
                           </span>
                         </div>
                       </div>

@@ -7,6 +7,12 @@ const ROOT = process.cwd();
 const REPORT = path.join(ROOT, 'reports', 'mutation', 'mutation.json');
 const OUT = path.join(ROOT, 'badges', 'mutation-badge.json');
 
+function formatNumberLocal(value, decimals = 1) {
+  const num = Number(value);
+  if (Number.isNaN(num) || num === Infinity || num === -Infinity) return (0).toFixed(decimals);
+  return num.toFixed(decimals);
+}
+
 function color(score){
   if (score >= 85) return 'brightgreen';
   if (score >= 75) return 'green';
@@ -25,7 +31,7 @@ async function main(){
   }
   const json = JSON.parse(await readFile(REPORT,'utf8'));
   const score = Math.max(0, Math.min(100, Number(json.mutationScore ?? json.metrics?.mutationScore ?? 0)));
-  const badge = { schemaVersion:1, label:'mutation', message: `${score.toFixed(1)}%`, color: color(score) };
+  const badge = { schemaVersion:1, label:'mutation', message: `${formatNumberLocal(score, 1)}%`, color: color(score) };
   await writeFile(OUT, JSON.stringify(badge,null,2));
   console.log('Generated mutation badge', badge);
 }

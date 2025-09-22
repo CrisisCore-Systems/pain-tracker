@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { advancedOfflineManager } from '../../lib/advanced-offline';
 
 interface OfflineResource {
@@ -158,7 +159,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  return formatNumber(bytes / Math.pow(k, i), 2) + ' ' + sizes[i];
   };
 
   const getPriorityColor = (priority: string): string => {

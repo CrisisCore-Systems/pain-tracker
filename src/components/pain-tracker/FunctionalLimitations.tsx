@@ -1,5 +1,6 @@
 
 import type { PainEntry } from '../../types';
+import { formatNumber } from '../../utils/formatting';
 
 interface FunctionalLimitationsProps {
   entries: PainEntry[];
@@ -72,7 +73,7 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
               </div>
               <div className="text-right">
                 <div className="font-medium">
-                  Avg. Pain: {limitation.averagePain.toFixed(1)}
+                  Avg. Pain: {formatNumber(limitation.averagePain, 1)}
                 </div>
               </div>
             </div>

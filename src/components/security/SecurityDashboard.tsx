@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { securityService } from '../../services/SecurityService';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { validateSecurityConfig } from '../../config/security';
@@ -279,7 +280,7 @@ export const SecurityDashboard: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">Score</p>
-                      <p className="font-medium">{(auditResult.score * 100).toFixed(1)}%</p>
+                      <p className="font-medium">{formatNumber(auditResult.score * 100, 1)}%</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-600">Issues Found</p>

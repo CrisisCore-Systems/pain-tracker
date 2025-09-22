@@ -292,13 +292,14 @@ class PainAnalyticsService {
     const monthlyData = new Array(31).fill(0).map(() => ({ sum: 0, count: 0 }));
     
     entries.forEach(entry => {
-      const date = new Date(entry.timestamp);
-      const dayOfWeek = date.getDay();
-      const dayOfMonth = date.getDate() - 1;
-      
+      const d = new Date(entry.timestamp);
+      const localStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const dayOfWeek = localStart.getDay();
+      const dayOfMonth = localStart.getDate() - 1;
+
       weeklyData[dayOfWeek].sum += entry.baselineData.pain;
       weeklyData[dayOfWeek].count += 1;
-      
+
       if (dayOfMonth < 31) {
         monthlyData[dayOfMonth].sum += entry.baselineData.pain;
         monthlyData[dayOfMonth].count += 1;

@@ -36,7 +36,24 @@ const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
 
 export function PainTracker() {
   const [error, setError] = useState<string | null>(null);
-  const [entries, setEntries] = useState<PainEntry[]>([]);
+  // Attempt a synchronous initial read from secureStorage/localStorage so tests that
+  // mock localStorage can assert DOM that depends on initial entries synchronously.
+  const readInitialEntries = (): PainEntry[] => {
+    try {
+      const stored = secureStorage.get<PainEntry[]>('pain_tracker_entries', { encrypt: true });
+      if (stored && Array.isArray(stored)) return stored;
+      const raw = localStorage.getItem('pain_tracker_entries');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // fallthrough
+    }
+    return [];
+  };
+
+  const [entries, setEntries] = useState<PainEntry[]>(readInitialEntries);
   const [showWCBReport, setShowWCBReport] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);

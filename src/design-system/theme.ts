@@ -3,7 +3,7 @@
  * Modern design tokens following Material Design 3.0 principles
  */
 
-export type ThemeMode = 'light' | 'dark' | 'high-contrast';
+export type ThemeMode = 'light' | 'dark' | 'high-contrast' | 'colorblind';
 
 export interface ColorScale {
   50: string;
@@ -379,12 +379,58 @@ export const theme: Theme = {
   },
 };
 
+// CSS Custom Properties for theming
+export const getCSSCustomProperties = (mode: ThemeMode) => {
+  const themeColors = getThemeColors(mode);
+
+  return {
+    // Base colors
+    '--background': themeColors.background,
+    '--foreground': themeColors.foreground,
+    '--card': themeColors.card,
+    '--card-foreground': themeColors.cardForeground,
+    '--popover': themeColors.popover,
+    '--popover-foreground': themeColors.popoverForeground,
+    '--primary': themeColors.primary,
+    '--primary-foreground': themeColors.primaryForeground,
+    '--secondary': themeColors.secondary,
+    '--secondary-foreground': themeColors.secondaryForeground,
+    '--muted': themeColors.muted,
+    '--muted-foreground': themeColors.mutedForeground,
+    '--accent': themeColors.accent,
+    '--accent-foreground': themeColors.accentForeground,
+    '--destructive': themeColors.destructive,
+    '--destructive-foreground': themeColors.destructiveForeground,
+    '--border': themeColors.border,
+    '--input': themeColors.input,
+    '--ring': themeColors.ring,
+
+    // Extended colors for new variants
+    '--success': colors.success[500],
+    '--success-foreground': colors.success[50],
+    '--warning': colors.warning[500],
+    '--warning-foreground': colors.warning[50],
+    '--info': colors.info[500],
+    '--info-foreground': colors.info[50],
+
+    // Semantic colors
+    '--success-bg': colors.success[50],
+    '--success-border': colors.success[200],
+    '--warning-bg': colors.warning[50],
+    '--warning-border': colors.warning[200],
+    '--error-bg': colors.error[50],
+    '--error-border': colors.error[200],
+    '--info-bg': colors.info[50],
+    '--info-border': colors.info[200],
+  };
+};
+
 // Theme context helpers
 export const getThemeColors = (mode: ThemeMode) => {
   if (mode === 'high-contrast') {
     return {
       background: '#000000',
-      foreground: '#ffffff', 
+      foreground: '#ffffff',
       card: '#000000',
       cardForeground: '#ffffff',
       popover: '#000000',
@@ -402,6 +448,30 @@ export const getThemeColors = (mode: ThemeMode) => {
       border: '#ffffff',
       input: '#ffffff',
       ring: '#ffff00',
+    };
+  }
+
+  if (mode === 'colorblind') {
+    return {
+      background: colors.neutral[50],
+      foreground: colors.neutral[900],
+      card: colors.neutral[50],
+      cardForeground: colors.neutral[900],
+      popover: colors.neutral[50],
+      popoverForeground: colors.neutral[900],
+      primary: colors.neutral[800],
+      primaryForeground: colors.neutral[50],
+      secondary: colors.neutral[600],
+      secondaryForeground: colors.neutral[50],
+      muted: colors.neutral[100],
+      mutedForeground: colors.neutral[700],
+      accent: colors.neutral[500],
+      accentForeground: colors.neutral[50],
+      destructive: colors.neutral[900],
+      destructiveForeground: colors.neutral[50],
+      border: colors.neutral[300],
+      input: colors.neutral[200],
+      ring: colors.neutral[800],
     };
   }
 

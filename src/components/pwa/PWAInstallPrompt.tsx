@@ -62,7 +62,11 @@ export function PWAInstallPrompt() {
   }
 
   return (
-    <Card className="fixed bottom-4 left-4 right-4 z-50 shadow-lg border-primary md:left-auto md:right-4 md:max-w-sm">
+    <Card
+      className="fixed bottom-4 left-4 z-50 shadow-lg border-primary max-w-sm w-[min(92%,420px)]"
+      role="dialog"
+      aria-label="Install Pain Tracker"
+    >
       <CardContent className="p-4">
         <div className="flex items-start space-x-3">
           <div className="flex-shrink-0">
@@ -119,7 +123,7 @@ export function PWAInstallPrompt() {
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
   );
 }

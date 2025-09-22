@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { formatNumber } from '../utils/formatting';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { PainEntry, EmergencyPanelData, ActivityLogEntry } from '../types';
@@ -264,5 +265,5 @@ export const selectLatestEntry = (state: PainTrackerState) =>
 export const selectAveragePain = (state: PainTrackerState) => {
   if (state.entries.length === 0) return 0;
   const sum = state.entries.reduce((acc, entry) => acc + entry.baselineData.pain, 0);
-  return Number((sum / state.entries.length).toFixed(1));
+  return Number(formatNumber(sum / state.entries.length, 1));
 };

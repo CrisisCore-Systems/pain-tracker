@@ -169,6 +169,14 @@ describe('PainTracker', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockLocalStorage.getItem.mockReset();
+    // By default, simulate that onboarding has been completed so the onboarding overlay
+    // does not render and tests can interact with the main app UI. Individual tests
+    // can override this using mockReturnValue or mockImplementation.
+    mockLocalStorage.getItem.mockImplementation((key: unknown) => {
+      const k = String(key || '');
+      if (k.includes('onboarding')) return 'true';
+      return null;
+    });
     mockLocalStorage.setItem.mockReset();
     console.error = vi.fn();
   });
@@ -403,7 +411,7 @@ describe('PainTracker', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />, { wrapper: TestWrapper });
       
-      const toggleButton = screen.getByText('Show WCB Report');
+    const toggleButton = screen.getByRole('button', { name: /Show WCB Report/i });
       toggleButton.focus();
       expect(document.activeElement).toBe(toggleButton);
       
@@ -421,7 +429,7 @@ describe('PainTracker', () => {
       render(<PainTracker />, { wrapper: TestWrapper });
       
       // Toggle WCB report
-      const toggleButton = screen.getByText('Show WCB Report');
+  const toggleButton = screen.getByRole('button', { name: /Show WCB Report/i });
       fireEvent.click(toggleButton);
       
       // Focus should move to the first interactive element in the report
@@ -445,9 +453,9 @@ describe('PainTracker', () => {
       }
       
       // Primary button should have sufficient contrast
-      const button = screen.getByText('Show WCB Report');
-      expect(button).toHaveClass('border');
-      expect(button).toHaveClass('border-input');
+  const button = screen.getByRole('button', { name: /Show WCB Report/i });
+  expect(button).toHaveClass('border');
+  expect(button).toHaveClass('border-input');
     });
 
     it('should provide clear error messages', () => {

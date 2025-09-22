@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import type { PainEntry } from '../../types';
+import { buildRolling7DayChartData } from '../../design-system/utils/chart';
 
 // Register ChartJS components
 ChartJS.register(
@@ -29,38 +30,9 @@ interface PainTrendChartProps {
 }
 
 export function PainTrendChart({ entries }: PainTrendChartProps) {
-  // Sort entries by timestamp
-  const sortedEntries = [...entries].sort(
-    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-  );
-
-  // Prepare data for the chart
-  const data = {
-    labels: sortedEntries.map(entry => {
-      const date = new Date(entry.timestamp);
-      return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    }),
-    datasets: [
-      {
-        label: 'Pain Level',
-        data: sortedEntries.map(entry => entry.baselineData.pain),
-        borderColor: 'rgb(59, 130, 246)', // Blue
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-        tension: 0.3
-      },
-      {
-        label: 'Total Pain Score',
-        data: sortedEntries.map(entry => {
-          const locationFactor = entry.baselineData.locations.length * 0.5;
-          const symptomFactor = entry.baselineData.symptoms.length * 0.3;
-          return entry.baselineData.pain + locationFactor + symptomFactor;
-        }),
-        borderColor: 'rgb(239, 68, 68)', // Red
-        backgroundColor: 'rgba(239, 68, 68, 0.5)',
-        tension: 0.3
-      }
-    ]
-  };
+  // Build rolling 7-day aggregated data for display
+  const raw = entries.map(e => ({ created_at: e.timestamp, pain_level: e.baselineData.pain }));
+  const chartData = buildRolling7DayChartData(raw, { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, label: 'Avg pain' });
 
   const options: ChartOptions<'line'> = {
     responsive: true,
@@ -71,17 +43,13 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
       },
       title: {
         display: true,
-        text: 'Pain Trend Over Time'
+        text: 'Pain Trend (last 7 days)'
       },
       tooltip: {
         callbacks: {
-          afterBody: (context) => {
-            const entry = sortedEntries[context[0].dataIndex];
-            return [
-              '',
-              'Locations: ' + entry.baselineData.locations.join(', '),
-              'Symptoms: ' + entry.baselineData.symptoms.join(', ')
-            ];
+          label: (context) => {
+            const v = context.parsed.y;
+            return v === null ? 'No data' : `Avg pain: ${v}`;
           }
         }
       }
@@ -89,10 +57,10 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
     scales: {
       y: {
         min: 0,
-        max: 12,
+        max: 10,
         title: {
           display: true,
-          text: 'Pain Level / Score'
+          text: 'Pain Level'
         }
       }
     }
@@ -101,8 +69,8 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <div style={{ height: '400px' }}>
-        <Line options={options} data={data} />
+        <Line options={options} data={chartData} />
       </div>
     </div>
   );
-} 
+}

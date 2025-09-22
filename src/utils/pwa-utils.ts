@@ -1,5 +1,6 @@
 // Enhanced PWA utility functions for Pain Tracker
 import { offlineStorage } from '../lib/offline-storage';
+import { formatNumber } from './formatting';
 import { backgroundSync } from '../lib/background-sync';
 import { secureStorage } from '../lib/storage/secureStorage';
 
@@ -226,7 +227,7 @@ export class PWAManager {
       if (total > 0) {
         const hitRatio = (cacheHits / total) * 100;
         this.dispatchCustomEvent('pwa-cache-performance', {
-          hitRatio: hitRatio.toFixed(2),
+          hitRatio: Number(formatNumber(hitRatio, 2)),
           totalRequests: total
         });
         

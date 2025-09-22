@@ -14,6 +14,7 @@ import {
   Settings
 } from 'lucide-react';
 import { pwaManager } from '../../utils/pwa-utils';
+import { formatNumber } from '../../utils/formatting';
 import { backgroundSync } from '../../lib/background-sync';
 
 interface PWAStatusData {
@@ -21,7 +22,7 @@ interface PWAStatusData {
   hasServiceWorker: boolean;
   isOnline: boolean;
   storageUsage: { used: number; quota: number };
-  capabilities: any;
+  capabilities: Record<string, boolean>;
   pendingSyncItems: number;
   lastSync: string | null;
 }
@@ -102,8 +103,11 @@ export function PWAStatusDashboard() {
     loadSyncStatus();
   };
 
-  const handleConnectionQualityChange = (event: any) => {
-    setConnectionQuality(event.detail.quality);
+  const handleConnectionQualityChange = (event: Event) => {
+    const customEvent = event as CustomEvent<Record<string, unknown>>;
+    const detail = customEvent.detail || {};
+    const quality = typeof detail.quality === 'string' ? detail.quality : 'unknown';
+    setConnectionQuality(quality);
   };
 
   const handleSyncCompleted = () => {
@@ -139,7 +143,7 @@ export function PWAStatusDashboard() {
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return `${formatNumber(bytes / Math.pow(k, i), 2)} ${sizes[i]}`;
   };
 
   const formatDate = (dateString: string | null): string => {
@@ -291,7 +295,7 @@ export function PWAStatusDashboard() {
                 ></div>
               </div>
               <p className="text-xs text-gray-600 mt-1">
-                {storagePercentage.toFixed(1)}% of available storage used
+                {formatNumber(storagePercentage, 1)}% of available storage used
               </p>
             </div>
             

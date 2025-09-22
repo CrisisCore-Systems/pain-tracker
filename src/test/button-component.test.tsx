@@ -23,7 +23,8 @@ describe('Button component', () => {
   it('applies size classes', () => {
     render(<Button size="lg">Big</Button>);
     const btn = screen.getByRole('button', { name: 'Big' });
-    expect(btn.className).toMatch(/h-11/);
+    // design-system defines lg size as h-12
+    expect(btn.className).toMatch(/h-12/);
   });
 
   it.each(variantExpectations)('applies $variant variant style', ({ variant, contains }) => {

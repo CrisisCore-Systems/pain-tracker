@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatNumber } from '../../utils/formatting';
 import { BarChart3, Map, Brain, TrendingUp } from 'lucide-react';
 import type { PainEntry } from '../../types';
 import { PainChart } from '../pain-tracker/PainChart';
@@ -141,9 +142,9 @@ export function EnhancedPainVisualizationPanel({ entries }: EnhancedPainVisualiz
 
 // Helper functions
 function calculateAveragePain(entries: PainEntry[]): string {
-  if (entries.length === 0) return '0.0';
+  if (entries.length === 0) return formatNumber(0, 1);
   const sum = entries.reduce((acc, entry) => acc + entry.baselineData.pain, 0);
-  return (sum / entries.length).toFixed(1);
+  return formatNumber(sum / entries.length, 1);
 }
 
 function calculateTrackingPeriod(entries: PainEntry[]): number {

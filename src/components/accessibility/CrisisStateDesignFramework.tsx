@@ -89,7 +89,11 @@ export function useCrisisState() {
 
 interface CrisisStateDesignFrameworkProps {
   onCrisisStateChange?: (state: CrisisStateConfig) => void;
-  onFrameworkChange?: (framework: string, config: any) => void;
+  // framework is one of the named sections and config is the partial config for that section
+  onFrameworkChange?: (
+    framework: 'clarity' | 'calm' | 'control',
+    config: Partial<ClarityControlsConfig | CalmingConfig | ControlConfig>
+  ) => void;
   initialCrisisLevel?: CrisisLevel;
   className?: string;
 }

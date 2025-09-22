@@ -4,6 +4,7 @@
  */
 
 import type { PainEntry } from '../types';
+import { formatNumber, formatPercent } from '../utils/formatting';
 
 // Worker types
 interface HealthInsightTask {
@@ -100,7 +101,7 @@ function detectTrends(entries: PainEntry[], timeframe: 'week' | 'month' | 'quart
     id: `trend-${Date.now()}`,
     type: 'trend',
     title: `Pain trend ${direction}`,
-    description: `Your average pain shows a ${direction} trend with an estimated ${(changePercent).toFixed(1)}% change over recent data.`,
+  description: `Your average pain shows a ${direction} trend with an estimated ${formatPercent(changePercent, 1)} change over recent data.`,
     confidence: Math.min(95, Math.abs(slope)*800 + 50),
     severity: direction === 'increasing' && changePercent > 10 ? 'medium' : 'low',
     data: { values: ma, labels: sorted.map(e => new Date(e.timestamp).toLocaleDateString()) },
@@ -130,7 +131,7 @@ function comprehensiveCorrelationAnalysis(entries: PainEntry[]): HealthInsight[]
       id:`corr-${p.name}-${Date.now()}`,
       type:'correlation',
       title:`Correlation: ${p.name} & Pain`,
-      description:`Correlation coefficient ${(corr).toFixed(2)}. ${p.formatter(corr)}.`,
+  description:`Correlation coefficient ${formatNumber(corr, 2)}. ${p.formatter(corr)}.`,
       confidence: Math.min(90, 40 + Math.abs(corr)*60),
       severity: Math.abs(corr) > 0.6 ? 'medium':'low',
       data:{ correlations:[{factor1:p.name, factor2:'pain-level', strength:corr, significance: p.x.length/entries.length}] },
@@ -213,7 +214,7 @@ function generateSummary(entries: PainEntry[], timeframe: 'week'|'month'|'quarte
     id:`summary-${Date.now()}`,
     type:'recommendation',
     title:'Pain Summary',
-    description:`Average pain ${(avg).toFixed(1)} (range ${min}-${max}). ${flareDays} flare days (>=7). Variability ${(range).toFixed(1)}.`,
+  description:`Average pain ${formatNumber(avg, 1)} (range ${min}-${max}). ${flareDays} flare days (>=7). Variability ${formatNumber(range, 1)}.`,
     confidence: 80,
     severity: flareDays/entries.length > 0.3 ? 'medium':'low',
     data:{ values:pains },
@@ -452,15 +453,15 @@ function analyzeActivityCorrelations(entries: PainEntry[]): HealthInsight[] {
       const overallAvg = entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length;
       
       const correlation = avgPain - overallAvg;
-      
+
       if (Math.abs(correlation) > 0.8) {
         insights.push({
           id: `activity-correlation-${activity}-${Date.now()}`,
           type: 'correlation',
           title: `Activity Impact: ${activity}`,
-          description: correlation > 0 
-            ? `${activity} appears to be associated with higher pain levels (average: ${avgPain.toFixed(1)} vs overall average: ${overallAvg.toFixed(1)}).`
-            : `${activity} appears to be associated with lower pain levels (average: ${avgPain.toFixed(1)} vs overall average: ${overallAvg.toFixed(1)}).`,
+          description: correlation > 0
+            ? `${activity} appears to be associated with higher pain levels (average: ${formatNumber(avgPain, 1)} vs overall average: ${formatNumber(overallAvg, 1)}).`
+            : `${activity} appears to be associated with lower pain levels (average: ${formatNumber(avgPain, 1)} vs overall average: ${formatNumber(overallAvg, 1)}).`,
           confidence: Math.min(85, 40 + Math.abs(correlation) * 20),
           severity: correlation > 1.5 ? 'high' : correlation > 0.8 ? 'medium' : 'low',
           data: {
@@ -540,9 +541,9 @@ function analyzeSleepCorrelations(entries: PainEntry[]): HealthInsight | null {
     id: `sleep-correlation-${Date.now()}`,
     type: 'correlation',
     title: 'Sleep Quality and Pain Connection',
-    description: correlation < -0.3 
-      ? `Better sleep quality appears to be associated with lower pain levels. Your data shows a ${Math.abs(correlation * 100).toFixed(0)}% correlation. Average sleep: ${avgSleep.toFixed(1)}h, Average pain: ${avgPain.toFixed(1)}/10.`
-      : `Poor sleep quality appears to be associated with higher pain levels. Your data shows a ${Math.abs(correlation * 100).toFixed(0)}% correlation. Average sleep: ${avgSleep.toFixed(1)}h, Average pain: ${avgPain.toFixed(1)}/10.`,
+    description: correlation < -0.3
+      ? `Better sleep quality appears to be associated with lower pain levels. Your data shows a ${formatNumber(Math.abs(correlation * 100), 0)}% correlation. Average sleep: ${formatNumber(avgSleep, 1)}h, Average pain: ${formatNumber(avgPain, 1)}/10.`
+      : `Poor sleep quality appears to be associated with higher pain levels. Your data shows a ${formatNumber(Math.abs(correlation * 100), 0)}% correlation. Average sleep: ${formatNumber(avgSleep, 1)}h, Average pain: ${formatNumber(avgPain, 1)}/10.`,
     confidence: Math.min(90, 30 + Math.abs(correlation) * 60),
     severity: Math.abs(correlation) > 0.6 ? 'high' : Math.abs(correlation) > 0.4 ? 'medium' : 'low',
     data: {
@@ -619,8 +620,8 @@ function analyzeMedicationEffectiveness(entries: PainEntry[]): HealthInsight[] {
           type: 'correlation',
           title: `Medication Analysis: ${medication}`,
           description: effectiveness > 0 
-            ? `${medication} appears to be associated with lower pain levels (average pain: ${avgPainWithMed.toFixed(1)} vs ${overallAvgPain.toFixed(1)} overall).`
-            : `${medication} usage periods show higher pain levels (average pain: ${avgPainWithMed.toFixed(1)} vs ${overallAvgPain.toFixed(1)} overall). This might indicate you take it during flares.`,
+            ? `${medication} appears to be associated with lower pain levels (average pain: ${formatNumber(avgPainWithMed, 1)} vs ${formatNumber(overallAvgPain, 1)} overall).`
+            : `${medication} usage periods show higher pain levels (average pain: ${formatNumber(avgPainWithMed, 1)} vs ${formatNumber(overallAvgPain, 1)} overall). This might indicate you take it during flares.`,
           confidence: Math.min(80, 30 + Math.abs(effectiveness) * 20),
           severity: Math.abs(effectiveness) > 1.5 ? 'high' : Math.abs(effectiveness) > 0.8 ? 'medium' : 'low',
           data: {

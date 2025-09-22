@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { formatNumber } from '../../../utils/formatting';
 import { format } from 'date-fns';
 import type { PainEntry } from '../../../types';
 import { downloadData } from '../../../utils/pain-tracker/export';
@@ -33,7 +34,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       const summaryData = [
         ['Report Generated', format(new Date(), 'yyyy-MM-dd HH:mm:ss')],
         ['Total Entries', entries.length.toString()],
-        ['Average Pain Level', avgPain.toFixed(1)],
+  ['Average Pain Level', formatNumber(avgPain, 1)],
         ['Current Pain Level', latestEntry?.baselineData.pain.toString() || 'N/A'],
         ['Most Affected Area', topLocation],
         ['Total Missed Work Days', workDays.toString()],
@@ -145,7 +146,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       const processedLocationStats = Object.entries(locationStats).map(([location, stats]) => ({
         location,
         frequency: stats.count,
-        averagePain: Number((stats.totalPain / stats.count).toFixed(1))
+  averagePain: Number(formatNumber(stats.totalPain / stats.count, 1))
       })).sort((a, b) => b.frequency - a.frequency);
 
       const latestEntry = entries[0];
@@ -154,7 +155,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       return JSON.stringify({
         metadata,
         summary: {
-          averagePainLevel: Number(avgPain.toFixed(1)),
+          averagePainLevel: Number(formatNumber(avgPain, 1)),
           currentPainLevel: latestEntry?.baselineData.pain || null,
           totalMissedWorkDays: workImpact,
           locationStatistics: processedLocationStats,
@@ -301,7 +302,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
                 <div className="text-gray-600">Avg Pain</div>
                 <div className="font-bold">
                   {entries.length > 0 
-                    ? (entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length).toFixed(1)
+                    ? Number(formatNumber((entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length), 1))
                     : 'N/A'}/10
                 </div>
               </div>

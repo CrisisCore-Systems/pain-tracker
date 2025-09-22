@@ -10,6 +10,8 @@ import {
   TreatmentsSection,
   WorkImpactSection,
 } from "./form-sections";
+import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Loading } from '../../design-system';
+import { ChevronLeft, ChevronRight, Check, Save, Clock, AlertCircle } from 'lucide-react';
 
 interface PainEntryFormProps {
   onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
@@ -18,6 +20,7 @@ interface PainEntryFormProps {
 export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const { ui, setCurrentFormSection } = usePainTrackerStore();
   const currentSection = ui.currentFormSection;
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<Omit<PainEntry, "id" | "timestamp">>({
     baselineData: {
       pain: 0,
@@ -59,6 +62,8 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const sections = [
     {
       title: "Pain Assessment",
+      description: "Rate your current pain and identify affected areas",
+      icon: "🎯",
       component: (
         <BaselineSection
           {...formData.baselineData}
@@ -68,9 +73,13 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           }))}
         />
       ),
+      required: true,
+      estimatedTime: "2 min",
     },
     {
       title: "Functional Impact",
+      description: "How is pain affecting your daily activities?",
+      icon: "🏃",
       component: (
         <FunctionalImpactSection
           {...formData.functionalImpact}
@@ -80,9 +89,13 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           }))}
         />
       ),
+      required: false,
+      estimatedTime: "3 min",
     },
     {
       title: "Medications",
+      description: "Track your current medications and their effectiveness",
+      icon: "💊",
       component: (
         <MedicationsSection
           {...formData.medications}
@@ -92,9 +105,13 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           }))}
         />
       ),
+      required: false,
+      estimatedTime: "2 min",
     },
     {
       title: "Treatments",
+      description: "Document recent treatments and their outcomes",
+      icon: "🏥",
       component: (
         <TreatmentsSection
           {...formData.treatments}
@@ -104,9 +121,13 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           }))}
         />
       ),
+      required: false,
+      estimatedTime: "3 min",
     },
     {
       title: "Quality of Life",
+      description: "How is pain affecting your sleep, mood, and social life?",
+      icon: "😴",
       component: (
         <QualityOfLifeSection
           {...formData.qualityOfLife}
@@ -116,9 +137,13 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           }))}
         />
       ),
+      required: false,
+      estimatedTime: "2 min",
     },
     {
       title: "Work Impact",
+      description: "How has pain affected your work and productivity?",
+      icon: "💼",
       component: (
         <WorkImpactSection
           {...formData.workImpact}
@@ -128,9 +153,13 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           }))}
         />
       ),
+      required: false,
+      estimatedTime: "2 min",
     },
     {
       title: "Comparison",
+      description: "Compare your current condition to previous assessments",
+      icon: "📊",
       component: (
         <ComparisonSection
           {...formData.comparison}
@@ -140,118 +169,179 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           }))}
         />
       ),
+      required: false,
+      estimatedTime: "2 min",
     },
   ];
 
-  const handleSubmit = () => {
-    onSubmit(formData);
-    
-    // Reset form
-    setFormData({
-      baselineData: { pain: 0, locations: [], symptoms: [] },
-      functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
-      medications: { current: [], changes: "", effectiveness: "" },
-      treatments: { recent: [], effectiveness: "", planned: [] },
-      qualityOfLife: { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
-      workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
-      comparison: { worseningSince: "", newLimitations: [] },
-      notes: "",
-    });
-    setCurrentFormSection(0);
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await onSubmit(formData);
+
+      // Reset form
+      setFormData({
+        baselineData: { pain: 0, locations: [], symptoms: [] },
+        functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+        medications: { current: [], changes: "", effectiveness: "" },
+        treatments: { recent: [], effectiveness: "", planned: [] },
+        qualityOfLife: { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
+        workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+        comparison: { worseningSince: "", newLimitations: [] },
+        notes: "",
+      });
+      setCurrentFormSection(0);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
+  const isSectionValid = (sectionIndex: number) => {
+    if (sectionIndex === 0) {
+      // Baseline section validation
+      return formData.baselineData.pain >= 0 && formData.baselineData.pain <= 10;
+    }
+    return true; // Other sections are optional
+  };
+
+  const canProceedToNext = isSectionValid(currentSection);
+  const isLastSection = currentSection === sections.length - 1;
+
   return (
-    <form 
-      role="form"
-      aria-label="Pain Entry Form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }}
-      className="bg-white p-6 rounded-lg shadow-md"
-    >
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold" id="form-title">Record Pain Entry</h2>
-          <div className="text-sm text-gray-500" aria-live="polite">
-            Step {currentSection + 1} of {sections.length}
+    <Card className="max-w-4xl mx-auto">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center space-x-2">
+              <span className="text-2xl">{sections[currentSection].icon}</span>
+              <span>{sections[currentSection].title}</span>
+            </CardTitle>
+            <p className="text-muted-foreground mt-1">
+              {sections[currentSection].description}
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Badge variant="outline" className="text-xs">
+              <Clock className="h-3 w-3 mr-1" />
+              {sections[currentSection].estimatedTime}
+            </Badge>
+            <Badge variant="secondary">
+              {currentSection + 1} of {sections.length}
+            </Badge>
           </div>
         </div>
-        
-        <div className="relative mb-4">
-          <div 
-            className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200"
-            role="progressbar"
-            aria-valuenow={((currentSection + 1) / sections.length) * 100}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="Form completion progress"
-          >
+
+        {/* Progress Bar */}
+        <div className="mt-4">
+          <div className="flex justify-between text-xs text-muted-foreground mb-2">
+            <span>Progress</span>
+            <span>{Math.round(((currentSection + 1) / sections.length) * 100)}%</span>
+          </div>
+          <div className="w-full bg-muted rounded-full h-2">
             <div
+              className="bg-primary h-2 rounded-full transition-all duration-300"
               style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
-              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
             />
           </div>
         </div>
 
-        <div className="flex overflow-x-auto pb-2 mb-4" role="tablist">
+        {/* Section Navigation Pills */}
+        <div className="flex flex-wrap gap-2 mt-4">
           {sections.map((section, index) => (
             <button
               key={index}
               onClick={() => setCurrentFormSection(index)}
-              role="tab"
-              aria-selected={currentSection === index}
-              aria-controls={`section-${index}`}
-              className={`px-4 py-2 whitespace-nowrap mx-1 rounded-full text-sm ${
-                currentSection === index
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                index === currentSection
+                  ? 'bg-primary text-primary-foreground'
+                  : index < currentSection
+                  ? 'bg-success text-success-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
+              aria-label={`Go to ${section.title} section`}
             >
-              {section.title}
+              {index < currentSection ? (
+                <Check className="h-3 w-3 inline mr-1" />
+              ) : (
+                <span className="mr-1">{section.icon}</span>
+              )}
+              <span className="hidden sm:inline">{section.title}</span>
+              <span className="sm:hidden">{index + 1}</span>
             </button>
           ))}
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="mb-6" role="tabpanel" id={`section-${currentSection}`} aria-labelledby={`section-${currentSection}-tab`}>
-        {sections[currentSection].component}
-      </div>
-
-      <div className="flex gap-4">
-        <button
-          type="button"
-          onClick={() => setCurrentFormSection(Math.max(0, currentSection - 1))}
-          className={`px-4 py-2 text-sm font-medium rounded-md ${
-            currentSection === 0
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-          disabled={currentSection === 0}
-          aria-label="Previous section"
+      <CardContent>
+        <form
+          role="form"
+          aria-label="Pain Entry Form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (isLastSection && canProceedToNext) {
+              handleSubmit();
+            }
+          }}
+          className="space-y-6"
         >
-          Previous
-        </button>
-        
-        {currentSection < sections.length - 1 ? (
-          <button
-            type="button"
-            onClick={() => setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))}
-            className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-md hover:bg-blue-600 ml-auto"
-            aria-label="Next section"
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            type="submit"
-            className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600 ml-auto"
-            aria-label="Submit pain entry"
-          >
-            Submit Entry
-          </button>
-        )}
-      </div>
-    </form>
+          {/* Current Section Content */}
+          <div className="min-h-[400px]">
+            {sections[currentSection].component}
+          </div>
+
+          {/* Validation Message */}
+          {!canProceedToNext && (
+            <div className="flex items-center space-x-2 p-3 bg-warning/10 border border-warning/20 rounded-lg">
+              <AlertCircle className="h-4 w-4 text-warning" />
+              <span className="text-sm text-warning">
+                Please complete the required information in this section before proceeding.
+              </span>
+            </div>
+          )}
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between pt-6 border-t">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setCurrentFormSection(Math.max(0, currentSection - 1))}
+              disabled={currentSection === 0}
+              leftIcon={<ChevronLeft className="h-4 w-4" />}
+            >
+              Previous
+            </Button>
+
+            <div className="flex space-x-3">
+              {!isLastSection ? (
+                <Button
+                  type="button"
+                  onClick={() => setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))}
+                  disabled={!canProceedToNext}
+                  rightIcon={<ChevronRight className="h-4 w-4" />}
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={!canProceedToNext || isSubmitting}
+                  leftIcon={isSubmitting ? undefined : <Save className="h-4 w-4" />}
+                  className="min-w-[120px]"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loading size="sm" className="mr-2" />
+                      Saving...
+                    </>
+                  ) : (
+                    'Save Entry'
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

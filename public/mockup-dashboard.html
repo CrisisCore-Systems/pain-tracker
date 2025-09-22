@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pain Tracker - Mockup Dashboard</title>
+  <style>
+    :root{
+      --bg:#f7fafc;
+      --card:#fff;
+      --muted:#6b7280;
+      --accent:#10b981; /* green */
+      --badge:#fff7cc; /* pale yellow */
+      --badge-text:#525252; /* gray text */
+      --shadow:0 6px 18px rgba(15,23,42,0.06);
+      --gap:16px;
+    }
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); color:#0f172a; margin:24px;}
+    .top-row{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+    .title{font-size:20px;font-weight:600}
+    .search-bar{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .search{padding:8px 12px;border-radius:8px;border:1px solid #e6e9ee;background:#fff;box-shadow:var(--shadow)}
+    /* Filter badge floated near search */
+    .filter-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:var(--badge);color:var(--badge-text);font-weight:600;font-size:13px;box-shadow:0 2px 6px rgba(2,6,23,0.06)}
+
+    /* PWA prompt anchored bottom-left */
+    .pwa-prompt{position:fixed;left:18px;bottom:18px;background:#111827;color:#fff;padding:12px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(2,6,23,0.2);display:flex;align-items:center;gap:10px;max-width:360px}
+    .pwa-actions{margin-left:auto;display:flex;gap:8px}
+    .pwa-btn{background:#fff;color:#111827;padding:6px 10px;border-radius:8px;font-weight:600}
+
+    /* Card grid */
+    .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--gap);margin-top:12px;padding-top:12px}
+    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow);min-height:86px;position:relative}
+    .card h3{font-size:13px;margin:0 0 8px 0;color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+    .card .value{font-size:24px;font-weight:700}
+
+    /* Info tooltip icon */
+    .info-icon{width:18px;height:18px;border-radius:50%;background:#eef2ff;color:#3730a3;display:inline-flex;align-items:center;justify-content:center;font-size:12px;cursor:help}
+    .tooltip{position:relative}
+    .tooltip:hover::after{content:attr(data-tip);position:absolute;right:0;top:calc(100% + 8px);background:#111827;color:#fff;padding:8px 10px;border-radius:8px;white-space:nowrap;font-size:12px}
+
+    /* Trend small */
+    .trend{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:700}
+
+    /* Today empty state */
+    .empty-sub{color:#9ca3af;font-size:13px;margin-top:6px}
+
+    /* Responsive tweaks */
+    @media (max-width:640px){.top-row{flex-wrap:wrap}.search{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="top-row">
+    <div class="title">Custom Dashboard</div>
+    <div class="search-bar">
+      <div class="filter-badge">Filter active • 3</div>
+      <input class="search" placeholder="Search entries..." />
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Overall Average
+        <span class="tooltip" data-tip="Average pain over selected period"><span class="info-icon">i</span></span>
+      </h3>
+      <div class="value">6.4</div>
+      <div class="trend">▲ 0.4</div>
+    </div>
+
+    <div class="card">
+      <h3>Today’s Entries</h3>
+      <div class="value">0</div>
+      <div class="empty-sub">No entries yet today</div>
+    </div>
+
+    <div class="card">
+      <h3>Total Entries</h3>
+      <div class="value">142</div>
+      <div class="empty-sub">Last 30 days</div>
+    </div>
+
+    <div class="card">
+      <h3>Trend</h3>
+      <div class="value">Improving</div>
+      <div class="trend">▲ 12%</div>
+    </div>
+  </div>
+
+  <div class="pwa-prompt" role="dialog" aria-label="Install Pain Tracker">
+    <div style="font-weight:700">Install Pain Tracker</div>
+    <div style="font-size:13px;color:#d1d5db">Install for quick access</div>
+    <div class="pwa-actions">
+      <button class="pwa-btn">Install</button>
+      <button class="pwa-btn" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.12)">Dismiss</button>
+    </div>
+  </div>
+
+</body>
+</html>

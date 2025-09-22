@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitest/config';
 
 const isCI = !!process.env.CI;
+const coverageEnabled = process.env.VITEST_COVERAGE !== 'false';
 
 export default defineConfig({
   test: {
@@ -13,10 +14,10 @@ export default defineConfig({
       'src/**/*.test.tsx'
     ],
     coverage: {
-      enabled: true, // enable locally so coverage badge can be generated
+      enabled: coverageEnabled, // toggle coverage collection via VITEST_COVERAGE env var
       provider: 'v8',
       reportsDirectory: 'coverage',
-  reporter: ['text','html','json-summary'],
+      reporter: ['text','html','json-summary'],
       // Focus coverage on core logic areas; exclude massive UI surface until component tests added
       include: [
         // Focus on core heuristic/engine/encryption logic currently covered by tests
@@ -48,12 +49,14 @@ export default defineConfig({
         '**/components/**/Demo*/**',
         '**/components/**/demo*/**'
       ],
-      thresholds: isCI ? {
-        lines: 50,
-        statements: 50,
-        branches: 40,
-        functions: 50,
-      } : undefined
+      thresholds: isCI
+        ? {
+            lines: 50,
+            statements: 50,
+            branches: 40,
+            functions: 50,
+          }
+        : undefined,
     }
   }
 });

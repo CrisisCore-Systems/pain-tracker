@@ -1,4 +1,5 @@
 import type { PainEntry, WCBReport } from '../types';
+import { formatNumber } from './formatting';
 import { analyzeWorkImpact, analyzeTreatmentChanges } from './wcbAnalytics';
 
 interface WCBClaimData {
@@ -172,7 +173,7 @@ function generateRecommendations(
 function calculateAveragePain(entries: PainEntry[]): number {
   if (entries.length === 0) return 0;
   const sum = entries.reduce((acc, entry) => acc + entry.baselineData.pain, 0);
-  return Number((sum / entries.length).toFixed(1));
+  return Number(formatNumber(sum / entries.length, 1));
 }
 
 function analyzeLocationFrequency(entries: PainEntry[]): Record<string, number> {
