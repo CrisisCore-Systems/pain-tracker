@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION || '20' }}
           cache: 'npm'
 
       - name: Install dependencies
@@ -65,38 +65,40 @@ jobs:
       - name: Add preview banner
         run: |
           echo "📝 Adding preview environment banner..."
-          
-          # Add preview banner to index.html
+
           cat > preview-banner.html << 'EOF'
-          <div id="preview-banner" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
-            color: white;
-            padding: 8px 16px;
-            text-align: center;
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 9999;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          ">
-            🚧 PREVIEW ENVIRONMENT - PR #${{ github.event.pull_request.number }} | 
-            <a href="${{ github.event.pull_request.html_url }}" style="color: white; text-decoration: underline;">View PR</a> |
-            <span style="font-family: monospace;">Build: ${{ github.event.pull_request.head.sha }}</span>
-          </div>
-          <script>
-            // Adjust body margin to account for banner
-            document.addEventListener('DOMContentLoaded', function() {
-              document.body.style.marginTop = '44px';
-            });
-          </script>
-          EOF
-          
-          # Insert banner into index.html
-          sed -i '/<body>/r preview-banner.html' dist/index.html
+<div id="preview-banner" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+">
+  🚧 PREVIEW ENVIRONMENT - PR #${{ github.event.pull_request.number }} |
+  <a href="${{ github.event.pull_request.html_url }}" style="color: white; text-decoration: underline;">View PR</a> |
+  <span style="font-family: monospace;">Build: ${{ github.event.pull_request.head.sha }}</span>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Only set margin if body has not already been adjusted
+    if (!document.body.style.marginTop || document.body.style.marginTop === '0px') {
+      document.body.style.marginTop = '44px';
+    }
+  });
+</script>
+EOF
+
+          # Insert banner into index.html robustly: find opening <body ...> tag and insert after it
+          # Use perl to preserve attributes on the body tag and avoid brittle replacements
+          perl -0777 -pe "s/(<body[^>]*>)/\1\n`cat preview-banner.html`/sge" -i dist/index.html
 
       - name: Generate build hash
         id: build-hash

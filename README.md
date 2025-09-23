@@ -1,13 +1,14 @@
 # 🩺 Pain Tracker | CrisisCore Systems
 
 [![Security Status](https://img.shields.io/badge/security-hardened-green)](./security/)
+[![Beta](https://img.shields.io/badge/status-beta-yellow)](https://github.com/CrisisCore-Systems/pain-tracker/issues)
 [![Test Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](./coverage/)
 [![TypeScript](https://img.shields.io/badge/typescript-76.1%25-blue)](https://www.typescriptlang.org/)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> **A revolutionary, security-first chronic pain management platform built with empathy, precision, and clinical rigor.**
+> **A security-first, offline-capable chronic pain tracking application built with empathy and clinical-minded design.**
 
-Pain Tracker transcends traditional health apps by providing high-resolution, multidimensional pain tracking with enterprise-grade security and offline-first architecture. Designed for real-world recovery journeys, clinical integration, and WorkSafe BC compliance.
+Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinical-focused exports and tooling for WorkSafe BC reporting. Some advanced analytics and integrations are in active development; see the implementation snapshot in `.github/copilot-instructions.md` for current status.
 
 ---
 
@@ -24,8 +25,8 @@ Pain Tracker transcends traditional health apps by providing high-resolution, mu
 ### 📊 **Advanced Pain Analytics**
 - **Multidimensional Tracking**: 7-step assessment across 25+ anatomical locations
 - **Symptom Complexity**: 19+ symptom types with severity gradients
-- **Pattern Recognition**: AI-assisted trend analysis and correlation detection
-- **Visual Heatmaps**: Body mapping with temporal progression visualization
+- **Pattern Recognition**: AI-assisted trend analysis and correlation detection (core heuristics implemented; advanced predictive models are in development)
+- **Visual Heatmaps**: Body mapping with temporal progression visualization (basic heatmaps implemented; advanced visualizations in progress)
 
 ### 🏥 **Clinical Integration**
 - **WorkSafe BC Compliance**: Automated claims generation and reporting
@@ -34,7 +35,7 @@ Pain Tracker transcends traditional health apps by providing high-resolution, mu
 - **Treatment Correlation**: Outcome tracking and intervention analysis
 
 ### 🔒 **Security Architecture**
-- **Local-First Data**: Zero cloud dependencies, complete privacy
+- **Local-First Data**: Primarily local storage (IndexedDB) with selective encryption; full enterprise-grade encrypted IndexedDB layer is planned.
 - **Enterprise Hardening**: CSP, SAST pipelines, secret scanning
 - **Threat Modeling**: Continuous security assessment and mitigation
 - **Compliance Ready**: HIPAA-aligned data handling practices
@@ -43,7 +44,7 @@ Pain Tracker transcends traditional health apps by providing high-resolution, mu
 - **Medication Management**: Dosage tracking, side effect monitoring
 - **Treatment Protocols**: Therapy session logging and effectiveness analysis
 - **Quality of Life**: Mood, sleep, and activity impact correlation
-- **Emergency Protocols**: Automated alert systems and crisis management
+- **Emergency Protocols**: Core emergency UI and simulation dashboards exist; automated external escalation and integrations are pending
 
 ---
 
@@ -121,10 +122,16 @@ src/
 
 ## 🚀 Getting Started
 
-### **Prerequisites**
-- Node.js 18+ (Node 18, 20, 22 supported)
-- npm 9+
-- Modern browser with IndexedDB support
+-### **Prerequisites**
+- Node.js 20 (LTS) is the standardized version for development and CI. Older LTS versions (18) may work, but CI and workflows are aligned to Node 20.
+-
+- Note: an `.nvmrc` file has been added to the repository to pin the Node.js version for local development.
+ - npm 9+
+ - Modern browser with IndexedDB support
+
+### Canvas on Windows
+
+If you are developing on Windows or running CI on Windows runners, follow the detailed instructions in `docs/CANVAS_WINDOWS_PREREQS.md` to install Visual Studio Build Tools or MSYS2 and the native `cairo` dependencies required by `canvas@3.x`.
 
 ### Badges
 Badges (tests, coverage, security, LOC, issues, PRs, commit activity) are generated
@@ -254,9 +261,9 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 
 ## 🔮 **Roadmap**
 
-### **Phase 1: Foundation** *(Current)*
-- ✅ Core pain tracking functionality
-- ✅ Security hardening and compliance
+- **Phase 1: Foundation** *(Current)*
+- Core pain tracking functionality
+- Security hardening and compliance (ongoing)
 - 🔄 Development dependency remediation
 
 ### **Phase 2: Intelligence** *(Q2 2025)*
@@ -383,18 +390,18 @@ Build: passing
 Security: dev dependency vulnerabilities present
 Deployment: GitHub Pages configured
 
-Implemented core features:
+Current core features (implemented or partially implemented):
 
-- Multi-step assessment (7 steps)
-- Interactive analytics and charts
-- WorkSafe BC report generation
-- Emergency response panel
-- Local storage import/export
-- Comprehensive test suite
-- Security scanning and validation
-- Onboarding and tutorial system
-- Responsive, accessible UI
-- Full TypeScript + Zod
+- Multi-step assessment (7 steps) — implemented
+- Interactive analytics and charts — implemented (trend charts)
+- WorkSafe BC report generation (CSV/JSON) — implemented; PDF export partial
+- Emergency response panel — partial (core UI implemented)
+- Local storage import/export — implemented (selective encryption wrappers)
+- Comprehensive test suite — implemented for core services; coverage targets ongoing
+- Security scanning and validation — implemented for CI; dev-dependency remediation ongoing
+- Onboarding and tutorial system — basic flows implemented
+- Responsive, accessible UI — implemented with trauma-informed patterns
+- Full TypeScript + Zod — implemented
 
 In active development:
 

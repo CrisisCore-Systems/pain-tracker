@@ -6,6 +6,8 @@ import {
   PointElement,
   LineElement,
   BarElement,
+  // Plugin for dataset fill behavior
+  Filler,
   Title,
   Tooltip,
   Legend,
@@ -29,6 +31,9 @@ ChartJS.register(
   ArcElement,
   RadialLinearScale
 );
+
+// Register filler plugin (required for dataset.fill to work)
+ChartJS.register(Filler);
 
 export type ChartType = 'line' | 'bar' | 'doughnut' | 'radar';
 

@@ -76,6 +76,21 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
 
     const firstPoint = trendData[0];
     const lastPoint = trendData[trendData.length - 1];
+
+    // Defensive guards: trendData points may contain nulls when entries are missing.
+    if (
+      firstPoint == null ||
+      lastPoint == null ||
+      firstPoint.pain == null ||
+      lastPoint.pain == null ||
+      firstPoint.symptoms == null ||
+      lastPoint.symptoms == null ||
+      firstPoint.locations == null ||
+      lastPoint.locations == null
+    ) {
+      return null;
+    }
+
     const painChange = lastPoint.pain - firstPoint.pain;
     const symptomsChange = lastPoint.symptoms - firstPoint.symptoms;
     const locationsChange = lastPoint.locations - firstPoint.locations;

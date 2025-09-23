@@ -2,6 +2,7 @@ import { useRef, useEffect } from "react";
 import { FileText } from "lucide-react";
 import type { PainEntry } from "../../types";
 import { WCBReportGenerator } from "../pain-tracker/WCBReport";
+import { isFeatureEnabled } from '../../config/beta';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../design-system";
 import { usePainTrackerStore } from "../../stores/pain-tracker-store";
 
@@ -61,7 +62,11 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
             />
           </div>
         </div>
-        <WCBReportGenerator entries={entries} period={ui.reportPeriod} />
+        {isFeatureEnabled('workSafeBCExport') ? (
+          <WCBReportGenerator entries={entries} period={ui.reportPeriod} />
+        ) : (
+          <div className="text-sm text-muted-foreground p-4 bg-muted/5 rounded">WorkSafe BC report export is not available in this release.</div>
+        )}
       </CardContent>
     </Card>
   );

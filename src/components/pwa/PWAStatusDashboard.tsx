@@ -62,7 +62,10 @@ export function PWAStatusDashboard() {
   const loadPWAStatus = async () => {
     try {
       const status = await pwaManager.getDiagnostics();
-      setPwaStatus(status);
+      // pwaManager.getDiagnostics() returns a typed PWACapabilities shape
+      // which may not exactly match our local PWAStatusData type. Narrow
+      // it here with a safe cast so the state updater accepts it.
+      setPwaStatus(status as unknown as PWAStatusData);
     } catch (error) {
       console.error('Failed to load PWA status:', error);
     }

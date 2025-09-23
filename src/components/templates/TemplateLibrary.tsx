@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isFeatureEnabled } from '../../config/beta';
 import type { PainEntry } from '../../types';
 
 interface TemplateLibraryProps {
@@ -225,7 +226,9 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all');
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
 
-  const allTemplates = [...WORKSAFE_BC_TEMPLATES, ...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES];
+  // Respect WorkSafe BC feature flag: optionally exclude WorkSafe templates
+  const includeWorkSafe = isFeatureEnabled('workSafeBCExport');
+  const allTemplates = includeWorkSafe ? [...WORKSAFE_BC_TEMPLATES, ...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES] : [...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES];
   const filteredTemplates = selectedCategory === 'all' 
     ? allTemplates 
     : allTemplates.filter(t => t.category === selectedCategory);

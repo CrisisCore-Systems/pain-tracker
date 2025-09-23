@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import { expect, afterEach, vi, beforeAll } from 'vitest';
+import { securityService } from '../services/SecurityService';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 import CryptoJS from 'crypto-js';
@@ -37,7 +38,6 @@ try {
   const { createCanvas, CanvasRenderingContext2D } = require('canvas');
 
   // Attach a minimal implementation to document if not present
-  // @ts-expect-error - augmenting global for test env
   if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
     // Replace getContext to return a real CanvasRenderingContext2D from node-canvas
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -93,17 +93,25 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
 }
 
 // Seed encryption master key if securityService storage relies on localStorage
-beforeAll(() => {
+beforeAll(async () => {
   try {
-    // Mimic stored key object shape used in EncryptionService.storeKey
-    const key = CryptoJS.lib.WordArray.random(32).toString();
-    const record = JSON.stringify({ key, created: new Date().toISOString() });
-    // Stored under key:pain-tracker-master (un-encrypted for test harness simplification)
+    // Initialize a deterministic master key for tests so SecurityService can encrypt/decrypt
+    // Using a password keeps the derived master key deterministic across runs
+    await securityService.initializeMasterKey('vitest-seed-password');
+
+    // Seed a deterministic master key object in localStorage so EncryptionService can find it if it
+    // attempts to list keys directly (some tests manipulate localStorage directly)
+    const seededKey = CryptoJS.SHA256('vitest-seed-key-2025').toString();
+    const record = JSON.stringify({ key: seededKey, created: new Date().toISOString() });
     window.localStorage.setItem('key:pain-tracker-master', record);
-  // Provide default no-op encryption hooks for secureStorage encrypt:true paths in tests
-  (globalThis as unknown as { __secureStorageEncrypt?: (p:string)=>string }).__secureStorageEncrypt = (plaintext: string) => plaintext;
-  (globalThis as unknown as { __secureStorageDecrypt?: (c:string)=>string }).__secureStorageDecrypt = (ciphertext: string) => ciphertext;
-  } catch {
-    /* ignore */
+
+    // Provide default no-op encryption hooks for secureStorage encrypt:true paths in tests
+    (globalThis as unknown as { __secureStorageEncrypt?: (p:string)=>string }).__secureStorageEncrypt = (plaintext: string) => plaintext;
+    (globalThis as unknown as { __secureStorageDecrypt?: (c:string)=>string }).__secureStorageDecrypt = (ciphertext: string) => ciphertext;
+  } catch (e) {
+    // If master key initialization fails for some environment, keep test-run resilient
+    // but log the issue for investigation
+    // eslint-disable-next-line no-console
+    console.warn('Test setup: failed to initialize master key', e);
   }
 });

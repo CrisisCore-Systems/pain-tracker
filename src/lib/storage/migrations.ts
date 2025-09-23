@@ -1,4 +1,4 @@
-import { secureStorage } from '../storage/secureStorage';
+import { secureStorage } from './secureStorage';
 
 export type MigrationFn = () => Promise<void> | void;
 
@@ -23,7 +23,6 @@ export async function runMigrations(migrations: Array<{ id: string; fn: Migratio
 }
 
 export default { runMigrations };
-import { secureStorage } from './secureStorage';
 
 /**
  * migrateLegacyKey - one-time migration helper

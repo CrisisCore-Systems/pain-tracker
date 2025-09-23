@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { isFeatureEnabled } from '../../config/beta';
 import { formatNumber } from '../../utils/formatting';
 import {
   TrendingUp,
@@ -54,6 +55,8 @@ interface AdvancedMetric {
 }
 
 export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnalyticsDashboardProps) {
+  // Respect beta feature flag: if advanced analytics feature is disabled, render nothing
+  if (!isFeatureEnabled('advancedAnalytics')) return null as any;
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
   const [showPredictions, setShowPredictions] = useState(true);
   const [chartType, setChartType] = useState<'line' | 'bar'>('line');

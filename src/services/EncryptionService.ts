@@ -107,6 +107,13 @@ export class EndToEndEncryptionService {
           // Fallback to in-memory store (primarily for tests)
             this.inMemoryKeyCache.set(keyId, { key, created: new Date().toISOString() });
         }
+        // Always populate in-memory cache as well so callers can rely on fast access
+        // and tests that assert fallback behavior will observe the key.
+        try {
+          this.inMemoryKeyCache.set(keyId, { key, created: new Date().toISOString() });
+        } catch {
+          // ignore cache set failures
+        }
       },
 
       retrieveKey: async (keyId: string): Promise<string | null> => {

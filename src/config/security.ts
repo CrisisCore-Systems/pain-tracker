@@ -117,13 +117,23 @@ export const securityConfig = {
     },
     
     // CORS configuration
-    cors: {
-      origin: process.env.NODE_ENV === 'production' 
-        ? ['https://your-domain.com'] // Replace with actual production domain
-        : ['http://localhost:5173', 'http://localhost:3000'],
-      credentials: true,
-      optionsSuccessStatus: 200,
-    },
+    cors: ((): any => {
+      const _env = ((): any => {
+        try {
+          if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+            return (import.meta as any).env;
+          }
+        } catch (_) {}
+        if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
+        return {};
+      })();
+      const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
+      return {
+        origin: isProd ? ['https://your-domain.com'] : ['http://localhost:5173', 'http://localhost:3000'],
+        credentials: true,
+        optionsSuccessStatus: 200,
+      };
+    })(),
     
     // Request validation
     validation: {
@@ -149,12 +159,24 @@ export const securityConfig = {
     },
     
     // Session security
-    session: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      sameSite: 'strict' as const,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
+    session: ((): any => {
+      const _env = ((): any => {
+        try {
+          if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+            return (import.meta as any).env;
+          }
+        } catch (_) {}
+        if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
+        return {};
+      })();
+      const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
+      return {
+        secure: isProd,
+        httpOnly: true,
+        sameSite: 'strict' as const,
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      };
+    })(),
     
     // Local storage encryption
     localStorage: {
@@ -186,11 +208,23 @@ export const securityConfig = {
   // Security monitoring
   monitoring: {
     // Error reporting
-    errorReporting: {
-      enableStackTraces: process.env.NODE_ENV !== 'production',
-      sanitizeErrors: true,
-      logSecurityEvents: true,
-    },
+    errorReporting: ((): any => {
+      const _env = ((): any => {
+        try {
+          if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+            return (import.meta as any).env;
+          }
+        } catch (_) {}
+        if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
+        return {};
+      })();
+      const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
+      return {
+        enableStackTraces: !isProd,
+        sanitizeErrors: true,
+        logSecurityEvents: true,
+      };
+    })(),
     
     // Audit logging
     audit: {
@@ -279,13 +313,23 @@ export function validateSecurityConfig(): {
   const recommendations: string[] = [];
   
   // Check environment variables
-  if (process.env.NODE_ENV === 'production') {
-    if (!process.env.VITE_WCB_API_ENDPOINT || process.env.VITE_WCB_API_ENDPOINT.startsWith('http://')) {
+  const _env = ((): any => {
+    try {
+      if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+        return (import.meta as any).env;
+      }
+    } catch (_) {}
+    if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
+    return {};
+  })();
+
+  if ((_env.NODE_ENV === 'production' || _env.MODE === 'production')) {
+    if (!_env.VITE_WCB_API_ENDPOINT || _env.VITE_WCB_API_ENDPOINT.startsWith('http://')) {
       issues.push('Production API endpoint should use HTTPS');
       recommendations.push('Set VITE_WCB_API_ENDPOINT to use https://');
     }
-    
-    if (process.env.VITE_ENABLE_DEBUG_MODE === 'true') {
+
+    if (_env.VITE_ENABLE_DEBUG_MODE === 'true') {
       issues.push('Debug mode should be disabled in production');
       recommendations.push('Set VITE_ENABLE_DEBUG_MODE=false for production');
     }
@@ -293,12 +337,12 @@ export function validateSecurityConfig(): {
   
   // Check CSP configuration
   const csp = securityConfig.contentSecurityPolicy;
-  if (csp.scriptSrc.includes("'unsafe-eval'") && process.env.NODE_ENV === 'production') {
+  if (csp.scriptSrc.includes("'unsafe-eval'") && ((_env.NODE_ENV === 'production') || (_env.MODE === 'production'))) {
     issues.push("'unsafe-eval' should not be allowed in production CSP");
     recommendations.push("Remove 'unsafe-eval' from script-src in production");
   }
   
-  if (csp.scriptSrc.includes("'unsafe-inline'") && process.env.NODE_ENV === 'production') {
+  if (csp.scriptSrc.includes("'unsafe-inline'") && ((_env.NODE_ENV === 'production') || (_env.MODE === 'production'))) {
     issues.push("'unsafe-inline' should not be allowed in production CSP");
     recommendations.push("Remove 'unsafe-inline' from script-src in production or use nonces");
   }

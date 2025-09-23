@@ -2,30 +2,6 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-      - name: Install native dependencies for canvas
-        run: |
-          sudo apt-get update -y;
-          sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev;
-      - name: Install dependencies
-        run: npm ci
-      - name: Run tests
-        run: npm run test -- --runname: CI/CD Pipeline
-
-on:
-  push:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
@@ -49,6 +25,9 @@ env:
   NODE_ENV: production
   VITE_APP_ENVIRONMENT: production
   VITE_WCB_API_ENDPOINT: /api/wcb
+
+  # Standardized Node version for CI
+  NODE_VERSION: '20'
 
 jobs:
   # Changed files detection for optimization
@@ -92,7 +71,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18, 20, 22]
+        # Standardize on a single, supported LTS for CI to avoid mismatched toolchains
+        node-version: [20]
         include:
           - node-version: 20
             is-primary: true
@@ -168,7 +148,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       
       - name: Install dependencies
@@ -296,7 +276,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       
       - name: Install dependencies

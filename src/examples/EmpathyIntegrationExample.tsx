@@ -360,7 +360,8 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
       </div>
 
       {/* Debug information */}
-      {process.env.NODE_ENV === 'development' && (
+      {((typeof (import.meta as any) !== 'undefined' && (import.meta as any).env && ((import.meta as any).env.MODE === 'development' || (import.meta as any).env.NODE_ENV === 'development'))
+        || (typeof process !== 'undefined' && (process as any).env && (process as any).env.NODE_ENV === 'development')) && (
         <div className="mt-8 p-4 bg-gray-50 rounded-lg">
           <h3 className="font-semibold mb-2">Debug Information</h3>
           <div className="text-sm space-y-2">

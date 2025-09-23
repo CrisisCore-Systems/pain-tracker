@@ -1,0 +1,96 @@
+<testsuites id="" name="" tests="2" failures="2" skipped="0" errors="0" time="125.64599700000001">
+<testsuite name="tests\pain-entry-form.spec.ts" timestamp="2025-09-22T22:43:16.570Z" hostname="chromium" tests="2" failures="2" skipped="0" time="208.579" errors="0">
+<testcase name="PainEntryForm e2e › can create a pain entry and see it in the list" classname="tests\pain-entry-form.spec.ts" time="105.078">
+<failure message="pain-entry-form.spec.ts:27:3 can create a pain entry and see it in the list" type="FAILURE">
+<![CDATA[  [chromium] › tests\pain-entry-form.spec.ts:27:3 › PainEntryForm e2e › can create a pain entry and see it in the list 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByText(/Record Pain Entry/)
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  30000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 30000ms
+      - waiting for getByText(/Record Pain Entry/)
+
+
+      21 |       await expect(page.getByText(/Pain Tracker/)).toBeVisible({ timeout });
+      22 |     } catch {
+    > 23 |       await expect(page.getByText(/Record Pain Entry/)).toBeVisible({ timeout });
+         |                                                         ^
+      24 |     }
+      25 |   });
+      26 |
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\pain-entry-form.spec.ts:23:57
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-chromium\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="PainEntryForm e2e › export report produces CSV download when WCB report shown" classname="tests\pain-entry-form.spec.ts" time="103.501">
+<failure message="pain-entry-form.spec.ts:83:3 export report produces CSV download when WCB report shown" type="FAILURE">
+<![CDATA[  [chromium] › tests\pain-entry-form.spec.ts:83:3 › PainEntryForm e2e › export report produces CSV download when WCB report shown 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator:  getByText(/Record Pain Entry/)
+    Expected: visible
+    Received: <element(s) not found>
+    Timeout:  30000ms
+
+    Call log:
+      - Expect "toBeVisible" with timeout 30000ms
+      - waiting for getByText(/Record Pain Entry/)
+
+
+      21 |       await expect(page.getByText(/Pain Tracker/)).toBeVisible({ timeout });
+      22 |     } catch {
+    > 23 |       await expect(page.getByText(/Record Pain Entry/)).toBeVisible({ timeout });
+         |                                                         ^
+      24 |     }
+      25 |   });
+      26 |
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\pain-entry-form.spec.ts:23:57
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

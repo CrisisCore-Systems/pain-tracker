@@ -56,7 +56,11 @@
     "release:minor": "node scripts/deploy.js release minor",
     "release:major": "node scripts/deploy.js release major",
     "healthcheck": "node scripts/health-check.js",
-    "mutate": "stryker run"
+  "mutate": "stryker run",
+    "playwright:install": "npx playwright install",
+    "e2e": "npx playwright test --config=e2e/playwright.config.ts",
+    "e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
+    "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
   "dependencies": {
     "@commitlint/cli": "^19.8.1",
@@ -95,6 +99,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.43.0",
     "@eslint/js": "^9.35.0",
     "@stryker-mutator/core": "^8.2.0",
     "@tailwindcss/forms": "^0.5.10",
@@ -128,6 +133,13 @@
     "vite": "^7.1.5",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
-    "canvas": "^2.11.2"
+    "canvas": "^3.2.0"
+  },
+  "engines": {
+    "node": "^20.0.0 || >=20",
+    "npm": ">=9"
+  },
+  "playwright": {
+    "install": true
   }
 }

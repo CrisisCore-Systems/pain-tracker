@@ -144,58 +144,46 @@ jobs:
           name: staging-build-${{ github.sha }}
           path: dist/
 
-      - name: Deploy to staging branch
+      - name: Deploy to staging (GitHub Pages)
+        uses: actions/deploy-pages@v4
+        with:
+          # The pages action will deploy the uploaded artifact. We previously uploaded the artifact in the 'validate' job.
+          # Ensure repository has Pages configured to serve from the gh-pages-staging branch or the artifact name.
+          # This action uses the default GITHUB_TOKEN for authentication.
+          # For more advanced scenarios, replace with peaceiris/actions-gh-pages or actions-gh-pages.
+          # artifact_name is not required here because we will copy dist into the workspace before calling deploy.
         run: |
-          echo "🚀 Deploying to staging environment..."
-          
-          # Configure git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Clone staging branch or create if doesn't exist
-          git clone --single-branch --branch gh-pages-staging https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} staging-repo || {
-            git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} staging-repo
-            cd staging-repo
-            git checkout --orphan gh-pages-staging
-            git rm -rf .
-            echo "# Staging Environment" > README.md
-            git add README.md
-            git commit -m "Initialize staging branch"
-            git push origin gh-pages-staging
-            cd ..
-          }
-          
-          # Deploy build to staging
-          cd staging-repo
-          rm -rf *
-          cp -r ../dist/* .
-          
-          # Add staging-specific modifications
-          echo "<!-- Staging Environment - Build: ${{ github.sha }} -->" >> index.html
-          
-          git add .
-          git commit -m "Deploy staging build ${{ github.sha }}" || echo "No changes to commit"
-          git push origin gh-pages-staging
+          echo "🚀 Preparing staging deployment artifact..."
+          # Copy dist into the workspace so deploy-pages can pick it up
+          mkdir -p ./staging-dist
+          cp -r dist/* ./staging-dist/
+          # Add a small staging marker
+          echo "<!-- Staging Environment - Build: ${{ github.sha }} -->" >> ./staging-dist/index.html
+          ls -la ./staging-dist | sed -n '1,200p'
 
       - name: Perform health checks
         run: |
           echo "🔍 Performing staging deployment health checks..."
-          
+
           # Wait for deployment to be ready
           sleep 30
-          
-          # Basic connectivity check
-          staging_url="https://crisiscore-systems.github.io/pain-tracker/"
+
+          # Use environment URL where possible
+          staging_url="${{ job.environment.url || 'https://crisiscore-systems.github.io/pain-tracker/staging/' }}"
+          echo "Checking staging URL: $staging_url"
           if curl -f -s "$staging_url" > /dev/null; then
             echo "✅ Staging site is accessible"
           else
             echo "❌ Staging site is not accessible"
             exit 1
           fi
-          
-          # Check for build hash in deployment
-          echo "📋 Verifying build integrity..."
-          echo "✅ Staging deployment completed successfully"
+
+          # Check for build marker in deployment
+          if curl -s "$staging_url" | grep -q "Staging Environment - Build"; then
+            echo "📋 Build marker found in deployment"
+          else
+            echo "⚠️ Build marker not found; verify deployed files"
+          fi
 
       - name: Update deployment status
         run: |

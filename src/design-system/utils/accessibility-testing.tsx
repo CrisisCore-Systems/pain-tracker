@@ -163,7 +163,19 @@ export const runAccessibilityTests = (element: HTMLElement): {
 /**
  * React hook for accessibility testing in development
  */
-export const useAccessibilityTesting = (enabled = process.env.NODE_ENV === 'development') => {
+const getNodeEnv = () => {
+  try {
+    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+      return (import.meta as any).env.MODE || (import.meta as any).env.NODE_ENV;
+    }
+  } catch (_) {}
+  if (typeof process !== 'undefined' && (process as any).env) {
+    return (process as any).env.NODE_ENV || (process as any).env.MODE;
+  }
+  return undefined;
+};
+
+export const useAccessibilityTesting = (enabled = getNodeEnv() === 'development') => {
   const [results, setResults] = React.useState<ReturnType<typeof runAccessibilityTests> | null>(null);
 
   const testElement = React.useCallback((element: HTMLElement | null) => {

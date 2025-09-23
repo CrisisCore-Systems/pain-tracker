@@ -14,6 +14,14 @@ import { ToastProvider } from "./components/feedback";
 import { TraumaInformedProvider } from "./components/accessibility";
 import './i18n/config';
 import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
+import BetaWarning from './components/BetaWarning';
+import QuickActions from './components/QuickActions';
+import MedicationReminders from './components/MedicationReminders';
+import NotificationConsentPrompt from './components/NotificationConsentPrompt';
+import AlertsSettings from './components/AlertsSettings';
+import AlertsActivityLog from './components/AlertsActivityLog';
+import { usePatternAlerts } from './hooks/usePatternAlerts';
+import { usePainTrackerStore, selectEntries } from './stores/pain-tracker-store';
 import { OfflineBanner } from "./components/pwa/OfflineIndicator";
 import { BrandedLoadingScreen } from "./components/branding/BrandedLoadingScreen";
 import { pwaManager } from "./utils/pwa-utils";
@@ -192,6 +200,10 @@ function App() {
       console.log('PWA Debug: Run resetPWA() in console to reset service worker');
     }
   }, []);
+  // Subscribe to entries and wire pattern alerts
+  const storeEntries = usePainTrackerStore(selectEntries);
+  const patternEntries = storeEntries.map(e => ({ time: e.timestamp, pain: e.baselineData?.pain ?? 0 }));
+  usePatternAlerts(patternEntries);
   
   return (
     <ThemeProvider>
@@ -199,6 +211,14 @@ function App() {
         <ToastProvider>
           <div className="min-h-screen bg-background transition-colors">
             <OfflineBanner />
+            <BetaWarning />
+            <QuickActions />
+            <div className="fixed top-20 right-4 z-50 w-80 space-y-2">
+              <MedicationReminders />
+              <AlertsSettings />
+              <AlertsActivityLog />
+            </div>
+            <NotificationConsentPrompt />
             <ErrorBoundary fallback={<ErrorFallback />}>
               <Suspense fallback={<LoadingFallback />}>
                 <PainTrackerContainer />

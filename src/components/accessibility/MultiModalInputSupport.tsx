@@ -21,12 +21,9 @@ import {
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
 // Minimal, local SpeechRecognition-like typings to avoid relying on lib.dom variants
-declare global {
-  interface Window {
-    webkitSpeechRecognition?: { new(): SpeechRecognitionLike };
-    SpeechRecognition?: { new(): SpeechRecognitionLike };
-  }
-}
+// Use local window access for SpeechRecognition to avoid conflicting global augmentations
+// (PhysicalAccommodations.tsx provides a full global declaration). We intentionally
+// avoid re-declaring global types here to prevent TS2717 duplicate-property errors.
 
 interface SpeechRecognitionLike {
   continuous: boolean;
@@ -97,18 +94,23 @@ function useVoiceRecognition(): VoiceRecognitionHook {
 
     if (SpeechRecognitionCtor) {
       setIsSupported(true);
-      recognitionRef.current = new SpeechRecognitionCtor();
+      // Cast the platform SpeechRecognition instance to our lightweight interface
+      // so we don't require exact runtime types. Use a defensive null-check
+      // before accessing instance properties to satisfy strict null checks.
+      recognitionRef.current = (new SpeechRecognitionCtor() as unknown) as SpeechRecognitionLike;
 
-      recognitionRef.current.continuous = true;
-      recognitionRef.current.interimResults = true;
+      if (recognitionRef.current) {
+        recognitionRef.current.continuous = true;
+        recognitionRef.current.interimResults = true;
 
-      recognitionRef.current.onresult = (event: SpeechRecognitionEventLike) => {
-        const transcript = Array.from(event.results)
-          .map(result => result[0])
-          .map(r => r.transcript)
-          .join('');
-        setTranscript(transcript);
-      };
+        recognitionRef.current.onresult = (event: SpeechRecognitionEventLike) => {
+          const transcript = Array.from(event.results)
+            .map(result => result[0])
+            .map(r => r.transcript)
+            .join('');
+          setTranscript(transcript);
+        };
+      }
     }
   }, []);
 

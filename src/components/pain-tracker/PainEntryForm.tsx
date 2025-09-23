@@ -11,7 +11,32 @@ import {
   WorkImpactSection,
 } from "./form-sections";
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Loading } from '../../design-system';
+// Optional validation technology integration (feature-flagged)
+import { EmotionalValidation } from '../../validation-technology';
 import { ChevronLeft, ChevronRight, Check, Save, Clock, AlertCircle } from 'lucide-react';
+
+// Environment helper for browser (Vite) and Node fallbacks.
+// Use Vite's import.meta.env when available, otherwise fall back to process.env if present.
+const getEnv = () => {
+  try {
+    // import.meta is supported in browser bundles built by Vite; cast to any to access env at runtime
+    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+      return (import.meta as any).env as Record<string, any>;
+    }
+  } catch (_) {
+    // ignore
+  }
+  if (typeof process !== 'undefined' && (process as any).env) {
+    return (process as any).env as Record<string, any>;
+  }
+  return {} as Record<string, any>;
+};
+
+const ENABLE_VALIDATION = (() => {
+  const env = getEnv();
+  // Support both Vite-prefixed and legacy env keys
+  return env.VITE_REACT_APP_ENABLE_VALIDATION === 'true' || env.REACT_APP_ENABLE_VALIDATION === 'true';
+})();
 
 interface PainEntryFormProps {
   onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
@@ -288,6 +313,17 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           <div className="min-h-[400px]">
             {sections[currentSection].component}
           </div>
+
+          {/* Emotional validation panel (read-only, feature-flagged) */}
+          {ENABLE_VALIDATION && (
+            <div className="mt-4">
+              <EmotionalValidation
+                text={formData.notes || ''}
+                onValidationGenerated={() => { /* read-only integration: UI only for now */ }}
+                isActive={true}
+              />
+            </div>
+          )}
 
           {/* Validation Message */}
           {!canProceedToNext && (
