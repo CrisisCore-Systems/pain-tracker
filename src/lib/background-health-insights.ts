@@ -519,8 +519,17 @@ export class BackgroundHealthInsightsService {
   }
 }
 
-// Export singleton instance
-export const healthInsights = BackgroundHealthInsightsService.getInstance();
+// Export a lazy getter for the singleton instance to avoid side-effects at module import time.
+// Creating workers (which uses new URL(..., import.meta.url)) during module import can cause
+// test runners and bundlers to receive URL objects unexpectedly. Make initialization
+// happen on first use instead.
+let _healthInsightsInstance: BackgroundHealthInsightsService | null = null;
+export function getHealthInsightsService(): BackgroundHealthInsightsService {
+  if (!_healthInsightsInstance) {
+    _healthInsightsInstance = BackgroundHealthInsightsService.getInstance();
+  }
+  return _healthInsightsInstance;
+}
 
 // Helper function for UI components
 export function getInsightIcon(type: HealthInsight['type']): string {

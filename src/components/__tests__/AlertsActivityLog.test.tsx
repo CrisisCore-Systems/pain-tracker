@@ -18,12 +18,18 @@ describe('AlertsActivityLog', () => {
 
   test('renders no alerts placeholder', () => {
     const { container } = render(<AlertsActivityLog />);
+    // Click the button to open the dialog
+    const button = screen.getByText('Recent Alerts');
+    fireEvent.click(button);
     expect(container.textContent).toContain('No recent alerts');
   });
 
   test('saveAlert shows alert and acknowledge clears single', () => {
     saveAlert({ id: 'a1', time: new Date().toISOString(), message: 'Test alert' });
     render(<AlertsActivityLog />);
+    // Click the button to open the dialog
+    const button = screen.getByText('Recent Alerts');
+    fireEvent.click(button);
     expect(screen.getByText('Test alert')).toBeTruthy();
   const ack = screen.getByText('Acknowledge');
   fireEvent.click(ack);
@@ -35,6 +41,9 @@ describe('AlertsActivityLog', () => {
     saveAlert({ id: 'a1', time: new Date().toISOString(), message: 'One' });
     saveAlert({ id: 'a2', time: new Date().toISOString(), message: 'Two' });
     render(<AlertsActivityLog />);
+    // Click the button to open the dialog
+    const button = screen.getByText('Recent Alerts');
+    fireEvent.click(button);
     expect(screen.getByText('One')).toBeTruthy();
     expect(screen.getByText('Two')).toBeTruthy();
   const clear = screen.getByText('Clear all');

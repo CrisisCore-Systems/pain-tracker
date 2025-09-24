@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system/components/Card';
 import { Badge } from '../../design-system/components/Badge';
-import { Chart } from '../../design-system/components/Chart';
+import Chart from '../../design-system/components/Chart';
 import type { PainEntry } from '../../types';
 import type { ComparisonInsight, ComparisonDataset, TreatmentComparison as TreatmentCfg } from '../../types/comparison';
 import { DataComparisonEngine } from '../../utils/comparison/engine';
@@ -161,8 +161,8 @@ export function TreatmentComparison({ entries, className }: TreatmentComparisonP
           label: 'Average Pain Level',
           data: [baselineAvg, treatmentAvg],
           backgroundColor: [
-            'hsl(var(--color-muted))',
-            change.absolute < 0 ? 'hsl(var(--color-success))' : 'hsl(var(--color-destructive))'
+            colorVar('color-muted') ?? '#64748b',
+            change.absolute < 0 ? colorVar('color-success') ?? '#22c55e' : colorVar('color-destructive') ?? '#ef4444'
           ]
         }]
       };

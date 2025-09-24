@@ -13,7 +13,8 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system/components/Card';
 import { Badge } from '../../design-system/components/Badge';
-import { Chart } from '../../design-system/components/Chart';
+import Chart from '../../design-system/components/Chart';
+import { colorVar } from '../../design-system/utils/theme';
 import type { PainEntry } from '../../types';
 import type { ComparisonInsight, ComparisonDataset } from '../../types/comparison';
 import type { ConditionComparison as ConditionCfg } from '../../types/comparison';
@@ -170,9 +171,9 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
       const c2Avg = result.statistics.overall.comparisonMean;
 
       const difference = {
-  absolute: c2Avg - c1Avg,
-  percentage: c1Avg > 0 ? ((c2Avg - c1Avg) / c1Avg) * 100 : 0,
-  significance: 1 - result.statistics.overall.statisticalSignificance
+        absolute: c2Avg - c1Avg,
+        percentage: c1Avg > 0 ? ((c2Avg - c1Avg) / c1Avg) * 100 : 0,
+        significance: 1 - result.statistics.overall.statisticalSignificance
       };
 
       // Generate chart data
@@ -182,8 +183,8 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
           label: 'Average Pain Level',
           data: [c1Avg, c2Avg],
           backgroundColor: [
-            'hsl(var(--color-muted))',
-            difference.absolute > 0 ? 'hsl(var(--color-destructive))' : 'hsl(var(--color-success))'
+            colorVar('color-muted') ?? '#64748b',
+            difference.absolute > 0 ? colorVar('color-destructive') ?? '#ef4444' : colorVar('color-success') ?? '#22c55e'
           ]
         }]
       };

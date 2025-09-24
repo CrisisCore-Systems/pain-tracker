@@ -56,10 +56,11 @@
     "release:minor": "node scripts/deploy.js release minor",
     "release:major": "node scripts/deploy.js release major",
     "healthcheck": "node scripts/health-check.js",
-  "mutate": "stryker run",
+    "mutate": "stryker run",
     "playwright:install": "npx playwright install",
     "e2e": "npx playwright test --config=e2e/playwright.config.ts",
     "e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
+    "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium",
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
   "dependencies": {
@@ -79,6 +80,7 @@
     "date-fns": "^4.1.0",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
+    "focus-trap-react": "^9.0.2",
     "glob": "^11.0.3",
     "html2canvas": "^1.4.1",
     "http-proxy-middleware": "^3.0.5",
@@ -99,8 +101,9 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
-    "@playwright/test": "^1.43.0",
+    "@axe-core/playwright": "^4.10.2",
     "@eslint/js": "^9.35.0",
+    "@playwright/test": "^1.43.0",
     "@stryker-mutator/core": "^8.2.0",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
@@ -117,6 +120,7 @@
     "@vitejs/plugin-react": "^5.0.2",
     "@vitest/coverage-v8": "^3.2.4",
     "autoprefixer": "^10.4.14",
+    "canvas": "^3.2.0",
     "eslint": "^9.35.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.0.0",
@@ -132,8 +136,7 @@
     "typescript": "^5.7.2",
     "vite": "^7.1.5",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4",
-    "canvas": "^3.2.0"
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": "^20.0.0 || >=20",

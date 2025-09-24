@@ -5,8 +5,10 @@ export interface RawEntry {
   pain_level: number;
 }
 
+import { colorVar } from './theme';
+
 const defaultColors = {
-  primary: 'hsl(var(--color-primary))',
+  primary: colorVar('color-primary'),
 };
 
 export function buildRolling7DayChartData(

@@ -445,6 +445,13 @@ export const getThemeColors = (mode: ThemeMode) => {
       accentForeground: '#000000',
       destructive: '#ff0000',
       destructiveForeground: '#ffffff',
+      // success/info/warning
+      success: colors.success[500],
+      successForeground: colors.success[50],
+      warning: colors.warning[500],
+      warningForeground: colors.warning[50],
+      info: colors.info[500],
+      infoForeground: colors.info[50],
       border: '#ffffff',
       input: '#ffffff',
       ring: '#ffff00',
@@ -469,6 +476,13 @@ export const getThemeColors = (mode: ThemeMode) => {
       accentForeground: colors.neutral[50],
       destructive: colors.neutral[900],
       destructiveForeground: colors.neutral[50],
+      // semantic colors
+      success: colors.success[500],
+      successForeground: colors.success[50],
+      warning: colors.warning[500],
+      warningForeground: colors.warning[50],
+      info: colors.info[500],
+      infoForeground: colors.info[50],
       border: colors.neutral[300],
       input: colors.neutral[200],
       ring: colors.neutral[800],
@@ -492,7 +506,14 @@ export const getThemeColors = (mode: ThemeMode) => {
       accent: colors.accent[400],
       accentForeground: colors.neutral[900],
       destructive: colors.error[500],
-      destructiveForeground: colors.neutral[50],
+      destructiveForeground: '#ffffff',
+      // semantic colors
+      success: colors.success[500],
+      successForeground: colors.success[50],
+      warning: colors.warning[500],
+      warningForeground: colors.warning[50],
+      info: colors.info[500],
+      infoForeground: colors.info[50],
       border: colors.neutral[700],
       input: colors.neutral[700],
       ring: colors.primary[400],
@@ -506,18 +527,40 @@ export const getThemeColors = (mode: ThemeMode) => {
     cardForeground: colors.neutral[900],
     popover: colors.neutral[50],
     popoverForeground: colors.neutral[900],
-    primary: colors.primary[600],
-    primaryForeground: colors.neutral[50],
+  primary: colors.primary[600],
+  primaryForeground: colors.neutral[50],
     secondary: colors.neutral[100],
     secondaryForeground: colors.neutral[900],
     muted: colors.neutral[100],
-    mutedForeground: colors.neutral[500],
+    // increase muted foreground contrast for accessibility
+    mutedForeground: colors.neutral[700],
     accent: colors.accent[600],
     accentForeground: colors.neutral[50],
-    destructive: colors.error[500],
-    destructiveForeground: colors.neutral[50],
+  // use darker semantic shades for better contrast on light backgrounds
+  destructive: colors.error[700],
+  // ensure destructive foreground is pure white for contrast against red
+  destructiveForeground: '#ffffff',
+  // semantic colors (darker variants)
+  success: colors.success[700],
+  successForeground: colors.success[50],
+  warning: colors.warning[700],
+  warningForeground: colors.warning[50],
+  info: colors.info[700],
+  infoForeground: colors.info[50],
     border: colors.neutral[200],
     input: colors.neutral[200],
     ring: colors.primary[600],
   };
 };
+
+// Extend theme with explicit typographic scale and spacing tokens for accessibility
+// Provide a small 4-step typographic scale (h1, h2, body, caption) used across the app
+theme.typography.fontSize['h1'] = ['1.75rem', { lineHeight: '2.25rem' }]; // ~28px
+theme.typography.fontSize['h2'] = ['1.25rem', { lineHeight: '1.75rem' }]; // ~20px
+theme.typography.fontSize['body'] = theme.typography.fontSize.base; // 16px
+theme.typography.fontSize['caption'] = ['0.75rem', { lineHeight: '1rem' }]; // 12px
+
+// Add a couple of spacing tokens that map to touch-target friendly values
+theme.spacing['touch-sm'] = '12px';
+theme.spacing['touch-md'] = '16px';
+theme.spacing['touch-lg'] = '24px';

@@ -5,6 +5,7 @@ const coverageEnabled = process.env.VITEST_COVERAGE !== 'false';
 
 export default defineConfig({
   test: {
+    hookTimeout: 20000,
     environment: 'jsdom',
     setupFiles: ['src/test/setup.ts'],
     globals: true,

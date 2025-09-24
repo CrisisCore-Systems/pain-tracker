@@ -24,7 +24,11 @@ import {
   Minimize2
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '../../design-system';
-import { Chart } from '../../design-system/components/Chart';
+import Chart from '../../design-system/components/Chart';
+import { colorVar, colorVarAlpha } from '../../design-system/utils/theme';
+import type { ChartPointMetaArray } from '../../design-system/types/chart';
+import { rollingAverage, movingStdDev, detectAnomalies } from '../../utils/analytics';
+import helpers from './helpers/analyticsHelpers';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
 
@@ -86,7 +90,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
   const metrics: AdvancedMetric[] = [];
 
     // Pain Level Trends
-  const avgPain = filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length;
+  const avgPain = filteredEntries.length > 0 ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length : 0;
     const prevPeriodAvg = entries
       .filter(entry => {
         const entryDate = new Date(entry.timestamp);
@@ -114,7 +118,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
     });
 
     // Entry Frequency
-    const entriesPerDay = filteredEntries.length / days;
+  const entriesPerDay = filteredEntries.length > 0 ? filteredEntries.length / days : 0;
     const prevEntriesPerDay = entries.filter(entry => {
       const entryDate = new Date(entry.timestamp);
       const prevStart = new Date(startDate.getTime() - days * 24 * 60 * 60 * 1000);
@@ -231,179 +235,94 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entries]);
 
-  // Helper functions
+  // Helper functions (delegated to analyticsHelpers) — keeps this file small for linting
   function generateTrendData(entries: PainEntry[], type: string) {
-    const dataByDate: { [key: string]: number[] } = {};
-
-    entries.forEach(entry => {
-      const date = new Date(entry.timestamp).toISOString().split('T')[0];
-      if (!dataByDate[date]) dataByDate[date] = [];
-
-      if (type === 'pain') {
-        dataByDate[date].push(entry.baselineData.pain);
-      }
-    });
-
-    return Object.entries(dataByDate).map(([date, values]) => ({
-      date,
-      value: values.reduce((a, b) => a + b, 0) / values.length
-    }));
+    return helpers.generateTrendData(entries, type);
   }
 
   function generateFrequencyData(entries: PainEntry[], days: number) {
-    const data = [];
-    const now = new Date();
-
-    for (let i = days - 1; i >= 0; i--) {
-      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
-      const dateStr = date.toISOString().split('T')[0];
-      const count = entries.filter(entry =>
-        new Date(entry.timestamp).toISOString().split('T')[0] === dateStr
-      ).length;
-
-      data.push({ date: dateStr, value: count });
-    }
-
-    return data;
+    return helpers.generateFrequencyData(entries, days);
   }
 
   function calculateIntensityDistribution(entries: PainEntry[]) {
-    const ranges = [
-      { min: 0, max: 2, label: 'Mild (0-2)', count: 0 },
-      { min: 3, max: 5, label: 'Moderate (3-5)', count: 0 },
-      { min: 6, max: 8, label: 'Severe (6-8)', count: 0 },
-      { min: 9, max: 10, label: 'Extreme (9-10)', count: 0 }
-    ];
-
-    entries.forEach(entry => {
-      const pain = entry.baselineData.pain;
-      const range = ranges.find(r => pain >= r.min && pain <= r.max);
-      if (range) range.count++;
-    });
-
-    const total = entries.length;
-    const variance = ranges.reduce((acc, range) => {
-      const proportion = range.count / total;
-      return acc + (proportion * proportion);
-    }, 0);
-
-    return {
-      variance: Math.sqrt(variance),
-      data: ranges.map(range => ({
-        label: range.label,
-        value: range.count,
-        percentage: total > 0 ? (range.count / total) * 100 : 0
-      }))
-    };
+    return helpers.calculateIntensityDistribution(entries);
   }
 
   function calculateSymptomCorrelation(entries: PainEntry[]) {
-    const symptomPainMap: { [key: string]: number[] } = {};
-
-    entries.forEach(entry => {
-      const pain = entry.baselineData.pain;
-      const symptoms = entry.baselineData.symptoms || [];
-
-      symptoms.forEach(symptom => {
-        if (!symptomPainMap[symptom]) symptomPainMap[symptom] = [];
-        symptomPainMap[symptom].push(pain);
-      });
-    });
-
-    const correlations = Object.entries(symptomPainMap).map(([symptom, pains]) => ({
-      symptom,
-      avgPain: pains.reduce((a, b) => a + b, 0) / pains.length,
-      count: pains.length
-    })).sort((a, b) => b.avgPain - a.avgPain);
-
-    return {
-      strength: correlations.length > 0 ? correlations[0].avgPain : 0,
-      data: correlations.slice(0, 5)
-    };
+    return helpers.calculateSymptomCorrelation(entries);
   }
 
   function calculateQOLImpact(entries: PainEntry[]) {
-    const qolEntries = entries.filter(e => e.qualityOfLife);
-    if (qolEntries.length === 0) return { average: 0, change: 0, trendData: [] };
-
-    const avgSleep = qolEntries.reduce((sum, e) => sum + (e.qualityOfLife?.sleepQuality || 0), 0) / qolEntries.length;
-    const avgMood = qolEntries.reduce((sum, e) => sum + (e.qualityOfLife?.moodImpact || 0), 0) / qolEntries.length;
-
-    const average = (avgSleep + avgMood) / 2;
-
-    // Simple change calculation (would need more sophisticated analysis)
-    const change = 0;
-
-    const trendData = qolEntries.map(entry => ({
-      date: new Date(entry.timestamp).toISOString().split('T')[0],
-      sleep: entry.qualityOfLife?.sleepQuality || 0,
-      mood: entry.qualityOfLife?.moodImpact || 0,
-      average: ((entry.qualityOfLife?.sleepQuality || 0) + (entry.qualityOfLife?.moodImpact || 0)) / 2
-    }));
-
-    return { average, change, trendData };
+    return helpers.calculateQOLImpact(entries);
   }
 
   function calculateTrend(values: number[]): number {
-    if (values.length < 2) return 0;
-
-    const n = values.length;
-    const sumX = (n * (n - 1)) / 2;
-    const sumY = values.reduce((a, b) => a + b, 0);
-    const sumXY = values.reduce((sum, y, x) => sum + x * y, 0);
-    const sumXX = (n * (n - 1) * (2 * n - 1)) / 6;
-
-    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-    return slope;
+    return helpers.calculateTrend(values);
   }
 
   function detectPatterns(entries: PainEntry[]) {
-    const timePatterns: { [key: string]: { pains: number[], count: number } } = {};
-
-    entries.forEach(entry => {
-      const hour = new Date(entry.timestamp).getHours();
-      const timeSlot = hour < 6 ? 'night' : hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
-
-      if (!timePatterns[timeSlot]) {
-        timePatterns[timeSlot] = { pains: [], count: 0 };
-      }
-
-      timePatterns[timeSlot].pains.push(entry.baselineData.pain);
-      timePatterns[timeSlot].count++;
-    });
-
-    const avgByTime = Object.entries(timePatterns).map(([time, data]) => ({
-      time,
-      avgPain: data.pains.reduce((a, b) => a + b, 0) / data.pains.length,
-      count: data.count
-    })).sort((a, b) => b.avgPain - a.avgPain);
-
-    if (avgByTime.length > 0 && avgByTime[0].count >= 3) {
-      return {
-        timeOfDay: {
-          time: avgByTime[0].time,
-          avgPain: avgByTime[0].avgPain,
-          confidence: Math.min((avgByTime[0].count / entries.length) * 100, 90)
-        }
-      };
-    }
-
-    return {};
+    return helpers.detectPatterns(entries);
   }
 
   function generateForecast(entries: PainEntry[]) {
-    if (entries.length < 7) return { predictedAvg: 0, confidence: 0 };
+    return helpers.generateForecast(entries);
+  }
 
-    const recent = entries.slice(-7);
-    const avgPain = recent.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / recent.length;
+  // Analytics: rolling averages, stddevs and anomalies for pain
+  // Build per-day aggregates with metadata so charts and tooltips can show entries + flags
+  const { dailyAverages, dailyMeta } = React.useMemo(() => {
+    return helpers.buildDailyAggregates(entries);
+  }, [entries]);
 
-    // Simple forecasting based on recent trend
-    const trend = calculateTrend(recent.map(e => e.baselineData.pain));
-    const predictedAvg = Math.max(0, Math.min(10, avgPain + trend * 7));
+  const painValues = dailyAverages.map(d => d.value);
+  const rolling7 = rollingAverage(painValues, 7);
+  const std7 = movingStdDev(painValues, 7);
+  const anomalies = detectAnomalies(painValues, 7, 2.5);
 
-    const confidence = Math.min(recent.length * 10, 85);
+  // Color ramp helper: interpolate between neutral (#4b5563) and danger (#ef4444)
+  function painColorForValue(v: number, alpha = 1) {
+    const clamp = Math.max(0, Math.min(10, Number(v || 0))) / 10;
+    const hexA = '#4b5563';
+    const hexB = '#ef4444';
+    const a = hexA.replace('#', '');
+    const b = hexB.replace('#', '');
+    const ra = parseInt(a.slice(0, 2), 16), ga = parseInt(a.slice(2, 4), 16), ba = parseInt(a.slice(4, 6), 16);
+    const rb = parseInt(b.slice(0, 2), 16), gb = parseInt(b.slice(2, 4), 16), bb = parseInt(b.slice(4, 6), 16);
+    const r = Math.round(ra + (rb - ra) * clamp);
+    const g = Math.round(ga + (gb - ga) * clamp);
+    const bcol = Math.round(ba + (bb - ba) * clamp);
+    return `rgba(${r}, ${g}, ${bcol}, ${alpha})`;
+  }
 
-    return { predictedAvg, confidence };
+  function handleExportCSV() {
+    try {
+      const header = ['date', 'avg_pain', 'rolling7_avg', 'stddev7', 'is_anomaly'];
+      const lines = [header.join(',')];
+      for (let i = 0; i < dailyAverages.length; i++) {
+        const d = dailyAverages[i];
+        const row = [
+          d.date,
+          (d.value ?? '').toString(),
+          (rolling7[i] ?? '').toString(),
+          (std7[i] ?? '').toString(),
+          anomalies.includes(i) ? '1' : '0'
+        ];
+        lines.push(row.join(','));
+      }
+      const csv = lines.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pain-analytics-${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('CSV export failed', err);
+    }
   }
 
   const getTrendIcon = (trend: string) => {
@@ -541,7 +460,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                 {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
               </Button>
 
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={() => handleExportCSV()}>
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
@@ -638,22 +557,58 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {advancedMetrics.find(m => m.id === 'pain-level')?.chartData && (
-              <Chart
-                data={{
-                  labels: (advancedMetrics.find(m => m.id === 'pain-level')!.chartData as Array<{ date: string; value: number }>).map(d => d.date),
-                  datasets: [{
-                    label: 'Average Pain Level',
-                    data: (advancedMetrics.find(m => m.id === 'pain-level')!.chartData as Array<{ date: string; value: number }>).map(d => d.value),
-                    borderColor: 'hsl(var(--color-primary))',
-                    backgroundColor: 'hsl(var(--color-primary) / 0.1)',
-                    fill: false,
-                    tension: 0.4
-                  }]
-                }}
-                type={chartType}
-                height={isFullscreen ? 400 : 300}
-              />
+            {dailyAverages.length > 0 && (
+                <Chart
+                  data={{
+                    labels: (function buildLabels() {
+                      const days = dailyAverages.length;
+                      // If short window (<=7) show Day 1..N for compact X-axis, otherwise show dates
+                      if (days <= 7) return dailyAverages.map((_, i) => `Day ${i + 1}`);
+                      return dailyAverages.map(d => d.date);
+                    })(),
+                    datasets: [
+                      {
+                        label: 'Average Pain Level',
+                        data: dailyAverages.map(d => d.value),
+                        // attach per-point metadata so Chart tooltip callbacks can read entries/notes/meds
+                        _meta: dailyMeta as ChartPointMetaArray,
+                        borderColor: painValues.map(v => painColorForValue(v, 1)),
+                        backgroundColor: painValues.map(v => painColorForValue(v, 0.08)),
+                        fill: false,
+                        tension: 0.35,
+                        // point styling uses ramp and anomaly emphasis
+                        pointBackgroundColor: dailyAverages.map((d, i) => anomalies.includes(i) ? 'rgba(239,68,68,1)' : painColorForValue(d.value, 1)),
+                        pointRadius: dailyAverages.map((_, i) => anomalies.includes(i) ? 6 : 4),
+                        pointHoverRadius: dailyAverages.map((_, i) => anomalies.includes(i) ? 8 : 6),
+                        yAxisID: 'y'
+                      },
+                      {
+                        label: 'Entries',
+                        data: dailyMeta.map(m => m.count),
+                        borderColor: 'rgba(75,85,99,0.95)',
+                        backgroundColor: 'rgba(75,85,99,0.12)',
+                        borderWidth: 1,
+                        tension: 0.2,
+                        type: 'bar',
+                        yAxisID: 'y1'
+                      },
+                      {
+                        label: '7-day rolling avg',
+                        data: rolling7,
+                        borderColor: colorVar('color-accent'),
+                        backgroundColor: 'transparent',
+                        borderDash: [6, 4],
+                        tension: 0.25,
+                        pointRadius: 0,
+                        fill: false,
+                        yAxisID: 'y'
+                      }
+                    ]
+                  }}
+                  type="line"
+                  height={isFullscreen ? 420 : 320}
+                  // Provide additional scales and tooltip callbacks via Chart props' scales prop
+                />
             )}
           </CardContent>
         </Card>
@@ -675,10 +630,10 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                     label: 'Entries',
                     data: (advancedMetrics.find(m => m.id === 'intensity')!.chartData as Array<{ label: string; value: number; percentage: number }>).map(d => d.value),
                     backgroundColor: [
-                      'hsl(var(--color-secondary))',
-                      'hsl(var(--color-accent))',
-                      'hsl(var(--color-warning))',
-                      'hsl(var(--color-destructive))'
+                      colorVar('color-secondary'),
+                      colorVar('color-accent'),
+                      colorVar('color-warning'),
+                      colorVar('color-destructive')
                     ]
                   }]
                 }}
@@ -705,7 +660,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                   datasets: [{
                     label: 'Average Pain Level',
                     data: (advancedMetrics.find(m => m.id === 'symptoms')!.chartData as Array<{ symptom: string; avgPain: number; count: number }>).map(d => d.avgPain),
-                    backgroundColor: 'hsl(var(--color-primary))'
+                    backgroundColor: colorVar('color-primary')
                   }]
                 }}
                 type="bar"
@@ -732,15 +687,15 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                     {
                       label: 'Sleep Quality',
                       data: (advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{ date: string; sleep: number; mood: number; average: number }>).map(d => d.sleep),
-                      borderColor: 'hsl(var(--color-secondary))',
-                      backgroundColor: 'hsl(var(--color-secondary) / 0.1)',
+                      borderColor: colorVar('color-secondary'),
+                      backgroundColor: colorVarAlpha('color-secondary', 0.1),
                       tension: 0.4
                     },
                     {
                       label: 'Mood Impact',
                       data: (advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{ date: string; sleep: number; mood: number; average: number }>).map(d => d.mood),
-                      borderColor: 'hsl(var(--color-accent))',
-                      backgroundColor: 'hsl(var(--color-accent) / 0.1)',
+                      borderColor: colorVar('color-accent'),
+                      backgroundColor: colorVarAlpha('color-accent', 0.1),
                       tension: 0.4
                     }
                   ]
@@ -772,8 +727,8 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                 datasets: [{
                   label: 'Entries per Day',
                   data: (advancedMetrics.find(m => m.id === 'frequency')!.chartData as Array<{ date: string; value: number }>).map(d => d.value),
-                  backgroundColor: 'hsl(var(--color-primary))',
-                  borderColor: 'hsl(var(--color-primary))',
+                    backgroundColor: colorVar('color-primary'),
+                    borderColor: colorVar('color-primary'),
                   borderWidth: 2
                 }]
               }}

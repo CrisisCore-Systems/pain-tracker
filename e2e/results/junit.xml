@@ -1,29 +1,181 @@
-<testsuites id="" name="" tests="2" failures="2" skipped="0" errors="0" time="125.64599700000001">
-<testsuite name="tests\pain-entry-form.spec.ts" timestamp="2025-09-22T22:43:16.570Z" hostname="chromium" tests="2" failures="2" skipped="0" time="208.579" errors="0">
-<testcase name="PainEntryForm e2e › can create a pain entry and see it in the list" classname="tests\pain-entry-form.spec.ts" time="105.078">
-<failure message="pain-entry-form.spec.ts:27:3 can create a pain entry and see it in the list" type="FAILURE">
-<![CDATA[  [chromium] › tests\pain-entry-form.spec.ts:27:3 › PainEntryForm e2e › can create a pain entry and see it in the list 
+<testsuites id="" name="" tests="10" failures="8" skipped="2" errors="0" time="323.89725">
+<testsuite name="accessibility.spec.ts" timestamp="2025-09-24T17:43:22.032Z" hostname="chromium" tests="3" failures="3" skipped="0" time="110.701" errors="0">
+<testcase name="Accessibility - comprehensive a11y checks › comprehensive scan dashboard" classname="accessibility.spec.ts" time="46.682">
+<failure message="accessibility.spec.ts:178:5 comprehensive scan dashboard" type="FAILURE">
+<![CDATA[  [chromium] › accessibility.spec.ts:178:5 › Accessibility - comprehensive a11y checks › comprehensive scan dashboard 
 
-    Error: expect(locator).toBeVisible() failed
+    Error: expect(received).toBe(expected) // Object.is equality
 
-    Locator:  getByText(/Record Pain Entry/)
-    Expected: visible
-    Received: <element(s) not found>
-    Timeout:  30000ms
+    Expected: 0
+    Received: 3
 
+      253 |
+      254 |       // Expect no critical or serious violations
+    > 255 |       expect(critical.length).toBe(0);
+          |                               ^
+      256 |     });
+      257 |   }
+      258 | });
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:255:31
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[Generated accessibility report: accessibility-report-dashboard-2025-09-24T17-44-24-094Z.html
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\video-1.webm]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-chromium\error-context.md]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[Accessibility violations for dashboard: [
+  { id: [32m'button-name'[39m, impact: [32m'critical'[39m, nodes: [33m4[39m },
+  { id: [32m'color-contrast'[39m, impact: [32m'serious'[39m, nodes: [33m8[39m },
+  { id: [32m'label'[39m, impact: [32m'critical'[39m, nodes: [33m2[39m }
+]
+]]>
+</system-err>
+</testcase>
+<testcase name="Accessibility - comprehensive a11y checks › comprehensive scan analytics" classname="accessibility.spec.ts" time="32.766">
+<failure message="accessibility.spec.ts:178:5 comprehensive scan analytics" type="FAILURE">
+<![CDATA[  [chromium] › accessibility.spec.ts:178:5 › Accessibility - comprehensive a11y checks › comprehensive scan analytics 
+
+    ReferenceError: page is not defined
+
+       8 |   { name: 'dashboard', path: '/', selector: '[data-walkthrough="pain-entry-form"]' },
+       9 |   { name: 'analytics', path: '/', selector: 'text=Advanced Analytics Dashboard', action: async () => {
+    > 10 |     await page.click('button:has-text("Analytics")');
+         |     ^
+      11 |     await page.waitForSelector('text=Advanced Analytics Dashboard');
+      12 |   }},
+      13 |   { name: 'history', path: '/', selector: 'text=Pain History', action: async () => {
+        at Object.action (C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:10:5)
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:188:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-chromium\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Accessibility - comprehensive a11y checks › comprehensive scan history" classname="accessibility.spec.ts" time="31.253">
+<failure message="accessibility.spec.ts:178:5 comprehensive scan history" type="FAILURE">
+<![CDATA[  [chromium] › accessibility.spec.ts:178:5 › Accessibility - comprehensive a11y checks › comprehensive scan history 
+
+    ReferenceError: page is not defined
+
+      12 |   }},
+      13 |   { name: 'history', path: '/', selector: 'text=Pain History', action: async () => {
+    > 14 |     await page.click('button:has-text("History")');
+         |     ^
+      15 |     await page.waitForSelector('text=Pain History');
+      16 |   }}
+      17 | ];
+        at Object.action (C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:14:5)
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:188:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-chromium\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="tests\pain-entry-form.spec.ts" timestamp="2025-09-24T17:43:22.032Z" hostname="chromium" tests="2" failures="1" skipped="1" time="144.512" errors="0">
+<testcase name="PainEntryForm e2e › can create a pain entry and see it in the list" classname="tests\pain-entry-form.spec.ts" time="122.741">
+<failure message="pain-entry-form.spec.ts:42:3 can create a pain entry and see it in the list" type="FAILURE">
+<![CDATA[  [chromium] › tests\pain-entry-form.spec.ts:42:3 › PainEntryForm e2e › can create a pain entry and see it in the list 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.click: Test timeout of 120000ms exceeded.
     Call log:
-      - Expect "toBeVisible" with timeout 30000ms
-      - waiting for getByText(/Record Pain Entry/)
+      - waiting for getByRole('button', { name: /Next/i })
+        - locator resolved to <button type="button" aria-disabled="false" class="inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md h-11 py-2 px-4">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div role="dialog" aria-modal="true" aria-labelledby="onboarding-title" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">…</div> intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <div role="dialog" aria-modal="true" aria-labelledby="onboarding-title" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">…</div> intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        122 × waiting for element to be visible, enabled and stable
+            - element is visible, enabled and stable
+            - scrolling into view if needed
+            - done scrolling
+            - <div role="dialog" aria-modal="true" aria-labelledby="onboarding-title" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">…</div> intercepts pointer events
+          - retrying click action
+            - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+        - element is visible, enabled and stable
+        - scrolling into view if needed
+        - done scrolling
 
 
-      21 |       await expect(page.getByText(/Pain Tracker/)).toBeVisible({ timeout });
-      22 |     } catch {
-    > 23 |       await expect(page.getByText(/Record Pain Entry/)).toBeVisible({ timeout });
-         |                                                         ^
-      24 |     }
-      25 |   });
-      26 |
-        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\pain-entry-form.spec.ts:23:57
+      77 |       if (await saveBtn.count() && (await saveBtn.isVisible())) break;
+      78 |       if (await nextBtn.count() && (await nextBtn.isEnabled())) {
+    > 79 |         await nextBtn.click();
+         |                       ^
+      80 |         await page.waitForTimeout(200); // small pause for UI transitions
+      81 |       } else {
+      82 |         break;
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\pain-entry-form.spec.ts:79:23
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
     ..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-chromium\test-failed-1.png
@@ -46,51 +198,196 @@
 ]]>
 </system-out>
 </testcase>
-<testcase name="PainEntryForm e2e › export report produces CSV download when WCB report shown" classname="tests\pain-entry-form.spec.ts" time="103.501">
-<failure message="pain-entry-form.spec.ts:83:3 export report produces CSV download when WCB report shown" type="FAILURE">
-<![CDATA[  [chromium] › tests\pain-entry-form.spec.ts:83:3 › PainEntryForm e2e › export report produces CSV download when WCB report shown 
+<testcase name="PainEntryForm e2e › export report produces CSV download when WCB report shown" classname="tests\pain-entry-form.spec.ts" time="21.771">
+<properties>
+<property name="skip" value="WCB Report toggle not present in this build">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="accessibility.spec.ts" timestamp="2025-09-24T17:43:22.032Z" hostname="firefox" tests="3" failures="3" skipped="0" time="174.666" errors="0">
+<testcase name="Accessibility - comprehensive a11y checks › comprehensive scan dashboard" classname="accessibility.spec.ts" time="81.208">
+<failure message="accessibility.spec.ts:178:5 comprehensive scan dashboard" type="FAILURE">
+<![CDATA[  [firefox] › accessibility.spec.ts:178:5 › Accessibility - comprehensive a11y checks › comprehensive scan dashboard 
 
-    Error: expect(locator).toBeVisible() failed
+    Error: expect(received).toBe(expected) // Object.is equality
 
-    Locator:  getByText(/Record Pain Entry/)
-    Expected: visible
-    Received: <element(s) not found>
-    Timeout:  30000ms
+    Expected: 0
+    Received: 3
 
-    Call log:
-      - Expect "toBeVisible" with timeout 30000ms
-      - waiting for getByText(/Record Pain Entry/)
-
-
-      21 |       await expect(page.getByText(/Pain Tracker/)).toBeVisible({ timeout });
-      22 |     } catch {
-    > 23 |       await expect(page.getByText(/Record Pain Entry/)).toBeVisible({ timeout });
-         |                                                         ^
-      24 |     }
-      25 |   });
-      26 |
-        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\pain-entry-form.spec.ts:23:57
+      253 |
+      254 |       // Expect no critical or serious violations
+    > 255 |       expect(critical.length).toBe(0);
+          |                               ^
+      256 |     });
+      257 |   }
+      258 | });
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:255:31
 
     attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\test-failed-1.png
+    ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\test-failed-1.png
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
     attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
-    ..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\video.webm
+    ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\video.webm
     ────────────────────────────────────────────────────────────────────────────────────────────────
 
-    Error Context: ..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\error-context.md
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[Generated accessibility report: accessibility-report-dashboard-2025-09-24T17-46-17-745Z.html
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\video-1.webm]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-4ae52-omprehensive-scan-dashboard-firefox\error-context.md]]
+]]>
+</system-out>
+<system-err>
+<![CDATA[Accessibility violations for dashboard: [
+  { id: [32m'button-name'[39m, impact: [32m'critical'[39m, nodes: [33m4[39m },
+  { id: [32m'color-contrast'[39m, impact: [32m'serious'[39m, nodes: [33m8[39m },
+  { id: [32m'label'[39m, impact: [32m'critical'[39m, nodes: [33m2[39m }
+]
+]]>
+</system-err>
+</testcase>
+<testcase name="Accessibility - comprehensive a11y checks › comprehensive scan analytics" classname="accessibility.spec.ts" time="48.325">
+<failure message="accessibility.spec.ts:178:5 comprehensive scan analytics" type="FAILURE">
+<![CDATA[  [firefox] › accessibility.spec.ts:178:5 › Accessibility - comprehensive a11y checks › comprehensive scan analytics 
+
+    ReferenceError: page is not defined
+
+       8 |   { name: 'dashboard', path: '/', selector: '[data-walkthrough="pain-entry-form"]' },
+       9 |   { name: 'analytics', path: '/', selector: 'text=Advanced Analytics Dashboard', action: async () => {
+    > 10 |     await page.click('button:has-text("Analytics")');
+         |     ^
+      11 |     await page.waitForSelector('text=Advanced Analytics Dashboard');
+      12 |   }},
+      13 |   { name: 'history', path: '/', selector: 'text=Pain History', action: async () => {
+        at Object.action (C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:10:5)
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:188:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-firefox\error-context.md
 ]]>
 </failure>
 <system-out>
 <![CDATA[
-[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\test-failed-1.png]]
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-firefox\test-failed-1.png]]
 
-[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\video.webm]]
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-firefox\video.webm]]
 
-[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-c8db5-nload-when-WCB-report-shown-chromium\error-context.md]]
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-ac762-omprehensive-scan-analytics-firefox\error-context.md]]
 ]]>
 </system-out>
+</testcase>
+<testcase name="Accessibility - comprehensive a11y checks › comprehensive scan history" classname="accessibility.spec.ts" time="45.133">
+<failure message="accessibility.spec.ts:178:5 comprehensive scan history" type="FAILURE">
+<![CDATA[  [firefox] › accessibility.spec.ts:178:5 › Accessibility - comprehensive a11y checks › comprehensive scan history 
+
+    ReferenceError: page is not defined
+
+      12 |   }},
+      13 |   { name: 'history', path: '/', selector: 'text=Pain History', action: async () => {
+    > 14 |     await page.click('button:has-text("History")');
+         |     ^
+      15 |     await page.waitForSelector('text=Pain History');
+      16 |   }}
+      17 | ];
+        at Object.action (C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:14:5)
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\accessibility.spec.ts:188:23
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-firefox\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-firefox\video.webm]]
+
+[[ATTACHMENT|..\..\test-results\accessibility-Accessibilit-6bdfc--comprehensive-scan-history-firefox\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="tests\pain-entry-form.spec.ts" timestamp="2025-09-24T17:43:22.032Z" hostname="firefox" tests="2" failures="1" skipped="1" time="190.387" errors="0">
+<testcase name="PainEntryForm e2e › can create a pain entry and see it in the list" classname="tests\pain-entry-form.spec.ts" time="126.571">
+<failure message="pain-entry-form.spec.ts:42:3 can create a pain entry and see it in the list" type="FAILURE">
+<![CDATA[  [firefox] › tests\pain-entry-form.spec.ts:42:3 › PainEntryForm e2e › can create a pain entry and see it in the list 
+
+    Test timeout of 120000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('PainEntryForm e2e', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Ensure fresh app state by clearing local storage and IndexedDB
+      6 |   await page.goto('/');
+      7 |     await page.evaluate(async () => {
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\pain-entry-form.spec.ts:4:8
+
+    Error: page.waitForLoadState: Test timeout of 120000ms exceeded.
+
+      15 |   await page.reload();
+      16 |     // Wait for app to finish loading (network idle) and for main UI text
+    > 17 |     await page.waitForLoadState('networkidle');
+         |                ^
+      18 |     // Hook into page console and pageerror to capture helpful diagnostics
+      19 |     page.on('console', (msg) => console.log('[page.console]', msg.type(), msg.text()));
+      20 |     page.on('pageerror', (err) => console.log('[page.error]', err.message));
+        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\pain-entry-form.spec.ts:17:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-firefox\test-failed-1.png]]
+
+[[ATTACHMENT|..\..\test-results\tests-pain-entry-form-Pain-5c246-ntry-and-see-it-in-the-list-firefox\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="PainEntryForm e2e › export report produces CSV download when WCB report shown" classname="tests\pain-entry-form.spec.ts" time="63.816">
+<properties>
+<property name="skip" value="WCB Report toggle not present in this build">
+</property>
+</properties>
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>

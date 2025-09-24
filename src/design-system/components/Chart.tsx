@@ -1,260 +1,206 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
   Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  // Plugin for dataset fill behavior
-  Filler,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  RadialLinearScale,
+  registerables,
+  ChartOptions,
+  ChartData as ChartJSData,
+  ChartType,
 } from 'chart.js';
 import { Line, Bar, Doughnut, Radar } from 'react-chartjs-2';
+
 import { Card, CardContent } from './Card';
 import { cn } from '../utils';
+import { colorVar, colorVarAlpha } from '../utils/theme';
+import type { ChartPointMeta, ChartPointMetaArray } from '../types/chart';
 
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  RadialLinearScale
-);
-
-// Register filler plugin (required for dataset.fill to work)
-ChartJS.register(Filler);
-
-export type ChartType = 'line' | 'bar' | 'doughnut' | 'radar';
-
-export interface ChartData {
-  labels: string[];
-  datasets: {
-    label: string;
+// Local typed dataset matching project usage
+export type ChartDataset = {
+  label?: string;
   data: (number | null)[];
-  /** Optional Chart.js dataset-level axis id (e.g. 'y' or 'y1') */
   yAxisID?: string;
-  /** Optional hidden flag for dataset */
   hidden?: boolean;
-    backgroundColor?: string | string[];
-    borderColor?: string | string[];
-    borderWidth?: number;
-    fill?: boolean;
-    tension?: number;
-  }[];
-}
+  backgroundColor?: string | string[];
+  borderColor?: string | string[];
+  borderWidth?: number;
+  fill?: boolean;
+  tension?: number;
+  _meta?: ChartPointMetaArray;
+};
 
-export interface ChartProps {
+export type ChartData = {
+  labels: string[];
+  datasets: ChartDataset[];
+};
+
+export type ChartProps = {
   data: ChartData;
-  type: ChartType;
+  type?: ChartType;
   title?: string;
+  summary?: string;
   height?: number;
   className?: string;
   showLegend?: boolean;
   showTitle?: boolean;
   responsive?: boolean;
   maintainAspectRatio?: boolean;
-  plugins?: Record<string, unknown>[];
-  /** Optional Chart.js scales override (e.g. { y: { min: 0, max: 10 } }) */
   scales?: Record<string, unknown> | undefined;
+};
+
+// Register Chart.js components only in browser/runtime to avoid SSR/test issues
+if (typeof window !== 'undefined' && (ChartJS as any)._registered !== true) {
+  ChartJS.register(...registerables);
+  // small marker to avoid double registration
+  (ChartJS as any)._registered = true;
 }
 
-const defaultColors = {
-  primary: 'hsl(var(--color-primary))',
-  secondary: 'hsl(var(--color-secondary))',
-  accent: 'hsl(var(--color-accent))',
-  muted: 'hsl(var(--color-muted))',
-  background: 'hsl(var(--color-background))',
-  foreground: 'hsl(var(--color-foreground))',
-};
+function mapDataset(ds: ChartDataset, chartType?: ChartType) {
+  // Preserve any array-based colors provided by callers (for per-point coloring)
+  const hasBorderArray = Array.isArray(ds.borderColor);
+  const hasBackgroundArray = Array.isArray(ds.backgroundColor);
+
+  const border = ds.borderColor ?? colorVar('color-primary');
+  const background = ds.backgroundColor ?? colorVarAlpha('color-primary', 0.08);
+
+  const mapped: any = {
+    ...ds,
+    borderColor: border,
+    backgroundColor: background,
+    borderWidth: ds.borderWidth ?? 2,
+    tension: ds.tension ?? 0.4,
+    fill: typeof ds.fill === 'boolean' ? ds.fill : false,
+  };
+
+  // For line charts, Chart.js commonly expects pointBackgroundColor/pointBorderColor for per-point styling
+  if (chartType === 'line') {
+    if (hasBackgroundArray) mapped.pointBackgroundColor = ds.backgroundColor;
+    else if (mapped.backgroundColor) mapped.pointBackgroundColor = mapped.backgroundColor;
+
+    if (hasBorderArray) mapped.pointBorderColor = ds.borderColor;
+    else if (mapped.borderColor) mapped.pointBorderColor = mapped.borderColor;
+  }
+
+  return mapped as any;
+}
 
 export function Chart({
   data,
-  type,
+  type = 'line',
   title,
+  summary,
   height = 300,
   className,
   showLegend = true,
   showTitle = true,
   responsive = true,
   maintainAspectRatio = false,
-  plugins = [],
   scales,
 }: ChartProps) {
-  const chartData = useMemo(() => {
-    // Apply default colors if not provided
-    
+  const chartData = React.useMemo(() => ({
+    labels: data.labels,
+    datasets: data.datasets.map(ds => mapDataset(ds, type)),
+  }) as ChartJSData<'line'>, [data, type]);
 
-    const processedDatasets = data.datasets.map((dataset, index) => {
-      const colors = [
-        defaultColors.primary,
-        defaultColors.secondary,
-        defaultColors.accent,
-        defaultColors.muted,
-      ];
-
-      return {
-        ...dataset,
-        backgroundColor: dataset.backgroundColor || colors[index % colors.length],
-        borderColor: dataset.borderColor || colors[index % colors.length],
-        borderWidth: dataset.borderWidth || 2,
-        fill: dataset.fill ?? (type === 'line' ? false : true),
-        tension: dataset.tension ?? (type === 'line' ? 0.4 : 0),
-      };
-    });
-
-    return {
-      ...data,
-      datasets: processedDatasets,
-    };
-  }, [data, type]);
-
-  // Determine if chart data is effectively empty (all dataset values null/undefined)
-  const isEmptyData = useMemo(() => {
-    if (!chartData || !chartData.datasets || chartData.datasets.length === 0) return true;
-    return chartData.datasets.every(ds => ds.data.every(v => v === null || v === undefined));
-  }, [chartData]);
-
-  const options = useMemo(() => ({
+  const options: ChartOptions<any> = React.useMemo(() => ({
     responsive,
     maintainAspectRatio,
+    devicePixelRatio: typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1,
+    interaction: { mode: 'index', intersect: false },
     plugins: {
-      legend: {
-        // Hide legend when there's no data to avoid confusing 'No entries' items in the legend
-        display: showLegend && !isEmptyData,
-        position: 'top' as const,
-      },
-      title: {
-        display: showTitle && !!title,
-        text: title,
-        font: {
-          size: 16,
-          weight: 'bold' as const,
-        },
-      },
+      legend: { display: showLegend, labels: { color: colorVar('color-foreground') } },
+      title: { display: showTitle && !!title, text: title, color: colorVar('color-foreground') },
       tooltip: {
-        backgroundColor: 'hsl(var(--color-card))',
-        titleColor: 'hsl(var(--color-card-foreground))',
-        bodyColor: 'hsl(var(--color-card-foreground))',
-        borderColor: 'hsl(var(--color-border))',
+        enabled: true,
+        mode: 'nearest',
+        intersect: false,
+        backgroundColor: colorVar('color-card'),
+        titleColor: colorVar('color-foreground'),
+        bodyColor: colorVar('color-foreground'),
+        borderColor: colorVar('color-border'),
         borderWidth: 1,
-        cornerRadius: 8,
-        padding: 12,
-      },
-      ...plugins,
+        padding: 8,
+        callbacks: {
+          // Custom tooltip: if dataset has _meta array provide entries/notes/meds
+          label: function(context) {
+            try {
+              // Use the shared ChartPointMeta type for dataset metadata
+              const ds = context.dataset as unknown as (ChartDataset & { _meta?: ChartPointMetaArray });
+              const idx = context.dataIndex;
+              const seriesLabel = context.dataset.label || '';
+              const value = context.parsed?.y ?? context.parsed ?? context.raw ?? '';
+              let line = `${seriesLabel}: ${value}`;
+              if (ds._meta && ds._meta[idx]) {
+                const m = ds._meta[idx];
+                if (typeof m.count === 'number') line += ` — ${m.count} entr${m.count === 1 ? 'y' : 'ies'}`;
+                const flags: string[] = [];
+                if (m.notes) flags.push(`${m.notes} notes`);
+                if (m.meds) flags.push(`${m.meds} meds`);
+                if (flags.length) line += ` (${flags.join(', ')})`;
+              }
+              return line;
+            } catch (e) {
+              return context.dataset.label ? `${context.dataset.label}: ${context.formattedValue}` : `${context.formattedValue}`;
+            }
+          }
+        }
+      }
     },
-    scales: type !== 'doughnut' && type !== 'radar' ? {
-      x: {
-        grid: {
-          color: 'hsl(var(--color-border))',
-        },
-        ticks: {
-          color: 'hsl(var(--color-foreground))',
-        },
-      },
-      y: {
-        grid: {
-          color: 'hsl(var(--color-border))',
-        },
-        ticks: {
-          color: 'hsl(var(--color-foreground))',
-        },
-      },
-      // Allow callers to override/extend scales (e.g. set min/max)
-      ...scales
-    } : undefined,
     elements: {
       point: {
-        hoverRadius: 8,
-        hoverBorderWidth: 3,
+        radius: 3,
+        hoverRadius: 6,
+        borderWidth: 2,
       },
+      line: {
+        tension: 0.35,
+      }
     },
-  }), [responsive, maintainAspectRatio, showLegend, showTitle, title, type, plugins, scales, isEmptyData]);
+    animation: {
+      duration: 400,
+      easing: 'easeOutQuart'
+    },
+    scales: type !== 'doughnut' && type !== 'radar' ? {
+      x: { ticks: { color: colorVar('color-foreground') }, grid: { color: colorVar('color-border') } },
+      y: { min: 0, max: 10, ticks: { color: colorVar('color-foreground') }, grid: { color: colorVar('color-border') }, title: { display: true, text: 'Pain Level' } },
+      y1: { position: 'right', ticks: { color: colorVar('color-foreground') }, grid: { display: false }, title: { display: true, text: 'Entries' } },
+      ...scales,
+    } : undefined,
+    maintainAspectRatio,
+  }), [responsive, maintainAspectRatio, showLegend, showTitle, title, type, scales]);
 
-  const renderChart = () => {
-    switch (type) {
-      case 'line':
-        return <Line data={chartData} options={options} height={height} />;
-      case 'bar':
-        return <Bar data={chartData} options={options} height={height} />;
-      case 'doughnut':
-        return <Doughnut data={chartData} options={options} height={height} />;
-      case 'radar':
-        return <Radar data={chartData} options={options} height={height} />;
-      default:
-        return <Line data={chartData} options={options} height={height} />;
-    }
-  };
+  const srSummary = summary ?? (title ? `${title} chart with ${data.datasets.length} dataset(s)` : 'Chart data');
 
   return (
     <Card className={cn('w-full', className)}>
       <CardContent className="p-6">
-        {isEmptyData ? (
-          <div className="flex flex-col items-center justify-center h-full py-12 text-center">
-            <h3 className="text-lg font-semibold">No entries this week</h3>
-            <p className="text-sm text-muted-foreground mt-2">Track pain over time to see trends.</p>
+        <figure aria-labelledby={title ? 'chart-title' : undefined}>
+          {title && <figcaption id="chart-title" className="sr-only">{title}</figcaption>}
+          <p className="sr-only" id="chart-summary">{srSummary}</p>
+          <div aria-describedby="chart-summary">
+            {type === 'bar' && <Bar data={chartData as any} options={options as any} height={height} />}
+            {type === 'doughnut' && <Doughnut data={chartData as any} options={options as any} height={height} />}
+            {type === 'radar' && <Radar data={chartData as any} options={options as any} height={height} />}
+            {type === 'line' && <Line data={chartData as any} options={options as any} height={height} />}
           </div>
-        ) : (
-          renderChart()
-        )}
+        </figure>
       </CardContent>
     </Card>
   );
 }
 
-// (helper moved to src/design-system/utils/chart.ts)
-
-// Specialized chart components for common use cases
-export function PainTrendChart({ data, title = 'Pain Trends', ...props }: Omit<ChartProps, 'type'>) {
-  return (
-    <Chart
-      data={data}
-      type="line"
-      title={title}
-      {...props}
-    />
-  );
+export function PainTrendChart(props: Omit<ChartProps, 'type'> & { data: ChartData }) {
+  return <Chart type="line" {...props} />;
 }
 
-export function SymptomFrequencyChart({ data, title = 'Symptom Frequency', ...props }: Omit<ChartProps, 'type'>) {
-  return (
-    <Chart
-      data={data}
-      type="bar"
-      title={title}
-      {...props}
-    />
-  );
+export function SymptomFrequencyChart(props: Omit<ChartProps, 'type'> & { data: ChartData }) {
+  return <Chart type="bar" {...props} />;
 }
 
-export function PainDistributionChart({ data, title = 'Pain Distribution', ...props }: Omit<ChartProps, 'type'>) {
-  return (
-    <Chart
-      data={data}
-      type="doughnut"
-      title={title}
-      {...props}
-    />
-  );
+export function PainDistributionChart(props: Omit<ChartProps, 'type'> & { data: ChartData }) {
+  return <Chart type="doughnut" {...props} />;
 }
 
-export function MultiDimensionalChart({ data, title = 'Multi-dimensional Analysis', ...props }: Omit<ChartProps, 'type'>) {
-  return (
-    <Chart
-      data={data}
-      type="radar"
-      title={title}
-      {...props}
-    />
-  );
+export function MultiDimensionalChart(props: Omit<ChartProps, 'type'> & { data: ChartData }) {
+  return <Chart type="radar" {...props} />;
 }
+
+export default Chart;

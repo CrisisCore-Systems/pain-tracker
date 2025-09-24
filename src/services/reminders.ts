@@ -1,8 +1,15 @@
 export type Reminder = {
   id: string;
   title: string;
+  // primary time for legacy reminders (HH:MM). New reminders may use `times`.
   time: string; // ISO time HH:MM
   enabled: boolean;
+  dosage?: string; // textual dosage like '10mg' or '2 tablets'
+  recurrence?: 'none' | 'daily' | 'weekly';
+  frequency?: 'once' | 'daily' | 'twice-daily' | 'weekly' | 'custom';
+  notes?: string;
+  // Optional multiple times for twice-daily or custom schedules. Each item is HH:MM
+  times?: string[];
 };
 
 const STORAGE_KEY = 'pain-tracker:medication-reminders';

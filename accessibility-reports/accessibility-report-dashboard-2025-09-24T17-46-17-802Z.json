@@ -1,0 +1,2316 @@
+{
+  "route": "dashboard",
+  "timestamp": "2025-09-24T17:46:17.803Z",
+  "violations": [
+    {
+      "id": "button-name",
+      "impact": "critical",
+      "tags": [
+        "cat.name-role-value",
+        "wcag2a",
+        "wcag412",
+        "section508",
+        "section508.22.a",
+        "TTv5",
+        "TT6.a",
+        "EN-301-549",
+        "EN-9.4.1.2",
+        "ACT"
+      ],
+      "description": "Ensure buttons have discernible text",
+      "help": "Buttons must have discernible text",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/button-name?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "button-has-visible-text",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have inner text that is visible to screen readers"
+            },
+            {
+              "id": "aria-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-label attribute does not exist or is empty"
+            },
+            {
+              "id": "aria-labelledby",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty"
+            },
+            {
+              "id": "non-empty-title",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no title attribute"
+            },
+            {
+              "id": "implicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an implicit (wrapped) <label>"
+            },
+            {
+              "id": "explicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an explicit <label>"
+            },
+            {
+              "id": "presentational-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "critical",
+          "html": "<button class=\"\n    inline-flex items-center justify-center\n    font-medium rounded-md\n    focus:outline-none focus:ring-2 focus:ring-offset-2\n    transition-colors\n    cursor-pointer\n   bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 px-6 py-4 text-lg min-h-[var(--ti-touch-size)] \" style=\"font-size: var(--ti-font-size); transition: all var(--ti-transition-duration);\">",
+          "target": [
+            ".bg-gray-200.hover\\:bg-gray-300.focus\\:ring-gray-500:nth-child(2)"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        },
+        {
+          "any": [
+            {
+              "id": "button-has-visible-text",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have inner text that is visible to screen readers"
+            },
+            {
+              "id": "aria-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-label attribute does not exist or is empty"
+            },
+            {
+              "id": "aria-labelledby",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty"
+            },
+            {
+              "id": "non-empty-title",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no title attribute"
+            },
+            {
+              "id": "implicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an implicit (wrapped) <label>"
+            },
+            {
+              "id": "explicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an explicit <label>"
+            },
+            {
+              "id": "presentational-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "critical",
+          "html": "<button class=\"\n    inline-flex items-center justify-center\n    font-medium rounded-md\n    focus:outline-none focus:ring-2 focus:ring-offset-2\n    transition-colors\n    cursor-pointer\n   bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 px-6 py-4 text-lg min-h-[var(--ti-touch-size)] \" style=\"font-size: var(--ti-font-size); transition: all var(--ti-transition-duration);\">",
+          "target": [
+            ".bg-gray-200.hover\\:bg-gray-300.focus\\:ring-gray-500:nth-child(3)"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        },
+        {
+          "any": [
+            {
+              "id": "button-has-visible-text",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have inner text that is visible to screen readers"
+            },
+            {
+              "id": "aria-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-label attribute does not exist or is empty"
+            },
+            {
+              "id": "aria-labelledby",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty"
+            },
+            {
+              "id": "non-empty-title",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no title attribute"
+            },
+            {
+              "id": "implicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an implicit (wrapped) <label>"
+            },
+            {
+              "id": "explicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an explicit <label>"
+            },
+            {
+              "id": "presentational-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "critical",
+          "html": "<button class=\"inline-flex items-center justify-center p-1 rounded-full hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring\" aria-expanded=\"false\">",
+          "target": [
+            ".border-border.text-card-foreground.bg-card:nth-child(3) > .p-6 > .top-3.right-3.absolute > .inline-block.relative > .hover\\:bg-muted.p-1.rounded-full"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        },
+        {
+          "any": [
+            {
+              "id": "button-has-visible-text",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have inner text that is visible to screen readers"
+            },
+            {
+              "id": "aria-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-label attribute does not exist or is empty"
+            },
+            {
+              "id": "aria-labelledby",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty"
+            },
+            {
+              "id": "non-empty-title",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no title attribute"
+            },
+            {
+              "id": "implicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an implicit (wrapped) <label>"
+            },
+            {
+              "id": "explicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an explicit <label>"
+            },
+            {
+              "id": "presentational-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "critical",
+          "html": "<button class=\"inline-flex items-center justify-center p-1 rounded-full hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring\" aria-expanded=\"false\">",
+          "target": [
+            ".border-border.text-card-foreground.bg-card:nth-child(5) > .p-6 > .top-3.right-3.absolute > .inline-block.relative > .hover\\:bg-muted.p-1.rounded-full"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        }
+      ]
+    },
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#ffffff",
+                "bgColor": "#ca8a04",
+                "contrastRatio": 2.93,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button aria-label=\"Dismiss beta notice\" class=\"text-sm bg-yellow-600 text-white px-3 py-1 rounded-md hover:bg-yellow-700\">Dismiss</button>",
+                  "target": [
+                    ".bg-yellow-600"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 2.93 (foreground color: #ffffff, background color: #ca8a04, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<button aria-label=\"Dismiss beta notice\" class=\"text-sm bg-yellow-600 text-white px-3 py-1 rounded-md hover:bg-yellow-700\">Dismiss</button>",
+          "target": [
+            ".bg-yellow-600"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.93 (foreground color: #ffffff, background color: #ca8a04, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#000000",
+                "bgColor": "#2563eb",
+                "contrastRatio": 4.06,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"justify-center font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md h-8 px-3 text-xs rounded-md flex items-center space-x-2\" type=\"button\" aria-disabled=\"false\">",
+                  "target": [
+                    ".md\\:flex > .hover\\:bg-primary\\/90.text-primary-foreground.bg-primary"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span>Dashboard</span>",
+          "target": [
+            ".md\\:flex > .hover\\:bg-primary\\/90.text-primary-foreground.bg-primary > .justify-center > span"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#000000",
+                "bgColor": "#2563eb",
+                "contrastRatio": 4.06,
+                "fontSize": "12.0pt (16px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"px-3 py-1 rounded bg-primary text-primary-foreground\">Overview</button>",
+                  "target": [
+                    ".space-x-2.flex > .text-primary-foreground.py-1.bg-primary"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<button class=\"px-3 py-1 rounded bg-primary text-primary-foreground\">Overview</button>",
+          "target": [
+            ".space-x-2.flex > .text-primary-foreground.py-1.bg-primary"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#000000",
+                "bgColor": "#2563eb",
+                "contrastRatio": 4.06,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"px-3 py-1 rounded-full text-xs font-medium transition-colors bg-primary text-primary-foreground\" aria-label=\"Go to Pain Assessment section\"><span class=\"mr-1\">🎯</span><span class=\"hidden sm:inline\">Pain Assessment</span><span class=\"sm:hidden\">1</span></button>",
+                  "target": [
+                    "button[aria-label=\"Go to Pain Assessment section\"]"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"hidden sm:inline\">Pain Assessment</span>",
+          "target": [
+            "button[aria-label=\"Go to Pain Assessment section\"] > .sm\\:inline.hidden"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#000000",
+                "bgColor": "#2563eb",
+                "contrastRatio": 4.06,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md h-11 py-2 px-4\" type=\"button\" aria-disabled=\"false\">",
+                  "target": [
+                    ".space-x-3.flex > .hover\\:bg-primary\\/90.h-11.text-primary-foreground"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"flex items-center justify-center\">Next</span>",
+          "target": [
+            ".space-x-3.flex > .hover\\:bg-primary\\/90.h-11.text-primary-foreground > .justify-center"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#000000",
+                "bgColor": "#2563eb",
+                "contrastRatio": 4.06,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md h-11 py-2 px-4\" type=\"button\" aria-disabled=\"false\">",
+                  "target": [
+                    ".py-12 > .hover\\:bg-primary\\/90.h-11.text-primary-foreground"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"flex items-center justify-center\">",
+          "target": [
+            ".py-12 > .hover\\:bg-primary\\/90.h-11.text-primary-foreground > .justify-center"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#000000",
+                "bgColor": "#2563eb",
+                "contrastRatio": 4.06,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"inline-flex items-center justify-center font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md h-8 px-3 text-xs rounded-md flex-1 min-w-fit\" type=\"button\" aria-disabled=\"false\">",
+                  "target": [
+                    ".min-w-fit.hover\\:bg-primary\\/90.text-primary-foreground"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"hidden sm:inline\">Trend Chart</span>",
+          "target": [
+            ".min-w-fit.hover\\:bg-primary\\/90.text-primary-foreground > .justify-center > .sm\\:inline.hidden"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#000000",
+                "bgColor": "#2563eb",
+                "contrastRatio": 4.06,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md h-11 py-2 px-4 min-w-24\" type=\"button\" aria-disabled=\"false\">",
+                  "target": [
+                    ".min-w-24"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"flex items-center justify-center\">Get Started</span>",
+          "target": [
+            ".min-w-24 > .justify-center"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 4.06 (foreground color: #000000, background color: #2563eb, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    },
+    {
+      "id": "label",
+      "impact": "critical",
+      "tags": [
+        "cat.forms",
+        "wcag2a",
+        "wcag412",
+        "section508",
+        "section508.22.n",
+        "TTv5",
+        "TT5.c",
+        "EN-301-549",
+        "EN-9.4.1.2",
+        "ACT"
+      ],
+      "description": "Ensure every form element has a label",
+      "help": "Form elements must have labels",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/label?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "implicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an implicit (wrapped) <label>"
+            },
+            {
+              "id": "explicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an explicit <label>"
+            },
+            {
+              "id": "aria-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-label attribute does not exist or is empty"
+            },
+            {
+              "id": "aria-labelledby",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty"
+            },
+            {
+              "id": "non-empty-title",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no title attribute"
+            },
+            {
+              "id": "non-empty-placeholder",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no placeholder attribute"
+            },
+            {
+              "id": "presentational-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "critical",
+          "html": "<input id=\"input-9ixx2z8np\" type=\"number\" class=\"flex h-10 rounded-md border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200 w-20\" aria-invalid=\"false\" min=\"1\" max=\"10\" value=\"1\">",
+          "target": [
+            "#input-9ixx2z8np"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        },
+        {
+          "any": [
+            {
+              "id": "implicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an implicit (wrapped) <label>"
+            },
+            {
+              "id": "explicit-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element does not have an explicit <label>"
+            },
+            {
+              "id": "aria-label",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-label attribute does not exist or is empty"
+            },
+            {
+              "id": "aria-labelledby",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty"
+            },
+            {
+              "id": "non-empty-title",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no title attribute"
+            },
+            {
+              "id": "non-empty-placeholder",
+              "data": {
+                "messageKey": "noAttr"
+              },
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element has no placeholder attribute"
+            },
+            {
+              "id": "presentational-role",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "critical",
+          "html": "<input id=\"input-upvqot7e2\" type=\"number\" class=\"flex h-10 rounded-md border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200 w-20\" aria-invalid=\"false\" min=\"1\" max=\"10\" value=\"10\">",
+          "target": [
+            "#input-upvqot7e2"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+        }
+      ]
+    }
+  ],
+  "colorData": [
+    {
+      "selector": "DIV.min-h-screen.bg-background.transition-colors",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.bg-yellow-50.border.border-yellow-200.text-yellow-900.rounded-lg.p-4.shadow-md.flex.items-start.justify-between",
+      "textColor": "rgb(113, 63, 18)",
+      "backgroundColor": "rgb(254, 252, 232)",
+      "borderColor": "rgb(254, 240, 138)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.text-sm.bg-yellow-600.text-white.px-3.py-1.rounded-md.hover:bg-yellow-700",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(202, 138, 4)",
+      "borderColor": "rgb(255, 255, 255)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex.items-center.justify-center.w-14.h-14.rounded-full.bg-foreground.text-foreground-contrast.shadow-lg",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(23, 23, 23)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.bg-white.border.rounded-md.px-3.py-2.shadow-sm.text-sm",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.bg-white.border.rounded-md.px-3.py-2.shadow-sm.text-sm.flex.items-center.gap-2",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.relative.bg-white.border.rounded-md.px-3.py-2.shadow-sm.text-sm.flex.items-center.gap-2",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.fixed.bottom-4.left-4.z-60.p-4.bg-card.border.rounded.shadow-md.max-w-sm",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.min-h-screen.bg-background",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "A.sr-only.focus:not-sr-only.focus:absolute.focus:top-4.focus:left-4.bg-primary.text-primary-foreground.px-4.py-2.rounded-md.z-50.shadow-lg",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.justify-center.font-medium.transition-all.duration-200.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:opacity-50.disabled:pointer-events-none.ring-offset-background.active:scale-[0.98].select-none.bg-primary.text-primary-foreground.hover:bg-primary/90.shadow-sm.hover:shadow-md.h-8.px-3.text-xs.rounded-md.flex.items-center.space-x-2",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.\n....inline-flex.items-center.justify-center\n....font-medium.rounded-md\n....focus:outline-none.focus:ring-2.focus:ring-offset-2\n....transition-colors\n....cursor-pointer\n...bg-gray-200.text-gray-900.hover:bg-gray-300.focus:ring-gray-500.px-6.py-4.text-lg.min-h-[var(--ti-touch-size)].",
+      "textColor": "rgb(17, 24, 39)",
+      "backgroundColor": "rgb(229, 231, 235)",
+      "borderColor": "rgb(17, 24, 39)",
+      "fontSize": "16px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.\n....inline-flex.items-center.justify-center\n....font-medium.rounded-md\n....focus:outline-none.focus:ring-2.focus:ring-offset-2\n....transition-colors\n....cursor-pointer\n...bg-gray-200.text-gray-900.hover:bg-gray-300.focus:ring-gray-500.px-6.py-4.text-lg.min-h-[var(--ti-touch-size)].",
+      "textColor": "rgb(17, 24, 39)",
+      "backgroundColor": "rgb(229, 231, 235)",
+      "borderColor": "rgb(17, 24, 39)",
+      "fontSize": "16px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.font-medium.transition-all.duration-200.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:opacity-50.disabled:pointer-events-none.ring-offset-background.active:scale-[0.98].select-none.bg-primary.text-primary-foreground.hover:bg-primary/90.shadow-sm.hover:shadow-md.h-8.px-3.text-xs.rounded-md.flex-1.flex.items-center.justify-center.space-x-1",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.bg-blue-50.border.border-blue-200.rounded-md.p-3.mt-2",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6.mb-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.flex.h-10.w-full.rounded-md.border.bg-background.px-3.py-2.text-sm.ring-offset-background.file:border-0.file:bg-transparent.file:text-sm.file:font-medium.placeholder:text-muted-foreground.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:cursor-not-allowed.disabled:opacity-50.transition-colors.duration-200.pl-9.pr-9",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.flex.h-10.w-full.rounded-md.border.bg-background.px-3.py-2.text-sm.ring-offset-background.file:border-0.file:bg-transparent.file:text-sm.file:font-medium.placeholder:text-muted-foreground.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:cursor-not-allowed.disabled:opacity-50.transition-colors.duration-200",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.flex.h-10.w-full.rounded-md.border.bg-background.px-3.py-2.text-sm.ring-offset-background.file:border-0.file:bg-transparent.file:text-sm.file:font-medium.placeholder:text-muted-foreground.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:cursor-not-allowed.disabled:opacity-50.transition-colors.duration-200",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.flex.h-10.rounded-md.border.bg-background.px-3.py-2.text-sm.ring-offset-background.file:border-0.file:bg-transparent.file:text-sm.file:font-medium.placeholder:text-muted-foreground.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:cursor-not-allowed.disabled:opacity-50.transition-colors.duration-200.w-20",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.flex.h-10.rounded-md.border.bg-background.px-3.py-2.text-sm.ring-offset-background.file:border-0.file:bg-transparent.file:text-sm.file:font-medium.placeholder:text-muted-foreground.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:cursor-not-allowed.disabled:opacity-50.transition-colors.duration-200.w-20",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded.bg-primary.text-primary-foreground",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded.bg-muted",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded.bg-muted",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.duration-200.border-border.p-6.transition-all.hover:shadow-md.relative",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.duration-200.border-border.p-6.relative.transition-all.hover:shadow-md",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.duration-200.border-border.p-6.relative.transition-all.hover:shadow-md",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "SPAN.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.text-xs",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.duration-200.border-border.p-6.relative.transition-all.hover:shadow-md",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.duration-200.border-border.p-6.relative.transition-all.hover:shadow-md",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "SPAN.inline-flex.items-center.justify-center.w-6.h-6.rounded-full.text-xs",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(255, 255, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6.relative",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6.xl:col-span-1",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6.max-w-4xl.mx-auto",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.inline-flex.items-center.rounded-full.border.font-semibold.transition-colors.focus:outline-none.focus:ring-2.focus:ring-ring.focus:ring-offset-2.border-transparent.bg-secondary.text-secondary-foreground.hover:bg-secondary/80.px-2.5.py-0.5.text-xs",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgba(0, 0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "DIV.w-full.bg-muted.rounded-full.h-2",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.bg-primary.h-2.rounded-full.transition-all.duration-300",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded-full.text-xs.font-medium.transition-colors.bg-primary.text-primary-foreground",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded-full.text-xs.font-medium.transition-colors.bg-muted.text-muted-foreground.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded-full.text-xs.font-medium.transition-colors.bg-muted.text-muted-foreground.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded-full.text-xs.font-medium.transition-colors.bg-muted.text-muted-foreground.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded-full.text-xs.font-medium.transition-colors.bg-muted.text-muted-foreground.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded-full.text-xs.font-medium.transition-colors.bg-muted.text-muted-foreground.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.px-3.py-1.rounded-full.text-xs.font-medium.transition-colors.bg-muted.text-muted-foreground.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.transition-all.duration-200.shadow-2xl.hover:shadow-2xl/80.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-primary.text-primary-foreground.shadow-md.scale-110",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex-1.h-8.rounded.transition-all.duration-200.bg-muted.hover:bg-muted/80",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.transition-all.duration-200.border-2.shadow-none.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.transition-all.duration-200.border-2.shadow-none.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.inline-flex.items-center.justify-center.rounded-lg.text-sm.font-medium.transition-all.duration-200.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:opacity-50.disabled:pointer-events-none.ring-offset-background.active:scale-[0.98].select-none.bg-primary.text-primary-foreground.hover:bg-primary/90.shadow-sm.hover:shadow-md.h-11.py-2.px-4",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.inline-flex.items-center.justify-center.rounded-lg.text-sm.font-medium.transition-all.duration-200.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:opacity-50.disabled:pointer-events-none.ring-offset-background.active:scale-[0.98].select-none.bg-primary.text-primary-foreground.hover:bg-primary/90.shadow-sm.hover:shadow-md.h-11.py-2.px-4",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6.xl:col-span-1",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.flex.flex-wrap.gap-2.mb-6.p-1.bg-muted.rounded-lg",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.inline-flex.items-center.justify-center.font-medium.transition-all.duration-200.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:opacity-50.disabled:pointer-events-none.ring-offset-background.active:scale-[0.98].select-none.bg-primary.text-primary-foreground.hover:bg-primary/90.shadow-sm.hover:shadow-md.h-8.px-3.text-xs.rounded-md.flex-1.min-w-fit",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.bg-white.p-6.rounded-lg.shadow-md",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.recharts-default-tooltip",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(204, 204, 204)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.bg-white.p-6.rounded-lg.shadow-md",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.inline-flex.items-center.rounded-full.border.font-semibold.transition-colors.focus:outline-none.focus:ring-2.focus:ring-ring.focus:ring-offset-2.border-transparent.bg-secondary.text-secondary-foreground.hover:bg-secondary/80.px-2.5.py-0.5.text-xs",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgba(0, 0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.fixed.inset-0.bg-black/50.flex.items-center.justify-center.z-50",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgba(0, 0, 0, 0.5)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.rounded-lg.border.bg-card.text-card-foreground.shadow-md.transition-all.duration-200.border-border.p-6.w-full.max-w-2xl.mx-4.max-h-[90vh].overflow-y-auto",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(229, 229, 229)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.h-2.flex-1.rounded.bg-primary",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.h-2.flex-1.rounded.bg-muted",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.h-2.flex-1.rounded.bg-muted",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.inline-flex.items-center.justify-center.rounded-lg.text-sm.font-medium.transition-all.duration-200.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:opacity-50.disabled:pointer-events-none.ring-offset-background.active:scale-[0.98].select-none.bg-primary.text-primary-foreground.hover:bg-primary/90.shadow-sm.hover:shadow-md.h-11.py-2.px-4.min-w-24",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0) rgb(0, 0, 0) rgb(0, 0, 0) rgb(59, 130, 246)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    }
+  ],
+  "focusResults": {
+    "totalFocusable": 111,
+    "visibleFocusable": 105,
+    "focusVisibleStyles": [
+      {
+        "element": "A",
+        "hasFocusRing": true,
+        "tabIndex": 3
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 4
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 5
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 6
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 7
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 8
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 9
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 10
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true,
+        "tabIndex": 11
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 12
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 13
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 14
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 15
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 16
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 17
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 21
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 22
+      },
+      {
+        "element": "INPUT#input-hwnvwiu71",
+        "hasFocusRing": true,
+        "tabIndex": 23
+      },
+      {
+        "element": "INPUT#input-r0w26e2c6",
+        "hasFocusRing": true,
+        "tabIndex": 24
+      },
+      {
+        "element": "INPUT#input-4yz3uhbzu",
+        "hasFocusRing": true,
+        "tabIndex": 25
+      },
+      {
+        "element": "INPUT#input-9ixx2z8np",
+        "hasFocusRing": true,
+        "tabIndex": 26
+      },
+      {
+        "element": "INPUT#input-upvqot7e2",
+        "hasFocusRing": true,
+        "tabIndex": 27
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 28
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 29
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 30
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 31
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 32
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 33
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 34
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 35
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 36
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 37
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 38
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 39
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 40
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 41
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 42
+      },
+      {
+        "element": "INPUT#pain-level",
+        "hasFocusRing": true,
+        "tabIndex": 43
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 44
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 45
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 46
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 47
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 48
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 49
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 50
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 51
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 52
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 53
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 54
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 55
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 56
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 57
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 58
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 59
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 60
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 61
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 62
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 63
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 64
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 65
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 66
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 67
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 68
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 69
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 70
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 71
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 72
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 73
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 74
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 75
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 76
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 77
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 78
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 79
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 80
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 81
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 82
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 83
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 84
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 85
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 86
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 87
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 88
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 89
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 90
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 91
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 92
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 93
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 94
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 95
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 96
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 97
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 98
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 99
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 100
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 101
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 102
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 103
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 104
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 105
+      },
+      {
+        "element": "svg",
+        "hasFocusRing": true,
+        "tabIndex": 106
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 107
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 108
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 109
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 110
+      }
+    ],
+    "tabOrder": [
+      {
+        "element": "A",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "A",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT#input-hwnvwiu71",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT#input-r0w26e2c6",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT#input-4yz3uhbzu",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT#input-9ixx2z8np",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT#input-upvqot7e2",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT#pain-level",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "svg",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      }
+    ]
+  }
+}

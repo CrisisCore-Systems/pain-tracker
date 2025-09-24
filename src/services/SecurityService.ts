@@ -99,6 +99,16 @@ export class SecurityService {
     this.initializeSecurity();
   }
 
+  private isTestEnv(): boolean {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+      return !!(env && (env.VITEST || env.NODE_ENV === 'test'));
+    } catch {
+      return false;
+    }
+  }
+
   private generateSessionId(): string {
     return CryptoJS.lib.WordArray.random(16).toString();
   }
@@ -314,8 +324,8 @@ export class SecurityService {
       this.events = this.events.slice(-500);
     }
 
-    // Log critical events to console
-    if (event.level === 'critical' || event.level === 'error') {
+    // Log critical events to console unless running tests (tests inspect events in-memory)
+    if (!this.isTestEnv() && (event.level === 'critical' || event.level === 'error')) {
       console.error(`[SECURITY ${event.level.toUpperCase()}]`, event.message, event.metadata);
     }
   }

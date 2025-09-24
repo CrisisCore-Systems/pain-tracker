@@ -13,7 +13,9 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { Chart } from '../../design-system/components/Chart';
+import { Loading } from '../../design-system/components/Loading';
+import Chart from '../../design-system/components/Chart';
+import { colorVar, colorVarAlpha } from '../../design-system/utils/theme';
 import { buildRolling7DayChartData, RawEntry } from '../../design-system/utils/chart';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
@@ -81,6 +83,8 @@ function MetricCard({ title, value, change, icon, className, tooltip, subtitle }
 
 export function DashboardOverview({ entries, allEntries, className }: DashboardOverviewProps) {
   const [tab, setTab] = useState<'overview' | 'charts' | 'recent'>('overview');
+  const [isExporting, setIsExporting] = useState(false);
+  const [liveMessage, setLiveMessage] = useState<string | null>(null);
 
   const metrics = useMemo(() => {
     const totalEntries = (allEntries?.length ?? entries.length) || 0;
@@ -130,22 +134,65 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
   const hasWeeklyData = metrics.weeklyTrend.length > 0;
 
   function getPainLevelColor(pain: number) {
-    if (pain <= 2) return 'text-green-600 bg-green-50';
-    if (pain <= 5) return 'text-yellow-600 bg-yellow-50';
-    if (pain <= 8) return 'text-orange-600 bg-orange-50';
-    return 'text-red-600 bg-red-50';
+    if (pain <= 2) return 'text-success bg-success-bg';
+    if (pain <= 5) return 'text-warning bg-warning-bg';
+    if (pain <= 8) return 'text-warning bg-warning-bg';
+    return 'text-destructive bg-error-bg';
   }
 
   function getActivityIcon(pain: number) {
-    if (pain <= 2) return <CheckCircle className="h-4 w-4 text-green-600" />;
-    if (pain <= 5) return <Activity className="h-4 w-4 text-yellow-600" />;
-    if (pain <= 8) return <AlertTriangle className="h-4 w-4 text-orange-600" />;
-    return <Zap className="h-4 w-4 text-red-600" />;
+    if (pain <= 2) return <CheckCircle className="h-4 w-4 text-success" aria-hidden="true" />;
+    if (pain <= 5) return <Activity className="h-4 w-4 text-warning" aria-hidden="true" />;
+    if (pain <= 8) return <AlertTriangle className="h-4 w-4 text-warning" aria-hidden="true" />;
+    return <Zap className="h-4 w-4 text-destructive" aria-hidden="true" />;
   }
 
   return (
-    <div className={cn('space-y-6', className)} style={{ paddingTop: '12px' }}>
-      <DashboardMenu active={tab} onChange={(t) => setTab(t)} />
+    <div className={cn('dashboard-container space-y-6', className)} style={{ paddingTop: '12px' }}>
+      <div className="flex items-center justify-between">
+        <DashboardMenu active={tab} onChange={(t) => setTab(t)} />
+        <div>
+          <div>
+            <button
+              className="btn"
+              aria-label="Export currently filtered entries as CSV"
+              disabled={isExporting}
+              onClick={async () => {
+                try {
+                  setIsExporting(true);
+                  setLiveMessage('Preparing CSV export...');
+                  const mod = await import('../../features/export/exportCsv');
+                  const csv = mod.entriesToCsv(entries.map(e => ({ id: e.id, timestamp: e.timestamp, pain: e.baselineData.pain, notes: (e as any).notes || '' })));
+                  mod.downloadCsv(`pain-entries-${new Date().toISOString().slice(0,10)}.csv`, csv);
+                  setLiveMessage('CSV export ready. Download starting.');
+                } catch (err) {
+                  setLiveMessage('CSV export failed.');
+                  // eslint-disable-next-line no-console
+                  console.error('Export failed', err);
+                } finally {
+                  setIsExporting(false);
+                  setTimeout(() => setLiveMessage(null), 3000);
+                }
+              }}
+            >
+              {isExporting ? 'Exporting…' : 'Export CSV'}
+            </button>
+            <div aria-live="polite" className="sr-only" role="status">{liveMessage}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Predictive panel for flare-up risk */}
+      {entries.length > 0 && (
+        <div>
+          {/* Lazy-load PredictivePanel to keep initial bundle small */}
+          <React.Suspense fallback={<Loading text="Loading predictive insights..." /> }>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore dynamic import typing */}
+            {React.createElement(React.lazy(() => import('../PredictivePanel')), { entries })}
+          </React.Suspense>
+        </div>
+      )}
 
       {tab === 'overview' ? (
         <>
@@ -156,7 +203,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                 title="Total Entries"
                 value={metrics.totalEntries}
                 icon={<BarChart3 className="h-6 w-6" />}
-                className="relative"
+                    className="relative"
               />
               <div className="text-xs text-muted-foreground mt-1 flex items-center space-x-2">
                 <Tooltip content="All-time total (not filtered)">All-time total</Tooltip>
@@ -172,7 +219,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
+                <Card className="relative">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BarChart3 className="h-5 w-5" />
@@ -181,23 +228,20 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
               </CardHeader>
               <CardContent>
                 {entries.length > 0 ? (
-                  <Chart
-                    data={{
-                      labels: metrics.painDistribution.map(d => d.label),
-                      datasets: [{
-                        label: 'Entries',
-                        data: metrics.painDistribution.map(d => d.data[0]),
-                        backgroundColor: [
-                          'hsl(var(--color-secondary))',
-                          'hsl(var(--color-accent))',
-                          'hsl(var(--color-warning))',
-                          'hsl(var(--color-destructive))'
-                        ]
-                      }]
-                    }}
-                    type="bar"
-                    height={200}
-                  />
+                    <Chart
+                      data={{
+                        labels: metrics.painDistribution.map(d => d.label),
+                        datasets: [{
+                          label: 'Entries',
+                          data: metrics.painDistribution.map(d => d.data[0]),
+                          // Show ghost color for zero-count buckets
+                          backgroundColor: metrics.painDistribution.map(d => d.data[0] === 0 ? 'rgba(107,114,128,0.08)' : 'rgba(75,85,99,0.9)'),
+                          borderColor: metrics.painDistribution.map(d => d.data[0] === 0 ? 'rgba(107,114,128,0.12)' : 'rgba(75,85,99,0.95)')
+                        }]
+                      }}
+                      type="bar"
+                      height={200}
+                    />
                 ) : (
                   <div className="flex items-center justify-center h-48 text-muted-foreground">
                     <div className="text-center">
@@ -227,16 +271,16 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                           {
                             label: 'Average Pain',
                             data: metrics.weeklyTrend.map(d => d.avg as number | null),
-                            borderColor: 'hsl(var(--color-primary))',
-                            backgroundColor: 'hsl(var(--color-primary) / 0.1)',
+                            borderColor: colorVar('color-primary'),
+                            backgroundColor: colorVarAlpha('color-primary', 0.1),
                             fill: true,
                             yAxisID: 'y'
                           },
                           {
                             label: 'Entry Count',
                             data: metrics.weeklyTrend.map(d => d.count),
-                            borderColor: 'hsl(var(--color-accent))',
-                            backgroundColor: 'hsl(var(--color-accent) / 0.08)',
+                            borderColor: colorVar('color-accent'),
+                            backgroundColor: colorVarAlpha('color-accent', 0.08),
                             fill: false,
                             yAxisID: 'y1'
                           }

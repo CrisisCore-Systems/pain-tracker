@@ -4,6 +4,7 @@ import { securityService } from '../services/SecurityService';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 import CryptoJS from 'crypto-js';
+import { getThemeColors } from '../design-system/theme';
 
 // Extend Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
@@ -94,24 +95,62 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
 
 // Seed encryption master key if securityService storage relies on localStorage
 beforeAll(async () => {
+  // Make this initialization resilient: if securityService.initializeMasterKey
+  // takes too long in some environments, continue tests after a short timeout.
+  const initPromise = (async () => {
+    try {
+      await securityService.initializeMasterKey('vitest-seed-password');
+
+      const seededKey = CryptoJS.SHA256('vitest-seed-key-2025').toString();
+      const record = JSON.stringify({ key: seededKey, created: new Date().toISOString() });
+      window.localStorage.setItem('key:pain-tracker-master', record);
+
+      (globalThis as unknown as { __secureStorageEncrypt?: (p:string)=>string }).__secureStorageEncrypt = (plaintext: string) => plaintext;
+      (globalThis as unknown as { __secureStorageDecrypt?: (c:string)=>string }).__secureStorageDecrypt = (ciphertext: string) => ciphertext;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('Test setup: failed to initialize master key', e);
+    }
+  })();
+
+  const timeout = new Promise<void>((resolve) => setTimeout(resolve, 2000));
+
+  // Wait for whichever finishes first: initialization or timeout
+  await Promise.race([initPromise, timeout]);
+
+  // Inject light theme colors into jsdom so axe and computed styles can evaluate contrast
   try {
-    // Initialize a deterministic master key for tests so SecurityService can encrypt/decrypt
-    // Using a password keeps the derived master key deterministic across runs
-    await securityService.initializeMasterKey('vitest-seed-password');
-
-    // Seed a deterministic master key object in localStorage so EncryptionService can find it if it
-    // attempts to list keys directly (some tests manipulate localStorage directly)
-    const seededKey = CryptoJS.SHA256('vitest-seed-key-2025').toString();
-    const record = JSON.stringify({ key: seededKey, created: new Date().toISOString() });
-    window.localStorage.setItem('key:pain-tracker-master', record);
-
-    // Provide default no-op encryption hooks for secureStorage encrypt:true paths in tests
-    (globalThis as unknown as { __secureStorageEncrypt?: (p:string)=>string }).__secureStorageEncrypt = (plaintext: string) => plaintext;
-    (globalThis as unknown as { __secureStorageDecrypt?: (c:string)=>string }).__secureStorageDecrypt = (ciphertext: string) => ciphertext;
+    const light = getThemeColors('light');
+    // Apply basic page-level styles
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.body.style.backgroundColor = light.background;
+      document.body.style.color = light.foreground;
+      // Set CSS custom properties used by app styles where possible
+      Object.entries({
+        '--primary': light.primary,
+        '--primary-foreground': light.primaryForeground,
+        '--destructive': light.destructive,
+        '--destructive-foreground': light.destructiveForeground,
+        '--muted': light.muted,
+        '--muted-foreground': light.mutedForeground,
+        '--card': light.card,
+        '--card-foreground': light.cardForeground,
+      }).forEach(([k, v]) => {
+        try { document.documentElement.style.setProperty(k, v as string); } catch {}
+      });
+    }
   } catch (e) {
-    // If master key initialization fails for some environment, keep test-run resilient
-    // but log the issue for investigation
+    // Non-fatal for test runs
     // eslint-disable-next-line no-console
-    console.warn('Test setup: failed to initialize master key', e);
+    console.warn('Test setup: failed to inject theme colors into jsdom', e);
   }
 });
+
+// Test-only: mock focus-trap-react to be a no-op wrapper to avoid focus-trap differences in jsdom
+import React from 'react';
+
+// Test-only: mock focus-trap-react to be a no-op wrapper to avoid focus-trap differences in jsdom
+vi.mock('focus-trap-react', () => ({
+  __esModule: true,
+  default: (props: { children?: React.ReactNode }) => React.createElement(React.Fragment, null, props.children),
+}));

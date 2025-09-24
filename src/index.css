@@ -257,7 +257,7 @@ input[type='range'] {
   height: 8px;
   border-radius: 5px;
   background: hsl(var(--color-muted));
-  outline: none;
+  /* don't remove outline globally; rely on focus-visible for accessible focus */
   transition: background-color 0.3s ease;
 }
 
@@ -295,10 +295,36 @@ input[type='range']::-moz-range-thumb:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Focus styles for accessibility */
-*:focus-visible {
-  outline: 2px solid hsl(var(--color-ring));
-  outline-offset: 2px;
+/* Focus styles for accessibility: keep strong, visible indicators for keyboard users */
+:focus-visible {
+  outline: none; /* remove native outline but keep a visible ring */
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.3); /* blue ring using primary */
+  border-radius: 6px;
+}
+
+/* Utility class for components to explicitly opt-in to the shared focus ring */
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.32);
+  outline: none;
+}
+
+/* Ensure common interactive elements show the ring (anchors, buttons, inputs) */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.28);
+  outline: none;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 /* Smooth transitions for theme changes */

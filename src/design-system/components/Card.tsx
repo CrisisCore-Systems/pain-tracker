@@ -8,16 +8,19 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../utils';
 
 const cardVariants = cva(
-  'rounded-lg border bg-card text-card-foreground shadow-sm transition-all duration-200',
+  'rounded-lg border bg-card text-card-foreground shadow-md transition-all duration-200',
   {
     variants: {
       variant: {
-        default: '',
-        elevated: 'shadow-md hover:shadow-lg',
+        // default now includes a subtle border for clearer separation
+        default: 'border-border',
+        elevated: 'shadow-2xl hover:shadow-2xl/80',
         outlined: 'border-2 shadow-none',
         filled: 'bg-muted/50 border-muted',
         ghost: 'border-transparent shadow-none bg-transparent',
         gradient: 'bg-gradient-to-br from-card to-muted/50 border-muted/50',
+        // accented provides a stronger border and depth for emphasis
+        accented: 'border-2 border-primary/40 shadow-2xl hover:shadow-2xl/80',
       },
       padding: {
         none: 'p-0',
@@ -28,9 +31,9 @@ const cardVariants = cva(
       },
       hover: {
         none: '',
-        lift: 'hover:-translate-y-1 hover:shadow-lg',
-        glow: 'hover:shadow-lg hover:shadow-primary/10',
-        scale: 'hover:scale-[1.02]',
+        lift: 'hover:-translate-y-1.5 hover:shadow-2xl/70',
+        glow: 'hover:shadow-2xl hover:shadow-primary/15',
+        scale: 'hover:scale-[1.02] hover:shadow-lg',
       },
     },
     defaultVariants: {
@@ -43,15 +46,29 @@ const cardVariants = cva(
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+    VariantProps<typeof cardVariants> {
+  /** Optional severity indicator for color-coding cards */
+  severity?: 'low' | 'medium' | 'high' | 'critical' | null;
+}
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, padding, hover, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(cardVariants({ variant, padding, hover, className }))}
-      {...props}
-    />
+    <div ref={ref} className={cn(cardVariants({ variant, padding, hover, className }))} {...props}>
+      {/* severity indicator: small colored bar at the top-left */}
+      {('severity' in props) && props.severity ? (
+        <div
+          aria-hidden
+          className={cn(
+            'absolute -top-2 -left-2 h-2 w-12 rounded-b-md',
+            props.severity === 'low' && 'bg-emerald-400',
+            props.severity === 'medium' && 'bg-amber-400',
+            props.severity === 'high' && 'bg-orange-500',
+            props.severity === 'critical' && 'bg-red-600'
+          )}
+        />
+      ) : null}
+      {props.children}
+    </div>
   )
 );
 Card.displayName = 'Card';
@@ -60,7 +77,7 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col space-y-1.5 pb-4', className)}
+      className={cn('flex items-center justify-between space-x-3 pb-4', className)}
       {...props}
     />
   )
@@ -71,10 +88,7 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
   ({ className, ...props }, ref) => (
     <h2
       ref={ref}
-      className={cn(
-        'text-2xl font-semibold leading-none tracking-tight',
-        className
-      )}
+      className={cn('text-2xl font-semibold leading-none tracking-tight', className)}
       {...props}
     />
   )

@@ -58,6 +58,34 @@ export class EndToEndEncryptionService {
     this.initializeService();
   }
 
+  // Detect test environments (Vitest / NODE_ENV=test)
+  private isTestEnv(): boolean {
+    try {
+      // process may not exist in some browser-like environments
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+      return !!(env && (env.VITEST || env.NODE_ENV === 'test'));
+    } catch {
+      return false;
+    }
+  }
+
+  // Route security logs through a filter so tests don't get noisy info/warning messages
+  private logSecurityEvent(event: Parameters<typeof securityService.logSecurityEvent>[0]) {
+    // Always forward security events to the centralized security service.
+    // In test environments we avoid additional console noise elsewhere, but
+    // tests rely on recorded security events (for example key rotation). Keep
+    // logging active so unit tests can assert on recorded events.
+    try {
+      securityService.logSecurityEvent(event);
+    } catch (e) {
+      // Swallow logging errors to avoid impacting encryption flows/tests
+      // but still avoid throwing from the logger.
+      // eslint-disable-next-line no-console
+      console.debug('logSecurityEvent failed', e);
+    }
+  }
+
   private async initializeService(): Promise<void> {
     try {
       // Ensure default key exists
@@ -66,14 +94,14 @@ export class EndToEndEncryptionService {
         await this.keyManager.generateKey(this.defaultKeyId);
       }
 
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'info',
         message: 'End-to-end encryption service initialized',
         timestamp: new Date()
       });
     } catch (error) {
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'error',
         message: 'Failed to initialize encryption service',
@@ -89,7 +117,7 @@ export class EndToEndEncryptionService {
         const key = CryptoJS.lib.WordArray.random(32).toString(); // 256-bit key
         await this.keyManager.storeKey(keyId, key);
         
-        securityService.logSecurityEvent({
+        this.logSecurityEvent({
           type: 'encryption',
           level: 'info',
           message: `New encryption key generated: ${keyId}`,
@@ -146,7 +174,7 @@ export class EndToEndEncryptionService {
           await storage.store(`archived-key:${keyId}:${Date.now()}`, { key: oldKey }, true);
         }
 
-        securityService.logSecurityEvent({
+          this.logSecurityEvent({
           type: 'encryption',
           level: 'info',
           message: `Key rotated: ${keyId}`,
@@ -164,7 +192,7 @@ export class EndToEndEncryptionService {
           this.inMemoryKeyCache.delete(keyId);
         }
         
-        securityService.logSecurityEvent({
+        this.logSecurityEvent({
           type: 'encryption',
           level: 'warning',
           message: `Key deleted: ${keyId}`,
@@ -239,7 +267,7 @@ export class EndToEndEncryptionService {
         version: '1.0.0'
       };
 
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'info',
         message: 'Data encrypted successfully',
@@ -259,7 +287,7 @@ export class EndToEndEncryptionService {
         checksum
       };
     } catch (error) {
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'error',
         message: 'Data encryption failed',
@@ -304,7 +332,7 @@ export class EndToEndEncryptionService {
         final = this.decompressString(decrypted);
       }
 
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'info',
         message: 'Data decrypted successfully',
@@ -318,7 +346,7 @@ export class EndToEndEncryptionService {
 
       return JSON.parse(final);
     } catch (error) {
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'error',
         message: 'Data decryption failed',
@@ -389,7 +417,7 @@ export class EndToEndEncryptionService {
       (encrypted.metadata as EncryptionMetadata).passwordSalt = passwordSalt;
     }
     
-    securityService.logSecurityEvent({
+    this.logSecurityEvent({
       type: 'encryption',
       level: 'info',
       message: 'Encrypted backup created',
@@ -425,7 +453,7 @@ export class EndToEndEncryptionService {
 
       const decrypted = await this.decrypt(encrypted);
       
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'info',
         message: 'Data restored from encrypted backup',
@@ -435,7 +463,7 @@ export class EndToEndEncryptionService {
 
       return decrypted;
     } catch (error) {
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'error',
         message: 'Failed to restore from encrypted backup',
@@ -464,7 +492,7 @@ export class EndToEndEncryptionService {
         }
       }
 
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'info',
         message: 'Key rotation completed',
@@ -476,7 +504,7 @@ export class EndToEndEncryptionService {
         timestamp: new Date()
       });
     } catch (error) {
-      securityService.logSecurityEvent({
+      this.logSecurityEvent({
         type: 'encryption',
         level: 'error',
         message: 'Key rotation failed',

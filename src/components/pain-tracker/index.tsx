@@ -15,9 +15,39 @@ import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
 import { Walkthrough } from "../tutorials";
 
+// Validation Technology Integration (conditionally enabled)
+const ENABLE_VALIDATION_TECH = (() => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (import.meta as any).env.VITE_ENABLE_VALIDATION_TECH === 'true';
+    }
+  } catch {
+    // ignore
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (typeof process !== 'undefined' && (process as any).env) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (process as any).env.ENABLE_VALIDATION_TECH === 'true';
+  }
+  return false;
+})();
+
+// Conditionally import validation technology components
+let ValidationTechnologyIntegration: React.ComponentType<any> | null = null;
+if (ENABLE_VALIDATION_TECH) {
+  try {
+    // Dynamic import will be handled in useEffect
+    console.log('Validation technology enabled');
+  } catch (error) {
+    console.warn('Validation technology integration not available:', error);
+  }
+}
+
 const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
   if (!entry.baselineData) return false;
-  
+
   const { pain } = entry.baselineData;
   if (typeof pain !== 'number' || pain < 0 || pain > 10) return false;
 
@@ -36,6 +66,11 @@ const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
 
 export function PainTracker() {
   const [error, setError] = useState<string | null>(null);
+  // Validation technology component state
+  const [ValidationTechComponent, setValidationTechComponent] = useState<React.ComponentType<{
+    painEntries: PainEntry[];
+    onPainEntrySubmit: (entry: Partial<PainEntry>) => void;
+  }> | null>(null);
   // Attempt a synchronous initial read from secureStorage/localStorage so tests that
   // mock localStorage can assert DOM that depends on initial entries synchronously.
   const readInitialEntries = (): PainEntry[] => {
@@ -65,6 +100,19 @@ export function PainTracker() {
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
   const startDateRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
+
+  // Dynamic import of validation technology
+  useEffect(() => {
+    if (ENABLE_VALIDATION_TECH) {
+      import('../integration/ValidationTechnologyIntegration')
+        .then((module) => {
+          setValidationTechComponent(() => module.ValidationTechnologyIntegration);
+        })
+        .catch((error) => {
+          console.warn('Failed to load validation technology:', error);
+        });
+    }
+  }, []);
 
   // Check for first-time user
   useEffect(() => {
@@ -370,7 +418,14 @@ export function PainTracker() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <PainEntryForm onSubmit={handleAddEntry} />
+              {ValidationTechComponent ? (
+                <ValidationTechComponent
+                  painEntries={entries}
+                  onPainEntrySubmit={handleAddEntry}
+                />
+              ) : (
+                <PainEntryForm onSubmit={handleAddEntry} />
+              )}
             </CardContent>
           </Card>
 

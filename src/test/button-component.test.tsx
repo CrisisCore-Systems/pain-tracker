@@ -32,4 +32,31 @@ describe('Button component', () => {
     const btn = screen.getByRole('button', { name: 'Var' });
     expect(btn.className).toContain(contains);
   });
+
+  it('has focus-visible styling for keyboard navigation', () => {
+    render(<Button>Focus Test</Button>);
+    const btn = screen.getByRole('button', { name: 'Focus Test' });
+
+    // Check that focus-visible classes are present
+    expect(btn.className).toMatch(/focus-visible:ring-2/);
+    expect(btn.className).toMatch(/focus-visible:ring-offset-2/);
+  });
+
+  it('maintains consistent focus-visible styling across variants', () => {
+    const variants: Array<'primary' | 'secondary' | 'ghost' | 'destructive'> = [
+      'primary', 'secondary', 'ghost', 'destructive'
+    ];
+
+    variants.forEach(variant => {
+      const { rerender } = render(<Button variant={variant}>Test {variant}</Button>);
+      const btn = screen.getByRole('button', { name: `Test ${variant}` });
+
+      // All variants should have consistent focus-visible behavior
+      expect(btn.className).toMatch(/focus-visible:ring/);
+      expect(btn.className).toMatch(/focus-visible:ring-offset/);
+
+      // Clean up for next iteration
+      rerender(<></>);
+    });
+  });
 });

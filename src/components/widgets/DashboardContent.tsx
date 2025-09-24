@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { Chart } from '../../design-system/components/Chart';
+import Chart from '../../design-system/components/Chart';
 import { BarChart3, TrendingUp } from 'lucide-react';
 import { buildRolling7DayChartData, RawEntry } from '../../design-system/utils/chart';
 import type { PainEntry } from '../../types';

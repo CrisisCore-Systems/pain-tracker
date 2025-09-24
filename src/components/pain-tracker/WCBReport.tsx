@@ -2,6 +2,8 @@
 import { formatNumber } from "../../utils/formatting";
 import type { PainEntry, WCBReport } from "../../types";
 import { analyzeTreatmentChanges, analyzeWorkImpact } from "../../utils/wcbAnalytics";
+import { pdfExportService } from "../../services/PDFExportService";
+import { toast } from "sonner";
 
 interface WCBReportGeneratorProps {
   entries: PainEntry[];
@@ -199,9 +201,31 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
     };
   }, [entries, period]);
 
+  const handleExportPDF = async () => {
+    try {
+      toast.loading("Generating PDF report...");
+      await pdfExportService.downloadWCBReport(report);
+      toast.dismiss();
+      toast.success("PDF report downloaded successfully!");
+    } catch (error) {
+      toast.dismiss();
+      console.error("PDF export failed:", error);
+      toast.error("Failed to generate PDF report. Please try again.");
+    }
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">WCB Report</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">WCB Report</h2>
+        <button
+          onClick={handleExportPDF}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+          disabled={report.recommendations.includes("No entries available for the selected period")}
+        >
+          Export PDF
+        </button>
+      </div>
       <div className="space-y-4">
         <div>
           <h3 className="font-medium">Period</h3>
