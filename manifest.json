@@ -1,0 +1,125 @@
+{
+  "short_name": "Pain Tracker Pro",
+  "name": "Pain Tracker Pro - AI-Powered Pain Management",
+  "description": "Comprehensive pain tracking with predictive analytics, 3D body mapping, and healthcare integration",
+  "version": "2.0.0",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logos/pain-tracker-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "logos/pain-tracker-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "maskable any"
+    }
+  ],
+  "start_url": "/pain-tracker/",
+  "scope": "/pain-tracker/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait-primary",
+  "theme_color": "#0ea5e9",
+  "background_color": "#ffffff",
+  "categories": ["health", "medical", "productivity", "lifestyle"],
+  "lang": "en",
+  "dir": "ltr",
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "screenshots/desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Pain tracking dashboard with analytics"
+    },
+    {
+      "src": "screenshots/mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Mobile pain entry form"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Pain Entry",
+      "short_name": "New Entry",
+      "description": "Record a new pain entry",
+      "url": "/pain-tracker/?action=new-entry",
+      "icons": [
+        {
+          "src": "icons/new-entry.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "View Analytics",
+      "short_name": "Analytics",
+      "description": "View pain analytics and insights",
+      "url": "/pain-tracker/?view=analytics",
+      "icons": [
+        {
+          "src": "icons/analytics.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Emergency Panel",
+      "short_name": "Emergency",
+      "description": "Access emergency contacts and protocols",
+      "url": "/pain-tracker/?view=emergency",
+      "icons": [
+        {
+          "src": "icons/emergency.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+paintracker",
+      "url": "/pain-tracker/?data=%s"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/pain-tracker/import",
+      "accept": {
+        "application/json": [".json"],
+        "text/csv": [".csv"]
+      }
+    }
+  ],
+  "share_target": {
+    "action": "/pain-tracker/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "file",
+          "accept": ["application/json", "text/csv", "image/*"]
+        }
+      ]
+    }
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+} 

@@ -1,0 +1,70 @@
+{
+  "outputs": {
+    "assets/chart-vendor-C6yoAA-A.js": {
+      "bytes": 286700
+    },
+    "assets/chart-vendor-C6yoAA-A.js.map": {
+      "bytes": 1467837
+    },
+    "assets/date-vendor-Bjuqiw2y.js": {
+      "bytes": 22380
+    },
+    "assets/date-vendor-Bjuqiw2y.js.map": {
+      "bytes": 147322
+    },
+    "assets/exportCsv-Dmvr2UaE.js": {
+      "bytes": 586
+    },
+    "assets/exportCsv-Dmvr2UaE.js.map": {
+      "bytes": 1890
+    },
+    "assets/html2canvas.esm-B0tyYwQk.js": {
+      "bytes": 202416
+    },
+    "assets/html2canvas.esm-B0tyYwQk.js.map": {
+      "bytes": 603193
+    },
+    "assets/index-BwsBVgda.css": {
+      "bytes": 77611
+    },
+    "assets/index-wxXM0OTV.js": {
+      "bytes": 1330244
+    },
+    "assets/index-wxXM0OTV.js.map": {
+      "bytes": 4856390
+    },
+    "assets/index.es-CRTLou-M.js": {
+      "bytes": 159482
+    },
+    "assets/index.es-CRTLou-M.js.map": {
+      "bytes": 641421
+    },
+    "assets/PredictivePanel-C6C35CRP.js": {
+      "bytes": 2836
+    },
+    "assets/PredictivePanel-C6C35CRP.js.map": {
+      "bytes": 8102
+    },
+    "assets/purify.es-CQJ0hv7W.js": {
+      "bytes": 21866
+    },
+    "assets/purify.es-CQJ0hv7W.js.map": {
+      "bytes": 90118
+    },
+    "assets/react-vendor-Ckhrjn13.js": {
+      "bytes": 142428
+    },
+    "assets/react-vendor-Ckhrjn13.js.map": {
+      "bytes": 344961
+    },
+    "pwa-demo.js": {
+      "bytes": 8279
+    },
+    "pwa-init.js": {
+      "bytes": 11192
+    },
+    "sw.js": {
+      "bytes": 12657
+    }
+  }
+}

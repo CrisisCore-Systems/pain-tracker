@@ -1,0 +1,23 @@
+name: Encryption Configuration Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-encryption:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install deps
+        run: npm ci
+      - name: Verify encryption config
+        env:
+          ENCRYPTION_KEY_HEX: ${{ secrets.ENCRYPTION_KEY_HEX }}
+        run: node ./scripts/check-encryption-config.mjs
