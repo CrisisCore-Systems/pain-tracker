@@ -9,8 +9,8 @@ export interface PainScore {
 
 export const calculatePainScore = (entry: PainEntry): PainScore => {
   const { baselineData } = entry;
-  const locationFactor = baselineData.locations.length * 0.5;
-  const symptomFactor = baselineData.symptoms.length * 0.3;
+  const locationFactor = (baselineData.locations?.length || 0) * 0.5;
+  const symptomFactor = (baselineData.symptoms?.length || 0) * 0.3;
   
   // Calculate total score based on pain level, locations, and symptoms
   const total = baselineData.pain + locationFactor + symptomFactor;
@@ -68,7 +68,7 @@ export const aggregatePainData = (entries: PainEntry[]): AggregatedPainData => {
   // Analyze locations frequency
   const locationCount: Record<string, number> = {};
   entries.forEach(entry => {
-    entry.baselineData.locations.forEach(location => {
+    entry.baselineData.locations?.forEach(location => {
       locationCount[location] = (locationCount[location] || 0) + 1;
     });
   });
@@ -79,7 +79,7 @@ export const aggregatePainData = (entries: PainEntry[]): AggregatedPainData => {
   // Analyze symptoms frequency
   const symptomCount: Record<string, number> = {};
   entries.forEach(entry => {
-    entry.baselineData.symptoms.forEach(symptom => {
+    entry.baselineData.symptoms?.forEach(symptom => {
       symptomCount[symptom] = (symptomCount[symptom] || 0) + 1;
     });
   });
@@ -118,10 +118,10 @@ export const aggregatePainData = (entries: PainEntry[]): AggregatedPainData => {
   const activityCount: Record<string, number> = {};
   const mobilityAidsCount: Record<string, number> = {};
   entries.forEach(entry => {
-    entry.functionalImpact.limitedActivities.forEach(activity => {
+    entry.functionalImpact?.limitedActivities?.forEach(activity => {
       activityCount[activity] = (activityCount[activity] || 0) + 1;
     });
-    entry.functionalImpact.mobilityAids.forEach(aid => {
+    entry.functionalImpact?.mobilityAids?.forEach(aid => {
       mobilityAidsCount[aid] = (mobilityAidsCount[aid] || 0) + 1;
     });
   });

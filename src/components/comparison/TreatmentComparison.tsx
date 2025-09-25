@@ -14,6 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system/components/Card';
 import { Badge } from '../../design-system/components/Badge';
 import Chart from '../../design-system/components/Chart';
+import { colorVar } from '../../design-system/utils/theme';
 import type { PainEntry } from '../../types';
 import type { ComparisonInsight, ComparisonDataset, TreatmentComparison as TreatmentCfg } from '../../types/comparison';
 import { DataComparisonEngine } from '../../utils/comparison/engine';

@@ -125,7 +125,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       title: 'Pain Locations',
       component: (
         <BodyMappingSection
-          selectedLocations={formData.baselineData.locations}
+          selectedLocations={formData.baselineData?.locations || []}
           onChange={(locations) => setFormData(prev => ({
             ...prev,
             baselineData: { ...prev.baselineData, locations }
@@ -138,7 +138,9 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       title: 'Symptoms',
       component: (
         <BaselineSection
-          {...formData.baselineData}
+          pain={formData.baselineData?.pain || 0}
+          locations={formData.baselineData?.locations || []}
+          symptoms={formData.baselineData?.symptoms || []}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             baselineData: { ...prev.baselineData, ...data }
@@ -155,10 +157,10 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
             <div>
               <h3 className="text-lg font-semibold mb-4">How is your sleep quality?</h3>
               <TouchOptimizedSlider
-                value={formData.qualityOfLife.sleepQuality}
+                value={formData.qualityOfLife?.sleepQuality || 0}
                 onChange={(value) => setFormData(prev => ({
                   ...prev,
-                  qualityOfLife: { ...prev.qualityOfLife, sleepQuality: value }
+                  qualityOfLife: { ...prev.qualityOfLife, sleepQuality: value, moodImpact: prev.qualityOfLife?.moodImpact || 0, socialImpact: prev.qualityOfLife?.socialImpact || [] }
                 }))}
                 min={0}
                 max={10}
@@ -170,10 +172,10 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
             <div>
               <h3 className="text-lg font-semibold mb-4">How much is pain affecting your mood?</h3>
               <TouchOptimizedSlider
-                value={formData.qualityOfLife.moodImpact}
+                value={formData.qualityOfLife?.moodImpact || 0}
                 onChange={(value) => setFormData(prev => ({
                   ...prev,
-                  qualityOfLife: { ...prev.qualityOfLife, moodImpact: value }
+                  qualityOfLife: { ...prev.qualityOfLife, moodImpact: value, sleepQuality: prev.qualityOfLife?.sleepQuality || 0, socialImpact: prev.qualityOfLife?.socialImpact || [] }
                 }))}
                 min={0}
                 max={10}
@@ -183,10 +185,16 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
             </div>
 
             <QualityOfLifeSection
-              {...formData.qualityOfLife}
+              sleepQuality={formData.qualityOfLife?.sleepQuality || 0}
+              moodImpact={formData.qualityOfLife?.moodImpact || 0}
+              socialImpact={formData.qualityOfLife?.socialImpact || []}
               onChange={(data) => setFormData(prev => ({
                 ...prev,
-                qualityOfLife: { ...prev.qualityOfLife, ...data }
+                qualityOfLife: {
+                  sleepQuality: data.sleepQuality ?? prev.qualityOfLife?.sleepQuality ?? 0,
+                  moodImpact: data.moodImpact ?? prev.qualityOfLife?.moodImpact ?? 0,
+                  socialImpact: data.socialImpact ?? prev.qualityOfLife?.socialImpact ?? []
+                }
               }))}
             />
           </CardContent>
@@ -198,10 +206,15 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       title: 'Daily Activities',
       component: (
         <FunctionalImpactSection
-          {...formData.functionalImpact}
+          limitedActivities={formData.functionalImpact?.limitedActivities || []}
+          mobilityAids={formData.functionalImpact?.mobilityAids || []}
           onChange={(data) => setFormData(prev => ({
             ...prev,
-            functionalImpact: { ...prev.functionalImpact, ...data }
+            functionalImpact: {
+              limitedActivities: data.limitedActivities ?? prev.functionalImpact?.limitedActivities ?? [],
+              assistanceNeeded: prev.functionalImpact?.assistanceNeeded ?? [],
+              mobilityAids: data.mobilityAids ?? prev.functionalImpact?.mobilityAids ?? []
+            }
           }))}
         />
       )
@@ -211,10 +224,16 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       title: 'Work Impact',
       component: (
         <WorkImpactSection
-          {...formData.workImpact}
+          missedWork={formData.workImpact?.missedWork || 0}
+          modifiedDuties={formData.workImpact?.modifiedDuties || []}
+          workLimitations={formData.workImpact?.workLimitations || []}
           onChange={(data) => setFormData(prev => ({
             ...prev,
-            workImpact: { ...prev.workImpact, ...data }
+            workImpact: {
+              missedWork: data.missedWork ?? prev.workImpact?.missedWork ?? 0,
+              modifiedDuties: data.modifiedDuties ?? prev.workImpact?.modifiedDuties ?? [],
+              workLimitations: data.workLimitations ?? prev.workImpact?.workLimitations ?? []
+            }
           }))}
         />
       )
@@ -224,10 +243,21 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       title: 'Medications',
       component: (
         <MedicationsSection
-          {...formData.medications}
+          current={formData.medications?.current?.map(med => ({
+            name: med.name,
+            dosage: med.dosage || '',
+            frequency: med.frequency || '',
+            effectiveness: med.effectiveness || ''
+          })) || []}
+          changes={formData.medications?.changes || ''}
+          effectiveness={formData.medications?.effectiveness || ''}
           onChange={(data) => setFormData(prev => ({
             ...prev,
-            medications: { ...prev.medications, ...data }
+            medications: {
+              current: data.current ?? prev.medications?.current ?? [],
+              changes: data.changes ?? prev.medications?.changes ?? '',
+              effectiveness: data.effectiveness ?? prev.medications?.effectiveness ?? ''
+            }
           }))}
         />
       )
@@ -237,10 +267,21 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       title: 'Treatments',
       component: (
         <TreatmentsSection
-          {...formData.treatments}
+          recent={formData.treatments?.recent?.map(t => ({
+            type: t.type,
+            provider: t.provider || '',
+            effectiveness: t.effectiveness || '',
+            date: t.date || new Date().toISOString()
+          })) || []}
+          effectiveness={formData.treatments?.effectiveness || ''}
+          planned={formData.treatments?.planned || []}
           onChange={(data) => setFormData(prev => ({
             ...prev,
-            treatments: { ...prev.treatments, ...data }
+            treatments: {
+              recent: data.recent ?? prev.treatments?.recent ?? [],
+              effectiveness: data.effectiveness ?? prev.treatments?.effectiveness ?? '',
+              planned: data.planned ?? prev.treatments?.planned ?? []
+            }
           }))}
         />
       )
@@ -250,10 +291,14 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       title: 'Comparison',
       component: (
         <ComparisonSection
-          {...formData.comparison}
+          worseningSince={formData.comparison?.worseningSince || ''}
+          newLimitations={formData.comparison?.newLimitations || []}
           onChange={(data) => setFormData(prev => ({
             ...prev,
-            comparison: { ...prev.comparison, ...data }
+            comparison: {
+              worseningSince: data.worseningSince ?? prev.comparison?.worseningSince ?? '',
+              newLimitations: data.newLimitations ?? prev.comparison?.newLimitations ?? []
+            }
           }))}
         />
       )

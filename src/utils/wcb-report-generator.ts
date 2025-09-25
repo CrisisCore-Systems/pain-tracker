@@ -42,6 +42,8 @@ export function generateWCBReport(entries: PainEntry[], claimData?: WCBClaimData
   const recommendations = generateRecommendations(sortedEntries, workImpact, claimData);
 
   return {
+    id: `wcb-report-${Date.now()}`,
+    createdAt: new Date().toISOString(),
     period: {
       start: startDate,
       end: endDate
@@ -71,7 +73,7 @@ function analyzeFunctionalImpact(entries: PainEntry[]) {
   const firstEntry = entries[0];
 
   return {
-    limitations: latestEntry?.functionalImpact.limitedActivities || [],
+    limitations: latestEntry?.functionalImpact?.limitedActivities || [],
     deterioration: identifyDeteriorations(firstEntry, latestEntry),
     improvements: identifyImprovements(firstEntry, latestEntry)
   };
@@ -83,8 +85,10 @@ function identifyDeteriorations(first?: PainEntry, latest?: PainEntry): string[]
   const deteriorations: string[] = [];
   
   // Check for new limitations
-  const newLimitations = latest.functionalImpact.limitedActivities.filter(
-    activity => !first.functionalImpact.limitedActivities.includes(activity)
+  const firstActivities = first.functionalImpact?.limitedActivities || [];
+  const latestActivities = latest.functionalImpact?.limitedActivities || [];
+  const newLimitations = latestActivities.filter(
+    activity => !firstActivities.includes(activity)
   );
   
   // Check for pain increase
@@ -93,8 +97,10 @@ function identifyDeteriorations(first?: PainEntry, latest?: PainEntry): string[]
   }
   
   // Check for new symptoms
-  const newSymptoms = latest.baselineData.symptoms.filter(
-    symptom => !first.baselineData.symptoms.includes(symptom)
+  const firstSymptoms = first.baselineData.symptoms || [];
+  const latestSymptoms = latest.baselineData.symptoms || [];
+  const newSymptoms = latestSymptoms.filter(
+    symptom => !firstSymptoms.includes(symptom)
   );
   
   return [...deteriorations, ...newLimitations, ...newSymptoms];
@@ -106,8 +112,10 @@ function identifyImprovements(first?: PainEntry, latest?: PainEntry): string[] {
   const improvements: string[] = [];
   
   // Check for resolved limitations
-  const resolvedLimitations = first.functionalImpact.limitedActivities.filter(
-    activity => !latest.functionalImpact.limitedActivities.includes(activity)
+  const firstActivities = first.functionalImpact?.limitedActivities || [];
+  const latestActivities = latest.functionalImpact?.limitedActivities || [];
+  const resolvedLimitations = firstActivities.filter(
+    activity => !latestActivities.includes(activity)
   );
   
   // Check for pain decrease
@@ -116,8 +124,10 @@ function identifyImprovements(first?: PainEntry, latest?: PainEntry): string[] {
   }
   
   // Check for resolved symptoms
-  const resolvedSymptoms = first.baselineData.symptoms.filter(
-    symptom => !latest.baselineData.symptoms.includes(symptom)
+  const firstSymptoms = first.baselineData.symptoms || [];
+  const latestSymptoms = latest.baselineData.symptoms || [];
+  const resolvedSymptoms = firstSymptoms.filter(
+    symptom => !latestSymptoms.includes(symptom)
   );
   
   return [...improvements, ...resolvedLimitations, ...resolvedSymptoms];
@@ -130,12 +140,12 @@ function identifyAccommodations(entries: PainEntry[]): string[] {
   const accommodations: string[] = [];
   
   // Check for mobility aids
-  if (latestEntry.functionalImpact.mobilityAids.length > 0) {
+  if (latestEntry.functionalImpact?.mobilityAids && latestEntry.functionalImpact.mobilityAids.length > 0) {
     accommodations.push(...latestEntry.functionalImpact.mobilityAids.map(aid => `Requires ${aid}`));
   }
   
   // Check work limitations
-  if (latestEntry.workImpact.modifiedDuties.length > 0) {
+  if (latestEntry.workImpact?.modifiedDuties && latestEntry.workImpact.modifiedDuties.length > 0) {
     accommodations.push(...latestEntry.workImpact.modifiedDuties);
   }
   
@@ -178,7 +188,7 @@ function calculateAveragePain(entries: PainEntry[]): number {
 
 function analyzeLocationFrequency(entries: PainEntry[]): Record<string, number> {
   return entries.reduce((acc: Record<string, number>, entry) => {
-    entry.baselineData.locations.forEach(location => {
+    (entry.baselineData.locations || []).forEach(location => {
       acc[location] = (acc[location] || 0) + 1;
     });
     return acc;
@@ -189,5 +199,5 @@ function analyzeTreatmentEffectiveness(entries: PainEntry[]): string {
   const latestEntry = entries[entries.length - 1];
   if (!latestEntry) return 'No data available';
   
-  return latestEntry.treatments.effectiveness || 'Not reported';
+  return latestEntry.treatments?.effectiveness || 'Not reported';
 } 

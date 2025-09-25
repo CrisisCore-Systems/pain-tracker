@@ -117,7 +117,7 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
       multiModalInput: false,
       stressResponsiveUI: true
     });
-    resetCrisisDetection();
+    resetCrisisDetection('resolved');
   }, [resetCrisisDetection]);
 
   const updateCrisisSettings = useCallback((settings: Partial<CrisisSettings>) => {

@@ -67,7 +67,7 @@ export class HolisticWellbeingService {
 
     // Calculate sleep quality impact
     const avgSleepQuality = recentPainEntries.length > 0
-      ? recentPainEntries.reduce((sum, e) => sum + e.qualityOfLife.sleepQuality, 0) / recentPainEntries.length
+      ? recentPainEntries.reduce((sum, e) => sum + (e.qualityOfLife?.sleepQuality || 5), 0) / recentPainEntries.length
       : 5;
 
     return {
@@ -299,8 +299,8 @@ export class HolisticWellbeingService {
 
     // Assess functional independence from pain entries
     const independenceFactors = painEntries.map(e => {
-      const assistanceNeeded = e.functionalImpact.assistanceNeeded.length;
-      const mobilityAids = e.functionalImpact.mobilityAids.length;
+      const assistanceNeeded = (e.functionalImpact?.assistanceNeeded || []).length;
+      const mobilityAids = (e.functionalImpact?.mobilityAids || []).length;
       return Math.max(0, 10 - assistanceNeeded - mobilityAids);
     });
 
@@ -336,7 +336,7 @@ export class HolisticWellbeingService {
   }
 
   private assessDailyActivities(painEntries: PainEntry[]): FunctionalAssessment {
-    const limitedActivities = painEntries.flatMap(e => e.functionalImpact.limitedActivities);
+    const limitedActivities = painEntries.flatMap(e => e.functionalImpact?.limitedActivities || []);
     const uniqueLimitations = new Set(limitedActivities);
     
     const independence = Math.max(0, 100 - (uniqueLimitations.size * 10));
@@ -352,7 +352,7 @@ export class HolisticWellbeingService {
   }
 
   private assessMobility(painEntries: PainEntry[]): FunctionalAssessment {
-    const mobilityAids = painEntries.flatMap(e => e.functionalImpact.mobilityAids);
+    const mobilityAids = painEntries.flatMap(e => e.functionalImpact?.mobilityAids || []);
     const uniqueAids = new Set(mobilityAids);
     
     const independence = Math.max(0, 100 - (uniqueAids.size * 15));
@@ -371,7 +371,7 @@ export class HolisticWellbeingService {
     // Estimate cognitive impact from pain levels and symptoms
     const cognitiveSymptoms = ['brain fog', 'confusion', 'memory', 'concentration'];
     const cognitiveImpact = painEntries.filter(e => 
-      e.baselineData.symptoms.some(s => 
+      (e.baselineData.symptoms || []).some(s => 
         cognitiveSymptoms.some(cs => s.toLowerCase().includes(cs))
       )
     ).length;
@@ -390,7 +390,7 @@ export class HolisticWellbeingService {
 
   private assessCommunication(painEntries: PainEntry[]): FunctionalAssessment {
     // Based on social impact and functional limitations
-    const socialImpact = painEntries.flatMap(e => e.qualityOfLife.socialImpact);
+    const socialImpact = painEntries.flatMap(e => e.qualityOfLife?.socialImpact || []);
     const communicationBarriers = socialImpact.filter(impact => 
       impact.toLowerCase().includes('communication') || 
       impact.toLowerCase().includes('speaking') ||
@@ -410,15 +410,15 @@ export class HolisticWellbeingService {
   }
 
   private assessWorkCapacity(painEntries: PainEntry[]): FunctionalAssessment {
-    const workLimitations = painEntries.flatMap(e => e.workImpact.workLimitations);
-    const missedWork = painEntries.reduce((sum, e) => sum + e.workImpact.missedWork, 0);
+    const workLimitations = painEntries.flatMap(e => e.workImpact?.workLimitations || []);
+    const missedWork = painEntries.reduce((sum, e) => sum + (e.workImpact?.missedWork || 0), 0);
     
     const independence = Math.max(0, 100 - (workLimitations.length * 5) - (missedWork * 2));
     
     return {
       independence,
       assistanceNeeded: independence < 25 ? 'maximum' : independence < 50 ? 'moderate' : independence < 75 ? 'minimal' : 'none',
-      adaptationsUsed: painEntries.flatMap(e => e.workImpact.modifiedDuties),
+      adaptationsUsed: painEntries.flatMap(e => e.workImpact?.modifiedDuties || []),
       barriers: workLimitations,
       improvements: [],
       goals: []
@@ -781,7 +781,7 @@ export class HolisticWellbeingService {
 
   private calculateRestQualityMetrics(painEntries: PainEntry[], moodEntries: MoodEntry[]): RestQualityMetrics {
     const avgSleepQuality = painEntries.length > 0
-      ? painEntries.reduce((sum, e) => sum + e.qualityOfLife.sleepQuality, 0) / painEntries.length
+      ? painEntries.reduce((sum, e) => sum + (e.qualityOfLife?.sleepQuality || 5), 0) / painEntries.length
       : 5;
 
     return {
@@ -803,7 +803,7 @@ export class HolisticWellbeingService {
     const recentEntries = this.getRecentEntries(painEntries, 7);
     
     const avgSleepQuality = recentEntries.length > 0
-      ? recentEntries.reduce((sum, e) => sum + e.qualityOfLife.sleepQuality, 0) / recentEntries.length
+      ? recentEntries.reduce((sum, e) => sum + (e.qualityOfLife?.sleepQuality || 5), 0) / recentEntries.length
       : 5;
 
     const avgPain = recentEntries.length > 0

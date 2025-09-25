@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import type { WCBReport } from '../../types';
+import type { WCBReport } from '../types/index';
 
 // Extend jsPDF type to include autoTable
 declare module 'jspdf' {
@@ -115,10 +115,10 @@ export class PDFExportService {
       yPosition += 8;
 
       const locationData = Object.entries(report.painTrends.locations)
-        .sort(([, a], [, b]) => b - a)
-        .map(([location, count]) => [location, count.toString()]);
+        .sort(([, a], [, b]) => (Number(b) as unknown as number) - (Number(a) as unknown as number))
+        .map(([location, count]) => [location, String(count)]);
 
-      this.doc.autoTable({
+      (this.doc as any).autoTable({
         startY: yPosition,
         head: [['Location', 'Occurrences']],
         body: locationData,
@@ -127,7 +127,7 @@ export class PDFExportService {
         headStyles: { fillColor: [41, 128, 185] },
       });
 
-      yPosition = (this.doc as any).lastAutoTable.finalY + 15;
+      yPosition = ((this.doc as any).lastAutoTable as any)?.finalY ? ((this.doc as any).lastAutoTable as any).finalY + 15 : yPosition + 15;
     } else {
       this.doc.text('No pain location data recorded.', 20, yPosition);
       yPosition += 10;
@@ -152,7 +152,7 @@ export class PDFExportService {
       this.doc.text('Work Limitations:', 20, yPosition);
       yPosition += 8;
 
-      const limitationData = report.workImpact.limitations.map(([limitation, frequency]) => [
+      const limitationData = report.workImpact.limitations.map(([limitation, frequency]: [string, number]) => [
         limitation,
         frequency.toString()
       ]);
@@ -174,7 +174,7 @@ export class PDFExportService {
       this.doc.text('Workplace Accommodations Needed:', 20, yPosition);
       yPosition += 8;
 
-      const accommodationData = report.workImpact.accommodationsNeeded.map(acc => [acc]);
+      const accommodationData = report.workImpact.accommodationsNeeded.map((acc: string) => [acc]);
 
       this.doc.autoTable({
         startY: yPosition,
@@ -211,7 +211,7 @@ export class PDFExportService {
       this.doc.text('Functional Limitations:', 20, yPosition);
       yPosition += 8;
 
-      const limitationData = report.functionalAnalysis.limitations.map(lim => [lim]);
+      const limitationData = report.functionalAnalysis.limitations.map((lim: string) => [lim]);
 
       this.doc.autoTable({
         startY: yPosition,
@@ -231,8 +231,8 @@ export class PDFExportService {
       yPosition += 8;
 
       const changes = [
-        ...report.functionalAnalysis.deterioration.map(change => ['Deterioration', change]),
-        ...report.functionalAnalysis.improvements.map(change => ['Improvement', change])
+        ...report.functionalAnalysis.deterioration.map((change: string) => ['Deterioration', change]),
+        ...report.functionalAnalysis.improvements.map((change: string) => ['Improvement', change])
       ];
 
       this.doc.autoTable({
@@ -270,7 +270,7 @@ export class PDFExportService {
       this.doc.text('Current Treatments:', 20, yPosition);
       yPosition += 8;
 
-      const treatmentData = report.treatments.current.map(treatment => [
+      const treatmentData = report.treatments.current.map((treatment: { treatment: string; frequency: number }) => [
         treatment.treatment,
         treatment.frequency.toString()
       ]);
@@ -309,7 +309,7 @@ export class PDFExportService {
     this.doc.setFont('helvetica', 'normal');
 
     // Recommendations list
-    report.recommendations.forEach((recommendation, index) => {
+    report.recommendations.forEach((recommendation: string, index: number) => {
       const lines = this.doc.splitTextToSize(recommendation, 160);
       this.doc.text(`${index + 1}.`, 20, yPosition);
       this.doc.text(lines, 30, yPosition);

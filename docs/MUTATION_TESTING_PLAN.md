@@ -1,3 +1,50 @@
+# Mutation Testing Plan (short)
+
+This file captures a concrete, low-risk plan to expand and operationalize mutation testing with Stryker in this repository.
+
+Goals
+- Improve test effectiveness by increasing mutation coverage in core logic
+- Integrate mutation checks into CI as a non-blocking quality gate initially
+- Provide automated PR feedback for maintainers to triage weak tests
+
+Quick starter checklist
+1. Keep Stryker as a devDependency and pin to a stable minor (already present).
+2. Add a focused mutate set for core utilities and services (start small):
+   - `src/utils/**` (calculations, trending, export)
+   - `src/services/**` (EmpathyIntelligenceEngine, collectors)
+   - `src/lib/analytics/**` (heuristics)
+3. Run locally with higher timeout and incremental output:
+   - `npx stryker run --timeoutMS 600000` or use `stryker.conf.js` to tune `timeoutMs`.
+
+Configuration recommendations (stryker.conf.js)
+- Use incremental mode where supported (speeds repeated local runs).
+- Keep `concurrency` moderate (2-4) to avoid CI flakiness.
+- Limit `mutate` globs to targeted folders for PR runs.
+
+CI integration
+- Add a lightweight mutation job on PRs that runs against the focused mutate set with a short timeout. Mark failures as informational comment on PR (do not block merge at first).
+- If mutation score drops significantly (configurable threshold, e.g., -10%), fail a nightly job that flags regressions.
+
+PR automation and triage
+- Post a PR comment with Stryker summary and a link to the detailed report (artifact). Include: files mutated, survived mutants list, and suggested tests to strengthen.
+- Assign to the PR author or a `tests` team for remediation.
+
+Operational notes
+- Start small: expand mutate set after steady-state (2-3 weeks) and when the team is comfortable with triage.
+- Prioritize mutation hardening for security-critical code paths and data validation modules.
+- Keep mutation runs off the main CI blocking path until the team has capacity to fix surviving mutants.
+
+Next steps (actionable)
+1. Create `stryker.conf.js` tuned for focused mutate globs and CI-friendly timeouts. (I can draft this file.)
+2. Add a GitHub Action `mutation-check.yml` that runs Stryker on PRs with `--dry-run` artifacts and posts comments.
+3. Start a pilot: run Stryker locally on `src/utils` and fix the top 10 surviving mutants.
+
+References
+- Stryker docs: https://stryker-mutator.io/docs
+
+---
+
+If you want, I can create `stryker.conf.js` and the GitHub Action workflow next (safe, small changes). Would you like me to add those now?
 # Mutation Testing Plan (StrykerJS)
 
 ## Goals

@@ -12,6 +12,7 @@ import {
   ReferenceLine
 } from 'recharts';
 import { format as formatDate, parseISO } from 'date-fns';
+import { chartColors } from '../../../design-system/utils/chart-colors';
 import type { PainEntry } from '../../../types';
 
 interface TreatmentOverlayProps {
@@ -53,8 +54,8 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
     const chartData: ChartDataPoint[] = sortedEntries.map(entry => ({
       date: formatDate(parseISO(entry.timestamp), 'MMM dd'),
       pain: entry.baselineData.pain,
-      treatment: entry.treatments.recent.length > 0 ? 'Treatment' : undefined,
-      medication: entry.medications.changes ? 'Med Change' : undefined
+      treatment: (entry.treatments?.recent?.length ?? 0) > 0 ? 'Treatment' : undefined,
+      medication: entry.medications?.changes ? 'Med Change' : undefined
     }));
 
     const treatmentEvents: TreatmentEvent[] = [];
@@ -62,8 +63,8 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
     sortedEntries.forEach(entry => {
       const date = formatDate(parseISO(entry.timestamp), 'MMM dd');
       
-      if (entry.treatments.recent.length > 0) {
-        entry.treatments.recent.forEach(treatment => {
+      if ((entry.treatments?.recent?.length ?? 0) > 0) {
+        entry.treatments?.recent?.forEach(treatment => {
           treatmentEvents.push({
             date,
             type: 'treatment',
@@ -72,7 +73,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
         });
       }
       
-      if (entry.medications.changes) {
+      if (entry.medications?.changes) {
         treatmentEvents.push({
           date,
           type: 'medication',
@@ -146,9 +147,9 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
               <Line
                 type="monotone"
                 dataKey="pain"
-                stroke="#2563eb"
-                strokeWidth={2}
-                dot={{ fill: '#2563eb', strokeWidth: 2, r: 4 }}
+                stroke={chartColors.analytics.trend}
+                strokeWidth={3}
+                dot={{ fill: chartColors.analytics.trend, strokeWidth: 2, r: 4 }}
                 name="Pain Level"
               />
 
@@ -159,7 +160,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
                     <ReferenceLine
                       key={`treatment-${index}`}
                       x={point.date}
-                      stroke="#10b981"
+                      stroke={chartColors.treatment.primary}
                       strokeDasharray="5 5"
                       strokeWidth={2}
                     />
@@ -175,7 +176,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
                     <ReferenceLine
                       key={`medication-${index}`}
                       x={point.date}
-                      stroke="#f59e0b"
+                      stroke={chartColors.treatment.medication}
                       strokeDasharray="2 2"
                       strokeWidth={2}
                     />
@@ -190,15 +191,15 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
         {/* Legend */}
         <div className="flex flex-wrap gap-6 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 bg-blue-600"></div>
+            <div className="w-4 h-0.5" style={{ backgroundColor: chartColors.analytics.trend }}></div>
             <span>Pain Level</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 bg-green-500 border-dashed border-t-2 border-green-500"></div>
+            <div className="w-4 h-0.5 border-dashed border-t-2" style={{ borderColor: chartColors.treatment.primary }}></div>
             <span>Treatment</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 bg-orange-500 border-dotted border-t-2 border-orange-500"></div>
+            <div className="w-4 h-0.5 border-dotted border-t-2" style={{ borderColor: chartColors.treatment.medication }}></div>
             <span>Medication Change</span>
           </div>
         </div>
@@ -210,9 +211,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {treatmentEvents.map((event, index) => (
                 <div key={index} className="flex items-start gap-3 p-2 bg-gray-50 rounded">
-                  <div className={`w-3 h-3 rounded-full mt-0.5 ${
-                    event.type === 'treatment' ? 'bg-green-500' : 'bg-orange-500'
-                  }`}></div>
+                  <div className="w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: event.type === 'treatment' ? chartColors.treatment.primary : chartColors.treatment.medication }}></div>
                   <div className="flex-1">
                     <div className="font-medium text-sm">{event.date}</div>
                     <div className="text-sm text-gray-600">{event.description}</div>

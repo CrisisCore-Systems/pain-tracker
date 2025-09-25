@@ -35,7 +35,7 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
     if (!entries.length) return [];
 
     const locationStats = entries.reduce((acc, entry) => {
-      entry.baselineData.locations.forEach(location => {
+      entry.baselineData.locations?.forEach(location => {
         if (!acc[location]) {
           acc[location] = { totalPain: 0, count: 0 };
         }

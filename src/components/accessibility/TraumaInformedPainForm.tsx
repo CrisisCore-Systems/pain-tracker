@@ -105,7 +105,7 @@ export function TraumaInformedPainEntryForm({
     const newErrors: Record<string, string> = {};
     
     // Gentle validation
-    if (formData.baselineData.pain === 0 && formData.baselineData.locations.length === 0) {
+    if (formData.baselineData.pain === 0 && (formData.baselineData.locations?.length ?? 0) === 0) {
       newErrors.baseline = "It would be helpful to know about your current pain level or location";
     }
     
@@ -189,7 +189,7 @@ export function TraumaInformedPainEntryForm({
       level: 'advanced' as const,
       content: (
         <NotesSection 
-          notes={formData.notes}
+          notes={formData.notes || ''}
           onNotesChange={(notes) => setFormData(prev => ({ ...prev, notes }))}
         />
       )
@@ -377,11 +377,12 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
           {commonLocations.map(location => (
             <TouchOptimizedButton
               key={location}
-              variant={data.locations.includes(location) ? "primary" : "secondary"}
+              variant={(data.locations || []).includes(location) ? "primary" : "secondary"}
               onClick={() => {
-                const newLocations = data.locations.includes(location)
-                  ? data.locations.filter(l => l !== location)
-                  : [...data.locations, location];
+                const currentLocations = data.locations || [];
+                const newLocations = currentLocations.includes(location)
+                  ? currentLocations.filter(l => l !== location)
+                  : [...currentLocations, location];
                 onChange({ locations: newLocations });
               }}
               className="m-1"
@@ -406,11 +407,12 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
           {commonSymptoms.map(symptom => (
             <TouchOptimizedButton
               key={symptom}
-              variant={data.symptoms.includes(symptom) ? "primary" : "secondary"}
+              variant={(data.symptoms || []).includes(symptom) ? "primary" : "secondary"}
               onClick={() => {
-                const newSymptoms = data.symptoms.includes(symptom)
-                  ? data.symptoms.filter(s => s !== symptom)
-                  : [...data.symptoms, symptom];
+                const currentSymptoms = data.symptoms || [];
+                const newSymptoms = currentSymptoms.includes(symptom)
+                  ? currentSymptoms.filter(s => s !== symptom)
+                  : [...currentSymptoms, symptom];
                 onChange({ symptoms: newSymptoms });
               }}
               className="m-1"
@@ -432,6 +434,7 @@ function FunctionalImpactSection({ data, onChange }: {
   onChange: (data: Partial<PainEntry['functionalImpact']>) => void; 
 }) {
   const activities = ["Walking", "Sitting", "Standing", "Sleeping", "Work tasks", "Household chores"];
+  const currentData = data || { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] };
   
   return (
     <ProgressiveDisclosure
@@ -443,11 +446,11 @@ function FunctionalImpactSection({ data, onChange }: {
         {activities.map(activity => (
           <TouchOptimizedButton
             key={activity}
-            variant={data.limitedActivities.includes(activity) ? "primary" : "secondary"}
+            variant={currentData.limitedActivities.includes(activity) ? "primary" : "secondary"}
             onClick={() => {
-              const newActivities = data.limitedActivities.includes(activity)
-                ? data.limitedActivities.filter(a => a !== activity)
-                : [...data.limitedActivities, activity];
+              const newActivities = currentData.limitedActivities.includes(activity)
+                ? currentData.limitedActivities.filter(a => a !== activity)
+                : [...currentData.limitedActivities, activity];
               onChange({ limitedActivities: newActivities });
             }}
             className="m-1"
@@ -468,6 +471,8 @@ function MedicationSection({
   medications: PainEntry['medications']; 
   onMedicationsChange: (data: Partial<PainEntry['medications']>) => void;
 }) {
+  const currentMedications = medications || { current: [], changes: '', effectiveness: '' };
+  
   return (
     <div className="space-y-6">
       <ProgressiveDisclosure
@@ -478,7 +483,7 @@ function MedicationSection({
         <textarea
           className="w-full p-3 border border-gray-300 rounded-md"
           placeholder="List your current pain medications..."
-          value={medications.changes}
+          value={currentMedications.changes}
           onChange={(e) => onMedicationsChange({ changes: e.target.value })}
           rows={3}
         />
@@ -491,6 +496,8 @@ function QualityOfLifeSection({ data, onChange }: {
   data: PainEntry['qualityOfLife']; 
   onChange: (data: Partial<PainEntry['qualityOfLife']>) => void; 
 }) {
+  const currentData = data || { sleepQuality: 5, moodImpact: 5, socialImpact: [] };
+  
   return (
     <ProgressiveDisclosure
       title="Sleep & Mood"
@@ -504,7 +511,7 @@ function QualityOfLifeSection({ data, onChange }: {
             type="range"
             min="1"
             max="10"
-            value={data.sleepQuality}
+            value={currentData.sleepQuality}
             onChange={(e) => onChange({ sleepQuality: parseInt(e.target.value) })}
             className="w-full"
           />
@@ -518,6 +525,8 @@ function WorkImpactSection({ data, onChange }: {
   data: PainEntry['workImpact']; 
   onChange: (data: Partial<PainEntry['workImpact']>) => void; 
 }) {
+  const currentData = data || { missedWork: 0, modifiedDuties: [], workLimitations: [] };
+  
   return (
     <ProgressiveDisclosure
       title="Work Impact"
@@ -529,7 +538,7 @@ function WorkImpactSection({ data, onChange }: {
         <input
           type="number"
           min="0"
-          value={data.missedWork}
+          value={currentData.missedWork}
           onChange={(e) => onChange({ missedWork: parseInt(e.target.value) || 0 })}
           className="w-full p-2 border border-gray-300 rounded-md"
         />

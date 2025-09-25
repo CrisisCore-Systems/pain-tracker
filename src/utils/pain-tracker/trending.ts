@@ -54,7 +54,7 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
 
   // Location frequency
   const locationFrequency = entries.reduce((acc, entry) => {
-    entry.baselineData.locations.forEach(location => {
+    entry.baselineData.locations?.forEach(location => {
       acc[location] = (acc[location] || 0) + 1;
     });
     return acc;
@@ -62,7 +62,7 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
 
   // Symptom correlations with pain levels
   const symptomCorrelations = entries.reduce((acc, entry) => {
-    entry.baselineData.symptoms.forEach(symptom => {
+    entry.baselineData.symptoms?.forEach(symptom => {
       acc[symptom] = (acc[symptom] || 0) + entry.baselineData.pain;
     });
     return acc;
@@ -129,7 +129,7 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
 
   // Location statistics
   const locationStats = entries.reduce((acc, entry) => {
-    entry.baselineData.locations.forEach(location => {
+    entry.baselineData.locations?.forEach(location => {
       if (!acc[location]) {
         acc[location] = { frequency: 0, totalPain: 0, avgPain: 0 };
       }
@@ -154,7 +154,7 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
 
   // Symptom statistics
   const symptomStats = entries.reduce((acc, entry) => {
-    entry.baselineData.symptoms.forEach(symptom => {
+    entry.baselineData.symptoms?.forEach(symptom => {
       if (!acc[symptom]) {
         acc[symptom] = { frequency: 0, totalPain: 0, avgPain: 0 };
       }
@@ -214,8 +214,8 @@ export function buildDailySeries(entries: PainEntry[], period?: { start: string;
     const localKey = `${localYear}-${localMonth}-${localDate}`;
     if (!acc[localKey]) acc[localKey] = { painLevels: [] as number[], symptoms: new Set<string>(), locations: new Set<string>() };
     acc[localKey].painLevels.push(entry.baselineData.pain);
-    entry.baselineData.symptoms.forEach(s => acc[localKey].symptoms.add(s));
-    entry.baselineData.locations.forEach(l => acc[localKey].locations.add(l));
+    entry.baselineData.symptoms?.forEach(s => acc[localKey].symptoms.add(s));
+    entry.baselineData.locations?.forEach(l => acc[localKey].locations.add(l));
     return acc;
   }, {} as Record<string, { painLevels: number[]; symptoms: Set<string>; locations: Set<string> }>);
 

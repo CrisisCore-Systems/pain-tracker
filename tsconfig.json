@@ -5,8 +5,9 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable", "WebWorker"],
     "module": "ESNext",
     "skipLibCheck": true,
+  "incremental": true,
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -18,9 +19,18 @@
   "allowJs": true,
   "checkJs": false,
     "forceConsistentCasingInFileNames": true,
-    "types": ["vite/client", "vitest/globals", "node"]
+    "types": ["vite/client", "vitest/globals", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@pain-tracker/*": ["packages/*/src"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx", "src/**/*.d.ts"],
-  "exclude": ["node_modules", "dist", ".vite"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*", "packages/**/*"],
+  "exclude": ["node_modules", "dist", ".vite", "coverage", "public"],
+  "references": [
+    { "path": "./packages/design-system/tsconfig.json" },
+  { "path": "./packages/services/tsconfig.json" },
+  { "path": "./packages/utils/tsconfig.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

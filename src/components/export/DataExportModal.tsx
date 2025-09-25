@@ -75,7 +75,9 @@ export function DataExportModal({
   const availableSymptoms = useMemo(() => {
     const symptomSet = new Set<string>();
     entries.forEach(entry => {
-      entry.baselineData.symptoms.forEach(symptom => symptomSet.add(symptom));
+      if (entry.baselineData.symptoms) {
+        entry.baselineData.symptoms.forEach(symptom => symptomSet.add(symptom));
+      }
     });
     return Array.from(symptomSet).sort();
   }, [entries]);
@@ -83,7 +85,9 @@ export function DataExportModal({
   const availableLocations = useMemo(() => {
     const locationSet = new Set<string>();
     entries.forEach(entry => {
-      entry.baselineData.locations.forEach(location => locationSet.add(location));
+      if (entry.baselineData.locations) {
+        entry.baselineData.locations.forEach(location => locationSet.add(location));
+      }
     });
     return Array.from(locationSet).sort();
   }, [entries]);
@@ -108,7 +112,7 @@ export function DataExportModal({
       // Symptoms filter
       if (filters.symptoms.length > 0) {
         const hasMatchingSymptom = filters.symptoms.some(symptom =>
-          entry.baselineData.symptoms.includes(symptom)
+          entry.baselineData.symptoms?.includes(symptom)
         );
         if (!hasMatchingSymptom) return false;
       }
@@ -116,7 +120,7 @@ export function DataExportModal({
       // Locations filter
       if (filters.locations.length > 0) {
         const hasMatchingLocation = filters.locations.some(location =>
-          entry.baselineData.locations.includes(location)
+          entry.baselineData.locations?.includes(location)
         );
         if (!hasMatchingLocation) return false;
       }

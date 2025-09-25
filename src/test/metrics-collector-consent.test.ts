@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { EmpathyMetricsCollector } from '../services/EmpathyMetricsCollector';
-import { SecurityService } from '../services/SecurityService';
 import type { PainEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
+import { EmpathyMetricsCollector } from '../services/EmpathyMetricsCollector';
+import { SecurityService } from '../services/SecurityService';
 import { EmpathyDrivenAnalyticsService } from '../services/EmpathyDrivenAnalytics';
 
 const security = new SecurityService(undefined, { consentRequired: true });

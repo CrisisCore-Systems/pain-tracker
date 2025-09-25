@@ -20,7 +20,7 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
 
   // Analyze functional limitations
   const limitationsAnalysis = filteredEntries.reduce((acc, entry) => {
-    entry.functionalImpact.limitedActivities.forEach(activity => {
+    entry.functionalImpact?.limitedActivities?.forEach(activity => {
       if (!acc[activity]) {
         acc[activity] = {
           count: 0,
@@ -31,10 +31,10 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
       }
       acc[activity].count += 1;
       acc[activity].painLevels.push(entry.baselineData.pain);
-      entry.functionalImpact.assistanceNeeded.forEach(assistance => 
+      entry.functionalImpact?.assistanceNeeded?.forEach(assistance => 
         acc[activity].assistanceNeeded.add(assistance)
       );
-      entry.functionalImpact.mobilityAids.forEach(aid => 
+      entry.functionalImpact?.mobilityAids?.forEach(aid => 
         acc[activity].mobilityAids.add(aid)
       );
     });

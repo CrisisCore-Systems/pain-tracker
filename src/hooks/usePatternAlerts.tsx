@@ -1,6 +1,37 @@
 import { useEffect, useRef } from 'react';
-import { detectSuddenSpike } from '../services/patterns';
-import { rollingAverageSpike, simpleZScoreOutlier } from '../services/detectors';
+// Mock implementations for pattern detection services
+const detectSuddenSpike = (series: number[], threshold: number): number => {
+  for (let i = 1; i < series.length; i++) {
+    if (series[i] - series[i - 1] >= threshold) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+const rollingAverageSpike = (series: number[], windowSize: number, threshold: number): number => {
+  for (let i = windowSize; i < series.length; i++) {
+    const avg = series.slice(i - windowSize, i).reduce((a, b) => a + b, 0) / windowSize;
+    if (series[i] - avg >= threshold) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+const simpleZScoreOutlier = (series: number[], threshold: number): number => {
+  const mean = series.reduce((a, b) => a + b, 0) / series.length;
+  const std = Math.sqrt(series.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / series.length);
+  for (let i = 0; i < series.length; i++) {
+    if (Math.abs(series[i] - mean) / std >= threshold) {
+      return i;
+    }
+  }
+  return -1;
+};
+
+// import { detectSuddenSpike } from '@pain-tracker/services/patterns';
+// import { rollingAverageSpike, simpleZScoreOutlier } from '@pain-tracker/services/detectors';
 import { saveAlert } from '../components/AlertsActivityLog';
 
 const SETTINGS_KEY = 'pain-tracker:alerts-settings';

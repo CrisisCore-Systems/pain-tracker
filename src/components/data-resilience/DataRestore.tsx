@@ -211,7 +211,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
                 <div key={index} className="border-b border-gray-200 pb-1">
                   <div>Date: {new Date(entry.timestamp).toLocaleDateString()}</div>
                   <div>Pain Level: {entry.baselineData.pain}/10</div>
-                  <div>Locations: {entry.baselineData.locations.join(', ')}</div>
+                  <div>Locations: {entry.baselineData?.locations?.join(', ') || 'None'}</div>
                 </div>
               ))}
               {backupMetadata && backupMetadata.entryCount > 3 && (

@@ -19,7 +19,7 @@ interface WorkImpactAnalysis {
 
 export function analyzeTreatmentChanges(entries: PainEntry[]): Treatment[] {
   const treatments = entries
-    .flatMap(entry => entry.treatments.recent)
+    .flatMap(entry => entry.treatments?.recent || [])
     .reduce((acc: Record<string, number>, treatment) => {
       const treatmentType = treatment.type;
       acc[treatmentType] = (acc[treatmentType] || 0) + 1;
@@ -36,10 +36,10 @@ export function analyzeTreatmentChanges(entries: PainEntry[]): Treatment[] {
 
 export function analyzeWorkImpact(entries: PainEntry[]): WorkImpactAnalysis {
   const workDays = entries
-    .reduce((acc, entry) => acc + (entry.workImpact.missedWork || 0), 0);
+    .reduce((acc, entry) => acc + (entry.workImpact?.missedWork || 0), 0);
 
   const limitations = entries
-    .flatMap(entry => entry.workImpact.workLimitations)
+    .flatMap(entry => entry.workImpact?.workLimitations || [])
     .reduce((acc: Record<string, number>, limitation: string) => {
       acc[limitation] = (acc[limitation] || 0) + 1;
       return acc;

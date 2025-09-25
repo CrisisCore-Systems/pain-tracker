@@ -345,10 +345,10 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                     <div>
                       <div className="font-medium text-gray-700">Pain Assessment:</div>
                       <div className="ml-4">
-                        {selectedTemplate.data.baselineData.locations?.length > 0 && (
+                        {selectedTemplate.data.baselineData.locations && selectedTemplate.data.baselineData.locations.length > 0 && (
                           <div>• Locations: {selectedTemplate.data.baselineData.locations.join(', ')}</div>
                         )}
-                        {selectedTemplate.data.baselineData.symptoms?.length > 0 && (
+                        {selectedTemplate.data.baselineData.symptoms && selectedTemplate.data.baselineData.symptoms.length > 0 && (
                           <div>• Symptoms: {selectedTemplate.data.baselineData.symptoms.join(', ')}</div>
                         )}
                       </div>

@@ -44,16 +44,16 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
       ];
 
       const rows = entries.map(entry => {
-        const medications = entry.medications.current
+        const medications = (entry.medications?.current ?? [])
           .map(med => `${med.name} ${med.dosage}`)
           .join(';');
         
         const rowData = [
           formatDate(new Date(entry.timestamp), 'yyyy-MM-dd HH:mm:ss'),
           entry.baselineData.pain.toString(),
-          Array.prototype.join.call(entry.baselineData.locations, ';'),
-          Array.prototype.join.call(entry.baselineData.symptoms, ';'),
-          Array.prototype.join.call(entry.functionalImpact.limitedActivities, ';'),
+          Array.prototype.join.call(entry.baselineData.locations ?? [], ';'),
+          Array.prototype.join.call(entry.baselineData.symptoms ?? [], ';'),
+          Array.prototype.join.call(entry.functionalImpact?.limitedActivities ?? [], ';'),
           medications,
           `"${entry.notes || ''}"`
         ];

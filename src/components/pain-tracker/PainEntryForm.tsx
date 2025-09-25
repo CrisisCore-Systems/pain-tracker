@@ -92,6 +92,8 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       component: (
         <BaselineSection
           {...formData.baselineData}
+          locations={formData.baselineData.locations || []}
+          symptoms={formData.baselineData.symptoms || []}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             baselineData: { ...prev.baselineData, ...data }
@@ -107,11 +109,12 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: "🏃",
       component: (
         <FunctionalImpactSection
-          {...formData.functionalImpact}
+          limitedActivities={formData.functionalImpact?.limitedActivities || []}
+          mobilityAids={formData.functionalImpact?.mobilityAids || []}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             functionalImpact: { ...prev.functionalImpact, ...data }
-          }))}
+          } as Omit<PainEntry, "id" | "timestamp">))}
         />
       ),
       required: false,
@@ -123,11 +126,11 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: "💊",
       component: (
         <MedicationsSection
-          {...formData.medications}
+          {...(formData.medications as any)}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             medications: { ...prev.medications, ...data }
-          }))}
+          } as Omit<PainEntry, "id" | "timestamp">))}
         />
       ),
       required: false,
@@ -139,11 +142,11 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: "🏥",
       component: (
         <TreatmentsSection
-          {...formData.treatments}
+          {...(formData.treatments as any)}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             treatments: { ...prev.treatments, ...data }
-          }))}
+          } as Omit<PainEntry, "id" | "timestamp">))}
         />
       ),
       required: false,
@@ -155,11 +158,11 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: "😴",
       component: (
         <QualityOfLifeSection
-          {...formData.qualityOfLife}
+          {...(formData.qualityOfLife as any)}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             qualityOfLife: { ...prev.qualityOfLife, ...data }
-          }))}
+          } as Omit<PainEntry, "id" | "timestamp">))}
         />
       ),
       required: false,
@@ -171,11 +174,11 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: "💼",
       component: (
         <WorkImpactSection
-          {...formData.workImpact}
+          {...(formData.workImpact as any)}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             workImpact: { ...prev.workImpact, ...data }
-          }))}
+          } as Omit<PainEntry, "id" | "timestamp">))}
         />
       ),
       required: false,
@@ -187,11 +190,11 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: "📊",
       component: (
         <ComparisonSection
-          {...formData.comparison}
+          {...(formData.comparison as any)}
           onChange={(data) => setFormData(prev => ({
             ...prev,
             comparison: { ...prev.comparison, ...data }
-          }))}
+          } as Omit<PainEntry, "id" | "timestamp">))}
         />
       ),
       required: false,

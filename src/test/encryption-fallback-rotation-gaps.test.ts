@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import CryptoJS from 'crypto-js';
 import { encryptionService } from '../services/EncryptionService';
 import { securityService } from '../services/SecurityService';
+import type { SecurityEvent } from '../services/SecurityService';
 
 // These tests specifically exercise previously uncovered fallback / error branches
 // in EncryptionService: in-memory key cache fallback, key rotation failure path,
@@ -49,7 +50,7 @@ describe('EncryptionService additional fallback and legacy paths', () => {
 
     // Confirm security event logged for completion
     const events = securityService.getSecurityEvents({ type: 'encryption' });
-    const rotationEvent = events.find(e => e.message === 'Key rotation completed');
+    const rotationEvent = events.find((e: SecurityEvent) => e.message === 'Key rotation completed');
     expect(rotationEvent).toBeTruthy();
   });
 

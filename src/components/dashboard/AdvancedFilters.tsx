@@ -147,28 +147,38 @@ export function AdvancedFilters({
     const searchTerms = new Set<string>();
 
     entries.forEach(entry => {
-      entry.baselineData.locations.forEach(loc => {
-        locations.add(loc);
-        // Add to search terms for suggestions
-        loc.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
-      });
-      entry.baselineData.symptoms.forEach(symptom => {
-        symptoms.add(symptom);
-        symptom.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
-      });
-      entry.medications.current.forEach(med => {
-        medications.add(med.name);
-        med.name.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
-      });
-      entry.treatments.recent.forEach(treatment => {
-        treatments.add(treatment.type);
-        treatment.type.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
-      });
+      if (entry.baselineData.locations) {
+        entry.baselineData.locations.forEach(loc => {
+          locations.add(loc);
+          // Add to search terms for suggestions
+          loc.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+        });
+      }
+      if (entry.baselineData.symptoms) {
+        entry.baselineData.symptoms.forEach(symptom => {
+          symptoms.add(symptom);
+          symptom.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+        });
+      }
+      if (entry.medications?.current) {
+        entry.medications.current.forEach(med => {
+          medications.add(med.name);
+          med.name.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+        });
+      }
+      if (entry.treatments?.recent) {
+        entry.treatments.recent.forEach(treatment => {
+          treatments.add(treatment.type);
+          treatment.type.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+        });
+      }
 
       // Add words from notes
-      entry.notes.toLowerCase().split(/\s+/).forEach(word => {
-        if (word.length > 2) searchTerms.add(word);
-      });
+      if (entry.notes) {
+        entry.notes.toLowerCase().split(/\s+/).forEach(word => {
+          if (word.length > 2) searchTerms.add(word);
+        });
+      }
     });
 
     return {
@@ -199,74 +209,76 @@ export function AdvancedFilters({
 
       // Location filter
       if (filters.locations.length > 0 &&
-          !filters.locations.some(loc => entry.baselineData.locations.includes(loc))) {
+          !filters.locations.some(loc => entry.baselineData.locations?.includes(loc))) {
         return false;
       }
 
       // Symptoms filter
       if (filters.symptoms.length > 0 &&
-          !filters.symptoms.some(symptom => entry.baselineData.symptoms.includes(symptom))) {
+          !filters.symptoms.some(symptom => entry.baselineData.symptoms?.includes(symptom))) {
         return false;
       }
 
       // Medications filter
       if (filters.medications.length > 0 &&
           !filters.medications.some(med =>
-            entry.medications.current.some(entryMed => entryMed.name === med))) {
+            entry.medications?.current?.some(entryMed => entryMed.name === med))) {
         return false;
       }
 
       // Treatments filter
       if (filters.treatments.length > 0 &&
           !filters.treatments.some(treatment =>
-            entry.treatments.recent.some(entryTreatment => entryTreatment.type === treatment))) {
+            entry.treatments?.recent?.some(entryTreatment => entryTreatment.type === treatment))) {
         return false;
       }
 
       // Sleep quality filter
-      if (entry.qualityOfLife.sleepQuality < filters.sleepQualityRange.min ||
-          entry.qualityOfLife.sleepQuality > filters.sleepQualityRange.max) {
+      if (entry.qualityOfLife?.sleepQuality !== undefined &&
+          (entry.qualityOfLife.sleepQuality < filters.sleepQualityRange.min ||
+          entry.qualityOfLife.sleepQuality > filters.sleepQualityRange.max)) {
         return false;
       }
 
       // Mood impact filter
-      if (entry.qualityOfLife.moodImpact < filters.moodImpactRange.min ||
-          entry.qualityOfLife.moodImpact > filters.moodImpactRange.max) {
+      if (entry.qualityOfLife?.moodImpact !== undefined &&
+          (entry.qualityOfLife.moodImpact < filters.moodImpactRange.min ||
+          entry.qualityOfLife.moodImpact > filters.moodImpactRange.max)) {
         return false;
       }
 
       // Work impact filter
-      if (filters.workImpact.hasMissedWork && entry.workImpact.missedWork === 0) {
+      if (filters.workImpact.hasMissedWork && (entry.workImpact?.missedWork ?? 0) === 0) {
         return false;
       }
-      if (filters.workImpact.hasModifiedDuties && entry.workImpact.modifiedDuties.length === 0) {
+      if (filters.workImpact.hasModifiedDuties && (entry.workImpact?.modifiedDuties?.length ?? 0) === 0) {
         return false;
       }
 
       // Text search filter
       if (filters.searchText) {
         const searchLower = filters.searchText.toLowerCase();
-        const searchableFields = [
+        const searchableFields: (string | undefined)[] = [
           entry.notes,
-          ...entry.baselineData.symptoms,
-          ...entry.baselineData.locations,
-          ...entry.medications.current.map(m => m.name),
-          ...entry.medications.current.map(m => m.dosage),
-          ...entry.medications.current.map(m => m.effectiveness),
-          entry.medications.changes,
-          ...entry.treatments.recent.map(t => t.type),
-          ...entry.treatments.recent.map(t => t.provider),
-          ...entry.treatments.recent.map(t => t.effectiveness),
-          entry.treatments.effectiveness,
-          entry.treatments.planned.join(' '),
-          ...entry.functionalImpact.limitedActivities,
-          ...entry.functionalImpact.assistanceNeeded,
-          ...entry.functionalImpact.mobilityAids,
-          ...entry.workImpact.modifiedDuties,
-          ...entry.workImpact.workLimitations,
-          entry.comparison.worseningSince,
-          ...entry.comparison.newLimitations,
-          entry.qualityOfLife.socialImpact.join(' ')
+          ...(entry.baselineData.symptoms || []),
+          ...(entry.baselineData.locations || []),
+          ...(entry.medications?.current?.map(m => m.name) || []),
+          ...(entry.medications?.current?.map(m => m.dosage) || []),
+          ...(entry.medications?.current?.map(m => m.effectiveness) || []),
+          entry.medications?.changes,
+          ...(entry.treatments?.recent?.map(t => t.type) || []),
+          ...(entry.treatments?.recent?.map(t => t.provider) || []),
+          ...(entry.treatments?.recent?.map(t => t.effectiveness) || []),
+          entry.treatments?.effectiveness,
+          entry.treatments?.planned?.join(' '),
+          ...(entry.functionalImpact?.limitedActivities || []),
+          ...(entry.functionalImpact?.assistanceNeeded || []),
+          ...(entry.functionalImpact?.mobilityAids || []),
+          ...(entry.workImpact?.modifiedDuties || []),
+          ...(entry.workImpact?.workLimitations || []),
+          entry.comparison?.worseningSince,
+          ...(entry.comparison?.newLimitations || []),
+          entry.qualityOfLife?.socialImpact?.join(' ')
         ];
 
         const hasMatch = searchableFields.some(field =>

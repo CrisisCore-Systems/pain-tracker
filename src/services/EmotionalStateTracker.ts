@@ -228,7 +228,7 @@ export class EmotionalStateTracker {
             emotionalImpact: moodDrop,
             lastOccurrence: current.timestamp,
             description: `Pain level ${painEntry.baselineData.pain}/10 caused mood drop from ${previous.mood} to ${current.mood}`,
-            warningSignsIdentified: painEntry.baselineData.symptoms,
+            warningSignsIdentified: painEntry.baselineData.symptoms ?? [],
             preventionStrategies: ['Pain management', 'Stress reduction', 'Preventive rest']
           });
         }

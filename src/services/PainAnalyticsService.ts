@@ -213,7 +213,7 @@ class PainAnalyticsService {
     const symptomPainMap = new Map<string, { painSum: number; count: number; }>();
     
     entries.forEach(entry => {
-      entry.baselineData.symptoms.forEach(symptom => {
+      (entry.baselineData.symptoms || []).forEach(symptom => {
         if (!symptomPainMap.has(symptom)) {
           symptomPainMap.set(symptom, { painSum: 0, count: 0 });
         }
@@ -238,7 +238,7 @@ class PainAnalyticsService {
     const activityPainMap = new Map<string, { painSum: number; count: number; }>();
     
     entries.forEach(entry => {
-      entry.functionalImpact.limitedActivities.forEach(activity => {
+      (entry.functionalImpact?.limitedActivities || []).forEach(activity => {
         if (!activityPainMap.has(activity)) {
           activityPainMap.set(activity, { painSum: 0, count: 0 });
         }
@@ -262,14 +262,14 @@ class PainAnalyticsService {
     const medicationMap = new Map<string, { effectiveness: number; painReduction: number; count: number; }>();
     
     entries.forEach(entry => {
-      entry.medications.current.forEach(med => {
+      (entry.medications?.current || []).forEach(med => {
         if (!medicationMap.has(med.name)) {
           medicationMap.set(med.name, { effectiveness: 0, painReduction: 0, count: 0 });
         }
         const data = medicationMap.get(med.name)!;
         
         // Simple effectiveness scoring
-        const effectScore = this.parseEffectiveness(med.effectiveness);
+        const effectScore = this.parseEffectiveness(med.effectiveness || 'moderate');
         data.effectiveness += effectScore;
         data.painReduction += Math.max(0, 10 - entry.baselineData.pain); // Inverse pain as reduction
         data.count += 1;

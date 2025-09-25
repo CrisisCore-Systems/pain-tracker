@@ -279,14 +279,14 @@ export class FHIRService {
     };
 
     // Add body sites
-    if (entry.baselineData.locations.length > 0) {
+    if (entry.baselineData.locations && entry.baselineData.locations.length > 0) {
       painObservation.bodySite = entry.baselineData.locations.map(location => ({
         text: location
       }));
     }
 
     // Add symptoms as components
-    if (entry.baselineData.symptoms.length > 0) {
+    if (entry.baselineData.symptoms && entry.baselineData.symptoms.length > 0) {
       painObservation.component?.push({
         code: {
           coding: [{
@@ -300,7 +300,7 @@ export class FHIRService {
     }
 
     // Add functional impact
-    if (entry.functionalImpact.limitedActivities.length > 0) {
+    if (entry.functionalImpact && entry.functionalImpact.limitedActivities && entry.functionalImpact.limitedActivities.length > 0) {
       painObservation.component?.push({
         code: {
           text: 'Limited Activities'
@@ -310,7 +310,7 @@ export class FHIRService {
     }
 
     // Add sleep quality
-    if (entry.qualityOfLife.sleepQuality !== undefined) {
+    if (entry.qualityOfLife && entry.qualityOfLife.sleepQuality !== undefined) {
       painObservation.component?.push({
         code: {
           coding: [{
@@ -329,7 +329,7 @@ export class FHIRService {
     }
 
     // Add mood impact
-    if (entry.qualityOfLife.moodImpact !== undefined) {
+    if (entry.qualityOfLife && entry.qualityOfLife.moodImpact !== undefined) {
       painObservation.component?.push({
         code: {
           text: 'Mood Impact'
@@ -422,42 +422,42 @@ export class FHIRService {
         {
           linkId: 'pain-locations',
           text: 'Pain locations',
-          answer: entry.baselineData.locations.map(location => ({
+          answer: (entry.baselineData.locations || []).map(location => ({
             valueString: location
           }))
         },
         {
           linkId: 'symptoms',
           text: 'Associated symptoms',
-          answer: entry.baselineData.symptoms.map(symptom => ({
+          answer: (entry.baselineData.symptoms || []).map(symptom => ({
             valueString: symptom
           }))
         },
         {
           linkId: 'sleep-quality',
           text: 'Sleep quality (0-10)',
-          answer: [{
+          answer: entry.qualityOfLife?.sleepQuality !== undefined ? [{
             valueInteger: entry.qualityOfLife.sleepQuality
-          }]
+          }] : []
         },
         {
           linkId: 'mood-impact',
           text: 'Mood impact (0-10)',
-          answer: [{
+          answer: entry.qualityOfLife?.moodImpact !== undefined ? [{
             valueInteger: entry.qualityOfLife.moodImpact
-          }]
+          }] : []
         },
         {
           linkId: 'functional-limitations',
           text: 'Functional limitations',
-          answer: entry.functionalImpact.limitedActivities.map(activity => ({
+          answer: (entry.functionalImpact?.limitedActivities || []).map(activity => ({
             valueString: activity
           }))
         },
         {
           linkId: 'medications',
           text: 'Current medications',
-          answer: entry.medications.current.map(med => ({
+          answer: (entry.medications?.current || []).map(med => ({
             valueString: `${med.name} ${med.dosage} ${med.frequency}`
           }))
         },

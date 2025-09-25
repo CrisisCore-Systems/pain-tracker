@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+/*
+ * Safe DB reset placeholder
+ * This script does not perform destructive actions by default.
+ * It helps contributors by printing the exact commands to run against their local DB.
+ */
+const { execSync } = require('child_process');
+const path = require('path');
+
+console.log('⚠️  Safe placeholder: db reset');
+console.log('This script will NOT drop any production databases.');
+console.log('If you want to run a real reset, set DRY_RUN=false and ensure you are on a local/test database.');
+
+const dryRun = process.env.DRY_RUN !== 'false';
+
+if (dryRun) {
+  console.log('\nDry run mode: showing recommended commands:\n');
+  console.log('  # Example (Postgres, local):');
+  console.log("  psql -h localhost -U postgres -c \"DROP DATABASE IF EXISTS pain_tracker_test; CREATE DATABASE pain_tracker_test;\"");
+  console.log('\nTo execute a real reset: DRY_RUN=false node scripts/db/reset.js');
+  process.exit(0);
+}
+
+try {
+  console.log('Running reset commands...');
+  // Add real reset logic here if/when project has DB client configured.
+  // For now we just print a success message to avoid accidental destruction.
+  console.log('✅ Reset completed (placeholder).');
+} catch (err) {
+  console.error('❌ Reset failed:', err.message);
+  process.exit(1);
+}

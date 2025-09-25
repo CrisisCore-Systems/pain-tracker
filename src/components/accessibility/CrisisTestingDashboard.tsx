@@ -262,7 +262,7 @@ export function CrisisTestingDashboard() {
     currentTestRef.current = testResult;
 
     // Reset crisis detection before starting
-    resetCrisisDetection();
+    resetCrisisDetection('resolved');
 
     // Start progress tracking
     const startTime = Date.now();
@@ -303,7 +303,7 @@ export function CrisisTestingDashboard() {
     setCurrentScenario(null);
     setTestProgress(0);
     setSimulationActive(false);
-    resetCrisisDetection();
+    resetCrisisDetection('resolved');
   }, [resetCrisisDetection]);
 
   // Run all tests
@@ -330,7 +330,7 @@ export function CrisisTestingDashboard() {
   // Clear all test results
   const clearResults = useCallback(() => {
     setTestResults([]);
-    resetCrisisDetection();
+    resetCrisisDetection('resolved');
   }, [resetCrisisDetection]);
 
   return (

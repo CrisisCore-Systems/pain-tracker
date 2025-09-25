@@ -1,6 +1,7 @@
 ﻿import { useMemo } from "react";
 import { formatNumber } from "../../utils/formatting";
-import type { PainEntry, WCBReport } from "../../types";
+import type { PainEntry } from "../../types";
+import type { WCBReport } from "../../types/index";
 import { analyzeTreatmentChanges, analyzeWorkImpact } from "../../utils/wcbAnalytics";
 import { pdfExportService } from "../../services/PDFExportService";
 import { toast } from "sonner";
@@ -235,21 +236,27 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
 
         <div>
           <h3 className="font-medium">Pain Trends</h3>
-          <p>Average Pain Level: {formatNumber(report.painTrends.average, 1)}</p>
-          <div className="mt-2">
-            <h4 className="text-sm font-medium">Common Locations:</h4>
-            {Object.keys(report.painTrends.locations).length === 0 ? (
-              <p className="text-sm text-gray-500">No pain location data recorded.</p>
-            ) : (
-              <ul className="list-disc pl-5">
-                {Object.entries(report.painTrends.locations)
-                  .sort(([, a], [, b]) => b - a)
-                  .map(([location, count]) => (
-                    <li key={location}>{location}: {count} occurrences</li>
-                  ))}
-              </ul>
-            )}
-          </div>
+          {report.painTrends ? (
+            <>
+              <p>Average Pain Level: {formatNumber(report.painTrends.average, 1)}</p>
+              <div className="mt-2">
+                <h4 className="text-sm font-medium">Common Locations:</h4>
+                {Object.keys(report.painTrends.locations).length === 0 ? (
+                  <p className="text-sm text-gray-500">No pain location data recorded.</p>
+                ) : (
+                  <ul className="list-disc pl-5">
+                    {Object.entries(report.painTrends.locations)
+                      .sort(([, a], [, b]) => b - a)
+                      .map(([location, count]) => (
+                        <li key={location}>{location}: {count} occurrences</li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-gray-500">No pain trend data available.</p>
+          )}
         </div>
 
         <div>

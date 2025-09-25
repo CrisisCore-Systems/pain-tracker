@@ -24,13 +24,13 @@ export const exportToCSV = (entries: PainEntry[]): string => {
       isoDate,
       time,
       entry.baselineData.pain,
-      `"${entry.baselineData.locations.join('; ')}"`,
-      `"${entry.baselineData.symptoms.join('; ')}"`,
-      `"${entry.functionalImpact.limitedActivities.join('; ')}"`,
-      entry.qualityOfLife.sleepQuality,
-      entry.qualityOfLife.moodImpact,
-      entry.workImpact.missedWork,
-      `"${entry.notes.replace(/"/g, '""')}"`
+      `"${entry.baselineData.locations?.join('; ') || ''}"`,
+      `"${entry.baselineData.symptoms?.join('; ') || ''}"`,
+      `"${entry.functionalImpact?.limitedActivities?.join('; ') || ''}"`,
+      entry.qualityOfLife?.sleepQuality || '',
+      entry.qualityOfLife?.moodImpact || '',
+      entry.workImpact?.missedWork || '',
+      `"${entry.notes?.replace(/"/g, '""') || ''}"`
     ].join(',');
   });
 
@@ -83,8 +83,8 @@ export const exportToPDF = (entries: PainEntry[]): string => {
   const avgPain = entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length;
   doc.text(`Average Pain Level: ${formatNumber(avgPain, 1)}/10`, 20, 65);
     
-    const mostCommonSymptoms = getMostCommonItems(entries.flatMap(entry => entry.baselineData.symptoms));
-    const mostCommonLocations = getMostCommonItems(entries.flatMap(entry => entry.baselineData.locations));
+    const mostCommonSymptoms = getMostCommonItems(entries.flatMap(entry => entry.baselineData.symptoms || []));
+    const mostCommonLocations = getMostCommonItems(entries.flatMap(entry => entry.baselineData.locations || []));
     
     doc.text(`Most Common Symptoms: ${mostCommonSymptoms.slice(0, 3).join(', ')}`, 20, 75);
     doc.text(`Most Common Locations: ${mostCommonLocations.slice(0, 3).join(', ')}`, 20, 85);
@@ -109,12 +109,12 @@ export const exportToPDF = (entries: PainEntry[]): string => {
     doc.text(`${index + 1}. ${date} ${time} - Pain: ${entry.baselineData.pain}/10`, 20, yPosition);
     yPosition += 8;
     
-    if (entry.baselineData.symptoms.length > 0) {
+    if (entry.baselineData.symptoms && entry.baselineData.symptoms.length > 0) {
       doc.text(`   Symptoms: ${entry.baselineData.symptoms.join(', ')}`, 25, yPosition);
       yPosition += 8;
     }
     
-    if (entry.baselineData.locations.length > 0) {
+    if (entry.baselineData.locations && entry.baselineData.locations.length > 0) {
       doc.text(`   Locations: ${entry.baselineData.locations.join(', ')}`, 25, yPosition);
       yPosition += 8;
     }

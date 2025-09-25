@@ -122,7 +122,9 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Injury Date</p>
-              <p className="font-medium">{new Date(report.claimInfo.injuryDate).toLocaleDateString()}</p>
+              <p className="font-medium">
+                {report.claimInfo?.injuryDate ? new Date(report.claimInfo.injuryDate).toLocaleDateString() : 'Not specified'}
+              </p>
             </div>
           </div>
         </section>
@@ -132,25 +134,31 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
       <section className="mb-8">
         <h3 className="text-lg font-semibold mb-3">Pain Analysis</h3>
         <div className="bg-gray-50 p-4 rounded">
-          <p className="mb-2">
-            <span className="font-medium">Average Pain Level:</span> {report.painTrends.average}/10
-          </p>
-          <div className="mb-4">
-            <h4 className="text-sm font-medium mb-2">Most Affected Areas:</h4>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(report.painTrends.locations)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 5)
-                .map(([location, frequency]) => (
-                  <span
-                    key={location}
-                    className="px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-full"
-                  >
-                    {location} ({frequency}x)
-                  </span>
-                ))}
-            </div>
-          </div>
+          {report.painTrends ? (
+            <>
+              <p className="mb-2">
+                <span className="font-medium">Average Pain Level:</span> {report.painTrends.average}/10
+              </p>
+              <div className="mb-4">
+                <h4 className="text-sm font-medium mb-2">Most Affected Areas:</h4>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(report.painTrends.locations)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 5)
+                    .map(([location, frequency]) => (
+                      <span
+                        key={location}
+                        className="px-2 py-1 bg-purple-100 text-purple-800 text-sm rounded-full"
+                      >
+                        {location} ({frequency}x)
+                      </span>
+                    ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="text-gray-500">No pain trend data available</p>
+          )}
         </div>
       </section>
 

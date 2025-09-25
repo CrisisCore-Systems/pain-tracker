@@ -4,16 +4,9 @@ import type { PainEntry, ReportTemplate } from '../types';
 import { formatNumber } from './formatting';
 
 interface JSDocWithAutoTable extends jsPDF {
-  autoTable: (options: {
-    startY: number;
-    head: string[][];
-    body: string[][];
-    margin?: { left?: number; right?: number };
-    styles?: { fontSize?: number };
-    headStyles?: { fillColor?: number[] };
-    columnStyles?: Record<number, { cellWidth?: number }>;
-  }) => void;
-  lastAutoTable: { finalY: number };
+  // jspdf-autotable typings vary between versions; allow flexible access
+  autoTable: (options: any) => any;
+  lastAutoTable?: { finalY: number };
 }
 
 interface DateRange {
@@ -106,8 +99,8 @@ export class PDFReportGenerator {
       ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length
       : 0;
 
-    const mostCommonLocation = this.getMostCommon(filteredEntries.flatMap(e => e.baselineData.locations));
-    const mostCommonSymptom = this.getMostCommon(filteredEntries.flatMap(e => e.baselineData.symptoms));
+    const mostCommonLocation = this.getMostCommon(filteredEntries.flatMap(e => e.baselineData.locations || []));
+    const mostCommonSymptom = this.getMostCommon(filteredEntries.flatMap(e => e.baselineData.symptoms || []));
 
     this.doc.text(`Total Entries: ${filteredEntries.length}`, 20, yPos);
     yPos += 8;
@@ -134,7 +127,9 @@ export class PDFReportGenerator {
 
     let yPos = 160;
 
-    template.sections.forEach(section => {
+    template.sections.forEach((section: unknown) => {
+      const pdfSection = section as PDFSection;
+      
       if (yPos > 250) {
         this.doc.addPage();
         yPos = 30;
@@ -142,24 +137,24 @@ export class PDFReportGenerator {
 
       this.doc.setFontSize(14);
       this.doc.setFont('helvetica', 'bold');
-      this.doc.text(section.title, 20, yPos);
+      this.doc.text(pdfSection.title, 20, yPos);
       yPos += 10;
 
       this.doc.setFontSize(10);
       this.doc.setFont('helvetica', 'normal');
 
-      switch (section.type) {
+      switch (pdfSection.type) {
         case 'metrics':
-          yPos = this.addMetricsSection(section, entries, dateRange, yPos);
+          yPos = this.addMetricsSection(pdfSection, entries, dateRange, yPos);
           break;
         case 'table':
-          yPos = this.addTableSection(section, entries, dateRange, yPos);
+          yPos = this.addTableSection(pdfSection, entries, dateRange, yPos);
           break;
         case 'text':
-          yPos = this.addTextSection(section, entries, dateRange, yPos);
+          yPos = this.addTextSection(pdfSection, entries, dateRange, yPos);
           break;
         default:
-          this.doc.text(`[Chart: ${section.dataSource}]`, 20, yPos);
+          this.doc.text(`[Chart: ${pdfSection.dataSource}]`, 20, yPos);
           yPos += 10;
       }
 
@@ -177,7 +172,7 @@ export class PDFReportGenerator {
 
     switch (section.dataSource) {
       case 'medications': {
-        const medications = new Set(filteredEntries.flatMap(e => e.medications.current.map(m => m.name)));
+        const medications = new Set(filteredEntries.flatMap(e => e.medications?.current?.map(m => m.name) || []));
         this.doc.text(`Total Unique Medications: ${medications.size}`, 20, yPos);
         yPos += 8;
         Array.from(medications).slice(0, 5).forEach(med => {
@@ -219,7 +214,7 @@ export class PDFReportGenerator {
         if (topSymptoms.length > 0) {
           const tableData = topSymptoms.map(([symptom, count]) => [symptom, count.toString()]);
 
-          (this.doc as JSDocWithAutoTable).autoTable({
+          ((this.doc as unknown) as JSDocWithAutoTable).autoTable({
             startY: yPos,
             head: [['Symptom', 'Frequency']],
             body: tableData,
@@ -228,7 +223,7 @@ export class PDFReportGenerator {
             headStyles: { fillColor: [66, 139, 202] }
           });
 
-          yPos = (this.doc as JSDocWithAutoTable).lastAutoTable.finalY + 10;
+          yPos = (((this.doc as unknown) as JSDocWithAutoTable).lastAutoTable?.finalY ?? yPos) + 10;
         }
         break;
       }
@@ -252,7 +247,7 @@ export class PDFReportGenerator {
         break;
       }
       case 'treatments': {
-        const treatments = new Set(filteredEntries.flatMap(e => e.treatments.recent.map(t => t.type)));
+        const treatments = new Set(filteredEntries.flatMap(e => e.treatments?.recent?.map(t => t.type) || []));
         this.doc.text(`Treatments received: ${Array.from(treatments).join(', ')}`, 20, yPos);
         yPos += 8;
         break;
@@ -280,12 +275,12 @@ export class PDFReportGenerator {
     const tableData = filteredEntries.map(entry => [
       new Date(entry.timestamp).toLocaleDateString(),
       entry.baselineData.pain.toString(),
-      entry.baselineData.locations.join(', '),
-      entry.baselineData.symptoms.join(', '),
-      entry.notes.substring(0, 50) + (entry.notes.length > 50 ? '...' : '')
+      (entry.baselineData.locations || []).join(', '),
+      (entry.baselineData.symptoms || []).join(', '),
+      (entry.notes || '').substring(0, 50) + ((entry.notes || '').length > 50 ? '...' : '')
     ]);
 
-    (this.doc as JSDocWithAutoTable).autoTable({
+  ((this.doc as unknown) as JSDocWithAutoTable).autoTable({
       startY: 40,
       head: [['Date', 'Pain Level', 'Locations', 'Symptoms', 'Notes']],
       body: tableData,
@@ -343,7 +338,7 @@ export class PDFReportGenerator {
     const counts: Record<string, number> = {};
 
     entries.forEach(entry => {
-      entry.baselineData.symptoms.forEach(symptom => {
+      (entry.baselineData.symptoms || []).forEach(symptom => {
         counts[symptom] = (counts[symptom] || 0) + 1;
       });
     });

@@ -33,7 +33,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
     : 0;
 
   const locationFrequency = entries.reduce((acc, entry) => {
-    entry.baselineData.locations.forEach(location => {
+    entry.baselineData.locations?.forEach(location => {
       acc[location] = (acc[location] || 0) + 1;
     });
     return acc;
@@ -44,16 +44,16 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
     .slice(0, 5)
     .map(([location, count]) => ({ location, count }));
 
-  const currentMedications = latestEntry?.medications.current || [];
+  const currentMedications = latestEntry?.medications?.current || [];
   const recentTreatments = entries
-    .flatMap(entry => entry.treatments.recent)
+    .flatMap(entry => entry.treatments?.recent || [])
     .filter((treatment, index, arr) => 
       arr.findIndex(t => t.type === treatment.type) === index
     )
     .slice(0, 5);
 
-  const functionalLimitations = latestEntry?.functionalImpact.limitedActivities || [];
-  const workImpact = entries.reduce((sum, entry) => sum + entry.workImpact.missedWork, 0);
+  const functionalLimitations = latestEntry?.functionalImpact?.limitedActivities || [];
+  const workImpact = entries.reduce((sum, entry) => sum + (entry.workImpact?.missedWork || 0), 0);
 
   const printSummary = () => {
     window.print();
@@ -199,7 +199,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
                     Provider: {treatment.provider}
                   </div>
                   <div className="text-sm text-gray-600">
-                    Date: {format(new Date(treatment.date), 'MMM d, yyyy')}
+                    Date: {treatment.date ? format(new Date(treatment.date), 'MMM d, yyyy') : 'N/A'}
                   </div>
                   <div className="text-sm text-gray-600">
                     Effectiveness: {treatment.effectiveness}
@@ -229,20 +229,20 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-50 p-3 rounded">
                 <div className="text-sm text-gray-600">Sleep Quality</div>
-                <div className="text-lg font-bold">{latestEntry.qualityOfLife.sleepQuality}/10</div>
+                <div className="text-lg font-bold">{latestEntry.qualityOfLife?.sleepQuality || 0}/10</div>
               </div>
               <div className="bg-gray-50 p-3 rounded">
                 <div className="text-sm text-gray-600">Mood Impact</div>
-                <div className="text-lg font-bold">{latestEntry.qualityOfLife.moodImpact}/10</div>
+                <div className="text-lg font-bold">{latestEntry.qualityOfLife?.moodImpact || 0}/10</div>
               </div>
             </div>
-            {latestEntry.qualityOfLife.socialImpact.length > 0 && (
+            {(latestEntry.qualityOfLife?.socialImpact?.length ?? 0) > 0 && (
               <div className="mt-3">
                 <div className="text-sm font-medium">Social Impact:</div>
                 <ul className="list-disc list-inside text-sm mt-1">
-                  {latestEntry.qualityOfLife.socialImpact.map((impact, index) => (
+                  {latestEntry.qualityOfLife?.socialImpact?.map((impact, index) => (
                     <li key={index}>{impact}</li>
-                  ))}
+                  )) || []}
                 </ul>
               </div>
             )}

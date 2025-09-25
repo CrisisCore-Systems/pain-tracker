@@ -19,7 +19,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
         : 0;
 
       const locationFreq = entries.reduce((acc, entry) => {
-        entry.baselineData.locations.forEach(loc => {
+        entry.baselineData?.locations?.forEach(loc => {
           acc[loc] = (acc[loc] || 0) + 1;
         });
         return acc;
@@ -28,23 +28,21 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       const topLocation = Object.entries(locationFreq)
         .sort(([,a], [,b]) => b - a)[0]?.[0] || 'None';
 
-      const workDays = entries.reduce((sum, entry) => sum + entry.workImpact.missedWork, 0);
+      const workDays = entries.reduce((sum, entry) => sum + (entry.workImpact?.missedWork || 0), 0);
       const latestEntry = entries[0];
 
       const summaryData = [
         ['Report Generated', format(new Date(), 'yyyy-MM-dd HH:mm:ss')],
         ['Total Entries', entries.length.toString()],
-  ['Average Pain Level', formatNumber(avgPain, 1)],
-        ['Current Pain Level', latestEntry?.baselineData.pain.toString() || 'N/A'],
+        ['Average Pain Level', formatNumber(avgPain, 1)],
+        ['Current Pain Level', latestEntry?.baselineData?.pain?.toString() || 'N/A'],
         ['Most Affected Area', topLocation],
         ['Total Missed Work Days', workDays.toString()],
-        ['Current Sleep Quality', latestEntry?.qualityOfLife.sleepQuality.toString() || 'N/A'],
-        ['Current Mood Impact', latestEntry?.qualityOfLife.moodImpact.toString() || 'N/A'],
-        ['Current Medications', latestEntry?.medications.current.map(m => `${m.name} (${m.dosage})`).join('; ') || 'None'],
-        ['Recent Treatments', latestEntry?.treatments.recent.map(t => `${t.type} - ${t.provider}`).join('; ') || 'None']
-      ];
-
-      return ['Field,Value', ...summaryData.map(([field, value]) => `"${field}","${value}"`)].join('\n');
+        ['Current Sleep Quality', latestEntry?.qualityOfLife?.sleepQuality?.toString() || 'N/A'],
+        ['Current Mood Impact', latestEntry?.qualityOfLife?.moodImpact?.toString() || 'N/A'],
+        ['Current Medications', latestEntry?.medications?.current?.map(m => `${m.name} (${m.dosage})`).join('; ') || 'None'],
+        ['Recent Treatments', latestEntry?.treatments?.recent?.map(t => `${t.type} - ${t.provider}`).join('; ') || 'None']
+      ];      return ['Field,Value', ...summaryData.map(([field, value]) => `"${field}","${value}"`)].join('\n');
     }
 
     if (exportType === 'detailed') {
@@ -64,27 +62,27 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
         return [
           format(date, 'yyyy-MM-dd'),
           format(date, 'HH:mm'),
-          entry.baselineData.pain,
-          `"${entry.baselineData.locations.join('; ')}"`,
-          `"${entry.baselineData.symptoms.join('; ')}"`,
-          `"${entry.functionalImpact.limitedActivities.join('; ')}"`,
-          `"${entry.functionalImpact.assistanceNeeded.join('; ')}"`,
-          `"${entry.functionalImpact.mobilityAids.join('; ')}"`,
-          `"${entry.medications.current.map(m => `${m.name} ${m.dosage} ${m.frequency}`).join('; ')}"`,
-          `"${entry.medications.changes || ''}"`,
-          `"${entry.medications.effectiveness || ''}"`,
-          `"${entry.treatments.recent.map(t => `${t.type} (${t.provider}) - ${t.effectiveness}`).join('; ')}"`,
-          `"${entry.treatments.effectiveness || ''}"`,
-          `"${entry.treatments.planned.join('; ')}"`,
-          entry.qualityOfLife.sleepQuality,
-          entry.qualityOfLife.moodImpact,
-          `"${entry.qualityOfLife.socialImpact.join('; ')}"`,
-          entry.workImpact.missedWork,
-          `"${entry.workImpact.modifiedDuties.join('; ')}"`,
-          `"${entry.workImpact.workLimitations.join('; ')}"`,
-          `"${entry.comparison.worseningSince || ''}"`,
-          `"${entry.comparison.newLimitations.join('; ')}"`,
-          `"${entry.notes.replace(/"/g, '""')}"`
+          entry.baselineData?.pain || 0,
+          `"${entry.baselineData?.locations?.join('; ') || ''}"`,
+          `"${entry.baselineData?.symptoms?.join('; ') || ''}"`,
+          `"${entry.functionalImpact?.limitedActivities?.join('; ') || ''}"`,
+          `"${entry.functionalImpact?.assistanceNeeded?.join('; ') || ''}"`,
+          `"${entry.functionalImpact?.mobilityAids?.join('; ') || ''}"`,
+          `"${entry.medications?.current?.map(m => `${m.name} ${m.dosage} ${m.frequency}`).join('; ') || ''}"`,
+          `"${entry.medications?.changes || ''}"`,
+          `"${entry.medications?.effectiveness || ''}"`,
+          `"${entry.treatments?.recent?.map(t => `${t.type} (${t.provider}) - ${t.effectiveness}`).join('; ') || ''}"`,
+          `"${entry.treatments?.effectiveness || ''}"`,
+          `"${entry.treatments?.planned?.join('; ') || ''}"`,
+          entry.qualityOfLife?.sleepQuality || 0,
+          entry.qualityOfLife?.moodImpact || 0,
+          `"${entry.qualityOfLife?.socialImpact?.join('; ') || ''}"`,
+          entry.workImpact?.missedWork || 0,
+          `"${entry.workImpact?.modifiedDuties?.join('; ') || ''}"`,
+          `"${entry.workImpact?.workLimitations?.join('; ') || ''}"`,
+          `"${entry.comparison?.worseningSince || ''}"`,
+          `"${entry.comparison?.newLimitations?.join('; ') || ''}"`,
+          `"${entry.notes?.replace(/"/g, '""') || ''}"`
         ].join(',');
       });
 
@@ -103,15 +101,15 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       return [
         format(date, 'yyyy-MM-dd'),
         format(date, 'HH:mm'),
-        entry.baselineData.pain,
-        `"${entry.baselineData.locations[0] || ''}"`,
-        `"${entry.baselineData.symptoms.slice(0, 3).join('; ')}"`,
-        entry.qualityOfLife.sleepQuality,
-        entry.qualityOfLife.moodImpact,
-        entry.workImpact.missedWork,
-        `"${entry.medications.current.map(m => m.name).join('; ')}"`,
-        `"${entry.treatments.recent.map(t => t.type).join('; ')}"`,
-        `"${entry.notes.replace(/"/g, '""').substring(0, 100)}${entry.notes.length > 100 ? '...' : ''}"`
+        entry.baselineData?.pain || 0,
+        `"${entry.baselineData?.locations?.[0] || ''}"`,
+        `"${entry.baselineData?.symptoms?.slice(0, 3).join('; ') || ''}"`,
+        entry.qualityOfLife?.sleepQuality || 0,
+        entry.qualityOfLife?.moodImpact || 0,
+        entry.workImpact?.missedWork || 0,
+        `"${entry.medications?.current?.map(m => m.name).join('; ') || ''}"`,
+        `"${entry.treatments?.recent?.map(t => t.type).join('; ') || ''}"`,
+        `"${entry.notes?.replace(/"/g, '""').substring(0, 100)}${entry.notes && entry.notes.length > 100 ? '...' : ''}"`
       ].join(',');
     });
 
@@ -135,10 +133,10 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
         : 0;
 
       const locationStats = entries.reduce((acc, entry) => {
-        entry.baselineData.locations.forEach(location => {
+        entry.baselineData?.locations?.forEach(location => {
           if (!acc[location]) acc[location] = { count: 0, totalPain: 0 };
           acc[location].count++;
-          acc[location].totalPain += entry.baselineData.pain;
+          acc[location].totalPain += entry.baselineData?.pain || 0;
         });
         return acc;
       }, {} as Record<string, { count: number; totalPain: number }>);
@@ -150,7 +148,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       })).sort((a, b) => b.frequency - a.frequency);
 
       const latestEntry = entries[0];
-      const workImpact = entries.reduce((sum, entry) => sum + entry.workImpact.missedWork, 0);
+      const workImpact = entries.reduce((sum, entry) => sum + (entry.workImpact?.missedWork || 0), 0);
 
       return JSON.stringify({
         metadata,
@@ -159,14 +157,14 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
           currentPainLevel: latestEntry?.baselineData.pain || null,
           totalMissedWorkDays: workImpact,
           locationStatistics: processedLocationStats,
-          currentMedications: latestEntry?.medications.current || [],
-          recentTreatments: latestEntry?.treatments.recent || [],
+          currentMedications: latestEntry?.medications?.current || [],
+          recentTreatments: latestEntry?.treatments?.recent || [],
           qualityOfLife: latestEntry ? {
-            sleepQuality: latestEntry.qualityOfLife.sleepQuality,
-            moodImpact: latestEntry.qualityOfLife.moodImpact,
-            socialImpact: latestEntry.qualityOfLife.socialImpact
+            sleepQuality: latestEntry.qualityOfLife?.sleepQuality || 0,
+            moodImpact: latestEntry.qualityOfLife?.moodImpact || 0,
+            socialImpact: latestEntry.qualityOfLife?.socialImpact || 0
           } : null,
-          functionalLimitations: latestEntry?.functionalImpact.limitedActivities || []
+          functionalLimitations: latestEntry?.functionalImpact?.limitedActivities || []
         }
       }, null, 2);
     }
@@ -192,28 +190,28 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       metadata,
       entries: entries.map(entry => ({
         date: entry.timestamp,
-        painLevel: entry.baselineData.pain,
-        primaryLocation: entry.baselineData.locations[0] || null,
-        symptoms: entry.baselineData.symptoms,
+        painLevel: entry.baselineData?.pain || 0,
+        primaryLocation: entry.baselineData?.locations?.[0] || null,
+        symptoms: entry.baselineData?.symptoms || [],
         qualityOfLife: {
-          sleep: entry.qualityOfLife.sleepQuality,
-          mood: entry.qualityOfLife.moodImpact
+          sleep: entry.qualityOfLife?.sleepQuality || 0,
+          mood: entry.qualityOfLife?.moodImpact || 0
         },
-        medications: entry.medications.current.map(m => ({
+        medications: entry.medications?.current?.map(m => ({
           name: m.name,
           dosage: m.dosage,
           effectiveness: m.effectiveness
-        })),
-        treatments: entry.treatments.recent.map(t => ({
+        })) || [],
+        treatments: entry.treatments?.recent?.map(t => ({
           type: t.type,
           provider: t.provider,
           effectiveness: t.effectiveness
-        })),
+        })) || [],
         workImpact: {
-          missedDays: entry.workImpact.missedWork,
-          limitations: entry.workImpact.workLimitations
+          missedDays: entry.workImpact?.missedWork || 0,
+          limitations: entry.workImpact?.workLimitations || []
         },
-        notes: entry.notes
+        notes: entry.notes || ''
       }))
     }, null, 2);
   };
@@ -301,27 +299,27 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
               <div>
                 <div className="text-gray-600">Avg Pain</div>
                 <div className="font-bold">
-                  {entries.length > 0 
-                    ? Number(formatNumber((entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length), 1))
+                  {entries.length > 0
+                    ? Number(formatNumber((entries.reduce((sum, entry) => sum + (entry.baselineData?.pain || 0), 0) / entries.length), 1))
                     : 'N/A'}/10
                 </div>
               </div>
               <div>
                 <div className="text-gray-600">Unique Locations</div>
                 <div className="font-bold">
-                  {new Set(entries.flatMap(e => e.baselineData.locations)).size}
+                  {new Set(entries.flatMap(e => e.baselineData?.locations || [])).size}
                 </div>
               </div>
               <div>
                 <div className="text-gray-600">Work Days Lost</div>
                 <div className="font-bold">
-                  {entries.reduce((sum, entry) => sum + entry.workImpact.missedWork, 0)}
+                  {entries.reduce((sum, entry) => sum + (entry.workImpact?.missedWork || 0), 0)}
                 </div>
               </div>
               <div>
                 <div className="text-gray-600">Treatment Types</div>
                 <div className="font-bold">
-                  {new Set(entries.flatMap(e => e.treatments.recent.map(t => t.type))).size}
+                  {new Set(entries.flatMap(e => e.treatments?.recent?.map(t => t.type) || [])).size}
                 </div>
               </div>
             </div>

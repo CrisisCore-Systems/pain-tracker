@@ -117,11 +117,11 @@ function comprehensiveCorrelationAnalysis(entries: PainEntry[]): HealthInsight[]
   if (entries.length < 6) return [];
   const pairs: Array<{name:string; x:number[]; y:number[]; formatter:(c:number)=>string}> = [];
   const sleep = entries.filter(e => e.qualityOfLife?.sleepQuality !== undefined);
-  if (sleep.length >= 5) pairs.push({name:'Sleep Quality', x:sleep.map(e=>e.qualityOfLife.sleepQuality), y:sleep.map(e=>e.baselineData.pain), formatter:(c)=> c<0? 'Better sleep linked to lower pain':'Poor sleep linked to higher pain'});
+  if (sleep.length >= 5) pairs.push({name:'Sleep Quality', x:sleep.map(e=>e.qualityOfLife!.sleepQuality), y:sleep.map(e=>e.baselineData.pain), formatter:(c)=> c<0? 'Better sleep linked to lower pain':'Poor sleep linked to higher pain'});
   const moodImpact = entries.filter(e => e.qualityOfLife?.moodImpact !== undefined);
-  if (moodImpact.length >=5) pairs.push({name:'Mood Impact', x:moodImpact.map(e=>e.qualityOfLife.moodImpact), y:moodImpact.map(e=>e.baselineData.pain), formatter:(c)=> c>0? 'Higher mood impact associates with higher pain':'Higher mood impact associates with lower pain'});
+  if (moodImpact.length >=5) pairs.push({name:'Mood Impact', x:moodImpact.map(e=>e.qualityOfLife!.moodImpact), y:moodImpact.map(e=>e.baselineData.pain), formatter:(c)=> c>0? 'Higher mood impact associates with higher pain':'Higher mood impact associates with lower pain'});
   const missed = entries.filter(e => e.workImpact?.missedWork!==undefined);
-  if (missed.length >=5) pairs.push({name:'Missed Work', x:missed.map(e=>e.workImpact.missedWork), y:missed.map(e=>e.baselineData.pain), formatter:(c)=> c>0? 'Increased missed work correlates with higher pain':'Increased missed work correlates with lower pain (unexpected)'});
+  if (missed.length >=5) pairs.push({name:'Missed Work', x:missed.map(e=>e.workImpact!.missedWork), y:missed.map(e=>e.baselineData.pain), formatter:(c)=> c>0? 'Increased missed work correlates with higher pain':'Increased missed work correlates with lower pain (unexpected)'});
 
   const insights: HealthInsight[] = [];
   for (const p of pairs) {

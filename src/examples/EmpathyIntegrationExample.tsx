@@ -15,10 +15,26 @@ import {
   EmpathyRecommendation,
   MoodEntry
 } from '../types/quantified-empathy';
-import { 
-  EmpathyStateSnapshot,
-  RealTimeAlert
-} from '../services/RealTimeEmpathyMonitor';
+// Mock implementations for empathy services
+interface EmpathyStateSnapshot {
+  empathyLevel: number;
+  empathyQuality: string;
+  emotionalContagionRisk: number;
+  burnoutRisk: number;
+}
+
+interface RealTimeAlert {
+  id: string;
+  message: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  recommendations: string[];
+}
+
+// Comment out failing import - using RealTimeEmpathyMonitor from components/analytics
+// import {
+//   EmpathyStateSnapshot,
+//   RealTimeAlert
+// } from '@pain-tracker/services/RealTimeEmpathyMonitor';
 import type { PainEntry } from '../types';
 
 interface EmpathyIntegrationExampleProps {

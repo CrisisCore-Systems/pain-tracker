@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useCrisisDetection } from './useCrisisDetection.tsx';
+import { useCrisisDetection } from './useCrisisDetection';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 import { VoiceInput } from './PhysicalAccommodations';
@@ -429,7 +429,7 @@ export function EmergencyProtocolDisplay({
 
           {/* Protocol Steps */}
           <div className="space-y-4 mb-6">
-            {protocol.immediateActions.map((action, index) => (
+            {protocol.immediateActions.map((action: string, index: number) => (
               <div 
                 key={index}
                 className={`protocol-step p-4 rounded-lg border-2 transition-all ${
@@ -472,7 +472,7 @@ export function EmergencyProtocolDisplay({
             <div className="medications bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-yellow-800 mb-3">Emergency Medications</h3>
               <div className="space-y-3">
-                {protocol.medications.map((med, index) => (
+                {protocol.medications.map((med: { name: string; dosage: string; instructions: string }, index: number) => (
                   <div key={index} className="bg-white rounded-lg p-4 border border-yellow-300">
                     <div className="flex items-center space-x-3 mb-2">
                       <Heart className="w-6 h-6 text-red-500" />

@@ -1,9 +1,13 @@
 import React from 'react';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'destructive';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'destructive' | 'outline' | 'default' | 'success' | 'warning' | 'gradient';
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
+  /** optional leading icon */
+  leftIcon?: React.ReactNode;
+  /** optional trailing icon */
+  rightIcon?: React.ReactNode;
   /** size controls height and padding; default ensures 44px touch target */
   size?: 'sm' | 'md' | 'lg';
 }
@@ -15,6 +19,11 @@ const variants: Record<Variant, string> = {
   secondary: 'bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 focus-visible:ring-indigo-500',
   ghost: 'bg-transparent text-blue-600 hover:bg-blue-50 focus-visible:ring-blue-500',
   destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
+  outline: 'border border-input hover:bg-accent hover:text-accent-foreground shadow-sm hover:shadow-md',
+  default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md',
+  success: 'bg-success text-success-foreground hover:bg-success/90 shadow-sm hover:shadow-md',
+  warning: 'bg-warning text-warning-foreground hover:bg-warning/90 shadow-sm hover:shadow-md',
+  gradient: 'bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl',
 };
 
 const sizes: Record<NonNullable<Props['size']>, string> = {
@@ -27,7 +36,7 @@ const sizes: Record<NonNullable<Props['size']>, string> = {
 export const buttonVariants = variants;
 
 export const Button = React.forwardRef<HTMLButtonElement, Props>(
-  ({ variant = 'primary', size = 'md', className = '', children, disabled, ...rest }, ref) => {
+  ({ variant = 'primary', size = 'md', className = '', children, disabled, leftIcon, rightIcon, ...rest }, ref) => {
     const classes = `${base} ${variants[variant]} ${sizes[size]} min-w-[44px] ${className}`.trim();
 
     return (
@@ -39,7 +48,9 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
         aria-disabled={disabled || undefined}
         {...rest}
       >
+        {leftIcon && <span className="mr-2 inline-flex items-center">{leftIcon}</span>}
         {children}
+        {rightIcon && <span className="ml-2 inline-flex items-center">{rightIcon}</span>}
       </button>
     );
   }

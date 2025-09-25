@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { empathyIntelligenceEngine } from '../services/EmpathyIntelligenceEngine';
 import { EmpathyIntelligenceEngine } from '../services/EmpathyIntelligenceEngine';
 import type { PainEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';

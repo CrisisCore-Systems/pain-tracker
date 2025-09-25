@@ -6,7 +6,7 @@
 // Crisis State Detection
 export interface CrisisState {
   isInCrisis: boolean;
-  severity: 'mild' | 'moderate' | 'severe' | 'critical';
+  severity: 'none' | 'mild' | 'moderate' | 'severe' | 'critical' | 'emergency' | 'acute';
   triggers: CrisisTrigger[];
   detectedAt: Date;
   duration: number; // in seconds

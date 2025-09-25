@@ -25,9 +25,12 @@ export function EnhancedTraumaInformedDemo() {
   const { crisisLevel, resetCrisisDetection } = useCrisisDetection();
   const [currentDemo, setCurrentDemo] = useState<string>('overview');
 
+  // Map crisis levels to component expectations
+  const mappedCrisisLevel = crisisLevel === 'critical' || crisisLevel === 'acute' ? 'emergency' : crisisLevel;
+
   return (
     <CrisisStateAdaptation
-      crisisLevel={crisisLevel}
+      crisisLevel={mappedCrisisLevel}
       onCrisisHelp={() => alert('Crisis help would be provided here')}
       onTakeBreak={() => alert('Break features would be activated')}
       onSimplifyInterface={() => alert('Interface would be simplified')}
@@ -46,7 +49,7 @@ export function EnhancedTraumaInformedDemo() {
             <div className="mt-4">
               <TouchOptimizedButton
                 variant="secondary"
-                onClick={resetCrisisDetection}
+                onClick={() => resetCrisisDetection('resolved')}
                 className="text-sm"
               >
                 Reset Crisis Detection (Current: {crisisLevel})

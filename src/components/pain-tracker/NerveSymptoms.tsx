@@ -28,7 +28,7 @@ export function NerveSymptoms({ entries, period }: NerveSymptomsProps) {
 
   // Analyze nerve symptoms
   const nerveSymptomAnalysis = filteredEntries.reduce((acc, entry) => {
-    const nerveSymptoms = entry.baselineData.symptoms
+    const nerveSymptoms = (entry.baselineData.symptoms || [])
       .filter(symptom => NERVE_SYMPTOMS.includes(symptom as typeof NERVE_SYMPTOMS[number]));
 
     nerveSymptoms.forEach(symptom => {
@@ -41,7 +41,7 @@ export function NerveSymptoms({ entries, period }: NerveSymptomsProps) {
       }
       acc[symptom].count += 1;
       acc[symptom].painLevels.push(entry.baselineData.pain);
-      entry.baselineData.locations.forEach(location => 
+      (entry.baselineData.locations || []).forEach(location => 
         acc[symptom].locations.add(location)
       );
     });

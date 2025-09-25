@@ -11,12 +11,14 @@ import { Line, Bar, Doughnut, Radar } from 'react-chartjs-2';
 import { Card, CardContent } from './Card';
 import { cn } from '../utils';
 import { colorVar, colorVarAlpha } from '../utils/theme';
+import { getChartColor, getChartColorAlpha, chartColors } from '../utils/chart-colors';
 import type { ChartPointMeta, ChartPointMetaArray } from '../types/chart';
 
 // Local typed dataset matching project usage
 export type ChartDataset = {
   label?: string;
-  data: (number | null)[];
+  // allow undefined as callers sometimes map undefined -> null at render time
+  data: (number | null | undefined)[];
   yAxisID?: string;
   hidden?: boolean;
   backgroundColor?: string | string[];
@@ -24,6 +26,14 @@ export type ChartDataset = {
   borderWidth?: number;
   fill?: boolean;
   tension?: number;
+  // Per-point chart.js props that may be injected by mapDataset
+  pointBackgroundColor?: string | string[];
+  pointBorderColor?: string | string[];
+  pointRadius?: number | number[];
+  pointHoverRadius?: number | number[];
+  // allow specifying dataset-level chart type for mixed charts
+  type?: ChartType;
+  borderDash?: number[];
   _meta?: ChartPointMetaArray;
 };
 
@@ -53,13 +63,17 @@ if (typeof window !== 'undefined' && (ChartJS as any)._registered !== true) {
   (ChartJS as any)._registered = true;
 }
 
-function mapDataset(ds: ChartDataset, chartType?: ChartType) {
+function mapDataset(ds: ChartDataset, chartType?: ChartType, datasetIndex: number = 0) {
   // Preserve any array-based colors provided by callers (for per-point coloring)
   const hasBorderArray = Array.isArray(ds.borderColor);
   const hasBackgroundArray = Array.isArray(ds.backgroundColor);
 
-  const border = ds.borderColor ?? colorVar('color-primary');
-  const background = ds.backgroundColor ?? colorVarAlpha('color-primary', 0.08);
+  // Use improved default colors from our chart color system
+  const defaultColor = getChartColor(datasetIndex);
+  const defaultColorAlpha = getChartColorAlpha(datasetIndex, 0.1);
+
+  const border = ds.borderColor ?? defaultColor;
+  const background = ds.backgroundColor ?? defaultColorAlpha;
 
   const mapped: any = {
     ...ds,
@@ -67,7 +81,7 @@ function mapDataset(ds: ChartDataset, chartType?: ChartType) {
     backgroundColor: background,
     borderWidth: ds.borderWidth ?? 2,
     tension: ds.tension ?? 0.4,
-    fill: typeof ds.fill === 'boolean' ? ds.fill : false,
+    fill: typeof ds.fill === 'boolean' ? ds.fill : chartType === 'line' ? true : false,
   };
 
   // For line charts, Chart.js commonly expects pointBackgroundColor/pointBorderColor for per-point styling
@@ -97,12 +111,12 @@ export function Chart({
 }: ChartProps) {
   const chartData = React.useMemo(() => ({
     labels: data.labels,
-    datasets: data.datasets.map(ds => mapDataset(ds, type)),
+    datasets: data.datasets.map((ds, index) => mapDataset(ds, type, index)),
   }) as ChartJSData<'line'>, [data, type]);
 
   const options: ChartOptions<any> = React.useMemo(() => ({
     responsive,
-    maintainAspectRatio,
+  // maintainAspectRatio intentionally set above; avoid duplicate key
     devicePixelRatio: typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1,
     interaction: { mode: 'index', intersect: false },
     plugins: {
@@ -118,9 +132,9 @@ export function Chart({
         borderColor: colorVar('color-border'),
         borderWidth: 1,
         padding: 8,
-        callbacks: {
+          callbacks: {
           // Custom tooltip: if dataset has _meta array provide entries/notes/meds
-          label: function(context) {
+          label: function(context: any) {
             try {
               // Use the shared ChartPointMeta type for dataset metadata
               const ds = context.dataset as unknown as (ChartDataset & { _meta?: ChartPointMetaArray });
@@ -164,7 +178,7 @@ export function Chart({
       y1: { position: 'right', ticks: { color: colorVar('color-foreground') }, grid: { display: false }, title: { display: true, text: 'Entries' } },
       ...scales,
     } : undefined,
-    maintainAspectRatio,
+  // maintainAspectRatio intentionally set above; avoid duplicate key
   }), [responsive, maintainAspectRatio, showLegend, showTitle, title, type, scales]);
 
   const srSummary = summary ?? (title ? `${title} chart with ${data.datasets.length} dataset(s)` : 'Chart data');

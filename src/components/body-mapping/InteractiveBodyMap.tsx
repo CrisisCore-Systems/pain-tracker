@@ -61,17 +61,19 @@ export function InteractiveBodyMap({
       const painMap = new Map<string, { total: number; count: number }>();
       
       entries.forEach(entry => {
-        entry.baselineData.locations.forEach(location => {
-          const regionId = normalizeLocationToRegionId(location);
-          if (regionId && BODY_REGIONS.find(r => r.id === regionId)) {
-            if (!painMap.has(regionId)) {
-              painMap.set(regionId, { total: 0, count: 0 });
+        if (entry.baselineData?.locations) {
+          entry.baselineData.locations.forEach(location => {
+            const regionId = normalizeLocationToRegionId(location);
+            if (regionId && BODY_REGIONS.find(r => r.id === regionId)) {
+              if (!painMap.has(regionId)) {
+                painMap.set(regionId, { total: 0, count: 0 });
+              }
+              const data = painMap.get(regionId)!;
+              data.total += entry.baselineData.pain;
+              data.count += 1;
             }
-            const data = painMap.get(regionId)!;
-            data.total += entry.baselineData.pain;
-            data.count += 1;
-          }
-        });
+          });
+        }
       });
 
       regionPainMap.current.clear();

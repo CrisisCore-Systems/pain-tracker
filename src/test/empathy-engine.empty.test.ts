@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { empathyIntelligenceEngine } from '../services/EmpathyIntelligenceEngine';
 import { EmpathyIntelligenceEngine } from '../services/EmpathyIntelligenceEngine';
 
 const engine = new EmpathyIntelligenceEngine({

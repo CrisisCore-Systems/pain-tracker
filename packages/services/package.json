@@ -1,0 +1,8 @@
+{
+  "name": "@pain-tracker/services",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "license": "MIT"
+}

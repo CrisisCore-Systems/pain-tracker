@@ -63,7 +63,7 @@ interface ComparisonResult {
 }
 
 // Local extension for optional tags on PainEntry used in condition filtering
-type Tagged = { triggers?: Array<{ name: string }>; conditions?: Array<{ name: string }> };
+type Tagged = { triggers?: string[]; conditions?: string[] };
 
 export function ConditionComparison({ entries, className }: ConditionComparisonProps) {
   const [selectedCondition1, setSelectedCondition1] = useState<string>('');
@@ -75,12 +75,12 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
   const availableConditions = useMemo((): ConditionOption[] => {
     const conditionMap = new Map<string, { count: number; lastUsed: Date; totalPain: number }>();
 
-    type Tagged = { triggers?: Array<{ name: string }>; conditions?: Array<{ name: string }> };
+    type Tagged = { triggers?: string[]; conditions?: string[] };
     entries.forEach(entry => {
       const { triggers } = (entry as PainEntry & Partial<Tagged>);
       if (triggers && triggers.length > 0) {
         triggers.forEach(trigger => {
-          const existing = conditionMap.get(trigger.name);
+          const existing = conditionMap.get(trigger);
           if (existing) {
             existing.count++;
             existing.totalPain += entry.baselineData.pain;
@@ -88,7 +88,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
               existing.lastUsed = new Date(entry.timestamp);
             }
           } else {
-            conditionMap.set(trigger.name, {
+            conditionMap.set(trigger, {
               count: 1,
               lastUsed: new Date(entry.timestamp),
               totalPain: entry.baselineData.pain
@@ -101,7 +101,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
   const { conditions } = (entry as PainEntry & Partial<Tagged>);
       if (conditions && conditions.length > 0) {
         conditions.forEach(condition => {
-          const existing = conditionMap.get(condition.name);
+          const existing = conditionMap.get(condition);
           if (existing) {
             existing.count++;
             existing.totalPain += entry.baselineData.pain;
@@ -109,7 +109,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
               existing.lastUsed = new Date(entry.timestamp);
             }
           } else {
-            conditionMap.set(condition.name, {
+            conditionMap.set(condition, {
               count: 1,
               lastUsed: new Date(entry.timestamp),
               totalPain: entry.baselineData.pain
@@ -146,7 +146,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
 
       const setFor = (name: string) => filtered.filter(e => {
         const { triggers, conditions } = (e as PainEntry & Partial<Tagged>);
-        return (triggers && triggers.some(t => t.name === name)) || (conditions && conditions.some(c => c.name === name));
+        return (triggers && triggers.some(t => t === name)) || (conditions && conditions.some(c => c === name));
       });
 
       const dataset1 = setFor(selectedCondition1);

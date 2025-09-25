@@ -347,7 +347,7 @@ export class AdvancedDataSynchronizationService {
     
     // Create delta changes for emergency data
   const changes: DeltaChange[] = entries.map(entry => ({
-      id: entry.id.toString(),
+      id: (entry.id ?? crypto.randomUUID()).toString(),
       type: 'create',
       tableName: 'pain-entries',
       data: entry as unknown as Record<string, unknown>,

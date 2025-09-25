@@ -65,10 +65,10 @@ export class EmpathyMetricsCollector {
     let redactions = 0;
     const safePain = painEntries.map(p => ({
       ...p,
-      notes: sanitize ? sanitizeText(p.notes).text : p.notes
+      notes: sanitize && p.notes ? sanitizeText(p.notes).text : p.notes
     }));
     if (sanitize) {
-      painEntries.forEach(p => { redactions += sanitizeText(p.notes).redactions; });
+      painEntries.forEach(p => { if (p.notes) redactions += sanitizeText(p.notes).redactions; });
     }
 
     const safeMood = moodEntries.map(m => ({

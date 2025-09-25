@@ -32,16 +32,16 @@ export function PainHistory({ entries }: PainHistoryProps) {
                   {format(new Date(entry.timestamp), "MMM d, yyyy HH:mm")}
                 </span>
               </div>
-              {entry.baselineData.locations.length > 0 && (
+              {(entry.baselineData.locations?.length ?? 0) > 0 && (
                 <div className="mb-2">
                   <span className="text-sm text-gray-600">Locations: </span>
-                  {entry.baselineData.locations.join(", ")}
+                  {entry.baselineData.locations?.join(", ")}
                 </div>
               )}
-              {entry.baselineData.symptoms.length > 0 && (
+              {(entry.baselineData.symptoms?.length ?? 0) > 0 && (
                 <div className="mb-2">
                   <span className="text-sm text-gray-600">Symptoms: </span>
-                  {entry.baselineData.symptoms.join(", ")}
+                  {entry.baselineData.symptoms?.join(", ")}
                 </div>
               )}
               {entry.notes && (

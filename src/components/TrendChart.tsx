@@ -1,6 +1,6 @@
 import React from 'react';
 import Chart from '../design-system/components/Chart';
-import { colorVar, colorVarAlpha } from '../design-system/utils/theme';
+import { chartColors, getChartColorAlpha } from '../design-system/utils/chart-colors';
 
 export default function TrendChart({ labels, data, height = 160 }: { labels: string[]; data: number[]; height?: number }) {
   return (
@@ -8,7 +8,7 @@ export default function TrendChart({ labels, data, height = 160 }: { labels: str
       <Chart
         data={{
           labels,
-          datasets: [{ label: 'Pain level', data, borderColor: colorVar('color-primary'), backgroundColor: colorVarAlpha('color-primary', 0.08), fill: true }]
+          datasets: [{ label: 'Pain level', data, borderColor: chartColors.analytics.trend, backgroundColor: getChartColorAlpha(0, 0.2, 'analytics'), fill: true }]
         }}
         type="line"
         height={height}

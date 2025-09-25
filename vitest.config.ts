@@ -1,9 +1,17 @@
 import { defineConfig } from 'vitest/config';
+import path from 'node:path';
 
 const isCI = !!process.env.CI;
 const coverageEnabled = process.env.VITEST_COVERAGE !== 'false';
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@pain-tracker/services': path.resolve(__dirname, 'packages/services/src'),
+      '@pain-tracker/design-system': path.resolve(__dirname, 'packages/design-system/src'),
+      '@pain-tracker/utils': path.resolve(__dirname, 'packages/utils/src'),
+    },
+  },
   test: {
     hookTimeout: 20000,
     environment: 'jsdom',

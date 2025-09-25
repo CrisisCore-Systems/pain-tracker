@@ -26,13 +26,13 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
 
   // Get unique activities from all entries
   const activities = Array.from(new Set(
-    filteredEntries.flatMap(entry => entry.functionalImpact.limitedActivities)
+    filteredEntries.flatMap(entry => entry.functionalImpact?.limitedActivities || [])
   ));
 
   // Calculate impact score for each activity
   const activityImpact = activities.map(activity => {
     const entriesWithActivity = filteredEntries.filter(entry =>
-      entry.functionalImpact.limitedActivities.includes(activity)
+      entry.functionalImpact?.limitedActivities?.includes(activity)
     );
 
     const averagePain = entriesWithActivity.reduce(
@@ -152,7 +152,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                 >
                   {filteredEntries
                     .filter(entry => 
-                      entry.functionalImpact.limitedActivities.includes(selectedActivity)
+                      entry.functionalImpact?.limitedActivities?.includes(selectedActivity)
                     )
                     .map(entry => (
                       <div 

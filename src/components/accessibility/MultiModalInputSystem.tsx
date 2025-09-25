@@ -43,7 +43,9 @@ export function MultiModalInputManager({
   const { preferences } = useTraumaInformed();
   const { crisisLevel } = useCrisisDetection();
   const isInCrisis = crisisLevel !== 'none';
-  const crisisSeverity = crisisLevel === 'none' ? 'mild' : crisisLevel === 'emergency' ? 'critical' : crisisLevel;
+  const crisisSeverity = crisisLevel === 'none' ? 'mild' : 
+                       crisisLevel === 'emergency' || crisisLevel === 'critical' || crisisLevel === 'acute' ? 'critical' : 
+                       crisisLevel;
   
   const [isListening, setIsListening] = useState(false);
   const [gestureEnabled, setGestureEnabled] = useState(true);

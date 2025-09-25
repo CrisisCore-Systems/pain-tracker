@@ -126,7 +126,7 @@ export function MedicationsSection({
         <Button
           type="button"
           onClick={addMedication}
-          variant="outline"
+          variant="default"
           className="w-full py-3 border-2 border-dashed border-border rounded-md text-muted-foreground hover:border-primary hover:text-primary"
           leftIcon={<span className="text-lg">+</span>}
         >

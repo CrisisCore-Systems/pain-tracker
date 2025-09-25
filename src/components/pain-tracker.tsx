@@ -5,6 +5,7 @@ import { PAIN_LOCATIONS, SYMPTOMS } from "../utils/constants";
 import useLocalStorage from "../hooks/useLocalStorage";
 import classNames from "classnames";
 import type { PainEntry } from "../types";
+import { chartColors } from "../design-system/utils/chart-colors";
 import { PainAnalytics } from "./pain-tracker/PainAnalytics";
 
 type SimplePainEntry = PainEntry;
@@ -292,7 +293,7 @@ function PainTracker() {
                     <XAxis dataKey="timestamp" />
                     <YAxis domain={[0, 10]} />
                     <Tooltip />
-                    <Line type="monotone" dataKey="pain" stroke="#3B82F6" />
+                    <Line type="monotone" dataKey="pain" stroke={chartColors.analytics.trend} strokeWidth={3} dot={{ fill: chartColors.analytics.trend, strokeWidth: 2, r: 4 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -316,13 +317,13 @@ function PainTracker() {
                         {format(new Date(entry.timestamp), "MMM d, yyyy HH:mm")}
                       </span>
                     </div>
-                    {entry.baselineData.locations.length > 0 && (
+                    {entry.baselineData?.locations && entry.baselineData.locations.length > 0 && (
                       <div className="mb-2">
                         <span className="text-sm text-gray-600">Locations: </span>
                         {entry.baselineData.locations.join(", ")}
                       </div>
                     )}
-                    {entry.baselineData.symptoms.length > 0 && (
+                    {entry.baselineData?.symptoms && entry.baselineData.symptoms.length > 0 && (
                       <div className="mb-2">
                         <span className="text-sm text-gray-600">Symptoms: </span>
                         {entry.baselineData.symptoms.join(", ")}

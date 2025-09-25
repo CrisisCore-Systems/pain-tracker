@@ -19,8 +19,8 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
     .map(entry => ({
       timestamp: entry.timestamp,
       averagePain: entry.baselineData.pain,
-      locations: entry.baselineData.locations,
-      symptoms: entry.baselineData.symptoms,
+      locations: entry.baselineData.locations ?? [],
+      symptoms: entry.baselineData.symptoms ?? [],
     }));
 
   const trend = calculateOverallTrend(progression);
@@ -52,18 +52,22 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
             <div>
               <h4 className="text-sm font-medium text-gray-700">Active Pain Locations</h4>
               <ul className="mt-1 space-y-1">
-                {latestEntry.locations.map(location => (
+                {latestEntry.locations.length > 0 ? latestEntry.locations.map(location => (
                   <li key={location} className="text-sm text-gray-600">{location}</li>
-                ))}
+                )) : (
+                  <li className="text-sm text-gray-500 italic">No locations recorded</li>
+                )}
               </ul>
             </div>
 
             <div>
               <h4 className="text-sm font-medium text-gray-700">Current Symptoms</h4>
               <ul className="mt-1 space-y-1">
-                {latestEntry.symptoms.map(symptom => (
+                {latestEntry.symptoms.length > 0 ? latestEntry.symptoms.map(symptom => (
                   <li key={symptom} className="text-sm text-gray-600">{symptom}</li>
-                ))}
+                )) : (
+                  <li className="text-sm text-gray-500 italic">No symptoms recorded</li>
+                )}
               </ul>
             </div>
           </>

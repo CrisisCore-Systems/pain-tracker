@@ -579,10 +579,9 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                         // point styling uses ramp and anomaly emphasis
                         pointBackgroundColor: dailyAverages.map((d, i) => anomalies.includes(i) ? 'rgba(239,68,68,1)' : painColorForValue(d.value, 1)),
                         pointRadius: dailyAverages.map((_, i) => anomalies.includes(i) ? 6 : 4),
-                        pointHoverRadius: dailyAverages.map((_, i) => anomalies.includes(i) ? 8 : 6),
                         yAxisID: 'y'
-                      },
-                      {
+                      } as any,
+                        {
                         label: 'Entries',
                         data: dailyMeta.map(m => m.count),
                         borderColor: 'rgba(75,85,99,0.95)',
@@ -591,7 +590,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                         tension: 0.2,
                         type: 'bar',
                         yAxisID: 'y1'
-                      },
+                        } as any,
                       {
                         label: '7-day rolling avg',
                         data: rolling7,
@@ -602,7 +601,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                         pointRadius: 0,
                         fill: false,
                         yAxisID: 'y'
-                      }
+                      } as any
                     ]
                   }}
                   type="line"

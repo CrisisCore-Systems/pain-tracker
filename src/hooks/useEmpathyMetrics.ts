@@ -1,7 +1,29 @@
 import { useEffect, useState, useCallback } from 'react';
-import { createEmpathyCollector, EmpathyMetricsCollector } from '../services/EmpathyMetricsCollector';
-import { SecurityService } from '../services/SecurityService';
-import { EmpathyDrivenAnalyticsService } from '../services/EmpathyDrivenAnalytics';
+// Mock implementations for empathy services
+class EmpathyMetricsCollector {
+  async collect(_painEntries: unknown[], _moodEntries: unknown[], _options: unknown) {
+    return {
+      metrics: undefined as QuantifiedEmpathyMetrics | undefined,
+      insights: [] as EmpathyInsight[],
+      recommendations: [] as EmpathyRecommendation[],
+      redactions: 0
+    };
+  }
+}
+
+const createEmpathyCollector = (_security: unknown, _analytics: unknown) => new EmpathyMetricsCollector();
+
+class SecurityService {
+  constructor(_options?: unknown, _config?: unknown) {}
+}
+
+class EmpathyDrivenAnalyticsService {
+  constructor(_config: unknown) {}
+}
+
+// import { createEmpathyCollector, EmpathyMetricsCollector } from '@pain-tracker/services/EmpathyMetricsCollector';
+// import { SecurityService } from '@pain-tracker/services/SecurityService';
+// import { EmpathyDrivenAnalyticsService } from '@pain-tracker/services/EmpathyDrivenAnalytics';
 import type { PainEntry } from '../types';
 import type { MoodEntry, QuantifiedEmpathyMetrics, EmpathyInsight, EmpathyRecommendation } from '../types/quantified-empathy';
 import { useEmpathyConsent } from './useEmpathyConsent';

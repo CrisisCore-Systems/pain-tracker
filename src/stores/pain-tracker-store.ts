@@ -31,8 +31,8 @@ export interface PainTrackerState {
   
   // Actions
   addEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
-  updateEntry: (id: number, updates: Partial<PainEntry>) => void;
-  deleteEntry: (id: number) => void;
+  updateEntry: (id: string | number, updates: Partial<PainEntry>) => void;
+  deleteEntry: (id: string | number) => void;
   
   // UI Actions
   setShowWCBReport: (show: boolean) => void;
@@ -47,7 +47,7 @@ export interface PainTrackerState {
   
   // Activity Log Actions
   addActivityLog: (log: Omit<ActivityLogEntry, 'id'>) => void;
-  updateActivityLog: (id: number, updates: Partial<ActivityLogEntry>) => void;
+  updateActivityLog: (id: string | number, updates: Partial<ActivityLogEntry>) => void;
   
   // Utility Actions
   setError: (error: string | null) => void;

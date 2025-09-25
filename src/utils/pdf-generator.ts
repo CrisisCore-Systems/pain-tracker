@@ -34,8 +34,10 @@ export async function generateWCBReportPDF(
   if (report.claimInfo) {
     doc.text(`Claim Number: ${report.claimInfo.claimNumber || 'Not Assigned'}`, 20, yPos);
     yPos += 10;
-    doc.text(`Injury Date: ${new Date(report.claimInfo.injuryDate).toLocaleDateString()}`, 20, yPos);
-    yPos += 20;
+    if (report.claimInfo.injuryDate) {
+      doc.text(`Injury Date: ${new Date(report.claimInfo.injuryDate).toLocaleDateString()}`, 20, yPos);
+      yPos += 20;
+    }
   }
 
   // Add pain analysis
@@ -43,19 +45,22 @@ export async function generateWCBReportPDF(
   doc.text('Pain Analysis', 20, yPos);
   doc.setFontSize(12);
   yPos += 10;
-  doc.text(`Average Pain Level: ${report.painTrends.average}/10`, 20, yPos);
   
-  // Add most affected areas
-  yPos += 10;
-  doc.text('Most Affected Areas:', 20, yPos);
-  yPos += 5;
-  Object.entries(report.painTrends.locations)
-    .sort(([,a], [,b]) => b - a)
-    .slice(0, 5)
-    .forEach(([location, frequency]) => {
-      yPos += 5;
-      doc.text(`• ${location} (${frequency} occurrences)`, 25, yPos);
-    });
+  if (report.painTrends) {
+    doc.text(`Average Pain Level: ${report.painTrends.average}/10`, 20, yPos);
+    
+    // Add most affected areas
+    yPos += 10;
+    doc.text('Most Affected Areas:', 20, yPos);
+    yPos += 5;
+    Object.entries(report.painTrends.locations)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .forEach(([location, frequency]) => {
+        yPos += 5;
+        doc.text(`• ${location} (${frequency} occurrences)`, 25, yPos);
+      });
+  }
 
   // Add work impact
   yPos += 20;

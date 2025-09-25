@@ -104,7 +104,7 @@ export interface Activity {
 }
 
 export interface ActivityLogEntry {
-  id: number;
+  id: string | number;
   date: string;
   activities: Activity[];
   dailyNotes: string;

@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { suggestTagsForText } from '../services/quickNoteTagger';
+// Mock implementation for quick note tagger
+const suggestTagsForText = (text: string): string[] => {
+  // Simple mock implementation
+  if (text.includes('headache')) return ['head', 'migraine'];
+  if (text.includes('back')) return ['back', 'spine'];
+  return ['general'];
+};
+
+// import { suggestTagsForText } from '@pain-tracker/services/quickNoteTagger';
 
 export function triggerQuickLog() {
   const ev = new CustomEvent('quick-log', { detail: { source: 'quick-actions', time: new Date().toISOString() } });

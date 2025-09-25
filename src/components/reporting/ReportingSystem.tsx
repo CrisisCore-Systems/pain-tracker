@@ -149,9 +149,9 @@ export function ReportingSystem({
         avgPainLevel: filteredEntries.length > 0
           ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length
           : 0,
-        mostCommonLocation: getMostCommon(filteredEntries.flatMap(e => e.baselineData.locations)),
-        mostCommonSymptom: getMostCommon(filteredEntries.flatMap(e => e.baselineData.symptoms)),
-        totalMedications: new Set(filteredEntries.flatMap(e => e.medications.current.map(m => m.name))).size
+        mostCommonLocation: getMostCommon(filteredEntries.flatMap(e => e.baselineData.locations).filter((loc): loc is string => loc != null)),
+        mostCommonSymptom: getMostCommon(filteredEntries.flatMap(e => e.baselineData.symptoms).filter((sym): sym is string => sym != null)),
+        totalMedications: new Set(filteredEntries.flatMap(e => e.medications?.current?.map(m => m.name) ?? [])).size
       }
     };
 

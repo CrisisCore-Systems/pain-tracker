@@ -254,14 +254,17 @@ watch: ## Watch files and run checks on changes
 	npx nodemon --exec "make check-pre-commit" --watch src --watch scripts --ext "ts,tsx,js,jsx"
 
 # Database (if implemented)
-db-reset: ## Reset database (if implemented)
-	@echo "💾 Database reset not implemented yet"
+db-reset: ## Reset database (safe placeholder)
+	@echo "💾 Running safe database reset script..."
+	node scripts/db/reset.cjs
 
-db-migrate: ## Run database migrations (if implemented)
-	@echo "💾 Database migrations not implemented yet"
+db-migrate: ## Run database migrations (safe placeholder)
+	@echo "💾 Running safe database migrations script..."
+	node scripts/db/migrate.cjs
 
-db-seed: ## Seed database with test data (if implemented)
-	@echo "💾 Database seeding not implemented yet"
+db-seed: ## Seed database with test data (safe placeholder)
+	@echo "💾 Running safe database seeding script..."
+	node scripts/db/seed.cjs
 
 # SBOM and Docs Validation
 sbom: ## Generate CycloneDX SBOM (security/sbom-latest.json)

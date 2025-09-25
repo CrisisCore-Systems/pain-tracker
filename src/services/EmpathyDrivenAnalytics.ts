@@ -990,7 +990,7 @@ export class EmpathyDrivenAnalyticsService {
     if (entries.length === 0) return 40;
     let supportMentions = 0;
     for (const e of entries) {
-      const n = e.notes.toLowerCase();
+      const n = (e.notes || '').toLowerCase();
       if (/(support|friend|family|group|community|talked|call)/.test(n)) supportMentions++;
     }
     const ratio = supportMentions / entries.length;
@@ -1015,7 +1015,7 @@ export class EmpathyDrivenAnalyticsService {
     const doubt = ['fake','imagining','overreact','exaggerat','not real','should not'];
     let affirmHits = 0; let doubtHits = 0;
     for (const e of _entries) {
-      const n = e.notes.toLowerCase();
+      const n = (e.notes || '').toLowerCase();
       if (affirm.some(w => n.includes(w))) affirmHits++;
       if (doubt.some(w => n.includes(w))) doubtHits++;
     }
@@ -1025,22 +1025,22 @@ export class EmpathyDrivenAnalyticsService {
   }
   private calculateCommunitySupport(entries: PainEntry[]): number {
     if (entries.length === 0) return 40;
-    const mentions = entries.filter(e => /community|group|meeting|peer/i.test(e.notes)).length;
+    const mentions = entries.filter(e => e.notes && /community|group|meeting|peer/i.test(e.notes)).length;
     return Math.min(100, 20 + (mentions / entries.length) * 80);
   }
   private calculateProfessionalValidation(entries: PainEntry[]): number {
     if (entries.length === 0) return 30;
-    const professional = entries.filter(e => /doctor|therapist|specialist|nurse|appointment|clinic/i.test(e.notes)).length;
+    const professional = entries.filter(e => e.notes && /doctor|therapist|specialist|nurse|appointment|clinic/i.test(e.notes)).length;
     return Math.min(100, 25 + (professional / entries.length) * 75);
   }
   private calculateFamilySupport(entries: PainEntry[]): number {
     if (entries.length === 0) return 35;
-    const family = entries.filter(e => /family|parent|sibling|partner|spouse|child|kids/i.test(e.notes)).length;
+    const family = entries.filter(e => e.notes && /family|parent|sibling|partner|spouse|child|kids/i.test(e.notes)).length;
     return Math.min(100, 30 + (family / entries.length) * 70);
   }
   private calculateSelfAwareness(entries: PainEntry[]): number {
     if (entries.length === 0) return 50;
-    const introspective = entries.filter(e => /noticed|realized|aware|pattern|trigger|understand/i.test(e.notes)).length;
+    const introspective = entries.filter(e => e.notes && /noticed|realized|aware|pattern|trigger|understand/i.test(e.notes)).length;
     return Math.min(100, (introspective / entries.length) * 100);
   }
   private calculateCopingSkillsGrowth(entries: PainEntry[]): number {
@@ -1048,7 +1048,7 @@ export class EmpathyDrivenAnalyticsService {
     const keywords = ['meditation','breathing','stretch','journaling','mindfulness','rest','heat','cold','pace'];
     let unique = new Set<string>();
     for (const e of entries) {
-      const n = e.notes.toLowerCase();
+      const n = (e.notes || '').toLowerCase();
       keywords.forEach(k => { if (n.includes(k)) unique.add(k); });
     }
     return Math.min(100, 20 + unique.size * 10);
@@ -1058,49 +1058,49 @@ export class EmpathyDrivenAnalyticsService {
     const commWords = ['communicat','told','said','explained','express','shared'];
     let hits = 0;
     for (const e of entries) {
-      const n = e.notes.toLowerCase();
+      const n = (e.notes || '').toLowerCase();
       if (commWords.some(w => n.includes(w))) hits++;
     }
     return Math.min(100, 30 + (hits / entries.length) * 70);
   }
   private calculateBoundaryProgress(entries: PainEntry[]): number {
     if (entries.length === 0) return 35;
-    const boundary = entries.filter(e => /boundary|said no|limit|protected|rested instead/i.test(e.notes)).length;
+    const boundary = entries.filter(e => e.notes && /boundary|said no|limit|protected|rested instead/i.test(e.notes)).length;
     return Math.min(100, 25 + (boundary / entries.length) * 75);
   }
   private calculateDecisionMakingPower(entries: PainEntry[]): number {
     if (entries.length === 0) return 40;
-    const decisions = entries.filter(e => /decided|chose|opted|selected|planned/i.test(e.notes)).length;
+    const decisions = entries.filter(e => e.notes && /decided|chose|opted|selected|planned/i.test(e.notes)).length;
     return Math.min(100, 35 + (decisions / entries.length) * 65);
   }
   private calculateSelfAdvocacyScore(entries: PainEntry[]): number {
     if (entries.length === 0) return 45;
-    const advocacy = entries.filter(e => /asked|requested|advocat|explained need|pushed for/i.test(e.notes)).length;
+    const advocacy = entries.filter(e => e.notes && /asked|requested|advocat|explained need|pushed for/i.test(e.notes)).length;
     return Math.min(100, 30 + (advocacy / entries.length) * 70);
   }
   private countTreatmentChoices(entries: PainEntry[]): number {
-    return entries.filter(e => /treatment|therapy|exercise|protocol|plan/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /treatment|therapy|exercise|protocol|plan/i.test(e.notes)).length;
   }
   private countDailyChoices(entries: PainEntry[]): number {
-    return entries.filter(e => /decided|chose|opted|adjusted|scheduled/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /decided|chose|opted|adjusted|scheduled/i.test(e.notes)).length;
   }
   private countBoundaryChoices(entries: PainEntry[]): number {
-    return entries.filter(e => /boundary|said no|limit/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /boundary|said no|limit/i.test(e.notes)).length;
   }
   private countCommunicationChoices(entries: PainEntry[]): number {
-    return entries.filter(e => /communicat|told|shared|express/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /communicat|told|shared|express/i.test(e.notes)).length;
   }
   private countEducationActivities(entries: PainEntry[]): number {
-    return entries.filter(e => /read|research|article|learn|webinar|podcast/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /read|research|article|learn|webinar|podcast/i.test(e.notes)).length;
   }
   private countResourceUse(entries: PainEntry[]): number {
-    return entries.filter(e => /resource|tool|app|tracker|guide/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /resource|tool|app|tracker|guide/i.test(e.notes)).length;
   }
   private countCommunityEngagement(entries: PainEntry[]): number {
-    return entries.filter(e => /group|community|forum|meeting|peer/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /group|community|forum|meeting|peer/i.test(e.notes)).length;
   }
   private countSelfCareInitiatives(entries: PainEntry[]): number {
-    return entries.filter(e => /self-care|rested|hydrated|nutrition|sleep|mindfulness|meditation|breathing/i.test(e.notes)).length;
+    return entries.filter(e => e.notes && /self-care|rested|hydrated|nutrition|sleep|mindfulness|meditation|breathing/i.test(e.notes)).length;
   }
 
   private async extractUserDefinedSuccesses(_entries: PainEntry[]): Promise<string[]> { void _entries;

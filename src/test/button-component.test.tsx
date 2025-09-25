@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { Button } from '../design-system/components/Button';
 
 // Simple mapping to assert variant classname presence
-type VariantName = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+type VariantName = 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' | 'success' | 'warning' | 'gradient';
 const variantExpectations: Array<{ variant: VariantName; contains: string }> = [
   { variant: 'default', contains: 'bg-primary' },
   { variant: 'destructive', contains: 'bg-destructive' },
@@ -43,8 +43,8 @@ describe('Button component', () => {
   });
 
   it('maintains consistent focus-visible styling across variants', () => {
-    const variants: Array<'primary' | 'secondary' | 'ghost' | 'destructive'> = [
-      'primary', 'secondary', 'ghost', 'destructive'
+    const variants: Array<'default' | 'secondary' | 'ghost' | 'destructive'> = [
+      'default', 'secondary', 'ghost', 'destructive'
     ];
 
     variants.forEach(variant => {

@@ -160,7 +160,7 @@ function calculateTrackingPeriod(entries: PainEntry[]): number {
 function getUniqueLocations(entries: PainEntry[]): number {
   const locations = new Set<string>();
   entries.forEach(entry => {
-    entry.baselineData.locations.forEach(location => {
+    entry.baselineData.locations?.forEach(location => {
       locations.add(location);
     });
   });

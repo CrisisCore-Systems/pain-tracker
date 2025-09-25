@@ -64,7 +64,13 @@ export default defineConfig({
       }
     }
   ],
-  base: '/pain-tracker/',
+  resolve: {
+    alias: {
+      '@pain-tracker/services': path.resolve(__dirname, 'packages/services/src'),
+      '@pain-tracker/design-system': path.resolve(__dirname, 'packages/design-system/src'),
+      '@pain-tracker/utils': path.resolve(__dirname, 'packages/utils/src'),
+    },
+  },
   build: {
     sourcemap: true,
     outDir: 'dist',

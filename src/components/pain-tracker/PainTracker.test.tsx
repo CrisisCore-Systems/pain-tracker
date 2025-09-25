@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, beforeAll, afterEach, afterAll, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import { PainTracker } from './index.tsx';
+import { PainTracker } from './index';
 import { ThemeProvider } from '../../design-system';
 import { ToastProvider } from '../feedback';
 

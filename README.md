@@ -177,6 +177,39 @@ npm run dev
 npm run test:coverage
 ```
 
+### Contributor setup (quick)
+
+Follow these lightweight steps when contributing or onboarding locally.
+
+- Keep dependencies healthy:
+  - Run an audit regularly: `npm audit`.
+  - Attempt safe auto-fixes: `npm audit fix` (non-forcing). If nothing remains, you're good; if transitive/dev-only issues persist, update the direct dev dependency (for example `@stryker-mutator/core`) and re-run the audit.
+
+- Database developer helpers (safe placeholders):
+  - Dry-run (recommended):
+    - `npm run db:migrate` — shows migration command recommendations
+    - `npm run db:reset` — shows reset recommendations
+    - `npm run db:seed`  — shows seeding recommendations
+  - Execute (only on local/test DB and after reviewing):
+    - `DRY_RUN=false npm run db:migrate`
+    - `DRY_RUN=false npm run db:reset`
+    - `DRY_RUN=false npm run db:seed`
+
+- Runtime validation helpers:
+  - Lightweight helpers are in `src/utils/validation.ts`:
+    - `assertNumericRange(value, name, min, max)` — runtime numeric guard
+    - `sanitizeNote(note, maxLength?)` — reduces accidental long-digit PHI and truncates
+  - Tests for the helpers live in `src/utils/__tests__/validation.test.ts`.
+
+- Running tests locally:
+  - Single file: `npm run test -- path/to/testfile`
+  - All tests: `npm run test` or `npm run test:coverage` for coverage
+
+Notes:
+- The database scripts are intentionally non-destructive by default (DRY_RUN mode). Only disable DRY_RUN when you're certain you're pointing at a local/test database.
+- Dev-only vulnerabilities are lower priority than production ones, but we recommend fixing them before releases. Avoid `npm audit fix --force` unless you run the full test suite and review changes.
+
+
 ### Production Build
 
 ```bash
