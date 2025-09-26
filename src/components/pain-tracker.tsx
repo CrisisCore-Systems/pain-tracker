@@ -7,6 +7,7 @@ import classNames from "classnames";
 import type { PainEntry } from "../types";
 import { chartColors } from "../design-system/utils/chart-colors";
 import { PainAnalytics } from "./pain-tracker/PainAnalytics";
+import { useReducedMotion } from "../design-system/utils/accessibility";
 
 type SimplePainEntry = PainEntry;
 
@@ -25,6 +26,7 @@ function PainTracker() {
   const [sleepQuality, setSleepQuality] = useState(5);
   const [moodImpact, setMoodImpact] = useState(5);
   const [missedWork, setMissedWork] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
 
   const handleAddEntry = () => {
     const newEntry: PainEntry = {
@@ -293,7 +295,7 @@ function PainTracker() {
                     <XAxis dataKey="timestamp" />
                     <YAxis domain={[0, 10]} />
                     <Tooltip />
-                    <Line type="monotone" dataKey="pain" stroke={chartColors.analytics.trend} strokeWidth={3} dot={{ fill: chartColors.analytics.trend, strokeWidth: 2, r: 4 }} />
+                    <Line type="monotone" dataKey="pain" stroke={chartColors.analytics.trend} strokeWidth={3} dot={{ fill: chartColors.analytics.trend, strokeWidth: 2, r: 4 }} isAnimationActive={!prefersReducedMotion} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>

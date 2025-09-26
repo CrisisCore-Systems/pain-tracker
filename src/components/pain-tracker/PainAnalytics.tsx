@@ -19,6 +19,7 @@ import { exportToCSV, exportToJSON, downloadData } from '../../utils/pain-tracke
 import { ComparisonAnalytics, LocationHeatmap, TreatmentOverlay } from './analytics-v2';
 import { VisitSummary, ClinicalExports } from './clinician-export';
 import { AccessibilityControls, LanguageSelector } from '../accessibility';
+import { useReducedMotion } from '../../design-system/utils/accessibility';
 import { EncryptedBackup, DataRestore } from '../data-resilience';
 import { TemplateLibrary } from '../templates';
 
@@ -36,6 +37,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
   onApplyTemplate = () => {} 
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const prefersReducedMotion = useReducedMotion();
   const trends = analyzeTrends(entries);
   const stats = calculateStatistics(entries);
 
@@ -165,6 +167,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                     dataKey="avgPain"
                     stroke="#8884d8"
                     name="Average Pain Level"
+                    isAnimationActive={!prefersReducedMotion}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -181,7 +184,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                   <YAxis domain={[0, 10]} />
                   <Tooltip />
                   <Legend wrapperStyle={{ whiteSpace: 'normal', maxWidth: 200 }} />
-                  <Line type="monotone" dataKey="pain" stroke="#ef4444" name="Average" />
+                  <Line type="monotone" dataKey="pain" stroke="#ef4444" name="Average" isAnimationActive={!prefersReducedMotion} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

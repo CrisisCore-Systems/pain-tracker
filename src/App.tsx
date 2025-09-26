@@ -104,7 +104,7 @@ function App() {
             <OfflineBanner />
             <BetaWarning />
             <QuickActions />
-            <div className="fixed top-20 right-4 z-50 w-80 space-y-2">
+            <div className="fixed top-20 right-4 z-50 flex flex-col space-y-2 w-80">
               <MedicationReminders />
               <AlertsSettings />
               <AlertsActivityLog />

@@ -64,7 +64,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
       aria-labelledby="onboarding-title"
     >
       <Card className="w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-        <CardContent className="p-8">
+        <CardContent className="p-8 pb-24">
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 
