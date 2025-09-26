@@ -15,13 +15,14 @@ export interface ToastData {
     label: string;
     onClick: () => void;
   };
+  onDismiss?: () => void;
 }
 
 interface ToastProps extends ToastData {
   onDismiss: (id: string) => void;
 }
 
-export function Toast({ id, type, title, message, duration = 5000, action, onDismiss }: ToastProps) {
+export function Toast({ id, type, title, message, duration = 5000, action, onDismiss: customOnDismiss, onDismiss }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -30,8 +31,9 @@ export function Toast({ id, type, title, message, duration = 5000, action, onDis
     setTimeout(() => {
       setIsVisible(false);
       onDismiss(id);
+      customOnDismiss?.();
     }, 150); // Animation duration
-  }, [id, onDismiss]);
+  }, [id, onDismiss, customOnDismiss]);
 
   useEffect(() => {
     if (duration > 0) {

@@ -65,7 +65,7 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
         </div>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center pt-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <Button
           variant="outline"
           onClick={onSkip}

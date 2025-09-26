@@ -14,6 +14,7 @@ import {
 import { format as formatDate, parseISO } from 'date-fns';
 import { chartColors } from '../../../design-system/utils/chart-colors';
 import type { PainEntry } from '../../../types';
+import { useReducedMotion } from '../../../design-system/utils/accessibility';
 
 interface TreatmentOverlayProps {
   entries: PainEntry[];
@@ -44,6 +45,7 @@ interface TooltipProps {
 }
 
 export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) => {
+  const prefersReducedMotion = useReducedMotion();
   const { chartData, treatmentEvents } = useMemo(() => {
     if (!entries.length) return { chartData: [], treatmentEvents: [] };
 
@@ -151,6 +153,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
                 strokeWidth={3}
                 dot={{ fill: chartColors.analytics.trend, strokeWidth: 2, r: 4 }}
                 name="Pain Level"
+                isAnimationActive={!prefersReducedMotion}
               />
 
               {/* Treatment markers */}

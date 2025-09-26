@@ -5,6 +5,7 @@ import { format, startOfDay, endOfDay } from 'date-fns';
 import { buildDailySeries } from '../../utils/pain-tracker/trending';
 import { formatNumber } from '../../utils/formatting';
 import { ErrorBoundary } from './ErrorBoundary';
+import { useReducedMotion } from '../../design-system/utils/accessibility';
 
 interface ProgressionAnalysisProps {
   entries: PainEntry[];
@@ -49,6 +50,7 @@ function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
 }
 
 export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProps) {
+  const prefersReducedMotion = useReducedMotion();
   const isTestEnv = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test';
   const canRenderChart = typeof window !== 'undefined' && 'ResizeObserver' in window && !isTestEnv;
 
@@ -174,6 +176,7 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
                     stroke="#ef4444"
                     name="Pain Level"
                     strokeWidth={2}
+                    isAnimationActive={!prefersReducedMotion}
                   />
                   <Line
                     yAxisId="right"
@@ -182,6 +185,7 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
                     stroke="#3b82f6"
                     name="Symptoms"
                     strokeWidth={2}
+                    isAnimationActive={!prefersReducedMotion}
                   />
                   <Line
                     yAxisId="right"
@@ -190,6 +194,7 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
                     stroke="#10b981"
                     name="Locations"
                     strokeWidth={2}
+                    isAnimationActive={!prefersReducedMotion}
                   />
                 </LineChart>
               </ResponsiveContainer>

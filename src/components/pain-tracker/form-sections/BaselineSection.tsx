@@ -171,7 +171,7 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
               Select any symptoms you're experiencing along with the pain
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
               {SYMPTOMS.map((symptom: string) => (
                 <Button
                   key={symptom}

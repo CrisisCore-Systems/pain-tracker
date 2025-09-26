@@ -1,5 +1,6 @@
 ﻿import { format } from "date-fns";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useReducedMotion } from "../../design-system/utils/accessibility";
 import type { PainEntry } from "../../types";
 
 interface ChartData {
@@ -12,6 +13,8 @@ interface PainChartProps {
 }
 
 export function PainChart({ entries }: PainChartProps) {
+  const prefersReducedMotion = useReducedMotion();
+
   const chartData: ChartData[] = [...entries]
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
     .map(entry => ({
@@ -33,6 +36,7 @@ export function PainChart({ entries }: PainChartProps) {
               dataKey="pain"
               stroke="#3b82f6"
               strokeWidth={2}
+              isAnimationActive={!prefersReducedMotion}
             />
           </LineChart>
         </ResponsiveContainer>

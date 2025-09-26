@@ -41,7 +41,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prepare": "husky install",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --dotfiles true",
+    "deploy": "gh-pages -d dist --dotfiles",
     "prebuild": "node scripts/check-env.mjs",
     "proxy:start": "node scripts/api-proxy.mjs",
     "doctor": "node scripts/doctor.js",

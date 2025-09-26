@@ -40,6 +40,26 @@ export function TraumaInformedPainTrackerLayout({
   const [showExportModal, setShowExportModal] = React.useState(false);
   const [showGoalManager, setShowGoalManager] = React.useState(false);
 
+  // Handle URL parameter for SPA routing
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pathParam = urlParams.get('p');
+    if (pathParam) {
+      // Remove the parameter from URL to clean it up
+      const newUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, '', newUrl);
+
+      // Navigate based on path
+      if (pathParam.startsWith('/analytics')) {
+        setActiveView('analytics');
+      } else if (pathParam.startsWith('/history')) {
+        setActiveView('history');
+      } else {
+        setActiveView('dashboard');
+      }
+    }
+  }, []);
+
 
 
   const navigationItems = [
