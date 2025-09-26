@@ -26,9 +26,11 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
   const [activeTab, setActiveTab] = useState<'list' | 'create' | 'progress'>('list');
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCreateGoal = async (goalData: Omit<Goal, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
+      setError(null); // Clear any previous errors
       const goal: Goal = {
         ...goalData,
         id: `goal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -40,7 +42,7 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
       setActiveTab('list');
     } catch (error) {
       console.error('Failed to create goal:', error);
-      // TODO: Show error message to user
+      setError('Failed to create goal. Please try again.');
     }
   };
 
@@ -58,6 +60,7 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
     setActiveTab('list');
     setSelectedGoal(null);
     setEditingGoal(null);
+    setError(null); // Clear any errors when going back
   };
 
   const renderHeader = () => (
@@ -128,6 +131,33 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
   return (
     <div className={`max-w-7xl mx-auto ${className}`}>
       {renderHeader()}
+      
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-800">{error}</p>
+            </div>
+            <div className="ml-auto pl-3">
+              <button
+                onClick={() => setError(null)}
+                className="inline-flex rounded-md p-1.5 text-red-400 hover:bg-red-100 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              >
+                <span className="sr-only">Dismiss</span>
+                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {renderContent()}
     </div>
   );

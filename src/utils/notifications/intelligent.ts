@@ -4,6 +4,7 @@ import { notificationStorage } from './storage';
 import { browserNotificationManager } from './browser';
 import { formatNumber } from '../formatting';
 import { localDayStart, isSameLocalDay } from '../../utils/dates';
+import { goalStorage } from '../goals/storage';
 
 export interface TriggerCondition {
   type: 'pain_threshold' | 'pattern_recognition' | 'medication_due' | 'goal_progress' | 'time_since_last_entry' | 'streak_maintenance';
@@ -178,7 +179,10 @@ class IntelligentNotificationTrigger {
         await browserNotificationManager.showFromNotification(fullNotification);
       }
 
-  console.log(`Intelligent trigger executed: ${trigger.name} (${formatNumber(analysis.confidence, 2)} confidence)`);
+      // Log successful trigger execution (in development only)
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Intelligent trigger executed: ${trigger.name} (${formatNumber(analysis.confidence, 2)} confidence)`);
+      }
     } catch (error) {
       console.error('Failed to execute intelligent trigger:', error);
     }
@@ -223,26 +227,139 @@ class IntelligentNotificationTrigger {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private evaluateMedicationDue(_condition: TriggerCondition, _entries: PainEntry[]): TriggerAnalysisResult {
-    // This would need medication schedule data
-    // For now, return a placeholder
+  private evaluateMedicationDue(_condition: TriggerCondition, entries: PainEntry[]): TriggerAnalysisResult {
+    // Check recent entries for medication data
+    if (entries.length === 0) {
+      return { shouldTrigger: false, confidence: 0, reason: 'No entries available for medication analysis' };
+    }
+
+    const recentEntries = entries.slice(-7); // Last 7 entries
+    const entriesWithMedications = recentEntries.filter(entry => 
+      entry.medications?.current && entry.medications.current.length > 0
+    );
+
+    if (entriesWithMedications.length === 0) {
+      return { shouldTrigger: false, confidence: 0, reason: 'No medication data found in recent entries' };
+    }
+
+    // Check if medications are being tracked consistently
+    // const totalMedications = entriesWithMedications.reduce((sum, entry) => 
+    //   sum + (entry.medications?.current?.length || 0), 0
+    // );
+    // const avgMedicationsPerEntry = totalMedications / entriesWithMedications.length; // Not currently used but could be for future heuristics
+
+    // Check for medications that might be due based on frequency
+    const medicationFrequencyMap = new Map<string, { count: number; lastTaken?: Date }>();
+    
+    entriesWithMedications.forEach(entry => {
+      entry.medications?.current?.forEach(med => {
+        const key = `${med.name}-${med.dosage}`;
+        const existing = medicationFrequencyMap.get(key) || { count: 0 };
+        existing.count += 1;
+        existing.lastTaken = new Date(entry.timestamp);
+        medicationFrequencyMap.set(key, existing);
+      });
+    });
+
+    // Check for medications that might be overdue
+    const now = new Date();
+    let overdueCount = 0;
+    let totalMedicationsChecked = 0;
+
+    for (const [, data] of medicationFrequencyMap) {
+      totalMedicationsChecked++;
+      
+      if (data.lastTaken) {
+        const hoursSinceLastTaken = (now.getTime() - data.lastTaken.getTime()) / (1000 * 60 * 60);
+        
+        // Simple heuristic: if medication hasn't been taken in 24+ hours, might be due
+        // This is a basic implementation - a full system would need proper scheduling
+        if (hoursSinceLastTaken > 24) {
+          overdueCount++;
+        }
+      }
+    }
+
+    const overdueRatio = totalMedicationsChecked > 0 ? overdueCount / totalMedicationsChecked : 0;
+    const shouldTrigger = overdueRatio > 0.3; // More than 30% of medications potentially overdue
+    const confidence = Math.min(overdueRatio * 2, 1); // Scale confidence
+
     return {
-      shouldTrigger: false,
-      confidence: 0,
-      reason: 'Medication due evaluation requires medication schedule data'
+      shouldTrigger,
+      confidence,
+      reason: `${overdueCount} of ${totalMedicationsChecked} medications may be due (${formatNumber(overdueRatio * 100, 1)}% potentially overdue)`
     };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private evaluateGoalProgress(_condition: TriggerCondition, _entries: PainEntry[]): TriggerAnalysisResult {
-    // This would need goal tracking data
-    // For now, return a placeholder
-    return {
-      shouldTrigger: false,
-      confidence: 0,
-      reason: 'Goal progress evaluation requires goal tracking data'
-    };
+  private async evaluateGoalProgress(_condition: TriggerCondition, _entries: PainEntry[]): Promise<TriggerAnalysisResult> {
+    try {
+      const goals = await goalStorage.getAllGoals();
+      const activeGoals = goals.filter(goal => goal.status === 'active');
+
+      if (activeGoals.length === 0) {
+        return { shouldTrigger: false, confidence: 0, reason: 'No active goals to evaluate' };
+      }
+
+      let goalsNeedingAttention = 0;
+      const reasons: string[] = [];
+
+      for (const goal of activeGoals) {
+        const now = new Date();
+        const startDate = new Date(goal.startDate);
+        const endDate = goal.endDate ? new Date(goal.endDate) : null;
+        
+        // Check if goal is overdue
+        if (endDate && now > endDate) {
+          goalsNeedingAttention++;
+          reasons.push(`${goal.title} is overdue`);
+          continue;
+        }
+
+        // Check progress towards targets
+        for (const target of goal.targets) {
+          const progress = goal.progress || [];
+          const recentProgress = progress.slice(-7); // Last 7 days of progress
+          
+          if (recentProgress.length === 0) {
+            goalsNeedingAttention++;
+            reasons.push(`${goal.title} has no recent progress`);
+            break;
+          }
+
+          // Calculate current progress towards target
+          const avgProgress = recentProgress.reduce((sum, p) => sum + p.value, 0) / recentProgress.length;
+          const progressPercentage = (avgProgress / target.targetValue) * 100;
+
+          // Check if goal is falling behind schedule
+          const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
+          const totalDays = endDate ? 
+            Math.floor((endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)) : 
+            30; // Default 30 days for goals without end date
+          
+          const expectedProgress = (daysElapsed / totalDays) * 100;
+          
+          if (progressPercentage < expectedProgress * 0.7) { // More than 30% behind schedule
+            goalsNeedingAttention++;
+            reasons.push(`${goal.title} is behind schedule (${formatNumber(progressPercentage, 1)}% vs expected ${formatNumber(expectedProgress, 1)}%)`);
+            break;
+          }
+        }
+      }
+
+      const attentionRatio = goalsNeedingAttention / activeGoals.length;
+      const shouldTrigger = attentionRatio > 0.3; // More than 30% of goals need attention
+      const confidence = Math.min(attentionRatio * 2, 1);
+
+      return {
+        shouldTrigger,
+        confidence,
+        reason: `${goalsNeedingAttention} of ${activeGoals.length} active goals need attention: ${reasons.slice(0, 2).join(', ')}${reasons.length > 2 ? '...' : ''}`
+      };
+    } catch (error) {
+      console.error('Error evaluating goal progress:', error);
+      return { shouldTrigger: false, confidence: 0, reason: 'Error evaluating goal progress' };
+    }
   }
 
   private evaluateTimeSinceLastEntry(condition: TriggerCondition, entries: PainEntry[]): TriggerAnalysisResult {

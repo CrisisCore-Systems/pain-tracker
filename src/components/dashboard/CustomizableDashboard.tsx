@@ -585,13 +585,22 @@ function DashboardWidget({
               userId="current-user"
               painEntries={entries}
               onInsightSelect={(insight) => {
-                console.log('Insight selected:', insight);
+                // Handle insight selection - could trigger navigation or modal
+                if (process.env.NODE_ENV === 'development') {
+                  console.log('Insight selected:', insight);
+                }
               }}
               onRecommendationAccept={(recommendation) => {
-                console.log('Recommendation accepted:', recommendation);
+                // Handle recommendation acceptance - could show success message
+                if (process.env.NODE_ENV === 'development') {
+                  console.log('Recommendation accepted:', recommendation);
+                }
               }}
               onShareMetrics={(metrics) => {
-                console.log('Share metrics:', metrics);
+                // Handle metrics sharing - could open share dialog
+                if (process.env.NODE_ENV === 'development') {
+                  console.log('Share metrics:', metrics);
+                }
               }}
               showAdvancedMetrics={true}
             />
@@ -675,10 +684,7 @@ function DashboardWidget({
             canCollapse={true}
           >
             <GoalDashboardWidget
-              onOpenManager={onOpenGoalManager || (() => {
-                // TODO: Implement goal manager opening logic
-                console.log('Open goal manager');
-              })}
+              onOpenManager={onOpenGoalManager}
             />
           </TraumaInformedSection>
         );
@@ -816,7 +822,10 @@ export function CustomizableDashboard({
   // Handle loading a filter
   const handleLoadFilter = useCallback((filter: SavedFilter) => {
     // The filter criteria will be applied through the AdvancedFilters component
-    console.log('Loading filter:', filter.name);
+    // Log in development for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Loading filter:', filter.name);
+    }
   }, []);
 
   // Handle deleting a filter

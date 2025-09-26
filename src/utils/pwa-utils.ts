@@ -65,7 +65,9 @@ export class PWAManager {
   private async init() {
     if (this.isInitialized) return;
     
-    console.log('PWA: Initializing PWA Manager');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('PWA: Initializing PWA Manager');
+    }
     this.checkInstallStatus();
     this.setupInstallPromptListener();
     await this.detectCapabilities();
@@ -100,12 +102,16 @@ export class PWAManager {
   private async initializeOfflineStorage(): Promise<void> {
     try {
       await offlineStorage.init();
-      console.log('PWA: Offline storage initialized');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Offline storage initialized');
+      }
       
       // Request persistent storage for critical health data
       if ('storage' in navigator && 'persist' in navigator.storage) {
         const persistent = await navigator.storage.persist();
-        console.log('PWA: Persistent storage:', persistent ? 'granted' : 'denied');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PWA: Persistent storage:', persistent ? 'granted' : 'denied');
+        }
         
         if (persistent) {
           this.dispatchCustomEvent('pwa-persistent-storage-granted');
@@ -125,7 +131,9 @@ export class PWAManager {
 
     // Skip service worker in development if there are issues
     if (import.meta.env.DEV && import.meta.env.VITE_SKIP_SW === 'true') {
-      console.log('PWA: Service Worker disabled in development mode');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Service Worker disabled in development mode');
+      }
       return;
     }
 
@@ -139,7 +147,9 @@ export class PWAManager {
         updateViaCache: 'none' // Force check for updates every time
       });
       
-      console.log('PWA: Service Worker registered successfully', this.swRegistration);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Service Worker registered successfully', this.swRegistration);
+      }
       
       // Listen for service worker updates
       this.swRegistration.addEventListener('updatefound', () => {
@@ -244,14 +254,18 @@ export class PWAManager {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       this.installPromptEvent = e as BeforeInstallPromptEvent;
-      console.log('PWA: Install prompt available');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Install prompt available');
+      }
       this.dispatchCustomEvent('pwa-install-available');
     });
 
     window.addEventListener('appinstalled', () => {
       this.isInstalled = true;
       this.installPromptEvent = null;
-      console.log('PWA: App installed successfully');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: App installed successfully');
+      }
       this.dispatchCustomEvent('pwa-installed');
     });
   }
@@ -266,10 +280,14 @@ export class PWAManager {
       const choiceResult = await this.installPromptEvent.userChoice;
       
       if (choiceResult.outcome === 'accepted') {
-        console.log('PWA: User accepted install prompt');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PWA: User accepted install prompt');
+        }
         return true;
       } else {
-        console.log('PWA: User dismissed install prompt');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PWA: User dismissed install prompt');
+        }
         return false;
       }
     } catch (error) {
@@ -302,13 +320,17 @@ export class PWAManager {
   // Enhanced Online/Offline Management with Background Sync Integration
   private setupOnlineOfflineListeners(): void {
     window.addEventListener('online', async () => {
-      console.log('PWA: Back online');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Back online');
+      }
       await this.handleOnlineStatus(true);
       this.dispatchCustomEvent('pwa-online');
     });
 
     window.addEventListener('offline', () => {
-      console.log('PWA: Gone offline');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Gone offline');
+      }
       this.handleOnlineStatus(false);
       this.dispatchCustomEvent('pwa-offline');
     });
@@ -510,7 +532,9 @@ export class PWAManager {
           ).buffer as ArrayBuffer
         });
 
-      console.log('PWA: Push subscription created:', subscription);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Push subscription created:', subscription);
+      }
       return subscription;
     } catch (error) {
       console.error('PWA: Failed to subscribe to push notifications:', error);
@@ -540,9 +564,13 @@ export class PWAManager {
   // Background Sync
   private setupBackgroundSync(): void {
     if (this.swRegistration && 'sync' in this.swRegistration) {
-      console.log('PWA: Background sync is supported');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Background sync is supported');
+      }
     } else {
-      console.log('PWA: Background sync is not supported');
+      if (process.env.NODE_ENV === 'development') {
+        console.log('PWA: Background sync is not supported');
+      }
     }
   }
 
@@ -596,7 +624,9 @@ export class PWAManager {
         await Promise.all(
           cacheNames.map(cacheName => caches.delete(cacheName))
         );
-        console.log('PWA: All caches cleared');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PWA: All caches cleared');
+        }
       }
     }
 
@@ -658,7 +688,9 @@ export class PWAManager {
           }
         }
 
-        console.log('PWA: Data imported successfully');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PWA: Data imported successfully');
+        }
         this.dispatchCustomEvent('pwa-data-imported');
       } catch (error) {
         console.error('PWA: Failed to import offline data:', error);
@@ -682,7 +714,9 @@ export class PWAManager {
         if (this.swRegistration && 'sync' in this.swRegistration) {
           const reg = this.swRegistration as ServiceWorkerRegistration & { sync: SyncManager };
           await reg.sync.register('health-data-sync');
-          console.log('PWA: Health data background sync enabled');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('PWA: Health data background sync enabled');
+          }
           return true;
         }
 
@@ -719,7 +753,9 @@ export class PWAManager {
         this.showNotification(title, body);
       }, delay);
 
-      console.log(`PWA: Health reminder scheduled for ${triggerTime.toLocaleString()}`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`PWA: Health reminder scheduled for ${triggerTime.toLocaleString()}`);
+      }
     }
 
     private showNotification(title: string, body: string): void {
@@ -773,7 +809,9 @@ export class PWAManager {
   // Clear all secureStorage-managed keys (namespaced)
   secureStorage.keys().forEach(k => secureStorage.remove(k));
 
-        console.log('PWA: All PWA data cleared');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PWA: All PWA data cleared');
+        }
         this.dispatchCustomEvent('pwa-data-cleared');
       } catch (error) {
         console.error('PWA: Failed to clear PWA data:', error);
@@ -788,7 +826,9 @@ export class PWAManager {
         if ('serviceWorker' in navigator) {
           const registrations = await navigator.serviceWorker.getRegistrations();
           await Promise.all(registrations.map(reg => reg.unregister()));
-          console.log('PWA: All service workers unregistered');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('PWA: All service workers unregistered');
+          }
         }
 
         // Clear all caches
@@ -797,7 +837,9 @@ export class PWAManager {
         // Clear PWA data
         await this.clearPWAData();
         
-        console.log('PWA: Service worker completely reset');
+        if (process.env.NODE_ENV === 'development') {
+          console.log('PWA: Service worker completely reset');
+        }
         this.dispatchCustomEvent('pwa-service-worker-reset');
       } catch (error) {
         console.error('PWA: Failed to reset service worker:', error);
