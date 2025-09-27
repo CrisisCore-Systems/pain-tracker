@@ -6,6 +6,11 @@
 [![TypeScript](https://img.shields.io/badge/typescript-76.1%25-blue)](https://www.typescriptlang.org/)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+<!-- CI / Coverage Badges -->
+[![CI](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/deploy.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/deploy.yml)
+[![E2E](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/e2e.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/e2e.yml)
+[![Codecov](https://img.shields.io/badge/codecov-unknown-blue)](https://codecov.io/gh/CrisisCore-Systems/pain-tracker)
+
 > **A security-first, offline-capable chronic pain tracking application built with empathy and clinical-minded design.**
 
 Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinical-focused exports and tooling for WorkSafe BC reporting. Some advanced analytics and integrations are in active development; see the implementation snapshot in `.github/copilot-instructions.md` for current status.
