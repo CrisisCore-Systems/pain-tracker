@@ -41,7 +41,13 @@ export function DashboardContent({ entries, allEntries }: DashboardContentProps)
         <Card><CardContent>Total Entries: {metrics.totalEntries}</CardContent></Card>
         <Card><CardContent>Avg Pain: {formatNumber(Number(metrics.averagePain), 1)}</CardContent></Card>
         <Card><CardContent>Weekly Avg: {formatNumber(Number(metrics.weeklyAvg), 1)}</CardContent></Card>
-        <Card><CardContent>Placeholder</CardContent></Card>
+        <Card>
+          <CardContent>
+            Placeholder widget space — to see planned dashboard widgets and their status, visit the project's feature matrix.
+            <a className="ml-1 text-primary underline" href="/docs/FEATURE_MATRIX.md">View Feature Matrix</a>
+            <div className="sr-only">Opens docs/FEATURE_MATRIX.md in repository</div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

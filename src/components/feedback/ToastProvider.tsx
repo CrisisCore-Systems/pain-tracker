@@ -64,24 +64,27 @@ export function ToastProvider({ children }: ToastProviderProps) {
     <ToastContext.Provider value={{ addToast, removeToast, clearToasts, addBottomLeftToast }}>
       {children}
       
-      {/* Top-right toast container */}
-      <div className="fixed top-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none">
+    {/* Top-right toast container */}
+    {/* Increased z-index to ensure toast appears above PWA install prompt (which uses z-index ~1001)
+      and other floating UI. Using a very high explicit z-index to avoid stacking conflicts. */}
+    <div className="fixed top-4 right-4 z-[10002] flex flex-col space-y-2 pointer-events-none">
         {toasts.map(toast => (
           <Toast
             key={toast.id}
             {...toast}
-            onDismiss={removeToast}
+            onDismiss={(id?: string) => removeToast(id ?? toast.id)}
           />
         ))}
       </div>
 
-      {/* Bottom-left toast container */}
-      <div className="fixed bottom-4 left-4 z-[10000] flex flex-col space-y-2 pointer-events-none max-w-[90%]">
+  {/* Bottom-left toast container */}
+  {/* Keep bottom-left toasts slightly lower than top-right but still very high to avoid being overlapped */}
+  <div className="fixed bottom-4 left-4 z-[10000] flex flex-col space-y-2 pointer-events-none max-w-[90%]">
         {bottomLeftToasts.map(toast => (
           <Toast
             key={toast.id}
             {...toast}
-            onDismiss={removeToast}
+            onDismiss={(id?: string) => removeToast(id ?? toast.id)}
           />
         ))}
       </div>

@@ -1,0 +1,278 @@
+{
+  "timestamp": "2025-09-26T13:01:00.476Z",
+  "summary": {
+    "totalTests": 5,
+    "passedTests": 5,
+    "failedTests": 0,
+    "totalIssues": 17,
+    "criticalIssues": 0,
+    "highIssues": 1,
+    "overallScore": 0.96
+  },
+  "results": [
+    {
+      "testType": "Dependency Vulnerability Scanning",
+      "passed": true,
+      "score": 1,
+      "issues": [
+        {
+          "id": "dependency-scan-error",
+          "severity": "medium",
+          "category": "tool-error",
+          "title": "Dependency scanning failed",
+          "description": "npm audit exited with a non-zero status and produced no JSON output",
+          "remediation": "Check npm audit configuration, network connectivity, and registry access",
+          "confidence": "high"
+        }
+      ],
+      "recommendations": [
+        "Run `npm audit fix` to automatically fix vulnerabilities",
+        "Update dependencies to latest secure versions",
+        "Consider using `npm audit fix --force` for breaking changes (test thoroughly)",
+        "Review and replace vulnerable packages with secure alternatives"
+      ],
+      "executionTime": 14,
+      "timestamp": "2025-09-26T12:58:47.640Z"
+    },
+    {
+      "testType": "Secret Scanning",
+      "passed": true,
+      "score": 1,
+      "issues": [],
+      "recommendations": [],
+      "executionTime": 5152,
+      "timestamp": "2025-09-26T12:58:52.799Z"
+    },
+    {
+      "testType": "Static Application Security Testing (SAST)",
+      "passed": true,
+      "score": 0.8,
+      "issues": [
+        {
+          "id": "weak-random-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\data-resilience\\EncryptedBackup.tsx",
+          "severity": "medium",
+          "category": "cryptography",
+          "title": "Weak random number generation",
+          "description": "Math.random() used for security-sensitive operations",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\data-resilience\\EncryptedBackup.tsx",
+          "remediation": "Use crypto.getRandomValues() for cryptographic operations",
+          "confidence": "medium",
+          "cwe": "CWE-338"
+        },
+        {
+          "id": "weak-random-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\healthcare\\InstitutionalBridgesDashboard.tsx",
+          "severity": "medium",
+          "category": "cryptography",
+          "title": "Weak random number generation",
+          "description": "Math.random() used for security-sensitive operations",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\healthcare\\InstitutionalBridgesDashboard.tsx",
+          "remediation": "Use crypto.getRandomValues() for cryptographic operations",
+          "confidence": "medium",
+          "cwe": "CWE-338"
+        },
+        {
+          "id": "xss-innerHTML-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\pain-tracker\\PainTracker.test.tsx",
+          "severity": "medium",
+          "category": "xss",
+          "title": "Potential XSS vulnerability",
+          "description": "Use of innerHTML without sanitization",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\pain-tracker\\PainTracker.test.tsx",
+          "remediation": "Use DOMPurify or textContent instead of innerHTML",
+          "confidence": "medium",
+          "cwe": "CWE-79"
+        },
+        {
+          "id": "xss-innerHTML-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\pwa\\PWAComponents.ts",
+          "severity": "medium",
+          "category": "xss",
+          "title": "Potential XSS vulnerability",
+          "description": "Use of innerHTML without sanitization",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\pwa\\PWAComponents.ts",
+          "remediation": "Use DOMPurify or textContent instead of innerHTML",
+          "confidence": "medium",
+          "cwe": "CWE-79"
+        },
+        {
+          "id": "xss-innerHTML-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\tutorials\\Walkthrough.tsx",
+          "severity": "medium",
+          "category": "xss",
+          "title": "Potential XSS vulnerability",
+          "description": "Use of innerHTML without sanitization",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\components\\tutorials\\Walkthrough.tsx",
+          "remediation": "Use DOMPurify or textContent instead of innerHTML",
+          "confidence": "medium",
+          "cwe": "CWE-79"
+        },
+        {
+          "id": "weak-random-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\design-system\\components\\Input.tsx",
+          "severity": "medium",
+          "category": "cryptography",
+          "title": "Weak random number generation",
+          "description": "Math.random() used for security-sensitive operations",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\design-system\\components\\Input.tsx",
+          "remediation": "Use crypto.getRandomValues() for cryptographic operations",
+          "confidence": "medium",
+          "cwe": "CWE-338"
+        },
+        {
+          "id": "weak-random-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\EmpathyMetricsCollector.ts",
+          "severity": "medium",
+          "category": "cryptography",
+          "title": "Weak random number generation",
+          "description": "Math.random() used for security-sensitive operations",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\EmpathyMetricsCollector.ts",
+          "remediation": "Use crypto.getRandomValues() for cryptographic operations",
+          "confidence": "medium",
+          "cwe": "CWE-338"
+        },
+        {
+          "id": "unsafe-storage-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\EncryptionService.ts",
+          "severity": "medium",
+          "category": "data-exposure",
+          "title": "Sensitive data in localStorage",
+          "description": "Potential storage of sensitive data in localStorage",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\EncryptionService.ts",
+          "remediation": "Encrypt sensitive data before storing or use secure storage methods",
+          "confidence": "low",
+          "cwe": "CWE-312"
+        },
+        {
+          "id": "weak-random-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\HealthcareAPIRouter.ts",
+          "severity": "medium",
+          "category": "cryptography",
+          "title": "Weak random number generation",
+          "description": "Math.random() used for security-sensitive operations",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\HealthcareAPIRouter.ts",
+          "remediation": "Use crypto.getRandomValues() for cryptographic operations",
+          "confidence": "medium",
+          "cwe": "CWE-338"
+        },
+        {
+          "id": "weak-random-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\HealthcareOAuth.ts",
+          "severity": "medium",
+          "category": "cryptography",
+          "title": "Weak random number generation",
+          "description": "Math.random() used for security-sensitive operations",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\HealthcareOAuth.ts",
+          "remediation": "Use crypto.getRandomValues() for cryptographic operations",
+          "confidence": "medium",
+          "cwe": "CWE-338"
+        },
+        {
+          "id": "unsafe-storage-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\SecurityService.ts",
+          "severity": "medium",
+          "category": "data-exposure",
+          "title": "Sensitive data in localStorage",
+          "description": "Potential storage of sensitive data in localStorage",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\services\\SecurityService.ts",
+          "remediation": "Encrypt sensitive data before storing or use secure storage methods",
+          "confidence": "low",
+          "cwe": "CWE-312"
+        },
+        {
+          "id": "unsafe-storage-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\test\\setup.ts",
+          "severity": "medium",
+          "category": "data-exposure",
+          "title": "Sensitive data in localStorage",
+          "description": "Potential storage of sensitive data in localStorage",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\src\\test\\setup.ts",
+          "remediation": "Encrypt sensitive data before storing or use secure storage methods",
+          "confidence": "low",
+          "cwe": "CWE-312"
+        },
+        {
+          "id": "eval-usage-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\scripts\\automated-security-testing.ts",
+          "severity": "high",
+          "category": "injection",
+          "title": "Dangerous eval() usage",
+          "description": "Use of eval() can lead to code injection",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\scripts\\automated-security-testing.ts",
+          "remediation": "Avoid eval() and use safer alternatives like JSON.parse()",
+          "confidence": "high",
+          "cwe": "CWE-95"
+        },
+        {
+          "id": "xss-innerHTML-C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\public\\pwa-init.js",
+          "severity": "medium",
+          "category": "xss",
+          "title": "Potential XSS vulnerability",
+          "description": "Use of innerHTML without sanitization",
+          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\public\\pwa-init.js",
+          "remediation": "Use DOMPurify or textContent instead of innerHTML",
+          "confidence": "medium",
+          "cwe": "CWE-79"
+        }
+      ],
+      "recommendations": [
+        "Implement input validation and sanitization",
+        "Use parameterized queries for database operations",
+        "Implement Content Security Policy",
+        "Use secure coding practices and security libraries",
+        "Conduct regular security code reviews"
+      ],
+      "executionTime": 2349,
+      "timestamp": "2025-09-26T12:58:55.153Z"
+    },
+    {
+      "testType": "Security Linting",
+      "passed": true,
+      "score": 1,
+      "issues": [
+        {
+          "id": "eslint-error",
+          "severity": "low",
+          "category": "tool-error",
+          "title": "ESLint execution failed",
+          "description": "Could not run ESLint security checks",
+          "remediation": "Check ESLint configuration and fix syntax errors",
+          "confidence": "high"
+        }
+      ],
+      "recommendations": [
+        "Fix ESLint errors and warnings",
+        "Enable security-focused ESLint rules",
+        "Use TypeScript strict mode",
+        "Implement consistent code formatting"
+      ],
+      "executionTime": 123504,
+      "timestamp": "2025-09-26T13:00:58.666Z"
+    },
+    {
+      "testType": "Custom Security Validations",
+      "passed": true,
+      "score": 1,
+      "issues": [
+        {
+          "id": "missing-csp",
+          "severity": "medium",
+          "category": "configuration",
+          "title": "Missing Content Security Policy",
+          "description": "No CSP headers found in index.html",
+          "file": "index.html",
+          "remediation": "Add Content-Security-Policy meta tag or HTTP header",
+          "confidence": "high",
+          "cwe": "CWE-693"
+        }
+      ],
+      "recommendations": [
+        "Implement proper Content Security Policy",
+        "Use HTTPS for all external connections",
+        "Implement secure error handling",
+        "Review and enhance security configurations"
+      ],
+      "executionTime": 1800,
+      "timestamp": "2025-09-26T13:01:00.474Z"
+    }
+  ],
+  "configuration": {
+    "enableSAST": true,
+    "enableDAST": true,
+    "enableDependencyScanning": true,
+    "enableSecretScanning": true,
+    "enableLinting": true,
+    "failOnCritical": true,
+    "failOnHigh": false,
+    "outputFormat": "json",
+    "reportPath": "./security-reports"
+  }
+}

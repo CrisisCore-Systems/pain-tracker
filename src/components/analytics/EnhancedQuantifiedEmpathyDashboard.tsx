@@ -450,13 +450,13 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
             <div className="text-center">
               <Sparkles className="w-8 h-8 mx-auto mb-4 text-purple-500" />
               <p className="text-gray-600">
-                {currentView === 'empathy-intelligence' && 'Empathy Intelligence analysis coming soon...'}
-                {currentView === 'neural-patterns' && 'Neural empathy patterns visualization coming soon...'}
-                {currentView === 'wisdom-journey' && 'Wisdom journey mapping coming soon...'}
-                {currentView === 'temporal-analysis' && 'Temporal empathy analysis coming soon...'}
-                {currentView === 'predictive-insights' && 'Predictive insights dashboard coming soon...'}
-                {currentView === 'cultural-empathy' && 'Cultural empathy metrics coming soon...'}
-                {currentView === 'micro-moments' && 'Micro-empathy moment tracking coming soon...'}
+                {currentView === 'empathy-intelligence' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
+                {currentView === 'neural-patterns' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
+                {currentView === 'wisdom-journey' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
+                {currentView === 'temporal-analysis' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
+                {currentView === 'predictive-insights' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
+                {currentView === 'cultural-empathy' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
+                {currentView === 'micro-moments' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
               </p>
             </div>
           </CardContent>

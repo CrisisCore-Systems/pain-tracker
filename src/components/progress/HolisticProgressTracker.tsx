@@ -519,7 +519,7 @@ export function HolisticProgressTracker({
       {activeTab === 'milestones' && (
         <Card>
           <CardContent className="p-6">
-            <p className="text-gray-500 text-center">Milestones tracking coming soon...</p>
+            <p className="text-gray-500 text-center">Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</p>
           </CardContent>
         </Card>
       )}
@@ -527,7 +527,7 @@ export function HolisticProgressTracker({
       {activeTab === 'coping' && (
         <Card>
           <CardContent className="p-6">
-            <p className="text-gray-500 text-center">Coping strategies tracking coming soon...</p>
+            <p className="text-gray-500 text-center">Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</p>
           </CardContent>
         </Card>
       )}
