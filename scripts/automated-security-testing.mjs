@@ -4,54 +4,20 @@
  * Implements SAST, DAST, dependency scanning, and security validation
  */
 
-import { execSync } from 'child_process';
+import { execSync, spawnSync } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Security test configuration
-interface SecurityTestConfig {
-  enableSAST: boolean;
-  enableDAST: boolean;
-  enableDependencyScanning: boolean;
-  enableSecretScanning: boolean;
-  enableLinting: boolean;
-  failOnCritical: boolean;
-  failOnHigh: boolean;
-  outputFormat: 'json' | 'sarif' | 'text';
-  reportPath: string;
-}
-
-// Security test result
-interface SecurityTestResult {
-  testType: string;
-  passed: boolean;
-  score: number;
-  issues: SecurityIssue[];
-  recommendations: string[];
-  executionTime: number;
-  timestamp: Date;
-}
-
-interface SecurityIssue {
-  id: string;
-  severity: 'critical' | 'high' | 'medium' | 'low' | 'info';
-  category: string;
-  title: string;
-  description: string;
-  file?: string;
-  line?: number;
-  column?: number;
-  remediation: string;
-  cwe?: string;
-  confidence: 'high' | 'medium' | 'low';
-}
+// NOTE: This file previously contained TypeScript interfaces. For runtime
+// compatibility with Node ESM we use plain JavaScript objects. Expected
+// shapes:
+// - config: { enableSAST, enableDAST, enableDependencyScanning, enableSecretScanning,
+//             enableLinting, failOnCritical, failOnHigh, outputFormat, reportPath }
+// - SecurityIssue: { id, severity, category, title, description, file?, line?, column?, remediation, cwe?, confidence }
 
 // Comprehensive security test suite
 export class AutomatedSecurityTestSuite {
-  private config: SecurityTestConfig;
-  private projectRoot: string;
-
-  constructor(config?: Partial<SecurityTestConfig>) {
+  constructor(config) {
     this.config = {
       enableSAST: true,
       enableDAST: true,
@@ -62,7 +28,7 @@ export class AutomatedSecurityTestSuite {
       failOnHigh: false,
       outputFormat: 'json',
       reportPath: './security-reports',
-      ...config
+      ...(config || {})
     };
 
     this.projectRoot = process.cwd();
@@ -71,10 +37,10 @@ export class AutomatedSecurityTestSuite {
   /**
    * Run all security tests
    */
-  async runAllTests(): Promise<SecurityTestResult[]> {
+  async runAllTests() {
     console.log('🔒 Starting Comprehensive Security Testing Suite...\n');
 
-    const results: SecurityTestResult[] = [];
+  const results = [];
 
     try {
       // Ensure report directory exists
@@ -136,55 +102,68 @@ export class AutomatedSecurityTestSuite {
   /**
    * Run dependency vulnerability scanning
    */
-  private async runDependencyScanning(): Promise<SecurityTestResult> {
+  async runDependencyScanning() {
     const startTime = Date.now();
-    const issues: SecurityIssue[] = [];
+  const issues = [];
 
-    try {
-      // Run npm audit
-      const auditOutput = execSync('npm audit --json', { 
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe']
-      });
+  // Use spawnSync so we can capture stdout/stderr and the exit status
+    // without throwing. This lets us parse JSON even when npm audit exits
+    // non-zero (which is the behavior when vulnerabilities are found).
+    const spawnResult = spawnSync('npm', ['audit', '--json'], {
+      encoding: 'utf8'
+    });
 
-      const auditData = JSON.parse(auditOutput);
-      const { vulnerabilities } = auditData;
+    const rawOutput = (spawnResult.stdout && String(spawnResult.stdout).trim())
+      ? String(spawnResult.stdout)
+      : (spawnResult.stderr && String(spawnResult.stderr).trim())
+        ? String(spawnResult.stderr)
+        : '';
 
-      // Convert npm audit results to our format
-      Object.entries(vulnerabilities).forEach(([packageName, vulnData]: [string, Record<string, unknown>]) => {
-        if (vulnData.severity) {
-          issues.push({
-            id: `npm-${packageName}-${vulnData.name || 'unknown'}`,
-            severity: vulnData.severity as SecurityIssue['severity'],
-            category: 'dependency',
-            title: `Vulnerable dependency: ${packageName}`,
-            description: (vulnData.title as string) || `Security vulnerability in ${packageName}`,
-            remediation: vulnData.fixAvailable ? 'Update to secure version' : 'Review alternatives or apply workaround',
-            confidence: 'high',
-            cwe: vulnData.cwe as string
+    if (rawOutput) {
+      try {
+        const auditData = JSON.parse(rawOutput);
+        const { vulnerabilities } = auditData || {};
+
+        if (vulnerabilities && typeof vulnerabilities === 'object') {
+          Object.entries(vulnerabilities).forEach(([packageName, vulnData]) => {
+            const vd = vulnData || {};
+            const severity = vd.severity || vd.severity_label || 'moderate';
+
+            issues.push({
+              id: `npm-${packageName}-${vd.name || 'unknown'}`,
+              severity,
+              category: 'dependency',
+              title: `Vulnerable dependency: ${packageName}`,
+              description: vd.title || `Security vulnerability in ${packageName}`,
+              remediation: vd.fixAvailable ? 'Update to secure version' : 'Review alternatives or apply workaround',
+              confidence: 'high',
+              cwe: vd.cwe
+            });
           });
         }
-      });
-
-    } catch (error) {
-      // npm audit returns non-zero exit code when vulnerabilities found
-      if (error instanceof Error && 'stdout' in error) {
-        try {
-          const auditData = JSON.parse(error.stdout as string);
-          // TODO: Process audit data even with non-zero exit code
-          console.log('Audit data available despite error:', auditData ? 'yes' : 'no');
-        } catch {
-          issues.push({
-            id: 'dependency-scan-error',
-            severity: 'medium',
-            category: 'tool-error',
-            title: 'Dependency scanning failed',
-            description: 'Could not complete dependency vulnerability scan',
-            remediation: 'Check npm audit configuration and network connectivity',
-            confidence: 'high'
-          });
-        }
+      } catch (parseErr) {
+        // If parsing fails, add a tool-error issue but continue
+        issues.push({
+          id: 'dependency-scan-error',
+          severity: 'medium',
+          category: 'tool-error',
+          title: 'Dependency scanning failed',
+          description: 'Could not parse npm audit output as JSON',
+          remediation: 'Inspect npm audit output and ensure JSON output is supported in this environment',
+          confidence: 'high'
+        });
       }
+    } else if (spawnResult.status !== 0) {
+      // No output but non-zero exit: record a generic tool error
+      issues.push({
+        id: 'dependency-scan-error',
+        severity: 'medium',
+        category: 'tool-error',
+        title: 'Dependency scanning failed',
+        description: 'npm audit exited with a non-zero status and produced no JSON output',
+        remediation: 'Check npm audit configuration, network connectivity, and registry access',
+        confidence: 'high'
+      });
     }
 
     const executionTime = Date.now() - startTime;
@@ -205,40 +184,40 @@ export class AutomatedSecurityTestSuite {
   /**
    * Run secret scanning
    */
-  private async runSecretScanning(): Promise<SecurityTestResult> {
+  async runSecretScanning() {
     const startTime = Date.now();
-    const issues: SecurityIssue[] = [];
+    const issues = [];
 
     // Define secret patterns
     const secretPatterns = [
       {
         name: 'Generic API Keys/Secrets',
         pattern: /(api[_-]?key|secret|password|token)\s*[=:]\s*['""]([^'""]{8,})['""]/, 
-        severity: 'high' as const,
+  severity: 'high',
         description: 'Generic API key, secret, password or token'
       },
       {
         name: 'JWT Token',
         pattern: /eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*/,
-        severity: 'high' as const,
+  severity: 'high',
         description: 'JWT token'
       },
       {
         name: 'Private Key Headers',
         pattern: /-----BEGIN [A-Z]+ PRIVATE KEY-----/,
-        severity: 'critical' as const,
+  severity: 'critical',
         description: 'Private key file content'
       },
       {
         name: 'Database URL with Password',
         pattern: /[a-zA-Z][a-zA-Z0-9+.-]*:\/\/[^:/\s]+:[^@/\s]+@[^/\s]+/,
-        severity: 'high' as const,
+  severity: 'high',
         description: 'Database connection string with embedded credentials'
       }
     ];
 
     // Scan files
-    const filesToScan = await this.getFilesToScan();
+  const filesToScan = await this.getFilesToScan();
     
     for (const filePath of filesToScan) {
       try {
@@ -286,9 +265,9 @@ export class AutomatedSecurityTestSuite {
   /**
    * Run Static Application Security Testing (SAST)
    */
-  private async runSAST(): Promise<SecurityTestResult> {
+  async runSAST() {
     const startTime = Date.now();
-    const issues: SecurityIssue[] = [];
+    const issues = [];
 
     // SAST checks for common security vulnerabilities
     const filesToScan = await this.getFilesToScan();
@@ -395,9 +374,9 @@ export class AutomatedSecurityTestSuite {
   /**
    * Run security linting
    */
-  private async runSecurityLinting(): Promise<SecurityTestResult> {
+  async runSecurityLinting() {
     const startTime = Date.now();
-    const issues: SecurityIssue[] = [];
+    const issues = [];
 
     try {
       // Run ESLint with security rules
@@ -406,16 +385,7 @@ export class AutomatedSecurityTestSuite {
         stdio: ['ignore', 'pipe', 'pipe']
       });
 
-      const eslintResults = JSON.parse(eslintOutput) as Array<{
-        filePath: string;
-        messages: Array<{
-          severity: number;
-          message: string;
-          ruleId?: string;
-          line?: number;
-          column?: number;
-        }>;
-      }>;
+  const eslintResults = JSON.parse(eslintOutput);
       
       eslintResults.forEach((fileResult) => {
         fileResult.messages.forEach((message) => {
@@ -438,9 +408,9 @@ export class AutomatedSecurityTestSuite {
 
     } catch (error) {
       // ESLint may return non-zero exit code with errors
-      if (error instanceof Error && 'stdout' in error) {
+      if (error && 'stdout' in error) {
         try {
-          const eslintResults = JSON.parse(error.stdout as string);
+          const eslintResults = JSON.parse(error.stdout);
           // Process results (same logic as above)
         } catch (parseError) {
           issues.push({
@@ -474,9 +444,9 @@ export class AutomatedSecurityTestSuite {
   /**
    * Run custom security tests
    */
-  private async runCustomSecurityTests(): Promise<SecurityTestResult> {
+  async runCustomSecurityTests() {
     const startTime = Date.now();
-    const issues: SecurityIssue[] = [];
+    const issues = [];
 
     // Test 1: Check for proper Content Security Policy
     try {
@@ -562,7 +532,7 @@ export class AutomatedSecurityTestSuite {
   /**
    * Generate comprehensive security report
    */
-  private async generateSecurityReport(results: SecurityTestResult[]): Promise<void> {
+  async generateSecurityReport(results) {
     const reportPath = path.join(this.config.reportPath, `security-report-${Date.now()}.json`);
     
     const report = {
@@ -587,7 +557,7 @@ export class AutomatedSecurityTestSuite {
   /**
    * Check if tests failed based on configuration
    */
-  private checkForFailures(results: SecurityTestResult[]): boolean {
+  checkForFailures(results) {
     if (this.config.failOnCritical) {
       const criticalIssues = results.reduce((sum, r) => sum + r.issues.filter(i => i.severity === 'critical').length, 0);
       if (criticalIssues > 0) return true;
@@ -602,8 +572,8 @@ export class AutomatedSecurityTestSuite {
   }
 
   // Helper methods for file scanning
-  private async getFilesToScan(extensions: string[] = ['.ts', '.tsx', '.js', '.jsx', '.json']): Promise<string[]> {
-    const files: string[] = [];
+  async getFilesToScan(extensions = ['.ts', '.tsx', '.js', '.jsx', '.json']) {
+    const files = [];
     const scanDirs = ['src', 'scripts', 'public'];
 
     for (const dir of scanDirs) {
@@ -617,7 +587,7 @@ export class AutomatedSecurityTestSuite {
     return files;
   }
 
-  private async scanDirectory(dirPath: string, extensions: string[], files: string[]): Promise<void> {
+  async scanDirectory(dirPath, extensions, files) {
     const entries = await fs.readdir(dirPath, { withFileTypes: true });
 
     for (const entry of entries) {
@@ -635,8 +605,8 @@ export class AutomatedSecurityTestSuite {
   }
 
   // Recommendation generators
-  private generateDependencyRecommendations(issues: SecurityIssue[]): string[] {
-    const recommendations: string[] = [];
+  generateDependencyRecommendations(issues) {
+    const recommendations = [];
     
     if (issues.length > 0) {
       recommendations.push('Run `npm audit fix` to automatically fix vulnerabilities');
@@ -648,8 +618,8 @@ export class AutomatedSecurityTestSuite {
     return recommendations;
   }
 
-  private generateSecretScanningRecommendations(issues: SecurityIssue[]): string[] {
-    const recommendations: string[] = [];
+  generateSecretScanningRecommendations(issues) {
+    const recommendations = [];
     
     if (issues.length > 0) {
       recommendations.push('Move all secrets to environment variables');
@@ -662,8 +632,8 @@ export class AutomatedSecurityTestSuite {
     return recommendations;
   }
 
-  private generateSASTRecommendations(issues: SecurityIssue[]): string[] {
-    const recommendations: string[] = [];
+  generateSASTRecommendations(issues) {
+    const recommendations = [];
     
     if (issues.length > 0) {
       recommendations.push('Implement input validation and sanitization');
@@ -676,8 +646,8 @@ export class AutomatedSecurityTestSuite {
     return recommendations;
   }
 
-  private generateLintingRecommendations(issues: SecurityIssue[]): string[] {
-    const recommendations: string[] = [];
+  generateLintingRecommendations(issues) {
+    const recommendations = [];
     
     if (issues.length > 0) {
       recommendations.push('Fix ESLint errors and warnings');
@@ -689,8 +659,8 @@ export class AutomatedSecurityTestSuite {
     return recommendations;
   }
 
-  private generateCustomTestRecommendations(issues: SecurityIssue[]): string[] {
-    const recommendations: string[] = [];
+  generateCustomTestRecommendations(issues) {
+    const recommendations = [];
     
     if (issues.length > 0) {
       recommendations.push('Implement proper Content Security Policy');
@@ -712,4 +682,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   });
 }
 
-export { AutomatedSecurityTestSuite };
+// module exports are handled via named export on the class declaration above

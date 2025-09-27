@@ -45,7 +45,7 @@ export const ComparisonAnalytics: React.FC<ComparisonAnalyticsProps> = ({ entrie
             )}
           </div>
         </div>
-        <p className="text-gray-600">Comparison analytics functionality coming soon...</p>
+  <p className="text-gray-600">Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</p>
       </div>
     </div>
   );

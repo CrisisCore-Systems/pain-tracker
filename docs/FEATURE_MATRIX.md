@@ -1,34 +1,46 @@
-# Feature Maturity Matrix
+
+# Feature Matrix
+
+This document lists product features, owners, priority, target milestone, and estimates. It is the canonical place for UI placeholders to link to feature details.
 
 Status Legend:
 - Implemented: Feature is functionally present and in active use
 - Partial: Core scaffolding or subset implemented; further depth planned
 - Planned: Not yet implemented; design or roadmap acknowledged
 
-| Category | Feature | Status | Representative Source | Notes |
-|----------|---------|--------|-----------------------|-------|
-| Assessment | 7-Step Pain Assessment | Implemented | `src/features/assessment/` | Full flow active |
-| Assessment | Comparison Tracking | Implemented | `src/features/assessment/steps/Comparison*` | Included in step 7 |
-| Analytics | Trend Charts | Implemented | `src/features/analytics/` | Uses Recharts/Chart.js |
-| Analytics | Heatmaps | Partial | `src/features/analytics/heatmap/` | Visualization WIP |
-| Reporting | WorkSafe BC Export (CSV/JSON) | Implemented | `src/features/reports/worksafebc/` | Sample CSV/JSON export available; verify templates before production use |
-| Reporting | WorkSafe BC PDF Export | Partial | `src/features/reports/worksafebc/pdf/` | PDF generator scaffold exists; rendering templates and edge-case formatting pending |
-| Emergency | Emergency Response Panel | Partial | `src/components/accessibility/` | Core panel implemented; automated escalation and external integrations pending |
-| Emergency | Crisis Simulation Dashboard | Implemented | `src/components/accessibility/CrisisTestingDashboard.tsx` | Adaptive testing |
-| Security | Secure Storage Wrapper | Implemented | `src/lib/storage/secureStorage.ts` | Namespaced; selective encryption implemented but review recommended for AES-GCM at scale |
-| Security | Encryption (Selective) | Partial | same as above | Encryption wrapper present; full AES-GCM encrypted IndexedDB layer planned and not yet in production use |
-| Security | SBOM Generation | Implemented | `security/sbom-latest.json` | Regeneratable |
-| Security | Automated Docs Validation | Implemented | `.github/workflows/docs-validate.yml` | CI enforced |
-| Storage | IndexedDB Encrypted Layer | Planned | (future) | Enterprise-grade encrypted layer (AES-GCM) is planned; current storage uses selective encryption wrappers |
-| Treatment | Medication Tracking | Implemented | `src/features/treatments/` | |
-| Treatment | Treatment Outcomes Correlation | Partial | `src/features/analytics/` | Deeper correlation planned |
-| QoL | Sleep / Mood / Activity | Implemented | `src/features/qol/` | |
-| Export | CSV/JSON General Export | Implemented | `src/features/export/` | CSV/JSON working; cross-browser testing recommended for large exports |
-| Export | PDF General Export | Partial | `src/features/export/pdf/` | PDF export scaffolding exists; stable templates and styling pending |
-| Platform | Mobile Optimization | Partial | responsive tweaks ongoing | Mobile UI responsive; performance tuning and touch-UX refinements ongoing |
-| Ops | Health Check Automation | Planned | `scripts/health-check.js` (future) | Categories defined |
-| Ops | Rollback Procedure | Implemented | `docs/DEPLOYMENT.md` | Documented |
-| Governance | Conventional Commits Enforcement | Implemented | Husky / lint tools | |
-| Governance | Dependency Vulnerability Remediation | Partial | root dependencies | Ongoing; several dev-dependency vulnerabilities noted; recommend running `npm audit` and patching critical items before release |
+| Feature | Owner | Priority | Target milestone | Estimate | Status | Representative Source | Notes |
+|---|---|---:|---|---:|---|---|---|
+| 7-Step Pain Assessment | @product-owner | High | v1.0 | 3d | Implemented | `src/features/assessment/` | Full flow active
+| Comparison Tracking | @product-owner | Medium | v1.1 | 2d | Implemented | `src/features/assessment/steps/Comparison*` | Included in step 7
+| Trend Charts | @analytics | High | v1.0 | 3d | Implemented | `src/features/analytics/` | Uses Recharts/Chart.js
+| Heatmaps | @analytics | Medium | v1.2 | 1w | Partial | `src/features/analytics/heatmap/` | Visualization WIP
+| WorkSafe BC Export (CSV/JSON) | @policy | High | v1.1 | 3d | Implemented | `src/features/reports/worksafebc/` | Sample CSV/JSON export available; verify templates
+| WorkSafe BC PDF Export | @policy | Medium | v1.2 | 1w | Partial | `src/features/reports/worksafebc/pdf/` | PDF generator scaffold exists; templates pending
+| Emergency Response Panel | @accessibility | High | v1.0 | 2d | Partial | `src/components/accessibility/` | Core panel implemented; integrations pending
+| Crisis Simulation Dashboard | @accessibility | Medium | v1.2 | 3d | Implemented | `src/components/accessibility/CrisisTestingDashboard.tsx` | Adaptive testing
+| Secure Storage Wrapper | @security | High | v1.1 | 1w | Implemented | `src/lib/storage/secureStorage.ts` | Selective encryption implemented; review AES-GCM layer
+| AES-GCM Encrypted IndexedDB Layer | @security | High | v2.0 | 2w | Planned | (future) | Enterprise-grade encrypted layer planned
+| SBOM Generation | @ops | Medium | v1.0 | 1d | Implemented | `security/sbom-latest.json` | Regeneratable
+| Automated Docs Validation | @docs | Low | v1.0 | 1d | Implemented | `.github/workflows/docs-validate.yml` | CI enforced
+| Medication Tracking | @product-owner | Medium | v1.1 | 3d | Implemented | `src/features/treatments/` | 
+| Treatment Outcomes Correlation | @analytics | Low | v2.0 | 2w | Partial | `src/features/analytics/` | Deeper correlation planned
+| Sleep / Mood / Activity | @product-owner | Medium | v1.0 | 2d | Implemented | `src/features/qol/` | 
+| CSV/JSON General Export | @platform | Medium | v1.0 | 2d | Implemented | `src/features/export/` | Cross-browser testing recommended for large exports
+| PDF General Export | @platform | Low | v1.2 | 1w | Partial | `src/features/export/pdf/` | Stable templates pending
+| Mobile Optimization | @platform | Medium | v2.0 | 5d | Partial | responsive tweaks ongoing | Performance tuning ongoing
+| Health Check Automation | @ops | Low | v2.0 | 3d | Planned | `scripts/health-check.js` | Categories defined
+| Rollback Procedure | @ops | High | v1.0 | 1d | Implemented | `docs/DEPLOYMENT.md` | Documented
+| Conventional Commits Enforcement | @ci | Medium | v1.0 | 1d | Implemented | Husky / lint tools | 
+| Dependency Vulnerability Remediation | @security | High | v1.0 | ongoing | Partial | root dependencies | Run `npm audit` and patch critical items before release
 
-(Adjust paths if they differ in the repository.)
+## How to use
+- Update your feature row when ownership, priority, milestone, or estimate changes.
+- Link UI placeholders to this file using an anchor or direct reference (e.g. `docs/FEATURE_MATRIX.md#worksafe-bc-export-csvjson`).
+- For larger features, link to a companion design doc and include the link in Notes.
+
+## Maintenance
+- Owners are responsible for keeping their rows accurate.
+- Create a GitHub issue and replace the Notes cell with the issue URL when planning starts.
+
+---
+Generated: 2025-09-26
