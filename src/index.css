@@ -486,3 +486,114 @@ button:active {
     border: 1px solid #ccc !important;
   }
 }
+
+/* ===== MOBILE OPTIMIZATIONS ===== */
+
+/* Ensure touch-friendly tap targets (minimum 44x44px per WCAG) */
+@media (max-width: 768px) {
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Optimize font sizes for mobile readability */
+  body {
+    font-size: 16px; /* Prevents zoom on input focus in iOS */
+  }
+
+  /* Better spacing for mobile */
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  /* Prevent horizontal overflow */
+  body,
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Make text more readable on small screens */
+  p {
+    line-height: 1.6;
+  }
+
+  /* Optimize form inputs for mobile */
+  input,
+  select,
+  textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.75rem;
+  }
+
+  /* Better modal/dialog sizing on mobile */
+  .modal-content,
+  [role="dialog"] {
+    max-width: calc(100vw - 2rem);
+    margin: 1rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Slightly reduce font sizes for better content density */
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Safe area insets for notched devices (iPhone X+) */
+@supports (padding: env(safe-area-inset-left)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Ensure header respects safe areas */
+  header {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  /* Bottom navigation/buttons */
+  .mobile-nav,
+  .bottom-actions {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase spacing between interactive elements */
+  button + button,
+  a + a {
+    margin-left: 0.5rem;
+  }
+
+  /* Make hover states instant for touch devices */
+  button,
+  a {
+    transition-duration: 0.1s;
+  }
+
+  /* Remove hover effects on touch devices */
+  .card-hover:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode improvements for mobile */
+@media (prefers-contrast: high) and (max-width: 768px) {
+  button,
+  a,
+  input,
+  select {
+    border-width: 2px;
+  }
+}
