@@ -232,7 +232,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
     }
 
     return insights;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [entries]);
 
   // Helper functions (delegated to analyticsHelpers) — keeps this file small for linting
@@ -320,7 +320,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.error('CSV export failed', err);
     }
   }

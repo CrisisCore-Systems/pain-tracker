@@ -18,7 +18,11 @@ export default function BetaWarning() {
     try {
       secureStorage.set(BETA_LOCALSTORAGE_KEY, 'true');
     } catch {
-      try { localStorage.setItem(BETA_LOCALSTORAGE_KEY, '1'); } catch {}
+      try { 
+        localStorage.setItem(BETA_LOCALSTORAGE_KEY, '1'); 
+      } catch {
+        // Ignore localStorage errors
+      }
     }
     setVisible(false);
   };

@@ -271,9 +271,16 @@ npm run build
 # Preview production build
 npm run preview
 
+# Pre-deployment validation (recommended before deploying)
+npm run deploy:precheck
+
 # Deploy to GitHub Pages
 npm run deploy
 ```
+
+For comprehensive deployment instructions, see:
+- `docs/DEPLOYMENT.md` - Complete deployment guide
+- `docs/DEPLOYMENT_CHECKLIST.md` - Pre-deployment checklist
 
 ## 🧪 **Testing & Quality**
 

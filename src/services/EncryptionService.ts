@@ -81,7 +81,7 @@ export class EndToEndEncryptionService {
     } catch (e) {
       // Swallow logging errors to avoid impacting encryption flows/tests
       // but still avoid throwing from the logger.
-      // eslint-disable-next-line no-console
+       
       console.debug('logSecurityEvent failed', e);
     }
   }

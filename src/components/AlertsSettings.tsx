@@ -15,7 +15,11 @@ export default function AlertsSettings() {
   const [slideIn, setSlideIn] = useState(false);
 
   useEffect(() => {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch {}
+    try { 
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); 
+    } catch {
+      // Ignore localStorage errors
+    }
   }, [settings]);
 
   useEffect(() => {
@@ -31,7 +35,11 @@ export default function AlertsSettings() {
       return () => clearTimeout(t);
     } else {
       setSlideIn(false);
-      try { prevActiveRef.current?.focus(); } catch {}
+      try { 
+        prevActiveRef.current?.focus(); 
+      } catch {
+        // Ignore focus errors
+      }
     }
   }, [open]);
 
