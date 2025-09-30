@@ -53,7 +53,7 @@ const luminance = (hexOrRgb?: string) => {
 		}
 	} catch (err) {
 		// parsing error - return black luminance
-		// eslint-disable-next-line no-console
+		 
 		console.warn('luminance parse error for', hexOrRgb, err);
 		return 0;
 	}

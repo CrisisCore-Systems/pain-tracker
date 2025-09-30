@@ -101,6 +101,9 @@ npm run release:patch  # or minor/major
 #### Using npm scripts
 
 ```bash
+# Pre-deployment validation (recommended before any deployment)
+npm run deploy:precheck
+
 # Check deployment status
 npm run deploy:status
 
@@ -120,6 +123,9 @@ npm run deploy:validate
 #### Using Make commands
 
 ```bash
+# Pre-deployment validation
+make deploy-precheck
+
 # Show deployment status
 make deploy-status
 
@@ -134,6 +140,24 @@ make release-major
 # Health checks
 make deploy-healthcheck
 ```
+
+### Pre-Deployment Checklist
+
+Before deploying to any environment, run the comprehensive pre-deployment validation:
+
+```bash
+npm run deploy:precheck
+```
+
+This script validates:
+- Environment configuration
+- Asset availability (manifest, icons, favicons)
+- Security scanning (no hardcoded secrets)
+- TypeScript compilation
+- Production build success
+- Deployment configuration
+
+See `docs/DEPLOYMENT_CHECKLIST.md` for the complete checklist.
 
 ## 📦 Release Management
 

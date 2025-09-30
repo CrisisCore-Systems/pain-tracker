@@ -63,6 +63,7 @@
     "deploy:healthcheck": "node scripts/deploy.js healthcheck",
     "deploy:logs": "node scripts/deploy.js logs",
     "deploy:validate": "node scripts/deploy.js validate",
+    "deploy:precheck": "node scripts/pre-deployment-validation.js",
     "release:patch": "node scripts/deploy.js release patch",
     "release:minor": "node scripts/deploy.js release minor",
     "release:major": "node scripts/deploy.js release major",

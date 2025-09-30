@@ -8,7 +8,7 @@ export const colorVar = (name: string) => {
       const computed = getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
       if (computed) return computed;
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.warn('colorVar computedStyle failed', err);
     }
   }
@@ -65,7 +65,7 @@ export const colorVarAlpha = (name: string, alpha: number | string) => {
         }
       }
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.warn('colorVarAlpha computedStyle failed', err);
     }
   }
