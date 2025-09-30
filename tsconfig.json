@@ -25,7 +25,7 @@
       "@pain-tracker/*": ["packages/*/src"]
     }
   },
-  "include": ["src/**/*", "packages/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", ".vite", "coverage", "public"],
   "references": [
     { "path": "./packages/design-system/tsconfig.json" },

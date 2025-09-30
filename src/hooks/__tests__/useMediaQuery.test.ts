@@ -65,7 +65,7 @@ describe('useMediaQuery', () => {
   });
 
   it('should update when media query changes', async () => {
-    let eventHandler: ((event: MediaQueryListEvent) => void) | null = null;
+    let eventHandler: ((event: MediaQueryListEvent) => void) | undefined;
     
     matchMediaMock.mockReturnValue({
       matches: false,

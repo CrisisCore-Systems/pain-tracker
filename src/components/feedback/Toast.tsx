@@ -18,11 +18,12 @@ export interface ToastData {
   onDismiss?: () => void;
 }
 
-interface ToastProps extends ToastData {
+interface ToastProps extends Omit<ToastData, 'onDismiss'> {
   onDismiss: (id: string) => void;
+  customOnDismiss?: () => void;
 }
 
-export function Toast({ id, type, title, message, duration = 5000, action, onDismiss: customOnDismiss, onDismiss }: ToastProps) {
+export function Toast({ id, type, title, message, duration = 5000, action, customOnDismiss, onDismiss }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
 
