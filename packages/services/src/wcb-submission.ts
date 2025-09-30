@@ -1,4 +1,4 @@
-import type { WCBReport } from '../../src/types';
+import type { WCBReport } from './types';
 
 export async function submitToWCB(_report: WCBReport, _options?: any) {
   return { success: false, error: 'API key required' };

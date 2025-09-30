@@ -509,7 +509,7 @@ function DashboardWidget({
             canCollapse={true}
           >
             <GoalDashboardWidget
-              onOpenManager={onOpenGoalManager}
+              onOpenManager={onOpenGoalManager || (() => {})}
             />
           </TraumaInformedSection>
         );

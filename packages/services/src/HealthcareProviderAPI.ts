@@ -1,4 +1,4 @@
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 import { FHIRBundle } from './FHIRService';
 
 export class HealthcareProviderAPI {
