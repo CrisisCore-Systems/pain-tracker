@@ -123,7 +123,9 @@ export const securityConfig = {
           if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
             return (import.meta as any).env;
           }
-        } catch (_) {}
+        } catch {
+          // import.meta not available, fall through to process.env
+        }
         if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
         return {};
       })();
@@ -165,7 +167,9 @@ export const securityConfig = {
           if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
             return (import.meta as any).env;
           }
-        } catch (_) {}
+        } catch {
+          // import.meta not available, fall through to process.env
+        }
         if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
         return {};
       })();
@@ -214,7 +218,9 @@ export const securityConfig = {
           if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
             return (import.meta as any).env;
           }
-        } catch (_) {}
+        } catch {
+          // import.meta not available, fall through to process.env
+        }
         if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
         return {};
       })();
@@ -318,7 +324,9 @@ export function validateSecurityConfig(): {
       if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
         return (import.meta as any).env;
       }
-    } catch (_) {}
+    } catch {
+      // import.meta not available, fall through to process.env
+    }
     if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
     return {};
   })();

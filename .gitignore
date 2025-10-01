@@ -30,3 +30,4 @@ security-audit-report.json
 *.sw?
 .env*
 !.env.example
+*.tsbuildinfo
