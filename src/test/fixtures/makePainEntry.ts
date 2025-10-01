@@ -10,12 +10,12 @@ export interface PainEntry {
 function generateId(): string {
   // Prefer Web Crypto's randomUUID when available (Node 18+, modern browsers)
   try {
-    // @ts-ignore - crypto may be ambient in different runtimes
     if (typeof (globalThis as any).crypto?.randomUUID === 'function') {
-      // @ts-ignore
       return (globalThis as any).crypto.randomUUID();
     }
-  } catch {}
+  } catch {
+    // Crypto API not available, fall through to fallback
+  }
 
   // Fallback: timestamp + random
   return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;

@@ -71,10 +71,16 @@ export function useBreakpoint(breakpoint: Breakpoint): boolean {
  * @returns object with boolean flags for common device sizes
  */
 export function useResponsive() {
-  const isMobile = !useBreakpoint('md'); // < 768px
-  const isTablet = useBreakpoint('md') && !useBreakpoint('lg'); // 768px - 1024px
-  const isDesktop = useBreakpoint('lg'); // >= 1024px
-  const isWidescreen = useBreakpoint('xl'); // >= 1280px
+  // Call all hooks unconditionally
+  const isMdUp = useBreakpoint('md'); // >= 768px
+  const isLgUp = useBreakpoint('lg'); // >= 1024px
+  const isXlUp = useBreakpoint('xl'); // >= 1280px
+
+  // Derive boolean flags
+  const isMobile = !isMdUp; // < 768px
+  const isTablet = isMdUp && !isLgUp; // 768px - 1024px
+  const isDesktop = isLgUp; // >= 1024px
+  const isWidescreen = isXlUp; // >= 1280px
 
   return {
     isMobile,

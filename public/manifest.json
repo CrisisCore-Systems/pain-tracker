@@ -23,6 +23,24 @@
       "purpose": "apple-touch-icon"
     }
   ],
+  "screenshots": [
+    {
+      "_comment": "TODO: Add actual screenshot files to public/screenshots/",
+      "src": "icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "540x720",
+      "form_factor": "narrow",
+      "label": "Pain tracking dashboard"
+    },
+    {
+      "_comment": "TODO: Add actual screenshot files to public/screenshots/",
+      "src": "icons/icon-192x192.png",
+      "type": "image/png", 
+      "sizes": "1280x720",
+      "form_factor": "wide",
+      "label": "Analytics overview"
+    }
+  ],
   "start_url": "/pain-tracker/",
   "scope": "/pain-tracker/",
   "display": "standalone",
