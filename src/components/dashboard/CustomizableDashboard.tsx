@@ -508,7 +508,7 @@ function DashboardWidget({
             importance="normal"
             canCollapse={true}
           >
-              <GoalDashboardWidget
+            <GoalDashboardWidget
               onOpenManager={onOpenGoalManager ?? (() => {})}
             />
           </TraumaInformedSection>

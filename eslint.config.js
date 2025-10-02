@@ -9,7 +9,7 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
-  ignores: ['dist/**', 'node_modules/**', '*.config.cjs', '**/*.min.js', 'coverage/**'],
+  ignores: ['dist/**', 'node_modules/**', '*.config.cjs', '**/*.config.cjs', '**/*.min.js', 'coverage/**', '**/dist/**', 'packages/*/dist/**', 'scripts/db/**'],
   },
   {
     files: ['**/*.{ts,tsx,js,jsx,mjs}'],
@@ -65,15 +65,20 @@ export default [
   },
   {
     // Special config for test files
-    files: ['**/*.test.{ts,tsx}'],
+    files: ['**/*.test.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}', '**/test/**/*.{ts,tsx}'],
     languageOptions: {
       globals: {
         describe: 'readonly',
         it: 'readonly',
+        test: 'readonly',
         expect: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
         vi: 'readonly',
+        jest: 'readonly',
+        console: 'readonly',
       }
     }
   }

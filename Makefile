@@ -122,6 +122,10 @@ deploy: ## Deploy to GitHub Pages
 	@echo "🚀 Deploying to GitHub Pages..."
 	npm run deploy
 
+deploy-precheck: ## Run pre-deployment validation
+	@echo "🔍 Running pre-deployment validation..."
+	npm run deploy:precheck
+
 deploy-status: ## Show deployment status
 	@echo "📊 Checking deployment status..."
 	npm run deploy:status

@@ -59,8 +59,7 @@ interface AdvancedMetric {
 }
 
 export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnalyticsDashboardProps) {
-  // Respect beta feature flag: if advanced analytics feature is disabled, render nothing
-  if (!isFeatureEnabled('advancedAnalytics')) return null as any;
+  // Initialize all hooks first (must be called unconditionally)
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
   const [showPredictions, setShowPredictions] = useState(true);
   const [chartType, setChartType] = useState<'line' | 'bar'>('line');
@@ -232,7 +231,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
     }
 
     return insights;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [entries]);
 
   // Helper functions (delegated to analyticsHelpers) — keeps this file small for linting
@@ -320,7 +319,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.error('CSV export failed', err);
     }
   }
@@ -340,6 +339,10 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       default: return 'text-blue-600 bg-blue-50 border-blue-200';
     }
   };
+
+  // Respect beta feature flag: if advanced analytics feature is disabled, render nothing
+  // This check must be after all hooks to follow React rules
+  if (!isFeatureEnabled('advancedAnalytics')) return null;
 
   if (entries.length === 0) {
     return (

@@ -1,5 +1,5 @@
 // Minimal FHIR types and service used by other services
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export interface FHIRResource { resourceType: string; id?: string; }
 export interface FHIRObservation extends FHIRResource { resourceType: 'Observation'; }

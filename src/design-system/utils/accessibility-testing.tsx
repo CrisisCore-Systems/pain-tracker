@@ -168,7 +168,9 @@ const getNodeEnv = () => {
     if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
       return (import.meta as any).env.MODE || (import.meta as any).env.NODE_ENV;
     }
-  } catch (_) {}
+  } catch {
+    // import.meta not available, fall through to process.env
+  }
   if (typeof process !== 'undefined' && (process as any).env) {
     return (process as any).env.NODE_ENV || (process as any).env.MODE;
   }

@@ -6,15 +6,33 @@ const STORAGE_KEY = 'pain-tracker:alerts-log';
 export type AlertRecord = { id: string; time: string; message: string };
 
 export function loadAlerts(): AlertRecord[] {
-  try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : []; } catch { return []; }
+  try { 
+    const raw = localStorage.getItem(STORAGE_KEY); 
+    return raw ? JSON.parse(raw) : []; 
+  } catch { 
+    // localStorage access failed or invalid JSON
+    return []; 
+  }
 }
 
 export function saveAlert(rec: AlertRecord) {
-  try { const curr = loadAlerts(); curr.unshift(rec); localStorage.setItem(STORAGE_KEY, JSON.stringify(curr.slice(0,50))); window.dispatchEvent(new Event('alerts-log-updated')); } catch {}
+  try { 
+    const curr = loadAlerts(); 
+    curr.unshift(rec); 
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(curr.slice(0,50))); 
+    window.dispatchEvent(new Event('alerts-log-updated')); 
+  } catch {
+    // localStorage save failed, alert will not be persisted
+  }
 }
 
 export function clearAlerts() {
-  try { localStorage.removeItem(STORAGE_KEY); window.dispatchEvent(new Event('alerts-log-updated')); } catch {}
+  try { 
+    localStorage.removeItem(STORAGE_KEY); 
+    window.dispatchEvent(new Event('alerts-log-updated')); 
+  } catch {
+    // localStorage clear failed
+  }
 }
 
 export function acknowledgeAlert(id: string) {
@@ -22,7 +40,9 @@ export function acknowledgeAlert(id: string) {
     const curr = loadAlerts().filter(a => a.id !== id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(curr));
     window.dispatchEvent(new Event('alerts-log-updated'));
-  } catch {}
+  } catch {
+    // localStorage update failed
+  }
 }
 
 export default function AlertsActivityLog() {
@@ -126,7 +146,12 @@ export default function AlertsActivityLog() {
                   <div>
                     <button onClick={() => {
                       // restore
-                      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prevAlerts)); window.dispatchEvent(new Event('alerts-log-updated')); } catch {}
+                      try { 
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(prevAlerts)); 
+                        window.dispatchEvent(new Event('alerts-log-updated')); 
+                      } catch {
+                        // Restore failed
+                      }
                       setPrevAlerts(null); setShowUndo(false);
                       if (undoTimer.current) { clearTimeout(undoTimer.current as any); undoTimer.current = null; }
                     }} className="text-sm underline">Undo</button>

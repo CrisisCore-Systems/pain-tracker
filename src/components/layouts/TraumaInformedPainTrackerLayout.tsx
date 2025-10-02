@@ -184,8 +184,9 @@ export function TraumaInformedPainTrackerLayout({
                 size="normal"
                 aria-label="Open accessibility settings"
                 aria-expanded={showSettings}
+                className="min-h-[44px] min-w-[44px]"
               >
-                <Settings className="h-4 w-4" />
+                <Settings className="h-5 w-5" />
               </TouchOptimizedButton>
 
               {/* Help Button */}
@@ -194,27 +195,31 @@ export function TraumaInformedPainTrackerLayout({
                 variant="secondary"
                 size="normal"
                 aria-label="Get help and tutorial"
+                className="min-h-[44px] min-w-[44px]"
               >
-                <HelpCircle className="h-4 w-4" />
+                <HelpCircle className="h-5 w-5" />
               </TouchOptimizedButton>
 
-              <ThemeToggle />
+              <div className="min-h-[44px] min-w-[44px] flex items-center justify-center">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
 
           {/* Mobile Navigation */}
-          <div className="md:hidden pb-4">
-            <nav className="flex space-x-1">
+          <div className="md:hidden pb-2 px-2">
+            <nav className="flex space-x-1 overflow-x-auto">
               {navigationItems.map((item) => (
                 <Button
                   key={item.id}
                   variant={activeView === item.id ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setActiveView(item.id as 'dashboard' | 'analytics' | 'history')}
-                  className="flex-1 flex items-center justify-center space-x-1"
+                  className="flex-1 flex items-center justify-center space-x-1 min-h-[44px] min-w-[44px]"
+                  aria-label={item.description}
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span className="text-xs">{item.label}</span>
+                  <item.icon className="h-5 w-5" />
+                  <span className="text-xs whitespace-nowrap">{item.label}</span>
                 </Button>
               ))}
             </nav>

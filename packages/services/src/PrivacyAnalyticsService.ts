@@ -1,4 +1,4 @@
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export class PrivacyPreservingAnalyticsService {
   async trackPainEntry(_entry: PainEntry) { /* noop */ }

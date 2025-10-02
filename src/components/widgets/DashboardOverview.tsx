@@ -167,7 +167,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                   setLiveMessage('CSV export ready. Download starting.');
                 } catch (err) {
                   setLiveMessage('CSV export failed.');
-                  // eslint-disable-next-line no-console
+                   
                   console.error('Export failed', err);
                 } finally {
                   setIsExporting(false);

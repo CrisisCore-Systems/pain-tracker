@@ -49,7 +49,11 @@ export default function MedicationReminders() {
       return () => clearTimeout(t);
     } else {
       setSlideIn(false);
-      try { prevActiveRef.current?.focus(); } catch {}
+      try { 
+        prevActiveRef.current?.focus(); 
+      } catch {
+        // Focus restoration failed, likely element no longer exists
+      }
     }
   }, [open]);
 

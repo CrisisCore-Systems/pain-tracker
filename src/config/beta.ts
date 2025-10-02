@@ -26,3 +26,4 @@ export const BETA_WARNING = {
 };
 
 export const BETA_LOCALSTORAGE_KEY = 'pain-tracker:beta-dismissed';
+export const BETA_ANALYTICS_CONSENT_KEY = 'pain-tracker:analytics-consent';

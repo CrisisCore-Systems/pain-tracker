@@ -66,7 +66,9 @@ export function usePatternAlerts(entries: {time:string; pain:number}[]) {
         try {
           saveAlert({ id: `${Date.now()}-${Math.random().toString(36).slice(2,7)}`, time: new Date().toISOString(), message });
           window.dispatchEvent(new Event('alerts-log-updated'));
-        } catch {}
+        } catch {
+          // Alert logging failed, continue without saving
+        }
 
         // Only notify if user has explicitly allowed notifications
         if (consent === 'granted' && typeof Notification !== 'undefined') {

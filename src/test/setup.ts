@@ -54,8 +54,8 @@ Object.defineProperty(window, 'matchMedia', {
 try {
   // Try to wire node-canvas into jsdom for higher fidelity canvas support in tests.
   // This is optional at runtime; if `canvas` isn't installed (for contributors), we fall back to a minimal stub.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { createCanvas, CanvasRenderingContext2D } = require('canvas');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { createCanvas } = require('canvas');
 
   // Attach a minimal implementation to document if not present
   if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
@@ -142,7 +142,6 @@ beforeAll(async () => {
       (globalThis as unknown as { __secureStorageEncrypt?: (p:string)=>string }).__secureStorageEncrypt = (plaintext: string) => plaintext;
       (globalThis as unknown as { __secureStorageDecrypt?: (c:string)=>string }).__secureStorageDecrypt = (ciphertext: string) => ciphertext;
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.warn('Test setup: failed to initialize master key', e);
     }
   })();
@@ -170,12 +169,15 @@ beforeAll(async () => {
         '--card': light.card,
         '--card-foreground': light.cardForeground,
       }).forEach(([k, v]) => {
-        try { document.documentElement.style.setProperty(k, v as string); } catch {}
+        try { 
+          document.documentElement.style.setProperty(k, v as string); 
+        } catch {
+          // Ignore errors setting CSS properties
+        }
       });
     }
   } catch (e) {
     // Non-fatal for test runs
-    // eslint-disable-next-line no-console
     console.warn('Test setup: failed to inject theme colors into jsdom', e);
   }
 });

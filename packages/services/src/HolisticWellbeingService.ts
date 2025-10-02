@@ -1,5 +1,5 @@
 // HolisticWellbeingService - migrated minimal implementation
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export class HolisticWellbeingService {
   async calculateWellbeingMetrics(userId: string, painEntries: PainEntry[]) {

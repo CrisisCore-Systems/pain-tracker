@@ -1,13 +1,23 @@
 import { Plus } from "lucide-react";
 import type { PainEntry } from "../../types";
 import { PainEntryForm } from "../pain-tracker/PainEntryForm";
+import { MobilePainEntryForm } from "../mobile/MobilePainEntryForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../design-system";
+import { useResponsive } from "../../hooks/useMediaQuery";
 
 interface PainEntryWidgetProps {
   onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
 }
 
 export function PainEntryWidget({ onSubmit }: PainEntryWidgetProps) {
+  const { isMobile } = useResponsive();
+
+  // On mobile devices, use the mobile-optimized form without the card wrapper
+  if (isMobile) {
+    return <MobilePainEntryForm onSubmit={onSubmit} />;
+  }
+
+  // On desktop, use the standard form with card wrapper
   return (
     <Card className="xl:col-span-1" data-walkthrough="pain-entry-form">
       <CardHeader>
