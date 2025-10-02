@@ -5,6 +5,38 @@
 
 export type ThemeMode = 'light' | 'dark' | 'high-contrast' | 'colorblind';
 
+// Lightweight explicit shape for the small set of theme tokens returned by
+// getThemeColors. Using an explicit interface keeps TypeScript happy when
+// consumers access semantic keys like `warning`, `info`, `success`, etc.
+export interface ThemeColors {
+  background: string;
+  foreground: string;
+  card: string;
+  cardForeground: string;
+  popover: string;
+  popoverForeground: string;
+  primary: string;
+  primaryForeground: string;
+  secondary: string;
+  secondaryForeground: string;
+  muted: string;
+  mutedForeground: string;
+  accent: string;
+  accentForeground: string;
+  destructive: string;
+  destructiveForeground: string;
+  // Semantic helpers used across the app
+  success: string;
+  successForeground: string;
+  warning: string;
+  warningForeground: string;
+  info: string;
+  infoForeground: string;
+  border: string;
+  input: string;
+  ring: string;
+}
+
 export interface ColorScale {
   50: string;
   100: string;
@@ -383,7 +415,7 @@ export const getCSSCustomProperties = (mode: ThemeMode) => {
 };
 
 // Theme context helpers
-export const getThemeColors = (mode: ThemeMode) => {
+export const getThemeColors = (mode: ThemeMode): ThemeColors => {
   if (mode === 'high-contrast') {
     return {
       background: '#000000',

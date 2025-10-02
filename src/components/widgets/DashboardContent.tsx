@@ -43,8 +43,8 @@ export function DashboardContent({ entries, allEntries }: DashboardContentProps)
         <Card><CardContent>Weekly Avg: {formatNumber(Number(metrics.weeklyAvg), 1)}</CardContent></Card>
         <Card>
           <CardContent>
-            Placeholder widget space — to see planned dashboard widgets and their status, visit the project's feature matrix.
-            <a className="ml-1 text-primary underline" href="/docs/FEATURE_MATRIX.md">View Feature Matrix</a>
+            This dashboard area is under active development. For planned widgets, status, and links to issues you can help with, see the project's feature matrix.
+            <a className="ml-1 text-primary underline" href="/docs/FEATURE_MATRIX.md" target="_blank" rel="noopener noreferrer">View Feature Matrix</a>
             <div className="sr-only">Opens docs/FEATURE_MATRIX.md in repository</div>
           </CardContent>
         </Card>

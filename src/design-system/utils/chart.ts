@@ -45,7 +45,7 @@ export function buildRolling7DayChartData(
   const labels = days.map(d => d.label);
   const data = days.map(d => {
     const arr = map.get(d.key) || [];
-    if (arr.length === 0) return null;
+    if (arr.length === 0) return 0;
     const sum = arr.reduce((s, v) => s + v, 0);
     const avg = sum / arr.length;
     return Math.round(avg * 10) / 10;

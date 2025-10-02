@@ -42,8 +42,8 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
           }`}
         >
           <div className="flex items-start space-x-4">
-            <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
-              <Sparkles className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0 bg-primary/10 dark:bg-primary/20">
+              <Sparkles className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="text-left flex-1">
               <h4 className="font-semibold text-foreground mb-2">Start with Sample Data</h4>
@@ -52,10 +52,10 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
                 Perfect for understanding the app before adding your own data.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                <span className="text-xs bg-primary/10 text-primary-foreground px-2 py-1 rounded">
                   Try before you track
                 </span>
-                <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-2 py-1 rounded">
+                <span className="text-xs bg-primary/10 text-primary-foreground px-2 py-1 rounded">
                   See example reports
                 </span>
               </div>
@@ -72,8 +72,8 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
           }`}
         >
           <div className="flex items-start space-x-4">
-            <div className="bg-green-100 dark:bg-green-900/30 rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0">
-              <User className="h-6 w-6 text-green-600 dark:text-green-400" />
+            <div className="rounded-lg w-12 h-12 flex items-center justify-center flex-shrink-0 bg-destructive/10 dark:bg-destructive/20">
+              <User className="h-6 w-6 text-destructive-foreground" />
             </div>
             <div className="text-left flex-1">
               <h4 className="font-semibold text-foreground mb-2">Start Fresh</h4>
@@ -82,10 +82,10 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
                 Best for users ready to start tracking immediately.
               </p>
               <div className="flex flex-wrap gap-2">
-                <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                <span className="text-xs bg-destructive/10 text-destructive-foreground px-2 py-1 rounded">
                   Clean start
                 </span>
-                <span className="text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                <span className="text-xs bg-destructive/10 text-destructive-foreground px-2 py-1 rounded">
                   Real data only
                 </span>
               </div>

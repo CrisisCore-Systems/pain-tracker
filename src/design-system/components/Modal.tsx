@@ -155,11 +155,11 @@ const alertIcons = {
   info: Info,
 };
 
-const alertColors = {
-  success: 'text-green-600',
-  error: 'text-red-600',
-  warning: 'text-yellow-600',
-  info: 'text-blue-600',
+const alertColors: Record<AlertType, React.CSSProperties> = {
+  success: { color: 'rgb(var(--color-pain-none))' },
+  error: { color: 'rgb(var(--color-pain-extreme))' },
+  warning: { color: 'rgb(var(--color-pain-moderate))' },
+  info: { color: 'rgb(var(--color-chart-series-1))' },
 };
 
 export function AlertModal({
@@ -204,7 +204,7 @@ export function AlertModal({
       }
     >
       <div className="flex items-start space-x-4">
-        <div className={cn('flex-shrink-0 mt-0.5', colorClass)}>
+        <div className={cn('flex-shrink-0 mt-0.5')} style={colorClass as any}>
           <Icon className="h-6 w-6" />
         </div>
         <div className="flex-1">

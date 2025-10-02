@@ -18,13 +18,16 @@ import {
   Shield,
   Brain,
   Zap,
-  RotateCcw
+  RotateCcw,
+  Smartphone
 } from 'lucide-react';
+import { useMobileAccessibility } from './MobileAccessibility';
 import type { TraumaInformedPreferences } from './TraumaInformedTypes';
 
 export function AccessibilitySettingsPanel() {
   const { preferences, updatePreferences } = useTraumaInformed();
-  const [activeTab, setActiveTab] = useState<'cognitive' | 'visual' | 'motor' | 'emotional'>('cognitive');
+  const { preferences: mobilePrefs, updatePreferences: updateMobilePrefs } = useMobileAccessibility();
+  const [activeTab, setActiveTab] = useState<'cognitive' | 'visual' | 'motor' | 'emotional' | 'mobile'>('cognitive');
 
   const handlePreferenceChange = (updates: Partial<TraumaInformedPreferences>) => {
     updatePreferences(updates);
@@ -66,6 +69,12 @@ export function AccessibilitySettingsPanel() {
       label: 'Motor & Input',
       icon: <Hand className="w-5 h-5" />,
       description: 'Touch targets and alternative input methods'
+    },
+    {
+      id: 'mobile' as const,
+      label: 'Mobile Features',
+      icon: <Smartphone className="w-5 h-5" />,
+      description: 'Voice input, haptic feedback, and mobile accessibility'
     },
     {
       id: 'emotional' as const,
@@ -150,6 +159,13 @@ export function AccessibilitySettingsPanel() {
             <MotorSettings 
               preferences={preferences} 
               onChange={handlePreferenceChange} 
+            />
+          )}
+          
+          {activeTab === 'mobile' && (
+            <MobileSettings 
+              preferences={mobilePrefs} 
+              onChange={updateMobilePrefs} 
             />
           )}
           
@@ -389,6 +405,79 @@ function EmotionalSafetySettings({
           description="Show gentle reminders to take breaks and practice self-care"
           checked={preferences.showComfortPrompts}
           onChange={(checked) => onChange({ showComfortPrompts: checked })}
+        />
+      </SettingGroup>
+    </div>
+  );
+}
+
+// Mobile Settings Tab
+function MobileSettings({ 
+  preferences, 
+  onChange 
+}: { 
+  preferences: any;
+  onChange: (updates: any) => void;
+}) {
+  return (
+    <div className="space-y-6">
+      <SettingGroup
+        title="Voice & Speech"
+        description="Voice input and text-to-speech features"
+        icon={<Volume2 className="w-5 h-5 text-blue-500" />}
+      >
+        <ToggleSetting
+          label="Voice Input"
+          description="Enable voice commands for navigation and form input"
+          checked={preferences.voiceInput}
+          onChange={(checked) => onChange({ voiceInput: checked })}
+        />
+        
+        <ToggleSetting
+          label="Text-to-Speech"
+          description="Read interface elements aloud when requested"
+          checked={preferences.textToSpeech}
+          onChange={(checked) => onChange({ textToSpeech: checked })}
+        />
+      </SettingGroup>
+
+      <SettingGroup
+        title="Haptic Feedback"
+        description="Vibration feedback for interactions"
+        icon={<Zap className="w-5 h-5 text-purple-500" />}
+      >
+        <ToggleSetting
+          label="Haptic Feedback"
+          description="Vibrate device for button presses and confirmations"
+          checked={preferences.hapticFeedback}
+          onChange={(checked) => onChange({ hapticFeedback: checked })}
+        />
+      </SettingGroup>
+
+      <SettingGroup
+        title="Text & Display"
+        description="Mobile-specific text and display preferences"
+        icon={<Type className="w-5 h-5 text-green-500" />}
+      >
+        <ToggleSetting
+          label="Large Text"
+          description="Increase text size for better mobile readability"
+          checked={preferences.largeText}
+          onChange={(checked) => onChange({ largeText: checked })}
+        />
+        
+        <ToggleSetting
+          label="High Contrast"
+          description="Enhanced contrast for better visibility on mobile screens"
+          checked={preferences.highContrast}
+          onChange={(checked) => onChange({ highContrast: checked })}
+        />
+        
+        <ToggleSetting
+          label="Reduced Motion"
+          description="Minimize animations that may cause motion sickness"
+          checked={preferences.reducedMotion}
+          onChange={(checked) => onChange({ reducedMotion: checked })}
         />
       </SettingGroup>
     </div>

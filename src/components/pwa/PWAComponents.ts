@@ -294,7 +294,9 @@ export function renderPWAComponent(component: PWAComponentConfig, container: HTM
 
   const element = createElement(component);
   if (element) {
-    container.innerHTML = '';
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
     container.appendChild(element);
   }
 }

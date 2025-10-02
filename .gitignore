@@ -30,3 +30,7 @@ security-audit-report.json
 *.sw?
 .env*
 !.env.example
+
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md

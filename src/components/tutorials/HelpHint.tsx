@@ -59,24 +59,27 @@ export function HelpHint({
   const getStyles = () => {
     switch (type) {
       case 'info':
-        return 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950/30 dark:border-blue-800 dark:text-blue-200';
+        // Use semantic primary token so colors follow ThemeProvider / CSS variables
+        return 'bg-primary/10 border-primary text-primary-foreground dark:bg-primary/20 dark:border-primary';
       case 'warning':
-        return 'bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-950/30 dark:border-yellow-800 dark:text-yellow-200';
+        // Use destructive as a semantic warning/danger token
+        return 'bg-destructive/10 border-destructive text-destructive-foreground dark:bg-destructive/20 dark:border-destructive';
       case 'tip':
       default:
-        return 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-200';
+        // Use accent for neutral tips
+        return 'bg-accent/10 border-accent text-accent-foreground dark:bg-accent/20 dark:border-accent';
     }
   };
 
   const getIconStyles = () => {
     switch (type) {
       case 'info':
-        return 'text-blue-600 dark:text-blue-400';
+        return 'text-primary dark:text-primary-foreground';
       case 'warning':
-        return 'text-yellow-600 dark:text-yellow-400';
+        return 'text-destructive dark:text-destructive-foreground';
       case 'tip':
       default:
-        return 'text-emerald-600 dark:text-emerald-400';
+        return 'text-accent dark:text-accent-foreground';
     }
   };
 

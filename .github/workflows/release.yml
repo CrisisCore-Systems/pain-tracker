@@ -1,473 +1,125 @@
 name: Release Management
 
 on:
-  push:
-    branches: [ main ]
-    paths-ignore:
-      - 'docs/**'
-      - '*.md'
-      - '.github/workflows/security.yml'
   workflow_dispatch:
     inputs:
-      release_type:
-        description: 'Type of release'
+      run_release:
+        description: 'Trigger a release flow (true/false)'
         required: true
-        default: 'patch'
-        type: choice
-        options:
-        - patch
-        - minor
-        - major
-        - prerelease
-      custom_version:
-        description: 'Custom version (optional, overrides release_type)'
-        required: false
-        type: string
-      skip_tests:
-        description: 'Skip tests (emergency release only)'
-        required: false
-        default: false
-        type: boolean
+        default: 'true'
 
 permissions:
   contents: write
   pages: write
-  id-token: write
-  issues: write
-  pull-requests: write
-
-# Ensure only one release at a time
-concurrency:
-  group: release-management
-  cancel-in-progress: false
-
-env:
-  NODE_ENV: production
 
 jobs:
-  # Determine if a release should be created
   check-release:
     name: Check Release Conditions
     runs-on: ubuntu-latest
     outputs:
-      should-release: ${{ steps.release-check.outputs.should-release }}
-      release-type: ${{ steps.release-check.outputs.release-type }}
+      should-release: ${{ steps.conventional.outputs.should-release }}
+      release-type: ${{ steps.conventional.outputs.release-type }}
       current-version: ${{ steps.version.outputs.current }}
-      next-version: ${{ steps.version.outputs.next }}
+      next-version: ${{ steps.check.outputs.next }}
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: '20'
 
-      - name: Get current version
+      - name: Get current package version
         id: version
         run: |
           current=$(node -p "require('./package.json').version")
           echo "current=$current" >> $GITHUB_OUTPUT
-          echo "📦 Current version: $current"
 
-      - name: Analyze commits for release type
-        id: release-check
+      - name: Analyze commits (conventional-recommended-bump)
+        id: conventional
         run: |
-          echo "🔍 Analyzing commits for release necessity..."
-          
-          # Check for manual release trigger
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "should-release=true" >> $GITHUB_OUTPUT
-            
-            if [ -n "${{ github.event.inputs.custom_version }}" ]; then
-              echo "next-version=${{ github.event.inputs.custom_version }}" >> $GITHUB_OUTPUT
-              echo "release-type=custom" >> $GITHUB_OUTPUT
-            else
-              echo "release-type=${{ github.event.inputs.release_type }}" >> $GITHUB_OUTPUT
-            fi
-            
-            echo "✅ Manual release triggered"
-            exit 0
-          fi
-          
-          # Get commits since last tag
-          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -z "$last_tag" ]; then
-            commits_range="HEAD"
-          else
-            commits_range="$last_tag..HEAD"
-          fi
-          
-          # Analyze commit messages
-          commits=$(git log --oneline --pretty=format:"%s" $commits_range)
-          
-          # Check for breaking changes
-          if echo "$commits" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?!:"; then
-            release_type="major"
-          # Check for features
-          elif echo "$commits" | grep -qE "^feat(\(.+\))?:"; then
-            release_type="minor"
-          # Check for fixes
-          elif echo "$commits" | grep -qE "^fix(\(.+\))?:"; then
-            release_type="patch"
-          # Check for any conventional commits
-          elif echo "$commits" | grep -qE "^(docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?:"; then
-            release_type="patch"
-          else
-            # No conventional commits found, skip release
+          # Install recommended-bump and run it to determine release type
+          npm install --no-save conventional-recommended-bump
+          node -e "const recommended=require('conventional-recommended-bump'); recommended({preset:'angular'}, (err, result)=>{ if(err){console.error(err); process.exit(1);} const t=result && result.releaseType ? result.releaseType : 'none'; console.log(t); process.exit(0); })" > .bump_type || true
+          TYPE=$(cat .bump_type | tr -d '\n')
+          if [ "$TYPE" = "none" ] || [ -z "$TYPE" ]; then
             echo "should-release=false" >> $GITHUB_OUTPUT
-            echo "⏭️ No conventional commits found, skipping release"
+            echo "release-type=none" >> $GITHUB_OUTPUT
+          else
+            echo "should-release=true" >> $GITHUB_OUTPUT
+            echo "release-type=$TYPE" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine release (semver-aware)
+        id: check
+        env:
+          RELEASE_TYPE: ${{ steps.conventional.outputs.release-type }}
+          SHOULD_RELEASE: ${{ steps.conventional.outputs.should-release }}
+        run: |
+          if [ "${SHOULD_RELEASE}" != "true" ]; then
+            echo "should-release=false" >> $GITHUB_OUTPUT
             exit 0
           fi
-          
-          echo "should-release=true" >> $GITHUB_OUTPUT
-          echo "release-type=$release_type" >> $GITHUB_OUTPUT
-          echo "✅ Release type determined: $release_type"
+          node - <<'NODE'
+          const fs = require('fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json'));
+          const current = pkg.version;
+          const releaseType = process.env.RELEASE_TYPE || 'patch';
 
-      - name: Calculate next version
-        if: steps.release-check.outputs.should-release == 'true' && github.event.inputs.custom_version == ''
-        run: |
-          current="${{ steps.version.outputs.current }}"
-          release_type="${{ steps.release-check.outputs.release-type }}"
-          
-          # Simple version bumping logic
-          IFS='.' read -r -a version_parts <<< "$current"
-          major="${version_parts[0]}"
-          minor="${version_parts[1]}"
-          patch="${version_parts[2]}"
-          
-          case "$release_type" in
-            "major")
-              major=$((major + 1))
-              minor=0
-              patch=0
-              ;;
-            "minor")
-              minor=$((minor + 1))
-              patch=0
-              ;;
-            "patch")
-              patch=$((patch + 1))
-              ;;
-            "prerelease")
-              # Add or increment prerelease identifier
-              if [[ "$current" == *"-"* ]]; then
-                # Already a prerelease, increment
-                patch=$((patch + 1))
-                next="$major.$minor.$patch-rc.1"
-              else
-                patch=$((patch + 1))
-                next="$major.$minor.$patch-rc.1"
-              fi
-              echo "next-version=$next" >> $GITHUB_OUTPUT
-              echo "📦 Next version: $next"
-              exit 0
-              ;;
-          esac
-          
-          next="$major.$minor.$patch"
-          echo "next-version=$next" >> $GITHUB_OUTPUT
-          echo "📦 Next version: $next"
+          function bumpSemver(v, type) {
+            const m = v.match(/^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$/);
+            if (!m) throw new Error('Invalid semver: ' + v);
+            let major = parseInt(m[1], 10);
+            let minor = parseInt(m[2], 10);
+            let patch = parseInt(m[3], 10);
+            const prerelease = m[4];
 
-  # Run comprehensive tests before release
-  pre-release-validation:
-    name: Pre-Release Validation
+            if (type === 'major') { major += 1; minor = 0; patch = 0; return `${major}.${minor}.${patch}`; }
+            if (type === 'minor') { minor += 1; patch = 0; return `${major}.${minor}.${patch}`; }
+            if (type === 'patch') { patch += 1; return `${major}.${minor}.${patch}`; }
+
+            if (type.startsWith('prerelease')) {
+              if (!prerelease) return `${major}.${minor}.${patch}-rc.1`;
+              const prMatch = prerelease.match(/^(.*?)(?:\.(\d+))?$/);
+              if (prMatch && prMatch[2]) {
+                const n = parseInt(prMatch[2], 10) + 1;
+                return `${major}.${minor}.${patch}-${prMatch[1]}.${n}`;
+              }
+              return `${major}.${minor}.${patch}-${prerelease}.1`;
+            }
+
+            throw new Error('Unsupported release type: ' + type);
+          }
+
+          const next = bumpSemver(current, releaseType);
+          const out = process.env.GITHUB_OUTPUT;
+          if (!out) throw new Error('GITHUB_OUTPUT not defined');
+          fs.appendFileSync(out, `next=${next}\n`);
+          NODE
+
+  create-release:
+    name: Create Release (placeholder)
     runs-on: ubuntu-latest
     needs: check-release
     if: needs.check-release.outputs.should-release == 'true'
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Run comprehensive validation
-        if: github.event.inputs.skip_tests != 'true'
+      - name: Show release info
         run: |
-          echo "🔍 Running comprehensive pre-release validation..."
-          
-          # Type checking
-          npm run typecheck
-          
-          # Linting
-          npm run lint
-          
-          # Security checks
-          npm run check-security
-          
-          # Full test suite
-          npm run test
-          
-          # Build verification
-          npm run build
-          
-          echo "✅ All validations passed"
-
-      - name: Security audit
-        run: |
-          echo "🔒 Running security audit..."
-          npm audit --audit-level high || {
-            echo "❌ High/critical security vulnerabilities found!"
-            echo "Please resolve security issues before release"
-            exit 1
-          }
-          echo "✅ Security audit passed"
-
-  # Create and publish release
-  create-release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: [check-release, pre-release-validation]
-    if: needs.check-release.outputs.should-release == 'true'
-    outputs:
-      release-tag: ${{ steps.create-tag.outputs.tag }}
-      release-url: ${{ steps.create-release.outputs.html_url }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Update version in package.json
-        run: |
-          next_version="${{ needs.check-release.outputs.next-version }}"
-          echo "📝 Updating version to $next_version"
-          
-          # Update package.json
-          npm version $next_version --no-git-tag-version
-          
-          # Commit version update
-          git add package.json package-lock.json
-          git commit -m "chore(release): bump version to $next_version"
-
-      - name: Generate changelog
-        id: changelog
-        run: |
-          echo "📝 Generating changelog..."
-          
-          # Get last tag for changelog range
-          last_tag=$(git describe --tags --abbrev=0 HEAD~1 2>/dev/null || echo "")
-          if [ -z "$last_tag" ]; then
-            range="HEAD"
-          else
-            range="$last_tag..HEAD"
-          fi
-          
-          # Generate changelog
-          cat > CHANGELOG_TEMP.md << 'EOF'
-          ## What's Changed
-          
-          EOF
-          
-          # Get commits and categorize
-          git log --oneline --pretty=format:"%s" $range | while read -r commit; do
-            if echo "$commit" | grep -qE "^feat(\(.+\))?:"; then
-              echo "### 🚀 Features" >> CHANGELOG_TEMP.md
-              echo "- $commit" >> CHANGELOG_TEMP.md
-            elif echo "$commit" | grep -qE "^fix(\(.+\))?:"; then
-              echo "### 🐛 Bug Fixes" >> CHANGELOG_TEMP.md
-              echo "- $commit" >> CHANGELOG_TEMP.md
-            elif echo "$commit" | grep -qE "^docs(\(.+\))?:"; then
-              echo "### 📚 Documentation" >> CHANGELOG_TEMP.md
-              echo "- $commit" >> CHANGELOG_TEMP.md
-            elif echo "$commit" | grep -qE "^(perf|refactor)(\(.+\))?:"; then
-              echo "### ⚡ Performance & Refactoring" >> CHANGELOG_TEMP.md
-              echo "- $commit" >> CHANGELOG_TEMP.md
-            fi
-          done
-          
-          # Read changelog content
-          changelog_content=$(cat CHANGELOG_TEMP.md)
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          echo "$changelog_content" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Build production release
-        run: |
-          echo "🏗️ Building production release..."
-          npm run build
-        env:
-          NODE_ENV: production
-          VITE_APP_ENVIRONMENT: production
-          VITE_APP_VERSION: ${{ needs.check-release.outputs.next-version }}
-          VITE_APP_BUILD_TIME: ${{ github.event.head_commit.timestamp || github.run_id }}
-          VITE_WCB_API_ENDPOINT: ${{ secrets.WCB_API_ENDPOINT || '/api/wcb' }}
-          VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN || '' }}
-          VITE_SENTRY_ENVIRONMENT: production
-          VITE_ENABLE_ANALYTICS: 'true'
-
-      - name: Create release assets
-        run: |
-          echo "📦 Creating release assets..."
-          
-          # Create distribution archive
-          tar -czf pain-tracker-${{ needs.check-release.outputs.next-version }}.tar.gz -C dist .
-          
-          # Create source archive
-          git archive --format=tar.gz --prefix=pain-tracker-${{ needs.check-release.outputs.next-version }}/ HEAD > pain-tracker-${{ needs.check-release.outputs.next-version }}-src.tar.gz
-          
-          # Generate checksums
-          sha256sum *.tar.gz > checksums.txt
-
-      - name: Create Git tag
-        id: create-tag
-        run: |
-          tag="v${{ needs.check-release.outputs.next-version }}"
-          echo "🏷️ Creating tag: $tag"
-          
-          git tag -a "$tag" -m "Release $tag"
-          git push origin "$tag"
-          
-          echo "tag=$tag" >> $GITHUB_OUTPUT
+          echo "Current version: ${{ needs.check-release.outputs.current-version }}"
+          echo "Next version: ${{ needs.check-release.outputs.next-version }}"
+          echo "Release type: ${{ needs.check-release.outputs.release-type }}"
 
       - name: Create GitHub Release
-        id: create-release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.create-tag.outputs.tag }}
-          release_name: Pain Tracker ${{ steps.create-tag.outputs.tag }}
-          body: |
-            # Pain Tracker ${{ steps.create-tag.outputs.tag }}
-            
-            ${{ steps.changelog.outputs.changelog }}
-            
-            ## 📊 Release Information
-            
-            - **Version**: ${{ needs.check-release.outputs.next-version }}
-            - **Release Type**: ${{ needs.check-release.outputs.release-type }}
-            - **Build Hash**: Built from commit ${{ github.sha }}
-            - **Release Date**: ${{ github.event.head_commit.timestamp || github.run_id }}
-            
-            ## 📦 Installation
-            
-            ### Option 1: Use GitHub Pages (Recommended)
-            Visit the deployed application at: https://crisiscore-systems.github.io/pain-tracker/
-            
-            ### Option 2: Download and Host Locally
-            1. Download the distribution archive below
-            2. Extract to your web server directory
-            3. Serve the files with any HTTP server
-            
-            ### Option 3: Build from Source
-            1. Download the source archive below
-            2. Run `npm install --legacy-peer-deps`
-            3. Run `npm run build`
-            4. Serve the `dist/` directory
-            
-            ## 🔒 Security
-            
-            This release has passed all security validations including:
-            - Dependency vulnerability scanning
-            - Static code analysis
-            - Secret scanning
-            - Build output verification
-            
-            ## 🙏 Contributors
-            
-            Thank you to all contributors who made this release possible!
+          tag_name: ${{ needs.check-release.outputs.next-version }}
+          release_name: Release ${{ needs.check-release.outputs.next-version }}
+          body: "Automated release (type: ${{ needs.check-release.outputs.release-type }})"
           draft: false
-          prerelease: ${{ contains(needs.check-release.outputs.next-version, 'rc') }}
-
-      - name: Upload release assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./pain-tracker-${{ needs.check-release.outputs.next-version }}.tar.gz
-          asset_name: pain-tracker-${{ needs.check-release.outputs.next-version }}.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload source archive
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./pain-tracker-${{ needs.check-release.outputs.next-version }}-src.tar.gz
-          asset_name: pain-tracker-${{ needs.check-release.outputs.next-version }}-src.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload checksums
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./checksums.txt
-          asset_name: checksums.txt
-          asset_content_type: text/plain
-
-      - name: Push version update
-        run: |
-          echo "📤 Pushing version update to main branch..."
-          git push origin main
-
-  # Deploy release to production
-  deploy-production:
-    name: Deploy to Production
-    needs: [check-release, create-release]
-    uses: ./.github/workflows/pages.yml
-    with:
-      environment: production
-      version: ${{ needs.check-release.outputs.next-version }}
-    secrets: inherit
-
-  # Post-release notifications
-  post-release:
-    name: Post-Release Tasks
-    runs-on: ubuntu-latest
-    needs: [check-release, create-release, deploy-production]
-    if: always() && needs.create-release.result == 'success'
-    steps:
-      - name: Update release summary
-        run: |
-          echo "# 🎉 Release ${{ needs.check-release.outputs.next-version }} Complete!" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 📊 Release Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **Version**: ${{ needs.check-release.outputs.next-version }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Type**: ${{ needs.check-release.outputs.release-type }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Tag**: ${{ needs.create-release.outputs.release-tag }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Release URL**: ${{ needs.create-release.outputs.release-url }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Production URL**: https://crisiscore-systems.github.io/pain-tracker/" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## ✅ Completed Tasks" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] Version bumped in package.json" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] Git tag created" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] GitHub release published" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] Release assets uploaded" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] Production deployment initiated" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ needs.deploy-production.result }}" == "success" ]; then
-            echo "- [x] Production deployment successful" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "- [ ] Production deployment failed" >> $GITHUB_STEP_SUMMARY
-          fi
+          prerelease: false

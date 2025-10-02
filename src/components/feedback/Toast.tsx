@@ -15,14 +15,21 @@ export interface ToastData {
     label: string;
     onClick: () => void;
   };
-  onDismiss?: () => void;
+  onDismiss?: (id?: string) => void;
 }
 
-interface ToastProps extends ToastData {
-  onDismiss: (id: string) => void;
+interface ToastProps {
+  id: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+  title: string;
+  message?: string;
+  duration?: number;
+  action?: { label: string; onClick: () => void };
+  onDismiss: (id?: string) => void;
+  onDismissHook?: (id?: string) => void;
 }
 
-export function Toast({ id, type, title, message, duration = 5000, action, onDismiss: customOnDismiss, onDismiss }: ToastProps) {
+export function Toast({ id, type, title, message, duration = 5000, action, onDismiss: onDismissRequired, onDismissHook }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -30,10 +37,10 @@ export function Toast({ id, type, title, message, duration = 5000, action, onDis
     setIsExiting(true);
     setTimeout(() => {
       setIsVisible(false);
-      onDismiss(id);
-      customOnDismiss?.();
+      onDismissRequired(id);
+      onDismissHook?.(id);
     }, 150); // Animation duration
-  }, [id, onDismiss, customOnDismiss]);
+  }, [id, onDismissRequired, onDismissHook]);
 
   useEffect(() => {
     if (duration > 0) {
@@ -48,13 +55,13 @@ export function Toast({ id, type, title, message, duration = 5000, action, onDis
   const getIcon = () => {
     switch (type) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-600" />;
+        return <CheckCircle className="h-5 w-5 text-destructive-foreground" />;
       case 'error':
-        return <XCircle className="h-5 w-5 text-red-600" />;
+        return <XCircle className="h-5 w-5 text-destructive-foreground" />;
       case 'warning':
-        return <AlertCircle className="h-5 w-5 text-yellow-600" />;
+        return <AlertCircle className="h-5 w-5 text-accent-foreground" />;
       case 'info':
-        return <Info className="h-5 w-5 text-blue-600" />;
+        return <Info className="h-5 w-5 text-primary-foreground" />;
       default:
         return <Info className="h-5 w-5 text-blue-600" />;
     }
@@ -63,13 +70,13 @@ export function Toast({ id, type, title, message, duration = 5000, action, onDis
   const getBackgroundColor = () => {
     switch (type) {
       case 'success':
-        return 'bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800';
+        return 'bg-card border-border text-foreground';
       case 'error':
-        return 'bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800';
+        return 'bg-card border-border text-foreground';
       case 'warning':
-        return 'bg-yellow-50 border-yellow-200 dark:bg-yellow-950/30 dark:border-yellow-800';
+        return 'bg-card border-border text-foreground';
       case 'info':
-        return 'bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800';
+        return 'bg-card border-border text-foreground';
       default:
         return 'bg-card border-border';
     }

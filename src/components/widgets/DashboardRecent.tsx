@@ -3,19 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
 import { Clock, CheckCircle, Activity, AlertTriangle, Zap } from 'lucide-react';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
-
-function getPainLevelColor(pain: number) {
-  if (pain <= 2) return 'text-green-600 bg-green-50';
-  if (pain <= 5) return 'text-yellow-600 bg-yellow-50';
-  if (pain <= 8) return 'text-orange-600 bg-orange-50';
-  return 'text-red-600 bg-red-50';
-}
+import { getPainLevelColor } from '../../design-system/utils/chart-colors';
 
 function getActivityIcon(pain: number) {
-  if (pain <= 2) return <CheckCircle className="h-4 w-4 text-green-600" />;
-  if (pain <= 5) return <Activity className="h-4 w-4 text-yellow-600" />;
-  if (pain <= 8) return <AlertTriangle className="h-4 w-4 text-orange-600" />;
-  return <Zap className="h-4 w-4 text-red-600" />;
+  if (pain <= 2) return <CheckCircle className="h-4 w-4 text-destructive-foreground" />;
+  if (pain <= 5) return <Activity className="h-4 w-4 text-accent-foreground" />;
+  if (pain <= 8) return <AlertTriangle className="h-4 w-4 text-accent-foreground" />;
+  return <Zap className="h-4 w-4 text-destructive-foreground" />;
 }
 
 export function DashboardRecent({ entries }: { entries: PainEntry[] }) {

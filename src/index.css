@@ -32,6 +32,22 @@
   --color-ring: 14 165 233;
 }
 
+/* Explicit chart & pain tokens so charts can read consistent RGB values */
+[data-theme="light"] :root {
+  --chart-series-1: 14 165 233; /* primary */
+  --chart-series-2: 34 197 94;  /* secondary */
+  --chart-series-3: 168 85 247; /* accent */
+  --chart-series-4: 249 115 22; /* orange / severe */
+  --chart-series-5: 234 179 8;  /* yellow / moderate */
+  --chart-series-6: 239 68 68;  /* red / extreme */
+
+  --color-pain-none: 16 185 129;    /* emerald-500 */
+  --color-pain-mild: 110 231 183;   /* emerald-300 */
+  --color-pain-moderate: 234 179 8; /* amber-500 */
+  --color-pain-severe: 249 115 22;  /* orange-500 */
+  --color-pain-extreme: 239 68 68;  /* red-500 */
+}
+
 /* Additional UI tokens */
 :root {
   --color-badge-bg: 255 249 196; /* pale yellow */
@@ -61,6 +77,22 @@
   --color-border: 51 65 85;
   --color-input: 51 65 85;
   --color-ring: 14 165 233;
+}
+
+/* Dark theme overrides for chart & pain tokens when necessary (same hues but tuned for dark background) */
+[data-theme="dark"] {
+  --chart-series-1: 96 165 250;  /* slightly brighter blue */
+  --chart-series-2: 34 197 94;   /* green */
+  --chart-series-3: 180 117 255; /* softer purple */
+  --chart-series-4: 255 159 67;  /* brighter orange */
+  --chart-series-5: 245 158 11;  /* brighter yellow */
+  --chart-series-6: 248 113 113; /* lighter red */
+
+  --color-pain-none: 34 197 94;
+  --color-pain-mild: 110 231 183;
+  --color-pain-moderate: 245 158 11;
+  --color-pain-severe: 255 159 67;
+  --color-pain-extreme: 248 113 113;
 }
 
 /* Updated global styles */
@@ -470,19 +502,261 @@ button:active {
   background: hsl(var(--color-primary));
 }
 
-/* Print styles */
-@media print {
-  .no-print {
-    display: none !important;
-  }
+/* ===== MOBILE OPTIMIZATIONS ===== */
 
-  body {
-    background: white !important;
-    color: black !important;
+/* Safe area insets for devices with notches */
+@supports (padding: max(0px)) {
+  .safe-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
   }
+  
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  .safe-left {
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+  
+  .safe-right {
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
 
-  .card {
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .card-hover:hover {
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  button:hover {
+    transform: none;
+  }
+  
+  /* Ensure minimum touch targets */
+  button, [role="button"], input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Mobile-specific layout utilities */
+.mobile-container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .mobile-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Swipe gesture indicators */
+.swipe-indicator {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipe-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'/%3e%3c/svg%3e") no-repeat center;
+  background-size: contain;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .swipe-indicator::after {
+    display: none;
+  }
+}
+
+/* Pull-to-refresh indicator */
+.pull-refresh-indicator {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: hsl(var(--color-primary));
+  color: hsl(var(--color-primary-foreground));
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.pull-refresh-indicator.refreshing {
+  transform: translateX(-50%) translateY(60px);
+}
+
+.pull-refresh-indicator .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Mobile keyboard optimizations */
+.mobile-keyboard-optimized {
+  /* Prevent zoom on input focus on iOS */
+  -webkit-text-size-adjust: 100%;
+  /* Improve tap targets */
+  touch-action: manipulation;
+}
+
+/* Mobile form improvements */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Better spacing for mobile forms */
+  .mobile-form-spacing > * + * {
+    margin-top: 1rem;
+  }
+}
+
+/* Touch feedback */
+.touch-feedback {
+  transition: background-color 0.1s ease;
+}
+
+.touch-feedback:active {
+  background-color: hsl(var(--color-muted));
+  transform: scale(0.98);
+}
+
+/* Mobile navigation improvements */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: hsl(var(--color-card));
+  border-top: 1px solid hsl(var(--color-border));
+  padding: 0.5rem;
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  z-index: 1000;
+}
+
+.mobile-nav-hidden {
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+/* Mobile modal improvements */
+.mobile-modal {
+  margin: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+}
+
+@media (min-width: 640px) {
+  .mobile-modal {
+    margin: 2rem auto;
+    max-width: 90vw;
+  }
+}
+
+/* Mobile chart optimizations */
+.mobile-chart {
+  touch-action: none; /* Allow touch interactions on charts */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.mobile-chart text {
+  font-size: 12px;
+  fill: hsl(var(--color-foreground));
+}
+
+@media (min-width: 768px) {
+  .mobile-chart text {
+    font-size: 14px;
+  }
+}
+
+/* Mobile accessibility improvements */
+@media (max-width: 768px) {
+  /* Larger focus rings on mobile */
+  :focus-visible {
+    outline: 2px solid hsl(var(--color-primary));
+    outline-offset: 2px;
+  }
+  
+  /* Better screen reader support */
+  .sr-only-mobile {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* Haptic feedback simulation */
+.haptic-feedback {
+  transition: transform 0.1s ease;
+}
+
+.haptic-feedback:active {
+  transform: scale(0.95);
+  transition-duration: 0.05s;
+}
+
+/* Mobile gesture hints */
+.gesture-hint {
+  position: relative;
+}
+
+.gesture-hint::before {
+  content: '← Swipe →';
+  position: absolute;
+  bottom: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: hsl(var(--color-muted-foreground));
+  opacity: 0.7;
+  pointer-events: none;
+  animation: fade-in-out 3s ease-in-out infinite;
+}
+
+@keyframes fade-in-out {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.7; }
+}
+
+@media (min-width: 768px) {
+  .gesture-hint::before {
+    display: none;
   }
 }

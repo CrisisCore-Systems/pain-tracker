@@ -1,73 +1,122 @@
 // Chart color utilities for consistent, accessible chart styling
 import { brand } from '../brand';
 
-// Chart color palettes for different use cases
+// Utility to read an RGB CSS variable (like "14 165 233") and return hex or rgba
+const root = (typeof window !== 'undefined' && window?.document?.documentElement) || null;
+
+function readCssRgbVar(varName: string): string | null {
+  try {
+    if (!root) return null;
+    const val = getComputedStyle(root).getPropertyValue(varName).trim();
+    if (!val) return null;
+    // Expecting `r g b` or `r, g, b` or `#hex`
+    if (val.startsWith('#')) return val;
+    // normalize commas
+    const cleaned = val.replace(/,/g, ' ').replace(/\s+/g, ' ').trim();
+    const parts = cleaned.split(' ');
+    if (parts.length === 3 && parts.every(p => /^\d+$/.test(p))) {
+      const [r, g, b] = parts.map(Number);
+      return `rgb(${r} ${g} ${b})`;
+    }
+    return val || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function rgbStringToRgba(rgbLike: string, alpha = 1): string {
+  if (!rgbLike) return `rgba(0,0,0,${alpha})`;
+  // handle formats like 'rgb(r g b)' or 'r g b' or '#rrggbb'
+  const hexMatch = rgbLike.match(/^#([0-9a-fA-F]{6})$/);
+  if (hexMatch) {
+    const hex = hexMatch[1];
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  const numMatch = rgbLike.match(/(\d+)\s*(?:[, ])\s*(\d+)\s*(?:[, ])\s*(\d+)/) || rgbLike.match(/(\d+)\s+(\d+)\s+(\d+)/);
+  if (numMatch) {
+    const r = Number(numMatch[1]);
+    const g = Number(numMatch[2]);
+    const b = Number(numMatch[3]);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  // fallback: return provided string with alpha using css color-function if possible
+  return `rgba(0,0,0,${alpha})`;
+}
+
+// Resolve a CSS variable name to an rgba string, falling back to a brand value
+function resolveColor(varName: string, fallbackHex?: string, alpha = 1): string {
+  const cssVal = readCssRgbVar(varName);
+  if (cssVal) return rgbStringToRgba(cssVal, alpha);
+  if (fallbackHex) return rgbStringToRgba(fallbackHex, alpha);
+  return `rgba(0,0,0,${alpha})`;
+}
+
+// Chart color palettes derived from CSS variables (ensures theme adaptability)
 export const chartColors = {
-  // Pain level colors (matches brand pain colors)
   pain: {
-    none: brand.colors.pain.none,        // Green
-    mild: brand.colors.pain.mild,        // Light green
-    moderate: brand.colors.pain.moderate, // Yellow
-    severe: brand.colors.pain.severe,    // Orange
-    extreme: brand.colors.pain.extreme   // Red
+    none: resolveColor('--color-pain-none', brand.colors.pain.none),
+    mild: resolveColor('--color-pain-mild', brand.colors.pain.mild),
+    moderate: resolveColor('--color-pain-moderate', brand.colors.pain.moderate),
+    severe: resolveColor('--color-pain-severe', brand.colors.pain.severe),
+    extreme: resolveColor('--color-pain-extreme', brand.colors.pain.extreme)
   },
 
-  // Treatment and medication colors
   treatment: {
-    primary: brand.colors.secondary[500],    // Healing green
-    medication: brand.colors.accent[500],    // Professional purple
-    therapy: brand.colors.primary[600],      // Blue
-    lifestyle: brand.colors.neutral[600]     // Gray
+    primary: resolveColor('--chart-series-2', brand.colors.secondary[500]),
+    medication: resolveColor('--chart-series-3', brand.colors.accent[500]),
+    therapy: resolveColor('--chart-series-1', brand.colors.primary[600]),
+    lifestyle: resolveColor('--chart-series-6', brand.colors.neutral[600])
   },
 
-  // Analytics and trends
   analytics: {
-    trend: brand.colors.primary[500],        // Primary blue
-    average: brand.colors.secondary[500],    // Healing green
-    prediction: brand.colors.accent[400],    // Light purple
-    baseline: brand.colors.neutral[500]      // Neutral gray
+    trend: resolveColor('--chart-series-1', brand.colors.primary[500]),
+    average: resolveColor('--chart-series-2', brand.colors.secondary[500]),
+    prediction: resolveColor('--chart-series-3', brand.colors.accent[400]),
+    baseline: resolveColor('--chart-series-6', brand.colors.neutral[500])
   },
 
-  // Status and alerts
   status: {
-    normal: brand.colors.status.info,        // Blue
-    warning: brand.colors.status.warning,    // Orange
-    critical: brand.colors.status.error,     // Red
-    success: brand.colors.status.success     // Green
+    normal: resolveColor('--chart-series-1', brand.colors.status.info),
+    warning: resolveColor('--chart-series-4', brand.colors.status.warning),
+    critical: resolveColor('--chart-series-6', brand.colors.status.error),
+    success: resolveColor('--chart-series-2', brand.colors.status.success)
   },
 
-  // Multi-series color palette (accessible and distinct)
   series: [
-    brand.colors.primary[500],      // Blue
-    brand.colors.secondary[500],    // Green
-    brand.colors.accent[500],       // Purple
-    brand.colors.pain.severe,       // Orange
-    brand.colors.pain.mild,         // Light green
-    brand.colors.neutral[600],      // Gray
-    brand.colors.primary[700],      // Dark blue
-    brand.colors.secondary[700],    // Dark green
-    brand.colors.accent[700],       // Dark purple
-    brand.colors.pain.extreme       // Red
+    resolveColor('--chart-series-1', brand.colors.primary[500]),
+    resolveColor('--chart-series-2', brand.colors.secondary[500]),
+    resolveColor('--chart-series-3', brand.colors.accent[500]),
+    resolveColor('--chart-series-4', brand.colors.pain.severe),
+    resolveColor('--chart-series-5', brand.colors.pain.moderate),
+    resolveColor('--chart-series-6', brand.colors.neutral[600]),
+    resolveColor('--chart-series-1', brand.colors.primary[700]),
+    resolveColor('--chart-series-2', brand.colors.secondary[700]),
+    resolveColor('--chart-series-3', brand.colors.accent[700]),
+    resolveColor('--chart-series-6', brand.colors.pain.extreme)
   ]
 };
 
 // Helper functions for chart colors
 export const getChartColor = (index: number, palette: keyof typeof chartColors = 'series'): string => {
-  const colorArray = chartColors[palette];
-  if (Array.isArray(colorArray)) {
-    return colorArray[index % colorArray.length];
-  }
+  const colorArray = chartColors[palette] as any;
+  if (Array.isArray(colorArray)) return colorArray[index % colorArray.length];
+  // if palette is an object, return first value
+  if (typeof colorArray === 'object') return Object.values(colorArray)[index % Object.values(colorArray).length] as string;
   return chartColors.series[index % chartColors.series.length];
 };
 
 export const getChartColorAlpha = (index: number, alpha: number = 0.2, palette: keyof typeof chartColors = 'series'): string => {
   const color = getChartColor(index, palette);
-  // Convert hex to rgba
-  const hex = color.replace('#', '');
-  const r = parseInt(hex.substr(0, 2), 16);
-  const g = parseInt(hex.substr(2, 2), 16);
-  const b = parseInt(hex.substr(4, 2), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  // color is already an rgba string from resolveColor
+  if (color.startsWith('rgba')) {
+    // replace alpha
+    return color.replace(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([0-9.]+)\)/, `rgba($1, $2, $3, ${alpha})`);
+  }
+  // fallback: try to parse numeric rgb
+  return rgbStringToRgba(color, alpha);
 };
 
 // Pain level color mapping

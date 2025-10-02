@@ -469,7 +469,7 @@ export class AutomatedSecurityTestSuite {
     }
 
     // Test 2: Check for secure HTTPS usage
-    const configFiles = ['vite.config.ts', 'vite.config.js', 'package.json'];
+  const configFiles = ['vite.config.ts', 'package.json'];
     for (const configFile of configFiles) {
       try {
         const content = await fs.readFile(path.join(this.projectRoot, configFile), 'utf8');

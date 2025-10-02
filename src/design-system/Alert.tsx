@@ -7,20 +7,18 @@ interface Props {
   children: React.ReactNode;
 }
 
-const toneClasses: Record<Tone, string> = {
-  success: 'bg-green-50 border-green-400 text-green-800',
-  error: 'bg-red-50 border-red-400 text-red-800',
-  info: 'bg-blue-50 border-blue-400 text-blue-800',
-  warning: 'bg-yellow-50 border-yellow-400 text-yellow-800',
+// Map tones to runtime CSS styles using tokens defined in src/index.css
+const toneStyles: Record<Tone, React.CSSProperties> = {
+  success: { backgroundColor: 'rgb(var(--color-pain-none))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-foreground))' },
+  error: { backgroundColor: 'rgb(var(--color-pain-extreme))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-primary-foreground))' },
+  info: { backgroundColor: 'rgb(var(--color-chart-series-1) / 0.12)', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-foreground))' },
+  warning: { backgroundColor: 'rgb(var(--color-pain-moderate))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-foreground))' },
 };
 
 export const Alert: React.FC<Props> = ({ tone = 'info', children }) => {
+  const style = toneStyles[tone];
   return (
-    <div
-      role="status"
-      aria-live="polite"
-      className={`p-3 rounded-md border ${toneClasses[tone]} text-sm`}
-    >
+    <div role="status" aria-live="polite" className={`p-3 rounded-md border text-sm`} style={style}>
       {children}
     </div>
   );

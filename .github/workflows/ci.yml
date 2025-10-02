@@ -40,11 +40,10 @@ jobs:
       docs-changed: ${{ steps.changes.outputs.docs }}
       deps-changed: ${{ steps.changes.outputs.deps }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
         with:
           fetch-depth: 0
-      
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
         id: changes
         with:
           filters: |
@@ -79,10 +78,9 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -114,7 +112,7 @@ jobs:
       
       - name: Upload coverage to Codecov (primary version only)
         if: matrix.is-primary
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7
         with:
           fail_ci_if_error: false
           verbose: true
@@ -124,7 +122,7 @@ jobs:
       
       - name: Upload build artifacts (primary version only)
         if: matrix.is-primary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: build-artifacts
           path: dist/
@@ -143,10 +141,9 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -205,22 +202,20 @@ jobs:
           echo "✅ Static security analysis passed"
       
       - name: CodeQL Analysis
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@3599b3baa15b485a2e49ef411a7a4bb2452e7f93
         with:
           languages: javascript-typescript
           queries: security-extended,security-and-quality
-          
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-        
+        uses: github/codeql-action/autobuild@3599b3baa15b485a2e49ef411a7a4bb2452e7f93
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@3599b3baa15b485a2e49ef411a7a4bb2452e7f93
         with:
           category: "/language:javascript-typescript"
       
       - name: Upload security results
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: security-scan-results
           path: |
@@ -237,7 +232,7 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
       
       - name: Check README exists and is valid
         run: |
@@ -271,10 +266,9 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-      
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -314,7 +308,7 @@ jobs:
           echo "✅ Build verification passed"
       
       - name: Upload production build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: production-build
           path: dist/

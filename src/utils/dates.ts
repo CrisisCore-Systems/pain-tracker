@@ -5,7 +5,15 @@ import { parseISO } from 'date-fns';
  * This normalizes a timestamp to the local-day start so comparisons are consistent.
  */
 export function localDayStart(input: string | Date): Date {
-  const d = typeof input === 'string' ? parseISO(input) : input;
+  // Defensive: Only allow ISO date strings or Date objects
+  let d: Date;
+  if (typeof input === 'string') {
+    if (!/^\d{4}-\d{2}-\d{2}T?/.test(input)) return new Date(NaN);
+    d = parseISO(input);
+  } else {
+    d = input;
+  }
+  if (!(d instanceof Date) || Number.isNaN(d.getTime())) return new Date(NaN);
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 

@@ -118,7 +118,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
 
   useEffect(() => {
     const styleSheet = document.createElement("style");
-    styleSheet.innerHTML = `
+    const styles = `
       .walkthrough-highlight {
         position: relative;
         z-index: 45;
@@ -126,6 +126,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
         border-radius: 4px;
       }
     `;
+    styleSheet.appendChild(document.createTextNode(styles));
     document.head.appendChild(styleSheet);
     return () => {
       document.head.removeChild(styleSheet);

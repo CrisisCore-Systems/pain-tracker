@@ -179,5 +179,3 @@ export const DEFAULT_DASHBOARD_LAYOUT: DashboardLayout = {
 };
 
 export const DASHBOARD_LAYOUT_KEY = 'pain-tracker-dashboard-layout';
-
-export default {};

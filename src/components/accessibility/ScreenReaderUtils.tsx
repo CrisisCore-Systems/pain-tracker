@@ -70,7 +70,7 @@ export const useScreenReader = () => {
   return { announce, AnnouncementElement };
 };
 
-// Skip Link Component
+// Skip Link Component with Mobile Optimization
 export const SkipLink: React.FC<{ href: string; children: React.ReactNode }> = ({ 
   href, 
   children 
@@ -78,7 +78,7 @@ export const SkipLink: React.FC<{ href: string; children: React.ReactNode }> = (
   return (
     <a
       href={href}
-      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-blue-600 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-primary text-primary-foreground px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary min-h-[44px] min-w-[44px] flex items-center justify-center"
     >
       {children}
     </a>

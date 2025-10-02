@@ -10,8 +10,15 @@ export type TimeOfDay = 'night' | 'morning' | 'midday' | 'afternoon' | 'evening'
 
 export function getHour(input: Date | string | number): number | null {
   try {
+    // Defensive: Only allow string, number, or Date
+    if (typeof input === 'string') {
+      // Reject obviously unsafe strings (e.g., code injection)
+      if (/[^\dT:\-\.Z ]/.test(input)) return null;
+      // Only accept ISO or timestamp-like strings
+      if (!/^\d{4}-\d{2}-\d{2}T?/.test(input) && !/^\d+$/.test(input)) return null;
+    }
     const d = typeof input === 'string' || typeof input === 'number' ? new Date(input) : input;
-    if (Number.isNaN(d.getTime())) return null;
+    if (!(d instanceof Date) || Number.isNaN(d.getTime())) return null;
     return d.getHours();
   } catch {
     return null;
@@ -19,6 +26,7 @@ export function getHour(input: Date | string | number): number | null {
 }
 
 export function getTimeOfDay(input: Date | string | number): TimeOfDay | null {
+  // Defensive: Only allow safe input
   const h = getHour(input);
   if (h === null) return null;
   if (h >= 0 && h < 5) return 'night';

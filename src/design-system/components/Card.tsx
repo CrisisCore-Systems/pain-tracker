@@ -58,13 +58,17 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       {('severity' in props) && props.severity ? (
         <div
           aria-hidden
-          className={cn(
-            'absolute -top-2 -left-2 h-2 w-12 rounded-b-md',
-            props.severity === 'low' && 'bg-emerald-400',
-            props.severity === 'medium' && 'bg-amber-400',
-            props.severity === 'high' && 'bg-orange-500',
-            props.severity === 'critical' && 'bg-red-600'
-          )}
+          className={cn('absolute -top-2 -left-2 h-2 w-12 rounded-b-md')}
+          style={{
+            backgroundColor:
+              props.severity === 'low'
+                ? 'rgb(var(--color-pain-none))'
+                : props.severity === 'medium'
+                ? 'rgb(var(--color-pain-mild))'
+                : props.severity === 'high'
+                ? 'rgb(var(--color-pain-severe))'
+                : 'rgb(var(--color-pain-extreme))',
+          }}
         />
       ) : null}
       {props.children}

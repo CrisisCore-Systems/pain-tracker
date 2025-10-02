@@ -3,9 +3,70 @@
  * Provides comprehensive encryption for all data at rest and in transit
  */
 
-import CryptoJS from 'crypto-js';
 import { securityService } from './SecurityService';
 import type { PainEntry } from '../types';
+
+// --- Web Crypto helpers ---
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  if (typeof Buffer !== 'undefined') {
+    return Buffer.from(buffer).toString('base64');
+  }
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+
+function base64ToArrayBuffer(base64: string): ArrayBuffer {
+  if (typeof Buffer !== 'undefined') {
+    return Uint8Array.from(Buffer.from(base64, 'base64')).buffer;
+  }
+  const binary = atob(base64);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+function bufferToHex(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function arrayBufferToHex(buffer: ArrayBuffer): string {
+  return bufferToHex(buffer);
+}
+
+function hexToArrayBuffer(hex: string): ArrayBuffer {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < bytes.length; i++) bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+  return bytes.buffer;
+}
+
+function concatUint8(a: Uint8Array, b: Uint8Array): Uint8Array {
+  const out = new Uint8Array(a.length + b.length);
+  out.set(a, 0);
+  out.set(b, a.length);
+  return out;
+}
+
+async function deriveKeyFromPassword(password: string, salt: Uint8Array, iterations = 150000): Promise<ArrayBuffer> {
+  const pwUtf8 = new TextEncoder().encode(password);
+  const baseKey = await crypto.subtle.importKey('raw', pwUtf8, 'PBKDF2', false, ['deriveBits', 'deriveKey']);
+  // Ensure we pass a plain ArrayBuffer (slice to the exact view range)
+  const saltBuf = salt.buffer.slice(salt.byteOffset, salt.byteOffset + salt.byteLength) as ArrayBuffer;
+  const derived = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: saltBuf as ArrayBuffer, iterations, hash: 'SHA-256' },
+    baseKey,
+    { name: 'AES-GCM', length: 256 },
+    true,
+    ['encrypt', 'decrypt']
+  );
+  const raw = await crypto.subtle.exportKey('raw', derived);
+  return raw;
+}
+
 
 // Encryption metadata for tracking
 export interface EncryptionMetadata {
@@ -15,6 +76,8 @@ export interface EncryptionMetadata {
   version: string;
   // Optional salt used when deriving a password-based key for backups
   passwordSalt?: string;
+  // optional IV for AES-GCM (base64)
+  iv?: string;
 }
 
 // Encrypted data wrapper
@@ -50,6 +113,12 @@ export interface EncryptionOptions {
 export class EndToEndEncryptionService {
   private keyManager: KeyManager;
   private defaultKeyId = 'pain-tracker-master';
+  // Only keys in this whitelist are allowed to be persisted (wrapped) to storage.
+  // Other keys will remain in-memory only. Update this list when adding new persisted keys.
+  private readonly SENSITIVITY_WHITELIST = new Set<string>([
+    'pain-tracker-master',
+    // backup-* keys (password-protected backups) are allowed
+  ]);
   // In-memory fallback cache for test/jsdom environments where secure storage may fail
   private inMemoryKeyCache = new Map<string, { key: string; created: string }>();
 
@@ -81,7 +150,6 @@ export class EndToEndEncryptionService {
     } catch (e) {
       // Swallow logging errors to avoid impacting encryption flows/tests
       // but still avoid throwing from the logger.
-      // eslint-disable-next-line no-console
       console.debug('logSecurityEvent failed', e);
     }
   }
@@ -114,9 +182,25 @@ export class EndToEndEncryptionService {
   private createKeyManager(): KeyManager {
     return {
       generateKey: async (keyId: string): Promise<string> => {
-        const key = CryptoJS.lib.WordArray.random(32).toString(); // 256-bit key
-        await this.keyManager.storeKey(keyId, key);
-        
+        // Generate a new AES-GCM key and a separate HMAC key, then wrap them for persistent storage.
+        const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+        const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+
+        // Wrap both keys using the SecurityService (which uses the master key)
+        let payload: string;
+        try {
+          const encWrapped = await securityService.wrapKey(encKey);
+          const hmacWrapped = await securityService.wrapKey(hmacKey);
+          payload = JSON.stringify({ encWrapped, hmacWrapped, created: new Date().toISOString() });
+          await this.keyManager.storeKey(keyId, payload);
+        } catch (e) {
+          // Fallback: export raw key material and store as base64 (will be encrypted at rest by secure storage)
+          const encRaw = await crypto.subtle.exportKey('raw', encKey);
+          const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
+          payload = JSON.stringify({ enc: arrayBufferToBase64(encRaw), hmac: arrayBufferToBase64(hmacRaw), created: new Date().toISOString() });
+          await this.keyManager.storeKey(keyId, payload);
+        }
+
         this.logSecurityEvent({
           type: 'encryption',
           level: 'info',
@@ -124,19 +208,58 @@ export class EndToEndEncryptionService {
           timestamp: new Date()
         });
 
-        return key;
+        return payload;
       },
 
       storeKey: async (keyId: string, key: string): Promise<void> => {
+        // If keyId is not whitelisted, keep in-memory only
+        if (!this.SENSITIVITY_WHITELIST.has(keyId) && !keyId.startsWith('backup-')) {
+          this.inMemoryKeyCache.set(keyId, { key, created: new Date().toISOString() });
+          return;
+        }
+
         try {
           const storage = securityService.createSecureStorage();
+
+          // If caller passed a wrapped payload already, store as-is.
+          try {
+            const parsed = JSON.parse(key) as any;
+            if (parsed && (parsed.encWrapped || parsed.hmacWrapped || parsed.wrapped)) {
+              await storage.store(`key:${keyId}`, { ...parsed, created: new Date().toISOString() }, true);
+              this.inMemoryKeyCache.set(keyId, { key: JSON.stringify({ ...parsed, created: new Date().toISOString() }), created: new Date().toISOString() });
+              return;
+            }
+            // If caller provided raw enc/hmac base64 material, import and wrap it before storing
+            if (parsed && (parsed.enc || parsed.hmac)) {
+              // Import provided raw keys and wrap using securityService
+              let encWrapped: string | undefined;
+              let hmacWrapped: string | undefined;
+              if (parsed.enc) {
+                const encRaw = base64ToArrayBuffer(parsed.enc);
+                const encCrypto = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, true, ['encrypt', 'decrypt']);
+                encWrapped = await securityService.wrapKey(encCrypto);
+              }
+              if (parsed.hmac) {
+                const hmacRaw = base64ToArrayBuffer(parsed.hmac);
+                const hmacCrypto = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+                hmacWrapped = await securityService.wrapKey(hmacCrypto);
+              }
+              const toStore = { encWrapped, hmacWrapped, created: new Date().toISOString() };
+              await storage.store(`key:${keyId}`, toStore, true);
+              this.inMemoryKeyCache.set(keyId, { key: JSON.stringify(toStore), created: new Date().toISOString() });
+              return;
+            }
+          } catch (parseErr) {
+            // fallthrough - treat as opaque and store via secure storage
+          }
+
+          // Default: store the provided key string as-is (secure storage encrypts it at rest)
           await storage.store(`key:${keyId}`, { key, created: new Date().toISOString() }, true);
-  } catch {
+        } catch (e) {
           // Fallback to in-memory store (primarily for tests)
-            this.inMemoryKeyCache.set(keyId, { key, created: new Date().toISOString() });
+          this.inMemoryKeyCache.set(keyId, { key, created: new Date().toISOString() });
         }
-        // Always populate in-memory cache as well so callers can rely on fast access
-        // and tests that assert fallback behavior will observe the key.
+        // Always populate in-memory cache as well so callers can rely on fast access and for rotation flows
         try {
           this.inMemoryKeyCache.set(keyId, { key, created: new Date().toISOString() });
         } catch {
@@ -147,8 +270,23 @@ export class EndToEndEncryptionService {
       retrieveKey: async (keyId: string): Promise<string | null> => {
         try {
           const storage = securityService.createSecureStorage();
-          const stored = await storage.retrieve(`key:${keyId}`, true) as { key: string; created: string } | null;
-          if (stored?.key) return stored.key;
+          const stored = await storage.retrieve(`key:${keyId}`, true) as any | null;
+          if (stored) {
+            // If stored contains wrapped blobs, return the wrapped JSON so callers can unwrap via SecurityService
+            try {
+              if (stored.encWrapped || stored.hmacWrapped || stored.wrapped) {
+                const payload = stored.encWrapped || stored.wrapped;
+                const out = payload ? JSON.stringify({ encWrapped: stored.encWrapped, hmacWrapped: stored.hmacWrapped, created: stored.created }) : JSON.stringify(stored);
+                // populate in-memory cache for fast access
+                this.inMemoryKeyCache.set(keyId, { key: out, created: stored.created || new Date().toISOString() });
+                return out;
+              }
+              if (stored.key) {
+                this.inMemoryKeyCache.set(keyId, { key: stored.key, created: stored.created || new Date().toISOString() });
+                return stored.key;
+              }
+            } catch {}
+          }
           const mem = this.inMemoryKeyCache.get(keyId);
           return mem?.key || null;
         } catch (error) {
@@ -165,23 +303,52 @@ export class EndToEndEncryptionService {
       },
 
       rotateKey: async (keyId: string): Promise<string> => {
+        // Retrieve old key before rotation
         const oldKey = await this.keyManager.retrieveKey(keyId);
-        const newKey = await this.keyManager.generateKey(keyId);
         
+        // Store old key as archived if it exists
         if (oldKey) {
-          // Archive old key for potential data recovery
-          const storage = securityService.createSecureStorage();
-          await storage.store(`archived-key:${keyId}:${Date.now()}`, { key: oldKey }, true);
+          try {
+            const storage = securityService.createSecureStorage();
+            await storage.store(`archived-key:${keyId}:${Date.now()}`, { key: oldKey, archived: new Date().toISOString() }, true);
+          } catch (e) {
+            securityService.logSecurityEvent({
+              type: 'encryption',
+              level: 'warning',
+              message: `Failed to archive old key during rotation: ${keyId}`,
+              metadata: { error: e instanceof Error ? e.message : 'Unknown error' },
+              timestamp: new Date()
+            });
+          }
         }
 
-          this.logSecurityEvent({
+        // Generate new keys (extractable to allow fallback export if wrap fails)
+        const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+        const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+
+        let payload: string;
+        try {
+          // Prefer wrapping via SecurityService
+          const encWrapped = await securityService.wrapKey(encKey);
+          const hmacWrapped = await securityService.wrapKey(hmacKey);
+          payload = JSON.stringify({ encWrapped, hmacWrapped, created: new Date().toISOString() });
+          await this.keyManager.storeKey(keyId, payload);
+        } catch (e) {
+          // Fallback: export raw key material and store via secure storage (encrypted at rest)
+          const encRaw = await crypto.subtle.exportKey('raw', encKey);
+          const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
+          payload = JSON.stringify({ enc: arrayBufferToBase64(encRaw), hmac: arrayBufferToBase64(hmacRaw), created: new Date().toISOString() });
+          await this.keyManager.storeKey(keyId, payload);
+        }
+
+        this.logSecurityEvent({
           type: 'encryption',
           level: 'info',
           message: `Key rotated: ${keyId}`,
           timestamp: new Date()
         });
 
-        return newKey;
+        return payload;
       },
 
       deleteKey: async (keyId: string): Promise<void> => {
@@ -229,8 +396,8 @@ export class EndToEndEncryptionService {
       const useCompression = options.useCompression ?? true;
       const addIntegrityCheck = options.addIntegrityCheck ?? true;
 
-      // Get encryption key
-      let key = await this.keyManager.retrieveKey(keyId);
+  // Get encryption key (stored as base64 raw key)
+  let key = await this.keyManager.retrieveKey(keyId);
       if (!key) {
         // Auto-generate missing key (helps test environment or first-run scenarios)
         securityService.logSecurityEvent({
@@ -242,8 +409,8 @@ export class EndToEndEncryptionService {
         key = await this.keyManager.generateKey(keyId);
       }
 
-      // Serialize data
-      let serialized = JSON.stringify(data);
+  // Serialize data
+  let serialized = JSON.stringify(data);
 
       // Optional compression
       if (useCompression && serialized.length > 1000) {
@@ -251,21 +418,67 @@ export class EndToEndEncryptionService {
         serialized = this.compressString(serialized);
       }
 
-      // Encrypt data
-      const encrypted = CryptoJS.AES.encrypt(serialized, key).toString();
+      // Resolve key material: accept wrapped payloads (encWrapped/hmacWrapped) or raw base64 fields
+      let encCryptoKey: CryptoKey | null = null;
+      let hmacCryptoKey: CryptoKey | null = null;
+      try {
+        const parsed = JSON.parse(key as string) as any;
+        if (parsed) {
+          if (parsed.encWrapped || parsed.wrapped) {
+            const wrapped = parsed.encWrapped || parsed.wrapped;
+            encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+          }
+          if (parsed.hmacWrapped) {
+            hmacCryptoKey = await securityService.unwrapKey(parsed.hmacWrapped, { name: 'HMAC', hash: { name: 'SHA-256' } } as any, ['sign', 'verify']);
+          }
+          if (!encCryptoKey && parsed.enc) {
+            try {
+              const encRaw = base64ToArrayBuffer(parsed.enc);
+              encCryptoKey = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+            } catch {}
+          }
+          if (!hmacCryptoKey && parsed.hmac) {
+            try {
+              const hmacRaw = base64ToArrayBuffer(parsed.hmac);
+              hmacCryptoKey = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+            } catch {}
+          }
+        }
+      } catch {
+        // Not JSON — try to import as raw base64 AES key
+        try {
+          const raw = base64ToArrayBuffer(key as string);
+          encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+        } catch {}
+      }
 
-      // Calculate checksum for integrity
+      if (!encCryptoKey) throw new Error('Encryption key material not available');
+
+      // AES-GCM IV (12 bytes recommended)
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+
+      const enc = new TextEncoder().encode(serialized);
+      const cipherBuffer = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, encCryptoKey, enc);
+      const encrypted = arrayBufferToBase64(cipherBuffer);
+
+      // Compute HMAC over ciphertext if hmac key present; store HMAC as base64
       let checksum = '';
-      if (addIntegrityCheck) {
-        checksum = CryptoJS.SHA256(serialized + key).toString();
+      if (addIntegrityCheck && hmacCryptoKey) {
+        const sig = await crypto.subtle.sign('HMAC', hmacCryptoKey, base64ToArrayBuffer(encrypted));
+        checksum = arrayBufferToBase64(sig);
+      } else if (addIntegrityCheck) {
+        // fallback to SHA-256 digest (base64)
+        const digest = await crypto.subtle.digest('SHA-256', base64ToArrayBuffer(encrypted));
+        checksum = arrayBufferToBase64(digest);
       }
 
       const metadata: EncryptionMetadata = {
         algorithm,
         keyId,
         timestamp: new Date(),
-        version: '1.0.0'
-      };
+        version: '2.0.0',
+        iv: arrayBufferToBase64(iv.buffer)
+      } as EncryptionMetadata;
 
       this.logSecurityEvent({
         type: 'encryption',
@@ -305,24 +518,92 @@ export class EndToEndEncryptionService {
     try {
       const { data, metadata, checksum } = encryptedData;
       const { keyId, algorithm } = metadata;
-
       // Get decryption key
       const key = await this.keyManager.retrieveKey(keyId);
       if (!key) {
         throw new Error(`Decryption key not found: ${keyId}`);
       }
 
-      // Decrypt data
-      const decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
-      if (!decrypted) {
+      // Support legacy CryptoJS ciphertexts for backward compatibility
+      if (metadata.version && metadata.version.startsWith('1.')) {
+        // Lazy-load CryptoJS only when handling legacy data
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const CryptoJS = require('crypto-js');
+        const decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
+        if (!decrypted) throw new Error('Decryption failed - invalid key or corrupted data (legacy)');
+        if (checksum) {
+          const calculatedChecksum = CryptoJS.SHA256(decrypted + key).toString();
+          if (calculatedChecksum !== checksum) throw new Error('Data integrity check failed - data may be corrupted (legacy)');
+        }
+        let final = decrypted;
+        if (decrypted.startsWith('COMPRESSED:')) final = this.decompressString(decrypted);
+        this.logSecurityEvent({ type: 'encryption', level: 'info', message: 'Data decrypted (legacy) successfully', metadata: { keyId, algorithm, integrityVerified: !!checksum }, timestamp: new Date() });
+        return JSON.parse(final);
+      }
+
+      // New branch: AES-GCM via SubtleCrypto
+      // Resolve key payload: support wrapped keys (encWrapped/hmacWrapped), raw enc/hmac base64, or bare base64 AES key
+      let encCryptoKey: CryptoKey | null = null;
+      let hmacCryptoKey: CryptoKey | null = null;
+      try {
+        const parsed = JSON.parse(key as string) as any;
+        if (parsed) {
+          if (parsed.encWrapped || parsed.wrapped) {
+            const wrapped = parsed.encWrapped || parsed.wrapped;
+            encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+          }
+          if (parsed.hmacWrapped) {
+            hmacCryptoKey = await securityService.unwrapKey(parsed.hmacWrapped, { name: 'HMAC', hash: { name: 'SHA-256' } } as any, ['sign', 'verify']);
+          }
+          if (!encCryptoKey && parsed.enc) {
+            try {
+              const encRaw = base64ToArrayBuffer(parsed.enc);
+              encCryptoKey = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, false, ['decrypt']);
+            } catch {}
+          }
+          if (!hmacCryptoKey && parsed.hmac) {
+            try {
+              const hmacRaw = base64ToArrayBuffer(parsed.hmac);
+              hmacCryptoKey = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']);
+            } catch {}
+          }
+        }
+      } catch {
+        // Not JSON -> try bare base64 AES key
+        try {
+          const raw = base64ToArrayBuffer(key as string);
+          encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['decrypt']);
+        } catch {}
+      }
+
+      if (!encCryptoKey) throw new Error('Decryption key material not available');
+
+      // Read IV from metadata
+      const ivBase64 = metadata.iv;
+      if (!ivBase64) throw new Error('Missing IV in metadata');
+      const iv = new Uint8Array(base64ToArrayBuffer(ivBase64));
+
+      // Decode ciphertext
+      const cipherBuffer = base64ToArrayBuffer(data);
+      let decryptedBuffer: ArrayBuffer;
+      try {
+        decryptedBuffer = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, encCryptoKey, cipherBuffer);
+      } catch {
         throw new Error('Decryption failed - invalid key or corrupted data');
       }
 
-      // Verify integrity if checksum exists
+      const decrypted = new TextDecoder().decode(new Uint8Array(decryptedBuffer));
+
+      // Verify integrity if checksum exists (expect base64 HMAC or base64 digest)
       if (checksum) {
-        const calculatedChecksum = CryptoJS.SHA256(decrypted + key).toString();
-        if (calculatedChecksum !== checksum) {
-          throw new Error('Data integrity check failed - data may be corrupted');
+        if (hmacCryptoKey) {
+          const valid = await crypto.subtle.verify('HMAC', hmacCryptoKey, base64ToArrayBuffer(checksum), base64ToArrayBuffer(data));
+          if (!valid) throw new Error('Data integrity check failed - HMAC mismatch');
+        } else {
+          // fallback to digest comparison
+          const digest = await crypto.subtle.digest('SHA-256', base64ToArrayBuffer(data));
+          const expected = arrayBufferToBase64(digest);
+          if (expected !== checksum) throw new Error('Data integrity check failed - digest mismatch');
         }
       }
 
@@ -398,25 +679,22 @@ export class EndToEndEncryptionService {
     const keyId = password ? `backup-${Date.now()}` : this.defaultKeyId;
     let passwordSalt: string | undefined;
     if (password) {
-      // Generate key from password with salt and persist salt for restore
-      const salt = CryptoJS.lib.WordArray.random(16);
-      passwordSalt = salt.toString(CryptoJS.enc.Hex);
-      // Allow iteration reduction in test environment to avoid long-running KDF cost
+      // Generate salt and derive key using PBKDF2 via SubtleCrypto
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      passwordSalt = arrayBufferToHex(salt.buffer);
       const iterationOverride = (typeof process !== 'undefined' && process.env && (process.env.VITEST || process.env.NODE_ENV === 'test'))
-        ? 500 // faster for unit tests
-        : 10000; // production / dev default
-      const derivedKey = CryptoJS.PBKDF2(password, salt, {
-        keySize: 8, // 256 bits
-        iterations: iterationOverride
-      }).toString();
-      await this.keyManager.storeKey(keyId, derivedKey);
+        ? 500
+        : 10000;
+      const derivedRaw = await deriveKeyFromPassword(password, salt, iterationOverride);
+      const derivedKeyBase64 = arrayBufferToBase64(derivedRaw);
+      await this.keyManager.storeKey(keyId, derivedKeyBase64);
     }
 
     const encrypted = await this.encrypt(data, { keyId });
     if (password && passwordSalt) {
       (encrypted.metadata as EncryptionMetadata).passwordSalt = passwordSalt;
     }
-    
+
     this.logSecurityEvent({
       type: 'encryption',
       level: 'info',
@@ -437,18 +715,14 @@ export class EndToEndEncryptionService {
       
       if (password) {
         const saltHex = (encrypted.metadata as EncryptionMetadata).passwordSalt;
-        if (!saltHex) {
-          throw new Error('Backup missing password salt metadata');
-        }
-        const salt = CryptoJS.enc.Hex.parse(saltHex);
+        if (!saltHex) throw new Error('Backup missing password salt metadata');
+        const salt = hexToArrayBuffer(saltHex);
         const iterationOverride = (typeof process !== 'undefined' && process.env && (process.env.VITEST || process.env.NODE_ENV === 'test'))
           ? 500
           : 10000;
-        const derivedKey = CryptoJS.PBKDF2(password, salt, {
-          keySize: 8,
-          iterations: iterationOverride
-        }).toString();
-        await this.keyManager.storeKey(encrypted.metadata.keyId, derivedKey);
+        const derivedRaw = await deriveKeyFromPassword(password, new Uint8Array(salt), iterationOverride);
+        const derivedKeyBase64 = arrayBufferToBase64(derivedRaw);
+        await this.keyManager.storeKey(encrypted.metadata.keyId, derivedKeyBase64);
       }
 
       const decrypted = await this.decrypt(encrypted);

@@ -39,6 +39,8 @@ Additional notes
 - Differential privacy: plan to replace uniform noise with Laplace mechanism and track epsilon budget. Current implementation is a placeholder and must be reviewed before production.
   - Current repo artifacts: `src/services/EmpathyMetricsCollector.ts` contains `METRIC_SENSITIVITY` map (conservative defaults) and the Laplace noise implementation.
   - Tests: `src/services/__tests__/sensitivity-noise.test.ts` demonstrates that higher sensitivity increases average noise magnitude; reviewers should inspect and accept the sensitivity values.
+  - Policy: see `docs/DP_POLICY.md` for recommended sensitivities and epsilon budgets (draft).
+  - HIPAA: a minimal `src/services/HIPAACompliance.ts` stub exists for PHI detection; security must review and expand detectors and logging behavior.
 - Consent: collector enforces consentRequired flag from SecurityService; UI must provide explicit consent flows and allow revocation.
 
 Security sign-off required:

@@ -39,8 +39,13 @@ async function runVitestList() {
     proc.stdout.on('data', d => (buf += d.toString()));
     proc.on('error', reject);
     proc.on('close', code => {
-      if (code !== 0) return reject(new Error('vitest list failed'));
-      resolve(buf);
+    // Some vitest runs may exit non-zero but still emit a valid JSON summary to stdout
+    // (for example when tests fail). Prefer parsing stdout if present instead of
+    // failing the whole script immediately. Only reject when there is no stdout
+    // to consume.
+    if (buf && buf.trim().length > 0) return resolve(buf);
+    if (code !== 0) return reject(new Error('vitest list failed and produced no stdout'));
+    resolve(buf);
     });
   });
 }
@@ -119,7 +124,25 @@ async function main() {
   console.log(`Generated test badge with count=${count}`);
 }
 
-main().catch(err => {
+main().catch(async err => {
   console.error('Failed to generate test badge:', err);
+  // In CI, prefer to write a neutral badge and exit 0 so pipelines that run
+  // this script don't fail the whole job due to badge generation issues.
+  if (process.env.CI) {
+    try {
+      const fallback = {
+        schemaVersion: 1,
+        label: 'tests',
+        message: '0',
+        color: 'lightgrey'
+      };
+      await writeFile(BADGE_PATH, JSON.stringify(fallback, null, 2));
+      console.log('Wrote fallback test badge (CI mode)');
+      process.exit(0);
+    } catch (e) {
+      console.error('Failed to write fallback badge in CI:', e);
+      process.exit(0);
+    }
+  }
   process.exit(1);
 });

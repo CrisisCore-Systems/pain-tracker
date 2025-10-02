@@ -9,6 +9,7 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import shellEscape from 'shell-escape';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,10 +49,12 @@ const log = (message, level = 'info') => {
 
 const runCommand = (command, options = {}) => {
   try {
-    return execSync(command, { 
-      encoding: 'utf8', 
+    // Sanitize the command using shell-escape
+    const sanitizedCommand = shellEscape(command.split(' '));
+    return execSync(sanitizedCommand, {
+      encoding: 'utf8',
       stdio: options.silent ? 'pipe' : 'inherit',
-      ...options 
+      ...options
     });
   } catch (error) {
     if (!options.allowFailure) {
@@ -78,14 +81,16 @@ const getCurrentVersion = () => {
 
 const getLatestTag = () => {
   try {
-    return runCommand('git describe --tags --abbrev=0', { silent: true }).trim();
+    const command = 'git describe --tags --abbrev=0';
+    return runCommand(command, { silent: true }).trim();
   } catch {
     return null;
   }
 };
 
 const checkGitStatus = () => {
-  const status = runCommand('git status --porcelain', { silent: true });
+  const command = 'git status --porcelain';
+  const status = runCommand(command, { silent: true });
   return status.trim() === '';
 };
 

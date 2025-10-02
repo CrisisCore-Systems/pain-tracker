@@ -20,6 +20,9 @@ import {
   useTraumaInformed,
   AccessibilitySettingsPanel
 } from "../accessibility";
+import { useSwipeGesture } from '../../hooks/useSwipeGesture';
+import { DashboardPullToRefresh } from '../ui/PullToRefresh';
+import { VoiceInput, TextToSpeechButton, GestureHint, useMobileAccessibility, HighContrastToggle } from '../accessibility/MobileAccessibility';
 
 interface TraumaInformedPainTrackerLayoutProps {
   entries: PainEntry[];
@@ -35,29 +38,70 @@ export function TraumaInformedPainTrackerLayout({
   onStartWalkthrough
 }: TraumaInformedPainTrackerLayoutProps) {
   const { preferences } = useTraumaInformed();
+  const { preferences: mobilePrefs, updatePreferences: updateMobilePrefs } = useMobileAccessibility();
   const [showSettings, setShowSettings] = React.useState(false);
   const [activeView, setActiveView] = React.useState<'dashboard' | 'analytics' | 'history'>('dashboard');
   const [showExportModal, setShowExportModal] = React.useState(false);
   const [showGoalManager, setShowGoalManager] = React.useState(false);
+  const [lastRefresh, setLastRefresh] = React.useState<Date>(new Date());
+  const [showGestureHint, setShowGestureHint] = React.useState(true);
 
-  // Handle URL parameter for SPA routing
-  React.useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const pathParam = urlParams.get('p');
-    if (pathParam) {
-      // Remove the parameter from URL to clean it up
-      const newUrl = window.location.pathname + window.location.hash;
-      window.history.replaceState({}, '', newUrl);
+  // Pull to refresh handler
+  const handlePullToRefresh = React.useCallback(async () => {
+    // Simulate data refresh - in a real app, this would sync with server
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setLastRefresh(new Date());
 
-      // Navigate based on path
-      if (pathParam.startsWith('/analytics')) {
-        setActiveView('analytics');
-      } else if (pathParam.startsWith('/history')) {
-        setActiveView('history');
-      } else {
-        setActiveView('dashboard');
-      }
+    // Trigger haptic feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate([50, 50, 50]);
     }
+  }, []);
+
+  // Swipe gesture for navigation
+  const swipeGesture = useSwipeGesture(
+    { threshold: 75, velocity: 0.5 },
+    {
+      onSwipeLeft: () => {
+        // Navigate to next view
+        if (activeView === 'dashboard') setActiveView('analytics');
+        else if (activeView === 'analytics') setActiveView('history');
+      },
+      onSwipeRight: () => {
+        // Navigate to previous view
+        if (activeView === 'history') setActiveView('analytics');
+        else if (activeView === 'analytics') setActiveView('dashboard');
+      },
+    }
+  );
+
+  // Voice input handler
+  const handleVoiceInput = React.useCallback((text: string) => {
+    // Simple voice command processing
+    const command = text.toLowerCase().trim();
+
+    if (command.includes('dashboard') || command.includes('home')) {
+      setActiveView('dashboard');
+    } else if (command.includes('analytics') || command.includes('charts')) {
+      setActiveView('analytics');
+    } else if (command.includes('history') || command.includes('past')) {
+      setActiveView('history');
+    } else if (command.includes('settings') || command.includes('accessibility')) {
+      setShowSettings(true);
+    } else if (command.includes('help') || command.includes('tutorial')) {
+      onStartWalkthrough();
+    }
+
+    // Haptic feedback for successful command
+    if ('vibrate' in navigator) {
+      navigator.vibrate(100);
+    }
+  }, [onStartWalkthrough]);
+
+  // Hide gesture hint after first interaction
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowGestureHint(false), 10000); // Hide after 10 seconds
+    return () => clearTimeout(timer);
   }, []);
 
 
@@ -120,6 +164,18 @@ export function TraumaInformedPainTrackerLayout({
                   </Badge>
                 )}
               </div>
+
+              {/* Voice Input for Mobile Accessibility */}
+              {mobilePrefs.voiceInput && (
+                <VoiceInput
+                  onResult={handleVoiceInput}
+                  placeholder="Voice commands..."
+                  language="en-US"
+                />
+              )}
+
+              {/* High Contrast Toggle */}
+              <HighContrastToggle />
 
               {/* Accessibility Settings Button */}
               <TouchOptimizedButton
@@ -198,7 +254,23 @@ export function TraumaInformedPainTrackerLayout({
         </div>
       )}
 
-      <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main 
+        id="main-content" 
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 swipe-indicator"
+        ref={swipeGesture.ref}
+      >
+        <DashboardPullToRefresh
+          onRefresh={handlePullToRefresh}
+          lastRefresh={lastRefresh}
+        >
+        {/* Gesture Hint for Mobile Users */}
+        <GestureHint
+          gesture="swipe"
+          direction="left"
+          description="Swipe to navigate between views"
+          show={showGestureHint && window.innerWidth < 768}
+        />
+
         {/* Comfort Prompt */}
         {preferences.showComfortPrompts && (
           <div className="mb-6">
@@ -295,6 +367,7 @@ export function TraumaInformedPainTrackerLayout({
             />
           </div>
         )}
+        </DashboardPullToRefresh>
       </main>
 
       {/* Modern Footer */}

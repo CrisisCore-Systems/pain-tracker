@@ -3,6 +3,8 @@ import { EmpathyDrivenAnalyticsService } from './EmpathyDrivenAnalytics';
 import { PrivacyBudgetManager } from './PrivacyBudgetManager';
 import { KeyManager } from './KeyManagement';
 import { AuditLogger } from './AuditLogger';
+import { createHmac } from 'crypto';
+import type { AuditEvent } from './SecureAuditSink';
 import type { PainEntry } from '../types';
 import type { MoodEntry, QuantifiedEmpathyMetrics, EmpathyInsight, EmpathyRecommendation } from '../types/quantified-empathy';
 
@@ -153,7 +155,28 @@ export class EmpathyMetricsCollector {
       }
       noiseInjected = !!allowed;
       // Audit budget consumption
-      if (this.auditLogger) {
+      const event = { timestamp: new Date().toISOString(), eventType: 'dp_budget_consumption', userId, details: { requestedEpsilon: eps, consumed: noiseInjected } };
+      if (this.keyManager && typeof (this.keyManager as KeyManager).getKey === 'function') {
+        try {
+          // request the audit key using the standard getKey interface; purpose 'audit' is conventional here
+          const getKeyFn = (this.keyManager as KeyManager).getKey.bind(this.keyManager);
+          const auditKey = await getKeyFn('audit');
+          const hmac = createHmac('sha256', auditKey).update(userId).digest('base64');
+          // prefer sinks that implement append (SecureAuditSink / InMemoryAuditSink)
+          type SinkLike = { append?: (e: Partial<AuditEvent>) => Promise<AuditEvent>; log?: (e: { timestamp: string; eventType: string; userId?: string; details?: Record<string, unknown> }) => Promise<void> };
+          const sink = this.auditLogger as unknown as SinkLike | undefined;
+          if (sink?.append) {
+            await sink.append({ eventId: String(Date.now()), timestamp: event.timestamp, eventType: event.eventType, userIdHmac: hmac, details: event.details });
+          } else if (sink?.log) {
+            await sink.log({ timestamp: event.timestamp, eventType: event.eventType, userId: hmac, details: event.details });
+          }
+        } catch (err) {
+          // best-effort: do not block collection on audit failures; still log to legacy logger if present
+          if (this.auditLogger && this.auditLogger.log) {
+            await this.auditLogger.log({ timestamp: new Date().toISOString(), eventType: 'dp_budget_audit_failure', userId, details: { error: String(err) } });
+          }
+        }
+      } else if (this.auditLogger && this.auditLogger.log) {
         await this.auditLogger.log({ timestamp: new Date().toISOString(), eventType: 'dp_budget_consumption', userId, details: { requestedEpsilon: eps, consumed: noiseInjected } });
       }
     }

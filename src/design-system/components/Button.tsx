@@ -9,29 +9,29 @@ import { cn } from '../utils';
 import { Loader2 } from 'lucide-react';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none',
+  'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background active:scale-[0.98] select-none touch-manipulation',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md',
-        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm hover:shadow-md',
-        outline: 'border border-input hover:bg-accent hover:text-accent-foreground shadow-sm hover:shadow-md',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-md',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'underline-offset-4 hover:underline text-primary shadow-none hover:shadow-none',
-        success: 'bg-success text-success-foreground hover:bg-success/90 shadow-sm hover:shadow-md',
-        warning: 'bg-warning text-warning-foreground hover:bg-warning/90 shadow-sm hover:shadow-md',
-        gradient: 'bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl',
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md active:bg-primary/80',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm hover:shadow-md active:bg-destructive/80',
+        outline: 'border border-input hover:bg-accent hover:text-accent-foreground shadow-sm hover:shadow-md active:bg-accent/80',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm hover:shadow-md active:bg-secondary/70',
+        ghost: 'hover:bg-accent hover:text-accent-foreground active:bg-accent/50',
+        link: 'underline-offset-4 hover:underline text-primary shadow-none hover:shadow-none active:text-primary/80',
+        success: 'bg-success text-success-foreground hover:bg-success/90 shadow-sm hover:shadow-md active:bg-success/80',
+        warning: 'bg-warning text-warning-foreground hover:bg-warning/90 shadow-sm hover:shadow-md active:bg-warning/80',
+        gradient: 'bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl active:from-primary/80 active:to-accent/80',
       },
       size: {
-        xs: 'h-7 px-2 text-xs rounded-md',
-        sm: 'h-8 px-3 text-xs rounded-md',
-        default: 'h-11 py-2 px-4',
-        lg: 'h-12 px-6 text-base rounded-lg',
-        xl: 'h-14 px-8 text-lg rounded-xl',
-        icon: 'h-10 w-10',
-        'icon-sm': 'h-8 w-8',
-        'icon-lg': 'h-12 w-12',
+        xs: 'h-8 px-2 text-xs rounded-md min-h-[32px] min-w-[32px]',
+        sm: 'h-9 px-3 text-xs rounded-md min-h-[36px] min-w-[36px]',
+        default: 'h-12 py-2 px-4 min-h-[44px] min-w-[44px]',
+  lg: 'h-12 px-6 text-base rounded-lg min-h-[48px] min-w-[48px]',
+        xl: 'h-16 px-8 text-lg rounded-xl min-h-[56px] min-w-[56px]',
+        icon: 'h-12 w-12 min-h-[44px] min-w-[44px]',
+        'icon-sm': 'h-9 w-9 min-h-[36px] min-w-[36px]',
+        'icon-lg': 'h-14 w-14 min-h-[48px] min-w-[48px]',
       },
       shape: {
         default: '',
@@ -55,6 +55,10 @@ export interface ButtonProps
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   fullWidth?: boolean;
+  hapticFeedback?: boolean;
+  longPress?: boolean;
+  onLongPress?: () => void;
+  longPressDelay?: number;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -68,23 +72,119 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     leftIcon,
     rightIcon,
     fullWidth = false,
+    hapticFeedback = true,
+    longPress = false,
+    onLongPress,
+    longPressDelay = 500,
     disabled,
+    onClick,
+    onTouchStart,
+    onTouchEnd,
+    onMouseDown,
+    onMouseUp,
     children,
     ...props
   }, ref) => {
     const isDisabled = disabled || loading;
+    const longPressTimerRef = React.useRef<NodeJS.Timeout>();
+    const [isPressed, setIsPressed] = React.useState(false);
+    const [isLongPressing, setIsLongPressing] = React.useState(false);
+
+    // Haptic feedback function
+    const triggerHapticFeedback = React.useCallback(() => {
+      if (hapticFeedback && 'vibrate' in navigator) {
+        navigator.vibrate(50);
+      }
+    }, [hapticFeedback]);
+
+    // Touch event handlers
+    const handleTouchStart = React.useCallback((e: React.TouchEvent<HTMLButtonElement>) => {
+      if (isDisabled) return;
+      
+      setIsPressed(true);
+      onTouchStart?.(e);
+      
+      if (longPress && onLongPress) {
+        longPressTimerRef.current = setTimeout(() => {
+          setIsLongPressing(true);
+          triggerHapticFeedback();
+          onLongPress();
+        }, longPressDelay);
+      }
+    }, [isDisabled, longPress, onLongPress, longPressDelay, onTouchStart, triggerHapticFeedback]);
+
+    const handleTouchEnd = React.useCallback((e: React.TouchEvent<HTMLButtonElement>) => {
+      setIsPressed(false);
+      setIsLongPressing(false);
+      onTouchEnd?.(e);
+      
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+      }
+    }, [onTouchEnd]);
+
+    // Mouse event handlers (for desktop testing)
+    const handleMouseDown = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      if (isDisabled) return;
+      
+      setIsPressed(true);
+      onMouseDown?.(e);
+      
+      if (longPress && onLongPress) {
+        longPressTimerRef.current = setTimeout(() => {
+          setIsLongPressing(true);
+          onLongPress();
+        }, longPressDelay);
+      }
+    }, [isDisabled, longPress, onLongPress, longPressDelay, onMouseDown]);
+
+    const handleMouseUp = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      setIsPressed(false);
+      setIsLongPressing(false);
+      onMouseUp?.(e);
+      
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+      }
+    }, [onMouseUp]);
+
+    // Click handler with haptic feedback
+    const handleClick = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      if (isDisabled || isLongPressing) return;
+      
+      triggerHapticFeedback();
+      onClick?.(e);
+    }, [isDisabled, isLongPressing, triggerHapticFeedback, onClick]);
+
+    // Cleanup timer on unmount
+    React.useEffect(() => {
+      return () => {
+        if (longPressTimerRef.current) {
+          clearTimeout(longPressTimerRef.current);
+        }
+      };
+    }, []);
 
     return (
       <button
         className={cn(
           buttonVariants({ variant, size, shape, className }),
           fullWidth && 'w-full',
-          loading && 'cursor-wait'
+          loading && 'cursor-wait',
+          isPressed && 'scale-95',
+          isLongPressing && 'ring-2 ring-primary ring-opacity-50',
+          'touch-manipulation select-none'
         )}
         ref={ref}
         type={type}
         disabled={isDisabled}
         aria-disabled={isDisabled}
+        aria-pressed={isPressed}
+        onClick={handleClick}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
         {...props}
       >
         {loading && (

@@ -37,11 +37,11 @@ export function ContextualHelp({ sections, title, className = '' }: ContextualHe
   const getTypeStyles = (type: HelpSection['type']) => {
     switch (type) {
       case 'info':
-        return 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/30';
+        return 'border-primary bg-primary/10 dark:border-primary dark:bg-primary/20';
       case 'tip':
-        return 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950/30';
+        return 'border-destructive bg-destructive/10 dark:border-destructive dark:bg-destructive/20';
       case 'warning':
-        return 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/30';
+        return 'border-accent bg-accent/10 dark:border-accent dark:bg-accent/20';
       default:
         return 'border-border bg-muted/50';
     }
@@ -50,11 +50,11 @@ export function ContextualHelp({ sections, title, className = '' }: ContextualHe
   const getIconStyles = (type: HelpSection['type']) => {
     switch (type) {
       case 'info':
-        return 'text-blue-600 dark:text-blue-400';
+        return 'text-primary dark:text-primary-foreground';
       case 'tip':
-        return 'text-yellow-600 dark:text-yellow-400';
+        return 'text-destructive dark:text-destructive-foreground';
       case 'warning':
-        return 'text-orange-600 dark:text-orange-400';
+        return 'text-accent dark:text-accent-foreground';
       default:
         return 'text-muted-foreground';
     }

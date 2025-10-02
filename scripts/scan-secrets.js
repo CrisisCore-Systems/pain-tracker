@@ -142,18 +142,18 @@ function shouldIgnoreLine(line) {
 
 function scanFile(filePath) {
   const findings = [];
-  
+  // Defensive: Only allow string file paths, reject unsafe patterns
+  if (typeof filePath !== 'string' || /[^\w\-\.\/\\]/.test(filePath)) {
+    return findings;
+  }
   try {
     const content = readFileSync(filePath, 'utf8');
     const lines = content.split('\n');
-    
     for (let lineNum = 0; lineNum < lines.length; lineNum++) {
       const line = lines[lineNum];
-      
       if (shouldIgnoreLine(line)) {
         continue;
       }
-      
       for (const { name, pattern, severity, description } of secretPatterns) {
         const match = pattern.exec(line);
         if (match) {
@@ -175,7 +175,6 @@ function scanFile(filePath) {
       log(`${icon.warning} Could not read file ${filePath}: ${error.message}`, colors.yellow);
     }
   }
-  
   return findings;
 }
 

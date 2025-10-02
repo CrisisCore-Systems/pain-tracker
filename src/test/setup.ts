@@ -3,8 +3,27 @@ import { expect, afterEach, vi, beforeAll } from 'vitest';
 import { securityService } from '../services/SecurityService';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
-import CryptoJS from 'crypto-js';
+// Avoid importing CryptoJS in tests; use SubtleCrypto / Node crypto when needed
+import { securityService } from '../services/SecurityService';
 import { getThemeColors } from '../design-system/theme';
+
+// Provide an IndexedDB polyfill for jsdom so integration tests that use
+// `offlineStorage` (which relies on IndexedDB) can run in the test env.
+// Use a dynamic ESM import so TypeScript/Eslint don't flag `require()` usage.
+// Ensure the fake-indexeddb polyfill is loaded before any setup code runs.
+// Top-level await is used so Vite/Vitest will wait for the module to load at
+// transform/setup time and avoid race conditions that can cause tests to be
+// skipped when IndexedDB isn't yet available.
+try {
+  const g = globalThis as unknown as { indexedDB?: IDBFactory };
+  if (typeof g.indexedDB === 'undefined') {
+    // This will throw if fake-indexeddb isn't installed; we catch and warn below.
+    await import('fake-indexeddb/auto');
+  }
+} catch (e) {
+  // eslint-disable-next-line no-console
+  console.warn('Test setup: fake-indexeddb not available — IndexedDB tests may be skipped', e);
+}
 
 // Extend Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
@@ -97,14 +116,29 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
 beforeAll(async () => {
   // Make this initialization resilient: if securityService.initializeMasterKey
   // takes too long in some environments, continue tests after a short timeout.
+  // Use test-only constants, not production secrets
+  const TEST_MASTER_PASSWORD = process.env.TEST_MASTER_PASSWORD || 'test-password';
+  const TEST_MASTER_KEY = process.env.TEST_MASTER_KEY || 'test-key-2025';
   const initPromise = (async () => {
     try {
-      await securityService.initializeMasterKey('vitest-seed-password');
+      await securityService.initializeMasterKey(TEST_MASTER_PASSWORD);
 
-      const seededKey = CryptoJS.SHA256('vitest-seed-key-2025').toString();
-      const record = JSON.stringify({ key: seededKey, created: new Date().toISOString() });
-      window.localStorage.setItem('key:pain-tracker-master', record);
+      // Create a seeded test key and store it via the secure storage API so tests don't write raw keys to localStorage
+      // Use SubtleCrypto (or Node crypto) to derive a stable bytestring from TEST_MASTER_KEY
+      let seededHashB64 = TEST_MASTER_KEY;
+      try {
+        const enc = new TextEncoder().encode(TEST_MASTER_KEY);
+        const digest = await crypto.subtle.digest('SHA-256', enc);
+        seededHashB64 = btoa(String.fromCharCode(...new Uint8Array(digest)));
+      } catch {
+        // Fallback: use the literal string (non-ideal but only for tests)
+        seededHashB64 = TEST_MASTER_KEY;
+      }
 
+      const storage = securityService.createSecureStorage();
+      await storage.store('key:pain-tracker-master', JSON.stringify({ key: seededHashB64, created: new Date().toISOString() }), true);
+
+      // Test-only hooks: expose no-op passthroughs but only in test env
       (globalThis as unknown as { __secureStorageEncrypt?: (p:string)=>string }).__secureStorageEncrypt = (plaintext: string) => plaintext;
       (globalThis as unknown as { __secureStorageDecrypt?: (c:string)=>string }).__secureStorageDecrypt = (ciphertext: string) => ciphertext;
     } catch (e) {
@@ -153,4 +187,18 @@ import React from 'react';
 vi.mock('focus-trap-react', () => ({
   __esModule: true,
   default: (props: { children?: React.ReactNode }) => React.createElement(React.Fragment, null, props.children),
+}));
+
+// Global test mocks: stub heavy or lazy-loaded modules used across components
+vi.mock('../components/PredictivePanel', () => ({
+  __esModule: true,
+  default: (props: any) => React.createElement('div', { 'data-testid': 'predictive-panel-mock', 'data-entries': JSON.stringify(props?.entries || []) }, 'PredictivePanelMock')
+}));
+
+vi.mock('../design-system/components/Chart', () => ({
+  __esModule: true,
+  default: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
+  PainTrendChart: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
+  SymptomFrequencyChart: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
+  PainDistributionChart: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
 }));

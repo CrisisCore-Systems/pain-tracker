@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CryptoJS from 'crypto-js';
+import { encryptionService } from '../../services/EncryptionService';
 import { format } from 'date-fns';
 import type { PainEntry } from '../../types';
 import { downloadData } from '../../utils/pain-tracker/export';
@@ -54,16 +54,15 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
         data: entries
       };
 
-      let backupContent = JSON.stringify(backupData, null, 2);
-
+      let backupContent = '';
       if (isEncrypted && password) {
-        // Encrypt the backup data
-        const encrypted = CryptoJS.AES.encrypt(backupContent, password).toString();
-        backupContent = JSON.stringify({
-          encrypted: true,
-          data: encrypted,
-          metadata: backupData.metadata
-        }, null, 2);
+        // Use centralized encryption service to create a password-protected backup
+        backupContent = await encryptionService.createEncryptedBackup(backupData, password);
+      } else if (isEncrypted && !password) {
+        // Use default service key
+        backupContent = await encryptionService.createEncryptedBackup(backupData);
+      } else {
+        backupContent = JSON.stringify(backupData, null, 2);
       }
 
       const timestamp = format(new Date(), 'yyyy-MM-dd-HHmm');

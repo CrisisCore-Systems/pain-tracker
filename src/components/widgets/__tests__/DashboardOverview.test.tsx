@@ -1,5 +1,18 @@
 import React from 'react';
 import { render, screen, within } from '@testing-library/react';
+import { vi } from 'vitest';
+// Mock PredictivePanel (lazy-loaded) so Suspense doesn't delay tests
+vi.mock('../../PredictivePanel', () => ({
+  default: () => <div data-testid="predictive-panel-mock">Predictive</div>
+}));
+// Mock Chart to avoid Chart.js rendering inside tests
+vi.mock('../../design-system/components/Chart', () => ({
+  default: (props: any) => <div data-testid="chart-mock">Chart</div>,
+  PainTrendChart: (props: any) => <div data-testid="chart-mock">Chart</div>,
+  SymptomFrequencyChart: (props: any) => <div data-testid="chart-mock">Chart</div>,
+  PainDistributionChart: (props: any) => <div data-testid="chart-mock">Chart</div>,
+}));
+
 import { DashboardOverview } from '../DashboardOverview';
 import type { PainEntry } from '../../../types';
 

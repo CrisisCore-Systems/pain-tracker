@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import CryptoJS from 'crypto-js';
+import { encryptionService } from '../../services/EncryptionService';
 import type { PainEntry } from '../../types';
 
 interface DataRestoreProps {
@@ -62,25 +62,10 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
       let entries: PainEntry[] = [];
 
       if (backupData.encrypted) {
-        if (!password) {
-          setRestoreStatus('Password required for encrypted backup');
-          setIsRestoring(false);
-          return;
-        }
-
         try {
-          const decryptedData = CryptoJS.AES.decrypt(backupData.data, password);
-          const decryptedText = decryptedData.toString(CryptoJS.enc.Utf8);
-          
-          if (!decryptedText) {
-            setRestoreStatus('Invalid password or corrupted backup file');
-            setIsRestoring(false);
-            return;
-          }
-
-          const parsedData = JSON.parse(decryptedText);
-          entries = parsedData.data || [];
-        } catch {
+          const restored = await encryptionService.restoreFromEncryptedBackup<{ data: PainEntry[] }>(fileContent, password);
+          entries = restored.data || [];
+        } catch (e) {
           setRestoreStatus('Failed to decrypt backup - check your password');
           setIsRestoring(false);
           return;

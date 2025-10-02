@@ -14,16 +14,30 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const base = 'inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
 
+// Keep layout/interaction classes in variants but move colors to runtime styles
 const variants: Record<Variant, string> = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-500',
-  secondary: 'bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 focus-visible:ring-indigo-500',
-  ghost: 'bg-transparent text-blue-600 hover:bg-blue-50 focus-visible:ring-blue-500',
-  destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',
-  outline: 'border border-input hover:bg-accent hover:text-accent-foreground shadow-sm hover:shadow-md',
-  default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-md',
-  success: 'bg-success text-success-foreground hover:bg-success/90 shadow-sm hover:shadow-md',
-  warning: 'bg-warning text-warning-foreground hover:bg-warning/90 shadow-sm hover:shadow-md',
-  gradient: 'bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl',
+  primary: '',
+  secondary: 'border',
+  ghost: '',
+  destructive: '',
+  outline: 'border',
+  default: '',
+  success: '',
+  warning: '',
+  gradient: '',
+};
+
+// Runtime color styles using CSS custom properties defined in src/index.css
+const colorStyles: Record<Variant, React.CSSProperties> = {
+  primary: { backgroundColor: 'rgb(var(--color-primary))', color: 'rgb(var(--color-primary-foreground))' },
+  secondary: { backgroundColor: 'rgb(var(--color-card))', color: 'rgb(var(--color-card-foreground))', borderColor: 'rgb(var(--color-border))' },
+  ghost: { backgroundColor: 'transparent', color: 'rgb(var(--color-primary))' },
+  destructive: { backgroundColor: 'rgb(var(--color-destructive))', color: 'rgb(var(--color-destructive-foreground))' },
+  outline: { backgroundColor: 'transparent', color: 'rgb(var(--color-foreground))', borderColor: 'rgb(var(--color-border))' },
+  default: { backgroundColor: 'rgb(var(--color-primary))', color: 'rgb(var(--color-primary-foreground))' },
+  success: { backgroundColor: 'rgb(var(--color-secondary))', color: 'rgb(var(--color-secondary-foreground))' },
+  warning: { backgroundColor: 'rgb(var(--color-accent))', color: 'rgb(var(--color-accent-foreground))' },
+  gradient: { background: 'linear-gradient(90deg, rgb(var(--color-primary)), rgb(var(--color-accent)))', color: 'rgb(var(--color-primary-foreground))' },
 };
 
 const sizes: Record<NonNullable<Props['size']>, string> = {
@@ -39,10 +53,13 @@ export const Button = React.forwardRef<HTMLButtonElement, Props>(
   ({ variant = 'primary', size = 'md', className = '', children, disabled, leftIcon, rightIcon, ...rest }, ref) => {
     const classes = `${base} ${variants[variant]} ${sizes[size]} min-w-[44px] ${className}`.trim();
 
+    const style: React.CSSProperties = { ...(colorStyles[variant] || {}), ...rest.style };
+
     return (
       <button
         ref={ref}
         className={classes}
+        style={style}
         disabled={disabled}
         // assistive tech: make disabled state explicit
         aria-disabled={disabled || undefined}

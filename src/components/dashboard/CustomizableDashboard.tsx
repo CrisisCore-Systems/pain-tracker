@@ -208,7 +208,7 @@ function WidgetManagementModal({
                 <label className="block text-sm font-medium mb-2">Layout Style</label>
                 <select
                   value={layout.layout}
-                  onChange={(e) => onUpdateLayoutSettings({ layout: e.target.value as 'grid' | 'masonry' | 'list' })}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onUpdateLayoutSettings({ layout: e.target.value as 'grid' | 'masonry' | 'list' })}
                   className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="grid">Grid</option>
@@ -220,7 +220,7 @@ function WidgetManagementModal({
                 <label className="block text-sm font-medium mb-2">Columns</label>
                 <select
                   value={layout.columns}
-                  onChange={(e) => onUpdateLayoutSettings({ columns: parseInt(e.target.value) as 1 | 2 | 3 | 4 })}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onUpdateLayoutSettings({ columns: parseInt(e.target.value) as 1 | 2 | 3 | 4 })}
                   className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value={1}>1 Column</option>
@@ -339,9 +339,9 @@ interface DashboardWidgetProps {
   onAddEntry: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
   onStartWalkthrough: () => void;
   onOpenGoalManager?: () => void;
-  onDragStart: () => void;
-  onDragEnd: () => void;
-  onDrop: () => void;
+  onDragStart: (e: React.DragEvent<HTMLDivElement>, widgetId: string) => void;
+  onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDrop: (e: React.DragEvent<HTMLDivElement>, targetWidgetId: string) => void;
   isDragging: boolean;
   layout: 'grid' | 'masonry' | 'list';
 }
@@ -508,8 +508,8 @@ function DashboardWidget({
             importance="normal"
             canCollapse={true}
           >
-            <GoalDashboardWidget
-              onOpenManager={onOpenGoalManager}
+              <GoalDashboardWidget
+              onOpenManager={onOpenGoalManager ?? (() => {})}
             />
           </TraumaInformedSection>
         );
@@ -560,10 +560,10 @@ function DashboardWidget({
         'cursor-move'
       )}
       draggable
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
+      onDragStart={(e) => onDragStart(e, widget.id)}
+      onDragEnd={(e) => onDragEnd(e)}
       onDragOver={(e) => e.preventDefault()}
-      onDrop={onDrop}
+      onDrop={(e) => onDrop(e, widget.id)}
     >
       <div className="relative">
         {/* Drag Handle */}
@@ -741,10 +741,10 @@ export function CustomizableDashboard({
             allEntries={entries}
             onAddEntry={onAddEntry}
             onStartWalkthrough={onStartWalkthrough}
-            onOpenGoalManager={onOpenGoalManager}
-            onDragStart={() => handleDragStart(widget.id)}
-            onDragEnd={handleDragEnd}
-            onDrop={() => handleDrop(widget.id)}
+            onOpenGoalManager={onOpenGoalManager ?? (() => {})}
+                      onDragStart={(e) => { e.dataTransfer?.setData('text/plain', widget.id); handleDragStart(widget.id); }}
+                      onDragEnd={(e) => { e.preventDefault(); handleDragEnd(); }}
+                      onDrop={(e) => { e.preventDefault(); const id = e.dataTransfer?.getData('text/plain') || widget.id; handleDrop(id); }}
             isDragging={draggedWidget === widget.id}
             layout={layout.layout}
           />

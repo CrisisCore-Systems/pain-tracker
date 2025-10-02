@@ -121,37 +121,42 @@ class PWAStatusManager {
 
     // Show status
     this.statusElement.style.display = 'block';
-    
-    let content = '<div style="display: flex; align-items: center; gap: 0.5rem;">';
-    
+
+    const content = document.createElement('div');
+    content.style.display = 'flex';
+    content.style.alignItems = 'center';
+    content.style.gap = '0.5rem';
+
+    const statusIndicator = document.createElement('div');
+    statusIndicator.style.width = '0.5rem';
+    statusIndicator.style.height = '0.5rem';
+    statusIndicator.style.borderRadius = '50%';
+
+    const statusText = document.createElement('span');
+    statusText.style.fontWeight = '500';
+
     if (!isOnline) {
-      content += `
-        <div style="width: 0.5rem; height: 0.5rem; background: #ef4444; border-radius: 50%;"></div>
-        <span style="font-weight: 500; color: #dc2626;">Offline</span>
-      `;
+      statusIndicator.style.background = '#ef4444';
+      statusText.style.color = '#dc2626';
+      statusText.textContent = 'Offline';
     } else if (isSyncing) {
-      content += `
-        <div style="width: 0.5rem; height: 0.5rem; background: #3b82f6; border-radius: 50%; animation: pulse 2s infinite;"></div>
-        <span style="font-weight: 500; color: #2563eb;">Syncing...</span>
-      `;
+      statusIndicator.style.background = '#3b82f6';
+      statusIndicator.style.animation = 'pulse 2s infinite';
+      statusText.style.color = '#2563eb';
+      statusText.textContent = 'Syncing...';
     } else if (pendingSync > 0) {
-      content += `
-        <div style="width: 0.5rem; height: 0.5rem; background: #f59e0b; border-radius: 50%;"></div>
-        <span style="font-weight: 500; color: #d97706;">${pendingSync} pending</span>
-      `;
+      statusIndicator.style.background = '#f59e0b';
+      statusText.style.color = '#d97706';
+      statusText.textContent = `${pendingSync} pending`;
     }
-    
-    content += '</div>';
-    
-    if (!isOnline) {
-      content += `
-        <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: #6b7280;">
-          Your data is saved locally and will sync when you're back online
-        </p>
-      `;
+
+    content.appendChild(statusIndicator);
+    content.appendChild(statusText);
+
+    while (this.statusElement.firstChild) {
+      this.statusElement.removeChild(this.statusElement.firstChild);
     }
-    
-    this.statusElement.innerHTML = content;
+    this.statusElement.appendChild(content);
   }
 
   showInstallPrompt() {

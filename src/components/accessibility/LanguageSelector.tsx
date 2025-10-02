@@ -23,14 +23,14 @@ export const LanguageSelector: React.FC = () => {
       
       <div className="space-y-2">
         {languages.map((language) => (
-          <button
+      <button
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={`
               w-full flex items-center gap-3 p-2 rounded transition-colors text-left
               ${i18n.language === language.code 
-                ? 'bg-blue-100 border-2 border-blue-500 text-blue-900' 
-                : 'hover:bg-gray-100 border-2 border-transparent'
+        ? 'bg-primary/10 border-2 border-primary text-primary-foreground' 
+        : 'hover:bg-muted/50 border-2 border-transparent'
               }
               focus:outline-none focus:ring-2 focus:ring-blue-500
             `}
@@ -41,7 +41,7 @@ export const LanguageSelector: React.FC = () => {
             </span>
             <span className="font-medium">{language.name}</span>
             {i18n.language === language.code && (
-              <span className="ml-auto text-blue-600" aria-label="selected">
+              <span className="ml-auto text-primary-foreground" aria-label="selected">
                 ✓
               </span>
             )}

@@ -52,11 +52,11 @@ export const AccessibilityControls: React.FC = () => {
           </h4>
           <div className="space-y-1 text-sm">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${isHighContrast ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+              <span className={`w-2 h-2 rounded-full ${isHighContrast ? 'bg-destructive-foreground' : 'bg-muted-foreground'}`}></span>
               <span>High Contrast: {isHighContrast ? 'Enabled' : 'Disabled'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${hasReducedMotion ? 'bg-green-500' : 'bg-gray-300'}`}></span>
+              <span className={`w-2 h-2 rounded-full ${hasReducedMotion ? 'bg-destructive-foreground' : 'bg-muted-foreground'}`}></span>
               <span>Reduced Motion: {hasReducedMotion ? 'Enabled' : 'Disabled'}</span>
             </div>
           </div>

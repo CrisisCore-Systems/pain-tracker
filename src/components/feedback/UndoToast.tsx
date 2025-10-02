@@ -8,7 +8,7 @@ import { RotateCcw, X } from 'lucide-react';
 interface UndoToastProps {
   message: string;
   onUndo: () => void;
-  onDismiss: () => void;
+  onDismiss: (id?: string) => void;
   duration?: number;
 }
 
