@@ -3,6 +3,7 @@ import { formatNumber } from '../utils/formatting';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { PainEntry, EmergencyPanelData, ActivityLogEntry } from '../types';
+import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
 
 export interface UIState {
   showWCBReport: boolean;
@@ -125,6 +126,11 @@ export const usePainTrackerStore = create<PainTrackerState>()(
 
               state.entries.push(newEntry);
               state.error = null;
+
+              // Track analytics (async, fire-and-forget)
+              privacyAnalytics.trackPainEntry(newEntry).catch(() => {
+                // Silently fail - analytics should not affect user experience
+              });
             });
           },
 
