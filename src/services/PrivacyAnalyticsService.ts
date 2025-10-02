@@ -150,19 +150,40 @@ export class PrivacyPreservingAnalyticsService {
       return true;
     }
 
-    // In a real implementation, this would show a consent dialog
-    // For now, we'll simulate user consent
+    // Grant consent when called
     this.userConsent = true;
 
     securityService.logSecurityEvent({
       type: 'analytics',
       level: 'info',
-      message: 'User consent for analytics',
+      message: 'User consent for analytics granted',
       metadata: { consentGiven: this.userConsent },
       timestamp: new Date()
     });
 
     return this.userConsent;
+  }
+
+  /**
+   * Revoke user consent for analytics
+   */
+  revokeConsent(): void {
+    this.userConsent = false;
+    
+    securityService.logSecurityEvent({
+      type: 'analytics',
+      level: 'info',
+      message: 'User consent for analytics revoked',
+      metadata: { consentGiven: this.userConsent },
+      timestamp: new Date()
+    });
+  }
+
+  /**
+   * Check if user has given consent
+   */
+  hasConsent(): boolean {
+    return this.userConsent || !this.config.consentRequired;
   }
 
   /**

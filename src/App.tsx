@@ -19,6 +19,7 @@ import BetaWarning from './components/BetaWarning';
 import QuickActions from './components/QuickActions';
 import MedicationReminders from './components/MedicationReminders';
 import NotificationConsentPrompt from './components/NotificationConsentPrompt';
+import BetaAnalyticsConsentPrompt from './components/BetaAnalyticsConsentPrompt';
 import AlertsSettings from './components/AlertsSettings';
 import AlertsActivityLog from './components/AlertsActivityLog';
 import { usePatternAlerts } from './hooks/usePatternAlerts';
@@ -110,6 +111,7 @@ function App() {
               <AlertsActivityLog />
             </div>
             <NotificationConsentPrompt />
+            <BetaAnalyticsConsentPrompt />
             <ErrorBoundary fallback={<ErrorFallback />}>
               <Suspense fallback={<LoadingFallback />}>
                 <PainTrackerContainer />

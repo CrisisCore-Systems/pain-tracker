@@ -1,8 +1,14 @@
 import type { PainEntry } from '../../types';
 import jsPDF from 'jspdf';
 import { formatNumber } from '../formatting';
+import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 
 export const exportToCSV = (entries: PainEntry[]): string => {
+  // Track export analytics
+  privacyAnalytics.trackDataExport('csv').catch(() => {
+    // Silently fail - analytics should not affect user experience
+  });
+
   const headers = [
     'Date',
     'Time',
@@ -38,6 +44,11 @@ export const exportToCSV = (entries: PainEntry[]): string => {
 };
 
 export const exportToJSON = (entries: PainEntry[]): string => {
+  // Track export analytics
+  privacyAnalytics.trackDataExport('json').catch(() => {
+    // Silently fail - analytics should not affect user experience
+  });
+
   return JSON.stringify(entries, null, 2);
 };
 
@@ -64,6 +75,11 @@ export const downloadData = (data: string, filename: string, mimeType: string = 
 };
 
 export const exportToPDF = (entries: PainEntry[]): string => {
+  // Track export analytics
+  privacyAnalytics.trackDataExport('pdf').catch(() => {
+    // Silently fail - analytics should not affect user experience
+  });
+
   const doc = new jsPDF();
   
   // Title
