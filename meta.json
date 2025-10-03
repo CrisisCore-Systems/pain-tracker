@@ -24,25 +24,25 @@
     "assets/html2canvas.esm-B0tyYwQk.js.map": {
       "bytes": 603193
     },
-    "assets/index-BwsBVgda.css": {
-      "bytes": 77611
+    "assets/index-DkmCwX7q.css": {
+      "bytes": 119641
     },
-    "assets/index-wxXM0OTV.js": {
-      "bytes": 1330244
+    "assets/index-NfVs-4jR.js": {
+      "bytes": 1499329
     },
-    "assets/index-wxXM0OTV.js.map": {
-      "bytes": 4856390
+    "assets/index-NfVs-4jR.js.map": {
+      "bytes": 5504038
     },
-    "assets/index.es-CRTLou-M.js": {
+    "assets/index.es-THjhnePh.js": {
       "bytes": 159482
     },
-    "assets/index.es-CRTLou-M.js.map": {
+    "assets/index.es-THjhnePh.js.map": {
       "bytes": 641421
     },
-    "assets/PredictivePanel-C6C35CRP.js": {
+    "assets/PredictivePanel-OAJII16W.js": {
       "bytes": 2836
     },
-    "assets/PredictivePanel-C6C35CRP.js.map": {
+    "assets/PredictivePanel-OAJII16W.js.map": {
       "bytes": 8102
     },
     "assets/purify.es-CQJ0hv7W.js": {
@@ -61,7 +61,7 @@
       "bytes": 8279
     },
     "pwa-init.js": {
-      "bytes": 11192
+      "bytes": 11342
     },
     "sw.js": {
       "bytes": 12657

@@ -2,11 +2,17 @@
 <html lang='en'>
   <head>
     <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover' />
     <meta name="description" content="Pain Tracker - A comprehensive tool for tracking and managing chronic pain and injuries" />
     <meta name="keywords" content="pain tracker, pain management, injury tracking, health monitoring, medical records" />
     <meta name="author" content="CrisisCore-Systems" />
-    <meta name="theme-color" content="#3B82F6" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Pain Tracker Pro" />
+    <meta name="msapplication-TileColor" content="#0ea5e9" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+    <meta name="format-detection" content="telephone=no" />
     
     <!-- Security Headers (Note: CSP frame-ancestors and X-Frame-Options are set via HTTP headers in server config) -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -26,11 +32,11 @@
     <link rel="manifest" href="./manifest.json" />
     
     <title>Pain Tracker - Comprehensive Pain & Injury Management System</title>
-    <script type="module" crossorigin src="/pain-tracker/assets/index-wxXM0OTV.js"></script>
+    <script type="module" crossorigin src="/pain-tracker/assets/index-NfVs-4jR.js"></script>
     <link rel="modulepreload" crossorigin href="/pain-tracker/assets/react-vendor-Ckhrjn13.js">
     <link rel="modulepreload" crossorigin href="/pain-tracker/assets/chart-vendor-C6yoAA-A.js">
     <link rel="modulepreload" crossorigin href="/pain-tracker/assets/date-vendor-Bjuqiw2y.js">
-    <link rel="stylesheet" crossorigin href="/pain-tracker/assets/index-BwsBVgda.css">
+    <link rel="stylesheet" crossorigin href="/pain-tracker/assets/index-DkmCwX7q.css">
   </head>
   <body>
     <div id='root'></div>
@@ -50,8 +56,8 @@
         });
       }
     </script>
-  <!-- These PWA helper scripts live in /public and are plain scripts (not ESM). Use classic script tags so Vite
-    does not attempt to transform them. If you need module behavior, move them into src/ and import them. -->
+  <!-- These PWA helper scripts live in /public and are plain scripts (not ESM). 
+       They are not bundled by Vite and are copied as-is to dist. -->
   <script src='./pwa-init.js'></script>
   <script src='./pwa-demo.js'></script>
   </body>
