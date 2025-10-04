@@ -25,16 +25,16 @@
   ],
   "screenshots": [
     {
-      "src": "screenshots/dashboard-540x720.svg",
-      "type": "image/svg+xml",
-      "sizes": "540x720",
+      "src": "screenshots/dashboard-540x720.png",
+      "type": "image/png",
+      "sizes": "1080x1440",
       "form_factor": "narrow",
       "label": "Pain tracking dashboard"
     },
     {
-      "src": "screenshots/analytics-1280x720.svg",
-      "type": "image/svg+xml",
-      "sizes": "1280x720",
+      "src": "screenshots/analytics-1280x720.png",
+      "type": "image/png",
+      "sizes": "2560x1440",
       "form_factor": "wide",
       "label": "Analytics overview"
     }
