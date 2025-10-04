@@ -145,7 +145,7 @@ beforeAll(async () => {
     }
   })();
 
-  const timeout = new Promise<void>((resolve) => setTimeout(resolve, 2000));
+  const timeout = new Promise<void>((resolve) => setTimeout(resolve, 30000));
 
   // Wait for whichever finishes first: initialization or timeout
   await Promise.race([initPromise, timeout]);

@@ -15,13 +15,13 @@ import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
 import { Walkthrough } from "../tutorials";
 
-// Validation Technology Integration (conditionally enabled)
+// Validation Technology Integration (enabled by default)
 const ENABLE_VALIDATION_TECH = (() => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (import.meta as any).env.VITE_ENABLE_VALIDATION_TECH === 'true';
+      return (import.meta as any).env.VITE_ENABLE_VALIDATION_TECH !== 'false';
     }
   } catch {
     // ignore
@@ -29,9 +29,9 @@ const ENABLE_VALIDATION_TECH = (() => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (typeof process !== 'undefined' && (process as any).env) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (process as any).env.ENABLE_VALIDATION_TECH === 'true';
+    return (process as any).env.ENABLE_VALIDATION_TECH !== 'false';
   }
-  return false;
+  return true; // Default enabled
 })();
 
 // Conditionally import validation technology components

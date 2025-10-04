@@ -43,8 +43,9 @@ const getEnv = () => {
 
 const ENABLE_VALIDATION = (() => {
   const env = getEnv();
+  // Enable by default unless explicitly disabled
   // Support both Vite-prefixed and legacy env keys
-  return env.VITE_REACT_APP_ENABLE_VALIDATION === 'true' || env.REACT_APP_ENABLE_VALIDATION === 'true';
+  return env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false';
 })();
 
 interface PainEntryFormProps {
