@@ -20,6 +20,8 @@ import { EmpathyDrivenAnalyticsService } from '../../services/EmpathyDrivenAnaly
 import { useEmpathyMetrics } from '../../hooks/useEmpathyMetrics';
 import { useEmpathyConsent } from '../../hooks/useEmpathyConsent';
 import type { PainEntry } from '../../types';
+import { PlannedFeatureNotice } from '../common/PlannedFeatureNotice';
+import type { RoadmapKey } from '../../constants/roadmapLinks';
 
 interface EnhancedEmpathyDashboardProps {
   userId: string;
@@ -41,6 +43,16 @@ type DashboardView =
   | 'micro-moments'
   | 'cultural-empathy'
   | 'personalized-interventions';
+
+const roadmapFeatureByView: Partial<Record<DashboardView, RoadmapKey>> = {
+  'empathy-intelligence': 'empathyIntelligence',
+  'neural-patterns': 'neuralPatterns',
+  'wisdom-journey': 'wisdomJourney',
+  'temporal-analysis': 'temporalAnalysis',
+  'predictive-insights': 'predictiveInsights',
+  'cultural-empathy': 'culturalEmpathy',
+  'micro-moments': 'microMoments'
+};
 
 export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboardProps> = ({
   userId,
@@ -108,6 +120,8 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
       onShareMetrics?.(quantifiedEmpathy);
     }
   }, [quantifiedEmpathy, onShareMetrics]);
+
+  const roadmapKey = roadmapFeatureByView[currentView];
 
   if (!consentGranted) {
     return (
@@ -447,17 +461,14 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
       {currentView !== 'overview' && (
         <Card>
           <CardContent className="flex items-center justify-center p-8">
-            <div className="text-center">
-              <Sparkles className="w-8 h-8 mx-auto mb-4 text-purple-500" />
+            <div className="text-center space-y-2">
+              <Sparkles className="w-8 h-8 mx-auto text-purple-500 mb-2" />
               <p className="text-gray-600">
-                {currentView === 'empathy-intelligence' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
-                {currentView === 'neural-patterns' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
-                {currentView === 'wisdom-journey' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
-                {currentView === 'temporal-analysis' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
-                {currentView === 'predictive-insights' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
-                {currentView === 'cultural-empathy' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
-                {currentView === 'micro-moments' && <>Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</>}
+                This dashboard view is actively in development and will unlock deeper empathy insights soon.
               </p>
+              {roadmapKey && (
+                <PlannedFeatureNotice feature={roadmapKey} className="mx-auto max-w-xl" />
+              )}
             </div>
           </CardContent>
         </Card>

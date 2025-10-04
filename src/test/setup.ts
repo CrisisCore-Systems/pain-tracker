@@ -1,10 +1,11 @@
 import '@testing-library/jest-dom';
 import { expect, afterEach, vi, beforeAll } from 'vitest';
-import { securityService } from '../services/SecurityService';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 // Avoid importing CryptoJS in tests; use SubtleCrypto / Node crypto when needed
 import { securityService } from '../services/SecurityService';
+import { vaultService } from '../services/VaultService';
+import { getSodium } from '../lib/crypto/sodium';
 import { getThemeColors } from '../design-system/theme';
 
 // Provide an IndexedDB polyfill for jsdom so integration tests that use
@@ -139,8 +140,6 @@ beforeAll(async () => {
       await storage.store('key:pain-tracker-master', JSON.stringify({ key: seededHashB64, created: new Date().toISOString() }), true);
 
       // Test-only hooks: expose no-op passthroughs but only in test env
-      (globalThis as unknown as { __secureStorageEncrypt?: (p:string)=>string }).__secureStorageEncrypt = (plaintext: string) => plaintext;
-      (globalThis as unknown as { __secureStorageDecrypt?: (c:string)=>string }).__secureStorageDecrypt = (ciphertext: string) => ciphertext;
     } catch (e) {
       console.warn('Test setup: failed to initialize master key', e);
     }
@@ -150,6 +149,20 @@ beforeAll(async () => {
 
   // Wait for whichever finishes first: initialization or timeout
   await Promise.race([initPromise, timeout]);
+
+  // Initialize vault with deterministic passphrase for tests
+  try {
+    await getSodium();
+    const TEST_VAULT_PASSPHRASE = process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
+    const vaultStatus = await vaultService.initialize();
+    if (vaultStatus.state === 'uninitialized') {
+      await vaultService.setupPassphrase(TEST_VAULT_PASSPHRASE);
+    } else if (vaultStatus.state !== 'unlocked') {
+      await vaultService.unlock(TEST_VAULT_PASSPHRASE);
+    }
+  } catch (error) {
+    console.warn('Test setup: failed to initialize vault service', error);
+  }
 
   // Inject light theme colors into jsdom so axe and computed styles can evaluate contrast
   try {

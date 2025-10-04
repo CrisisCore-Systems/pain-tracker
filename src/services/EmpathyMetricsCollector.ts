@@ -29,11 +29,24 @@ const PII_PATTERNS: RegExp[] = [
   /\b\d{3}-\d{3}-\d{4}\b/g, // phone (US-like)
   /\b\+?\d{7,15}\b/g,        // international-ish phone numbers
   /\b\d{10}\b/g,             // raw 10 digit
+  /\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g, // credit cards
+  /\b\d{3}-\d{2}-\d{4}\b/g, // SSN / SIN style IDs
   /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, // email
-  /\b(?:street|st\.|ave|road|rd\.|drive|dr\.|lane|ln\.|boulevard|blvd)\b/gi, // address hints
-  /\b\d{3}\s?\d{2}\s?\d{4}\b/g, // common national id formats (loose)
+  /\b(?:street|st\.|ave|road|rd\.|drive|dr\.|lane|ln\.|boulevard|blvd|suite|unit|apt)\b/gi, // address hints
+  /\b\d{3}\s?\d{2}\s?\d{4}\b/g, // other common national id formats (loose)
   /\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\b/g // UUIDs
 ];
+
+const DEFAULT_NOISE_EPSILON = 1.0;
+const MIN_NOISE_EPSILON = 0.1;
+const MAX_NOISE_EPSILON = 5;
+
+type SanitizedResult<T> = { value: T; redactions: number };
+
+type SinkLike = {
+  append?: (event: Partial<AuditEvent>) => Promise<AuditEvent>;
+  log?: (event: { timestamp: string; eventType: string; userId?: string; details?: Record<string, unknown> }) => Promise<void>;
+};
 
 function sanitizeText(input: string): { text: string; redactions: number } {
   let redactions = 0;
@@ -41,7 +54,71 @@ function sanitizeText(input: string): { text: string; redactions: number } {
   for (const pattern of PII_PATTERNS) {
     output = output.replace(pattern, () => { redactions++; return '[REDACTED]'; });
   }
-  return { text: output, redactions };
+  output = output.replace(/[^\S\r\n]{2,}/g, ' ');
+  output = output.replace(/\n{3,}/g, '\n\n');
+  output = output.replace(/\u200B+/g, '');
+  return { text: output.trim(), redactions };
+}
+
+function sanitizeDeep<T>(input: T): SanitizedResult<T> {
+  const seen = new WeakMap<object, SanitizedResult<unknown>>();
+
+  const walk = (value: unknown): SanitizedResult<unknown> => {
+    if (typeof value === 'string') {
+      const { text, redactions } = sanitizeText(value);
+      return { value: text, redactions };
+    }
+
+    if (Array.isArray(value)) {
+      let total = 0;
+      const sanitized = value.map((item) => {
+        const result = walk(item);
+        total += result.redactions;
+        return result.value;
+      });
+      return { value: sanitized, redactions: total };
+    }
+
+    if (value && typeof value === 'object') {
+      if (value instanceof Date) {
+        return { value, redactions: 0 };
+      }
+
+      const cached = seen.get(value as object);
+      if (cached) {
+        return cached;
+      }
+
+      const clone: Record<string, unknown> = {};
+      const record: SanitizedResult<unknown> = { value: clone, redactions: 0 };
+      seen.set(value as object, record);
+
+      for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+        const result = walk(child);
+        clone[key] = result.value;
+        record.redactions += result.redactions;
+      }
+
+      return record;
+    }
+
+    return { value, redactions: 0 };
+  };
+
+  const result = walk(input);
+  return { value: result.value as T, redactions: result.redactions };
+}
+
+function normalizeEpsilon(requested: number | undefined, minimumFromConfig: number | undefined): number {
+  const min = Math.max(MIN_NOISE_EPSILON, minimumFromConfig ?? MIN_NOISE_EPSILON);
+  if (!Number.isFinite(requested)) {
+    return Math.max(min, DEFAULT_NOISE_EPSILON);
+  }
+  const magnitude = Math.abs(requested as number);
+  if (magnitude === 0) {
+    return 0;
+  }
+  return Math.min(MAX_NOISE_EPSILON, Math.max(min, magnitude));
 }
 
 function sampleLaplace(scale: number): number {
@@ -116,72 +193,57 @@ export class EmpathyMetricsCollector {
     moodEntries: MoodEntry[],
     options: EmpathyCollectionOptions
   ): Promise< EmpathyCollectionResult > {
-  const { userId, consentGranted, sanitize = true, differentialPrivacy = false, noiseEpsilon = 1.0 } = options;
+    const { userId, consentGranted, sanitize = true, differentialPrivacy = false, noiseEpsilon = DEFAULT_NOISE_EPSILON } = options;
 
     if (this.security && this.security['privacyConfig']?.consentRequired && !consentGranted) {
       throw new Error('Consent required before collecting empathy metrics.');
     }
 
-    // Sanitize notes in copies only
     let redactions = 0;
-    const safePain = painEntries.map(p => ({
-      ...p,
-      notes: sanitize && p.notes ? sanitizeText(p.notes).text : p.notes
-    }));
-    if (sanitize) {
-      painEntries.forEach(p => { if (p.notes) redactions += sanitizeText(p.notes).redactions; });
-    }
+    const safePain = sanitize
+      ? painEntries.map((entry) => {
+          const result = sanitizeDeep(entry);
+          redactions += result.redactions;
+          return result.value;
+        })
+      : painEntries.map((entry) => ({ ...entry }));
 
-    const safeMood = moodEntries.map(m => ({
-      ...m,
-      notes: sanitize && m.notes ? sanitizeText(m.notes).text : m.notes
-    }));
-    if (sanitize) {
-      moodEntries.forEach(m => { if (m.notes) redactions += sanitizeText(m.notes).redactions; });
-    }
+    const safeMood = sanitize
+      ? moodEntries.map((entry) => {
+          const result = sanitizeDeep(entry);
+          redactions += result.redactions;
+          return result.value;
+        })
+      : moodEntries.map((entry) => ({ ...entry }));
 
     const metrics = await this.analytics.calculateQuantifiedEmpathy(userId, safePain, safeMood);
-  const insights = await this.analytics.generateEmpathyInsights(userId, metrics, safePain, safeMood);
+    const insights = await this.analytics.generateEmpathyInsights(userId, metrics, safePain, safeMood);
     const recommendations = await this.analytics.generateEmpathyRecommendations(userId, metrics, insights);
 
     // Range guard + optional noise (respect privacy budget if provided)
     let noiseInjected = false;
+    let epsilonForNoise = 0;
     if (differentialPrivacy) {
-      const eps = noiseEpsilon;
-      let allowed = true;
-      if (this.budgetManager) {
-        // consume returns a Promise<boolean>
-        allowed = await this.budgetManager.consume(userId, eps);
-      }
-      noiseInjected = !!allowed;
-      // Audit budget consumption
-      const event = { timestamp: new Date().toISOString(), eventType: 'dp_budget_consumption', userId, details: { requestedEpsilon: eps, consumed: noiseInjected } };
-      if (this.keyManager && typeof (this.keyManager as KeyManager).getKey === 'function') {
-        try {
-          // request the audit key using the standard getKey interface; purpose 'audit' is conventional here
-          const getKeyFn = (this.keyManager as KeyManager).getKey.bind(this.keyManager);
-          const auditKey = await getKeyFn('audit');
-          const hmac = createHmac('sha256', auditKey).update(userId).digest('base64');
-          // prefer sinks that implement append (SecureAuditSink / InMemoryAuditSink)
-          type SinkLike = { append?: (e: Partial<AuditEvent>) => Promise<AuditEvent>; log?: (e: { timestamp: string; eventType: string; userId?: string; details?: Record<string, unknown> }) => Promise<void> };
-          const sink = this.auditLogger as unknown as SinkLike | undefined;
-          if (sink?.append) {
-            await sink.append({ eventId: String(Date.now()), timestamp: event.timestamp, eventType: event.eventType, userIdHmac: hmac, details: event.details });
-          } else if (sink?.log) {
-            await sink.log({ timestamp: event.timestamp, eventType: event.eventType, userId: hmac, details: event.details });
-          }
-        } catch (err) {
-          // best-effort: do not block collection on audit failures; still log to legacy logger if present
-          if (this.auditLogger && this.auditLogger.log) {
-            await this.auditLogger.log({ timestamp: new Date().toISOString(), eventType: 'dp_budget_audit_failure', userId, details: { error: String(err) } });
-          }
-        }
-      } else if (this.auditLogger && this.auditLogger.log) {
-        await this.auditLogger.log({ timestamp: new Date().toISOString(), eventType: 'dp_budget_consumption', userId, details: { requestedEpsilon: eps, consumed: noiseInjected } });
+      const minimumNoiseLevel = this.security?.['privacyConfig']?.minimumNoiseLevel;
+      const normalizedEpsilon = normalizeEpsilon(noiseEpsilon, minimumNoiseLevel);
+
+      if (normalizedEpsilon > 0) {
+        const allowed = await this.consumePrivacyBudget(userId, normalizedEpsilon);
+        noiseInjected = allowed;
+        epsilonForNoise = allowed ? normalizedEpsilon : 0;
+        await this.logBudgetEvent(userId, allowed ? 'dp_budget_consumption' : 'dp_budget_denied', {
+          requestedEpsilon: normalizedEpsilon,
+          consumed: allowed
+        });
+      } else {
+        await this.logBudgetEvent(userId, 'dp_budget_skipped', {
+          requestedEpsilon: noiseEpsilon,
+          reason: 'non_positive_epsilon'
+        });
       }
     }
 
-    const guarded = this.guardMetrics(metrics, noiseInjected, noiseEpsilon);
+    const guarded = this.guardMetrics(metrics, noiseInjected, epsilonForNoise);
 
     return { metrics: guarded, insights, recommendations, redactions, noiseInjected };
   }
@@ -213,6 +275,64 @@ export class EmpathyMetricsCollector {
   .forEach(k => { humanizedMetrics[k] = applyNoiseMaybe(humanizedMetrics[k], `humanizedMetrics.${k}`); });
 
     return { ...metrics, emotionalIntelligence, compassionateProgress, empathyKPIs, humanizedMetrics };
+  }
+
+  private async consumePrivacyBudget(userId: string, epsilon: number): Promise<boolean> {
+    if (!this.budgetManager) {
+      return true;
+    }
+
+    try {
+      const outcome = (this.budgetManager.consume as unknown as (id: string, eps: number) => boolean | Promise<boolean>)(userId, epsilon);
+      if (outcome && typeof (outcome as Promise<boolean>).then === 'function') {
+        return await outcome;
+      }
+      return !!outcome;
+    } catch (error) {
+      await this.logBudgetEvent(userId, 'dp_budget_error', {
+        requestedEpsilon: epsilon,
+        error: error instanceof Error ? error.message : String(error)
+      });
+      return false;
+    }
+  }
+
+  private async logBudgetEvent(userId: string, eventType: string, details: Record<string, unknown>): Promise<void> {
+    if (!this.auditLogger) {
+      return;
+    }
+
+    const timestamp = new Date().toISOString();
+    const sink = this.auditLogger as unknown as SinkLike;
+
+    if (this.keyManager && typeof (this.keyManager as KeyManager).getKey === 'function') {
+      try {
+        const auditKey = await this.keyManager.getKey('audit');
+        const hmac = createHmac('sha256', auditKey).update(userId).digest('base64');
+        if (sink?.append) {
+          await sink.append({ eventId: String(Date.now()), timestamp, eventType, userIdHmac: hmac, details });
+          return;
+        }
+        if (sink?.log) {
+          await sink.log({ timestamp, eventType, userId: hmac, details });
+          return;
+        }
+      } catch (error) {
+        if (sink?.log) {
+          await sink.log({
+            timestamp: new Date().toISOString(),
+            eventType: 'dp_budget_audit_failure',
+            userId,
+            details: { error: error instanceof Error ? error.message : String(error) }
+          });
+        }
+        return;
+      }
+    }
+
+    if (sink?.log) {
+      await sink.log({ timestamp, eventType, userId, details });
+    }
   }
 }
 

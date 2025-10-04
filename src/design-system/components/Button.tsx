@@ -59,6 +59,7 @@ export interface ButtonProps
   longPress?: boolean;
   onLongPress?: () => void;
   longPressDelay?: number;
+  ripple?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -76,6 +77,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     longPress = false,
     onLongPress,
     longPressDelay = 500,
+    ripple = true,
     disabled,
     onClick,
     onTouchStart,
@@ -89,6 +91,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const longPressTimerRef = React.useRef<NodeJS.Timeout>();
     const [isPressed, setIsPressed] = React.useState(false);
     const [isLongPressing, setIsLongPressing] = React.useState(false);
+    const [ripples, setRipples] = React.useState<Array<{ x: number; y: number; id: number }>>([]);
 
     // Haptic feedback function
     const triggerHapticFeedback = React.useCallback(() => {
@@ -152,9 +155,24 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const handleClick = React.useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
       if (isDisabled || isLongPressing) return;
       
+      // Add ripple effect
+      if (ripple) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const id = Date.now();
+        
+        setRipples(prev => [...prev, { x, y, id }]);
+        
+        // Remove ripple after animation
+        setTimeout(() => {
+          setRipples(prev => prev.filter(r => r.id !== id));
+        }, 600);
+      }
+      
       triggerHapticFeedback();
       onClick?.(e);
-    }, [isDisabled, isLongPressing, triggerHapticFeedback, onClick]);
+    }, [isDisabled, isLongPressing, ripple, triggerHapticFeedback, onClick]);
 
     // Cleanup timer on unmount
     React.useEffect(() => {
@@ -173,6 +191,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           loading && 'cursor-wait',
           isPressed && 'scale-95',
           isLongPressing && 'ring-2 ring-primary ring-opacity-50',
+          ripple && 'relative overflow-hidden',
           'touch-manipulation select-none'
         )}
         ref={ref}
@@ -187,6 +206,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         onMouseUp={handleMouseUp}
         {...props}
       >
+        {/* Ripple effects */}
+        {ripple && ripples.map((ripple) => (
+          <span
+            key={ripple.id}
+            className="absolute bg-white/30 rounded-full pointer-events-none animate-ripple"
+            style={{
+              left: ripple.x,
+              top: ripple.y,
+              width: '20px',
+              height: '20px',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        ))}
+        
         {loading && (
           <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
         )}

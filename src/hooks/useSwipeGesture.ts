@@ -36,12 +36,12 @@ const defaultConfig: Required<SwipeConfig> = {
   preventDefault: true,
 };
 
-export function useSwipeGesture(
+export function useSwipeGesture<T extends HTMLElement = HTMLElement>(
   config: SwipeConfig = {},
   handlers: SwipeHandlers = {}
 ) {
   const finalConfig = { ...defaultConfig, ...config };
-  const elementRef = useRef<HTMLElement>(null);
+  const elementRef = useRef<T>(null);
   const [swipeState, setSwipeState] = useState<SwipeState>({
     isSwiping: false,
     direction: null,
@@ -207,7 +207,7 @@ export function usePullToRefresh(
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [pullDistance, setPullDistance] = useState(0);
 
-  const swipeGesture = useSwipeGesture(
+  const swipeGesture = useSwipeGesture<HTMLDivElement>(
     { threshold: 10, velocity: 0.1, ...config },
     {
       onSwipeMove: (state) => {

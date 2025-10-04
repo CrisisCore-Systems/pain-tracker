@@ -24,7 +24,7 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
 
 // Security Event Types
 export interface SecurityEvent {
-  type: 'authentication' | 'encryption' | 'data_access' | 'error' | 'audit' | 'analytics';
+  type: 'authentication' | 'encryption' | 'data_access' | 'error' | 'audit' | 'analytics' | 'vault';
   level: 'info' | 'warning' | 'error' | 'critical';
   message: string;
   metadata?: Record<string, unknown>;

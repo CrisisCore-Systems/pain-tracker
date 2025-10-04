@@ -27,6 +27,8 @@ export type ChartDataset = {
   backgroundColor?: string | string[];
   borderColor?: string | string[];
   borderWidth?: number;
+  borderRadius?: number | number[];
+  borderSkipped?: boolean | string;
   fill?: boolean;
   tension?: number;
   // Per-point chart.js props that may be injected by mapDataset
@@ -51,6 +53,7 @@ export type ChartConfig = {
   showLegend?: boolean;
   showTitle?: boolean;
   scales?: Record<string, unknown> | undefined;
+  plugins?: Record<string, unknown> | undefined;
 };
 
 export type ChartProps = {
@@ -126,6 +129,7 @@ export function Chart({
     showLegend = true,
     showTitle = true,
     scales,
+    plugins,
   } = config;
 
   const chartData = React.useMemo(() => ({
@@ -194,6 +198,7 @@ export function Chart({
           mode: 'xy' as const,
         },
       },
+      ...plugins,
     },
     elements: {
       point: {

@@ -12,16 +12,15 @@ import { PainTrackerContainer } from "./containers/PainTrackerContainer";
 import { ThemeProvider } from "./design-system";
 import { ToastProvider } from "./components/feedback";
 import { TraumaInformedProvider } from "./components/accessibility";
+import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
 import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
 import { PWAStatusIndicator } from "./components/pwa/PWAStatusIndicator";
 import BetaWarning from './components/BetaWarning';
 import QuickActions from './components/QuickActions';
-import MedicationReminders from './components/MedicationReminders';
 import NotificationConsentPrompt from './components/NotificationConsentPrompt';
 import BetaAnalyticsConsentPrompt from './components/BetaAnalyticsConsentPrompt';
-import AlertsSettings from './components/AlertsSettings';
-import AlertsActivityLog from './components/AlertsActivityLog';
+import { VaultGate } from './components/security/VaultGate';
 import { usePatternAlerts } from './hooks/usePatternAlerts';
 import { usePainTrackerStore, selectEntries } from './stores/pain-tracker-store';
 import { OfflineBanner } from "./components/pwa/OfflineIndicator";
@@ -52,6 +51,13 @@ const LoadingFallback = () => {
 };
 
 function App() {
+  // Initialize global accessibility features
+  const { announceMessage } = useGlobalAccessibility({
+    enableValidation: import.meta.env.DEV,
+    enableAutoLabeling: true,
+    announceRouteChanges: true,
+  });
+
   // Initialize PWA features
   useEffect(() => {
     // Initialize PWA manager
@@ -101,25 +107,22 @@ function App() {
     <ThemeProvider>
       <TraumaInformedProvider>
         <ToastProvider>
-          <div className="min-h-screen bg-background transition-colors">
-            <OfflineBanner />
-            <BetaWarning />
-            <QuickActions />
-            <div className="fixed top-20 right-4 z-50 flex flex-col space-y-2 w-80">
-              <MedicationReminders />
-              <AlertsSettings />
-              <AlertsActivityLog />
+          <VaultGate>
+            <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+              <OfflineBanner />
+              <BetaWarning />
+              <QuickActions />
+              <NotificationConsentPrompt />
+              <BetaAnalyticsConsentPrompt />
+              <ErrorBoundary fallback={<ErrorFallback />}>
+                <Suspense fallback={<LoadingFallback />}>
+                  <PainTrackerContainer />
+                </Suspense>
+              </ErrorBoundary>
+              <PWAInstallPrompt />
+              <PWAStatusIndicator />
             </div>
-            <NotificationConsentPrompt />
-            <BetaAnalyticsConsentPrompt />
-            <ErrorBoundary fallback={<ErrorFallback />}>
-              <Suspense fallback={<LoadingFallback />}>
-                <PainTrackerContainer />
-              </Suspense>
-            </ErrorBoundary>
-            <PWAInstallPrompt />
-            <PWAStatusIndicator />
-          </div>
+          </VaultGate>
         </ToastProvider>
       </TraumaInformedProvider>
     </ThemeProvider>

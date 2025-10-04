@@ -10,10 +10,15 @@ export * from './ThemeProvider';
 // Components
 export * from './components/Button';
 export * from './components/Card';
+export * from './components/EnhancedCard';
 export * from './components/Input';
 export * from './components/ThemeToggle';
+export * from './components/ThemeSwitcher';
 export * from './components/Badge';
 export * from './components/Loading';
+export * from './components/Skeleton';
+export * from './components/PageTransition';
+export * from './components/Toast';
 export * from './components/DataTable';
 export * from './components/Chart';
 export * from './components/Navigation';

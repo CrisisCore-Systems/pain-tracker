@@ -2,6 +2,30 @@
 
 ## 🎯 **Successfully Completed Priority Improvements**
 
+### ✅ **New: Calmer Dashboard Surfaces (2025-10-03)**
+
+**Purpose:** Address visual overload from the customizable dashboard after modularization—fixing text overflow, tightening spacing, and restoring a gently-paced hierarchy.
+
+**Key Enhancements:**
+- 🧩 Redesigned `DashboardHeader` with a hero surface and digestible metric tiles so summary data no longer wraps awkwardly on smaller screens.
+- 🧭 Converted `DashboardSectionNavigation` into pill-style tabs with horizontal scrolling support, preventing description text from clipping or colliding.
+- 📐 Replaced ad-hoc column layouts in `DashboardGridSection` with responsive CSS grid sizing plus consistent widget shells to keep cards from mashing together.
+- 🧱 Standardized the customizable dashboard to a maximum of two columns, keeping widgets readable while still supporting dense layouts.
+- 🎛️ Refined `DashboardWidget` styling and utility widgets (current stats, quick actions) for balanced padding, trauma-informed spacing, and clearer drag handles.
+
+**Impact:** The dashboard now breathes—widgets align cleanly, descriptive copy wraps gracefully, and users can focus on one cluster of information at a time without visual noise.
+
+### ✅ **New: Trauma-Informed Dashboard Streamlining (2025-09-25)**
+
+**Purpose:** Reduce dashboard overwhelm while surfacing crisis-support features with clearer intent.
+
+**Key Changes:**
+- 🚦 Introduced a dedicated **Support** view in `TraumaInformedPainTrackerLayout` with reminders, alert settings, and safety logs grouped together.
+- 🧭 Expanded navigation (desktop, mobile, voice, and gestures) to include the Support tab, keeping primary dashboard metrics distraction-free.
+- 🪄 Simplified the default dashboard composition so insight widgets have maximum space while comfort tools remain one tap away.
+
+**Impact:** Users can stay focused on trends and entries during daily tracking, then transition to the Support view when they want to tune reminders or review safety activity—without scrolling through a crowded layout.
+
 ### ✅ **1. Architecture: Component Decomposition & State Management**
 
 **Achievements:**

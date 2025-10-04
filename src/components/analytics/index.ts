@@ -9,6 +9,14 @@ export { default as EmpathyAnalyticsIntegration } from './EmpathyAnalyticsIntegr
 export { QuantifiedEmpathyDashboard } from './QuantifiedEmpathyDashboard';
 export { EnhancedQuantifiedEmpathyDashboard } from './EnhancedQuantifiedEmpathyDashboard';
 
+// Advanced Analytics Components (New)
+export { AnalyticsDashboard } from './AnalyticsDashboard';
+export { CorrelationMatrixView } from './CorrelationMatrixView';
+export { InterventionScorecard } from './InterventionScorecard';
+export { TriggerPatternTimeline } from './TriggerPatternTimeline';
+export { PredictiveIndicatorPanel } from './PredictiveIndicatorPanel';
+export { WeeklyClinicalBriefCard } from './WeeklyClinicalBriefCard';
+
 // Re-export enhanced analytics services
 export { 
   EmpathyDrivenAnalyticsService,
@@ -63,3 +71,12 @@ export type {
   EmpathyStateSnapshot,
   RealTimeAlert
 } from '../../services/RealTimeEmpathyMonitor';
+
+// Re-export Advanced Analytics types
+export type {
+  CorrelationResult,
+  InterventionScore,
+  TriggerPattern,
+  PredictiveIndicator,
+  WeeklyClinicalBrief,
+} from '../../services/AdvancedAnalyticsEngine';

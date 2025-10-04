@@ -51,10 +51,13 @@ export const secureStorage = {
       if (raw === '"__SERIALIZATION_ERROR__"') return null;
       try {
         let decoded = raw;
-    if (options?.encrypt && (options.decryptFn || (globalThis as unknown as { __secureStorageDecrypt?: (c: string)=>string }).__secureStorageDecrypt)) {
+        if (options?.encrypt) {
+          const decrypt = options.decryptFn || (globalThis as unknown as { __secureStorageDecrypt?: (c: string)=>string }).__secureStorageDecrypt;
+          if (!decrypt) {
+            return null;
+          }
           try {
-            const decrypt = options.decryptFn || (globalThis as unknown as { __secureStorageDecrypt?: (c: string)=>string }).__secureStorageDecrypt;
-            decoded = (decrypt!)(raw);
+            decoded = decrypt(raw);
           } catch {
             return null; // decryption failure treated as missing
           }
@@ -81,10 +84,13 @@ export const secureStorage = {
         return { success: false, error: 'VALUE_TOO_LARGE', bytes };
       }
       let out = data;
-      if (options?.encrypt && (options.encryptFn || (globalThis as unknown as { __secureStorageEncrypt?: (p: string)=>string }).__secureStorageEncrypt)) {
+      if (options?.encrypt) {
+        const encrypt = options.encryptFn || (globalThis as unknown as { __secureStorageEncrypt?: (p: string)=>string }).__secureStorageEncrypt;
+        if (!encrypt) {
+          return { success: false, error: 'ENCRYPTION_UNAVAILABLE' };
+        }
         try {
-          const encrypt = options.encryptFn || (globalThis as unknown as { __secureStorageEncrypt?: (p: string)=>string }).__secureStorageEncrypt;
-          out = (encrypt!)(data);
+          out = encrypt(data);
         } catch {
           return { success: false, error: 'ENCRYPT_FAILED' };
         }

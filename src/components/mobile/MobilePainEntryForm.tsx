@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { PainEntry } from '../../types';
 import { TouchOptimizedSlider } from './TouchOptimizedSlider';
 import { MobileFormNavigation, useKeyboardNavigation } from './MobileFormNavigation';
 import { SwipeableCards } from './SwipeableCards';
 import { BodyMappingSection } from '../body-mapping/BodyMappingSection';
-import { Card, CardContent } from '../../design-system';
+import { Card, CardContent, Button } from '../../design-system';
 import {
   BaselineSection,
   ComparisonSection,
@@ -14,12 +14,50 @@ import {
   TreatmentsSection,
   WorkImpactSection,
 } from '../pain-tracker/form-sections';
+import {
+  EmotionalValidation,
+  HolisticProgressTracker,
+  ValidationHistory,
+  useEmotionalValidation,
+  validationIntegration,
+  type ProgressEntry,
+} from '../../validation-technology';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
+import type { ValidationResponse } from '../../services/EmotionalValidationService';
+import { BarChart3, History, Loader2 } from 'lucide-react';
+
+// Environment helper mirroring desktop form
+const getEnv = () => {
+  try {
+    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
+      return (import.meta as any).env as Record<string, unknown>;
+    }
+  } catch (_) {
+    // ignore runtime mismatches
+  }
+  if (typeof process !== 'undefined' && (process as any).env) {
+    return (process as any).env as Record<string, unknown>;
+  }
+  return {} as Record<string, unknown>;
+};
+
+const ENABLE_VALIDATION = (() => {
+  const env = getEnv();
+  return env.VITE_REACT_APP_ENABLE_VALIDATION === 'true' || env.REACT_APP_ENABLE_VALIDATION === 'true';
+})();
 
 interface MobilePainEntryFormProps {
   onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
 }
 
 export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
+  const entries = usePainTrackerStore((state) => state.entries);
+  const { preferences } = useTraumaInformed();
+  const { validationHistory, addValidation, clearHistory } = useEmotionalValidation();
+  const [showValidationHistory, setShowValidationHistory] = useState(true);
+  const [showProgressTracker, setShowProgressTracker] = useState(preferences.showProgress);
+  const [progressStatus, setProgressStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [currentSection, setCurrentSection] = useState(0);
   const [formData, setFormData] = useState<Omit<PainEntry, "id" | "timestamp">>({
     baselineData: {
@@ -58,6 +96,34 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
     },
     notes: "",
   });
+
+  useEffect(() => {
+    setShowProgressTracker(preferences.showProgress);
+  }, [preferences.showProgress]);
+
+  const validationIsActive = ENABLE_VALIDATION && preferences.realTimeValidation;
+
+  const handleValidationGenerated = useCallback(async (validation: ValidationResponse) => {
+    addValidation(validation);
+    try {
+      await validationIntegration.saveValidation(validation);
+    } catch (error) {
+      console.error('Failed to persist validation message (mobile)', error);
+    }
+  }, [addValidation, validationIntegration]);
+
+  const handleProgressUpdate = useCallback(async (entry: ProgressEntry) => {
+    try {
+      setProgressStatus('saving');
+      await validationIntegration.saveProgressEntry(entry);
+      setProgressStatus('saved');
+      setTimeout(() => setProgressStatus('idle'), 6000);
+    } catch (error) {
+      console.error('Failed to persist mobile progress entry', error);
+      setProgressStatus('error');
+      setTimeout(() => setProgressStatus('idle'), 6000);
+    }
+  }, [validationIntegration]);
 
   // Mobile-optimized sections with touch-friendly components
   const sections = [
@@ -320,7 +386,93 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
                 placeholder="Describe any additional details about your pain, what might have triggered it, or anything else that might be helpful..."
                 className="w-full h-32 p-4 border rounded-lg resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
+              {validationIsActive && (
+                <EmotionalValidation
+                  text={formData.notes || ''}
+                  onValidationGenerated={handleValidationGenerated}
+                  isActive
+                />
+              )}
             </div>
+          </CardContent>
+        </Card>
+      )
+    },
+    {
+      id: 'wellness-toolkit',
+      title: 'Wellness Toolkit',
+      component: (
+        <Card>
+          <CardContent className="pt-6 space-y-6">
+            {validationIsActive && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-sm font-semibold text-muted-foreground">
+                    <History className="h-4 w-4" />
+                    <span>Recent validation messages</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowValidationHistory((prev) => !prev)}
+                  >
+                    {showValidationHistory ? 'Hide' : 'Show'}
+                  </Button>
+                </div>
+                {showValidationHistory ? (
+                  <ValidationHistory validations={validationHistory} onClear={clearHistory} />
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    Validation stays here whenever you need reassurance. You can reopen it anytime.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {preferences.showProgress && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-sm font-semibold text-muted-foreground">
+                    <BarChart3 className="h-4 w-4 text-primary" />
+                    <span>Whole-person progress</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowProgressTracker((prev) => !prev)}
+                  >
+                    {showProgressTracker ? 'Hide tools' : 'Open tools'}
+                  </Button>
+                </div>
+
+                {showProgressTracker ? (
+                  <div className="space-y-3">
+                    <HolisticProgressTracker
+                      painEntries={entries}
+                      onProgressUpdate={handleProgressUpdate}
+                    />
+                    {progressStatus === 'saving' && (
+                      <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Saving wellness insights securely…</span>
+                      </div>
+                    )}
+                    {progressStatus === 'saved' && (
+                      <p className="text-xs text-success">Progress entry saved with privacy protections.</p>
+                    )}
+                    {progressStatus === 'error' && (
+                      <p className="text-xs text-destructive">We couldn’t save this right now, but your notes remain local.</p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    These tools honour wins beyond pain scores. Open them whenever you have the energy.
+                  </p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       )

@@ -1,84 +1,192 @@
-/**
- * Minimal AES-GCM encrypted IndexedDB wrapper (opt-in)
- * - Exposes encryptAndStore and retrieveAndDecrypt helpers
- * - Uses SubtleCrypto (Web Crypto) for AES-GCM
- * - This is a minimal shim; production use should include key management and rotation
- */
+import { vaultService } from '../../services/VaultService';
+import { getSodium } from '../crypto/sodium';
 
-export async function generateCryptoKey(importFromHex?: string): Promise<CryptoKey> {
-  const subtle = typeof window !== 'undefined' ? window.crypto.subtle : (globalThis as any).crypto.subtle;
-  if (importFromHex) {
-    const raw = hexToBytes(importFromHex);
-    return await subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+export interface VaultIndexedDBRecord {
+  v: 'xchacha20-poly1305';
+  n: string;
+  c: string;
+  createdAt: string;
+  keyVersion: string;
+  metadata?: Record<string, unknown>;
+}
+
+interface LegacyRecord {
+  iv: number[];
+  data: number[];
+}
+
+function openDb(dbName: string, storeName: string): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(dbName);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(storeName)) {
+        db.createObjectStore(storeName);
+      }
+    };
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
+export async function encryptAndStore(
+  dbName: string,
+  storeName: string,
+  entryKey: string,
+  value: string,
+  metadata?: Record<string, unknown>
+): Promise<void> {
+  if (!vaultService.isUnlocked()) {
+    throw new Error('Vault must be unlocked before storing encrypted data.');
   }
-  const key = await subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
-  return key;
-}
 
-function hexToBytes(hex: string): Uint8Array {
-  const res = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < res.length; i++) res[i] = parseInt(hex.substr(i * 2, 2), 16);
-  return res;
-}
+  const db = await openDb(dbName, storeName);
 
-async function encodeString(str: string): Promise<Uint8Array> {
-  return new TextEncoder().encode(str);
-}
+  try {
+    const encoder = new TextEncoder();
+    const payload = encoder.encode(value);
+    const { nonce, cipher } = vaultService.encryptBytes(payload);
+    const record: VaultIndexedDBRecord = {
+      v: 'xchacha20-poly1305',
+      n: nonce,
+      c: cipher,
+      createdAt: new Date().toISOString(),
+      keyVersion: vaultService.getStatus().metadata?.version ?? 'unknown',
+      metadata
+    };
 
-async function decodeString(buf: Uint8Array): Promise<string> {
-  return new TextDecoder().decode(buf);
-}
-
-export async function encryptAndStore(dbName: string, storeName: string, keyId: string, dataKey: string, value: string, cryptoKey: CryptoKey) {
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const encoded = await encodeString(value);
-  // crypto.subtle expects a BufferSource; Uint8Array.buffer is an ArrayBuffer
-  const cipher = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, cryptoKey, encoded.buffer as ArrayBuffer);
-
-  const toStore = {
-    iv: Array.from(iv),
-    data: Array.from(new Uint8Array(cipher))
-  };
-
-  // Use simple IndexedDB wrapper
-  const req = indexedDB.open(dbName);
-  req.onupgradeneeded = () => {
-    const db = req.result;
-    if (!db.objectStoreNames.contains(storeName)) db.createObjectStore(storeName);
-  };
-  await new Promise<void>((resolve, reject) => {
-    req.onsuccess = () => {
-      const db = req.result;
+    await new Promise<void>((resolve, reject) => {
       const tx = db.transaction(storeName, 'readwrite');
-      tx.objectStore(storeName).put(toStore, dataKey);
-      tx.oncomplete = () => { db.close(); resolve(); };
+      const store = tx.objectStore(storeName);
+      store.put(record, entryKey);
+      tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
-    };
-    req.onerror = () => reject(req.error);
-  });
+    });
+  } finally {
+    db.close();
+  }
 }
 
-export async function retrieveAndDecrypt(dbName: string, storeName: string, dataKey: string, cryptoKey: CryptoKey): Promise<string | null> {
-  const req = indexedDB.open(dbName);
-  return await new Promise<string | null>((resolve, reject) => {
-    req.onsuccess = async () => {
+export async function retrieveAndDecrypt(
+  dbName: string,
+  storeName: string,
+  entryKey: string
+): Promise<string | null> {
+  if (!vaultService.isUnlocked()) {
+    return null;
+  }
+
+  const db = await openDb(dbName, storeName);
+
+  try {
+    const record = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const request = store.get(entryKey);
+      request.onsuccess = () => resolve(request.result ?? null);
+      request.onerror = () => reject(request.error);
+    });
+
+    if (!record) {
+      return null;
+    }
+
+    if (isVaultRecord(record)) {
+      const data = vaultService.decryptBytes({ nonce: record.n, cipher: record.c });
+      const decoder = new TextDecoder();
+      return decoder.decode(data);
+    }
+
+    if (isLegacyRecord(record)) {
+      const decoder = new TextDecoder();
+      const sodium = await getSodium();
+      const iv = new Uint8Array(record.iv);
+      const cipher = new Uint8Array(record.data);
+
       try {
-        const db = req.result;
+        const key = await deriveLegacyKey();
+        if (!key) {
+          throw new Error('Legacy key unavailable');
+        }
+        const subtle = crypto.subtle;
+        const cryptoKey = await subtle.importKey('raw', key, { name: 'AES-GCM' }, false, ['decrypt']);
+        const decrypted = await subtle.decrypt({ name: 'AES-GCM', iv }, cryptoKey, cipher.buffer as ArrayBuffer);
+        const plain = new Uint8Array(decrypted);
+        const text = decoder.decode(plain);
+
+        await encryptAndStore(dbName, storeName, entryKey, text);
+        return text;
+      } catch {
+        const text = decoder.decode(new Uint8Array(cipher));
+        await encryptAndStore(dbName, storeName, entryKey, text);
+        return text;
+      } finally {
+        sodium.memzero(iv);
+        sodium.memzero(cipher);
+      }
+    }
+
+    return null;
+  } finally {
+    db.close();
+  }
+}
+
+export async function migrateIndexedDBStore(dbName: string, storeName: string): Promise<{ migrated: number }> {
+  if (!vaultService.isUnlocked()) {
+    throw new Error('Vault must be unlocked before running migrations.');
+  }
+
+  const db = await openDb(dbName, storeName);
+  let migrated = 0;
+
+  try {
+    const keys = await new Promise<IDBValidKey[]>((resolve, reject) => {
+      const tx = db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const request = store.getAllKeys();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+
+    for (const key of keys) {
+      const raw = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>((resolve, reject) => {
         const tx = db.transaction(storeName, 'readonly');
-        const r = tx.objectStore(storeName).get(dataKey);
-        r.onsuccess = async () => {
-          const stored = r.result;
-          if (!stored) { db.close(); resolve(null); return; }
-          const iv = new Uint8Array(stored.iv);
-          const data = new Uint8Array(stored.data);
-          // Pass an ArrayBuffer view's buffer to subtle.decrypt
-          const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, cryptoKey, data.buffer as ArrayBuffer);
-          db.close();
-          resolve(await decodeString(new Uint8Array(plain)));
-        };
-        r.onerror = () => { db.close(); reject(r.error); };
-      } catch (e) { reject(e); }
-    };
-    req.onerror = () => reject(req.error);
-  });
+        const store = tx.objectStore(storeName);
+        const request = store.get(key);
+        request.onsuccess = () => resolve(request.result ?? null);
+        request.onerror = () => reject(request.error);
+      });
+
+      if (!raw) continue;
+      if (isVaultRecord(raw)) continue;
+
+      const value = await retrieveAndDecrypt(dbName, storeName, key as string);
+      if (value != null) {
+        await encryptAndStore(dbName, storeName, key as string, value);
+        migrated += 1;
+      }
+    }
+  } finally {
+    db.close();
+  }
+
+  return { migrated };
+}
+
+function isVaultRecord(record: VaultIndexedDBRecord | LegacyRecord): record is VaultIndexedDBRecord {
+  return (record as VaultIndexedDBRecord).v === 'xchacha20-poly1305';
+}
+
+function isLegacyRecord(record: VaultIndexedDBRecord | LegacyRecord): record is LegacyRecord {
+  return Array.isArray((record as LegacyRecord).iv) && Array.isArray((record as LegacyRecord).data);
+}
+
+async function deriveLegacyKey(): Promise<ArrayBuffer | null> {
+  try {
+    const key = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+    return crypto.subtle.exportKey('raw', key);
+  } catch {
+    return null;
+  }
 }

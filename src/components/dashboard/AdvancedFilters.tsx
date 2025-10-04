@@ -48,6 +48,8 @@ interface AdvancedFiltersProps {
   onSaveFilter: (name: string, criteria: FilterCriteria) => void;
   onLoadFilter: (filter: SavedFilter) => void;
   onDeleteFilter: (filterId: string) => void;
+  onCriteriaChange?: (criteria: FilterCriteria) => void;
+  onActiveFiltersChange?: (count: number) => void;
 }
 
 const defaultFilters: FilterCriteria = {
@@ -85,6 +87,8 @@ export function AdvancedFilters({
   onSaveFilter,
   onLoadFilter,
   onDeleteFilter,
+  onCriteriaChange,
+  onActiveFiltersChange,
 }: AdvancedFiltersProps) {
   const [filters, setFilters] = useState<FilterCriteria>(defaultFilters);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -298,6 +302,18 @@ export function AdvancedFilters({
   React.useEffect(() => {
     onFiltersChange(filteredEntries);
   }, [filteredEntries, onFiltersChange]);
+
+  useEffect(() => {
+    if (onCriteriaChange) {
+      onCriteriaChange(filters);
+    }
+  }, [filters, onCriteriaChange]);
+
+  useEffect(() => {
+    if (onActiveFiltersChange) {
+      onActiveFiltersChange(activeFiltersCount);
+    }
+  }, [activeFiltersCount, onActiveFiltersChange]);
 
   const updateFilter = (key: keyof FilterCriteria, value: FilterCriteria[keyof FilterCriteria]) => {
     setFilters(prev => ({

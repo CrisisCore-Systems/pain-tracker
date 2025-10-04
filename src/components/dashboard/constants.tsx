@@ -35,7 +35,7 @@ export interface DashboardLayout {
     visible: boolean;
   }[];
   layout: 'grid' | 'masonry' | 'list';
-  columns: 1 | 2 | 3 | 4;
+  columns: 1 | 2;
 }
 
 export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
@@ -175,7 +175,7 @@ export const DEFAULT_DASHBOARD_LAYOUT: DashboardLayout = {
     { id: 'wcb-report', type: 'wcb-report', size: 'medium', position: 9, visible: false }
   ],
   layout: 'grid',
-  columns: 3
+  columns: 2
 };
 
 export const DASHBOARD_LAYOUT_KEY = 'pain-tracker-dashboard-layout';

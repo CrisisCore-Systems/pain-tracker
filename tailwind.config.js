@@ -57,6 +57,50 @@ export default {
           'sans-serif',
         ],
       },
+      animation: {
+        'shimmer': 'shimmer 2s infinite',
+        'fadeInUp': 'fadeInUp 0.5s ease-out',
+        'fadeInDown': 'fadeInDown 0.5s ease-out',
+        'scaleIn': 'scaleIn 0.3s ease-out',
+        'slideInRight': 'slideInRight 0.5s ease-out',
+        'slideInLeft': 'slideInLeft 0.5s ease-out',
+        'smoothPulse': 'smoothPulse 2s ease-in-out infinite',
+        'gentleFloat': 'gentleFloat 3s ease-in-out infinite',
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { backgroundPosition: '-1000px 0' },
+          '100%': { backgroundPosition: '1000px 0' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeInDown: {
+          '0%': { opacity: '0', transform: 'translateY(-20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.9)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(-30px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        slideInLeft: {
+          '0%': { opacity: '0', transform: 'translateX(30px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        smoothPulse: {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.8' },
+        },
+        gentleFloat: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
     },
   },
   plugins: [],

@@ -1,5 +1,2 @@
-runtimes:
-    - python@3.11.11
 tools:
     - trivy@0.66.0
-    - lizard@1.17.31

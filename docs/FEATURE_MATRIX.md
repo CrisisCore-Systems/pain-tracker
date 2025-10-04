@@ -33,6 +33,42 @@ Status Legend:
 | Conventional Commits Enforcement | @ci | Medium | v1.0 | 1d | Implemented | Husky / lint tools | 
 | Dependency Vulnerability Remediation | @security | High | v1.0 | ongoing | Partial | root dependencies | Run `npm audit` and patch critical items before release
 
+## Roadmap Deep Dives
+
+The sections below expand on upcoming releases that currently surface as in-app planned feature notices. Each subsection tracks intent, trauma-informed considerations, and the best place to follow progress.
+
+### Holistic Progress Milestones
+- **Goal:** Curate celebratory milestones that emerge from holistic progress tracking entries.
+- **Why it matters:** Recognizes meaningful breakthroughs while keeping tone gentle and empowering.
+- **Where to follow:** [Active issues](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+holistic+milestones)
+
+### Adaptive Coping Strategy Coach
+- **Goal:** Deliver adaptive, trauma-informed coping prompts tuned to the user's current patterns.
+- **Why it matters:** Reinforces agency with contextual recommendations that respect emotional safety.
+- **Where to follow:** [Tracking board](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+coping+strategy)
+
+### Comparison Analytics 2.0
+- **Goal:** Expand treatment and time-period comparisons with adjustable cohorts and clinician-ready summaries.
+- **Why it matters:** Supports collaborative care conversations by visualizing how interventions affect outcomes.
+- **Where to follow:** [Roadmap search](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+comparison+analytics)
+
+### Visual Comparison Charts
+- **Goal:** Provide interactive charts that illuminate differences across selected time slices and therapies.
+- **Why it matters:** Enhances accessibility by pairing numeric insights with visual storytelling.
+- **Where to follow:** [Design explorations](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+visual+comparison)
+
+### Empathy Intelligence Deep Dives
+- **Goal:** Unlock multi-dimensional empathy drill-downs including neural pattern explorers, wisdom journeys, temporal rhythms, predictive insights, cultural empathy, and micro-moment celebrations.
+- **Why it matters:** Gives clinicians and users gentle, privacy-conscious visibility into empathy growth arcs.
+- **Where to follow:**
+	- [Empathy IQ roadmap](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+empathy+intelligence)
+	- [Neural empathy thread](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+neural+empathy)
+	- [Wisdom journey work](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+wisdom+journey)
+	- [Temporal empathy updates](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+temporal+empathy)
+	- [Predictive empathy roadmap](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+predictive+empathy)
+	- [Cultural empathy focus](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+cultural+empathy)
+	- [Micro-moment tasks](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+micro+empathy)
+
 ## How to use
 - Update your feature row when ownership, priority, milestone, or estimate changes.
 - Link UI placeholders to this file using an anchor or direct reference (e.g. `docs/FEATURE_MATRIX.md#worksafe-bc-export-csvjson`).

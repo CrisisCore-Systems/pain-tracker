@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import type { PainEntry } from "../../types";
 import { usePainTrackerStore } from "../../stores/pain-tracker-store";
 import {
@@ -12,8 +12,17 @@ import {
 } from "./form-sections";
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Loading } from '../../design-system';
 // Optional validation technology integration (feature-flagged)
-import { EmotionalValidation } from '../../validation-technology';
-import { ChevronLeft, ChevronRight, Check, Save, Clock, AlertCircle } from 'lucide-react';
+import {
+  EmotionalValidation,
+  HolisticProgressTracker,
+  ValidationHistory,
+  useEmotionalValidation,
+  validationIntegration,
+  type ProgressEntry,
+} from '../../validation-technology';
+import { ChevronLeft, ChevronRight, Check, Save, Clock, AlertCircle, BarChart3, History, Loader2 } from 'lucide-react';
+import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
+import type { ValidationResponse } from '../../services/EmotionalValidationService';
 
 // Environment helper for browser (Vite) and Node fallbacks.
 // Use Vite's import.meta.env when available, otherwise fall back to process.env if present.
@@ -44,8 +53,14 @@ interface PainEntryFormProps {
 
 export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const { ui, setCurrentFormSection } = usePainTrackerStore();
+  const entries = usePainTrackerStore((state) => state.entries);
   const currentSection = ui.currentFormSection;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { preferences } = useTraumaInformed();
+  const { validationHistory, addValidation, clearHistory } = useEmotionalValidation();
+  const [showValidationHistory, setShowValidationHistory] = useState(true);
+  const [showProgressTracker, setShowProgressTracker] = useState(preferences.showProgress);
+  const [progressStatus, setProgressStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [formData, setFormData] = useState<Omit<PainEntry, "id" | "timestamp">>({
     baselineData: {
       pain: 0,
@@ -83,6 +98,34 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     },
     notes: "",
   });
+
+  useEffect(() => {
+    setShowProgressTracker(preferences.showProgress);
+  }, [preferences.showProgress]);
+
+  const handleValidationGenerated = useCallback(async (validation: ValidationResponse) => {
+    addValidation(validation);
+    try {
+      await validationIntegration.saveValidation(validation);
+    } catch (error) {
+      console.error('Failed to persist validation message', error);
+    }
+  }, [addValidation, validationIntegration]);
+
+  const handleProgressUpdate = useCallback(async (entry: ProgressEntry) => {
+    try {
+      setProgressStatus('saving');
+      await validationIntegration.saveProgressEntry(entry);
+      setProgressStatus('saved');
+      setTimeout(() => setProgressStatus('idle'), 6000);
+    } catch (error) {
+      console.error('Failed to persist progress entry', error);
+      setProgressStatus('error');
+      setTimeout(() => setProgressStatus('idle'), 6000);
+    }
+  }, [validationIntegration]);
+
+  const validationIsActive = useMemo(() => ENABLE_VALIDATION && preferences.realTimeValidation, [preferences.realTimeValidation]);
 
   const sections = [
     {
@@ -318,13 +361,47 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           </div>
 
           {/* Emotional validation panel (read-only, feature-flagged) */}
-          {ENABLE_VALIDATION && (
+          {validationIsActive && (
             <div className="mt-4">
               <EmotionalValidation
                 text={formData.notes || ''}
-                onValidationGenerated={() => { /* read-only integration: UI only for now */ }}
-                isActive={true}
+                onValidationGenerated={handleValidationGenerated}
+                isActive
               />
+            </div>
+          )}
+
+          {validationIsActive && validationHistory.length > 0 && showValidationHistory && (
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2 text-sm font-medium text-muted-foreground">
+                  <History className="h-4 w-4" />
+                  <span>Recent validation moments</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowValidationHistory(false)}
+                >
+                  Hide
+                </Button>
+              </div>
+              <ValidationHistory validations={validationHistory} onClear={clearHistory} />
+            </div>
+          )}
+
+          {validationIsActive && !showValidationHistory && validationHistory.length > 0 && (
+            <div className="mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowValidationHistory(true)}
+                leftIcon={<History className="h-4 w-4" />}
+              >
+                Show recent validation messages
+              </Button>
             </div>
           )}
 
@@ -380,6 +457,50 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
             </div>
           </div>
         </form>
+
+        {preferences.showProgress && (
+          <div className="mt-8 border-t pt-6">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <BarChart3 className="h-4 w-4 text-primary" />
+                <p className="text-sm font-semibold text-muted-foreground">Whole-person progress tracking</p>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowProgressTracker((prev) => !prev)}
+              >
+                {showProgressTracker ? 'Hide wellness tools' : 'Show wellness tools'}
+              </Button>
+            </div>
+
+            {showProgressTracker ? (
+              <div className="space-y-3">
+                <HolisticProgressTracker
+                  painEntries={entries}
+                  onProgressUpdate={handleProgressUpdate}
+                />
+                {progressStatus === 'saving' && (
+                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Saving wellness insights securely…</span>
+                  </div>
+                )}
+                {progressStatus === 'saved' && (
+                  <p className="text-xs text-success">Progress entry saved with validation technology.</p>
+                )}
+                {progressStatus === 'error' && (
+                  <p className="text-xs text-destructive">We couldn’t save your progress right now. Your notes stay on this device.</p>
+                )}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                These tools celebrate growth beyond pain scores. You can open them whenever you’re ready.
+              </p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

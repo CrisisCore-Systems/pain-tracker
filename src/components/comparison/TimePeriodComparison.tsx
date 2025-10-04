@@ -18,6 +18,7 @@ import {
   Activity,
   RefreshCw
 } from 'lucide-react';
+import { PlannedFeatureNotice } from '../common/PlannedFeatureNotice';
 
 interface TimePeriodComparisonProps {
   entries: PainEntry[];
@@ -415,7 +416,7 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             <div className="text-center py-8 text-gray-500">
               <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p>Charts will be displayed here</p>
-              <p className="text-sm mt-1">Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</p>
+              <PlannedFeatureNotice feature="visualComparison" />
             </div>
           </CardContent>
         </Card>

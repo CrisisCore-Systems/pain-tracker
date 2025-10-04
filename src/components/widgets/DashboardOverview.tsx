@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import {
   TrendingUp,
-  TrendingDown,
   Calendar,
   Clock,
   Target,
@@ -10,21 +9,30 @@ import {
   AlertTriangle,
   CheckCircle,
   Zap,
-  HelpCircle
+  HelpCircle,
+  Download,
+  Sparkles,
+  Lightbulb,
+  Feather
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
+import { Button, Badge } from '../../design-system';
+import { EnhancedCard, MetricCard as EnhancedMetricCard, EnhancedCardHeader, EnhancedCardTitle, EnhancedCardContent } from '../../design-system/components/EnhancedCard';
 import { Loading } from '../../design-system/components/Loading';
+import { PageTransition, StaggeredChildren } from '../../design-system/components/PageTransition';
 import Chart from '../../design-system/components/Chart';
 import { colorVar, colorVarAlpha } from '../../design-system/utils/theme';
-import { buildRolling7DayChartData, RawEntry } from '../../design-system/utils/chart';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
+import { gradients, textGradients } from '../../design-system/theme/gradients';
 import { formatNumber } from '../../utils/formatting';
+import { isSameLocalDay, localDayStart } from '../../utils/dates';
 import { Tooltip } from '../tutorials/Tooltip';
 import DashboardMenu from './DashboardMenu';
 import DashboardContent from './DashboardContent';
 import DashboardRecent from './DashboardRecent';
-import { localDayStart, isSameLocalDay } from '../../utils/dates';
+import { generateDashboardAIInsights, type InsightTone } from '../../utils/pain-tracker/insights';
+
+const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
 interface DashboardOverviewProps {
   entries: PainEntry[];
@@ -41,43 +49,34 @@ function MetricCard({ title, value, change, icon, className, tooltip, subtitle }
   tooltip?: string;
   subtitle?: React.ReactNode;
 }) {
-  const TrendIcon = change?.trend === 'up' ? TrendingUp : change?.trend === 'down' ? TrendingDown : Target;
-  const trendColor = change?.trend === 'up' ? 'text-red-600' : change?.trend === 'down' ? 'text-green-600' : 'text-blue-600';
-
+  // Map trend to variant for EnhancedMetricCard
+  const variant = change?.trend === 'down' ? 'success' : change?.trend === 'up' ? 'warning' : 'default';
+  const trend = change?.trend === 'up' ? 'up' : change?.trend === 'down' ? 'down' : 'neutral';
+  
   return (
-    <Card className={cn('relative transition-all hover:shadow-md', className)}>
-      <CardContent className="p-6">
-        {tooltip && (
-          <div className="absolute top-3 right-3">
-            <Tooltip content={tooltip}>
-              <span
-                className="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs"
-                style={{ backgroundColor: 'hsl(var(--metric-tooltip-bg))', color: 'hsl(var(--color-muted-foreground))' }}
-              >
-                <HelpCircle className="h-3 w-3" />
-              </span>
-            </Tooltip>
-          </div>
-        )}
-
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-2xl font-bold text-foreground">{value}</p>
-            {change && (
-              <div className={cn('flex items-center text-sm mt-1', trendColor)}>
-                <TrendIcon className="h-4 w-4 mr-1" />
-                <span>{change.trend === 'up' ? '+' : change.trend === 'down' ? '-' : ''}{change.value}% {change.label}</span>
-              </div>
-            )}
-            {subtitle && (
-              <div className="text-sm text-muted-foreground mt-2">{subtitle}</div>
-            )}
-          </div>
-          <div className="text-muted-foreground">{icon}</div>
+    <div className={className}>
+      <EnhancedMetricCard
+        title={title}
+        value={value}
+        change={change ? { value: Math.abs(change.value), label: change.label } : undefined}
+        icon={icon}
+        trend={trend}
+        variant={variant}
+      />
+      {tooltip && (
+        <div className="text-xs text-muted-foreground mt-2 flex items-center space-x-2">
+          <Tooltip content={tooltip}>
+            <span className="inline-flex items-center">
+              <HelpCircle className="h-3 w-3 mr-1" />
+              {tooltip}
+            </span>
+          </Tooltip>
         </div>
-      </CardContent>
-    </Card>
+      )}
+      {subtitle && (
+        <div className="text-xs text-muted-foreground mt-1">{subtitle}</div>
+      )}
+    </div>
   );
 }
 
@@ -87,51 +86,225 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
 
   const metrics = useMemo(() => {
-    const totalEntries = (allEntries?.length ?? entries.length) || 0;
-    const today = new Date();
-    const todayEntries = entries.filter(e => new Date(e.timestamp).toDateString() === today.toDateString()).length;
-    const averagePain = entries.length > 0 ? entries.reduce((s, e) => s + e.baselineData.pain, 0) / entries.length : 0;
-    const weekly = entries.slice(-7);
-    const weeklyAvg = weekly.length > 0 ? weekly.reduce((s, e) => s + e.baselineData.pain, 0) / weekly.length : 0;
+    const activeEntries = entries ?? [];
+    const referenceEntries = allEntries && allEntries.length > 0 ? allEntries : activeEntries;
 
-    const painDistribution = [0,0,0,0];
-    entries.forEach(e => {
-      const p = e.baselineData.pain;
-      if (p <= 2) painDistribution[0]++;
-      else if (p <= 5) painDistribution[1]++;
-      else if (p <= 8) painDistribution[2]++;
-      else painDistribution[3]++;
+    const todayStart = localDayStart(new Date());
+    const weeklyWindowStart = new Date(todayStart);
+    weeklyWindowStart.setDate(weeklyWindowStart.getDate() - 6);
+
+    let filteredPainTotal = 0;
+    let weeklyPainTotal = 0;
+    let weeklyEntryCount = 0;
+    let todayEntryCount = 0;
+
+    const painDistributionBuckets = [0, 0, 0, 0];
+    const dailyAggregates = new Map<number, { sum: number; count: number }>();
+
+    activeEntries.forEach((entry) => {
+      const pain = entry.baselineData.pain;
+      filteredPainTotal += pain;
+
+      const entryDay = localDayStart(entry.timestamp);
+      const entryDayKey = entryDay.getTime();
+
+      if (isSameLocalDay(entry.timestamp, todayStart)) {
+        todayEntryCount += 1;
+      }
+
+      if (entryDayKey >= weeklyWindowStart.getTime()) {
+        weeklyPainTotal += pain;
+        weeklyEntryCount += 1;
+      }
+
+      const aggregate = dailyAggregates.get(entryDayKey);
+      if (aggregate) {
+        aggregate.sum += pain;
+        aggregate.count += 1;
+      } else {
+        dailyAggregates.set(entryDayKey, { sum: pain, count: 1 });
+      }
+
+      if (pain <= 2) painDistributionBuckets[0] += 1;
+      else if (pain <= 5) painDistributionBuckets[1] += 1;
+      else if (pain <= 8) painDistributionBuckets[2] += 1;
+      else painDistributionBuckets[3] += 1;
     });
 
-    const recentActivity = entries.slice().sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0,5).map(e => ({
-      id: e.id,
-      pain: e.baselineData.pain,
-      timestamp: e.timestamp,
-      symptoms: (e as any).symptoms || [],
-      qualityOfLife: (e as any).qualityOfLife
-    }));
+    const averagePainRaw = activeEntries.length > 0 ? filteredPainTotal / activeEntries.length : 0;
+    const weeklyAverageRaw = weeklyEntryCount > 0 ? weeklyPainTotal / weeklyEntryCount : 0;
 
-    const weeklyTrend = entries.length > 0 ? entries.slice(-7).map((e, idx) => ({ label: `Day ${idx+1}`, avg: e.baselineData.pain, count: 1 })) : [];
+    const overallPainTotal = referenceEntries.reduce((total, entry) => total + entry.baselineData.pain, 0);
+    const overallAverageRaw = referenceEntries.length > 0 ? overallPainTotal / referenceEntries.length : null;
+
+    const dateFormatter = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' });
+
+    const weeklyTrend = Array.from({ length: 7 }, (_, index) => {
+      const day = new Date(weeklyWindowStart);
+      day.setDate(weeklyWindowStart.getDate() + index);
+      const dayKey = day.getTime();
+      const aggregate = dailyAggregates.get(dayKey);
+      return {
+        label: dateFormatter.format(day),
+        avg: aggregate ? Math.round((aggregate.sum / aggregate.count) * 10) / 10 : null,
+        count: aggregate?.count ?? 0,
+      };
+    });
+
+    const recentActivity = activeEntries
+      .slice()
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 5)
+      .map((entry) => {
+        const entryWithQuality = entry as PainEntry & {
+          qualityOfLife?: PainEntry['qualityOfLife'] | null;
+        };
+
+        return {
+          id: entry.id,
+          pain: entry.baselineData.pain,
+          timestamp: entry.timestamp,
+          symptoms: Array.isArray(entry.baselineData.symptoms) ? entry.baselineData.symptoms : [],
+          qualityOfLife: entryWithQuality.qualityOfLife ?? null,
+        };
+      });
+
+    let painTrend: { value: number; label: string; trend: 'up' | 'down' | 'neutral' } | null = null;
+    if (overallAverageRaw !== null && activeEntries.length > 0) {
+      const deltaPercent = (averagePainRaw - overallAverageRaw) * 10; // scale difference to 0-100 range
+      const roundedDelta = Math.round(Math.abs(deltaPercent) * 10) / 10;
+      if (roundedDelta >= 1) {
+        painTrend = {
+          value: roundedDelta,
+          label: 'vs lifetime average',
+          trend: deltaPercent > 0 ? 'up' : 'down',
+        };
+      }
+    }
 
     return {
-      totalEntries,
-      averagePain: formatNumber(Number(averagePain), 1),
-      overallAverage: undefined,
-      todayEntries,
-      weeklyAverage: formatNumber(Number(weeklyAvg), 1),
-      painTrend: null,
+      totalEntries: referenceEntries.length,
+      averagePain: formatNumber(Number(averagePainRaw), 1),
+      overallAverage: overallAverageRaw !== null ? formatNumber(Number(overallAverageRaw), 1) : undefined,
+      todayEntries: todayEntryCount,
+      weeklyAverage: formatNumber(Number(weeklyAverageRaw), 1),
+      painTrend,
       recentActivity,
       painDistribution: [
-        { label: 'Mild', data: [painDistribution[0]] },
-        { label: 'Moderate', data: [painDistribution[1]] },
-        { label: 'Severe', data: [painDistribution[2]] },
-        { label: 'Extreme', data: [painDistribution[3]] }
+        { label: 'Mild', data: [painDistributionBuckets[0]] },
+        { label: 'Moderate', data: [painDistributionBuckets[1]] },
+        { label: 'Severe', data: [painDistributionBuckets[2]] },
+        { label: 'Extreme', data: [painDistributionBuckets[3]] }
       ],
-      weeklyTrend
+      weeklyTrend,
     } as const;
   }, [entries, allEntries]);
 
-  const hasWeeklyData = metrics.weeklyTrend.length > 0;
+  const hasWeeklyData = metrics.weeklyTrend.some((day) => day.count > 0);
+
+  const aiInsights = useMemo(
+    () => generateDashboardAIInsights(entries, { allEntries }),
+    [entries, allEntries]
+  );
+
+  const toneStyles = useMemo<Record<InsightTone, { icon: React.ReactNode; accent: string }>>(
+    () => ({
+      celebration: {
+        icon: <Sparkles className="h-4 w-4 text-emerald-500" aria-hidden="true" />,
+        accent: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
+      },
+      'gentle-nudge': {
+        icon: <Feather className="h-4 w-4 text-amber-500" aria-hidden="true" />,
+        accent: 'bg-amber-500/10 text-amber-600 border-amber-400/30',
+      },
+      observation: {
+        icon: <Lightbulb className="h-4 w-4 text-sky-500" aria-hidden="true" />,
+        accent: 'bg-sky-500/10 text-sky-600 border-sky-400/30',
+      },
+    }),
+    []
+  );
+
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
+  }, []);
+
+  const encouragement = useMemo(() => {
+    if (entries.length === 0) {
+      return "Let's capture your first entry whenever you're ready.";
+    }
+
+    if (metrics.todayEntries === 0) {
+      return 'No entries yet today—take a mindful moment to record how you feel.';
+    }
+
+    if (Number(metrics.weeklyAverage) <= 4) {
+      return 'Great job staying ahead of your pain patterns this week.';
+    }
+
+    return 'Keep observing the shifts—small notes today help tomorrow’s insights.';
+  }, [entries.length, metrics.todayEntries, metrics.weeklyAverage]);
+
+  const heroHighlights = useMemo(
+    () => [
+      {
+        label: 'Total entries logged',
+        value: metrics.totalEntries,
+        icon: <BarChart3 className="h-4 w-4" aria-hidden="true" />,
+      },
+      {
+        label: 'Weekly average',
+        value: `${metrics.weeklyAverage}/10`,
+        icon: <TrendingUp className="h-4 w-4" aria-hidden="true" />,
+      },
+      {
+        label: "Today's entries",
+        value: metrics.todayEntries,
+        icon: <Calendar className="h-4 w-4" aria-hidden="true" />,
+      },
+    ],
+    [metrics.totalEntries, metrics.weeklyAverage, metrics.todayEntries]
+  );
+
+  const lastEntryLabel = useMemo(() => {
+    if (metrics.recentActivity.length === 0) {
+      return 'Awaiting first entry';
+    }
+    const lastTimestamp = metrics.recentActivity[0]?.timestamp;
+    if (!lastTimestamp) return 'Awaiting first entry';
+    try {
+      return new Date(lastTimestamp).toLocaleString();
+    } catch {
+      return 'Recently updated';
+    }
+  }, [metrics.recentActivity]);
+
+  const handleExport = React.useCallback(async () => {
+    try {
+      setIsExporting(true);
+      setLiveMessage('Preparing CSV export...');
+      const mod = await import('../../features/export/exportCsv');
+      const csv = mod.entriesToCsv(
+        entries.map((e) => ({
+          id: e.id,
+          timestamp: e.timestamp,
+          pain: e.baselineData.pain,
+          notes: (e as any).notes || '',
+        }))
+      );
+      mod.downloadCsv(`pain-entries-${new Date().toISOString().slice(0, 10)}.csv`, csv);
+      setLiveMessage('CSV export ready. Download starting.');
+    } catch (err) {
+      setLiveMessage('CSV export failed.');
+      console.error('Export failed', err);
+    } finally {
+      setIsExporting(false);
+      setTimeout(() => setLiveMessage(null), 3000);
+    }
+  }, [entries]);
 
   function getPainLevelColor(pain: number) {
     if (pain <= 2) return 'text-success bg-success-bg';
@@ -148,39 +321,101 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
   }
 
   return (
-    <div className={cn('dashboard-container space-y-6', className)} style={{ paddingTop: '12px' }}>
-      <div className="flex items-center justify-between">
-        <DashboardMenu active={tab} onChange={(t) => setTab(t)} />
-        <div>
-          <div>
-            <button
-              className="btn"
-              aria-label="Export currently filtered entries as CSV"
-              disabled={isExporting}
-              onClick={async () => {
-                try {
-                  setIsExporting(true);
-                  setLiveMessage('Preparing CSV export...');
-                  const mod = await import('../../features/export/exportCsv');
-                  const csv = mod.entriesToCsv(entries.map(e => ({ id: e.id, timestamp: e.timestamp, pain: e.baselineData.pain, notes: (e as any).notes || '' })));
-                  mod.downloadCsv(`pain-entries-${new Date().toISOString().slice(0,10)}.csv`, csv);
-                  setLiveMessage('CSV export ready. Download starting.');
-                } catch (err) {
-                  setLiveMessage('CSV export failed.');
-                   
-                  console.error('Export failed', err);
-                } finally {
-                  setIsExporting(false);
-                  setTimeout(() => setLiveMessage(null), 3000);
-                }
-              }}
-            >
-              {isExporting ? 'Exporting…' : 'Export CSV'}
-            </button>
-            <div aria-live="polite" className="sr-only" role="status">{liveMessage}</div>
+    <div className={cn('dashboard-container space-y-8', className)} style={{ paddingTop: '12px' }}>
+      <DashboardMenu active={tab} onChange={(t) => setTab(t)} />
+
+      <PageTransition type="slideUp" duration={450}>
+        <section
+          className={cn(
+            'relative overflow-hidden rounded-3xl border border-border/40 px-6 py-8 sm:px-10 sm:py-10',
+            gradients.subtleLight,
+            'dark:bg-gradient-to-br dark:from-gray-950 dark:via-blue-950/80 dark:to-purple-950 shadow-[0_35px_90px_-60px_rgba(59,130,246,0.65)]'
+          )}
+        >
+          <div
+            className="pointer-events-none absolute inset-0 opacity-30 mix-blend-screen"
+            aria-hidden="true"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 15% 20%, rgba(59,130,246,0.35), transparent 45%), radial-gradient(circle at 85% 30%, rgba(147,51,234,0.35), transparent 55%), radial-gradient(circle at 50% 80%, rgba(6,182,212,0.2), transparent 60%)',
+            }}
+          />
+
+          <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-4 max-w-2xl">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/60 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary shadow-sm backdrop-blur-md dark:bg-white/10 dark:text-primary-foreground">
+                <Sparkles className="h-4 w-4" aria-hidden="true" />
+                Empathy-driven insights
+              </span>
+
+              <h2 className={cn('text-3xl sm:text-4xl font-bold leading-tight', textGradients.primary)}>
+                {greeting}, let&apos;s review your progress
+              </h2>
+
+              <p className="text-base text-muted-foreground max-w-xl">
+                {encouragement}
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                {heroHighlights.map((highlight) => (
+                  <div
+                    key={highlight.label}
+                    className={cn(
+                      'group inline-flex items-center gap-3 rounded-2xl border border-white/60 bg-white/70 px-4 py-3 text-sm shadow-sm backdrop-blur-md transition-all duration-300',
+                      'dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/15 hover:-translate-y-1 hover:shadow-xl'
+                    )}
+                  >
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary shadow-inner">
+                      {highlight.icon}
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        {highlight.label}
+                      </span>
+                      <span className="text-lg font-semibold text-foreground">{highlight.value}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex w-full max-w-xs flex-col items-start gap-3 md:items-end">
+              <Button
+                type="button"
+                variant="default"
+                size="lg"
+                onClick={handleExport}
+                disabled={isExporting}
+                className="relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary via-indigo-500 to-purple-500 px-6 py-3 text-primary-foreground shadow-[0_20px_60px_-25px_rgba(59,130,246,0.9)] transition-transform duration-200 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-offset-2"
+                aria-label="Export currently filtered entries as CSV"
+              >
+                <Download className="h-5 w-5" aria-hidden="true" />
+                <span>{isExporting ? 'Preparing export…' : 'Export CSV'}</span>
+              </Button>
+
+              <Badge
+                variant="outline"
+                className="rounded-full border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary shadow-sm"
+              >
+                Last entry: {lastEntryLabel}
+              </Badge>
+
+              <p className="text-xs text-muted-foreground max-w-[18rem] text-left md:text-right">
+                Exports are encrypted locally so you control what leaves your device.
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
+      </PageTransition>
+
+      <div aria-live="polite" className="sr-only" role="status">
+        {liveMessage}
       </div>
+      {liveMessage && (
+        <div className="rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary shadow-sm transition-all">
+          {liveMessage}
+        </div>
+      )}
 
       {/* Predictive panel for flare-up risk */}
       {entries.length > 0 && (
@@ -194,136 +429,306 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
         </div>
       )}
 
+      <EnhancedCard
+        variant="glass"
+        hoverable
+        animated
+        className="border border-border/40 bg-card/70 backdrop-blur-xl"
+      >
+        <EnhancedCardHeader icon={<Sparkles className="h-5 w-5" aria-hidden="true" />}>
+          <EnhancedCardTitle gradient>AI insight highlights</EnhancedCardTitle>
+        </EnhancedCardHeader>
+        <EnhancedCardContent>
+          <StaggeredChildren className="grid grid-cols-1 gap-4 lg:grid-cols-3" delay={80}>
+            {aiInsights.map((insight) => {
+              const tone = toneStyles[insight.tone] ?? toneStyles['observation'];
+              const confidence = Math.round(clamp01(insight.confidence) * 100);
+              return (
+                <div
+                  key={insight.id}
+                  className={cn(
+                    'flex flex-col justify-between rounded-2xl border p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg',
+                    'bg-white/80 dark:bg-slate-900/60 backdrop-blur',
+                    tone.accent
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/50 shadow-inner dark:bg-slate-950/70">
+                        {tone.icon}
+                      </span>
+                      <div>
+                        <h3 className="text-sm font-semibold text-foreground">{insight.title}</h3>
+                        {insight.metricLabel && insight.metricValue && (
+                          <p className="mt-1 text-xs font-medium text-muted-foreground">
+                            <span className="text-foreground font-semibold">{insight.metricValue}</span>
+                            <span className="ml-1 text-muted-foreground">{insight.metricLabel}</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <Badge variant="secondary" className="rounded-full text-[11px] font-medium">
+                      Confidence ~{confidence}%
+                    </Badge>
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{insight.summary}</p>
+                  {insight.detail && (
+                    <p className="mt-2 text-xs text-muted-foreground/80">{insight.detail}</p>
+                  )}
+                </div>
+              );
+            })}
+          </StaggeredChildren>
+        </EnhancedCardContent>
+      </EnhancedCard>
+
       {tab === 'overview' ? (
         <>
           {/* Key Metrics Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: 'var(--dashboard-gap)' }}>
-            <div>
+          <StaggeredChildren className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5" delay={90}>
+            <div className="space-y-2 transition-all duration-200 hover:-translate-y-1">
               <MetricCard
                 title="Total Entries"
                 value={metrics.totalEntries}
                 icon={<BarChart3 className="h-6 w-6" />}
-                    className="relative"
               />
-              <div className="text-xs text-muted-foreground mt-1 flex items-center space-x-2">
-                <Tooltip content="All-time total (not filtered)">All-time total</Tooltip>
-                <span className="mx-1">·</span>
-                <span>Showing {entries.length} filtered</span>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Tooltip content="All-time total (not filtered)">
+                  <span className="inline-flex items-center gap-1">
+                    <HelpCircle className="h-3 w-3" aria-hidden="true" />
+                    All-time total
+                  </span>
+                </Tooltip>
+                <span aria-hidden="true">•</span>
+                <span>{entries.length} currently filtered</span>
               </div>
             </div>
 
-            <MetricCard title="Average Pain" value={metrics.averagePain} change={metrics.painTrend || undefined} icon={<Target className="h-6 w-6" />} />
-            <MetricCard title="Overall Average" value={metrics.overallAverage ?? metrics.averagePain} icon={<Activity className="h-6 w-6" />} tooltip="Average pain across all recorded entries (not just filtered view)" />
-            <MetricCard title="Today's Entries" value={metrics.todayEntries} subtitle={metrics.todayEntries === 0 ? 'No entries yet today' : undefined} icon={<Calendar className="h-6 w-6" />} />
-            <MetricCard title="Weekly Average" value={metrics.weeklyAverage} icon={<TrendingUp className="h-6 w-6" />} tooltip="Average pain over the past 7 days (includes today)" />
-          </div>
+            <div className="space-y-2 transition-all duration-200 hover:-translate-y-1">
+              <MetricCard
+                title="Average Pain"
+                value={`${metrics.averagePain}/10`}
+                change={metrics.painTrend || undefined}
+                icon={<Target className="h-6 w-6" />}
+              />
+              <p className="text-xs text-muted-foreground">
+                Pain levels averaged across the selected timeframe.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="relative">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <BarChart3 className="h-5 w-5" />
-                  <span>Pain Distribution</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div className="space-y-2 transition-all duration-200 hover:-translate-y-1">
+              <MetricCard
+                title="Overall Average"
+                value={`${metrics.overallAverage ?? metrics.averagePain}/10`}
+                icon={<Activity className="h-6 w-6" />}
+              />
+              <p className="text-xs text-muted-foreground">
+                Compares filtered data to your lifetime average.
+              </p>
+            </div>
+
+            <div className="space-y-2 transition-all duration-200 hover:-translate-y-1">
+              <MetricCard
+                title="Today's Entries"
+                value={metrics.todayEntries}
+                icon={<Calendar className="h-6 w-6" />}
+              />
+              <p className="text-xs text-muted-foreground">
+                {metrics.todayEntries === 0 ? 'No entries logged yet today.' : 'Entries captured so far today.'}
+              </p>
+            </div>
+
+            <div className="space-y-2 transition-all duration-200 hover:-translate-y-1">
+              <MetricCard
+                title="Weekly Average"
+                value={`${metrics.weeklyAverage}/10`}
+                icon={<TrendingUp className="h-6 w-6" />}
+              />
+              <p className="text-xs text-muted-foreground">
+                Past 7 days including today. Track shifts over time.
+              </p>
+            </div>
+          </StaggeredChildren>
+
+          <StaggeredChildren className="grid grid-cols-1 gap-6 lg:grid-cols-2" delay={120}>
+            <EnhancedCard
+              variant="glass"
+              hoverable
+              animated
+              className="relative overflow-hidden border border-border/40 bg-card/70 backdrop-blur-xl"
+            >
+              <div
+                className="pointer-events-none absolute inset-y-0 right-0 w-40 opacity-25"
+                aria-hidden="true"
+                style={{
+                  background: 'radial-gradient(circle at 30% 20%, rgba(59,130,246,0.45), transparent 60%)',
+                }}
+              />
+              <EnhancedCardHeader icon={<BarChart3 className="h-5 w-5" />}>
+                <EnhancedCardTitle gradient>Pain Distribution</EnhancedCardTitle>
+              </EnhancedCardHeader>
+              <EnhancedCardContent>
                 {entries.length > 0 ? (
-                    <Chart
-                      data={{
-                        labels: metrics.painDistribution.map(d => d.label),
-                        datasets: [{
+                  <Chart
+                    data={{
+                      labels: metrics.painDistribution.map((d) => d.label),
+                      datasets: [
+                        {
                           label: 'Entries',
-                          data: metrics.painDistribution.map(d => d.data[0]),
-                          // Show ghost color for zero-count buckets
-                          backgroundColor: metrics.painDistribution.map(d => d.data[0] === 0 ? 'rgba(107,114,128,0.08)' : 'rgba(75,85,99,0.9)'),
-                          borderColor: metrics.painDistribution.map(d => d.data[0] === 0 ? 'rgba(107,114,128,0.12)' : 'rgba(75,85,99,0.95)')
-                        }]
-                      }}
-                      type="bar"
-                      height={200}
-                    />
+                          data: metrics.painDistribution.map((d) => d.data[0]),
+                          backgroundColor: metrics.painDistribution.map((d) =>
+                            d.data[0] === 0 ? 'rgba(148,163,184,0.15)' : 'rgba(59,130,246,0.35)'
+                          ),
+                          borderColor: metrics.painDistribution.map((d) =>
+                            d.data[0] === 0 ? 'rgba(148,163,184,0.3)' : 'rgba(59,130,246,0.7)'
+                          ),
+                          borderWidth: 2,
+                          borderRadius: 12,
+                        },
+                      ],
+                    }}
+                    type="bar"
+                    height={200}
+                    config={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                          intersect: false,
+                          backgroundColor: 'rgba(15,23,42,0.85)',
+                          borderColor: 'rgba(59,130,246,0.35)',
+                          borderWidth: 1,
+                        },
+                      },
+                      scales: {
+                        x: {
+                          grid: { display: false },
+                          ticks: { color: 'rgba(148,163,184,0.9)' },
+                        },
+                        y: {
+                          beginAtZero: true,
+                          grid: { color: 'rgba(148,163,184,0.15)' },
+                          ticks: { stepSize: 1, color: 'rgba(148,163,184,0.9)' },
+                        },
+                      },
+                    }}
+                  />
                 ) : (
-                  <div className="flex items-center justify-center h-48 text-muted-foreground">
+                  <div className="flex h-48 items-center justify-center text-muted-foreground">
                     <div className="text-center">
-                      <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <BarChart3 className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
                       <p>No data available</p>
                       <p className="text-sm">Start tracking to see your pain distribution</p>
                     </div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </EnhancedCardContent>
+            </EnhancedCard>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <TrendingUp className="h-5 w-5" />
-                  <span>Weekly Trend</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+            <EnhancedCard variant="glass" hoverable animated className="border border-border/40 bg-card/70 backdrop-blur-xl">
+              <EnhancedCardHeader icon={<TrendingUp className="h-5 w-5" />}>
+                <EnhancedCardTitle gradient>Weekly Trend</EnhancedCardTitle>
+              </EnhancedCardHeader>
+              <EnhancedCardContent>
                 {entries.length > 0 ? (
                   hasWeeklyData ? (
                     <Chart
                       data={{
-                        labels: metrics.weeklyTrend.map(d => d.label),
+                        labels: metrics.weeklyTrend.map((d) => d.label),
                         datasets: [
                           {
                             label: 'Average Pain',
-                            data: metrics.weeklyTrend.map(d => d.avg as number | null),
+                            data: metrics.weeklyTrend.map((d) => d.avg as number | null),
                             borderColor: colorVar('color-primary'),
-                            backgroundColor: colorVarAlpha('color-primary', 0.1),
+                            backgroundColor: colorVarAlpha('color-primary', 0.18),
                             fill: true,
-                            yAxisID: 'y'
+                            tension: 0.35,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: colorVar('color-primary'),
+                            yAxisID: 'y',
                           },
                           {
                             label: 'Entry Count',
-                            data: metrics.weeklyTrend.map(d => d.count),
+                            data: metrics.weeklyTrend.map((d) => d.count),
                             borderColor: colorVar('color-accent'),
-                            backgroundColor: colorVarAlpha('color-accent', 0.08),
-                            fill: false,
-                            yAxisID: 'y1'
-                          }
-                        ]
+                            backgroundColor: colorVarAlpha('color-accent', 0.12),
+                            fill: true,
+                            tension: 0.3,
+                            borderDash: [6, 4],
+                            yAxisID: 'y1',
+                          },
+                        ],
                       }}
                       type="line"
                       height={200}
-                      scales={{
-                        y: { min: 0, max: 10, ticks: { stepSize: 1 }, title: { display: true, text: 'Pain Level' } },
-                        y1: { min: 0, ticks: { stepSize: 1 }, position: 'right', title: { display: true, text: 'Entries' } }
+                      config={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            position: 'bottom',
+                            labels: { color: 'rgba(148,163,184,0.9)', usePointStyle: true },
+                          },
+                          tooltip: {
+                            intersect: false,
+                            mode: 'index',
+                            backgroundColor: 'rgba(15,23,42,0.85)',
+                            borderColor: 'rgba(147,51,234,0.35)',
+                            borderWidth: 1,
+                          },
+                        },
+                        scales: {
+                          y: {
+                            min: 0,
+                            max: 10,
+                            ticks: { stepSize: 1, color: 'rgba(148,163,184,0.9)' },
+                            grid: { color: 'rgba(148,163,184,0.15)' },
+                            title: { display: true, text: 'Pain Level', color: 'rgba(148,163,184,0.9)' },
+                          },
+                          y1: {
+                            min: 0,
+                            ticks: { stepSize: 1, color: 'rgba(148,163,184,0.9)' },
+                            grid: { display: false },
+                            position: 'right',
+                            title: { display: true, text: 'Entries', color: 'rgba(148,163,184,0.9)' },
+                          },
+                          x: {
+                            grid: { display: false },
+                            ticks: { color: 'rgba(148,163,184,0.9)' },
+                          },
+                        },
                       }}
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-48 text-muted-foreground">
+                    <div className="flex h-48 items-center justify-center text-muted-foreground">
                       <div className="text-center">
-                        <TrendingUp className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                        <TrendingUp className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
                         <p>No entries this week</p>
                         <p className="text-sm">Track pain over time to see trends</p>
                       </div>
                     </div>
                   )
                 ) : (
-                  <div className="flex items-center justify-center h-48 text-muted-foreground">
+                  <div className="flex h-48 items-center justify-center text-muted-foreground">
                     <div className="text-center">
-                      <TrendingUp className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                      <TrendingUp className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
                       <p>No trend data</p>
                       <p className="text-sm">Track pain over time to see trends</p>
                     </div>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
+              </EnhancedCardContent>
+            </EnhancedCard>
+          </StaggeredChildren>
 
           {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Clock className="h-5 w-5" />
-                <span>Recent Activity</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+          <EnhancedCard variant="glass" hoverable animated>
+            <EnhancedCardHeader icon={<Clock className="h-5 w-5" />}>
+              <EnhancedCardTitle>Recent Activity</EnhancedCardTitle>
+            </EnhancedCardHeader>
+            <EnhancedCardContent>
               {metrics.recentActivity.length > 0 ? (
                 <div className="space-y-4">
                   {metrics.recentActivity.map((activity) => (
@@ -361,8 +766,8 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                   <p className="text-sm">Your recent pain entries will appear here</p>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </EnhancedCardContent>
+          </EnhancedCard>
         </>
       ) : tab === 'charts' ? (
         <DashboardContent entries={entries} allEntries={allEntries} />

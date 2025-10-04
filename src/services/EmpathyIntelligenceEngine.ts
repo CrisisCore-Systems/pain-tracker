@@ -27,6 +27,49 @@ import {
 import { extractWisdomInsights } from './empathy/WisdomModule';
 import { calculateTrend as extCalculateTrend, calculateVariance as extCalculateVariance, buildPredictiveModel } from './empathy/PredictiveModule';
 
+const MOTIVATION_KEYWORDS = ['help', 'support', 'encourage', 'check in', 'showed up', 'listened'] as const;
+const MOTIVATION_ACTION_KEYWORDS = ['volunteered', 'brought', 'organized', 'advocated', 'dropped off'] as const;
+const FATIGUE_KEYWORDS = ['burned out', 'exhausted', 'drained', 'too tired', 'could not help'] as const;
+const BOUNDARY_KEYWORDS = ['boundary', 'limit', 'said no', 'protected my space', 'took a pause'] as const;
+const RESTORATIVE_KEYWORDS = ['rested', 'recharged', 'took a break', 'scheduled downtime', 'stepped back'] as const;
+const OVERWHELM_KEYWORDS = ['absorbed', 'overwhelmed by others', 'took on too much', 'emotionally flooded'] as const;
+const CONNECTION_KEYWORDS = ['connected deeply', 'shared emotions', 'mirrored feelings', 'felt their pain', 'resonated'] as const;
+const DETACHMENT_KEYWORDS = ['numb', 'disconnected', 'shut down', 'detached', 'couldn\'t feel'] as const;
+
+function clampScore(value: number, min = 0, max = 100): number {
+  if (Number.isNaN(value) || !Number.isFinite(value)) {
+    return min;
+  }
+  return Math.max(min, Math.min(max, value));
+}
+
+function normalizeText(value?: string): string {
+  return (value ?? '').toLowerCase();
+}
+
+function hasKeyword(text: string | undefined, keywords: readonly string[]): boolean {
+  if (!text) return false;
+  const normalized = normalizeText(text);
+  return keywords.some((keyword) => normalized.includes(keyword));
+}
+
+function entryWeight(entry: MoodEntry): number {
+  let weight = 1;
+  if (typeof entry.hopefulness === 'number') {
+    weight += (entry.hopefulness - 5) / 10;
+  }
+  if (typeof entry.mood === 'number') {
+    weight += (entry.mood - 5) / 20;
+  }
+  if (typeof entry.energy === 'number' && entry.energy >= 7) {
+    weight += 0.2;
+  }
+  if (entry.socialSupport && entry.socialSupport !== 'none') {
+    weight += 0.25;
+  }
+  return Math.max(0.4, weight);
+}
+
 export interface EmpathyIntelligenceConfig {
   learningRate: number; // 0-1, how quickly the AI learns patterns
   predictionHorizon: number; // days ahead to predict
@@ -237,42 +280,81 @@ export class EmpathyIntelligenceEngine {
 
   private calculateMirrorNeuronActivity(moodEntries: MoodEntry[]): number {
     if (moodEntries.length === 0) return 50;
-    
-    // Simulated mirror neuron activity based on emotional responsiveness
-    const emotionalResponses = moodEntries.filter(e => 
-      e.notes.toLowerCase().includes('felt their') ||
-      e.notes.toLowerCase().includes('could feel') ||
-      e.notes.toLowerCase().includes('mirrored') ||
-      e.context.toLowerCase().includes('emotional connection')
-    );
 
-    const socialEntries = moodEntries.filter(e => e.socialSupport !== 'none');
-    const responsiveness = emotionalResponses.length / Math.max(socialEntries.length, 1);
-    
-    return Math.min(100, responsiveness * 80 + 20);
+    let resonanceWeight = 0;
+    let totalWeight = 0;
+    let detachmentHits = 0;
+
+    for (const entry of moodEntries) {
+      const weight = entryWeight(entry);
+      totalWeight += weight;
+      const notes = normalizeText(entry.notes);
+      const context = normalizeText(entry.context);
+
+      if (
+        hasKeyword(notes, CONNECTION_KEYWORDS) ||
+        notes.includes('felt their') ||
+        notes.includes('could feel') ||
+        notes.includes('mirrored') ||
+        context.includes('emotional connection') ||
+        context.includes('support group')
+      ) {
+        resonanceWeight += weight;
+      }
+
+      if (hasKeyword(notes, DETACHMENT_KEYWORDS) || context.includes('detached')) {
+        detachmentHits += 1;
+      }
+    }
+
+    if (totalWeight === 0) {
+      return 50;
+    }
+
+    const resonanceScore = (resonanceWeight / totalWeight) * 55;
+    const emotionalEnergy = moodEntries.reduce((sum, e) => sum + (e.emotionalRegulation ?? 5), 0) / moodEntries.length;
+    const energyScore = (emotionalEnergy / 10) * 20;
+    const detachmentPenalty = (detachmentHits / moodEntries.length) * 35;
+
+    return clampScore(40 + resonanceScore + energyScore - detachmentPenalty);
   }
 
   private calculateEmotionalContagionResistance(moodEntries: MoodEntry[]): number {
     if (moodEntries.length === 0) return 50;
-    
-    // Resistance to unwanted emotional absorption
-    const boundaryEntries = moodEntries.filter(e => 
-      e.notes.toLowerCase().includes('boundary') ||
-      e.notes.toLowerCase().includes('protect myself') ||
-      e.notes.toLowerCase().includes('didn\'t absorb') ||
-      e.copingStrategies.includes('boundaries')
-    );
 
-    const overwhelmedEntries = moodEntries.filter(e => 
-      e.notes.toLowerCase().includes('overwhelmed by others') ||
-      e.notes.toLowerCase().includes('absorbed their emotions') ||
-      e.anxiety > 7 && e.context.toLowerCase().includes('social')
-    );
+    let protectiveWeight = 0;
+    let totalWeight = 0;
+    let overwhelmWeight = 0;
 
-    const boundaryScore = (boundaryEntries.length / moodEntries.length) * 70;
-    const overwhelmPenalty = (overwhelmedEntries.length / moodEntries.length) * 30;
-    
-    return Math.max(10, Math.min(100, 50 + boundaryScore - overwhelmPenalty));
+    for (const entry of moodEntries) {
+      const weight = entryWeight(entry);
+      totalWeight += weight;
+      const notes = normalizeText(entry.notes);
+      const context = normalizeText(entry.context);
+
+      const usesBoundaryStrategy = hasKeyword(notes, BOUNDARY_KEYWORDS) || entry.copingStrategies?.some((strategy) => normalizeText(strategy).includes('boundary'));
+      const namedRest = hasKeyword(notes, RESTORATIVE_KEYWORDS);
+
+      if (usesBoundaryStrategy || namedRest) {
+        protectiveWeight += weight;
+      }
+
+      const overwhelmedByOthers = hasKeyword(notes, OVERWHELM_KEYWORDS) || notes.includes('absorbed their emotions') || (entry.anxiety ?? 0) > 7 && context.includes('social');
+      if (overwhelmedByOthers) {
+        overwhelmWeight += weight + 0.3;
+      }
+    }
+
+    if (totalWeight === 0) {
+      return 50;
+    }
+
+    const protectiveScore = (protectiveWeight / totalWeight) * 60;
+    const overwhelmPenalty = (overwhelmWeight / totalWeight) * 55;
+    const regulationAverage = moodEntries.reduce((sum, entry) => sum + (entry.emotionalRegulation ?? 5), 0) / moodEntries.length;
+    const regulationBonus = (regulationAverage / 10) * 20;
+
+    return clampScore(35 + protectiveScore + regulationBonus - overwhelmPenalty, 10, 100);
   }
 
   private calculateEmpathicDistressManagement(moodEntries: MoodEntry[]): number {
@@ -576,22 +658,82 @@ export class EmpathyIntelligenceEngine {
 
   private calculateEmpathicMotivation(moodEntries: MoodEntry[]): number {
     if (moodEntries.length === 0) return 50;
-    const motivationIndicators = moodEntries.filter(e => 
-      e.notes.toLowerCase().includes('help') ||
-      e.notes.toLowerCase().includes('support') ||
-      e.notes.toLowerCase().includes('encourage')
-    ).length;
-    return Math.min((motivationIndicators / moodEntries.length) * 100, 100);
+
+    let totalWeight = 0;
+    let motivationWeight = 0;
+    let actionBoost = 0;
+    let fatiguePenalty = 0;
+
+    for (const entry of moodEntries) {
+      const weight = entryWeight(entry);
+      totalWeight += weight;
+      const notes = normalizeText(entry.notes);
+      const context = normalizeText(entry.context);
+
+      const motivationSignal = hasKeyword(notes, MOTIVATION_KEYWORDS) || context.includes('support group') || context.includes('care team');
+      const supportiveStrategy = entry.copingStrategies?.some((strategy) => normalizeText(strategy).includes('support others') || normalizeText(strategy).includes('community'));
+
+      if (motivationSignal || supportiveStrategy) {
+        motivationWeight += weight;
+      }
+
+      if (hasKeyword(notes, MOTIVATION_ACTION_KEYWORDS)) {
+        actionBoost += 1;
+      }
+
+      if (hasKeyword(notes, FATIGUE_KEYWORDS) || (entry.energy ?? 5) <= 3) {
+        fatiguePenalty += 1;
+      }
+    }
+
+    if (totalWeight === 0) {
+      return 50;
+    }
+
+    const baseScore = (motivationWeight / totalWeight) * 55;
+    const actionScore = (actionBoost / moodEntries.length) * 25;
+    const fatigueScore = (fatiguePenalty / moodEntries.length) * 45;
+
+    return clampScore(45 + baseScore + actionScore - fatigueScore);
   }
 
   private calculateBoundaryMaintenance(moodEntries: MoodEntry[]): number {
     if (moodEntries.length === 0) return 50;
-    const boundaryIndicators = moodEntries.filter(e => 
-      e.notes.toLowerCase().includes('boundary') ||
-      e.notes.toLowerCase().includes('limit') ||
-      e.notes.toLowerCase().includes('space')
-    ).length;
-    return Math.min((boundaryIndicators / moodEntries.length) * 100, 100);
+
+    let totalWeight = 0;
+    let boundaryWeight = 0;
+    let restorativeWeight = 0;
+    let overloadHits = 0;
+
+    for (const entry of moodEntries) {
+      const weight = entryWeight(entry);
+      totalWeight += weight;
+      const notes = normalizeText(entry.notes);
+
+      const namedBoundary = hasKeyword(notes, BOUNDARY_KEYWORDS) || entry.copingStrategies?.some((strategy) => normalizeText(strategy).includes('boundary'));
+      const advocatedNeeds = notes.includes('asked for what i need') || notes.includes('set expectations');
+      if (namedBoundary || advocatedNeeds) {
+        boundaryWeight += weight;
+      }
+
+  if (hasKeyword(notes, RESTORATIVE_KEYWORDS) || (entry.energy ?? 0) >= 7 || (entry.stress ?? 0) <= 3) {
+        restorativeWeight += weight * 0.6;
+      }
+
+      if (hasKeyword(notes, OVERWHELM_KEYWORDS) || notes.includes('took on too much') || notes.includes('people pleasing')) {
+        overloadHits += 1;
+      }
+    }
+
+    if (totalWeight === 0) {
+      return 50;
+    }
+
+    const boundaryScore = (boundaryWeight / totalWeight) * 60;
+    const restorativeScore = (restorativeWeight / totalWeight) * 25;
+    const overloadPenalty = (overloadHits / moodEntries.length) * 55;
+
+    return clampScore(40 + boundaryScore + restorativeScore - overloadPenalty);
   }
 
   private async calculateCulturalEmpathy(

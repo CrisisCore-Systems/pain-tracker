@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { PainEntry } from '../../../types';
+import { PlannedFeatureNotice } from '../../common/PlannedFeatureNotice';
 
 interface ComparisonAnalyticsProps {
   entries: PainEntry[];
@@ -45,7 +46,7 @@ export const ComparisonAnalytics: React.FC<ComparisonAnalyticsProps> = ({ entrie
             )}
           </div>
         </div>
-  <p className="text-gray-600">Planned feature — see the <a href="/docs/FEATURE_MATRIX.md" className="text-primary hover:underline">Feature Matrix</a> for details and timelines.</p>
+        <PlannedFeatureNotice feature="comparisonAnalytics" />
       </div>
     </div>
   );
