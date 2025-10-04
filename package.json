@@ -71,6 +71,7 @@
     "healthcheck": "node scripts/health-check.js",
     "mutate": "stryker run",
     "playwright:install": "npx playwright install",
+    "screenshots:capture": "node scripts/capture-screenshots.js",
     "e2e": "npx playwright test --config=e2e/playwright.config.ts",
     "e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
     "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium",
