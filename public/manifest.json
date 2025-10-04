@@ -25,17 +25,15 @@
   ],
   "screenshots": [
     {
-      "_comment": "TODO: Add actual screenshot files to public/screenshots/",
-      "src": "icons/icon-192x192.png",
-      "type": "image/png",
+      "src": "screenshots/dashboard-540x720.svg",
+      "type": "image/svg+xml",
       "sizes": "540x720",
       "form_factor": "narrow",
       "label": "Pain tracking dashboard"
     },
     {
-      "_comment": "TODO: Add actual screenshot files to public/screenshots/",
-      "src": "icons/icon-192x192.png",
-      "type": "image/png", 
+      "src": "screenshots/analytics-1280x720.svg",
+      "type": "image/svg+xml",
       "sizes": "1280x720",
       "form_factor": "wide",
       "label": "Analytics overview"
