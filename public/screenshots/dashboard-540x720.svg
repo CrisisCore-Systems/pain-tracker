@@ -1,0 +1,102 @@
+<svg width="540" height="720" viewBox="0 0 540 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="540" height="720" fill="#f8fafc"/>
+  
+  <!-- Header -->
+  <rect width="540" height="80" fill="#0ea5e9"/>
+  
+  <!-- Logo/Icon Area -->
+  <circle cx="40" cy="40" r="20" fill="white" opacity="0.9"/>
+  <text x="70" y="45" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="white">
+    Pain Tracker
+  </text>
+  
+  <!-- Main Content Area -->
+  <g transform="translate(20, 100)">
+    <!-- Title -->
+    <text x="0" y="30" font-family="Inter, system-ui, sans-serif" font-size="24" font-weight="600" fill="#0f172a">
+      Pain Tracking Dashboard
+    </text>
+    
+    <!-- Card 1: Today's Entry -->
+    <rect x="0" y="50" width="500" height="120" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="80" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#0f172a">
+      Today's Pain Entry
+    </text>
+    <text x="20" y="105" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#64748b">
+      Track your current pain level
+    </text>
+    <circle cx="450" cy="105" r="25" fill="#0ea5e9" opacity="0.1"/>
+    <text x="440" y="112" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#0ea5e9">
+      7
+    </text>
+    
+    <!-- Card 2: Weekly Summary -->
+    <rect x="0" y="190" width="500" height="120" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="220" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#0f172a">
+      Weekly Summary
+    </text>
+    <text x="20" y="245" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#64748b">
+      Average pain level this week
+    </text>
+    
+    <!-- Simple chart bars -->
+    <g transform="translate(20, 260)">
+      <rect x="0" y="0" width="40" height="30" rx="4" fill="#22c55e" opacity="0.6"/>
+      <rect x="60" y="-10" width="40" height="40" rx="4" fill="#84cc16" opacity="0.6"/>
+      <rect x="120" y="-20" width="40" height="50" rx="4" fill="#eab308" opacity="0.6"/>
+      <rect x="180" y="-15" width="40" height="45" rx="4" fill="#f59e0b" opacity="0.6"/>
+      <rect x="240" y="-10" width="40" height="40" rx="4" fill="#84cc16" opacity="0.6"/>
+      <rect x="300" y="0" width="40" height="30" rx="4" fill="#22c55e" opacity="0.6"/>
+      <rect x="360" y="-5" width="40" height="35" rx="4" fill="#84cc16" opacity="0.6"/>
+    </g>
+    
+    <!-- Card 3: Quick Actions -->
+    <rect x="0" y="330" width="500" height="120" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="360" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#0f172a">
+      Quick Actions
+    </text>
+    
+    <!-- Action buttons -->
+    <g transform="translate(20, 380)">
+      <rect x="0" y="0" width="140" height="50" rx="6" fill="#0ea5e9"/>
+      <text x="25" y="30" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="white">
+        Log Pain
+      </text>
+      
+      <rect x="160" y="0" width="140" height="50" rx="6" fill="white" stroke="#0ea5e9" stroke-width="2"/>
+      <text x="175" y="30" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#0ea5e9">
+        View Trends
+      </text>
+      
+      <rect x="320" y="0" width="140" height="50" rx="6" fill="white" stroke="#22c55e" stroke-width="2"/>
+      <text x="345" y="30" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#22c55e">
+        Export
+      </text>
+    </g>
+    
+    <!-- Card 4: Recent Entries -->
+    <rect x="0" y="470" width="500" height="100" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="500" font-family="Inter, system-ui, sans-serif" font-size="16" font-weight="600" fill="#0f172a">
+      Recent Entries
+    </text>
+    <text x="20" y="525" font-family="Inter, system-ui, sans-serif" font-size="14" fill="#64748b">
+      Last 7 days of pain tracking data
+    </text>
+    <circle cx="470" cy="520" r="8" fill="#22c55e"/>
+  </g>
+  
+  <!-- Bottom Navigation -->
+  <rect y="640" width="540" height="80" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+  <g transform="translate(0, 660)">
+    <circle cx="67.5" cy="30" r="12" fill="#0ea5e9"/>
+    <circle cx="202.5" cy="30" r="12" fill="#64748b" opacity="0.3"/>
+    <circle cx="337.5" cy="30" r="12" fill="#64748b" opacity="0.3"/>
+    <circle cx="472.5" cy="30" r="12" fill="#64748b" opacity="0.3"/>
+  </g>
+  
+  <!-- Watermark -->
+  <text x="270" y="710" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">
+    Pain Tracker Pro - Screenshot Placeholder
+  </text>
+</svg>
