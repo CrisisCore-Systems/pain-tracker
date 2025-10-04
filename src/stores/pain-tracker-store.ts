@@ -3,6 +3,7 @@ import { formatNumber } from '../utils/formatting';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { PainEntry, EmergencyPanelData, ActivityLogEntry } from '../types';
+import type { MoodEntry } from '../types/quantified-empathy';
 import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
 
 export interface UIState {
@@ -20,6 +21,7 @@ export interface UIState {
 export interface PainTrackerState {
   // Data
   entries: PainEntry[];
+  moodEntries: MoodEntry[];
   emergencyData: EmergencyPanelData | null;
   activityLogs: ActivityLogEntry[];
   
@@ -34,6 +36,11 @@ export interface PainTrackerState {
   addEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
   updateEntry: (id: string | number, updates: Partial<PainEntry>) => void;
   deleteEntry: (id: string | number) => void;
+  
+  // Mood Entry Actions
+  addMoodEntry: (entry: Omit<MoodEntry, 'timestamp'>) => void;
+  updateMoodEntry: (timestamp: string, updates: Partial<MoodEntry>) => void;
+  deleteMoodEntry: (timestamp: string) => void;
   
   // UI Actions
   setShowWCBReport: (show: boolean) => void;
@@ -65,6 +72,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
       subscribeWithSelector(
         immer((set) => ({
           entries: [],
+          moodEntries: [],
           emergencyData: null,
           activityLogs: [],
           ui: {
@@ -149,6 +157,50 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             });
           },
 
+          // Mood Entry Management
+          addMoodEntry: (entryData) => {
+            set((state) => {
+              const newMoodEntry: MoodEntry = {
+                timestamp: new Date(),
+                mood: entryData.mood || 5,
+                energy: entryData.energy || 5,
+                anxiety: entryData.anxiety || 5,
+                stress: entryData.stress || 5,
+                hopefulness: entryData.hopefulness || 5,
+                selfEfficacy: entryData.selfEfficacy || 5,
+                emotionalClarity: entryData.emotionalClarity || 5,
+                emotionalRegulation: entryData.emotionalRegulation || 5,
+                context: entryData.context || '',
+                triggers: entryData.triggers || [],
+                copingStrategies: entryData.copingStrategies || [],
+                socialSupport: entryData.socialSupport || 'none',
+                notes: entryData.notes || ''
+              };
+
+              state.moodEntries.push(newMoodEntry);
+              state.error = null;
+            });
+          },
+
+          updateMoodEntry: (timestamp, updates) => {
+            set((state) => {
+              const index = state.moodEntries.findIndex(
+                entry => entry.timestamp.toISOString() === timestamp
+              );
+              if (index >= 0) {
+                state.moodEntries[index] = { ...state.moodEntries[index], ...updates };
+              }
+            });
+          },
+
+          deleteMoodEntry: (timestamp) => {
+            set((state) => {
+              state.moodEntries = state.moodEntries.filter(
+                entry => entry.timestamp.toISOString() !== timestamp
+              );
+            });
+          },
+
           // UI Actions
           setShowWCBReport: (show) => {
             set((state) => {
@@ -229,6 +281,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           clearAllData: () => {
             set((state) => {
               state.entries = [];
+              state.moodEntries = [];
               state.activityLogs = [];
               state.emergencyData = null;
               state.error = null;
@@ -249,6 +302,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
         name: 'pain-tracker-storage',
         partialize: (state) => ({
           entries: state.entries,
+          moodEntries: state.moodEntries,
           emergencyData: state.emergencyData,
           activityLogs: state.activityLogs
         })
@@ -260,16 +314,25 @@ export const usePainTrackerStore = create<PainTrackerState>()(
 
 // Selectors for optimized component subscriptions
 export const selectEntries = (state: PainTrackerState) => state.entries;
+export const selectMoodEntries = (state: PainTrackerState) => state.moodEntries;
 export const selectUIState = (state: PainTrackerState) => state.ui;
 export const selectError = (state: PainTrackerState) => state.error;
 export const selectIsLoading = (state: PainTrackerState) => state.isLoading;
 
 // Computed selectors
 export const selectEntriesCount = (state: PainTrackerState) => state.entries.length;
+export const selectMoodEntriesCount = (state: PainTrackerState) => state.moodEntries.length;
 export const selectLatestEntry = (state: PainTrackerState) => 
   state.entries.length > 0 ? state.entries[state.entries.length - 1] : null;
+export const selectLatestMoodEntry = (state: PainTrackerState) =>
+  state.moodEntries.length > 0 ? state.moodEntries[state.moodEntries.length - 1] : null;
 export const selectAveragePain = (state: PainTrackerState) => {
   if (state.entries.length === 0) return 0;
   const sum = state.entries.reduce((acc, entry) => acc + entry.baselineData.pain, 0);
   return Number(formatNumber(sum / state.entries.length, 1));
+};
+export const selectAverageMood = (state: PainTrackerState) => {
+  if (state.moodEntries.length === 0) return 0;
+  const sum = state.moodEntries.reduce((acc, entry) => acc + entry.mood, 0);
+  return Number(formatNumber(sum / state.moodEntries.length, 1));
 };

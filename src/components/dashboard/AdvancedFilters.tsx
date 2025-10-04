@@ -309,6 +309,22 @@ export function AdvancedFilters({
     }
   }, [filters, onCriteriaChange]);
 
+  // Calculate active filters count
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (filters.dateRange.start || filters.dateRange.end) count++;
+    if (filters.painLevelRange.min !== 1 || filters.painLevelRange.max !== 10) count++;
+    if (filters.locations.length > 0) count++;
+    if (filters.symptoms.length > 0) count++;
+    if (filters.medications.length > 0) count++;
+    if (filters.treatments.length > 0) count++;
+    if (filters.sleepQualityRange.min !== 1 || filters.sleepQualityRange.max !== 10) count++;
+    if (filters.moodImpactRange.min !== 1 || filters.moodImpactRange.max !== 10) count++;
+    if (filters.workImpact.hasMissedWork || filters.workImpact.hasModifiedDuties) count++;
+    if (filters.searchText) count++;
+    return count;
+  }, [filters]);
+
   useEffect(() => {
     if (onActiveFiltersChange) {
       onActiveFiltersChange(activeFiltersCount);
@@ -331,21 +347,6 @@ export function AdvancedFilters({
       },
     }));
   };
-
-  const activeFiltersCount = useMemo(() => {
-    let count = 0;
-    if (filters.dateRange.start || filters.dateRange.end) count++;
-    if (filters.painLevelRange.min !== 1 || filters.painLevelRange.max !== 10) count++;
-    if (filters.locations.length > 0) count++;
-    if (filters.symptoms.length > 0) count++;
-    if (filters.medications.length > 0) count++;
-    if (filters.treatments.length > 0) count++;
-    if (filters.sleepQualityRange.min !== 1 || filters.sleepQualityRange.max !== 10) count++;
-    if (filters.moodImpactRange.min !== 1 || filters.moodImpactRange.max !== 10) count++;
-    if (filters.workImpact.hasMissedWork || filters.workImpact.hasModifiedDuties) count++;
-    if (filters.searchText) count++;
-    return count;
-  }, [filters]);
 
   const clearFilters = () => {
     setFilters(defaultFilters);

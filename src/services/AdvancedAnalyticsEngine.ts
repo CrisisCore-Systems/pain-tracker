@@ -1,6 +1,6 @@
 import type { PainEntry, MoodEntry } from '../types/pain-tracker';
 
-interface CorrelationResult {
+export interface CorrelationResult {
   variable1: string;
   variable2: string;
   coefficient: number; // Pearson correlation coefficient (-1 to 1)
@@ -10,7 +10,7 @@ interface CorrelationResult {
   sampleSize: number;
 }
 
-interface InterventionScore {
+export interface InterventionScore {
   intervention: string;
   type: 'medication' | 'treatment' | 'coping_strategy' | 'lifestyle';
   effectivenessScore: number; // 0-100
@@ -21,7 +21,7 @@ interface InterventionScore {
   recommendation: string;
 }
 
-interface TriggerPattern {
+export interface TriggerPattern {
   trigger: string;
   frequency: number;
   averagePainIncrease: number;
@@ -32,7 +32,7 @@ interface TriggerPattern {
   riskScore: number; // 0-100
 }
 
-interface PredictiveIndicator {
+export interface PredictiveIndicator {
   indicator: string;
   type: 'warning' | 'onset' | 'escalation';
   confidence: number;
@@ -40,7 +40,7 @@ interface PredictiveIndicator {
   description: string;
 }
 
-interface WeeklyClinicalBrief {
+export interface WeeklyClinicalBrief {
   weekStartDate: Date;
   weekEndDate: Date;
   overallTrend: 'improving' | 'stable' | 'worsening';
