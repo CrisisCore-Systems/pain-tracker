@@ -137,7 +137,26 @@ beforeAll(async () => {
       }
 
       const storage = securityService.createSecureStorage();
-      await storage.store('key:pain-tracker-master', JSON.stringify({ key: seededHashB64, created: new Date().toISOString() }), true);
+      
+      // Generate proper encryption keys for tests
+      const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+      const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+      
+      try {
+        // Try to wrap keys using SecurityService
+        const encWrapped = await securityService.wrapKey(encKey);
+        const hmacWrapped = await securityService.wrapKey(hmacKey);
+        const payload = JSON.stringify({ encWrapped, hmacWrapped, created: new Date().toISOString() });
+        await storage.store('key:pain-tracker-master', { key: payload, created: new Date().toISOString() }, true);
+      } catch {
+        // Fallback: export raw key material and store as JSON string in key field
+        const encRaw = await crypto.subtle.exportKey('raw', encKey);
+        const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
+        const encB64 = btoa(String.fromCharCode(...new Uint8Array(encRaw)));
+        const hmacB64 = btoa(String.fromCharCode(...new Uint8Array(hmacRaw)));
+        const payload = JSON.stringify({ enc: encB64, hmac: hmacB64, created: new Date().toISOString() });
+        await storage.store('key:pain-tracker-master', { key: payload, created: new Date().toISOString() }, true);
+      }
 
       // Test-only hooks: expose no-op passthroughs but only in test env
     } catch (e) {

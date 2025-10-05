@@ -8,9 +8,22 @@ const largePayload = 'AAAAABBBBBCCCCCDDDDDEEEEE'.repeat(60); // produces long re
 // Access private methods via cast for targeted coverage
 const anyEnc = encryptionService as unknown as { decompressString: (c: string) => string };
 
+// Helper to initialize encryption keys for tests
+async function setupEncryptionKeys() {
+  const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+  const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+  const encRaw = await crypto.subtle.exportKey('raw', encKey);
+  const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
+  const encB64 = btoa(String.fromCharCode(...new Uint8Array(encRaw)));
+  const hmacB64 = btoa(String.fromCharCode(...new Uint8Array(hmacRaw)));
+  const payload = JSON.stringify({ enc: encB64, hmac: hmacB64, created: new Date().toISOString() });
+  (encryptionService as any).inMemoryKeyCache.set('pain-tracker-master', { key: payload, created: new Date().toISOString() });
+}
+
 describe('EncryptionService additional gaps', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.restoreAllMocks();
+    await setupEncryptionKeys();
   });
 
   it('falls back to in-memory key cache when secure storage fails (storeKey path)', async () => {
@@ -22,6 +35,17 @@ describe('EncryptionService additional gaps', () => {
       delete: async () => {}
   }) as unknown as ReturnType<typeof securityService.createSecureStorage>);
     const svc = new EndToEndEncryptionService();
+    
+    // Initialize keys for the new service instance by directly populating its in-memory cache
+    const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+    const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+    const encRaw = await crypto.subtle.exportKey('raw', encKey);
+    const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
+    const encB64 = btoa(String.fromCharCode(...new Uint8Array(encRaw)));
+    const hmacB64 = btoa(String.fromCharCode(...new Uint8Array(hmacRaw)));
+    const payload = JSON.stringify({ enc: encB64, hmac: hmacB64, created: new Date().toISOString() });
+    (svc as any).inMemoryKeyCache.set('pain-tracker-master', { key: payload, created: new Date().toISOString() });
+    
     // Force generateKey -> storeKey fallback
     const data = await svc.encrypt({ hello: 'world' });
     expect(data.metadata.keyId).toBeDefined();
