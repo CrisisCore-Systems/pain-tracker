@@ -3,7 +3,8 @@ import { render, screen, within } from '@testing-library/react';
 import { vi } from 'vitest';
 // Mock PredictivePanel (lazy-loaded) so Suspense doesn't delay tests
 vi.mock('../../PredictivePanel', () => ({
-  default: () => <div data-testid="predictive-panel-mock">Predictive</div>
+  __esModule: true,
+  default: ({ entries }: any) => <div data-testid="predictive-panel-mock" data-entries={JSON.stringify(entries)}>Predictive</div>
 }));
 // Mock Chart to avoid Chart.js rendering inside tests
 vi.mock('../../design-system/components/Chart', () => ({

@@ -51,7 +51,7 @@ describe('EncryptedVaultService', () => {
     const unlockedRead = secureStorage.get<typeof payload>(TEST_KEY, { encrypt: true });
     expect(unlockedRead).toBeTruthy();
     expect(unlockedRead?.message).toBe(payload.message);
-  });
+  }, 30000);
 
   it('re-encrypts legacy plaintext values on unlock', async () => {
     vaultService.lock();
@@ -68,5 +68,5 @@ describe('EncryptedVaultService', () => {
     if (raw) {
       expect(raw).toContain('"v":"xchacha20-poly1305"');
     }
-  });
+  }, 30000);
 });

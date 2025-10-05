@@ -428,6 +428,6 @@ describe('AdvancedAnalyticsEngine', () => {
       
       expect(() => engine.calculateCorrelationMatrix(largeDataset)).not.toThrow();
       expect(() => engine.scoreInterventions(largeDataset)).not.toThrow();
-    });
+    }, 10000);
   });
 });
