@@ -92,6 +92,7 @@ export function PainTracker() {
   const [showWCBReport, setShowWCBReport] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [walkthroughSteps, setWalkthroughSteps] = useState<any[]>([]);
   const [reportPeriod, setReportPeriod] = useState({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 days ago
     end: new Date().toISOString().split("T")[0]
@@ -112,6 +113,18 @@ export function PainTracker() {
           console.warn('Failed to load validation technology:', error);
         });
     }
+  }, []);
+
+  // Dynamic import of walkthrough steps
+  useEffect(() => {
+    import('../../data/sampleData')
+      .then((module) => {
+        setWalkthroughSteps(module.walkthroughSteps || []);
+      })
+      .catch((error) => {
+        console.warn('Failed to load walkthrough steps:', error);
+        setWalkthroughSteps([]); // Fallback to empty array
+      });
   }, []);
 
   // Check for first-time user
