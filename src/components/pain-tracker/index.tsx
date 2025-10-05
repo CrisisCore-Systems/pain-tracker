@@ -10,7 +10,7 @@ import { FileText, Plus, Activity, AlertCircle, HelpCircle, PlayCircle } from "l
 import { OnboardingFlow } from "../onboarding";
 import { EmptyState, TrackingIllustration } from "../empty-state";
 import { useToast } from "../feedback";
-import { samplePainEntries, walkthroughSteps } from "../../data/sampleData";
+// Dynamic imports: samplePainEntries and walkthroughSteps loaded on demand
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
 import { Walkthrough } from "../tutorials";

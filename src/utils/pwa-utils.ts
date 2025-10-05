@@ -1,7 +1,6 @@
 // Enhanced PWA utility functions for Pain Tracker
-import { offlineStorage } from '../lib/offline-storage';
+// Note: offlineStorage and backgroundSync loaded dynamically for code splitting
 import { formatNumber } from './formatting';
-import { backgroundSync } from '../lib/background-sync';
 import { secureStorage } from '../lib/storage/secureStorage';
 
 // Lightweight declaration for BeforeInstallPromptEvent for environments
@@ -101,6 +100,7 @@ export class PWAManager {
   // Enhanced Storage Initialization
   private async initializeOfflineStorage(): Promise<void> {
     try {
+      const { offlineStorage } = await import('../lib/offline-storage');
       await offlineStorage.init();
       if (process.env.NODE_ENV === 'development') {
         console.log('PWA: Offline storage initialized');
@@ -648,6 +648,7 @@ export class PWAManager {
     async exportOfflineData(): Promise<OfflineData> {
       try {
         // Export from IndexedDB for complete offline data
+        const { offlineStorage } = await import('../lib/offline-storage');
         const offlineDataExport = await offlineStorage.exportData();
         
         // Combine with localStorage data
@@ -674,6 +675,7 @@ export class PWAManager {
         // Import sync queue if available
         if (data.syncQueue) {
           // Import sync queue items to IndexedDB
+          const { offlineStorage } = await import('../lib/offline-storage');
           for (const item of data.syncQueue) {
             // Ensure item matches expected sync queue shape before adding
             const queueItem = item as { url: string; method: string; headers?: Record<string,string>; body?: unknown; priority?: 'high'|'medium'|'low'; type?: string; metadata?: Record<string,unknown> };
@@ -783,6 +785,8 @@ export class PWAManager {
       pendingSyncItems: number;
       lastSync: string | null;
     }> {
+      const { offlineStorage } = await import('../lib/offline-storage');
+      const { backgroundSync } = await import('../lib/background-sync');
       const storageUsage = await offlineStorage.getStorageUsage();
       const pendingSyncItems = await backgroundSync.getPendingItemsCount();
   const lastSync = secureStorage.get<string>('last-sync-time');
@@ -804,6 +808,7 @@ export class PWAManager {
         await this.clearCaches();
         
         // Clear IndexedDB
+        const { offlineStorage } = await import('../lib/offline-storage');
         await offlineStorage.clearAllData();
         
   // Clear all secureStorage-managed keys (namespaced)

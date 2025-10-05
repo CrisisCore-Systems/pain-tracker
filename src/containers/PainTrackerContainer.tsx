@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { secureStorage } from '../lib/storage/secureStorage';
 import type { PainEntry } from '../types';
+import type { WalkthroughStep } from '../types';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { TraumaInformedPainTrackerLayout } from '../components/layouts/TraumaInformedPainTrackerLayout';
 import { OnboardingFlow } from '../components/onboarding';
 import { Walkthrough } from '../components/tutorials';
 import { useToast } from '../components/feedback';
-import { walkthroughSteps } from '../data/sampleData';
 
 export function PainTrackerContainer() {
   const {
@@ -21,6 +21,14 @@ export function PainTrackerContainer() {
   } = usePainTrackerStore();
 
   const toast = useToast();
+  const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
+
+  // Load walkthrough steps dynamically to avoid circular dependency
+  useEffect(() => {
+    import('../data/sampleData').then(({ walkthroughSteps: steps }) => {
+      setWalkthroughSteps(steps);
+    });
+  }, []);
 
   // Check for first-time user
   useEffect(() => {
