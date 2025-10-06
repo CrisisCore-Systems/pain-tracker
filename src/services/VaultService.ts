@@ -1,4 +1,4 @@
-import sodium from 'libsodium-wrappers-sumo';
+import sodium from 'libsodium-wrappers';
 import { securityService } from './SecurityService';
 import { secureStorage } from '../lib/storage/secureStorage';
 import { getSodium, getSodiumSync } from '../lib/crypto/sodium';
@@ -459,7 +459,7 @@ export class EncryptedVaultService {
     (globalThis as { __secureStorageDecrypt?: (ciphertext: string) => string }).__secureStorageDecrypt = (ciphertext: string) => this.decryptString(ciphertext);
   }
 
-  private assertSodium(): typeof import('libsodium-wrappers-sumo') {
+  private assertSodium(): typeof import('libsodium-wrappers') {
     const sodium = getSodiumSync();
     if (!sodium) {
       throw new Error('libsodium not ready');
