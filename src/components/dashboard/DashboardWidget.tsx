@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { GripVertical, HelpCircle } from 'lucide-react';
 import { Card, CardContent, Button, Badge } from '../../design-system';
 import { cn } from '../../design-system/utils';
@@ -8,12 +8,14 @@ import { PainEntryWidget } from '../widgets/PainEntryWidget';
 import { EnhancedPainVisualizationPanel } from '../widgets/EnhancedPainVisualizationPanel';
 import { PainHistoryPanel } from '../widgets/PainHistoryPanel';
 import { QuantifiedEmpathyDashboard } from '../analytics/QuantifiedEmpathyDashboard';
-import { WCBReportPanel } from '../widgets/WCBReportPanel';
 import { IntelligentTriggersManager } from '../notifications/IntelligentTriggersManager';
 import { GoalDashboardWidget } from '../goals/GoalDashboardWidget';
 import { formatNumber } from '../../utils/formatting';
 import type { WidgetType } from './constants';
 import type { PainEntry } from '../../types';
+
+// Lazy load WCBReportPanel to defer PDF library loading (Phase 3 optimization)
+const WCBReportPanel = lazy(() => import('../widgets/WCBReportPanel').then(m => ({ default: m.WCBReportPanel })));
 
 type LayoutStyle = 'grid' | 'masonry' | 'list';
 
@@ -101,7 +103,13 @@ const renderWcbReport: WidgetRenderer = ({ entries }) => (
     importance="normal"
     canCollapse={true}
   >
-    <WCBReportPanel entries={entries} />
+    <Suspense fallback={
+      <div className="flex items-center justify-center p-8" role="status" aria-live="polite">
+        <div className="animate-pulse">Loading WCB Report...</div>
+      </div>
+    }>
+      <WCBReportPanel entries={entries} />
+    </Suspense>
   </TraumaInformedSection>
 );
 

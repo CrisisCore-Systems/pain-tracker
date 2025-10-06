@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { FileText, Download } from 'lucide-react';
 import { PatientClaimInfoModal, type PatientClaimInfo } from './PatientClaimInfoModal';
-import { ClinicalPDFExporter } from '../../services/ClinicalPDFExporter';
 import { captureMultipleCharts, waitForChartsToRender } from '../../utils/chartCapture';
-import type { PainEntry, MoodEntry } from '../../types/pain-tracker';
+import type { PainEntry } from '../../types';
+import type { MoodEntry } from '../../types/quantified-empathy';
 
 interface ClinicalPDFExportButtonProps {
   entries: PainEntry[];
@@ -51,7 +51,8 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
         { id: 'pain-distribution-chart', type: 'canvas' },
       ]);
 
-      // Generate PDF
+      // Lazy load PDF exporter to defer jsPDF bundle loading (Phase 3 optimization)
+      const { ClinicalPDFExporter } = await import('../../services/ClinicalPDFExporter');
       const exporter = new ClinicalPDFExporter();
       await exporter.generateReport({
         entries,

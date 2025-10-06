@@ -4,10 +4,13 @@ import type { PainEntry } from "../../types";
 import { PainEntryWidget } from "../widgets/PainEntryWidget";
 import { EnhancedPainVisualizationPanel } from "../widgets/EnhancedPainVisualizationPanel";
 import { PainHistoryPanel } from "../widgets/PainHistoryPanel";
-import { WCBReportPanel } from "../widgets/WCBReportPanel";
+import { lazy, Suspense } from "react";
 import { EmptyStatePanel } from "../widgets/EmptyStatePanel";
 import { Card, CardContent, Button, ThemeToggle } from "../../design-system";
 import { usePainTrackerStore } from "../../stores/pain-tracker-store";
+
+// Lazy load WCBReportPanel to defer PDF library loading (Phase 3 optimization)
+const WCBReportPanel = lazy(() => import("../widgets/WCBReportPanel").then(m => ({ default: m.WCBReportPanel })));
 
 interface PainTrackerLayoutProps {
   entries: PainEntry[];
@@ -88,7 +91,13 @@ export function PainTrackerLayout({
         )}
 
         {ui.showWCBReport && (
-          <WCBReportPanel entries={entries} />
+          <Suspense fallback={
+            <div className="flex items-center justify-center p-8" role="status" aria-live="polite">
+              <div className="animate-pulse">Loading WCB Report...</div>
+            </div>
+          }>
+            <WCBReportPanel entries={entries} />
+          </Suspense>
         )}
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">

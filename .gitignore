@@ -34,3 +34,4 @@ security-audit-report.json
 
 #Ignore vscode AI rules
 .github\instructions\codacy.instructions.md
+.vercel

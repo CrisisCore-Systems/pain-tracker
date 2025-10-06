@@ -146,6 +146,15 @@ export class EncryptedVaultService {
     const memlimit = sodium.crypto_pwhash_MEMLIMIT_MODERATE;
     const keyLength = sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES;
 
+    console.log('[VaultService] Creating vault with:', {
+      passphraseType: typeof passphrase,
+      passphraseLength: passphrase?.length,
+      keyLength,
+      opslimit,
+      memlimit,
+      saltLength: salt.length
+    });
+
     const key = sodium.crypto_pwhash(
       keyLength,
       passphrase,
@@ -155,7 +164,15 @@ export class EncryptedVaultService {
       sodium.crypto_pwhash_ALG_ARGON2ID13
     );
 
-    const verificationHash = sodium.crypto_pwhash_str(passphrase, opslimit, memlimit);
+    console.log('[VaultService] Key derived, creating verification hash...');
+
+    const verificationHash = sodium.crypto_pwhash_str(
+      passphrase,
+      opslimit,
+      memlimit
+    );
+
+    console.log('[VaultService] Verification hash created:', verificationHash?.length);
 
     const metadata: VaultMetadata = {
       version: VAULT_VERSION,
@@ -207,7 +224,17 @@ export class EncryptedVaultService {
 
     const sodium = await getSodium();
 
-    const isValid = sodium.crypto_pwhash_str_verify(metadata.verification.hash, passphrase);
+    let isValid = false;
+    try {
+      isValid = sodium.crypto_pwhash_str_verify(
+        metadata.verification.hash,
+        passphrase
+      );
+    } catch (error) {
+      this.logEvent('error', `Passphrase verification error: ${error}`);
+      throw new Error('Passphrase verification failed.');
+    }
+
     if (!isValid) {
       this.logEvent('warning', 'Vault unlock attempt failed');
       throw new Error('Incorrect passphrase.');

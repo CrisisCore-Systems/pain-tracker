@@ -3,7 +3,6 @@ import { formatNumber } from "../../utils/formatting";
 import type { PainEntry } from "../../types";
 import type { WCBReport } from "../../types/index";
 import { analyzeTreatmentChanges, analyzeWorkImpact } from "../../utils/wcbAnalytics";
-import { pdfExportService } from "../../services/PDFExportService";
 import { toast } from "sonner";
 
 interface WCBReportGeneratorProps {
@@ -205,6 +204,8 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
   const handleExportPDF = async () => {
     try {
       toast.loading("Generating PDF report...");
+      // Lazy load PDF service to defer jsPDF bundle loading (Phase 3 optimization)
+      const { pdfExportService } = await import("../../services/PDFExportService");
       await pdfExportService.downloadWCBReport(report);
       toast.dismiss();
       toast.success("PDF report downloaded successfully!");

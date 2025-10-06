@@ -5,9 +5,11 @@ import path from 'node:path';
 import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
-const devCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
-// Production CSP removes unsafe-inline/unsafe-eval and restricts connect-src
-const prodCsp = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.wcb.gov; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
+// Development CSP - allows hot reload and dev tools
+const devCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
+
+// Production CSP - strict, no external CDNs (self-host all resources)
+const prodCsp = "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self' data:; img-src 'self' data: blob:; connect-src 'self' https://api.wcb.gov; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -52,12 +54,20 @@ export default defineConfig({
           // Content Security Policy
           res.setHeader('Content-Security-Policy', devCsp);
           
-          // Security headers
+          // Security headers (OWASP recommended)
           res.setHeader('X-Frame-Options', 'DENY');
           res.setHeader('X-Content-Type-Options', 'nosniff');
           res.setHeader('X-XSS-Protection', '1; mode=block');
           res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
           res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()');
+          
+          // Cross-Origin headers for enhanced security
+          res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+          res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+          res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+          
+          // HSTS for HTTPS enforcement (dev server doesn't use HTTPS, so this is for documentation)
+          // In production, web server should set: Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
           
           next();
         });
@@ -73,10 +83,20 @@ export default defineConfig({
     },
   },
   build: {
-    sourcemap: true,
+    // Never generate source maps (security best practice)
+    sourcemap: false,
     outDir: 'dist',
+    // Always use terser for production-grade minification
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.log statements
+        drop_debugger: true,
+      },
+    },
     rollupOptions: {
       output: {
+        sourcemap: false, // Explicitly disable sourcemaps in rollup output
         manualChunks: (id) => {
           // Vendor chunking strategy for better code splitting
           if (id.includes('node_modules')) {
@@ -146,7 +166,10 @@ export default defineConfig({
       'X-Content-Type-Options': 'nosniff',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'strict-origin-when-cross-origin',
-      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()'
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Resource-Policy': 'same-origin'
     }
   },
   define: {
@@ -154,8 +177,18 @@ export default defineConfig({
   },
   // Inject stricter CSP for production preview server (static hosting can add headers separately)
   preview: {
+    port: 4173,
     headers: {
-      'Content-Security-Policy': isProd ? prodCsp : devCsp
+      'Content-Security-Policy': prodCsp,
+      'X-Frame-Options': 'DENY',
+      'X-Content-Type-Options': 'nosniff',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Resource-Policy': 'same-origin',
+      'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload'
     }
   },
   test: {

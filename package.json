@@ -159,7 +159,7 @@
     "vitest": "^3.2.4"
   },
   "engines": {
-    "node": "^20.0.0 || >=20",
+    "node": "20",
     "npm": ">=9"
   },
   "playwright": {

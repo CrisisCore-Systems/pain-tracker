@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "composite": true,
+    "noEmit": false,
     "outDir": "dist",
     "noEmit": false,
     "tsBuildInfoFile": "./.tsbuildinfo"
