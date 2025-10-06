@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { secureStorage } from '../lib/storage/secureStorage';
 import type { PainEntry } from '../types';
 import type { WalkthroughStep } from '../types';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { TraumaInformedPainTrackerLayout } from '../components/layouts/TraumaInformedPainTrackerLayout';
-import { OnboardingFlow } from '../components/onboarding';
-import { Walkthrough } from '../components/tutorials';
 import { useToast } from '../components/feedback';
+
+// Lazy load onboarding and tutorial components (Phase 2 optimization)
+const OnboardingFlow = lazy(() => import('../components/onboarding').then(m => ({ default: m.OnboardingFlow })));
+const Walkthrough = lazy(() => import('../components/tutorials').then(m => ({ default: m.Walkthrough })));
 
 export function PainTrackerContainer() {
   const {
@@ -131,21 +133,27 @@ export function PainTrackerContainer() {
         onStartWalkthrough={handleStartWalkthrough}
       />
 
-      {/* Onboarding Flow */}
+      {/* Onboarding Flow - Lazy loaded only when needed */}
       {ui.showOnboarding && (
-        <OnboardingFlow
-          onComplete={handleOnboardingComplete}
-          onSkip={handleOnboardingSkip}
-        />
+        <Suspense fallback={null}>
+          <OnboardingFlow
+            onComplete={handleOnboardingComplete}
+            onSkip={handleOnboardingSkip}
+          />
+        </Suspense>
       )}
 
-      {/* Interactive Walkthrough */}
-      <Walkthrough
-        steps={walkthroughSteps}
-        isActive={ui.showWalkthrough}
-        onComplete={handleWalkthroughComplete}
-        onSkip={handleWalkthroughSkip}
-      />
+      {/* Interactive Walkthrough - Lazy loaded only when needed */}
+      {ui.showWalkthrough && (
+        <Suspense fallback={null}>
+          <Walkthrough
+            steps={walkthroughSteps}
+            isActive={ui.showWalkthrough}
+            onComplete={handleWalkthroughComplete}
+            onSkip={handleWalkthroughSkip}
+          />
+        </Suspense>
+      )}
     </>
   );
 }

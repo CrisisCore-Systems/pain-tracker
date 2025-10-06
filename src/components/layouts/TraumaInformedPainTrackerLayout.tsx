@@ -3,16 +3,10 @@
  * Integrates existing pain tracker functionality with modern design patterns
  */
 
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { AlertCircle, HelpCircle, Settings, BarChart3, Calendar, TrendingUp, LifeBuoy } from "lucide-react";
 import { PainTrackerIcon } from '../branding/BrandedLogo';
 import type { PainEntry } from "../../types";
-import { PainHistoryPanel } from "../widgets/PainHistoryPanel";
-import { AnalyticsDashboard } from "../analytics/AnalyticsDashboard";
-import { ClinicalPDFExportButton } from "../export/ClinicalPDFExportButton";
-import { DataExportModal } from "../export/DataExportModal";
-import { CustomizableDashboard } from "../dashboard/CustomizableDashboard";
-import { GoalManagerModal } from "../goals/GoalManagerModal";
 import { Card, CardContent, Button, Badge, ThemeToggle } from "../../design-system";
 import {
   MemoryAid,
@@ -27,6 +21,15 @@ import { VoiceInput, GestureHint, useMobileAccessibility, HighContrastToggle } f
 import MedicationReminders from '../MedicationReminders';
 import AlertsSettings from '../AlertsSettings';
 import AlertsActivityLog from '../AlertsActivityLog';
+import { BrandedLoadingScreen } from '../branding/BrandedLoadingScreen';
+
+// Lazy load large view components for code splitting (Phase 2 optimization)
+const PainHistoryPanel = lazy(() => import("../widgets/PainHistoryPanel").then(m => ({ default: m.PainHistoryPanel })));
+const AnalyticsDashboard = lazy(() => import("../analytics/AnalyticsDashboard").then(m => ({ default: m.AnalyticsDashboard })));
+const ClinicalPDFExportButton = lazy(() => import("../export/ClinicalPDFExportButton").then(m => ({ default: m.ClinicalPDFExportButton })));
+const DataExportModal = lazy(() => import("../export/DataExportModal").then(m => ({ default: m.DataExportModal })));
+const CustomizableDashboard = lazy(() => import("../dashboard/CustomizableDashboard").then(m => ({ default: m.CustomizableDashboard })));
+const GoalManagerModal = lazy(() => import("../goals/GoalManagerModal").then(m => ({ default: m.GoalManagerModal })));
 
 interface TraumaInformedPainTrackerLayoutProps {
   entries: PainEntry[];
@@ -331,12 +334,14 @@ export function TraumaInformedPainTrackerLayout({
         {/* Dashboard View */}
         {activeView === 'dashboard' && (
           <div className="space-y-6">
-            <CustomizableDashboard
-              entries={entries}
-              onAddEntry={onAddEntry}
-              onStartWalkthrough={onStartWalkthrough}
-              onOpenGoalManager={() => setShowGoalManager(true)}
-            />
+            <Suspense fallback={<BrandedLoadingScreen message="Loading Dashboard..." />}>
+              <CustomizableDashboard
+                entries={entries}
+                onAddEntry={onAddEntry}
+                onStartWalkthrough={onStartWalkthrough}
+                onOpenGoalManager={() => setShowGoalManager(true)}
+              />
+            </Suspense>
           </div>
         )}
 
@@ -349,17 +354,21 @@ export function TraumaInformedPainTrackerLayout({
                 <p className="text-muted-foreground">Comprehensive insights, correlations, and predictive indicators</p>
               </div>
               <div className="flex gap-3">
-                <ClinicalPDFExportButton 
-                  entries={entries}
-                  variant="compact"
-                />
+                <Suspense fallback={<div className="text-muted-foreground text-sm">Loading...</div>}>
+                  <ClinicalPDFExportButton 
+                    entries={entries}
+                    variant="compact"
+                  />
+                </Suspense>
                 <Button variant="outline" onClick={() => setActiveView('dashboard')}>
                   Back to Dashboard
                 </Button>
               </div>
             </div>
 
-            <AnalyticsDashboard />
+            <Suspense fallback={<BrandedLoadingScreen message="Loading Analytics..." />}>
+              <AnalyticsDashboard />
+            </Suspense>
           </div>
         )}
 
@@ -376,7 +385,9 @@ export function TraumaInformedPainTrackerLayout({
               </Button>
             </div>
 
-            <PainHistoryPanel entries={entries} />
+            <Suspense fallback={<BrandedLoadingScreen message="Loading History..." />}>
+              <PainHistoryPanel entries={entries} />
+            </Suspense>
           </div>
         )}
 
@@ -444,17 +455,25 @@ export function TraumaInformedPainTrackerLayout({
       </footer>
 
       {/* Data Export Modal */}
-      <DataExportModal
-        isOpen={showExportModal}
-        onClose={() => setShowExportModal(false)}
-        entries={entries}
-      />
+      {showExportModal && (
+        <Suspense fallback={null}>
+          <DataExportModal
+            isOpen={showExportModal}
+            onClose={() => setShowExportModal(false)}
+            entries={entries}
+          />
+        </Suspense>
+      )}
 
       {/* Goal Manager Modal */}
-      <GoalManagerModal
-        isOpen={showGoalManager}
-        onClose={() => setShowGoalManager(false)}
-      />
+      {showGoalManager && (
+        <Suspense fallback={null}>
+          <GoalManagerModal
+            isOpen={showGoalManager}
+            onClose={() => setShowGoalManager(false)}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
