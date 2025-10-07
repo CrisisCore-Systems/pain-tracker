@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { Button } from '../../design-system';
 
-interface WalkthroughStep {
+export interface WalkthroughStep {
   target: string; // CSS selector for the target element
   title: string;
   content: string;

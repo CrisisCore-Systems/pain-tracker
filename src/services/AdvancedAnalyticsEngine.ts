@@ -1,5 +1,11 @@
 import type { PainEntry, MoodEntry } from '../types/pain-tracker';
 
+const getPainIntensity = (entry: PainEntry): number =>
+  entry.intensity ?? entry.baselineData?.pain ?? 0;
+
+const getPainQuality = (entry: PainEntry): string[] =>
+  entry.quality ?? entry.baselineData?.symptoms ?? [];
+
 export interface CorrelationResult {
   variable1: string;
   variable2: string;
@@ -80,7 +86,7 @@ export class AdvancedAnalyticsEngine {
     const results: CorrelationResult[] = [];
 
     // Extract time-series data
-    const painLevels = entries.map(e => e.intensity);
+    const painLevels = entries.map(getPainIntensity);
     const timestamps = entries.map(e => new Date(e.timestamp).getTime());
     
     // Time-based correlations
@@ -134,7 +140,7 @@ export class AdvancedAnalyticsEngine {
       results.push(this.computeCorrelation(
         'Pain Level',
         'Activity Level',
-        entriesWithActivity.map(e => e.intensity),
+        entriesWithActivity.map(getPainIntensity),
         entriesWithActivity.map(e => e.activityLevel || 0)
       ));
     }
@@ -156,7 +162,8 @@ export class AdvancedAnalyticsEngine {
     // Collect intervention data
     entries.forEach((entry, index) => {
       const reliefMethods = entry.reliefMethods || [];
-      
+      const intensity = getPainIntensity(entry);
+
       reliefMethods.forEach(method => {
         if (!interventionMap.has(method)) {
           interventionMap.set(method, {
@@ -166,16 +173,17 @@ export class AdvancedAnalyticsEngine {
             successes: 0,
           });
         }
-        
+
         const data = interventionMap.get(method)!;
         data.uses++;
-        data.painBefore.push(entry.intensity);
-        
+        data.painBefore.push(intensity);
+
         // Look for next entry within 2-6 hours to measure effect
         const nextEntry = this.findNextEntry(entry, entries.slice(index + 1), 2, 6);
         if (nextEntry) {
-          data.painAfter.push(nextEntry.intensity);
-          if (nextEntry.intensity < entry.intensity) {
+          const nextIntensity = getPainIntensity(nextEntry);
+          data.painAfter.push(nextIntensity);
+          if (nextIntensity < intensity) {
             data.successes++;
           }
         }
@@ -260,12 +268,10 @@ export class AdvancedAnalyticsEngine {
         
         const data = triggerMap.get(trigger)!;
         data.count++;
-        data.painLevels.push(entry.intensity);
+        data.painLevels.push(getPainIntensity(entry));
         data.timestamps.push(new Date(entry.timestamp));
-        
-        if (entry.quality) {
-          entry.quality.forEach(q => data.symptoms.add(q));
-        }
+
+        getPainQuality(entry).forEach(q => data.symptoms.add(q));
       });
     });
 
@@ -276,7 +282,7 @@ export class AdvancedAnalyticsEngine {
       if (data.count < 3) return; // Need at least 3 occurrences
       
       const avgPain = data.painLevels.reduce((a, b) => a + b, 0) / data.painLevels.length;
-      const overallAvg = entries.reduce((sum, e) => sum + e.intensity, 0) / entries.length;
+      const overallAvg = entries.reduce((sum, e) => sum + getPainIntensity(e), 0) / entries.length;
       const avgIncrease = avgPain - overallAvg;
       
       // Time of day pattern
@@ -338,13 +344,16 @@ export class AdvancedAnalyticsEngine {
       const previous = entries[i - 1];
       const timeDiff = (new Date(current.timestamp).getTime() - new Date(previous.timestamp).getTime()) / (1000 * 60 * 60);
       
-      if (timeDiff <= 4 && current.intensity - previous.intensity >= 3) {
+      const currentIntensity = getPainIntensity(current);
+      const previousIntensity = getPainIntensity(previous);
+
+      if (timeDiff <= 4 && currentIntensity - previousIntensity >= 3) {
         indicators.push({
           indicator: 'Rapid Pain Escalation',
           type: 'escalation',
           confidence: 0.75,
           leadTime: `${Math.round(timeDiff)} hours`,
-          description: `Pain increased by ${current.intensity - previous.intensity} points in ${Math.round(timeDiff)} hours`,
+          description: `Pain increased by ${currentIntensity - previousIntensity} points in ${Math.round(timeDiff)} hours`,
         });
       }
     }
@@ -355,9 +364,9 @@ export class AdvancedAnalyticsEngine {
       return hour >= 5 && hour <= 9;
     });
     const morningAvg = morningEntries.length > 0
-      ? morningEntries.reduce((sum, e) => sum + e.intensity, 0) / morningEntries.length
+      ? morningEntries.reduce((sum, e) => sum + getPainIntensity(e), 0) / morningEntries.length
       : 0;
-    const overallAvg = entries.reduce((sum, e) => sum + e.intensity, 0) / entries.length;
+    const overallAvg = entries.reduce((sum, e) => sum + getPainIntensity(e), 0) / entries.length;
     
     if (morningEntries.length >= 5 && morningAvg > overallAvg + 1) {
       indicators.push({
@@ -372,7 +381,7 @@ export class AdvancedAnalyticsEngine {
     // Activity-related onset
     const activeEntries = entries.filter(e => e.activityLevel && e.activityLevel > 6);
     if (activeEntries.length >= 10) {
-      const activeAvg = activeEntries.reduce((sum, e) => sum + e.intensity, 0) / activeEntries.length;
+      const activeAvg = activeEntries.reduce((sum, e) => sum + getPainIntensity(e), 0) / activeEntries.length;
       if (activeAvg > overallAvg + 1.5) {
         indicators.push({
           indicator: 'Activity-Induced Pain',
@@ -425,10 +434,10 @@ export class AdvancedAnalyticsEngine {
 
     // Calculate metrics
     const avgPain = weekEntries.length > 0
-      ? weekEntries.reduce((sum, e) => sum + e.intensity, 0) / weekEntries.length
+      ? weekEntries.reduce((sum, e) => sum + getPainIntensity(e), 0) / weekEntries.length
       : 0;
     const prevAvgPain = prevWeekEntries.length > 0
-      ? prevWeekEntries.reduce((sum, e) => sum + e.intensity, 0) / prevWeekEntries.length
+      ? prevWeekEntries.reduce((sum, e) => sum + getPainIntensity(e), 0) / prevWeekEntries.length
       : avgPain;
     const painChange = avgPain - prevAvgPain;
     
@@ -446,13 +455,13 @@ export class AdvancedAnalyticsEngine {
       insights.push(`${weekEntries.length} pain entries recorded (avg ${(weekEntries.length / 7).toFixed(1)} per day)`);
       insights.push(`Average pain level: ${avgPain.toFixed(1)}/10 (${trend === 'improving' ? '↓' : trend === 'worsening' ? '↑' : '→'} ${Math.abs(painChange).toFixed(1)} from previous week)`);
       
-      const maxPain = Math.max(...weekEntries.map(e => e.intensity));
-      const maxEntry = weekEntries.find(e => e.intensity === maxPain);
+      const maxPain = Math.max(...weekEntries.map(getPainIntensity));
+      const maxEntry = weekEntries.find(e => getPainIntensity(e) === maxPain);
       if (maxEntry) {
         insights.push(`Peak pain: ${maxPain}/10 on ${new Date(maxEntry.timestamp).toLocaleDateString()}`);
       }
       
-      const minPain = Math.min(...weekEntries.map(e => e.intensity));
+      const minPain = Math.min(...weekEntries.map(getPainIntensity));
       insights.push(`Pain ranged from ${minPain} to ${maxPain}/10`);
     }
 
@@ -480,7 +489,7 @@ export class AdvancedAnalyticsEngine {
     if (avgPain >= 7) {
       concerns.push('High average pain level requires clinical attention');
     }
-    const highPainDays = weekEntries.filter(e => e.intensity >= 8).length;
+    const highPainDays = weekEntries.filter(e => getPainIntensity(e) >= 8).length;
     if (highPainDays >= 3) {
       concerns.push(`${highPainDays} days with severe pain (8+/10) this week`);
     }
@@ -615,7 +624,7 @@ export class AdvancedAnalyticsEngine {
       
       if (closestMood) {
         aligned.push({
-          pain: painEntry.intensity,
+          pain: getPainIntensity(painEntry),
           mood: closestMood.mood,
         });
       }

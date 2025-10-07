@@ -2,6 +2,15 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import type { PainEntry, MoodEntry } from '../types/pain-tracker';
 
+const getPainIntensity = (entry: PainEntry): number =>
+  entry.intensity ?? entry.baselineData?.pain ?? 0;
+
+const getPainLocation = (entry: PainEntry): string | undefined =>
+  entry.location ?? entry.baselineData?.locations?.join(', ');
+
+const getPainQuality = (entry: PainEntry): string[] =>
+  entry.quality ?? entry.baselineData?.symptoms ?? [];
+
 interface PatientInfo {
   name?: string;
   dateOfBirth?: string;
@@ -234,9 +243,9 @@ export class ClinicalPDFExporter {
     this.currentY += 8;
     
     // Calculate statistics
-    const avgPain = entries.reduce((sum, e) => sum + e.intensity, 0) / entries.length;
-    const maxPain = Math.max(...entries.map(e => e.intensity));
-    const minPain = Math.min(...entries.map(e => e.intensity));
+    const avgPain = entries.reduce((sum, e) => sum + getPainIntensity(e), 0) / entries.length;
+    const maxPain = Math.max(...entries.map(getPainIntensity));
+    const minPain = Math.min(...entries.map(getPainIntensity));
     const totalEntries = entries.length;
     
     const dateRange = entries.length > 0 
@@ -346,9 +355,9 @@ export class ClinicalPDFExporter {
         hour: '2-digit', 
         minute: '2-digit' 
       }),
-      entry.intensity.toString(),
-      entry.location || 'Not specified',
-      entry.quality?.join(', ') || 'N/A',
+      getPainIntensity(entry).toString(),
+      getPainLocation(entry) || 'Not specified',
+      getPainQuality(entry).join(', ') || 'N/A',
       entry.triggers?.join(', ') || 'None noted',
     ]);
     
@@ -464,17 +473,20 @@ export class ClinicalPDFExporter {
     const parts: string[] = [];
     
     // Pain intensity
-    const painCategory = this.getPainCategory(entry.intensity);
-    parts.push(`Patient reported ${painCategory.toLowerCase()} pain (${entry.intensity}/10)`);
-    
+    const intensity = getPainIntensity(entry);
+    const painCategory = this.getPainCategory(intensity);
+    parts.push(`Patient reported ${painCategory.toLowerCase()} pain (${intensity}/10)`);
+
     // Location
-    if (entry.location) {
-      parts.push(`in ${entry.location}`);
+    const location = getPainLocation(entry);
+    if (location) {
+      parts.push(`in ${location}`);
     }
-    
+
     // Quality descriptors
-    if (entry.quality && entry.quality.length > 0) {
-      parts.push(`described as ${entry.quality.join(', ')}`);
+    const quality = getPainQuality(entry);
+    if (quality.length > 0) {
+      parts.push(`described as ${quality.join(', ')}`);
     }
     
     // Triggers

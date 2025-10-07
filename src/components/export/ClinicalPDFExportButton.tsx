@@ -53,13 +53,16 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
 
       // Generate PDF
       const exporter = new ClinicalPDFExporter();
-      await exporter.generateReport(
+      await exporter.generateReport({
         entries,
         patientInfo,
         moodEntries,
-        chartImages['pain-trend-chart'],
-        chartImages['pain-distribution-chart']
-      );
+        charts: {
+          painTrend: chartImages['pain-trend-chart'],
+          painDistribution: chartImages['pain-distribution-chart'],
+        },
+        includeNarrative: true,
+      });
 
       // Success feedback
       if ('vibrate' in navigator) {
