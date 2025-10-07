@@ -381,22 +381,25 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 
 ## 📊 **Project Metrics**
 
-**Current Statistics (September 2024):**
+**Current Statistics (October 2024):**
 
 | Metric | Value | Status | Notes |
 |--------|-------|--------|-------|
 | **Test Coverage** | 90%+ | ✅ Excellent | Comprehensive test suite with unit, integration, and E2E tests |
 | **Security Score** | A+ | ✅ Hardened | Multi-layer security with active scanning and SAST |
 | **Lines of Code** | 31,700+ | 📈 Growing | TypeScript-first codebase with strong typing |
-| **Bundle Size** | <2MB | ✅ Optimized | Code-split and tree-shaken for performance |
+| **Bundle Size** | **1.3 MB** | ✅ **Optimized** | **51% reduction** - Route-based splitting + lazy loading |
+| **Gzipped Size** | **420 KB** | ✅ **Excellent** | Production-ready compression (~3:1 ratio) |
 | **Components** | 150+ | 📦 Modular | Reusable design system components |
 | **Build Status** | ✅ Passing | 🟢 Stable | All CI/CD pipelines green |
 | **Dependencies** | Clean | ✅ Audited | Production deps clean, dev deps with minor issues |
 
 **Build Performance:**
-- Build Time: ~10s
+- Build Time: ~19s (production optimized)
 - Dev Server Start: <1s
 - Hot Module Reload: ~100ms
+- Main Bundle: 1,296 KB (down from 2,670 KB)
+- Lazy Chunks: 10+ separate chunks for on-demand loading
 
 ---
 
