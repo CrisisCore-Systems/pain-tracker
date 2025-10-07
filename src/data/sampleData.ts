@@ -549,7 +549,7 @@ export const samplePainEntries: PainEntry[] = [
       worseningSince: 'Gradual onset over past 6 months',
       newLimitations: ['Cannot participate in running club'],
     },
-    notes: 'Bilateral knee pain from overuse. Need to strengthen supporting muscles. Ice after activity helps. Considering cortisone injection if PT doesn't help.',
+    notes: 'Bilateral knee pain from overuse. Need to strengthen supporting muscles. Ice after activity helps. Considering cortisone injection if PT does not help.',
   },
 ];
 
