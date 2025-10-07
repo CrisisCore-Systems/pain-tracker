@@ -26,7 +26,7 @@ export default defineConfig({
       enabled: coverageEnabled, // toggle coverage collection via VITEST_COVERAGE env var
       provider: 'v8',
       reportsDirectory: 'coverage',
-      reporter: ['text','html','json-summary'],
+      reporter: ['text', 'html', 'json'],
       // Focus coverage on core logic areas; exclude massive UI surface until component tests added
       include: [
         // Focus on core heuristic/engine/encryption logic currently covered by tests
