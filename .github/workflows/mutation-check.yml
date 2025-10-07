@@ -21,7 +21,7 @@ jobs:
 
       - name: Run focused Stryker (non-blocking)
         run: |
-          npx stryker run --config stryker.conf.cjs --logLevel info || true
+          npx stryker run stryker.conf.cjs --logLevel info || true
 
       - name: Upload mutation report
         uses: actions/upload-artifact@v4
@@ -35,7 +35,7 @@ jobs:
         with:
           script: |
             const summary = 'Mutation testing run completed. Artifact `mutation-report` uploaded.';
-            github.issues.createComment({
+            github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
