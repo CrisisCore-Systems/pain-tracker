@@ -1,7 +1,7 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
 import { secureStorage } from '../lib/storage/secureStorage';
 import type { PainEntry } from '../types';
-import type { WalkthroughStep } from '../types';
+import type { WalkthroughStep } from '../components/tutorials/Walkthrough';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { TraumaInformedPainTrackerLayout } from '../components/layouts/TraumaInformedPainTrackerLayout';
 import { useToast } from '../components/feedback';

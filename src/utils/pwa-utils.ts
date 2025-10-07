@@ -21,6 +21,11 @@ interface SyncManager {
   register(tag: string): Promise<void>;
 }
 
+type MaybeForceSync = {
+  forceSync?: () => Promise<unknown>;
+  forcSync?: () => Promise<unknown>;
+};
+
 interface PWACapabilities {
   serviceWorker: boolean;
   pushNotifications: boolean;
@@ -343,9 +348,8 @@ export class PWAManager {
     if (isOnline) {
       // Trigger background sync when coming back online
       try {
+        const { backgroundSync } = await import('../lib/background-sync');
         // Support legacy typo (forcSync) and future corrected (forceSync)
-  // cspell:ignore forc
-  type MaybeForceSync = { forceSync?: () => Promise<unknown>; forcSync?: () => Promise<unknown> };
         const svc = backgroundSync as unknown as MaybeForceSync;
         if (typeof svc.forceSync === 'function') {
           await svc.forceSync();

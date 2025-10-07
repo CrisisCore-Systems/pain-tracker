@@ -17,16 +17,22 @@ describe('AdvancedAnalyticsEngine', () => {
       timestamp.setDate(timestamp.getDate() - i);
       timestamp.setHours(8 + (i % 12), 0, 0, 0);
 
+      const intensity = 3 + (i % 7);
       return {
         id: i + 1,
         timestamp: timestamp.toISOString(),
-        intensity: 3 + (i % 7),
+        intensity,
         location: 'Lower Back',
         quality: ['sharp', 'throbbing'],
         triggers: i % 3 === 0 ? ['sitting', 'stress'] : ['weather'],
         reliefMethods: i % 2 === 0 ? ['medication', 'rest'] : ['stretching'],
         activityLevel: 5 + (i % 5),
         notes: `Test entry ${i}`,
+        baselineData: {
+          pain: intensity,
+          locations: ['Lower Back'],
+          symptoms: ['sharp', 'throbbing'],
+        },
       };
     });
 
@@ -263,6 +269,11 @@ describe('AdvancedAnalyticsEngine', () => {
           quality: [],
           triggers: [],
           reliefMethods: [],
+          baselineData: {
+            pain: 4,
+            locations: ['Back'],
+            symptoms: [],
+          },
         },
         {
           id: 2,
@@ -272,6 +283,11 @@ describe('AdvancedAnalyticsEngine', () => {
           quality: [],
           triggers: [],
           reliefMethods: [],
+          baselineData: {
+            pain: 8,
+            locations: ['Back'],
+            symptoms: [],
+          },
         },
         ...mockEntries, // Add more for sufficient data
       ];
@@ -412,6 +428,11 @@ describe('AdvancedAnalyticsEngine', () => {
           quality: [],
           triggers: [],
           reliefMethods: [],
+          baselineData: {
+            pain: 5,
+            locations: ['Back'],
+            symptoms: [],
+          },
         },
       ];
       

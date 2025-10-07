@@ -14,6 +14,7 @@ import { useToast } from "../feedback";
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
 import { Walkthrough } from "../tutorials";
+import type { WalkthroughStep } from "../tutorials/Walkthrough";
 
 // Validation Technology Integration (enabled by default)
 const ENABLE_VALIDATION_TECH = (() => {
@@ -92,7 +93,7 @@ export function PainTracker() {
   const [showWCBReport, setShowWCBReport] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
-  const [walkthroughSteps, setWalkthroughSteps] = useState<any[]>([]);
+  const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
   const [reportPeriod, setReportPeriod] = useState({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 days ago
     end: new Date().toISOString().split("T")[0]
@@ -118,8 +119,12 @@ export function PainTracker() {
   // Dynamic import of walkthrough steps
   useEffect(() => {
     import('../../data/sampleData')
-      .then((module) => {
-        setWalkthroughSteps(module.walkthroughSteps || []);
+      .then(({ walkthroughSteps: steps }) => {
+        if (Array.isArray(steps)) {
+          setWalkthroughSteps(steps as WalkthroughStep[]);
+        } else {
+          setWalkthroughSteps([]);
+        }
       })
       .catch((error) => {
         console.warn('Failed to load walkthrough steps:', error);
@@ -194,10 +199,17 @@ export function PainTracker() {
     }
     setShowOnboarding(false);
     if (setupWithSampleData) {
-      setEntries(samplePainEntries);
-      // persist each sample via savePainEntry
-      samplePainEntries.forEach(e => { try { savePainEntry(e); } catch {/* ignore individual */} });
-      toast.success('Sample data loaded!', 'Explore the features with example pain entries. You can clear this data anytime.');
+      void (async () => {
+        try {
+          const { samplePainEntries } = await import('../../data/sampleData');
+          setEntries(samplePainEntries);
+          await Promise.allSettled(samplePainEntries.map(entry => savePainEntry(entry)));
+          toast.success('Sample data loaded!', 'Explore the features with example pain entries. You can clear this data anytime.');
+        } catch (error) {
+          console.error('Failed to load sample pain entries:', error);
+          toast.error('Sample data unavailable', 'Unable to load example entries at this time.');
+        }
+      })();
     } else {
       toast.info('Welcome to Pain Tracker!', 'Start by recording your first pain entry above.');
     }
