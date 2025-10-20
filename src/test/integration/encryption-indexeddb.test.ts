@@ -1,8 +1,20 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { offlineStorage } from '../../lib/offline-storage';
 import { encryptionService } from '../../services/EncryptionService';
 
 type StoredRow = { id?: number; timestamp: string; type: string; data: unknown; synced?: boolean; lastModified: string };
+
+// Helper to initialize encryption keys for tests
+async function setupEncryptionKeys() {
+  const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+  const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+  const encRaw = await crypto.subtle.exportKey('raw', encKey);
+  const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
+  const encB64 = btoa(String.fromCharCode(...new Uint8Array(encRaw)));
+  const hmacB64 = btoa(String.fromCharCode(...new Uint8Array(hmacRaw)));
+  const payload = JSON.stringify({ enc: encB64, hmac: hmacB64, created: new Date().toISOString() });
+  (encryptionService as any).inMemoryKeyCache.set('pain-tracker-master', { key: payload, created: new Date().toISOString() });
+}
 
 // If IndexedDB (or the fake polyfill) isn't available in the test environment,
 // fall back to a small in-memory shim that implements the methods used by
@@ -50,6 +62,10 @@ if (typeof indexedDB === 'undefined') {
 }
 
 describe('Encryption + IndexedDB integration', () => {
+  beforeEach(async () => {
+    await setupEncryptionKeys();
+  });
+
   beforeAll(async () => {
     // Ensure a clean DB. If initialization fails (e.g. IndexedDB race), fall back to an in-memory shim
     try {
