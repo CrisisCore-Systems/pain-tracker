@@ -94,10 +94,11 @@ Unlike ManageMyPain ($3.99-$4.99/month) or Curable ($14.99/month), our core feat
 - **Perfect for small clinics** - Can't afford Epic? We're your solution.
 
 **Learn More:**
-- [📊 Competitive Market Analysis](docs/COMPETITIVE_MARKET_ANALYSIS.md)
-- [🔍 Feature Comparison Matrix](docs/FEATURE_COMPARISON_MATRIX.md)
-- [💰 Pricing & Business Model](docs/PRICING_BUSINESS_MODEL.md)
-- [🎯 Marketing Positioning](docs/MARKETING_POSITIONING.md)
+- [📋 Competitive Strategy Overview](docs/COMPETITIVE_STRATEGY_OVERVIEW.md) - **Quick reference guide**
+- [📊 Competitive Market Analysis](docs/COMPETITIVE_MARKET_ANALYSIS.md) - Detailed competitor analysis
+- [🔍 Feature Comparison Matrix](docs/FEATURE_COMPARISON_MATRIX.md) - Feature-by-feature comparison
+- [💰 Pricing & Business Model](docs/PRICING_BUSINESS_MODEL.md) - Business strategy and revenue model
+- [🎯 Marketing Positioning](docs/MARKETING_POSITIONING.md) - Brand messaging and campaigns
 
 ---
 
@@ -449,6 +450,7 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 - **[Empathy Framework](EMPATHY_ENHANCEMENT_SUMMARY.md)** - User experience philosophy
 
 ### Market & Strategy
+- **[Competitive Strategy Overview](docs/COMPETITIVE_STRATEGY_OVERVIEW.md)** - Quick reference guide to market positioning
 - **[Competitive Market Analysis](docs/COMPETITIVE_MARKET_ANALYSIS.md)** - Competitive landscape and positioning
 - **[Feature Comparison Matrix](docs/FEATURE_COMPARISON_MATRIX.md)** - Feature-by-feature comparison with competitors
 - **[Pricing & Business Model](docs/PRICING_BUSINESS_MODEL.md)** - Freemium pricing strategy and revenue model
