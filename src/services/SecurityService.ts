@@ -14,12 +14,18 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
   return btoa(binary);
 }
 
-function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  if (typeof Buffer !== 'undefined') return Uint8Array.from(Buffer.from(base64, 'base64')).buffer;
+function base64ToUint8Array(base64: string): Uint8Array {
+  if (typeof Buffer !== 'undefined') {
+    return new Uint8Array(Buffer.from(base64, 'base64'));
+  }
   const binary = atob(base64);
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes.buffer;
+  return bytes;
+}
+
+function base64ToArrayBuffer(base64: string): ArrayBuffer {
+  return base64ToUint8Array(base64).buffer;
 }
 
 // Security Event Types
@@ -227,7 +233,8 @@ export class SecurityService {
       const cipherB64 = arrayBufferToBase64(cipherBuffer);
 
       // Compute HMAC over ciphertext for integrity (do not include raw key)
-      const hmacSig = await crypto.subtle.sign('HMAC', this.masterHmacKey, base64ToArrayBuffer(cipherB64));
+      const cipherBytes = base64ToUint8Array(cipherB64);
+      const hmacSig = await crypto.subtle.sign('HMAC', this.masterHmacKey, cipherBytes);
       const hmacB64 = arrayBufferToBase64(hmacSig);
 
   const payload = JSON.stringify({ v: '1', cipher: cipherB64, iv: arrayBufferToBase64(iv.buffer), hmac: hmacB64 });
@@ -286,11 +293,11 @@ export class SecurityService {
       if (!parsed.cipher || !parsed.iv || !parsed.hmac) throw new Error('Encrypted payload missing fields');
 
       // Verify HMAC
-      const expected = await crypto.subtle.verify('HMAC', this.masterHmacKey, base64ToArrayBuffer(parsed.hmac), base64ToArrayBuffer(parsed.cipher));
+      const expected = await crypto.subtle.verify('HMAC', this.masterHmacKey, base64ToUint8Array(parsed.hmac), base64ToUint8Array(parsed.cipher));
       if (!expected) throw new Error('Integrity check failed - HMAC mismatch');
 
-      const iv = new Uint8Array(base64ToArrayBuffer(parsed.iv));
-      const cipherBuf = base64ToArrayBuffer(parsed.cipher);
+      const iv = base64ToUint8Array(parsed.iv);
+      const cipherBuf = base64ToUint8Array(parsed.cipher);
       let decryptedBuf: ArrayBuffer;
       try {
         decryptedBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, this.masterCryptoKey, cipherBuf);
