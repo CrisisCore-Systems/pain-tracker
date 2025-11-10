@@ -1,8 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Pre-push hook: ensure dynamic badges are up to date on main branch.
 # Skips on non-main branches or if CI environment.
 
-set -euo pipefail
+set -e
+set -u
+set -o pipefail
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD || echo "")
 if [ "$BRANCH" != "main" ]; then
