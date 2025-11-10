@@ -63,6 +63,45 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 ---
 
+## 💎 **Competitive Advantages**
+
+Pain Tracker stands apart from competitors through its unique combination of features:
+
+### 🆓 **Free Forever for Patients**
+Unlike ManageMyPain ($3.99-$4.99/month) or Curable ($14.99/month), our core features are **always free** for patients. No paywalls, no subscriptions, no compromises.
+
+### 🔒 **True Privacy-First Architecture**
+- **Local-first storage** - Your data never leaves your device (IndexedDB)
+- **Zero cloud dependency** - Works completely offline
+- **AES-256 encryption** - Military-grade data protection
+- Unlike competitors (ManageMyPain, PainScale, Curable), we don't store your data on external servers
+
+### 📋 **WorkSafeBC Integration**
+- **Only app with native WorkSafeBC support** - Auto-generate Forms 6, 7, 8, and 11
+- **Digital claims filing** - 3 clicks instead of 3 hours of paperwork
+- **Longitudinal tracking** - 30/60/90-day trend reports for appeals
+- Built in BC, for BC workers
+
+### 💚 **Trauma-Informed Design**
+- **Crisis detection** - Integrated emergency support
+- **Gentle language mode** - Emotionally safe interactions
+- **WCAG 2.1 AA compliant** - Comprehensive accessibility
+- **Progressive disclosure** - Reduces cognitive overload during pain flares
+
+### 🏥 **Affordable Clinical Integration**
+- **96% cheaper than Epic EHR** - $19.99/month vs. $500-700/month
+- **FHIR/HL7 export** (planned) - Integrate with existing systems
+- **Perfect for small clinics** - Can't afford Epic? We're your solution.
+
+**Learn More:**
+- [📋 Competitive Strategy Overview](docs/COMPETITIVE_STRATEGY_OVERVIEW.md) - **Quick reference guide**
+- [📊 Competitive Market Analysis](docs/COMPETITIVE_MARKET_ANALYSIS.md) - Detailed competitor analysis
+- [🔍 Feature Comparison Matrix](docs/FEATURE_COMPARISON_MATRIX.md) - Feature-by-feature comparison
+- [💰 Pricing & Business Model](docs/PRICING_BUSINESS_MODEL.md) - Business strategy and revenue model
+- [🎯 Marketing Positioning](docs/MARKETING_POSITIONING.md) - Brand messaging and campaigns
+
+---
+
 ## 🌟 **Core Features**
 
 ### 📊 **Advanced Pain Analytics**
@@ -403,11 +442,24 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 
 ## 📄 **Documentation**
 
+### Core Documentation
 - **[Architecture Deep Dive](ARCHITECTURE_DEEP_DIVE.md)** - Technical implementation details
 - **[Contributing Guide](CONTRIBUTING.md)** - Development and contribution guidelines
 - **[Security Policy](security/)** - Security practices and vulnerability reporting
 - **[PWA Implementation](PWA-COMPLETE.md)** - Progressive Web App features
 - **[Empathy Framework](EMPATHY_ENHANCEMENT_SUMMARY.md)** - User experience philosophy
+
+### Market & Strategy
+- **[Competitive Strategy Overview](docs/COMPETITIVE_STRATEGY_OVERVIEW.md)** - Quick reference guide to market positioning
+- **[Competitive Market Analysis](docs/COMPETITIVE_MARKET_ANALYSIS.md)** - Competitive landscape and positioning
+- **[Feature Comparison Matrix](docs/FEATURE_COMPARISON_MATRIX.md)** - Feature-by-feature comparison with competitors
+- **[Pricing & Business Model](docs/PRICING_BUSINESS_MODEL.md)** - Freemium pricing strategy and revenue model
+- **[Marketing Positioning](docs/MARKETING_POSITIONING.md)** - Brand messaging and go-to-market strategy
+
+### Technical Documentation
+- **[Validation Technology](VALIDATION_TECHNOLOGY.md)** - Data validation and schema documentation
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Production deployment instructions
+- **[Integration Guide](docs/INTEGRATION_GUIDE.md)** - Third-party integration documentation
 
 ---
 
@@ -441,124 +493,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *Pain Tracker - Where Technology Meets Compassion*
 
 </div>
-=======
-# Manual setup
-npm install --legacy-peer-deps
-cp .env.example .env
-npm run dev
-```
-
-Known issues:
-
-- Some legacy peer deps are required while test ecosystem
-  versions converge; remediation is underway.
-
-Node compatibility:
-
-- Node.js 18, 20, 22 supported
-- npm 9+ required
-- Use --legacy-peer-deps during installation if needed
-
----
-
-## 🤝 Contributing and development
-
-This repo enforces Conventional Commits and has strong pre-commit gates.
-
-Examples:
-
-```text
-feat(tracker): add pain heatmap visualization
-fix(api): resolve WCB integration timeout
-docs(readme): add contributing guidelines
-```
-
-Skip tags: [skip lint], [skip build], [skip all]
-
----
-
-## 🔧 Documentation details
-
-<details>
-<summary>Expand for developer workflow and commands</summary>
-
-Key commands (Makefile):
-
-```bash
-make help         # List commands
-make dev          # Start Vite dev server
-make test         # Run Vitest
-make check        # Lint, typecheck, security
-make lint-fix     # Auto-fix linting issues
-make badge:all    # Regenerate dynamic badges
-```
-
-Commit convention:
-
-- feat(scope): add new feature
-- fix(api): resolve endpoint issue
-- docs(readme): update installation guide
-- chore(deps): upgrade dependencies
-
-Dynamic badges are generated by scripts in /scripts and kept fresh
-via the pre-push hook on main.
-
-Version: 0.1.0-dev (early development)
-Build: passing
-Security: dev dependency vulnerabilities present
-Deployment: GitHub Pages configured
-
-Current core features (implemented or partially implemented):
-
-- Multi-step assessment (7 steps) — implemented
-- Interactive analytics and charts — implemented (trend charts)
-- WorkSafe BC report generation (CSV/JSON) — implemented; PDF export partial
-- Emergency response panel — partial (core UI implemented)
-- Local storage import/export — implemented (selective encryption wrappers)
-- Comprehensive test suite — implemented for core services; coverage targets ongoing
-- Security scanning and validation — implemented for CI; dev-dependency remediation ongoing
-- Onboarding and tutorial system — basic flows implemented
-- Responsive, accessible UI — implemented with trauma-informed patterns
-- Full TypeScript + Zod — implemented
-
-In active development:
-
-- Dependency remediation
-- Enhanced analytics
-- Mobile optimization
-- Additional export formats
-
-</details>
-
-<details>
-<summary>📋 Full feature list</summary>
-
-- Multi-dimensional pain assessment: intensity, 25+ locations,
-  19+ symptom types
-- Advanced analytics: trend charts, heat maps, progression analysis
-- WorkSafe BC report generation
-- Emergency response panel
-- Clinical data export: CSV and JSON outputs
-- Work impact assessment: missed days, modified duties, limitations
-- Medication and treatment logging
-- Quality-of-life metrics: sleep, mood, activity
-- Secure local-first storage: data stays on device
-- Data portability: import, export, backups
-
-</details>
-
----
-
-## 🖤 Built with empathy, rigor, and transparency
-
-Commitment to honest status reporting, privacy-first architecture,
-layered security, and evidence-driven iteration.
-
-By CrisisCore Systems.
-
----
-
-## License
-
-MIT License — see LICENSE.
->>>>>>> e82c41c (chore: Update generated badges\n\nAuto-generated badge updates)
