@@ -25,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     // Perform a trivial query; for the noop client this will also succeed
-    const rows = await db.query<{ ok: number }>('SELECT 1 as ok');
+    const rows = (await db.query('SELECT 1 as ok')) as Array<{ ok: number }>;
     const ok = Array.isArray(rows) && rows.length > 0 ? rows[0].ok === 1 : true;
     res.status(200).json({ ok });
   } catch (error) {
