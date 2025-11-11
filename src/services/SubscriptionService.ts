@@ -73,8 +73,7 @@ export class SubscriptionService {
       type: 'subscription_created',
       subscriptionId: subscription.id,
       userId,
-      tier,
-      metadata: { billingInterval, isTrial }
+      metadata: { billingInterval, isTrial, tier }
     });
     
     await securityService.logSecurityEvent({

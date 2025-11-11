@@ -5,8 +5,8 @@
 
 import React, { ReactNode } from 'react';
 import { AlertCircle, Lock, TrendingUp, Crown } from 'lucide-react';
-import { useSubscription, useFeatureAccess, useHasTier } from '../contexts/SubscriptionContext';
-import type { SubscriptionTier, TierFeatures } from '../types/subscription';
+import { useSubscription, useFeatureAccess, useHasTier } from '../../contexts/SubscriptionContext';
+import type { SubscriptionTier, TierFeatures } from '../../types/subscription';
 
 /**
  * Props for FeatureGate component
@@ -127,14 +127,14 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   reason,
   onUpgrade
 }) => {
-  const tierIcons = {
+  const tierIcons: Record<SubscriptionTier, string> = {
     free: '🆓',
     basic: '⭐',
     pro: '💎',
     enterprise: '👑'
   };
   
-  const tierColors = {
+  const tierColors: Record<SubscriptionTier, string> = {
     free: 'bg-gray-100 border-gray-300 text-gray-700',
     basic: 'bg-blue-50 border-blue-300 text-blue-700',
     pro: 'bg-purple-50 border-purple-300 text-purple-700',
@@ -159,7 +159,7 @@ export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           
           {feature && (
             <p className="text-xs mb-4 opacity-75">
-              Feature: <code className="bg-black/10 px-2 py-1 rounded">{feature}</code>
+              Feature: <code className="bg-black/10 px-2 py-1 rounded">{String(feature)}</code>
             </p>
           )}
           
@@ -274,7 +274,7 @@ export const TierBadge: React.FC<TierBadgeProps> = ({
   showIcon = true
 }) => {
   const { currentTier } = useSubscription();
-  const tier = propTier || currentTier;
+  const tier: SubscriptionTier = (propTier || currentTier) as SubscriptionTier;
   
   const sizeClasses = {
     sm: 'text-xs px-2 py-1',
@@ -282,7 +282,7 @@ export const TierBadge: React.FC<TierBadgeProps> = ({
     lg: 'text-base px-4 py-2'
   };
   
-  const tierConfig = {
+  const tierConfig: Record<SubscriptionTier, { icon: string; label: string; classes: string }> = {
     free: {
       icon: '🆓',
       label: 'Free',

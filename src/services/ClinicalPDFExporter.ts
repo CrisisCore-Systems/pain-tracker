@@ -1,3 +1,4 @@
+import autoTable from 'jspdf-autotable';
 import type { jsPDF as jsPDFType } from 'jspdf';
 import type { PainEntry, MoodEntry } from '../types/pain-tracker';
 
@@ -394,7 +395,7 @@ export class ClinicalPDFExporter {
         fillColor: [249, 250, 251],
       },
       margin: { left: this.margin, right: this.margin },
-      didDrawPage: (data) => {
+      didDrawPage: (data: any) => {
         this.currentY = data.cursor?.y || this.currentY;
       },
     });
