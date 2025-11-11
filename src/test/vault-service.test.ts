@@ -1,12 +1,62 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { vaultService } from '../services/VaultService';
 import { secureStorage } from '../lib/storage/secureStorage';
+import sodium from 'libsodium-wrappers';
+
+// Test-only sodium polyfill for environments missing crypto_pwhash
+async function ensurePolyfill() {
+  await sodium.ready;
+  const missing = typeof (sodium as any).crypto_pwhash !== 'function' || typeof (sodium as any).crypto_pwhash_str !== 'function';
+  if (!missing) return;
+
+  // eslint-disable-next-line no-console
+  console.warn('[vault-service.test] Applying sodium crypto_pwhash polyfill for test environment');
+
+  async function pbkdf2(passphrase: string, salt: Uint8Array, length: number, iterations: number): Promise<Uint8Array> {
+    const enc = new TextEncoder().encode(passphrase);
+    const baseKey = await crypto.subtle.importKey('raw', enc, 'PBKDF2', false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations, hash: 'SHA-256' }, baseKey, length * 8);
+    return new Uint8Array(bits);
+  }
+
+  (sodium as any).__preparePolyfillKey = async function (passphrase: string, salt: Uint8Array, outputLength: number, opslimit: number) {
+    const iterations = Math.max(1000, Math.min(10000, opslimit * 10));
+    return pbkdf2(passphrase, salt, outputLength, iterations);
+  };
+
+  (sodium as any).crypto_pwhash_str = function (passphrase: string) {
+    const digest = sodium.crypto_generichash(32, passphrase);
+    return 'pbkdf2$' + sodium.to_base64(digest, 1);
+  };
+
+  (sodium as any).crypto_pwhash_str_verify = function (stored: string, passphrase: string) {
+    if (!stored.startsWith('pbkdf2$')) return false;
+    const digest = sodium.crypto_generichash(32, passphrase);
+    const compare = 'pbkdf2$' + sodium.to_base64(digest, 1);
+    return compare === stored;
+  };
+}
+
+async function prederiveIfNeeded(passphrase: string) {
+  await ensurePolyfill();
+  const hasReal = typeof (sodium as any).crypto_pwhash === 'function' && !(sodium as any).crypto_pwhash.toString().includes('Polyfill');
+  if (hasReal) return;
+  const opslimit = (sodium as any).crypto_pwhash_OPSLIMIT_MODERATE || 2;
+  const keyLength = (sodium as any).crypto_aead_xchacha20poly1305_ietf_KEYBYTES || 32;
+  const saltBytes = (sodium as any).crypto_pwhash_SALTBYTES > 0 ? (sodium as any).crypto_pwhash_SALTBYTES : 16;
+  const salt = sodium.randombytes_buf(saltBytes);
+  const derived = await (sodium as any).__preparePolyfillKey(passphrase, salt, keyLength, opslimit);
+  (sodium as any).crypto_pwhash = function (outputLength: number) {
+    return derived.slice(0, outputLength);
+  };
+}
 
 const TEST_KEY = 'vault-test-entry';
 const TEST_VAULT_PASSPHRASE = process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
 
 describe('EncryptedVaultService', () => {
   beforeAll(async () => {
+    await prederiveIfNeeded(TEST_VAULT_PASSPHRASE);
     const status = await vaultService.initialize();
     if (status.state === 'uninitialized') {
       await vaultService.setupPassphrase(TEST_VAULT_PASSPHRASE);

@@ -35,3 +35,15 @@ security-audit-report.json
 #Ignore vscode AI rules
 .github\instructions\codacy.instructions.md
 .vercel
+
+# Vitest coverage & transient test artifacts (keep badges but ignore raw outputs)
+vitest-*.json
+vitest-*.log
+vitest-*.txt
+coverage/
+*.lcov
+
+# Local badge generation intermediate files (final badges kept in /badges)
+badges/*.json
+!badges/*.svg
+
