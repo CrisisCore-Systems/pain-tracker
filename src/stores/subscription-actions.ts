@@ -184,7 +184,7 @@ export class SubscriptionAwareActions {
   async addPainEntry(
     entry: Omit<PainEntry, 'id' | 'timestamp'>,
     storeAction: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void
-  ): Promise<SubscriptionActionResult<PainEntry>> {
+  ): Promise<SubscriptionActionResult<void>> {
     // Check quota
     const quotaCheck = await checkPainEntryQuota(this.userId);
     if (!quotaCheck.success) {
@@ -198,7 +198,7 @@ export class SubscriptionAwareActions {
       // Track usage (async, fire-and-forget)
       void trackPainEntryUsage(this.userId);
 
-      return { success: true };
+  return { success: true };
     } catch (err) {
       return {
         success: false,
@@ -213,7 +213,7 @@ export class SubscriptionAwareActions {
   async addMoodEntry(
     entry: Omit<MoodEntry, 'timestamp'>,
     storeAction: (entry: Omit<MoodEntry, 'timestamp'>) => void
-  ): Promise<SubscriptionActionResult<MoodEntry>> {
+  ): Promise<SubscriptionActionResult<void>> {
     const quotaCheck = await checkMoodEntryQuota(this.userId);
     if (!quotaCheck.success) {
       return quotaCheck;
@@ -222,7 +222,7 @@ export class SubscriptionAwareActions {
     try {
       storeAction(entry);
       void trackMoodEntryUsage(this.userId);
-      return { success: true };
+  return { success: true };
     } catch (err) {
       return {
         success: false,
@@ -237,7 +237,7 @@ export class SubscriptionAwareActions {
   async addActivityLog(
     log: Omit<ActivityLogEntry, 'id'>,
     storeAction: (log: Omit<ActivityLogEntry, 'id'>) => void
-  ): Promise<SubscriptionActionResult<ActivityLogEntry>> {
+  ): Promise<SubscriptionActionResult<void>> {
     const quotaCheck = await checkActivityLogQuota(this.userId);
     if (!quotaCheck.success) {
       return quotaCheck;
@@ -246,7 +246,7 @@ export class SubscriptionAwareActions {
     try {
       storeAction(log);
       void trackActivityLogUsage(this.userId);
-      return { success: true };
+  return { success: true };
     } catch (err) {
       return {
         success: false,

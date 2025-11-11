@@ -496,7 +496,18 @@ export class SubscriptionService {
     for (const tier of tiers) {
       const plan = SUBSCRIPTION_PLANS[tier];
       const feature = plan.features[featureName];
-      if (feature && feature !== false && feature !== 0) {
+      // Booleans: true indicates availability
+      if (typeof feature === 'boolean') {
+        if (feature === true) return tier;
+        continue;
+      }
+      // Numbers: any non-zero value indicates availability (-1 = unlimited)
+      if (typeof feature === 'number') {
+        if (feature !== 0) return tier;
+        continue;
+      }
+      // Strings (e.g., encryption levels): any defined value indicates availability
+      if (typeof feature === 'string') {
         return tier;
       }
     }

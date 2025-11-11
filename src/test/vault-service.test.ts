@@ -15,7 +15,13 @@ async function ensurePolyfill() {
   async function pbkdf2(passphrase: string, salt: Uint8Array, length: number, iterations: number): Promise<Uint8Array> {
     const enc = new TextEncoder().encode(passphrase);
     const baseKey = await crypto.subtle.importKey('raw', enc, 'PBKDF2', false, ['deriveBits']);
-    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations, hash: 'SHA-256' }, baseKey, length * 8);
+    // Some DOM lib typings in test environments require ArrayBuffer for salt
+    const saltBuffer: ArrayBuffer = salt.buffer instanceof ArrayBuffer ? salt.buffer : new Uint8Array(salt).buffer;
+    const bits = await crypto.subtle.deriveBits(
+      { name: 'PBKDF2', salt: saltBuffer as ArrayBuffer, iterations, hash: 'SHA-256' },
+      baseKey,
+      length * 8
+    );
     return new Uint8Array(bits);
   }
 
