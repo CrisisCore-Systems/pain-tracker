@@ -1,0 +1,168 @@
+// Prisma Schema for Subscription System
+// Run: npx prisma generate && npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // or "mysql", "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// SUBSCRIPTION MODEL
+// ============================================================================
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  
+  // User identification
+  userId    String   @unique @map("user_id") @db.VarChar(255)
+  
+  // Stripe identifiers
+  customerId      String  @map("customer_id") @db.VarChar(255)
+  subscriptionId  String? @unique @map("subscription_id") @db.VarChar(255)
+  
+  // Subscription details
+  tier            SubscriptionTier @default(FREE)
+  status          SubscriptionStatus @default(ACTIVE)
+  billingInterval BillingInterval? @map("billing_interval")
+  
+  // Timestamps
+  currentPeriodStart DateTime? @map("current_period_start")
+  currentPeriodEnd   DateTime? @map("current_period_end")
+  trialStart         DateTime? @map("trial_start")
+  trialEnd           DateTime? @map("trial_end")
+  canceledAt         DateTime? @map("canceled_at")
+  endedAt            DateTime? @map("ended_at")
+  
+  // Cancellation
+  cancelAtPeriodEnd Boolean @default(false) @map("cancel_at_period_end")
+  cancelReason      String? @map("cancel_reason") @db.Text
+  
+  // Metadata
+  metadata Json?
+  
+  // Audit timestamps
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  
+  // Relations
+  usageTracking UsageTracking[]
+  billingEvents BillingEvent[]
+  
+  @@index([userId])
+  @@index([customerId])
+  @@index([status])
+  @@index([tier])
+  @@map("subscriptions")
+}
+
+enum SubscriptionTier {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+  
+  @@map("subscription_tier")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+  
+  @@map("subscription_status")
+}
+
+enum BillingInterval {
+  MONTHLY
+  YEARLY
+  
+  @@map("billing_interval")
+}
+
+// ============================================================================
+// USAGE TRACKING MODEL
+// ============================================================================
+model UsageTracking {
+  id     Int    @id @default(autoincrement())
+  
+  // User identification
+  userId String @map("user_id") @db.VarChar(255)
+  
+  // Usage type and amount
+  usageType UsageType @map("usage_type")
+  amount    Int       @default(1)
+  
+  // Period tracking
+  periodStart DateTime @map("period_start") @db.Date
+  periodEnd   DateTime @map("period_end") @db.Date
+  
+  // Metadata
+  metadata Json?
+  
+  // Timestamps
+  trackedAt DateTime @default(now()) @map("tracked_at")
+  
+  // Relations
+  subscription Subscription? @relation(fields: [userId], references: [userId])
+  
+  @@unique([userId, usageType, periodStart, periodEnd])
+  @@index([userId])
+  @@index([usageType])
+  @@index([periodStart, periodEnd])
+  @@index([trackedAt])
+  @@map("usage_tracking")
+}
+
+enum UsageType {
+  PAIN_ENTRY
+  MOOD_ENTRY
+  ACTIVITY_LOG
+  EXPORT
+  STORAGE
+  
+  @@map("usage_type")
+}
+
+// ============================================================================
+// BILLING EVENTS MODEL
+// ============================================================================
+model BillingEvent {
+  id Int @id @default(autoincrement())
+  
+  // Stripe identifiers
+  subscriptionId   String  @map("subscription_id") @db.VarChar(255)
+  invoiceId        String? @map("invoice_id") @db.VarChar(255)
+  paymentIntentId  String? @map("payment_intent_id") @db.VarChar(255)
+  
+  // Event details
+  eventType String @map("event_type") @db.VarChar(100)
+  amount    Decimal? @db.Decimal(10, 2)
+  currency  String?  @db.VarChar(10)
+  
+  // Status
+  status String? @db.VarChar(50)
+  
+  // Metadata
+  stripeEventId String? @unique @map("stripe_event_id") @db.VarChar(255)
+  metadata      Json?
+  
+  // Timestamps
+  occurredAt DateTime @map("occurred_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  subscription Subscription? @relation(fields: [subscriptionId], references: [subscriptionId])
+  
+  @@index([subscriptionId])
+  @@index([invoiceId])
+  @@index([occurredAt])
+  @@index([stripeEventId])
+  @@map("billing_events")
+}

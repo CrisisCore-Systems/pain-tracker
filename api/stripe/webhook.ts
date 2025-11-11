@@ -45,6 +45,7 @@ export const config = {
 };
 
 /**
+<<<<<<< HEAD
  * Utility: log DB operation timings for observability
  */
 async function logDbTiming<T>(label: string, fn: () => Promise<T>): Promise<T> {
@@ -60,6 +61,8 @@ async function logDbTiming<T>(label: string, fn: () => Promise<T>): Promise<T> {
 }
 
 /**
+=======
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
  * Verify Stripe webhook signature
  */
 function verifyWebhookSignature(
@@ -96,6 +99,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
   });
 
   // Store subscription in database
+<<<<<<< HEAD
   await logDbTiming('upsertSubscription.checkout_completed', () =>
     db.upsertSubscription({
       userId,
@@ -106,6 +110,16 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
       billingInterval: session.metadata?.interval as 'monthly' | 'yearly',
     })
   );
+=======
+  await db.upsertSubscription({
+    userId,
+    customerId,
+    subscriptionId,
+    tier: session.metadata?.tier as 'free' | 'basic' | 'pro' | 'enterprise' || 'basic',
+    status: 'active',
+    billingInterval: session.metadata?.interval as 'monthly' | 'yearly',
+  });
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
 }
 
 /**
@@ -132,6 +146,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription): Pro
   });
 
   // Update database
+<<<<<<< HEAD
   await logDbTiming('upsertSubscription.subscription_created', () =>
     db.upsertSubscription({
       userId,
@@ -155,6 +170,29 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription): Pro
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     })
   );
+=======
+  await db.upsertSubscription({
+    userId,
+    subscriptionId: subscription.id,
+    customerId: subscription.customer as string,
+    status: subscription.status as 'active' | 'trialing' | 'past_due' | 'canceled',
+    tier: subscription.metadata?.tier as 'free' | 'basic' | 'pro' | 'enterprise' || 'basic',
+    billingInterval: subscription.metadata?.interval as 'monthly' | 'yearly',
+    currentPeriodStart: subscriptionWithLegacyFields.current_period_start
+      ? new Date(subscriptionWithLegacyFields.current_period_start * 1000)
+      : undefined,
+    currentPeriodEnd: subscriptionWithLegacyFields.current_period_end
+      ? new Date(subscriptionWithLegacyFields.current_period_end * 1000)
+      : undefined,
+    trialStart: subscriptionWithLegacyFields.trial_start
+      ? new Date(subscriptionWithLegacyFields.trial_start * 1000)
+      : undefined,
+    trialEnd: subscriptionWithLegacyFields.trial_end
+      ? new Date(subscriptionWithLegacyFields.trial_end * 1000)
+      : undefined,
+    cancelAtPeriodEnd: subscription.cancel_at_period_end,
+  });
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
 }
 
 /**
@@ -176,12 +214,19 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Pro
   });
 
   // Update database
+<<<<<<< HEAD
   await logDbTiming('updateSubscriptionStatus.subscription_updated', () =>
     db.updateSubscriptionStatus(
       subscription.id,
       subscription.status as 'active' | 'trialing' | 'past_due' | 'canceled',
       subscription.cancel_at_period_end
     )
+=======
+  await db.updateSubscriptionStatus(
+    subscription.id,
+    subscription.status as 'active' | 'trialing' | 'past_due' | 'canceled',
+    subscription.cancel_at_period_end
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
   );
 }
 
@@ -202,9 +247,13 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Pro
   });
 
   // Update database
+<<<<<<< HEAD
   await logDbTiming('cancelSubscription.subscription_deleted', () =>
     db.cancelSubscription(subscription.id)
   );
+=======
+  await db.cancelSubscription(subscription.id);
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
 }
 
 /**
@@ -230,6 +279,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
   if (subscriptionId) {
     const paidAt = invoiceWithLegacyFields.status_transitions?.paid_at;
 
+<<<<<<< HEAD
     await logDbTiming('createBillingEvent.invoice_paid', () =>
       db.createBillingEvent({
         subscriptionId,
@@ -242,6 +292,18 @@ async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
         occurredAt: paidAt ? new Date(paidAt * 1000) : new Date(),
       })
     );
+=======
+    await db.createBillingEvent({
+      subscriptionId,
+      invoiceId: invoice.id,
+      paymentIntentId: invoiceWithLegacyFields.payment_intent as string,
+      eventType: 'invoice_paid',
+      amount: invoice.amount_paid / 100,
+      currency: invoice.currency,
+      status: 'succeeded',
+      occurredAt: paidAt ? new Date(paidAt * 1000) : new Date(),
+    });
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
   }
 }
 
@@ -265,6 +327,7 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void
 
   // Update subscription status
   if (subscriptionId) {
+<<<<<<< HEAD
     await logDbTiming('updateSubscriptionStatus.invoice_payment_failed', () =>
       db.updateSubscriptionStatus(subscriptionId, 'past_due')
     );
@@ -282,6 +345,21 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void
         occurredAt: new Date(),
       })
     );
+=======
+    await db.updateSubscriptionStatus(subscriptionId, 'past_due');
+    
+    // Log failed payment
+    await db.createBillingEvent({
+      subscriptionId,
+      invoiceId: invoice.id,
+      paymentIntentId: invoiceWithLegacyFields.payment_intent as string,
+      eventType: 'payment_failed',
+      amount: invoice.amount_due / 100,
+      currency: invoice.currency,
+      status: 'failed',
+      occurredAt: new Date(),
+    });
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
   }
   
   // TODO: Send payment failed email
@@ -318,9 +396,12 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> {
+<<<<<<< HEAD
   // Quick visibility into whether a DB is configured in this environment
   console.log('[WEBHOOK] HAS_DATABASE=', process.env.DATABASE_URL ? 'yes' : 'no');
 
+=======
+>>>>>>> 52f81eb (chore: Trigger redeploy for health endpoint)
   // Only allow POST requests
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });

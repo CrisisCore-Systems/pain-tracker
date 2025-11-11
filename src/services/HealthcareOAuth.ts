@@ -1,6 +1,8 @@
 // Healthcare OAuth2/OIDC Authentication Service
 // Implements secure authentication and authorization for healthcare providers
 
+import type { UserSubscription } from '../types/subscription';
+
 export interface OAuthConfig {
   clientId: string;
   clientSecret: string;
@@ -64,6 +66,8 @@ export interface UserInfo {
   specialty?: string;
   licenseNumber?: string;
   licenseState?: string;
+  // Subscription data
+  subscription?: UserSubscription;
 }
 
 export interface JWTPayload {

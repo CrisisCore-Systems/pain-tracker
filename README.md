@@ -15,6 +15,50 @@
 
 Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinical-focused exports and tooling for WorkSafe BC reporting. Some advanced analytics and integrations are in active development; see the implementation snapshot in `.github/copilot-instructions.md` for current status.
 
+---
+
+## 🚀 **Quick Start**
+
+### For Production Deployment (SaaS System)
+
+**Complete subscription system ready to deploy** - Follow our 5-minute setup guide:
+
+```powershell
+# 1. Install Stripe CLI & authenticate
+stripe login
+
+# 2. Create subscription products (see QUICKSTART.md for exact commands)
+# 3. Setup PostgreSQL database
+# 4. Configure .env.local
+# 5. Test locally, then deploy to Vercel
+
+# Full guide:
+cat QUICKSTART.md
+```
+
+**📚 Documentation**:
+- **QUICKSTART.md** - 5-minute local setup
+- **DEPLOYMENT_GUIDE.md** - Complete production deployment (550+ lines)
+- **DEPLOYMENT_STATUS.md** - Current checklist and progress
+- **SECURITY_AUDIT.md** - Security vulnerability report
+
+### For Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run tests
+npm test
+```
+
+**Note**: SaaS features require Stripe configuration. See `QUICKSTART.md` for setup.
+
+---
+
 ![Pain Tracker Dashboard](docs/screenshots/main-dashboard.png)
 *The Pain Tracker dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design.*
 
@@ -31,12 +75,15 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 ## 📊 **Current Implementation Status**
 
 **Version:** 0.1.0-beta (Active Development)  
-**Last Updated:** September 2024
+**Last Updated:** November 2024
 
 ### ✅ **Fully Implemented Features**
 
 | Feature | Status | Description |
 |---------|--------|-------------|
+| **SaaS Subscription System** | ✅ Complete | 4-tier model (Free, Basic, Pro, Enterprise) with Stripe integration |
+| **Backend Infrastructure** | ✅ Complete | Vercel serverless functions, PostgreSQL, webhook processing |
+| **Feature Gates & Quotas** | ✅ Complete | Usage tracking, quota enforcement, upgrade prompts |
 | **Empathy Intelligence Engine** | ✅ Complete | Heuristic-based pain pattern analysis and personalized insights |
 | **Trauma-Informed UI** | ✅ Complete | Comprehensive accessibility with trauma-informed design patterns |
 | **7-Step Pain Assessment** | ✅ Complete | Multi-dimensional tracking across 25+ anatomical locations |
@@ -49,6 +96,7 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 | Feature | Status | Next Steps |
 |---------|--------|------------|
+| **Production Deployment** | 🟡 Ready | Follow QUICKSTART.md to deploy in < 1 hour |
 | **Validation Technology** | 🟡 Integration Pending | Connect validation UI to main forms |
 | **PWA Features** | 🟡 Testing Needed | Service worker present, needs browser testing |
 | **Advanced Visualizations** | 🟡 In Progress | Body heatmaps and correlation graphs |
@@ -56,10 +104,11 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 ### 📅 **Roadmap Highlights**
 
+- **November 2024**: Production deployment, Stripe live mode, monitoring setup
 - **Q4 2024**: Complete PWA testing, enhance offline capabilities
-- **Q1 2025**: Machine learning pain pattern recognition
-- **Q2 2025**: EMR/EHR integration capabilities
-- **Q3 2025**: Multi-platform native applications
+- **Q1 2025**: Machine learning pain pattern recognition, referral program
+- **Q2 2025**: EMR/EHR integration capabilities, admin dashboard
+- **Q3 2025**: Multi-platform native applications, SOC 2 compliance
 
 ---
 
@@ -103,6 +152,14 @@ Unlike ManageMyPain ($3.99-$4.99/month) or Curable ($14.99/month), our core feat
 ---
 
 ## 🌟 **Core Features**
+
+### 💰 **SaaS Subscription System** ⭐ NEW
+- ✅ **4-Tier Model**: Free (50 entries), Basic ($9.99/mo), Pro ($24.99/mo), Enterprise (custom)
+- ✅ **Stripe Integration**: Complete checkout flow, webhook processing, subscription management
+- ✅ **Feature Gates**: Granular access control across 7+ features (exports, analytics, storage)
+- ✅ **Usage Tracking**: Real-time quota monitoring with PostgreSQL database
+- ✅ **Smart Quotas**: 80% warnings, upgrade prompts, graceful quota enforcement
+- 📚 **Deployment Ready**: See `QUICKSTART.md` for 5-minute setup guide
 
 ### 📊 **Advanced Pain Analytics**
 - ✅ **Multidimensional Tracking**: Fully implemented 7-step assessment across 25+ anatomical locations

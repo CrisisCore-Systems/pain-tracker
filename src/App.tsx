@@ -12,6 +12,7 @@ import { PainTrackerContainer } from "./containers/PainTrackerContainer";
 import { ThemeProvider } from "./design-system";
 import { ToastProvider } from "./components/feedback";
 import { TraumaInformedProvider } from "./components/accessibility";
+import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
 import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
@@ -105,18 +106,19 @@ function App() {
   
   return (
     <ThemeProvider>
-      <TraumaInformedProvider>
-        <ToastProvider>
-          <VaultGate>
-            <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
-              <OfflineBanner />
-              <BetaWarning />
-              <QuickActions />
-              <NotificationConsentPrompt />
-              <BetaAnalyticsConsentPrompt />
-              <ErrorBoundary fallback={<ErrorFallback />}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <PainTrackerContainer />
+      <SubscriptionProvider>
+        <TraumaInformedProvider>
+          <ToastProvider>
+            <VaultGate>
+              <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                <OfflineBanner />
+                <BetaWarning />
+                <QuickActions />
+                <NotificationConsentPrompt />
+                <BetaAnalyticsConsentPrompt />
+                <ErrorBoundary fallback={<ErrorFallback />}>
+                  <Suspense fallback={<LoadingFallback />}>
+                    <PainTrackerContainer />
                 </Suspense>
               </ErrorBoundary>
               <PWAInstallPrompt />
@@ -125,6 +127,7 @@ function App() {
           </VaultGate>
         </ToastProvider>
       </TraumaInformedProvider>
+    </SubscriptionProvider>
     </ThemeProvider>
   );
 }

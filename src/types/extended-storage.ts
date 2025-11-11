@@ -5,6 +5,7 @@
 
 // Import base types
 import type { PainEntry } from '../types';
+import type { SubscriptionTier } from './subscription';
 
 // Base types from offline-storage.ts
 export type PainEntryData = {
@@ -180,6 +181,9 @@ export interface UserContext {
     preferredTechniques?: string[];
     lastSession?: string;
   };
+  // Subscription context
+  subscriptionTier?: SubscriptionTier;
+  hasFeature?: (feature: string) => boolean;
 }
 
 export interface SessionOutcomes {

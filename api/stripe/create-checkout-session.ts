@@ -10,6 +10,7 @@ import Stripe from 'stripe';
 
 // Initialize Stripe with secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  // Use the newer Stripe API version for future-proofing; adjust if incompatible
   apiVersion: '2025-10-29.clover',
 });
 
@@ -76,7 +77,7 @@ export default async function handler(
     }
 
     // Get the correct price ID
-  const priceKey = `${tier}_${interval}` as keyof typeof PRICE_IDS;
+    const priceKey = `${tier}_${interval}` as keyof typeof PRICE_IDS;
     const priceId = PRICE_IDS[priceKey];
 
     if (!priceId) {
