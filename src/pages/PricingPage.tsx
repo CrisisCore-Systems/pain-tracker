@@ -292,6 +292,7 @@ export const PricingPage: React.FC = () => {
 /**
  * Helper: Get top features for each tier
  */
+export function getTopFeatures(tier: SubscriptionTier): string[] {
   const features: Record<SubscriptionTier, string[]> = {
     free: [
       '50 pain entries',
@@ -325,9 +326,7 @@ export const PricingPage: React.FC = () => {
       'Custom training'
     ]
   };
-  
   return features[tier];
-  return features[tier] || [];
 }
 
 /**
