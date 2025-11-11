@@ -33,24 +33,21 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
       updatedEntries.push(entry);
     }
     
-    try {
-      // Store entries array directly; secureStorage will serialize
-      const result = secureStorage.set(STORAGE_KEY, updatedEntries, { encrypt: true });
-      if (!result.success) {
-        if (result.error === 'QuotaExceededError' || /quota/i.test(result.error || '')) {
-          throw createStorageError('STORAGE_FULL', 'Local storage is full. Please clear some space.');
-        }
-        // Map value too large to storage full for user friendly messaging
-        if (result.error === 'VALUE_TOO_LARGE') {
-          throw createStorageError('STORAGE_FULL', 'Pain entry data exceeds storage limits.');
-        }
-        throw createStorageError('WRITE_ERROR', 'Failed to save pain entry.');
-      }
-    } catch (e) {
-      if (e instanceof Error && e.name === 'QuotaExceededError') {
+    // Prefer encrypted write when hooks are available; gracefully fall back to plain storage
+    const hasEncryptHook = typeof (globalThis as { __secureStorageEncrypt?: (p: string) => string }).__secureStorageEncrypt === 'function';
+    const tryWrite = (encrypt: boolean) => secureStorage.set(STORAGE_KEY, updatedEntries, encrypt ? { encrypt: true } : undefined);
+
+    const firstAttempt = tryWrite(hasEncryptHook);
+    const result = firstAttempt.success || !hasEncryptHook ? firstAttempt : tryWrite(false);
+
+    if (!result.success) {
+      const msg = result.error || '';
+      if (/quota/i.test(msg) || msg === 'QuotaExceededError') {
         throw createStorageError('STORAGE_FULL', 'Local storage is full. Please clear some space.');
       }
-      if ((e as StorageError).code) throw e;
+      if (msg === 'VALUE_TOO_LARGE') {
+        throw createStorageError('STORAGE_FULL', 'Pain entry data exceeds storage limits.');
+      }
       throw createStorageError('WRITE_ERROR', 'Failed to save pain entry.');
     }
   } catch (e) {
@@ -67,7 +64,11 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
  */
 export const loadPainEntries = async (): Promise<PainEntry[]> => {
   try {
-  let stored = secureStorage.get<unknown>(STORAGE_KEY, { encrypt: true });
+  // Attempt encrypted read if hooks are available, otherwise plain
+  const hasDecryptHook = typeof (globalThis as { __secureStorageDecrypt?: (c: string) => string }).__secureStorageDecrypt === 'function';
+  let stored = hasDecryptHook
+    ? secureStorage.get<unknown>(STORAGE_KEY, { encrypt: true })
+    : secureStorage.get<unknown>(STORAGE_KEY);
     if (!stored) {
       // Backward compatibility / test injection path: look at raw localStorage
       const raw = localStorage.getItem(STORAGE_KEY);

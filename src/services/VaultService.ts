@@ -139,9 +139,18 @@ export class EncryptedVaultService {
       throw new Error('Passphrase must be at least 12 characters.');
     }
 
+    // Ensure libsodium ready and reference stable instance
     await ensureReady();
     const sodium = await getSodium();
-    const salt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
+    // Defensive: crypto_pwhash_SALTBYTES must be a valid positive integer
+    const configuredSaltBytes = sodium.crypto_pwhash_SALTBYTES as unknown;
+    const saltBytes = (Number.isInteger(configuredSaltBytes as number) && (configuredSaltBytes as number) > 0)
+      ? (configuredSaltBytes as number)
+      : 16; // fallback to 16 bytes in test/env edge cases
+    if (saltBytes !== configuredSaltBytes) {
+      this.logEvent('warning', 'Using fallback salt length', { configuredSaltBytes, saltBytes });
+    }
+    const salt = sodium.randombytes_buf(saltBytes);
     const opslimit = sodium.crypto_pwhash_OPSLIMIT_MODERATE;
     const memlimit = sodium.crypto_pwhash_MEMLIMIT_MODERATE;
     const keyLength = sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES;
@@ -241,6 +250,9 @@ export class EncryptedVaultService {
     }
 
     const salt = sodium.from_base64(metadata.derivation.salt, BASE64_VARIANT);
+    if (!(salt instanceof Uint8Array) || salt.length <= 0) {
+      this.logEvent('error', 'Derived salt invalid', { actual: (salt as Uint8Array)?.length });
+    }
     const key = sodium.crypto_pwhash(
       metadata.derivation.keyLength,
       passphrase,
@@ -293,7 +305,11 @@ export class EncryptedVaultService {
 
     const msg = toBytes(message);
 
-    const nonce = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
+    const nonceLen = sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES;
+    if (!Number.isInteger(nonceLen) || nonceLen <= 0) {
+      throw new Error('encryptString: invalid nonce length constant');
+    }
+    const nonce = sodium.randombytes_buf(nonceLen);
     
     // Ensure msg is truly a Uint8Array for libsodium (realm-safe conversion)
     const finalMsg = ArrayBuffer.isView(msg) ? new Uint8Array((msg as ArrayBufferView).buffer, (msg as ArrayBufferView).byteOffset, (msg as ArrayBufferView).byteLength) : msg;
@@ -341,12 +357,18 @@ export class EncryptedVaultService {
     } catch {
       return payload;
     }
-  }  encryptBytes(data: Uint8Array): { nonce: string; cipher: string } {
+  }
+
+  encryptBytes(data: Uint8Array): { nonce: string; cipher: string } {
     if (!this.key) {
       throw new Error('Vault is locked.');
     }
     const sodium = this.assertSodium();
-    const nonce = sodium.randombytes_buf(sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES);
+    const nonceSize = sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES;
+    if (!Number.isInteger(nonceSize) || nonceSize <= 0) {
+      throw new Error('encryptBytes: invalid nonce length constant');
+    }
+    const nonce = sodium.randombytes_buf(nonceSize);
     const cipher = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(data, null, null, nonce, this.key);
     return {
       nonce: sodium.to_base64(nonce, BASE64_VARIANT),

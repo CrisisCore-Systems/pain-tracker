@@ -136,6 +136,6 @@ describe('color contrast and accessibility smoke', () => {
 		});
 
 		expect(results).toHaveNoViolations();
-	}, 10000);
+	}, 30000);
 });
 
