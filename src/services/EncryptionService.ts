@@ -4,6 +4,7 @@
  */
 
 import { securityService } from './SecurityService';
+import type { EncryptionKeyPayload, EncryptedBlobMeta, KeyBundleWrappedPayload, KeyBundleRawPayload, OpaqueKeyPayload } from '../types/security';
 import type { PainEntry } from '../types';
 
 // --- Web Crypto helpers ---
@@ -44,12 +45,7 @@ function hexToArrayBuffer(hex: string): ArrayBuffer {
   return bytes.buffer;
 }
 
-function concatUint8(a: Uint8Array, b: Uint8Array): Uint8Array {
-  const out = new Uint8Array(a.length + b.length);
-  out.set(a, 0);
-  out.set(b, a.length);
-  return out;
-}
+// concat helper was unused and removed
 
 async function deriveKeyFromPassword(password: string, salt: Uint8Array, iterations = 150000): Promise<ArrayBuffer> {
   const pwUtf8 = new TextEncoder().encode(password);
@@ -69,11 +65,7 @@ async function deriveKeyFromPassword(password: string, salt: Uint8Array, iterati
 
 
 // Encryption metadata for tracking
-export interface EncryptionMetadata {
-  algorithm: string;
-  keyId: string;
-  timestamp: Date;
-  version: string;
+export interface EncryptionMetadata extends EncryptedBlobMeta {
   // Optional salt used when deriving a password-based key for backups
   passwordSalt?: string;
   // optional IV for AES-GCM (base64)
@@ -193,7 +185,7 @@ export class EndToEndEncryptionService {
           const hmacWrapped = await securityService.wrapKey(hmacKey);
           payload = JSON.stringify({ encWrapped, hmacWrapped, created: new Date().toISOString() });
           await this.keyManager.storeKey(keyId, payload);
-        } catch (e) {
+  } catch {
           // Fallback: export raw key material and store as base64 (will be encrypted at rest by secure storage)
           const encRaw = await crypto.subtle.exportKey('raw', encKey);
           const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
@@ -223,24 +215,27 @@ export class EndToEndEncryptionService {
 
           // If caller passed a wrapped payload already, store as-is.
           try {
-            const parsed = JSON.parse(key) as any;
-            if (parsed && (parsed.encWrapped || parsed.hmacWrapped || parsed.wrapped)) {
+            const parsed = JSON.parse(key) as EncryptionKeyPayload;
+            const isWrapped = (p: EncryptionKeyPayload): p is KeyBundleWrappedPayload => 
+              'encWrapped' in p || 'hmacWrapped' in p || 'wrapped' in p;
+            
+            if (parsed && isWrapped(parsed)) {
               await storage.store(`key:${keyId}`, { ...parsed, created: new Date().toISOString() }, true);
               this.inMemoryKeyCache.set(keyId, { key: JSON.stringify({ ...parsed, created: new Date().toISOString() }), created: new Date().toISOString() });
               return;
             }
             // If caller provided raw enc/hmac base64 material, import and wrap it before storing
-            if (parsed && (parsed.enc || parsed.hmac)) {
+            if (parsed && ('enc' in parsed || 'hmac' in parsed)) {
               // Import provided raw keys and wrap using securityService
               let encWrapped: string | undefined;
               let hmacWrapped: string | undefined;
-              if (parsed.enc) {
-                const encRaw = base64ToArrayBuffer(parsed.enc);
+              if ((parsed as KeyBundleRawPayload).enc) {
+                const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
                 const encCrypto = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, true, ['encrypt', 'decrypt']);
                 encWrapped = await securityService.wrapKey(encCrypto);
               }
-              if (parsed.hmac) {
-                const hmacRaw = base64ToArrayBuffer(parsed.hmac);
+              if ((parsed as KeyBundleRawPayload).hmac) {
+                const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
                 const hmacCrypto = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
                 hmacWrapped = await securityService.wrapKey(hmacCrypto);
               }
@@ -249,13 +244,13 @@ export class EndToEndEncryptionService {
               this.inMemoryKeyCache.set(keyId, { key: JSON.stringify(toStore), created: new Date().toISOString() });
               return;
             }
-          } catch (parseErr) {
+          } catch {
             // fallthrough - treat as opaque and store via secure storage
           }
 
           // Default: store the provided key string as-is (secure storage encrypts it at rest)
           await storage.store(`key:${keyId}`, { key, created: new Date().toISOString() }, true);
-        } catch (e) {
+        } catch {
           // Fallback to in-memory store (primarily for tests)
           this.inMemoryKeyCache.set(keyId, { key, created: new Date().toISOString() });
         }
@@ -270,31 +265,34 @@ export class EndToEndEncryptionService {
       retrieveKey: async (keyId: string): Promise<string | null> => {
         try {
           const storage = securityService.createSecureStorage();
-          const stored = await storage.retrieve(`key:${keyId}`, true) as any | null;
+          const stored = await storage.retrieve(`key:${keyId}`, true) as ((EncryptionKeyPayload & { created?: string }) | null);
           if (stored) {
             // If stored contains wrapped blobs, return the wrapped JSON so callers can unwrap via SecurityService
             try {
-              if (stored.encWrapped || stored.hmacWrapped || stored.wrapped) {
-                const payload = stored.encWrapped || stored.wrapped;
-                const out = payload ? JSON.stringify({ encWrapped: stored.encWrapped, hmacWrapped: stored.hmacWrapped, created: stored.created }) : JSON.stringify(stored);
+              const hasWrapped = (stored as KeyBundleWrappedPayload).encWrapped || (stored as KeyBundleWrappedPayload).hmacWrapped || (stored as KeyBundleWrappedPayload).wrapped;
+              if (hasWrapped) {
+                const payload = (stored as KeyBundleWrappedPayload).encWrapped || (stored as KeyBundleWrappedPayload).wrapped;
+                const out = payload ? JSON.stringify({ encWrapped: (stored as KeyBundleWrappedPayload).encWrapped, hmacWrapped: (stored as KeyBundleWrappedPayload).hmacWrapped, created: (stored as { created?: string }).created }) : JSON.stringify(stored);
                 // populate in-memory cache for fast access
-                this.inMemoryKeyCache.set(keyId, { key: out, created: stored.created || new Date().toISOString() });
+                this.inMemoryKeyCache.set(keyId, { key: out, created: (stored as { created?: string }).created || new Date().toISOString() });
                 return out;
               }
-              if (stored.key) {
-                this.inMemoryKeyCache.set(keyId, { key: stored.key, created: stored.created || new Date().toISOString() });
-                return stored.key;
+              if ((stored as OpaqueKeyPayload).key) {
+                this.inMemoryKeyCache.set(keyId, { key: (stored as OpaqueKeyPayload).key!, created: (stored as { created?: string }).created || new Date().toISOString() });
+                return (stored as OpaqueKeyPayload).key!;
               }
-            } catch {}
+            } catch {
+              // ignore raw AES-GCM key import failure; alternative key material may be available
+            }
           }
           const mem = this.inMemoryKeyCache.get(keyId);
           return mem?.key || null;
-        } catch (error) {
+        } catch (err) {
           securityService.logSecurityEvent({
             type: 'encryption',
             level: 'error',
             message: `Failed to retrieve key: ${keyId}`,
-            metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
+            metadata: { error: err instanceof Error ? err.message : 'Unknown error' },
             timestamp: new Date()
           });
           const mem = this.inMemoryKeyCache.get(keyId);
@@ -422,26 +420,35 @@ export class EndToEndEncryptionService {
       let encCryptoKey: CryptoKey | null = null;
       let hmacCryptoKey: CryptoKey | null = null;
       try {
-        const parsed = JSON.parse(key as string) as any;
+        const parsed = JSON.parse(key as string) as EncryptionKeyPayload;
         if (parsed) {
-          if (parsed.encWrapped || parsed.wrapped) {
-            const wrapped = parsed.encWrapped || parsed.wrapped;
-            encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+          if ((parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped) {
+            const wrapped = (parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped;
+            if (wrapped) {
+              encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+            }
           }
-          if (parsed.hmacWrapped) {
-            hmacCryptoKey = await securityService.unwrapKey(parsed.hmacWrapped, { name: 'HMAC', hash: { name: 'SHA-256' } } as any, ['sign', 'verify']);
+          if ((parsed as KeyBundleWrappedPayload).hmacWrapped) {
+            const hmacWrapped = (parsed as KeyBundleWrappedPayload).hmacWrapped;
+            if (hmacWrapped) {
+              hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, ['sign', 'verify']);
+            }
           }
-          if (!encCryptoKey && parsed.enc) {
+          if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
             try {
-              const encRaw = base64ToArrayBuffer(parsed.enc);
+              const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
               encCryptoKey = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
-            } catch {}
+            } catch {
+              // ignore HMAC key import failure; will fall back to digest integrity check
+            }
           }
-          if (!hmacCryptoKey && parsed.hmac) {
+          if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
             try {
-              const hmacRaw = base64ToArrayBuffer(parsed.hmac);
+              const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
               hmacCryptoKey = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
-            } catch {}
+            } catch {
+              // ignore HMAC import failure; will fall back to digest integrity check
+            }
           }
         }
       } catch {
@@ -449,7 +456,9 @@ export class EndToEndEncryptionService {
         try {
           const raw = base64ToArrayBuffer(key as string);
           encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
-        } catch {}
+        } catch {
+          // ignore non-JSON parse failure; will attempt raw base64 import next
+        }
       }
 
       if (!encCryptoKey) throw new Error('Encryption key material not available');
@@ -478,7 +487,7 @@ export class EndToEndEncryptionService {
         timestamp: new Date(),
         version: '2.0.0',
         iv: arrayBufferToBase64(iv.buffer)
-      } as EncryptionMetadata;
+      };
 
       this.logSecurityEvent({
         type: 'encryption',
@@ -526,9 +535,9 @@ export class EndToEndEncryptionService {
 
       // Support legacy CryptoJS ciphertexts for backward compatibility
       if (metadata.version && metadata.version.startsWith('1.')) {
-        // Lazy-load CryptoJS only when handling legacy data
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const CryptoJS = require('crypto-js');
+        // Lazy-load CryptoJS only when handling legacy data using dynamic import (avoid CommonJS require in TS)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const CryptoJS: any = await import('crypto-js');
         const decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
         if (!decrypted) throw new Error('Decryption failed - invalid key or corrupted data (legacy)');
         if (checksum) {
@@ -546,26 +555,35 @@ export class EndToEndEncryptionService {
       let encCryptoKey: CryptoKey | null = null;
       let hmacCryptoKey: CryptoKey | null = null;
       try {
-        const parsed = JSON.parse(key as string) as any;
+        const parsed = JSON.parse(key as string) as EncryptionKeyPayload;
         if (parsed) {
-          if (parsed.encWrapped || parsed.wrapped) {
-            const wrapped = parsed.encWrapped || parsed.wrapped;
-            encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+          if ((parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped) {
+            const wrapped = (parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped;
+            if (wrapped) {
+              encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+            }
           }
-          if (parsed.hmacWrapped) {
-            hmacCryptoKey = await securityService.unwrapKey(parsed.hmacWrapped, { name: 'HMAC', hash: { name: 'SHA-256' } } as any, ['sign', 'verify']);
+          if ((parsed as KeyBundleWrappedPayload).hmacWrapped) {
+            const hmacWrapped = (parsed as KeyBundleWrappedPayload).hmacWrapped;
+            if (hmacWrapped) {
+              hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, ['sign', 'verify']);
+            }
           }
-          if (!encCryptoKey && parsed.enc) {
+          if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
             try {
-              const encRaw = base64ToArrayBuffer(parsed.enc);
+              const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
               encCryptoKey = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, false, ['decrypt']);
-            } catch {}
+            } catch {
+              // ignore raw AES-GCM key import failure in decrypt path; other forms may succeed
+            }
           }
-          if (!hmacCryptoKey && parsed.hmac) {
+          if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
             try {
-              const hmacRaw = base64ToArrayBuffer(parsed.hmac);
+              const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
               hmacCryptoKey = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']);
-            } catch {}
+            } catch {
+              // ignore HMAC import failure; checksum fallback path will be used
+            }
           }
         }
       } catch {
@@ -573,7 +591,9 @@ export class EndToEndEncryptionService {
         try {
           const raw = base64ToArrayBuffer(key as string);
           encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['decrypt']);
-        } catch {}
+        } catch {
+          // ignore base64 AES key import failure; error thrown later if key remains unavailable
+        }
       }
 
       if (!encCryptoKey) throw new Error('Decryption key material not available');

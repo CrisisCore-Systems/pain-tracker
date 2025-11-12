@@ -13,7 +13,8 @@ import {
   Download,
   Sparkles,
   Lightbulb,
-  Feather
+  Feather,
+  Trash2
 } from 'lucide-react';
 import { Button, Badge } from '../../design-system';
 import { EnhancedCard, MetricCard as EnhancedMetricCard, EnhancedCardHeader, EnhancedCardTitle, EnhancedCardContent } from '../../design-system/components/EnhancedCard';
@@ -28,9 +29,12 @@ import { formatNumber } from '../../utils/formatting';
 import { isSameLocalDay, localDayStart } from '../../utils/dates';
 import { Tooltip } from '../tutorials/Tooltip';
 import DashboardMenu from './DashboardMenu';
+import { useAdaptiveCopy } from '../../contexts/useTone';
+import { emptyStates } from '../../content/microcopy';
 import DashboardContent from './DashboardContent';
 import DashboardRecent from './DashboardRecent';
 import { generateDashboardAIInsights, type InsightTone } from '../../utils/pain-tracker/insights';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
@@ -84,6 +88,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
   const [tab, setTab] = useState<'overview' | 'charts' | 'recent'>('overview');
   const [isExporting, setIsExporting] = useState(false);
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
+  const { clearAllData } = usePainTrackerStore();
 
   const metrics = useMemo(() => {
     const activeEntries = entries ?? [];
@@ -202,6 +207,12 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
 
   const hasWeeklyData = metrics.weeklyTrend.some((day) => day.count > 0);
 
+  // Adaptive tone copy
+  const noLogsHeadline = useAdaptiveCopy(emptyStates.noLogs.headline);
+  const noLogsSubtext = useAdaptiveCopy(emptyStates.noLogs.subtext);
+  const noTrendsHeadline = useAdaptiveCopy(emptyStates.noTrends.headline);
+  const noTrendsSubtext = useAdaptiveCopy(emptyStates.noTrends.subtext);
+
   const aiInsights = useMemo(
     () => generateDashboardAIInsights(entries, { allEntries }),
     [entries, allEntries]
@@ -234,19 +245,19 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
 
   const encouragement = useMemo(() => {
     if (entries.length === 0) {
-      return "Let's capture your first entry whenever you're ready.";
+      return noLogsHeadline;
     }
 
     if (metrics.todayEntries === 0) {
-      return 'No entries yet today—take a mindful moment to record how you feel.';
+      return noLogsSubtext;
     }
 
     if (Number(metrics.weeklyAverage) <= 4) {
       return 'Great job staying ahead of your pain patterns this week.';
     }
 
-    return 'Keep observing the shifts—small notes today help tomorrow’s insights.';
-  }, [entries.length, metrics.todayEntries, metrics.weeklyAverage]);
+    return 'Keep observing the shifts—small notes today help tomorrow\'s insights.';
+  }, [entries.length, metrics.todayEntries, metrics.weeklyAverage, noLogsHeadline, noLogsSubtext]);
 
   const heroHighlights = useMemo(
     () => [
@@ -292,7 +303,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
           id: e.id,
           timestamp: e.timestamp,
           pain: e.baselineData.pain,
-          notes: (e as any).notes || '',
+          notes: e.notes || '',
         }))
       );
       mod.downloadCsv(`pain-entries-${new Date().toISOString().slice(0, 10)}.csv`, csv);
@@ -305,6 +316,14 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
       setTimeout(() => setLiveMessage(null), 3000);
     }
   }, [entries]);
+
+  const handleClearData = React.useCallback(() => {
+    if (window.confirm('⚠️ Are you sure you want to delete ALL pain entries? This action cannot be undone.')) {
+      clearAllData();
+      setLiveMessage('All data cleared successfully.');
+      setTimeout(() => setLiveMessage(null), 3000);
+    }
+  }, [clearAllData]);
 
   function getPainLevelColor(pain: number) {
     if (pain <= 2) return 'text-success bg-success-bg';
@@ -391,6 +410,18 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
               >
                 <Download className="h-5 w-5" aria-hidden="true" />
                 <span>{isExporting ? 'Preparing export…' : 'Export CSV'}</span>
+              </Button>
+
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={handleClearData}
+                className="relative inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm"
+                aria-label="Delete all pain entries"
+              >
+                <Trash2 className="h-4 w-4" aria-hidden="true" />
+                <span>Clear All Data</span>
               </Button>
 
               <Badge
@@ -534,7 +565,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                 icon={<Calendar className="h-6 w-6" />}
               />
               <p className="text-xs text-muted-foreground">
-                {metrics.todayEntries === 0 ? 'No entries logged yet today.' : 'Entries captured so far today.'}
+                {metrics.todayEntries === 0 ? noLogsSubtext : 'Entries captured so far today.'}
               </p>
             </div>
 
@@ -618,8 +649,8 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                   <div className="flex h-48 items-center justify-center text-muted-foreground">
                     <div className="text-center">
                       <BarChart3 className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
-                      <p>No data available</p>
-                      <p className="text-sm">Start tracking to see your pain distribution</p>
+                      <p className="font-medium">{noTrendsHeadline}</p>
+                      <p className="text-sm mt-1">{noTrendsSubtext}</p>
                     </div>
                   </div>
                 )}
@@ -705,8 +736,8 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                     <div className="flex h-48 items-center justify-center text-muted-foreground">
                       <div className="text-center">
                         <TrendingUp className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
-                        <p>No entries this week</p>
-                        <p className="text-sm">Track pain over time to see trends</p>
+                        <p className="font-medium">{noTrendsHeadline}</p>
+                        <p className="text-sm mt-1">{noTrendsSubtext}</p>
                       </div>
                     </div>
                   )
@@ -714,8 +745,8 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                   <div className="flex h-48 items-center justify-center text-muted-foreground">
                     <div className="text-center">
                       <TrendingUp className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
-                      <p>No trend data</p>
-                      <p className="text-sm">Track pain over time to see trends</p>
+                      <p className="font-medium">{noTrendsHeadline}</p>
+                      <p className="text-sm mt-1">{noTrendsSubtext}</p>
                     </div>
                   </div>
                 )}

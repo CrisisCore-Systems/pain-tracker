@@ -92,9 +92,8 @@ export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({
 
   return (
     <div className="space-y-4">
-    {/* NOTE: Export quota warnings are handled via USAGE_LIMITS and SubscriptionService.
-      UsageWarning expects a TierFeatures key (numeric), which we don't have for exports yet.
-      When a maxExportsPerMonth feature is added to TierFeatures, re-enable a UsageWarning here. */}
+      {/* Export quota warning based on per-tier numeric limit (maxExportsPerMonth) */}
+      <UsageWarning feature="maxExportsPerMonth" threshold={80} />
       
       {/* CSV Export - Available on all tiers */}
       <div>

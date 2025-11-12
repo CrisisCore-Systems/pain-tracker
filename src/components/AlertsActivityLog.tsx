@@ -321,7 +321,7 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
     }
 
     return (
-      <div className="fixed inset-0 z-50" role="presentation">
+      <div className="fixed inset-0 z-[100]" role="presentation">
         <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
         <FocusTrap
           active={true}

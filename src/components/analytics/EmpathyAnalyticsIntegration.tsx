@@ -220,7 +220,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
     if (!showCelebrationModal || !celebratedAchievement) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
         <div className="bg-white rounded-lg p-6 max-w-md w-full text-center space-y-4 animate-pulse">
           <div className="text-4xl">{celebratedAchievement.icon}</div>
           <h3 className="text-xl font-bold text-gray-800">{celebratedAchievement.title}</h3>

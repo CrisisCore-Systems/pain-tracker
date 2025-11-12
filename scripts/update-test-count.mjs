@@ -39,7 +39,7 @@ try {
   await fs.writeFile(readmePath, updated, 'utf8');
   console.log(`update-test-count: Updated README with ${total} tests.`);
 } catch (err) {
-  // eslint-disable-next-line no-console
+  // Log failure; console usage acceptable in CLI script
   console.error('update-test-count: failed', err);
   process.exitCode = 1;
 }

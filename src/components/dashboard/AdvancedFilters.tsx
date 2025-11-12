@@ -777,7 +777,7 @@ export function AdvancedFilters({
 
         {/* Save Filter Dialog */}
         {showSaveDialog && (
-          <div className="fixed inset-0 z-50 overflow-y-auto">
+          <div className="fixed inset-0 z-[100] overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
               <div className="fixed inset-0 transition-opacity bg-background/80 backdrop-blur-sm" onClick={() => setShowSaveDialog(false)} />
               <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-card shadow-xl rounded-lg border">

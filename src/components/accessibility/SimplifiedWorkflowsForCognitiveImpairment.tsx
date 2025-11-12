@@ -642,7 +642,7 @@ function WorkflowExecutionInterface({
   const textSizeClass = sizeMap[adaptiveSettings.textSize] ?? 'text-base';
 
   return (
-    <div className={`fixed inset-0 bg-white z-50 overflow-auto ${className}`}>
+    <div className={`fixed inset-0 bg-white z-[100] overflow-auto ${className}`}>
       <div className="min-h-screen p-4">
         {/* Header */}
         <div className="bg-purple-100 rounded-lg p-4 mb-4">

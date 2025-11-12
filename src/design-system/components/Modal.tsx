@@ -3,6 +3,7 @@ import { X, AlertTriangle, CheckCircle, Info, AlertCircle } from 'lucide-react';
 import { Button } from './Button';
 import { Card, CardContent, CardHeader, CardTitle } from './Card';
 import { cn } from '../utils';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
@@ -46,6 +47,7 @@ export function Modal({
   footerClassName,
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const trapRef = useFocusTrap(isOpen);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -81,7 +83,8 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
+      ref={trapRef as React.RefObject<HTMLDivElement>}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={handleBackdropClick}
       role="dialog"
       aria-modal="true"
@@ -204,7 +207,7 @@ export function AlertModal({
       }
     >
       <div className="flex items-start space-x-4">
-        <div className={cn('flex-shrink-0 mt-0.5')} style={colorClass as any}>
+        <div className={cn('flex-shrink-0 mt-0.5')} style={colorClass}>
           <Icon className="h-6 w-6" />
         </div>
         <div className="flex-1">

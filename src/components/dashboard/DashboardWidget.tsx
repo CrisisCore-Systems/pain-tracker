@@ -3,7 +3,7 @@ import { GripVertical, HelpCircle } from 'lucide-react';
 import { Card, CardContent, Button, Badge } from '../../design-system';
 import { cn } from '../../design-system/utils';
 import { TraumaInformedSection } from '../accessibility';
-import { DashboardOverview } from '../widgets/DashboardOverview';
+import { ModernDashboard } from '../widgets/ModernDashboard';
 import { PainEntryWidget } from '../widgets/PainEntryWidget';
 import { EnhancedPainVisualizationPanel } from '../widgets/EnhancedPainVisualizationPanel';
 import { PainHistoryPanel } from '../widgets/PainHistoryPanel';
@@ -30,7 +30,7 @@ type WidgetRendererContext = {
 type WidgetRenderer = (context: WidgetRendererContext) => React.ReactNode;
 
 const renderDashboardOverview: WidgetRenderer = ({ entries, allEntries }) => (
-  <DashboardOverview entries={entries} allEntries={allEntries} />
+  <ModernDashboard entries={entries} allEntries={allEntries} />
 );
 
 const renderPainEntry: WidgetRenderer = ({ onAddEntry }) => (

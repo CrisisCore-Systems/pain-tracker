@@ -39,12 +39,17 @@ export async function migrateLegacyEncryption(opts: MigrateOptions = {}) {
     try {
       const backupData = JSON.stringify(rows, null, 2);
       // In Node.js environments, write to file; in browser, download or log
-      if (typeof require !== 'undefined') {
-        const fs = require('fs');
-        fs.writeFileSync(backupPath, backupData, 'utf-8');
-        console.info(`[Migration] Backup saved to ${backupPath}`);
+      if (typeof window === 'undefined') {
+        try {
+          const fs = await import('fs');
+          fs.writeFileSync(backupPath, backupData, 'utf-8');
+          console.info(`[Migration] Backup saved to ${backupPath}`);
+        } catch {
+          console.warn('[Migration] fs import failed; backup data logged to console');
+          console.info('[Migration] Backup:', backupData);
+        }
       } else {
-        console.warn('[Migration] Backup requested but fs unavailable; backup data logged to console');
+        console.warn('[Migration] Backup requested but filesystem unavailable; backup data logged to console');
         console.info('[Migration] Backup:', backupData);
       }
     } catch (e) {

@@ -1,4 +1,3 @@
-import sodium from 'libsodium-wrappers';
 import { securityService } from './SecurityService';
 import { secureStorage } from '../lib/storage/secureStorage';
 import { getSodium, getSodiumSync } from '../lib/crypto/sodium';
@@ -43,7 +42,7 @@ function toBytes(input: unknown): Uint8Array {
 }
 
 async function ensureReady(): Promise<void> {
-  await sodium.ready;
+  await getSodium();
 }
 
 function isEnvelopeString(raw: string): boolean {
@@ -142,6 +141,14 @@ export class EncryptedVaultService {
     // Ensure libsodium ready and reference stable instance
     await ensureReady();
     const sodium = await getSodium();
+    
+    console.log('[VaultService] Sodium instance retrieved:', {
+      sodiumType: typeof sodium,
+      hasCryptoPwhash: typeof sodium.crypto_pwhash,
+      hasCryptoPwhashStr: typeof sodium.crypto_pwhash_str,
+      saltBytes: sodium.crypto_pwhash_SALTBYTES
+    });
+    
     // Defensive: crypto_pwhash_SALTBYTES must be a valid positive integer
     const configuredSaltBytes = sodium.crypto_pwhash_SALTBYTES as unknown;
     const saltBytes = (Number.isInteger(configuredSaltBytes as number) && (configuredSaltBytes as number) > 0)
@@ -298,6 +305,7 @@ export class EncryptedVaultService {
       throw new Error('encryptString: libsodium not ready');
     }
 
+    const sodium = this.assertSodium();
     const key = this.key as Uint8Array;
     if (!(key instanceof Uint8Array) || key.length !== sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES) {
       throw new Error('encryptString: invalid key type/length');
@@ -337,6 +345,7 @@ export class EncryptedVaultService {
       throw new Error('decryptString: libsodium not ready');
     }
 
+    const sodium = this.assertSodium();
     try {
       const env = JSON.parse(payload);
       if (env?.v !== 'xchacha20-poly1305') {

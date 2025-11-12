@@ -42,21 +42,38 @@ export class FileAuditSink implements AuditSink {
   // Production: prefer cloud sink with object immutability.
   private path: string;
   private auditKey: string;
-  private fs = require('fs');
+  // Lazy dynamic import keeps browser bundles clean; avoid CommonJS require
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private fs: any;
 
   constructor(path: string, auditKey: string) {
     this.path = path;
     this.auditKey = auditKey;
-    // ensure file exists
-    if (!this.fs.existsSync(this.path)) this.fs.writeFileSync(this.path, '');
+    if (typeof window === 'undefined') {
+      import('fs').then(mod => {
+        this.fs = mod;
+        try {
+          if (!this.fs.existsSync(this.path)) this.fs.writeFileSync(this.path, '');
+        } catch {
+          // ignore fs init errors
+        }
+      }).catch(() => {
+        // ignore dynamic import failure in non-Node env
+      });
+    }
   }
 
   async append(event: Omit<AuditEvent, 'signature'>): Promise<AuditEvent> {
     const serialized = JSON.stringify(event);
     const signature = createHmac('sha256', this.auditKey).update(serialized).digest('base64');
     const signed: AuditEvent = { ...event, signature };
-    // append as newline-delimited JSON
-    this.fs.appendFileSync(this.path, JSON.stringify(signed) + '\n');
+    if (this.fs) {
+      try {
+        this.fs.appendFileSync(this.path, JSON.stringify(signed) + '\n');
+      } catch {
+        // ignore append failure (read-only environment)
+      }
+    }
     return signed;
   }
 }

@@ -87,6 +87,8 @@ export interface TierFeatures {
   wcbReports: boolean;
   clinicalPDFExport: boolean;
   scheduledReports: boolean;
+  /** Monthly export quota (-1 = unlimited). Numeric so UsageWarning can monitor. */
+  maxExportsPerMonth: number;
   
   // Integration Features
   healthcareProviderAPI: boolean;

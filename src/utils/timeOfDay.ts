@@ -12,8 +12,8 @@ export function getHour(input: Date | string | number): number | null {
   try {
     // Defensive: Only allow string, number, or Date
     if (typeof input === 'string') {
-      // Reject obviously unsafe strings (e.g., code injection)
-      if (/[^\dT:\-\.Z ]/.test(input)) return null;
+      // Reject obviously unsafe strings (e.g., code injection) - remove unnecessary escapes in char class
+      if (/[^\dT:\-.Z ]/.test(input)) return null;
       // Only accept ISO or timestamp-like strings
       if (!/^\d{4}-\d{2}-\d{2}T?/.test(input) && !/^\d+$/.test(input)) return null;
     }

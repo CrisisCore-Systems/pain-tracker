@@ -4,6 +4,7 @@
  */
 
 import { formatNumber } from '../utils/formatting';
+import type { WrappedKeyPayload } from '../types/security';
 
 // --- small crypto helpers (kept local to avoid circular deps) ---
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
@@ -266,7 +267,9 @@ export class SecurityService {
           try {
             const obj = JSON.parse(encryptedData);
             if (obj && obj.v === 'clear' && typeof obj.payload === 'string') return obj.payload;
-          } catch {}
+          } catch {
+            // ignore parse failure in test passthrough path; will error below if keys unavailable
+          }
         }
         throw new Error('Decryption key not available');
       }
@@ -543,15 +546,20 @@ export class SecurityService {
   /**
    * Unwrap a previously wrapped key JSON (as produced by wrapKey) into a CryptoKey.
    */
-  async unwrapKey(wrappedJson: string, algorithm: AlgorithmIdentifier = { name: 'AES-GCM' }, usages: KeyUsage[] = ['encrypt', 'decrypt']): Promise<CryptoKey | null> {
+  // Narrow algorithm/usages types inline (avoid DOM lib global types that triggered lint no-undef)
+  async unwrapKey(
+    wrappedJson: string,
+    algorithm: { name: string } = { name: 'AES-GCM' },
+    usages: Array<'encrypt' | 'decrypt' | 'sign' | 'verify'> = ['encrypt', 'decrypt']
+  ): Promise<CryptoKey | null> {
     try {
-      const obj = JSON.parse(wrappedJson) as { wrapped?: string | null; iv?: string | null; format?: string };
+      const obj = JSON.parse(wrappedJson) as WrappedKeyPayload | { wrapped?: string | null; iv?: string | null; format?: string };
       if (!obj || !obj.wrapped) return null;
       if (obj.format === 'raw' && (!obj.iv || !this.masterCryptoKey)) {
         if (this.isTestEnv()) {
           // In tests the wrapped field may actually be raw key material
           const raw = base64ToArrayBuffer(obj.wrapped);
-          return await crypto.subtle.importKey('raw', raw, algorithm, false, usages as any);
+          return await crypto.subtle.importKey('raw', raw, algorithm, false, usages);
         }
         // Cannot unwrap without master key
         throw new Error('Cannot unwrap key - master key missing');
@@ -561,7 +569,7 @@ export class SecurityService {
       const wrappedBuf = base64ToArrayBuffer(obj.wrapped);
       if (!this.masterCryptoKey) throw new Error('Master crypto key not initialized');
       // Unwrap key
-      const key = await crypto.subtle.unwrapKey('raw', wrappedBuf, this.masterCryptoKey, { name: 'AES-GCM', iv: iv ? new Uint8Array(iv) : new Uint8Array(12) }, algorithm, false, usages as any);
+      const key = await crypto.subtle.unwrapKey('raw', wrappedBuf, this.masterCryptoKey, { name: 'AES-GCM', iv: iv ? new Uint8Array(iv) : new Uint8Array(12) }, algorithm, false, usages);
       return key;
     } catch (e) {
       this.logSecurityEvent({ type: 'encryption', level: 'error', message: 'Failed to unwrap key', metadata: { error: e instanceof Error ? e.message : String(e) }, timestamp: new Date(), sessionId: this.sessionId });

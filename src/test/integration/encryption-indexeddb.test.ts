@@ -16,9 +16,8 @@ let storageToUse: typeof offlineStorage | { init: ()=>Promise<void>; clearAllDat
 // if IndexedDB isn't available or initialization fails.
 try {
   // If offlineStorage.init is undefined for some reason, this will throw and use shim
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  offlineStorage.init?.().catch?.(() => {
-    // noop here — we'll replace below
+  void offlineStorage.init?.().catch?.(() => {
+    // initialization failure handled by shim fallback below
   });
 } catch {
   // ignore — we'll create a simple in-memory shim
@@ -56,8 +55,7 @@ describe('Encryption + IndexedDB integration', () => {
       await storageToUse.init();
       await storageToUse.clearAllData();
       // Debug: report which storage is in use
-      // eslint-disable-next-line no-console
-      console.info('[test] storageToUse init succeeded; using real offlineStorage or polyfill');
+  console.info('[test] storageToUse init succeeded; using real offlineStorage or polyfill');
     } catch (e) {
       // Replace storageToUse with an in-memory shim to keep the test running
       const rows: StoredRow[] = [];
@@ -78,8 +76,7 @@ describe('Encryption + IndexedDB integration', () => {
         async deleteData(id: number) { const i = rows.findIndex(r => r.id === id); if (i !== -1) rows.splice(i, 1); }
       } as any;
       // Debug: report shim usage
-      // eslint-disable-next-line no-console
-      console.info('[test] storageToUse init failed; using in-memory shim');
+  console.info('[test] storageToUse init failed; using in-memory shim');
     }
   });
 

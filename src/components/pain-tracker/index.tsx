@@ -10,6 +10,8 @@ import { FileText, Plus, Activity, AlertCircle, HelpCircle, PlayCircle } from "l
 import { OnboardingFlow } from "../onboarding";
 import { EmptyState, TrackingIllustration } from "../empty-state";
 import { useToast } from "../feedback";
+import { useAdaptiveCopy } from "../../contexts/useTone";
+import { emptyStates } from "../../content/microcopy";
 // Dynamic imports: samplePainEntries and walkthroughSteps loaded on demand
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
@@ -66,6 +68,12 @@ const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
 };
 
 export function PainTracker() {
+  // Adaptive tone copy
+  const noLogsHeadline = useAdaptiveCopy(emptyStates.noLogs.headline);
+  const noLogsSubtext = useAdaptiveCopy(emptyStates.noLogs.subtext);
+  const noLogsCTA = useAdaptiveCopy(emptyStates.noLogs.cta);
+  const secondaryCTA = useAdaptiveCopy(emptyStates.noLogs.secondaryCta);
+
   const [error, setError] = useState<string | null>(null);
   // Validation technology component state
   const [ValidationTechComponent, setValidationTechComponent] = useState<React.ComponentType<{
@@ -471,15 +479,15 @@ export function PainTracker() {
           <Card>
             <CardContent className="pt-8 pb-8">
               <EmptyState
-                title="Start Your Pain Tracking Journey"
-                description="Begin by recording your first pain entry above. Track symptoms, triggers, and treatments to gain valuable insights into your pain patterns and improve your quality of life."
+                title={noLogsHeadline}
+                description={noLogsSubtext}
                 primaryAction={{
-                  label: "Take Interactive Tour",
+                  label: noLogsCTA,
                   onClick: handleStartWalkthrough,
                   icon: <PlayCircle className="h-4 w-4" />
                 }}
                 secondaryAction={{
-                  label: "View Sample Data",
+                  label: secondaryCTA,
                   onClick: () => handleOnboardingComplete(true)
                 }}
                 illustration={<TrackingIllustration />}

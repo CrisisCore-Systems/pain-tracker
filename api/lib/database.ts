@@ -88,7 +88,54 @@ export interface BillingEventRecord {
 /**
  * Database client class
  */
-export class DatabaseClient {
+// Input payloads for specific operations
+export interface UpsertSubscriptionInput {
+  userId: string;
+  customerId: string;
+  subscriptionId?: string;
+  tier: SubscriptionRecord['tier'];
+  status: SubscriptionRecord['status'];
+  billingInterval?: SubscriptionRecord['billingInterval'];
+  currentPeriodStart?: Date;
+  currentPeriodEnd?: Date;
+  trialStart?: Date;
+  trialEnd?: Date;
+  cancelAtPeriodEnd?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+export interface CreateBillingEventInput {
+  subscriptionId: string;
+  invoiceId?: string;
+  paymentIntentId?: string;
+  eventType: string;
+  amount?: number;
+  currency?: string;
+  status?: string;
+  stripeEventId?: string;
+  metadata?: Record<string, unknown>;
+  occurredAt: Date;
+}
+
+// Unified interface consumed by application code (real or no-op implementation)
+export interface DatabaseClientInterface {
+  getClient(): Promise<PoolClient>;
+  query<T = unknown>(text: string, params?: unknown[]): Promise<T[]>;
+  getSubscriptionByUserId(userId: string): Promise<SubscriptionRecord | null>;
+  getSubscriptionByStripeId(subscriptionId: string): Promise<SubscriptionRecord | null>;
+  upsertSubscription(data: UpsertSubscriptionInput): Promise<SubscriptionRecord>;
+  updateSubscriptionStatus(subscriptionId: string, status: SubscriptionRecord['status'], cancelAtPeriodEnd?: boolean): Promise<SubscriptionRecord | null>;
+  cancelSubscription(subscriptionId: string, reason?: string): Promise<SubscriptionRecord | null>;
+  trackUsage(userId: string, usageType: UsageRecord['usageType'], amount?: number, metadata?: Record<string, unknown>): Promise<void>;
+  getCurrentUsage(userId: string, usageType?: UsageRecord['usageType']): Promise<UsageRecord[]>;
+  getUsageTotal(userId: string, usageType: UsageRecord['usageType']): Promise<number>;
+  createBillingEvent(data: CreateBillingEventInput): Promise<BillingEventRecord>;
+  getBillingEvents(subscriptionId: string, limit?: number): Promise<BillingEventRecord[]>;
+  getSubscriptionAnalytics(): Promise<{ totalSubscriptions: number; byTier: Record<string, number>; byStatus: Record<string, number>; monthlyRecurringRevenue: number }>;
+  close(): Promise<void>;
+}
+
+export class DatabaseClient implements DatabaseClientInterface {
   private pool: Pool;
 
   constructor() {
@@ -142,20 +189,7 @@ export class DatabaseClient {
   /**
    * Create or update subscription
    */
-  async upsertSubscription(data: {
-    userId: string;
-    customerId: string;
-    subscriptionId?: string;
-    tier: SubscriptionRecord['tier'];
-    status: SubscriptionRecord['status'];
-    billingInterval?: SubscriptionRecord['billingInterval'];
-    currentPeriodStart?: Date;
-    currentPeriodEnd?: Date;
-    trialStart?: Date;
-    trialEnd?: Date;
-    cancelAtPeriodEnd?: boolean;
-    metadata?: Record<string, unknown>;
-  }): Promise<SubscriptionRecord> {
+  async upsertSubscription(data: UpsertSubscriptionInput): Promise<SubscriptionRecord> {
     const result = await this.query<SubscriptionRecord>(
       `INSERT INTO subscriptions (
         user_id, customer_id, subscription_id, tier, status, billing_interval,
@@ -297,18 +331,7 @@ export class DatabaseClient {
   /**
    * Create billing event
    */
-  async createBillingEvent(data: {
-    subscriptionId: string;
-    invoiceId?: string;
-    paymentIntentId?: string;
-    eventType: string;
-    amount?: number;
-    currency?: string;
-    status?: string;
-    stripeEventId?: string;
-    metadata?: Record<string, unknown>;
-    occurredAt: Date;
-  }): Promise<BillingEventRecord> {
+  async createBillingEvent(data: CreateBillingEventInput): Promise<BillingEventRecord> {
     const result = await this.query<BillingEventRecord>(
       `INSERT INTO billing_events (
         subscription_id, invoice_id, payment_intent_id, event_type,
@@ -394,7 +417,7 @@ export class DatabaseClient {
 // succeed (200) in environments where a database is not reachable, while logging
 // the intended operations. This is useful for initial integration testing on
 // serverless deployments before wiring a cloud Postgres instance.
-class NoopDatabaseClient {
+class NoopDatabaseClient implements DatabaseClientInterface {
   async getClient(): Promise<PoolClient> {
     console.warn('[DB:NOOP] getClient called with no DATABASE_URL configured');
     throw new Error('No database configured');
@@ -412,11 +435,30 @@ class NoopDatabaseClient {
     console.warn('[DB:NOOP] getSubscriptionByStripeId');
     return null;
   }
-  async upsertSubscription(data: any): Promise<any> {
+  async upsertSubscription(data: UpsertSubscriptionInput): Promise<SubscriptionRecord> {
     console.warn('[DB:NOOP] upsertSubscription', data);
-    return { ...data, id: 0, createdAt: new Date(), updatedAt: new Date() };
+    return {
+      id: 0,
+      userId: data.userId,
+      customerId: data.customerId,
+      subscriptionId: data.subscriptionId,
+      tier: data.tier,
+      status: data.status,
+      billingInterval: data.billingInterval,
+      currentPeriodStart: data.currentPeriodStart,
+      currentPeriodEnd: data.currentPeriodEnd,
+      trialStart: data.trialStart,
+      trialEnd: data.trialEnd,
+      canceledAt: undefined,
+      endedAt: undefined,
+      cancelAtPeriodEnd: !!data.cancelAtPeriodEnd,
+      cancelReason: undefined,
+      metadata: data.metadata,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
   }
-  async updateSubscriptionStatus(_subscriptionId: string, _status: any, _cancel?: boolean): Promise<SubscriptionRecord | null> {
+  async updateSubscriptionStatus(_subscriptionId: string, _status: SubscriptionRecord['status'], _cancel?: boolean): Promise<SubscriptionRecord | null> {
     console.warn('[DB:NOOP] updateSubscriptionStatus', { _subscriptionId, _status, _cancel });
     return null;
   }
@@ -424,26 +466,39 @@ class NoopDatabaseClient {
     console.warn('[DB:NOOP] cancelSubscription', { _subscriptionId, _reason });
     return null;
   }
-  async trackUsage(_userId: string, _usageType: any, _amount?: number, _metadata?: Record<string, unknown>): Promise<void> {
+  async trackUsage(_userId: string, _usageType: UsageRecord['usageType'], _amount?: number, _metadata?: Record<string, unknown>): Promise<void> {
     console.warn('[DB:NOOP] trackUsage');
   }
-  async getCurrentUsage(_userId: string, _usageType?: any): Promise<UsageRecord[]> {
+  async getCurrentUsage(_userId: string, _usageType?: UsageRecord['usageType']): Promise<UsageRecord[]> {
     console.warn('[DB:NOOP] getCurrentUsage');
     return [];
   }
-  async getUsageTotal(_userId: string, _usageType: any): Promise<number> {
+  async getUsageTotal(_userId: string, _usageType: UsageRecord['usageType']): Promise<number> {
     console.warn('[DB:NOOP] getUsageTotal');
     return 0;
   }
-  async createBillingEvent(data: any): Promise<any> {
+  async createBillingEvent(data: CreateBillingEventInput): Promise<BillingEventRecord> {
     console.warn('[DB:NOOP] createBillingEvent', data);
-    return { ...data, id: 0, createdAt: new Date() };
+    return {
+      id: 0,
+      subscriptionId: data.subscriptionId,
+      invoiceId: data.invoiceId,
+      paymentIntentId: data.paymentIntentId,
+      eventType: data.eventType,
+      amount: data.amount,
+      currency: data.currency,
+      status: data.status,
+      stripeEventId: data.stripeEventId,
+      metadata: data.metadata,
+      occurredAt: data.occurredAt,
+      createdAt: new Date()
+    };
   }
   async getBillingEvents(_subscriptionId: string, _limit?: number): Promise<BillingEventRecord[]> {
     console.warn('[DB:NOOP] getBillingEvents');
     return [];
   }
-  async getSubscriptionAnalytics(): Promise<any> {
+  async getSubscriptionAnalytics(): Promise<{ totalSubscriptions: number; byTier: Record<string, number>; byStatus: Record<string, number>; monthlyRecurringRevenue: number }> {
     console.warn('[DB:NOOP] getSubscriptionAnalytics');
     return { totalSubscriptions: 0, byTier: {}, byStatus: {}, monthlyRecurringRevenue: 0 };
   }
@@ -453,4 +508,4 @@ class NoopDatabaseClient {
 }
 
 // Export singleton instance (real DB when configured, otherwise a no-op shim)
-export const db: any = HAS_DATABASE ? new DatabaseClient() : new NoopDatabaseClient();
+export const db: DatabaseClientInterface = HAS_DATABASE ? new DatabaseClient() : new NoopDatabaseClient();

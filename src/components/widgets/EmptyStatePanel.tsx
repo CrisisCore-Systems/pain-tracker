@@ -2,6 +2,8 @@ import { PlayCircle } from "lucide-react";
 import { EmptyState, TrackingIllustration } from "../empty-state";
 import { Card, CardContent } from "../../design-system";
 import { usePainTrackerStore } from "../../stores/pain-tracker-store";
+import { useAdaptiveCopy } from "../../contexts/useTone";
+import { emptyStates } from "../../content/microcopy";
 
 interface EmptyStatePanelProps {
   onStartWalkthrough: () => void;
@@ -9,6 +11,12 @@ interface EmptyStatePanelProps {
 
 export function EmptyStatePanel({ onStartWalkthrough }: EmptyStatePanelProps) {
   const { loadSampleData } = usePainTrackerStore();
+  
+  // Adaptive tone copy
+  const noLogsHeadline = useAdaptiveCopy(emptyStates.noLogs.headline);
+  const noLogsSubtext = useAdaptiveCopy(emptyStates.noLogs.subtext);
+  const noLogsCTA = useAdaptiveCopy(emptyStates.noLogs.cta);
+  const secondaryCTA = useAdaptiveCopy(emptyStates.noLogs.secondaryCta);
 
   const handleLoadSampleData = () => {
     loadSampleData();
@@ -18,15 +26,15 @@ export function EmptyStatePanel({ onStartWalkthrough }: EmptyStatePanelProps) {
     <Card>
       <CardContent className="pt-8 pb-8">
         <EmptyState
-          title="Start Your Pain Tracking Journey"
-          description="Begin by recording your first pain entry above. Track symptoms, triggers, and treatments to gain valuable insights into your pain patterns and improve your quality of life."
+          title={noLogsHeadline}
+          description={noLogsSubtext}
           primaryAction={{
-            label: "Take Interactive Tour",
+            label: noLogsCTA,
             onClick: onStartWalkthrough,
             icon: <PlayCircle className="h-4 w-4" />
           }}
           secondaryAction={{
-            label: "View Sample Data",
+            label: secondaryCTA,
             onClick: handleLoadSampleData
           }}
           illustration={<TrackingIllustration />}

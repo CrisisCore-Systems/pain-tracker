@@ -13,6 +13,8 @@ import { ThemeProvider } from "./design-system";
 import { ToastProvider } from "./components/feedback";
 import { TraumaInformedProvider } from "./components/accessibility";
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
+import { ToneProvider } from "./contexts/ToneContext";
+import { initializeToneEngine } from "./services/ToneEngine";
 import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
 import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
@@ -27,6 +29,7 @@ import { usePainTrackerStore, selectEntries } from './stores/pain-tracker-store'
 import { OfflineBanner } from "./components/pwa/OfflineIndicator";
 import { BrandedLoadingScreen } from "./components/branding/BrandedLoadingScreen";
 import { pwaManager } from "./utils/pwa-utils";
+import { ToneStateTester } from "./components/dev/ToneStateTester";
 
 const ErrorFallback = () => {
   return (
@@ -58,6 +61,14 @@ function App() {
     enableAutoLabeling: true,
     announceRouteChanges: true,
   });
+
+  // Initialize tone engine on app start
+  useEffect(() => {
+    initializeToneEngine().catch(error => {
+      console.error('Failed to initialize tone engine:', error);
+      // Continue without tone engine - app still works
+    });
+  }, []);
 
   // Initialize PWA features
   useEffect(() => {
@@ -107,26 +118,29 @@ function App() {
   return (
     <ThemeProvider>
       <SubscriptionProvider>
-        <TraumaInformedProvider>
-          <ToastProvider>
-            <VaultGate>
-              <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
-                <OfflineBanner />
-                <BetaWarning />
-                <QuickActions />
-                <NotificationConsentPrompt />
-                <BetaAnalyticsConsentPrompt />
-                <ErrorBoundary fallback={<ErrorFallback />}>
-                  <Suspense fallback={<LoadingFallback />}>
-                    <PainTrackerContainer />
-                </Suspense>
-              </ErrorBoundary>
-              <PWAInstallPrompt />
-              <PWAStatusIndicator />
-            </div>
-          </VaultGate>
-        </ToastProvider>
-      </TraumaInformedProvider>
+        <ToneProvider>
+          <TraumaInformedProvider>
+            <ToastProvider>
+              <VaultGate>
+                <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                  <OfflineBanner />
+                  <BetaWarning />
+                  <QuickActions />
+                  <NotificationConsentPrompt />
+                  <BetaAnalyticsConsentPrompt />
+                  <ErrorBoundary fallback={<ErrorFallback />}>
+                    <Suspense fallback={<LoadingFallback />}>
+                      <PainTrackerContainer />
+                  </Suspense>
+                </ErrorBoundary>
+                <PWAInstallPrompt />
+                <PWAStatusIndicator />
+                <ToneStateTester />
+              </div>
+            </VaultGate>
+          </ToastProvider>
+        </TraumaInformedProvider>
+      </ToneProvider>
     </SubscriptionProvider>
     </ThemeProvider>
   );

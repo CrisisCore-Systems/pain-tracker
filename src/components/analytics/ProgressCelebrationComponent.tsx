@@ -278,7 +278,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
     <div className="space-y-6">
       {/* Confetti Effect */}
       {showConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-50">
+        <div className="fixed inset-0 pointer-events-none z-[100]">
           <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 opacity-20 animate-pulse"></div>
           <div className="flex items-center justify-center h-full">
             <div className="text-6xl animate-bounce">🎉</div>

@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* global __dirname, process, console, URL */
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
@@ -17,7 +19,7 @@ async function run() {
   let axeSource = '';
   try {
     axeSource = fs.readFileSync(path.join(__dirname, '..', 'node_modules', 'axe-core', 'axe.min.js'), 'utf8');
-  } catch (e) {
+  } catch {
     console.error('axe-core not found in node_modules. Install with `npm i -D axe-core`');
     process.exit(2);
   }
@@ -94,7 +96,7 @@ async function run() {
   reportLines.push('</body></html>');
 
   // Write JSON + HTML output
-  try { fs.mkdirSync(path.join(__dirname, '..', 'test-results'), { recursive: true }); } catch {}
+  try { fs.mkdirSync(path.join(__dirname, '..', 'test-results'), { recursive: true }); } catch { /* ignore mkdir errors */ }
   fs.writeFileSync(path.join(__dirname, '..', 'test-results', 'playwright-axe.json'), JSON.stringify(results, null, 2));
   fs.writeFileSync(path.join(__dirname, '..', 'test-results', 'playwright-axe.html'), reportLines.join('\n'));
   console.log('\nSaved results to test-results/playwright-axe.json and test-results/playwright-axe.html');

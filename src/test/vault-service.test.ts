@@ -9,7 +9,6 @@ async function ensurePolyfill() {
   const missing = typeof (sodium as any).crypto_pwhash !== 'function' || typeof (sodium as any).crypto_pwhash_str !== 'function';
   if (!missing) return;
 
-  // eslint-disable-next-line no-console
   console.warn('[vault-service.test] Applying sodium crypto_pwhash polyfill for test environment');
 
   async function pbkdf2(passphrase: string, salt: Uint8Array, length: number, iterations: number): Promise<Uint8Array> {

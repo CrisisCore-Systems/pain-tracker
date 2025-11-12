@@ -188,6 +188,7 @@ export class SubscriptionService {
     else if (featureName === 'maxMoodEntries') current = subscription.usage.moodEntries;
     else if (featureName === 'maxActivityLogs') current = subscription.usage.activityLogs;
     else if (featureName === 'maxStorageMB') current = subscription.usage.storageMB;
+  else if (featureName === 'maxExportsPerMonth') current = subscription.usage.exportCount;
     
     const remaining = limit === -1 ? Infinity : Math.max(0, limit - current);
     const percentage = limit === -1 ? 0 : Math.min(100, (current / limit) * 100);
@@ -225,8 +226,8 @@ export class SubscriptionService {
       moodEntries: 'maxMoodEntries',
       activityLogs: 'maxActivityLogs',
       storageMB: 'maxStorageMB',
-      apiCalls: 'maxPainEntries', // Placeholder
-      exportCount: 'maxPainEntries' // Placeholder
+      apiCalls: 'maxPainEntries', // Placeholder until dedicated apiCalls quota added
+      exportCount: 'maxExportsPerMonth'
     };
     
     const featureName = featureMap[usageType];

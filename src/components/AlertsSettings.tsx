@@ -117,7 +117,7 @@ export default function AlertsSettings({ variant = 'overlay', className, onClose
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50" role="presentation">
+        <div className="fixed inset-0 z-[100]" role="presentation">
           <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
           <FocusTrap
             active={true}

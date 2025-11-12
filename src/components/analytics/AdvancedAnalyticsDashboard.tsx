@@ -31,6 +31,7 @@ import { rollingAverage, movingStdDev, detectAnomalies } from '../../utils/analy
 import helpers from './helpers/analyticsHelpers';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
+import { LocationHeatmap } from '../pain-tracker/analytics-v2/LocationHeatmap';
 
 interface AdvancedAnalyticsDashboardProps {
   entries: PainEntry[];
@@ -740,6 +741,9 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
           )}
         </CardContent>
       </Card>
+
+      {/* Body Location Heatmap - Newly Integrated */}
+      <LocationHeatmap entries={entries} />
     </div>
   );
 }

@@ -326,7 +326,7 @@ function EmergencyModeInterface({
   className?: string;
 }) {
   return (
-    <div className={`fixed inset-0 bg-red-50 z-50 overflow-auto ${className}`}>
+    <div className={`fixed inset-0 bg-red-50 z-[100] overflow-auto ${className}`}>
       <div className="min-h-screen p-4">
         {/* Emergency Header */}
         <div className="bg-red-600 text-white rounded-lg p-4 mb-4">

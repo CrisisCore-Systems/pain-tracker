@@ -1,3 +1,5 @@
+/* eslint-env node */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 
@@ -31,7 +33,8 @@ function extractBlock(selector) {
   return m ? m[1] : '';
 }
 
-const lightBlock = extractBlock('[data-theme="light"]\s*:root') || extractBlock(':root');
+// Use double backslash to ensure the regex receives a literal \s
+const lightBlock = extractBlock('[data-theme="light"]\\s*:root') || extractBlock(':root');
 const darkBlock = extractBlock('[data-theme="dark"]') || '';
 
 function extractVars(block) {

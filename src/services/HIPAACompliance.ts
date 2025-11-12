@@ -23,8 +23,7 @@ export class HIPAACompliance {
 
   // Hook to log PHI detection events; real implementation must forward to secure audit sink.
   async logPHIDetection(userId: string, textSample: string, matches: string[]) {
-    // Minimal local logging
-    // eslint-disable-next-line no-console
+    // Minimal local logging (console usage acceptable here for visibility; remove directive to satisfy lint)
     console.warn(`[HIPAA] PHI detected for user=${userId}, matches=${JSON.stringify(matches.slice(0,5))}`);
   }
 }

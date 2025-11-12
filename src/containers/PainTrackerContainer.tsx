@@ -3,8 +3,13 @@ import { secureStorage } from '../lib/storage/secureStorage';
 import type { PainEntry } from '../types';
 import type { WalkthroughStep } from '../components/tutorials/Walkthrough';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
-import { TraumaInformedPainTrackerLayout } from '../components/layouts/TraumaInformedPainTrackerLayout';
+import { ModernAppLayout } from '../components/layouts/ModernAppLayout';
+import { ClinicalDashboard } from '../design-system/fused-v2';
+import { QuickLogStepper } from '../design-system/fused-v2';
 import { useToast } from '../components/feedback';
+import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
+import { AdvancedAnalyticsView } from '../components/analytics/AdvancedAnalyticsView';
+import { CalendarView } from '../components/calendar/CalendarView';
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
 const OnboardingFlow = lazy(() => import('../components/onboarding').then(m => ({ default: m.OnboardingFlow })));
@@ -14,7 +19,6 @@ export function PainTrackerContainer() {
   const {
     entries,
     ui,
-    error,
     addEntry,
     setShowOnboarding,
     setShowWalkthrough,
@@ -24,6 +28,7 @@ export function PainTrackerContainer() {
 
   const toast = useToast();
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
+  const [currentView, setCurrentView] = useState<string>('dashboard');
 
   // Load walkthrough steps dynamically to avoid circular dependency
   useEffect(() => {
@@ -117,6 +122,7 @@ export function PainTrackerContainer() {
       addEntry(entryData);
       setError(null);
       toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
+      setCurrentView('dashboard'); // Navigate back to dashboard after saving
     } catch (err) {
       setError("Failed to add pain entry. Please try again.");
       toast.error('Save Failed', 'Unable to add pain entry. Please try again.');
@@ -124,14 +130,106 @@ export function PainTrackerContainer() {
     }
   };
 
+  // Calculate stats for header
+  const stats = {
+    totalEntries: entries.length,
+    avgPain: entries.length > 0 
+      ? entries.reduce((sum, e) => sum + e.baselineData.pain, 0) / entries.length 
+      : 0,
+    streak: entries.length > 0 ? Math.min(entries.length, 7) : 0 // Simplified streak calc
+  };
+
+  const renderView = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return entries.length > 0 ? (
+          <ClinicalDashboard 
+            entries={entries}
+            onLogNow={() => setCurrentView('new-entry')}
+            onViewCalendar={() => setCurrentView('calendar')}
+            onViewAnalytics={() => setCurrentView('analytics')}
+            onExport={() => {
+              // TODO: Implement PDF export
+              toast.info('Export', 'PDF export coming soon');
+            }}
+          />
+        ) : (
+          <EmptyStatePanel onStartWalkthrough={handleStartWalkthrough} />
+        );
+      
+      case 'new-entry':
+        return (
+          <QuickLogStepper
+            onComplete={(data) => {
+              // Convert QuickLogStepper data to PainEntry format
+              handleAddEntry({
+                baselineData: {
+                  pain: data.pain,
+                  locations: data.locations,
+                  symptoms: data.symptoms
+                },
+                notes: data.notes
+              } as Omit<PainEntry, 'id' | 'timestamp'>);
+            }}
+            onCancel={() => setCurrentView('dashboard')}
+          />
+        );
+      
+      case 'analytics':
+        return <AdvancedAnalyticsView entries={entries} />;
+      
+      case 'calendar':
+        return <CalendarView entries={entries} />;
+      
+      case 'reports':
+        return (
+          <div className="text-center py-20">
+            <div className="inline-flex p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl mb-4">
+              <span className="text-4xl">🚧</span>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Coming Soon</h3>
+            <p className="text-gray-600 dark:text-gray-400">This feature is under development</p>
+          </div>
+        );
+      
+      case 'settings':
+      case 'help':
+        return (
+          <div className="text-center py-20">
+            <div className="inline-flex p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl mb-4">
+              <span className="text-4xl">⚙️</span>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{currentView === 'settings' ? 'Settings' : 'Help & Support'}</h3>
+            <p className="text-gray-600 dark:text-gray-400">Configuration options coming soon</p>
+          </div>
+        );
+      
+      default:
+        return entries.length > 0 ? (
+          <ClinicalDashboard 
+            entries={entries}
+            onLogNow={() => setCurrentView('new-entry')}
+            onViewCalendar={() => setCurrentView('calendar')}
+            onViewAnalytics={() => setCurrentView('analytics')}
+            onExport={() => {
+              toast.info('Export', 'PDF export coming soon');
+            }}
+          />
+        ) : (
+          <EmptyStatePanel onStartWalkthrough={handleStartWalkthrough} />
+        );
+    }
+  };
+
   return (
     <>
-      <TraumaInformedPainTrackerLayout
-        entries={entries}
-        error={error}
-        onAddEntry={handleAddEntry}
-        onStartWalkthrough={handleStartWalkthrough}
-      />
+      <ModernAppLayout 
+        currentView={currentView}
+        onNavigate={setCurrentView}
+        stats={stats}
+      >
+        {renderView()}
+      </ModernAppLayout>
 
       {/* Onboarding Flow - Lazy loaded only when needed */}
       {ui.showOnboarding && (

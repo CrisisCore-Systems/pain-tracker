@@ -34,24 +34,16 @@ export class PDFExportService {
    * Generate a WCB report PDF
    */
   async generateWCBReport(report: WCBReport): Promise<Blob> {
-    try {
-      // Dynamically load jsPDF libraries
-      await this.initializePDF();
-      
-      this.setupDocument();
-      this.addHeader(report);
-      this.addPainTrends(report);
-      this.addWorkImpact(report);
-      this.addFunctionalAnalysis(report);
-      this.addTreatments(report);
-      this.addRecommendations(report);
-
-      // Return as blob
-      const blob = this.doc!.output('blob');
-      return blob;
-    } catch (error) {
-      throw error;
-    }
+    // Dynamically load jsPDF libraries (allow errors to surface naturally for upstream handling)
+    await this.initializePDF();
+    this.setupDocument();
+    this.addHeader(report);
+    this.addPainTrends(report);
+    this.addWorkImpact(report);
+    this.addFunctionalAnalysis(report);
+    this.addTreatments(report);
+    this.addRecommendations(report);
+    return this.doc!.output('blob');
   }
 
   /**

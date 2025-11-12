@@ -31,6 +31,7 @@ const FREE_FEATURES: TierFeatures = {
   wcbReports: false,
   clinicalPDFExport: false,
   scheduledReports: false,
+  maxExportsPerMonth: 5,
   
   // Integration Features
   healthcareProviderAPI: false,
@@ -105,6 +106,7 @@ const BASIC_FEATURES: TierFeatures = {
   wcbReports: true,
   clinicalPDFExport: false,
   scheduledReports: false,
+  maxExportsPerMonth: 50,
   
   // Integration Features
   healthcareProviderAPI: false,
@@ -179,6 +181,7 @@ const PRO_FEATURES: TierFeatures = {
   wcbReports: true,
   clinicalPDFExport: true,
   scheduledReports: true,
+  maxExportsPerMonth: 200,
   
   // Integration Features
   healthcareProviderAPI: true,
@@ -253,6 +256,7 @@ const ENTERPRISE_FEATURES: TierFeatures = {
   wcbReports: true,
   clinicalPDFExport: true,
   scheduledReports: true,
+  maxExportsPerMonth: -1,
   
   // Integration Features
   healthcareProviderAPI: true,

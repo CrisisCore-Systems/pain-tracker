@@ -4,6 +4,46 @@
  */
 
 // Content Security Policy configuration
+// Discriminated unions for environment configuration
+export type EnvironmentName = 'development' | 'staging' | 'production';
+
+export interface EnvironmentFlagsBase {
+  allowInlineScripts: boolean;
+  allowInlineStyles: boolean;
+  allowEval: boolean;
+  enableSourceMaps: boolean;
+  allowHMR: boolean;
+  enableHSTS?: boolean;
+  enableCSP?: boolean;
+}
+
+export interface DevelopmentEnvConfig extends EnvironmentFlagsBase {
+  env: 'development';
+}
+export interface StagingEnvConfig extends EnvironmentFlagsBase {
+  env: 'staging';
+}
+export interface ProductionEnvConfig extends EnvironmentFlagsBase {
+  env: 'production';
+  enableHSTS: true;
+  enableCSP: true;
+}
+
+export type EnvironmentConfig = DevelopmentEnvConfig | StagingEnvConfig | ProductionEnvConfig;
+
+export interface CorsConfig {
+  origin: string[];
+  credentials: boolean;
+  optionsSuccessStatus: number;
+}
+
+export interface SessionConfig {
+  secure: boolean;
+  httpOnly: boolean;
+  sameSite: 'strict' | 'lax' | 'none';
+  maxAge: number;
+}
+
 export const securityConfig = {
   // Content Security Policy directives
   contentSecurityPolicy: {
@@ -78,33 +118,31 @@ export const securityConfig = {
   // Environment-specific configurations
   environments: {
     development: {
-      // Relaxed CSP for development
+      env: 'development',
       allowInlineScripts: true,
       allowInlineStyles: true,
       allowEval: true,
       enableSourceMaps: true,
-      allowHMR: true,
-    },
-    
+      allowHMR: true
+    } as DevelopmentEnvConfig,
     staging: {
-      // Moderate security for staging
+      env: 'staging',
       allowInlineScripts: false,
       allowInlineStyles: true,
       allowEval: false,
       enableSourceMaps: true,
-      allowHMR: false,
-    },
-    
+      allowHMR: false
+    } as StagingEnvConfig,
     production: {
-      // Strict security for production
+      env: 'production',
       allowInlineScripts: false,
       allowInlineStyles: false,
       allowEval: false,
       enableSourceMaps: false,
       allowHMR: false,
       enableHSTS: true,
-      enableCSP: true,
-    },
+      enableCSP: true
+    } as ProductionEnvConfig,
   },
 
   // API security configuration
@@ -117,17 +155,17 @@ export const securityConfig = {
     },
     
     // CORS configuration
-    cors: ((): any => {
-      const _env = ((): any => {
+    cors: ((): CorsConfig => {
+      const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
         try {
-          if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-            return (import.meta as any).env;
+          if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
+            return (import.meta as any).env as Record<string, string | undefined>;
           }
         } catch {
           // import.meta not available, fall through to process.env
         }
-        if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
-        return {};
+        if (typeof process !== 'undefined' && process.env) return process.env as Record<string, string | undefined>;
+        return {} as Record<string, string | undefined>;
       })();
       const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
       return {
@@ -161,17 +199,17 @@ export const securityConfig = {
     },
     
     // Session security
-    session: ((): any => {
-      const _env = ((): any => {
+    session: ((): SessionConfig => {
+      const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
         try {
-          if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-            return (import.meta as any).env;
+          if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
+            return (import.meta as any).env as Record<string, string | undefined>;
           }
         } catch {
           // import.meta not available, fall through to process.env
         }
-        if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
-        return {};
+        if (typeof process !== 'undefined' && process.env) return process.env as Record<string, string | undefined>;
+        return {} as Record<string, string | undefined>;
       })();
       const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
       return {
@@ -212,17 +250,17 @@ export const securityConfig = {
   // Security monitoring
   monitoring: {
     // Error reporting
-    errorReporting: ((): any => {
-      const _env = ((): any => {
+    errorReporting: ((): { enableStackTraces: boolean; sanitizeErrors: boolean; logSecurityEvents: boolean } => {
+      const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
         try {
-          if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-            return (import.meta as any).env;
+          if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
+            return (import.meta as any).env as Record<string, string | undefined>;
           }
         } catch {
           // import.meta not available, fall through to process.env
         }
-        if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
-        return {};
+        if (typeof process !== 'undefined' && process.env) return process.env as Record<string, string | undefined>;
+        return {} as Record<string, string | undefined>;
       })();
       const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
       return {
@@ -245,7 +283,7 @@ export const securityConfig = {
 /**
  * Generate CSP header string
  */
-export function generateCSPHeader(environment: 'development' | 'staging' | 'production' = 'production'): string {
+export function generateCSPHeader(environment: EnvironmentName = 'production'): string {
   const csp = securityConfig.contentSecurityPolicy;
   const envConfig = securityConfig.environments[environment];
   
@@ -292,7 +330,7 @@ export function generateCSPHeader(environment: 'development' | 'staging' | 'prod
 /**
  * Get security headers for environment
  */
-export function getSecurityHeaders(environment: 'development' | 'staging' | 'production' = 'production'): Record<string, string> {
+export function getSecurityHeaders(environment: EnvironmentName = 'production'): Record<string, string> {
   const headers: Record<string, string> = {
     ...securityConfig.securityHeaders,
     'Content-Security-Policy': generateCSPHeader(environment),

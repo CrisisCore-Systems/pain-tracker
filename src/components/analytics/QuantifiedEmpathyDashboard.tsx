@@ -24,6 +24,8 @@ import { EmpathyDrivenAnalyticsService } from '../../services/EmpathyDrivenAnaly
 import { EmotionalStateTracker } from '../../services/EmotionalStateTracker';
 import { HolisticWellbeingService } from '../../services/HolisticWellbeingService';
 import type { PainEntry } from '../../types';
+import { useAdaptiveCopy } from '../../contexts/useTone';
+import { emptyStates } from '../../content/microcopy';
 
 interface QuantifiedEmpathyDashboardProps {
   userId: string;
@@ -45,6 +47,10 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
   onRecommendationAccept,
   onShareMetrics
 }) => {
+  // Adaptive tone copy
+  const noTrendsHeadline = useAdaptiveCopy(emptyStates.noTrends.headline);
+  const noTrendsSubtext = useAdaptiveCopy(emptyStates.noTrends.subtext);
+
   // Services
   const [analyticsService] = useState(() => new EmpathyDrivenAnalyticsService({
     validationThreshold: 70,
@@ -309,8 +315,8 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
         <CardContent className="flex items-center justify-center p-8">
           <div className="text-center">
             <Brain className="w-8 h-8 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-600">Not enough data to generate empathy metrics yet.</p>
-            <p className="text-sm text-gray-500 mt-2">Keep tracking to unlock insights!</p>
+            <p className="text-gray-600 font-medium">{noTrendsHeadline}</p>
+            <p className="text-sm text-gray-500 mt-2">{noTrendsSubtext}</p>
           </div>
         </CardContent>
       </Card>
