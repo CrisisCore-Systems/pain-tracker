@@ -1,0 +1,614 @@
+# Pain Tracker v0.2.0 Roadmap Issues
+# Generated: 2025-11-13
+# Import with: gh issue create --body-file <issue-file>.md
+
+issues:
+  # Phase 1A: Verify MVP Spine (Week 1-2)
+  - number: 1
+    title: "🔍 Audit: Core State Management (painStore)"
+    labels:
+      - p0-mvp
+      - audit
+      - state-management
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Verify that the Zustand painStore implementation matches the ARCHITECTURE.md specification.
+
+      ## Acceptance Criteria
+      - [ ] File `src/stores/painStore.ts` exists and exports `usePainStore`
+      - [ ] Implements `addEntry(entry: PainEntry): void`
+      - [ ] Implements `updateEntry(id: string, changes: Partial<PainEntry>): void`
+      - [ ] Implements `deleteEntry(id: string): void`
+      - [ ] Implements `getFilteredEntries(): PainEntry[]`
+      - [ ] Implements `getAnalytics(): AnalyticsData`
+      - [ ] Implements `getWCBReport(range: DateRange): WCBReport`
+      - [ ] Uses Immer middleware for immutable updates
+      - [ ] Includes unit tests with 80%+ coverage
+
+      ## Definition of Done
+      - All checkboxes checked
+      - Tests passing: `npm run test src/stores/painStore.test.ts`
+      - Code review completed
+
+      ## Priority
+      **P0** - Blocking v0.2.0 release
+
+      ## Estimated Effort
+      4 hours
+
+  - number: 2
+    title: "🔍 Audit: Data Persistence Layer (IndexedDB)"
+    labels:
+      - p0-mvp
+      - audit
+      - database
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Verify IndexedDB implementation for local data storage.
+
+      ## Acceptance Criteria
+      - [ ] IndexedDB service file exists in `src/services/` or `src/lib/`
+      - [ ] Object store `painEntries` configured with indexes: id, timestamp, painLevel, location*
+      - [ ] Object store `settings` configured with key index
+      - [ ] Test write → read → update → delete cycle
+      - [ ] Verify encryption flag on sensitive entries
+      - [ ] Benchmark query performance (target: <50ms for 1000 entries)
+      - [ ] Handle quota exceeded errors gracefully
+      - [ ] Implement cleanup for old entries (6+ months)
+
+      ## Definition of Done
+      - All checkboxes checked
+      - Performance benchmark documented
+      - Integration tests passing
+
+      ## Priority
+      **P0** - Blocking v0.2.0 release
+
+      ## Estimated Effort
+      6 hours
+
+  - number: 3
+    title: "🔍 Audit: Encryption Implementation"
+    labels:
+      - p0-mvp
+      - audit
+      - security
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Verify encryption service uses Web Crypto API correctly.
+
+      ## Acceptance Criteria
+      - [ ] Encryption service located (check `src/utils/encryption.ts` or `src/services/`)
+      - [ ] Uses Web Crypto API (NOT CryptoJS library)
+      - [ ] AES-GCM algorithm with 256-bit keys
+      - [ ] PBKDF2 key derivation with 100,000 iterations minimum
+      - [ ] Unique IV (initialization vector) per encryption operation
+      - [ ] Salt stored with encrypted data
+      - [ ] Test encrypt → decrypt cycle with correct passphrase
+      - [ ] Test decrypt failure with wrong passphrase
+      - [ ] Verify Web Worker is used for encryption (offload from main thread)
+      - [ ] No passphrase stored in plaintext anywhere
+
+      ## Definition of Done
+      - All checkboxes checked
+      - Security tests passing
+      - No CryptoJS in package.json
+
+      ## Priority
+      **P0** - Security critical
+
+      ## Estimated Effort
+      5 hours
+
+  - number: 4
+    title: "🔍 Audit: Validation Layer (Zod Schemas)"
+    labels:
+      - p0-mvp
+      - audit
+      - validation
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Verify all user inputs are validated with Zod schemas.
+
+      ## Acceptance Criteria
+      - [ ] Find all Zod schemas in `src/schemas/`
+      - [ ] `painEntry.schema.ts` validates:
+        - `painLevel`: integer 0-10
+        - `timestamp`: Date ≤ now (no future dates)
+        - `location`: non-empty array
+        - `notes`: max length enforced (5000 chars recommended)
+      - [ ] Error messages are user-friendly (not technical)
+      - [ ] All forms use zodResolver from @hookform/resolvers/zod
+      - [ ] Test validation with invalid data
+      - [ ] Test edge cases (empty arrays, boundary values)
+
+      ## Definition of Done
+      - All checkboxes checked
+      - Validation tests passing
+      - No unvalidated user inputs reach the store
+
+      ## Priority
+      **P0** - Data integrity critical
+
+      ## Estimated Effort
+      3 hours
+
+  # Phase 1B: Lock Down "Empathy Engine" (Week 2-3)
+  - number: 5
+    title: "🧠 Implement Basic Emotional Analysis Service"
+    labels:
+      - p1-beta
+      - feature
+      - empathy
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Create rule-based emotional analysis for pain entry notes (NO ML yet).
+
+      ## Implementation
+      Create `src/services/emotionalAnalysis.ts` with:
+
+      ```typescript
+      interface EmotionalMetrics {
+        sentiment: 'positive' | 'neutral' | 'negative' | 'crisis';
+        keywords: string[];
+        crisisIndicators: string[];
+      }
+
+      export function analyzeNote(note: string): EmotionalMetrics
+      ```
+
+      ## Acceptance Criteria
+      - [ ] Keyword-based crisis detection (suicide, self-harm terms)
+      - [ ] Sentiment classification (4 states: positive, neutral, negative, crisis)
+      - [ ] Extract keywords from note (word tokenization)
+      - [ ] Unit tests covering:
+        - Crisis keywords detected correctly
+        - Sentiment classification accuracy
+        - Empty/null note handling
+        - Case-insensitive matching
+      - [ ] Performance: <10ms for typical note (500 chars)
+
+      ## Definition of Done
+      - Service implemented and tested
+      - No external API calls (local processing only)
+      - Privacy-preserving (no data leaves device)
+
+      ## Priority
+      **P1** - Important for v0.2.0
+
+      ## Estimated Effort
+      4 hours
+
+  - number: 6
+    title: "🆘 Design Crisis Response UX"
+    labels:
+      - p1-beta
+      - ux
+      - empathy
+      - safety
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Show non-patronizing crisis support when emotional analysis detects crisis indicators.
+
+      ## Acceptance Criteria
+      - [ ] Design calm, supportive message (avoid patronizing language)
+      - [ ] Display BC Crisis Centre: **1-800-784-2433**
+      - [ ] Display Crisis Services Canada: **1-833-456-4566**
+      - [ ] Include "I'm safe, dismiss" option
+      - [ ] Never block pain entry submission
+      - [ ] Optional: allow user to opt-out of crisis detection
+      - [ ] Test with real crisis keywords
+      - [ ] Accessibility: screen reader compatible
+
+      ## Message Template (Draft)
+      ```
+      We noticed your note mentions some difficult feelings.
+      
+      If you're in crisis, these services are available 24/7:
+      • BC Crisis Centre: 1-800-784-2433
+      • Crisis Services Canada: 1-833-456-4566
+      
+      [I'm safe, dismiss] [More resources]
+      ```
+
+      ## Definition of Done
+      - Crisis modal designed and implemented
+      - Does not prevent entry submission
+      - Dismissible without friction
+
+      ## Priority
+      **P1** - Safety feature
+
+      ## Estimated Effort
+      6 hours
+
+  # Phase 1C: WorkSafe BC Export (Week 3-4)
+  - number: 7
+    title: "📋 Design WCB Report Data Structure"
+    labels:
+      - p0-mvp
+      - wcb-export
+      - feature
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Define TypeScript types and data structure for WorkSafeBC-aligned reports.
+
+      ## Acceptance Criteria
+      - [ ] Create `src/types/wcbReport.ts`
+      - [ ] Define `WCBReport` interface aligned to Form 8 fields
+      - [ ] Implement date range filtering
+      - [ ] Generate pain narrative from entries (text summary)
+      - [ ] Calculate trend metrics:
+        - Average pain level
+        - Peak pain level
+        - Trend direction (increasing/decreasing/stable)
+      - [ ] List affected body parts with frequency
+      - [ ] List limited activities (functional impact)
+      - [ ] Include entry count and date range in report
+
+      ## Type Definition (Draft)
+      ```typescript
+      interface WCBReport {
+        dateRange: { start: Date; end: Date };
+        entryCount: number;
+        painSummary: {
+          average: number;
+          peak: number;
+          trend: 'increasing' | 'decreasing' | 'stable';
+        };
+        affectedAreas: Array<{ location: string; frequency: number }>;
+        functionalLimitations: string[];
+        narrative: string;
+      }
+      ```
+
+      ## Definition of Done
+      - Types defined and exported
+      - Generator function implemented
+      - Unit tests with mock data
+
+      ## Priority
+      **P0** - Core feature
+
+      ## Estimated Effort
+      5 hours
+
+  - number: 8
+    title: "📄 Implement PDF Export for WCB Reports"
+    labels:
+      - p1-beta
+      - wcb-export
+      - feature
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Generate downloadable PDF reports for WorkSafeBC claims.
+
+      ## Acceptance Criteria
+      - [ ] Evaluate PDF libraries (jsPDF, pdfmake) - choose smallest bundle
+      - [ ] Create simple, clean template (no fancy graphics)
+      - [ ] Include all WCBReport data fields
+      - [ ] Add disclaimer: "For WorkSafeBC reference only - not an official form"
+      - [ ] Test with 30-day, 90-day, 180-day date ranges
+      - [ ] Filename format: `pain-tracker-wcb-YYYY-MM-DD.pdf`
+      - [ ] Add "Export for WCB" button to analytics page
+      - [ ] Bundle size impact: <50KB additional
+
+      ## Legal Considerations
+      - Do NOT replicate official WCB form layout (avoid legal issues)
+      - Label as "structured summary" not "official form"
+      - Include date generated and version number
+
+      ## Definition of Done
+      - PDF generation working
+      - Download triggers in all major browsers
+      - Bundle size acceptable
+
+      ## Priority
+      **P1** - Key differentiator
+
+      ## Estimated Effort
+      8 hours
+
+  - number: 9
+    title: "⚖️ CRITICAL: Legal Review Preparation for WCB Export"
+    labels:
+      - p0-mvp
+      - legal
+      - documentation
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Prepare documentation and disclaimers for legal review of WCB export feature.
+
+      ## Acceptance Criteria
+      - [ ] Draft disclaimer text for PDF exports
+      - [ ] Research: Is mimicking Form 8 layout legally safe?
+      - [ ] Decide: "Official form replica" vs "Structured summary"
+      - [ ] Document in `SECURITY.md` and `docs/LEGAL.md`
+      - [ ] Add disclaimer to export UI
+      - [ ] Add disclaimer to PDF footer
+      - [ ] Consider liability if report is used in claim
+
+      ## Recommended Approach
+      **"Structured Summary" - Safer**
+      - Don't replicate official form layout
+      - Clearly label as "Pain Tracker Summary Report"
+      - Include: "This is a personal pain log summary. Please transcribe relevant information to official WorkSafeBC forms."
+
+      ## Action Items
+      - [ ] Consult with legal advisor (recommended)
+      - [ ] Update all export UI text
+      - [ ] Add to onboarding/help docs
+
+      ## Priority
+      **P0** - Liability risk
+
+      ## Estimated Effort
+      4 hours (+ external legal review time)
+
+  # Phase 2: Security Hardening (Week 5-6)
+  - number: 10
+    title: "🔒 Implement Content Security Policy (CSP)"
+    labels:
+      - p0-mvp
+      - security
+      - infrastructure
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Enforce strict Content Security Policy to prevent XSS attacks.
+
+      ## Acceptance Criteria
+      - [ ] Configure CSP headers in `vite.config.ts`
+      - [ ] Production CSP directives:
+        - `default-src 'self'`
+        - `script-src 'self'` (no unsafe-inline in production)
+        - `style-src 'self'` (evaluate unsafe-inline necessity)
+        - `img-src 'self' data: blob:`
+        - `connect-src 'self'`
+        - `frame-ancestors 'none'`
+        - `object-src 'none'`
+        - `base-uri 'self'`
+      - [ ] Test in production build (not just dev)
+      - [ ] Document any exceptions in SECURITY.md
+      - [ ] Verify no console errors from CSP violations
+
+      ## Testing
+      ```bash
+      npm run build
+      npm run preview
+      # Open browser DevTools → Console
+      # Check for CSP violation warnings
+      ```
+
+      ## Definition of Done
+      - CSP enforced in production
+      - No violations on critical user flows
+      - Documented in security policy
+
+      ## Priority
+      **P0** - Security baseline
+
+      ## Estimated Effort
+      3 hours
+
+  - number: 11
+    title: "🔐 Security Audit: Encryption & Key Management"
+    labels:
+      - p0-mvp
+      - security
+      - audit
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Comprehensive security audit of encryption implementation.
+
+      ## Acceptance Criteria
+      - [ ] Confirm no plaintext passphrase storage (not in localStorage, IndexedDB, or memory after use)
+      - [ ] Test key derivation uses cryptographically secure random salt
+      - [ ] Verify IV (initialization vector) uniqueness per encryption operation
+      - [ ] Add passphrase strength meter (zxcvbn or similar)
+      - [ ] Implement session timeout (configurable, default 15 min)
+      - [ ] Test encryption/decryption with 1000+ entries (performance check)
+      - [ ] Verify encrypted data is not logged to console
+      - [ ] Check service worker doesn't cache sensitive data
+
+      ## Security Checklist
+      - [ ] PBKDF2 iterations ≥ 100,000
+      - [ ] Salt length ≥ 128 bits
+      - [ ] IV length = 96 bits (for AES-GCM)
+      - [ ] Key length = 256 bits
+      - [ ] No encryption key reuse
+
+      ## Definition of Done
+      - All checks passing
+      - Security documentation updated
+      - No sensitive data in logs/console
+
+      ## Priority
+      **P0** - Security critical
+
+      ## Estimated Effort
+      6 hours
+
+  - number: 12
+    title: "📦 Dependency Security Audit"
+    labels:
+      - p0-mvp
+      - security
+      - dependencies
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Ensure all dependencies are secure and up-to-date.
+
+      ## Acceptance Criteria
+      - [ ] Run `npm audit` - target: 0 high/critical vulnerabilities
+      - [ ] Fix or document any remaining vulnerabilities
+      - [ ] Add Dependabot configuration (`.github/dependabot.yml`)
+      - [ ] Alternative: Add Snyk integration
+      - [ ] Document security update policy in SECURITY.md
+      - [ ] Set up automated security alerts
+      - [ ] Review all dependencies - remove unused packages
+
+      ## Dependabot Config (Draft)
+      ```yaml
+      version: 2
+      updates:
+        - package-ecosystem: "npm"
+          directory: "/"
+          schedule:
+            interval: "weekly"
+          open-pull-requests-limit: 5
+      ```
+
+      ## Definition of Done
+      - `npm audit` clean (or documented exceptions)
+      - Automated security monitoring enabled
+      - SECURITY.md updated with contact method
+
+      ## Priority
+      **P0** - Security baseline
+
+      ## Estimated Effort
+      3 hours
+
+  # Phase 3: Testing Pyramid (Week 7-8)
+  - number: 13
+    title: "✅ Unit Test Coverage: Core Services"
+    labels:
+      - p1-beta
+      - testing
+      - quality
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Achieve 80%+ unit test coverage for critical services.
+
+      ## Target Coverage
+      - [ ] `src/utils/encryption.ts` - 90%+
+      - [ ] `src/services/emotionalAnalysis.ts` - 85%+
+      - [ ] `src/schemas/*.ts` - 100% (all validation rules)
+      - [ ] `src/stores/painStore.ts` - 85%+
+      - [ ] `src/services/indexedDB.ts` - 80%+
+
+      ## Test Requirements
+      - [ ] All encryption functions (encrypt, decrypt, derive key)
+      - [ ] All validation schemas (valid/invalid cases)
+      - [ ] Store actions with Immer (immutability tests)
+      - [ ] Edge cases (null, undefined, boundary values)
+      - [ ] Error handling paths
+
+      ## Commands
+      ```bash
+      npm run test -- --coverage
+      npm run test:watch
+      ```
+
+      ## Definition of Done
+      - Coverage report shows 80%+ for target files
+      - All tests passing
+      - Coverage badge added to README
+
+      ## Priority
+      **P1** - Quality gate
+
+      ## Estimated Effort
+      12 hours
+
+  - number: 14
+    title: "🔗 Integration Tests: Store + Database"
+    labels:
+      - p1-beta
+      - testing
+      - integration
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Test integration between Zustand store and IndexedDB persistence.
+
+      ## Test Scenarios
+      - [ ] painStore.addEntry() → verify saved to IndexedDB
+      - [ ] Refresh page → verify entries loaded from IndexedDB
+      - [ ] painStore.updateEntry() → verify changes persisted
+      - [ ] painStore.deleteEntry() → verify removed from IndexedDB
+      - [ ] Encryption service + storage (encrypt → save → load → decrypt)
+      - [ ] Form submission → validation → storage → retrieval
+      - [ ] Multiple entries with filters
+
+      ## Test Setup
+      ```typescript
+      // Use fake-indexeddb for testing
+      import 'fake-indexeddb/auto';
+      ```
+
+      ## Definition of Done
+      - All integration scenarios passing
+      - Tests run in CI/CD
+      - No flaky tests
+
+      ## Priority
+      **P1** - Quality gate
+
+      ## Estimated Effort
+      8 hours
+
+  - number: 15
+    title: "🎭 E2E Tests: Critical User Flows"
+    labels:
+      - p1-beta
+      - testing
+      - e2e
+    milestone: v0.2.0
+    body: |
+      ## Goal
+      Playwright E2E tests for critical user journeys.
+
+      ## Test Flows
+      - [ ] **Flow 1: Create Pain Entry**
+        - Navigate to home
+        - Click "New Entry"
+        - Fill pain level, location, notes
+        - Submit
+        - Verify entry appears in list
+      - [ ] **Flow 2: Edit Entry**
+        - Create entry
+        - Click edit
+        - Modify fields
+        - Save
+        - Verify changes displayed
+      - [ ] **Flow 3: Delete Entry**
+        - Create entry
+        - Click delete
+        - Confirm deletion
+        - Verify removed from list
+      - [ ] **Flow 4: Export WCB Report**
+        - Create 5 entries over date range
+        - Navigate to analytics
+        - Click "Export for WCB"
+        - Verify PDF download
+      - [ ] **Flow 5: Offline Mode**
+        - Go offline (network throttling)
+        - Create pain entry
+        - Verify saved locally
+        - Go online
+        - Verify data intact
+
+      ## Definition of Done
+      - All 5 flows passing
+      - Tests run in CI/CD
+      - Screenshots captured on failure
+
+      ## Priority
+      **P1** - Release gate
+
+      ## Estimated Effort
+      10 hours
