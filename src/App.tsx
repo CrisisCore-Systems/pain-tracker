@@ -30,6 +30,7 @@ import { OfflineBanner } from "./components/pwa/OfflineIndicator";
 import { BrandedLoadingScreen } from "./components/branding/BrandedLoadingScreen";
 import { pwaManager } from "./utils/pwa-utils";
 import { ToneStateTester } from "./components/dev/ToneStateTester";
+import { ScreenshotShowcase } from "./pages/ScreenshotShowcase";
 
 const ErrorFallback = () => {
   return (
@@ -115,6 +116,9 @@ function App() {
   const patternEntries = storeEntries.map(e => ({ time: e.timestamp, pain: e.baselineData?.pain ?? 0 }));
   usePatternAlerts(patternEntries);
   
+  // Check if we're in screenshot showcase mode
+  const isShowcaseMode = window.location.hash.startsWith('#demo-');
+  
   return (
     <ThemeProvider>
       <SubscriptionProvider>
@@ -122,26 +126,32 @@ function App() {
           <TraumaInformedProvider>
             <ToastProvider>
               <VaultGate>
-                <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
-                  <OfflineBanner />
-                  <BetaWarning />
-                  <QuickActions />
-                  <NotificationConsentPrompt />
-                  <BetaAnalyticsConsentPrompt />
-                  <ErrorBoundary fallback={<ErrorFallback />}>
-                    <Suspense fallback={<LoadingFallback />}>
-                      <PainTrackerContainer />
-                  </Suspense>
-                </ErrorBoundary>
-                <PWAInstallPrompt />
-                <PWAStatusIndicator />
-                <ToneStateTester />
-              </div>
-            </VaultGate>
-          </ToastProvider>
-        </TraumaInformedProvider>
-      </ToneProvider>
-    </SubscriptionProvider>
+                {isShowcaseMode ? (
+                  // Screenshot showcase mode - clean views without UI chrome
+                  <ScreenshotShowcase />
+                ) : (
+                  // Normal application mode
+                  <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                    <OfflineBanner />
+                    <BetaWarning />
+                    <QuickActions />
+                    <NotificationConsentPrompt />
+                    <BetaAnalyticsConsentPrompt />
+                    <ErrorBoundary fallback={<ErrorFallback />}>
+                      <Suspense fallback={<LoadingFallback />}>
+                        <PainTrackerContainer />
+                    </Suspense>
+                  </ErrorBoundary>
+                  <PWAInstallPrompt />
+                  <PWAStatusIndicator />
+                  <ToneStateTester />
+                </div>
+                )}
+              </VaultGate>
+            </ToastProvider>
+          </TraumaInformedProvider>
+        </ToneProvider>
+      </SubscriptionProvider>
     </ThemeProvider>
   );
 }
