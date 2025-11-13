@@ -444,19 +444,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *Pain Tracker - Where Technology Meets Compassion*
 
 </div>
-=======
-# Manual setup
-npm install --legacy-peer-deps
-cp .env.example .env
-npm run dev
-```
-
-Known issues:
-
-- Some legacy peer deps are required while test ecosystem
-  versions converge; remediation is underway.
-
-Node compatibility:
 
 - Node.js 18, 20, 22 supported
 - npm 9+ required
@@ -564,4 +551,3 @@ By CrisisCore Systems.
 ## License
 
 MIT License — see LICENSE.
->>>>>>> e82c41c (chore: Update generated badges\n\nAuto-generated badge updates)
