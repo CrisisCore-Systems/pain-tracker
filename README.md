@@ -467,6 +467,55 @@ Skip tags: [skip lint], [skip build], [skip all]
 
 ---
 
+## 📸 Screenshot Portfolio
+
+A comprehensive screenshot portfolio system is available for marketing, social media, and documentation purposes.
+
+### Quick Start
+```bash
+# Generate all screenshots
+npm run screenshots:portfolio
+
+# Generate specific phases
+npm run screenshots:portfolio:phase1   # Essential (Week 1)
+npm run screenshots:portfolio:phase2   # Growth (Weeks 2-3)  
+npm run screenshots:portfolio:phase3   # Advanced (Month 1)
+
+# Test demo routes locally
+npm run dev
+# Then visit: http://localhost:3000/pain-tracker/#demo-export
+```
+
+### Available Screenshots (18 Total)
+
+**Phase 1 - Essential (6 screenshots):**
+- Pain entry interface - Core tracking UI
+- Export modal - One-click WorkSafe BC forms
+- Generated Form 6/7 previews - Automated form completion
+- Privacy & security settings - Local-first architecture
+
+**Phase 2 - Growth (5 screenshots):**
+- Body map interaction - Anatomical pain mapping
+- Analytics dashboard - Advanced metrics
+- Offline functionality - Works without internet
+- Comparison grid - Feature comparison vs competitors
+- Mobile responsiveness - Multi-device support
+
+**Phase 3 - Advanced (7 screenshots):**
+- Trauma-informed mode - Gentle vs clinical language
+- Process flow - User journey infographic
+- Architecture diagram - Technical infrastructure
+- Built in BC branding - Local development
+- Crisis support - Emergency features
+
+### Documentation
+- **Quick Reference:** [`docs/SCREENSHOT_QUICK_REFERENCE.md`](docs/SCREENSHOT_QUICK_REFERENCE.md)
+- **Marketing Guide:** [`docs/SCREENSHOT_MARKETING_GUIDE.md`](docs/SCREENSHOT_MARKETING_GUIDE.md)
+- **Manual Templates:** [`docs/MANUAL_SCREENSHOT_TEMPLATES.md`](docs/MANUAL_SCREENSHOT_TEMPLATES.md)
+- **Full Details:** [`public/screenshots/README.md`](public/screenshots/README.md)
+
+---
+
 ## 🔧 Documentation details
 
 <details>
