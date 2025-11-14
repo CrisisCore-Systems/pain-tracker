@@ -52,19 +52,6 @@ I watched this destroy my father's recovery after a workplace injury. So I built
 
 No "freemium" traps. No feature walls. This is our commitment to BC workers.
 
-## See It In Action
-
-\[SCREENSHOT PLACEHOLDER: Before/After form generation\]
-
-1. **Track your pain** (30 seconds daily)
-    
-2. **Click "Export WorkSafeBC Forms"**
-    
-3. **Download perfect Form 6/7 PDFs**
-    
-
-No more guessing dates, pain levels, or symptoms. The app maintains perfect records automatically.
-
 ## Why This Changes Everything for BC Claimants
 
 ### For Workers:
