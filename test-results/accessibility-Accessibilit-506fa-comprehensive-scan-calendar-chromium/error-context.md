@@ -1,0 +1,3609 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - application "Pain Tracker Pro Application" [ref=e3]:
+    - generic [ref=e5]:
+      - button "Open quick actions (Ctrl+Q)" [ref=e6] [cursor=pointer]:
+        - generic [ref=e7] [cursor=pointer]: ✚
+      - generic [ref=e9]: Ctrl+Q
+    - generic [ref=e10]:
+      - link "Skip to main content" [ref=e11] [cursor=pointer]:
+        - /url: "#main-content"
+      - banner [ref=e12]:
+        - generic [ref=e14]:
+          - generic [ref=e16]:
+            - img [ref=e18]
+            - generic [ref=e20]:
+              - heading "Pain Tracker Pro" [level=1] [ref=e21]
+              - paragraph [ref=e22]: Empathy-Driven Care
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - img [ref=e25]
+              - generic [ref=e27]: 3.6 avg
+            - generic [ref=e28]:
+              - img [ref=e29]
+              - generic [ref=e32]: 7 day streak
+          - generic [ref=e33]:
+            - button "Button with no label" [ref=e34] [cursor=pointer]:
+              - img [ref=e36] [cursor=pointer]
+            - button "Button with no label" [ref=e39] [cursor=pointer]:
+              - img [ref=e41] [cursor=pointer]
+            - img [ref=e44] [cursor=pointer]
+      - complementary [ref=e46]:
+        - generic [ref=e47]:
+          - navigation [ref=e48]:
+            - button "Dashboard" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50] [cursor=pointer]:
+                - img [ref=e51] [cursor=pointer]
+                - generic [ref=e56] [cursor=pointer]: Dashboard
+            - button "New Entry" [ref=e57] [cursor=pointer]:
+              - generic [ref=e58] [cursor=pointer]:
+                - img [ref=e59] [cursor=pointer]
+                - generic [ref=e60] [cursor=pointer]: New Entry
+            - button "Body Map" [ref=e61] [cursor=pointer]:
+              - generic [ref=e62] [cursor=pointer]:
+                - img [ref=e63] [cursor=pointer]
+                - generic [ref=e66] [cursor=pointer]: Body Map
+            - button "Fibromyalgia Hub New" [ref=e67] [cursor=pointer]:
+              - generic [ref=e68] [cursor=pointer]:
+                - img [ref=e69] [cursor=pointer]
+                - generic [ref=e71] [cursor=pointer]: Fibromyalgia Hub
+              - generic [ref=e73] [cursor=pointer]: New
+            - button "Analytics Pro" [ref=e74] [cursor=pointer]:
+              - generic [ref=e75] [cursor=pointer]:
+                - img [ref=e76] [cursor=pointer]
+                - generic [ref=e79] [cursor=pointer]: Analytics
+              - generic [ref=e81] [cursor=pointer]: Pro
+            - button "Calendar" [ref=e82] [cursor=pointer]:
+              - generic [ref=e83] [cursor=pointer]:
+                - img [ref=e84] [cursor=pointer]
+                - generic [ref=e86] [cursor=pointer]: Calendar
+            - button "Reports" [ref=e87] [cursor=pointer]:
+              - generic [ref=e88] [cursor=pointer]:
+                - img [ref=e89] [cursor=pointer]
+                - generic [ref=e92] [cursor=pointer]: Reports
+          - navigation [ref=e94]:
+            - button "Settings" [ref=e95] [cursor=pointer]:
+              - img [ref=e96] [cursor=pointer]
+              - generic [ref=e99] [cursor=pointer]: Settings
+            - button "Help" [ref=e100] [cursor=pointer]:
+              - img [ref=e101] [cursor=pointer]
+              - generic [ref=e104] [cursor=pointer]: Help
+          - button "Quick Entry" [ref=e106] [cursor=pointer]:
+            - generic [ref=e107] [cursor=pointer]:
+              - img [ref=e108] [cursor=pointer]
+              - text: Quick Entry
+      - main [ref=e109]:
+        - generic [ref=e112]:
+          - generic [ref=e113]:
+            - generic [ref=e114]:
+              - heading "Today" [level=1] [ref=e115]
+              - paragraph [ref=e116]: Friday, November 14
+            - generic [ref=e117]:
+              - img [ref=e118]
+              - generic [ref=e121]: "Last entry: 1d ago"
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - heading "Recommended for You" [level=2] [ref=e124]
+              - generic [ref=e125]:
+                - img [ref=e126]
+                - generic [ref=e129]: Updated just now
+            - generic [ref=e130]:
+              - 'button "Log pain now Last entry: 33h ago • ~10s Quick" [ref=e131] [cursor=pointer]':
+                - generic [ref=e132] [cursor=pointer]:
+                  - img [ref=e134] [cursor=pointer]
+                  - generic [ref=e136] [cursor=pointer]:
+                    - generic [ref=e137] [cursor=pointer]: Log pain now
+                    - generic [ref=e138] [cursor=pointer]: "Last entry: 33h ago • ~10s"
+                - generic [ref=e139] [cursor=pointer]: Quick
+              - button "View calendar See your pain patterns at a glance • 1 min" [ref=e140] [cursor=pointer]:
+                - generic [ref=e141] [cursor=pointer]:
+                  - img [ref=e142] [cursor=pointer]
+                  - generic [ref=e144] [cursor=pointer]:
+                    - generic [ref=e145] [cursor=pointer]: View calendar
+                    - generic [ref=e146] [cursor=pointer]: See your pain patterns at a glance • 1 min
+          - generic [ref=e147]:
+            - generic [ref=e148]:
+              - generic [ref=e149]: Avg Pain (7d)
+              - generic [ref=e150]:
+                - generic [ref=e151]: "0.0"
+                - generic [ref=e152]: /10
+              - generic [ref=e153]:
+                - img [ref=e154]
+                - generic [ref=e157]: "+0.5"
+                - generic [ref=e158]: vs last week
+              - img [ref=e160]
+            - generic [ref=e162]:
+              - generic [ref=e163]: Tracking Streak
+              - generic [ref=e164]:
+                - generic [ref=e165]: "3"
+                - generic [ref=e166]: days
+              - generic [ref=e167]:
+                - img [ref=e168]
+                - generic [ref=e171]: "-1.0"
+                - generic [ref=e172]: this week
+            - generic [ref=e173]:
+              - generic [ref=e174]: Variability Index
+              - generic [ref=e176]: "0.0"
+              - generic [ref=e177]:
+                - img [ref=e178]
+                - generic [ref=e179]: "0.0"
+                - generic [ref=e180]: rolling SD
+          - generic [ref=e181]:
+            - heading "Next Steps" [level=2] [ref=e182]
+            - generic [ref=e183]:
+              - paragraph [ref=e184]: • Continue daily tracking for pattern detection
+              - paragraph [ref=e185]: • Review calendar for weekly trends
+              - paragraph [ref=e186]: • Share 7-day report with provider before next visit
+      - button "Activate calm breathing mode" [ref=e187] [cursor=pointer]:
+        - img [ref=e188] [cursor=pointer]
+    - generic [ref=e192]:
+      - generic [ref=e193]:
+        - heading "🎭 Tone State Tester" [level=3] [ref=e194]
+        - button "Minimize tone state tester (Esc)" [ref=e195] [cursor=pointer]: ×
+      - generic [ref=e196]:
+        - generic [ref=e197]: "⌨️ Shortcuts:"
+        - generic [ref=e198]:
+          - generic [ref=e199]:
+            - generic [ref=e200]: Ctrl+T
+            - text: Toggle panel
+          - generic [ref=e201]:
+            - generic [ref=e202]: Esc
+            - text: Minimize
+          - generic [ref=e203]:
+            - generic [ref=e204]: 1-4
+            - text: Force states
+      - generic [ref=e205]:
+        - generic [ref=e206]: "Current State:"
+        - generic [ref=e207]: STABLE
+        - generic [ref=e208]: "Pain: 0.0 (→)"
+      - generic [ref=e209]:
+        - generic [ref=e210]: "Force State:"
+        - button "😌stable 1 Brief, upbeat, professional-warm" [ref=e211] [cursor=pointer]:
+          - generic [ref=e212] [cursor=pointer]:
+            - generic [ref=e213] [cursor=pointer]:
+              - generic [ref=e214] [cursor=pointer]: 😌
+              - generic [ref=e215] [cursor=pointer]: stable
+            - generic [ref=e216] [cursor=pointer]: "1"
+          - generic [ref=e217] [cursor=pointer]: Brief, upbeat, professional-warm
+        - button "😟rising 2 Steady, specific, encouraging" [ref=e218] [cursor=pointer]:
+          - generic [ref=e219] [cursor=pointer]:
+            - generic [ref=e220] [cursor=pointer]:
+              - generic [ref=e221] [cursor=pointer]: 😟
+              - generic [ref=e222] [cursor=pointer]: rising
+            - generic [ref=e223] [cursor=pointer]: "2"
+          - generic [ref=e224] [cursor=pointer]: Steady, specific, encouraging
+        - button "😣flare 3 Short lines, imperative, slow cadence" [ref=e225] [cursor=pointer]:
+          - generic [ref=e226] [cursor=pointer]:
+            - generic [ref=e227] [cursor=pointer]:
+              - generic [ref=e228] [cursor=pointer]: 😣
+              - generic [ref=e229] [cursor=pointer]: flare
+            - generic [ref=e230] [cursor=pointer]: "3"
+          - generic [ref=e231] [cursor=pointer]: Short lines, imperative, slow cadence
+        - button "🙂recovery 4 Warm, factual, no cheerleading" [ref=e232] [cursor=pointer]:
+          - generic [ref=e233] [cursor=pointer]:
+            - generic [ref=e234] [cursor=pointer]:
+              - generic [ref=e235] [cursor=pointer]: 🙂
+              - generic [ref=e236] [cursor=pointer]: recovery
+            - generic [ref=e237] [cursor=pointer]: "4"
+          - generic [ref=e238] [cursor=pointer]: Warm, factual, no cheerleading
+      - generic [ref=e239]:
+        - generic [ref=e240]: "Preferences:"
+        - generic [ref=e241] [cursor=pointer]:
+          - generic [ref=e242] [cursor=pointer]: Warmth
+          - combobox "Warmth" [ref=e243]:
+            - option "Neutral" [selected]
+            - option "Warm"
+        - generic [ref=e244] [cursor=pointer]:
+          - generic [ref=e245] [cursor=pointer]: Coach Intensity
+          - combobox "Coach Intensity" [ref=e246]:
+            - option "Minimal" [selected]
+            - option "Guided"
+        - generic [ref=e247] [cursor=pointer]:
+          - generic [ref=e248] [cursor=pointer]: Medical Terms
+          - checkbox "Input field" [ref=e249]
+        - generic [ref=e250] [cursor=pointer]:
+          - generic [ref=e251] [cursor=pointer]: Allow Lightness
+          - checkbox "Input field" [ref=e252]
+      - generic [ref=e254]:
+        - generic [ref=e255]: "Test Areas:"
+        - generic [ref=e256]: "• QuickLogStepper: Pain slider, locations, notes"
+        - generic [ref=e257]: "• PanicMode: Greeting, breathing, crisis text"
+        - generic [ref=e258]: "• Dashboard: Empty states, insights"
+        - generic [ref=e259]: "• Analytics: Progress summaries"
+  - generic:
+    - alert [ref=e260]:
+      - generic [ref=e261]:
+        - img [ref=e263]
+        - generic [ref=e265]:
+          - heading "Get gentle notifications?" [level=4] [ref=e266]
+          - paragraph [ref=e267]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e268] [cursor=pointer]
+        - button "Dismiss notification" [ref=e269] [cursor=pointer]:
+          - img [ref=e270] [cursor=pointer]
+    - alert [ref=e273]:
+      - generic [ref=e274]:
+        - img [ref=e276]
+        - generic [ref=e278]:
+          - heading "Get gentle notifications?" [level=4] [ref=e279]
+          - paragraph [ref=e280]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e281] [cursor=pointer]
+        - button "Dismiss notification" [ref=e282] [cursor=pointer]:
+          - img [ref=e283] [cursor=pointer]
+    - alert [ref=e286]:
+      - generic [ref=e287]:
+        - img [ref=e289]
+        - generic [ref=e291]:
+          - heading "Get gentle notifications?" [level=4] [ref=e292]
+          - paragraph [ref=e293]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e294] [cursor=pointer]
+        - button "Dismiss notification" [ref=e295] [cursor=pointer]:
+          - img [ref=e296] [cursor=pointer]
+    - alert [ref=e299]:
+      - generic [ref=e300]:
+        - img [ref=e302]
+        - generic [ref=e304]:
+          - heading "Get gentle notifications?" [level=4] [ref=e305]
+          - paragraph [ref=e306]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e307] [cursor=pointer]
+        - button "Dismiss notification" [ref=e308] [cursor=pointer]:
+          - img [ref=e309] [cursor=pointer]
+    - alert [ref=e312]:
+      - generic [ref=e313]:
+        - img [ref=e315]
+        - generic [ref=e317]:
+          - heading "Get gentle notifications?" [level=4] [ref=e318]
+          - paragraph [ref=e319]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e320] [cursor=pointer]
+        - button "Dismiss notification" [ref=e321] [cursor=pointer]:
+          - img [ref=e322] [cursor=pointer]
+    - alert [ref=e325]:
+      - generic [ref=e326]:
+        - img [ref=e328]
+        - generic [ref=e330]:
+          - heading "Get gentle notifications?" [level=4] [ref=e331]
+          - paragraph [ref=e332]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e333] [cursor=pointer]
+        - button "Dismiss notification" [ref=e334] [cursor=pointer]:
+          - img [ref=e335] [cursor=pointer]
+    - alert [ref=e338]:
+      - generic [ref=e339]:
+        - img [ref=e341]
+        - generic [ref=e343]:
+          - heading "Get gentle notifications?" [level=4] [ref=e344]
+          - paragraph [ref=e345]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e346] [cursor=pointer]
+        - button "Dismiss notification" [ref=e347] [cursor=pointer]:
+          - img [ref=e348] [cursor=pointer]
+    - alert [ref=e351]:
+      - generic [ref=e352]:
+        - img [ref=e354]
+        - generic [ref=e356]:
+          - heading "Get gentle notifications?" [level=4] [ref=e357]
+          - paragraph [ref=e358]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e359] [cursor=pointer]
+        - button "Dismiss notification" [ref=e360] [cursor=pointer]:
+          - img [ref=e361] [cursor=pointer]
+    - alert [ref=e364]:
+      - generic [ref=e365]:
+        - img [ref=e367]
+        - generic [ref=e369]:
+          - heading "Get gentle notifications?" [level=4] [ref=e370]
+          - paragraph [ref=e371]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e372] [cursor=pointer]
+        - button "Dismiss notification" [ref=e373] [cursor=pointer]:
+          - img [ref=e374] [cursor=pointer]
+    - alert [ref=e377]:
+      - generic [ref=e378]:
+        - img [ref=e380]
+        - generic [ref=e382]:
+          - heading "Get gentle notifications?" [level=4] [ref=e383]
+          - paragraph [ref=e384]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e385] [cursor=pointer]
+        - button "Dismiss notification" [ref=e386] [cursor=pointer]:
+          - img [ref=e387] [cursor=pointer]
+    - alert [ref=e390]:
+      - generic [ref=e391]:
+        - img [ref=e393]
+        - generic [ref=e395]:
+          - heading "Get gentle notifications?" [level=4] [ref=e396]
+          - paragraph [ref=e397]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e398] [cursor=pointer]
+        - button "Dismiss notification" [ref=e399] [cursor=pointer]:
+          - img [ref=e400] [cursor=pointer]
+    - alert [ref=e403]:
+      - generic [ref=e404]:
+        - img [ref=e406]
+        - generic [ref=e408]:
+          - heading "Get gentle notifications?" [level=4] [ref=e409]
+          - paragraph [ref=e410]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e411] [cursor=pointer]
+        - button "Dismiss notification" [ref=e412] [cursor=pointer]:
+          - img [ref=e413] [cursor=pointer]
+    - alert [ref=e416]:
+      - generic [ref=e417]:
+        - img [ref=e419]
+        - generic [ref=e421]:
+          - heading "Get gentle notifications?" [level=4] [ref=e422]
+          - paragraph [ref=e423]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e424] [cursor=pointer]
+        - button "Dismiss notification" [ref=e425] [cursor=pointer]:
+          - img [ref=e426] [cursor=pointer]
+    - alert [ref=e429]:
+      - generic [ref=e430]:
+        - img [ref=e432]
+        - generic [ref=e434]:
+          - heading "Get gentle notifications?" [level=4] [ref=e435]
+          - paragraph [ref=e436]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e437] [cursor=pointer]
+        - button "Dismiss notification" [ref=e438] [cursor=pointer]:
+          - img [ref=e439] [cursor=pointer]
+    - alert [ref=e442]:
+      - generic [ref=e443]:
+        - img [ref=e445]
+        - generic [ref=e447]:
+          - heading "Get gentle notifications?" [level=4] [ref=e448]
+          - paragraph [ref=e449]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e450] [cursor=pointer]
+        - button "Dismiss notification" [ref=e451] [cursor=pointer]:
+          - img [ref=e452] [cursor=pointer]
+    - alert [ref=e455]:
+      - generic [ref=e456]:
+        - img [ref=e458]
+        - generic [ref=e460]:
+          - heading "Get gentle notifications?" [level=4] [ref=e461]
+          - paragraph [ref=e462]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e463] [cursor=pointer]
+        - button "Dismiss notification" [ref=e464] [cursor=pointer]:
+          - img [ref=e465] [cursor=pointer]
+    - alert [ref=e468]:
+      - generic [ref=e469]:
+        - img [ref=e471]
+        - generic [ref=e473]:
+          - heading "Get gentle notifications?" [level=4] [ref=e474]
+          - paragraph [ref=e475]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e476] [cursor=pointer]
+        - button "Dismiss notification" [ref=e477] [cursor=pointer]:
+          - img [ref=e478] [cursor=pointer]
+    - alert [ref=e481]:
+      - generic [ref=e482]:
+        - img [ref=e484]
+        - generic [ref=e486]:
+          - heading "Get gentle notifications?" [level=4] [ref=e487]
+          - paragraph [ref=e488]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e489] [cursor=pointer]
+        - button "Dismiss notification" [ref=e490] [cursor=pointer]:
+          - img [ref=e491] [cursor=pointer]
+    - alert [ref=e494]:
+      - generic [ref=e495]:
+        - img [ref=e497]
+        - generic [ref=e499]:
+          - heading "Get gentle notifications?" [level=4] [ref=e500]
+          - paragraph [ref=e501]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e502] [cursor=pointer]
+        - button "Dismiss notification" [ref=e503] [cursor=pointer]:
+          - img [ref=e504] [cursor=pointer]
+    - alert [ref=e507]:
+      - generic [ref=e508]:
+        - img [ref=e510]
+        - generic [ref=e512]:
+          - heading "Get gentle notifications?" [level=4] [ref=e513]
+          - paragraph [ref=e514]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e515] [cursor=pointer]
+        - button "Dismiss notification" [ref=e516] [cursor=pointer]:
+          - img [ref=e517] [cursor=pointer]
+    - alert [ref=e520]:
+      - generic [ref=e521]:
+        - img [ref=e523]
+        - generic [ref=e525]:
+          - heading "Get gentle notifications?" [level=4] [ref=e526]
+          - paragraph [ref=e527]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e528] [cursor=pointer]
+        - button "Dismiss notification" [ref=e529] [cursor=pointer]:
+          - img [ref=e530] [cursor=pointer]
+    - alert [ref=e533]:
+      - generic [ref=e534]:
+        - img [ref=e536]
+        - generic [ref=e538]:
+          - heading "Get gentle notifications?" [level=4] [ref=e539]
+          - paragraph [ref=e540]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e541] [cursor=pointer]
+        - button "Dismiss notification" [ref=e542] [cursor=pointer]:
+          - img [ref=e543] [cursor=pointer]
+    - alert [ref=e546]:
+      - generic [ref=e547]:
+        - img [ref=e549]
+        - generic [ref=e551]:
+          - heading "Get gentle notifications?" [level=4] [ref=e552]
+          - paragraph [ref=e553]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e554] [cursor=pointer]
+        - button "Dismiss notification" [ref=e555] [cursor=pointer]:
+          - img [ref=e556] [cursor=pointer]
+    - alert [ref=e559]:
+      - generic [ref=e560]:
+        - img [ref=e562]
+        - generic [ref=e564]:
+          - heading "Get gentle notifications?" [level=4] [ref=e565]
+          - paragraph [ref=e566]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e567] [cursor=pointer]
+        - button "Dismiss notification" [ref=e568] [cursor=pointer]:
+          - img [ref=e569] [cursor=pointer]
+    - alert [ref=e572]:
+      - generic [ref=e573]:
+        - img [ref=e575]
+        - generic [ref=e577]:
+          - heading "Get gentle notifications?" [level=4] [ref=e578]
+          - paragraph [ref=e579]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e580] [cursor=pointer]
+        - button "Dismiss notification" [ref=e581] [cursor=pointer]:
+          - img [ref=e582] [cursor=pointer]
+    - alert [ref=e585]:
+      - generic [ref=e586]:
+        - img [ref=e588]
+        - generic [ref=e590]:
+          - heading "Get gentle notifications?" [level=4] [ref=e591]
+          - paragraph [ref=e592]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e593] [cursor=pointer]
+        - button "Dismiss notification" [ref=e594] [cursor=pointer]:
+          - img [ref=e595] [cursor=pointer]
+    - alert [ref=e598]:
+      - generic [ref=e599]:
+        - img [ref=e601]
+        - generic [ref=e603]:
+          - heading "Get gentle notifications?" [level=4] [ref=e604]
+          - paragraph [ref=e605]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e606] [cursor=pointer]
+        - button "Dismiss notification" [ref=e607] [cursor=pointer]:
+          - img [ref=e608] [cursor=pointer]
+    - alert [ref=e611]:
+      - generic [ref=e612]:
+        - img [ref=e614]
+        - generic [ref=e616]:
+          - heading "Get gentle notifications?" [level=4] [ref=e617]
+          - paragraph [ref=e618]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e619] [cursor=pointer]
+        - button "Dismiss notification" [ref=e620] [cursor=pointer]:
+          - img [ref=e621] [cursor=pointer]
+    - alert [ref=e624]:
+      - generic [ref=e625]:
+        - img [ref=e627]
+        - generic [ref=e629]:
+          - heading "Get gentle notifications?" [level=4] [ref=e630]
+          - paragraph [ref=e631]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e632] [cursor=pointer]
+        - button "Dismiss notification" [ref=e633] [cursor=pointer]:
+          - img [ref=e634] [cursor=pointer]
+    - alert [ref=e637]:
+      - generic [ref=e638]:
+        - img [ref=e640]
+        - generic [ref=e642]:
+          - heading "Get gentle notifications?" [level=4] [ref=e643]
+          - paragraph [ref=e644]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e645] [cursor=pointer]
+        - button "Dismiss notification" [ref=e646] [cursor=pointer]:
+          - img [ref=e647] [cursor=pointer]
+    - alert [ref=e650]:
+      - generic [ref=e651]:
+        - img [ref=e653]
+        - generic [ref=e655]:
+          - heading "Get gentle notifications?" [level=4] [ref=e656]
+          - paragraph [ref=e657]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e658] [cursor=pointer]
+        - button "Dismiss notification" [ref=e659] [cursor=pointer]:
+          - img [ref=e660] [cursor=pointer]
+    - alert [ref=e663]:
+      - generic [ref=e664]:
+        - img [ref=e666]
+        - generic [ref=e668]:
+          - heading "Get gentle notifications?" [level=4] [ref=e669]
+          - paragraph [ref=e670]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e671] [cursor=pointer]
+        - button "Dismiss notification" [ref=e672] [cursor=pointer]:
+          - img [ref=e673] [cursor=pointer]
+    - alert [ref=e676]:
+      - generic [ref=e677]:
+        - img [ref=e679]
+        - generic [ref=e681]:
+          - heading "Get gentle notifications?" [level=4] [ref=e682]
+          - paragraph [ref=e683]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e684] [cursor=pointer]
+        - button "Dismiss notification" [ref=e685] [cursor=pointer]:
+          - img [ref=e686] [cursor=pointer]
+    - alert [ref=e689]:
+      - generic [ref=e690]:
+        - img [ref=e692]
+        - generic [ref=e694]:
+          - heading "Get gentle notifications?" [level=4] [ref=e695]
+          - paragraph [ref=e696]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e697] [cursor=pointer]
+        - button "Dismiss notification" [ref=e698] [cursor=pointer]:
+          - img [ref=e699] [cursor=pointer]
+    - alert [ref=e702]:
+      - generic [ref=e703]:
+        - img [ref=e705]
+        - generic [ref=e707]:
+          - heading "Get gentle notifications?" [level=4] [ref=e708]
+          - paragraph [ref=e709]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e710] [cursor=pointer]
+        - button "Dismiss notification" [ref=e711] [cursor=pointer]:
+          - img [ref=e712] [cursor=pointer]
+    - alert [ref=e715]:
+      - generic [ref=e716]:
+        - img [ref=e718]
+        - generic [ref=e720]:
+          - heading "Get gentle notifications?" [level=4] [ref=e721]
+          - paragraph [ref=e722]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e723] [cursor=pointer]
+        - button "Dismiss notification" [ref=e724] [cursor=pointer]:
+          - img [ref=e725] [cursor=pointer]
+    - alert [ref=e728]:
+      - generic [ref=e729]:
+        - img [ref=e731]
+        - generic [ref=e733]:
+          - heading "Get gentle notifications?" [level=4] [ref=e734]
+          - paragraph [ref=e735]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e736] [cursor=pointer]
+        - button "Dismiss notification" [ref=e737] [cursor=pointer]:
+          - img [ref=e738] [cursor=pointer]
+    - alert [ref=e741]:
+      - generic [ref=e742]:
+        - img [ref=e744]
+        - generic [ref=e746]:
+          - heading "Get gentle notifications?" [level=4] [ref=e747]
+          - paragraph [ref=e748]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e749] [cursor=pointer]
+        - button "Dismiss notification" [ref=e750] [cursor=pointer]:
+          - img [ref=e751] [cursor=pointer]
+    - alert [ref=e754]:
+      - generic [ref=e755]:
+        - img [ref=e757]
+        - generic [ref=e759]:
+          - heading "Get gentle notifications?" [level=4] [ref=e760]
+          - paragraph [ref=e761]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e762] [cursor=pointer]
+        - button "Dismiss notification" [ref=e763] [cursor=pointer]:
+          - img [ref=e764] [cursor=pointer]
+    - alert [ref=e767]:
+      - generic [ref=e768]:
+        - img [ref=e770]
+        - generic [ref=e772]:
+          - heading "Get gentle notifications?" [level=4] [ref=e773]
+          - paragraph [ref=e774]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e775] [cursor=pointer]
+        - button "Dismiss notification" [ref=e776] [cursor=pointer]:
+          - img [ref=e777] [cursor=pointer]
+    - alert [ref=e780]:
+      - generic [ref=e781]:
+        - img [ref=e783]
+        - generic [ref=e785]:
+          - heading "Get gentle notifications?" [level=4] [ref=e786]
+          - paragraph [ref=e787]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e788] [cursor=pointer]
+        - button "Dismiss notification" [ref=e789] [cursor=pointer]:
+          - img [ref=e790] [cursor=pointer]
+    - alert [ref=e793]:
+      - generic [ref=e794]:
+        - img [ref=e796]
+        - generic [ref=e798]:
+          - heading "Get gentle notifications?" [level=4] [ref=e799]
+          - paragraph [ref=e800]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e801] [cursor=pointer]
+        - button "Dismiss notification" [ref=e802] [cursor=pointer]:
+          - img [ref=e803] [cursor=pointer]
+    - alert [ref=e806]:
+      - generic [ref=e807]:
+        - img [ref=e809]
+        - generic [ref=e811]:
+          - heading "Get gentle notifications?" [level=4] [ref=e812]
+          - paragraph [ref=e813]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e814] [cursor=pointer]
+        - button "Dismiss notification" [ref=e815] [cursor=pointer]:
+          - img [ref=e816] [cursor=pointer]
+    - alert [ref=e819]:
+      - generic [ref=e820]:
+        - img [ref=e822]
+        - generic [ref=e824]:
+          - heading "Get gentle notifications?" [level=4] [ref=e825]
+          - paragraph [ref=e826]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e827] [cursor=pointer]
+        - button "Dismiss notification" [ref=e828] [cursor=pointer]:
+          - img [ref=e829] [cursor=pointer]
+    - alert [ref=e832]:
+      - generic [ref=e833]:
+        - img [ref=e835]
+        - generic [ref=e837]:
+          - heading "Get gentle notifications?" [level=4] [ref=e838]
+          - paragraph [ref=e839]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e840] [cursor=pointer]
+        - button "Dismiss notification" [ref=e841] [cursor=pointer]:
+          - img [ref=e842] [cursor=pointer]
+    - alert [ref=e845]:
+      - generic [ref=e846]:
+        - img [ref=e848]
+        - generic [ref=e850]:
+          - heading "Get gentle notifications?" [level=4] [ref=e851]
+          - paragraph [ref=e852]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e853] [cursor=pointer]
+        - button "Dismiss notification" [ref=e854] [cursor=pointer]:
+          - img [ref=e855] [cursor=pointer]
+    - alert [ref=e858]:
+      - generic [ref=e859]:
+        - img [ref=e861]
+        - generic [ref=e863]:
+          - heading "Get gentle notifications?" [level=4] [ref=e864]
+          - paragraph [ref=e865]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e866] [cursor=pointer]
+        - button "Dismiss notification" [ref=e867] [cursor=pointer]:
+          - img [ref=e868] [cursor=pointer]
+    - alert [ref=e871]:
+      - generic [ref=e872]:
+        - img [ref=e874]
+        - generic [ref=e876]:
+          - heading "Get gentle notifications?" [level=4] [ref=e877]
+          - paragraph [ref=e878]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e879] [cursor=pointer]
+        - button "Dismiss notification" [ref=e880] [cursor=pointer]:
+          - img [ref=e881] [cursor=pointer]
+    - alert [ref=e884]:
+      - generic [ref=e885]:
+        - img [ref=e887]
+        - generic [ref=e889]:
+          - heading "Get gentle notifications?" [level=4] [ref=e890]
+          - paragraph [ref=e891]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e892] [cursor=pointer]
+        - button "Dismiss notification" [ref=e893] [cursor=pointer]:
+          - img [ref=e894] [cursor=pointer]
+    - alert [ref=e897]:
+      - generic [ref=e898]:
+        - img [ref=e900]
+        - generic [ref=e902]:
+          - heading "Get gentle notifications?" [level=4] [ref=e903]
+          - paragraph [ref=e904]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e905] [cursor=pointer]
+        - button "Dismiss notification" [ref=e906] [cursor=pointer]:
+          - img [ref=e907] [cursor=pointer]
+    - alert [ref=e910]:
+      - generic [ref=e911]:
+        - img [ref=e913]
+        - generic [ref=e915]:
+          - heading "Get gentle notifications?" [level=4] [ref=e916]
+          - paragraph [ref=e917]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e918] [cursor=pointer]
+        - button "Dismiss notification" [ref=e919] [cursor=pointer]:
+          - img [ref=e920] [cursor=pointer]
+    - alert [ref=e923]:
+      - generic [ref=e924]:
+        - img [ref=e926]
+        - generic [ref=e928]:
+          - heading "Get gentle notifications?" [level=4] [ref=e929]
+          - paragraph [ref=e930]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e931] [cursor=pointer]
+        - button "Dismiss notification" [ref=e932] [cursor=pointer]:
+          - img [ref=e933] [cursor=pointer]
+    - alert [ref=e936]:
+      - generic [ref=e937]:
+        - img [ref=e939]
+        - generic [ref=e941]:
+          - heading "Get gentle notifications?" [level=4] [ref=e942]
+          - paragraph [ref=e943]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e944] [cursor=pointer]
+        - button "Dismiss notification" [ref=e945] [cursor=pointer]:
+          - img [ref=e946] [cursor=pointer]
+    - alert [ref=e949]:
+      - generic [ref=e950]:
+        - img [ref=e952]
+        - generic [ref=e954]:
+          - heading "Get gentle notifications?" [level=4] [ref=e955]
+          - paragraph [ref=e956]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e957] [cursor=pointer]
+        - button "Dismiss notification" [ref=e958] [cursor=pointer]:
+          - img [ref=e959] [cursor=pointer]
+    - alert [ref=e962]:
+      - generic [ref=e963]:
+        - img [ref=e965]
+        - generic [ref=e967]:
+          - heading "Get gentle notifications?" [level=4] [ref=e968]
+          - paragraph [ref=e969]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e970] [cursor=pointer]
+        - button "Dismiss notification" [ref=e971] [cursor=pointer]:
+          - img [ref=e972] [cursor=pointer]
+    - alert [ref=e975]:
+      - generic [ref=e976]:
+        - img [ref=e978]
+        - generic [ref=e980]:
+          - heading "Get gentle notifications?" [level=4] [ref=e981]
+          - paragraph [ref=e982]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e983] [cursor=pointer]
+        - button "Dismiss notification" [ref=e984] [cursor=pointer]:
+          - img [ref=e985] [cursor=pointer]
+    - alert [ref=e988]:
+      - generic [ref=e989]:
+        - img [ref=e991]
+        - generic [ref=e993]:
+          - heading "Get gentle notifications?" [level=4] [ref=e994]
+          - paragraph [ref=e995]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e996] [cursor=pointer]
+        - button "Dismiss notification" [ref=e997] [cursor=pointer]:
+          - img [ref=e998] [cursor=pointer]
+    - alert [ref=e1001]:
+      - generic [ref=e1002]:
+        - img [ref=e1004]
+        - generic [ref=e1006]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1007]
+          - paragraph [ref=e1008]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1009] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1010] [cursor=pointer]:
+          - img [ref=e1011] [cursor=pointer]
+    - alert [ref=e1014]:
+      - generic [ref=e1015]:
+        - img [ref=e1017]
+        - generic [ref=e1019]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1020]
+          - paragraph [ref=e1021]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1022] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1023] [cursor=pointer]:
+          - img [ref=e1024] [cursor=pointer]
+    - alert [ref=e1027]:
+      - generic [ref=e1028]:
+        - img [ref=e1030]
+        - generic [ref=e1032]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1033]
+          - paragraph [ref=e1034]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1035] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1036] [cursor=pointer]:
+          - img [ref=e1037] [cursor=pointer]
+    - alert [ref=e1040]:
+      - generic [ref=e1041]:
+        - img [ref=e1043]
+        - generic [ref=e1045]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1046]
+          - paragraph [ref=e1047]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1048] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1049] [cursor=pointer]:
+          - img [ref=e1050] [cursor=pointer]
+    - alert [ref=e1053]:
+      - generic [ref=e1054]:
+        - img [ref=e1056]
+        - generic [ref=e1058]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1059]
+          - paragraph [ref=e1060]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1061] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1062] [cursor=pointer]:
+          - img [ref=e1063] [cursor=pointer]
+    - alert [ref=e1066]:
+      - generic [ref=e1067]:
+        - img [ref=e1069]
+        - generic [ref=e1071]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1072]
+          - paragraph [ref=e1073]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1074] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1075] [cursor=pointer]:
+          - img [ref=e1076] [cursor=pointer]
+    - alert [ref=e1079]:
+      - generic [ref=e1080]:
+        - img [ref=e1082]
+        - generic [ref=e1084]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1085]
+          - paragraph [ref=e1086]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1087] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1088] [cursor=pointer]:
+          - img [ref=e1089] [cursor=pointer]
+    - alert [ref=e1092]:
+      - generic [ref=e1093]:
+        - img [ref=e1095]
+        - generic [ref=e1097]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1098]
+          - paragraph [ref=e1099]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1100] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1101] [cursor=pointer]:
+          - img [ref=e1102] [cursor=pointer]
+    - alert [ref=e1105]:
+      - generic [ref=e1106]:
+        - img [ref=e1108]
+        - generic [ref=e1110]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1111]
+          - paragraph [ref=e1112]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1113] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1114] [cursor=pointer]:
+          - img [ref=e1115] [cursor=pointer]
+    - alert [ref=e1118]:
+      - generic [ref=e1119]:
+        - img [ref=e1121]
+        - generic [ref=e1123]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1124]
+          - paragraph [ref=e1125]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1126] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1127] [cursor=pointer]:
+          - img [ref=e1128] [cursor=pointer]
+    - alert [ref=e1131]:
+      - generic [ref=e1132]:
+        - img [ref=e1134]
+        - generic [ref=e1136]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1137]
+          - paragraph [ref=e1138]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1139] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1140] [cursor=pointer]:
+          - img [ref=e1141] [cursor=pointer]
+    - alert [ref=e1144]:
+      - generic [ref=e1145]:
+        - img [ref=e1147]
+        - generic [ref=e1149]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1150]
+          - paragraph [ref=e1151]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1152] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1153] [cursor=pointer]:
+          - img [ref=e1154] [cursor=pointer]
+    - alert [ref=e1157]:
+      - generic [ref=e1158]:
+        - img [ref=e1160]
+        - generic [ref=e1162]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1163]
+          - paragraph [ref=e1164]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1165] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1166] [cursor=pointer]:
+          - img [ref=e1167] [cursor=pointer]
+    - alert [ref=e1170]:
+      - generic [ref=e1171]:
+        - img [ref=e1173]
+        - generic [ref=e1175]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1176]
+          - paragraph [ref=e1177]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1178] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1179] [cursor=pointer]:
+          - img [ref=e1180] [cursor=pointer]
+    - alert [ref=e1183]:
+      - generic [ref=e1184]:
+        - img [ref=e1186]
+        - generic [ref=e1188]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1189]
+          - paragraph [ref=e1190]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1191] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1192] [cursor=pointer]:
+          - img [ref=e1193] [cursor=pointer]
+    - alert [ref=e1196]:
+      - generic [ref=e1197]:
+        - img [ref=e1199]
+        - generic [ref=e1201]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1202]
+          - paragraph [ref=e1203]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1204] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1205] [cursor=pointer]:
+          - img [ref=e1206] [cursor=pointer]
+    - alert [ref=e1209]:
+      - generic [ref=e1210]:
+        - img [ref=e1212]
+        - generic [ref=e1214]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1215]
+          - paragraph [ref=e1216]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1217] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1218] [cursor=pointer]:
+          - img [ref=e1219] [cursor=pointer]
+    - alert [ref=e1222]:
+      - generic [ref=e1223]:
+        - img [ref=e1225]
+        - generic [ref=e1227]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1228]
+          - paragraph [ref=e1229]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1230] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1231] [cursor=pointer]:
+          - img [ref=e1232] [cursor=pointer]
+    - alert [ref=e1235]:
+      - generic [ref=e1236]:
+        - img [ref=e1238]
+        - generic [ref=e1240]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1241]
+          - paragraph [ref=e1242]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1243] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1244] [cursor=pointer]:
+          - img [ref=e1245] [cursor=pointer]
+    - alert [ref=e1248]:
+      - generic [ref=e1249]:
+        - img [ref=e1251]
+        - generic [ref=e1253]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1254]
+          - paragraph [ref=e1255]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1256] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1257] [cursor=pointer]:
+          - img [ref=e1258] [cursor=pointer]
+    - alert [ref=e1261]:
+      - generic [ref=e1262]:
+        - img [ref=e1264]
+        - generic [ref=e1266]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1267]
+          - paragraph [ref=e1268]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1269] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1270] [cursor=pointer]:
+          - img [ref=e1271] [cursor=pointer]
+    - alert [ref=e1274]:
+      - generic [ref=e1275]:
+        - img [ref=e1277]
+        - generic [ref=e1279]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1280]
+          - paragraph [ref=e1281]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1282] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1283] [cursor=pointer]:
+          - img [ref=e1284] [cursor=pointer]
+    - alert [ref=e1287]:
+      - generic [ref=e1288]:
+        - img [ref=e1290]
+        - generic [ref=e1292]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1293]
+          - paragraph [ref=e1294]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1295] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1296] [cursor=pointer]:
+          - img [ref=e1297] [cursor=pointer]
+    - alert [ref=e1300]:
+      - generic [ref=e1301]:
+        - img [ref=e1303]
+        - generic [ref=e1305]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1306]
+          - paragraph [ref=e1307]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1308] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1309] [cursor=pointer]:
+          - img [ref=e1310] [cursor=pointer]
+    - alert [ref=e1313]:
+      - generic [ref=e1314]:
+        - img [ref=e1316]
+        - generic [ref=e1318]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1319]
+          - paragraph [ref=e1320]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1321] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1322] [cursor=pointer]:
+          - img [ref=e1323] [cursor=pointer]
+    - alert [ref=e1326]:
+      - generic [ref=e1327]:
+        - img [ref=e1329]
+        - generic [ref=e1331]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1332]
+          - paragraph [ref=e1333]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1334] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1335] [cursor=pointer]:
+          - img [ref=e1336] [cursor=pointer]
+    - alert [ref=e1339]:
+      - generic [ref=e1340]:
+        - img [ref=e1342]
+        - generic [ref=e1344]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1345]
+          - paragraph [ref=e1346]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1347] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1348] [cursor=pointer]:
+          - img [ref=e1349] [cursor=pointer]
+    - alert [ref=e1352]:
+      - generic [ref=e1353]:
+        - img [ref=e1355]
+        - generic [ref=e1357]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1358]
+          - paragraph [ref=e1359]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1360] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1361] [cursor=pointer]:
+          - img [ref=e1362] [cursor=pointer]
+    - alert [ref=e1365]:
+      - generic [ref=e1366]:
+        - img [ref=e1368]
+        - generic [ref=e1370]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1371]
+          - paragraph [ref=e1372]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1373] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1374] [cursor=pointer]:
+          - img [ref=e1375] [cursor=pointer]
+    - alert [ref=e1378]:
+      - generic [ref=e1379]:
+        - img [ref=e1381]
+        - generic [ref=e1383]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1384]
+          - paragraph [ref=e1385]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1386] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1387] [cursor=pointer]:
+          - img [ref=e1388] [cursor=pointer]
+    - alert [ref=e1391]:
+      - generic [ref=e1392]:
+        - img [ref=e1394]
+        - generic [ref=e1396]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1397]
+          - paragraph [ref=e1398]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1399] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1400] [cursor=pointer]:
+          - img [ref=e1401] [cursor=pointer]
+    - alert [ref=e1404]:
+      - generic [ref=e1405]:
+        - img [ref=e1407]
+        - generic [ref=e1409]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1410]
+          - paragraph [ref=e1411]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1412] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1413] [cursor=pointer]:
+          - img [ref=e1414] [cursor=pointer]
+    - alert [ref=e1417]:
+      - generic [ref=e1418]:
+        - img [ref=e1420]
+        - generic [ref=e1422]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1423]
+          - paragraph [ref=e1424]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1425] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1426] [cursor=pointer]:
+          - img [ref=e1427] [cursor=pointer]
+    - alert [ref=e1430]:
+      - generic [ref=e1431]:
+        - img [ref=e1433]
+        - generic [ref=e1435]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1436]
+          - paragraph [ref=e1437]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1438] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1439] [cursor=pointer]:
+          - img [ref=e1440] [cursor=pointer]
+    - alert [ref=e1443]:
+      - generic [ref=e1444]:
+        - img [ref=e1446]
+        - generic [ref=e1448]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1449]
+          - paragraph [ref=e1450]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1451] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1452] [cursor=pointer]:
+          - img [ref=e1453] [cursor=pointer]
+    - alert [ref=e1456]:
+      - generic [ref=e1457]:
+        - img [ref=e1459]
+        - generic [ref=e1461]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1462]
+          - paragraph [ref=e1463]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1464] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1465] [cursor=pointer]:
+          - img [ref=e1466] [cursor=pointer]
+    - alert [ref=e1469]:
+      - generic [ref=e1470]:
+        - img [ref=e1472]
+        - generic [ref=e1474]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1475]
+          - paragraph [ref=e1476]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1477] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1478] [cursor=pointer]:
+          - img [ref=e1479] [cursor=pointer]
+    - alert [ref=e1482]:
+      - generic [ref=e1483]:
+        - img [ref=e1485]
+        - generic [ref=e1487]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1488]
+          - paragraph [ref=e1489]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1490] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1491] [cursor=pointer]:
+          - img [ref=e1492] [cursor=pointer]
+    - alert [ref=e1495]:
+      - generic [ref=e1496]:
+        - img [ref=e1498]
+        - generic [ref=e1500]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1501]
+          - paragraph [ref=e1502]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1503] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1504] [cursor=pointer]:
+          - img [ref=e1505] [cursor=pointer]
+    - alert [ref=e1508]:
+      - generic [ref=e1509]:
+        - img [ref=e1511]
+        - generic [ref=e1513]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1514]
+          - paragraph [ref=e1515]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1516] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1517] [cursor=pointer]:
+          - img [ref=e1518] [cursor=pointer]
+    - alert [ref=e1521]:
+      - generic [ref=e1522]:
+        - img [ref=e1524]
+        - generic [ref=e1526]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1527]
+          - paragraph [ref=e1528]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1529] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1530] [cursor=pointer]:
+          - img [ref=e1531] [cursor=pointer]
+    - alert [ref=e1534]:
+      - generic [ref=e1535]:
+        - img [ref=e1537]
+        - generic [ref=e1539]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1540]
+          - paragraph [ref=e1541]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1542] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1543] [cursor=pointer]:
+          - img [ref=e1544] [cursor=pointer]
+    - alert [ref=e1547]:
+      - generic [ref=e1548]:
+        - img [ref=e1550]
+        - generic [ref=e1552]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1553]
+          - paragraph [ref=e1554]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1555] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1556] [cursor=pointer]:
+          - img [ref=e1557] [cursor=pointer]
+    - alert [ref=e1560]:
+      - generic [ref=e1561]:
+        - img [ref=e1563]
+        - generic [ref=e1565]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1566]
+          - paragraph [ref=e1567]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1568] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1569] [cursor=pointer]:
+          - img [ref=e1570] [cursor=pointer]
+    - alert [ref=e1573]:
+      - generic [ref=e1574]:
+        - img [ref=e1576]
+        - generic [ref=e1578]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1579]
+          - paragraph [ref=e1580]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1581] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1582] [cursor=pointer]:
+          - img [ref=e1583] [cursor=pointer]
+    - alert [ref=e1586]:
+      - generic [ref=e1587]:
+        - img [ref=e1589]
+        - generic [ref=e1591]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1592]
+          - paragraph [ref=e1593]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1594] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1595] [cursor=pointer]:
+          - img [ref=e1596] [cursor=pointer]
+    - alert [ref=e1599]:
+      - generic [ref=e1600]:
+        - img [ref=e1602]
+        - generic [ref=e1604]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1605]
+          - paragraph [ref=e1606]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1607] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1608] [cursor=pointer]:
+          - img [ref=e1609] [cursor=pointer]
+    - alert [ref=e1612]:
+      - generic [ref=e1613]:
+        - img [ref=e1615]
+        - generic [ref=e1617]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1618]
+          - paragraph [ref=e1619]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1620] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1621] [cursor=pointer]:
+          - img [ref=e1622] [cursor=pointer]
+    - alert [ref=e1625]:
+      - generic [ref=e1626]:
+        - img [ref=e1628]
+        - generic [ref=e1630]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1631]
+          - paragraph [ref=e1632]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1633] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1634] [cursor=pointer]:
+          - img [ref=e1635] [cursor=pointer]
+    - alert [ref=e1638]:
+      - generic [ref=e1639]:
+        - img [ref=e1641]
+        - generic [ref=e1643]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1644]
+          - paragraph [ref=e1645]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1646] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1647] [cursor=pointer]:
+          - img [ref=e1648] [cursor=pointer]
+    - alert [ref=e1651]:
+      - generic [ref=e1652]:
+        - img [ref=e1654]
+        - generic [ref=e1656]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1657]
+          - paragraph [ref=e1658]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1659] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1660] [cursor=pointer]:
+          - img [ref=e1661] [cursor=pointer]
+    - alert [ref=e1664]:
+      - generic [ref=e1665]:
+        - img [ref=e1667]
+        - generic [ref=e1669]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1670]
+          - paragraph [ref=e1671]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1672] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1673] [cursor=pointer]:
+          - img [ref=e1674] [cursor=pointer]
+    - alert [ref=e1677]:
+      - generic [ref=e1678]:
+        - img [ref=e1680]
+        - generic [ref=e1682]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1683]
+          - paragraph [ref=e1684]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1685] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1686] [cursor=pointer]:
+          - img [ref=e1687] [cursor=pointer]
+    - alert [ref=e1690]:
+      - generic [ref=e1691]:
+        - img [ref=e1693]
+        - generic [ref=e1695]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1696]
+          - paragraph [ref=e1697]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1698] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1699] [cursor=pointer]:
+          - img [ref=e1700] [cursor=pointer]
+    - alert [ref=e1703]:
+      - generic [ref=e1704]:
+        - img [ref=e1706]
+        - generic [ref=e1708]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1709]
+          - paragraph [ref=e1710]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1711] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1712] [cursor=pointer]:
+          - img [ref=e1713] [cursor=pointer]
+    - alert [ref=e1716]:
+      - generic [ref=e1717]:
+        - img [ref=e1719]
+        - generic [ref=e1721]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1722]
+          - paragraph [ref=e1723]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1724] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1725] [cursor=pointer]:
+          - img [ref=e1726] [cursor=pointer]
+    - alert [ref=e1729]:
+      - generic [ref=e1730]:
+        - img [ref=e1732]
+        - generic [ref=e1734]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1735]
+          - paragraph [ref=e1736]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1737] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1738] [cursor=pointer]:
+          - img [ref=e1739] [cursor=pointer]
+    - alert [ref=e1742]:
+      - generic [ref=e1743]:
+        - img [ref=e1745]
+        - generic [ref=e1747]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1748]
+          - paragraph [ref=e1749]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1750] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1751] [cursor=pointer]:
+          - img [ref=e1752] [cursor=pointer]
+    - alert [ref=e1755]:
+      - generic [ref=e1756]:
+        - img [ref=e1758]
+        - generic [ref=e1760]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1761]
+          - paragraph [ref=e1762]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1763] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1764] [cursor=pointer]:
+          - img [ref=e1765] [cursor=pointer]
+    - alert [ref=e1768]:
+      - generic [ref=e1769]:
+        - img [ref=e1771]
+        - generic [ref=e1773]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1774]
+          - paragraph [ref=e1775]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1776] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1777] [cursor=pointer]:
+          - img [ref=e1778] [cursor=pointer]
+    - alert [ref=e1781]:
+      - generic [ref=e1782]:
+        - img [ref=e1784]
+        - generic [ref=e1786]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1787]
+          - paragraph [ref=e1788]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1789] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1790] [cursor=pointer]:
+          - img [ref=e1791] [cursor=pointer]
+    - alert [ref=e1794]:
+      - generic [ref=e1795]:
+        - img [ref=e1797]
+        - generic [ref=e1799]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1800]
+          - paragraph [ref=e1801]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1802] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1803] [cursor=pointer]:
+          - img [ref=e1804] [cursor=pointer]
+    - alert [ref=e1807]:
+      - generic [ref=e1808]:
+        - img [ref=e1810]
+        - generic [ref=e1812]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1813]
+          - paragraph [ref=e1814]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1815] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1816] [cursor=pointer]:
+          - img [ref=e1817] [cursor=pointer]
+    - alert [ref=e1820]:
+      - generic [ref=e1821]:
+        - img [ref=e1823]
+        - generic [ref=e1825]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1826]
+          - paragraph [ref=e1827]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1828] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1829] [cursor=pointer]:
+          - img [ref=e1830] [cursor=pointer]
+    - alert [ref=e1833]:
+      - generic [ref=e1834]:
+        - img [ref=e1836]
+        - generic [ref=e1838]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1839]
+          - paragraph [ref=e1840]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1841] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1842] [cursor=pointer]:
+          - img [ref=e1843] [cursor=pointer]
+    - alert [ref=e1846]:
+      - generic [ref=e1847]:
+        - img [ref=e1849]
+        - generic [ref=e1851]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1852]
+          - paragraph [ref=e1853]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1854] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1855] [cursor=pointer]:
+          - img [ref=e1856] [cursor=pointer]
+    - alert [ref=e1859]:
+      - generic [ref=e1860]:
+        - img [ref=e1862]
+        - generic [ref=e1864]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1865]
+          - paragraph [ref=e1866]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1867] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1868] [cursor=pointer]:
+          - img [ref=e1869] [cursor=pointer]
+    - alert [ref=e1872]:
+      - generic [ref=e1873]:
+        - img [ref=e1875]
+        - generic [ref=e1877]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1878]
+          - paragraph [ref=e1879]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1880] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1881] [cursor=pointer]:
+          - img [ref=e1882] [cursor=pointer]
+    - alert [ref=e1885]:
+      - generic [ref=e1886]:
+        - img [ref=e1888]
+        - generic [ref=e1890]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1891]
+          - paragraph [ref=e1892]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1893] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1894] [cursor=pointer]:
+          - img [ref=e1895] [cursor=pointer]
+    - alert [ref=e1898]:
+      - generic [ref=e1899]:
+        - img [ref=e1901]
+        - generic [ref=e1903]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1904]
+          - paragraph [ref=e1905]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1906] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1907] [cursor=pointer]:
+          - img [ref=e1908] [cursor=pointer]
+    - alert [ref=e1911]:
+      - generic [ref=e1912]:
+        - img [ref=e1914]
+        - generic [ref=e1916]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1917]
+          - paragraph [ref=e1918]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1919] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1920] [cursor=pointer]:
+          - img [ref=e1921] [cursor=pointer]
+    - alert [ref=e1924]:
+      - generic [ref=e1925]:
+        - img [ref=e1927]
+        - generic [ref=e1929]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1930]
+          - paragraph [ref=e1931]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1932] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1933] [cursor=pointer]:
+          - img [ref=e1934] [cursor=pointer]
+    - alert [ref=e1937]:
+      - generic [ref=e1938]:
+        - img [ref=e1940]
+        - generic [ref=e1942]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1943]
+          - paragraph [ref=e1944]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1945] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1946] [cursor=pointer]:
+          - img [ref=e1947] [cursor=pointer]
+    - alert [ref=e1950]:
+      - generic [ref=e1951]:
+        - img [ref=e1953]
+        - generic [ref=e1955]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1956]
+          - paragraph [ref=e1957]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1958] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1959] [cursor=pointer]:
+          - img [ref=e1960] [cursor=pointer]
+    - alert [ref=e1963]:
+      - generic [ref=e1964]:
+        - img [ref=e1966]
+        - generic [ref=e1968]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1969]
+          - paragraph [ref=e1970]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1971] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1972] [cursor=pointer]:
+          - img [ref=e1973] [cursor=pointer]
+    - alert [ref=e1976]:
+      - generic [ref=e1977]:
+        - img [ref=e1979]
+        - generic [ref=e1981]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1982]
+          - paragraph [ref=e1983]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1984] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1985] [cursor=pointer]:
+          - img [ref=e1986] [cursor=pointer]
+    - alert [ref=e1989]:
+      - generic [ref=e1990]:
+        - img [ref=e1992]
+        - generic [ref=e1994]:
+          - heading "Get gentle notifications?" [level=4] [ref=e1995]
+          - paragraph [ref=e1996]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e1997] [cursor=pointer]
+        - button "Dismiss notification" [ref=e1998] [cursor=pointer]:
+          - img [ref=e1999] [cursor=pointer]
+    - alert [ref=e2002]:
+      - generic [ref=e2003]:
+        - img [ref=e2005]
+        - generic [ref=e2007]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2008]
+          - paragraph [ref=e2009]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2010] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2011] [cursor=pointer]:
+          - img [ref=e2012] [cursor=pointer]
+    - alert [ref=e2015]:
+      - generic [ref=e2016]:
+        - img [ref=e2018]
+        - generic [ref=e2020]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2021]
+          - paragraph [ref=e2022]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2023] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2024] [cursor=pointer]:
+          - img [ref=e2025] [cursor=pointer]
+    - alert [ref=e2028]:
+      - generic [ref=e2029]:
+        - img [ref=e2031]
+        - generic [ref=e2033]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2034]
+          - paragraph [ref=e2035]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2036] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2037] [cursor=pointer]:
+          - img [ref=e2038] [cursor=pointer]
+    - alert [ref=e2041]:
+      - generic [ref=e2042]:
+        - img [ref=e2044]
+        - generic [ref=e2046]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2047]
+          - paragraph [ref=e2048]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2049] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2050] [cursor=pointer]:
+          - img [ref=e2051] [cursor=pointer]
+    - alert [ref=e2054]:
+      - generic [ref=e2055]:
+        - img [ref=e2057]
+        - generic [ref=e2059]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2060]
+          - paragraph [ref=e2061]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2062] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2063] [cursor=pointer]:
+          - img [ref=e2064] [cursor=pointer]
+    - alert [ref=e2067]:
+      - generic [ref=e2068]:
+        - img [ref=e2070]
+        - generic [ref=e2072]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2073]
+          - paragraph [ref=e2074]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2075] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2076] [cursor=pointer]:
+          - img [ref=e2077] [cursor=pointer]
+    - alert [ref=e2080]:
+      - generic [ref=e2081]:
+        - img [ref=e2083]
+        - generic [ref=e2085]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2086]
+          - paragraph [ref=e2087]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2088] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2089] [cursor=pointer]:
+          - img [ref=e2090] [cursor=pointer]
+    - alert [ref=e2093]:
+      - generic [ref=e2094]:
+        - img [ref=e2096]
+        - generic [ref=e2098]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2099]
+          - paragraph [ref=e2100]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2101] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2102] [cursor=pointer]:
+          - img [ref=e2103] [cursor=pointer]
+    - alert [ref=e2106]:
+      - generic [ref=e2107]:
+        - img [ref=e2109]
+        - generic [ref=e2111]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2112]
+          - paragraph [ref=e2113]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2114] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2115] [cursor=pointer]:
+          - img [ref=e2116] [cursor=pointer]
+    - alert [ref=e2119]:
+      - generic [ref=e2120]:
+        - img [ref=e2122]
+        - generic [ref=e2124]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2125]
+          - paragraph [ref=e2126]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2127] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2128] [cursor=pointer]:
+          - img [ref=e2129] [cursor=pointer]
+    - alert [ref=e2132]:
+      - generic [ref=e2133]:
+        - img [ref=e2135]
+        - generic [ref=e2137]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2138]
+          - paragraph [ref=e2139]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2140] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2141] [cursor=pointer]:
+          - img [ref=e2142] [cursor=pointer]
+    - alert [ref=e2145]:
+      - generic [ref=e2146]:
+        - img [ref=e2148]
+        - generic [ref=e2150]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2151]
+          - paragraph [ref=e2152]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2153] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2154] [cursor=pointer]:
+          - img [ref=e2155] [cursor=pointer]
+    - alert [ref=e2158]:
+      - generic [ref=e2159]:
+        - img [ref=e2161]
+        - generic [ref=e2163]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2164]
+          - paragraph [ref=e2165]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2166] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2167] [cursor=pointer]:
+          - img [ref=e2168] [cursor=pointer]
+    - alert [ref=e2171]:
+      - generic [ref=e2172]:
+        - img [ref=e2174]
+        - generic [ref=e2176]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2177]
+          - paragraph [ref=e2178]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2179] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2180] [cursor=pointer]:
+          - img [ref=e2181] [cursor=pointer]
+    - alert [ref=e2184]:
+      - generic [ref=e2185]:
+        - img [ref=e2187]
+        - generic [ref=e2189]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2190]
+          - paragraph [ref=e2191]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2192] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2193] [cursor=pointer]:
+          - img [ref=e2194] [cursor=pointer]
+    - alert [ref=e2197]:
+      - generic [ref=e2198]:
+        - img [ref=e2200]
+        - generic [ref=e2202]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2203]
+          - paragraph [ref=e2204]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2205] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2206] [cursor=pointer]:
+          - img [ref=e2207] [cursor=pointer]
+    - alert [ref=e2210]:
+      - generic [ref=e2211]:
+        - img [ref=e2213]
+        - generic [ref=e2215]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2216]
+          - paragraph [ref=e2217]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2218] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2219] [cursor=pointer]:
+          - img [ref=e2220] [cursor=pointer]
+    - alert [ref=e2223]:
+      - generic [ref=e2224]:
+        - img [ref=e2226]
+        - generic [ref=e2228]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2229]
+          - paragraph [ref=e2230]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2231] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2232] [cursor=pointer]:
+          - img [ref=e2233] [cursor=pointer]
+    - alert [ref=e2236]:
+      - generic [ref=e2237]:
+        - img [ref=e2239]
+        - generic [ref=e2241]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2242]
+          - paragraph [ref=e2243]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2244] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2245] [cursor=pointer]:
+          - img [ref=e2246] [cursor=pointer]
+    - alert [ref=e2249]:
+      - generic [ref=e2250]:
+        - img [ref=e2252]
+        - generic [ref=e2254]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2255]
+          - paragraph [ref=e2256]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2257] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2258] [cursor=pointer]:
+          - img [ref=e2259] [cursor=pointer]
+    - alert [ref=e2262]:
+      - generic [ref=e2263]:
+        - img [ref=e2265]
+        - generic [ref=e2267]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2268]
+          - paragraph [ref=e2269]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2270] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2271] [cursor=pointer]:
+          - img [ref=e2272] [cursor=pointer]
+    - alert [ref=e2275]:
+      - generic [ref=e2276]:
+        - img [ref=e2278]
+        - generic [ref=e2280]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2281]
+          - paragraph [ref=e2282]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2283] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2284] [cursor=pointer]:
+          - img [ref=e2285] [cursor=pointer]
+    - alert [ref=e2288]:
+      - generic [ref=e2289]:
+        - img [ref=e2291]
+        - generic [ref=e2293]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2294]
+          - paragraph [ref=e2295]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2296] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2297] [cursor=pointer]:
+          - img [ref=e2298] [cursor=pointer]
+    - alert [ref=e2301]:
+      - generic [ref=e2302]:
+        - img [ref=e2304]
+        - generic [ref=e2306]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2307]
+          - paragraph [ref=e2308]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2309] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2310] [cursor=pointer]:
+          - img [ref=e2311] [cursor=pointer]
+    - alert [ref=e2314]:
+      - generic [ref=e2315]:
+        - img [ref=e2317]
+        - generic [ref=e2319]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2320]
+          - paragraph [ref=e2321]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2322] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2323] [cursor=pointer]:
+          - img [ref=e2324] [cursor=pointer]
+    - alert [ref=e2327]:
+      - generic [ref=e2328]:
+        - img [ref=e2330]
+        - generic [ref=e2332]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2333]
+          - paragraph [ref=e2334]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2335] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2336] [cursor=pointer]:
+          - img [ref=e2337] [cursor=pointer]
+    - alert [ref=e2340]:
+      - generic [ref=e2341]:
+        - img [ref=e2343]
+        - generic [ref=e2345]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2346]
+          - paragraph [ref=e2347]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2348] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2349] [cursor=pointer]:
+          - img [ref=e2350] [cursor=pointer]
+    - alert [ref=e2353]:
+      - generic [ref=e2354]:
+        - img [ref=e2356]
+        - generic [ref=e2358]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2359]
+          - paragraph [ref=e2360]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2361] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2362] [cursor=pointer]:
+          - img [ref=e2363] [cursor=pointer]
+    - alert [ref=e2366]:
+      - generic [ref=e2367]:
+        - img [ref=e2369]
+        - generic [ref=e2371]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2372]
+          - paragraph [ref=e2373]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2374] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2375] [cursor=pointer]:
+          - img [ref=e2376] [cursor=pointer]
+    - alert [ref=e2379]:
+      - generic [ref=e2380]:
+        - img [ref=e2382]
+        - generic [ref=e2384]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2385]
+          - paragraph [ref=e2386]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2387] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2388] [cursor=pointer]:
+          - img [ref=e2389] [cursor=pointer]
+    - alert [ref=e2392]:
+      - generic [ref=e2393]:
+        - img [ref=e2395]
+        - generic [ref=e2397]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2398]
+          - paragraph [ref=e2399]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2400] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2401] [cursor=pointer]:
+          - img [ref=e2402] [cursor=pointer]
+    - alert [ref=e2405]:
+      - generic [ref=e2406]:
+        - img [ref=e2408]
+        - generic [ref=e2410]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2411]
+          - paragraph [ref=e2412]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2413] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2414] [cursor=pointer]:
+          - img [ref=e2415] [cursor=pointer]
+    - alert [ref=e2418]:
+      - generic [ref=e2419]:
+        - img [ref=e2421]
+        - generic [ref=e2423]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2424]
+          - paragraph [ref=e2425]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2426] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2427] [cursor=pointer]:
+          - img [ref=e2428] [cursor=pointer]
+    - alert [ref=e2431]:
+      - generic [ref=e2432]:
+        - img [ref=e2434]
+        - generic [ref=e2436]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2437]
+          - paragraph [ref=e2438]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2439] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2440] [cursor=pointer]:
+          - img [ref=e2441] [cursor=pointer]
+    - alert [ref=e2444]:
+      - generic [ref=e2445]:
+        - img [ref=e2447]
+        - generic [ref=e2449]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2450]
+          - paragraph [ref=e2451]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2452] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2453] [cursor=pointer]:
+          - img [ref=e2454] [cursor=pointer]
+    - alert [ref=e2457]:
+      - generic [ref=e2458]:
+        - img [ref=e2460]
+        - generic [ref=e2462]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2463]
+          - paragraph [ref=e2464]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2465] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2466] [cursor=pointer]:
+          - img [ref=e2467] [cursor=pointer]
+    - alert [ref=e2470]:
+      - generic [ref=e2471]:
+        - img [ref=e2473]
+        - generic [ref=e2475]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2476]
+          - paragraph [ref=e2477]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2478] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2479] [cursor=pointer]:
+          - img [ref=e2480] [cursor=pointer]
+    - alert [ref=e2483]:
+      - generic [ref=e2484]:
+        - img [ref=e2486]
+        - generic [ref=e2488]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2489]
+          - paragraph [ref=e2490]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2491] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2492] [cursor=pointer]:
+          - img [ref=e2493] [cursor=pointer]
+    - alert [ref=e2496]:
+      - generic [ref=e2497]:
+        - img [ref=e2499]
+        - generic [ref=e2501]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2502]
+          - paragraph [ref=e2503]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2504] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2505] [cursor=pointer]:
+          - img [ref=e2506] [cursor=pointer]
+    - alert [ref=e2509]:
+      - generic [ref=e2510]:
+        - img [ref=e2512]
+        - generic [ref=e2514]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2515]
+          - paragraph [ref=e2516]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2517] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2518] [cursor=pointer]:
+          - img [ref=e2519] [cursor=pointer]
+    - alert [ref=e2522]:
+      - generic [ref=e2523]:
+        - img [ref=e2525]
+        - generic [ref=e2527]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2528]
+          - paragraph [ref=e2529]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2530] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2531] [cursor=pointer]:
+          - img [ref=e2532] [cursor=pointer]
+    - alert [ref=e2535]:
+      - generic [ref=e2536]:
+        - img [ref=e2538]
+        - generic [ref=e2540]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2541]
+          - paragraph [ref=e2542]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2543] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2544] [cursor=pointer]:
+          - img [ref=e2545] [cursor=pointer]
+    - alert [ref=e2548]:
+      - generic [ref=e2549]:
+        - img [ref=e2551]
+        - generic [ref=e2553]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2554]
+          - paragraph [ref=e2555]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2556] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2557] [cursor=pointer]:
+          - img [ref=e2558] [cursor=pointer]
+    - alert [ref=e2561]:
+      - generic [ref=e2562]:
+        - img [ref=e2564]
+        - generic [ref=e2566]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2567]
+          - paragraph [ref=e2568]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2569] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2570] [cursor=pointer]:
+          - img [ref=e2571] [cursor=pointer]
+    - alert [ref=e2574]:
+      - generic [ref=e2575]:
+        - img [ref=e2577]
+        - generic [ref=e2579]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2580]
+          - paragraph [ref=e2581]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2582] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2583] [cursor=pointer]:
+          - img [ref=e2584] [cursor=pointer]
+    - alert [ref=e2587]:
+      - generic [ref=e2588]:
+        - img [ref=e2590]
+        - generic [ref=e2592]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2593]
+          - paragraph [ref=e2594]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2595] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2596] [cursor=pointer]:
+          - img [ref=e2597] [cursor=pointer]
+    - alert [ref=e2600]:
+      - generic [ref=e2601]:
+        - img [ref=e2603]
+        - generic [ref=e2605]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2606]
+          - paragraph [ref=e2607]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2608] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2609] [cursor=pointer]:
+          - img [ref=e2610] [cursor=pointer]
+    - alert [ref=e2613]:
+      - generic [ref=e2614]:
+        - img [ref=e2616]
+        - generic [ref=e2618]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2619]
+          - paragraph [ref=e2620]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2621] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2622] [cursor=pointer]:
+          - img [ref=e2623] [cursor=pointer]
+    - alert [ref=e2626]:
+      - generic [ref=e2627]:
+        - img [ref=e2629]
+        - generic [ref=e2631]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2632]
+          - paragraph [ref=e2633]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2634] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2635] [cursor=pointer]:
+          - img [ref=e2636] [cursor=pointer]
+    - alert [ref=e2639]:
+      - generic [ref=e2640]:
+        - img [ref=e2642]
+        - generic [ref=e2644]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2645]
+          - paragraph [ref=e2646]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2647] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2648] [cursor=pointer]:
+          - img [ref=e2649] [cursor=pointer]
+    - alert [ref=e2652]:
+      - generic [ref=e2653]:
+        - img [ref=e2655]
+        - generic [ref=e2657]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2658]
+          - paragraph [ref=e2659]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2660] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2661] [cursor=pointer]:
+          - img [ref=e2662] [cursor=pointer]
+    - alert [ref=e2665]:
+      - generic [ref=e2666]:
+        - img [ref=e2668]
+        - generic [ref=e2670]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2671]
+          - paragraph [ref=e2672]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2673] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2674] [cursor=pointer]:
+          - img [ref=e2675] [cursor=pointer]
+    - alert [ref=e2678]:
+      - generic [ref=e2679]:
+        - img [ref=e2681]
+        - generic [ref=e2683]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2684]
+          - paragraph [ref=e2685]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2686] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2687] [cursor=pointer]:
+          - img [ref=e2688] [cursor=pointer]
+    - alert [ref=e2691]:
+      - generic [ref=e2692]:
+        - img [ref=e2694]
+        - generic [ref=e2696]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2697]
+          - paragraph [ref=e2698]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2699] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2700] [cursor=pointer]:
+          - img [ref=e2701] [cursor=pointer]
+    - alert [ref=e2704]:
+      - generic [ref=e2705]:
+        - img [ref=e2707]
+        - generic [ref=e2709]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2710]
+          - paragraph [ref=e2711]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2712] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2713] [cursor=pointer]:
+          - img [ref=e2714] [cursor=pointer]
+    - alert [ref=e2717]:
+      - generic [ref=e2718]:
+        - img [ref=e2720]
+        - generic [ref=e2722]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2723]
+          - paragraph [ref=e2724]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2725] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2726] [cursor=pointer]:
+          - img [ref=e2727] [cursor=pointer]
+    - alert [ref=e2730]:
+      - generic [ref=e2731]:
+        - img [ref=e2733]
+        - generic [ref=e2735]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2736]
+          - paragraph [ref=e2737]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2738] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2739] [cursor=pointer]:
+          - img [ref=e2740] [cursor=pointer]
+    - alert [ref=e2743]:
+      - generic [ref=e2744]:
+        - img [ref=e2746]
+        - generic [ref=e2748]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2749]
+          - paragraph [ref=e2750]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2751] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2752] [cursor=pointer]:
+          - img [ref=e2753] [cursor=pointer]
+    - alert [ref=e2756]:
+      - generic [ref=e2757]:
+        - img [ref=e2759]
+        - generic [ref=e2761]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2762]
+          - paragraph [ref=e2763]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2764] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2765] [cursor=pointer]:
+          - img [ref=e2766] [cursor=pointer]
+    - alert [ref=e2769]:
+      - generic [ref=e2770]:
+        - img [ref=e2772]
+        - generic [ref=e2774]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2775]
+          - paragraph [ref=e2776]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2777] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2778] [cursor=pointer]:
+          - img [ref=e2779] [cursor=pointer]
+    - alert [ref=e2782]:
+      - generic [ref=e2783]:
+        - img [ref=e2785]
+        - generic [ref=e2787]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2788]
+          - paragraph [ref=e2789]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2790] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2791] [cursor=pointer]:
+          - img [ref=e2792] [cursor=pointer]
+    - alert [ref=e2795]:
+      - generic [ref=e2796]:
+        - img [ref=e2798]
+        - generic [ref=e2800]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2801]
+          - paragraph [ref=e2802]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2803] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2804] [cursor=pointer]:
+          - img [ref=e2805] [cursor=pointer]
+    - alert [ref=e2808]:
+      - generic [ref=e2809]:
+        - img [ref=e2811]
+        - generic [ref=e2813]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2814]
+          - paragraph [ref=e2815]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2816] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2817] [cursor=pointer]:
+          - img [ref=e2818] [cursor=pointer]
+    - alert [ref=e2821]:
+      - generic [ref=e2822]:
+        - img [ref=e2824]
+        - generic [ref=e2826]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2827]
+          - paragraph [ref=e2828]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2829] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2830] [cursor=pointer]:
+          - img [ref=e2831] [cursor=pointer]
+    - alert [ref=e2834]:
+      - generic [ref=e2835]:
+        - img [ref=e2837]
+        - generic [ref=e2839]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2840]
+          - paragraph [ref=e2841]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2842] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2843] [cursor=pointer]:
+          - img [ref=e2844] [cursor=pointer]
+    - alert [ref=e2847]:
+      - generic [ref=e2848]:
+        - img [ref=e2850]
+        - generic [ref=e2852]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2853]
+          - paragraph [ref=e2854]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2855] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2856] [cursor=pointer]:
+          - img [ref=e2857] [cursor=pointer]
+    - alert [ref=e2860]:
+      - generic [ref=e2861]:
+        - img [ref=e2863]
+        - generic [ref=e2865]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2866]
+          - paragraph [ref=e2867]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2868] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2869] [cursor=pointer]:
+          - img [ref=e2870] [cursor=pointer]
+    - alert [ref=e2873]:
+      - generic [ref=e2874]:
+        - img [ref=e2876]
+        - generic [ref=e2878]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2879]
+          - paragraph [ref=e2880]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2881] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2882] [cursor=pointer]:
+          - img [ref=e2883] [cursor=pointer]
+    - alert [ref=e2886]:
+      - generic [ref=e2887]:
+        - img [ref=e2889]
+        - generic [ref=e2891]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2892]
+          - paragraph [ref=e2893]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2894] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2895] [cursor=pointer]:
+          - img [ref=e2896] [cursor=pointer]
+    - alert [ref=e2899]:
+      - generic [ref=e2900]:
+        - img [ref=e2902]
+        - generic [ref=e2904]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2905]
+          - paragraph [ref=e2906]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2907] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2908] [cursor=pointer]:
+          - img [ref=e2909] [cursor=pointer]
+    - alert [ref=e2912]:
+      - generic [ref=e2913]:
+        - img [ref=e2915]
+        - generic [ref=e2917]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2918]
+          - paragraph [ref=e2919]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2920] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2921] [cursor=pointer]:
+          - img [ref=e2922] [cursor=pointer]
+    - alert [ref=e2925]:
+      - generic [ref=e2926]:
+        - img [ref=e2928]
+        - generic [ref=e2930]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2931]
+          - paragraph [ref=e2932]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2933] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2934] [cursor=pointer]:
+          - img [ref=e2935] [cursor=pointer]
+    - alert [ref=e2938]:
+      - generic [ref=e2939]:
+        - img [ref=e2941]
+        - generic [ref=e2943]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2944]
+          - paragraph [ref=e2945]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2946] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2947] [cursor=pointer]:
+          - img [ref=e2948] [cursor=pointer]
+    - alert [ref=e2951]:
+      - generic [ref=e2952]:
+        - img [ref=e2954]
+        - generic [ref=e2956]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2957]
+          - paragraph [ref=e2958]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2959] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2960] [cursor=pointer]:
+          - img [ref=e2961] [cursor=pointer]
+    - alert [ref=e2964]:
+      - generic [ref=e2965]:
+        - img [ref=e2967]
+        - generic [ref=e2969]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2970]
+          - paragraph [ref=e2971]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2972] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2973] [cursor=pointer]:
+          - img [ref=e2974] [cursor=pointer]
+    - alert [ref=e2977]:
+      - generic [ref=e2978]:
+        - img [ref=e2980]
+        - generic [ref=e2982]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2983]
+          - paragraph [ref=e2984]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2985] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2986] [cursor=pointer]:
+          - img [ref=e2987] [cursor=pointer]
+    - alert [ref=e2990]:
+      - generic [ref=e2991]:
+        - img [ref=e2993]
+        - generic [ref=e2995]:
+          - heading "Get gentle notifications?" [level=4] [ref=e2996]
+          - paragraph [ref=e2997]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e2998] [cursor=pointer]
+        - button "Dismiss notification" [ref=e2999] [cursor=pointer]:
+          - img [ref=e3000] [cursor=pointer]
+    - alert [ref=e3003]:
+      - generic [ref=e3004]:
+        - img [ref=e3006]
+        - generic [ref=e3008]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3009]
+          - paragraph [ref=e3010]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3011] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3012] [cursor=pointer]:
+          - img [ref=e3013] [cursor=pointer]
+    - alert [ref=e3016]:
+      - generic [ref=e3017]:
+        - img [ref=e3019]
+        - generic [ref=e3021]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3022]
+          - paragraph [ref=e3023]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3024] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3025] [cursor=pointer]:
+          - img [ref=e3026] [cursor=pointer]
+    - alert [ref=e3029]:
+      - generic [ref=e3030]:
+        - img [ref=e3032]
+        - generic [ref=e3034]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3035]
+          - paragraph [ref=e3036]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3037] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3038] [cursor=pointer]:
+          - img [ref=e3039] [cursor=pointer]
+    - alert [ref=e3042]:
+      - generic [ref=e3043]:
+        - img [ref=e3045]
+        - generic [ref=e3047]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3048]
+          - paragraph [ref=e3049]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3050] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3051] [cursor=pointer]:
+          - img [ref=e3052] [cursor=pointer]
+    - alert [ref=e3055]:
+      - generic [ref=e3056]:
+        - img [ref=e3058]
+        - generic [ref=e3060]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3061]
+          - paragraph [ref=e3062]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3063] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3064] [cursor=pointer]:
+          - img [ref=e3065] [cursor=pointer]
+    - alert [ref=e3068]:
+      - generic [ref=e3069]:
+        - img [ref=e3071]
+        - generic [ref=e3073]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3074]
+          - paragraph [ref=e3075]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3076] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3077] [cursor=pointer]:
+          - img [ref=e3078] [cursor=pointer]
+    - alert [ref=e3081]:
+      - generic [ref=e3082]:
+        - img [ref=e3084]
+        - generic [ref=e3086]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3087]
+          - paragraph [ref=e3088]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3089] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3090] [cursor=pointer]:
+          - img [ref=e3091] [cursor=pointer]
+    - alert [ref=e3094]:
+      - generic [ref=e3095]:
+        - img [ref=e3097]
+        - generic [ref=e3099]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3100]
+          - paragraph [ref=e3101]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3102] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3103] [cursor=pointer]:
+          - img [ref=e3104] [cursor=pointer]
+    - alert [ref=e3107]:
+      - generic [ref=e3108]:
+        - img [ref=e3110]
+        - generic [ref=e3112]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3113]
+          - paragraph [ref=e3114]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3115] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3116] [cursor=pointer]:
+          - img [ref=e3117] [cursor=pointer]
+    - alert [ref=e3120]:
+      - generic [ref=e3121]:
+        - img [ref=e3123]
+        - generic [ref=e3125]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3126]
+          - paragraph [ref=e3127]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3128] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3129] [cursor=pointer]:
+          - img [ref=e3130] [cursor=pointer]
+    - alert [ref=e3133]:
+      - generic [ref=e3134]:
+        - img [ref=e3136]
+        - generic [ref=e3138]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3139]
+          - paragraph [ref=e3140]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3141] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3142] [cursor=pointer]:
+          - img [ref=e3143] [cursor=pointer]
+    - alert [ref=e3146]:
+      - generic [ref=e3147]:
+        - img [ref=e3149]
+        - generic [ref=e3151]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3152]
+          - paragraph [ref=e3153]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3154] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3155] [cursor=pointer]:
+          - img [ref=e3156] [cursor=pointer]
+    - alert [ref=e3159]:
+      - generic [ref=e3160]:
+        - img [ref=e3162]
+        - generic [ref=e3164]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3165]
+          - paragraph [ref=e3166]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3167] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3168] [cursor=pointer]:
+          - img [ref=e3169] [cursor=pointer]
+    - alert [ref=e3172]:
+      - generic [ref=e3173]:
+        - img [ref=e3175]
+        - generic [ref=e3177]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3178]
+          - paragraph [ref=e3179]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3180] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3181] [cursor=pointer]:
+          - img [ref=e3182] [cursor=pointer]
+    - alert [ref=e3185]:
+      - generic [ref=e3186]:
+        - img [ref=e3188]
+        - generic [ref=e3190]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3191]
+          - paragraph [ref=e3192]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3193] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3194] [cursor=pointer]:
+          - img [ref=e3195] [cursor=pointer]
+    - alert [ref=e3198]:
+      - generic [ref=e3199]:
+        - img [ref=e3201]
+        - generic [ref=e3203]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3204]
+          - paragraph [ref=e3205]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3206] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3207] [cursor=pointer]:
+          - img [ref=e3208] [cursor=pointer]
+    - alert [ref=e3211]:
+      - generic [ref=e3212]:
+        - img [ref=e3214]
+        - generic [ref=e3216]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3217]
+          - paragraph [ref=e3218]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3219] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3220] [cursor=pointer]:
+          - img [ref=e3221] [cursor=pointer]
+    - alert [ref=e3224]:
+      - generic [ref=e3225]:
+        - img [ref=e3227]
+        - generic [ref=e3229]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3230]
+          - paragraph [ref=e3231]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3232] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3233] [cursor=pointer]:
+          - img [ref=e3234] [cursor=pointer]
+    - alert [ref=e3237]:
+      - generic [ref=e3238]:
+        - img [ref=e3240]
+        - generic [ref=e3242]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3243]
+          - paragraph [ref=e3244]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3245] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3246] [cursor=pointer]:
+          - img [ref=e3247] [cursor=pointer]
+    - alert [ref=e3250]:
+      - generic [ref=e3251]:
+        - img [ref=e3253]
+        - generic [ref=e3255]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3256]
+          - paragraph [ref=e3257]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3258] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3259] [cursor=pointer]:
+          - img [ref=e3260] [cursor=pointer]
+    - alert [ref=e3263]:
+      - generic [ref=e3264]:
+        - img [ref=e3266]
+        - generic [ref=e3268]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3269]
+          - paragraph [ref=e3270]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3271] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3272] [cursor=pointer]:
+          - img [ref=e3273] [cursor=pointer]
+    - alert [ref=e3276]:
+      - generic [ref=e3277]:
+        - img [ref=e3279]
+        - generic [ref=e3281]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3282]
+          - paragraph [ref=e3283]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3284] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3285] [cursor=pointer]:
+          - img [ref=e3286] [cursor=pointer]
+    - alert [ref=e3289]:
+      - generic [ref=e3290]:
+        - img [ref=e3292]
+        - generic [ref=e3294]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3295]
+          - paragraph [ref=e3296]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3297] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3298] [cursor=pointer]:
+          - img [ref=e3299] [cursor=pointer]
+    - alert [ref=e3302]:
+      - generic [ref=e3303]:
+        - img [ref=e3305]
+        - generic [ref=e3307]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3308]
+          - paragraph [ref=e3309]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3310] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3311] [cursor=pointer]:
+          - img [ref=e3312] [cursor=pointer]
+    - alert [ref=e3315]:
+      - generic [ref=e3316]:
+        - img [ref=e3318]
+        - generic [ref=e3320]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3321]
+          - paragraph [ref=e3322]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3323] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3324] [cursor=pointer]:
+          - img [ref=e3325] [cursor=pointer]
+    - alert [ref=e3328]:
+      - generic [ref=e3329]:
+        - img [ref=e3331]
+        - generic [ref=e3333]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3334]
+          - paragraph [ref=e3335]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3336] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3337] [cursor=pointer]:
+          - img [ref=e3338] [cursor=pointer]
+    - alert [ref=e3341]:
+      - generic [ref=e3342]:
+        - img [ref=e3344]
+        - generic [ref=e3346]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3347]
+          - paragraph [ref=e3348]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3349] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3350] [cursor=pointer]:
+          - img [ref=e3351] [cursor=pointer]
+    - alert [ref=e3354]:
+      - generic [ref=e3355]:
+        - img [ref=e3357]
+        - generic [ref=e3359]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3360]
+          - paragraph [ref=e3361]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3362] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3363] [cursor=pointer]:
+          - img [ref=e3364] [cursor=pointer]
+    - alert [ref=e3367]:
+      - generic [ref=e3368]:
+        - img [ref=e3370]
+        - generic [ref=e3372]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3373]
+          - paragraph [ref=e3374]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3375] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3376] [cursor=pointer]:
+          - img [ref=e3377] [cursor=pointer]
+    - alert [ref=e3380]:
+      - generic [ref=e3381]:
+        - img [ref=e3383]
+        - generic [ref=e3385]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3386]
+          - paragraph [ref=e3387]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3388] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3389] [cursor=pointer]:
+          - img [ref=e3390] [cursor=pointer]
+    - alert [ref=e3393]:
+      - generic [ref=e3394]:
+        - img [ref=e3396]
+        - generic [ref=e3398]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3399]
+          - paragraph [ref=e3400]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3401] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3402] [cursor=pointer]:
+          - img [ref=e3403] [cursor=pointer]
+    - alert [ref=e3406]:
+      - generic [ref=e3407]:
+        - img [ref=e3409]
+        - generic [ref=e3411]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3412]
+          - paragraph [ref=e3413]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3414] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3415] [cursor=pointer]:
+          - img [ref=e3416] [cursor=pointer]
+    - alert [ref=e3419]:
+      - generic [ref=e3420]:
+        - img [ref=e3422]
+        - generic [ref=e3424]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3425]
+          - paragraph [ref=e3426]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3427] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3428] [cursor=pointer]:
+          - img [ref=e3429] [cursor=pointer]
+    - alert [ref=e3432]:
+      - generic [ref=e3433]:
+        - img [ref=e3435]
+        - generic [ref=e3437]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3438]
+          - paragraph [ref=e3439]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3440] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3441] [cursor=pointer]:
+          - img [ref=e3442] [cursor=pointer]
+    - alert [ref=e3445]:
+      - generic [ref=e3446]:
+        - img [ref=e3448]
+        - generic [ref=e3450]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3451]
+          - paragraph [ref=e3452]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3453] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3454] [cursor=pointer]:
+          - img [ref=e3455] [cursor=pointer]
+    - alert [ref=e3458]:
+      - generic [ref=e3459]:
+        - img [ref=e3461]
+        - generic [ref=e3463]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3464]
+          - paragraph [ref=e3465]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3466] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3467] [cursor=pointer]:
+          - img [ref=e3468] [cursor=pointer]
+    - alert [ref=e3471]:
+      - generic [ref=e3472]:
+        - img [ref=e3474]
+        - generic [ref=e3476]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3477]
+          - paragraph [ref=e3478]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3479] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3480] [cursor=pointer]:
+          - img [ref=e3481] [cursor=pointer]
+    - alert [ref=e3484]:
+      - generic [ref=e3485]:
+        - img [ref=e3487]
+        - generic [ref=e3489]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3490]
+          - paragraph [ref=e3491]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3492] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3493] [cursor=pointer]:
+          - img [ref=e3494] [cursor=pointer]
+    - alert [ref=e3497]:
+      - generic [ref=e3498]:
+        - img [ref=e3500]
+        - generic [ref=e3502]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3503]
+          - paragraph [ref=e3504]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3505] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3506] [cursor=pointer]:
+          - img [ref=e3507] [cursor=pointer]
+    - alert [ref=e3510]:
+      - generic [ref=e3511]:
+        - img [ref=e3513]
+        - generic [ref=e3515]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3516]
+          - paragraph [ref=e3517]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3518] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3519] [cursor=pointer]:
+          - img [ref=e3520] [cursor=pointer]
+    - alert [ref=e3523]:
+      - generic [ref=e3524]:
+        - img [ref=e3526]
+        - generic [ref=e3528]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3529]
+          - paragraph [ref=e3530]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3531] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3532] [cursor=pointer]:
+          - img [ref=e3533] [cursor=pointer]
+    - alert [ref=e3536]:
+      - generic [ref=e3537]:
+        - img [ref=e3539]
+        - generic [ref=e3541]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3542]
+          - paragraph [ref=e3543]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3544] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3545] [cursor=pointer]:
+          - img [ref=e3546] [cursor=pointer]
+    - alert [ref=e3549]:
+      - generic [ref=e3550]:
+        - img [ref=e3552]
+        - generic [ref=e3554]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3555]
+          - paragraph [ref=e3556]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3557] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3558] [cursor=pointer]:
+          - img [ref=e3559] [cursor=pointer]
+    - alert [ref=e3562]:
+      - generic [ref=e3563]:
+        - img [ref=e3565]
+        - generic [ref=e3567]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3568]
+          - paragraph [ref=e3569]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3570] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3571] [cursor=pointer]:
+          - img [ref=e3572] [cursor=pointer]
+    - alert [ref=e3575]:
+      - generic [ref=e3576]:
+        - img [ref=e3578]
+        - generic [ref=e3580]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3581]
+          - paragraph [ref=e3582]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3583] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3584] [cursor=pointer]:
+          - img [ref=e3585] [cursor=pointer]
+    - alert [ref=e3588]:
+      - generic [ref=e3589]:
+        - img [ref=e3591]
+        - generic [ref=e3593]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3594]
+          - paragraph [ref=e3595]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3596] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3597] [cursor=pointer]:
+          - img [ref=e3598] [cursor=pointer]
+    - alert [ref=e3601]:
+      - generic [ref=e3602]:
+        - img [ref=e3604]
+        - generic [ref=e3606]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3607]
+          - paragraph [ref=e3608]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3609] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3610] [cursor=pointer]:
+          - img [ref=e3611] [cursor=pointer]
+    - alert [ref=e3614]:
+      - generic [ref=e3615]:
+        - img [ref=e3617]
+        - generic [ref=e3619]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3620]
+          - paragraph [ref=e3621]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3622] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3623] [cursor=pointer]:
+          - img [ref=e3624] [cursor=pointer]
+    - alert [ref=e3627]:
+      - generic [ref=e3628]:
+        - img [ref=e3630]
+        - generic [ref=e3632]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3633]
+          - paragraph [ref=e3634]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3635] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3636] [cursor=pointer]:
+          - img [ref=e3637] [cursor=pointer]
+    - alert [ref=e3640]:
+      - generic [ref=e3641]:
+        - img [ref=e3643]
+        - generic [ref=e3645]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3646]
+          - paragraph [ref=e3647]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3648] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3649] [cursor=pointer]:
+          - img [ref=e3650] [cursor=pointer]
+    - alert [ref=e3653]:
+      - generic [ref=e3654]:
+        - img [ref=e3656]
+        - generic [ref=e3658]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3659]
+          - paragraph [ref=e3660]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3661] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3662] [cursor=pointer]:
+          - img [ref=e3663] [cursor=pointer]
+    - alert [ref=e3666]:
+      - generic [ref=e3667]:
+        - img [ref=e3669]
+        - generic [ref=e3671]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3672]
+          - paragraph [ref=e3673]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3674] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3675] [cursor=pointer]:
+          - img [ref=e3676] [cursor=pointer]
+    - alert [ref=e3679]:
+      - generic [ref=e3680]:
+        - img [ref=e3682]
+        - generic [ref=e3684]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3685]
+          - paragraph [ref=e3686]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3687] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3688] [cursor=pointer]:
+          - img [ref=e3689] [cursor=pointer]
+    - alert [ref=e3692]:
+      - generic [ref=e3693]:
+        - img [ref=e3695]
+        - generic [ref=e3697]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3698]
+          - paragraph [ref=e3699]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3700] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3701] [cursor=pointer]:
+          - img [ref=e3702] [cursor=pointer]
+    - alert [ref=e3705]:
+      - generic [ref=e3706]:
+        - img [ref=e3708]
+        - generic [ref=e3710]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3711]
+          - paragraph [ref=e3712]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3713] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3714] [cursor=pointer]:
+          - img [ref=e3715] [cursor=pointer]
+    - alert [ref=e3718]:
+      - generic [ref=e3719]:
+        - img [ref=e3721]
+        - generic [ref=e3723]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3724]
+          - paragraph [ref=e3725]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3726] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3727] [cursor=pointer]:
+          - img [ref=e3728] [cursor=pointer]
+    - alert [ref=e3731]:
+      - generic [ref=e3732]:
+        - img [ref=e3734]
+        - generic [ref=e3736]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3737]
+          - paragraph [ref=e3738]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3739] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3740] [cursor=pointer]:
+          - img [ref=e3741] [cursor=pointer]
+    - alert [ref=e3744]:
+      - generic [ref=e3745]:
+        - img [ref=e3747]
+        - generic [ref=e3749]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3750]
+          - paragraph [ref=e3751]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3752] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3753] [cursor=pointer]:
+          - img [ref=e3754] [cursor=pointer]
+    - alert [ref=e3757]:
+      - generic [ref=e3758]:
+        - img [ref=e3760]
+        - generic [ref=e3762]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3763]
+          - paragraph [ref=e3764]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3765] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3766] [cursor=pointer]:
+          - img [ref=e3767] [cursor=pointer]
+    - alert [ref=e3770]:
+      - generic [ref=e3771]:
+        - img [ref=e3773]
+        - generic [ref=e3775]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3776]
+          - paragraph [ref=e3777]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3778] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3779] [cursor=pointer]:
+          - img [ref=e3780] [cursor=pointer]
+    - alert [ref=e3783]:
+      - generic [ref=e3784]:
+        - img [ref=e3786]
+        - generic [ref=e3788]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3789]
+          - paragraph [ref=e3790]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3791] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3792] [cursor=pointer]:
+          - img [ref=e3793] [cursor=pointer]
+    - alert [ref=e3796]:
+      - generic [ref=e3797]:
+        - img [ref=e3799]
+        - generic [ref=e3801]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3802]
+          - paragraph [ref=e3803]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3804] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3805] [cursor=pointer]:
+          - img [ref=e3806] [cursor=pointer]
+    - alert [ref=e3809]:
+      - generic [ref=e3810]:
+        - img [ref=e3812]
+        - generic [ref=e3814]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3815]
+          - paragraph [ref=e3816]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3817] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3818] [cursor=pointer]:
+          - img [ref=e3819] [cursor=pointer]
+    - alert [ref=e3822]:
+      - generic [ref=e3823]:
+        - img [ref=e3825]
+        - generic [ref=e3827]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3828]
+          - paragraph [ref=e3829]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3830] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3831] [cursor=pointer]:
+          - img [ref=e3832] [cursor=pointer]
+    - alert [ref=e3835]:
+      - generic [ref=e3836]:
+        - img [ref=e3838]
+        - generic [ref=e3840]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3841]
+          - paragraph [ref=e3842]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3843] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3844] [cursor=pointer]:
+          - img [ref=e3845] [cursor=pointer]
+    - alert [ref=e3848]:
+      - generic [ref=e3849]:
+        - img [ref=e3851]
+        - generic [ref=e3853]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3854]
+          - paragraph [ref=e3855]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3856] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3857] [cursor=pointer]:
+          - img [ref=e3858] [cursor=pointer]
+    - alert [ref=e3861]:
+      - generic [ref=e3862]:
+        - img [ref=e3864]
+        - generic [ref=e3866]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3867]
+          - paragraph [ref=e3868]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3869] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3870] [cursor=pointer]:
+          - img [ref=e3871] [cursor=pointer]
+    - alert [ref=e3874]:
+      - generic [ref=e3875]:
+        - img [ref=e3877]
+        - generic [ref=e3879]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3880]
+          - paragraph [ref=e3881]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3882] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3883] [cursor=pointer]:
+          - img [ref=e3884] [cursor=pointer]
+    - alert [ref=e3887]:
+      - generic [ref=e3888]:
+        - img [ref=e3890]
+        - generic [ref=e3892]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3893]
+          - paragraph [ref=e3894]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3895] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3896] [cursor=pointer]:
+          - img [ref=e3897] [cursor=pointer]
+    - alert [ref=e3900]:
+      - generic [ref=e3901]:
+        - img [ref=e3903]
+        - generic [ref=e3905]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3906]
+          - paragraph [ref=e3907]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3908] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3909] [cursor=pointer]:
+          - img [ref=e3910] [cursor=pointer]
+    - alert [ref=e3913]:
+      - generic [ref=e3914]:
+        - img [ref=e3916]
+        - generic [ref=e3918]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3919]
+          - paragraph [ref=e3920]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3921] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3922] [cursor=pointer]:
+          - img [ref=e3923] [cursor=pointer]
+    - alert [ref=e3926]:
+      - generic [ref=e3927]:
+        - img [ref=e3929]
+        - generic [ref=e3931]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3932]
+          - paragraph [ref=e3933]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3934] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3935] [cursor=pointer]:
+          - img [ref=e3936] [cursor=pointer]
+    - alert [ref=e3939]:
+      - generic [ref=e3940]:
+        - img [ref=e3942]
+        - generic [ref=e3944]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3945]
+          - paragraph [ref=e3946]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3947] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3948] [cursor=pointer]:
+          - img [ref=e3949] [cursor=pointer]
+    - alert [ref=e3952]:
+      - generic [ref=e3953]:
+        - img [ref=e3955]
+        - generic [ref=e3957]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3958]
+          - paragraph [ref=e3959]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3960] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3961] [cursor=pointer]:
+          - img [ref=e3962] [cursor=pointer]
+    - alert [ref=e3965]:
+      - generic [ref=e3966]:
+        - img [ref=e3968]
+        - generic [ref=e3970]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3971]
+          - paragraph [ref=e3972]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3973] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3974] [cursor=pointer]:
+          - img [ref=e3975] [cursor=pointer]
+    - alert [ref=e3978]:
+      - generic [ref=e3979]:
+        - img [ref=e3981]
+        - generic [ref=e3983]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3984]
+          - paragraph [ref=e3985]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3986] [cursor=pointer]
+        - button "Dismiss notification" [ref=e3987] [cursor=pointer]:
+          - img [ref=e3988] [cursor=pointer]
+    - alert [ref=e3991]:
+      - generic [ref=e3992]:
+        - img [ref=e3994]
+        - generic [ref=e3996]:
+          - heading "Get gentle notifications?" [level=4] [ref=e3997]
+          - paragraph [ref=e3998]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e3999] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4000] [cursor=pointer]:
+          - img [ref=e4001] [cursor=pointer]
+    - alert [ref=e4004]:
+      - generic [ref=e4005]:
+        - img [ref=e4007]
+        - generic [ref=e4009]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4010]
+          - paragraph [ref=e4011]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4012] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4013] [cursor=pointer]:
+          - img [ref=e4014] [cursor=pointer]
+    - alert [ref=e4017]:
+      - generic [ref=e4018]:
+        - img [ref=e4020]
+        - generic [ref=e4022]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4023]
+          - paragraph [ref=e4024]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4025] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4026] [cursor=pointer]:
+          - img [ref=e4027] [cursor=pointer]
+    - alert [ref=e4030]:
+      - generic [ref=e4031]:
+        - img [ref=e4033]
+        - generic [ref=e4035]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4036]
+          - paragraph [ref=e4037]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4038] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4039] [cursor=pointer]:
+          - img [ref=e4040] [cursor=pointer]
+    - alert [ref=e4043]:
+      - generic [ref=e4044]:
+        - img [ref=e4046]
+        - generic [ref=e4048]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4049]
+          - paragraph [ref=e4050]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4051] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4052] [cursor=pointer]:
+          - img [ref=e4053] [cursor=pointer]
+    - alert [ref=e4056]:
+      - generic [ref=e4057]:
+        - img [ref=e4059]
+        - generic [ref=e4061]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4062]
+          - paragraph [ref=e4063]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4064] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4065] [cursor=pointer]:
+          - img [ref=e4066] [cursor=pointer]
+    - alert [ref=e4069]:
+      - generic [ref=e4070]:
+        - img [ref=e4072]
+        - generic [ref=e4074]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4075]
+          - paragraph [ref=e4076]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4077] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4078] [cursor=pointer]:
+          - img [ref=e4079] [cursor=pointer]
+    - alert [ref=e4082]:
+      - generic [ref=e4083]:
+        - img [ref=e4085]
+        - generic [ref=e4087]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4088]
+          - paragraph [ref=e4089]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4090] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4091] [cursor=pointer]:
+          - img [ref=e4092] [cursor=pointer]
+    - alert [ref=e4095]:
+      - generic [ref=e4096]:
+        - img [ref=e4098]
+        - generic [ref=e4100]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4101]
+          - paragraph [ref=e4102]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4103] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4104] [cursor=pointer]:
+          - img [ref=e4105] [cursor=pointer]
+    - alert [ref=e4108]:
+      - generic [ref=e4109]:
+        - img [ref=e4111]
+        - generic [ref=e4113]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4114]
+          - paragraph [ref=e4115]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4116] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4117] [cursor=pointer]:
+          - img [ref=e4118] [cursor=pointer]
+    - alert [ref=e4121]:
+      - generic [ref=e4122]:
+        - img [ref=e4124]
+        - generic [ref=e4126]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4127]
+          - paragraph [ref=e4128]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4129] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4130] [cursor=pointer]:
+          - img [ref=e4131] [cursor=pointer]
+    - alert [ref=e4134]:
+      - generic [ref=e4135]:
+        - img [ref=e4137]
+        - generic [ref=e4139]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4140]
+          - paragraph [ref=e4141]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4142] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4143] [cursor=pointer]:
+          - img [ref=e4144] [cursor=pointer]
+    - alert [ref=e4147]:
+      - generic [ref=e4148]:
+        - img [ref=e4150]
+        - generic [ref=e4152]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4153]
+          - paragraph [ref=e4154]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4155] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4156] [cursor=pointer]:
+          - img [ref=e4157] [cursor=pointer]
+    - alert [ref=e4160]:
+      - generic [ref=e4161]:
+        - img [ref=e4163]
+        - generic [ref=e4165]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4166]
+          - paragraph [ref=e4167]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4168] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4169] [cursor=pointer]:
+          - img [ref=e4170] [cursor=pointer]
+    - alert [ref=e4173]:
+      - generic [ref=e4174]:
+        - img [ref=e4176]
+        - generic [ref=e4178]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4179]
+          - paragraph [ref=e4180]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4181] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4182] [cursor=pointer]:
+          - img [ref=e4183] [cursor=pointer]
+    - alert [ref=e4186]:
+      - generic [ref=e4187]:
+        - img [ref=e4189]
+        - generic [ref=e4191]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4192]
+          - paragraph [ref=e4193]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4194] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4195] [cursor=pointer]:
+          - img [ref=e4196] [cursor=pointer]
+    - alert [ref=e4199]:
+      - generic [ref=e4200]:
+        - img [ref=e4202]
+        - generic [ref=e4204]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4205]
+          - paragraph [ref=e4206]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4207] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4208] [cursor=pointer]:
+          - img [ref=e4209] [cursor=pointer]
+    - alert [ref=e4212]:
+      - generic [ref=e4213]:
+        - img [ref=e4215]
+        - generic [ref=e4217]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4218]
+          - paragraph [ref=e4219]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4220] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4221] [cursor=pointer]:
+          - img [ref=e4222] [cursor=pointer]
+    - alert [ref=e4225]:
+      - generic [ref=e4226]:
+        - img [ref=e4228]
+        - generic [ref=e4230]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4231]
+          - paragraph [ref=e4232]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4233] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4234] [cursor=pointer]:
+          - img [ref=e4235] [cursor=pointer]
+    - alert [ref=e4238]:
+      - generic [ref=e4239]:
+        - img [ref=e4241]
+        - generic [ref=e4243]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4244]
+          - paragraph [ref=e4245]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4246] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4247] [cursor=pointer]:
+          - img [ref=e4248] [cursor=pointer]
+    - alert [ref=e4251]:
+      - generic [ref=e4252]:
+        - img [ref=e4254]
+        - generic [ref=e4256]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4257]
+          - paragraph [ref=e4258]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4259] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4260] [cursor=pointer]:
+          - img [ref=e4261] [cursor=pointer]
+    - alert [ref=e4264]:
+      - generic [ref=e4265]:
+        - img [ref=e4267]
+        - generic [ref=e4269]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4270]
+          - paragraph [ref=e4271]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4272] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4273] [cursor=pointer]:
+          - img [ref=e4274] [cursor=pointer]
+    - alert [ref=e4277]:
+      - generic [ref=e4278]:
+        - img [ref=e4280]
+        - generic [ref=e4282]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4283]
+          - paragraph [ref=e4284]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4285] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4286] [cursor=pointer]:
+          - img [ref=e4287] [cursor=pointer]
+    - alert [ref=e4290]:
+      - generic [ref=e4291]:
+        - img [ref=e4293]
+        - generic [ref=e4295]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4296]
+          - paragraph [ref=e4297]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4298] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4299] [cursor=pointer]:
+          - img [ref=e4300] [cursor=pointer]
+    - alert [ref=e4303]:
+      - generic [ref=e4304]:
+        - img [ref=e4306]
+        - generic [ref=e4308]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4309]
+          - paragraph [ref=e4310]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4311] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4312] [cursor=pointer]:
+          - img [ref=e4313] [cursor=pointer]
+    - alert [ref=e4316]:
+      - generic [ref=e4317]:
+        - img [ref=e4319]
+        - generic [ref=e4321]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4322]
+          - paragraph [ref=e4323]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4324] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4325] [cursor=pointer]:
+          - img [ref=e4326] [cursor=pointer]
+    - alert [ref=e4329]:
+      - generic [ref=e4330]:
+        - img [ref=e4332]
+        - generic [ref=e4334]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4335]
+          - paragraph [ref=e4336]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4337] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4338] [cursor=pointer]:
+          - img [ref=e4339] [cursor=pointer]
+    - alert [ref=e4342]:
+      - generic [ref=e4343]:
+        - img [ref=e4345]
+        - generic [ref=e4347]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4348]
+          - paragraph [ref=e4349]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4350] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4351] [cursor=pointer]:
+          - img [ref=e4352] [cursor=pointer]
+    - alert [ref=e4355]:
+      - generic [ref=e4356]:
+        - img [ref=e4358]
+        - generic [ref=e4360]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4361]
+          - paragraph [ref=e4362]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4363] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4364] [cursor=pointer]:
+          - img [ref=e4365] [cursor=pointer]
+    - alert [ref=e4368]:
+      - generic [ref=e4369]:
+        - img [ref=e4371]
+        - generic [ref=e4373]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4374]
+          - paragraph [ref=e4375]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4376] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4377] [cursor=pointer]:
+          - img [ref=e4378] [cursor=pointer]
+    - alert [ref=e4381]:
+      - generic [ref=e4382]:
+        - img [ref=e4384]
+        - generic [ref=e4386]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4387]
+          - paragraph [ref=e4388]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4389] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4390] [cursor=pointer]:
+          - img [ref=e4391] [cursor=pointer]
+    - alert [ref=e4394]:
+      - generic [ref=e4395]:
+        - img [ref=e4397]
+        - generic [ref=e4399]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4400]
+          - paragraph [ref=e4401]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4402] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4403] [cursor=pointer]:
+          - img [ref=e4404] [cursor=pointer]
+    - alert [ref=e4407]:
+      - generic [ref=e4408]:
+        - img [ref=e4410]
+        - generic [ref=e4412]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4413]
+          - paragraph [ref=e4414]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4415] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4416] [cursor=pointer]:
+          - img [ref=e4417] [cursor=pointer]
+    - alert [ref=e4420]:
+      - generic [ref=e4421]:
+        - img [ref=e4423]
+        - generic [ref=e4425]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4426]
+          - paragraph [ref=e4427]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4428] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4429] [cursor=pointer]:
+          - img [ref=e4430] [cursor=pointer]
+    - alert [ref=e4433]:
+      - generic [ref=e4434]:
+        - img [ref=e4436]
+        - generic [ref=e4438]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4439]
+          - paragraph [ref=e4440]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4441] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4442] [cursor=pointer]:
+          - img [ref=e4443] [cursor=pointer]
+    - alert [ref=e4446]:
+      - generic [ref=e4447]:
+        - img [ref=e4449]
+        - generic [ref=e4451]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4452]
+          - paragraph [ref=e4453]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4454] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4455] [cursor=pointer]:
+          - img [ref=e4456] [cursor=pointer]
+    - alert [ref=e4459]:
+      - generic [ref=e4460]:
+        - img [ref=e4462]
+        - generic [ref=e4464]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4465]
+          - paragraph [ref=e4466]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4467] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4468] [cursor=pointer]:
+          - img [ref=e4469] [cursor=pointer]
+    - alert [ref=e4472]:
+      - generic [ref=e4473]:
+        - img [ref=e4475]
+        - generic [ref=e4477]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4478]
+          - paragraph [ref=e4479]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4480] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4481] [cursor=pointer]:
+          - img [ref=e4482] [cursor=pointer]
+    - alert [ref=e4485]:
+      - generic [ref=e4486]:
+        - img [ref=e4488]
+        - generic [ref=e4490]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4491]
+          - paragraph [ref=e4492]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4493] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4494] [cursor=pointer]:
+          - img [ref=e4495] [cursor=pointer]
+    - alert [ref=e4498]:
+      - generic [ref=e4499]:
+        - img [ref=e4501]
+        - generic [ref=e4503]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4504]
+          - paragraph [ref=e4505]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4506] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4507] [cursor=pointer]:
+          - img [ref=e4508] [cursor=pointer]
+    - alert [ref=e4511]:
+      - generic [ref=e4512]:
+        - img [ref=e4514]
+        - generic [ref=e4516]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4517]
+          - paragraph [ref=e4518]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4519] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4520] [cursor=pointer]:
+          - img [ref=e4521] [cursor=pointer]
+    - alert [ref=e4524]:
+      - generic [ref=e4525]:
+        - img [ref=e4527]
+        - generic [ref=e4529]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4530]
+          - paragraph [ref=e4531]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4532] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4533] [cursor=pointer]:
+          - img [ref=e4534] [cursor=pointer]
+    - alert [ref=e4537]:
+      - generic [ref=e4538]:
+        - img [ref=e4540]
+        - generic [ref=e4542]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4543]
+          - paragraph [ref=e4544]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4545] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4546] [cursor=pointer]:
+          - img [ref=e4547] [cursor=pointer]
+    - alert [ref=e4550]:
+      - generic [ref=e4551]:
+        - img [ref=e4553]
+        - generic [ref=e4555]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4556]
+          - paragraph [ref=e4557]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4558] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4559] [cursor=pointer]:
+          - img [ref=e4560] [cursor=pointer]
+    - alert [ref=e4563]:
+      - generic [ref=e4564]:
+        - img [ref=e4566]
+        - generic [ref=e4568]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4569]
+          - paragraph [ref=e4570]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4571] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4572] [cursor=pointer]:
+          - img [ref=e4573] [cursor=pointer]
+    - alert [ref=e4576]:
+      - generic [ref=e4577]:
+        - img [ref=e4579]
+        - generic [ref=e4581]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4582]
+          - paragraph [ref=e4583]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4584] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4585] [cursor=pointer]:
+          - img [ref=e4586] [cursor=pointer]
+    - alert [ref=e4589]:
+      - generic [ref=e4590]:
+        - img [ref=e4592]
+        - generic [ref=e4594]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4595]
+          - paragraph [ref=e4596]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4597] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4598] [cursor=pointer]:
+          - img [ref=e4599] [cursor=pointer]
+    - alert [ref=e4602]:
+      - generic [ref=e4603]:
+        - img [ref=e4605]
+        - generic [ref=e4607]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4608]
+          - paragraph [ref=e4609]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4610] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4611] [cursor=pointer]:
+          - img [ref=e4612] [cursor=pointer]
+    - alert [ref=e4615]:
+      - generic [ref=e4616]:
+        - img [ref=e4618]
+        - generic [ref=e4620]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4621]
+          - paragraph [ref=e4622]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4623] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4624] [cursor=pointer]:
+          - img [ref=e4625] [cursor=pointer]
+    - alert [ref=e4628]:
+      - generic [ref=e4629]:
+        - img [ref=e4631]
+        - generic [ref=e4633]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4634]
+          - paragraph [ref=e4635]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4636] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4637] [cursor=pointer]:
+          - img [ref=e4638] [cursor=pointer]
+    - alert [ref=e4641]:
+      - generic [ref=e4642]:
+        - img [ref=e4644]
+        - generic [ref=e4646]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4647]
+          - paragraph [ref=e4648]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4649] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4650] [cursor=pointer]:
+          - img [ref=e4651] [cursor=pointer]
+    - alert [ref=e4654]:
+      - generic [ref=e4655]:
+        - img [ref=e4657]
+        - generic [ref=e4659]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4660]
+          - paragraph [ref=e4661]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4662] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4663] [cursor=pointer]:
+          - img [ref=e4664] [cursor=pointer]
+    - alert [ref=e4667]:
+      - generic [ref=e4668]:
+        - img [ref=e4670]
+        - generic [ref=e4672]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4673]
+          - paragraph [ref=e4674]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4675] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4676] [cursor=pointer]:
+          - img [ref=e4677] [cursor=pointer]
+    - alert [ref=e4680]:
+      - generic [ref=e4681]:
+        - img [ref=e4683]
+        - generic [ref=e4685]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4686]
+          - paragraph [ref=e4687]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4688] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4689] [cursor=pointer]:
+          - img [ref=e4690] [cursor=pointer]
+    - alert [ref=e4693]:
+      - generic [ref=e4694]:
+        - img [ref=e4696]
+        - generic [ref=e4698]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4699]
+          - paragraph [ref=e4700]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4701] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4702] [cursor=pointer]:
+          - img [ref=e4703] [cursor=pointer]
+    - alert [ref=e4706]:
+      - generic [ref=e4707]:
+        - img [ref=e4709]
+        - generic [ref=e4711]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4712]
+          - paragraph [ref=e4713]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4714] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4715] [cursor=pointer]:
+          - img [ref=e4716] [cursor=pointer]
+    - alert [ref=e4719]:
+      - generic [ref=e4720]:
+        - img [ref=e4722]
+        - generic [ref=e4724]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4725]
+          - paragraph [ref=e4726]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4727] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4728] [cursor=pointer]:
+          - img [ref=e4729] [cursor=pointer]
+    - alert [ref=e4732]:
+      - generic [ref=e4733]:
+        - img [ref=e4735]
+        - generic [ref=e4737]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4738]
+          - paragraph [ref=e4739]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4740] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4741] [cursor=pointer]:
+          - img [ref=e4742] [cursor=pointer]
+    - alert [ref=e4745]:
+      - generic [ref=e4746]:
+        - img [ref=e4748]
+        - generic [ref=e4750]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4751]
+          - paragraph [ref=e4752]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4753] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4754] [cursor=pointer]:
+          - img [ref=e4755] [cursor=pointer]
+    - alert [ref=e4758]:
+      - generic [ref=e4759]:
+        - img [ref=e4761]
+        - generic [ref=e4763]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4764]
+          - paragraph [ref=e4765]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4766] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4767] [cursor=pointer]:
+          - img [ref=e4768] [cursor=pointer]
+    - alert [ref=e4771]:
+      - generic [ref=e4772]:
+        - img [ref=e4774]
+        - generic [ref=e4776]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4777]
+          - paragraph [ref=e4778]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4779] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4780] [cursor=pointer]:
+          - img [ref=e4781] [cursor=pointer]
+    - alert [ref=e4784]:
+      - generic [ref=e4785]:
+        - img [ref=e4787]
+        - generic [ref=e4789]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4790]
+          - paragraph [ref=e4791]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4792] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4793] [cursor=pointer]:
+          - img [ref=e4794] [cursor=pointer]
+    - alert [ref=e4797]:
+      - generic [ref=e4798]:
+        - img [ref=e4800]
+        - generic [ref=e4802]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4803]
+          - paragraph [ref=e4804]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4805] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4806] [cursor=pointer]:
+          - img [ref=e4807] [cursor=pointer]
+    - alert [ref=e4810]:
+      - generic [ref=e4811]:
+        - img [ref=e4813]
+        - generic [ref=e4815]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4816]
+          - paragraph [ref=e4817]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4818] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4819] [cursor=pointer]:
+          - img [ref=e4820] [cursor=pointer]
+    - alert [ref=e4823]:
+      - generic [ref=e4824]:
+        - img [ref=e4826]
+        - generic [ref=e4828]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4829]
+          - paragraph [ref=e4830]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4831] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4832] [cursor=pointer]:
+          - img [ref=e4833] [cursor=pointer]
+    - alert [ref=e4836]:
+      - generic [ref=e4837]:
+        - img [ref=e4839]
+        - generic [ref=e4841]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4842]
+          - paragraph [ref=e4843]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4844] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4845] [cursor=pointer]:
+          - img [ref=e4846] [cursor=pointer]
+    - alert [ref=e4849]:
+      - generic [ref=e4850]:
+        - img [ref=e4852]
+        - generic [ref=e4854]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4855]
+          - paragraph [ref=e4856]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4857] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4858] [cursor=pointer]:
+          - img [ref=e4859] [cursor=pointer]
+    - alert [ref=e4862]:
+      - generic [ref=e4863]:
+        - img [ref=e4865]
+        - generic [ref=e4867]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4868]
+          - paragraph [ref=e4869]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4870] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4871] [cursor=pointer]:
+          - img [ref=e4872] [cursor=pointer]
+    - alert [ref=e4875]:
+      - generic [ref=e4876]:
+        - img [ref=e4878]
+        - generic [ref=e4880]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4881]
+          - paragraph [ref=e4882]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4883] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4884] [cursor=pointer]:
+          - img [ref=e4885] [cursor=pointer]
+    - alert [ref=e4888]:
+      - generic [ref=e4889]:
+        - img [ref=e4891]
+        - generic [ref=e4893]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4894]
+          - paragraph [ref=e4895]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4896] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4897] [cursor=pointer]:
+          - img [ref=e4898] [cursor=pointer]
+    - alert [ref=e4901]:
+      - generic [ref=e4902]:
+        - img [ref=e4904]
+        - generic [ref=e4906]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4907]
+          - paragraph [ref=e4908]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4909] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4910] [cursor=pointer]:
+          - img [ref=e4911] [cursor=pointer]
+    - alert [ref=e4914]:
+      - generic [ref=e4915]:
+        - img [ref=e4917]
+        - generic [ref=e4919]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4920]
+          - paragraph [ref=e4921]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4922] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4923] [cursor=pointer]:
+          - img [ref=e4924] [cursor=pointer]
+    - alert [ref=e4927]:
+      - generic [ref=e4928]:
+        - img [ref=e4930]
+        - generic [ref=e4932]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4933]
+          - paragraph [ref=e4934]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4935] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4936] [cursor=pointer]:
+          - img [ref=e4937] [cursor=pointer]
+    - alert [ref=e4940]:
+      - generic [ref=e4941]:
+        - img [ref=e4943]
+        - generic [ref=e4945]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4946]
+          - paragraph [ref=e4947]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4948] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4949] [cursor=pointer]:
+          - img [ref=e4950] [cursor=pointer]
+    - alert [ref=e4953]:
+      - generic [ref=e4954]:
+        - img [ref=e4956]
+        - generic [ref=e4958]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4959]
+          - paragraph [ref=e4960]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4961] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4962] [cursor=pointer]:
+          - img [ref=e4963] [cursor=pointer]
+    - alert [ref=e4966]:
+      - generic [ref=e4967]:
+        - img [ref=e4969]
+        - generic [ref=e4971]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4972]
+          - paragraph [ref=e4973]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4974] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4975] [cursor=pointer]:
+          - img [ref=e4976] [cursor=pointer]
+    - alert [ref=e4979]:
+      - generic [ref=e4980]:
+        - img [ref=e4982]
+        - generic [ref=e4984]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4985]
+          - paragraph [ref=e4986]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e4987] [cursor=pointer]
+        - button "Dismiss notification" [ref=e4988] [cursor=pointer]:
+          - img [ref=e4989] [cursor=pointer]
+    - alert [ref=e4992]:
+      - generic [ref=e4993]:
+        - img [ref=e4995]
+        - generic [ref=e4997]:
+          - heading "Get gentle notifications?" [level=4] [ref=e4998]
+          - paragraph [ref=e4999]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5000] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5001] [cursor=pointer]:
+          - img [ref=e5002] [cursor=pointer]
+    - alert [ref=e5005]:
+      - generic [ref=e5006]:
+        - img [ref=e5008]
+        - generic [ref=e5010]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5011]
+          - paragraph [ref=e5012]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5013] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5014] [cursor=pointer]:
+          - img [ref=e5015] [cursor=pointer]
+    - alert [ref=e5018]:
+      - generic [ref=e5019]:
+        - img [ref=e5021]
+        - generic [ref=e5023]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5024]
+          - paragraph [ref=e5025]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5026] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5027] [cursor=pointer]:
+          - img [ref=e5028] [cursor=pointer]
+    - alert [ref=e5031]:
+      - generic [ref=e5032]:
+        - img [ref=e5034]
+        - generic [ref=e5036]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5037]
+          - paragraph [ref=e5038]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5039] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5040] [cursor=pointer]:
+          - img [ref=e5041] [cursor=pointer]
+    - alert [ref=e5044]:
+      - generic [ref=e5045]:
+        - img [ref=e5047]
+        - generic [ref=e5049]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5050]
+          - paragraph [ref=e5051]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5052] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5053] [cursor=pointer]:
+          - img [ref=e5054] [cursor=pointer]
+    - alert [ref=e5057]:
+      - generic [ref=e5058]:
+        - img [ref=e5060]
+        - generic [ref=e5062]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5063]
+          - paragraph [ref=e5064]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5065] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5066] [cursor=pointer]:
+          - img [ref=e5067] [cursor=pointer]
+    - alert [ref=e5070]:
+      - generic [ref=e5071]:
+        - img [ref=e5073]
+        - generic [ref=e5075]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5076]
+          - paragraph [ref=e5077]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5078] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5079] [cursor=pointer]:
+          - img [ref=e5080] [cursor=pointer]
+    - alert [ref=e5083]:
+      - generic [ref=e5084]:
+        - img [ref=e5086]
+        - generic [ref=e5088]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5089]
+          - paragraph [ref=e5090]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5091] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5092] [cursor=pointer]:
+          - img [ref=e5093] [cursor=pointer]
+    - alert [ref=e5096]:
+      - generic [ref=e5097]:
+        - img [ref=e5099]
+        - generic [ref=e5101]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5102]
+          - paragraph [ref=e5103]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5104] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5105] [cursor=pointer]:
+          - img [ref=e5106] [cursor=pointer]
+    - alert [ref=e5109]:
+      - generic [ref=e5110]:
+        - img [ref=e5112]
+        - generic [ref=e5114]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5115]
+          - paragraph [ref=e5116]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5117] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5118] [cursor=pointer]:
+          - img [ref=e5119] [cursor=pointer]
+    - alert [ref=e5122]:
+      - generic [ref=e5123]:
+        - img [ref=e5125]
+        - generic [ref=e5127]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5128]
+          - paragraph [ref=e5129]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5130] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5131] [cursor=pointer]:
+          - img [ref=e5132] [cursor=pointer]
+    - alert [ref=e5135]:
+      - generic [ref=e5136]:
+        - img [ref=e5138]
+        - generic [ref=e5140]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5141]
+          - paragraph [ref=e5142]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5143] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5144] [cursor=pointer]:
+          - img [ref=e5145] [cursor=pointer]
+    - alert [ref=e5148]:
+      - generic [ref=e5149]:
+        - img [ref=e5151]
+        - generic [ref=e5153]:
+          - heading "Get gentle notifications?" [level=4] [ref=e5154]
+          - paragraph [ref=e5155]: We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.
+          - button "Allow" [ref=e5156] [cursor=pointer]
+        - button "Dismiss notification" [ref=e5157] [cursor=pointer]:
+          - img [ref=e5158] [cursor=pointer]
+```

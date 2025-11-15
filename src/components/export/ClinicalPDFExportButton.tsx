@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FileText, Download } from 'lucide-react';
 import { PatientClaimInfoModal, type PatientClaimInfo } from './PatientClaimInfoModal';
 import { captureMultipleCharts, waitForChartsToRender } from '../../utils/chartCapture';
 import type { PainEntry } from '../../types';
 import type { MoodEntry } from '../../types/quantified-empathy';
+import { hipaaComplianceService } from '../../services/HIPAACompliance';
+import type { AuditTrail } from '../../services/HIPAACompliance';
+
+type AuditActionType = AuditTrail['actionType'];
+type AuditOutcome = AuditTrail['outcome'];
 
 interface ClinicalPDFExportButtonProps {
   entries: PainEntry[];
@@ -28,18 +33,68 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const logPdfAudit = useCallback(
+    async ({
+      action,
+      actionType = 'export',
+      outcome = 'success',
+      details = {}
+    }: {
+      action: string;
+      actionType?: AuditActionType;
+      outcome?: AuditOutcome;
+      details?: Record<string, unknown>;
+    }) => {
+      try {
+        await hipaaComplianceService.logAuditEvent({
+          actionType,
+          userId: 'local-user',
+          userRole: 'patient',
+          resourceType: 'ClinicalPDFExport',
+          outcome,
+          details: {
+            action,
+            entryCount: entries.length,
+            moodEntryCount: moodEntries.length,
+            ...details
+          }
+        });
+      } catch (auditError) {
+        console.error('HIPAA audit logging failed', auditError);
+      }
+    },
+    [entries.length, moodEntries.length]
+  );
+
   const handleExportClick = () => {
     if (entries.length === 0) {
       setError('No pain entries to export');
+      void logPdfAudit({
+        action: 'clinical-pdf-export',
+        outcome: 'failure',
+        details: { reason: 'no-entries' }
+      });
       return;
     }
     setError(null);
     setShowModal(true);
+    void logPdfAudit({
+      action: 'clinical-pdf-export',
+      actionType: 'access',
+      details: { step: 'patient-info-modal' }
+    });
   };
 
   const handleSubmitPatientInfo = async (patientInfo: PatientClaimInfo) => {
     setIsExporting(true);
     setError(null);
+    void logPdfAudit({
+      action: 'clinical-pdf-export',
+      details: {
+        stage: 'generation-start',
+        hasPatientInfo: Boolean(patientInfo)
+      }
+    });
 
     try {
       // Wait for charts to render
@@ -69,9 +124,24 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
       if ('vibrate' in navigator) {
         navigator.vibrate([100, 50, 100]);
       }
+      await logPdfAudit({
+        action: 'clinical-pdf-export',
+        details: {
+          stage: 'generation-complete',
+          chartsCaptured: Object.keys(chartImages).length
+        }
+      });
     } catch (err) {
       console.error('PDF export failed:', err);
       setError('Failed to generate PDF. Please try again.');
+      await logPdfAudit({
+        action: 'clinical-pdf-export',
+        outcome: 'failure',
+        details: {
+          stage: 'generation-error',
+          error: err instanceof Error ? err.message : 'unknown-error'
+        }
+      });
     } finally {
       setIsExporting(false);
     }

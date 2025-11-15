@@ -118,7 +118,12 @@ async function captureScreenshot(page, screenshot, outputDir) {
 
     // Navigate to URL if specified
     if (screenshot.url) {
-      await page.goto(screenshot.url, { 
+      const baseUrl = 'http://localhost:3000';
+      const fullUrl = screenshot.url.startsWith('http') 
+        ? screenshot.url 
+        : `${baseUrl}${screenshot.url}`;
+      
+      await page.goto(fullUrl, { 
         waitUntil: 'networkidle',
         timeout: 30000 
       });
@@ -308,6 +313,81 @@ async function captureScreenshotPortfolio() {
 
     const page = await context.newPage();
 
+    // Handle authentication - set up vault with test passphrase
+    console.log('🔐 Setting up authentication...');
+    const baseUrl = 'http://localhost:3000';
+    await page.goto(`${baseUrl}/pain-tracker/`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(1000);
+    
+    // DEBUG: Take screenshot of current page
+    const debugDir = join(SCREENSHOTS_BASE_DIR, 'debug');
+    ensureDir(debugDir);
+    await page.screenshot({ path: join(debugDir, 'auth-screen.png') });
+    console.log('   📸 Debug screenshot saved to debug/auth-screen.png');
+    
+    // Check if we need to set up or unlock the vault
+    const setupHeading = await page.locator('text=/Create a secure passphrase|Create Your Vault/i').count();
+    const unlockHeading = await page.locator('text=/Unlock Your Vault|Enter your passphrase/i').count();
+    
+    console.log(`   Setup screen detected: ${setupHeading > 0}`);
+    console.log(`   Unlock screen detected: ${unlockHeading > 0}`);
+    
+    const testPassphrase = 'screenshot-test-passphrase-2025';
+    
+    if (setupHeading > 0) {
+      console.log('   Setting up vault with test passphrase...');
+      
+      // Wait for password inputs to be visible
+      await page.waitForSelector('input[type="password"]', { state: 'visible', timeout: 5000 });
+      
+      // Get all password fields
+      const passwordFields = await page.locator('input[type="password"]').all();
+      console.log(`   Found ${passwordFields.length} password fields`);
+      
+      // Fill passphrase field (first one)
+      await passwordFields[0].fill(testPassphrase);
+      
+      // Fill confirm passphrase field (second one)
+      if (passwordFields.length > 1) {
+        await passwordFields[1].fill(testPassphrase);
+      }
+      
+      // Wait a bit for validation
+      await page.waitForTimeout(500);
+      
+      // Click submit button
+      const submitButton = await page.locator('button[type="submit"]');
+      await submitButton.click();
+      
+      // Wait for authentication to complete
+      await page.waitForTimeout(3000);
+      
+      // DEBUG: Screenshot after auth
+      await page.screenshot({ path: join(debugDir, 'after-auth.png') });
+      console.log('   📸 After auth screenshot saved');
+      console.log('   ✅ Vault created and unlocked');
+      
+    } else if (unlockHeading > 0) {
+      console.log('   Unlocking vault...');
+      
+      await page.waitForSelector('input[type="password"]', { state: 'visible', timeout: 5000 });
+      await page.fill('input[type="password"]', testPassphrase);
+      await page.waitForTimeout(500);
+      
+      const submitButton = await page.locator('button[type="submit"]');
+      await submitButton.click();
+      
+      await page.waitForTimeout(3000);
+      
+      // DEBUG: Screenshot after auth
+      await page.screenshot({ path: join(debugDir, 'after-auth.png') });
+      console.log('   📸 After auth screenshot saved');
+      console.log('   ✅ Vault unlocked');
+      
+    } else {
+      console.log('   ✅ Already authenticated');
+    }
+
     // Capture each screenshot
     const results = [];
     for (const screenshot of screenshots) {
@@ -316,6 +396,29 @@ async function captureScreenshotPortfolio() {
     }
 
     await browser.close();
+
+    // Clean up test vault data from localStorage
+    console.log('🧹 Cleaning up test vault data...');
+    const cleanupBrowser = await chromium.launch({ headless: true });
+    const cleanupContext = await cleanupBrowser.newContext();
+    const cleanupPage = await cleanupContext.newPage();
+    
+    await cleanupPage.goto(`${baseUrl}/pain-tracker/`);
+    await cleanupPage.evaluate(() => {
+      // Clear all localStorage (vault keys)
+      localStorage.clear();
+      // Clear all IndexedDB databases
+      if (window.indexedDB && window.indexedDB.databases) {
+        window.indexedDB.databases().then(dbs => {
+          dbs.forEach(db => {
+            if (db.name) window.indexedDB.deleteDatabase(db.name);
+          });
+        });
+      }
+    });
+    
+    await cleanupBrowser.close();
+    console.log('   ✅ Test data cleared');
 
     // Generate metadata
     if (!dryRun) {

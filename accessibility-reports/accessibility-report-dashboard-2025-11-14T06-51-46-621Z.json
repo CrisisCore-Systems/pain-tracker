@@ -1,0 +1,124 @@
+{
+  "route": "dashboard",
+  "timestamp": "2025-11-14T06:51:46.621Z",
+  "violations": [],
+  "colorData": [
+    {
+      "selector": "DIV.fixed.inset-0.z-50.flex.items-center.justify-center.bg-slate-900/80.px-4",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgba(15, 23, 42, 0.8)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.w-full.max-w-lg.rounded-xl.bg-white.p-6.shadow-2xl.focus:outline-none.focus-visible:ring-2.focus-visible:ring-indigo-500",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "SPAN.inline-flex.h-10.w-10.items-center.justify-center.rounded-full.bg-indigo-50.text-indigo-600.text-lg.font-semibold",
+      "textColor": "rgb(79, 70, 229)",
+      "backgroundColor": "rgb(238, 242, 255)",
+      "borderColor": "rgb(79, 70, 229)",
+      "fontSize": "18px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "INPUT.mt-1.block.w-full.rounded-md.border.border-gray-300.px-3.py-2.shadow-sm.focus:border-indigo-500.focus:outline-none.focus:ring-2.focus:ring-indigo-500",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.mt-1.block.w-full.rounded-md.border.border-gray-300.px-3.py-2.shadow-sm.focus:border-indigo-500.focus:outline-none.focus:ring-2.focus:ring-indigo-500",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.inline-flex.items-center.justify-center.rounded-md.border.border-transparent.bg-indigo-600.px-4.py-2.text-sm.font-medium.text-white.shadow-sm.hover:bg-indigo-700.focus:outline-none.focus:ring-2.focus:ring-indigo-500.focus:ring-offset-2.disabled:opacity-60",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(79, 70, 229)",
+      "borderColor": "rgba(0, 0, 0, 0)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "BUTTON.inline-flex.items-center.justify-center.rounded-md.border.border-gray-300.bg-white.px-4.py-2.text-sm.font-medium.text-gray-700.shadow-sm.hover:bg-gray-50.focus:outline-none.focus:ring-2.focus:ring-indigo-500.focus:ring-offset-2",
+      "textColor": "rgb(55, 65, 81)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0) rgb(0, 0, 0) rgb(0, 0, 0) rgb(59, 130, 246)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    }
+  ],
+  "focusResults": {
+    "totalFocusable": 8,
+    "visibleFocusable": 5,
+    "focusVisibleStyles": [
+      {
+        "element": "INPUT#vault-passphrase",
+        "hasFocusRing": true,
+        "tabIndex": 3
+      },
+      {
+        "element": "INPUT#vault-passphrase-confirm",
+        "hasFocusRing": true,
+        "tabIndex": 4
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 5
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 6
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 7
+      }
+    ],
+    "tabOrder": [
+      {
+        "element": "INPUT#vault-passphrase",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT#vault-passphrase-confirm",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      }
+    ]
+  }
+}

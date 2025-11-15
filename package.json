@@ -80,7 +80,7 @@
     "screenshots:portfolio:phase3": "node scripts/capture-screenshot-portfolio.js --phase=phase3",
     "e2e": "npx playwright test --config=e2e/playwright.config.ts",
     "e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
-    "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium",
+  "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
   "dependencies": {

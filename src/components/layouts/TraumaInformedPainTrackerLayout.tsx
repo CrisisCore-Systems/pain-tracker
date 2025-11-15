@@ -155,6 +155,7 @@ export function TraumaInformedPainTrackerLayout({
                   variant={activeView === item.id ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setActiveView(item.id as 'dashboard' | 'analytics' | 'history' | 'support')}
+                  data-nav-target={item.id}
                   className="flex items-center space-x-2 transition-all duration-300 hover:scale-105 hover:shadow-md active:scale-95"
                 >
                   <item.icon className="h-4 w-4" />
@@ -229,6 +230,7 @@ export function TraumaInformedPainTrackerLayout({
                   onClick={() => setActiveView(item.id as 'dashboard' | 'analytics' | 'history' | 'support')}
                   className="flex-1 flex items-center justify-center space-x-1 min-h-[44px] min-w-[44px]"
                   aria-label={item.description}
+                  data-nav-target={item.id}
                 >
                   <item.icon className="h-5 w-5" />
                   <span className="text-xs whitespace-nowrap">{item.label}</span>

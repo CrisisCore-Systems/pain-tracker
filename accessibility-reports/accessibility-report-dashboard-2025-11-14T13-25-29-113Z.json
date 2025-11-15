@@ -1,0 +1,2431 @@
+{
+  "route": "dashboard",
+  "timestamp": "2025-11-14T13:25:29.113Z",
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#dfc2f9",
+                "bgColor": "#9333ea",
+                "contrastRatio": 3.38,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"w-full px-3 py-2 text-left text-xs rounded transition-all bg-purple-600 text-white shadow-md\">",
+                  "target": [
+                    ".bg-purple-600"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 3.38 (foreground color: #dfc2f9, background color: #9333ea, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<div class=\"text-xs opacity-70 mt-1\">Brief, upbeat, professional-warm</div>",
+          "target": [
+            ".bg-purple-600 > .opacity-70.text-xs.mt-1"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.38 (foreground color: #dfc2f9, background color: #9333ea, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ],
+  "colorData": [
+    {
+      "selector": "DIV.min-h-screen.bg-background.transition-colors",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex.items-center.justify-center.w-14.h-14.rounded-full.bg-foreground.text-foreground-contrast.shadow-lg.hover:shadow-xl.hover:scale-105.transition-all",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(23, 23, 23)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.py-0.5.bg-muted.rounded.text-xs",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 245, 245)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "HEADER.fixed.top-0.left-0.right-0.z-50.backdrop-blur-xl.bg-white/70.dark:bg-gray-900/70.border-b.border-gray-200/50.dark:border-gray-700/50",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgba(255, 255, 255, 0.7)",
+      "borderColor": "rgba(229, 231, 235, 0.5)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.flex.items-center.gap-2.px-3.py-1.5.rounded-full.bg-blue-50.dark:bg-blue-950/30.border.border-blue-200.dark:border-blue-800",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.flex.items-center.gap-2.px-3.py-1.5.rounded-full.bg-purple-50.dark:bg-purple-950/30.border.border-purple-200.dark:border-purple-800",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 245, 255)",
+      "borderColor": "rgb(233, 213, 255)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.h-full.px-4.py-6.bg-white/50.dark:bg-gray-900/50.backdrop-blur-sm.border-r.border-gray-200/50.dark:border-gray-700/50",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgba(255, 255, 255, 0.5)",
+      "borderColor": "rgba(229, 231, 235, 0.5)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card.transition-all.duration-[var(--duration-fast)].hover:surface-elevated.hover:shadow-[var(--elevation-2)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.h-full.transition-all.duration-[var(--duration-normal)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(240, 242, 244)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card.transition-all.duration-[var(--duration-fast)].hover:surface-elevated.hover:shadow-[var(--elevation-2)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card.transition-all.duration-[var(--duration-fast)].hover:surface-elevated.hover:shadow-[var(--elevation-2)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "borderColor": "rgb(0, 0, 0)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.fixed.bottom-4.left-4.z-[80].bg-gray-900.text-white.p-4.rounded-lg.shadow-2xl.max-w-md.max-h-[85vh].overflow-y-auto.border-2.border-purple-600.animate-in.fade-in.slide-in-from-bottom-4.duration-300",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(17, 24, 39)",
+      "borderColor": "rgb(147, 51, 234)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.flex.items-center.justify-between.mb-3.sticky.top-0.bg-gray-900.pb-2.border-b.border-gray-700.z-10",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(17, 24, 39)",
+      "borderColor": "rgb(55, 65, 81)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.mb-3.p-2.bg-purple-900/30.rounded.border.border-purple-700/50.text-xs.text-purple-300",
+      "textColor": "rgb(216, 180, 254)",
+      "backgroundColor": "rgba(88, 28, 135, 0.3)",
+      "borderColor": "rgba(126, 34, 206, 0.5)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.py-0.5.bg-gray-800.rounded.text-xs",
+      "textColor": "rgb(233, 213, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(233, 213, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.py-0.5.bg-gray-800.rounded.text-xs",
+      "textColor": "rgb(233, 213, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(233, 213, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.py-0.5.bg-gray-800.rounded.text-xs",
+      "textColor": "rgb(233, 213, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(233, 213, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.mb-3.p-2.bg-gray-800.rounded.border.border-gray-700",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(55, 65, 81)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-purple-600.text-white.shadow-md",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(147, 51, 234)",
+      "borderColor": "rgb(255, 255, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.5.py-0.5.bg-gray-700.rounded.text-xs",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(55, 65, 81)",
+      "borderColor": "rgb(255, 255, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-gray-800.hover:bg-gray-700.text-gray-300",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.5.py-0.5.bg-gray-700.rounded.text-xs",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(55, 65, 81)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-gray-800.hover:bg-gray-700.text-gray-300",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.5.py-0.5.bg-gray-700.rounded.text-xs",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(55, 65, 81)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-gray-800.hover:bg-gray-700.text-gray-300",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "KBD.px-1.5.py-0.5.bg-gray-700.rounded.text-xs",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(55, 65, 81)",
+      "borderColor": "rgb(209, 213, 219)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "SELECT.bg-gray-800.border.border-gray-700.rounded.px-2.py-1.text-xs.hover:border-purple-600.transition-colors",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(55, 65, 81)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "SELECT.bg-gray-800.border.border-gray-700.rounded.px-2.py-1.text-xs.hover:border-purple-600.transition-colors",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(55, 65, 81)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.bg-gray-800.border.border-gray-700.rounded",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(255, 255, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.bg-gray-800.border.border-gray-700.rounded",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "borderColor": "rgb(255, 255, 255)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.\n........pointer-events-auto.w-full.max-w-sm.rounded-lg.border.p-4.shadow-lg\n........transition-all.duration-150.ease-in-out\n........bg-blue-50.border-blue-200.dark:bg-blue-950/30.dark:border-blue-800\n........opacity-100.transform.translate-x-0\n......",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "borderColor": "rgb(191, 219, 254)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(255, 255, 255)",
+      "borderColor": "rgb(0, 0, 0) rgb(0, 0, 0) rgb(0, 0, 0) rgb(59, 130, 246)",
+      "fontSize": "14px",
+      "fontWeight": "400"
+    }
+  ],
+  "focusResults": {
+    "totalFocusable": 175,
+    "visibleFocusable": 170,
+    "focusVisibleStyles": [
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 3
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true,
+        "tabIndex": 4
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 6
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 7
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 8
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 9
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 10
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 11
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 12
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 13
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 14
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 15
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 16
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 17
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 18
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 19
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 21
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 22
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 23
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 24
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 25
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 26
+      },
+      {
+        "element": "SELECT",
+        "hasFocusRing": true,
+        "tabIndex": 27
+      },
+      {
+        "element": "SELECT",
+        "hasFocusRing": true,
+        "tabIndex": 28
+      },
+      {
+        "element": "INPUT",
+        "hasFocusRing": true,
+        "tabIndex": 29
+      },
+      {
+        "element": "INPUT",
+        "hasFocusRing": true,
+        "tabIndex": 30
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 31
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 32
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 33
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 34
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 35
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 36
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 37
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 38
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 39
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 40
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 41
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 42
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 43
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 44
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 45
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 46
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 47
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 48
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 49
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 50
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 51
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 52
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 53
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 54
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 55
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 56
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 57
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 58
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 59
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 60
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 61
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 62
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 63
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 64
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 65
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 66
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 67
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 68
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 69
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 70
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 71
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 72
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 73
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 74
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 75
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 76
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 77
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 78
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 79
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 80
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 81
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 82
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 83
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 84
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 85
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 86
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 87
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 88
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 89
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 90
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 91
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 92
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 93
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 94
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 95
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 96
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 97
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 98
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 99
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 100
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 101
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 102
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 103
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 104
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 105
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 106
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 107
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 108
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 109
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 110
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 111
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 112
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 113
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 114
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 115
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 116
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 117
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 118
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 119
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 120
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 121
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 122
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 123
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 124
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 125
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 126
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 127
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 128
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 129
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 130
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 131
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 132
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 133
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 134
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 135
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 136
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 137
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 138
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 139
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 140
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 141
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 142
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 143
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 144
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 145
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 146
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 147
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 148
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 149
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 150
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 151
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 152
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 153
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 154
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 155
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 156
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 157
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 158
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 159
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 160
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 161
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 162
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 163
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 164
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 165
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 166
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 167
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 168
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 169
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 170
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 171
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 172
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 173
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true,
+        "tabIndex": 174
+      }
+    ],
+    "tabOrder": [
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "A",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "SELECT",
+        "tabIndex": 0
+      },
+      {
+        "element": "SELECT",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT",
+        "tabIndex": 0
+      },
+      {
+        "element": "INPUT",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      },
+      {
+        "element": "BUTTON",
+        "tabIndex": 0
+      }
+    ]
+  }
+}

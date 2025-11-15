@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard,
   Plus,
+  User,
   TrendingUp,
   Settings,
   Heart,
@@ -46,6 +47,8 @@ export function ModernAppLayout({
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, badge: null },
     { id: 'new-entry', name: 'New Entry', icon: Plus, badge: null },
+    { id: 'body-map', name: 'Body Map', icon: User, badge: null },
+    { id: 'fibromyalgia', name: 'Fibromyalgia Hub', icon: Heart, badge: 'New' },
     { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Pro' },
     { id: 'calendar', name: 'Calendar', icon: Calendar, badge: null },
     { id: 'reports', name: 'Reports', icon: FileText, badge: null },
@@ -75,6 +78,8 @@ export function ModernAppLayout({
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label={sidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                data-testid="nav-toggle"
               >
                 {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
@@ -154,6 +159,7 @@ export function ModernAppLayout({
                 <button
                   key={item.id}
                   onClick={() => onNavigate?.(item.id)}
+                  data-nav-target={item.id}
                   className={cn(
                     'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
                     isActive
@@ -237,6 +243,7 @@ export function ModernAppLayout({
                         onNavigate?.(item.id);
                         setSidebarOpen(false);
                       }}
+                      data-nav-target={item.id}
                       className={cn(
                         'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all',
                         isActive

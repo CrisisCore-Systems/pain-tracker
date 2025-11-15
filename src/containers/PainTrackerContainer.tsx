@@ -8,8 +8,10 @@ import { ClinicalDashboard } from '../design-system/fused-v2';
 import { QuickLogStepper } from '../design-system/fused-v2';
 import { useToast } from '../components/feedback';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
-import { AdvancedAnalyticsView } from '../components/analytics/AdvancedAnalyticsView';
+import { PremiumAnalyticsDashboard } from '../components/analytics/PremiumAnalyticsDashboard';
 import { CalendarView } from '../components/calendar/CalendarView';
+import { BodyMapPage } from '../components/body-mapping/BodyMapPage';
+import { FibromyalgiaTracker } from '../components/fibromyalgia/FibromyalgiaTracker';
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
 const OnboardingFlow = lazy(() => import('../components/onboarding').then(m => ({ default: m.OnboardingFlow })));
@@ -176,7 +178,13 @@ export function PainTrackerContainer() {
         );
       
       case 'analytics':
-        return <AdvancedAnalyticsView entries={entries} />;
+        return <PremiumAnalyticsDashboard entries={entries} />;
+      
+      case 'body-map':
+        return <BodyMapPage />;
+      
+      case 'fibromyalgia':
+        return <FibromyalgiaTracker />;
       
       case 'calendar':
         return <CalendarView entries={entries} />;

@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Report - dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .summary { background: #f5f5f5; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .violations { margin-bottom: 20px; }
+        .violation { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
+        .violation.critical { border-color: #d32f2f; background: #ffebee; }
+        .violation.serious { border-color: #f57c00; background: #fff3e0; }
+        .violation.moderate { border-color: #fbc02d; background: #fffde7; }
+        .violation.minor { border-color: #388e3c; background: #e8f5e8; }
+        .colors { margin-bottom: 20px; }
+        .color-item { border: 1px solid #ddd; padding: 10px; margin-bottom: 5px; border-radius: 4px; }
+        .focus-results { margin-bottom: 20px; }
+        .metric { display: inline-block; background: #e3f2fd; padding: 5px 10px; margin: 5px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Accessibility Report - dashboard</h1>
+    <div class="summary">
+        <h2>Summary</h2>
+        <div class="metric">Total Violations: 1</div>
+        <div class="metric">Critical: 0</div>
+        <div class="metric">Serious: 1</div>
+        <div class="metric">Moderate: 0</div>
+        <div class="metric">Focusable Elements: 179</div>
+        <div class="metric">Visible Focusable: 174</div>
+    </div>
+
+    
+    <div class="violations">
+        <h2>Violations</h2>
+        
+            <div class="violation serious">
+                <h3>color-contrast (serious)</h3>
+                <p><strong>Description:</strong> Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds</p>
+                <p><strong>Help:</strong> Elements must meet minimum color contrast ratio thresholds</p>
+                <p><strong>Help URL:</strong> <a href="https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright" target="_blank">https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright</a></p>
+                <p><strong>Elements:</strong> 1</p>
+            </div>
+        
+    </div>
+    
+
+    <div class="focus-results">
+        <h2>Focus Behavior</h2>
+        <p>Elements with focus-visible styles: 174 / 174</p>
+    </div>
+
+    <div class="colors">
+        <h2>Computed Colors (Sample)</h2>
+        
+            <div class="color-item">
+                <strong>DIV.min-h-screen.bg-background.transition-colors</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(250, 250, 250)
+            </div>
+        
+            <div class="color-item">
+                <strong>BUTTON.flex.items-center.justify-center.w-14.h-14.rounded-full.bg-foreground.text-foreground-contrast.shadow-lg.hover:shadow-xl.hover:scale-105.transition-all</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(23, 23, 23)
+            </div>
+        
+            <div class="color-item">
+                <strong>KBD.px-1.py-0.5.bg-muted.rounded.text-xs</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(245, 245, 245)
+            </div>
+        
+            <div class="color-item">
+                <strong>HEADER.fixed.top-0.left-0.right-0.z-50.backdrop-blur-xl.bg-white/70.dark:bg-gray-900/70.border-b.border-gray-200/50.dark:border-gray-700/50</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgba(255, 255, 255, 0.7)
+            </div>
+        
+            <div class="color-item">
+                <strong>DIV.flex.items-center.gap-2.px-3.py-1.5.rounded-full.bg-blue-50.dark:bg-blue-950/30.border.border-blue-200.dark:border-blue-800</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(239, 246, 255)
+            </div>
+        
+            <div class="color-item">
+                <strong>DIV.flex.items-center.gap-2.px-3.py-1.5.rounded-full.bg-purple-50.dark:bg-purple-950/30.border.border-purple-200.dark:border-purple-800</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(250, 245, 255)
+            </div>
+        
+            <div class="color-item">
+                <strong>DIV.h-full.px-4.py-6.bg-white/50.dark:bg-gray-900/50.backdrop-blur-sm.border-r.border-gray-200/50.dark:border-gray-700/50</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgba(255, 255, 255, 0.5)
+            </div>
+        
+            <div class="color-item">
+                <strong>DIV.surface-card</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(245, 246, 248)
+            </div>
+        
+            <div class="color-item">
+                <strong>DIV.surface-card.transition-all.duration-[var(--duration-fast)].hover:surface-elevated.hover:shadow-[var(--elevation-2)]</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(245, 246, 248)
+            </div>
+        
+            <div class="color-item">
+                <strong>DIV.h-full.transition-all.duration-[var(--duration-normal)]</strong><br>
+                Text: rgb(0, 0, 0) | Background: rgb(240, 242, 244)
+            </div>
+        
+    </div>
+</body>
+</html>

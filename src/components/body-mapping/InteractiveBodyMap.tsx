@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
-import { Palette, RotateCcw, Info } from 'lucide-react';
+import { Palette, RotateCcw, Info, Maximize2, ZoomIn, ZoomOut, Download, User } from 'lucide-react';
 import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
 
 interface BodyRegion {
   id: string;
   name: string;
-  path: string;
+  frontPath?: string;
+  backPath?: string;
   center: { x: number; y: number };
+  category: 'upper' | 'core' | 'lower' | 'extremities';
 }
 
 interface InteractiveBodyMapProps {
@@ -16,49 +18,254 @@ interface InteractiveBodyMapProps {
   onRegionSelect?: (regions: string[]) => void;
   mode?: 'selection' | 'heatmap';
   className?: string;
+  height?: number;
 }
 
-// Simplified body regions for SVG mapping
+// Anatomically accurate body regions with improved SVG paths
 const BODY_REGIONS: BodyRegion[] = [
-  { id: 'head', name: 'Head', path: 'M150 50 C170 50, 180 60, 180 80 C180 100, 170 110, 150 110 C130 110, 120 100, 120 80 C120 60, 130 50, 150 50 Z', center: { x: 150, y: 80 } },
-  { id: 'neck', name: 'Neck', path: 'M140 110 L160 110 L160 130 L140 130 Z', center: { x: 150, y: 120 } },
-  { id: 'left-shoulder', name: 'Left Shoulder', path: 'M90 140 C110 130, 130 140, 140 160 C130 170, 110 170, 90 160 Z', center: { x: 115, y: 150 } },
-  { id: 'right-shoulder', name: 'Right Shoulder', path: 'M160 160 C170 140, 190 130, 210 140 L210 160 C190 170, 170 170, 160 160 Z', center: { x: 185, y: 150 } },
-  { id: 'left-arm', name: 'Left Arm', path: 'M90 160 L110 160 L110 240 L90 240 Z', center: { x: 100, y: 200 } },
-  { id: 'right-arm', name: 'Right Arm', path: 'M190 160 L210 160 L210 240 L190 240 Z', center: { x: 200, y: 200 } },
-  { id: 'chest', name: 'Chest', path: 'M140 130 L160 130 L180 160 L180 200 L120 200 L120 160 Z', center: { x: 150, y: 165 } },
-  { id: 'upper-back', name: 'Upper Back', path: 'M120 130 L180 130 L180 180 L120 180 Z', center: { x: 150, y: 155 } },
-  { id: 'abdomen', name: 'Abdomen', path: 'M120 200 L180 200 L180 260 L120 260 Z', center: { x: 150, y: 230 } },
-  { id: 'lower-back', name: 'Lower Back', path: 'M120 180 L180 180 L180 260 L120 260 Z', center: { x: 150, y: 220 } },
-  { id: 'left-hip', name: 'Left Hip', path: 'M120 260 L140 260 L140 300 L120 300 Z', center: { x: 130, y: 280 } },
-  { id: 'right-hip', name: 'Right Hip', path: 'M160 260 L180 260 L180 300 L160 300 Z', center: { x: 170, y: 280 } },
-  { id: 'left-thigh', name: 'Left Thigh', path: 'M120 300 L140 300 L140 380 L120 380 Z', center: { x: 130, y: 340 } },
-  { id: 'right-thigh', name: 'Right Thigh', path: 'M160 300 L180 300 L180 380 L160 380 Z', center: { x: 170, y: 340 } },
-  { id: 'left-knee', name: 'Left Knee', path: 'M120 380 L140 380 L140 400 L120 400 Z', center: { x: 130, y: 390 } },
-  { id: 'right-knee', name: 'Right Knee', path: 'M160 380 L180 380 L180 400 L160 400 Z', center: { x: 170, y: 390 } },
-  { id: 'left-calf', name: 'Left Calf', path: 'M120 400 L140 400 L140 480 L120 480 Z', center: { x: 130, y: 440 } },
-  { id: 'right-calf', name: 'Right Calf', path: 'M160 400 L180 400 L180 480 L160 480 Z', center: { x: 170, y: 440 } },
-  { id: 'left-foot', name: 'Left Foot', path: 'M115 480 L145 480 L145 500 L115 500 Z', center: { x: 130, y: 490 } },
-  { id: 'right-foot', name: 'Right Foot', path: 'M155 480 L185 480 L185 500 L155 500 Z', center: { x: 170, y: 490 } },
+  // HEAD & NECK
+  { 
+    id: 'head', 
+    name: 'Head', 
+    frontPath: 'M150 35 C165 35, 175 45, 175 60 C175 70, 172 78, 165 85 C162 88, 158 90, 153 92 L147 92 C142 90, 138 88, 135 85 C128 78, 125 70, 125 60 C125 45, 135 35, 150 35 Z', 
+    backPath: 'M150 35 C165 35, 175 45, 175 60 C175 70, 172 78, 165 85 C162 88, 158 90, 153 92 L147 92 C142 90, 138 88, 135 85 C128 78, 125 70, 125 60 C125 45, 135 35, 150 35 Z',
+    center: { x: 150, y: 63 }, 
+    category: 'upper' 
+  },
+  { 
+    id: 'neck', 
+    name: 'Neck', 
+    frontPath: 'M142 92 L158 92 L160 110 L140 110 Z', 
+    backPath: 'M142 92 L158 92 L160 110 L140 110 Z',
+    center: { x: 150, y: 101 }, 
+    category: 'upper' 
+  },
+  
+  // SHOULDERS & ARMS
+  { 
+    id: 'left-shoulder', 
+    name: 'Left Shoulder', 
+    frontPath: 'M85 115 C95 105, 115 105, 125 110 L130 125 C125 135, 110 140, 95 135 L85 120 Z', 
+    center: { x: 107, y: 120 }, 
+    category: 'upper' 
+  },
+  { 
+    id: 'right-shoulder', 
+    name: 'Right Shoulder', 
+    frontPath: 'M175 110 C185 105, 205 105, 215 115 L215 120 L205 135 C190 140, 175 135, 170 125 Z', 
+    center: { x: 193, y: 120 }, 
+    category: 'upper' 
+  },
+  { 
+    id: 'left-upper-arm', 
+    name: 'Left Upper Arm', 
+    frontPath: 'M85 135 L105 140 L107 200 L87 205 Z', 
+    center: { x: 96, y: 170 }, 
+    category: 'extremities' 
+  },
+  { 
+    id: 'right-upper-arm', 
+    name: 'Right Upper Arm', 
+    frontPath: 'M195 140 L215 135 L213 205 L193 200 Z', 
+    center: { x: 204, y: 170 }, 
+    category: 'extremities' 
+  },
+  { 
+    id: 'left-elbow', 
+    name: 'Left Elbow', 
+    frontPath: 'M87 205 L107 200 L108 220 L88 225 Z', 
+    center: { x: 97, y: 212 }, 
+    category: 'extremities' 
+  },
+  { 
+    id: 'right-elbow', 
+    name: 'Right Elbow', 
+    frontPath: 'M193 200 L213 205 L212 225 L192 220 Z', 
+    center: { x: 203, y: 212 }, 
+    category: 'extremities' 
+  },
+  { 
+    id: 'left-forearm', 
+    name: 'Left Forearm', 
+    frontPath: 'M88 225 L108 220 L110 285 L90 290 Z', 
+    center: { x: 99, y: 255 }, 
+    category: 'extremities' 
+  },
+  { 
+    id: 'right-forearm', 
+    name: 'Right Forearm', 
+    frontPath: 'M192 220 L212 225 L210 290 L190 285 Z', 
+    center: { x: 201, y: 255 }, 
+    category: 'extremities' 
+  },
+  { 
+    id: 'left-hand', 
+    name: 'Left Hand', 
+    frontPath: 'M90 290 L110 285 L112 308 L92 312 Z', 
+    center: { x: 101, y: 298 }, 
+    category: 'extremities' 
+  },
+  { 
+    id: 'right-hand', 
+    name: 'Right Hand', 
+    frontPath: 'M190 285 L210 290 L208 312 L188 308 Z', 
+    center: { x: 199, y: 298 }, 
+    category: 'extremities' 
+  },
+  
+  // TORSO
+  { 
+    id: 'chest', 
+    name: 'Chest', 
+    frontPath: 'M130 110 L170 110 L180 145 L178 180 L122 180 L120 145 Z', 
+    center: { x: 150, y: 145 }, 
+    category: 'core' 
+  },
+  { 
+    id: 'upper-back', 
+    name: 'Upper Back', 
+    backPath: 'M130 110 L170 110 L178 145 L180 180 L120 180 L122 145 Z', 
+    center: { x: 150, y: 145 }, 
+    category: 'core' 
+  },
+  { 
+    id: 'abdomen', 
+    name: 'Abdomen', 
+    frontPath: 'M122 180 L178 180 L175 235 L125 235 Z', 
+    center: { x: 150, y: 207 }, 
+    category: 'core' 
+  },
+  { 
+    id: 'lower-back', 
+    name: 'Lower Back', 
+    backPath: 'M120 180 L180 180 L178 235 L122 235 Z', 
+    center: { x: 150, y: 207 }, 
+    category: 'core' 
+  },
+  
+  // HIPS & PELVIS
+  { 
+    id: 'left-hip', 
+    name: 'Left Hip', 
+    frontPath: 'M125 235 L145 235 L148 275 L128 275 Z', 
+    backPath: 'M125 235 L145 235 L148 275 L128 275 Z',
+    center: { x: 136, y: 255 }, 
+    category: 'core' 
+  },
+  { 
+    id: 'right-hip', 
+    name: 'Right Hip', 
+    frontPath: 'M155 235 L175 235 L172 275 L152 275 Z', 
+    backPath: 'M155 235 L175 235 L172 275 L152 275 Z',
+    center: { x: 164, y: 255 }, 
+    category: 'core' 
+  },
+  
+  // LEGS
+  { 
+    id: 'left-thigh', 
+    name: 'Left Thigh', 
+    frontPath: 'M128 275 L148 275 L147 365 L127 365 Z', 
+    backPath: 'M128 275 L148 275 L147 365 L127 365 Z',
+    center: { x: 137, y: 320 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'right-thigh', 
+    name: 'Right Thigh', 
+    frontPath: 'M152 275 L172 275 L173 365 L153 365 Z', 
+    backPath: 'M152 275 L172 275 L173 365 L153 365 Z',
+    center: { x: 163, y: 320 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'left-knee', 
+    name: 'Left Knee', 
+    frontPath: 'M127 365 L147 365 L147 385 L127 385 Z', 
+    backPath: 'M127 365 L147 365 L147 385 L127 385 Z',
+    center: { x: 137, y: 375 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'right-knee', 
+    name: 'Right Knee', 
+    frontPath: 'M153 365 L173 365 L173 385 L153 385 Z', 
+    backPath: 'M153 365 L173 365 L173 385 L153 385 Z',
+    center: { x: 163, y: 375 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'left-calf', 
+    name: 'Left Calf', 
+    frontPath: 'M127 385 L147 385 L145 465 L125 465 Z', 
+    backPath: 'M127 385 L147 385 L145 465 L125 465 Z',
+    center: { x: 136, y: 425 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'right-calf', 
+    name: 'Right Calf', 
+    frontPath: 'M153 385 L173 385 L175 465 L155 465 Z', 
+    backPath: 'M153 385 L173 385 L175 465 L155 465 Z',
+    center: { x: 164, y: 425 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'left-ankle', 
+    name: 'Left Ankle', 
+    frontPath: 'M125 465 L145 465 L144 478 L124 478 Z', 
+    backPath: 'M125 465 L145 465 L144 478 L124 478 Z',
+    center: { x: 134, y: 471 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'right-ankle', 
+    name: 'Right Ankle', 
+    frontPath: 'M155 465 L175 465 L176 478 L156 478 Z', 
+    backPath: 'M155 465 L175 465 L176 478 L156 478 Z',
+    center: { x: 166, y: 471 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'left-foot', 
+    name: 'Left Foot', 
+    frontPath: 'M118 478 L150 478 L152 495 L116 495 Z', 
+    backPath: 'M118 478 L150 478 L152 495 L116 495 Z',
+    center: { x: 134, y: 486 }, 
+    category: 'lower' 
+  },
+  { 
+    id: 'right-foot', 
+    name: 'Right Foot', 
+    frontPath: 'M150 478 L182 478 L184 495 L148 495 Z', 
+    backPath: 'M150 478 L182 478 L184 495 L148 495 Z',
+    center: { x: 166, y: 486 }, 
+    category: 'lower' 
+  },
 ];
+
 
 export function InteractiveBodyMap({
   entries = [],
   selectedRegions = [],
   onRegionSelect,
   mode = 'selection',
-  className = ''
+  className = '',
+  height = 600
 }: InteractiveBodyMapProps) {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
   const [showFront, setShowFront] = useState(true);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Calculate pain intensity for each region based on entries
-  const regionPainMap = useRef(new Map<string, number>());
+  const regionPainMap = useRef(new Map<string, { avg: number; max: number; count: number }>());
 
   useEffect(() => {
     if (mode === 'heatmap' && entries.length > 0) {
-      const painMap = new Map<string, { total: number; count: number }>();
+      const painMap = new Map<string, { total: number; max: number; count: number }>();
       
       entries.forEach(entry => {
         if (entry.baselineData?.locations) {
@@ -66,10 +273,11 @@ export function InteractiveBodyMap({
             const regionId = normalizeLocationToRegionId(location);
             if (regionId && BODY_REGIONS.find(r => r.id === regionId)) {
               if (!painMap.has(regionId)) {
-                painMap.set(regionId, { total: 0, count: 0 });
+                painMap.set(regionId, { total: 0, max: 0, count: 0 });
               }
               const data = painMap.get(regionId)!;
               data.total += entry.baselineData.pain;
+              data.max = Math.max(data.max, entry.baselineData.pain);
               data.count += 1;
             }
           });
@@ -78,7 +286,11 @@ export function InteractiveBodyMap({
 
       regionPainMap.current.clear();
       painMap.forEach((data, regionId) => {
-        regionPainMap.current.set(regionId, data.total / data.count);
+        regionPainMap.current.set(regionId, {
+          avg: data.total / data.count,
+          max: data.max,
+          count: data.count
+        });
       });
     }
   }, [entries, mode]);
@@ -97,19 +309,21 @@ export function InteractiveBodyMap({
       if (selectedRegions.includes(regionId)) {
         return '#ef4444'; // Red for selected
       } else if (hoveredRegion === regionId) {
-        return '#3b82f6'; // Blue for hover
+        return '#60a5fa'; // Blue for hover
       } else {
         return '#e5e7eb'; // Gray for unselected
       }
     } else if (mode === 'heatmap') {
-      const painLevel = regionPainMap.current.get(regionId) || 0;
-      if (painLevel === 0) return '#e5e7eb';
+      const painData = regionPainMap.current.get(regionId);
+      if (!painData || painData.avg === 0) return '#f3f4f6';
       
-      // Color gradient from green (low pain) to red (high pain)
-      const intensity = painLevel / 10; // Normalize to 0-1
-      if (intensity < 0.3) return `rgba(34, 197, 94, ${0.3 + intensity * 0.7})`;
-      if (intensity < 0.6) return `rgba(251, 191, 36, ${0.3 + intensity * 0.7})`;
-      return `rgba(239, 68, 68, ${0.3 + intensity * 0.7})`;
+      // Enhanced color gradient based on average pain
+      const intensity = painData.avg / 10;
+      if (intensity < 0.25) return '#86efac'; // Light green (0-2.5)
+      if (intensity < 0.4) return '#4ade80'; // Green (2.5-4)
+      if (intensity < 0.6) return '#fbbf24'; // Yellow (4-6)
+      if (intensity < 0.75) return '#fb923c'; // Orange (6-7.5)
+      return '#ef4444'; // Red (7.5-10)
     }
     
     return '#e5e7eb';
@@ -117,151 +331,336 @@ export function InteractiveBodyMap({
 
   const getRegionOpacity = (regionId: string): number => {
     if (mode === 'heatmap') {
-      const painLevel = regionPainMap.current.get(regionId) || 0;
-      return painLevel === 0 ? 0.3 : 0.7;
+      const painData = regionPainMap.current.get(regionId);
+      if (!painData) return 0.2;
+      // Opacity based on frequency + intensity
+      const frequencyFactor = Math.min(painData.count / 10, 1); // More entries = more opaque
+      const intensityFactor = painData.avg / 10;
+      return 0.3 + (frequencyFactor * 0.3) + (intensityFactor * 0.4);
     }
-    return hoveredRegion === regionId ? 0.8 : 0.6;
+    return hoveredRegion === regionId ? 0.9 : 0.7;
   };
 
-  const getPainLevelForRegion = (regionId: string): number => {
-    return regionPainMap.current.get(regionId) || 0;
+  const getPainDataForRegion = (regionId: string) => {
+    return regionPainMap.current.get(regionId) || { avg: 0, max: 0, count: 0 };
   };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement && containerRef.current) {
+      containerRef.current.requestFullscreen();
+      setIsFullscreen(true);
+    } else if (document.fullscreenElement) {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
+  const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.2, 3));
+  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+
+  const exportAsPNG = () => {
+    if (!svgRef.current) return;
+    
+    const svgData = new XMLSerializer().serializeToString(svgRef.current);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    img.onload = () => {
+      canvas.width = 300 * 2; // 2x for better quality
+      canvas.height = 520 * 2;
+      ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+      
+      const pngFile = canvas.toDataURL('image/png');
+      const downloadLink = document.createElement('a');
+      downloadLink.download = `pain-map-${new Date().toISOString().split('T')[0]}.png`;
+      downloadLink.href = pngFile;
+      downloadLink.click();
+    };
+    
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+  };
+
+  const visibleRegions = BODY_REGIONS.filter(region => {
+    if (showFront) {
+      return region.frontPath !== undefined;
+    } else {
+      return region.backPath !== undefined;
+    }
+  });
+
+  const selectedCount = selectedRegions.length;
+  const affectedRegionsCount = mode === 'heatmap' ? regionPainMap.current.size : 0;
 
   return (
-    <div className={`interactive-body-map ${className}`}>
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center space-x-2">
-          <Palette className="h-5 w-5" />
-          <span className="font-medium">
-            {mode === 'selection' ? 'Select Pain Locations' : 'Pain Heat Map'}
-          </span>
+    <div ref={containerRef} className={`interactive-body-map ${className} ${isFullscreen ? 'fixed inset-0 z-50 bg-white' : ''}`}>
+      {/* Header Controls */}
+      <div className="flex justify-between items-center mb-4 bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <User className="h-6 w-6 text-blue-600" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900">
+              {mode === 'selection' ? 'Select Pain Locations' : 'Pain Heat Map'}
+            </h3>
+            <p className="text-sm text-gray-600">
+              {mode === 'selection' 
+                ? `${selectedCount} region${selectedCount !== 1 ? 's' : ''} selected`
+                : `${affectedRegionsCount} region${affectedRegionsCount !== 1 ? 's' : ''} with recorded pain`
+              }
+            </p>
+          </div>
         </div>
+        
         <div className="flex items-center space-x-2">
+          {/* Zoom Controls */}
+          <div className="flex items-center space-x-1 bg-white rounded-md border border-gray-300 px-2 py-1">
+            <button
+              onClick={handleZoomOut}
+              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              title="Zoom Out"
+            >
+              <ZoomOut className="h-4 w-4 text-gray-600" />
+            </button>
+            <span className="text-xs text-gray-600 px-2 min-w-[3rem] text-center">
+              {Math.round(zoomLevel * 100)}%
+            </span>
+            <button
+              onClick={handleZoomIn}
+              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              title="Zoom In"
+            >
+              <ZoomIn className="h-4 w-4 text-gray-600" />
+            </button>
+          </div>
+
+          {/* View Toggle */}
           <button
             onClick={() => setShowFront(!showFront)}
-            className="flex items-center space-x-1 px-3 py-1 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors text-sm"
+            className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
           >
             <RotateCcw className="h-4 w-4" />
-            <span>{showFront ? 'Show Back' : 'Show Front'}</span>
+            <span className="text-sm font-medium">{showFront ? 'Front' : 'Back'}</span>
           </button>
-          {mode === 'heatmap' && (
-            <div className="flex items-center space-x-1 text-xs text-gray-600">
-              <Info className="h-4 w-4" />
-              <span>Color intensity = pain level</span>
-            </div>
-          )}
+
+          {/* Export Button */}
+          <button
+            onClick={exportAsPNG}
+            className="p-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            title="Export as PNG"
+          >
+            <Download className="h-4 w-4" />
+          </button>
+
+          {/* Fullscreen Toggle */}
+          <button
+            onClick={toggleFullscreen}
+            className="p-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            title="Toggle Fullscreen"
+          >
+            <Maximize2 className="h-4 w-4" />
+          </button>
         </div>
       </div>
 
-      <div className="relative bg-white rounded-lg border p-4">
+      {/* Body Map SVG */}
+      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 p-6 shadow-lg overflow-hidden">
+        {/* Background Grid Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <svg width="100%" height="100%">
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="gray" strokeWidth="0.5"/>
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        </div>
+
         <svg
           ref={svgRef}
           viewBox="0 0 300 520"
-          className="w-full max-w-md mx-auto"
-          style={{ maxHeight: '600px' }}
+          className="w-full mx-auto transition-transform duration-300"
+          style={{ 
+            maxHeight: `${height}px`,
+            maxWidth: '400px',
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: 'center'
+          }}
         >
-          {/* Body outline */}
-          <rect
-            x="0"
-            y="0"
-            width="300"
-            height="520"
-            fill="none"
-            stroke="#e5e7eb"
-            strokeWidth="2"
-            rx="10"
-          />
+          {/* Background */}
+          <rect x="0" y="0" width="300" height="520" fill="#ffffff" rx="15" />
 
-          {/* Body regions */}
-          {BODY_REGIONS.map((region) => {
-            // Filter regions based on front/back view
-            const isFrontRegion = !region.id.includes('back');
-            if (showFront !== isFrontRegion) return null;
+          {/* Body Outline Shadow */}
+          <ellipse cx="150" cy="510" rx="40" ry="8" fill="#000000" opacity="0.1" />
+
+          {/* Body Regions */}
+          {visibleRegions.map((region) => {
+            const path = showFront ? region.frontPath : region.backPath;
+            if (!path) return null;
+
+            const painData = getPainDataForRegion(region.id);
+            const isActive = mode === 'selection' ? selectedRegions.includes(region.id) : painData.avg > 0;
 
             return (
               <g key={region.id}>
+                {/* Glow effect for selected/affected regions */}
+                {isActive && (
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke={mode === 'selection' ? '#ef4444' : '#fbbf24'}
+                    strokeWidth="3"
+                    opacity="0.4"
+                    className="animate-pulse"
+                    filter="blur(4px)"
+                  />
+                )}
+                
+                {/* Main region */}
                 <path
-                  d={region.path}
+                  d={path}
                   fill={getRegionColor(region.id)}
-                  stroke="#374151"
-                  strokeWidth="1"
+                  stroke={hoveredRegion === region.id ? '#1f2937' : '#6b7280'}
+                  strokeWidth={hoveredRegion === region.id ? '2' : '1'}
                   opacity={getRegionOpacity(region.id)}
-                  className="cursor-pointer transition-all duration-200 hover:stroke-2"
+                  className="cursor-pointer transition-all duration-200 hover:brightness-110"
                   onClick={() => handleRegionClick(region.id)}
                   onMouseEnter={() => setHoveredRegion(region.id)}
                   onMouseLeave={() => setHoveredRegion(null)}
                 />
                 
-                {/* Region labels */}
-                <text
-                  x={region.center.x}
-                  y={region.center.y}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  className="text-xs font-medium pointer-events-none select-none"
-                  fill="#374151"
-                >
-                  {mode === 'heatmap' && getPainLevelForRegion(region.id) > 0 
-                    ? formatNumber(getPainLevelForRegion(region.id), 1)
-                    : ''}
-                </text>
+                {/* Pain level indicator for heatmap */}
+                {mode === 'heatmap' && painData.avg > 0 && (
+                  <text
+                    x={region.center.x}
+                    y={region.center.y}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    className="text-xs font-bold pointer-events-none select-none"
+                    fill="#ffffff"
+                    stroke="#000000"
+                    strokeWidth="0.5"
+                  >
+                    {formatNumber(painData.avg, 1)}
+                  </text>
+                )}
               </g>
             );
           })}
+
+          {/* View Label */}
+          <text
+            x="150"
+            y="20"
+            textAnchor="middle"
+            className="text-sm font-semibold"
+            fill="#4b5563"
+          >
+            {showFront ? 'FRONT VIEW' : 'BACK VIEW'}
+          </text>
         </svg>
 
-        {/* Hover tooltip */}
+        {/* Hover Tooltip */}
         {hoveredRegion && (
-          <div className="absolute top-4 right-4 bg-black text-white px-3 py-2 rounded-md text-sm pointer-events-none">
-            <div className="font-medium">
+          <div className="absolute top-8 right-8 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-xl pointer-events-none z-10 min-w-[200px]">
+            <div className="font-semibold text-base mb-1">
               {BODY_REGIONS.find(r => r.id === hoveredRegion)?.name}
             </div>
-              {mode === 'heatmap' && (
-              <div className="text-xs">
-                Pain Level: {formatNumber(getPainLevelForRegion(hoveredRegion), 1)}/10
-              </div>
-            )}
+            {mode === 'heatmap' && (() => {
+              const painData = getPainDataForRegion(hoveredRegion);
+              return painData.avg > 0 ? (
+                <div className="text-sm space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Avg Pain:</span>
+                    <span className="font-medium">{formatNumber(painData.avg, 1)}/10</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Max Pain:</span>
+                    <span className="font-medium">{painData.max}/10</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Entries:</span>
+                    <span className="font-medium">{painData.count}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-400">No pain recorded</div>
+              );
+            })()}
             {mode === 'selection' && (
-              <div className="text-xs">
+              <div className="text-sm text-gray-300">
                 Click to {selectedRegions.includes(hoveredRegion) ? 'deselect' : 'select'}
               </div>
             )}
           </div>
         )}
+      </div>
 
-        {/* Legend for heatmap mode */}
+      {/* Legend & Statistics */}
+      <div className="mt-6 space-y-4">
+        {/* Heatmap Legend */}
         {mode === 'heatmap' && (
-          <div className="mt-4 flex justify-center">
-            <div className="flex items-center space-x-2 text-sm">
-              <span>Low Pain</span>
-              <div className="flex space-x-1">
-                <div className="w-4 h-4 bg-green-400 rounded"></div>
-                <div className="w-4 h-4 bg-yellow-400 rounded"></div>
-                <div className="w-4 h-4 bg-red-400 rounded"></div>
+          <div className="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-lg p-4 border border-gray-200">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-semibold text-gray-700">Pain Intensity Scale</span>
+              <Info className="h-4 w-4 text-gray-500" />
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex-1">
+                <div className="h-8 rounded-lg bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 shadow-inner"></div>
+                <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <span>0</span>
+                  <span>2.5</span>
+                  <span>5</span>
+                  <span>7.5</span>
+                  <span>10</span>
+                </div>
               </div>
-              <span>High Pain</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3 mt-4 text-xs">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                <span className="text-gray-600">Mild (0-4)</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                <span className="text-gray-600">Moderate (4-7)</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <span className="text-gray-600">Severe (7-10)</span>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Selected regions display for selection mode */}
+        {/* Selection Mode: Selected Regions */}
         {mode === 'selection' && selectedRegions.length > 0 && (
-          <div className="mt-4 p-3 bg-blue-50 rounded-md">
-            <div className="text-sm font-medium text-blue-900 mb-2">
-              Selected Locations ({selectedRegions.length}):
+          <div className="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
+            <div className="text-sm font-semibold text-blue-900 mb-3">
+              Selected Locations ({selectedRegions.length})
             </div>
             <div className="flex flex-wrap gap-2">
               {selectedRegions.map(regionId => {
                 const region = BODY_REGIONS.find(r => r.id === regionId);
+                const category = region?.category;
+                const categoryColors = {
+                  upper: 'bg-purple-100 text-purple-800 border-purple-300',
+                  core: 'bg-blue-100 text-blue-800 border-blue-300',
+                  lower: 'bg-green-100 text-green-800 border-green-300',
+                  extremities: 'bg-orange-100 text-orange-800 border-orange-300'
+                };
+                
                 return (
                   <span
                     key={regionId}
-                    className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${categoryColors[category || 'core']}`}
                   >
                     {region?.name}
                     <button
                       onClick={() => handleRegionClick(regionId)}
-                      className="ml-1 hover:text-blue-600"
+                      className="ml-2 hover:scale-125 transition-transform"
+                      title="Remove"
                     >
                       ×
                     </button>
@@ -269,8 +668,65 @@ export function InteractiveBodyMap({
                 );
               })}
             </div>
+            <button
+              onClick={() => onRegionSelect?.([])}
+              className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
+            >
+              Clear All
+            </button>
           </div>
         )}
+
+        {/* Statistics Panel for Heatmap */}
+        {mode === 'heatmap' && affectedRegionsCount > 0 && (
+          <div className="grid grid-cols-3 gap-4">
+            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Affected Regions</div>
+              <div className="text-2xl font-bold text-gray-900">{affectedRegionsCount}</div>
+            </div>
+            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Highest Pain</div>
+              <div className="text-2xl font-bold text-red-600">
+                {Math.max(...Array.from(regionPainMap.current.values()).map(d => d.max), 0)}/10
+              </div>
+            </div>
+            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Avg Pain</div>
+              <div className="text-2xl font-bold text-orange-600">
+                {formatNumber(
+                  Array.from(regionPainMap.current.values()).reduce((sum, d) => sum + d.avg, 0) / 
+                  (affectedRegionsCount || 1), 
+                  1
+                )}/10
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Body Region Categories */}
+        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <div className="text-sm font-semibold text-gray-700 mb-3">Body Region Categories</div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { name: 'Upper Body', category: 'upper', color: 'purple', icon: '🧠' },
+              { name: 'Core/Torso', category: 'core', color: 'blue', icon: '🫀' },
+              { name: 'Lower Body', category: 'lower', color: 'green', icon: '🦵' },
+              { name: 'Arms/Hands', category: 'extremities', color: 'orange', icon: '💪' }
+            ].map(({ name, category, color, icon }) => {
+              const count = mode === 'selection'
+                ? selectedRegions.filter(id => BODY_REGIONS.find(r => r.id === id)?.category === category).length
+                : Array.from(regionPainMap.current.entries()).filter(([id]) => BODY_REGIONS.find(r => r.id === id)?.category === category).length;
+              
+              return (
+                <div key={category} className={`bg-${color}-50 border border-${color}-200 rounded-md p-2 text-center`}>
+                  <div className="text-2xl mb-1">{icon}</div>
+                  <div className="text-xs font-medium text-gray-700">{name}</div>
+                  <div className={`text-sm font-bold text-${color}-700 mt-1`}>{count}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -287,9 +743,18 @@ function normalizeLocationToRegionId(location: string): string | null {
     'shoulder': 'left-shoulder', // Default to left, could be enhanced
     'left shoulder': 'left-shoulder',
     'right shoulder': 'right-shoulder',
-    'arm': 'left-arm',
-    'left arm': 'left-arm',
-    'right arm': 'right-arm',
+    'arm': 'left-upper-arm',
+    'left arm': 'left-upper-arm',
+    'right arm': 'right-upper-arm',
+    'elbow': 'left-elbow',
+    'left elbow': 'left-elbow',
+    'right elbow': 'right-elbow',
+    'forearm': 'left-forearm',
+    'left forearm': 'left-forearm',
+    'right forearm': 'right-forearm',
+    'hand': 'left-hand',
+    'left hand': 'left-hand',
+    'right hand': 'right-hand',
     'chest': 'chest',
     'back': 'upper-back',
     'upper back': 'upper-back',
@@ -309,6 +774,9 @@ function normalizeLocationToRegionId(location: string): string | null {
     'calf': 'left-calf',
     'left calf': 'left-calf',
     'right calf': 'right-calf',
+    'ankle': 'left-ankle',
+    'left ankle': 'left-ankle',
+    'right ankle': 'right-ankle',
     'foot': 'left-foot',
     'left foot': 'left-foot',
     'right foot': 'right-foot'

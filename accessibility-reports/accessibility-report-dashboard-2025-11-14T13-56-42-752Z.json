@@ -1,0 +1,407 @@
+{
+  "route": "dashboard",
+  "timestamp": "2025-11-14T13:56:42.753Z",
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#dfc2f9",
+                "bgColor": "#9333ea",
+                "contrastRatio": 3.38,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<button class=\"w-full px-3 py-2 text-left text-xs rounded transition-all bg-purple-600 text-white shadow-md\">",
+                  "target": [
+                    ".bg-purple-600"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 3.38 (foreground color: #dfc2f9, background color: #9333ea, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<div class=\"text-xs opacity-70 mt-1\">Brief, upbeat, professional-warm</div>",
+          "target": [
+            ".bg-purple-600 > .opacity-70.text-xs.mt-1"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.38 (foreground color: #dfc2f9, background color: #9333ea, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ],
+  "colorData": [
+    {
+      "selector": "DIV.min-h-screen.bg-background.transition-colors",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.flex.items-center.justify-center.w-14.h-14.rounded-full.bg-foreground.text-foreground-contrast.shadow-lg.hover:shadow-xl.hover:scale-105.transition-all",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(23, 23, 23)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.flex.items-center.gap-2.px-3.py-1.5.rounded-full.bg-blue-50.dark:bg-blue-950/30.border.border-blue-200.dark:border-blue-800",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.flex.items-center.gap-2.px-3.py-1.5.rounded-full.bg-purple-50.dark:bg-purple-950/30.border.border-purple-200.dark:border-purple-800",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(250, 245, 255)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.h-full.px-4.py-6.bg-white/50.dark:bg-gray-900/50.backdrop-blur-sm.border-r.border-gray-200/50.dark:border-gray-700/50",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgba(255, 255, 255, 0.5)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card.transition-all.duration-[var(--duration-fast)].hover:surface-elevated.hover:shadow-[var(--elevation-2)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.h-full.transition-all.duration-[var(--duration-normal)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(240, 242, 244)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card.transition-all.duration-[var(--duration-fast)].hover:surface-elevated.hover:shadow-[var(--elevation-2)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card.transition-all.duration-[var(--duration-fast)].hover:surface-elevated.hover:shadow-[var(--elevation-2)]",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.surface-card",
+      "textColor": "rgb(0, 0, 0)",
+      "backgroundColor": "rgb(245, 246, 248)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.fixed.bottom-4.left-4.z-[80].bg-gray-900.text-white.p-4.rounded-lg.shadow-2xl.max-w-md.max-h-[85vh].overflow-y-auto.border-2.border-purple-600.animate-in.fade-in.slide-in-from-bottom-4.duration-300",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(17, 24, 39)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.flex.items-center.justify-between.mb-3.sticky.top-0.bg-gray-900.pb-2.border-b.border-gray-700.z-10",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(17, 24, 39)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.mb-3.p-2.bg-purple-900/30.rounded.border.border-purple-700/50.text-xs.text-purple-300",
+      "textColor": "rgb(216, 180, 254)",
+      "backgroundColor": "rgba(88, 28, 135, 0.3)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.mb-3.p-2.bg-gray-800.rounded.border.border-gray-700",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-purple-600.text-white.shadow-md",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(147, 51, 234)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-gray-800.hover:bg-gray-700.text-gray-300",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-gray-800.hover:bg-gray-700.text-gray-300",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.w-full.px-3.py-2.text-left.text-xs.rounded.transition-all.bg-gray-800.hover:bg-gray-700.text-gray-300",
+      "textColor": "rgb(209, 213, 219)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "INPUT.bg-gray-800.border.border-gray-700.rounded",
+      "textColor": "rgb(255, 255, 255)",
+      "backgroundColor": "rgb(31, 41, 55)",
+      "fontSize": "12px",
+      "fontWeight": "400"
+    }
+  ],
+  "focusResults": {
+    "totalFocusable": 129,
+    "visibleFocusable": 50,
+    "focusVisibleStyles": [
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "SELECT",
+        "hasFocusRing": true
+      },
+      {
+        "element": "SELECT",
+        "hasFocusRing": true
+      },
+      {
+        "element": "INPUT",
+        "hasFocusRing": true
+      },
+      {
+        "element": "INPUT",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      }
+    ]
+  }
+}
