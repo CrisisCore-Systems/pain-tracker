@@ -1533,9 +1533,14 @@ const InsightsView: React.FC<{
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                <p className="text-xs uppercase tracking-wider text-white/70">Baseline</p>
-                <p className="text-2xl font-bold">{patternAnalysis.baseline.value.toFixed(1)}</p>
-                <p className="text-xs text-white/80 capitalize">{patternAnalysis.baseline.confidence} confidence</p>
+                <p className="text-xs uppercase tracking-wider text-white/70">Trend Slope</p>
+                <p className="text-2xl font-bold">
+                  {patternAnalysis.dailyTrend.length > 0 
+                    ? (patternAnalysis.dailyTrend[patternAnalysis.dailyTrend.length - 1].value - 
+                       patternAnalysis.dailyTrend[0].value).toFixed(1)
+                    : '0.0'}
+                </p>
+                <p className="text-xs text-white/80">Recent trend direction</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
                 <p className="text-xs uppercase tracking-wider text-white/70">Episodes Detected</p>
@@ -1544,8 +1549,8 @@ const InsightsView: React.FC<{
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
                 <p className="text-xs uppercase tracking-wider text-white/70">Data Quality</p>
-                <p className="text-2xl font-bold capitalize">{patternAnalysis.dataQuality}</p>
-                <p className="text-xs text-white/80">{entries.length} entries analyzed</p>
+                <p className="text-2xl font-bold capitalize">{patternAnalysis.meta.dataQuality}</p>
+                <p className="text-xs text-white/80">{patternAnalysis.meta.entryCount} entries analyzed</p>
               </div>
             </div>
           </div>
@@ -1566,7 +1571,7 @@ const InsightsView: React.FC<{
                           {episode.severity} Severity
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {episode.duration} days • Peak: {episode.peakIntensity.toFixed(1)}/10
+                          {episode.durationDays} days • Peak: {episode.peakPain.toFixed(1)}/10
                         </p>
                       </div>
                       {episode.recoveryDays !== null && (
@@ -1598,8 +1603,8 @@ const InsightsView: React.FC<{
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className={`text-sm font-semibold ${corr.delta > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                        {corr.delta > 0 ? '+' : ''}{corr.delta.toFixed(1)}
+                      <p className={`text-sm font-semibold ${corr.deltaPain > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {corr.deltaPain > 0 ? '+' : ''}{corr.deltaPain.toFixed(1)}
                       </p>
                       <p className="text-xs text-gray-500 capitalize">{corr.strength}</p>
                     </div>
@@ -1620,13 +1625,13 @@ const InsightsView: React.FC<{
                 {patternAnalysis.qolPatterns.map((pattern, idx) => (
                   <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-2">
-                      {pattern.dimension === 'sleep' && <Moon className="w-4 h-4" />}
-                      {pattern.dimension === 'mood' && <Sun className="w-4 h-4" />}
-                      {pattern.dimension === 'activity' && <Activity className="w-4 h-4" />}
-                      <p className="font-semibold text-gray-900 dark:text-white capitalize">{pattern.dimension}</p>
+                      {pattern.metric === 'sleep' && <Moon className="w-4 h-4" />}
+                      {pattern.metric === 'mood' && <Sun className="w-4 h-4" />}
+                      {pattern.metric === 'activity' && <Activity className="w-4 h-4" />}
+                      <p className="font-semibold text-gray-900 dark:text-white capitalize">{pattern.metric}</p>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">{pattern.description}</p>
-                    <p className="text-xs text-gray-500 mt-2 capitalize">{pattern.strength} correlation</p>
+                    <p className="text-xs text-gray-500 mt-2 capitalize">{pattern.correlation} correlation</p>
                   </div>
                 ))}
               </div>
@@ -1634,14 +1639,14 @@ const InsightsView: React.FC<{
           )}
 
           {/* Cautions */}
-          {patternAnalysis.cautions.length > 0 && (
+          {patternAnalysis.meta.cautions.length > 0 && (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <p className="font-semibold text-yellow-900 dark:text-yellow-100">Analysis Notes</p>
                   <ul className="mt-2 space-y-1 text-sm text-yellow-800 dark:text-yellow-200">
-                    {patternAnalysis.cautions.map((caution, idx) => (
+                    {patternAnalysis.meta.cautions.map((caution, idx) => (
                       <li key={idx}>• {caution}</li>
                     ))}
                   </ul>
