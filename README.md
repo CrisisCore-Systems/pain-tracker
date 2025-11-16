@@ -63,10 +63,42 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 ---
 
+## 💜 **Fibromyalgia-Specialized Features**
+
+Pain Tracker offers **clinical-grade fibromyalgia support** built on ACR 2016 Revised Diagnostic Criteria—going beyond generic pain tracking to provide specialized tools for the fibromyalgia community.
+
+### 🎯 **ACR-Compliant Assessment**
+- ✅ **Widespread Pain Index (WPI)**: 0-19 scale tracking across 18 ACR-defined body regions
+- ✅ **Symptom Severity Scale (SSS)**: 0-12 scale covering fatigue, sleep, cognition, and somatic symptoms
+- ✅ **Diagnostic Criteria Calculator**: Real-time feedback on ACR 2016 diagnostic thresholds
+- ✅ **44+ Anatomical Locations**: 26 general + 18 fibro-specific WPI regions for comprehensive pain mapping
+
+### 🧠 **Fibro-Specific Analytics**
+- ✅ **Fibro Fog Tracking**: Dedicated cognitive symptom assessment (memory, concentration)
+- ✅ **Flare Pattern Recognition**: Frequency, duration, and intensity tracking with trigger correlation
+- ✅ **Symptom Trends**: Longitudinal analysis of fatigue, cognition, and sleep quality
+- ✅ **Energy Envelope Management**: Activity pacing tools and post-exertional malaise tracking
+- ✅ **Trigger Identification**: Weather, stress, sleep, activity, and food sensitivity correlation
+
+### 🤝 **Trauma-Informed Fibro Care**
+- ✅ **Medical Trauma Awareness**: Designed for those who've faced diagnostic delays and invalidation
+- ✅ **Gentle Workflows**: Progressive disclosure to reduce cognitive load during "fibro fog"
+- ✅ **Privacy Protection**: 100% local storage—no insurance or employer access concerns
+- ✅ **Empathy-Driven Analytics**: Validates patient experience through biopsychosocial tracking
+
+### 📋 **Clinical & Claims Support**
+- ✅ **WorkSafe BC Integration**: Auto-populated Forms 6/7 for fibromyalgia workplace injury claims
+- ✅ **Rheumatology-Ready Reports**: WPI/SSS summaries for specialist appointments
+- ✅ **Treatment Effectiveness**: Intervention correlation analysis (medications, therapies, self-care)
+
+**📖 [Complete Fibromyalgia Features Guide](docs/FIBROMYALGIA_FEATURES.md)** | **✅ [Claims Verification Report](docs/FIBROMYALGIA_CLAIMS_VERIFICATION.md)**
+
+---
+
 ## 🌟 **Core Features**
 
 ### 📊 **Advanced Pain Analytics**
-- ✅ **Multidimensional Tracking**: Fully implemented 7-step assessment across 25+ anatomical locations
+- ✅ **Multidimensional Tracking**: Fully implemented 7-step assessment across 44+ anatomical locations
 - ✅ **Symptom Complexity**: Complete tracking of 19+ symptom types with severity gradients
 - ✅ **Pattern Recognition**: Heuristic-based trend analysis and correlation detection (working)
 - 🔄 **Visual Heatmaps**: Basic body mapping implemented; advanced temporal progression in development
