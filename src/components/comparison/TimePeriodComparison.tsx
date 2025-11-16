@@ -327,13 +327,13 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
                 <div className="text-2xl font-bold text-blue-600">
                   {formatNumber(statistics.overall.baselineMean, 1)}
                 </div>
-                <div className="text-sm text-gray-600">Baseline Avg</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Baseline Avg</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-red-600">
                   {formatNumber(statistics.overall.comparisonMean, 1)}
                 </div>
-                <div className="text-sm text-gray-600">Comparison Avg</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Comparison Avg</div>
               </div>
               <div className="text-center">
                 <div className={`text-2xl font-bold ${
@@ -342,19 +342,19 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
                   {statistics.overall.percentageChange > 0 ? '+' : ''}
                   {formatNumber(statistics.overall.percentageChange, 1)}%
                 </div>
-                <div className="text-sm text-gray-600">Change</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Change</div>
               </div>
             </div>
 
             {/* Statistical Significance */}
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+            <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Statistical Significance</span>
                 <Badge variant={statistics.overall.statisticalSignificance < 0.05 ? "default" : "secondary"}>
                   {statistics.overall.statisticalSignificance < 0.05 ? 'Significant' : 'Not Significant'}
                 </Badge>
               </div>
-              <div className="text-xs text-gray-600 mt-1">
+              <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                 p-value: {formatNumber(statistics.overall.statisticalSignificance, 3)}
               </div>
             </div>
@@ -377,7 +377,7 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h4 className="font-medium text-sm">{insight.title}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{insight.description}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{insight.description}</p>
                         {insight.recommendation && (
                           <p className="text-sm text-blue-600 mt-2 font-medium">
                             💡 {insight.recommendation}
@@ -413,7 +413,7 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
               <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p>Charts will be displayed here</p>
               <PlannedFeatureNotice feature="visualComparison" />

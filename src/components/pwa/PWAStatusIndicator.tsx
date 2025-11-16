@@ -99,7 +99,7 @@ export function PWAStatusIndicator() {
           )}
         </div>
         {!status.isOnline && (
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
             Your data is saved locally and will sync when you're back online
           </p>
         )}

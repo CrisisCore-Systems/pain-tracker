@@ -256,7 +256,7 @@ export function EmotionalCheckIn({
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
       <h3 className="text-lg font-medium mb-4 flex items-center">
         <Heart className="w-5 h-5 mr-2 text-pink-500" />
         How are you feeling?
@@ -264,7 +264,7 @@ export function EmotionalCheckIn({
       
       {/* Feeling Selection */}
       <div className="mb-4">
-        <p className="text-sm text-gray-600 mb-2">Choose what feels closest:</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Choose what feels closest:</p>
         <div className="grid grid-cols-2 gap-2">
           {feelings.map((feeling) => {
             const Icon = feeling.icon;
@@ -288,16 +288,16 @@ export function EmotionalCheckIn({
       {/* Intensity */}
       {selectedFeeling && (
         <div className="mb-4">
-          <p className="text-sm text-gray-600 mb-2">How intense is this feeling?</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">How intense is this feeling?</p>
           <input
             type="range"
             min="1"
             max="10"
             value={intensity}
             onChange={(e) => setIntensity(Number(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span>Mild</span>
             <span className="font-medium">{intensity}/10</span>
             <span>Intense</span>
@@ -313,9 +313,9 @@ export function EmotionalCheckIn({
               type="checkbox"
               checked={painRelated}
               onChange={(e) => setPainRelated(e.target.checked)}
-              className="rounded border-gray-300"
+              className="rounded border-gray-300 dark:border-gray-600"
             />
-            <span className="text-sm text-gray-700">This feeling is related to my pain</span>
+            <span className="text-sm text-gray-700 dark:text-gray-300">This feeling is related to my pain</span>
           </label>
         </div>
       )}

@@ -187,7 +187,7 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Create New Goal</h2>
-          <p className="text-gray-600">Set meaningful goals to track your progress and stay motivated</p>
+          <p className="text-gray-600 dark:text-gray-400">Set meaningful goals to track your progress and stay motivated</p>
         </div>
         <Button variant="outline" onClick={onCancel}>
           <X className="w-4 h-4 mr-2" />
@@ -220,19 +220,19 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
                       {template.difficulty}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600">{template.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{template.description}</p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <Calendar className="w-4 h-4 mr-2" />
                       {template.duration} days
                     </div>
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <Target className="w-4 h-4 mr-2" />
                       {template.estimatedSuccess}% success rate
                     </div>
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <Award className="w-4 h-4 mr-2" />
                       {template.milestones.length} milestones
                     </div>

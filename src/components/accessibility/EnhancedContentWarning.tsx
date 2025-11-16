@@ -215,7 +215,7 @@ export function EnhancedContentWarning({
               <TouchOptimizedButton
                 variant="secondary"
                 onClick={() => setIsVisible(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 dark:text-gray-400"
                 aria-label="Dismiss warning"
               >
                 <X className="w-4 h-4" />
@@ -223,7 +223,7 @@ export function EnhancedContentWarning({
             </div>
           </div>
           
-          <p className="text-gray-700 mb-4">
+          <p className="text-gray-700 dark:text-gray-300 mb-4">
             {description || config.message}
           </p>
           
@@ -305,7 +305,7 @@ function EnhancedTriggerDisplay({ triggers }: { triggers: PainTriggerType[] }) {
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Content includes:
         </span>
         {Object.keys(groupedTriggers).length > 3 && (
@@ -339,7 +339,7 @@ function EnhancedTriggerDisplay({ triggers }: { triggers: PainTriggerType[] }) {
             <div key={category} className="flex items-start space-x-3">
               <CategoryIcon className={`w-4 h-4 mt-0.5 ${categoryConfig.color}`} />
               <div className="flex-1">
-                <div className="font-medium text-sm text-gray-800 mb-1">
+                <div className="font-medium text-sm text-gray-800 dark:text-gray-200 mb-1">
                   {categoryConfig.label}
                 </div>
                 <div className="flex flex-wrap gap-1">
@@ -434,7 +434,7 @@ function AdvancedWarningSettings({
   
   return (
     <div className="border-t pt-4 mt-4 space-y-3">
-      <h4 className="text-sm font-medium text-gray-800">Warning Preferences</h4>
+      <h4 className="text-sm font-medium text-gray-800 dark:text-gray-200">Warning Preferences</h4>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
         <div className="space-y-2">
@@ -504,7 +504,7 @@ function AdvancedWarningSettings({
       </div>
       
       <div className="mt-3">
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Custom trigger words (optional):
         </label>
         <input
@@ -512,7 +512,7 @@ function AdvancedWarningSettings({
           value={customTriggers}
           onChange={(e) => setCustomTriggers(e.target.value)}
           placeholder="Add personal trigger words, separated by commas"
-          className="w-full p-2 text-sm border border-gray-300 rounded-md"
+          className="w-full p-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md"
         />
       </div>
     </div>
@@ -538,7 +538,7 @@ function ContentWarningReminder({
     `}>
       <div className="flex items-center space-x-3">
         <Shield className={`w-4 h-4 ${config.color}`} />
-        <span className="text-sm text-gray-700">
+        <span className="text-sm text-gray-700 dark:text-gray-300">
           Content warning acknowledged - {triggers.length} trigger{triggers.length !== 1 ? 's' : ''} present
         </span>
       </div>

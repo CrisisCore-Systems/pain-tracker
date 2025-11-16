@@ -396,7 +396,7 @@ export function CrisisModeSettingsPanel({
           <h2 className="text-xl font-semibold">Crisis Mode Settings</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl"
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-300 text-2xl"
           >
             ×
           </button>
@@ -479,9 +479,9 @@ export function CrisisModeSettingsPanel({
           <h3 className="text-lg font-medium mb-3">Emergency Contacts</h3>
           <div className="space-y-2">
             {crisisSettings.emergencyContacts.map((contact: CrisisSettings['emergencyContacts'][0], index: number) => (
-              <div key={index} className="p-2 bg-gray-50 rounded text-sm">
+              <div key={index} className="p-2 bg-gray-50 dark:bg-gray-900 rounded text-sm">
                 <div className="font-medium">{contact.name}</div>
-                <div className="text-gray-600">{contact.phone} ({contact.type})</div>
+                <div className="text-gray-600 dark:text-gray-400">{contact.phone} ({contact.type})</div>
               </div>
             ))}
           </div>

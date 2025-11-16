@@ -33,8 +33,8 @@ export const FeatureGate: React.FC<FeatureGateProps> = ({
   
   if (access.loading) {
     return (
-      <div className="animate-pulse bg-gray-200 rounded p-4">
-        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+      <div className="animate-pulse bg-gray-200 dark:bg-gray-700 rounded p-4">
+        <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-3/4"></div>
       </div>
     );
   }

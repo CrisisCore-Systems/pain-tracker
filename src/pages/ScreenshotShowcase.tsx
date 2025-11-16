@@ -48,7 +48,7 @@ export function BodyMapShowcase() {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-8">
       <div className="max-w-4xl w-full">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
           Pinpoint Your Pain Locations
         </h1>
         <InteractiveBodyMap
@@ -76,8 +76,8 @@ export function PrivacySettingsShowcase() {
           <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-lg border-2 border-green-200">
             <Lock className="w-8 h-8 text-green-600 mt-1" />
             <div>
-              <h3 className="font-semibold text-lg text-gray-900">Local Storage Only</h3>
-              <p className="text-gray-700 mt-2">
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Local Storage Only</h3>
+              <p className="text-gray-700 dark:text-gray-300 mt-2">
                 Your data is stored locally on your device using encrypted IndexedDB. 
                 We cannot access your information even if we wanted to.
               </p>
@@ -87,8 +87,8 @@ export function PrivacySettingsShowcase() {
           <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
             <Lock className="w-8 h-8 text-blue-600 mt-1" />
             <div>
-              <h3 className="font-semibold text-lg text-gray-900">AES-256 Encryption</h3>
-              <p className="text-gray-700 mt-2">
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">AES-256 Encryption</h3>
+              <p className="text-gray-700 dark:text-gray-300 mt-2">
                 All sensitive pain data is encrypted using military-grade AES-256 encryption 
                 before storage.
               </p>
@@ -98,8 +98,8 @@ export function PrivacySettingsShowcase() {
           <div className="flex items-start space-x-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
             <Lock className="w-8 h-8 text-purple-600 mt-1" />
             <div>
-              <h3 className="font-semibold text-lg text-gray-900">HIPAA Aligned</h3>
-              <p className="text-gray-700 mt-2">
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">HIPAA Aligned</h3>
+              <p className="text-gray-700 dark:text-gray-300 mt-2">
                 Built with HIPAA compliance in mind, including audit trails and 
                 data protection measures.
               </p>
@@ -107,7 +107,7 @@ export function PrivacySettingsShowcase() {
           </div>
 
           <div className="text-center pt-4 border-t">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               <strong>Unlike cloud-based competitors,</strong> your medical data 
               never leaves your device.
             </p>
@@ -164,10 +164,10 @@ export function BenefitsGridShowcase() {
                   <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-${benefit.color}-100 mb-4`}>
                     <Icon className={`w-8 h-8 text-${benefit.color}-600`} />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                     {benefit.title}
                   </h3>
-                  <p className="text-gray-600">{benefit.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400">{benefit.description}</p>
                 </CardContent>
               </Card>
             );
@@ -200,17 +200,17 @@ export function ComparisonGridShowcase() {
         <CardContent className="p-8">
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-gray-300">
-                <th className="text-left py-4 px-4 text-gray-900">Feature</th>
+              <tr className="border-b-2 border-gray-300 dark:border-gray-600">
+                <th className="text-left py-4 px-4 text-gray-900 dark:text-gray-100">Feature</th>
                 <th className="text-center py-4 px-4 text-blue-600 font-bold">Pain Tracker</th>
-                <th className="text-center py-4 px-4 text-gray-600">Competitor A</th>
-                <th className="text-center py-4 px-4 text-gray-600">Competitor B</th>
+                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">Competitor A</th>
+                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">Competitor B</th>
               </tr>
             </thead>
             <tbody>
               {features.map((item, index) => (
-                <tr key={index} className="border-b border-gray-200">
-                  <td className="py-4 px-4 text-gray-900">{item.feature}</td>
+                <tr key={index} className="border-b border-gray-200 dark:border-gray-700">
+                  <td className="py-4 px-4 text-gray-900 dark:text-gray-100">{item.feature}</td>
                   <td className="text-center py-4 px-4">
                     {item.us ? (
                       <span className="text-green-600 text-2xl">✓</span>

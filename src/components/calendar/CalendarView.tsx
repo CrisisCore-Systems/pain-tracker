@@ -345,7 +345,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-gray-500" />
+                        <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
                           {new Date(entry.timestamp).toLocaleTimeString('en-US', {
                             hour: '2-digit',
@@ -360,7 +360,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
 
                     {entry.baselineData.locations && entry.baselineData.locations.length > 0 && (
                       <div className="flex items-start gap-2">
-                        <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
+                        <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 mt-0.5" />
                         <div className="flex flex-wrap gap-1">
                           {entry.baselineData.locations.map((loc, i) => (
                             <Badge key={i} variant="outline" className="text-xs rounded-full">
@@ -373,7 +373,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
 
                     {entry.medications?.current && entry.medications.current.length > 0 && (
                       <div className="flex items-start gap-2">
-                        <Pill className="h-4 w-4 text-gray-400 mt-0.5" />
+                        <Pill className="h-4 w-4 text-gray-400 dark:text-gray-500 mt-0.5" />
                         <div className="flex flex-wrap gap-1">
                           {entry.medications.current.map((med, i) => (
                             <Badge key={i} variant="outline" className="text-xs rounded-full">
@@ -395,7 +395,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
             </div>
           ) : (
             <div className="bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-950/20 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 p-8 text-center">
-              <Info className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+              <Info className="h-12 w-12 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Select a Day
               </h3>

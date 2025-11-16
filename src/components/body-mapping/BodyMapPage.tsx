@@ -148,7 +148,7 @@ export function BodyMapPage() {
             <button
               onClick={handleSaveEntry}
               disabled={isSaving || selectedRegions.length === 0}
-              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors disabled:cursor-not-allowed"
+              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 dark:bg-gray-500 text-white font-semibold rounded-lg transition-colors disabled:cursor-not-allowed"
             >
               {isSaving ? 'Saving...' : 'Save Entry'}
             </button>

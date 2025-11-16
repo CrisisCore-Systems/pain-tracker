@@ -77,7 +77,7 @@ export function ModernAppLayout({
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-800 transition-colors"
                 aria-label={sidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 data-testid="nav-toggle"
               >

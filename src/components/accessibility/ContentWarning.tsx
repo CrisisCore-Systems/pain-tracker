@@ -127,14 +127,14 @@ export function ContentWarning({
             <TouchOptimizedButton
               variant="secondary"
               onClick={() => setIsVisible(false)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 dark:text-gray-400"
               aria-label="Dismiss warning"
             >
               <X className="w-4 h-4" />
             </TouchOptimizedButton>
           </div>
           
-          <p className="text-gray-700 mb-4">
+          <p className="text-gray-700 dark:text-gray-300 mb-4">
             {description || config.message}
           </p>
           
@@ -183,7 +183,7 @@ function TriggerTypesList({ types }: { types: string[] }) {
   return (
     <div className="mb-4">
       <div className="flex items-center mb-2">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Content includes:
         </span>
         {types.length > 3 && (
@@ -206,7 +206,7 @@ function TriggerTypesList({ types }: { types: string[] }) {
         {displayTypes.map((type, index) => (
           <span
             key={index}
-            className="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-md"
+            className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-md"
           >
             {type}
           </span>
@@ -231,7 +231,7 @@ function ContentWarningCustomization({
       <TouchOptimizedButton
         variant="secondary"
         onClick={() => setIsExpanded(true)}
-        className="text-xs text-gray-600"
+        className="text-xs text-gray-600 dark:text-gray-400"
       >
         <ChevronRight className="w-3 h-3 mr-1" />
         Customize Warnings
@@ -242,7 +242,7 @@ function ContentWarningCustomization({
   return (
     <div className="border-t pt-3 mt-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Warning Settings
         </span>
         <TouchOptimizedButton
@@ -265,7 +265,7 @@ function ContentWarningCustomization({
           </TouchOptimizedButton>
         )}
         
-        <p className="text-xs text-gray-600">
+        <p className="text-xs text-gray-600 dark:text-gray-400">
           You can always adjust warning preferences in Settings
         </p>
       </div>
@@ -290,7 +290,7 @@ function ContentWarningBanner({
     `}>
       <div className="flex items-center space-x-2">
         <Shield className={`w-4 h-4 ${config.color}`} />
-        <span className="text-sm text-gray-700">
+        <span className="text-sm text-gray-700 dark:text-gray-300">
           Content warning acknowledged
         </span>
       </div>
@@ -331,7 +331,7 @@ export function InlineContentWarning({
         <Eye className="w-3 h-3 mr-1" />
         Show {triggerType}
       </TouchOptimizedButton>
-      <span className="text-gray-500 text-sm">[hidden]</span>
+      <span className="text-gray-500 dark:text-gray-400 text-sm">[hidden]</span>
     </span>
   );
 }

@@ -45,7 +45,7 @@ function InsightCard({ insight, onViewDetails }: InsightCardProps) {
       case 'anomaly':
         return <AlertTriangle className="h-4 w-4 text-orange-600" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-600" />;
+        return <Activity className="h-4 w-4 text-gray-600 dark:text-gray-400" />;
     }
   };
 

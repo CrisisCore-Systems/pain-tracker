@@ -205,7 +205,7 @@ function SimplificationControls({
         </div>
 
         {showAdvanced && (
-          <div className="mt-3 pt-3 border-t border-gray-200 space-y-2">
+          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
             <SimplificationSettings
               config={config}
               onUpdate={onConfigUpdate}
@@ -228,13 +228,13 @@ function SimplificationSettings({
   return (
     <div className="space-y-3 text-sm">
       <div>
-        <label className="block text-xs font-medium text-gray-700 mb-1">
+        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
           Simplification Level
         </label>
         <select
           value={config.level}
           onChange={(e) => onUpdate({ level: e.target.value as SimplificationConfig['level'] })}
-          className="w-full text-xs p-1 border border-gray-300 rounded"
+          className="w-full text-xs p-1 border border-gray-300 dark:border-gray-600 rounded"
         >
           <option value="minimal">Minimal</option>
           <option value="moderate">Moderate</option>
@@ -289,7 +289,7 @@ function SimplificationToggle({
 }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-xs text-gray-700">{label}</span>
+      <span className="text-xs text-gray-700 dark:text-gray-300">{label}</span>
       <TouchOptimizedButton
         variant="secondary"
         onClick={() => onChange(!enabled)}
@@ -298,7 +298,7 @@ function SimplificationToggle({
         {enabled ? (
           <ToggleRight className="w-4 h-4 text-blue-600" />
         ) : (
-          <ToggleLeft className="w-4 h-4 text-gray-400" />
+          <ToggleLeft className="w-4 h-4 text-gray-400 dark:text-gray-500" />
         )}
       </TouchOptimizedButton>
     </div>

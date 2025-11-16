@@ -313,7 +313,7 @@ function MedicalDisclosureHeader({
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-1">
-              <h3 className="font-medium text-gray-900 flex-1">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 flex-1">
                 {title}
               </h3>
               
@@ -333,7 +333,7 @@ function MedicalDisclosureHeader({
               </div>
             </div>
             
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
               {contextConfig.description}
             </p>
             
@@ -348,9 +348,9 @@ function MedicalDisclosureHeader({
         <div className="flex items-center space-x-2 ml-3">
           {levelIcon}
           {isOpen ? (
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           ) : (
-            <ChevronRight className="w-5 h-5 text-gray-400" />
+            <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           )}
         </div>
       </div>
@@ -405,7 +405,7 @@ function MedicalDisclosureMetadata({
   }
   
   return (
-    <div className="flex items-center space-x-4 text-xs text-gray-500">
+    <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
       {timeToRead && (
         <div className="flex items-center space-x-1">
           <Clock className="w-3 h-3" />
@@ -522,14 +522,14 @@ export function OrganizedMedicalSections({
   return (
     <div className="space-y-6">
       {/* User Context Indicator */}
-      <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+      <div className="p-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg">
         <div className="flex items-center space-x-2">
-          <Shield className="w-5 h-5 text-gray-600" />
+          <Shield className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           <div>
-            <h3 className="font-medium text-gray-800">
+            <h3 className="font-medium text-gray-800 dark:text-gray-200">
               Information organized for: {userType === 'patient' ? 'Patients' : userType === 'caregiver' ? 'Caregivers' : userType === 'provider' ? 'Healthcare Providers' : 'Everyone'}
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Sections prioritized by relevance and current pain level ({currentPainLevel}/10)
             </p>
           </div>
@@ -613,7 +613,7 @@ function MedicalGroupHeader({
           `} />
           
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {group.title}
             </h2>
             <div className="flex items-center space-x-2 mt-1">
@@ -628,13 +628,13 @@ function MedicalGroupHeader({
         </div>
         
         <div className="flex items-center space-x-2">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 dark:text-gray-400">
             {group.sections.length} section{group.sections.length > 1 ? 's' : ''}
           </span>
           {isOpen ? (
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           ) : (
-            <ChevronRight className="w-5 h-5 text-gray-400" />
+            <ChevronRight className="w-5 h-5 text-gray-400 dark:text-gray-500" />
           )}
         </div>
       </div>

@@ -243,13 +243,13 @@ const DailyTracking: React.FC = () => {
           <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
             <div className="text-sm text-gray-600 dark:text-gray-400">Widespread Pain Index (WPI)</div>
             <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{wpiScore} / 19</div>
-            <div className="text-xs text-gray-500 mt-1">Need ≥7 for primary criteria</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need ≥7 for primary criteria</div>
           </div>
           
           <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
             <div className="text-sm text-gray-600 dark:text-gray-400">Symptom Severity Scale (SSS)</div>
             <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">{sssScore} / 12</div>
-            <div className="text-xs text-gray-500 mt-1">Need ≥5 for primary criteria</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need ≥5 for primary criteria</div>
           </div>
         </div>
 
@@ -309,7 +309,7 @@ const DailyTracking: React.FC = () => {
             return (
               <div key={symptom.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="flex items-center gap-2 mb-3">
-                  <Icon className="w-4 h-4 text-gray-500" />
+                  <Icon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                   <span className="font-medium text-gray-900 dark:text-white">{symptom.label}</span>
                 </div>
                 <div className="flex gap-2">

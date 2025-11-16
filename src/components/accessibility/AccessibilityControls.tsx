@@ -46,7 +46,7 @@ export const AccessibilityControls: React.FC = () => {
         </div>
 
         {/* Accessibility Status Indicators */}
-        <div className="pt-4 border-t border-gray-200">
+        <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
           <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             System Accessibility Settings
           </h4>
@@ -63,7 +63,7 @@ export const AccessibilityControls: React.FC = () => {
         </div>
 
         {/* Quick Tips */}
-        <div className="pt-4 border-t border-gray-200">
+        <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
           <details className="text-sm">
             <summary className="font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
               Keyboard Navigation Tips

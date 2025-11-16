@@ -191,7 +191,7 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
   if (!analytics) {
     return (
       <div className="text-center py-20">
-        <BarChart3 className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+        <BarChart3 className="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{noTrendsHeadline}</h3>
         <p className="text-gray-500 dark:text-gray-400">{noTrendsSubtext}</p>
       </div>

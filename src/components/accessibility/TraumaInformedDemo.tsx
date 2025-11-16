@@ -41,18 +41,18 @@ function WelcomeSection() {
   
   return (
     <div className="text-center space-y-4">
-      <h1 className="text-3xl font-bold text-gray-900">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
         Welcome to Your Pain Tracker
       </h1>
       
       {preferences.gentleLanguage ? (
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           This is your safe space to track and understand your pain. 
           You're in complete control of what you share and when. 
           Take your time, and remember - you're taking an important step in your health journey.
         </p>
       ) : (
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           Track your pain levels, symptoms, and treatments to better understand your health patterns.
         </p>
       )}
@@ -111,7 +111,7 @@ function FeatureShowcase() {
     <Card>
       <CardHeader>
         <CardTitle>Trauma-Informed Features</CardTitle>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           This interface includes accommodations designed to support people with various needs
         </p>
       </CardHeader>
@@ -133,20 +133,20 @@ function FeatureGrid({ features }: { features: Feature[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {features.map((feature, index) => (
-        <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+        <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
           <div className="flex-shrink-0">
             {feature.icon}
           </div>
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-2">
-              <h3 className="font-medium text-gray-900">{feature.title}</h3>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">{feature.title}</h3>
               {feature.enabled && (
                 <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                   Active
                 </span>
               )}
             </div>
-            <p className="text-sm text-gray-600">{feature.description}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">{feature.description}</p>
           </div>
         </div>
       ))}
@@ -182,10 +182,10 @@ export function SettingsIntegration() {
     <TraumaInformedLayout>
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Accessibility & Comfort Settings
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Customize your experience to work best for your needs
           </p>
         </div>

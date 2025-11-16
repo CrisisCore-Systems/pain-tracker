@@ -37,10 +37,10 @@ export function EnhancedTraumaInformedDemo() {
     >
       <div className="max-w-6xl mx-auto p-6 space-y-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Enhanced Trauma-Informed Design
           </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Experience the enhanced trauma-informed design features including cognitive load indicators,
             crisis-state adaptations, content warnings, and progressive disclosure patterns.
           </p>
@@ -123,7 +123,7 @@ function OverviewDemo() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             The enhanced trauma-informed design system now includes four major improvements
             to better support users who may be experiencing trauma, cognitive challenges, or crisis states.
           </p>
@@ -179,12 +179,12 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
+    <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
       <div className="flex items-start space-x-3">
         {icon}
         <div>
-          <h3 className="font-medium text-gray-900 mb-1">{title}</h3>
-          <p className="text-sm text-gray-600">{description}</p>
+          <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-1">{title}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
         </div>
       </div>
     </div>
@@ -229,7 +229,7 @@ function CognitiveLoadDemo() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Cognitive load indicators help users understand the complexity of forms and sections,
             providing guidance and simplification options when needed.
           </p>
@@ -258,13 +258,13 @@ function CognitiveLoadDemo() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Array.from({ length: config.fields }, (_, i) => (
                   <div key={i}>
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Field {i + 1} {i < config.required ? '*' : ''}
                     </label>
                     <input
                       type="text"
                       required={i < config.required}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                      className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm"
                       {...(config.complex && i % 3 === 0 ? { 'data-complex': true } : {})}
                     />
                   </div>
@@ -278,8 +278,8 @@ function CognitiveLoadDemo() {
             onLoadChange={setLoadLevel}
           />
 
-          <div className="mt-4 p-3 bg-gray-50 rounded">
-            <p className="text-sm text-gray-600">
+          <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Current detected load level: <strong>{loadLevel}</strong>
             </p>
           </div>
@@ -302,13 +302,13 @@ function CrisisAdaptationDemo() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             The interface automatically detects crisis behaviors and adapts to provide appropriate support.
             Crisis levels are detected through user behavior patterns like rapid clicking, frequent navigation, or errors.
           </p>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Simulate Crisis Level:
             </label>
             <div className="flex space-x-2">
@@ -333,7 +333,7 @@ function CrisisAdaptationDemo() {
           >
             <div className="p-6 bg-white rounded-lg border">
               <h3 className="text-lg font-medium mb-4">Sample Content Area</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 This content area shows how the interface adapts based on crisis level.
                 Notice how the background, borders, and available actions change.
               </p>
@@ -379,13 +379,13 @@ function ContentWarningsDemo() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Content warnings provide gentle, informative alerts about potentially triggering content
             with options to proceed, skip, or customize warning preferences.
           </p>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Warning Level:
             </label>
             <div className="flex space-x-2">
@@ -412,7 +412,7 @@ function ContentWarningsDemo() {
           >
             <div className="p-6 bg-white rounded-lg border">
               <h3 className="text-lg font-medium mb-4">Protected Content Area</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
                 This content would normally be hidden behind the warning. It might contain
                 sensitive information related to pain experiences, medical procedures, or
                 other potentially triggering topics.
@@ -433,8 +433,8 @@ function ContentWarningsDemo() {
               analysisText="This content discusses severe chronic pain, emergency surgery, and mental health challenges including depression and anxiety."
               customTriggers={['Custom trigger example']}
             >
-              <div className="p-4 bg-gray-50 rounded">
-                <p className="text-sm text-gray-600">
+              <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   This content was automatically analyzed and flagged based on keywords and context.
                 </p>
               </div>
@@ -551,7 +551,7 @@ function ProgressiveDisclosureDemo() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Progressive disclosure organizes information by importance and complexity,
             allowing users to access only what they need when they need it.
           </p>
@@ -568,8 +568,8 @@ function ProgressiveDisclosureDemo() {
               title="Smart Content Section"
               adaptToUserBehavior={true}
             >
-              <div className="p-4 bg-gray-50 rounded">
-                <p className="text-sm text-gray-600 mb-3">
+              <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                   This section adapts its complexity level based on your interaction patterns
                   and current preferences. The more you interact with the interface, the more
                   detailed options become available.

@@ -245,13 +245,13 @@ export function UserAgencyReinforcementPanel({
       )}
 
       {/* Header */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+      <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 mb-6">
         <div className="flex items-center space-x-3 mb-4">
           <Crown className="w-6 h-6 text-purple-600" />
-          <h2 className="text-xl font-bold text-gray-900">You're In Control</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">You're In Control</h2>
         </div>
         
-        <p className="text-gray-700 mb-4 leading-relaxed">
+        <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
           Your pain tracking experience should work exactly the way you need it to. 
           Every choice below puts you in the driver's seat of your health journey.
         </p>
@@ -315,19 +315,19 @@ function AgencyChoiceCard({
   const selectedOpt = choice.options.find(opt => opt.id === selectedOption);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
       {/* Header */}
       <TouchOptimizedButton
         variant="secondary"
         onClick={onExpand}
-        className="w-full p-4 text-left bg-transparent hover:bg-gray-50 border-0 rounded-none"
+        className="w-full p-4 text-left bg-transparent hover:bg-gray-50 dark:bg-gray-900 border-0 rounded-none"
       >
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 mb-1">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
               {choice.title}
             </h3>
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
               {choice.description}
             </p>
             
@@ -385,7 +385,7 @@ function AgencyChoiceCard({
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="font-medium text-gray-900">
+                        <h4 className="font-medium text-gray-900 dark:text-gray-100">
                           {option.label}
                         </h4>
                         {isSelected && (
@@ -393,7 +393,7 @@ function AgencyChoiceCard({
                         )}
                       </div>
                       
-                      <p className="text-sm text-gray-600 mb-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                         {option.description}
                       </p>
                       
@@ -473,47 +473,47 @@ function AdvancedAgencyControls({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 mt-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 mt-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Settings className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">
+        <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Advanced Control Options
         </h3>
       </div>
       
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Data Retention Control
           </label>
           <select
             value={advancedSettings.dataRetention}
             onChange={(e) => handleSettingChange('dataRetention', e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
+            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-purple-500"
           >
             <option value="user-controlled">I control everything</option>
             <option value="auto-archive">Auto-archive old data</option>
             <option value="never-delete">Keep all data forever</option>
           </select>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
             You decide how long your data is kept and when it's removed
           </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Export Format Preference
           </label>
           <select
             value={advancedSettings.exportFormat}
             onChange={(e) => handleSettingChange('exportFormat', e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500"
+            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-purple-500"
           >
             <option value="comprehensive">Complete data with context</option>
             <option value="clinical">Medical format for providers</option>
             <option value="personal">Personal summary format</option>
           </select>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
             Choose how your data is formatted when you share it
           </p>
         </div>

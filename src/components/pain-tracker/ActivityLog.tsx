@@ -97,7 +97,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
           {/* Activity List */}
           <div>
             <h4 
-              className="text-sm font-medium text-gray-700 mb-2"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               id="activities-heading"
             >
               Limited Activities
@@ -124,10 +124,10 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                   tabIndex={activityImpact.length === 0 ? -1 : (focusedIndex === index ? 0 : -1)}
                 >
                   <div className="font-medium">{activity}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     Frequency: {frequency} times
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     Avg. Pain: {formatNumber(averagePain, 1)}
                   </div>
                 </button>
@@ -142,10 +142,10 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
               role="region"
               aria-label={`Details for ${selectedActivity}`}
             >
-              <h4 className="text-sm font-medium text-gray-700 mb-2">
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Activity Details: {selectedActivity}
               </h4>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
                 <div 
                   className="space-y-4"
                   role="list"
@@ -169,7 +169,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                               Pain Level: {entry.baselineData.pain}
                             </div>
                             <div 
-                              className="text-sm text-gray-600"
+                              className="text-sm text-gray-600 dark:text-gray-400"
                               aria-label={`Date: ${format(new Date(entry.timestamp), 'MMM d, yyyy HH:mm')}`}
                             >
                               {format(new Date(entry.timestamp), 'MMM d, yyyy HH:mm')}
@@ -177,7 +177,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                           </div>
                           {entry.notes && (
                             <div 
-                              className="text-sm text-gray-600 max-w-xs"
+                              className="text-sm text-gray-600 dark:text-gray-400 max-w-xs"
                               aria-label={`Notes: ${entry.notes}`}
                             >
                               {entry.notes}

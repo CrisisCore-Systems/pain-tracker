@@ -134,7 +134,7 @@ export function ValidationIntegratedPainForm({
         <CardContent className="space-y-4">
           {/* Pain Level Slider */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Pain Level
             </label>
             <div className="flex items-center space-x-4">
@@ -157,7 +157,7 @@ export function ValidationIntegratedPainForm({
 
           {/* Notes with Real-time Validation */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Notes & Observations
             </label>
             <textarea
@@ -178,7 +178,7 @@ export function ValidationIntegratedPainForm({
 
           {/* Mood Tracking */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Current Mood
             </label>
             <div className="flex items-center space-x-4">
@@ -318,7 +318,7 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
         <CardContent className="p-6">
           <div className="flex items-center justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-2 text-gray-600">Loading insights...</span>
+            <span className="ml-2 text-gray-600 dark:text-gray-400">Loading insights...</span>
           </div>
         </CardContent>
       </Card>
@@ -329,7 +329,7 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
     return (
       <Card>
         <CardContent className="p-6">
-          <p className="text-gray-500 text-center">No validation data available yet.</p>
+          <p className="text-gray-500 dark:text-gray-400 text-center">No validation data available yet.</p>
         </CardContent>
       </Card>
     );
@@ -399,14 +399,14 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
 
           {dashboardData.insights.recommendations.length > 0 && (
             <div className="pt-4 border-t">
-              <h4 className="font-medium text-gray-800 mb-2 flex items-center">
+              <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2 flex items-center">
                 <Star className="w-4 h-4 mr-2 text-yellow-500" />
                 Personalized Recommendations
               </h4>
               <ul className="space-y-1">
                 {dashboardData.insights.recommendations.map((rec: string, index: number) => (
-                  <li key={index} className="text-sm text-gray-600 flex items-start">
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                  <li key={index} className="text-sm text-gray-600 dark:text-gray-400 flex items-start">
+                    <span className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
                     {rec}
                   </li>
                 ))}
@@ -439,7 +439,7 @@ export function ValidationTechnologyIntegration({
   return (
     <div className="space-y-6">
       {/* View Toggle */}
-      <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
         <button
           onClick={() => setActiveView('form')}
           className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${

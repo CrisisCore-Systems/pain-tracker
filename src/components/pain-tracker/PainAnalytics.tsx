@@ -91,7 +91,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
     <div className="space-y-6">
       {/* Navigation Tabs */}
       <div className="bg-white rounded-lg shadow">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="flex space-x-8 px-6" aria-label="Analytics Tabs">
             {tabs.map((tab) => (
               <button
@@ -136,15 +136,15 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="stat-card">
-                <h3 className="text-gray-600">Average Pain</h3>
+                <h3 className="text-gray-600 dark:text-gray-400">Average Pain</h3>
                 <p className="text-2xl font-bold">{formatNumber(stats.mean, 1)}</p>
               </div>
               <div className="stat-card">
-                <h3 className="text-gray-600">Most Common Level</h3>
+                <h3 className="text-gray-600 dark:text-gray-400">Most Common Level</h3>
                 <p className="text-2xl font-bold">{stats.mode}</p>
               </div>
               <div className="stat-card">
-                <h3 className="text-gray-600">Pain Trend</h3>
+                <h3 className="text-gray-600 dark:text-gray-400">Pain Trend</h3>
                 <p className="text-2xl font-bold">
                   {trends.painTrends.increasing ? '↑' : '↓'} {formatNumber(Math.abs(trends.painTrends.averageChange), 1)}
                 </p>

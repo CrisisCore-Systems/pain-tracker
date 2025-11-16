@@ -294,7 +294,7 @@ export function CommandPalette({
       >
         {/* Search Input */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-          <Search className="h-5 w-5 text-gray-400 flex-shrink-0" aria-hidden="true" />
+          <Search className="h-5 w-5 text-gray-400 dark:text-gray-500 flex-shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
             type="text"
@@ -377,7 +377,7 @@ export function CommandPalette({
                             </span>
                             {item.recent && (
                               <Clock
-                                className="h-3 w-3 text-gray-400"
+                                className="h-3 w-3 text-gray-400 dark:text-gray-500"
                                 aria-label="Recent"
                               />
                             )}

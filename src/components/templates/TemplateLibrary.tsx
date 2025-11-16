@@ -257,7 +257,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
       <div className="space-y-6">
         {/* Category Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Filter by Category
           </label>
           <div className="flex flex-wrap gap-2">
@@ -295,20 +295,20 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                   <span className="text-2xl" role="img" aria-hidden="true">
                     {template.icon}
                   </span>
-                  <h3 className="font-medium text-gray-900">{template.name}</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">{template.name}</h3>
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full ${getCategoryColor(template.category)}`}>
                   {template.category === 'worksafe-bc' ? 'WorkSafe BC' : 
                    template.category === 'clinic' ? 'Clinical' : 'General'}
                 </span>
               </div>
-              <p className="text-sm text-gray-600">{template.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{template.description}</p>
             </div>
           ))}
         </div>
 
         {filteredTemplates.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             No templates found in this category.
           </div>
         )}
@@ -326,12 +326,12 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                   </span>
                   <div>
                     <h3 className="text-lg font-semibold">{selectedTemplate.name}</h3>
-                    <p className="text-sm text-gray-600">{selectedTemplate.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{selectedTemplate.description}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedTemplate(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 dark:text-gray-400"
                 >
                   ✕
                 </button>
@@ -343,7 +343,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                 <div className="space-y-3 text-sm">
                   {selectedTemplate.data.baselineData && (
                     <div>
-                      <div className="font-medium text-gray-700">Pain Assessment:</div>
+                      <div className="font-medium text-gray-700 dark:text-gray-300">Pain Assessment:</div>
                       <div className="ml-4">
                         {selectedTemplate.data.baselineData.locations && selectedTemplate.data.baselineData.locations.length > 0 && (
                           <div>• Locations: {selectedTemplate.data.baselineData.locations.join(', ')}</div>
@@ -357,7 +357,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
 
                   {selectedTemplate.data.functionalImpact && (
                     <div>
-                      <div className="font-medium text-gray-700">Functional Impact:</div>
+                      <div className="font-medium text-gray-700 dark:text-gray-300">Functional Impact:</div>
                       <div className="ml-4">
                         {selectedTemplate.data.functionalImpact.limitedActivities?.length > 0 && (
                           <div>• Limited activities: {selectedTemplate.data.functionalImpact.limitedActivities.join(', ')}</div>
@@ -371,7 +371,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
 
                   {selectedTemplate.data.workImpact && (
                     <div>
-                      <div className="font-medium text-gray-700">Work Impact:</div>
+                      <div className="font-medium text-gray-700 dark:text-gray-300">Work Impact:</div>
                       <div className="ml-4">
                         {selectedTemplate.data.workImpact.modifiedDuties?.length > 0 && (
                           <div>• Modified duties: {selectedTemplate.data.workImpact.modifiedDuties.join(', ')}</div>
@@ -395,7 +395,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                 </button>
                 <button
                   onClick={() => setSelectedTemplate(null)}
-                  className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:bg-gray-900"
                 >
                   Cancel
                 </button>

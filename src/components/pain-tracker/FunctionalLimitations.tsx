@@ -63,11 +63,11 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
 
       <div className="space-y-6">
         {limitationsSummary.map(limitation => (
-          <div key={limitation.activity} className="bg-gray-50 p-4 rounded-lg">
+          <div key={limitation.activity} className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
             <div className="flex justify-between items-start mb-2">
               <div>
                 <h4 className="font-medium">{limitation.activity}</h4>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Reported {limitation.frequency} times
                 </p>
               </div>
@@ -80,7 +80,7 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
 
             {limitation.assistanceNeeded.length > 0 && (
               <div className="mt-2">
-                <h5 className="text-sm font-medium text-gray-700">Assistance Needed:</h5>
+                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">Assistance Needed:</h5>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {limitation.assistanceNeeded.map(assistance => (
                     <span
@@ -96,7 +96,7 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
 
             {limitation.mobilityAids.length > 0 && (
               <div className="mt-2">
-                <h5 className="text-sm font-medium text-gray-700">Mobility Aids Used:</h5>
+                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">Mobility Aids Used:</h5>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {limitation.mobilityAids.map(aid => (
                     <span
@@ -113,7 +113,7 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
         ))}
 
         {limitationsSummary.length === 0 && (
-          <p className="text-gray-500 text-center py-4">
+          <p className="text-gray-500 dark:text-gray-400 text-center py-4">
             No functional limitations recorded in this period.
           </p>
         )}

@@ -337,7 +337,7 @@ export function CrisisTestingDashboard() {
     <div className="crisis-testing-dashboard p-6 max-w-6xl mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">Crisis Feature Testing Dashboard</h1>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           Test and validate crisis-responsive features under simulated stress conditions
         </p>
       </div>
@@ -390,9 +390,9 @@ export function CrisisTestingDashboard() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium">Progress</span>
-                <span className="text-sm text-gray-600">{Math.round(testProgress)}%</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{Math.round(testProgress)}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${testProgress}%` }}

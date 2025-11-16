@@ -244,16 +244,16 @@ export function CrisisStateDesignFramework({
 
   return (
     <CrisisStateContext.Provider value={contextValue}>
-      <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className}`}>
+      <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
         <div className="flex items-start space-x-3 mb-6">
           <div className="p-2 bg-red-100 rounded-lg">
             <Shield className="w-6 h-6 text-red-600" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
               Crisis-State UX Design Framework
             </h2>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
               Adaptive interface that provides clarity, calm, and control during pain crises and cognitive challenges.
               Automatically adjusts complexity and provides supportive features based on your current state.
             </p>
@@ -345,16 +345,16 @@ function CrisisLevelControl({
   ];
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4">
+    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
-        <Target className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Current State Assessment</h3>
+        <Target className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Current State Assessment</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Crisis Level Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Crisis Level
           </label>
           <div className="space-y-2">
@@ -389,7 +389,7 @@ function CrisisLevelControl({
 
         {/* Cognitive State Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Cognitive State
           </label>
           <div className="space-y-2">
@@ -434,18 +434,18 @@ function ClarityFrameworkSection({
   const isHighCrisis = crisisLevel === 'acute' || crisisLevel === 'emergency';
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
         <Eye className="w-5 h-5 text-blue-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Clarity Framework</h3>
-        <span className="text-sm text-gray-500">Reduce visual complexity and cognitive load</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Clarity Framework</h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Reduce visual complexity and cognitive load</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-4">
           {/* Visual Simplification Slider */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Visual Simplification: {controls.visualSimplification}%
             </label>
             <input
@@ -457,7 +457,7 @@ function ClarityFrameworkSection({
               className="w-full"
               disabled={isHighCrisis}
             />
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
               {controls.visualSimplification < 30 ? 'Full interface' : 
                controls.visualSimplification < 70 ? 'Simplified' : 'Minimal'}
             </div>
@@ -465,7 +465,7 @@ function ClarityFrameworkSection({
 
           {/* Text Size Slider */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Text Size: {controls.textSize}px
             </label>
             <input
@@ -480,7 +480,7 @@ function ClarityFrameworkSection({
 
           {/* Spacing Slider */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               UI Spacing: {controls.spacing}%
             </label>
             <input
@@ -497,7 +497,7 @@ function ClarityFrameworkSection({
         <div className="space-y-3">
           {/* Toggle Controls */}
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Color Reduction</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Color Reduction</label>
             <TouchOptimizedButton
               variant={controls.colorReduction ? "primary" : "secondary"}
               onClick={() => onControlsChange({ colorReduction: !controls.colorReduction })}
@@ -508,7 +508,7 @@ function ClarityFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Focus Mode</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Focus Mode</label>
             <TouchOptimizedButton
               variant={controls.focusMode ? "primary" : "secondary"}
               onClick={() => onControlsChange({ focusMode: !controls.focusMode })}
@@ -519,7 +519,7 @@ function ClarityFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Distraction Filter</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Distraction Filter</label>
             <TouchOptimizedButton
               variant={controls.distractionFilter ? "primary" : "secondary"}
               onClick={() => onControlsChange({ distractionFilter: !controls.distractionFilter })}
@@ -554,17 +554,17 @@ function CalmFrameworkSection({
   const isHighCrisis = crisisLevel === 'acute' || crisisLevel === 'emergency';
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
         <Heart className="w-5 h-5 text-green-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Calm Framework</h3>
-        <span className="text-sm text-gray-500">Reduce stress and provide emotional support</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Calm Framework</h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Reduce stress and provide emotional support</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Breathing Prompts</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Breathing Prompts</label>
             <TouchOptimizedButton
               variant={config.breathingPrompts ? "primary" : "secondary"}
               onClick={() => onConfigChange({ breathingPrompts: !config.breathingPrompts })}
@@ -575,7 +575,7 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Gentle Transitions</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Gentle Transitions</label>
             <TouchOptimizedButton
               variant={config.gentleTransitions ? "primary" : "secondary"}
               onClick={() => onConfigChange({ gentleTransitions: !config.gentleTransitions })}
@@ -586,7 +586,7 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Soft Colors</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Soft Colors</label>
             <TouchOptimizedButton
               variant={config.softColors ? "primary" : "secondary"}
               onClick={() => onConfigChange({ softColors: !config.softColors })}
@@ -599,7 +599,7 @@ function CalmFrameworkSection({
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Reduced Contrast</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Reduced Contrast</label>
             <TouchOptimizedButton
               variant={config.reducedContrast ? "primary" : "secondary"}
               onClick={() => onConfigChange({ reducedContrast: !config.reducedContrast })}
@@ -610,7 +610,7 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Mindful Pacing</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Mindful Pacing</label>
             <TouchOptimizedButton
               variant={config.mindfulPacing ? "primary" : "secondary"}
               onClick={() => onConfigChange({ mindfulPacing: !config.mindfulPacing })}
@@ -621,7 +621,7 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Stress Indicators</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Stress Indicators</label>
             <TouchOptimizedButton
               variant={config.stressIndicators ? "primary" : "secondary"}
               onClick={() => onConfigChange({ stressIndicators: !config.stressIndicators })}
@@ -663,17 +663,17 @@ function ControlFrameworkSection({
   ];
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
         <Shield className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Control Framework</h3>
-        <span className="text-sm text-gray-500">Maintain user agency and quick access</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Control Framework</h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Maintain user agency and quick access</span>
       </div>
 
       <div className="space-y-4">
         {/* Quick Actions Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Quick Actions ({config.quickActions.length}/4 selected)
           </label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -703,7 +703,7 @@ function ControlFrameworkSection({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">Emergency Contacts</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Emergency Contacts</label>
               <TouchOptimizedButton
                 variant={config.emergencyContacts ? "primary" : "secondary"}
                 onClick={() => onConfigChange({ emergencyContacts: !config.emergencyContacts })}
@@ -714,7 +714,7 @@ function ControlFrameworkSection({
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">One-Click Save</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">One-Click Save</label>
               <TouchOptimizedButton
                 variant={config.oneClickSave ? "primary" : "secondary"}
                 onClick={() => onConfigChange({ oneClickSave: !config.oneClickSave })}
@@ -725,7 +725,7 @@ function ControlFrameworkSection({
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">Undo Buffer</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Undo Buffer</label>
               <TouchOptimizedButton
                 variant={config.undoBuffer ? "primary" : "secondary"}
                 onClick={() => onConfigChange({ undoBuffer: !config.undoBuffer })}
@@ -738,7 +738,7 @@ function ControlFrameworkSection({
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">Confirmations</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Confirmations</label>
               <TouchOptimizedButton
                 variant={config.confirmations ? "primary" : "secondary"}
                 onClick={() => onConfigChange({ confirmations: !config.confirmations })}
@@ -749,7 +749,7 @@ function ControlFrameworkSection({
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">Progress Saving</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Progress Saving</label>
               <TouchOptimizedButton
                 variant={config.progressSaving ? "primary" : "secondary"}
                 onClick={() => onConfigChange({ progressSaving: !config.progressSaving })}
@@ -796,13 +796,13 @@ function FrameworkPreview({
   };
 
   return (
-    <div className="mt-6 border-t border-gray-200 pt-6">
+    <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Palette className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Framework Preview</h3>
+        <Palette className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Framework Preview</h3>
       </div>
 
-      <div className={`bg-gray-50 rounded-lg p-4 ${getPreviewStyle()}`}>
+      <div className={`bg-gray-50 dark:bg-gray-900 rounded-lg p-4 ${getPreviewStyle()}`}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Clarity Preview */}
           <div className="bg-white rounded p-3">

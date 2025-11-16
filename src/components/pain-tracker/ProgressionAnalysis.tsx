@@ -122,7 +122,7 @@ export function ProgressionAnalysis({ entries, period }: ProgressionAnalysisProp
       >
         <h3 className="text-lg font-semibold mb-4">Progression Analysis</h3>
         <p 
-          className="text-gray-500 text-center py-4"
+          className="text-gray-500 dark:text-gray-400 text-center py-4"
           role="status"
         >
           No data available for the selected period.

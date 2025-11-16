@@ -20,7 +20,7 @@ export function WorkImpactSection({
       <h3 className="font-semibold text-lg">Work Impact</h3>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Days of Missed Work
         </label>
         <input
@@ -33,7 +33,7 @@ export function WorkImpactSection({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Modified Duties
         </label>
         <textarea
@@ -46,7 +46,7 @@ export function WorkImpactSection({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Work Limitations
         </label>
         <textarea

@@ -109,7 +109,7 @@ function PainTracker() {
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-6">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="-mb-px flex space-x-8" aria-label="Tabs">
             <button
               onClick={() => setActiveTab('entry')}
@@ -144,7 +144,7 @@ function PainTracker() {
 
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Pain Level: {currentPain}
                 </label>
                 <div className="flex items-center gap-2">
@@ -156,7 +156,7 @@ function PainTracker() {
                     onChange={(e) => setCurrentPain(parseInt(e.target.value))}
                     className="w-full"
                   />
-                  <div className="grid grid-cols-11 w-full text-xs text-gray-500 px-1">
+                  <div className="grid grid-cols-11 w-full text-xs text-gray-500 dark:text-gray-400 px-1">
                     {[...Array(11)].map((_, i) => (
                       <div key={i} className="text-center">{i}</div>
                     ))}
@@ -165,7 +165,7 @@ function PainTracker() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Location (select all that apply)
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -188,7 +188,7 @@ function PainTracker() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Symptoms (select all that apply)
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -211,7 +211,7 @@ function PainTracker() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Limited Activities
                 </label>
                 <input
@@ -224,7 +224,7 @@ function PainTracker() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Sleep Quality (0-10)
                 </label>
                 <input
@@ -238,7 +238,7 @@ function PainTracker() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Mood Impact (0-10)
                 </label>
                 <input
@@ -252,7 +252,7 @@ function PainTracker() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Missed Work (days)
                 </label>
                 <input
@@ -265,7 +265,7 @@ function PainTracker() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Notes
                 </label>
                 <textarea
@@ -300,7 +300,7 @@ function PainTracker() {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="text-gray-500 text-center py-8">
+              <div className="text-gray-500 dark:text-gray-400 text-center py-8">
                 No pain entries yet
               </div>
             )}
@@ -311,29 +311,29 @@ function PainTracker() {
                 .map((entry) => (
                   <div
                     key={entry.id}
-                    className="p-4 bg-gray-50 rounded-lg"
+                    className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg"
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-semibold">Pain Level: {entry.baselineData.pain}</span>
-                      <span className="text-gray-500">
+                      <span className="text-gray-500 dark:text-gray-400">
                         {format(new Date(entry.timestamp), "MMM d, yyyy HH:mm")}
                       </span>
                     </div>
                     {entry.baselineData?.locations && entry.baselineData.locations.length > 0 && (
                       <div className="mb-2">
-                        <span className="text-sm text-gray-600">Locations: </span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Locations: </span>
                         {entry.baselineData.locations.join(", ")}
                       </div>
                     )}
                     {entry.baselineData?.symptoms && entry.baselineData.symptoms.length > 0 && (
                       <div className="mb-2">
-                        <span className="text-sm text-gray-600">Symptoms: </span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Symptoms: </span>
                         {entry.baselineData.symptoms.join(", ")}
                       </div>
                     )}
                     {entry.notes && (
-                      <div className="text-gray-700">
-                        <span className="text-sm text-gray-600">Notes: </span>
+                      <div className="text-gray-700 dark:text-gray-300">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">Notes: </span>
                         {entry.notes}
                       </div>
                     )}

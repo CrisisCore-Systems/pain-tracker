@@ -280,8 +280,8 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-semibold text-gray-800">{alert.message}</h4>
-                  <ul className="mt-2 text-sm text-gray-600">
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">{alert.message}</h4>
+                  <ul className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                     {alert.recommendations.map((rec: string, index: number) => (
                       <li key={index} className="mt-1">• {rec}</li>
                     ))}
@@ -289,7 +289,7 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
                 </div>
                 <button 
                   onClick={() => dismissAlert(alert.id)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 dark:text-gray-400"
                 >
                   ✕
                 </button>
@@ -305,19 +305,19 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
           <h3 className="font-semibold text-purple-800 mb-2">Current Empathy State</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div>
-              <span className="text-gray-600">Level:</span>
+              <span className="text-gray-600 dark:text-gray-400">Level:</span>
               <span className="ml-2 font-medium">{realTimeState.empathyLevel}%</span>
             </div>
             <div>
-              <span className="text-gray-600">Quality:</span>
+              <span className="text-gray-600 dark:text-gray-400">Quality:</span>
               <span className="ml-2 font-medium capitalize">{realTimeState.empathyQuality}</span>
             </div>
             <div>
-              <span className="text-gray-600">Contagion Risk:</span>
+              <span className="text-gray-600 dark:text-gray-400">Contagion Risk:</span>
               <span className="ml-2 font-medium">{realTimeState.emotionalContagionRisk}%</span>
             </div>
             <div>
-              <span className="text-gray-600">Burnout Risk:</span>
+              <span className="text-gray-600 dark:text-gray-400">Burnout Risk:</span>
               <span className="ml-2 font-medium">{realTimeState.burnoutRisk}%</span>
             </div>
           </div>
@@ -378,7 +378,7 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
       {/* Debug information */}
       {((typeof (import.meta as any) !== 'undefined' && (import.meta as any).env && ((import.meta as any).env.MODE === 'development' || (import.meta as any).env.NODE_ENV === 'development'))
         || (typeof process !== 'undefined' && (process as any).env && (process as any).env.NODE_ENV === 'development')) && (
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
           <h3 className="font-semibold mb-2">Debug Information</h3>
           <div className="text-sm space-y-2">
             <div>Insights Count: {insights.length}</div>

@@ -302,7 +302,7 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
         <CardContent className="flex items-center justify-center p-8">
           <div className="text-center">
             <Sparkles className="w-8 h-8 mx-auto mb-4 text-purple-500 animate-pulse" />
-            <p className="text-gray-600">Calculating your empathy metrics...</p>
+            <p className="text-gray-600 dark:text-gray-400">Calculating your empathy metrics...</p>
           </div>
         </CardContent>
       </Card>
@@ -314,9 +314,9 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
       <Card className="w-full">
         <CardContent className="flex items-center justify-center p-8">
           <div className="text-center">
-            <Brain className="w-8 h-8 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-600 font-medium">{noTrendsHeadline}</p>
-            <p className="text-sm text-gray-500 mt-2">{noTrendsSubtext}</p>
+            <Brain className="w-8 h-8 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+            <p className="text-gray-600 dark:text-gray-400 font-medium">{noTrendsHeadline}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{noTrendsSubtext}</p>
           </div>
         </CardContent>
       </Card>
@@ -383,7 +383,7 @@ export const QuantifiedEmpathyDashboard: React.FC<QuantifiedEmpathyDashboardProp
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center justify-center space-x-4">
-            <span className="text-sm text-gray-600">Timeframe:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">Timeframe:</span>
             {[
               { id: 'week', label: 'Past Week' },
               { id: 'month', label: 'Past Month' },
@@ -471,7 +471,7 @@ const OverviewDashboard: React.FC<{
               empathy.emotionalIntelligence.socialSkills
             ) / 5)}%
           </div>
-          <p className="text-sm text-gray-600">Overall EQ Score</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Overall EQ Score</p>
           <div className="mt-4 space-y-1 text-xs">
             <div className="flex justify-between">
               <span>Self-Awareness</span>
@@ -509,7 +509,7 @@ const OverviewDashboard: React.FC<{
               empathy.compassionateProgress.hopefulness
             ) / 5)}%
           </div>
-          <p className="text-sm text-gray-600">Compassion Score</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Compassion Score</p>
           <div className="mt-4 space-y-1 text-xs">
             <div className="flex justify-between">
               <span>Self-Compassion</span>
@@ -541,7 +541,7 @@ const OverviewDashboard: React.FC<{
           <div className="text-3xl font-bold text-purple-600 mb-2">
             {Math.round(wellbeing.qualityOfLife.overallSatisfaction)}%
           </div>
-          <p className="text-sm text-gray-600">Life Satisfaction</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Life Satisfaction</p>
           <div className="mt-4 space-y-1 text-xs">
             <div className="flex justify-between">
               <span>Meaning & Purpose</span>
@@ -573,7 +573,7 @@ const OverviewDashboard: React.FC<{
           <div className="text-3xl font-bold text-orange-600 mb-2">
             {Math.round(pacing.energyManagement.currentEnergyLevel)}%
           </div>
-          <p className="text-sm text-gray-600">Current Energy</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Current Energy</p>
           <div className="mt-4 space-y-1 text-xs">
             <div className="flex justify-between">
               <span>Available Spoons</span>
@@ -616,7 +616,7 @@ const EmotionalIntelligenceDashboard: React.FC<{
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </span>
                 <div className="flex items-center space-x-2">
-                  <div className="w-24 bg-gray-200 rounded-full h-2">
+                  <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
                       className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${numeric}%` }}
@@ -648,7 +648,7 @@ const EmotionalIntelligenceDashboard: React.FC<{
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </span>
                 <div className="flex items-center space-x-2">
-                  <div className="w-24 bg-gray-200 rounded-full h-2">
+                  <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
                       className="bg-green-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${numeric}%` }}
@@ -679,7 +679,7 @@ const EmotionalIntelligenceDashboard: React.FC<{
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </span>
                 <div className="flex items-center space-x-2">
-                  <div className="w-24 bg-gray-200 rounded-full h-2">
+                  <div className="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                     <div 
                       className="bg-purple-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${typeof value === 'number' ? value : 50}%` }}
@@ -693,10 +693,10 @@ const EmotionalIntelligenceDashboard: React.FC<{
             ))}
           </div>
           <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-3">Wisdom Gained</h4>
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Wisdom Gained</h4>
             <div className="space-y-2">
               {Array.isArray(empathy.humanizedMetrics.wisdomGained) && empathy.humanizedMetrics.wisdomGained.slice(0, 3).map((wisdom, index) => (
-                <div key={index} className="text-sm text-gray-600 p-2 bg-gray-50 rounded">
+                <div key={index} className="text-sm text-gray-600 dark:text-gray-400 p-2 bg-gray-50 dark:bg-gray-900 rounded">
                   "{typeof wisdom === 'string' ? (wisdom.length > 100 ? wisdom.substring(0, 100) + '...' : wisdom) : ''}"
                 </div>
               ))}
@@ -717,8 +717,8 @@ const WellbeingDashboard: React.FC<{ wellbeing: HolisticWellbeingMetrics }> = ({
       <CardTitle>Holistic Wellbeing Metrics</CardTitle>
     </CardHeader>
     <CardContent>
-  <p className="text-gray-600 mb-2">Overall satisfaction: {Math.round(wellbeing.qualityOfLife.overallSatisfaction)}%</p>
-  <p className="text-gray-600 text-sm">Meaning & Purpose: {Math.round(wellbeing.qualityOfLife.meaningAndPurpose)}%</p>
+  <p className="text-gray-600 dark:text-gray-400 mb-2">Overall satisfaction: {Math.round(wellbeing.qualityOfLife.overallSatisfaction)}%</p>
+  <p className="text-gray-600 dark:text-gray-400 text-sm">Meaning & Purpose: {Math.round(wellbeing.qualityOfLife.meaningAndPurpose)}%</p>
     </CardContent>
   </Card>
 );
@@ -729,8 +729,8 @@ const PacingDashboard: React.FC<{ pacing: DigitalPacingSystem }> = ({ pacing }) 
       <CardTitle>Energy & Pacing Dashboard</CardTitle>
     </CardHeader>
     <CardContent>
-  <p className="text-gray-600 mb-2">Current energy: {Math.round(pacing.energyManagement.currentEnergyLevel)}%</p>
-  <p className="text-gray-600 text-sm">Used spoons: {pacing.energyManagement.spoonTheory.usedSpoons}/{pacing.energyManagement.spoonTheory.totalSpoons}</p>
+  <p className="text-gray-600 dark:text-gray-400 mb-2">Current energy: {Math.round(pacing.energyManagement.currentEnergyLevel)}%</p>
+  <p className="text-gray-600 dark:text-gray-400 text-sm">Used spoons: {pacing.energyManagement.spoonTheory.usedSpoons}/{pacing.energyManagement.spoonTheory.totalSpoons}</p>
     </CardContent>
   </Card>
 );
@@ -754,14 +754,14 @@ const InsightsDashboard: React.FC<{
           {insights.map((insight) => (
             <div 
               key={insight.id} 
-              className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
+              className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50 dark:bg-gray-900"
               onClick={() => onInsightSelect?.(insight)}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">{insight.title}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{insight.description}</p>
-                  <div className="flex items-center mt-2 text-xs text-gray-500">
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100">{insight.title}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{insight.description}</p>
+                  <div className="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-400">
                     <span>Confidence: {insight.confidence}%</span>
                     <span className="mx-2">•</span>
                     <span className="capitalize">{insight.type}</span>
@@ -791,7 +791,7 @@ const InsightsDashboard: React.FC<{
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <h4 className="font-medium text-gray-900">{rec.title}</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100">{rec.title}</h4>
                     <span className={`px-2 py-1 text-xs rounded ${
                       rec.priority === 'high' ? 'bg-red-100 text-red-700' :
                       rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
@@ -800,8 +800,8 @@ const InsightsDashboard: React.FC<{
                       {rec.priority} priority
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3">{rec.description}</p>
-                  <div className="text-xs text-gray-500">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{rec.description}</p>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
                     <p><strong>Timeframe:</strong> {rec.timeframe}</p>
                     <p><strong>Effort:</strong> {rec.effort}</p>
                   </div>
@@ -836,8 +836,8 @@ const TrendsDashboard: React.FC<{
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <p className="text-gray-600 mb-2">Entries: pain {painEntries.length} • mood {moodEntries.length} • timeframe {timeframe}</p>
-      <p className="text-gray-500 text-sm">Detailed visualization placeholder.</p>
+      <p className="text-gray-600 dark:text-gray-400 mb-2">Entries: pain {painEntries.length} • mood {moodEntries.length} • timeframe {timeframe}</p>
+      <p className="text-gray-500 dark:text-gray-400 text-sm">Detailed visualization placeholder.</p>
     </CardContent>
   </Card>
 );
