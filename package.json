@@ -80,7 +80,7 @@
     "screenshots:portfolio:phase3": "node scripts/capture-screenshot-portfolio.js --phase=phase3",
     "e2e": "npx playwright test --config=e2e/playwright.config.ts",
     "e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
-  "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
+    "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
   "dependencies": {
@@ -123,6 +123,7 @@
     "react-hook-form": "^7.63.0",
     "react-i18next": "^15.7.3",
     "react-is": "^19.1.1",
+    "react-router-dom": "^7.9.6",
     "recharts": "^3.2.0",
     "sonner": "^2.0.7",
     "stripe": "^19.3.0",
@@ -147,6 +148,7 @@
     "@types/node": "^24.3.1",
     "@types/react": "^18.3.25",
     "@types/react-dom": "^18.3.7",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^8.43.0",
     "@typescript-eslint/parser": "^8.43.0",
     "@vitejs/plugin-react": "^5.0.2",

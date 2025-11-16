@@ -30,14 +30,14 @@ async function ensurePolyfill() {
   };
 
   (sodium as any).crypto_pwhash_str = function (passphrase: string) {
-    const digest = sodium.crypto_generichash(32, passphrase);
-    return 'pbkdf2$' + sodium.to_base64(digest, 1);
+    const digest = (sodium as any).crypto_generichash(32, passphrase);
+    return 'pbkdf2$' + (sodium as any).to_base64(digest, 1);
   };
 
   (sodium as any).crypto_pwhash_str_verify = function (stored: string, passphrase: string) {
     if (!stored.startsWith('pbkdf2$')) return false;
-    const digest = sodium.crypto_generichash(32, passphrase);
-    const compare = 'pbkdf2$' + sodium.to_base64(digest, 1);
+    const digest = (sodium as any).crypto_generichash(32, passphrase);
+    const compare = 'pbkdf2$' + (sodium as any).to_base64(digest, 1);
     return compare === stored;
   };
 }
