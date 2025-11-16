@@ -1,0 +1,7 @@
+{
+  "status": "ready",
+  "timestamp": "generated-on-deploy",
+  "checks": {
+    "static_files": "ok"
+  }
+}

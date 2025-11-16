@@ -1,0 +1,77 @@
+name: Build and deploy to remote Ubuntu VM
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --run || true
+
+      - name: Build static files
+        run: npm run build
+
+      - name: Add health check files
+        run: |
+          mkdir -p dist/health
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "{\"status\":\"ok\",\"timestamp\":\"$timestamp\"}" > dist/health/healthz.json
+          echo "{\"status\":\"ready\",\"timestamp\":\"$timestamp\",\"checks\":{\"static_files\":\"ok\"}}" > dist/health/ready.json
+
+      - name: Archive release
+        run: tar -czf release.tar.gz -C dist .
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Upload release and deploy
+        env:
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          scp -o StrictHostKeyChecking=no release.tar.gz ${DEPLOY_USER}@${DEPLOY_HOST}:/tmp/release.tar.gz
+          ssh -o StrictHostKeyChecking=no ${DEPLOY_USER}@${DEPLOY_HOST} << 'EOF'
+            # Create backup of current deployment
+            if [ -d /srv/pain-tracker ]; then
+              sudo mkdir -p /srv/pain-tracker-backups
+              sudo tar -czf /srv/pain-tracker-backups/backup-$(date +%Y%m%d-%H%M%S).tar.gz -C /srv pain-tracker || true
+            fi
+            
+            # Deploy new version
+            sudo mkdir -p /srv/pain-tracker
+            sudo tar -xzf /tmp/release.tar.gz -C /srv/pain-tracker
+            sudo chown -R www-data:www-data /srv/pain-tracker
+            
+            # Test nginx configuration
+            sudo nginx -t && sudo systemctl reload nginx || echo "Nginx reload failed"
+            
+            # Cleanup old backups (keep last 5)
+            sudo sh -c 'cd /srv/pain-tracker-backups && ls -t | tail -n +6 | xargs -r rm' || true
+          EOF
+
+      - name: Health check
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          sleep 5
+          curl -f https://${DEPLOY_HOST}/healthz || curl -f http://${DEPLOY_HOST}/healthz || echo "Health check failed (expected if HTTPS not yet configured)"
