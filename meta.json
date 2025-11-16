@@ -1,9 +1,9 @@
 {
   "outputs": {
-    "assets/background-sync-Db6JzLVQ.js": {
+    "assets/background-sync-LM2uXb9P.js": {
       "bytes": 7020
     },
-    "assets/background-sync-Db6JzLVQ.js.map": {
+    "assets/background-sync-LM2uXb9P.js.map": {
       "bytes": 22381
     },
     "assets/chart-vendor-B7B0FrSV.js": {
@@ -12,32 +12,56 @@
     "assets/chart-vendor-B7B0FrSV.js.map": {
       "bytes": 53005
     },
+    "assets/ClinicalPDFExportButton-BFrOacZ1.js": {
+      "bytes": 28056
+    },
+    "assets/ClinicalPDFExportButton-BFrOacZ1.js.map": {
+      "bytes": 39944
+    },
+    "assets/ClinicalPDFExporter-flNdxlkT.js": {
+      "bytes": 44485
+    },
+    "assets/ClinicalPDFExporter-flNdxlkT.js.map": {
+      "bytes": 169944
+    },
     "assets/date-vendor-VbNwGsdS.js": {
       "bytes": 2850
     },
     "assets/date-vendor-VbNwGsdS.js.map": {
       "bytes": 22296
     },
-    "assets/index-B7FZOeX1.js": {
-      "bytes": 18870
+    "assets/html2canvas.esm-Ge7aVWlp.js": {
+      "bytes": 201454
     },
-    "assets/index-B7FZOeX1.js.map": {
-      "bytes": 34146
+    "assets/html2canvas.esm-Ge7aVWlp.js.map": {
+      "bytes": 603097
     },
-    "assets/index-BytI_QpU.js": {
-      "bytes": 23382
+    "assets/index-BtB-2XHp.js": {
+      "bytes": 18653
     },
-    "assets/index-BytI_QpU.js.map": {
-      "bytes": 30200
+    "assets/index-BtB-2XHp.js.map": {
+      "bytes": 33259
     },
-    "assets/index-BzUynn-L.css": {
-      "bytes": 150910
+    "assets/index-CMk-Qjgs.css": {
+      "bytes": 161262
     },
-    "assets/index-DcFiGg85.js": {
-      "bytes": 723550
+    "assets/index-DtM62JBT.js": {
+      "bytes": 23398
     },
-    "assets/index-DcFiGg85.js.map": {
-      "bytes": 2402848
+    "assets/index-DtM62JBT.js.map": {
+      "bytes": 30388
+    },
+    "assets/index-h2s7xxye.js": {
+      "bytes": 1459822
+    },
+    "assets/index-h2s7xxye.js.map": {
+      "bytes": 4615362
+    },
+    "assets/index.es-DaLVRl2c.js": {
+      "bytes": 158675
+    },
+    "assets/index.es-DaLVRl2c.js.map": {
+      "bytes": 641349
     },
     "assets/libsodium-wrappers-DhqTdZPT.js": {
       "bytes": 1075118
@@ -50,6 +74,12 @@
     },
     "assets/offline-storage-CQ7mII8k.js.map": {
       "bytes": 33578
+    },
+    "assets/purify.es-BkTlVNTa.js": {
+      "bytes": 22011
+    },
+    "assets/purify.es-BkTlVNTa.js.map": {
+      "bytes": 91236
     },
     "assets/react-vendor-Bn1aEwkj.js": {
       "bytes": 313368

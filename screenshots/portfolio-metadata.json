@@ -1,0 +1,126 @@
+{
+  "generated": "2025-11-13T06:08:49.491Z",
+  "phase": "phase1",
+  "category": "all",
+  "screenshots": [
+    {
+      "id": "blank-wcb-form",
+      "name": "blank-wcb-form-6.png",
+      "category": "marketing",
+      "description": "Blank WorkSafeBC Form 6 - The Pain Point",
+      "caption": "This is what claimants face - hours of manual form filling",
+      "url": "/pain-tracker/#demo-blank-form",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase1",
+      "useCase": "Social media posts, blog introductions",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    },
+    {
+      "id": "export-modal",
+      "name": "export-modal-solution.png",
+      "category": "marketing",
+      "description": "Export Modal - The Solution",
+      "caption": "This is the alternative - one click to generate perfect forms",
+      "url": "/pain-tracker/#demo-export",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase1",
+      "useCase": "Hero image, landing page above the fold",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    },
+    {
+      "id": "pain-entry-interface",
+      "name": "pain-entry-interface.png",
+      "category": "marketing",
+      "description": "Pain Entry Interface",
+      "caption": "Track your pain in 30 seconds - no complex interfaces",
+      "url": "/pain-tracker/",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase1",
+      "useCase": "Demo sequences, feature explanations",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    },
+    {
+      "id": "export-process",
+      "name": "export-process.png",
+      "category": "marketing",
+      "description": "Export Process with Form 6/7 Options",
+      "caption": "One click exports your data to WorkSafeBC-ready formats",
+      "url": "/pain-tracker/#demo-export-modal",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase1",
+      "useCase": "Conversion-focused content",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    },
+    {
+      "id": "form-6-preview",
+      "name": "generated-form-6-preview.png",
+      "category": "wcb-forms",
+      "description": "Generated Form 6 Preview",
+      "caption": "Perfectly formatted Form 6, generated automatically from your entries",
+      "url": "/pain-tracker/#demo-form-6",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase1",
+      "useCase": "Trust-building, result demonstrations",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    },
+    {
+      "id": "form-7-preview",
+      "name": "generated-form-7-preview.png",
+      "category": "wcb-forms",
+      "description": "Generated Form 7 Preview",
+      "caption": "Employer reports generated with the same accuracy",
+      "url": "/pain-tracker/#demo-form-7",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase1",
+      "useCase": "Comprehensive solution showcasing",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    },
+    {
+      "id": "privacy-settings",
+      "name": "privacy-security-settings.png",
+      "category": "technical",
+      "description": "Privacy/Security Settings",
+      "caption": "Your data never leaves your device - unlike cloud-based competitors",
+      "url": "/pain-tracker/#demo-settings",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase1",
+      "useCase": "Privacy-focused marketing, addressing concerns",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    }
+  ]
+}
