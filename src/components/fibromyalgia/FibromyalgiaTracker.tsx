@@ -70,6 +70,7 @@ export const FibromyalgiaTracker: React.FC = () => {
 
 // Daily Tracking Component
 const DailyTracking: React.FC = () => {
+  const addFibromyalgiaEntry = usePainTrackerStore((state) => state.addFibromyalgiaEntry);
   const [wpiRegions, setWpiRegions] = useState<Record<string, boolean>>({});
   const [sssScores, setSssScores] = useState({
     fatigue: 0,
@@ -77,6 +78,7 @@ const DailyTracking: React.FC = () => {
     cognitive_symptoms: 0,
     somatic_symptoms: 0,
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   const wpiBodyRegions = [
     { id: 'leftShoulder', label: 'Left Shoulder', side: 'left' },
@@ -110,6 +112,111 @@ const DailyTracking: React.FC = () => {
   const wpiScore = calculateWPI();
   const sssScore = calculateSSS();
   const meetsCriteria = (wpiScore >= 7 && sssScore >= 5) || (wpiScore >= 4 && wpiScore <= 6 && sssScore >= 9);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const entry: FibromyalgiaEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        
+        // ACR 2016 Criteria - WPI as nested object
+        wpi: {
+          leftShoulder: wpiRegions.leftShoulder || false,
+          rightShoulder: wpiRegions.rightShoulder || false,
+          leftUpperArm: wpiRegions.leftUpperArm || false,
+          rightUpperArm: wpiRegions.rightUpperArm || false,
+          leftLowerArm: wpiRegions.leftLowerArm || false,
+          rightLowerArm: wpiRegions.rightLowerArm || false,
+          leftHip: wpiRegions.leftHip || false,
+          rightHip: wpiRegions.rightHip || false,
+          leftUpperLeg: wpiRegions.leftUpperLeg || false,
+          rightUpperLeg: wpiRegions.rightUpperLeg || false,
+          leftLowerLeg: wpiRegions.leftLowerLeg || false,
+          rightLowerLeg: wpiRegions.rightLowerLeg || false,
+          jaw: wpiRegions.jaw || false,
+          chest: wpiRegions.chest || false,
+          abdomen: wpiRegions.abdomen || false,
+          upperBack: wpiRegions.upperBack || false,
+          lowerBack: wpiRegions.lowerBack || false,
+          neck: wpiRegions.neck || false,
+        },
+        
+        // SSS as nested object
+        sss: {
+          fatigue: sssScores.fatigue as 0 | 1 | 2 | 3,
+          waking_unrefreshed: sssScores.waking_unrefreshed as 0 | 1 | 2 | 3,
+          cognitive_symptoms: sssScores.cognitive_symptoms as 0 | 1 | 2 | 3,
+          somatic_symptoms: sssScores.somatic_symptoms as 0 | 1 | 2 | 3,
+        },
+        
+        // Default symptoms object
+        symptoms: {
+          headache: false,
+          migraine: false,
+          ibs: false,
+          temporomandibularDisorder: false,
+          restlessLegSyndrome: false,
+          lightSensitivity: false,
+          soundSensitivity: false,
+          temperatureSensitivity: false,
+          chemicalSensitivity: false,
+          clothingSensitivity: false,
+          touchSensitivity: false,
+          numbnessTingling: false,
+          muscleStiffness: false,
+          jointPain: false,
+          brainfog: false,
+          memoryProblems: false,
+          concentrationDifficulty: false,
+        },
+        
+        // Default triggers
+        triggers: {},
+        
+        // Default impact
+        impact: {
+          sleepQuality: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+          moodRating: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+          anxietyLevel: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+          functionalAbility: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+        },
+        
+        // Default activity
+        activity: {
+          activityLevel: 'moderate',
+          restPeriods: 0,
+          overexerted: false,
+          paybackPeriod: false,
+        },
+        
+        // Default interventions
+        interventions: {},
+        
+        // Metadata
+        notes: '',
+      };
+
+      await addFibromyalgiaEntry(entry);
+      
+      // Reset form
+      setWpiRegions({});
+      setSssScores({
+        fatigue: 0,
+        waking_unrefreshed: 0,
+        cognitive_symptoms: 0,
+        somatic_symptoms: 0,
+      });
+      
+      // Success feedback
+      alert('Fibromyalgia entry saved successfully!');
+    } catch (error) {
+      console.error('Failed to save fibromyalgia entry:', error);
+      alert('Failed to save entry. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -233,8 +340,12 @@ const DailyTracking: React.FC = () => {
       </div>
 
       {/* Save Button */}
-      <button className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all">
-        Save Today's Entry
+      <button 
+        onClick={handleSave}
+        disabled={isSaving}
+        className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isSaving ? 'Saving...' : 'Save Today\'s Entry'}
       </button>
     </div>
   );
