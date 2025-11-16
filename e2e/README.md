@@ -1,40 +1,130 @@
+# End-to-End Testing Suite
 
-End-to-end tests for the Pain Tracker app using Playwright
+## Overview
 
-Getting started
+This directory contains automated end-to-end tests for the Pain Tracker application, including comprehensive PWA (Progressive Web App) cross-browser testing.
 
-- Install dependencies (from project root):
+## Test Suites
 
-  npm install
+### Regular E2E Tests
+- **`tests/pain-entry-form.spec.ts`**: Form interaction and data persistence
+- **`accessibility.spec.ts`**: Accessibility compliance testing
 
-- Install Playwright browsers (optional - Playwright will attempt install during first run):
+### PWA Test Suite ⭐ NEW!
 
-  npx playwright install --with-deps
+Comprehensive PWA testing across Chrome, Firefox, and Safari:
 
-- Run dev server (Playwright config will reuse an existing server if found):
+1. **`tests/pwa-service-worker.spec.ts`** - Service worker registration, caching, versioning
+2. **`tests/pwa-offline.spec.ts`** - Offline functionality and data persistence
+3. **`tests/pwa-install.spec.ts`** - Install prompts and manifest validation
+4. **`tests/pwa-caching.spec.ts`** - Cache strategies and management
+5. **`tests/pwa-background-sync.spec.ts`** - Background synchronization
+6. **`tests/pwa-performance-security.spec.ts`** - Performance and security validation
 
-  npm run dev
+## Quick Start
 
-- Run the e2e tests:
+### Prerequisites
 
-  npm run e2e
+```bash
+# Install dependencies (from project root)
+npm install
 
-Windows-specific notes
+# Install Playwright browsers
+npx playwright install
+```
 
-If you're developing on Windows and `canvas` or other native build deps fail, run the helper script:
+### Running Tests
+
+```bash
+# Run ALL e2e tests
+npm run e2e
+
+# Run ONLY PWA tests across all browsers
+npm run e2e:pwa
+
+# Run PWA tests on specific browser
+npm run e2e:pwa:chromium
+npm run e2e:pwa:firefox
+npm run e2e:pwa:webkit
+
+# Generate comprehensive PWA test report
+npm run e2e:pwa:report
+
+# Debug mode
+npm run e2e:debug
+```
+
+## Browser Support Matrix
+
+| Browser | Desktop | Mobile | PWA Support | Background Sync |
+|---------|---------|--------|-------------|-----------------|
+| Chrome/Chromium | ✅ Full | ✅ Full | ✅ Full | ✅ Yes |
+| Firefox | ✅ Full | ✅ Full | ✅ Good | ⚠️ Limited |
+| Safari/WebKit | ✅ Good | ⚠️ iOS 11.3+ | ✅ Good | ❌ No |
+
+## Documentation
+
+- **📋 PWA Test Execution Report**: [PWA_TEST_EXECUTION_REPORT.md](./PWA_TEST_EXECUTION_REPORT.md)
+- **📖 PWA Implementation Guide**: [../docs/PWA-IMPLEMENTATION.md](../docs/PWA-IMPLEMENTATION.md)
+- **📊 PWA Browser Test Plan**: [../docs/PWA_BROWSER_TEST_PLAN.md](../docs/PWA_BROWSER_TEST_PLAN.md)
+
+## Viewing Results
+
+```bash
+# HTML report
+npx playwright show-report e2e/results/html-report
+
+# PWA test results
+cat e2e/results/pwa-test-report.md
+
+# JSON results
+cat e2e/results/test-results.json
+```
+
+## Windows-Specific Setup
+
+If you're on Windows and encounter `canvas` build errors:
 
 ```powershell
 npm run bootstrap-windows
 ```
 
-The script provides guidance and attempts to automate MSYS2 installation where possible. See `docs/CANVAS_WINDOWS_PREREQS.md` for full platform and CI instructions.
+See `docs/CANVAS_WINDOWS_PREREQS.md` for details.
 
-CI notes
+## CI/CD Integration
 
-- Use `npx playwright install --with-deps` in CI runners to ensure browsers and dependencies are available.
-- The Playwright config starts a Vite dev server automatically if one is not found.
+The Playwright config starts a Vite dev server automatically if one is not found.
 
-Troubleshooting
+```yaml
+# Example GitHub Actions workflow
+- run: npx playwright install --with-deps
+- run: npm run e2e:pwa
+- uses: actions/upload-artifact@v3
+  if: always()
+  with:
+    name: playwright-report
+    path: e2e/results/
+```
 
-- If tests can't find UI elements, inspect the DOM to determine the correct labels or roles used in your build. The sample tests use flexible selectors and will skip export tests if the expected button isn't present.
+## Troubleshooting
 
+### Service Worker Not Registering
+- Ensure HTTPS or localhost
+- Check `public/sw.js` exists
+- Clear browser cache
+
+### Tests Timing Out
+- Increase timeout: `test.setTimeout(180000)`
+- Check network and server responsiveness
+
+### Cache Failures
+- Clear all caches before tests
+- Verify service worker version
+- Check cache naming
+
+For more troubleshooting, see [PWA_TEST_EXECUTION_REPORT.md](./PWA_TEST_EXECUTION_REPORT.md).
+
+---
+
+**Last Updated**: 2025-11-16  
+**Maintained By**: Development Team

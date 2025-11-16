@@ -151,17 +151,22 @@ test.describe('PWA Install Prompt (Add to Home Screen)', () => {
 });
 
 test.describe('PWA Install - Browser Specific', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+  });
+
   test('should support installation on Chromium browsers', async ({ page, browserName }) => {
     test.skip(browserName !== 'chromium', 'Chromium-specific test');
     
     const installSupport = await page.evaluate(() => {
       return {
         hasBeforeInstallPrompt: 'onbeforeinstallprompt' in window,
-        serviceWorkerReady: 'serviceWorker' in navigator,
+        serviceWorkerSupported: 'serviceWorker' in navigator,
       };
     });
     
-    expect(installSupport.serviceWorkerReady).toBe(true);
+    expect(installSupport.serviceWorkerSupported).toBe(true);
   });
 
   test('should work with Firefox installation mechanism', async ({ page, browserName }) => {
