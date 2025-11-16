@@ -13,7 +13,7 @@ export default defineConfig({
     },
   },
   test: {
-    hookTimeout: 40000, // Increased for async security initialization in tests
+    hookTimeout: 35000, // Allows for 15s security init + 15s vault init + buffer
     testTimeout: 10000,
     environment: 'jsdom',
     setupFiles: ['src/test/setup.ts'],

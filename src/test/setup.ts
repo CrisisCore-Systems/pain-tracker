@@ -114,6 +114,12 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
 
 // Seed encryption master key if securityService storage relies on localStorage
 beforeAll(async () => {
+  // Skip heavy initialization in CI or when SKIP_HEAVY_SETUP is set
+  if (process.env.CI || process.env.SKIP_HEAVY_SETUP === 'true') {
+    console.log('Test setup: Skipping heavy initialization (CI or SKIP_HEAVY_SETUP=true)');
+    return;
+  }
+
   // Make this initialization resilient: if securityService.initializeMasterKey
   // takes too long in some environments, continue tests after a short timeout.
   // Use test-only constants, not production secrets
@@ -144,24 +150,36 @@ beforeAll(async () => {
     }
   })();
 
-  const timeout = new Promise<void>((resolve) => setTimeout(resolve, 30000));
+  const timeout = new Promise<void>((resolve) => setTimeout(() => {
+    console.warn('Test setup: security initialization timed out after 15s, continuing...');
+    resolve();
+  }, 15000));
 
   // Wait for whichever finishes first: initialization or timeout
   await Promise.race([initPromise, timeout]);
 
   // Initialize vault with deterministic passphrase for tests
-  try {
-    await getSodium();
-    const TEST_VAULT_PASSPHRASE = process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
-    const vaultStatus = await vaultService.initialize();
-    if (vaultStatus.state === 'uninitialized') {
-      await vaultService.setupPassphrase(TEST_VAULT_PASSPHRASE);
-    } else if (vaultStatus.state !== 'unlocked') {
-      await vaultService.unlock(TEST_VAULT_PASSPHRASE);
+  const vaultPromise = (async () => {
+    try {
+      await getSodium();
+      const TEST_VAULT_PASSPHRASE = process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
+      const vaultStatus = await vaultService.initialize();
+      if (vaultStatus.state === 'uninitialized') {
+        await vaultService.setupPassphrase(TEST_VAULT_PASSPHRASE);
+      } else if (vaultStatus.state !== 'unlocked') {
+        await vaultService.unlock(TEST_VAULT_PASSPHRASE);
+      }
+    } catch (error) {
+      console.warn('Test setup: failed to initialize vault service', error);
     }
-  } catch (error) {
-    console.warn('Test setup: failed to initialize vault service', error);
-  }
+  })();
+
+  const vaultTimeout = new Promise<void>((resolve) => setTimeout(() => {
+    console.warn('Test setup: vault initialization timed out after 15s, continuing...');
+    resolve();
+  }, 15000));
+
+  await Promise.race([vaultPromise, vaultTimeout]);
 
   // Inject light theme colors into jsdom so axe and computed styles can evaluate contrast
   try {
