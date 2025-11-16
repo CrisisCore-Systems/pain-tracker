@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within } from '../../../test/test-utils'; // Use custom render with providers
 import { vi } from 'vitest';
 // Mock PredictivePanel (lazy-loaded) so Suspense doesn't delay tests
 vi.mock('../../PredictivePanel', () => ({

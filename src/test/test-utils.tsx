@@ -1,12 +1,16 @@
 import { ReactElement } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
+import { ThemeProvider } from '../design-system/ThemeProvider';
+import { ToneProvider } from '../contexts/ToneContext';
 
-// Add any providers here
+// Add all required providers for testing
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return (
-    <>
-      {children}
-    </>
+    <ThemeProvider defaultTheme="light" storageKey="test-theme">
+      <ToneProvider>
+        {children}
+      </ToneProvider>
+    </ThemeProvider>
   );
 };
 

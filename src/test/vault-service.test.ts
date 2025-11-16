@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { vaultService } from '../services/VaultService';
 import { secureStorage } from '../lib/storage/secureStorage';
-import sodium from 'libsodium-wrappers';
+import sodium from 'libsodium-wrappers-sumo';
 
 // Test-only sodium polyfill for environments missing crypto_pwhash
 async function ensurePolyfill() {

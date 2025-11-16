@@ -1,9 +1,8 @@
 
 import { describe, it, expect, beforeEach, beforeAll, afterEach, afterAll, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '../../test/test-utils'; // Use custom render with providers
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { PainTracker } from './index';
-import { ThemeProvider } from '../../design-system';
 import { ToastProvider } from '../feedback';
 
 import type { PainEntry } from '../../types';
@@ -11,13 +10,11 @@ import '@testing-library/jest-dom';
 
 expect.extend(toHaveNoViolations);
 
-// Test wrapper component
+// Additional test wrapper for toast functionality (ThemeProvider and ToneProvider already in test-utils)
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider defaultMode="light">
-    <ToastProvider>
-      {children}
-    </ToastProvider>
-  </ThemeProvider>
+  <ToastProvider>
+    {children}
+  </ToastProvider>
 );
 
 // Mock console.error to avoid noise in test output
