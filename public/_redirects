@@ -1,0 +1,3 @@
+# Cloudflare Pages SPA routing
+# Serve static assets directly, fallback to index.html for all other routes
+/*  /index.html  200
