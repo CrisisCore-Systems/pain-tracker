@@ -33,6 +33,8 @@ import { EmotionalValidation, ValidationHistory, useEmotionalValidation } from '
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 import { hipaaComplianceService } from '../../services/HIPAACompliance';
 import type { AuditTrail } from '../../services/HIPAACompliance';
+import { analyzePatterns } from '../../utils/pain-tracker/pattern-engine';
+import type { PatternAnalysisResult } from '../../types/pattern-engine';
 
 type TimePeriod = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -567,6 +569,20 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
     };
   }, [filteredEntries]);
 
+  // Advanced pattern recognition using heuristic engine
+  const patternAnalysis = useMemo<PatternAnalysisResult | null>(() => {
+    if (filteredEntries.length === 0) {
+      return null;
+    }
+    
+    try {
+      return analyzePatterns(filteredEntries);
+    } catch (error) {
+      console.error('Pattern analysis failed:', error);
+      return null;
+    }
+  }, [filteredEntries]);
+
   const reasoningTree = useMemo<ReasoningNode[]>(
     () => buildReasoningTree(analytics, filteredEntries.length),
     [analytics, filteredEntries.length]
@@ -668,7 +684,12 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
   {view === 'predictions' && <PredictionsView analytics={analytics} />}
         {view === 'clinical' && <ClinicalReportView analytics={analytics} entries={filteredEntries} />}
         {view === 'insights' && (
-          <InsightsView analytics={analytics} entries={filteredEntries} reasoningTree={reasoningTree} />
+          <InsightsView 
+            analytics={analytics} 
+            entries={filteredEntries} 
+            reasoningTree={reasoningTree}
+            patternAnalysis={patternAnalysis}
+          />
         )}
         {view === 'export' && <ExportView analytics={analytics} entries={filteredEntries} />}
       </div>
@@ -1427,7 +1448,8 @@ const InsightsView: React.FC<{
   analytics: AnalyticsSnapshot;
   entries: PainEntry[];
   reasoningTree: ReasoningNode[];
-}> = ({ analytics, entries, reasoningTree }) => {
+  patternAnalysis: PatternAnalysisResult | null;
+}> = ({ analytics, entries, reasoningTree, patternAnalysis }) => {
   const entryConfidence = entries.length >= 60 ? 'high' : entries.length >= 25 ? 'medium' : 'low';
   const latestRecommendation = analytics.personalizedRecommendations[0];
 
@@ -1496,6 +1518,139 @@ const InsightsView: React.FC<{
           </div>
         </div>
       </div>
+
+      {/* Advanced Pattern Recognition Results */}
+      {patternAnalysis && (
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-6 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <Brain className="w-6 h-6" />
+              <div>
+                <h3 className="text-xl font-bold">Heuristic Pattern Recognition</h3>
+                <p className="text-sm text-white/80">Advanced analysis powered by local algorithms</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <p className="text-xs uppercase tracking-wider text-white/70">Baseline</p>
+                <p className="text-2xl font-bold">{patternAnalysis.baseline.value.toFixed(1)}</p>
+                <p className="text-xs text-white/80 capitalize">{patternAnalysis.baseline.confidence} confidence</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <p className="text-xs uppercase tracking-wider text-white/70">Episodes Detected</p>
+                <p className="text-2xl font-bold">{patternAnalysis.episodes.length}</p>
+                <p className="text-xs text-white/80">Flare patterns identified</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <p className="text-xs uppercase tracking-wider text-white/70">Data Quality</p>
+                <p className="text-2xl font-bold capitalize">{patternAnalysis.dataQuality}</p>
+                <p className="text-xs text-white/80">{entries.length} entries analyzed</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Episodes Timeline */}
+          {patternAnalysis.episodes.length > 0 && (
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-500" />
+                Pain Episodes ({patternAnalysis.episodes.length})
+              </h4>
+              <div className="space-y-3">
+                {patternAnalysis.episodes.slice(0, 5).map((episode, idx) => (
+                  <div key={idx} className="border-l-4 border-red-500 pl-4 py-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-gray-900 dark:text-white capitalize">
+                          {episode.severity} Severity
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {episode.duration} days • Peak: {episode.peakIntensity.toFixed(1)}/10
+                        </p>
+                      </div>
+                      {episode.recoveryDays !== null && (
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Recovery: {episode.recoveryDays}d
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Trigger Correlations */}
+          {patternAnalysis.triggerCorrelations.length > 0 && (
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Zap className="w-5 h-5 text-yellow-500" />
+                Trigger Correlations
+              </h4>
+              <div className="space-y-3">
+                {patternAnalysis.triggerCorrelations.slice(0, 5).map((corr, idx) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white">{corr.label}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {corr.support} occurrences • {corr.confidence.toFixed(0)}% confidence
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-sm font-semibold ${corr.delta > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {corr.delta > 0 ? '+' : ''}{corr.delta.toFixed(1)}
+                      </p>
+                      <p className="text-xs text-gray-500 capitalize">{corr.strength}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* QoL Patterns */}
+          {patternAnalysis.qolPatterns.length > 0 && (
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Heart className="w-5 h-5 text-pink-500" />
+                Quality of Life Insights
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {patternAnalysis.qolPatterns.map((pattern, idx) => (
+                  <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      {pattern.dimension === 'sleep' && <Moon className="w-4 h-4" />}
+                      {pattern.dimension === 'mood' && <Sun className="w-4 h-4" />}
+                      {pattern.dimension === 'activity' && <Activity className="w-4 h-4" />}
+                      <p className="font-semibold text-gray-900 dark:text-white capitalize">{pattern.dimension}</p>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{pattern.description}</p>
+                    <p className="text-xs text-gray-500 mt-2 capitalize">{pattern.strength} correlation</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Cautions */}
+          {patternAnalysis.cautions.length > 0 && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-semibold text-yellow-900 dark:text-yellow-100">Analysis Notes</p>
+                  <ul className="mt-2 space-y-1 text-sm text-yellow-800 dark:text-yellow-200">
+                    {patternAnalysis.cautions.map((caution, idx) => (
+                      <li key={idx}>• {caution}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
