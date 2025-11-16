@@ -21,7 +21,6 @@ import './i18n/config';
 import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
 import { PWAStatusIndicator } from "./components/pwa/PWAStatusIndicator";
 import BetaWarning from './components/BetaWarning';
-import QuickActions from './components/QuickActions';
 import NotificationConsentPrompt from './components/NotificationConsentPrompt';
 import BetaAnalyticsConsentPrompt from './components/BetaAnalyticsConsentPrompt';
 import { VaultGate } from './components/security/VaultGate';
@@ -145,7 +144,6 @@ function App() {
                       <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
                         <OfflineBanner />
                         <BetaWarning />
-                        <QuickActions />
                         <NotificationConsentPrompt />
                         <BetaAnalyticsConsentPrompt />
                         <ErrorBoundary fallback={<ErrorFallback />}>
