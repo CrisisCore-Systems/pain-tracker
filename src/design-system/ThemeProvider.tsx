@@ -110,6 +110,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     
     // Set data attribute for CSS targeting
     root.setAttribute('data-theme', newMode);
+    
+    // Add/remove 'dark' class for Tailwind dark mode
+    if (newMode === 'dark' || newMode === 'high-contrast') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
   }, []);
 
   const setMode = useCallback((newMode: ThemeMode) => {
