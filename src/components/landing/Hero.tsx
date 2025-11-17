@@ -7,7 +7,7 @@ export const Hero: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
+    <section className="hero relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
       <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
           {/* Left Column: Content */}
