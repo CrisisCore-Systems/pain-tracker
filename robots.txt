@@ -1,0 +1,7 @@
+# Pain Tracker - robots.txt
+User-agent: *
+Allow: /
+Disallow: /app
+Disallow: /api
+
+Sitemap: https://paintracker.ca/sitemap.xml

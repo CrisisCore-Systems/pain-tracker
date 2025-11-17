@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang='en'>
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X25RTEWBYL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-X25RTEWBYL');
+    </script>
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover' />
     <meta name="description" content="Pain Tracker - A comprehensive tool for tracking and managing chronic pain and injuries" />
@@ -13,6 +22,10 @@
     <meta name="msapplication-TileColor" content="#0ea5e9" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
     <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#3B82F6" />
+    
+    <!-- Prevent forced dark mode on browsers (Chrome Auto Dark Theme) -->
+    <meta name="color-scheme" content="only light" />
     
     <!-- Security Headers (Note: CSP frame-ancestors and X-Frame-Options are set via HTTP headers in server config) -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -27,16 +40,17 @@
     <meta property="og:site_name" content="Pain Tracker" />
     
     <!-- Icons -->
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="manifest" href="./manifest.json" />
     
     <title>Pain Tracker - Comprehensive Pain & Injury Management System</title>
-    <script type="module" crossorigin src="/pain-tracker/assets/index-h2s7xxye.js"></script>
-    <link rel="modulepreload" crossorigin href="/pain-tracker/assets/react-vendor-Bn1aEwkj.js">
-    <link rel="modulepreload" crossorigin href="/pain-tracker/assets/chart-vendor-B7B0FrSV.js">
-    <link rel="modulepreload" crossorigin href="/pain-tracker/assets/date-vendor-VbNwGsdS.js">
-    <link rel="stylesheet" crossorigin href="/pain-tracker/assets/index-CMk-Qjgs.css">
+    <script type="module" crossorigin src="/assets/index-fQDdTo9I.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-Bn1aEwkj.js">
+    <link rel="modulepreload" crossorigin href="/assets/chart-vendor-B7B0FrSV.js">
+    <link rel="modulepreload" crossorigin href="/assets/date-vendor-VbNwGsdS.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-vAmkTGCQ.css">
   </head>
   <body>
     <div id='root'></div>

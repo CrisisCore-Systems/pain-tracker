@@ -39,8 +39,8 @@
       "label": "Analytics overview"
     }
   ],
-  "start_url": "/pain-tracker/",
-  "scope": "/pain-tracker/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait-primary",
