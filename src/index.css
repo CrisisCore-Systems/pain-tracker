@@ -876,3 +876,70 @@ button:active {
     border-width: 2px;
   }
 }
+
+/* ===== HERO SECTION CONTRAST FIX ===== */
+
+/* 
+ * Force dark background and light text for hero section to ensure readability.
+ * This fixes the contrast issue where dark/gray text appears on a dark background.
+ * Using !important to override Tailwind utility classes.
+ */
+
+/* Hero section - apply very dark background */
+.hero {
+  background: #020617 !important;           /* very dark slate (bg-slate-950) */
+  color: #f9fafb !important;                /* almost white for default text (text-slate-50) */
+}
+
+/* Hero main heading - bright white and bold */
+.hero h1,
+.hero-title {
+  color: #f9fafb !important;                /* text-slate-50 */
+  font-weight: 700 !important;
+}
+
+/* Hero paragraph text - light gray for readability */
+.hero p,
+.hero-subtitle {
+  color: #e5e7eb !important;                /* text-slate-200 */
+}
+
+/* Override text-muted-foreground in hero to be light */
+.hero .text-muted-foreground {
+  color: #cbd5e1 !important;                /* text-slate-300 - lighter slate for secondary text */
+}
+
+/* Keep primary colored text visible but adjust for dark background */
+.hero .text-primary {
+  color: #0ea5e9 !important;                /* bright cyan - visible on dark */
+}
+
+/* Badge/pill elements should have light text and visible background */
+.hero .bg-primary\/10 {
+  background-color: rgba(14, 165, 233, 0.2) !important;  /* slightly brighter badge bg */
+}
+
+/* Microcopy and small text elements */
+.hero-microcopy,
+.hero-badge,
+.hero-open-source {
+  color: #cbd5e1 !important;                /* text-slate-300 */
+}
+
+/* All span elements in hero get light text */
+.hero span {
+  color: inherit;
+}
+
+/* Override any opacity effects that might dim the text */
+.hero *:not(img):not(svg):not(path):not(circle):not(line):not(rect):not(polygon) {
+  opacity: 1 !important;
+}
+
+/* Remove any overlay effects that could muddy the contrast */
+.hero::before,
+.hero::after {
+  background: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
