@@ -1,15 +1,15 @@
-// Pain Tracker Service Worker - v1.2 (manifest.json fix)
+// Pain Tracker Service Worker - v1.3 (root path fix for Cloudflare deployment)
 const CACHE_NAME = 'pain-tracker-v1';
-const STATIC_CACHE_NAME = 'pain-tracker-static-v1.2'; // Incremented to force cache update
-const DYNAMIC_CACHE_NAME = 'pain-tracker-dynamic-v1.2'; // Incremented to force cache update
+const STATIC_CACHE_NAME = 'pain-tracker-static-v1.3'; // Incremented to force cache update
+const DYNAMIC_CACHE_NAME = 'pain-tracker-dynamic-v1.3'; // Incremented to force cache update
 
 // Files to cache for offline use
 const STATIC_ASSETS = [
-  '/pain-tracker/',
-  '/pain-tracker/index.html',
-  '/pain-tracker/manifest.json',
-  '/pain-tracker/offline.html',
-  '/pain-tracker/404.html',
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/offline.html',
+  '/404.html',
 ];
 
 // API endpoints that should be cached
@@ -79,8 +79,8 @@ self.addEventListener('fetch', (event) => {
       } catch {
         // Try cached index.html first, then offline.html fallback
         const navStaticCache = await caches.open(STATIC_CACHE_NAME);
-        const offline = await navStaticCache.match('/pain-tracker/offline.html');
-        const indexFallback = await navStaticCache.match('/pain-tracker/index.html');
+        const offline = await navStaticCache.match('/offline.html');
+        const indexFallback = await navStaticCache.match('/index.html');
         return offline || indexFallback || new Response('Offline', { status: 503 });
       }
     })());
@@ -197,7 +197,7 @@ async function handleOtherRequests(request) {
     
     // Serve offline fallback asset (non-navigation)
   const otherStaticCache = await caches.open(STATIC_CACHE_NAME);
-  const offlinePage = await otherStaticCache.match('/pain-tracker/offline.html');
+  const offlinePage = await otherStaticCache.match('/offline.html');
     return offlinePage || new Response('Offline - Content not available', {
       status: 503,
       headers: { 'Content-Type': 'text/plain' }
@@ -398,4 +398,4 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
-console.log('Service Worker: Loaded successfully - v1.2 with manifest.json fix');
+console.log('Service Worker: Loaded successfully - v1.3 with root path fix for Cloudflare deployment');
