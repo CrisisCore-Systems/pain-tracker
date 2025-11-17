@@ -4,7 +4,7 @@ export type FormatKey = 'shortDate' | 'mediumDateTime' | 'timeOnly';
 
 const FORMATS: Record<FormatKey, string> = {
   shortDate: 'yyyy-MM-dd',
-  mediumDateTime: "yyyy-MM-dd HH:mm", // not localized here; callers may use Intl when needed
+  mediumDateTime: 'yyyy-MM-dd HH:mm', // not localized here; callers may use Intl when needed
   timeOnly: 'HH:mm',
 };
 

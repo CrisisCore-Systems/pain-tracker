@@ -85,16 +85,12 @@ export function PageTransition({
   const currentClass = isExiting
     ? transitions.exitActive
     : isVisible
-    ? transitions.enterActive
-    : transitions.enter;
+      ? transitions.enterActive
+      : transitions.enter;
 
   return (
     <div
-      className={cn(
-        'transition-all',
-        currentClass,
-        className
-      )}
+      className={cn('transition-all', currentClass, className)}
       style={{
         transitionDuration: `${duration}ms`,
       }}
@@ -153,13 +149,12 @@ interface StaggeredChildrenProps {
   className?: string;
 }
 
-export function StaggeredChildren({
-  children,
-  delay = 50,
-  className,
-}: StaggeredChildrenProps) {
+export function StaggeredChildren({ children, delay = 50, className }: StaggeredChildrenProps) {
   return (
-    <div className={cn('stagger-children', className)} style={{ '--stagger-delay': `${delay}ms` } as React.CSSProperties}>
+    <div
+      className={cn('stagger-children', className)}
+      style={{ '--stagger-delay': `${delay}ms` } as React.CSSProperties}
+    >
       {children}
     </div>
   );
@@ -180,11 +175,7 @@ export function RouteTransition({
   duration = 300,
 }: RouteTransitionProps) {
   return (
-    <PageTransition
-      key={location}
-      type={type}
-      duration={duration}
-    >
+    <PageTransition key={location} type={type} duration={duration}>
       {children}
     </PageTransition>
   );
@@ -216,11 +207,7 @@ export function Fade({ show, children, duration = 300, className }: FadeProps) {
 
   return (
     <div
-      className={cn(
-        'transition-opacity',
-        show ? 'opacity-100' : 'opacity-0',
-        className
-      )}
+      className={cn('transition-opacity', show ? 'opacity-100' : 'opacity-0', className)}
       style={{ transitionDuration: `${duration}ms` }}
     >
       {children}
@@ -237,13 +224,7 @@ interface SlideProps {
   className?: string;
 }
 
-export function Slide({
-  show,
-  children,
-  direction = 'up',
-  duration = 300,
-  className,
-}: SlideProps) {
+export function Slide({ show, children, direction = 'up', duration = 300, className }: SlideProps) {
   const [shouldRender, setShouldRender] = useState(show);
 
   useEffect(() => {

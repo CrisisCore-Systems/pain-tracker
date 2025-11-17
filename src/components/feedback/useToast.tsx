@@ -47,7 +47,12 @@ export function useToast() {
     },
 
     bottomLeft: {
-      success: (title: string, message?: string, action?: { label: string; onClick: () => void }, options?: { onDismiss?: () => void }) => {
+      success: (
+        title: string,
+        message?: string,
+        action?: { label: string; onClick: () => void },
+        options?: { onDismiss?: () => void }
+      ) => {
         addBottomLeftToast({
           type: 'success',
           title,
@@ -57,7 +62,12 @@ export function useToast() {
         });
       },
 
-      error: (title: string, message?: string, action?: { label: string; onClick: () => void }, options?: { onDismiss?: () => void }) => {
+      error: (
+        title: string,
+        message?: string,
+        action?: { label: string; onClick: () => void },
+        options?: { onDismiss?: () => void }
+      ) => {
         addBottomLeftToast({
           type: 'error',
           title,
@@ -68,7 +78,12 @@ export function useToast() {
         });
       },
 
-      warning: (title: string, message?: string, action?: { label: string; onClick: () => void }, options?: { onDismiss?: () => void }) => {
+      warning: (
+        title: string,
+        message?: string,
+        action?: { label: string; onClick: () => void },
+        options?: { onDismiss?: () => void }
+      ) => {
         addBottomLeftToast({
           type: 'warning',
           title,
@@ -79,7 +94,12 @@ export function useToast() {
         });
       },
 
-      info: (title: string, message?: string, action?: { label: string; onClick: () => void }, options?: { onDismiss?: () => void }) => {
+      info: (
+        title: string,
+        message?: string,
+        action?: { label: string; onClick: () => void },
+        options?: { onDismiss?: () => void }
+      ) => {
         addBottomLeftToast({
           type: 'info',
           title,

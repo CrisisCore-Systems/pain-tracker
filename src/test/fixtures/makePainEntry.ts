@@ -6,7 +6,6 @@ export interface PainEntry {
   timestamp: string;
 }
 
-
 function generateId(): string {
   // Prefer Web Crypto's randomUUID when available (Node 18+, modern browsers)
   try {
@@ -18,7 +17,7 @@ function generateId(): string {
   }
 
   // Fallback: timestamp + random
-  return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
+  return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
 export function makePainEntry(overrides: Partial<PainEntry> = {}): PainEntry {

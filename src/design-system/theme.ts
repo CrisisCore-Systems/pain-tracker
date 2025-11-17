@@ -516,8 +516,8 @@ export const getThemeColors = (mode: ThemeMode): ThemeColors => {
     cardForeground: colors.neutral[900],
     popover: colors.neutral[50],
     popoverForeground: colors.neutral[900],
-  primary: colors.primary[600],
-  primaryForeground: colors.neutral[50],
+    primary: colors.primary[600],
+    primaryForeground: colors.neutral[50],
     secondary: colors.neutral[100],
     secondaryForeground: colors.neutral[900],
     muted: colors.neutral[100],
@@ -525,17 +525,17 @@ export const getThemeColors = (mode: ThemeMode): ThemeColors => {
     mutedForeground: colors.neutral[700],
     accent: colors.accent[600],
     accentForeground: colors.neutral[50],
-  // use darker semantic shades for better contrast on light backgrounds
-  destructive: colors.error[700],
-  // ensure destructive foreground is pure white for contrast against red
-  destructiveForeground: '#ffffff',
-  // semantic colors (darker variants)
-  success: colors.success[700],
-  successForeground: colors.success[50],
-  warning: colors.warning[700],
-  warningForeground: colors.warning[50],
-  info: colors.info[700],
-  infoForeground: colors.info[50],
+    // use darker semantic shades for better contrast on light backgrounds
+    destructive: colors.error[700],
+    // ensure destructive foreground is pure white for contrast against red
+    destructiveForeground: '#ffffff',
+    // semantic colors (darker variants)
+    success: colors.success[700],
+    successForeground: colors.success[50],
+    warning: colors.warning[700],
+    warningForeground: colors.warning[50],
+    info: colors.info[700],
+    infoForeground: colors.info[50],
     border: colors.neutral[200],
     input: colors.neutral[200],
     ring: colors.primary[600],

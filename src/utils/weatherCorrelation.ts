@@ -15,7 +15,9 @@ export function pearsonCorrelation(x: number[], y: number[]): number | null {
   return numerator / denom;
 }
 
-export async function correlatePainWithPressure(entries: { time: string; pain: number; lat?: number; lon?: number }[]) {
+export async function correlatePainWithPressure(
+  entries: { time: string; pain: number; lat?: number; lon?: number }[]
+) {
   // Try to fetch a single pressure reading if location provided on entries
   const pressures: number[] = [];
   const pains: number[] = [];

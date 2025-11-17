@@ -1,4 +1,4 @@
-import type { PainEntry } from "../../types";
+import type { PainEntry } from '../../types';
 import { secureStorage } from '../../lib/storage/secureStorage';
 
 const STORAGE_KEY = 'pain_tracker_entries';
@@ -24,7 +24,7 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
   try {
     const existingEntries = await loadPainEntries();
     const updatedEntries = [...existingEntries];
-    
+
     // Find and update existing entry or add new one
     const existingIndex = updatedEntries.findIndex(e => e.id === entry.id);
     if (existingIndex !== -1) {
@@ -32,10 +32,13 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
     } else {
       updatedEntries.push(entry);
     }
-    
+
     // Prefer encrypted write when hooks are available; gracefully fall back to plain storage
-    const hasEncryptHook = typeof (globalThis as { __secureStorageEncrypt?: (p: string) => string }).__secureStorageEncrypt === 'function';
-    const tryWrite = (encrypt: boolean) => secureStorage.set(STORAGE_KEY, updatedEntries, encrypt ? { encrypt: true } : undefined);
+    const hasEncryptHook =
+      typeof (globalThis as { __secureStorageEncrypt?: (p: string) => string })
+        .__secureStorageEncrypt === 'function';
+    const tryWrite = (encrypt: boolean) =>
+      secureStorage.set(STORAGE_KEY, updatedEntries, encrypt ? { encrypt: true } : undefined);
 
     const firstAttempt = tryWrite(hasEncryptHook);
     const result = firstAttempt.success || !hasEncryptHook ? firstAttempt : tryWrite(false);
@@ -64,11 +67,13 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
  */
 export const loadPainEntries = async (): Promise<PainEntry[]> => {
   try {
-  // Attempt encrypted read if hooks are available, otherwise plain
-  const hasDecryptHook = typeof (globalThis as { __secureStorageDecrypt?: (c: string) => string }).__secureStorageDecrypt === 'function';
-  let stored = hasDecryptHook
-    ? secureStorage.get<unknown>(STORAGE_KEY, { encrypt: true })
-    : secureStorage.get<unknown>(STORAGE_KEY);
+    // Attempt encrypted read if hooks are available, otherwise plain
+    const hasDecryptHook =
+      typeof (globalThis as { __secureStorageDecrypt?: (c: string) => string })
+        .__secureStorageDecrypt === 'function';
+    let stored = hasDecryptHook
+      ? secureStorage.get<unknown>(STORAGE_KEY, { encrypt: true })
+      : secureStorage.get<unknown>(STORAGE_KEY);
     if (!stored) {
       // Backward compatibility / test injection path: look at raw localStorage
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -81,7 +86,7 @@ export const loadPainEntries = async (): Promise<PainEntry[]> => {
     } else {
       entries = stored;
     }
-    
+
     // Validate the data structure
     if (!Array.isArray(entries) || !entries.every(isValidPainEntry)) {
       throw createStorageError('PARSE_ERROR', 'Stored data is corrupted.');
@@ -105,7 +110,7 @@ export const loadPainEntries = async (): Promise<PainEntry[]> => {
  */
 export const clearPainEntries = async (): Promise<void> => {
   try {
-  secureStorage.remove(STORAGE_KEY, { encrypt: true });
+    secureStorage.remove(STORAGE_KEY, { encrypt: true });
   } catch {
     throw createStorageError('WRITE_ERROR', 'Failed to clear pain entries.');
   }
@@ -116,7 +121,7 @@ export const clearPainEntries = async (): Promise<void> => {
  */
 const isValidPainEntry = (entry: unknown): entry is PainEntry => {
   if (!entry || typeof entry !== 'object') return false;
-  
+
   const e = entry as Partial<PainEntry>;
   return (
     typeof e.id === 'number' &&

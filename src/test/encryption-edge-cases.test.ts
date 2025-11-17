@@ -1,9 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { encryptionService } from '../services/EncryptionService';
 
-interface Payload { msg: string; pad?: string }
+interface Payload {
+  msg: string;
+  pad?: string;
+}
 
-function bigPayload(): Payload { return { msg: 'x'.repeat(1200), pad: 'y'.repeat(800) }; }
+function bigPayload(): Payload {
+  return { msg: 'x'.repeat(1200), pad: 'y'.repeat(800) };
+}
 
 describe('EncryptionService edge cases', () => {
   it('rotates keys without throwing', async () => {
@@ -25,7 +30,10 @@ describe('EncryptionService edge cases', () => {
   it('creates and restores password-protected backup', async () => {
     const data = { entries: [bigPayload(), { msg: 'short' }] };
     const backup = await encryptionService.createEncryptedBackup(data, 'pw123');
-    const restored = await encryptionService.restoreFromEncryptedBackup<typeof data>(backup, 'pw123');
+    const restored = await encryptionService.restoreFromEncryptedBackup<typeof data>(
+      backup,
+      'pw123'
+    );
     expect(restored.entries[0].msg.length).toBe(1200);
   });
 
@@ -33,8 +41,8 @@ describe('EncryptionService edge cases', () => {
     const encrypted = await encryptionService.encrypt({ value: 'secure' });
     // Tamper payload
     const hacked = { ...encrypted, data: encrypted.data.slice(0, -4) + 'ABCD' };
-  // Pass tampered object; runtime integrity or parse should fail
-  await expect(encryptionService.decrypt(hacked as typeof encrypted)).rejects.toThrow();
+    // Pass tampered object; runtime integrity or parse should fail
+    await expect(encryptionService.decrypt(hacked as typeof encrypted)).rejects.toThrow();
   });
 
   it('skips compression when below threshold', async () => {
@@ -54,6 +62,8 @@ describe('EncryptionService edge cases', () => {
       delete parsed.metadata.passwordSalt;
     }
     const tampered = JSON.stringify(parsed);
-    await expect(encryptionService.restoreFromEncryptedBackup(tampered, 'pwABC')).rejects.toThrow(/salt/i);
+    await expect(encryptionService.restoreFromEncryptedBackup(tampered, 'pwABC')).rejects.toThrow(
+      /salt/i
+    );
   });
 });

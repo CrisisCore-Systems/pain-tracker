@@ -14,7 +14,13 @@ export interface CrisisState {
 }
 
 export interface CrisisTrigger {
-  type: 'pain_spike' | 'cognitive_fog' | 'emotional_distress' | 'rapid_input' | 'error_pattern' | 'time_pressure';
+  type:
+    | 'pain_spike'
+    | 'cognitive_fog'
+    | 'emotional_distress'
+    | 'rapid_input'
+    | 'error_pattern'
+    | 'time_pressure';
   value: number; // normalized 0-1
   threshold: number;
   timestamp: Date;
@@ -184,95 +190,95 @@ export interface CrisisSession {
 // Voice Command Patterns for Crisis Situations
 export const EMERGENCY_VOICE_COMMANDS: VoiceCommand[] = [
   {
-    phrase: "help me",
-    aliases: ["I need help", "emergency", "crisis"],
-    action: "activate_emergency_mode",
+    phrase: 'help me',
+    aliases: ['I need help', 'emergency', 'crisis'],
+    action: 'activate_emergency_mode',
     emergencyCommand: true,
-    requiresConfirmation: false
+    requiresConfirmation: false,
   },
   {
-    phrase: "call doctor",
-    aliases: ["contact doctor", "call emergency contact"],
-    action: "call_primary_contact",
+    phrase: 'call doctor',
+    aliases: ['contact doctor', 'call emergency contact'],
+    action: 'call_primary_contact',
     emergencyCommand: true,
-    requiresConfirmation: true
+    requiresConfirmation: true,
   },
   {
-    phrase: "save everything",
-    aliases: ["save all", "backup data"],
-    action: "emergency_save",
+    phrase: 'save everything',
+    aliases: ['save all', 'backup data'],
+    action: 'emergency_save',
     emergencyCommand: true,
-    requiresConfirmation: false
+    requiresConfirmation: false,
   },
   {
-    phrase: "simplify interface",
-    aliases: ["make it simple", "reduce complexity"],
-    action: "activate_simple_mode",
+    phrase: 'simplify interface',
+    aliases: ['make it simple', 'reduce complexity'],
+    action: 'activate_simple_mode',
     emergencyCommand: false,
-    requiresConfirmation: false
+    requiresConfirmation: false,
   },
   {
-    phrase: "read to me",
-    aliases: ["speak text", "voice guidance"],
-    action: "enable_voice_guidance",
+    phrase: 'read to me',
+    aliases: ['speak text', 'voice guidance'],
+    action: 'enable_voice_guidance',
     emergencyCommand: false,
-    requiresConfirmation: false
+    requiresConfirmation: false,
   },
   {
-    phrase: "go back",
-    aliases: ["previous page", "undo"],
-    action: "navigate_back",
+    phrase: 'go back',
+    aliases: ['previous page', 'undo'],
+    action: 'navigate_back',
     emergencyCommand: false,
-    requiresConfirmation: false
+    requiresConfirmation: false,
   },
   {
-    phrase: "take a break",
-    aliases: ["pause", "stop"],
-    action: "activate_break_mode",
+    phrase: 'take a break',
+    aliases: ['pause', 'stop'],
+    action: 'activate_break_mode',
     emergencyCommand: false,
-    requiresConfirmation: false
+    requiresConfirmation: false,
   },
   {
-    phrase: "breathing exercise",
-    aliases: ["calm down", "relax"],
-    action: "start_breathing_exercise",
+    phrase: 'breathing exercise',
+    aliases: ['calm down', 'relax'],
+    action: 'start_breathing_exercise',
     emergencyCommand: false,
-    requiresConfirmation: false
-  }
+    requiresConfirmation: false,
+  },
 ];
 
 // Emergency Gesture Patterns
 export const EMERGENCY_GESTURES: EmergencyGesture[] = [
   {
-    pattern: "shake_device",
-    action: "activate_emergency_mode",
-    description: "Shake device rapidly to activate emergency mode",
-    enabled: true
+    pattern: 'shake_device',
+    action: 'activate_emergency_mode',
+    description: 'Shake device rapidly to activate emergency mode',
+    enabled: true,
   },
   {
-    pattern: "triple_tap",
-    action: "call_emergency_contact",
-    description: "Triple tap screen to call primary emergency contact",
-    enabled: true
+    pattern: 'triple_tap',
+    action: 'call_emergency_contact',
+    description: 'Triple tap screen to call primary emergency contact',
+    enabled: true,
   },
   {
-    pattern: "swipe_up_three_fingers",
-    action: "simplify_interface",
-    description: "Swipe up with three fingers to simplify interface",
-    enabled: true
+    pattern: 'swipe_up_three_fingers',
+    action: 'simplify_interface',
+    description: 'Swipe up with three fingers to simplify interface',
+    enabled: true,
   },
   {
-    pattern: "long_press_corner",
-    action: "show_help_menu",
-    description: "Long press screen corner to show help options",
-    enabled: true
+    pattern: 'long_press_corner',
+    action: 'show_help_menu',
+    description: 'Long press screen corner to show help options',
+    enabled: true,
   },
   {
-    pattern: "pinch_in_hold",
-    action: "activate_focus_mode",
-    description: "Pinch screen and hold to activate focus mode",
-    enabled: true
-  }
+    pattern: 'pinch_in_hold',
+    action: 'activate_focus_mode',
+    description: 'Pinch screen and hold to activate focus mode',
+    enabled: true,
+  },
 ];
 
 // Default Crisis State Configuration
@@ -285,32 +291,32 @@ export const DEFAULT_CRISIS_CONFIG = {
     essentialFunctionsOnly: false,
     emergencyContactsVisible: true,
     autoSaveFrequency: 30,
-    timeoutExtensions: true
+    timeoutExtensions: true,
   },
   stressResponsiveUI: {
     enabled: true,
     colorAdaptation: {
       calmingColors: true,
       reducedContrast: false,
-      warmTonePalette: true
+      warmTonePalette: true,
     },
     animationAdaptation: {
       reduceMotion: true,
       slowerTransitions: true,
-      essentialAnimationsOnly: true
+      essentialAnimationsOnly: true,
     },
     layoutAdaptation: {
       increaseWhitespace: true,
       simplifyStructure: true,
       prioritizeContent: true,
-      hideNonEssential: false
+      hideNonEssential: false,
     },
     interactionAdaptation: {
       increaseTouchTargets: true,
       addConfirmations: true,
       enableUndo: true,
-      showHelp: true
-    }
+      showHelp: true,
+    },
   },
   multiModalInput: {
     voice: {
@@ -319,7 +325,7 @@ export const DEFAULT_CRISIS_CONFIG = {
       language: 'en-US',
       commands: EMERGENCY_VOICE_COMMANDS,
       continualListening: false,
-      emergencyPhrases: ["help me", "emergency", "call doctor"]
+      emergencyPhrases: ['help me', 'emergency', 'call doctor'],
     },
     gesture: {
       enabled: true,
@@ -327,14 +333,14 @@ export const DEFAULT_CRISIS_CONFIG = {
       swipeToNavigate: true,
       pinchToZoom: true,
       tapPatterns: true,
-      emergencyGestures: EMERGENCY_GESTURES
+      emergencyGestures: EMERGENCY_GESTURES,
     },
     touch: {
       targetSizeMultiplier: 1.5,
       pressureThreshold: 0.3,
       dwellTime: 150,
       hapticFeedback: true,
-      errorCorrection: true
-    }
-  }
+      errorCorrection: true,
+    },
+  },
 };

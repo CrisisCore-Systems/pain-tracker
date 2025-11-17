@@ -1,5 +1,10 @@
 import React, { useMemo } from 'react';
-import { EnhancedCard, EnhancedCardHeader, EnhancedCardTitle, EnhancedCardContent } from '../../design-system/components/EnhancedCard';
+import {
+  EnhancedCard,
+  EnhancedCardHeader,
+  EnhancedCardTitle,
+  EnhancedCardContent,
+} from '../../design-system/components/EnhancedCard';
 import { Clock, CheckCircle, Activity, AlertTriangle, Zap } from 'lucide-react';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
@@ -52,11 +57,18 @@ function getSeverityMeta(pain: number) {
 
 export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
   const recent = useMemo(
-    () => entries.slice().sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 5),
+    () =>
+      entries
+        .slice()
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+        .slice(0, 5),
     [entries]
   );
 
-  const relativeFormatter = useMemo(() => new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }), []);
+  const relativeFormatter = useMemo(
+    () => new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }),
+    []
+  );
   const absoluteFormatter = useMemo(
     () => new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }),
     []
@@ -104,7 +116,10 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
               Your latest entries with gentle prompts for reflection.
             </p>
           </div>
-          <Badge variant="outline" className="rounded-full border-primary/20 bg-primary/5 text-xs text-primary">
+          <Badge
+            variant="outline"
+            className="rounded-full border-primary/20 bg-primary/5 text-xs text-primary"
+          >
             {recent.length > 0 ? `${recent.length} highlighted` : 'Nothing logged yet'}
           </Badge>
         </div>
@@ -124,10 +139,15 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                 const absoluteLabel = Number.isNaN(entryDate.getTime())
                   ? 'Unknown time'
                   : absoluteFormatter.format(entryDate);
-                const symptoms = ((item as unknown as { symptoms?: string[] }).symptoms ?? []).filter(Boolean);
-                const quality = (item as unknown as {
-                  qualityOfLife?: { sleepQuality: number; moodImpact: number };
-                }).qualityOfLife ?? null;
+                const symptoms = (
+                  (item as unknown as { symptoms?: string[] }).symptoms ?? []
+                ).filter(Boolean);
+                const quality =
+                  (
+                    item as unknown as {
+                      qualityOfLife?: { sleepQuality: number; moodImpact: number };
+                    }
+                  ).qualityOfLife ?? null;
 
                 return (
                   <div key={item.id} className="relative pl-6">
@@ -139,7 +159,10 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                     )}
                     <div className="absolute left-[-32px] top-10 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 shadow-inner">
                       <span
-                        className={cn('block h-3.5 w-3.5 rounded-full shadow', severity.indicatorClass)}
+                        className={cn(
+                          'block h-3.5 w-3.5 rounded-full shadow',
+                          severity.indicatorClass
+                        )}
                         aria-hidden="true"
                       />
                     </div>
@@ -191,7 +214,7 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
                         {symptoms.length > 0 ? (
                           <>
-                            {symptoms.slice(0, 3).map((symptom) => (
+                            {symptoms.slice(0, 3).map(symptom => (
                               <Badge
                                 key={symptom}
                                 variant="secondary"
@@ -201,7 +224,9 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                               </Badge>
                             ))}
                             {symptoms.length > 3 && (
-                              <span className="text-muted-foreground">+{symptoms.length - 3} more</span>
+                              <span className="text-muted-foreground">
+                                +{symptoms.length - 3} more
+                              </span>
                             )}
                           </>
                         ) : (
@@ -209,7 +234,9 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                         )}
                       </div>
 
-                      <p className={cn('mt-4 text-xs font-medium', severity.accent)}>{severity.message}</p>
+                      <p className={cn('mt-4 text-xs font-medium', severity.accent)}>
+                        {severity.message}
+                      </p>
                     </div>
                   </div>
                 );
@@ -218,7 +245,10 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
           </div>
         ) : (
           <div className="relative overflow-hidden rounded-2xl border border-dashed border-border/60 bg-card/60 px-8 py-12 text-center text-muted-foreground">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" aria-hidden="true" />
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent"
+              aria-hidden="true"
+            />
             <Clock className="mx-auto mb-4 h-12 w-12 opacity-50" aria-hidden="true" />
             <p className="text-base font-medium text-foreground">No recent activity yet</p>
             <p className="mt-1 text-sm text-muted-foreground">

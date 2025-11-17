@@ -35,7 +35,11 @@ describe('empathy quotient heuristic', () => {
       m({ notes: 'Trying to understand and feel for others today' }),
       m({ notes: 'Regular log without keywords' }),
     ];
-    const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics('u2', [], moods);
+    const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
+      'u2',
+      [],
+      moods
+    );
     // empathyIQ is eq*2 but we want relative check; ensure > baseline*2 (100) when indicators present
     expect(metrics.empathyIntelligence.empathyIQ).toBeGreaterThan(80);
   });
@@ -45,13 +49,23 @@ describe('empathy quotient heuristic', () => {
       m({ notes: 'Neutral entry about breakfast and schedule' }),
       m({ notes: 'Another neutral note with no empathy words' }),
     ];
-    const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics('u3', [], moods);
+    const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
+      'u3',
+      [],
+      moods
+    );
     expect(metrics.empathyIntelligence.empathyIQ).toBeLessThanOrEqual(120);
   });
 
   it('caps score at 100 internally (200 IQ)', async () => {
-    const moods: MoodEntry[] = Array.from({ length: 12 }, (_, i) => m({ notes: 'empathy understand feel for others ' + i }));
-    const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics('u4', [], moods);
+    const moods: MoodEntry[] = Array.from({ length: 12 }, (_, i) =>
+      m({ notes: 'empathy understand feel for others ' + i })
+    );
+    const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
+      'u4',
+      [],
+      moods
+    );
     expect(metrics.empathyIntelligence.empathyIQ).toBeLessThanOrEqual(200);
   });
 });

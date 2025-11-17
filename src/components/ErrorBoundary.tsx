@@ -26,12 +26,14 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render(): ReactNode {
     if (this.state.hasError) {
-      return this.props.fallback || (
-        <div className="error-boundary">
-          <h2>Something went wrong</h2>
-          <p>Please try refreshing the page</p>
-          <button onClick={() => window.location.reload()}>Refresh</button>
-        </div>
+      return (
+        this.props.fallback || (
+          <div className="error-boundary">
+            <h2>Something went wrong</h2>
+            <p>Please try refreshing the page</p>
+            <button onClick={() => window.location.reload()}>Refresh</button>
+          </div>
+        )
       );
     }
 

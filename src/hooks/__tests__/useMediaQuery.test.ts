@@ -66,7 +66,7 @@ describe('useMediaQuery', () => {
 
   it('should update when media query changes', async () => {
     let eventHandler: ((event: MediaQueryListEvent) => void) | undefined;
-    
+
     matchMediaMock.mockReturnValue({
       matches: false,
       media: '(min-width: 768px)',
@@ -83,7 +83,7 @@ describe('useMediaQuery', () => {
     });
 
     const { result } = renderHook(() => useMediaQuery('(min-width: 768px)'));
-    
+
     expect(result.current).toBe(false);
 
     // Simulate media query change
@@ -162,7 +162,7 @@ describe('useResponsive', () => {
     });
 
     const { result } = renderHook(() => useResponsive());
-    
+
     expect(result.current.isMobile).toBe(true);
     expect(result.current.isTablet).toBe(false);
     expect(result.current.isDesktop).toBe(false);
@@ -186,7 +186,7 @@ describe('useResponsive', () => {
     });
 
     const { result } = renderHook(() => useResponsive());
-    
+
     expect(result.current.isMobile).toBe(false);
     expect(result.current.isDesktop).toBe(true);
     expect(result.current.isWidescreen).toBe(true);

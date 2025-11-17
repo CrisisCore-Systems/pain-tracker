@@ -10,7 +10,9 @@ const suggestTagsForText = (text: string): string[] => {
 // import { suggestTagsForText } from '@pain-tracker/services/quickNoteTagger';
 
 export function triggerQuickLog() {
-  const ev = new CustomEvent('quick-log', { detail: { source: 'quick-actions', time: new Date().toISOString() } });
+  const ev = new CustomEvent('quick-log', {
+    detail: { source: 'quick-actions', time: new Date().toISOString() },
+  });
   window.dispatchEvent(ev);
 }
 
@@ -42,8 +44,9 @@ export default function QuickActions() {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Only trigger if not in an input field
       const target = e.target as HTMLElement;
-      const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
-      
+      const isInputField =
+        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+
       if (e.key === 'q' && !isInputField && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
         toggleOpen();
@@ -83,10 +86,10 @@ export default function QuickActions() {
 
         {/* Main FAB */}
         <button
-          aria-label={open ? "Close quick actions" : "Open quick actions (Ctrl+Q)"}
+          aria-label={open ? 'Close quick actions' : 'Open quick actions (Ctrl+Q)'}
           onClick={toggleOpen}
           className="flex items-center justify-center w-14 h-14 rounded-full bg-foreground text-foreground-contrast shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-          title={open ? "Close (Esc)" : "Quick Actions (Ctrl+Q)"}
+          title={open ? 'Close (Esc)' : 'Quick Actions (Ctrl+Q)'}
         >
           <span className="text-xl">{open ? '×' : '✚'}</span>
         </button>

@@ -4,12 +4,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Crown, 
-  Compass, 
-  Target, 
-  Shield, 
-  Settings, 
+import {
+  Crown,
+  Compass,
+  Target,
+  Shield,
+  Settings,
   ChevronRight,
   Check,
   X,
@@ -22,13 +22,18 @@ import {
   Lock,
   Unlock,
   Maximize,
-  Minimize
+  Minimize,
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
 interface AgencyChoice {
   id: string;
-  category: 'data-control' | 'interaction-style' | 'content-filtering' | 'privacy' | 'customization';
+  category:
+    | 'data-control'
+    | 'interaction-style'
+    | 'content-filtering'
+    | 'privacy'
+    | 'customization';
   title: string;
   description: string;
   userBenefit: string;
@@ -65,23 +70,23 @@ const agencyChoices: AgencyChoice[] = [
         label: 'Keep everything on my device',
         description: 'Nothing leaves your device without your explicit permission',
         empowermentMessage: 'You maintain complete privacy and control',
-        icon: Shield
+        icon: Shield,
       },
       {
         id: 'selective-sync',
         label: 'I choose what to share',
         description: 'Select specific data to sync for backup or sharing',
         empowermentMessage: 'You have granular control over your information',
-        icon: Sliders
+        icon: Sliders,
       },
       {
         id: 'full-sync',
         label: 'Sync for convenience',
         description: 'Encrypted sync across devices for easy access',
         empowermentMessage: 'Convenience with security - still your choice',
-        icon: RotateCcw
-      }
-    ]
+        icon: RotateCcw,
+      },
+    ],
   },
   {
     id: 'interaction-autonomy',
@@ -95,23 +100,23 @@ const agencyChoices: AgencyChoice[] = [
         label: 'Gentle suggestions',
         description: 'Soft prompts and optional guidance',
         empowermentMessage: 'Support when you want it, space when you need it',
-        icon: Heart
+        icon: Heart,
       },
       {
         id: 'expert-mode',
         label: 'Direct control',
         description: 'Minimal guidance, maximum control',
         empowermentMessage: 'You are the expert on your own experience',
-        icon: Crown
+        icon: Crown,
       },
       {
         id: 'collaborative',
         label: 'Partnership approach',
         description: 'Work together to understand patterns',
         empowermentMessage: 'Your insights drive the experience',
-        icon: Compass
-      }
-    ]
+        icon: Compass,
+      },
+    ],
   },
   {
     id: 'content-filtering',
@@ -125,23 +130,23 @@ const agencyChoices: AgencyChoice[] = [
         label: 'Focus on possibilities',
         description: 'Emphasize positive trends and potential',
         empowermentMessage: 'Hope and possibility guide your experience',
-        icon: Star
+        icon: Star,
       },
       {
         id: 'practical-focused',
         label: 'Show me actionable insights',
         description: 'Highlight patterns and practical next steps',
         empowermentMessage: 'Knowledge becomes power through action',
-        icon: Target
+        icon: Target,
       },
       {
         id: 'balanced-view',
         label: 'Complete picture',
         description: 'Show all data with context and support',
         empowermentMessage: 'Full information with compassionate framing',
-        icon: Lightbulb
-      }
-    ]
+        icon: Lightbulb,
+      },
+    ],
   },
   {
     id: 'privacy-control',
@@ -155,23 +160,23 @@ const agencyChoices: AgencyChoice[] = [
         label: 'Just for me',
         description: 'No sharing features or suggestions',
         empowermentMessage: 'Your journey is completely private',
-        icon: Lock
+        icon: Lock,
       },
       {
         id: 'healthcare-sharing',
         label: 'Healthcare team access',
         description: 'Easy sharing with your medical providers',
         empowermentMessage: 'You control who sees what, when',
-        icon: Unlock
+        icon: Unlock,
       },
       {
         id: 'community-connection',
         label: 'Connect with others',
         description: 'Optional community features and peer support',
         empowermentMessage: 'Choose your level of connection',
-        icon: User
-      }
-    ]
+        icon: User,
+      },
+    ],
   },
   {
     id: 'customization-level',
@@ -185,30 +190,30 @@ const agencyChoices: AgencyChoice[] = [
         label: 'Keep it simple',
         description: 'Smart defaults with minimal configuration',
         empowermentMessage: 'Simplicity is a choice, not a limitation',
-        icon: Minimize
+        icon: Minimize,
       },
       {
         id: 'customizable',
         label: 'Some customization',
         description: 'Key settings you can adjust as needed',
         empowermentMessage: 'Balance between simplicity and control',
-        icon: Settings
+        icon: Settings,
       },
       {
         id: 'full-control',
         label: 'Maximum customization',
         description: 'Deep control over every aspect of the experience',
         empowermentMessage: 'Every detail reflects your preferences',
-        icon: Maximize
-      }
-    ]
-  }
+        icon: Maximize,
+      },
+    ],
+  },
 ];
 
 export function UserAgencyReinforcementPanel({
   onAgencyChoice,
   onCustomizationChange,
-  showAdvancedControls = false
+  showAdvancedControls = false,
 }: UserControlPanelProps) {
   const [selectedChoices, setSelectedChoices] = useState<Record<string, string>>({});
   const [expandedChoice, setExpandedChoice] = useState<string | null>(null);
@@ -225,7 +230,7 @@ export function UserAgencyReinforcementPanel({
 
   const handleChoiceSelection = (choice: AgencyChoice, optionId: string) => {
     setSelectedChoices(prev => ({ ...prev, [choice.id]: optionId }));
-    
+
     if (onAgencyChoice) {
       onAgencyChoice(choice, optionId);
     }
@@ -250,49 +255,42 @@ export function UserAgencyReinforcementPanel({
           <Crown className="w-6 h-6 text-purple-600" />
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">You're In Control</h2>
         </div>
-        
+
         <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-          Your pain tracking experience should work exactly the way you need it to. 
-          Every choice below puts you in the driver's seat of your health journey.
+          Your pain tracking experience should work exactly the way you need it to. Every choice
+          below puts you in the driver's seat of your health journey.
         </p>
-        
+
         <div className="bg-purple-50 border border-purple-200 rounded-md p-3">
           <p className="text-sm text-purple-800">
-            💜 <strong>Remember:</strong> You can change any of these choices at any time. 
-            There are no wrong answers - only what works best for you right now.
+            💜 <strong>Remember:</strong> You can change any of these choices at any time. There are
+            no wrong answers - only what works best for you right now.
           </p>
         </div>
       </div>
 
       {/* Agency Choices */}
       <div className="space-y-4">
-        {agencyChoices.map((choice) => (
+        {agencyChoices.map(choice => (
           <AgencyChoiceCard
             key={choice.id}
             choice={choice}
             isExpanded={expandedChoice === choice.id}
             selectedOption={selectedChoices[choice.id]}
-            onExpand={() => setExpandedChoice(
-              expandedChoice === choice.id ? null : choice.id
-            )}
-            onOptionSelect={(optionId) => handleChoiceSelection(choice, optionId)}
+            onExpand={() => setExpandedChoice(expandedChoice === choice.id ? null : choice.id)}
+            onOptionSelect={optionId => handleChoiceSelection(choice, optionId)}
           />
         ))}
       </div>
 
       {/* Advanced Controls */}
       {showAdvancedControls && (
-        <AdvancedAgencyControls 
-          onCustomizationChange={onCustomizationChange}
-        />
+        <AdvancedAgencyControls onCustomizationChange={onCustomizationChange} />
       )}
 
       {/* Agency Summary */}
       {Object.keys(selectedChoices).length > 0 && (
-        <AgencySummary 
-          selections={selectedChoices}
-          choices={agencyChoices}
-        />
+        <AgencySummary selections={selectedChoices} choices={agencyChoices} />
       )}
     </div>
   );
@@ -304,7 +302,7 @@ function AgencyChoiceCard({
   isExpanded,
   selectedOption,
   onExpand,
-  onOptionSelect
+  onOptionSelect,
 }: {
   choice: AgencyChoice;
   isExpanded: boolean;
@@ -324,27 +322,23 @@ function AgencyChoiceCard({
       >
         <div className="flex items-center justify-between">
           <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
-              {choice.title}
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              {choice.description}
-            </p>
-            
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{choice.title}</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{choice.description}</p>
+
             {selectedOpt && (
               <div className="flex items-center space-x-2">
                 <Check className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-green-700">
-                  {selectedOpt.label}
-                </span>
+                <span className="text-sm font-medium text-green-700">{selectedOpt.label}</span>
               </div>
             )}
           </div>
-          
-          <ChevronRight className={`
+
+          <ChevronRight
+            className={`
             w-5 h-5 text-gray-400 transition-transform
             ${isExpanded ? 'rotate-90' : ''}
-          `} />
+          `}
+          />
         </div>
       </TouchOptimizedButton>
 
@@ -356,47 +350,48 @@ function AgencyChoiceCard({
               <strong>Why this matters:</strong> {choice.userBenefit}
             </p>
           </div>
-          
+
           <div className="space-y-3">
-            {choice.options.map((option) => {
+            {choice.options.map(option => {
               const Icon = option.icon;
               const isSelected = selectedOption === option.id;
-              
+
               return (
                 <TouchOptimizedButton
                   key={option.id}
-                  variant={isSelected ? "primary" : "secondary"}
+                  variant={isSelected ? 'primary' : 'secondary'}
                   onClick={() => onOptionSelect(option.id)}
                   className={`
                     w-full p-4 text-left border-2 rounded-lg transition-all
-                    ${isSelected 
-                      ? 'border-purple-300 bg-purple-50' 
-                      : 'border-gray-200 hover:border-purple-200'
+                    ${
+                      isSelected
+                        ? 'border-purple-300 bg-purple-50'
+                        : 'border-gray-200 hover:border-purple-200'
                     }
                   `}
                 >
                   <div className="flex items-start space-x-3">
                     {Icon && (
-                      <Icon className={`
+                      <Icon
+                        className={`
                         w-5 h-5 mt-0.5
                         ${isSelected ? 'text-purple-600' : 'text-gray-600'}
-                      `} />
+                      `}
+                      />
                     )}
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <h4 className="font-medium text-gray-900 dark:text-gray-100">
                           {option.label}
                         </h4>
-                        {isSelected && (
-                          <Check className="w-4 h-4 text-purple-600" />
-                        )}
+                        {isSelected && <Check className="w-4 h-4 text-purple-600" />}
                       </div>
-                      
+
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                         {option.description}
                       </p>
-                      
+
                       {isSelected && (
                         <div className="p-2 bg-white/70 rounded-md">
                           <p className="text-xs text-purple-700 italic">
@@ -419,11 +414,11 @@ function AgencyChoiceCard({
 // Agency affirmation popup
 function AgencyAffirmation({ onClose }: { onClose: () => void }) {
   const affirmations = [
-    "You are the expert on your own experience",
-    "Your choices and preferences matter",
-    "Taking control of your health journey shows strength",
-    "You have the right to customize your care experience",
-    "Your autonomy and agency are respected here"
+    'You are the expert on your own experience',
+    'Your choices and preferences matter',
+    'Taking control of your health journey shows strength',
+    'You have the right to customize your care experience',
+    'Your autonomy and agency are respected here',
   ];
 
   const randomAffirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
@@ -433,12 +428,8 @@ function AgencyAffirmation({ onClose }: { onClose: () => void }) {
       <div className="flex items-start space-x-3">
         <Crown className="w-5 h-5 text-purple-600 mt-0.5" />
         <div className="flex-1">
-          <h4 className="font-medium text-purple-900 mb-1">
-            Your Agency Matters
-          </h4>
-          <p className="text-sm text-purple-800 italic">
-            {randomAffirmation}
-          </p>
+          <h4 className="font-medium text-purple-900 mb-1">Your Agency Matters</h4>
+          <p className="text-sm text-purple-800 italic">{randomAffirmation}</p>
         </div>
         <TouchOptimizedButton
           variant="secondary"
@@ -454,7 +445,7 @@ function AgencyAffirmation({ onClose }: { onClose: () => void }) {
 
 // Advanced agency controls
 function AdvancedAgencyControls({
-  onCustomizationChange
+  onCustomizationChange,
 }: {
   onCustomizationChange?: (setting: string, value: string | number | boolean) => void;
 }) {
@@ -462,7 +453,7 @@ function AdvancedAgencyControls({
     dataRetention: 'user-controlled',
     exportFormat: 'comprehensive',
     reminderStyle: 'gentle',
-    progressVisualization: 'holistic'
+    progressVisualization: 'holistic',
   });
 
   const handleSettingChange = (setting: string, value: string) => {
@@ -480,7 +471,7 @@ function AdvancedAgencyControls({
           Advanced Control Options
         </h3>
       </div>
-      
+
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -488,7 +479,7 @@ function AdvancedAgencyControls({
           </label>
           <select
             value={advancedSettings.dataRetention}
-            onChange={(e) => handleSettingChange('dataRetention', e.target.value)}
+            onChange={e => handleSettingChange('dataRetention', e.target.value)}
             className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-purple-500"
           >
             <option value="user-controlled">I control everything</option>
@@ -506,7 +497,7 @@ function AdvancedAgencyControls({
           </label>
           <select
             value={advancedSettings.exportFormat}
-            onChange={(e) => handleSettingChange('exportFormat', e.target.value)}
+            onChange={e => handleSettingChange('exportFormat', e.target.value)}
             className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-purple-500"
           >
             <option value="comprehensive">Complete data with context</option>
@@ -525,7 +516,7 @@ function AdvancedAgencyControls({
 // Agency choices summary
 function AgencySummary({
   selections,
-  choices
+  choices,
 }: {
   selections: Record<string, string>;
   choices: AgencyChoice[];
@@ -534,41 +525,37 @@ function AgencySummary({
     <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-6 mt-6">
       <div className="flex items-center space-x-2 mb-4">
         <Star className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-purple-900">
-          Your Agency in Action
-        </h3>
+        <h3 className="text-lg font-semibold text-purple-900">Your Agency in Action</h3>
       </div>
-      
+
       <p className="text-purple-800 mb-4">
-        You've made {Object.keys(selections).length} choices that put you in control of your experience:
+        You've made {Object.keys(selections).length} choices that put you in control of your
+        experience:
       </p>
-      
+
       <div className="space-y-2">
         {Object.entries(selections).map(([choiceId, optionId]) => {
           const choice = choices.find(c => c.id === choiceId);
           const option = choice?.options.find(o => o.id === optionId);
-          
+
           if (!choice || !option) return null;
-          
+
           return (
             <div key={choiceId} className="bg-white/70 rounded-md p-3">
               <div className="flex items-center space-x-2">
                 <Check className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-medium text-purple-900">
-                  {choice.title}:
-                </span>
-                <span className="text-sm text-purple-700">
-                  {option.label}
-                </span>
+                <span className="text-sm font-medium text-purple-900">{choice.title}:</span>
+                <span className="text-sm text-purple-700">{option.label}</span>
               </div>
             </div>
           );
         })}
       </div>
-      
+
       <div className="mt-4 p-3 bg-white/50 rounded-md">
         <p className="text-sm text-purple-800 italic">
-          Remember: You can change any of these choices at any time. Your agency and autonomy are always respected.
+          Remember: You can change any of these choices at any time. Your agency and autonomy are
+          always respected.
         </p>
       </div>
     </div>

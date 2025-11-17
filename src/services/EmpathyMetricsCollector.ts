@@ -6,7 +6,12 @@ import { AuditLogger } from './AuditLogger';
 import { createHmac } from 'crypto';
 import type { AuditEvent } from './SecureAuditSink';
 import type { PainEntry } from '../types';
-import type { MoodEntry, QuantifiedEmpathyMetrics, EmpathyInsight, EmpathyRecommendation } from '../types/quantified-empathy';
+import type {
+  MoodEntry,
+  QuantifiedEmpathyMetrics,
+  EmpathyInsight,
+  EmpathyRecommendation,
+} from '../types/quantified-empathy';
 
 export interface EmpathyCollectionOptions {
   userId: string;
@@ -27,14 +32,14 @@ export interface EmpathyCollectionResult {
 // Extended PII-ish pattern set (conservative; expand as needed)
 const PII_PATTERNS: RegExp[] = [
   /\b\d{3}-\d{3}-\d{4}\b/g, // phone (US-like)
-  /\b\+?\d{7,15}\b/g,        // international-ish phone numbers
-  /\b\d{10}\b/g,             // raw 10 digit
+  /\b\+?\d{7,15}\b/g, // international-ish phone numbers
+  /\b\d{10}\b/g, // raw 10 digit
   /\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g, // credit cards
   /\b\d{3}-\d{2}-\d{4}\b/g, // SSN / SIN style IDs
   /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, // email
   /\b(?:street|st\.|ave|road|rd\.|drive|dr\.|lane|ln\.|boulevard|blvd|suite|unit|apt)\b/gi, // address hints
   /\b\d{3}\s?\d{2}\s?\d{4}\b/g, // other common national id formats (loose)
-  /\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\b/g // UUIDs
+  /\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}\b/g, // UUIDs
 ];
 
 const DEFAULT_NOISE_EPSILON = 1.0;
@@ -45,14 +50,22 @@ type SanitizedResult<T> = { value: T; redactions: number };
 
 type SinkLike = {
   append?: (event: Partial<AuditEvent>) => Promise<AuditEvent>;
-  log?: (event: { timestamp: string; eventType: string; userId?: string; details?: Record<string, unknown> }) => Promise<void>;
+  log?: (event: {
+    timestamp: string;
+    eventType: string;
+    userId?: string;
+    details?: Record<string, unknown>;
+  }) => Promise<void>;
 };
 
 function sanitizeText(input: string): { text: string; redactions: number } {
   let redactions = 0;
   let output = input.slice(0, 2000); // length cap
   for (const pattern of PII_PATTERNS) {
-    output = output.replace(pattern, () => { redactions++; return '[REDACTED]'; });
+    output = output.replace(pattern, () => {
+      redactions++;
+      return '[REDACTED]';
+    });
   }
   output = output.replace(/[^\S\r\n]{2,}/g, ' ');
   output = output.replace(/\n{3,}/g, '\n\n');
@@ -71,7 +84,7 @@ function sanitizeDeep<T>(input: T): SanitizedResult<T> {
 
     if (Array.isArray(value)) {
       let total = 0;
-      const sanitized = value.map((item) => {
+      const sanitized = value.map(item => {
         const result = walk(item);
         total += result.redactions;
         return result.value;
@@ -109,7 +122,10 @@ function sanitizeDeep<T>(input: T): SanitizedResult<T> {
   return { value: result.value as T, redactions: result.redactions };
 }
 
-function normalizeEpsilon(requested: number | undefined, minimumFromConfig: number | undefined): number {
+function normalizeEpsilon(
+  requested: number | undefined,
+  minimumFromConfig: number | undefined
+): number {
   const min = Math.max(MIN_NOISE_EPSILON, minimumFromConfig ?? MIN_NOISE_EPSILON);
   if (!Number.isFinite(requested)) {
     return Math.max(min, DEFAULT_NOISE_EPSILON);
@@ -182,18 +198,24 @@ function addNoise(value: number, epsilon: number, sensitivity = 1): number {
 export class EmpathyMetricsCollector {
   constructor(
     private security: SecurityService,
-    private analytics: EmpathyDrivenAnalyticsService
-  , private budgetManager?: PrivacyBudgetManager
-  , private keyManager?: KeyManager
-  , private auditLogger?: AuditLogger
+    private analytics: EmpathyDrivenAnalyticsService,
+    private budgetManager?: PrivacyBudgetManager,
+    private keyManager?: KeyManager,
+    private auditLogger?: AuditLogger
   ) {}
 
   async collect(
     painEntries: PainEntry[],
     moodEntries: MoodEntry[],
     options: EmpathyCollectionOptions
-  ): Promise< EmpathyCollectionResult > {
-    const { userId, consentGranted, sanitize = true, differentialPrivacy = false, noiseEpsilon = DEFAULT_NOISE_EPSILON } = options;
+  ): Promise<EmpathyCollectionResult> {
+    const {
+      userId,
+      consentGranted,
+      sanitize = true,
+      differentialPrivacy = false,
+      noiseEpsilon = DEFAULT_NOISE_EPSILON,
+    } = options;
 
     if (this.security && this.security['privacyConfig']?.consentRequired && !consentGranted) {
       throw new Error('Consent required before collecting empathy metrics.');
@@ -201,24 +223,33 @@ export class EmpathyMetricsCollector {
 
     let redactions = 0;
     const safePain = sanitize
-      ? painEntries.map((entry) => {
+      ? painEntries.map(entry => {
           const result = sanitizeDeep(entry);
           redactions += result.redactions;
           return result.value;
         })
-      : painEntries.map((entry) => ({ ...entry }));
+      : painEntries.map(entry => ({ ...entry }));
 
     const safeMood = sanitize
-      ? moodEntries.map((entry) => {
+      ? moodEntries.map(entry => {
           const result = sanitizeDeep(entry);
           redactions += result.redactions;
           return result.value;
         })
-      : moodEntries.map((entry) => ({ ...entry }));
+      : moodEntries.map(entry => ({ ...entry }));
 
     const metrics = await this.analytics.calculateQuantifiedEmpathy(userId, safePain, safeMood);
-    const insights = await this.analytics.generateEmpathyInsights(userId, metrics, safePain, safeMood);
-    const recommendations = await this.analytics.generateEmpathyRecommendations(userId, metrics, insights);
+    const insights = await this.analytics.generateEmpathyInsights(
+      userId,
+      metrics,
+      safePain,
+      safeMood
+    );
+    const recommendations = await this.analytics.generateEmpathyRecommendations(
+      userId,
+      metrics,
+      insights
+    );
 
     // Range guard + optional noise (respect privacy budget if provided)
     let noiseInjected = false;
@@ -233,12 +264,12 @@ export class EmpathyMetricsCollector {
         epsilonForNoise = allowed ? normalizedEpsilon : 0;
         await this.logBudgetEvent(userId, allowed ? 'dp_budget_consumption' : 'dp_budget_denied', {
           requestedEpsilon: normalizedEpsilon,
-          consumed: allowed
+          consumed: allowed,
         });
       } else {
         await this.logBudgetEvent(userId, 'dp_budget_skipped', {
           requestedEpsilon: noiseEpsilon,
-          reason: 'non_positive_epsilon'
+          reason: 'non_positive_epsilon',
         });
       }
     }
@@ -248,7 +279,11 @@ export class EmpathyMetricsCollector {
     return { metrics: guarded, insights, recommendations, redactions, noiseInjected };
   }
 
-  private guardMetrics(metrics: QuantifiedEmpathyMetrics, noisy: boolean, epsilon: number): QuantifiedEmpathyMetrics {
+  private guardMetrics(
+    metrics: QuantifiedEmpathyMetrics,
+    noisy: boolean,
+    epsilon: number
+  ): QuantifiedEmpathyMetrics {
     const clamp = (v: number) => Math.min(100, Math.max(0, v));
 
     // Iterate shallow numeric leaves (manually for key sections to avoid perf cost)
@@ -258,23 +293,90 @@ export class EmpathyMetricsCollector {
       return addNoise(clamp(v), epsilon, sensitivity);
     };
 
-  const emotionalIntelligence: typeof metrics.emotionalIntelligence = { ...metrics.emotionalIntelligence };
-    (['selfAwareness','selfRegulation','motivation','empathy','socialSkills','emotionalGranularity','metaEmotionalAwareness'] as const)
-  .forEach(k => { emotionalIntelligence[k] = applyNoiseMaybe(emotionalIntelligence[k], `emotionalIntelligence.${k}`); });
+    const emotionalIntelligence: typeof metrics.emotionalIntelligence = {
+      ...metrics.emotionalIntelligence,
+    };
+    (
+      [
+        'selfAwareness',
+        'selfRegulation',
+        'motivation',
+        'empathy',
+        'socialSkills',
+        'emotionalGranularity',
+        'metaEmotionalAwareness',
+      ] as const
+    ).forEach(k => {
+      emotionalIntelligence[k] = applyNoiseMaybe(
+        emotionalIntelligence[k],
+        `emotionalIntelligence.${k}`
+      );
+    });
 
-  const compassionateProgress: typeof metrics.compassionateProgress = { ...metrics.compassionateProgress };
-    (['selfCompassion','selfCriticism','progressCelebration','setbackResilience','hopefulness','postTraumaticGrowth','meaningMaking','adaptiveReframing','compassionFatigue'] as const)
-  .forEach(k => { compassionateProgress[k] = applyNoiseMaybe(compassionateProgress[k], `compassionateProgress.${k}`); });
+    const compassionateProgress: typeof metrics.compassionateProgress = {
+      ...metrics.compassionateProgress,
+    };
+    (
+      [
+        'selfCompassion',
+        'selfCriticism',
+        'progressCelebration',
+        'setbackResilience',
+        'hopefulness',
+        'postTraumaticGrowth',
+        'meaningMaking',
+        'adaptiveReframing',
+        'compassionFatigue',
+      ] as const
+    ).forEach(k => {
+      compassionateProgress[k] = applyNoiseMaybe(
+        compassionateProgress[k],
+        `compassionateProgress.${k}`
+      );
+    });
 
-  const empathyKPIs: typeof metrics.empathyKPIs = { ...metrics.empathyKPIs };
-    (['validationReceived','validationGiven','emotionalSupport','understandingFelt','connectionQuality','empathicAccuracy','empathicConcern','perspectiveTaking','empathicMotivation','boundaryMaintenance'] as const)
-  .forEach(k => { empathyKPIs[k] = applyNoiseMaybe(empathyKPIs[k], `empathyKPIs.${k}`); });
+    const empathyKPIs: typeof metrics.empathyKPIs = { ...metrics.empathyKPIs };
+    (
+      [
+        'validationReceived',
+        'validationGiven',
+        'emotionalSupport',
+        'understandingFelt',
+        'connectionQuality',
+        'empathicAccuracy',
+        'empathicConcern',
+        'perspectiveTaking',
+        'empathicMotivation',
+        'boundaryMaintenance',
+      ] as const
+    ).forEach(k => {
+      empathyKPIs[k] = applyNoiseMaybe(empathyKPIs[k], `empathyKPIs.${k}`);
+    });
 
-  const humanizedMetrics: typeof metrics.humanizedMetrics = { ...metrics.humanizedMetrics };
-    (['courageScore','vulnerabilityAcceptance','authenticityLevel','growthMindset','innerStrength','dignityMaintenance','purposeClarity','spiritualWellbeing','lifeNarrativeCoherence'] as const)
-  .forEach(k => { humanizedMetrics[k] = applyNoiseMaybe(humanizedMetrics[k], `humanizedMetrics.${k}`); });
+    const humanizedMetrics: typeof metrics.humanizedMetrics = { ...metrics.humanizedMetrics };
+    (
+      [
+        'courageScore',
+        'vulnerabilityAcceptance',
+        'authenticityLevel',
+        'growthMindset',
+        'innerStrength',
+        'dignityMaintenance',
+        'purposeClarity',
+        'spiritualWellbeing',
+        'lifeNarrativeCoherence',
+      ] as const
+    ).forEach(k => {
+      humanizedMetrics[k] = applyNoiseMaybe(humanizedMetrics[k], `humanizedMetrics.${k}`);
+    });
 
-    return { ...metrics, emotionalIntelligence, compassionateProgress, empathyKPIs, humanizedMetrics };
+    return {
+      ...metrics,
+      emotionalIntelligence,
+      compassionateProgress,
+      empathyKPIs,
+      humanizedMetrics,
+    };
   }
 
   private async consumePrivacyBudget(userId: string, epsilon: number): Promise<boolean> {
@@ -283,7 +385,12 @@ export class EmpathyMetricsCollector {
     }
 
     try {
-      const outcome = (this.budgetManager.consume as unknown as (id: string, eps: number) => boolean | Promise<boolean>)(userId, epsilon);
+      const outcome = (
+        this.budgetManager.consume as unknown as (
+          id: string,
+          eps: number
+        ) => boolean | Promise<boolean>
+      )(userId, epsilon);
       if (outcome && typeof (outcome as Promise<boolean>).then === 'function') {
         return await outcome;
       }
@@ -291,13 +398,17 @@ export class EmpathyMetricsCollector {
     } catch (error) {
       await this.logBudgetEvent(userId, 'dp_budget_error', {
         requestedEpsilon: epsilon,
-        error: error instanceof Error ? error.message : String(error)
+        error: error instanceof Error ? error.message : String(error),
       });
       return false;
     }
   }
 
-  private async logBudgetEvent(userId: string, eventType: string, details: Record<string, unknown>): Promise<void> {
+  private async logBudgetEvent(
+    userId: string,
+    eventType: string,
+    details: Record<string, unknown>
+  ): Promise<void> {
     if (!this.auditLogger) {
       return;
     }
@@ -310,7 +421,13 @@ export class EmpathyMetricsCollector {
         const auditKey = await this.keyManager.getKey('audit');
         const hmac = createHmac('sha256', auditKey).update(userId).digest('base64');
         if (sink?.append) {
-          await sink.append({ eventId: String(Date.now()), timestamp, eventType, userIdHmac: hmac, details });
+          await sink.append({
+            eventId: String(Date.now()),
+            timestamp,
+            eventType,
+            userIdHmac: hmac,
+            details,
+          });
           return;
         }
         if (sink?.log) {
@@ -323,7 +440,7 @@ export class EmpathyMetricsCollector {
             timestamp: new Date().toISOString(),
             eventType: 'dp_budget_audit_failure',
             userId,
-            details: { error: error instanceof Error ? error.message : String(error) }
+            details: { error: error instanceof Error ? error.message : String(error) },
           });
         }
         return;
@@ -337,6 +454,9 @@ export class EmpathyMetricsCollector {
 }
 
 // Factory helper
-export function createEmpathyCollector(security: SecurityService, analytics: EmpathyDrivenAnalyticsService) {
+export function createEmpathyCollector(
+  security: SecurityService,
+  analytics: EmpathyDrivenAnalyticsService
+) {
   return new EmpathyMetricsCollector(security, analytics);
 }

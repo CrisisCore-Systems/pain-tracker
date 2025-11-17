@@ -14,19 +14,19 @@ interface HelpHintProps {
   onDismiss?: () => void;
 }
 
-export function HelpHint({ 
-  message, 
-  type = 'tip', 
-  persistKey, 
+export function HelpHint({
+  message,
+  type = 'tip',
+  persistKey,
   className = '',
-  onDismiss 
+  onDismiss,
 }: HelpHintProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   // Check if hint was previously dismissed
   useEffect(() => {
     if (persistKey) {
-  const dismissed = secureStorage.get<string>(`hint-dismissed-${persistKey}`);
+      const dismissed = secureStorage.get<string>(`hint-dismissed-${persistKey}`);
       if (dismissed === 'true') {
         setIsVisible(false);
       }
@@ -35,12 +35,12 @@ export function HelpHint({
 
   const handleDismiss = () => {
     setIsVisible(false);
-    
+
     // Remember dismissal if persistKey is provided
     if (persistKey) {
-  secureStorage.set(`hint-dismissed-${persistKey}`, 'true');
+      secureStorage.set(`hint-dismissed-${persistKey}`, 'true');
     }
-    
+
     onDismiss?.();
   };
 
@@ -86,19 +86,17 @@ export function HelpHint({
   if (!isVisible) return null;
 
   return (
-    <div 
+    <div
       className={`flex items-start space-x-3 p-4 rounded-lg border ${getStyles()} ${className}`}
       role="note"
       aria-live="polite"
     >
-      <div className={`flex-shrink-0 ${getIconStyles()}`}>
-        {getIcon()}
-      </div>
-      
+      <div className={`flex-shrink-0 ${getIconStyles()}`}>{getIcon()}</div>
+
       <div className="flex-1 min-w-0">
         <p className="text-sm">{message}</p>
       </div>
-      
+
       <button
         onClick={handleDismiss}
         className="flex-shrink-0 text-current hover:opacity-70 transition-opacity"

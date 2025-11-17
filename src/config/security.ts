@@ -52,28 +52,28 @@ export const securityConfig = {
       "'self'",
       "'unsafe-inline'", // Only for development - remove in production
       "'unsafe-eval'", // Only for development - remove in production
-      "https://cdn.jsdelivr.net", // For any CDN dependencies
+      'https://cdn.jsdelivr.net', // For any CDN dependencies
     ],
     styleSrc: [
       "'self'",
       "'unsafe-inline'", // Required for CSS-in-JS and inline styles
-      "https://fonts.googleapis.com",
+      'https://fonts.googleapis.com',
     ],
     fontSrc: [
       "'self'",
-      "https://fonts.gstatic.com",
-      "data:", // For base64 encoded fonts
+      'https://fonts.gstatic.com',
+      'data:', // For base64 encoded fonts
     ],
     imgSrc: [
       "'self'",
-      "data:", // For base64 encoded images
-      "blob:", // For generated images
+      'data:', // For base64 encoded images
+      'blob:', // For generated images
     ],
     connectSrc: [
       "'self'",
-      "ws://localhost:*", // For development HMR
-      "wss://localhost:*",
-      "https://api.wcb.gov", // WCB API endpoint
+      'ws://localhost:*', // For development HMR
+      'wss://localhost:*',
+      'https://api.wcb.gov', // WCB API endpoint
     ],
     mediaSrc: ["'self'"],
     objectSrc: ["'none'"],
@@ -88,16 +88,16 @@ export const securityConfig = {
   securityHeaders: {
     // Prevent MIME type sniffing
     'X-Content-Type-Options': 'nosniff',
-    
+
     // Prevent clickjacking
     'X-Frame-Options': 'DENY',
-    
+
     // XSS Protection (legacy browsers)
     'X-XSS-Protection': '1; mode=block',
-    
+
     // Referrer policy
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    
+
     // Permissions policy (feature policy)
     'Permissions-Policy': [
       'camera=()',
@@ -107,10 +107,10 @@ export const securityConfig = {
       'usb=()',
       'bluetooth=()',
     ].join(', '),
-    
+
     // HSTS (HTTP Strict Transport Security)
     'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-    
+
     // Expect-CT header
     'Expect-CT': 'max-age=86400, enforce',
   },
@@ -123,7 +123,7 @@ export const securityConfig = {
       allowInlineStyles: true,
       allowEval: true,
       enableSourceMaps: true,
-      allowHMR: true
+      allowHMR: true,
     } as DevelopmentEnvConfig,
     staging: {
       env: 'staging',
@@ -131,7 +131,7 @@ export const securityConfig = {
       allowInlineStyles: true,
       allowEval: false,
       enableSourceMaps: true,
-      allowHMR: false
+      allowHMR: false,
     } as StagingEnvConfig,
     production: {
       env: 'production',
@@ -141,7 +141,7 @@ export const securityConfig = {
       enableSourceMaps: false,
       allowHMR: false,
       enableHSTS: true,
-      enableCSP: true
+      enableCSP: true,
     } as ProductionEnvConfig,
   },
 
@@ -153,7 +153,7 @@ export const securityConfig = {
       max: 100, // Limit each IP to 100 requests per windowMs
       message: 'Too many requests from this IP, please try again later.',
     },
-    
+
     // CORS configuration
     cors: ((): CorsConfig => {
       const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
@@ -164,17 +164,20 @@ export const securityConfig = {
         } catch {
           // import.meta not available, fall through to process.env
         }
-        if (typeof process !== 'undefined' && process.env) return process.env as Record<string, string | undefined>;
+        if (typeof process !== 'undefined' && process.env)
+          return process.env as Record<string, string | undefined>;
         return {} as Record<string, string | undefined>;
       })();
       const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
       return {
-        origin: isProd ? ['https://your-domain.com'] : ['http://localhost:5173', 'http://localhost:3000'],
+        origin: isProd
+          ? ['https://your-domain.com']
+          : ['http://localhost:5173', 'http://localhost:3000'],
         credentials: true,
         optionsSuccessStatus: 200,
       };
     })(),
-    
+
     // Request validation
     validation: {
       maxRequestSize: '10mb',
@@ -197,7 +200,7 @@ export const securityConfig = {
       ivLength: 16,
       iterations: 10000,
     },
-    
+
     // Session security
     session: ((): SessionConfig => {
       const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
@@ -208,7 +211,8 @@ export const securityConfig = {
         } catch {
           // import.meta not available, fall through to process.env
         }
-        if (typeof process !== 'undefined' && process.env) return process.env as Record<string, string | undefined>;
+        if (typeof process !== 'undefined' && process.env)
+          return process.env as Record<string, string | undefined>;
         return {} as Record<string, string | undefined>;
       })();
       const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
@@ -219,7 +223,7 @@ export const securityConfig = {
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
       };
     })(),
-    
+
     // Local storage encryption
     localStorage: {
       enableEncryption: true,
@@ -238,7 +242,7 @@ export const securityConfig = {
       minimumAggregationSize: 5,
       anonymizeIPs: true,
     },
-    
+
     // Tracking prevention
     tracking: {
       blockThirdPartyTrackers: true,
@@ -250,7 +254,11 @@ export const securityConfig = {
   // Security monitoring
   monitoring: {
     // Error reporting
-    errorReporting: ((): { enableStackTraces: boolean; sanitizeErrors: boolean; logSecurityEvents: boolean } => {
+    errorReporting: ((): {
+      enableStackTraces: boolean;
+      sanitizeErrors: boolean;
+      logSecurityEvents: boolean;
+    } => {
       const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
         try {
           if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
@@ -259,7 +267,8 @@ export const securityConfig = {
         } catch {
           // import.meta not available, fall through to process.env
         }
-        if (typeof process !== 'undefined' && process.env) return process.env as Record<string, string | undefined>;
+        if (typeof process !== 'undefined' && process.env)
+          return process.env as Record<string, string | undefined>;
         return {} as Record<string, string | undefined>;
       })();
       const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
@@ -269,7 +278,7 @@ export const securityConfig = {
         logSecurityEvents: true,
       };
     })(),
-    
+
     // Audit logging
     audit: {
       logAuthenticationEvents: true,
@@ -286,12 +295,12 @@ export const securityConfig = {
 export function generateCSPHeader(environment: EnvironmentName = 'production'): string {
   const csp = securityConfig.contentSecurityPolicy;
   const envConfig = securityConfig.environments[environment];
-  
+
   const directives: string[] = [];
-  
+
   // Default source
   directives.push(`default-src ${csp.defaultSrc.join(' ')}`);
-  
+
   // Script source
   let scriptSrc = [...csp.scriptSrc];
   if (!envConfig.allowInlineScripts) {
@@ -301,14 +310,14 @@ export function generateCSPHeader(environment: EnvironmentName = 'production'): 
     scriptSrc = scriptSrc.filter(src => src !== "'unsafe-eval'");
   }
   directives.push(`script-src ${scriptSrc.join(' ')}`);
-  
+
   // Style source
   let styleSrc = [...csp.styleSrc];
   if (!envConfig.allowInlineStyles) {
     styleSrc = styleSrc.filter(src => src !== "'unsafe-inline'");
   }
   directives.push(`style-src ${styleSrc.join(' ')}`);
-  
+
   // Other directives
   directives.push(`font-src ${csp.fontSrc.join(' ')}`);
   directives.push(`img-src ${csp.imgSrc.join(' ')}`);
@@ -319,29 +328,31 @@ export function generateCSPHeader(environment: EnvironmentName = 'production'): 
   directives.push(`frame-ancestors ${csp.frameAncestors.join(' ')}`);
   directives.push(`form-action ${csp.formAction.join(' ')}`);
   directives.push(`base-uri ${csp.baseUri.join(' ')}`);
-  
+
   if (csp.upgradeInsecureRequests) {
     directives.push('upgrade-insecure-requests');
   }
-  
+
   return directives.join('; ');
 }
 
 /**
  * Get security headers for environment
  */
-export function getSecurityHeaders(environment: EnvironmentName = 'production'): Record<string, string> {
+export function getSecurityHeaders(
+  environment: EnvironmentName = 'production'
+): Record<string, string> {
   const headers: Record<string, string> = {
     ...securityConfig.securityHeaders,
     'Content-Security-Policy': generateCSPHeader(environment),
   };
-  
+
   // Remove HSTS in development
   if (environment === 'development') {
     delete headers['Strict-Transport-Security'];
     delete headers['Expect-CT'];
   }
-  
+
   return headers;
 }
 
@@ -355,7 +366,7 @@ export function validateSecurityConfig(): {
 } {
   const issues: string[] = [];
   const recommendations: string[] = [];
-  
+
   // Check environment variables
   const _env = ((): any => {
     try {
@@ -369,7 +380,7 @@ export function validateSecurityConfig(): {
     return {};
   })();
 
-  if ((_env.NODE_ENV === 'production' || _env.MODE === 'production')) {
+  if (_env.NODE_ENV === 'production' || _env.MODE === 'production') {
     if (!_env.VITE_WCB_API_ENDPOINT || _env.VITE_WCB_API_ENDPOINT.startsWith('http://')) {
       issues.push('Production API endpoint should use HTTPS');
       recommendations.push('Set VITE_WCB_API_ENDPOINT to use https://');
@@ -380,31 +391,37 @@ export function validateSecurityConfig(): {
       recommendations.push('Set VITE_ENABLE_DEBUG_MODE=false for production');
     }
   }
-  
+
   // Check CSP configuration
   const csp = securityConfig.contentSecurityPolicy;
-  if (csp.scriptSrc.includes("'unsafe-eval'") && ((_env.NODE_ENV === 'production') || (_env.MODE === 'production'))) {
+  if (
+    csp.scriptSrc.includes("'unsafe-eval'") &&
+    (_env.NODE_ENV === 'production' || _env.MODE === 'production')
+  ) {
     issues.push("'unsafe-eval' should not be allowed in production CSP");
     recommendations.push("Remove 'unsafe-eval' from script-src in production");
   }
-  
-  if (csp.scriptSrc.includes("'unsafe-inline'") && ((_env.NODE_ENV === 'production') || (_env.MODE === 'production'))) {
+
+  if (
+    csp.scriptSrc.includes("'unsafe-inline'") &&
+    (_env.NODE_ENV === 'production' || _env.MODE === 'production')
+  ) {
     issues.push("'unsafe-inline' should not be allowed in production CSP");
     recommendations.push("Remove 'unsafe-inline' from script-src in production or use nonces");
   }
-  
+
   // Check data protection settings
   if (!securityConfig.dataProtection.localStorage.enableEncryption) {
     issues.push('Local storage encryption is disabled');
     recommendations.push('Enable localStorage encryption for sensitive data');
   }
-  
+
   // Check privacy settings
   if (!securityConfig.privacy.analytics.enableDifferentialPrivacy) {
     issues.push('Differential privacy is disabled for analytics');
     recommendations.push('Enable differential privacy to protect user data');
   }
-  
+
   return {
     isValid: issues.length === 0,
     issues,
@@ -438,11 +455,11 @@ export const securityMiddlewareConfig = {
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     xssFilter: true,
   },
-  
+
   cors: securityConfig.apiSecurity.cors,
-  
+
   rateLimit: securityConfig.apiSecurity.rateLimit,
-  
+
   compression: {
     level: 6,
     threshold: 1024,

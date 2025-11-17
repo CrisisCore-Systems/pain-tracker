@@ -8,15 +8,17 @@ import {
 
 /**
  * Global Accessibility Hook
- * 
+ *
  * Initializes and maintains accessibility features across the application.
  * Should be called once at the app level.
  */
-export const useGlobalAccessibility = (options: {
-  enableValidation?: boolean;
-  enableAutoLabeling?: boolean;
-  announceRouteChanges?: boolean;
-} = {}) => {
+export const useGlobalAccessibility = (
+  options: {
+    enableValidation?: boolean;
+    enableAutoLabeling?: boolean;
+    announceRouteChanges?: boolean;
+  } = {}
+) => {
   const {
     enableValidation = process.env.NODE_ENV === 'development',
     enableAutoLabeling = true,
@@ -42,11 +44,11 @@ export const useGlobalAccessibility = (options: {
     if (enableValidation) {
       const validateInterval = setInterval(() => {
         const { errors, warnings } = validateARIA();
-        
+
         if (errors.length > 0) {
           console.error('ARIA Validation Errors:', errors);
         }
-        
+
         if (warnings.length > 0) {
           console.warn('ARIA Validation Warnings:', warnings);
         }
@@ -59,8 +61,8 @@ export const useGlobalAccessibility = (options: {
   useEffect(() => {
     // Announce route changes
     if (announceRouteChanges) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
           if (mutation.type === 'childList' && mutation.target === document.body) {
             const title = document.title;
             announceToScreenReader(`Navigated to: ${title}`, 'polite', 1000);

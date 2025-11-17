@@ -5,7 +5,16 @@
 
 import React, { useState, useEffect, ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { ChevronDown, ChevronRight, Eye, EyeOff, Heart, Shield, Clock, RefreshCw } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  Eye,
+  EyeOff,
+  Heart,
+  Shield,
+  Clock,
+  RefreshCw,
+} from 'lucide-react';
 import { useTraumaInformed } from './TraumaInformedHooks';
 
 // Progressive Disclosure Component
@@ -17,29 +26,29 @@ interface ProgressiveDisclosureProps {
   memoryAid?: string;
 }
 
-export function ProgressiveDisclosure({ 
-  title, 
-  level, 
-  children, 
+export function ProgressiveDisclosure({
+  title,
+  level,
+  children,
   defaultOpen = false,
-  memoryAid 
+  memoryAid,
 }: ProgressiveDisclosureProps) {
   const { preferences } = useTraumaInformed();
   const [isOpen, setIsOpen] = useState(defaultOpen);
-  
+
   // Auto-open essential items in simplified mode
   const shouldAutoOpen = preferences.simplifiedMode && level === 'essential';
-  
+
   const levelColors = {
     essential: 'border-l-blue-500 bg-blue-50',
     helpful: 'border-l-yellow-500 bg-yellow-50',
-    advanced: 'border-l-gray-500 bg-gray-50'
+    advanced: 'border-l-gray-500 bg-gray-50',
   };
 
   const levelLabels = {
     essential: 'Essential',
     helpful: 'Helpful',
-    advanced: 'Advanced'
+    advanced: 'Advanced',
   };
 
   return (
@@ -59,7 +68,9 @@ export function ProgressiveDisclosure({
             )}
             <div>
               <h3 className="font-medium text-gray-900 dark:text-gray-100">{title}</h3>
-              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{levelLabels[level]}</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                {levelLabels[level]}
+              </span>
             </div>
           </div>
           {preferences.showMemoryAids && memoryAid && (
@@ -69,12 +80,8 @@ export function ProgressiveDisclosure({
           )}
         </div>
       </button>
-      
-      {(isOpen || shouldAutoOpen) && (
-        <div className="px-4 pb-4">
-          {children}
-        </div>
-      )}
+
+      {(isOpen || shouldAutoOpen) && <div className="px-4 pb-4">{children}</div>}
     </div>
   );
 }
@@ -90,13 +97,13 @@ interface MemoryAidProps {
 
 export function MemoryAid({ text, type = 'tip', title, items }: MemoryAidProps) {
   const { preferences } = useTraumaInformed();
-  
+
   if (!preferences.showMemoryAids) return null;
 
   const icons = {
     tip: '💡',
     reminder: '🔔',
-    example: '📝'
+    example: '📝',
   };
 
   if (title && items) {
@@ -132,7 +139,7 @@ interface GentleValidationProps {
 
 export function GentleValidation({ field, error, success, children }: GentleValidationProps) {
   const { preferences } = useTraumaInformed();
-  
+
   const getMessage = () => {
     if (error && preferences.gentleLanguage) {
       return `It looks like the ${field} field might need a little attention. No worries - take your time.`;
@@ -147,9 +154,11 @@ export function GentleValidation({ field, error, success, children }: GentleVali
     <div className="space-y-2">
       {children}
       {(error || success) && (
-        <div className={`flex items-start space-x-2 p-2 rounded ${
-          error ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
-        }`}>
+        <div
+          className={`flex items-start space-x-2 p-2 rounded ${
+            error ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
+          }`}
+        >
           {error ? (
             <Heart className="w-4 h-4 mt-0.5 text-red-500" />
           ) : (
@@ -170,7 +179,7 @@ interface AutoSaveIndicatorProps {
 
 export function AutoSaveIndicator({ lastSaved, isSaving }: AutoSaveIndicatorProps) {
   const { preferences } = useTraumaInformed();
-  
+
   if (!preferences.autoSave) return null;
 
   return (
@@ -203,20 +212,20 @@ interface ComfortPromptProps {
 export function ComfortPrompt({ intensity = 'gentle' }: ComfortPromptProps) {
   const { preferences } = useTraumaInformed();
   const [isVisible, setIsVisible] = useState(false);
-  
+
   useEffect(() => {
     if (preferences.showComfortPrompts) {
       const timer = setTimeout(() => setIsVisible(true), 30000); // Show after 30 seconds
       return () => clearTimeout(timer);
     }
   }, [preferences.showComfortPrompts]);
-  
+
   if (!preferences.showComfortPrompts || !isVisible) return null;
 
   const messages = {
     gentle: "Take your time. There's no rush with tracking your health.",
-    standard: "Remember to take breaks if you need them. Your wellbeing comes first.",
-    strong: "If you're feeling overwhelmed, it's okay to save and continue later."
+    standard: 'Remember to take breaks if you need them. Your wellbeing comes first.',
+    strong: "If you're feeling overwhelmed, it's okay to save and continue later.",
   };
 
   return (
@@ -247,16 +256,16 @@ interface TouchOptimizedButtonProps {
   className?: string;
 }
 
-export function TouchOptimizedButton({ 
-  children, 
-  onClick, 
+export function TouchOptimizedButton({
+  children,
+  onClick,
   variant = 'primary',
   size = 'normal',
   disabled = false,
-  className = ''
+  className = '',
 }: TouchOptimizedButtonProps) {
   const { preferences } = useTraumaInformed();
-  
+
   const baseClasses = `
     inline-flex items-center justify-center
     font-medium rounded-md
@@ -264,16 +273,17 @@ export function TouchOptimizedButton({
     transition-colors
     ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
   `;
-  
+
   const variantClasses = {
     primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
     secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500',
     gentle: 'bg-green-100 text-green-800 hover:bg-green-200 focus:ring-green-500',
   };
-  
-  const sizeClass = size === 'large' || preferences.touchTargetSize !== 'normal' 
-    ? `px-6 py-4 text-lg min-h-[var(--ti-touch-size)]`
-    : `px-4 py-2 text-base min-h-[44px]`;
+
+  const sizeClass =
+    size === 'large' || preferences.touchTargetSize !== 'normal'
+      ? `px-6 py-4 text-lg min-h-[var(--ti-touch-size)]`
+      : `px-4 py-2 text-base min-h-[44px]`;
 
   return (
     <button
@@ -297,19 +307,17 @@ interface CognitiveLoadReducerProps {
   showToggle?: boolean;
 }
 
-export function CognitiveLoadReducer({ 
-  children, 
+export function CognitiveLoadReducer({
+  children,
   maxItems = 5,
-  showToggle = true 
+  showToggle = true,
 }: CognitiveLoadReducerProps) {
   const { preferences } = useTraumaInformed();
   const [showAll, setShowAll] = useState(!preferences.simplifiedMode);
-  
+
   const childArray = React.Children.toArray(children);
   const shouldLimit = preferences.simplifiedMode && childArray.length > maxItems;
-  const displayChildren = shouldLimit && !showAll 
-    ? childArray.slice(0, maxItems)
-    : childArray;
+  const displayChildren = shouldLimit && !showAll ? childArray.slice(0, maxItems) : childArray;
 
   return (
     <div>
@@ -346,11 +354,11 @@ interface TraumaInformedFormProps {
   autoSave?: boolean;
 }
 
-export function TraumaInformedForm({ 
-  children, 
-  title, 
+export function TraumaInformedForm({
+  children,
+  title,
   description,
-  autoSave = true 
+  autoSave = true,
 }: TraumaInformedFormProps) {
   const { preferences } = useTraumaInformed();
   const [lastSaved] = useState<Date>();
@@ -361,11 +369,12 @@ export function TraumaInformedForm({
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle style={{ fontSize: 'var(--ti-font-size)' }}>
-              {title}
-            </CardTitle>
+            <CardTitle style={{ fontSize: 'var(--ti-font-size)' }}>{title}</CardTitle>
             {description && (
-              <p className="text-gray-600 dark:text-gray-400 mt-1" style={{ fontSize: 'calc(var(--ti-font-size) * 0.875)' }}>
+              <p
+                className="text-gray-600 dark:text-gray-400 mt-1"
+                style={{ fontSize: 'calc(var(--ti-font-size) * 0.875)' }}
+              >
                 {description}
               </p>
             )}
@@ -376,10 +385,8 @@ export function TraumaInformedForm({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
-          {children}
-        </div>
-        
+        <div className="space-y-6">{children}</div>
+
         {preferences.showComfortPrompts && (
           <div className="mt-6 p-4 bg-blue-50 rounded-md">
             <div className="flex items-center space-x-2">

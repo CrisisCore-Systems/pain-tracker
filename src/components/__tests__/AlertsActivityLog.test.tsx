@@ -31,10 +31,10 @@ describe('AlertsActivityLog', () => {
     const button = screen.getByText('Recent Alerts');
     fireEvent.click(button);
     expect(screen.getByText('Test alert')).toBeTruthy();
-  const ack = screen.getByText('Acknowledge');
-  fireEvent.click(ack);
-  // after acknowledging (confirm mocked true), the list updates
-  expect(screen.queryByText('Test alert')).toBeNull();
+    const ack = screen.getByText('Acknowledge');
+    fireEvent.click(ack);
+    // after acknowledging (confirm mocked true), the list updates
+    expect(screen.queryByText('Test alert')).toBeNull();
   });
 
   test('clearAlerts removes all alerts', async () => {
@@ -46,16 +46,16 @@ describe('AlertsActivityLog', () => {
     fireEvent.click(button);
     expect(screen.getByText('One')).toBeTruthy();
     expect(screen.getByText('Two')).toBeTruthy();
-  const clear = screen.getByText('Clear all');
-  fireEvent.click(clear);
-  // confirm dialog opens; our confirm is stubbed true; the modal will then clear and show Undo
-  const yes = await screen.findByText('Yes, clear');
-  fireEvent.click(yes);
-  // Undo banner appears (wait for Undo button)
-  const undo = await screen.findByText('Undo');
-  fireEvent.click(undo);
-  // original alerts restored
-  expect(await screen.findByText('One')).toBeTruthy();
-  expect(await screen.findByText('Two')).toBeTruthy();
+    const clear = screen.getByText('Clear all');
+    fireEvent.click(clear);
+    // confirm dialog opens; our confirm is stubbed true; the modal will then clear and show Undo
+    const yes = await screen.findByText('Yes, clear');
+    fireEvent.click(yes);
+    // Undo banner appears (wait for Undo button)
+    const undo = await screen.findByText('Undo');
+    fireEvent.click(undo);
+    // original alerts restored
+    expect(await screen.findByText('One')).toBeTruthy();
+    expect(await screen.findByText('Two')).toBeTruthy();
   });
 });

@@ -7,10 +7,7 @@ interface GoalManagerModalProps {
   onClose: () => void;
 }
 
-export const GoalManagerModal: React.FC<GoalManagerModalProps> = ({
-  isOpen,
-  onClose
-}) => {
+export const GoalManagerModal: React.FC<GoalManagerModalProps> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <GoalManager onClose={onClose} />

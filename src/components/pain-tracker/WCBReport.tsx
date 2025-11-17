@@ -1,9 +1,9 @@
-﻿import { useMemo } from "react";
-import { formatNumber } from "../../utils/formatting";
-import type { PainEntry } from "../../types";
-import type { WCBReport } from "../../types/index";
-import { analyzeTreatmentChanges, analyzeWorkImpact } from "../../utils/wcbAnalytics";
-import { toast } from "sonner";
+﻿import { useMemo } from 'react';
+import { formatNumber } from '../../utils/formatting';
+import type { PainEntry } from '../../types';
+import type { WCBReport } from '../../types/index';
+import { analyzeTreatmentChanges, analyzeWorkImpact } from '../../utils/wcbAnalytics';
+import { toast } from 'sonner';
 
 interface WCBReportGeneratorProps {
   entries: PainEntry[];
@@ -14,35 +14,35 @@ interface WCBReportGeneratorProps {
 }
 
 const BASE_RECOMMENDATIONS = [
-  "Continue monitoring pain levels",
-  "Follow up with healthcare provider",
-  "Modify work duties as needed"
+  'Continue monitoring pain levels',
+  'Follow up with healthcare provider',
+  'Modify work duties as needed',
 ];
 
-const createEmptyReport = (period: WCBReport["period"]): WCBReport => ({
+const createEmptyReport = (period: WCBReport['period']): WCBReport => ({
   period,
   painTrends: {
     average: 0,
     progression: [],
-    locations: {}
+    locations: {},
   },
   workImpact: {
     missedDays: 0,
     limitations: [],
-    accommodationsNeeded: []
+    accommodationsNeeded: [],
   },
   functionalAnalysis: {
     limitations: [],
     deterioration: [],
-    improvements: []
+    improvements: [],
   },
   treatments: {
     current: [],
-    effectiveness: "No treatment data recorded."
+    effectiveness: 'No treatment data recorded.',
   },
   recommendations: [
-    "No entries available for the selected period. Maintain regular logging to build a comprehensive record."
-  ]
+    'No entries available for the selected period. Maintain regular logging to build a comprehensive record.',
+  ],
 });
 
 export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps) {
@@ -75,18 +75,21 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
     const painSum = painLevels.reduce((total, level) => total + level, 0);
     const averagePain = painLevels.length > 0 ? painSum / painLevels.length : 0;
 
-    const locationFrequency = sortedEntries.reduce((acc, entry) => {
-      entry.baselineData.locations?.forEach(location => {
-        const normalized = location.trim() || "Unspecified";
-        acc[normalized] = (acc[normalized] || 0) + 1;
-      });
-      return acc;
-    }, {} as Record<string, number>);
+    const locationFrequency = sortedEntries.reduce(
+      (acc, entry) => {
+        entry.baselineData.locations?.forEach(location => {
+          const normalized = location.trim() || 'Unspecified';
+          acc[normalized] = (acc[normalized] || 0) + 1;
+        });
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     const limitationSources = [
       filteredEntries.flatMap(entry => entry.functionalImpact?.limitedActivities ?? []),
       filteredEntries.flatMap(entry => entry.workImpact?.workLimitations ?? []),
-      filteredEntries.flatMap(entry => entry.comparison?.newLimitations ?? [])
+      filteredEntries.flatMap(entry => entry.comparison?.newLimitations ?? []),
     ];
 
     const limitations = Array.from(new Set(limitationSources.flat())).sort();
@@ -121,22 +124,19 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
 
     const treatmentEffectivenessFeedback = filteredEntries
       .flatMap(entry => [
-        entry.treatments?.effectiveness ?? "",
-        ...((entry.treatments?.recent ?? []).map(treatment => treatment.effectiveness ?? ""))
+        entry.treatments?.effectiveness ?? '',
+        ...(entry.treatments?.recent ?? []).map(treatment => treatment.effectiveness ?? ''),
       ])
       .map(effectiveness => effectiveness.trim())
       .filter(Boolean);
 
-    let effectivenessSummary = "No treatment data recorded.";
+    let effectivenessSummary = 'No treatment data recorded.';
 
     if (treatmentEffectivenessFeedback.length > 0) {
-      const effectivenessCounts = treatmentEffectivenessFeedback.reduce(
-        (acc, feedback) => {
-          acc.set(feedback, (acc.get(feedback) ?? 0) + 1);
-          return acc;
-        },
-        new Map<string, number>()
-      );
+      const effectivenessCounts = treatmentEffectivenessFeedback.reduce((acc, feedback) => {
+        acc.set(feedback, (acc.get(feedback) ?? 0) + 1);
+        return acc;
+      }, new Map<string, number>());
 
       const rankedEffectiveness = Array.from(effectivenessCounts.entries()).sort(
         (a, b) => b[1] - a[1]
@@ -153,22 +153,22 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
       effectivenessSummary = `${primaryLabel} (${primaryShare}% of ${totalFeedback} reports)`;
 
       if (secondaryInsights.length > 0) {
-        effectivenessSummary += `; other feedback: ${secondaryInsights.join(", ")}`;
+        effectivenessSummary += `; other feedback: ${secondaryInsights.join(', ')}`;
       }
     }
 
     const recommendations = [...BASE_RECOMMENDATIONS];
 
     if (averagePain >= 7) {
-      recommendations.unshift("Elevated pain levels detected; consider clinical reassessment.");
+      recommendations.unshift('Elevated pain levels detected; consider clinical reassessment.');
     }
 
     if (missedDays > 0) {
-      recommendations.push("Document missed work days for employer or insurer discussions.");
+      recommendations.push('Document missed work days for employer or insurer discussions.');
     }
 
     if (accommodationsNeeded.length > 0) {
-      recommendations.push("Review workplace accommodations to ensure ongoing suitability.");
+      recommendations.push('Review workplace accommodations to ensure ongoing suitability.');
     }
 
     return {
@@ -179,40 +179,40 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           date: entry.timestamp,
           pain: entry.baselineData.pain,
           locations: entry.baselineData.locations ?? [],
-          symptoms: entry.baselineData.symptoms ?? []
+          symptoms: entry.baselineData.symptoms ?? [],
         })),
-        locations: locationFrequency
+        locations: locationFrequency,
       },
       workImpact: {
         missedDays,
         limitations: commonLimitations,
-        accommodationsNeeded
+        accommodationsNeeded,
       },
       functionalAnalysis: {
         limitations,
         deterioration,
-        improvements
+        improvements,
       },
       treatments: {
         current: currentTreatments,
-        effectiveness: effectivenessSummary
+        effectiveness: effectivenessSummary,
       },
-      recommendations
+      recommendations,
     };
   }, [entries, period]);
 
   const handleExportPDF = async () => {
     try {
-      toast.loading("Generating PDF report...");
+      toast.loading('Generating PDF report...');
       // Lazy load PDF service to defer jsPDF bundle loading (Phase 3 optimization)
-      const { pdfExportService } = await import("../../services/PDFExportService");
+      const { pdfExportService } = await import('../../services/PDFExportService');
       await pdfExportService.downloadWCBReport(report);
       toast.dismiss();
-      toast.success("PDF report downloaded successfully!");
+      toast.success('PDF report downloaded successfully!');
     } catch (error) {
       toast.dismiss();
-      console.error("PDF export failed:", error);
-      toast.error("Failed to generate PDF report. Please try again.");
+      console.error('PDF export failed:', error);
+      toast.error('Failed to generate PDF report. Please try again.');
     }
   };
 
@@ -223,7 +223,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
         <button
           onClick={handleExportPDF}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-          disabled={report.recommendations.includes("No entries available for the selected period")}
+          disabled={report.recommendations.includes('No entries available for the selected period')}
         >
           Export PDF
         </button>
@@ -243,20 +243,26 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
               <div className="mt-2">
                 <h4 className="text-sm font-medium">Common Locations:</h4>
                 {Object.keys(report.painTrends.locations).length === 0 ? (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">No pain location data recorded.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    No pain location data recorded.
+                  </p>
                 ) : (
                   <ul className="list-disc pl-5">
                     {Object.entries(report.painTrends.locations)
                       .sort(([, a], [, b]) => b - a)
                       .map(([location, count]) => (
-                        <li key={location}>{location}: {count} occurrences</li>
+                        <li key={location}>
+                          {location}: {count} occurrences
+                        </li>
                       ))}
                   </ul>
                 )}
               </div>
             </>
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400">No pain trend data available.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              No pain trend data available.
+            </p>
           )}
         </div>
 
@@ -266,11 +272,15 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <div className="mt-2">
             <h4 className="text-sm font-medium">Common Limitations:</h4>
             {report.workImpact.limitations.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">No work limitations reported.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                No work limitations reported.
+              </p>
             ) : (
               <ul className="list-disc pl-5">
                 {report.workImpact.limitations.map(([limitation, frequency]) => (
-                  <li key={limitation}>{limitation}: {frequency} occurrences</li>
+                  <li key={limitation}>
+                    {limitation}: {frequency} occurrences
+                  </li>
                 ))}
               </ul>
             )}
@@ -278,7 +288,9 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <div className="mt-2">
             <h4 className="text-sm font-medium">Accommodations Needed:</h4>
             {report.workImpact.accommodationsNeeded.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">No accommodations documented.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                No accommodations documented.
+              </p>
             ) : (
               <ul className="list-disc pl-5">
                 {report.workImpact.accommodationsNeeded.map(accommodation => (
@@ -294,7 +306,9 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <div className="mt-2">
             <h4 className="text-sm font-medium">Limitations:</h4>
             {report.functionalAnalysis.limitations.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">No functional limitations reported.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                No functional limitations reported.
+              </p>
             ) : (
               <ul className="list-disc pl-5">
                 {report.functionalAnalysis.limitations.map(limitation => (
@@ -329,14 +343,18 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           )}
           {report.functionalAnalysis.deterioration.length === 0 &&
             report.functionalAnalysis.improvements.length === 0 && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">No significant pain changes detected.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                No significant pain changes detected.
+              </p>
             )}
         </div>
 
         <div>
           <h3 className="font-medium">Treatments</h3>
           {report.treatments.current.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-gray-400">No active treatments recorded.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              No active treatments recorded.
+            </p>
           ) : (
             <ul className="list-disc pl-5">
               {report.treatments.current.map(treatment => (
@@ -346,7 +364,9 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
               ))}
             </ul>
           )}
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{report.treatments.effectiveness}</p>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+            {report.treatments.effectiveness}
+          </p>
         </div>
 
         <div>

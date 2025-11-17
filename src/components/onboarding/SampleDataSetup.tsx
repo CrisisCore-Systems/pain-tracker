@@ -24,9 +24,7 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-3">
-          How would you like to start?
-        </h3>
+        <h3 className="text-2xl font-bold text-foreground mb-3">How would you like to start?</h3>
         <p className="text-muted-foreground">
           Choose your preferred way to begin your pain tracking journey
         </p>
@@ -48,7 +46,7 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
             <div className="text-left flex-1">
               <h4 className="font-semibold text-foreground mb-2">Start with Sample Data</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Explore Pain Tracker with pre-filled sample entries to see how features work. 
+                Explore Pain Tracker with pre-filled sample entries to see how features work.
                 Perfect for understanding the app before adding your own data.
               </p>
               <div className="flex flex-wrap gap-2">
@@ -78,8 +76,8 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
             <div className="text-left flex-1">
               <h4 className="font-semibold text-foreground mb-2">Start Fresh</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Begin with a clean slate and add your first real pain entry. 
-                Best for users ready to start tracking immediately.
+                Begin with a clean slate and add your first real pain entry. Best for users ready to
+                start tracking immediately.
               </p>
               <div className="flex flex-wrap gap-2">
                 <span className="text-xs bg-destructive/10 text-destructive-foreground px-2 py-1 rounded">
@@ -100,25 +98,22 @@ export function SampleDataSetup({ onComplete, onPrevious }: SampleDataSetupProps
           <span className="text-sm font-medium text-foreground">Privacy Note</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          All data is stored locally on your device. You can clear sample data anytime, 
-          and no information is sent to external servers.
+          All data is stored locally on your device. You can clear sample data anytime, and no
+          information is sent to external servers.
         </p>
       </div>
 
       <div className="flex justify-between items-center pt-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <Button
-          variant="outline"
-          onClick={onPrevious}
-        >
+        <Button variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        
-        <Button
-          onClick={handleComplete}
-          disabled={!selectedOption}
-          className="min-w-24"
-        >
-          {selectedOption === 'sample' ? 'Setup with Samples' : selectedOption === 'fresh' ? 'Start Fresh' : 'Continue'}
+
+        <Button onClick={handleComplete} disabled={!selectedOption} className="min-w-24">
+          {selectedOption === 'sample'
+            ? 'Setup with Samples'
+            : selectedOption === 'fresh'
+              ? 'Start Fresh'
+              : 'Continue'}
         </Button>
       </div>
     </div>

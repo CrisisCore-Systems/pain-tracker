@@ -39,7 +39,7 @@ export function FormField({
   rightIcon,
   showPasswordToggle,
   className = '',
-  inputClassName = ''
+  inputClassName = '',
 }: FormFieldProps) {
   const [focused, setFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -57,7 +57,7 @@ export function FormField({
 
   const getInputClasses = () => {
     let classes = 'peer w-full transition-all duration-200 ';
-    
+
     if (error) {
       classes += 'border-red-500 focus:border-red-500 focus:ring-red-500/20 ';
     } else if (success) {
@@ -74,7 +74,7 @@ export function FormField({
 
   const getLabelClasses = () => {
     let classes = 'absolute left-3 transition-all duration-200 pointer-events-none ';
-    
+
     if (focused || hasValue) {
       classes += 'top-0 -translate-y-1/2 text-xs bg-background px-2 ';
       if (error) {

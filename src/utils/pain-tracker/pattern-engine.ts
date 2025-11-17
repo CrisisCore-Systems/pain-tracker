@@ -1,9 +1,9 @@
 /**
  * Advanced Pattern Recognition Engine
- * 
+ *
  * Heuristic-based engine for detecting pain trends, correlations, episodes,
  * and Quality of Life patterns. All computation runs locally - zero cloud deps.
- * 
+ *
  * Design principles:
  * - Transparent, explainable heuristics (not black-box ML)
  * - Trauma-informed messaging (confidence levels, gentle language)
@@ -63,7 +63,11 @@ export function analyzePatterns(
   // Step 5: Correlation analysis
   const triggerCorrelations = computeTriggerCorrelations(cleanedEntries, baseline, fullConfig);
   const symptomCorrelations = computeSymptomCorrelations(cleanedEntries, baseline, fullConfig);
-  const medicationCorrelations = computeMedicationCorrelations(cleanedEntries, baseline, fullConfig);
+  const medicationCorrelations = computeMedicationCorrelations(
+    cleanedEntries,
+    baseline,
+    fullConfig
+  );
   const locationCorrelations = computeLocationCorrelations(cleanedEntries, baseline, fullConfig);
 
   // Step 6: Trigger bundles (co-occurring triggers)
@@ -115,7 +119,7 @@ export function analyzePatterns(
  */
 export function cleanEntries(entries: PainEntry[]): PainEntry[] {
   return entries
-    .filter((entry) => {
+    .filter(entry => {
       // Must have valid pain level
       const pain = entry.baselineData?.pain;
       if (pain === undefined || pain === null || pain < 0 || pain > 10) {
@@ -144,10 +148,7 @@ export function cleanEntries(entries: PainEntry[]): PainEntry[] {
 /**
  * Calculate user's baseline pain level (robust to outliers)
  */
-export function calculateBaseline(
-  entries: PainEntry[],
-  windowDays: number = 30
-): BaselineResult {
+export function calculateBaseline(entries: PainEntry[], windowDays: number = 30): BaselineResult {
   if (entries.length === 0) {
     return {
       value: 0,
@@ -161,12 +162,10 @@ export function calculateBaseline(
   // Use recent window for baseline
   const now = Date.now();
   const windowMs = windowDays * 24 * 60 * 60 * 1000;
-  const recentEntries = entries.filter(
-    (e) => now - new Date(e.timestamp).getTime() <= windowMs
-  );
+  const recentEntries = entries.filter(e => now - new Date(e.timestamp).getTime() <= windowMs);
 
   const useEntries = recentEntries.length >= 7 ? recentEntries : entries;
-  const painValues = useEntries.map((e) => e.baselineData.pain);
+  const painValues = useEntries.map(e => e.baselineData.pain);
 
   // Use median for robustness
   const sorted = [...painValues].sort((a, b) => a - b);
@@ -199,7 +198,7 @@ export function computeDailyTrend(entries: PainEntry[]): TrendPoint[] {
 
   const dailyMap = new Map<string, { values: number[]; count: number }>();
 
-  entries.forEach((entry) => {
+  entries.forEach(entry => {
     const date = new Date(entry.timestamp);
     const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
@@ -216,8 +215,7 @@ export function computeDailyTrend(entries: PainEntry[]): TrendPoint[] {
     .map(([date, data]) => {
       const sorted = [...data.values].sort((a, b) => a - b);
       const mean = data.values.reduce((sum, v) => sum + v, 0) / data.count;
-      const variance =
-        data.values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / data.count;
+      const variance = data.values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / data.count;
       const stdDev = Math.sqrt(variance);
 
       return {
@@ -242,7 +240,7 @@ export function computeWeeklyTrend(dailyTrend: TrendPoint[]): TrendPoint[] {
 
   for (let i = window - 1; i < dailyTrend.length; i++) {
     const slice = dailyTrend.slice(i - window + 1, i + 1);
-    const values = slice.map((p) => p.value);
+    const values = slice.map(p => p.value);
     const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
     const totalCount = slice.reduce((sum, p) => sum + p.count, 0);
     const minVal = Math.min(...values);
@@ -298,7 +296,7 @@ export function detectEpisodes(
       if (currentEpisode && currentEpisode.points.length >= config.episodeMinLengthDays) {
         // Close episode
         const points = currentEpisode.points;
-        const painValues = points.map((p) => p.value);
+        const painValues = points.map(p => p.value);
         const avgPain = painValues.reduce((sum, v) => sum + v, 0) / painValues.length;
         const peakPain = Math.max(...painValues) as number;
 
@@ -378,12 +376,7 @@ export function computeTriggerCorrelations(
   baseline: BaselineResult,
   config: PatternEngineConfig
 ): TriggerCorrelation[] {
-  return computeGenericCorrelations(
-    entries,
-    baseline,
-    config,
-    (entry) => entry.triggers || []
-  );
+  return computeGenericCorrelations(entries, baseline, config, entry => entry.triggers || []);
 }
 
 /**
@@ -398,7 +391,7 @@ export function computeSymptomCorrelations(
     entries,
     baseline,
     config,
-    (entry) => entry.baselineData.symptoms || []
+    entry => entry.baselineData.symptoms || []
   );
 }
 
@@ -410,16 +403,9 @@ export function computeMedicationCorrelations(
   baseline: BaselineResult,
   config: PatternEngineConfig
 ): TriggerCorrelation[] {
-  const meds = entries.map((entry) =>
-    entry.medications?.current?.map((m) => m.name) || []
-  );
+  const meds = entries.map(entry => entry.medications?.current?.map(m => m.name) || []);
 
-  return computeGenericCorrelations(
-    entries,
-    baseline,
-    config,
-    (entry, idx) => meds[idx] || []
-  );
+  return computeGenericCorrelations(entries, baseline, config, (entry, idx) => meds[idx] || []);
 }
 
 /**
@@ -434,7 +420,7 @@ export function computeLocationCorrelations(
     entries,
     baseline,
     config,
-    (entry) => entry.baselineData.locations || []
+    entry => entry.baselineData.locations || []
   );
 }
 
@@ -460,7 +446,7 @@ function computeGenericCorrelations(
     const items = extractor(entry, idx);
     const pain = entry.baselineData.pain;
 
-    items.forEach((item) => {
+    items.forEach(item => {
       if (!itemStats.has(item)) {
         itemStats.set(item, { withItem: [], withoutItem: [] });
       }
@@ -485,8 +471,7 @@ function computeGenericCorrelations(
       return;
     }
 
-    const meanWith =
-      stats.withItem.reduce((sum, v) => sum + v, 0) / stats.withItem.length;
+    const meanWith = stats.withItem.reduce((sum, v) => sum + v, 0) / stats.withItem.length;
     const meanWithout =
       stats.withoutItem.length > 0
         ? stats.withoutItem.reduce((sum, v) => sum + v, 0) / stats.withoutItem.length
@@ -495,13 +480,12 @@ function computeGenericCorrelations(
     const delta = meanWith - meanWithout;
 
     // Calculate confidence (how stable is this pattern)
-    const aboveBaseline = stats.withItem.filter((v) => v > baseline.value).length;
+    const aboveBaseline = stats.withItem.filter(v => v > baseline.value).length;
     const confidence = aboveBaseline / stats.withItem.length;
 
     // Calculate stability (consistency over time)
     const variance =
-      stats.withItem.reduce((sum, v) => sum + Math.pow(v - meanWith, 2), 0) /
-      stats.withItem.length;
+      stats.withItem.reduce((sum, v) => sum + Math.pow(v - meanWith, 2), 0) / stats.withItem.length;
     const stabilityScore = Math.max(0, 1 - variance / 10); // Normalize to 0-1
 
     const strength = bucketCorrelation(delta, confidence);
@@ -541,7 +525,7 @@ function bucketCorrelation(delta: number, confidence: number): CorrelationStreng
 function formatLabel(key: string): string {
   return key
     .split(/[-_\s]+/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 }
 
@@ -567,7 +551,7 @@ export function detectTriggerBundles(
   >();
 
   // Find all trigger pairs
-  entries.forEach((entry) => {
+  entries.forEach(entry => {
     const triggers = entry.triggers || [];
     if (triggers.length < 2) return;
 
@@ -627,7 +611,7 @@ export function computeQoLPatterns(
     baseline,
     config,
     'sleep',
-    (e) => e.qualityOfLife?.sleepQuality,
+    e => e.qualityOfLife?.sleepQuality,
     { goodThreshold: 7, poorThreshold: 3 }
   );
   if (sleepPattern) patterns.push(sleepPattern);
@@ -638,7 +622,7 @@ export function computeQoLPatterns(
     baseline,
     config,
     'mood',
-    (e) => e.qualityOfLife?.moodImpact,
+    e => e.qualityOfLife?.moodImpact,
     { goodThreshold: 3, poorThreshold: -2 }
   );
   if (moodPattern) patterns.push(moodPattern);
@@ -649,7 +633,7 @@ export function computeQoLPatterns(
     baseline,
     config,
     'activity',
-    (e) => e.activityLevel,
+    e => e.activityLevel,
     { goodThreshold: 7, poorThreshold: 3 }
   );
   if (activityPattern) patterns.push(activityPattern);
@@ -676,7 +660,7 @@ function analyzeQoLDimension(
   const poorEntries: number[] = [];
   let totalCount = 0;
 
-  entries.forEach((entry) => {
+  entries.forEach(entry => {
     const value = extractor(entry);
     if (value === undefined || value === null) return;
 
@@ -771,10 +755,8 @@ export function detectQoLDissonances(
   const recentPain = dailyTrend.slice(-7);
   const previousPain = dailyTrend.slice(-14, -7);
 
-  const recentPainAvg =
-    recentPain.reduce((sum, p) => sum + p.value, 0) / recentPain.length;
-  const previousPainAvg =
-    previousPain.reduce((sum, p) => sum + p.value, 0) / previousPain.length;
+  const recentPainAvg = recentPain.reduce((sum, p) => sum + p.value, 0) / recentPain.length;
+  const previousPainAvg = previousPain.reduce((sum, p) => sum + p.value, 0) / previousPain.length;
 
   const painChange = recentPainAvg - previousPainAvg;
   let painTrend: 'improving' | 'stable' | 'worsening';
@@ -791,17 +773,15 @@ export function detectQoLDissonances(
   const previousEntries = entries.slice(-14, -7);
 
   const recentSleep = recentEntries
-    .map((e) => e.qualityOfLife?.sleepQuality)
+    .map(e => e.qualityOfLife?.sleepQuality)
     .filter((v): v is number => v !== undefined);
   const previousSleep = previousEntries
-    .map((e) => e.qualityOfLife?.sleepQuality)
+    .map(e => e.qualityOfLife?.sleepQuality)
     .filter((v): v is number => v !== undefined);
 
   if (recentSleep.length >= 3 && previousSleep.length >= 3) {
-    const recentSleepAvg =
-      recentSleep.reduce((sum, v) => sum + v, 0) / recentSleep.length;
-    const previousSleepAvg =
-      previousSleep.reduce((sum, v) => sum + v, 0) / previousSleep.length;
+    const recentSleepAvg = recentSleep.reduce((sum, v) => sum + v, 0) / recentSleep.length;
+    const previousSleepAvg = previousSleep.reduce((sum, v) => sum + v, 0) / previousSleep.length;
 
     const sleepChange = recentSleepAvg - previousSleepAvg;
 
@@ -830,10 +810,7 @@ export function detectQoLDissonances(
 /**
  * Assess overall data quality/coverage
  */
-function assessDataQuality(
-  entries: PainEntry[],
-  config: PatternEngineConfig
-): ConfidenceLevel {
+function assessDataQuality(entries: PainEntry[], config: PatternEngineConfig): ConfidenceLevel {
   if (entries.length >= 60) return 'high';
   if (entries.length >= config.minEntriesForTrend * 3) return 'medium';
   return 'low';
@@ -846,7 +823,9 @@ function generateCautions(entries: PainEntry[], config: PatternEngineConfig): st
   const cautions: string[] = [];
 
   if (entries.length < config.minEntriesForTrend) {
-    cautions.push(`Low sample size (${entries.length} entries). Add more entries for reliable trends.`);
+    cautions.push(
+      `Low sample size (${entries.length} entries). Add more entries for reliable trends.`
+    );
   }
 
   if (entries.length < config.minSupportForCorrelation) {
@@ -854,14 +833,16 @@ function generateCautions(entries: PainEntry[], config: PatternEngineConfig): st
   }
 
   const hasQoL = entries.some(
-    (e) =>
+    e =>
       e.qualityOfLife?.sleepQuality !== undefined ||
       e.qualityOfLife?.moodImpact !== undefined ||
       e.activityLevel !== undefined
   );
 
   if (!hasQoL) {
-    cautions.push('Quality of Life data missing. Log sleep, mood, and activity for richer insights.');
+    cautions.push(
+      'Quality of Life data missing. Log sleep, mood, and activity for richer insights.'
+    );
   }
 
   return cautions;
@@ -899,14 +880,13 @@ export function calculateStatistics(values: number[]): StatisticalSummary {
   for (const v of values) {
     frequency.set(v, (frequency.get(v) || 0) + 1);
   }
-  const mode = Array.from(frequency.entries()).reduce(
-    (a, b) => (b[1] > a[1] ? b : a),
-    [0, 0] as [number, number]
-  )[0];
+  const mode = Array.from(frequency.entries()).reduce((a, b) => (b[1] > a[1] ? b : a), [0, 0] as [
+    number,
+    number,
+  ])[0];
 
   // Calculate standard deviation
-  const variance =
-    values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
+  const variance = values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
   const stdDev = Math.sqrt(variance);
 
   return {

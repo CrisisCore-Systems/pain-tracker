@@ -21,7 +21,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
   const steps = [
     { component: WelcomeScreen, title: 'Welcome' },
     { component: FeatureHighlights, title: 'Features' },
-    { component: SampleDataSetup, title: 'Setup' }
+    { component: SampleDataSetup, title: 'Setup' },
   ];
 
   const handleNext = () => {
@@ -57,7 +57,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
   if (!isVisible) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100]"
       role="dialog"
       aria-modal="true"
@@ -67,10 +67,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
         <CardContent className="p-8 pb-24">
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 
-                id="onboarding-title"
-                className="text-2xl font-bold text-foreground"
-              >
+              <h2 id="onboarding-title" className="text-2xl font-bold text-foreground">
                 {steps[currentStep].title}
               </h2>
               <button
@@ -82,7 +79,7 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
                 Skip
               </button>
             </div>
-            
+
             {/* Progress indicator */}
             <div className="flex space-x-2 mb-6">
               {steps.map((_, index) => (

@@ -8,7 +8,7 @@ import es from './locales/es.json';
 const resources = {
   en: { translation: en },
   fr: { translation: fr },
-  es: { translation: es }
+  es: { translation: es },
 };
 
 i18n
@@ -18,19 +18,19 @@ i18n
     resources,
     fallbackLng: 'en',
     debug: import.meta.env.DEV,
-    
+
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
 
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage']
+      caches: ['localStorage'],
     },
 
     react: {
-      useSuspense: false
-    }
+      useSuspense: false,
+    },
   });
 
 export default i18n;

@@ -15,7 +15,8 @@ const features = [
   {
     icon: FileBarChart,
     title: 'WorkSafe BC Export',
-    description: 'Generate clinical reports for claims, healthcare providers, and legal documentation.',
+    description:
+      'Generate clinical reports for claims, healthcare providers, and legal documentation.',
   },
   {
     icon: Pill,
@@ -50,7 +51,7 @@ export const FeatureShowcase: React.FC = () => {
 
         {/* Features List */}
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-          {features.map((feature) => {
+          {features.map(feature => {
             const Icon = feature.icon;
             return (
               <div
@@ -66,9 +67,7 @@ export const FeatureShowcase: React.FC = () => {
 
                 {/* Content */}
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-base">
-                    {feature.title}
-                  </h3>
+                  <h3 className="font-semibold text-base">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {feature.description}
                   </p>

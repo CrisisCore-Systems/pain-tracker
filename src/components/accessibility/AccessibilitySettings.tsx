@@ -7,27 +7,30 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 import { useTraumaInformed } from './TraumaInformedHooks';
-import { 
-  Settings, 
-  Eye, 
-  Type, 
-  Palette, 
-  Hand, 
-  Volume2, 
+import {
+  Settings,
+  Eye,
+  Type,
+  Palette,
+  Hand,
+  Volume2,
   Heart,
   Shield,
   Brain,
   Zap,
   RotateCcw,
-  Smartphone
+  Smartphone,
 } from 'lucide-react';
 import { useMobileAccessibility } from './MobileAccessibility';
 import type { TraumaInformedPreferences } from './TraumaInformedTypes';
 
 export function AccessibilitySettingsPanel() {
   const { preferences, updatePreferences } = useTraumaInformed();
-  const { preferences: mobilePrefs, updatePreferences: updateMobilePrefs } = useMobileAccessibility();
-  const [activeTab, setActiveTab] = useState<'cognitive' | 'visual' | 'motor' | 'emotional' | 'mobile'>('cognitive');
+  const { preferences: mobilePrefs, updatePreferences: updateMobilePrefs } =
+    useMobileAccessibility();
+  const [activeTab, setActiveTab] = useState<
+    'cognitive' | 'visual' | 'motor' | 'emotional' | 'mobile'
+  >('cognitive');
 
   const handlePreferenceChange = (updates: Partial<TraumaInformedPreferences>) => {
     updatePreferences(updates);
@@ -56,32 +59,32 @@ export function AccessibilitySettingsPanel() {
       id: 'cognitive' as const,
       label: 'Cognitive Support',
       icon: <Brain className="w-5 h-5" />,
-      description: 'Memory aids and cognitive load reduction'
+      description: 'Memory aids and cognitive load reduction',
     },
     {
       id: 'visual' as const,
       label: 'Visual Preferences',
       icon: <Eye className="w-5 h-5" />,
-      description: 'Text size, contrast, and motion settings'
+      description: 'Text size, contrast, and motion settings',
     },
     {
       id: 'motor' as const,
       label: 'Motor & Input',
       icon: <Hand className="w-5 h-5" />,
-      description: 'Touch targets and alternative input methods'
+      description: 'Touch targets and alternative input methods',
     },
     {
       id: 'mobile' as const,
       label: 'Mobile Features',
       icon: <Smartphone className="w-5 h-5" />,
-      description: 'Voice input, haptic feedback, and mobile accessibility'
+      description: 'Voice input, haptic feedback, and mobile accessibility',
     },
     {
       id: 'emotional' as const,
       label: 'Emotional Safety',
       icon: <Heart className="w-5 h-5" />,
-      description: 'Trauma-informed interaction patterns'
-    }
+      description: 'Trauma-informed interaction patterns',
+    },
   ];
 
   return (
@@ -98,11 +101,7 @@ export function AccessibilitySettingsPanel() {
             </div>
           </div>
           <div className="flex space-x-2">
-            <TouchOptimizedButton
-              variant="secondary"
-              onClick={resetToDefaults}
-              size="normal"
-            >
+            <TouchOptimizedButton variant="secondary" onClick={resetToDefaults} size="normal">
               <RotateCcw className="w-4 h-4 mr-2" />
               Reset
             </TouchOptimizedButton>
@@ -114,16 +113,17 @@ export function AccessibilitySettingsPanel() {
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
           <nav className="flex space-x-4" aria-label="Settings categories">
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`
                   flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-t-lg
                   transition-colors min-h-[var(--ti-touch-size)]
-                  ${activeTab === tab.id
-                    ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
-                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  ${
+                    activeTab === tab.id
+                      ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                   }
                 `}
                 aria-selected={activeTab === tab.id}
@@ -142,38 +142,23 @@ export function AccessibilitySettingsPanel() {
         {/* Tab Content */}
         <div className="space-y-6">
           {activeTab === 'cognitive' && (
-            <CognitiveSettings 
-              preferences={preferences} 
-              onChange={handlePreferenceChange} 
-            />
+            <CognitiveSettings preferences={preferences} onChange={handlePreferenceChange} />
           )}
-          
+
           {activeTab === 'visual' && (
-            <VisualSettings 
-              preferences={preferences} 
-              onChange={handlePreferenceChange} 
-            />
+            <VisualSettings preferences={preferences} onChange={handlePreferenceChange} />
           )}
-          
+
           {activeTab === 'motor' && (
-            <MotorSettings 
-              preferences={preferences} 
-              onChange={handlePreferenceChange} 
-            />
+            <MotorSettings preferences={preferences} onChange={handlePreferenceChange} />
           )}
-          
+
           {activeTab === 'mobile' && (
-            <MobileSettings 
-              preferences={mobilePrefs} 
-              onChange={updateMobilePrefs} 
-            />
+            <MobileSettings preferences={mobilePrefs} onChange={updateMobilePrefs} />
           )}
-          
+
           {activeTab === 'emotional' && (
-            <EmotionalSafetySettings 
-              preferences={preferences} 
-              onChange={handlePreferenceChange} 
-            />
+            <EmotionalSafetySettings preferences={preferences} onChange={handlePreferenceChange} />
           )}
         </div>
       </CardContent>
@@ -182,10 +167,10 @@ export function AccessibilitySettingsPanel() {
 }
 
 // Cognitive Settings Tab
-function CognitiveSettings({ 
-  preferences, 
-  onChange 
-}: { 
+function CognitiveSettings({
+  preferences,
+  onChange,
+}: {
   preferences: TraumaInformedPreferences;
   onChange: (updates: Partial<TraumaInformedPreferences>) => void;
 }) {
@@ -200,7 +185,7 @@ function CognitiveSettings({
           label="Simplified Mode"
           description="Show only essential features and reduce interface complexity"
           checked={preferences.simplifiedMode}
-          onChange={(checked) => onChange({ simplifiedMode: checked })}
+          onChange={checked => onChange({ simplifiedMode: checked })}
         />
       </SettingGroup>
 
@@ -213,21 +198,21 @@ function CognitiveSettings({
           label="Memory Aids"
           description="Show helpful tips and reminders throughout the interface"
           checked={preferences.showMemoryAids}
-          onChange={(checked) => onChange({ showMemoryAids: checked })}
+          onChange={checked => onChange({ showMemoryAids: checked })}
         />
-        
+
         <ToggleSetting
           label="Progress Indicators"
           description="Show your progress through forms and tasks"
           checked={preferences.showProgress}
-          onChange={(checked) => onChange({ showProgress: checked })}
+          onChange={checked => onChange({ showProgress: checked })}
         />
-        
+
         <ToggleSetting
           label="Auto-Save"
           description="Automatically save your work to prevent data loss"
           checked={preferences.autoSave}
-          onChange={(checked) => onChange({ autoSave: checked })}
+          onChange={checked => onChange({ autoSave: checked })}
         />
       </SettingGroup>
     </div>
@@ -235,10 +220,10 @@ function CognitiveSettings({
 }
 
 // Visual Settings Tab
-function VisualSettings({ 
-  preferences, 
-  onChange 
-}: { 
+function VisualSettings({
+  preferences,
+  onChange,
+}: {
   preferences: TraumaInformedPreferences;
   onChange: (updates: Partial<TraumaInformedPreferences>) => void;
 }) {
@@ -257,9 +242,9 @@ function VisualSettings({
             { value: 'small', label: 'Small (14px)' },
             { value: 'medium', label: 'Medium (16px)' },
             { value: 'large', label: 'Large (18px)' },
-            { value: 'xl', label: 'Extra Large (20px)' }
+            { value: 'xl', label: 'Extra Large (20px)' },
           ]}
-          onChange={(value) => onChange({ fontSize: value as TraumaInformedPreferences['fontSize'] })}
+          onChange={value => onChange({ fontSize: value as TraumaInformedPreferences['fontSize'] })}
         />
       </SettingGroup>
 
@@ -275,9 +260,9 @@ function VisualSettings({
           options={[
             { value: 'normal', label: 'Normal Contrast' },
             { value: 'high', label: 'High Contrast' },
-            { value: 'extra-high', label: 'Extra High Contrast' }
+            { value: 'extra-high', label: 'Extra High Contrast' },
           ]}
-          onChange={(value) => onChange({ contrast: value as TraumaInformedPreferences['contrast'] })}
+          onChange={value => onChange({ contrast: value as TraumaInformedPreferences['contrast'] })}
         />
       </SettingGroup>
 
@@ -290,7 +275,7 @@ function VisualSettings({
           label="Reduce Motion"
           description="Minimize animations and transitions that may cause discomfort"
           checked={preferences.reduceMotion}
-          onChange={(checked) => onChange({ reduceMotion: checked })}
+          onChange={checked => onChange({ reduceMotion: checked })}
         />
       </SettingGroup>
     </div>
@@ -298,10 +283,10 @@ function VisualSettings({
 }
 
 // Motor Settings Tab
-function MotorSettings({ 
-  preferences, 
-  onChange 
-}: { 
+function MotorSettings({
+  preferences,
+  onChange,
+}: {
   preferences: TraumaInformedPreferences;
   onChange: (updates: Partial<TraumaInformedPreferences>) => void;
 }) {
@@ -319,9 +304,11 @@ function MotorSettings({
           options={[
             { value: 'normal', label: 'Normal (44px)' },
             { value: 'large', label: 'Large (56px)' },
-            { value: 'extra-large', label: 'Extra Large (72px)' }
+            { value: 'extra-large', label: 'Extra Large (72px)' },
           ]}
-          onChange={(value) => onChange({ touchTargetSize: value as TraumaInformedPreferences['touchTargetSize'] })}
+          onChange={value =>
+            onChange({ touchTargetSize: value as TraumaInformedPreferences['touchTargetSize'] })
+          }
         />
       </SettingGroup>
 
@@ -334,7 +321,7 @@ function MotorSettings({
           label="Voice Input"
           description="Use speech-to-text for filling out forms (requires microphone)"
           checked={preferences.voiceInput}
-          onChange={(checked) => onChange({ voiceInput: checked })}
+          onChange={checked => onChange({ voiceInput: checked })}
         />
       </SettingGroup>
 
@@ -350,9 +337,11 @@ function MotorSettings({
           options={[
             { value: 'minimal', label: 'Minimal - Few confirmations' },
             { value: 'standard', label: 'Standard - Important actions only' },
-            { value: 'high', label: 'High - Confirm most actions' }
+            { value: 'high', label: 'High - Confirm most actions' },
           ]}
-          onChange={(value) => onChange({ confirmationLevel: value as TraumaInformedPreferences['confirmationLevel'] })}
+          onChange={value =>
+            onChange({ confirmationLevel: value as TraumaInformedPreferences['confirmationLevel'] })
+          }
         />
       </SettingGroup>
     </div>
@@ -360,10 +349,10 @@ function MotorSettings({
 }
 
 // Emotional Safety Settings Tab
-function EmotionalSafetySettings({ 
-  preferences, 
-  onChange 
-}: { 
+function EmotionalSafetySettings({
+  preferences,
+  onChange,
+}: {
   preferences: TraumaInformedPreferences;
   onChange: (updates: Partial<TraumaInformedPreferences>) => void;
 }) {
@@ -378,7 +367,7 @@ function EmotionalSafetySettings({
           label="Gentle Language"
           description="Use supportive, non-judgmental language in messages and feedback"
           checked={preferences.gentleLanguage}
-          onChange={(checked) => onChange({ gentleLanguage: checked })}
+          onChange={checked => onChange({ gentleLanguage: checked })}
         />
       </SettingGroup>
 
@@ -391,7 +380,7 @@ function EmotionalSafetySettings({
           label="Hide Distressing Content"
           description="Filter out potentially triggering medical images or detailed descriptions"
           checked={preferences.hideDistressingContent}
-          onChange={(checked) => onChange({ hideDistressingContent: checked })}
+          onChange={checked => onChange({ hideDistressingContent: checked })}
         />
       </SettingGroup>
 
@@ -404,7 +393,7 @@ function EmotionalSafetySettings({
           label="Comfort Prompts"
           description="Show gentle reminders to take breaks and practice self-care"
           checked={preferences.showComfortPrompts}
-          onChange={(checked) => onChange({ showComfortPrompts: checked })}
+          onChange={checked => onChange({ showComfortPrompts: checked })}
         />
       </SettingGroup>
     </div>
@@ -412,10 +401,10 @@ function EmotionalSafetySettings({
 }
 
 // Mobile Settings Tab
-function MobileSettings({ 
-  preferences, 
-  onChange 
-}: { 
+function MobileSettings({
+  preferences,
+  onChange,
+}: {
   preferences: any;
   onChange: (updates: any) => void;
 }) {
@@ -430,14 +419,14 @@ function MobileSettings({
           label="Voice Input"
           description="Enable voice commands for navigation and form input"
           checked={preferences.voiceInput}
-          onChange={(checked) => onChange({ voiceInput: checked })}
+          onChange={checked => onChange({ voiceInput: checked })}
         />
-        
+
         <ToggleSetting
           label="Text-to-Speech"
           description="Read interface elements aloud when requested"
           checked={preferences.textToSpeech}
-          onChange={(checked) => onChange({ textToSpeech: checked })}
+          onChange={checked => onChange({ textToSpeech: checked })}
         />
       </SettingGroup>
 
@@ -450,7 +439,7 @@ function MobileSettings({
           label="Haptic Feedback"
           description="Vibrate device for button presses and confirmations"
           checked={preferences.hapticFeedback}
-          onChange={(checked) => onChange({ hapticFeedback: checked })}
+          onChange={checked => onChange({ hapticFeedback: checked })}
         />
       </SettingGroup>
 
@@ -463,21 +452,21 @@ function MobileSettings({
           label="Large Text"
           description="Increase text size for better mobile readability"
           checked={preferences.largeText}
-          onChange={(checked) => onChange({ largeText: checked })}
+          onChange={checked => onChange({ largeText: checked })}
         />
-        
+
         <ToggleSetting
           label="High Contrast"
           description="Enhanced contrast for better visibility on mobile screens"
           checked={preferences.highContrast}
-          onChange={(checked) => onChange({ highContrast: checked })}
+          onChange={checked => onChange({ highContrast: checked })}
         />
-        
+
         <ToggleSetting
           label="Reduced Motion"
           description="Minimize animations that may cause motion sickness"
           checked={preferences.reducedMotion}
-          onChange={(checked) => onChange({ reducedMotion: checked })}
+          onChange={checked => onChange({ reducedMotion: checked })}
         />
       </SettingGroup>
     </div>
@@ -485,12 +474,12 @@ function MobileSettings({
 }
 
 // Setting Group Component
-function SettingGroup({ 
-  title, 
-  description, 
-  icon, 
-  children 
-}: { 
+function SettingGroup({
+  title,
+  description,
+  icon,
+  children,
+}: {
   title: string;
   description: string;
   icon: React.ReactNode;
@@ -505,20 +494,18 @@ function SettingGroup({
           <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
         </div>
       </div>
-      <div className="space-y-4">
-        {children}
-      </div>
+      <div className="space-y-4">{children}</div>
     </div>
   );
 }
 
 // Toggle Setting Component
-function ToggleSetting({ 
-  label, 
-  description, 
-  checked, 
-  onChange 
-}: { 
+function ToggleSetting({
+  label,
+  description,
+  checked,
+  onChange,
+}: {
   label: string;
   description: string;
   checked: boolean;
@@ -554,13 +541,13 @@ function ToggleSetting({
 }
 
 // Select Setting Component
-function SelectSetting({ 
-  label, 
-  description, 
-  value, 
-  options, 
-  onChange 
-}: { 
+function SelectSetting({
+  label,
+  description,
+  value,
+  options,
+  onChange,
+}: {
   label: string;
   description: string;
   value: string;
@@ -569,22 +556,24 @@ function SelectSetting({
 }) {
   return (
     <div>
-      <label className="block font-medium text-gray-900 dark:text-gray-100 text-sm mb-1">{label}</label>
+      <label className="block font-medium text-gray-900 dark:text-gray-100 text-sm mb-1">
+        {label}
+      </label>
       <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">{description}</p>
       <select
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         className="
           block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
           text-sm
         "
-        style={{ 
+        style={{
           minHeight: 'var(--ti-touch-size)',
-          fontSize: 'var(--ti-font-size)'
+          fontSize: 'var(--ti-font-size)',
         }}
       >
-        {options.map((option) => (
+        {options.map(option => (
           <option key={option.value} value={option.value}>
             {option.label}
           </option>

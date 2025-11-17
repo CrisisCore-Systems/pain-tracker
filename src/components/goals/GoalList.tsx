@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { Goal } from '../../types/goals';
 import { goalStorage } from '../../utils/goals/storage';
-import { GoalAnalyticsCalculator, calculateDaysRemaining, isGoalOverdue, getGoalStatusColor, formatGoalProgress } from '../../utils/goals/analytics';
+import {
+  GoalAnalyticsCalculator,
+  calculateDaysRemaining,
+  isGoalOverdue,
+  getGoalStatusColor,
+  formatGoalProgress,
+} from '../../utils/goals/analytics';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -23,7 +29,7 @@ import {
   BarChart3,
   Search,
   Star,
-  Clock
+  Clock,
 } from 'lucide-react';
 
 interface GoalListProps {
@@ -32,11 +38,7 @@ interface GoalListProps {
   onViewProgress: (goal: Goal) => void;
 }
 
-export const GoalList: React.FC<GoalListProps> = ({
-  onCreateGoal,
-  onEditGoal,
-  onViewProgress
-}) => {
+export const GoalList: React.FC<GoalListProps> = ({ onCreateGoal, onEditGoal, onViewProgress }) => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [filteredGoals, setFilteredGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,8 +68,9 @@ export const GoalList: React.FC<GoalListProps> = ({
 
   const filterAndSortGoals = useCallback(() => {
     let filtered = goals.filter(goal => {
-      const matchesSearch = goal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           goal.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch =
+        goal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        goal.description.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || goal.status === statusFilter;
       const matchesType = typeFilter === 'all' || goal.type === typeFilter;
 
@@ -109,7 +112,7 @@ export const GoalList: React.FC<GoalListProps> = ({
         ...goal,
         status: newStatus,
         completedAt: newStatus === 'completed' ? new Date().toISOString() : undefined,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       await goalStorage.saveGoal(updatedGoal);
@@ -224,7 +227,12 @@ export const GoalList: React.FC<GoalListProps> = ({
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={sortBy} onValueChange={(value: string) => setSortBy(value as 'created' | 'priority' | 'progress' | 'due_date')}>
+            <Select
+              value={sortBy}
+              onValueChange={(value: string) =>
+                setSortBy(value as 'created' | 'priority' | 'progress' | 'due_date')
+              }
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
@@ -250,8 +258,7 @@ export const GoalList: React.FC<GoalListProps> = ({
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               {goals.length === 0
                 ? 'Create your first goal to start tracking your progress'
-                : 'Try adjusting your search or filters'
-              }
+                : 'Try adjusting your search or filters'}
             </p>
             {goals.length === 0 && (
               <Button onClick={onCreateGoal}>
@@ -263,7 +270,7 @@ export const GoalList: React.FC<GoalListProps> = ({
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredGoals.map((goal) => {
+          {filteredGoals.map(goal => {
             const progress = GoalAnalyticsCalculator.calculateProgressPercentage(goal, []);
             const daysRemaining = calculateDaysRemaining(goal);
             const isOverdue = isGoalOverdue(goal);
@@ -279,9 +286,7 @@ export const GoalList: React.FC<GoalListProps> = ({
                         <CardTitle className="text-lg line-clamp-2">{goal.title}</CardTitle>
                         <div className="flex items-center gap-2 mt-1">
                           {getStatusIcon(goal.status)}
-                          <Badge className={statusColor}>
-                            {goal.status}
-                          </Badge>
+                          <Badge className={statusColor}>{goal.status}</Badge>
                         </div>
                       </div>
                     </div>
@@ -301,7 +306,8 @@ export const GoalList: React.FC<GoalListProps> = ({
                   {/* Target */}
                   {goal.targets[0] && (
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      Target: {formatGoalProgress(goal.targets[0].targetValue, goal.targets[0].unit)}
+                      Target:{' '}
+                      {formatGoalProgress(goal.targets[0].targetValue, goal.targets[0].unit)}
                     </div>
                   )}
 
@@ -309,10 +315,13 @@ export const GoalList: React.FC<GoalListProps> = ({
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
-                      {daysRemaining === -1 ? 'No deadline' :
-                       daysRemaining === 0 ? 'Due today' :
-                       daysRemaining > 0 ? `${daysRemaining} days left` :
-                       `${Math.abs(daysRemaining)} days overdue`}
+                      {daysRemaining === -1
+                        ? 'No deadline'
+                        : daysRemaining === 0
+                          ? 'Due today'
+                          : daysRemaining > 0
+                            ? `${daysRemaining} days left`
+                            : `${Math.abs(daysRemaining)} days overdue`}
                     </div>
                     {isOverdue && (
                       <Badge variant="destructive" className="text-xs">
@@ -323,9 +332,7 @@ export const GoalList: React.FC<GoalListProps> = ({
 
                   {/* Priority */}
                   <div className="flex items-center justify-between">
-                    <Badge variant="outline">
-                      {goal.priority} priority
-                    </Badge>
+                    <Badge variant="outline">{goal.priority} priority</Badge>
                     {goal.milestones.length > 0 && (
                       <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
                         <Award className="w-4 h-4" />
@@ -345,11 +352,7 @@ export const GoalList: React.FC<GoalListProps> = ({
                       <BarChart3 className="w-4 h-4 mr-1" />
                       Progress
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onEditGoal(goal)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => onEditGoal(goal)}>
                       <Edit className="w-4 h-4" />
                     </Button>
                     {goal.status === 'active' && (
@@ -415,10 +418,13 @@ export const GoalList: React.FC<GoalListProps> = ({
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">
-                  {Math.round(goals.reduce((sum, g) => {
-                    const progress = GoalAnalyticsCalculator.calculateProgressPercentage(g, []);
-                    return sum + progress;
-                  }, 0) / goals.length)}%
+                  {Math.round(
+                    goals.reduce((sum, g) => {
+                      const progress = GoalAnalyticsCalculator.calculateProgressPercentage(g, []);
+                      return sum + progress;
+                    }, 0) / goals.length
+                  )}
+                  %
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">Avg Progress</div>
               </div>

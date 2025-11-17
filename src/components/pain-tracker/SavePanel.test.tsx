@@ -62,7 +62,7 @@ URL.revokeObjectURL = mockRevokeObjectURL;
 let lastCreatedAnchor: HTMLAnchorElement | null = null;
 const mockClick = vi.fn();
 const originalCreateElement = document.createElement;
-document.createElement = vi.fn((tagName) => {
+document.createElement = vi.fn(tagName => {
   if (tagName === 'a') {
     const anchor = originalCreateElement.call(document, 'a') as HTMLAnchorElement;
     anchor.click = mockClick;
@@ -96,9 +96,9 @@ describe('SavePanel', () => {
 
   it('handles JSON export', () => {
     render(<SavePanel entries={mockEntries} />);
-    
+
     fireEvent.click(screen.getByText('Export JSON'));
-    
+
     expect(mockCreateObjectURL).toHaveBeenCalledWith(expect.any(Blob));
     expect(lastCreatedAnchor?.download).toBe('pain-tracker-export.json');
     expect(mockClick).toHaveBeenCalled();
@@ -107,9 +107,9 @@ describe('SavePanel', () => {
 
   it('handles CSV export', () => {
     render(<SavePanel entries={mockEntries} />);
-    
+
     fireEvent.click(screen.getByText('Export CSV'));
-    
+
     expect(mockCreateObjectURL).toHaveBeenCalledWith(expect.any(Blob));
     expect(lastCreatedAnchor?.download).toBe('pain-tracker-export.csv');
     expect(mockClick).toHaveBeenCalled();
@@ -119,9 +119,9 @@ describe('SavePanel', () => {
   it('uses custom export handler when provided', () => {
     const onExport = vi.fn();
     render(<SavePanel entries={mockEntries} onExport={onExport} />);
-    
+
     fireEvent.click(screen.getByText('Export JSON'));
-    
+
     expect(onExport).toHaveBeenCalledWith('json');
     expect(mockCreateObjectURL).not.toHaveBeenCalled();
   });
@@ -135,10 +135,12 @@ describe('SavePanel', () => {
   it('shows confirmation dialog when clear data clicked', () => {
     const onClearData = vi.fn();
     render(<SavePanel entries={mockEntries} onClearData={onClearData} />);
-    
+
     fireEvent.click(screen.getByText('Clear Data'));
-    
-    expect(screen.getByText('Are you sure you want to clear all data? This action cannot be undone.')).toBeDefined();
+
+    expect(
+      screen.getByText('Are you sure you want to clear all data? This action cannot be undone.')
+    ).toBeDefined();
     expect(screen.getByText('Yes, Clear Data')).toBeDefined();
     expect(screen.getByText('Cancel')).toBeDefined();
   });
@@ -146,53 +148,55 @@ describe('SavePanel', () => {
   it('calls onClearData when confirmed', () => {
     const onClearData = vi.fn();
     render(<SavePanel entries={mockEntries} onClearData={onClearData} />);
-    
+
     fireEvent.click(screen.getByText('Clear Data'));
     fireEvent.click(screen.getByText('Yes, Clear Data'));
-    
+
     expect(onClearData).toHaveBeenCalled();
   });
 
   it('hides confirmation dialog when cancelled', () => {
     const onClearData = vi.fn();
     render(<SavePanel entries={mockEntries} onClearData={onClearData} />);
-    
+
     fireEvent.click(screen.getByText('Clear Data'));
     fireEvent.click(screen.getByText('Cancel'));
-    
-    expect(screen.queryByText('Are you sure you want to clear all data? This action cannot be undone.')).toBeNull();
+
+    expect(
+      screen.queryByText('Are you sure you want to clear all data? This action cannot be undone.')
+    ).toBeNull();
   });
 
   it('formats CSV data correctly', () => {
     render(<SavePanel entries={mockEntries} />);
-    
+
     fireEvent.click(screen.getByText('Export CSV'));
-    
+
     // Verify the mock was called and get the blob
     expect(mockCreateObjectURL).toHaveBeenCalled();
     const calls = mockCreateObjectURL.mock.calls;
     expect(calls.length).toBeGreaterThan(0);
-    
+
     const blob = calls[0][0];
     expect(blob).toBeInstanceOf(Blob);
-    
+
     const reader = new FileReader();
-    
-    return new Promise<void>((resolve) => {
+
+    return new Promise<void>(resolve => {
       reader.onload = () => {
         const csv = reader.result as string;
-        
+
         // Check headers
         expect(csv).toContain('Date,Pain Level,Locations,Symptoms');
-        
+
         // Check data formatting
         expect(csv).toContain('lower back');
         expect(csv).toContain('aching');
         expect(csv).toContain('Ibuprofen 400mg');
-        
+
         resolve();
       };
       reader.readAsText(blob);
     });
   });
-}); 
+});

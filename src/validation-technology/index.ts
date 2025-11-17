@@ -1,43 +1,43 @@
 /**
  * Validation Technology Integration - Main Export Index
- * 
+ *
  * This file provides easy access to all validation technology components
  * and services for integration into the pain tracker application.
  */
 
 // Core Validation Services
-export { 
-  EmotionalValidation, 
-  ValidationHistory, 
-  type ValidationResponse 
+export {
+  EmotionalValidation,
+  ValidationHistory,
+  type ValidationResponse,
 } from '../services/EmotionalValidationService';
 
-export { 
+export {
   validationIntegration,
   type ValidationEvent,
   type ValidationPattern,
-  type ProgressInsights 
+  type ProgressInsights,
 } from '../services/ValidationIntegrationService';
 
 // Progress Tracking Components
-export { 
+export {
   HolisticProgressTracker,
   type WellbeingMetrics,
-  type ProgressEntry 
+  type ProgressEntry,
 } from '../components/progress/HolisticProgressTracker';
 
 // User Agency Components
-export { 
-  UserControlPanel, 
-  ChoiceEmphasis, 
-  EmpowermentMessageDisplay 
+export {
+  UserControlPanel,
+  ChoiceEmphasis,
+  EmpowermentMessageDisplay,
 } from '../components/agency/UserAgencyComponents';
 
 // Main Integration Components
-export { 
+export {
   ValidationTechnologyIntegration,
   ValidationIntegratedPainForm,
-  ValidationDashboard 
+  ValidationDashboard,
 } from '../components/integration/ValidationTechnologyIntegration';
 
 // React Hooks
@@ -48,23 +48,23 @@ export type { TraumaInformedPreferences } from '../components/accessibility/Trau
 
 /**
  * Quick Start Guide:
- * 
+ *
  * 1. Basic emotional validation:
  *    import { EmotionalValidation } from './validation-technology';
  *    <EmotionalValidation text={userInput} onValidation={handleValidation} />
- * 
+ *
  * 2. Holistic progress tracking:
  *    import { HolisticProgressTracker } from './validation-technology';
  *    <HolisticProgressTracker painEntries={entries} onProgressUpdate={handleProgress} />
- * 
+ *
  * 3. User agency features:
  *    import { UserControlPanel } from './validation-technology';
  *    <UserControlPanel />
- * 
+ *
  * 4. Complete integration:
  *    import { ValidationTechnologyIntegration } from './validation-technology';
  *    <ValidationTechnologyIntegration painEntries={entries} />
- * 
+ *
  * 5. Form integration:
  *    import { ValidationIntegratedPainForm } from './validation-technology';
  *    <ValidationIntegratedPainForm onSubmit={handleSubmit} painEntries={entries} />

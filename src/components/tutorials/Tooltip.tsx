@@ -13,12 +13,12 @@ interface TooltipProps {
   className?: string;
 }
 
-export function Tooltip({ 
-  content, 
-  children, 
-  placement = 'top', 
+export function Tooltip({
+  content,
+  children,
+  placement = 'top',
   trigger = 'hover',
-  className = '' 
+  className = '',
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
@@ -29,14 +29,16 @@ export function Tooltip({
     top: 'bottom-full mb-2 left-1/2 transform -translate-x-1/2',
     bottom: 'top-full mt-2 left-1/2 transform -translate-x-1/2',
     left: 'right-full mr-2 top-1/2 transform -translate-y-1/2',
-    right: 'left-full ml-2 top-1/2 transform -translate-y-1/2'
+    right: 'left-full ml-2 top-1/2 transform -translate-y-1/2',
   };
 
   const arrowClasses = {
     top: 'top-full left-1/2 transform -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent border-t-popover',
-    bottom: 'bottom-full left-1/2 transform -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-popover',
+    bottom:
+      'bottom-full left-1/2 transform -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-popover',
     left: 'left-full top-1/2 transform -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-popover',
-    right: 'right-full top-1/2 transform -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-popover'
+    right:
+      'right-full top-1/2 transform -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-popover',
   };
 
   const handleShow = () => {
@@ -89,15 +91,15 @@ export function Tooltip({
       onMouseEnter: handleShow,
       onMouseLeave: handleHide,
       onFocus: handleShow,
-      onBlur: handleHide
+      onBlur: handleHide,
     },
     click: {
-      onClick: handleToggle
+      onClick: handleToggle,
     },
     focus: {
       onFocus: handleShow,
-      onBlur: handleHide
-    }
+      onBlur: handleHide,
+    },
   };
 
   if (isDismissed) {

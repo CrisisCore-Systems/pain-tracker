@@ -23,11 +23,9 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
             <Heart className="h-6 w-6 text-red-500 absolute -top-1 -right-1" />
           </div>
         </div>
-        
-        <h3 className="text-3xl font-bold text-foreground mb-4">
-          Welcome to Pain Tracker
-        </h3>
-        
+
+        <h3 className="text-3xl font-bold text-foreground mb-4">Welcome to Pain Tracker</h3>
+
         <p className="text-lg text-muted-foreground mb-6 max-w-md mx-auto">
           Take control of your pain management journey with comprehensive tracking and insights.
         </p>
@@ -43,7 +41,7 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
             Record pain levels, symptoms, and daily activities
           </p>
         </div>
-        
+
         <div className="text-center">
           <div className="bg-primary/10 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
             <TrendingUp className="h-6 w-6 text-primary" />
@@ -53,7 +51,7 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
             Visualize patterns and improvements over time
           </p>
         </div>
-        
+
         <div className="text-center">
           <div className="bg-primary/10 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
             <Heart className="h-6 w-6 text-primary" />
@@ -66,17 +64,11 @@ export function WelcomeScreen({ onNext, onSkip }: WelcomeScreenProps) {
       </div>
 
       <div className="flex justify-between items-center pt-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <Button
-          variant="outline"
-          onClick={onSkip}
-        >
+        <Button variant="outline" onClick={onSkip}>
           Skip Tour
         </Button>
-        
-        <Button
-          onClick={onNext}
-          className="min-w-24"
-        >
+
+        <Button onClick={onNext} className="min-w-24">
           Get Started
         </Button>
       </div>

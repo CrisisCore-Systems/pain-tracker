@@ -113,7 +113,8 @@ export function AdvancedFilters({
   useEffect(() => {
     try {
       const url = new URL(window.location.href);
-      const hasActiveFilters = filters.searchText ||
+      const hasActiveFilters =
+        filters.searchText ||
         filters.dateRange.start ||
         filters.dateRange.end ||
         filters.painLevelRange.min !== 1 ||
@@ -155,33 +156,48 @@ export function AdvancedFilters({
         entry.baselineData.locations.forEach(loc => {
           locations.add(loc);
           // Add to search terms for suggestions
-          loc.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+          loc
+            .toLowerCase()
+            .split(' ')
+            .forEach(word => searchTerms.add(word));
         });
       }
       if (entry.baselineData.symptoms) {
         entry.baselineData.symptoms.forEach(symptom => {
           symptoms.add(symptom);
-          symptom.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+          symptom
+            .toLowerCase()
+            .split(' ')
+            .forEach(word => searchTerms.add(word));
         });
       }
       if (entry.medications?.current) {
         entry.medications.current.forEach(med => {
           medications.add(med.name);
-          med.name.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+          med.name
+            .toLowerCase()
+            .split(' ')
+            .forEach(word => searchTerms.add(word));
         });
       }
       if (entry.treatments?.recent) {
         entry.treatments.recent.forEach(treatment => {
           treatments.add(treatment.type);
-          treatment.type.toLowerCase().split(' ').forEach(word => searchTerms.add(word));
+          treatment.type
+            .toLowerCase()
+            .split(' ')
+            .forEach(word => searchTerms.add(word));
         });
       }
 
       // Add words from notes
       if (entry.notes) {
-        entry.notes.toLowerCase().split(/\s+/).forEach(word => {
-          if (word.length > 2) searchTerms.add(word);
-        });
+        entry.notes
+          .toLowerCase()
+          .split(/\s+/)
+          .forEach(word => {
+            if (word.length > 2) searchTerms.add(word);
+          });
       }
     });
 
@@ -190,7 +206,7 @@ export function AdvancedFilters({
       symptoms: Array.from(symptoms).sort(),
       medications: Array.from(medications).sort(),
       treatments: Array.from(treatments).sort(),
-      searchTerms: Array.from(searchTerms).sort().slice(0, 20) // Limit to top 20 suggestions
+      searchTerms: Array.from(searchTerms).sort().slice(0, 20), // Limit to top 20 suggestions
     };
   }, [entries]);
 
@@ -198,7 +214,10 @@ export function AdvancedFilters({
   const filteredEntries = useMemo(() => {
     return entries.filter(entry => {
       // Date range filter
-      if (filters.dateRange.start && new Date(entry.timestamp) < new Date(filters.dateRange.start)) {
+      if (
+        filters.dateRange.start &&
+        new Date(entry.timestamp) < new Date(filters.dateRange.start)
+      ) {
         return false;
       }
       if (filters.dateRange.end && new Date(entry.timestamp) > new Date(filters.dateRange.end)) {
@@ -206,48 +225,64 @@ export function AdvancedFilters({
       }
 
       // Pain level filter
-      if (entry.baselineData.pain < filters.painLevelRange.min ||
-          entry.baselineData.pain > filters.painLevelRange.max) {
+      if (
+        entry.baselineData.pain < filters.painLevelRange.min ||
+        entry.baselineData.pain > filters.painLevelRange.max
+      ) {
         return false;
       }
 
       // Location filter
-      if (filters.locations.length > 0 &&
-          !filters.locations.some(loc => entry.baselineData.locations?.includes(loc))) {
+      if (
+        filters.locations.length > 0 &&
+        !filters.locations.some(loc => entry.baselineData.locations?.includes(loc))
+      ) {
         return false;
       }
 
       // Symptoms filter
-      if (filters.symptoms.length > 0 &&
-          !filters.symptoms.some(symptom => entry.baselineData.symptoms?.includes(symptom))) {
+      if (
+        filters.symptoms.length > 0 &&
+        !filters.symptoms.some(symptom => entry.baselineData.symptoms?.includes(symptom))
+      ) {
         return false;
       }
 
       // Medications filter
-      if (filters.medications.length > 0 &&
-          !filters.medications.some(med =>
-            entry.medications?.current?.some(entryMed => entryMed.name === med))) {
+      if (
+        filters.medications.length > 0 &&
+        !filters.medications.some(med =>
+          entry.medications?.current?.some(entryMed => entryMed.name === med)
+        )
+      ) {
         return false;
       }
 
       // Treatments filter
-      if (filters.treatments.length > 0 &&
-          !filters.treatments.some(treatment =>
-            entry.treatments?.recent?.some(entryTreatment => entryTreatment.type === treatment))) {
+      if (
+        filters.treatments.length > 0 &&
+        !filters.treatments.some(treatment =>
+          entry.treatments?.recent?.some(entryTreatment => entryTreatment.type === treatment)
+        )
+      ) {
         return false;
       }
 
       // Sleep quality filter
-      if (entry.qualityOfLife?.sleepQuality !== undefined &&
-          (entry.qualityOfLife.sleepQuality < filters.sleepQualityRange.min ||
-          entry.qualityOfLife.sleepQuality > filters.sleepQualityRange.max)) {
+      if (
+        entry.qualityOfLife?.sleepQuality !== undefined &&
+        (entry.qualityOfLife.sleepQuality < filters.sleepQualityRange.min ||
+          entry.qualityOfLife.sleepQuality > filters.sleepQualityRange.max)
+      ) {
         return false;
       }
 
       // Mood impact filter
-      if (entry.qualityOfLife?.moodImpact !== undefined &&
-          (entry.qualityOfLife.moodImpact < filters.moodImpactRange.min ||
-          entry.qualityOfLife.moodImpact > filters.moodImpactRange.max)) {
+      if (
+        entry.qualityOfLife?.moodImpact !== undefined &&
+        (entry.qualityOfLife.moodImpact < filters.moodImpactRange.min ||
+          entry.qualityOfLife.moodImpact > filters.moodImpactRange.max)
+      ) {
         return false;
       }
 
@@ -255,7 +290,10 @@ export function AdvancedFilters({
       if (filters.workImpact.hasMissedWork && (entry.workImpact?.missedWork ?? 0) === 0) {
         return false;
       }
-      if (filters.workImpact.hasModifiedDuties && (entry.workImpact?.modifiedDuties?.length ?? 0) === 0) {
+      if (
+        filters.workImpact.hasModifiedDuties &&
+        (entry.workImpact?.modifiedDuties?.length ?? 0) === 0
+      ) {
         return false;
       }
 
@@ -282,11 +320,11 @@ export function AdvancedFilters({
           ...(entry.workImpact?.workLimitations || []),
           entry.comparison?.worseningSince,
           ...(entry.comparison?.newLimitations || []),
-          entry.qualityOfLife?.socialImpact?.join(' ')
+          entry.qualityOfLife?.socialImpact?.join(' '),
         ];
 
-        const hasMatch = searchableFields.some(field =>
-          field && field.toString().toLowerCase().includes(searchLower)
+        const hasMatch = searchableFields.some(
+          field => field && field.toString().toLowerCase().includes(searchLower)
         );
 
         if (!hasMatch) {
@@ -338,7 +376,11 @@ export function AdvancedFilters({
     }));
   };
 
-  const updateNestedFilter = (parentKey: keyof FilterCriteria, childKey: string, value: unknown) => {
+  const updateNestedFilter = (
+    parentKey: keyof FilterCriteria,
+    childKey: string,
+    value: unknown
+  ) => {
     setFilters(prev => ({
       ...prev,
       [parentKey]: {
@@ -373,7 +415,8 @@ export function AdvancedFilters({
   }, [filters]);
 
   const hasActiveFilters = useMemo(() => {
-    return filters.searchText ||
+    return (
+      filters.searchText ||
       filters.dateRange.start ||
       filters.dateRange.end ||
       filters.painLevelRange.min !== 1 ||
@@ -387,7 +430,8 @@ export function AdvancedFilters({
       filters.moodImpactRange.min !== 1 ||
       filters.moodImpactRange.max !== 10 ||
       filters.workImpact.hasMissedWork ||
-      filters.workImpact.hasModifiedDuties;
+      filters.workImpact.hasModifiedDuties
+    );
   }, [filters]);
 
   return (
@@ -403,7 +447,7 @@ export function AdvancedFilters({
                 className="ml-2 border-transparent"
                 style={{
                   backgroundColor: 'hsl(var(--color-badge-bg))',
-                  color: 'hsl(var(--color-badge-foreground))'
+                  color: 'hsl(var(--color-badge-foreground))',
                 }}
               >
                 {activeFiltersCount} active
@@ -411,11 +455,7 @@ export function AdvancedFilters({
             )}
           </div>
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-            >
+            <Button variant="outline" size="sm" onClick={() => setShowAdvanced(!showAdvanced)}>
               {showAdvanced ? 'Hide' : 'Show'} Advanced
             </Button>
             <Button
@@ -452,7 +492,7 @@ export function AdvancedFilters({
               <Input
                 placeholder="Search across all fields (notes, symptoms, medications, treatments...)"
                 value={filters.searchText}
-                onChange={(e) => updateFilter('searchText', e.target.value)}
+                onChange={e => updateFilter('searchText', e.target.value)}
                 className="pl-9 pr-9"
               />
               {filters.searchText && (
@@ -466,7 +506,8 @@ export function AdvancedFilters({
             </div>
             {filters.searchText && (
               <div className="text-xs text-muted-foreground">
-                Searching across: notes, symptoms, locations, medications, treatments, functional impact, work impact, and more
+                Searching across: notes, symptoms, locations, medications, treatments, functional
+                impact, work impact, and more
               </div>
             )}
             {!filters.searchText && filterOptions.searchTerms.length > 0 && (
@@ -494,13 +535,13 @@ export function AdvancedFilters({
               <Input
                 type="date"
                 value={filters.dateRange.start}
-                onChange={(e) => updateNestedFilter('dateRange', 'start', e.target.value)}
+                onChange={e => updateNestedFilter('dateRange', 'start', e.target.value)}
                 placeholder="Start date"
               />
               <Input
                 type="date"
                 value={filters.dateRange.end}
-                onChange={(e) => updateNestedFilter('dateRange', 'end', e.target.value)}
+                onChange={e => updateNestedFilter('dateRange', 'end', e.target.value)}
                 placeholder="End date"
               />
             </div>
@@ -508,14 +549,18 @@ export function AdvancedFilters({
 
           {/* Pain Level Range */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Pain Level ({filters.painLevelRange.min}-{filters.painLevelRange.max})</label>
+            <label className="text-sm font-medium">
+              Pain Level ({filters.painLevelRange.min}-{filters.painLevelRange.max})
+            </label>
             <div className="flex space-x-2">
               <Input
                 type="number"
                 min="1"
                 max="10"
                 value={filters.painLevelRange.min}
-                onChange={(e) => updateNestedFilter('painLevelRange', 'min', parseInt(e.target.value) || 1)}
+                onChange={e =>
+                  updateNestedFilter('painLevelRange', 'min', parseInt(e.target.value) || 1)
+                }
                 className="w-20"
               />
               <Input
@@ -523,7 +568,9 @@ export function AdvancedFilters({
                 min="1"
                 max="10"
                 value={filters.painLevelRange.max}
-                onChange={(e) => updateNestedFilter('painLevelRange', 'max', parseInt(e.target.value) || 10)}
+                onChange={e =>
+                  updateNestedFilter('painLevelRange', 'max', parseInt(e.target.value) || 10)
+                }
                 className="w-20"
               />
             </div>
@@ -532,12 +579,8 @@ export function AdvancedFilters({
           {/* Results Count */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Results</label>
-            <div className="text-2xl font-bold text-primary">
-              {filteredEntries.length}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              of {entries.length} entries
-            </div>
+            <div className="text-2xl font-bold text-primary">{filteredEntries.length}</div>
+            <div className="text-xs text-muted-foreground">of {entries.length} entries</div>
           </div>
         </div>
 
@@ -555,11 +598,14 @@ export function AdvancedFilters({
                         type="checkbox"
                         id={`location-${location}`}
                         checked={filters.locations.includes(location)}
-                        onChange={(e) => {
+                        onChange={e => {
                           if (e.target.checked) {
                             updateFilter('locations', [...filters.locations, location]);
                           } else {
-                            updateFilter('locations', filters.locations.filter(l => l !== location));
+                            updateFilter(
+                              'locations',
+                              filters.locations.filter(l => l !== location)
+                            );
                           }
                         }}
                         className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
@@ -582,11 +628,14 @@ export function AdvancedFilters({
                         type="checkbox"
                         id={`symptom-${symptom}`}
                         checked={filters.symptoms.includes(symptom)}
-                        onChange={(e) => {
+                        onChange={e => {
                           if (e.target.checked) {
                             updateFilter('symptoms', [...filters.symptoms, symptom]);
                           } else {
-                            updateFilter('symptoms', filters.symptoms.filter(s => s !== symptom));
+                            updateFilter(
+                              'symptoms',
+                              filters.symptoms.filter(s => s !== symptom)
+                            );
                           }
                         }}
                         className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
@@ -609,11 +658,14 @@ export function AdvancedFilters({
                         type="checkbox"
                         id={`medication-${medication}`}
                         checked={filters.medications.includes(medication)}
-                        onChange={(e) => {
+                        onChange={e => {
                           if (e.target.checked) {
                             updateFilter('medications', [...filters.medications, medication]);
                           } else {
-                            updateFilter('medications', filters.medications.filter(m => m !== medication));
+                            updateFilter(
+                              'medications',
+                              filters.medications.filter(m => m !== medication)
+                            );
                           }
                         }}
                         className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
@@ -636,11 +688,14 @@ export function AdvancedFilters({
                         type="checkbox"
                         id={`treatment-${treatment}`}
                         checked={filters.treatments.includes(treatment)}
-                        onChange={(e) => {
+                        onChange={e => {
                           if (e.target.checked) {
                             updateFilter('treatments', [...filters.treatments, treatment]);
                           } else {
-                            updateFilter('treatments', filters.treatments.filter(t => t !== treatment));
+                            updateFilter(
+                              'treatments',
+                              filters.treatments.filter(t => t !== treatment)
+                            );
                           }
                         }}
                         className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
@@ -655,14 +710,18 @@ export function AdvancedFilters({
 
               {/* Sleep Quality */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Sleep Quality ({filters.sleepQualityRange.min}-{filters.sleepQualityRange.max})</label>
+                <label className="text-sm font-medium">
+                  Sleep Quality ({filters.sleepQualityRange.min}-{filters.sleepQualityRange.max})
+                </label>
                 <div className="flex space-x-2">
                   <Input
                     type="number"
                     min="1"
                     max="10"
                     value={filters.sleepQualityRange.min}
-                    onChange={(e) => updateNestedFilter('sleepQualityRange', 'min', parseInt(e.target.value) || 1)}
+                    onChange={e =>
+                      updateNestedFilter('sleepQualityRange', 'min', parseInt(e.target.value) || 1)
+                    }
                     className="w-20"
                   />
                   <Input
@@ -670,7 +729,9 @@ export function AdvancedFilters({
                     min="1"
                     max="10"
                     value={filters.sleepQualityRange.max}
-                    onChange={(e) => updateNestedFilter('sleepQualityRange', 'max', parseInt(e.target.value) || 10)}
+                    onChange={e =>
+                      updateNestedFilter('sleepQualityRange', 'max', parseInt(e.target.value) || 10)
+                    }
                     className="w-20"
                   />
                 </div>
@@ -678,14 +739,18 @@ export function AdvancedFilters({
 
               {/* Mood Impact */}
               <div className="space-y-2">
-                <label className="text-sm font-medium">Mood Impact ({filters.moodImpactRange.min}-{filters.moodImpactRange.max})</label>
+                <label className="text-sm font-medium">
+                  Mood Impact ({filters.moodImpactRange.min}-{filters.moodImpactRange.max})
+                </label>
                 <div className="flex space-x-2">
                   <Input
                     type="number"
                     min="1"
                     max="10"
                     value={filters.moodImpactRange.min}
-                    onChange={(e) => updateNestedFilter('moodImpactRange', 'min', parseInt(e.target.value) || 1)}
+                    onChange={e =>
+                      updateNestedFilter('moodImpactRange', 'min', parseInt(e.target.value) || 1)
+                    }
                     className="w-20"
                   />
                   <Input
@@ -693,7 +758,9 @@ export function AdvancedFilters({
                     min="1"
                     max="10"
                     value={filters.moodImpactRange.max}
-                    onChange={(e) => updateNestedFilter('moodImpactRange', 'max', parseInt(e.target.value) || 10)}
+                    onChange={e =>
+                      updateNestedFilter('moodImpactRange', 'max', parseInt(e.target.value) || 10)
+                    }
                     className="w-20"
                   />
                 </div>
@@ -709,7 +776,9 @@ export function AdvancedFilters({
                     type="checkbox"
                     id="has-missed-work"
                     checked={filters.workImpact.hasMissedWork}
-                    onChange={(e) => updateNestedFilter('workImpact', 'hasMissedWork', e.target.checked)}
+                    onChange={e =>
+                      updateNestedFilter('workImpact', 'hasMissedWork', e.target.checked)
+                    }
                     className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                   />
                   <label htmlFor="has-missed-work" className="text-sm">
@@ -721,7 +790,9 @@ export function AdvancedFilters({
                     type="checkbox"
                     id="has-modified-duties"
                     checked={filters.workImpact.hasModifiedDuties}
-                    onChange={(e) => updateNestedFilter('workImpact', 'hasModifiedDuties', e.target.checked)}
+                    onChange={e =>
+                      updateNestedFilter('workImpact', 'hasModifiedDuties', e.target.checked)
+                    }
                     className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                   />
                   <label htmlFor="has-modified-duties" className="text-sm">
@@ -738,11 +809,7 @@ export function AdvancedFilters({
           <div className="border-t pt-4">
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium">Saved Filters</label>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowSaveDialog(true)}
-              >
+              <Button variant="outline" size="sm" onClick={() => setShowSaveDialog(true)}>
                 <Save className="h-4 w-4 mr-1" />
                 Save Current
               </Button>
@@ -761,7 +828,7 @@ export function AdvancedFilters({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       onDeleteFilter(filter.id);
                     }}
@@ -779,14 +846,17 @@ export function AdvancedFilters({
         {showSaveDialog && (
           <div className="fixed inset-0 z-[100] overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-              <div className="fixed inset-0 transition-opacity bg-background/80 backdrop-blur-sm" onClick={() => setShowSaveDialog(false)} />
+              <div
+                className="fixed inset-0 transition-opacity bg-background/80 backdrop-blur-sm"
+                onClick={() => setShowSaveDialog(false)}
+              />
               <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-card shadow-xl rounded-lg border">
                 <h3 className="text-lg font-medium mb-4">Save Filter Preset</h3>
                 <Input
                   placeholder="Filter name"
                   value={saveFilterName}
-                  onChange={(e) => setSaveFilterName(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSaveFilter()}
+                  onChange={e => setSaveFilterName(e.target.value)}
+                  onKeyPress={e => e.key === 'Enter' && handleSaveFilter()}
                   autoFocus
                 />
                 <div className="flex justify-end space-x-2 mt-4">

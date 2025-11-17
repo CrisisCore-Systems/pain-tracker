@@ -7,18 +7,20 @@ interface QualityOfLifeSectionProps {
   sleepQuality: number;
   moodImpact: number;
   socialImpact: string[];
-  onChange: (data: Partial<{
-    sleepQuality: number;
-    moodImpact: number;
-    socialImpact: string[];
-  }>) => void;
+  onChange: (
+    data: Partial<{
+      sleepQuality: number;
+      moodImpact: number;
+      socialImpact: string[];
+    }>
+  ) => void;
 }
 
 export function QualityOfLifeSection({
   sleepQuality,
   moodImpact,
   socialImpact,
-  onChange
+  onChange,
 }: QualityOfLifeSectionProps) {
   const getSleepQualityDescription = (level: number) => {
     if (level <= 3) return 'Poor sleep quality';
@@ -35,7 +37,9 @@ export function QualityOfLifeSection({
   return (
     <div className="space-y-6" role="group" aria-labelledby="quality-of-life-title">
       <div className="flex items-center space-x-3">
-        <span className="text-2xl" role="img" aria-label="quality of life">😴</span>
+        <span className="text-2xl" role="img" aria-label="quality of life">
+          😴
+        </span>
         <h3 id="quality-of-life-title" className="text-xl font-semibold text-foreground">
           Quality of Life Impact
         </h3>
@@ -62,15 +66,25 @@ export function QualityOfLifeSection({
                   min="0"
                   max="10"
                   value={sleepQuality}
-                  onChange={(e) => onChange({ sleepQuality: parseInt(e.target.value) })}
+                  onChange={e => onChange({ sleepQuality: parseInt(e.target.value) })}
                   className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
                   aria-label={`Sleep quality: ${sleepQuality} out of 10 - ${getSleepQualityDescription(sleepQuality)}`}
                 />
 
                 <div className="flex justify-between text-xs text-muted-foreground px-1">
-                  <span>0<br />No sleep</span>
-                  <span>5<br />Fair</span>
-                  <span>10<br />Excellent</span>
+                  <span>
+                    0<br />
+                    No sleep
+                  </span>
+                  <span>
+                    5<br />
+                    Fair
+                  </span>
+                  <span>
+                    10
+                    <br />
+                    Excellent
+                  </span>
                 </div>
               </div>
             </div>
@@ -93,15 +107,25 @@ export function QualityOfLifeSection({
                   min="0"
                   max="10"
                   value={moodImpact}
-                  onChange={(e) => onChange({ moodImpact: parseInt(e.target.value) })}
+                  onChange={e => onChange({ moodImpact: parseInt(e.target.value) })}
                   className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
                   aria-label={`Mood impact: ${moodImpact} out of 10 - ${getMoodImpactDescription(moodImpact)}`}
                 />
 
                 <div className="flex justify-between text-xs text-muted-foreground px-1">
-                  <span>0<br />No impact</span>
-                  <span>5<br />Moderate</span>
-                  <span>10<br />Severe</span>
+                  <span>
+                    0<br />
+                    No impact
+                  </span>
+                  <span>
+                    5<br />
+                    Moderate
+                  </span>
+                  <span>
+                    10
+                    <br />
+                    Severe
+                  </span>
                 </div>
               </div>
             </div>
@@ -116,8 +140,8 @@ export function QualityOfLifeSection({
         </label>
         <textarea
           id="social-impact"
-          value={socialImpact.join("\n")}
-          onChange={(e) => onChange({ socialImpact: e.target.value.split("\n").filter(Boolean) })}
+          value={socialImpact.join('\n')}
+          onChange={e => onChange({ socialImpact: e.target.value.split('\n').filter(Boolean) })}
           className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 min-h-[80px] resize-vertical"
           rows={3}
           placeholder="Enter each social impact on a new line (e.g., 'Unable to attend social gatherings')"
@@ -128,9 +152,10 @@ export function QualityOfLifeSection({
         </p>
       </div>
 
-      {(sleepQuality === 0 && moodImpact === 0 && socialImpact.length === 0) && (
+      {sleepQuality === 0 && moodImpact === 0 && socialImpact.length === 0 && (
         <Alert tone="info">
-          Quality of life metrics help track how pain affects your daily life. Consider rating your sleep quality and mood impact above.
+          Quality of life metrics help track how pain affects your daily life. Consider rating your
+          sleep quality and mood impact above.
         </Alert>
       )}
     </div>

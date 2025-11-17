@@ -87,14 +87,14 @@ class BrowserNotificationManager {
     }
 
     try {
-  const notification = new Notification(options.title, {
+      const notification = new Notification(options.title, {
         body: options.body,
         icon: options.icon || '/icons/notification-icon.png',
         badge: options.badge || '/icons/badge-icon.png',
         tag: options.tag,
         requireInteraction: options.requireInteraction || false,
         silent: options.silent || false,
-        data: options.data
+        data: options.data,
       });
 
       // Auto-close notification after 5 seconds unless it requires interaction
@@ -126,7 +126,7 @@ class BrowserNotificationManager {
       };
 
       // Handle notification error
-      notification.onerror = (error) => {
+      notification.onerror = error => {
         console.error('Notification error:', error);
       };
 
@@ -138,7 +138,9 @@ class BrowserNotificationManager {
   }
 
   // Show notification from our Notification type
-  async showFromNotification(notification: AppNotification): Promise<globalThis.Notification | null> {
+  async showFromNotification(
+    notification: AppNotification
+  ): Promise<globalThis.Notification | null> {
     const options: BrowserNotificationOptions = {
       title: notification.title,
       body: notification.message,
@@ -146,8 +148,8 @@ class BrowserNotificationManager {
       requireInteraction: notification.priority === 'urgent' || notification.priority === 'high',
       data: {
         actionUrl: notification.actionUrl,
-        notificationId: notification.id
-      }
+        notificationId: notification.id,
+      },
     };
 
     return this.show(options);
@@ -181,7 +183,7 @@ class BrowserNotificationManager {
     return {
       supported: this.isSupported(),
       permission: this.permission,
-      queueLength: this.notificationQueue.length
+      queueLength: this.notificationQueue.length,
     };
   }
 
@@ -196,7 +198,7 @@ class BrowserNotificationManager {
       title: 'Test Notification',
       body: 'This is a test notification to verify browser notification functionality.',
       tag: 'test-notification',
-      requireInteraction: false
+      requireInteraction: false,
     };
 
     const notification = await this.show(testOptions);
@@ -216,31 +218,37 @@ export const showPainReminderNotification = async (painLevel?: number): Promise<
       : 'Time for your regular pain check-in',
     tag: 'pain-reminder',
     requireInteraction: false,
-    data: { actionUrl: '/track' }
+    data: { actionUrl: '/track' },
   };
 
   await browserNotificationManager.show(options);
 };
 
-export const showMedicationReminderNotification = async (medicationName: string, dosage: string): Promise<void> => {
+export const showMedicationReminderNotification = async (
+  medicationName: string,
+  dosage: string
+): Promise<void> => {
   const options: BrowserNotificationOptions = {
     title: 'Medication Reminder',
     body: `Time to take ${medicationName} (${dosage})`,
     tag: 'medication-reminder',
     requireInteraction: true,
-    data: { actionUrl: '/medications' }
+    data: { actionUrl: '/medications' },
   };
 
   await browserNotificationManager.show(options);
 };
 
-export const showAppointmentReminderNotification = async (providerName: string, hoursUntil: number): Promise<void> => {
+export const showAppointmentReminderNotification = async (
+  providerName: string,
+  hoursUntil: number
+): Promise<void> => {
   const options: BrowserNotificationOptions = {
     title: 'Appointment Reminder',
     body: `You have an appointment with ${providerName} in ${hoursUntil} hour${hoursUntil !== 1 ? 's' : ''}`,
     tag: 'appointment-reminder',
     requireInteraction: true,
-    data: { actionUrl: '/appointments' }
+    data: { actionUrl: '/appointments' },
   };
 
   await browserNotificationManager.show(options);
@@ -252,7 +260,7 @@ export const showGoalAchievementNotification = async (goalDescription: string): 
     body: `Congratulations! You've achieved your goal: ${goalDescription}`,
     tag: 'goal-achievement',
     requireInteraction: true,
-    data: { actionUrl: '/goals' }
+    data: { actionUrl: '/goals' },
   };
 
   await browserNotificationManager.show(options);
@@ -287,6 +295,6 @@ export const useBrowserNotifications = () => {
     permission,
     requestPermission,
     showNotification,
-    testNotification
+    testNotification,
   };
 };

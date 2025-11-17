@@ -35,7 +35,9 @@ function rgbStringToRgba(rgbLike: string, alpha = 1): string {
     const b = parseInt(hex.substr(4, 2), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
-  const numMatch = rgbLike.match(/(\d+)\s*(?:[, ])\s*(\d+)\s*(?:[, ])\s*(\d+)/) || rgbLike.match(/(\d+)\s+(\d+)\s+(\d+)/);
+  const numMatch =
+    rgbLike.match(/(\d+)\s*(?:[, ])\s*(\d+)\s*(?:[, ])\s*(\d+)/) ||
+    rgbLike.match(/(\d+)\s+(\d+)\s+(\d+)/);
   if (numMatch) {
     const r = Number(numMatch[1]);
     const g = Number(numMatch[2]);
@@ -61,28 +63,28 @@ export const chartColors = {
     mild: resolveColor('--color-pain-mild', brand.colors.pain.mild),
     moderate: resolveColor('--color-pain-moderate', brand.colors.pain.moderate),
     severe: resolveColor('--color-pain-severe', brand.colors.pain.severe),
-    extreme: resolveColor('--color-pain-extreme', brand.colors.pain.extreme)
+    extreme: resolveColor('--color-pain-extreme', brand.colors.pain.extreme),
   },
 
   treatment: {
     primary: resolveColor('--chart-series-2', brand.colors.secondary[500]),
     medication: resolveColor('--chart-series-3', brand.colors.accent[500]),
     therapy: resolveColor('--chart-series-1', brand.colors.primary[600]),
-    lifestyle: resolveColor('--chart-series-6', brand.colors.neutral[600])
+    lifestyle: resolveColor('--chart-series-6', brand.colors.neutral[600]),
   },
 
   analytics: {
     trend: resolveColor('--chart-series-1', brand.colors.primary[500]),
     average: resolveColor('--chart-series-2', brand.colors.secondary[500]),
     prediction: resolveColor('--chart-series-3', brand.colors.accent[400]),
-    baseline: resolveColor('--chart-series-6', brand.colors.neutral[500])
+    baseline: resolveColor('--chart-series-6', brand.colors.neutral[500]),
   },
 
   status: {
     normal: resolveColor('--chart-series-1', brand.colors.status.info),
     warning: resolveColor('--chart-series-4', brand.colors.status.warning),
     critical: resolveColor('--chart-series-6', brand.colors.status.error),
-    success: resolveColor('--chart-series-2', brand.colors.status.success)
+    success: resolveColor('--chart-series-2', brand.colors.status.success),
   },
 
   series: [
@@ -95,25 +97,36 @@ export const chartColors = {
     resolveColor('--chart-series-1', brand.colors.primary[700]),
     resolveColor('--chart-series-2', brand.colors.secondary[700]),
     resolveColor('--chart-series-3', brand.colors.accent[700]),
-    resolveColor('--chart-series-6', brand.colors.pain.extreme)
-  ]
+    resolveColor('--chart-series-6', brand.colors.pain.extreme),
+  ],
 };
 
 // Helper functions for chart colors
-export const getChartColor = (index: number, palette: keyof typeof chartColors = 'series'): string => {
+export const getChartColor = (
+  index: number,
+  palette: keyof typeof chartColors = 'series'
+): string => {
   const colorArray = chartColors[palette] as any;
   if (Array.isArray(colorArray)) return colorArray[index % colorArray.length];
   // if palette is an object, return first value
-  if (typeof colorArray === 'object') return Object.values(colorArray)[index % Object.values(colorArray).length] as string;
+  if (typeof colorArray === 'object')
+    return Object.values(colorArray)[index % Object.values(colorArray).length] as string;
   return chartColors.series[index % chartColors.series.length];
 };
 
-export const getChartColorAlpha = (index: number, alpha: number = 0.2, palette: keyof typeof chartColors = 'series'): string => {
+export const getChartColorAlpha = (
+  index: number,
+  alpha: number = 0.2,
+  palette: keyof typeof chartColors = 'series'
+): string => {
   const color = getChartColor(index, palette);
   // color is already an rgba string from resolveColor
   if (color.startsWith('rgba')) {
     // replace alpha
-    return color.replace(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([0-9.]+)\)/, `rgba($1, $2, $3, ${alpha})`);
+    return color.replace(
+      /rgba\((\d+),\s*(\d+),\s*(\d+),\s*([0-9.]+)\)/,
+      `rgba($1, $2, $3, ${alpha})`
+    );
   }
   // fallback: try to parse numeric rgb
   return rgbStringToRgba(color, alpha);
@@ -151,15 +164,15 @@ export const getTreatmentColor = (treatmentType: string): string => {
 export const defaultChartColors = {
   line: {
     stroke: chartColors.analytics.trend,
-    fill: getChartColorAlpha(0, 0.1, 'analytics')
+    fill: getChartColorAlpha(0, 0.1, 'analytics'),
   },
   bar: {
     background: chartColors.analytics.trend,
-    border: chartColors.analytics.trend
+    border: chartColors.analytics.trend,
   },
   treatment: {
     line: chartColors.treatment.primary,
     medication: chartColors.treatment.medication,
-    therapy: chartColors.treatment.therapy
-  }
+    therapy: chartColors.treatment.therapy,
+  },
 };

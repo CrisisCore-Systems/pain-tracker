@@ -78,15 +78,13 @@ export const PricingPage: React.FC = () => {
 
       {/* Pricing Cards */}
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-        {(Object.keys(SUBSCRIPTION_PLANS) as SubscriptionTier[]).map((tierKey) => {
+        {(Object.keys(SUBSCRIPTION_PLANS) as SubscriptionTier[]).map(tierKey => {
           const plan = SUBSCRIPTION_PLANS[tierKey];
-          const price = billingInterval === 'monthly' 
-            ? plan.pricing.monthly 
-            : plan.pricing.yearly;
-          
+          const price = billingInterval === 'monthly' ? plan.pricing.monthly : plan.pricing.yearly;
+
           const isCurrentPlan = currentTier === tierKey;
           const isPremium = tierKey === 'pro' || tierKey === 'enterprise';
-          
+
           return (
             <div
               key={tierKey}
@@ -94,8 +92,8 @@ export const PricingPage: React.FC = () => {
                 plan.popular
                   ? 'bg-gradient-to-b from-purple-50 to-white border-4 border-purple-500 shadow-2xl scale-105'
                   : plan.recommended
-                  ? 'bg-gradient-to-b from-blue-50 to-white border-2 border-blue-300 shadow-xl'
-                  : 'bg-white border-2 border-gray-200 shadow-lg'
+                    ? 'bg-gradient-to-b from-blue-50 to-white border-2 border-blue-300 shadow-xl'
+                    : 'bg-white border-2 border-gray-200 shadow-lg'
               }`}
             >
               {/* Popular Badge */}
@@ -109,7 +107,9 @@ export const PricingPage: React.FC = () => {
 
               {/* Tier Icon */}
               <div className="mb-4">
-                {tierKey === 'free' && <Star className="w-12 h-12 text-gray-400 dark:text-gray-500" />}
+                {tierKey === 'free' && (
+                  <Star className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+                )}
                 {tierKey === 'basic' && <Star className="w-12 h-12 text-blue-500" />}
                 {tierKey === 'pro' && <Crown className="w-12 h-12 text-purple-500" />}
                 {tierKey === 'enterprise' && <Users className="w-12 h-12 text-amber-500" />}
@@ -119,9 +119,7 @@ export const PricingPage: React.FC = () => {
               <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {plan.name}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                {plan.tagline}
-              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">{plan.tagline}</p>
 
               {/* Price */}
               <div className="mb-6">
@@ -130,9 +128,7 @@ export const PricingPage: React.FC = () => {
                     <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                       Custom
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Contact sales
-                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Contact sales</p>
                   </div>
                 ) : (
                   <div>
@@ -163,8 +159,8 @@ export const PricingPage: React.FC = () => {
                   isCurrentPlan
                     ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                     : isPremium
-                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg hover:scale-105'
-                    : 'bg-gray-900 text-white hover:bg-gray-800'
+                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:shadow-lg hover:scale-105'
+                      : 'bg-gray-900 text-white hover:bg-gray-800'
                 }`}
               >
                 {isCurrentPlan ? 'Current Plan' : `Get ${plan.name}`}
@@ -179,7 +175,9 @@ export const PricingPage: React.FC = () => {
 
               {/* Top Features */}
               <div className="space-y-3">
-                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Top features:</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+                  Top features:
+                </p>
                 {getTopFeatures(tierKey).map((feature, idx) => (
                   <div key={idx} className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -194,10 +192,8 @@ export const PricingPage: React.FC = () => {
 
       {/* Feature Comparison Table */}
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-8">
-          Compare All Features
-        </h2>
-        
+        <h2 className="text-3xl font-bold text-center mb-8">Compare All Features</h2>
+
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -222,37 +218,52 @@ export const PricingPage: React.FC = () => {
               </thead>
               <tbody>
                 {Object.entries(FEATURE_COMPARISON).map(([categoryKey, category]) => {
-                  const cat = category as { category: string; items: Array<{ name: string; free: string | boolean; basic: string | boolean; pro: string | boolean; enterprise: string | boolean }> };
+                  const cat = category as {
+                    category: string;
+                    items: Array<{
+                      name: string;
+                      free: string | boolean;
+                      basic: string | boolean;
+                      pro: string | boolean;
+                      enterprise: string | boolean;
+                    }>;
+                  };
                   return (
-                  <React.Fragment key={categoryKey}>
-                    {/* Category Header */}
-                    <tr className="bg-gray-100 dark:bg-gray-800">
-                      <td colSpan={5} className="px-6 py-3 text-sm font-bold text-gray-900 dark:text-gray-100">
-                        {cat.category}
-                      </td>
-                    </tr>
-                    
-                    {/* Category Items */}
-                    {cat.items.map((item, idx) => (
-                      <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50 dark:bg-gray-900">
-                        <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
-                          {item.name}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <FeatureCell value={item.free} />
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <FeatureCell value={item.basic} />
-                        </td>
-                        <td className="px-6 py-4 text-center bg-purple-50">
-                          <FeatureCell value={item.pro} />
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <FeatureCell value={item.enterprise} />
+                    <React.Fragment key={categoryKey}>
+                      {/* Category Header */}
+                      <tr className="bg-gray-100 dark:bg-gray-800">
+                        <td
+                          colSpan={5}
+                          className="px-6 py-3 text-sm font-bold text-gray-900 dark:text-gray-100"
+                        >
+                          {cat.category}
                         </td>
                       </tr>
-                    ))}
-                  </React.Fragment>
+
+                      {/* Category Items */}
+                      {cat.items.map((item, idx) => (
+                        <tr
+                          key={idx}
+                          className="border-b border-gray-100 hover:bg-gray-50 dark:bg-gray-900"
+                        >
+                          <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
+                            {item.name}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <FeatureCell value={item.free} />
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <FeatureCell value={item.basic} />
+                          </td>
+                          <td className="px-6 py-4 text-center bg-purple-50">
+                            <FeatureCell value={item.pro} />
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <FeatureCell value={item.enterprise} />
+                          </td>
+                        </tr>
+                      ))}
+                    </React.Fragment>
                   );
                 })}
               </tbody>
@@ -263,9 +274,7 @@ export const PricingPage: React.FC = () => {
 
       {/* FAQ Section */}
       <div className="max-w-4xl mx-auto mt-16">
-        <h2 className="text-3xl font-bold text-center mb-8">
-          Frequently Asked Questions
-        </h2>
+        <h2 className="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
         <div className="space-y-6">
           <FAQItem
             question="Can I change plans at any time?"
@@ -294,20 +303,14 @@ export const PricingPage: React.FC = () => {
  */
 export function getTopFeatures(tier: SubscriptionTier): string[] {
   const features: Record<SubscriptionTier, string[]> = {
-    free: [
-      '50 pain entries',
-      'Basic analytics',
-      'CSV export',
-      'Offline mode',
-      'Mobile app access'
-    ],
+    free: ['50 pain entries', 'Basic analytics', 'CSV export', 'Offline mode', 'Mobile app access'],
     basic: [
       '500 entries',
       'Advanced analytics',
       'PDF & WCB reports',
       'Family sharing (2 users)',
       'Empathy intelligence',
-      '2FA security'
+      '2FA security',
     ],
     pro: [
       'Unlimited entries',
@@ -315,7 +318,7 @@ export function getTopFeatures(tier: SubscriptionTier): string[] {
       'Clinical PDF export',
       'HIPAA compliance',
       'Healthcare API access',
-      'Priority support (4h)'
+      'Priority support (4h)',
     ],
     enterprise: [
       'Unlimited everything',
@@ -323,8 +326,8 @@ export function getTopFeatures(tier: SubscriptionTier): string[] {
       'White-label options',
       'SOC2 compliance',
       'Dedicated support (1h)',
-      'Custom training'
-    ]
+      'Custom training',
+    ],
   };
   return features[tier];
 }
@@ -340,7 +343,7 @@ const FeatureCell: React.FC<{ value: string | number | boolean }> = ({ value }) 
       <X className="w-5 h-5 text-gray-300 dark:text-gray-600 mx-auto" />
     );
   }
-  
+
   return <span className="text-sm text-gray-700 dark:text-gray-300">{value}</span>;
 };
 
@@ -349,7 +352,7 @@ const FeatureCell: React.FC<{ value: string | number | boolean }> = ({ value }) 
  */
 const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <div className="bg-white rounded-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden">
       <button
@@ -357,7 +360,9 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, ans
         className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:bg-gray-900 transition-colors"
       >
         <span className="font-semibold text-gray-900 dark:text-gray-100">{question}</span>
-        <TrendingUp className={`w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
+        <TrendingUp
+          className={`w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform ${isOpen ? 'rotate-90' : ''}`}
+        />
       </button>
       {isOpen && (
         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">

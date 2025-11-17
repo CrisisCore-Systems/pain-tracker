@@ -95,7 +95,15 @@ export interface Address {
 
 export interface FHIRObservation extends FHIRResource {
   resourceType: 'Observation';
-  status: 'registered' | 'preliminary' | 'final' | 'amended' | 'corrected' | 'cancelled' | 'entered-in-error' | 'unknown';
+  status:
+    | 'registered'
+    | 'preliminary'
+    | 'final'
+    | 'amended'
+    | 'corrected'
+    | 'cancelled'
+    | 'entered-in-error'
+    | 'unknown';
   category?: CodeableConcept[];
   code: CodeableConcept;
   subject?: Reference;
@@ -187,7 +195,16 @@ export interface QuestionnaireResponseAnswer {
 
 export interface FHIRBundle extends FHIRResource {
   resourceType: 'Bundle';
-  type: 'document' | 'message' | 'transaction' | 'transaction-response' | 'batch' | 'batch-response' | 'history' | 'searchset' | 'collection';
+  type:
+    | 'document'
+    | 'message'
+    | 'transaction'
+    | 'transaction-response'
+    | 'batch'
+    | 'batch-response'
+    | 'history'
+    | 'searchset'
+    | 'collection';
   timestamp?: string;
   total?: number;
   link?: BundleLink[];
@@ -243,8 +260,8 @@ export class FHIRService {
     this.baseUrl = baseUrl.replace(/\/$/, ''); // Remove trailing slash
     this.headers = {
       'Content-Type': 'application/fhir+json',
-      'Accept': 'application/fhir+json',
-      ...(apiKey && { 'Authorization': `Bearer ${apiKey}` })
+      Accept: 'application/fhir+json',
+      ...(apiKey && { Authorization: `Bearer ${apiKey}` }),
     };
   }
 
@@ -253,19 +270,25 @@ export class FHIRService {
     const painObservation: FHIRObservation = {
       resourceType: 'Observation',
       status: 'final',
-      category: [{
-        coding: [{
-          system: 'http://terminology.hl7.org/CodeSystem/observation-category',
-          code: 'survey',
-          display: 'Survey'
-        }]
-      }],
+      category: [
+        {
+          coding: [
+            {
+              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+              code: 'survey',
+              display: 'Survey',
+            },
+          ],
+        },
+      ],
       code: {
-        coding: [{
-          system: 'http://loinc.org',
-          code: '72133-2',
-          display: 'Pain severity Wong-Baker FACES Scale'
-        }]
+        coding: [
+          {
+            system: 'http://loinc.org',
+            code: '72133-2',
+            display: 'Pain severity Wong-Baker FACES Scale',
+          },
+        ],
       },
       subject: patientId ? { reference: `Patient/${patientId}` } : undefined,
       effectiveDateTime: entry.timestamp,
@@ -273,15 +296,15 @@ export class FHIRService {
         value: entry.baselineData.pain,
         unit: 'score',
         system: 'http://unitsofmeasure.org',
-        code: '{score}'
+        code: '{score}',
       },
-      component: []
+      component: [],
     };
 
     // Add body sites
     if (entry.baselineData.locations && entry.baselineData.locations.length > 0) {
       painObservation.bodySite = entry.baselineData.locations.map(location => ({
-        text: location
+        text: location,
       }));
     }
 
@@ -289,23 +312,29 @@ export class FHIRService {
     if (entry.baselineData.symptoms && entry.baselineData.symptoms.length > 0) {
       painObservation.component?.push({
         code: {
-          coding: [{
-            system: 'http://snomed.info/sct',
-            code: '404684003',
-            display: 'Clinical finding'
-          }]
+          coding: [
+            {
+              system: 'http://snomed.info/sct',
+              code: '404684003',
+              display: 'Clinical finding',
+            },
+          ],
         },
-        valueString: entry.baselineData.symptoms.join(', ')
+        valueString: entry.baselineData.symptoms.join(', '),
       });
     }
 
     // Add functional impact
-    if (entry.functionalImpact && entry.functionalImpact.limitedActivities && entry.functionalImpact.limitedActivities.length > 0) {
+    if (
+      entry.functionalImpact &&
+      entry.functionalImpact.limitedActivities &&
+      entry.functionalImpact.limitedActivities.length > 0
+    ) {
       painObservation.component?.push({
         code: {
-          text: 'Limited Activities'
+          text: 'Limited Activities',
         },
-        valueString: entry.functionalImpact.limitedActivities.join(', ')
+        valueString: entry.functionalImpact.limitedActivities.join(', '),
       });
     }
 
@@ -313,18 +342,20 @@ export class FHIRService {
     if (entry.qualityOfLife && entry.qualityOfLife.sleepQuality !== undefined) {
       painObservation.component?.push({
         code: {
-          coding: [{
-            system: 'http://loinc.org',
-            code: '72170-4',
-            display: 'Sleep quality'
-          }]
+          coding: [
+            {
+              system: 'http://loinc.org',
+              code: '72170-4',
+              display: 'Sleep quality',
+            },
+          ],
         },
         valueQuantity: {
           value: entry.qualityOfLife.sleepQuality,
           unit: 'score',
           system: 'http://unitsofmeasure.org',
-          code: '{score}'
-        }
+          code: '{score}',
+        },
       });
     }
 
@@ -332,23 +363,25 @@ export class FHIRService {
     if (entry.qualityOfLife && entry.qualityOfLife.moodImpact !== undefined) {
       painObservation.component?.push({
         code: {
-          text: 'Mood Impact'
+          text: 'Mood Impact',
         },
         valueQuantity: {
           value: entry.qualityOfLife.moodImpact,
           unit: 'score',
           system: 'http://unitsofmeasure.org',
-          code: '{score}'
-        }
+          code: '{score}',
+        },
       });
     }
 
     // Add notes
     if (entry.notes) {
-      painObservation.note = [{
-        text: entry.notes,
-        time: entry.timestamp
-      }];
+      painObservation.note = [
+        {
+          text: entry.notes,
+          time: entry.timestamp,
+        },
+      ];
     }
 
     return painObservation;
@@ -361,10 +394,10 @@ export class FHIRService {
       type: 'collection',
       timestamp: new Date().toISOString(),
       total: entries.length,
-      entry: entries.map((entry) => ({
+      entry: entries.map(entry => ({
         fullUrl: `urn:uuid:pain-observation-${entry.id}`,
-        resource: this.painEntryToFHIRObservation(entry, patientId)
-      }))
+        resource: this.painEntryToFHIRObservation(entry, patientId),
+      })),
     };
 
     return bundle;
@@ -373,33 +406,41 @@ export class FHIRService {
   // Convert Emergency Contact to FHIR Patient Contact
   emergencyContactToFHIRContact(contact: EmergencyContact): PatientContact {
     return {
-      relationship: [{
-        coding: [{
-          system: 'http://terminology.hl7.org/CodeSystem/v2-0131',
-          code: contact.isHealthcareProvider ? 'PR' : 'C',
-          display: contact.isHealthcareProvider ? 'Healthcare Provider' : 'Emergency Contact'
-        }],
-        text: contact.relationship
-      }],
+      relationship: [
+        {
+          coding: [
+            {
+              system: 'http://terminology.hl7.org/CodeSystem/v2-0131',
+              code: contact.isHealthcareProvider ? 'PR' : 'C',
+              display: contact.isHealthcareProvider ? 'Healthcare Provider' : 'Emergency Contact',
+            },
+          ],
+          text: contact.relationship,
+        },
+      ],
       name: {
-        text: contact.name
+        text: contact.name,
       },
       telecom: [
         {
           system: 'phone',
           value: contact.phoneNumber,
-          use: 'mobile'
+          use: 'mobile',
         },
-        ...(contact.email ? [{
-          system: 'email' as const,
-          value: contact.email
-        }] : [])
+        ...(contact.email
+          ? [
+              {
+                system: 'email' as const,
+                value: contact.email,
+              },
+            ]
+          : []),
       ],
       ...(contact.address && {
         address: {
-          text: contact.address
-        }
-      })
+          text: contact.address,
+        },
+      }),
     };
   }
 
@@ -415,60 +456,78 @@ export class FHIRService {
         {
           linkId: 'pain-level',
           text: 'Current pain level (0-10)',
-          answer: [{
-            valueInteger: entry.baselineData.pain
-          }]
+          answer: [
+            {
+              valueInteger: entry.baselineData.pain,
+            },
+          ],
         },
         {
           linkId: 'pain-locations',
           text: 'Pain locations',
           answer: (entry.baselineData.locations || []).map(location => ({
-            valueString: location
-          }))
+            valueString: location,
+          })),
         },
         {
           linkId: 'symptoms',
           text: 'Associated symptoms',
           answer: (entry.baselineData.symptoms || []).map(symptom => ({
-            valueString: symptom
-          }))
+            valueString: symptom,
+          })),
         },
         {
           linkId: 'sleep-quality',
           text: 'Sleep quality (0-10)',
-          answer: entry.qualityOfLife?.sleepQuality !== undefined ? [{
-            valueInteger: entry.qualityOfLife.sleepQuality
-          }] : []
+          answer:
+            entry.qualityOfLife?.sleepQuality !== undefined
+              ? [
+                  {
+                    valueInteger: entry.qualityOfLife.sleepQuality,
+                  },
+                ]
+              : [],
         },
         {
           linkId: 'mood-impact',
           text: 'Mood impact (0-10)',
-          answer: entry.qualityOfLife?.moodImpact !== undefined ? [{
-            valueInteger: entry.qualityOfLife.moodImpact
-          }] : []
+          answer:
+            entry.qualityOfLife?.moodImpact !== undefined
+              ? [
+                  {
+                    valueInteger: entry.qualityOfLife.moodImpact,
+                  },
+                ]
+              : [],
         },
         {
           linkId: 'functional-limitations',
           text: 'Functional limitations',
           answer: (entry.functionalImpact?.limitedActivities || []).map(activity => ({
-            valueString: activity
-          }))
+            valueString: activity,
+          })),
         },
         {
           linkId: 'medications',
           text: 'Current medications',
           answer: (entry.medications?.current || []).map(med => ({
-            valueString: `${med.name} ${med.dosage} ${med.frequency}`
-          }))
+            valueString: `${med.name} ${med.dosage} ${med.frequency}`,
+          })),
         },
-        ...(entry.notes ? [{
-          linkId: 'additional-notes',
-          text: 'Additional notes',
-          answer: [{
-            valueString: entry.notes
-          }]
-        }] : [])
-      ]
+        ...(entry.notes
+          ? [
+              {
+                linkId: 'additional-notes',
+                text: 'Additional notes',
+                answer: [
+                  {
+                    valueString: entry.notes,
+                  },
+                ],
+              },
+            ]
+          : []),
+      ],
     };
   }
 
@@ -477,7 +536,7 @@ export class FHIRService {
     const response = await fetch(`${this.baseUrl}/${resource.resourceType}`, {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(resource)
+      body: JSON.stringify(resource),
     });
 
     if (!response.ok) {
@@ -495,7 +554,7 @@ export class FHIRService {
     const response = await fetch(`${this.baseUrl}/${resource.resourceType}/${resource.id}`, {
       method: 'PUT',
       headers: this.headers,
-      body: JSON.stringify(resource)
+      body: JSON.stringify(resource),
     });
 
     if (!response.ok) {
@@ -508,7 +567,7 @@ export class FHIRService {
   async getResource(resourceType: string, id: string): Promise<FHIRResource> {
     const response = await fetch(`${this.baseUrl}/${resourceType}/${id}`, {
       method: 'GET',
-      headers: this.headers
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -522,7 +581,7 @@ export class FHIRService {
     const searchParams = new URLSearchParams(params);
     const response = await fetch(`${this.baseUrl}/${resourceType}?${searchParams}`, {
       method: 'GET',
-      headers: this.headers
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -535,7 +594,7 @@ export class FHIRService {
   async deleteResource(resourceType: string, id: string): Promise<void> {
     const response = await fetch(`${this.baseUrl}/${resourceType}/${id}`, {
       method: 'DELETE',
-      headers: this.headers
+      headers: this.headers,
     });
 
     if (!response.ok) {
@@ -548,7 +607,7 @@ export class FHIRService {
     const response = await fetch(`${this.baseUrl}`, {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(bundle)
+      body: JSON.stringify(bundle),
     });
 
     if (!response.ok) {
@@ -563,7 +622,7 @@ export class FHIRService {
     const response = await fetch(`${this.baseUrl}/${resource.resourceType}/$validate`, {
       method: 'POST',
       headers: this.headers,
-      body: JSON.stringify(resource)
+      body: JSON.stringify(resource),
     });
 
     if (!response.ok) {

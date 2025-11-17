@@ -13,7 +13,10 @@ describe('EncryptionService Web Crypto migration', () => {
     const payload = { sensitive: 'data' };
     const encrypted = await encryptionService.encrypt(payload);
     // mutate ciphertext
-    const tampered = { ...encrypted, data: encrypted.data.slice(0, -2) + (encrypted.data.slice(-2) === 'AA' ? 'BB' : 'AA') };
+    const tampered = {
+      ...encrypted,
+      data: encrypted.data.slice(0, -2) + (encrypted.data.slice(-2) === 'AA' ? 'BB' : 'AA'),
+    };
     await expect(encryptionService.decrypt(tampered as any)).rejects.toThrow();
   });
 });

@@ -12,10 +12,15 @@ import {
   Filter,
   X,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
 } from 'lucide-react';
 import { Modal, Button, Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { exportToCSV, exportToJSON, exportToPDF, downloadData } from '../../utils/pain-tracker/export';
+import {
+  exportToCSV,
+  exportToJSON,
+  exportToPDF,
+  downloadData,
+} from '../../utils/pain-tracker/export';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
 
@@ -49,7 +54,7 @@ export function DataExportModal({
   isOpen,
   onClose,
   entries,
-  title = 'Export Pain Data'
+  title = 'Export Pain Data',
 }: DataExportModalProps) {
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('csv');
   const [isExporting, setIsExporting] = useState(false);
@@ -57,18 +62,18 @@ export function DataExportModal({
   const [filters, setFilters] = useState<ExportFilters>({
     dateRange: {
       start: '',
-      end: ''
+      end: '',
     },
     painLevelRange: {
       min: 0,
-      max: 10
+      max: 10,
     },
     symptoms: [],
     locations: [],
     includeQualityOfLife: true,
     includeWorkImpact: true,
     includeMedications: true,
-    includeTreatments: true
+    includeTreatments: true,
   });
 
   // Get unique symptoms and locations for filtering
@@ -104,8 +109,10 @@ export function DataExportModal({
       }
 
       // Pain level filter
-      if (entry.baselineData.pain < filters.painLevelRange.min ||
-          entry.baselineData.pain > filters.painLevelRange.max) {
+      if (
+        entry.baselineData.pain < filters.painLevelRange.min ||
+        entry.baselineData.pain > filters.painLevelRange.max
+      ) {
         return false;
       }
 
@@ -168,7 +175,6 @@ export function DataExportModal({
         onClose();
         setExportStatus('idle');
       }, 2000);
-
     } catch (error) {
       console.error('Export failed:', error);
       setExportStatus('error');
@@ -183,35 +189,29 @@ export function DataExportModal({
       label: 'CSV (Spreadsheet)',
       description: 'Compatible with Excel, Google Sheets',
       icon: FileSpreadsheet,
-      extension: '.csv'
+      extension: '.csv',
     },
     {
       id: 'json' as const,
       label: 'JSON (Data)',
       description: 'For developers and data analysis',
       icon: FileJson,
-      extension: '.json'
+      extension: '.json',
     },
     {
       id: 'pdf' as const,
       label: 'PDF (Report)',
       description: 'Formatted report for sharing',
       icon: FileText,
-      extension: '.pdf'
-    }
+      extension: '.pdf',
+    },
   ];
 
-  const updateFilter = <K extends keyof ExportFilters>(
-    key: K,
-    value: ExportFilters[K]
-  ) => {
+  const updateFilter = <K extends keyof ExportFilters>(key: K, value: ExportFilters[K]) => {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  const toggleArrayFilter = <K extends keyof ExportFilters>(
-    key: K,
-    value: string
-  ) => {
+  const toggleArrayFilter = <K extends keyof ExportFilters>(key: K, value: string) => {
     if (!Array.isArray(filters[key])) return;
 
     const currentArray = filters[key] as string[];
@@ -251,7 +251,7 @@ export function DataExportModal({
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {formatOptions.map((format) => {
+              {formatOptions.map(format => {
                 const Icon = format.icon;
                 return (
                   <button
@@ -268,12 +268,8 @@ export function DataExportModal({
                       <Icon className="h-8 w-8 text-primary mt-1" />
                       <div>
                         <h3 className="font-medium">{format.label}</h3>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {format.description}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {format.extension}
-                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">{format.description}</p>
+                        <p className="text-xs text-muted-foreground mt-2">{format.extension}</p>
                       </div>
                     </div>
                   </button>
@@ -299,10 +295,12 @@ export function DataExportModal({
                 <input
                   type="date"
                   value={filters.dateRange.start}
-                  onChange={(e) => updateFilter('dateRange', {
-                    ...filters.dateRange,
-                    start: e.target.value
-                  })}
+                  onChange={e =>
+                    updateFilter('dateRange', {
+                      ...filters.dateRange,
+                      start: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -311,10 +309,12 @@ export function DataExportModal({
                 <input
                   type="date"
                   value={filters.dateRange.end}
-                  onChange={(e) => updateFilter('dateRange', {
-                    ...filters.dateRange,
-                    end: e.target.value
-                  })}
+                  onChange={e =>
+                    updateFilter('dateRange', {
+                      ...filters.dateRange,
+                      end: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
@@ -331,10 +331,12 @@ export function DataExportModal({
                   min="0"
                   max="10"
                   value={filters.painLevelRange.min}
-                  onChange={(e) => updateFilter('painLevelRange', {
-                    ...filters.painLevelRange,
-                    min: parseInt(e.target.value)
-                  })}
+                  onChange={e =>
+                    updateFilter('painLevelRange', {
+                      ...filters.painLevelRange,
+                      min: parseInt(e.target.value),
+                    })
+                  }
                   className="flex-1"
                 />
                 <span className="text-sm text-muted-foreground">to</span>
@@ -343,10 +345,12 @@ export function DataExportModal({
                   min="0"
                   max="10"
                   value={filters.painLevelRange.max}
-                  onChange={(e) => updateFilter('painLevelRange', {
-                    ...filters.painLevelRange,
-                    max: parseInt(e.target.value)
-                  })}
+                  onChange={e =>
+                    updateFilter('painLevelRange', {
+                      ...filters.painLevelRange,
+                      max: parseInt(e.target.value),
+                    })
+                  }
                   className="flex-1"
                 />
               </div>
@@ -406,13 +410,13 @@ export function DataExportModal({
                   { key: 'includeQualityOfLife', label: 'Quality of Life' },
                   { key: 'includeWorkImpact', label: 'Work Impact' },
                   { key: 'includeMedications', label: 'Medications' },
-                  { key: 'includeTreatments', label: 'Treatments' }
+                  { key: 'includeTreatments', label: 'Treatments' },
                 ].map(({ key, label }) => (
                   <label key={key} className="flex items-center space-x-2">
                     <input
                       type="checkbox"
                       checked={filters[key as keyof ExportFilters] as boolean}
-                      onChange={(e) => updateFilter(key as keyof ExportFilters, e.target.checked)}
+                      onChange={e => updateFilter(key as keyof ExportFilters, e.target.checked)}
                       className="rounded border-border"
                     />
                     <span className="text-sm">{label}</span>
@@ -425,10 +429,14 @@ export function DataExportModal({
 
         {/* Export Status */}
         {exportStatus !== 'idle' && (
-          <Card className={cn(
-            'border',
-            exportStatus === 'success' ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'
-          )}>
+          <Card
+            className={cn(
+              'border',
+              exportStatus === 'success'
+                ? 'border-green-200 bg-green-50'
+                : 'border-red-200 bg-red-50'
+            )}
+          >
             <CardContent className="pt-6">
               <div className="flex items-center space-x-2">
                 {exportStatus === 'success' ? (
@@ -436,16 +444,17 @@ export function DataExportModal({
                 ) : (
                   <AlertCircle className="h-5 w-5 text-red-600" />
                 )}
-                <p className={cn(
-                  'text-sm',
-                  exportStatus === 'success' ? 'text-green-800' : 'text-red-800'
-                )}>
+                <p
+                  className={cn(
+                    'text-sm',
+                    exportStatus === 'success' ? 'text-green-800' : 'text-red-800'
+                  )}
+                >
                   {exportStatus === 'success'
                     ? `Successfully exported ${filteredEntries.length} entries!`
                     : filteredEntries.length === 0
                       ? 'No entries match your filters. Please adjust your criteria.'
-                      : 'Export failed. Please try again.'
-                  }
+                      : 'Export failed. Please try again.'}
                 </p>
               </div>
             </CardContent>

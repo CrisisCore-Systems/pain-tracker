@@ -17,7 +17,7 @@ export function usePWAStatus() {
     isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
     isInstalled: false,
     hasServiceWorker: false,
-    canInstall: false
+    canInstall: false,
   });
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export function usePWAStatus() {
           isOnline: diagnostics.isOnline,
           isInstalled: diagnostics.isInstalled,
           hasServiceWorker: diagnostics.hasServiceWorker,
-          canInstall: pwaManager.isInstallPromptAvailable()
+          canInstall: pwaManager.isInstallPromptAvailable(),
         });
       } catch (err) {
         console.error('Failed to update PWA status:', err);
@@ -41,20 +41,21 @@ export function usePWAStatus() {
     const handleOnline = () => setStatus(prev => ({ ...prev, isOnline: true }));
     const handleOffline = () => setStatus(prev => ({ ...prev, isOnline: false }));
     const handleInstallAvailable = () => setStatus(prev => ({ ...prev, canInstall: true }));
-    const handleInstalled = () => setStatus(prev => ({ ...prev, isInstalled: true, canInstall: false }));
+    const handleInstalled = () =>
+      setStatus(prev => ({ ...prev, isInstalled: true, canInstall: false }));
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-  window.addEventListener('pwa-install-available', handleInstallAvailable);
-  window.addEventListener('pwa-installed', handleInstalled);
+    window.addEventListener('pwa-install-available', handleInstallAvailable);
+    window.addEventListener('pwa-installed', handleInstalled);
 
     updateStatus();
 
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
-  window.removeEventListener('pwa-install-available', handleInstallAvailable);
-  window.removeEventListener('pwa-installed', handleInstalled);
+      window.removeEventListener('pwa-install-available', handleInstallAvailable);
+      window.removeEventListener('pwa-installed', handleInstalled);
       mounted = false;
     };
   }, []);
@@ -77,7 +78,7 @@ export function useBackgroundSync() {
     isSyncing: false,
     pendingItems: 0,
     lastSync: null,
-    error: null
+    error: null,
   });
 
   useEffect(() => {
@@ -96,18 +97,23 @@ export function useBackgroundSync() {
               secureStorage.set('last-sync-time', legacy, { encrypt: true });
               lastSync = legacy;
             }
-          } catch {/* ignore */}
+          } catch {
+            /* ignore */
+          }
         }
 
         if (!mounted) return;
         setSyncStatus({ isSyncing, pendingItems, lastSync, error: null });
       } catch (err) {
         if (!mounted) return;
-        setSyncStatus(prev => ({ ...prev, error: err instanceof Error ? err.message : 'Unknown error' }));
+        setSyncStatus(prev => ({
+          ...prev,
+          error: err instanceof Error ? err.message : 'Unknown error',
+        }));
       }
     };
 
-  const handleSyncCompleted = (evt: Event) => {
+    const handleSyncCompleted = (evt: Event) => {
       const ev = evt as CustomEvent<{ successCount?: number; errors?: string[] }>;
       const stats = ev.detail || { successCount: 0, errors: [] };
       setSyncStatus(prev => ({
@@ -115,16 +121,16 @@ export function useBackgroundSync() {
         isSyncing: false,
         pendingItems: Math.max(0, prev.pendingItems - (stats.successCount || 0)),
         lastSync: new Date().toISOString(),
-        error: stats.errors && stats.errors.length > 0 ? stats.errors[0] : null
+        error: stats.errors && stats.errors.length > 0 ? stats.errors[0] : null,
       }));
     };
 
-  const handleSyncStarted = () => {
+    const handleSyncStarted = () => {
       setSyncStatus(prev => ({ ...prev, isSyncing: true, error: null }));
     };
 
-  window.addEventListener('background-sync-sync-completed', handleSyncCompleted);
-  window.addEventListener('background-sync-sync-started', handleSyncStarted);
+    window.addEventListener('background-sync-sync-completed', handleSyncCompleted);
+    window.addEventListener('background-sync-sync-started', handleSyncStarted);
 
     updateSyncStatus();
 
@@ -132,8 +138,8 @@ export function useBackgroundSync() {
 
     return () => {
       mounted = false;
-  window.removeEventListener('background-sync-sync-completed', handleSyncCompleted);
-  window.removeEventListener('background-sync-sync-started', handleSyncStarted);
+      window.removeEventListener('background-sync-sync-completed', handleSyncCompleted);
+      window.removeEventListener('background-sync-sync-started', handleSyncStarted);
       clearInterval(interval);
     };
   }, []);
@@ -142,8 +148,11 @@ export function useBackgroundSync() {
     try {
       setSyncStatus(prev => ({ ...prev, isSyncing: true, error: null }));
       // Support both correct and legacy typo method names without using 'any'
-  // cspell:ignore forc
-      type MaybeForceSync = { forceSync?: () => Promise<unknown>; forcSync?: () => Promise<unknown> };
+      // cspell:ignore forc
+      type MaybeForceSync = {
+        forceSync?: () => Promise<unknown>;
+        forcSync?: () => Promise<unknown>;
+      };
       const svc = backgroundSync as unknown as MaybeForceSync;
       if (typeof svc.forceSync === 'function') {
         await svc.forceSync();
@@ -152,7 +161,11 @@ export function useBackgroundSync() {
       }
       return true;
     } catch (err) {
-      setSyncStatus(prev => ({ ...prev, isSyncing: false, error: err instanceof Error ? err.message : 'Sync failed' }));
+      setSyncStatus(prev => ({
+        ...prev,
+        isSyncing: false,
+        error: err instanceof Error ? err.message : 'Sync failed',
+      }));
       return false;
     }
   }, []);
@@ -165,7 +178,7 @@ export function useOfflineStorage() {
   const [storageStatus, setStorageStatus] = useState({
     isSupported: false,
     usage: { used: 0, quota: 0 },
-    isReady: false
+    isReady: false,
   });
 
   useEffect(() => {
@@ -185,12 +198,16 @@ export function useOfflineStorage() {
     };
 
     initStorage();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const storeData = useCallback(async (type: string, data: unknown) => {
     try {
-      const storageLike = offlineStorage as unknown as { storeData: (t: string, d: unknown) => Promise<number> };
+      const storageLike = offlineStorage as unknown as {
+        storeData: (t: string, d: unknown) => Promise<number>;
+      };
       await storageLike.storeData(type, data);
       return true;
     } catch (err) {
@@ -201,7 +218,9 @@ export function useOfflineStorage() {
 
   const getData = useCallback(async (type: string) => {
     try {
-      const storageLike = offlineStorage as unknown as { getData: (t: string) => Promise<Array<{ data: unknown }>> };
+      const storageLike = offlineStorage as unknown as {
+        getData: (t: string) => Promise<Array<{ data: unknown }>>;
+      };
       const records = await storageLike.getData(type);
       return records.map(r => r.data);
     } catch (err) {
@@ -234,7 +253,11 @@ export function usePWA() {
 
 // Health check hook
 export function usePWAHealthCheck() {
-  const [health, setHealth] = useState({ score: 0, issues: [] as string[], recommendations: [] as string[] });
+  const [health, setHealth] = useState({
+    score: 0,
+    issues: [] as string[],
+    recommendations: [] as string[],
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -252,7 +275,10 @@ export function usePWAHealthCheck() {
           score -= 30;
         }
 
-        const storagePercentage = diagnostics.storageUsage.quota > 0 ? (diagnostics.storageUsage.used / diagnostics.storageUsage.quota) * 100 : 0;
+        const storagePercentage =
+          diagnostics.storageUsage.quota > 0
+            ? (diagnostics.storageUsage.used / diagnostics.storageUsage.quota) * 100
+            : 0;
         if (storagePercentage > 80) {
           issues.push('Storage usage is high');
           recommendations.push('Clear cache or unused data');
@@ -280,13 +306,20 @@ export function usePWAHealthCheck() {
       } catch (err) {
         console.error('PWA health check failed:', err);
         if (!mounted) return;
-        setHealth({ score: 0, issues: ['Health check failed'], recommendations: ['Refresh the application'] });
+        setHealth({
+          score: 0,
+          issues: ['Health check failed'],
+          recommendations: ['Refresh the application'],
+        });
       }
     };
 
     checkHealth();
     const interval = setInterval(checkHealth, 5 * 60 * 1000);
-    return () => { mounted = false; clearInterval(interval); };
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   return health;
@@ -296,4 +329,3 @@ export function usePWAHealthCheck() {
  * Enhanced PWA Hooks for Pain Tracker
  * Provides React hooks for PWA functionality integration
  */
-

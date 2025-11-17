@@ -18,27 +18,31 @@ export function FeatureHighlights({ onNext, onPrevious }: FeatureHighlightsProps
     {
       icon: BarChart,
       title: 'Visual Analytics',
-      description: 'Interactive charts and graphs to visualize your pain patterns, trends, and progress over time.',
-      highlight: 'See your progress at a glance'
+      description:
+        'Interactive charts and graphs to visualize your pain patterns, trends, and progress over time.',
+      highlight: 'See your progress at a glance',
     },
     {
       icon: FileText,
       title: 'WCB Reports',
-      description: 'Generate comprehensive reports for WorkSafe BC submissions with all required documentation.',
-      highlight: 'Professional medical reports'
+      description:
+        'Generate comprehensive reports for WorkSafe BC submissions with all required documentation.',
+      highlight: 'Professional medical reports',
     },
     {
       icon: Clock,
       title: 'Smart Tracking',
-      description: 'Quick and easy pain entry forms with intelligent suggestions and auto-save functionality.',
-      highlight: 'Never lose your data'
+      description:
+        'Quick and easy pain entry forms with intelligent suggestions and auto-save functionality.',
+      highlight: 'Never lose your data',
     },
     {
       icon: Shield,
       title: 'Privacy First',
-      description: 'All your data stays on your device. No cloud storage, no tracking, complete privacy.',
-      highlight: 'Your data is yours alone'
-    }
+      description:
+        'All your data stays on your device. No cloud storage, no tracking, complete privacy.',
+      highlight: 'Your data is yours alone',
+    },
   ];
 
   return (
@@ -70,17 +74,11 @@ export function FeatureHighlights({ onNext, onPrevious }: FeatureHighlightsProps
       </div>
 
       <div className="flex justify-between items-center pt-4 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <Button
-          variant="outline"
-          onClick={onPrevious}
-        >
+        <Button variant="outline" onClick={onPrevious}>
           Previous
         </Button>
-        
-        <Button
-          onClick={onNext}
-          className="min-w-24"
-        >
+
+        <Button onClick={onNext} className="min-w-24">
           Continue
         </Button>
       </div>

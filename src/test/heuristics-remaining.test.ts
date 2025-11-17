@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { keywordHitCount, aggregateKeywordDensity, boundedScore } from '../lib/analytics/heuristics';
+import {
+  keywordHitCount,
+  aggregateKeywordDensity,
+  boundedScore,
+} from '../lib/analytics/heuristics';
 
 describe('heuristics remaining coverage', () => {
   it('keywordHitCount counts multiple distinct keyword hits case-insensitively', () => {
@@ -12,7 +16,7 @@ describe('heuristics remaining coverage', () => {
     const notes = ['Severe fatigue today', 'Minor fatigue but improved', 'No issues'];
     const density = aggregateKeywordDensity(notes, ['fatigue', 'flare']);
     // hits: first(1), second(1), third(0) => 2 / 3
-    expect(density).toBeCloseTo(2/3, 5);
+    expect(density).toBeCloseTo(2 / 3, 5);
   });
 
   it('boundedScore clamps below min and above max', () => {

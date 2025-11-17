@@ -4,37 +4,62 @@
  */
 
 import React, { lazy, Suspense } from 'react';
-import { AlertCircle, HelpCircle, Settings, BarChart3, Calendar, TrendingUp, LifeBuoy } from "lucide-react";
+import {
+  AlertCircle,
+  HelpCircle,
+  Settings,
+  BarChart3,
+  Calendar,
+  TrendingUp,
+  LifeBuoy,
+} from 'lucide-react';
 import { PainTrackerIcon } from '../branding/BrandedLogo';
-import type { PainEntry } from "../../types";
-import { Card, CardContent, Button, Badge, ThemeToggle } from "../../design-system";
+import type { PainEntry } from '../../types';
+import { Card, CardContent, Button, Badge, ThemeToggle } from '../../design-system';
 import {
   MemoryAid,
   ComfortPrompt,
   TouchOptimizedButton,
   useTraumaInformed,
-  AccessibilitySettingsPanel
-} from "../accessibility";
+  AccessibilitySettingsPanel,
+} from '../accessibility';
 import { useSwipeGesture } from '../../hooks/useSwipeGesture';
 import { DashboardPullToRefresh } from '../ui/PullToRefresh';
-import { VoiceInput, GestureHint, useMobileAccessibility, HighContrastToggle } from '../accessibility/MobileAccessibility';
+import {
+  VoiceInput,
+  GestureHint,
+  useMobileAccessibility,
+  HighContrastToggle,
+} from '../accessibility/MobileAccessibility';
 import MedicationReminders from '../MedicationReminders';
 import AlertsSettings from '../AlertsSettings';
 import AlertsActivityLog from '../AlertsActivityLog';
 import { BrandedLoadingScreen } from '../branding/BrandedLoadingScreen';
 
 // Lazy load large view components for code splitting (Phase 2 optimization)
-const PainHistoryPanel = lazy(() => import("../widgets/PainHistoryPanel").then(m => ({ default: m.PainHistoryPanel })));
-const AnalyticsDashboard = lazy(() => import("../analytics/AnalyticsDashboard").then(m => ({ default: m.AnalyticsDashboard })));
-const ClinicalPDFExportButton = lazy(() => import("../export/ClinicalPDFExportButton").then(m => ({ default: m.ClinicalPDFExportButton })));
-const DataExportModal = lazy(() => import("../export/DataExportModal").then(m => ({ default: m.DataExportModal })));
-const CustomizableDashboard = lazy(() => import("../dashboard/CustomizableDashboard").then(m => ({ default: m.CustomizableDashboard })));
-const GoalManagerModal = lazy(() => import("../goals/GoalManagerModal").then(m => ({ default: m.GoalManagerModal })));
+const PainHistoryPanel = lazy(() =>
+  import('../widgets/PainHistoryPanel').then(m => ({ default: m.PainHistoryPanel }))
+);
+const AnalyticsDashboard = lazy(() =>
+  import('../analytics/AnalyticsDashboard').then(m => ({ default: m.AnalyticsDashboard }))
+);
+const ClinicalPDFExportButton = lazy(() =>
+  import('../export/ClinicalPDFExportButton').then(m => ({ default: m.ClinicalPDFExportButton }))
+);
+const DataExportModal = lazy(() =>
+  import('../export/DataExportModal').then(m => ({ default: m.DataExportModal }))
+);
+const CustomizableDashboard = lazy(() =>
+  import('../dashboard/CustomizableDashboard').then(m => ({ default: m.CustomizableDashboard }))
+);
+const GoalManagerModal = lazy(() =>
+  import('../goals/GoalManagerModal').then(m => ({ default: m.GoalManagerModal }))
+);
 
 interface TraumaInformedPainTrackerLayoutProps {
   entries: PainEntry[];
   error: string | null;
-  onAddEntry: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
+  onAddEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
   onStartWalkthrough: () => void;
 }
 
@@ -42,12 +67,14 @@ export function TraumaInformedPainTrackerLayout({
   entries,
   error,
   onAddEntry,
-  onStartWalkthrough
+  onStartWalkthrough,
 }: TraumaInformedPainTrackerLayoutProps) {
   const { preferences } = useTraumaInformed();
   const { preferences: mobilePrefs } = useMobileAccessibility();
   const [showSettings, setShowSettings] = React.useState(false);
-  const [activeView, setActiveView] = React.useState<'dashboard' | 'analytics' | 'history' | 'support'>('dashboard');
+  const [activeView, setActiveView] = React.useState<
+    'dashboard' | 'analytics' | 'history' | 'support'
+  >('dashboard');
   const [showExportModal, setShowExportModal] = React.useState(false);
   const [showGoalManager, setShowGoalManager] = React.useState(false);
   const [lastRefresh, setLastRefresh] = React.useState<Date>(new Date());
@@ -85,29 +112,36 @@ export function TraumaInformedPainTrackerLayout({
   );
 
   // Voice input handler
-  const handleVoiceInput = React.useCallback((text: string) => {
-    // Simple voice command processing
-    const command = text.toLowerCase().trim();
+  const handleVoiceInput = React.useCallback(
+    (text: string) => {
+      // Simple voice command processing
+      const command = text.toLowerCase().trim();
 
-    if (command.includes('dashboard') || command.includes('home')) {
-      setActiveView('dashboard');
-    } else if (command.includes('analytics') || command.includes('charts')) {
-      setActiveView('analytics');
-    } else if (command.includes('history') || command.includes('past')) {
-      setActiveView('history');
-    } else if (command.includes('support') || command.includes('care') || command.includes('help tools')) {
-      setActiveView('support');
-    } else if (command.includes('settings') || command.includes('accessibility')) {
-      setShowSettings(true);
-    } else if (command.includes('help') || command.includes('tutorial')) {
-      onStartWalkthrough();
-    }
+      if (command.includes('dashboard') || command.includes('home')) {
+        setActiveView('dashboard');
+      } else if (command.includes('analytics') || command.includes('charts')) {
+        setActiveView('analytics');
+      } else if (command.includes('history') || command.includes('past')) {
+        setActiveView('history');
+      } else if (
+        command.includes('support') ||
+        command.includes('care') ||
+        command.includes('help tools')
+      ) {
+        setActiveView('support');
+      } else if (command.includes('settings') || command.includes('accessibility')) {
+        setShowSettings(true);
+      } else if (command.includes('help') || command.includes('tutorial')) {
+        onStartWalkthrough();
+      }
 
-    // Haptic feedback for successful command
-    if ('vibrate' in navigator) {
-      navigator.vibrate(100);
-    }
-  }, [onStartWalkthrough]);
+      // Haptic feedback for successful command
+      if ('vibrate' in navigator) {
+        navigator.vibrate(100);
+      }
+    },
+    [onStartWalkthrough]
+  );
 
   // Hide gesture hint after first interaction
   React.useEffect(() => {
@@ -115,13 +149,26 @@ export function TraumaInformedPainTrackerLayout({
     return () => clearTimeout(timer);
   }, []);
 
-
-
   const navigationItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, description: 'Overview and quick actions' },
-    { id: 'analytics', label: 'Analytics', icon: TrendingUp, description: 'Detailed insights and trends' },
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: BarChart3,
+      description: 'Overview and quick actions',
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics',
+      icon: TrendingUp,
+      description: 'Detailed insights and trends',
+    },
     { id: 'history', label: 'History', icon: Calendar, description: 'Past entries and patterns' },
-    { id: 'support', label: 'Support', icon: LifeBuoy, description: 'Reminders, alerts, and safety tools' }
+    {
+      id: 'support',
+      label: 'Support',
+      icon: LifeBuoy,
+      description: 'Reminders, alerts, and safety tools',
+    },
   ];
 
   return (
@@ -141,7 +188,9 @@ export function TraumaInformedPainTrackerLayout({
             <div className="flex items-center space-x-4">
               <PainTrackerIcon size={40} />
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">Pain Tracker Pro</h1>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">
+                  Pain Tracker Pro
+                </h1>
                 <div className="text-xs text-muted-foreground font-medium tracking-wider uppercase">
                   AI-Powered Pain Management
                 </div>
@@ -149,12 +198,14 @@ export function TraumaInformedPainTrackerLayout({
             </div>
 
             <nav className="hidden md:flex items-center space-x-1">
-              {navigationItems.map((item) => (
+              {navigationItems.map(item => (
                 <Button
                   key={item.id}
-                  variant={activeView === item.id ? "default" : "ghost"}
+                  variant={activeView === item.id ? 'default' : 'ghost'}
                   size="sm"
-                  onClick={() => setActiveView(item.id as 'dashboard' | 'analytics' | 'history' | 'support')}
+                  onClick={() =>
+                    setActiveView(item.id as 'dashboard' | 'analytics' | 'history' | 'support')
+                  }
                   data-nav-target={item.id}
                   className="flex items-center space-x-2 transition-all duration-300 hover:scale-105 hover:shadow-md active:scale-95"
                 >
@@ -172,8 +223,12 @@ export function TraumaInformedPainTrackerLayout({
                   <span>{entries.length} entries</span>
                 </div>
                 {entries.length > 0 && (
-                  <Badge variant="outline" className="text-xs bg-primary/5 border-primary/20 hover:bg-primary/10 transition-colors">
-                    Last: {new Date(entries[entries.length - 1]?.timestamp || '').toLocaleDateString()}
+                  <Badge
+                    variant="outline"
+                    className="text-xs bg-primary/5 border-primary/20 hover:bg-primary/10 transition-colors"
+                  >
+                    Last:{' '}
+                    {new Date(entries[entries.length - 1]?.timestamp || '').toLocaleDateString()}
                   </Badge>
                 )}
               </div>
@@ -222,12 +277,14 @@ export function TraumaInformedPainTrackerLayout({
           {/* Mobile Navigation */}
           <div className="md:hidden pb-2 px-2">
             <nav className="flex space-x-1 overflow-x-auto">
-              {navigationItems.map((item) => (
+              {navigationItems.map(item => (
                 <Button
                   key={item.id}
-                  variant={activeView === item.id ? "default" : "ghost"}
+                  variant={activeView === item.id ? 'default' : 'ghost'}
                   size="sm"
-                  onClick={() => setActiveView(item.id as 'dashboard' | 'analytics' | 'history' | 'support')}
+                  onClick={() =>
+                    setActiveView(item.id as 'dashboard' | 'analytics' | 'history' | 'support')
+                  }
                   className="flex-1 flex items-center justify-center space-x-1 min-h-[44px] min-w-[44px]"
                   aria-label={item.description}
                   data-nav-target={item.id}
@@ -273,157 +330,164 @@ export function TraumaInformedPainTrackerLayout({
         </div>
       )}
 
-      <main 
-        id="main-content" 
+      <main
+        id="main-content"
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 swipe-indicator relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/2 before:to-transparent before:pointer-events-none before:-z-10"
         ref={swipeGesture.ref}
       >
-        <DashboardPullToRefresh
-          onRefresh={handlePullToRefresh}
-          lastRefresh={lastRefresh}
-        >
-        {/* Gesture Hint for Mobile Users */}
-        <GestureHint
-          gesture="swipe"
-          direction="left"
-          description="Swipe to navigate between views"
-          show={showGestureHint && window.innerWidth < 768}
-        />
+        <DashboardPullToRefresh onRefresh={handlePullToRefresh} lastRefresh={lastRefresh}>
+          {/* Gesture Hint for Mobile Users */}
+          <GestureHint
+            gesture="swipe"
+            direction="left"
+            description="Swipe to navigate between views"
+            show={showGestureHint && window.innerWidth < 768}
+          />
 
-        {/* Comfort Prompt */}
-        {preferences.showComfortPrompts && (
-          <div className="mb-6">
-            <ComfortPrompt />
-          </div>
-        )}
+          {/* Comfort Prompt */}
+          {preferences.showComfortPrompts && (
+            <div className="mb-6">
+              <ComfortPrompt />
+            </div>
+          )}
 
-        {/* Memory Aid for new users */}
-        {preferences.showMemoryAids && entries.length === 0 && (
-          <div className="mb-6">
-            <MemoryAid
-              text="Welcome! Start by recording your current pain level. Your information is automatically saved as you go, so you can take breaks anytime."
-              type="tip"
-            />
-          </div>
-        )}
+          {/* Memory Aid for new users */}
+          {preferences.showMemoryAids && entries.length === 0 && (
+            <div className="mb-6">
+              <MemoryAid
+                text="Welcome! Start by recording your current pain level. Your information is automatically saved as you go, so you can take breaks anytime."
+                type="tip"
+              />
+            </div>
+          )}
 
-        {/* Error Display with Gentle Language */}
-        {error && (
-          <Card className="mb-6 border-destructive/50 bg-destructive/5 animate-[fadeInDown_0.5s_ease-out] shadow-lg shadow-destructive/10">
-            <CardContent className="pt-6">
-              <div className="flex items-center space-x-2" role="alert" aria-live="polite">
-                <AlertCircle className="h-5 w-5 text-destructive" />
+          {/* Error Display with Gentle Language */}
+          {error && (
+            <Card className="mb-6 border-destructive/50 bg-destructive/5 animate-[fadeInDown_0.5s_ease-out] shadow-lg shadow-destructive/10">
+              <CardContent className="pt-6">
+                <div className="flex items-center space-x-2" role="alert" aria-live="polite">
+                  <AlertCircle className="h-5 w-5 text-destructive" />
+                  <div>
+                    {preferences.gentleLanguage ? (
+                      <>
+                        <strong className="font-semibold text-destructive">
+                          Something didn't work:{' '}
+                        </strong>
+                        <span className="text-destructive">
+                          We encountered an issue. Please try again when you're ready. Your data is
+                          safe.
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <strong className="font-semibold text-destructive">Error: </strong>
+                        <span className="text-destructive">{error}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Dashboard View */}
+          {activeView === 'dashboard' && (
+            <div className="space-y-6">
+              <Suspense fallback={<BrandedLoadingScreen message="Loading Dashboard..." />}>
+                <CustomizableDashboard
+                  entries={entries}
+                  onAddEntry={onAddEntry}
+                  onStartWalkthrough={onStartWalkthrough}
+                  onOpenGoalManager={() => setShowGoalManager(true)}
+                />
+              </Suspense>
+            </div>
+          )}
+
+          {/* Analytics View */}
+          {activeView === 'analytics' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  {preferences.gentleLanguage ? (
-                    <>
-                      <strong className="font-semibold text-destructive">Something didn't work: </strong>
-                      <span className="text-destructive">
-                        We encountered an issue. Please try again when you're ready. Your data is safe.
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <strong className="font-semibold text-destructive">Error: </strong>
-                      <span className="text-destructive">{error}</span>
-                    </>
-                  )}
+                  <h2 className="text-2xl font-bold text-foreground">
+                    Advanced Analytics Dashboard
+                  </h2>
+                  <p className="text-muted-foreground">
+                    Comprehensive insights, correlations, and predictive indicators
+                  </p>
+                </div>
+                <div className="flex gap-3">
+                  <Suspense
+                    fallback={<div className="text-muted-foreground text-sm">Loading...</div>}
+                  >
+                    <ClinicalPDFExportButton entries={entries} variant="compact" />
+                  </Suspense>
+                  <Button variant="outline" onClick={() => setActiveView('dashboard')}>
+                    Back to Dashboard
+                  </Button>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
 
-        {/* Dashboard View */}
-        {activeView === 'dashboard' && (
-          <div className="space-y-6">
-            <Suspense fallback={<BrandedLoadingScreen message="Loading Dashboard..." />}>
-              <CustomizableDashboard
-                entries={entries}
-                onAddEntry={onAddEntry}
-                onStartWalkthrough={onStartWalkthrough}
-                onOpenGoalManager={() => setShowGoalManager(true)}
-              />
-            </Suspense>
-          </div>
-        )}
+              <Suspense fallback={<BrandedLoadingScreen message="Loading Analytics..." />}>
+                <AnalyticsDashboard />
+              </Suspense>
+            </div>
+          )}
 
-        {/* Analytics View */}
-        {activeView === 'analytics' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground">Advanced Analytics Dashboard</h2>
-                <p className="text-muted-foreground">Comprehensive insights, correlations, and predictive indicators</p>
-              </div>
-              <div className="flex gap-3">
-                <Suspense fallback={<div className="text-muted-foreground text-sm">Loading...</div>}>
-                  <ClinicalPDFExportButton 
-                    entries={entries}
-                    variant="compact"
-                  />
-                </Suspense>
+          {/* History View */}
+          {activeView === 'history' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">Pain History</h2>
+                  <p className="text-muted-foreground">
+                    Complete history of your pain entries and patterns
+                  </p>
+                </div>
                 <Button variant="outline" onClick={() => setActiveView('dashboard')}>
                   Back to Dashboard
                 </Button>
               </div>
+
+              <Suspense fallback={<BrandedLoadingScreen message="Loading History..." />}>
+                <PainHistoryPanel entries={entries} />
+              </Suspense>
             </div>
+          )}
 
-            <Suspense fallback={<BrandedLoadingScreen message="Loading Analytics..." />}>
-              <AnalyticsDashboard />
-            </Suspense>
-          </div>
-        )}
-
-        {/* History View */}
-        {activeView === 'history' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground">Pain History</h2>
-                <p className="text-muted-foreground">Complete history of your pain entries and patterns</p>
+          {/* Support View */}
+          {activeView === 'support' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-foreground">Support & Safety</h2>
+                  <p className="text-muted-foreground">
+                    Manage reminders, alerts, and comfort tools when you need extra help.
+                  </p>
+                </div>
+                <Button variant="outline" onClick={() => setActiveView('dashboard')}>
+                  Back to Dashboard
+                </Button>
               </div>
-              <Button variant="outline" onClick={() => setActiveView('dashboard')}>
-                Back to Dashboard
-              </Button>
-            </div>
 
-            <Suspense fallback={<BrandedLoadingScreen message="Loading History..." />}>
-              <PainHistoryPanel entries={entries} />
-            </Suspense>
-          </div>
-        )}
-
-        {/* Support View */}
-        {activeView === 'support' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold text-foreground">Support & Safety</h2>
-                <p className="text-muted-foreground">Manage reminders, alerts, and comfort tools when you need extra help.</p>
+              <div className="grid gap-4 lg:grid-cols-2">
+                <MedicationReminders variant="inline" />
+                <AlertsSettings variant="inline" className="text-sm" />
               </div>
-              <Button variant="outline" onClick={() => setActiveView('dashboard')}>
-                Back to Dashboard
-              </Button>
+
+              <AlertsActivityLog variant="inline" className="text-sm" />
             </div>
+          )}
 
-            <div className="grid gap-4 lg:grid-cols-2">
-              <MedicationReminders variant="inline" />
-              <AlertsSettings variant="inline" className="text-sm" />
+          {/* Additional Memory Aid for users with multiple entries */}
+          {preferences.showMemoryAids && entries.length >= 3 && (
+            <div className="mt-6">
+              <MemoryAid
+                text="Great progress! You've been consistently tracking your pain. Look for patterns in your data to share with your healthcare provider."
+                type="reminder"
+              />
             </div>
-
-            <AlertsActivityLog variant="inline" className="text-sm" />
-          </div>
-        )}
-
-        {/* Additional Memory Aid for users with multiple entries */}
-        {preferences.showMemoryAids && entries.length >= 3 && (
-          <div className="mt-6">
-            <MemoryAid
-              text="Great progress! You've been consistently tracking your pain. Look for patterns in your data to share with your healthcare provider."
-              type="reminder"
-            />
-          </div>
-        )}
+          )}
         </DashboardPullToRefresh>
       </main>
 
@@ -432,11 +496,9 @@ export function TraumaInformedPainTrackerLayout({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="text-sm text-muted-foreground text-center md:text-left">
-              {preferences.gentleLanguage ? (
-                "Your health journey matters. You're doing great by tracking your symptoms."
-              ) : (
-                "Pain Tracker Pro - Manage your health information with confidence"
-              )}
+              {preferences.gentleLanguage
+                ? "Your health journey matters. You're doing great by tracking your symptoms."
+                : 'Pain Tracker Pro - Manage your health information with confidence'}
             </div>
 
             <div className="flex items-center space-x-4">
@@ -470,10 +532,7 @@ export function TraumaInformedPainTrackerLayout({
       {/* Goal Manager Modal */}
       {showGoalManager && (
         <Suspense fallback={null}>
-          <GoalManagerModal
-            isOpen={showGoalManager}
-            onClose={() => setShowGoalManager(false)}
-          />
+          <GoalManagerModal isOpen={showGoalManager} onClose={() => setShowGoalManager(false)} />
         </Suspense>
       )}
     </div>

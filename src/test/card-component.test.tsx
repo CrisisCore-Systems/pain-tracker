@@ -1,7 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from '../design-system/components/Card';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+  CardDescription,
+} from '../design-system/components/Card';
 
 describe('Card component', () => {
   it('renders structure', () => {

@@ -9,7 +9,13 @@ import { cn } from '../utils';
 import { Slide } from './PageTransition';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
-export type ToastPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+export type ToastPosition =
+  | 'top-left'
+  | 'top-center'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right';
 
 export interface Toast {
   id: string;
@@ -53,29 +59,32 @@ export function ToastProvider({
 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback((toast: Omit<Toast, 'id'>) => {
-    const id = `toast-${Date.now()}-${Math.random()}`;
-    const newToast: Toast = {
-      ...toast,
-      id,
-      duration: toast.duration ?? 5000,
-    };
+  const addToast = useCallback(
+    (toast: Omit<Toast, 'id'>) => {
+      const id = `toast-${Date.now()}-${Math.random()}`;
+      const newToast: Toast = {
+        ...toast,
+        id,
+        duration: toast.duration ?? 5000,
+      };
 
-    setToasts(prev => {
-      const updated = [...prev, newToast];
-      // Limit number of toasts
-      return updated.slice(-maxToasts);
-    });
+      setToasts(prev => {
+        const updated = [...prev, newToast];
+        // Limit number of toasts
+        return updated.slice(-maxToasts);
+      });
 
-    // Auto-dismiss if duration is set
-    if (newToast.duration && newToast.duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, newToast.duration);
-    }
+      // Auto-dismiss if duration is set
+      if (newToast.duration && newToast.duration > 0) {
+        setTimeout(() => {
+          removeToast(id);
+        }, newToast.duration);
+      }
 
-    return id;
-  }, [maxToasts]);
+      return id;
+    },
+    [maxToasts]
+  );
 
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(toast => toast.id !== id));
@@ -200,12 +209,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
   const colors = colorClasses[toast.type];
 
   return (
-    <Slide
-      show={isVisible}
-      direction="down"
-      duration={300}
-      className="pointer-events-auto"
-    >
+    <Slide show={isVisible} direction="down" duration={300} className="pointer-events-auto">
       <div
         className={cn(
           'min-w-[320px] max-w-md rounded-lg border-2 shadow-lg backdrop-blur-sm',
@@ -219,18 +223,12 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       >
         <div className="p-4">
           <div className="flex items-start space-x-3">
-            <div className={cn('flex-shrink-0', colors.icon)}>
-              {icons[toast.type]}
-            </div>
+            <div className={cn('flex-shrink-0', colors.icon)}>{icons[toast.type]}</div>
 
             <div className="flex-1 min-w-0">
-              <p className={cn('text-sm font-semibold', colors.text)}>
-                {toast.title}
-              </p>
+              <p className={cn('text-sm font-semibold', colors.text)}>{toast.title}</p>
               {toast.message && (
-                <p className={cn('text-sm mt-1 opacity-90', colors.text)}>
-                  {toast.message}
-                </p>
+                <p className={cn('text-sm mt-1 opacity-90', colors.text)}>{toast.message}</p>
               )}
 
               {toast.action && (

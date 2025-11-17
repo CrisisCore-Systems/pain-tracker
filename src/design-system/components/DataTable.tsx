@@ -56,8 +56,8 @@ export function DataTable<T extends Record<string, unknown>>({
 
     // Apply search
     if (searchTerm) {
-      filtered = filtered.filter((row) =>
-        Object.values(row).some((value) =>
+      filtered = filtered.filter(row =>
+        Object.values(row).some(value =>
           String(value).toLowerCase().includes(searchTerm.toLowerCase())
         )
       );
@@ -66,7 +66,7 @@ export function DataTable<T extends Record<string, unknown>>({
     // Apply column filters
     Object.entries(filters).forEach(([key, value]) => {
       if (value) {
-        filtered = filtered.filter((row) =>
+        filtered = filtered.filter(row =>
           String(row[key]).toLowerCase().includes(value.toLowerCase())
         );
       }
@@ -118,7 +118,7 @@ export function DataTable<T extends Record<string, unknown>>({
   };
 
   const handleFilterChange = (columnKey: string, value: string) => {
-    setFilters((prev) => ({
+    setFilters(prev => ({
       ...prev,
       [columnKey]: value,
     }));
@@ -143,7 +143,7 @@ export function DataTable<T extends Record<string, unknown>>({
                 <Input
                   placeholder="Search..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
               </div>
@@ -159,20 +159,14 @@ export function DataTable<T extends Record<string, unknown>>({
 
       <CardContent>
         {paginatedData.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            {emptyMessage}
-          </div>
+          <div className="text-center py-8 text-muted-foreground">{emptyMessage}</div>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table
-                className="w-full"
-                role="table"
-                aria-label={title || 'Data table'}
-              >
+              <table className="w-full" role="table" aria-label={title || 'Data table'}>
                 <thead>
                   <tr className="border-b" role="row">
-                    {columns.map((column) => (
+                    {columns.map(column => (
                       <th
                         key={String(column.key)}
                         className={cn(
@@ -222,7 +216,9 @@ export function DataTable<T extends Record<string, unknown>>({
                               <Input
                                 placeholder="Filter..."
                                 value={filters[String(column.key)] || ''}
-                                onChange={(e) => handleFilterChange(String(column.key), e.target.value)}
+                                onChange={e =>
+                                  handleFilterChange(String(column.key), e.target.value)
+                                }
                                 className="h-6 w-20 text-xs"
                                 aria-label={`Filter ${column.header}`}
                               />
@@ -245,7 +241,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       onClick={() => onRowClick?.(row)}
                       role="row"
                       tabIndex={onRowClick ? 0 : -1}
-                      onKeyDown={(e) => {
+                      onKeyDown={e => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
                           onRowClick?.(row);
@@ -253,7 +249,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       }}
                       aria-label={onRowClick ? `Row ${index + 1}, click to select` : undefined}
                     >
-                      {columns.map((column) => (
+                      {columns.map(column => (
                         <td
                           key={String(column.key)}
                           className={cn(
@@ -265,15 +261,12 @@ export function DataTable<T extends Record<string, unknown>>({
                         >
                           {column.render
                             ? column.render(row[column.key as keyof T], row)
-                            : String(row[column.key as keyof T] || '')
-                          }
+                            : String(row[column.key as keyof T] || '')}
                         </td>
                       ))}
                       {actions && (
                         <td className="py-3 px-4" role="cell">
-                          <div className="flex items-center space-x-2">
-                            {actions(row)}
-                          </div>
+                          <div className="flex items-center space-x-2">{actions(row)}</div>
                         </td>
                       )}
                     </tr>
@@ -285,7 +278,9 @@ export function DataTable<T extends Record<string, unknown>>({
             {pagination && totalPages > 1 && (
               <div className="flex items-center justify-between mt-4">
                 <div className="text-sm text-muted-foreground">
-                  Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, sortedData.length)} of {sortedData.length} entries
+                  Showing {(currentPage - 1) * pageSize + 1} to{' '}
+                  {Math.min(currentPage * pageSize, sortedData.length)} of {sortedData.length}{' '}
+                  entries
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button

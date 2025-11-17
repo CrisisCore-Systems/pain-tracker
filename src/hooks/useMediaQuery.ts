@@ -1,6 +1,6 @@
 /**
  * useMediaQuery Hook
- * 
+ *
  * Provides responsive breakpoint detection for mobile optimization
  * Based on Tailwind CSS breakpoints
  */
@@ -102,7 +102,7 @@ export function useIsTouchDevice(): boolean {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     const checkTouch = () => {
       setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
     };
@@ -110,7 +110,7 @@ export function useIsTouchDevice(): boolean {
     // Check on mount and on resize (for device orientation changes)
     checkTouch();
     window.addEventListener('resize', checkTouch);
-    
+
     return () => window.removeEventListener('resize', checkTouch);
   }, []);
 

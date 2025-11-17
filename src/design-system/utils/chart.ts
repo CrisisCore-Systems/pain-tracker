@@ -19,7 +19,12 @@ export function buildRolling7DayChartData(
   const locale = opts?.locale || undefined;
 
   const fmtYMD = (d: Date) => {
-    return new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(d);
   };
 
   const fmtLabel = (d: Date) => {

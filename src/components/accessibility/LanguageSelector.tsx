@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' }
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
 ];
 
 export const LanguageSelector: React.FC = () => {
@@ -17,20 +17,23 @@ export const LanguageSelector: React.FC = () => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border">
       <h3 className="font-semibold mb-3 flex items-center gap-2">
-        <span role="img" aria-label="language">🌐</span>
+        <span role="img" aria-label="language">
+          🌐
+        </span>
         Language / Langue / Idioma
       </h3>
-      
+
       <div className="space-y-2">
-        {languages.map((language) => (
-      <button
+        {languages.map(language => (
+          <button
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
             className={`
               w-full flex items-center gap-3 p-2 rounded transition-colors text-left
-              ${i18n.language === language.code 
-        ? 'bg-primary/10 border-2 border-primary text-primary-foreground' 
-        : 'hover:bg-muted/50 border-2 border-transparent'
+              ${
+                i18n.language === language.code
+                  ? 'bg-primary/10 border-2 border-primary text-primary-foreground'
+                  : 'hover:bg-muted/50 border-2 border-transparent'
               }
               focus:outline-none focus:ring-2 focus:ring-blue-500
             `}
@@ -48,7 +51,7 @@ export const LanguageSelector: React.FC = () => {
           </button>
         ))}
       </div>
-      
+
       <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
         <p className="text-xs text-gray-600 dark:text-gray-400">
           Current: {languages.find(l => l.code === i18n.language)?.name || 'Unknown'}

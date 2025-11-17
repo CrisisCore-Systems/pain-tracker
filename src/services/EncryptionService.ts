@@ -4,7 +4,13 @@
  */
 
 import { securityService } from './SecurityService';
-import type { EncryptionKeyPayload, EncryptedBlobMeta, KeyBundleWrappedPayload, KeyBundleRawPayload, OpaqueKeyPayload } from '../types/security';
+import type {
+  EncryptionKeyPayload,
+  EncryptedBlobMeta,
+  KeyBundleWrappedPayload,
+  KeyBundleRawPayload,
+  OpaqueKeyPayload,
+} from '../types/security';
 import type { PainEntry } from '../types';
 
 // --- Web Crypto helpers ---
@@ -32,7 +38,9 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
 
 function bufferToHex(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
-  return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+  return Array.from(bytes)
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 function arrayBufferToHex(buffer: ArrayBuffer): string {
@@ -47,11 +55,21 @@ function hexToArrayBuffer(hex: string): ArrayBuffer {
 
 // concat helper was unused and removed
 
-async function deriveKeyFromPassword(password: string, salt: Uint8Array, iterations = 150000): Promise<ArrayBuffer> {
+async function deriveKeyFromPassword(
+  password: string,
+  salt: Uint8Array,
+  iterations = 150000
+): Promise<ArrayBuffer> {
   const pwUtf8 = new TextEncoder().encode(password);
-  const baseKey = await crypto.subtle.importKey('raw', pwUtf8, 'PBKDF2', false, ['deriveBits', 'deriveKey']);
+  const baseKey = await crypto.subtle.importKey('raw', pwUtf8, 'PBKDF2', false, [
+    'deriveBits',
+    'deriveKey',
+  ]);
   // Ensure we pass a plain ArrayBuffer (slice to the exact view range)
-  const saltBuf = salt.buffer.slice(salt.byteOffset, salt.byteOffset + salt.byteLength) as ArrayBuffer;
+  const saltBuf = salt.buffer.slice(
+    salt.byteOffset,
+    salt.byteOffset + salt.byteLength
+  ) as ArrayBuffer;
   const derived = await crypto.subtle.deriveKey(
     { name: 'PBKDF2', salt: saltBuf as ArrayBuffer, iterations, hash: 'SHA-256' },
     baseKey,
@@ -62,7 +80,6 @@ async function deriveKeyFromPassword(password: string, salt: Uint8Array, iterati
   const raw = await crypto.subtle.exportKey('raw', derived);
   return raw;
 }
-
 
 // Encryption metadata for tracking
 export interface EncryptionMetadata extends EncryptedBlobMeta {
@@ -158,7 +175,7 @@ export class EndToEndEncryptionService {
         type: 'encryption',
         level: 'info',
         message: 'End-to-end encryption service initialized',
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     } catch (error) {
       this.logSecurityEvent({
@@ -166,7 +183,7 @@ export class EndToEndEncryptionService {
         level: 'error',
         message: 'Failed to initialize encryption service',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
   }
@@ -175,8 +192,14 @@ export class EndToEndEncryptionService {
     return {
       generateKey: async (keyId: string): Promise<string> => {
         // Generate a new AES-GCM key and a separate HMAC key, then wrap them for persistent storage.
-        const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
-        const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+        const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, [
+          'encrypt',
+          'decrypt',
+        ]);
+        const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, [
+          'sign',
+          'verify',
+        ]);
 
         // Wrap both keys using the SecurityService (which uses the master key)
         let payload: string;
@@ -185,11 +208,15 @@ export class EndToEndEncryptionService {
           const hmacWrapped = await securityService.wrapKey(hmacKey);
           payload = JSON.stringify({ encWrapped, hmacWrapped, created: new Date().toISOString() });
           await this.keyManager.storeKey(keyId, payload);
-  } catch {
+        } catch {
           // Fallback: export raw key material and store as base64 (will be encrypted at rest by secure storage)
           const encRaw = await crypto.subtle.exportKey('raw', encKey);
           const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
-          payload = JSON.stringify({ enc: arrayBufferToBase64(encRaw), hmac: arrayBufferToBase64(hmacRaw), created: new Date().toISOString() });
+          payload = JSON.stringify({
+            enc: arrayBufferToBase64(encRaw),
+            hmac: arrayBufferToBase64(hmacRaw),
+            created: new Date().toISOString(),
+          });
           await this.keyManager.storeKey(keyId, payload);
         }
 
@@ -197,7 +224,7 @@ export class EndToEndEncryptionService {
           type: 'encryption',
           level: 'info',
           message: `New encryption key generated: ${keyId}`,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
 
         return payload;
@@ -216,12 +243,19 @@ export class EndToEndEncryptionService {
           // If caller passed a wrapped payload already, store as-is.
           try {
             const parsed = JSON.parse(key) as EncryptionKeyPayload;
-            const isWrapped = (p: EncryptionKeyPayload): p is KeyBundleWrappedPayload => 
+            const isWrapped = (p: EncryptionKeyPayload): p is KeyBundleWrappedPayload =>
               'encWrapped' in p || 'hmacWrapped' in p || 'wrapped' in p;
-            
+
             if (parsed && isWrapped(parsed)) {
-              await storage.store(`key:${keyId}`, { ...parsed, created: new Date().toISOString() }, true);
-              this.inMemoryKeyCache.set(keyId, { key: JSON.stringify({ ...parsed, created: new Date().toISOString() }), created: new Date().toISOString() });
+              await storage.store(
+                `key:${keyId}`,
+                { ...parsed, created: new Date().toISOString() },
+                true
+              );
+              this.inMemoryKeyCache.set(keyId, {
+                key: JSON.stringify({ ...parsed, created: new Date().toISOString() }),
+                created: new Date().toISOString(),
+              });
               return;
             }
             // If caller provided raw enc/hmac base64 material, import and wrap it before storing
@@ -231,17 +265,32 @@ export class EndToEndEncryptionService {
               let hmacWrapped: string | undefined;
               if ((parsed as KeyBundleRawPayload).enc) {
                 const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
-                const encCrypto = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, true, ['encrypt', 'decrypt']);
+                const encCrypto = await crypto.subtle.importKey(
+                  'raw',
+                  encRaw,
+                  { name: 'AES-GCM' },
+                  true,
+                  ['encrypt', 'decrypt']
+                );
                 encWrapped = await securityService.wrapKey(encCrypto);
               }
               if ((parsed as KeyBundleRawPayload).hmac) {
                 const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
-                const hmacCrypto = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+                const hmacCrypto = await crypto.subtle.importKey(
+                  'raw',
+                  hmacRaw,
+                  { name: 'HMAC', hash: 'SHA-256' },
+                  true,
+                  ['sign', 'verify']
+                );
                 hmacWrapped = await securityService.wrapKey(hmacCrypto);
               }
               const toStore = { encWrapped, hmacWrapped, created: new Date().toISOString() };
               await storage.store(`key:${keyId}`, toStore, true);
-              this.inMemoryKeyCache.set(keyId, { key: JSON.stringify(toStore), created: new Date().toISOString() });
+              this.inMemoryKeyCache.set(keyId, {
+                key: JSON.stringify(toStore),
+                created: new Date().toISOString(),
+              });
               return;
             }
           } catch {
@@ -265,20 +314,39 @@ export class EndToEndEncryptionService {
       retrieveKey: async (keyId: string): Promise<string | null> => {
         try {
           const storage = securityService.createSecureStorage();
-          const stored = await storage.retrieve(`key:${keyId}`, true) as ((EncryptionKeyPayload & { created?: string }) | null);
+          const stored = (await storage.retrieve(`key:${keyId}`, true)) as
+            | (EncryptionKeyPayload & { created?: string })
+            | null;
           if (stored) {
             // If stored contains wrapped blobs, return the wrapped JSON so callers can unwrap via SecurityService
             try {
-              const hasWrapped = (stored as KeyBundleWrappedPayload).encWrapped || (stored as KeyBundleWrappedPayload).hmacWrapped || (stored as KeyBundleWrappedPayload).wrapped;
+              const hasWrapped =
+                (stored as KeyBundleWrappedPayload).encWrapped ||
+                (stored as KeyBundleWrappedPayload).hmacWrapped ||
+                (stored as KeyBundleWrappedPayload).wrapped;
               if (hasWrapped) {
-                const payload = (stored as KeyBundleWrappedPayload).encWrapped || (stored as KeyBundleWrappedPayload).wrapped;
-                const out = payload ? JSON.stringify({ encWrapped: (stored as KeyBundleWrappedPayload).encWrapped, hmacWrapped: (stored as KeyBundleWrappedPayload).hmacWrapped, created: (stored as { created?: string }).created }) : JSON.stringify(stored);
+                const payload =
+                  (stored as KeyBundleWrappedPayload).encWrapped ||
+                  (stored as KeyBundleWrappedPayload).wrapped;
+                const out = payload
+                  ? JSON.stringify({
+                      encWrapped: (stored as KeyBundleWrappedPayload).encWrapped,
+                      hmacWrapped: (stored as KeyBundleWrappedPayload).hmacWrapped,
+                      created: (stored as { created?: string }).created,
+                    })
+                  : JSON.stringify(stored);
                 // populate in-memory cache for fast access
-                this.inMemoryKeyCache.set(keyId, { key: out, created: (stored as { created?: string }).created || new Date().toISOString() });
+                this.inMemoryKeyCache.set(keyId, {
+                  key: out,
+                  created: (stored as { created?: string }).created || new Date().toISOString(),
+                });
                 return out;
               }
               if ((stored as OpaqueKeyPayload).key) {
-                this.inMemoryKeyCache.set(keyId, { key: (stored as OpaqueKeyPayload).key!, created: (stored as { created?: string }).created || new Date().toISOString() });
+                this.inMemoryKeyCache.set(keyId, {
+                  key: (stored as OpaqueKeyPayload).key!,
+                  created: (stored as { created?: string }).created || new Date().toISOString(),
+                });
                 return (stored as OpaqueKeyPayload).key!;
               }
             } catch {
@@ -293,7 +361,7 @@ export class EndToEndEncryptionService {
             level: 'error',
             message: `Failed to retrieve key: ${keyId}`,
             metadata: { error: err instanceof Error ? err.message : 'Unknown error' },
-            timestamp: new Date()
+            timestamp: new Date(),
           });
           const mem = this.inMemoryKeyCache.get(keyId);
           return mem?.key || null;
@@ -303,26 +371,36 @@ export class EndToEndEncryptionService {
       rotateKey: async (keyId: string): Promise<string> => {
         // Retrieve old key before rotation
         const oldKey = await this.keyManager.retrieveKey(keyId);
-        
+
         // Store old key as archived if it exists
         if (oldKey) {
           try {
             const storage = securityService.createSecureStorage();
-            await storage.store(`archived-key:${keyId}:${Date.now()}`, { key: oldKey, archived: new Date().toISOString() }, true);
+            await storage.store(
+              `archived-key:${keyId}:${Date.now()}`,
+              { key: oldKey, archived: new Date().toISOString() },
+              true
+            );
           } catch (e) {
             securityService.logSecurityEvent({
               type: 'encryption',
               level: 'warning',
               message: `Failed to archive old key during rotation: ${keyId}`,
               metadata: { error: e instanceof Error ? e.message : 'Unknown error' },
-              timestamp: new Date()
+              timestamp: new Date(),
             });
           }
         }
 
         // Generate new keys (extractable to allow fallback export if wrap fails)
-        const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
-        const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, ['sign', 'verify']);
+        const encKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, [
+          'encrypt',
+          'decrypt',
+        ]);
+        const hmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, true, [
+          'sign',
+          'verify',
+        ]);
 
         let payload: string;
         try {
@@ -335,7 +413,11 @@ export class EndToEndEncryptionService {
           // Fallback: export raw key material and store via secure storage (encrypted at rest)
           const encRaw = await crypto.subtle.exportKey('raw', encKey);
           const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
-          payload = JSON.stringify({ enc: arrayBufferToBase64(encRaw), hmac: arrayBufferToBase64(hmacRaw), created: new Date().toISOString() });
+          payload = JSON.stringify({
+            enc: arrayBufferToBase64(encRaw),
+            hmac: arrayBufferToBase64(hmacRaw),
+            created: new Date().toISOString(),
+          });
           await this.keyManager.storeKey(keyId, payload);
         }
 
@@ -343,7 +425,7 @@ export class EndToEndEncryptionService {
           type: 'encryption',
           level: 'info',
           message: `Key rotated: ${keyId}`,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
 
         return payload;
@@ -356,12 +438,12 @@ export class EndToEndEncryptionService {
         } catch {
           this.inMemoryKeyCache.delete(keyId);
         }
-        
+
         this.logSecurityEvent({
           type: 'encryption',
           level: 'warning',
           message: `Key deleted: ${keyId}`,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       },
 
@@ -380,7 +462,7 @@ export class EndToEndEncryptionService {
         // Include in-memory keys
         this.inMemoryKeyCache.forEach((_v, k) => keys.add(k));
         return Array.from(keys);
-      }
+      },
     };
   }
 
@@ -394,21 +476,21 @@ export class EndToEndEncryptionService {
       const useCompression = options.useCompression ?? true;
       const addIntegrityCheck = options.addIntegrityCheck ?? true;
 
-  // Get encryption key (stored as base64 raw key)
-  let key = await this.keyManager.retrieveKey(keyId);
+      // Get encryption key (stored as base64 raw key)
+      let key = await this.keyManager.retrieveKey(keyId);
       if (!key) {
         // Auto-generate missing key (helps test environment or first-run scenarios)
         securityService.logSecurityEvent({
           type: 'encryption',
           level: 'warning',
           message: `Encryption key missing, generating on-demand: ${keyId}`,
-          timestamp: new Date()
+          timestamp: new Date(),
         });
         key = await this.keyManager.generateKey(keyId);
       }
 
-  // Serialize data
-  let serialized = JSON.stringify(data);
+      // Serialize data
+      let serialized = JSON.stringify(data);
 
       // Optional compression
       if (useCompression && serialized.length > 1000) {
@@ -422,22 +504,39 @@ export class EndToEndEncryptionService {
       try {
         const parsed = JSON.parse(key as string) as EncryptionKeyPayload;
         if (parsed) {
-          if ((parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped) {
-            const wrapped = (parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped;
+          if (
+            (parsed as KeyBundleWrappedPayload).encWrapped ||
+            (parsed as KeyBundleWrappedPayload).wrapped
+          ) {
+            const wrapped =
+              (parsed as KeyBundleWrappedPayload).encWrapped ||
+              (parsed as KeyBundleWrappedPayload).wrapped;
             if (wrapped) {
-              encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+              encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, [
+                'encrypt',
+                'decrypt',
+              ]);
             }
           }
           if ((parsed as KeyBundleWrappedPayload).hmacWrapped) {
             const hmacWrapped = (parsed as KeyBundleWrappedPayload).hmacWrapped;
             if (hmacWrapped) {
-              hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, ['sign', 'verify']);
+              hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, [
+                'sign',
+                'verify',
+              ]);
             }
           }
           if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
             try {
               const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
-              encCryptoKey = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+              encCryptoKey = await crypto.subtle.importKey(
+                'raw',
+                encRaw,
+                { name: 'AES-GCM' },
+                false,
+                ['encrypt', 'decrypt']
+              );
             } catch {
               // ignore HMAC key import failure; will fall back to digest integrity check
             }
@@ -445,7 +544,13 @@ export class EndToEndEncryptionService {
           if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
             try {
               const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
-              hmacCryptoKey = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+              hmacCryptoKey = await crypto.subtle.importKey(
+                'raw',
+                hmacRaw,
+                { name: 'HMAC', hash: 'SHA-256' },
+                false,
+                ['sign', 'verify']
+              );
             } catch {
               // ignore HMAC import failure; will fall back to digest integrity check
             }
@@ -455,7 +560,10 @@ export class EndToEndEncryptionService {
         // Not JSON — try to import as raw base64 AES key
         try {
           const raw = base64ToArrayBuffer(key as string);
-          encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
+          encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, [
+            'encrypt',
+            'decrypt',
+          ]);
         } catch {
           // ignore non-JSON parse failure; will attempt raw base64 import next
         }
@@ -486,7 +594,7 @@ export class EndToEndEncryptionService {
         keyId,
         timestamp: new Date(),
         version: '2.0.0',
-        iv: arrayBufferToBase64(iv.buffer)
+        iv: arrayBufferToBase64(iv.buffer),
       };
 
       this.logSecurityEvent({
@@ -498,15 +606,15 @@ export class EndToEndEncryptionService {
           algorithm,
           originalSize: serialized.length,
           encryptedSize: encrypted.length,
-          compressed: useCompression
+          compressed: useCompression,
         },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return {
         data: encrypted,
         metadata,
-        checksum
+        checksum,
       };
     } catch (error) {
       this.logSecurityEvent({
@@ -514,7 +622,7 @@ export class EndToEndEncryptionService {
         level: 'error',
         message: 'Data encryption failed',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw error;
     }
@@ -539,14 +647,22 @@ export class EndToEndEncryptionService {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const CryptoJS: any = await import('crypto-js');
         const decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
-        if (!decrypted) throw new Error('Decryption failed - invalid key or corrupted data (legacy)');
+        if (!decrypted)
+          throw new Error('Decryption failed - invalid key or corrupted data (legacy)');
         if (checksum) {
           const calculatedChecksum = CryptoJS.SHA256(decrypted + key).toString();
-          if (calculatedChecksum !== checksum) throw new Error('Data integrity check failed - data may be corrupted (legacy)');
+          if (calculatedChecksum !== checksum)
+            throw new Error('Data integrity check failed - data may be corrupted (legacy)');
         }
         let final = decrypted;
         if (decrypted.startsWith('COMPRESSED:')) final = this.decompressString(decrypted);
-        this.logSecurityEvent({ type: 'encryption', level: 'info', message: 'Data decrypted (legacy) successfully', metadata: { keyId, algorithm, integrityVerified: !!checksum }, timestamp: new Date() });
+        this.logSecurityEvent({
+          type: 'encryption',
+          level: 'info',
+          message: 'Data decrypted (legacy) successfully',
+          metadata: { keyId, algorithm, integrityVerified: !!checksum },
+          timestamp: new Date(),
+        });
         return JSON.parse(final);
       }
 
@@ -557,22 +673,39 @@ export class EndToEndEncryptionService {
       try {
         const parsed = JSON.parse(key as string) as EncryptionKeyPayload;
         if (parsed) {
-          if ((parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped) {
-            const wrapped = (parsed as KeyBundleWrappedPayload).encWrapped || (parsed as KeyBundleWrappedPayload).wrapped;
+          if (
+            (parsed as KeyBundleWrappedPayload).encWrapped ||
+            (parsed as KeyBundleWrappedPayload).wrapped
+          ) {
+            const wrapped =
+              (parsed as KeyBundleWrappedPayload).encWrapped ||
+              (parsed as KeyBundleWrappedPayload).wrapped;
             if (wrapped) {
-              encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, ['encrypt', 'decrypt']);
+              encCryptoKey = await securityService.unwrapKey(wrapped, { name: 'AES-GCM' }, [
+                'encrypt',
+                'decrypt',
+              ]);
             }
           }
           if ((parsed as KeyBundleWrappedPayload).hmacWrapped) {
             const hmacWrapped = (parsed as KeyBundleWrappedPayload).hmacWrapped;
             if (hmacWrapped) {
-              hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, ['sign', 'verify']);
+              hmacCryptoKey = await securityService.unwrapKey(hmacWrapped, { name: 'HMAC' }, [
+                'sign',
+                'verify',
+              ]);
             }
           }
           if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
             try {
               const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
-              encCryptoKey = await crypto.subtle.importKey('raw', encRaw, { name: 'AES-GCM' }, false, ['decrypt']);
+              encCryptoKey = await crypto.subtle.importKey(
+                'raw',
+                encRaw,
+                { name: 'AES-GCM' },
+                false,
+                ['decrypt']
+              );
             } catch {
               // ignore raw AES-GCM key import failure in decrypt path; other forms may succeed
             }
@@ -580,7 +713,13 @@ export class EndToEndEncryptionService {
           if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
             try {
               const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
-              hmacCryptoKey = await crypto.subtle.importKey('raw', hmacRaw, { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']);
+              hmacCryptoKey = await crypto.subtle.importKey(
+                'raw',
+                hmacRaw,
+                { name: 'HMAC', hash: 'SHA-256' },
+                false,
+                ['verify']
+              );
             } catch {
               // ignore HMAC import failure; checksum fallback path will be used
             }
@@ -590,7 +729,9 @@ export class EndToEndEncryptionService {
         // Not JSON -> try bare base64 AES key
         try {
           const raw = base64ToArrayBuffer(key as string);
-          encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['decrypt']);
+          encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, [
+            'decrypt',
+          ]);
         } catch {
           // ignore base64 AES key import failure; error thrown later if key remains unavailable
         }
@@ -607,7 +748,11 @@ export class EndToEndEncryptionService {
       const cipherBuffer = base64ToArrayBuffer(data);
       let decryptedBuffer: ArrayBuffer;
       try {
-        decryptedBuffer = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, encCryptoKey, cipherBuffer);
+        decryptedBuffer = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv },
+          encCryptoKey,
+          cipherBuffer
+        );
       } catch {
         throw new Error('Decryption failed - invalid key or corrupted data');
       }
@@ -617,13 +762,19 @@ export class EndToEndEncryptionService {
       // Verify integrity if checksum exists (expect base64 HMAC or base64 digest)
       if (checksum) {
         if (hmacCryptoKey) {
-          const valid = await crypto.subtle.verify('HMAC', hmacCryptoKey, base64ToArrayBuffer(checksum), base64ToArrayBuffer(data));
+          const valid = await crypto.subtle.verify(
+            'HMAC',
+            hmacCryptoKey,
+            base64ToArrayBuffer(checksum),
+            base64ToArrayBuffer(data)
+          );
           if (!valid) throw new Error('Data integrity check failed - HMAC mismatch');
         } else {
           // fallback to digest comparison
           const digest = await crypto.subtle.digest('SHA-256', base64ToArrayBuffer(data));
           const expected = arrayBufferToBase64(digest);
-          if (expected !== checksum) throw new Error('Data integrity check failed - digest mismatch');
+          if (expected !== checksum)
+            throw new Error('Data integrity check failed - digest mismatch');
         }
       }
 
@@ -640,9 +791,9 @@ export class EndToEndEncryptionService {
         metadata: {
           keyId,
           algorithm,
-          integrityVerified: !!checksum
+          integrityVerified: !!checksum,
         },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return JSON.parse(final);
@@ -652,7 +803,7 @@ export class EndToEndEncryptionService {
         level: 'error',
         message: 'Data decryption failed',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw error;
     }
@@ -664,7 +815,7 @@ export class EndToEndEncryptionService {
   async encryptPainEntry(entry: PainEntry): Promise<EncryptedData<PainEntry>> {
     return this.encrypt(entry, {
       useCompression: true,
-      addIntegrityCheck: true
+      addIntegrityCheck: true,
     });
   }
 
@@ -681,7 +832,7 @@ export class EndToEndEncryptionService {
   async encryptPainEntries(entries: PainEntry[]): Promise<EncryptedData<PainEntry[]>> {
     return this.encrypt(entries, {
       useCompression: true,
-      addIntegrityCheck: true
+      addIntegrityCheck: true,
     });
   }
 
@@ -702,9 +853,12 @@ export class EndToEndEncryptionService {
       // Generate salt and derive key using PBKDF2 via SubtleCrypto
       const salt = crypto.getRandomValues(new Uint8Array(16));
       passwordSalt = arrayBufferToHex(salt.buffer);
-      const iterationOverride = (typeof process !== 'undefined' && process.env && (process.env.VITEST || process.env.NODE_ENV === 'test'))
-        ? 500
-        : 10000;
+      const iterationOverride =
+        typeof process !== 'undefined' &&
+        process.env &&
+        (process.env.VITEST || process.env.NODE_ENV === 'test')
+          ? 500
+          : 10000;
       const derivedRaw = await deriveKeyFromPassword(password, salt, iterationOverride);
       const derivedKeyBase64 = arrayBufferToBase64(derivedRaw);
       await this.keyManager.storeKey(keyId, derivedKeyBase64);
@@ -720,7 +874,7 @@ export class EndToEndEncryptionService {
       level: 'info',
       message: 'Encrypted backup created',
       metadata: { keyId, passwordProtected: !!password },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return JSON.stringify(encrypted, null, 2);
@@ -732,27 +886,34 @@ export class EndToEndEncryptionService {
   async restoreFromEncryptedBackup<T>(backupData: string, password?: string): Promise<T> {
     try {
       const encrypted = JSON.parse(backupData) as EncryptedData<T>;
-      
+
       if (password) {
         const saltHex = (encrypted.metadata as EncryptionMetadata).passwordSalt;
         if (!saltHex) throw new Error('Backup missing password salt metadata');
         const salt = hexToArrayBuffer(saltHex);
-        const iterationOverride = (typeof process !== 'undefined' && process.env && (process.env.VITEST || process.env.NODE_ENV === 'test'))
-          ? 500
-          : 10000;
-        const derivedRaw = await deriveKeyFromPassword(password, new Uint8Array(salt), iterationOverride);
+        const iterationOverride =
+          typeof process !== 'undefined' &&
+          process.env &&
+          (process.env.VITEST || process.env.NODE_ENV === 'test')
+            ? 500
+            : 10000;
+        const derivedRaw = await deriveKeyFromPassword(
+          password,
+          new Uint8Array(salt),
+          iterationOverride
+        );
         const derivedKeyBase64 = arrayBufferToBase64(derivedRaw);
         await this.keyManager.storeKey(encrypted.metadata.keyId, derivedKeyBase64);
       }
 
       const decrypted = await this.decrypt(encrypted);
-      
+
       this.logSecurityEvent({
         type: 'encryption',
         level: 'info',
         message: 'Data restored from encrypted backup',
         metadata: { keyId: encrypted.metadata.keyId },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return decrypted;
@@ -762,7 +923,7 @@ export class EndToEndEncryptionService {
         level: 'error',
         message: 'Failed to restore from encrypted backup',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw error;
     }
@@ -793,9 +954,9 @@ export class EndToEndEncryptionService {
         metadata: {
           totalKeys: keys.length,
           successful: rotationResults.filter(r => r.success).length,
-          failed: rotationResults.filter(r => !r.success).length
+          failed: rotationResults.filter(r => !r.success).length,
         },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     } catch (error) {
       this.logSecurityEvent({
@@ -803,7 +964,7 @@ export class EndToEndEncryptionService {
         level: 'error',
         message: 'Key rotation failed',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw error;
     }
@@ -822,7 +983,7 @@ export class EndToEndEncryptionService {
       keysGenerated: 0, // Would be implemented with actual key counting
       defaultKeyExists: true, // Would check if default key exists
       encryptionEnabled: true,
-      lastKeyRotation: null // Would track last rotation
+      lastKeyRotation: null, // Would track last rotation
     };
   }
 
@@ -834,7 +995,7 @@ export class EndToEndEncryptionService {
     let i = 0;
     while (i < str.length) {
       let j = i + 1;
-      while (j < str.length && str[j] === str[i] && (j - i) < 255) j++;
+      while (j < str.length && str[j] === str[i] && j - i < 255) j++;
       const runLength = j - i;
       if (runLength > 4) {
         encoded += `~${str[i]}${String.fromCharCode(runLength)}`; // ~ marker + char + length byte

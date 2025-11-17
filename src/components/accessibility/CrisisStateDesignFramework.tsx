@@ -1,10 +1,10 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { 
-  AlertTriangle, 
-  Brain, 
-  Heart, 
-  Shield, 
-  Eye, 
+import {
+  AlertTriangle,
+  Brain,
+  Heart,
+  Shield,
+  Eye,
   Volume2,
   VolumeX,
   Palette,
@@ -18,7 +18,7 @@ import {
   Check,
   X,
   Settings,
-  HelpCircle
+  HelpCircle,
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -102,7 +102,7 @@ export function CrisisStateDesignFramework({
   onCrisisStateChange,
   onFrameworkChange,
   initialCrisisLevel = 'stable',
-  className = ''
+  className = '',
 }: CrisisStateDesignFrameworkProps) {
   const [crisisState, setCrisisState] = useState<CrisisStateConfig>({
     level: initialCrisisLevel,
@@ -113,7 +113,7 @@ export function CrisisStateDesignFramework({
     largeText: false,
     minimalUI: false,
     autoSave: true,
-    emergencyMode: false
+    emergencyMode: false,
   });
 
   const [clarityControls, setClarityControls] = useState<ClarityControlsConfig>({
@@ -123,7 +123,7 @@ export function CrisisStateDesignFramework({
     textSize: 16,
     spacing: 50,
     focusMode: false,
-    distractionFilter: false
+    distractionFilter: false,
   });
 
   const [calmingConfig, setCalmingConfig] = useState<CalmingConfig>({
@@ -132,7 +132,7 @@ export function CrisisStateDesignFramework({
     softColors: false,
     reducedContrast: false,
     mindfulPacing: false,
-    stressIndicators: true
+    stressIndicators: true,
   });
 
   const [controlConfig, setControlConfig] = useState<ControlConfig>({
@@ -141,18 +141,18 @@ export function CrisisStateDesignFramework({
     oneClickSave: true,
     undoBuffer: true,
     confirmations: true,
-    progressSaving: true
+    progressSaving: true,
   });
 
   const updateCrisisState = (updates: Partial<CrisisStateConfig>) => {
     const newState = { ...crisisState, ...updates };
     setCrisisState(newState);
-    
+
     // Auto-adjust interface based on crisis level
     if (updates.level) {
       adjustInterfaceForCrisis(updates.level);
     }
-    
+
     if (onCrisisStateChange) {
       onCrisisStateChange(newState);
     }
@@ -161,7 +161,7 @@ export function CrisisStateDesignFramework({
   const updateClarityControls = (updates: Partial<ClarityControlsConfig>) => {
     const newControls = { ...clarityControls, ...updates };
     setClarityControls(newControls);
-    
+
     if (onFrameworkChange) {
       onFrameworkChange('clarity', newControls);
     }
@@ -170,7 +170,7 @@ export function CrisisStateDesignFramework({
   const updateCalmingConfig = (updates: Partial<CalmingConfig>) => {
     const newConfig = { ...calmingConfig, ...updates };
     setCalmingConfig(newConfig);
-    
+
     if (onFrameworkChange) {
       onFrameworkChange('calm', newConfig);
     }
@@ -179,7 +179,7 @@ export function CrisisStateDesignFramework({
   const updateControlConfig = (updates: Partial<ControlConfig>) => {
     const newConfig = { ...controlConfig, ...updates };
     setControlConfig(newConfig);
-    
+
     if (onFrameworkChange) {
       onFrameworkChange('control', newConfig);
     }
@@ -192,12 +192,12 @@ export function CrisisStateDesignFramework({
           visualSimplification: 70,
           colorReduction: true,
           focusMode: true,
-          distractionFilter: true
+          distractionFilter: true,
         });
         updateCalmingConfig({
           breathingPrompts: true,
           gentleTransitions: true,
-          softColors: true
+          softColors: true,
         });
         break;
       case 'emergency':
@@ -206,13 +206,13 @@ export function CrisisStateDesignFramework({
           colorReduction: true,
           focusMode: true,
           distractionFilter: true,
-          textSize: 20
+          textSize: 20,
         });
         updateCalmingConfig({
           breathingPrompts: true,
           gentleTransitions: true,
           softColors: true,
-          mindfulPacing: true
+          mindfulPacing: true,
         });
         setCrisisState(prev => ({ ...prev, interfaceMode: 'emergency', minimalUI: true }));
         break;
@@ -221,11 +221,11 @@ export function CrisisStateDesignFramework({
           visualSimplification: 0,
           colorReduction: false,
           focusMode: false,
-          distractionFilter: false
+          distractionFilter: false,
         });
         updateCalmingConfig({
           breathingPrompts: false,
-          softColors: false
+          softColors: false,
         });
         break;
     }
@@ -239,12 +239,14 @@ export function CrisisStateDesignFramework({
     calmingConfig,
     updateCalmingConfig,
     controlConfig,
-    updateControlConfig
+    updateControlConfig,
   };
 
   return (
     <CrisisStateContext.Provider value={contextValue}>
-      <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
+      <div
+        className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}
+      >
         <div className="flex items-start space-x-3 mb-6">
           <div className="p-2 bg-red-100 rounded-lg">
             <Shield className="w-6 h-6 text-red-600" />
@@ -254,17 +256,15 @@ export function CrisisStateDesignFramework({
               Crisis-State UX Design Framework
             </h2>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Adaptive interface that provides clarity, calm, and control during pain crises and cognitive challenges.
-              Automatically adjusts complexity and provides supportive features based on your current state.
+              Adaptive interface that provides clarity, calm, and control during pain crises and
+              cognitive challenges. Automatically adjusts complexity and provides supportive
+              features based on your current state.
             </p>
           </div>
         </div>
 
         {/* Crisis Level Indicator & Control */}
-        <CrisisLevelControl
-          crisisState={crisisState}
-          onStateChange={updateCrisisState}
-        />
+        <CrisisLevelControl crisisState={crisisState} onStateChange={updateCrisisState} />
 
         {/* Three C's Framework Sections */}
         <div className="space-y-6 mt-6">
@@ -305,50 +305,57 @@ export function CrisisStateDesignFramework({
 // Crisis Level Control Component
 function CrisisLevelControl({
   crisisState,
-  onStateChange
+  onStateChange,
 }: {
   crisisState: CrisisStateConfig;
   onStateChange: (updates: Partial<CrisisStateConfig>) => void;
 }) {
-  const crisisLevels: { level: CrisisLevel; label: string; color: string; description: string }[] = [
-    {
-      level: 'stable',
-      label: 'Stable',
-      color: 'green',
-      description: 'Normal functioning, standard interface'
-    },
-    {
-      level: 'elevated',
-      label: 'Elevated',
-      color: 'yellow',
-      description: 'Increased pain or stress, some simplification'
-    },
-    {
-      level: 'acute',
-      label: 'Acute',
-      color: 'orange',
-      description: 'High pain or cognitive fog, significant simplification'
-    },
-    {
-      level: 'emergency',
-      label: 'Emergency',
-      color: 'red',
-      description: 'Crisis state, minimal interface with emergency features'
-    }
-  ];
+  const crisisLevels: { level: CrisisLevel; label: string; color: string; description: string }[] =
+    [
+      {
+        level: 'stable',
+        label: 'Stable',
+        color: 'green',
+        description: 'Normal functioning, standard interface',
+      },
+      {
+        level: 'elevated',
+        label: 'Elevated',
+        color: 'yellow',
+        description: 'Increased pain or stress, some simplification',
+      },
+      {
+        level: 'acute',
+        label: 'Acute',
+        color: 'orange',
+        description: 'High pain or cognitive fog, significant simplification',
+      },
+      {
+        level: 'emergency',
+        label: 'Emergency',
+        color: 'red',
+        description: 'Crisis state, minimal interface with emergency features',
+      },
+    ];
 
-  const cognitiveStates: { state: CognitiveState; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  const cognitiveStates: {
+    state: CognitiveState;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }[] = [
     { state: 'clear', label: 'Clear', icon: Brain },
     { state: 'foggy', label: 'Foggy', icon: Eye },
     { state: 'impaired', label: 'Impaired', icon: AlertTriangle },
-    { state: 'overwhelmed', label: 'Overwhelmed', icon: Zap }
+    { state: 'overwhelmed', label: 'Overwhelmed', icon: Zap },
   ];
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
         <Target className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Current State Assessment</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Current State Assessment
+        </h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -358,13 +365,21 @@ function CrisisLevelControl({
             Crisis Level
           </label>
           <div className="space-y-2">
-            {crisisLevels.map((level) => {
+            {crisisLevels.map(level => {
               const isSelected = crisisState.level === level.level;
               const colorClasses = {
-                green: isSelected ? 'bg-green-100 border-green-300 text-green-800' : 'border-green-200 hover:border-green-300',
-                yellow: isSelected ? 'bg-yellow-100 border-yellow-300 text-yellow-800' : 'border-yellow-200 hover:border-yellow-300',
-                orange: isSelected ? 'bg-orange-100 border-orange-300 text-orange-800' : 'border-orange-200 hover:border-orange-300',
-                red: isSelected ? 'bg-red-100 border-red-300 text-red-800' : 'border-red-200 hover:border-red-300'
+                green: isSelected
+                  ? 'bg-green-100 border-green-300 text-green-800'
+                  : 'border-green-200 hover:border-green-300',
+                yellow: isSelected
+                  ? 'bg-yellow-100 border-yellow-300 text-yellow-800'
+                  : 'border-yellow-200 hover:border-yellow-300',
+                orange: isSelected
+                  ? 'bg-orange-100 border-orange-300 text-orange-800'
+                  : 'border-orange-200 hover:border-orange-300',
+                red: isSelected
+                  ? 'bg-red-100 border-red-300 text-red-800'
+                  : 'border-red-200 hover:border-red-300',
               };
 
               return (
@@ -393,7 +408,7 @@ function CrisisLevelControl({
             Cognitive State
           </label>
           <div className="space-y-2">
-            {cognitiveStates.map((state) => {
+            {cognitiveStates.map(state => {
               const isSelected = crisisState.cognitiveState === state.state;
               const Icon = state.icon;
 
@@ -403,7 +418,9 @@ function CrisisLevelControl({
                   variant="secondary"
                   onClick={() => onStateChange({ cognitiveState: state.state })}
                   className={`w-full p-3 text-left border-2 rounded-lg transition-all ${
-                    isSelected ? 'bg-blue-100 border-blue-300 text-blue-800' : 'border-gray-200 hover:border-blue-300'
+                    isSelected
+                      ? 'bg-blue-100 border-blue-300 text-blue-800'
+                      : 'border-gray-200 hover:border-blue-300'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
@@ -425,7 +442,7 @@ function CrisisLevelControl({
 function ClarityFrameworkSection({
   controls,
   onControlsChange,
-  crisisLevel
+  crisisLevel,
 }: {
   controls: ClarityControlsConfig;
   onControlsChange: (updates: Partial<ClarityControlsConfig>) => void;
@@ -437,8 +454,12 @@ function ClarityFrameworkSection({
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
         <Eye className="w-5 h-5 text-blue-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Clarity Framework</h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Reduce visual complexity and cognitive load</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Clarity Framework
+        </h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          Reduce visual complexity and cognitive load
+        </span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -453,13 +474,16 @@ function ClarityFrameworkSection({
               min="0"
               max="100"
               value={controls.visualSimplification}
-              onChange={(e) => onControlsChange({ visualSimplification: parseInt(e.target.value) })}
+              onChange={e => onControlsChange({ visualSimplification: parseInt(e.target.value) })}
               className="w-full"
               disabled={isHighCrisis}
             />
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              {controls.visualSimplification < 30 ? 'Full interface' : 
-               controls.visualSimplification < 70 ? 'Simplified' : 'Minimal'}
+              {controls.visualSimplification < 30
+                ? 'Full interface'
+                : controls.visualSimplification < 70
+                  ? 'Simplified'
+                  : 'Minimal'}
             </div>
           </div>
 
@@ -473,7 +497,7 @@ function ClarityFrameworkSection({
               min="12"
               max="24"
               value={controls.textSize}
-              onChange={(e) => onControlsChange({ textSize: parseInt(e.target.value) })}
+              onChange={e => onControlsChange({ textSize: parseInt(e.target.value) })}
               className="w-full"
             />
           </div>
@@ -488,7 +512,7 @@ function ClarityFrameworkSection({
               min="0"
               max="100"
               value={controls.spacing}
-              onChange={(e) => onControlsChange({ spacing: parseInt(e.target.value) })}
+              onChange={e => onControlsChange({ spacing: parseInt(e.target.value) })}
               className="w-full"
             />
           </div>
@@ -497,9 +521,11 @@ function ClarityFrameworkSection({
         <div className="space-y-3">
           {/* Toggle Controls */}
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Color Reduction</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Color Reduction
+            </label>
             <TouchOptimizedButton
-              variant={controls.colorReduction ? "primary" : "secondary"}
+              variant={controls.colorReduction ? 'primary' : 'secondary'}
               onClick={() => onControlsChange({ colorReduction: !controls.colorReduction })}
               className="px-3 py-1"
             >
@@ -508,9 +534,11 @@ function ClarityFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Focus Mode</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Focus Mode
+            </label>
             <TouchOptimizedButton
-              variant={controls.focusMode ? "primary" : "secondary"}
+              variant={controls.focusMode ? 'primary' : 'secondary'}
               onClick={() => onControlsChange({ focusMode: !controls.focusMode })}
               className="px-3 py-1"
             >
@@ -519,9 +547,11 @@ function ClarityFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Distraction Filter</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Distraction Filter
+            </label>
             <TouchOptimizedButton
-              variant={controls.distractionFilter ? "primary" : "secondary"}
+              variant={controls.distractionFilter ? 'primary' : 'secondary'}
               onClick={() => onControlsChange({ distractionFilter: !controls.distractionFilter })}
               className="px-3 py-1"
             >
@@ -545,7 +575,7 @@ function ClarityFrameworkSection({
 function CalmFrameworkSection({
   config,
   onConfigChange,
-  crisisLevel
+  crisisLevel,
 }: {
   config: CalmingConfig;
   onConfigChange: (updates: Partial<CalmingConfig>) => void;
@@ -558,15 +588,19 @@ function CalmFrameworkSection({
       <div className="flex items-center space-x-2 mb-4">
         <Heart className="w-5 h-5 text-green-600" />
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Calm Framework</h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Reduce stress and provide emotional support</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          Reduce stress and provide emotional support
+        </span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Breathing Prompts</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Breathing Prompts
+            </label>
             <TouchOptimizedButton
-              variant={config.breathingPrompts ? "primary" : "secondary"}
+              variant={config.breathingPrompts ? 'primary' : 'secondary'}
               onClick={() => onConfigChange({ breathingPrompts: !config.breathingPrompts })}
               className="px-3 py-1"
             >
@@ -575,9 +609,11 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Gentle Transitions</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Gentle Transitions
+            </label>
             <TouchOptimizedButton
-              variant={config.gentleTransitions ? "primary" : "secondary"}
+              variant={config.gentleTransitions ? 'primary' : 'secondary'}
               onClick={() => onConfigChange({ gentleTransitions: !config.gentleTransitions })}
               className="px-3 py-1"
             >
@@ -586,9 +622,11 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Soft Colors</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Soft Colors
+            </label>
             <TouchOptimizedButton
-              variant={config.softColors ? "primary" : "secondary"}
+              variant={config.softColors ? 'primary' : 'secondary'}
               onClick={() => onConfigChange({ softColors: !config.softColors })}
               className="px-3 py-1"
             >
@@ -599,9 +637,11 @@ function CalmFrameworkSection({
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Reduced Contrast</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Reduced Contrast
+            </label>
             <TouchOptimizedButton
-              variant={config.reducedContrast ? "primary" : "secondary"}
+              variant={config.reducedContrast ? 'primary' : 'secondary'}
               onClick={() => onConfigChange({ reducedContrast: !config.reducedContrast })}
               className="px-3 py-1"
             >
@@ -610,9 +650,11 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Mindful Pacing</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Mindful Pacing
+            </label>
             <TouchOptimizedButton
-              variant={config.mindfulPacing ? "primary" : "secondary"}
+              variant={config.mindfulPacing ? 'primary' : 'secondary'}
               onClick={() => onConfigChange({ mindfulPacing: !config.mindfulPacing })}
               className="px-3 py-1"
             >
@@ -621,9 +663,11 @@ function CalmFrameworkSection({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Stress Indicators</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Stress Indicators
+            </label>
             <TouchOptimizedButton
-              variant={config.stressIndicators ? "primary" : "secondary"}
+              variant={config.stressIndicators ? 'primary' : 'secondary'}
               onClick={() => onConfigChange({ stressIndicators: !config.stressIndicators })}
               className="px-3 py-1"
             >
@@ -652,22 +696,33 @@ function CalmFrameworkSection({
 function ControlFrameworkSection({
   config,
   onConfigChange,
-  crisisLevel
+  crisisLevel,
 }: {
   config: ControlConfig;
   onConfigChange: (updates: Partial<ControlConfig>) => void;
   crisisLevel: CrisisLevel;
 }) {
   const availableQuickActions = [
-    'save', 'emergency', 'breathe', 'contact', 'medication', 'rest', 'undo', 'help'
+    'save',
+    'emergency',
+    'breathe',
+    'contact',
+    'medication',
+    'rest',
+    'undo',
+    'help',
   ];
 
   return (
     <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
         <Shield className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Control Framework</h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Maintain user agency and quick access</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Control Framework
+        </h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          Maintain user agency and quick access
+        </span>
       </div>
 
       <div className="space-y-4">
@@ -677,12 +732,12 @@ function ControlFrameworkSection({
             Quick Actions ({config.quickActions.length}/4 selected)
           </label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {availableQuickActions.map((action) => {
+            {availableQuickActions.map(action => {
               const isSelected = config.quickActions.includes(action);
               return (
                 <TouchOptimizedButton
                   key={action}
-                  variant={isSelected ? "primary" : "secondary"}
+                  variant={isSelected ? 'primary' : 'secondary'}
                   onClick={() => {
                     const newActions = isSelected
                       ? config.quickActions.filter(a => a !== action)
@@ -703,9 +758,11 @@ function ControlFrameworkSection({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Emergency Contacts</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Emergency Contacts
+              </label>
               <TouchOptimizedButton
-                variant={config.emergencyContacts ? "primary" : "secondary"}
+                variant={config.emergencyContacts ? 'primary' : 'secondary'}
                 onClick={() => onConfigChange({ emergencyContacts: !config.emergencyContacts })}
                 className="px-3 py-1"
               >
@@ -714,9 +771,11 @@ function ControlFrameworkSection({
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">One-Click Save</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                One-Click Save
+              </label>
               <TouchOptimizedButton
-                variant={config.oneClickSave ? "primary" : "secondary"}
+                variant={config.oneClickSave ? 'primary' : 'secondary'}
                 onClick={() => onConfigChange({ oneClickSave: !config.oneClickSave })}
                 className="px-3 py-1"
               >
@@ -725,9 +784,11 @@ function ControlFrameworkSection({
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Undo Buffer</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Undo Buffer
+              </label>
               <TouchOptimizedButton
-                variant={config.undoBuffer ? "primary" : "secondary"}
+                variant={config.undoBuffer ? 'primary' : 'secondary'}
                 onClick={() => onConfigChange({ undoBuffer: !config.undoBuffer })}
                 className="px-3 py-1"
               >
@@ -738,9 +799,11 @@ function ControlFrameworkSection({
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Confirmations</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Confirmations
+              </label>
               <TouchOptimizedButton
-                variant={config.confirmations ? "primary" : "secondary"}
+                variant={config.confirmations ? 'primary' : 'secondary'}
                 onClick={() => onConfigChange({ confirmations: !config.confirmations })}
                 className="px-3 py-1"
               >
@@ -749,9 +812,11 @@ function ControlFrameworkSection({
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Progress Saving</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                Progress Saving
+              </label>
               <TouchOptimizedButton
-                variant={config.progressSaving ? "primary" : "secondary"}
+                variant={config.progressSaving ? 'primary' : 'secondary'}
                 onClick={() => onConfigChange({ progressSaving: !config.progressSaving })}
                 className="px-3 py-1"
               >
@@ -770,7 +835,7 @@ function FrameworkPreview({
   crisisState,
   clarityControls,
   calmingConfig,
-  controlConfig
+  controlConfig,
 }: {
   crisisState: CrisisStateConfig;
   clarityControls: ClarityControlsConfig;
@@ -778,18 +843,18 @@ function FrameworkPreview({
   controlConfig: ControlConfig;
 }) {
   const getPreviewStyle = () => {
-    const baseStyle = "transition-all duration-300";
+    const baseStyle = 'transition-all duration-300';
     let style = baseStyle;
 
     // Apply clarity adjustments
     if (clarityControls.visualSimplification > 50) {
-      style += " shadow-sm";
+      style += ' shadow-sm';
     }
     if (clarityControls.colorReduction) {
-      style += " grayscale-50";
+      style += ' grayscale-50';
     }
     if (calmingConfig.softColors) {
-      style += " opacity-90";
+      style += ' opacity-90';
     }
 
     return style;
@@ -799,7 +864,9 @@ function FrameworkPreview({
     <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
       <div className="flex items-center space-x-2 mb-4">
         <Palette className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Framework Preview</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Framework Preview
+        </h3>
       </div>
 
       <div className={`bg-gray-50 dark:bg-gray-900 rounded-lg p-4 ${getPreviewStyle()}`}>
@@ -808,12 +875,8 @@ function FrameworkPreview({
           <div className="bg-white rounded p-3">
             <h4 className="font-medium text-blue-900 mb-2">Clarity</h4>
             <div className="space-y-2">
-              <div className="text-sm">
-                Simplification: {clarityControls.visualSimplification}%
-              </div>
-              <div className="text-sm">
-                Text Size: {clarityControls.textSize}px
-              </div>
+              <div className="text-sm">Simplification: {clarityControls.visualSimplification}%</div>
+              <div className="text-sm">Text Size: {clarityControls.textSize}px</div>
               {clarityControls.focusMode && (
                 <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
                   Focus Mode Active
@@ -848,9 +911,7 @@ function FrameworkPreview({
           <div className="bg-white rounded p-3">
             <h4 className="font-medium text-purple-900 mb-2">Control</h4>
             <div className="space-y-2">
-              <div className="text-sm">
-                Quick Actions: {controlConfig.quickActions.length}
-              </div>
+              <div className="text-sm">Quick Actions: {controlConfig.quickActions.length}</div>
               {controlConfig.emergencyContacts && (
                 <div className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">
                   Emergency Ready
@@ -870,12 +931,17 @@ function FrameworkPreview({
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">Current State:</span>
             <div className="flex items-center space-x-2">
-              <span className={`px-2 py-1 text-xs rounded-full ${
-                crisisState.level === 'stable' ? 'bg-green-100 text-green-800' :
-                crisisState.level === 'elevated' ? 'bg-yellow-100 text-yellow-800' :
-                crisisState.level === 'acute' ? 'bg-orange-100 text-orange-800' :
-                'bg-red-100 text-red-800'
-              }`}>
+              <span
+                className={`px-2 py-1 text-xs rounded-full ${
+                  crisisState.level === 'stable'
+                    ? 'bg-green-100 text-green-800'
+                    : crisisState.level === 'elevated'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : crisisState.level === 'acute'
+                        ? 'bg-orange-100 text-orange-800'
+                        : 'bg-red-100 text-red-800'
+                }`}
+              >
                 {crisisState.level}
               </span>
               <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">

@@ -49,11 +49,11 @@ export function useSavedFilters() {
   };
 
   const updateFilter = (filterId: string, name: string, criteria: FilterCriteria) => {
-    setSavedFilters(prev => prev.map(f =>
-      f.id === filterId
-        ? { ...f, name: name.trim(), criteria: { ...criteria } }
-        : f
-    ));
+    setSavedFilters(prev =>
+      prev.map(f =>
+        f.id === filterId ? { ...f, name: name.trim(), criteria: { ...criteria } } : f
+      )
+    );
   };
 
   return {

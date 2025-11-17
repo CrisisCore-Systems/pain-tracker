@@ -16,7 +16,7 @@ import {
   RefreshCw,
   AlertTriangle,
   CheckCircle,
-  Info
+  Info,
 } from 'lucide-react';
 
 interface IntelligentTriggersManagerProps {
@@ -24,16 +24,10 @@ interface IntelligentTriggersManagerProps {
 }
 
 export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProps> = ({
-  className = ''
+  className = '',
 }) => {
-  const {
-    triggers,
-    isAnalyzing,
-    lastAnalysis,
-    updateTrigger,
-    resetToDefaults,
-    getTriggerStats
-  } = useIntelligentTriggers();
+  const { triggers, isAnalyzing, lastAnalysis, updateTrigger, resetToDefaults, getTriggerStats } =
+    useIntelligentTriggers();
 
   const {
     selectedTrigger,
@@ -42,7 +36,7 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
     selectTrigger,
     startEditing,
     cancelEditing,
-    openStats
+    openStats,
   } = useTriggerManagement();
 
   const getTriggerIcon = (type: IntelligentTrigger['type']) => {
@@ -138,7 +132,7 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
 
       {/* Triggers List */}
       <div className="grid gap-4">
-        {triggers.map((trigger) => {
+        {triggers.map(trigger => {
           const stats = getTriggerStats(trigger.id);
           const isSelected = selectedTrigger?.id === trigger.id;
 
@@ -156,7 +150,9 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
                     {getTriggerIcon(trigger.type)}
                     <div>
                       <CardTitle className="text-lg">{trigger.name}</CardTitle>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{trigger.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {trigger.description}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -207,7 +203,7 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
                 {/* Conditions Preview */}
                 <div className="mb-4">
                   <h4 className="text-sm font-medium mb-2">Trigger Conditions:</h4>
-                    <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {trigger.conditions.map((condition: TriggerCondition, index: number) => (
                       <Badge key={index} variant="outline" className="text-xs">
                         {String(condition.type).replace('_', ' ')}
@@ -260,11 +256,14 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
           </CardHeader>
           <CardContent>
             {showStats ? (
-              <TriggerStatsView trigger={selectedTrigger} stats={getTriggerStats(selectedTrigger.id)} />
+              <TriggerStatsView
+                trigger={selectedTrigger}
+                stats={getTriggerStats(selectedTrigger.id)}
+              />
             ) : isEditing ? (
               <TriggerEditView
                 trigger={selectedTrigger}
-                onSave={(updates) => {
+                onSave={updates => {
                   updateTrigger(selectedTrigger.id, updates);
                   cancelEditing();
                 }}
@@ -286,9 +285,7 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Set up smart notifications that respond to your pain patterns and goals.
             </p>
-            <Button onClick={resetToDefaults}>
-              Create Default Triggers
-            </Button>
+            <Button onClick={resetToDefaults}>Create Default Triggers</Button>
           </CardContent>
         </Card>
       )}
@@ -308,12 +305,13 @@ const TriggerDetailsView: React.FC<{ trigger: IntelligentTrigger }> = ({ trigger
       <h4 className="font-medium mb-2">Trigger Conditions</h4>
       <div className="space-y-2">
         {trigger.conditions.map((condition, index) => (
-          <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+          <div
+            key={index}
+            className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg"
+          >
             <Info className="w-4 h-4 text-blue-600" />
             <div>
-              <div className="font-medium capitalize">
-                {condition.type.replace('_', ' ')}
-              </div>
+              <div className="font-medium capitalize">{condition.type.replace('_', ' ')}</div>
               {condition.threshold && (
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Threshold: {condition.threshold}
@@ -336,7 +334,10 @@ const TriggerDetailsView: React.FC<{ trigger: IntelligentTrigger }> = ({ trigger
         <div className="space-y-1 text-sm">
           <div>Cooldown: {formatCooldown(trigger.cooldownPeriod)}</div>
           <div>Max per day: {trigger.maxTriggersPerDay}</div>
-          <div>Priority: <Badge className={getPriorityColor(trigger.priority)}>{trigger.priority}</Badge></div>
+          <div>
+            Priority:{' '}
+            <Badge className={getPriorityColor(trigger.priority)}>{trigger.priority}</Badge>
+          </div>
         </div>
       </div>
       <div>
@@ -403,7 +404,7 @@ const TriggerEditView: React.FC<{
     isActive: trigger.isActive,
     cooldownPeriod: trigger.cooldownPeriod,
     maxTriggersPerDay: trigger.maxTriggersPerDay,
-    priority: trigger.priority
+    priority: trigger.priority,
   });
 
   const handleSave = () => {
@@ -417,14 +418,19 @@ const TriggerEditView: React.FC<{
           <label className="block text-sm font-medium mb-2">Active</label>
           <Switch
             checked={formData.isActive}
-            onCheckedChange={(checked) => setFormData(prev => ({ ...prev, isActive: checked }))}
+            onCheckedChange={checked => setFormData(prev => ({ ...prev, isActive: checked }))}
           />
         </div>
         <div>
           <label className="block text-sm font-medium mb-2">Priority</label>
           <select
             value={formData.priority}
-            onChange={(e) => setFormData(prev => ({ ...prev, priority: e.target.value as IntelligentTrigger['priority'] }))}
+            onChange={e =>
+              setFormData(prev => ({
+                ...prev,
+                priority: e.target.value as IntelligentTrigger['priority'],
+              }))
+            }
             className="w-full p-2 border rounded"
           >
             <option value="low">Low</option>
@@ -438,7 +444,9 @@ const TriggerEditView: React.FC<{
           <input
             type="number"
             value={formData.cooldownPeriod}
-            onChange={(e) => setFormData(prev => ({ ...prev, cooldownPeriod: parseInt(e.target.value) }))}
+            onChange={e =>
+              setFormData(prev => ({ ...prev, cooldownPeriod: parseInt(e.target.value) }))
+            }
             className="w-full p-2 border rounded"
             min="1"
           />
@@ -448,7 +456,9 @@ const TriggerEditView: React.FC<{
           <input
             type="number"
             value={formData.maxTriggersPerDay}
-            onChange={(e) => setFormData(prev => ({ ...prev, maxTriggersPerDay: parseInt(e.target.value) }))}
+            onChange={e =>
+              setFormData(prev => ({ ...prev, maxTriggersPerDay: parseInt(e.target.value) }))
+            }
             className="w-full p-2 border rounded"
             min="1"
           />
@@ -457,7 +467,9 @@ const TriggerEditView: React.FC<{
 
       <div className="flex gap-2 pt-4">
         <Button onClick={handleSave}>Save Changes</Button>
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
       </div>
     </div>
   );

@@ -9,7 +9,11 @@ export interface BatchResult {
  * Attempts to write a map of key=>value into storage (localStorage-like API) with optional per-item limit.
  * Non-throwing: returns partial errors in result.
  */
-export function batchSet(storage: Storage, entries: Record<string, unknown>, maxPerItemBytes = 50 * 1024): BatchResult {
+export function batchSet(
+  storage: Storage,
+  entries: Record<string, unknown>,
+  maxPerItemBytes = 50 * 1024
+): BatchResult {
   const errors: BatchResult['errors'] = [];
   for (const [k, v] of Object.entries(entries)) {
     try {

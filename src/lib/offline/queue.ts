@@ -32,24 +32,34 @@ export async function getQueue(deps: OfflineQueueDeps): Promise<QueuedRequestDat
       const json = await existing.json();
       return Array.isArray(json) ? json : [];
     }
-  } catch (e) { deps.log?.('offline-queue:getQueue error', e); }
+  } catch (e) {
+    deps.log?.('offline-queue:getQueue error', e);
+  }
   return [];
 }
 
 export async function saveQueue(queue: QueuedRequestData[], deps: OfflineQueueDeps): Promise<void> {
   try {
     const cache = await deps.openCache(DEFAULT_QUEUE_CACHE);
-    await cache.put(QUEUE_KEY, new Response(JSON.stringify(queue), { headers: { 'Content-Type': 'application/json' } }));
-  } catch (e) { deps.log?.('offline-queue:saveQueue error', e); }
+    await cache.put(
+      QUEUE_KEY,
+      new Response(JSON.stringify(queue), { headers: { 'Content-Type': 'application/json' } })
+    );
+  } catch (e) {
+    deps.log?.('offline-queue:saveQueue error', e);
+  }
 }
 
-export async function queueFailedRequest(req: Request, deps: OfflineQueueDeps): Promise<QueuedRequestData> {
+export async function queueFailedRequest(
+  req: Request,
+  deps: OfflineQueueDeps
+): Promise<QueuedRequestData> {
   const data: QueuedRequestData = {
     url: req.url,
     method: req.method,
     headers: Object.fromEntries(req.headers.entries()),
     body: req.method !== 'GET' ? await req.clone().text() : null,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
   const queue = await getQueue(deps);
   queue.push(data);
@@ -69,8 +79,13 @@ export async function processQueue(deps: OfflineQueueDeps): Promise<ProcessResul
   let processed = 0;
   for (const item of queue) {
     try {
-      const res = await deps.fetchFn(item.url, { method: item.method, headers: item.headers, body: item.body });
-      if (res.ok) processed++; else remaining.push(item);
+      const res = await deps.fetchFn(item.url, {
+        method: item.method,
+        headers: item.headers,
+        body: item.body,
+      });
+      if (res.ok) processed++;
+      else remaining.push(item);
     } catch {
       remaining.push(item);
     }

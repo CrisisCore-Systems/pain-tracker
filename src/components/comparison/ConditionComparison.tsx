@@ -9,7 +9,7 @@ import {
   CheckCircle,
   Clock,
   Activity,
-  Info
+  Info,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system/components/Card';
 import { Badge } from '../../design-system/components/Badge';
@@ -77,7 +77,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
 
     type Tagged = { triggers?: string[]; conditions?: string[] };
     entries.forEach(entry => {
-      const { triggers } = (entry as PainEntry & Partial<Tagged>);
+      const { triggers } = entry as PainEntry & Partial<Tagged>;
       if (triggers && triggers.length > 0) {
         triggers.forEach(trigger => {
           const existing = conditionMap.get(trigger);
@@ -91,14 +91,14 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
             conditionMap.set(trigger, {
               count: 1,
               lastUsed: new Date(entry.timestamp),
-              totalPain: entry.baselineData.pain
+              totalPain: entry.baselineData.pain,
             });
           }
         });
       }
 
       // Also include other conditions if present
-  const { conditions } = (entry as PainEntry & Partial<Tagged>);
+      const { conditions } = entry as PainEntry & Partial<Tagged>;
       if (conditions && conditions.length > 0) {
         conditions.forEach(condition => {
           const existing = conditionMap.get(condition);
@@ -112,7 +112,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
             conditionMap.set(condition, {
               count: 1,
               lastUsed: new Date(entry.timestamp),
-              totalPain: entry.baselineData.pain
+              totalPain: entry.baselineData.pain,
             });
           }
         });
@@ -124,7 +124,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
         name,
         count: data.count,
         lastUsed: data.lastUsed,
-        averagePain: data.totalPain / data.count
+        averagePain: data.totalPain / data.count,
       }))
       .sort((a, b) => b.lastUsed.getTime() - a.lastUsed.getTime());
   }, [entries]);
@@ -132,86 +132,97 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
   // Comparison results
   const [comparisonResult, setComparisonResult] = useState<ComparisonResult | null>(null);
   useEffect(() => {
-    if (!selectedCondition1 || !selectedCondition2 || entries.length < 2) { setComparisonResult(null); return; }
+    if (!selectedCondition1 || !selectedCondition2 || entries.length < 2) {
+      setComparisonResult(null);
+      return;
+    }
     setIsComparing(true);
     (async () => {
       try {
-      const periodStart = new Date(Date.now() - comparisonPeriod * 24 * 60 * 60 * 1000);
-      const periodEnd = new Date();
+        const periodStart = new Date(Date.now() - comparisonPeriod * 24 * 60 * 60 * 1000);
+        const periodEnd = new Date();
 
-      const filtered = entries.filter(e => {
-        const d = new Date(e.timestamp);
-        return d >= periodStart && d <= periodEnd;
-      });
+        const filtered = entries.filter(e => {
+          const d = new Date(e.timestamp);
+          return d >= periodStart && d <= periodEnd;
+        });
 
-      const setFor = (name: string) => filtered.filter(e => {
-        const { triggers, conditions } = (e as PainEntry & Partial<Tagged>);
-        return (triggers && triggers.some(t => t === name)) || (conditions && conditions.some(c => c === name));
-      });
+        const setFor = (name: string) =>
+          filtered.filter(e => {
+            const { triggers, conditions } = e as PainEntry & Partial<Tagged>;
+            return (
+              (triggers && triggers.some(t => t === name)) ||
+              (conditions && conditions.some(c => c === name))
+            );
+          });
 
-      const dataset1 = setFor(selectedCondition1);
-      const dataset2 = setFor(selectedCondition2);
+        const dataset1 = setFor(selectedCondition1);
+        const dataset2 = setFor(selectedCondition2);
 
-      const datasets: ComparisonDataset[] = [
-        { id: 'c1', name: selectedCondition1, entries: dataset1, color: '#64748b', metadata: {} },
-        { id: 'c2', name: selectedCondition2, entries: dataset2, color: '#ef4444', metadata: {} },
-      ];
+        const datasets: ComparisonDataset[] = [
+          { id: 'c1', name: selectedCondition1, entries: dataset1, color: '#64748b', metadata: {} },
+          { id: 'c2', name: selectedCondition2, entries: dataset2, color: '#ef4444', metadata: {} },
+        ];
 
-      const cfg: ConditionCfg = {
-        type: 'condition',
-        conditionName: `${selectedCondition1} vs ${selectedCondition2}`,
-        conditionTags: [selectedCondition1, selectedCondition2],
-        comparisonCondition: selectedCondition2,
-        datasets
-      };
+        const cfg: ConditionCfg = {
+          type: 'condition',
+          conditionName: `${selectedCondition1} vs ${selectedCondition2}`,
+          conditionTags: [selectedCondition1, selectedCondition2],
+          comparisonCondition: selectedCondition2,
+          datasets,
+        };
 
-      const result = await DataComparisonEngine.compareDatasets(cfg, datasets);
+        const result = await DataComparisonEngine.compareDatasets(cfg, datasets);
 
-      const c1Avg = result.statistics.overall.baselineMean;
-      const c2Avg = result.statistics.overall.comparisonMean;
+        const c1Avg = result.statistics.overall.baselineMean;
+        const c2Avg = result.statistics.overall.comparisonMean;
 
-      const difference = {
-        absolute: c2Avg - c1Avg,
-        percentage: c1Avg > 0 ? ((c2Avg - c1Avg) / c1Avg) * 100 : 0,
-        significance: 1 - result.statistics.overall.statisticalSignificance
-      };
+        const difference = {
+          absolute: c2Avg - c1Avg,
+          percentage: c1Avg > 0 ? ((c2Avg - c1Avg) / c1Avg) * 100 : 0,
+          significance: 1 - result.statistics.overall.statisticalSignificance,
+        };
 
-      // Generate chart data
-      const chartData = {
-        labels: [selectedCondition1, selectedCondition2],
-        datasets: [{
-          label: 'Average Pain Level',
-          data: [c1Avg, c2Avg],
-          backgroundColor: [
-            colorVar('color-muted') ?? '#64748b',
-            difference.absolute > 0 ? colorVar('color-destructive') ?? '#ef4444' : colorVar('color-success') ?? '#22c55e'
-          ]
-        }]
-      };
+        // Generate chart data
+        const chartData = {
+          labels: [selectedCondition1, selectedCondition2],
+          datasets: [
+            {
+              label: 'Average Pain Level',
+              data: [c1Avg, c2Avg],
+              backgroundColor: [
+                colorVar('color-muted') ?? '#64748b',
+                difference.absolute > 0
+                  ? (colorVar('color-destructive') ?? '#ef4444')
+                  : (colorVar('color-success') ?? '#22c55e'),
+              ],
+            },
+          ],
+        };
 
-      setIsComparing(false);
-      setComparisonResult({
-        condition1: selectedCondition1,
-        condition2: selectedCondition2,
-        condition1Stats: {
-          averagePain: c1Avg,
-          entries: datasets[0].entries.length,
-          period: { start: periodStart, end: periodEnd }
-        },
-        condition2Stats: {
-          averagePain: c2Avg,
-          entries: datasets[1].entries.length,
-          period: { start: periodStart, end: periodEnd }
-        },
-        difference,
-        insights: result.insights || [],
-        chartData
-      });
-    } catch (error) {
-      console.error('Condition comparison failed:', error);
-      setIsComparing(false);
-      setComparisonResult(null);
-    }
+        setIsComparing(false);
+        setComparisonResult({
+          condition1: selectedCondition1,
+          condition2: selectedCondition2,
+          condition1Stats: {
+            averagePain: c1Avg,
+            entries: datasets[0].entries.length,
+            period: { start: periodStart, end: periodEnd },
+          },
+          condition2Stats: {
+            averagePain: c2Avg,
+            entries: datasets[1].entries.length,
+            period: { start: periodStart, end: periodEnd },
+          },
+          difference,
+          insights: result.insights || [],
+          chartData,
+        });
+      } catch (error) {
+        console.error('Condition comparison failed:', error);
+        setIsComparing(false);
+        setComparisonResult(null);
+      }
     })();
   }, [selectedCondition1, selectedCondition2, comparisonPeriod, entries]);
 
@@ -222,8 +233,18 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
   };
 
   const getSignificanceBadge = (significance: number) => {
-    if (significance > 0.8) return <Badge variant="default" className="bg-green-100 text-green-800">High Confidence</Badge>;
-    if (significance > 0.6) return <Badge variant="default" className="bg-yellow-100 text-yellow-800">Moderate Confidence</Badge>;
+    if (significance > 0.8)
+      return (
+        <Badge variant="default" className="bg-green-100 text-green-800">
+          High Confidence
+        </Badge>
+      );
+    if (significance > 0.6)
+      return (
+        <Badge variant="default" className="bg-yellow-100 text-yellow-800">
+          Moderate Confidence
+        </Badge>
+      );
     return <Badge variant="outline">Low Confidence</Badge>;
   };
 
@@ -255,11 +276,16 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
             {/* Condition 1 Selection */}
             <div className="space-y-2">
               <label className="text-sm font-medium">First Condition/Trigger</label>
-              <select className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={selectedCondition1} onChange={(e) => setSelectedCondition1(e.target.value)}>
+              <select
+                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={selectedCondition1}
+                onChange={e => setSelectedCondition1(e.target.value)}
+              >
                 <option value="">Select first condition...</option>
                 {availableConditions.map(condition => (
                   <option key={condition.name} value={condition.name}>
-                    {condition.name} ({condition.count} entries, avg: {formatNumber(condition.averagePain, 1)})
+                    {condition.name} ({condition.count} entries, avg:{' '}
+                    {formatNumber(condition.averagePain, 1)})
                   </option>
                 ))}
               </select>
@@ -268,13 +294,18 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
             {/* Condition 2 Selection */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Second Condition/Trigger</label>
-              <select className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={selectedCondition2} onChange={(e) => setSelectedCondition2(e.target.value)}>
+              <select
+                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={selectedCondition2}
+                onChange={e => setSelectedCondition2(e.target.value)}
+              >
                 <option value="">Select second condition...</option>
                 {availableConditions
                   .filter(condition => condition.name !== selectedCondition1)
                   .map(condition => (
                     <option key={condition.name} value={condition.name}>
-                      {condition.name} ({condition.count} entries, avg: {formatNumber(condition.averagePain, 1)})
+                      {condition.name} ({condition.count} entries, avg:{' '}
+                      {formatNumber(condition.averagePain, 1)})
                     </option>
                   ))}
               </select>
@@ -283,7 +314,11 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
             {/* Time Period */}
             <div className="space-y-2">
               <label className="text-sm font-medium">Analysis Period (days)</label>
-              <select className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={comparisonPeriod.toString()} onChange={(e) => setComparisonPeriod(parseInt(e.target.value))}>
+              <select
+                className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                value={comparisonPeriod.toString()}
+                onChange={e => setComparisonPeriod(parseInt(e.target.value))}
+              >
                 <option value="7">Last 7 days</option>
                 <option value="14">Last 14 days</option>
                 <option value="30">Last 30 days</option>
@@ -297,7 +332,8 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
             <div className="flex items-center space-x-2 p-4 bg-muted rounded-lg">
               <Info className="h-4 w-4 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
-                Need at least 2 different conditions or triggers to compare. Add more entries with different conditions.
+                Need at least 2 different conditions or triggers to compare. Add more entries with
+                different conditions.
               </p>
             </div>
           )}
@@ -314,8 +350,12 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">{comparisonResult.condition1}</p>
-                    <p className="text-2xl font-bold">{formatNumber(comparisonResult.condition1Stats.averagePain, 1)}</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      {comparisonResult.condition1}
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {formatNumber(comparisonResult.condition1Stats.averagePain, 1)}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {comparisonResult.condition1Stats.entries} entries
                     </p>
@@ -330,8 +370,12 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">{comparisonResult.condition2}</p>
-                    <p className="text-2xl font-bold">{formatNumber(comparisonResult.condition2Stats.averagePain, 1)}</p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      {comparisonResult.condition2}
+                    </p>
+                    <p className="text-2xl font-bold">
+                      {formatNumber(comparisonResult.condition2Stats.averagePain, 1)}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                       {comparisonResult.condition2Stats.entries} entries
                     </p>
@@ -376,11 +420,7 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Chart
-                data={comparisonResult.chartData}
-                type="bar"
-                height={300}
-              />
+              <Chart data={comparisonResult.chartData} type="bar" height={300} />
             </CardContent>
           </Card>
 
@@ -398,20 +438,31 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
                   {comparisonResult.insights.map((insight, index) => (
                     <div key={index} className="flex items-start space-x-3 p-3 rounded-lg border">
                       <div className="mt-0.5">
-                        {insight.type === 'improvement' && <TrendingDown className="h-4 w-4 text-green-600" />}
-                        {insight.type === 'worsening' && <TrendingUp className="h-4 w-4 text-red-600" />}
+                        {insight.type === 'improvement' && (
+                          <TrendingDown className="h-4 w-4 text-green-600" />
+                        )}
+                        {insight.type === 'worsening' && (
+                          <TrendingUp className="h-4 w-4 text-red-600" />
+                        )}
                         {insight.type === 'pattern' && <Target className="h-4 w-4 text-blue-600" />}
-                        {insight.type === 'correlation' && <BarChart3 className="h-4 w-4 text-purple-600" />}
+                        {insight.type === 'correlation' && (
+                          <BarChart3 className="h-4 w-4 text-purple-600" />
+                        )}
                       </div>
                       <div className="flex-1">
                         <h4 className="font-medium text-sm">{insight.title}</h4>
                         <p className="text-sm text-muted-foreground mt-1">{insight.description}</p>
                         <div className="flex items-center justify-between mt-2">
-                          <span className={cn('px-2 py-1 rounded-full text-xs font-medium',
-                            insight.confidence > 0.8 ? 'bg-green-100 text-green-800' :
-                            insight.confidence > 0.6 ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-orange-100 text-orange-800'
-                          )}>
+                          <span
+                            className={cn(
+                              'px-2 py-1 rounded-full text-xs font-medium',
+                              insight.confidence > 0.8
+                                ? 'bg-green-100 text-green-800'
+                                : insight.confidence > 0.6
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-orange-100 text-orange-800'
+                            )}
+                          >
                             {Math.round(insight.confidence * 100)}% confidence
                           </span>
                           {insight.recommendation && (
@@ -447,7 +498,8 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
             <AlertTriangle className="h-12 w-12 mx-auto mb-2 opacity-50" />
             <h3 className="font-medium mb-2">Select Conditions to Compare</h3>
             <p className="text-sm text-muted-foreground">
-              Choose two different conditions or triggers from the dropdowns above to see how they affect your pain levels.
+              Choose two different conditions or triggers from the dropdowns above to see how they
+              affect your pain levels.
             </p>
           </CardContent>
         </Card>

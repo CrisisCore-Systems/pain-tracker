@@ -16,7 +16,7 @@ function pain(id: number, painLevel: number, note: string): PainEntry {
     qualityOfLife: { sleepQuality: 6, moodImpact: 4, socialImpact: [] },
     workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
     comparison: { worseningSince: '', newLimitations: [] },
-    notes: note
+    notes: note,
   };
 }
 
@@ -35,7 +35,7 @@ function mood(idx: number, note: string, overrides: Partial<MoodEntry> = {}): Mo
     triggers: [],
     copingStrategies: ['mindfulness', 'self-care'].slice(0, (idx % 2) + 1),
     socialSupport: idx % 2 === 0 ? 'moderate' : 'minimal',
-    notes: note
+    notes: note,
   };
   return { ...base, ...overrides };
 }
@@ -46,7 +46,7 @@ const engine = new EmpathyIntelligenceEngine({
   personalizationDepth: 'deep',
   culturalSensitivity: 'enhanced',
   interventionStyle: 'adaptive',
-  privacyLevel: 'enhanced'
+  privacyLevel: 'enhanced',
 });
 
 // Generate representative dataset covering many heuristics
@@ -55,7 +55,7 @@ const pains: PainEntry[] = [
   pain(2, 5, 'manageable with pacing'),
   pain(3, 3, 'mild improvement noticed'),
   pain(4, 6, 'spike but learned coping'),
-  pain(5, 4, 'steady and meaningful progress')
+  pain(5, 4, 'steady and meaningful progress'),
 ];
 
 const moods: MoodEntry[] = [
@@ -64,7 +64,7 @@ const moods: MoodEntry[] = [
   mood(3, 'Felt emotional connection and understood their perspective deeply'),
   mood(4, 'Applied insight and shared what I realized and helped someone'),
   mood(5, 'Grateful and meaning emerging; spiritual acceptance and growth'),
-  mood(6, 'I noticed I am calmer and remembered progress; practiced compassion')
+  mood(6, 'I noticed I am calmer and remembered progress; practiced compassion'),
 ];
 
 describe('EmpathyIntelligenceEngine integration', () => {
@@ -72,7 +72,10 @@ describe('EmpathyIntelligenceEngine integration', () => {
     const metrics = await engine.calculateAdvancedEmpathyMetrics('user-int', pains, moods);
     expect(metrics.emotionalIntelligence.empathy).toBeGreaterThanOrEqual(0);
     expect(metrics.humanizedMetrics.wisdomGained.insights.length).toBeLessThanOrEqual(10);
-    const insights = await engine.generateAdvancedInsights('user-int', metrics, { painEntries: pains, moodEntries: moods });
+    const insights = await engine.generateAdvancedInsights('user-int', metrics, {
+      painEntries: pains,
+      moodEntries: moods,
+    });
     expect(insights.length).toBeGreaterThan(0);
     const recs = await engine.generatePersonalizedRecommendations('user-int', metrics, insights);
     expect(recs.length).toBeGreaterThan(0);

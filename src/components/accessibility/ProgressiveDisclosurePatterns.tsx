@@ -4,17 +4,17 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  ChevronDown, 
-  ChevronRight, 
-  Info, 
-  HelpCircle, 
+import {
+  ChevronDown,
+  ChevronRight,
+  Info,
+  HelpCircle,
   Eye,
   EyeOff,
   Clock,
   Brain,
   Target,
-  Layers
+  Layers,
 } from 'lucide-react';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { TouchOptimizedButton } from './TraumaInformedUX';
@@ -40,7 +40,7 @@ const levelConfig = {
     bgColor: 'bg-green-50',
     borderColor: 'border-green-200',
     priority: 1,
-    description: 'Core information you need'
+    description: 'Core information you need',
   },
   helpful: {
     icon: Info,
@@ -48,7 +48,7 @@ const levelConfig = {
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-200',
     priority: 2,
-    description: 'Additional context that may help'
+    description: 'Additional context that may help',
   },
   advanced: {
     icon: Layers,
@@ -56,7 +56,7 @@ const levelConfig = {
     bgColor: 'bg-purple-50',
     borderColor: 'border-purple-200',
     priority: 3,
-    description: 'Detailed information for deeper understanding'
+    description: 'Detailed information for deeper understanding',
   },
   expert: {
     icon: Brain,
@@ -64,8 +64,8 @@ const levelConfig = {
     bgColor: 'bg-gray-50',
     borderColor: 'border-gray-200',
     priority: 4,
-    description: 'Technical details and comprehensive options'
-  }
+    description: 'Technical details and comprehensive options',
+  },
 };
 
 export function ProgressiveDisclosure({
@@ -78,19 +78,17 @@ export function ProgressiveDisclosure({
   defaultOpen = false,
   onOpen,
   onClose,
-  className = ''
+  className = '',
 }: ProgressiveDisclosureProps) {
   const { preferences } = useTraumaInformed();
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [hasBeenOpened, setHasBeenOpened] = useState(defaultOpen);
-  
+
   const config = levelConfig[level];
   const Icon = config.icon;
 
   // Auto-hide advanced content in simplified mode
-  const shouldShow = !preferences.simplifiedMode || 
-    level === 'essential' || 
-    level === 'helpful';
+  const shouldShow = !preferences.simplifiedMode || level === 'essential' || level === 'helpful';
 
   if (!shouldShow) {
     return null;
@@ -99,7 +97,7 @@ export function ProgressiveDisclosure({
   const handleToggle = () => {
     const newState = !isOpen;
     setIsOpen(newState);
-    
+
     if (newState) {
       setHasBeenOpened(true);
       if (onOpen) onOpen();
@@ -109,10 +107,12 @@ export function ProgressiveDisclosure({
   };
 
   return (
-    <div className={`
+    <div
+      className={`
       rounded-lg border transition-all duration-200
       ${config.bgColor} ${config.borderColor} ${className}
-    `}>
+    `}
+    >
       <DisclosureHeader
         title={title}
         level={level}
@@ -123,7 +123,7 @@ export function ProgressiveDisclosure({
         estimatedTime={estimatedTime}
         description={config.description}
       />
-      
+
       {isOpen && (
         <div className="p-4 pt-0">
           {cognitiveLoad && hasBeenOpened && (
@@ -150,7 +150,7 @@ function DisclosureHeader({
   icon,
   memoryAid,
   estimatedTime,
-  description
+  description,
 }: {
   title: string;
   level: string;
@@ -170,26 +170,19 @@ function DisclosureHeader({
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
           {icon}
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-1">
-              <h3 className="font-medium text-gray-900 dark:text-gray-100">
-                {title}
-              </h3>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">{title}</h3>
               <DisclosureBadge level={level} />
             </div>
-            
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              {description}
-            </p>
-            
-            <DisclosureMetadata 
-              memoryAid={memoryAid}
-              estimatedTime={estimatedTime}
-            />
+
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{description}</p>
+
+            <DisclosureMetadata memoryAid={memoryAid} estimatedTime={estimatedTime} />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2 ml-3">
           {isOpen ? (
             <ChevronDown className="w-5 h-5 text-gray-400 dark:text-gray-500" />
@@ -205,12 +198,14 @@ function DisclosureHeader({
 // Badge showing disclosure level
 function DisclosureBadge({ level }: { level: string }) {
   const config = levelConfig[level as keyof typeof levelConfig];
-  
+
   return (
-    <span className={`
+    <span
+      className={`
       inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
       ${config.bgColor} ${config.color}
-    `}>
+    `}
+    >
       {level}
     </span>
   );
@@ -219,7 +214,7 @@ function DisclosureBadge({ level }: { level: string }) {
 // Metadata display for disclosure sections
 function DisclosureMetadata({
   memoryAid,
-  estimatedTime
+  estimatedTime,
 }: {
   memoryAid?: string;
   estimatedTime?: number;
@@ -227,7 +222,7 @@ function DisclosureMetadata({
   if (!memoryAid && !estimatedTime) {
     return null;
   }
-  
+
   return (
     <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
       {estimatedTime && (
@@ -236,7 +231,7 @@ function DisclosureMetadata({
           <span>{estimatedTime} min read</span>
         </div>
       )}
-      
+
       {memoryAid && (
         <div className="flex items-center space-x-1">
           <HelpCircle className="w-3 h-3" />
@@ -251,7 +246,7 @@ function DisclosureMetadata({
 export function LayeredDisclosure({
   sections,
   title,
-  showAllLevels = false
+  showAllLevels = false,
 }: {
   sections: DisclosureSection[];
   title: string;
@@ -259,7 +254,7 @@ export function LayeredDisclosure({
 }) {
   const { preferences } = useTraumaInformed();
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
-  
+
   // Filter sections based on user preferences
   const visibleSections = sections.filter(section => {
     if (showAllLevels) return true;
@@ -270,8 +265,8 @@ export function LayeredDisclosure({
   });
 
   // Sort sections by priority
-  const sortedSections = visibleSections.sort((a, b) => 
-    levelConfig[a.level].priority - levelConfig[b.level].priority
+  const sortedSections = visibleSections.sort(
+    (a, b) => levelConfig[a.level].priority - levelConfig[b.level].priority
   );
 
   return (
@@ -281,7 +276,7 @@ export function LayeredDisclosure({
         <LayeredDisclosureControls
           sections={sortedSections}
           openSections={openSections}
-          onToggleAll={(allOpen) => {
+          onToggleAll={allOpen => {
             if (allOpen) {
               setOpenSections(new Set(sortedSections.map(s => s.id)));
             } else {
@@ -290,8 +285,8 @@ export function LayeredDisclosure({
           }}
         />
       </div>
-      
-      {sortedSections.map((section) => (
+
+      {sortedSections.map(section => (
         <ProgressiveDisclosure
           key={section.id}
           title={section.title}
@@ -301,11 +296,13 @@ export function LayeredDisclosure({
           cognitiveLoad={section.cognitiveLoad}
           defaultOpen={openSections.has(section.id)}
           onOpen={() => setOpenSections(prev => new Set([...prev, section.id]))}
-          onClose={() => setOpenSections(prev => {
-            const next = new Set(prev);
-            next.delete(section.id);
-            return next;
-          })}
+          onClose={() =>
+            setOpenSections(prev => {
+              const next = new Set(prev);
+              next.delete(section.id);
+              return next;
+            })
+          }
         >
           {section.content}
         </ProgressiveDisclosure>
@@ -328,7 +325,7 @@ interface DisclosureSection {
 function LayeredDisclosureControls({
   sections,
   openSections,
-  onToggleAll
+  onToggleAll,
 }: {
   sections: DisclosureSection[];
   openSections: Set<string>;
@@ -336,7 +333,7 @@ function LayeredDisclosureControls({
 }) {
   const allOpen = sections.every(s => openSections.has(s.id));
   const someOpen = sections.some(s => openSections.has(s.id));
-  
+
   return (
     <div className="flex items-center space-x-2">
       <TouchOptimizedButton
@@ -364,7 +361,7 @@ function LayeredDisclosureControls({
 export function AdaptiveDisclosure({
   children,
   title,
-  adaptToUserBehavior = true
+  adaptToUserBehavior = true,
 }: {
   children: React.ReactNode;
   title: string;
@@ -374,49 +371,51 @@ export function AdaptiveDisclosure({
   const [userEngagement, setUserEngagement] = useState({
     timeSpent: 0,
     interactionCount: 0,
-    lastInteraction: Date.now()
+    lastInteraction: Date.now(),
   });
-  
+
   useEffect(() => {
     if (!adaptToUserBehavior) return;
-    
+
     const interval = setInterval(() => {
       setUserEngagement(prev => ({
         ...prev,
-        timeSpent: prev.timeSpent + 1
+        timeSpent: prev.timeSpent + 1,
       }));
     }, 1000);
-    
+
     return () => clearInterval(interval);
   }, [adaptToUserBehavior]);
-  
+
   // Determine appropriate level based on user behavior and preferences
   const getAdaptiveLevel = (): 'essential' | 'helpful' | 'advanced' | 'expert' => {
     if (preferences.simplifiedMode) return 'essential';
-    
+
     if (adaptToUserBehavior) {
       const { timeSpent, interactionCount } = userEngagement;
-      
+
       if (timeSpent > 300 && interactionCount > 10) return 'expert';
       if (timeSpent > 120 && interactionCount > 5) return 'advanced';
       if (timeSpent > 60 || interactionCount > 2) return 'helpful';
     }
-    
+
     return 'essential';
   };
-  
+
   const level = getAdaptiveLevel();
-  
+
   return (
     <ProgressiveDisclosure
       title={title}
       level={level}
       memoryAid={`Adapted to your ${preferences.simplifiedMode ? 'simplified' : 'standard'} preferences`}
-      onOpen={() => setUserEngagement(prev => ({
-        ...prev,
-        interactionCount: prev.interactionCount + 1,
-        lastInteraction: Date.now()
-      }))}
+      onOpen={() =>
+        setUserEngagement(prev => ({
+          ...prev,
+          interactionCount: prev.interactionCount + 1,
+          lastInteraction: Date.now(),
+        }))
+      }
     >
       {children}
     </ProgressiveDisclosure>

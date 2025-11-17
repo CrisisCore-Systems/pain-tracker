@@ -8,24 +8,11 @@ export type GoalType =
   | 'mood_tracking'
   | 'custom';
 
-export type GoalStatus =
-  | 'active'
-  | 'completed'
-  | 'paused'
-  | 'abandoned'
-  | 'overdue';
+export type GoalStatus = 'active' | 'completed' | 'paused' | 'abandoned' | 'overdue';
 
-export type GoalPriority =
-  | 'low'
-  | 'medium'
-  | 'high'
-  | 'urgent';
+export type GoalPriority = 'low' | 'medium' | 'high' | 'urgent';
 
-export type GoalFrequency =
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'custom';
+export type GoalFrequency = 'daily' | 'weekly' | 'monthly' | 'custom';
 
 export type GoalMetric =
   | 'pain_level'
@@ -41,7 +28,12 @@ export interface GoalTarget {
   targetValue: number;
   currentValue: number;
   unit: string;
-  comparison: 'less_than' | 'greater_than' | 'equal_to' | 'percentage_decrease' | 'percentage_increase';
+  comparison:
+    | 'less_than'
+    | 'greater_than'
+    | 'equal_to'
+    | 'percentage_decrease'
+    | 'percentage_increase';
 }
 
 export interface GoalMilestone {
@@ -146,8 +138,8 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         metric: 'pain_level',
         targetValue: 30,
         unit: '%',
-        comparison: 'percentage_decrease'
-      }
+        comparison: 'percentage_decrease',
+      },
     ],
     duration: 30,
     milestones: [
@@ -155,24 +147,24 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         title: 'Week 1 Complete',
         description: 'Completed first week of pain tracking',
         targetValue: 7,
-        reward: 'Small celebration!'
+        reward: 'Small celebration!',
       },
       {
         title: '15% Reduction',
         description: 'Achieved 15% pain reduction',
         targetValue: 15,
-        reward: 'Great progress!'
+        reward: 'Great progress!',
       },
       {
         title: 'Goal Achieved',
         description: 'Successfully reduced pain by 30%',
         targetValue: 30,
-        reward: 'Congratulations!'
-      }
+        reward: 'Congratulations!',
+      },
     ],
     category: 'pain_management',
     difficulty: 'medium',
-    estimatedSuccess: 65
+    estimatedSuccess: 65,
   },
   {
     id: 'consistent_tracking',
@@ -184,8 +176,8 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         metric: 'entry_count',
         targetValue: 30,
         unit: 'entries',
-        comparison: 'greater_than'
-      }
+        comparison: 'greater_than',
+      },
     ],
     duration: 30,
     milestones: [
@@ -193,24 +185,24 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         title: 'Week 1 Streak',
         description: '7 consecutive days of tracking',
         targetValue: 7,
-        reward: 'Building good habits!'
+        reward: 'Building good habits!',
       },
       {
         title: 'Halfway Point',
         description: '15 days completed',
         targetValue: 15,
-        reward: 'You\'re doing great!'
+        reward: "You're doing great!",
       },
       {
         title: '30-Day Champion',
         description: 'Completed 30 days of consistent tracking',
         targetValue: 30,
-        reward: 'Consistency master!'
-      }
+        reward: 'Consistency master!',
+      },
     ],
     category: 'lifestyle',
     difficulty: 'easy',
-    estimatedSuccess: 80
+    estimatedSuccess: 80,
   },
   {
     id: 'medication_adherence',
@@ -222,8 +214,8 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         metric: 'medication_taken',
         targetValue: 100,
         unit: '%',
-        comparison: 'equal_to'
-      }
+        comparison: 'equal_to',
+      },
     ],
     duration: 14,
     milestones: [
@@ -231,18 +223,18 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         title: 'First Week',
         description: 'Completed medication schedule for 7 days',
         targetValue: 7,
-        reward: 'Great start!'
+        reward: 'Great start!',
       },
       {
         title: 'Perfect Record',
         description: '14 days of perfect medication adherence',
         targetValue: 14,
-        reward: 'Health hero!'
-      }
+        reward: 'Health hero!',
+      },
     ],
     category: 'medication',
     difficulty: 'medium',
-    estimatedSuccess: 70
+    estimatedSuccess: 70,
   },
   {
     id: 'increase_activity',
@@ -254,8 +246,8 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         metric: 'activity_minutes',
         targetValue: 30,
         unit: 'minutes',
-        comparison: 'greater_than'
-      }
+        comparison: 'greater_than',
+      },
     ],
     duration: 21,
     milestones: [
@@ -263,25 +255,25 @@ export const DEFAULT_GOAL_TEMPLATES: GoalTemplate[] = [
         title: 'Week 1: 10 minutes',
         description: 'Achieved 10 minutes of daily activity',
         targetValue: 10,
-        reward: 'Movement matters!'
+        reward: 'Movement matters!',
       },
       {
         title: 'Week 2: 20 minutes',
         description: 'Achieved 20 minutes of daily activity',
         targetValue: 20,
-        reward: 'Building momentum!'
+        reward: 'Building momentum!',
       },
       {
         title: 'Goal Achieved: 30 minutes',
         description: 'Successfully reached 30 minutes daily',
         targetValue: 30,
-        reward: 'Active lifestyle champion!'
-      }
+        reward: 'Active lifestyle champion!',
+      },
     ],
     category: 'lifestyle',
     difficulty: 'medium',
-    estimatedSuccess: 60
-  }
+    estimatedSuccess: 60,
+  },
 ];
 
 export const GOAL_TYPE_LABELS: Record<GoalType, string> = {
@@ -292,7 +284,7 @@ export const GOAL_TYPE_LABELS: Record<GoalType, string> = {
   activity_increase: 'Increase Activity',
   sleep_improvement: 'Sleep Improvement',
   mood_tracking: 'Mood Tracking',
-  custom: 'Custom Goal'
+  custom: 'Custom Goal',
 };
 
 export const GOAL_STATUS_LABELS: Record<GoalStatus, string> = {
@@ -300,14 +292,14 @@ export const GOAL_STATUS_LABELS: Record<GoalStatus, string> = {
   completed: 'Completed',
   paused: 'Paused',
   abandoned: 'Abandoned',
-  overdue: 'Overdue'
+  overdue: 'Overdue',
 };
 
 export const GOAL_PRIORITY_LABELS: Record<GoalPriority, string> = {
   low: 'Low',
   medium: 'Medium',
   high: 'High',
-  urgent: 'Urgent'
+  urgent: 'Urgent',
 };
 
 export const GOAL_METRIC_LABELS: Record<GoalMetric, string> = {
@@ -317,5 +309,5 @@ export const GOAL_METRIC_LABELS: Record<GoalMetric, string> = {
   activity_minutes: 'Activity Minutes',
   sleep_hours: 'Sleep Hours',
   mood_score: 'Mood Score',
-  custom: 'Custom Metric'
+  custom: 'Custom Metric',
 };

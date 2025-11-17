@@ -38,7 +38,7 @@ interface ProgressMetric {
 export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = ({
   entries,
   onCelebrationShared,
-  onMilestoneReached
+  onMilestoneReached,
 }) => {
   const [achievements, setAchievements] = useState<CelebrationAchievement[]>([]);
   const [progressMetrics, setProgressMetrics] = useState<ProgressMetric[]>([]);
@@ -52,12 +52,12 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
 
   const generateAchievements = () => {
     const newAchievements: CelebrationAchievement[] = [];
-  const today = new Date();
-  const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const today = new Date();
+    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-  // Daily achievements - use local-day comparison
-  const todayEntries = entries.filter(entry => isSameLocalDay(entry.timestamp, today));
+    // Daily achievements - use local-day comparison
+    const todayEntries = entries.filter(entry => isSameLocalDay(entry.timestamp, today));
 
     if (todayEntries.length > 0) {
       newAchievements.push({
@@ -66,27 +66,32 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
         description: 'You showed up for yourself today by tracking your experience',
         category: 'self_care',
         icon: '💚',
-        celebrationMessage: 'Every time you check in with yourself, you\'re practicing self-compassion!',
+        celebrationMessage:
+          "Every time you check in with yourself, you're practicing self-compassion!",
         achievedAt: today.toISOString(),
-        shareableText: 'I practiced self-care today by listening to my body and tracking my experience.',
-        significance: 'daily'
+        shareableText:
+          'I practiced self-care today by listening to my body and tracking my experience.',
+        significance: 'daily',
       });
     }
 
-  // Weekly achievements - use local-day start for comparison
-  const weekEntries = entries.filter(entry => localDayStart(entry.timestamp) >= localDayStart(weekAgo));
-    
+    // Weekly achievements - use local-day start for comparison
+    const weekEntries = entries.filter(
+      entry => localDayStart(entry.timestamp) >= localDayStart(weekAgo)
+    );
+
     if (weekEntries.length >= 5) {
       newAchievements.push({
         id: 'consistent-week',
         title: 'Consistency Champion',
-        description: 'You\'ve tracked consistently this week',
+        description: "You've tracked consistently this week",
         category: 'growth',
         icon: '⭐',
         celebrationMessage: 'Your commitment to understanding yourself is truly admirable!',
         achievedAt: today.toISOString(),
-        shareableText: 'I\'ve been consistently tracking my health journey this week. Small steps, big progress!',
-        significance: 'weekly'
+        shareableText:
+          "I've been consistently tracking my health journey this week. Small steps, big progress!",
+        significance: 'weekly',
       });
     }
 
@@ -96,13 +101,14 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
       newAchievements.push({
         id: 'mindful-reflection',
         title: 'Mindful Reflection Master',
-        description: 'You\'ve been thoughtfully documenting your experiences',
+        description: "You've been thoughtfully documenting your experiences",
         category: 'awareness',
         icon: '🧠',
-        celebrationMessage: 'Your self-awareness and reflection show incredible emotional intelligence!',
+        celebrationMessage:
+          'Your self-awareness and reflection show incredible emotional intelligence!',
         achievedAt: today.toISOString(),
-        shareableText: 'I\'ve been practicing mindful reflection on my health journey.',
-        significance: 'weekly'
+        shareableText: "I've been practicing mindful reflection on my health journey.",
+        significance: 'weekly',
       });
     }
 
@@ -117,13 +123,16 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
         icon: '🦁',
         celebrationMessage: 'It takes real courage to face difficult days with awareness and care!',
         achievedAt: today.toISOString(),
-        shareableText: 'I\'m showing courage by staying present with my experience, even on tough days.',
-        significance: 'milestone'
+        shareableText:
+          "I'm showing courage by staying present with my experience, even on tough days.",
+        significance: 'milestone',
       });
     }
 
     // Growth achievements
-  const monthEntries = entries.filter(entry => localDayStart(entry.timestamp) >= localDayStart(monthAgo));
+    const monthEntries = entries.filter(
+      entry => localDayStart(entry.timestamp) >= localDayStart(monthAgo)
+    );
     if (monthEntries.length >= 20) {
       newAchievements.push({
         id: 'growth-journey',
@@ -133,31 +142,32 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
         icon: '🌱',
         celebrationMessage: 'Your dedication to growth and self-understanding is inspiring!',
         achievedAt: today.toISOString(),
-        shareableText: 'I\'ve been on a month-long journey of self-discovery and health awareness.',
-        significance: 'milestone'
+        shareableText: "I've been on a month-long journey of self-discovery and health awareness.",
+        significance: 'milestone',
       });
     }
 
     // Connection achievements
-    const communicationEntries = entries.filter(entry => 
-      entry.notes && (
-        entry.notes.toLowerCase().includes('talk') ||
-        entry.notes.toLowerCase().includes('share') ||
-        entry.notes.toLowerCase().includes('support')
-      )
+    const communicationEntries = entries.filter(
+      entry =>
+        entry.notes &&
+        (entry.notes.toLowerCase().includes('talk') ||
+          entry.notes.toLowerCase().includes('share') ||
+          entry.notes.toLowerCase().includes('support'))
     );
-    
+
     if (communicationEntries.length >= 3) {
       newAchievements.push({
         id: 'connection-builder',
         title: 'Connection Builder',
-        description: 'You\'ve been reaching out and connecting with others',
+        description: "You've been reaching out and connecting with others",
         category: 'connection',
         icon: '🤝',
-        celebrationMessage: 'Building connections and sharing your experience shows wisdom and strength!',
+        celebrationMessage:
+          'Building connections and sharing your experience shows wisdom and strength!',
         achievedAt: today.toISOString(),
-        shareableText: 'I\'ve been building meaningful connections around my health journey.',
-        significance: 'weekly'
+        shareableText: "I've been building meaningful connections around my health journey.",
+        significance: 'weekly',
       });
     }
 
@@ -172,13 +182,14 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
       newAchievements.push({
         id: 'resilience-champion',
         title: 'Resilience Champion',
-        description: 'You\'ve shown recovery and resilience after difficult days',
+        description: "You've shown recovery and resilience after difficult days",
         category: 'resilience',
         icon: '💪',
         celebrationMessage: 'Your ability to bounce back shows incredible inner strength!',
         achievedAt: today.toISOString(),
-        shareableText: 'I\'m celebrating my resilience and ability to recover from challenging times.',
-        significance: 'milestone'
+        shareableText:
+          "I'm celebrating my resilience and ability to recover from challenging times.",
+        significance: 'milestone',
       });
     }
 
@@ -191,42 +202,44 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
         name: 'Self-Awareness Days',
         value: entries.length,
         unit: 'days',
-        description: 'Days you\'ve practiced mindful self-awareness',
+        description: "Days you've practiced mindful self-awareness",
         color: 'bg-purple-500',
         icon: <Heart className="w-4 h-4" />,
-        celebrationThreshold: 30
+        celebrationThreshold: 30,
       },
       {
         name: 'Reflection Entries',
         value: entries.filter(e => e.notes && e.notes.length > 10).length,
         unit: 'entries',
-        description: 'Times you\'ve taken the time to reflect deeply',
+        description: "Times you've taken the time to reflect deeply",
         color: 'bg-blue-500',
         icon: <Star className="w-4 h-4" />,
-        celebrationThreshold: 15
+        celebrationThreshold: 15,
       },
       {
         name: 'Courage Moments',
         value: entries.filter(e => e.baselineData.pain >= 7).length,
         unit: 'moments',
-        description: 'Times you\'ve shown courage during difficult experiences',
+        description: "Times you've shown courage during difficult experiences",
         color: 'bg-orange-500',
         icon: <Trophy className="w-4 h-4" />,
-        celebrationThreshold: 5
+        celebrationThreshold: 5,
       },
       {
         name: 'Growth Insights',
-        value: entries.filter(e => e.notes && (
-          e.notes.toLowerCase().includes('learn') ||
-          e.notes.toLowerCase().includes('realize') ||
-          e.notes.toLowerCase().includes('understand')
-        )).length,
+        value: entries.filter(
+          e =>
+            e.notes &&
+            (e.notes.toLowerCase().includes('learn') ||
+              e.notes.toLowerCase().includes('realize') ||
+              e.notes.toLowerCase().includes('understand'))
+        ).length,
         unit: 'insights',
-        description: 'Personal insights and learnings you\'ve gained',
+        description: "Personal insights and learnings you've gained",
         color: 'bg-green-500',
         icon: <Sparkles className="w-4 h-4" />,
-        celebrationThreshold: 10
-      }
+        celebrationThreshold: 10,
+      },
     ];
 
     setProgressMetrics(metrics);
@@ -235,7 +248,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
   const handleCelebrate = (achievement: CelebrationAchievement) => {
     setSelectedCelebration(achievement.id);
     setShowConfetti(true);
-    
+
     setTimeout(() => {
       setShowConfetti(false);
       setSelectedCelebration(null);
@@ -252,25 +265,39 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'self_care': return 'border-pink-300 bg-pink-50';
-      case 'awareness': return 'border-purple-300 bg-purple-50';
-      case 'courage': return 'border-orange-300 bg-orange-50';
-      case 'connection': return 'border-blue-300 bg-blue-50';
-      case 'growth': return 'border-green-300 bg-green-50';
-      case 'resilience': return 'border-red-300 bg-red-50';
-      default: return 'border-gray-300 bg-gray-50';
+      case 'self_care':
+        return 'border-pink-300 bg-pink-50';
+      case 'awareness':
+        return 'border-purple-300 bg-purple-50';
+      case 'courage':
+        return 'border-orange-300 bg-orange-50';
+      case 'connection':
+        return 'border-blue-300 bg-blue-50';
+      case 'growth':
+        return 'border-green-300 bg-green-50';
+      case 'resilience':
+        return 'border-red-300 bg-red-50';
+      default:
+        return 'border-gray-300 bg-gray-50';
     }
   };
 
   const getCategoryTextColor = (category: string) => {
     switch (category) {
-      case 'self_care': return 'text-pink-700';
-      case 'awareness': return 'text-purple-700';
-      case 'courage': return 'text-orange-700';
-      case 'connection': return 'text-blue-700';
-      case 'growth': return 'text-green-700';
-      case 'resilience': return 'text-red-700';
-      default: return 'text-gray-700';
+      case 'self_care':
+        return 'text-pink-700';
+      case 'awareness':
+        return 'text-purple-700';
+      case 'courage':
+        return 'text-orange-700';
+      case 'connection':
+        return 'text-blue-700';
+      case 'growth':
+        return 'text-green-700';
+      case 'resilience':
+        return 'text-red-700';
+      default:
+        return 'text-gray-700';
     }
   };
 
@@ -301,7 +328,9 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {progressMetrics.map((metric, index) => (
               <div key={index} className="text-center p-4 bg-white rounded-lg border">
-                <div className={`w-12 h-12 ${metric.color} rounded-full flex items-center justify-center mx-auto mb-3 text-white`}>
+                <div
+                  className={`w-12 h-12 ${metric.color} rounded-full flex items-center justify-center mx-auto mb-3 text-white`}
+                >
                   {metric.icon}
                 </div>
                 <div className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-1">
@@ -335,7 +364,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {achievements.slice(0, 4).map((achievement) => (
+            {achievements.slice(0, 4).map(achievement => (
               <div
                 key={achievement.id}
                 className={`p-4 rounded-lg border-2 transition-all ${
@@ -349,8 +378,12 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
                     <div className="text-2xl">{achievement.icon}</div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h4 className="font-semibold text-gray-800 dark:text-gray-200">{achievement.title}</h4>
-                        <span className={`px-2 py-1 text-xs rounded-full ${getCategoryTextColor(achievement.category)} bg-white`}>
+                        <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                          {achievement.title}
+                        </h4>
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full ${getCategoryTextColor(achievement.category)} bg-white`}
+                        >
                           {achievement.category.replace('_', ' ')}
                         </span>
                         {achievement.significance === 'milestone' && (
@@ -359,7 +392,9 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{achievement.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        {achievement.description}
+                      </p>
                       <div className="bg-white p-3 rounded-md border-l-4 border-l-yellow-400">
                         <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                           {achievement.celebrationMessage}
@@ -369,7 +404,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
                         <div className="mt-3 text-center">
                           <span className="inline-flex items-center gap-2 text-yellow-600 font-medium">
                             <Sparkles className="w-4 h-4" />
-                            Celebrating You! 
+                            Celebrating You!
                             <Sparkles className="w-4 h-4" />
                           </span>
                         </div>
@@ -430,7 +465,13 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white p-3 rounded-lg">
                 <div className="text-2xl font-bold text-purple-600">
-                  {entries.filter(e => localDayStart(e.timestamp) >= localDayStart(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))).length}
+                  {
+                    entries.filter(
+                      e =>
+                        localDayStart(e.timestamp) >=
+                        localDayStart(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
+                    ).length
+                  }
                 </div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">Days of Self-Care</div>
               </div>

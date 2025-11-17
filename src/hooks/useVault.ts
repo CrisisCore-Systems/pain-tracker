@@ -34,6 +34,6 @@ export function useVault(): {
     setupPassphrase: (passphrase: string) => vaultService.setupPassphrase(passphrase),
     unlock: (passphrase: string) => vaultService.unlock(passphrase),
     lock: () => vaultService.lock(),
-    clearAll: () => vaultService.clearAll()
+    clearAll: () => vaultService.clearAll(),
   };
 }

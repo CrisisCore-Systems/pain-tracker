@@ -4,19 +4,19 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  ArrowLeft, 
-  Home, 
-  Phone, 
-  Shield, 
-  AlertTriangle, 
-  Navigation, 
+import {
+  ArrowLeft,
+  Home,
+  Phone,
+  Shield,
+  AlertTriangle,
+  Navigation,
   MapPin,
   Compass,
   ChevronRight,
   X,
   Save,
-  HelpCircle
+  HelpCircle,
 } from 'lucide-react';
 import { useCrisisDetection } from './useCrisisDetection';
 import { useTraumaInformed } from './TraumaInformedHooks';
@@ -56,7 +56,7 @@ const defaultEssentialPaths: NavigationPath[] = [
     isEssential: true,
     icon: Home,
     description: 'Return to main page',
-    cognitiveLoad: 'minimal'
+    cognitiveLoad: 'minimal',
   },
   {
     id: 'pain-tracker',
@@ -65,7 +65,7 @@ const defaultEssentialPaths: NavigationPath[] = [
     isEssential: true,
     icon: MapPin,
     description: 'Quick pain tracking',
-    cognitiveLoad: 'minimal'
+    cognitiveLoad: 'minimal',
   },
   {
     id: 'emergency',
@@ -74,8 +74,8 @@ const defaultEssentialPaths: NavigationPath[] = [
     isEssential: true,
     icon: AlertTriangle,
     description: 'Emergency resources',
-    cognitiveLoad: 'minimal'
-  }
+    cognitiveLoad: 'minimal',
+  },
 ];
 
 export function CrisisNavigationBar({
@@ -83,7 +83,7 @@ export function CrisisNavigationBar({
   onNavigate,
   emergencyContacts = [],
   essentialPaths = defaultEssentialPaths,
-  showBreadcrumbs = true
+  showBreadcrumbs = true,
 }: CrisisNavigationProps) {
   const { crisisLevel } = useCrisisDetection();
   const { preferences } = useTraumaInformed();
@@ -112,11 +112,13 @@ export function CrisisNavigationBar({
   const isHighCrisis = crisisLevel === 'severe' || crisisLevel === 'emergency';
 
   return (
-    <div className={`
+    <div
+      className={`
       crisis-navigation-bar border-b transition-all duration-200
       ${isCrisisMode ? 'bg-orange-50 border-orange-200' : 'bg-white border-gray-200'}
       ${isHighCrisis ? 'bg-red-50 border-red-300' : ''}
-    `}>
+    `}
+    >
       {/* Crisis Alert Banner */}
       {isCrisisMode && <CrisisAlertBanner crisisLevel={crisisLevel} />}
 
@@ -125,10 +127,8 @@ export function CrisisNavigationBar({
           {/* Left: Back button and breadcrumbs */}
           <div className="flex items-center space-x-4">
             <CrisisBackButton currentPath={currentPath} onNavigate={onNavigate} />
-            
-            {showBreadcrumbs && !isHighCrisis && (
-              <CrisisBreadcrumbs currentPath={currentPath} />
-            )}
+
+            {showBreadcrumbs && !isHighCrisis && <CrisisBreadcrumbs currentPath={currentPath} />}
           </div>
 
           {/* Center: Crisis indicator and save status */}
@@ -139,10 +139,8 @@ export function CrisisNavigationBar({
                 <span>Saved {formatTime(lastSaved)}</span>
               </div>
             )}
-            
-            {isCrisisMode && (
-              <CrisisIndicator level={crisisLevel} />
-            )}
+
+            {isCrisisMode && <CrisisIndicator level={crisisLevel} />}
           </div>
 
           {/* Right: Emergency actions */}
@@ -233,7 +231,7 @@ function CrisisAlertBanner({ crisisLevel }: { crisisLevel: string }) {
 // Smart back button that provides context
 function CrisisBackButton({
   currentPath,
-  onNavigate
+  onNavigate,
 }: {
   currentPath: string;
   onNavigate: (path: string) => void;
@@ -241,7 +239,7 @@ function CrisisBackButton({
   const getBackPath = () => {
     const pathSegments = currentPath.split('/').filter(Boolean);
     if (pathSegments.length <= 1) return '/';
-    
+
     pathSegments.pop();
     return '/' + pathSegments.join('/');
   };
@@ -249,7 +247,7 @@ function CrisisBackButton({
   const getBackLabel = () => {
     const backPath = getBackPath();
     if (backPath === '/') return 'Home';
-    
+
     const pathSegments = backPath.split('/').filter(Boolean);
     return pathSegments[pathSegments.length - 1] || 'Back';
   };
@@ -261,9 +259,7 @@ function CrisisBackButton({
       className="flex items-center space-x-2"
     >
       <ArrowLeft className="w-4 h-4" />
-      <span className="hidden sm:inline">
-        {getBackLabel()}
-      </span>
+      <span className="hidden sm:inline">{getBackLabel()}</span>
     </TouchOptimizedButton>
   );
 }
@@ -271,7 +267,7 @@ function CrisisBackButton({
 // Simplified breadcrumbs for crisis state
 function CrisisBreadcrumbs({ currentPath }: { currentPath: string }) {
   const pathSegments = currentPath.split('/').filter(Boolean);
-  
+
   if (pathSegments.length <= 1) return null;
 
   return (
@@ -280,7 +276,13 @@ function CrisisBreadcrumbs({ currentPath }: { currentPath: string }) {
       {pathSegments.map((segment, index) => (
         <React.Fragment key={index}>
           <ChevronRight className="w-3 h-3" />
-          <span className={index === pathSegments.length - 1 ? 'font-medium text-gray-900 dark:text-gray-100' : ''}>
+          <span
+            className={
+              index === pathSegments.length - 1
+                ? 'font-medium text-gray-900 dark:text-gray-100'
+                : ''
+            }
+          >
             {segment.replace('-', ' ')}
           </span>
         </React.Fragment>
@@ -306,10 +308,12 @@ function CrisisIndicator({ level }: { level: string }) {
   };
 
   return (
-    <div className={`
+    <div
+      className={`
       px-3 py-1 rounded-full text-xs font-medium border
       ${getColor()}
-    `}>
+    `}
+    >
       Support Mode: {level}
     </div>
   );
@@ -320,7 +324,7 @@ function EssentialNavigationLinks({
   paths,
   currentPath,
   onNavigate,
-  crisisLevel
+  crisisLevel,
 }: {
   paths: NavigationPath[];
   currentPath: string;
@@ -337,14 +341,14 @@ function EssentialNavigationLinks({
 
   return (
     <div className="flex flex-wrap gap-2">
-      {visiblePaths.map((path) => {
+      {visiblePaths.map(path => {
         const Icon = path.icon || Navigation;
         const isActive = currentPath === path.path;
-        
+
         return (
           <TouchOptimizedButton
             key={path.id}
-            variant={isActive ? "primary" : "secondary"}
+            variant={isActive ? 'primary' : 'secondary'}
             onClick={() => onNavigate(path.path)}
             className={`
               flex items-center space-x-2 text-sm
@@ -379,7 +383,7 @@ function CrisisEscapeButton({ onNavigate }: { onNavigate: (path: string) => void
 function EmergencyNavigationPanel({
   contacts,
   onClose,
-  onNavigate
+  onNavigate,
 }: {
   contacts: EmergencyContact[];
   onClose: () => void;
@@ -389,18 +393,14 @@ function EmergencyNavigationPanel({
     <div className="bg-red-50 border-t border-red-200 p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-red-800">Emergency Support</h3>
-        <TouchOptimizedButton
-          variant="secondary"
-          onClick={onClose}
-          className="text-red-600"
-        >
+        <TouchOptimizedButton variant="secondary" onClick={onClose} className="text-red-600">
           <X className="w-4 h-4" />
         </TouchOptimizedButton>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Emergency Contacts */}
-        {contacts.slice(0, 2).map((contact) => (
+        {contacts.slice(0, 2).map(contact => (
           <TouchOptimizedButton
             key={contact.id}
             variant="primary"
@@ -459,28 +459,26 @@ function EmergencyNavigationPanel({
 }
 
 // Simplified compass navigation for severe crisis states
-export function CrisisCompassNavigation({
-  onNavigate
-}: {
-  onNavigate: (path: string) => void;
-}) {
+export function CrisisCompassNavigation({ onNavigate }: { onNavigate: (path: string) => void }) {
   const destinations = [
     { path: '/', label: 'Home', icon: Home },
     { path: '/pain-tracker', label: 'Log Pain', icon: MapPin },
     { path: '/emergency', label: 'Emergency', icon: AlertTriangle },
-    { path: '/help', label: 'Get Help', icon: HelpCircle }
+    { path: '/help', label: 'Get Help', icon: HelpCircle },
   ];
 
   return (
     <div className="crisis-compass-nav bg-white rounded-xl shadow-lg p-6 max-w-sm mx-auto">
       <div className="text-center mb-6">
         <Compass className="w-12 h-12 mx-auto text-blue-600 mb-2" />
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Where do you need to go?</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+          Where do you need to go?
+        </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">Choose your destination</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        {destinations.map((dest) => {
+        {destinations.map(dest => {
           const Icon = dest.icon;
           return (
             <TouchOptimizedButton
@@ -504,12 +502,12 @@ function formatTime(date: Date): string {
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffMins = Math.floor(diffMs / 60000);
-  
+
   if (diffMins < 1) return 'just now';
   if (diffMins < 60) return `${diffMins}m ago`;
-  
+
   const diffHours = Math.floor(diffMins / 60);
   if (diffHours < 24) return `${diffHours}h ago`;
-  
+
   return date.toLocaleDateString();
 }

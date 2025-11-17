@@ -14,13 +14,8 @@ describe('Accessibility Tests', () => {
   describe('QuickLogStepper', () => {
     it('should have no axe violations', async () => {
       const { QuickLogStepper } = await import('../design-system/fused-v2/QuickLogStepper');
-      const { container } = render(
-        <QuickLogStepper 
-          onComplete={() => {}} 
-          onCancel={() => {}} 
-        />
-      );
-      
+      const { container } = render(<QuickLogStepper onComplete={() => {}} onCancel={() => {}} />);
+
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
@@ -28,7 +23,7 @@ describe('Accessibility Tests', () => {
     it('should have accessible pain slider with ARIA labels', async () => {
       const { QuickLogStepper } = await import('../design-system/fused-v2/QuickLogStepper');
       render(<QuickLogStepper onComplete={() => {}} onCancel={() => {}} />);
-      
+
       const slider = screen.getByRole('slider', { name: /pain intensity/i });
       expect(slider).toHaveAttribute('aria-valuemin', '0');
       expect(slider).toHaveAttribute('aria-valuemax', '10');
@@ -39,14 +34,14 @@ describe('Accessibility Tests', () => {
     it('should have fieldset/legend for location tags', async () => {
       const { QuickLogStepper } = await import('../design-system/fused-v2/QuickLogStepper');
       const { container } = render(<QuickLogStepper onComplete={() => {}} onCancel={() => {}} />);
-      
+
       // Navigate to step 2
       const continueButton = screen.getByText(/continue/i);
       await userEvent.click(continueButton);
-      
+
       const fieldsets = container.querySelectorAll('fieldset');
       expect(fieldsets.length).toBeGreaterThan(0);
-      
+
       const legends = container.querySelectorAll('legend');
       expect(legends.length).toBeGreaterThan(0);
     });
@@ -54,14 +49,14 @@ describe('Accessibility Tests', () => {
     it('should have 48×48px minimum tap targets', async () => {
       const { QuickLogStepper } = await import('../design-system/fused-v2/QuickLogStepper');
       const { container } = render(<QuickLogStepper onComplete={() => {}} onCancel={() => {}} />);
-      
+
       // Check stepper buttons
       const buttons = container.querySelectorAll('button[aria-label*="pain level"]');
       buttons.forEach(button => {
         const styles = window.getComputedStyle(button);
         const minWidth = parseInt(styles.minWidth);
         const minHeight = parseInt(styles.minHeight);
-        
+
         expect(minWidth).toBeGreaterThanOrEqual(48);
         expect(minHeight).toBeGreaterThanOrEqual(48);
       });
@@ -71,9 +66,9 @@ describe('Accessibility Tests', () => {
       const { QuickLogStepper } = await import('../design-system/fused-v2/QuickLogStepper');
       const onComplete = vi.fn();
       const onCancel = vi.fn();
-      
+
       render(<QuickLogStepper onComplete={onComplete} onCancel={onCancel} />);
-      
+
       // Press Esc should trigger cancel
       await userEvent.keyboard('{Escape}');
       expect(onCancel).toHaveBeenCalled();
@@ -83,31 +78,24 @@ describe('Accessibility Tests', () => {
   describe('PanicMode', () => {
     it('should have no axe violations', async () => {
       const { PanicMode } = await import('../components/accessibility/PanicMode');
-      const { container } = render(
-        <PanicMode 
-          isActive={true} 
-          onClose={() => {}} 
-        />
-      );
-      
+      const { container } = render(<PanicMode isActive={true} onClose={() => {}} />);
+
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
     it('should have 56×56px panic button', async () => {
       const { PanicMode } = await import('../components/accessibility/PanicMode');
-      const { container } = render(
-        <PanicMode isActive={true} onClose={() => {}} />
-      );
-      
+      const { container } = render(<PanicMode isActive={true} onClose={() => {}} />);
+
       const closeButton = container.querySelector('button[aria-label*="Exit"]');
       expect(closeButton).toBeDefined();
-      
+
       if (closeButton) {
         const styles = window.getComputedStyle(closeButton);
         const minWidth = parseInt(styles.minWidth);
         const minHeight = parseInt(styles.minHeight);
-        
+
         expect(minWidth).toBeGreaterThanOrEqual(56);
         expect(minHeight).toBeGreaterThanOrEqual(56);
       }
@@ -115,10 +103,8 @@ describe('Accessibility Tests', () => {
 
     it('should have role="dialog" and aria-modal="true"', async () => {
       const { PanicMode } = await import('../components/accessibility/PanicMode');
-      const { container } = render(
-        <PanicMode isActive={true} onClose={() => {}} />
-      );
-      
+      const { container } = render(<PanicMode isActive={true} onClose={() => {}} />);
+
       const dialog = container.querySelector('[role="dialog"]');
       expect(dialog).toBeDefined();
       expect(dialog?.getAttribute('aria-modal')).toBe('true');
@@ -126,10 +112,8 @@ describe('Accessibility Tests', () => {
 
     it('should announce breathing instructions with aria-live', async () => {
       const { PanicMode } = await import('../components/accessibility/PanicMode');
-      const { container } = render(
-        <PanicMode isActive={true} onClose={() => {}} />
-      );
-      
+      const { container } = render(<PanicMode isActive={true} onClose={() => {}} />);
+
       const liveRegion = container.querySelector('[aria-live="assertive"]');
       expect(liveRegion).toBeDefined();
     });
@@ -138,26 +122,19 @@ describe('Accessibility Tests', () => {
   describe('BodyMapAccessible', () => {
     it('should have no axe violations', async () => {
       const { BodyMapAccessible } = await import('../components/accessibility/BodyMapAccessible');
-      const { container } = render(
-        <BodyMapAccessible 
-          selectedRegions={[]} 
-          onChange={() => {}} 
-        />
-      );
-      
+      const { container } = render(<BodyMapAccessible selectedRegions={[]} onChange={() => {}} />);
+
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
     it('should have checkboxes with proper ARIA', async () => {
       const { BodyMapAccessible } = await import('../components/accessibility/BodyMapAccessible');
-      render(
-        <BodyMapAccessible selectedRegions={[]} onChange={() => {}} />
-      );
-      
+      render(<BodyMapAccessible selectedRegions={[]} onChange={() => {}} />);
+
       const checkboxes = screen.getAllByRole('checkbox', { hidden: true });
       expect(checkboxes.length).toBeGreaterThan(0);
-      
+
       checkboxes.forEach(checkbox => {
         expect(checkbox).toHaveAttribute('aria-label');
       });
@@ -168,7 +145,7 @@ describe('Accessibility Tests', () => {
       const { container } = render(
         <BodyMapAccessible selectedRegions={['lower-back']} onChange={() => {}} />
       );
-      
+
       const liveRegion = container.querySelector('[aria-live="polite"]');
       expect(liveRegion).toBeDefined();
       expect(liveRegion?.textContent).toContain('1 region');
@@ -177,16 +154,18 @@ describe('Accessibility Tests', () => {
 
   describe('ChartWithTableToggle', () => {
     it('should have no axe violations', async () => {
-      const { ChartWithTableToggle } = await import('../components/accessibility/ChartWithTableToggle');
+      const { ChartWithTableToggle } = await import(
+        '../components/accessibility/ChartWithTableToggle'
+      );
       const mockData = {
         labels: ['Day 1', 'Day 2'],
-        datasets: [{ label: 'Pain', data: [5, 6] }]
+        datasets: [{ label: 'Pain', data: [5, 6] }],
       };
       const tableData = [
         { label: 'Day 1', value: 5 },
-        { label: 'Day 2', value: 6 }
+        { label: 'Day 2', value: 6 },
       ];
-      
+
       const { container } = render(
         <ChartWithTableToggle
           title="Test Chart"
@@ -196,22 +175,24 @@ describe('Accessibility Tests', () => {
           tableData={tableData}
         />
       );
-      
+
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
 
     it('should toggle between chart and table view', async () => {
-      const { ChartWithTableToggle } = await import('../components/accessibility/ChartWithTableToggle');
+      const { ChartWithTableToggle } = await import(
+        '../components/accessibility/ChartWithTableToggle'
+      );
       const mockData = {
         labels: ['Day 1', 'Day 2'],
-        datasets: [{ label: 'Pain', data: [5, 6] }]
+        datasets: [{ label: 'Pain', data: [5, 6] }],
       };
       const tableData = [
         { label: 'Day 1', value: 5 },
-        { label: 'Day 2', value: 6 }
+        { label: 'Day 2', value: 6 },
       ];
-      
+
       render(
         <ChartWithTableToggle
           title="Test Chart"
@@ -221,24 +202,26 @@ describe('Accessibility Tests', () => {
           tableData={tableData}
         />
       );
-      
+
       const toggleButton = screen.getByRole('button', { name: /switch to table view/i });
       expect(toggleButton).toBeDefined();
-      
+
       await userEvent.click(toggleButton);
-      
+
       const table = screen.getByRole('table');
       expect(table).toBeDefined();
     });
 
     it('should have semantic table structure', async () => {
-      const { ChartWithTableToggle } = await import('../components/accessibility/ChartWithTableToggle');
+      const { ChartWithTableToggle } = await import(
+        '../components/accessibility/ChartWithTableToggle'
+      );
       const mockData = {
         labels: ['Day 1'],
-        datasets: [{ label: 'Pain', data: [5] }]
+        datasets: [{ label: 'Pain', data: [5] }],
       };
       const tableData = [{ label: 'Day 1', value: 5 }];
-      
+
       render(
         <ChartWithTableToggle
           title="Test Chart"
@@ -248,16 +231,16 @@ describe('Accessibility Tests', () => {
           tableData={tableData}
         />
       );
-      
+
       // Switch to table view
       const toggleButton = screen.getByRole('button', { name: /switch to table view/i });
       await userEvent.click(toggleButton);
-      
+
       const table = screen.getByRole('table');
       const thead = table.querySelector('thead');
       const tbody = table.querySelector('tbody');
       const tfoot = table.querySelector('tfoot');
-      
+
       expect(thead).toBeDefined();
       expect(tbody).toBeDefined();
       expect(tfoot).toBeDefined();
@@ -272,7 +255,7 @@ describe('Accessibility Tests', () => {
           <p>Modal content</p>
         </Modal>
       );
-      
+
       const results = await axe(container);
       expect(results).toHaveNoViolations();
     });
@@ -285,19 +268,19 @@ describe('Accessibility Tests', () => {
           <button>Second</button>
         </Modal>
       );
-      
+
       const closeButton = screen.getByRole('button', { name: /close modal/i });
       const firstButton = screen.getByText('First');
       const secondButton = screen.getByText('Second');
-      
+
       // Tab through elements
       closeButton.focus();
       await userEvent.tab();
       expect(firstButton).toHaveFocus();
-      
+
       await userEvent.tab();
       expect(secondButton).toHaveFocus();
-      
+
       await userEvent.tab();
       // Should cycle back to close button
       expect(closeButton).toHaveFocus();
@@ -312,7 +295,7 @@ describe('Accessibility Tests', () => {
           <div>Content</div>
         </ModernAppLayout>
       );
-      
+
       const skipLink = screen.getByText(/skip to main content/i);
       expect(skipLink).toBeDefined();
       expect(skipLink).toHaveAttribute('href', '#main-content');
@@ -325,7 +308,7 @@ describe('Accessibility Tests', () => {
           <div>Content</div>
         </ModernAppLayout>
       );
-      
+
       const mainContent = container.querySelector('#main-content');
       expect(mainContent).toBeDefined();
       expect(mainContent?.tagName).toBe('MAIN');

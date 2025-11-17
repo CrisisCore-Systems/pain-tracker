@@ -23,7 +23,9 @@ export class GoalAnalyticsCalculator {
       case 'greater_than':
         return Math.min(100, Math.max(0, (latestProgress.value / target.targetValue) * 100));
       case 'equal_to':
-        return latestProgress.value >= target.targetValue ? 100 : (latestProgress.value / target.targetValue) * 100;
+        return latestProgress.value >= target.targetValue
+          ? 100
+          : (latestProgress.value / target.targetValue) * 100;
       default:
         return 0;
     }
@@ -41,24 +43,24 @@ export class GoalAnalyticsCalculator {
     if (progress.length === 0) return 0;
 
     // Sort by date
-    const sortedProgress = progress.sort((a, b) =>
-      new Date(a.date).getTime() - new Date(b.date).getTime()
+    const sortedProgress = progress.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
     let currentStreak = 0;
-  const today = new Date();
+    const today = new Date();
 
-  // Check if today has an entry using local-day comparison
-  const todayEntry = sortedProgress.find(p => isSameLocalDay(p.date, today));
+    // Check if today has an entry using local-day comparison
+    const todayEntry = sortedProgress.find(p => isSameLocalDay(p.date, today));
     if (!todayEntry) return 0;
 
     // Count consecutive days backwards from today
     for (let i = sortedProgress.length - 1; i >= 0; i--) {
-  const entry = sortedProgress[i];
-  const expectedDate = new Date(today);
-  expectedDate.setDate(expectedDate.getDate() - (sortedProgress.length - 1 - i));
+      const entry = sortedProgress[i];
+      const expectedDate = new Date(today);
+      expectedDate.setDate(expectedDate.getDate() - (sortedProgress.length - 1 - i));
 
-  if (isSameLocalDay(entry.date, expectedDate)) {
+      if (isSameLocalDay(entry.date, expectedDate)) {
         currentStreak++;
       } else {
         break;
@@ -68,13 +70,19 @@ export class GoalAnalyticsCalculator {
     return currentStreak;
   }
 
-  static calculateWeeklyProgress(progress: GoalProgress[]): { week: string; average: number; count: number }[] {
+  static calculateWeeklyProgress(
+    progress: GoalProgress[]
+  ): { week: string; average: number; count: number }[] {
     const weeklyData: { [key: string]: { sum: number; count: number } } = {};
 
     progress.forEach(p => {
       const date = new Date(p.date);
       const local = localDayStart(date);
-      const weekStart = new Date(local.getFullYear(), local.getMonth(), local.getDate() - local.getDay()); // Start of week (Sunday)
+      const weekStart = new Date(
+        local.getFullYear(),
+        local.getMonth(),
+        local.getDate() - local.getDay()
+      ); // Start of week (Sunday)
       const weekKey = weekStart.toISOString().split('T')[0];
 
       if (!weeklyData[weekKey]) {
@@ -89,7 +97,7 @@ export class GoalAnalyticsCalculator {
       .map(([week, data]) => ({
         week,
         average: data.sum / data.count,
-        count: data.count
+        count: data.count,
       }));
   }
 
@@ -114,22 +122,22 @@ export class GoalAnalyticsCalculator {
     const insights: string[] = [];
     const completion = this.calculateProgressPercentage(goal, progress);
     const trend = this.calculateTrend(progress);
-  const streak = this.calculateStreak(progress);
+    const streak = this.calculateStreak(progress);
 
     // Completion insights
     if (completion >= 100) {
-      insights.push('🎉 Congratulations! You\'ve achieved your goal!');
+      insights.push("🎉 Congratulations! You've achieved your goal!");
     } else if (completion >= 75) {
-      insights.push('🚀 Excellent progress! You\'re in the final stretch.');
+      insights.push("🚀 Excellent progress! You're in the final stretch.");
     } else if (completion >= 50) {
-      insights.push('📈 You\'re halfway there! Keep up the great work.');
+      insights.push("📈 You're halfway there! Keep up the great work.");
     } else if (completion >= 25) {
-      insights.push('🌱 Good start! You\'re building momentum.');
+      insights.push("🌱 Good start! You're building momentum.");
     }
 
     // Trend insights
     if (trend === 'improving') {
-      insights.push('📊 Your progress is trending upward - you\'re on the right track!');
+      insights.push("📊 Your progress is trending upward - you're on the right track!");
     } else if (trend === 'declining') {
       insights.push('⚠️ Your progress has slowed. Consider reviewing your strategies.');
     }
@@ -148,14 +156,16 @@ export class GoalAnalyticsCalculator {
       const previousWeek = weeklyData[weeklyData.length - 2];
 
       if (recentWeek.count > previousWeek.count) {
-        insights.push('📈 You\'re tracking more frequently this week!');
+        insights.push("📈 You're tracking more frequently this week!");
       } else if (recentWeek.count < previousWeek.count) {
         insights.push('📉 Consider increasing your tracking frequency.');
       }
     }
 
     // Time-based insights
-    const daysSinceStart = Math.floor((Date.now() - new Date(goal.startDate).getTime()) / (24 * 60 * 60 * 1000));
+    const daysSinceStart = Math.floor(
+      (Date.now() - new Date(goal.startDate).getTime()) / (24 * 60 * 60 * 1000)
+    );
     if (daysSinceStart > 0 && progress.length === 0) {
       insights.push('📝 Start tracking your progress to see detailed insights.');
     }
@@ -169,7 +179,10 @@ export class GoalAnalyticsCalculator {
       return {
         ...milestone,
         isCompleted,
-        progressPercentage: Math.min(100, (progress[progress.length - 1]?.value || 0) / milestone.targetValue * 100)
+        progressPercentage: Math.min(
+          100,
+          ((progress[progress.length - 1]?.value || 0) / milestone.targetValue) * 100
+        ),
       };
     });
   }
@@ -207,7 +220,7 @@ export class GoalAnalyticsCalculator {
     score += completion * 0.3;
 
     // Streak bonus
-  const streak = this.calculateStreak(progress);
+    const streak = this.calculateStreak(progress);
     score += Math.min(streak * 2, 20);
 
     // Consistency bonus
@@ -228,18 +241,22 @@ export class GoalAnalyticsCalculator {
 
 export class GoalTemplateManager {
   static getTemplatesByCategory(category: GoalTemplate['category']): GoalTemplate[] {
-    return DEFAULT_GOAL_TEMPLATES.filter((template: GoalTemplate) => template.category === category);
+    return DEFAULT_GOAL_TEMPLATES.filter(
+      (template: GoalTemplate) => template.category === category
+    );
   }
 
   static getTemplatesByDifficulty(difficulty: GoalTemplate['difficulty']): GoalTemplate[] {
-    return DEFAULT_GOAL_TEMPLATES.filter((template: GoalTemplate) => template.difficulty === difficulty);
+    return DEFAULT_GOAL_TEMPLATES.filter(
+      (template: GoalTemplate) => template.difficulty === difficulty
+    );
   }
 
   static getRecommendedTemplates(userGoals: Goal[]): GoalTemplate[] {
     // Simple recommendation logic based on existing goals
     const existingTypes = userGoals.map(g => g.type);
-    const recommended = DEFAULT_GOAL_TEMPLATES.filter((template: GoalTemplate) =>
-      !existingTypes.includes(template.type)
+    const recommended = DEFAULT_GOAL_TEMPLATES.filter(
+      (template: GoalTemplate) => !existingTypes.includes(template.type)
     );
 
     return recommended.slice(0, 3); // Return top 3 recommendations
@@ -260,7 +277,7 @@ export class GoalTemplateManager {
       priority: 'medium',
       targets: template.targets.map(target => ({
         ...target,
-        currentValue: 0
+        currentValue: 0,
       })),
       startDate: now.toISOString(),
       endDate: endDate.toISOString(),
@@ -268,14 +285,14 @@ export class GoalTemplateManager {
       milestones: template.milestones.map(milestone => ({
         ...milestone,
         id: `milestone_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        isCompleted: false
+        isCompleted: false,
       })),
       progress: [],
       tags: [template.category],
       isPublic: false,
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
-      ...customizations
+      ...customizations,
     };
 
     return goal;
@@ -318,10 +335,10 @@ export const getGoalStatusColor = (status: Goal['status']): string => {
 
 export const formatGoalProgress = (value: number, unit: string): string => {
   if (unit === '%') {
-  return `${formatPercent(value, 1)}`;
+    return `${formatPercent(value, 1)}`;
   }
   if (unit.includes('minute') || unit.includes('hour')) {
-  return `${formatNumber(value, 0)} ${unit}`;
+    return `${formatNumber(value, 0)} ${unit}`;
   }
   return `${formatNumber(value, 1)} ${unit}`;
 };
@@ -329,7 +346,10 @@ export const formatGoalProgress = (value: number, unit: string): string => {
 // Facade used by UI components expecting `goalAnalytics.calculateGoalAnalytics(goal, progress)`
 export const goalAnalytics = {
   async calculateGoalAnalytics(goal: Goal, progress: GoalProgress[]) {
-    const completionPercentage = GoalAnalyticsCalculator.calculateProgressPercentage(goal, progress);
+    const completionPercentage = GoalAnalyticsCalculator.calculateProgressPercentage(
+      goal,
+      progress
+    );
     const trend = GoalAnalyticsCalculator.calculateTrend(progress);
     const insights = GoalAnalyticsCalculator.generateProgressInsights(goal, progress);
     const bestStreak = GoalAnalyticsCalculator.calculateStreak(progress);
@@ -344,7 +364,7 @@ export const goalAnalytics = {
       bestStreak,
       currentStreak,
       totalEntries: progress.length,
-      averageProgress
+      averageProgress,
     };
-  }
+  },
 };

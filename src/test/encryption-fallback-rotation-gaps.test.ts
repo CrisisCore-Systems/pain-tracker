@@ -12,26 +12,31 @@ describe('EncryptionService additional fallback and legacy paths', () => {
   it('falls back to in-memory key cache when secure storage write fails', async () => {
     const originalSetItem = localStorage.setItem;
     // Force storage failure inside key manager storeKey -> storage.store path
-  (localStorage as unknown as { setItem: (...args: unknown[]) => void }).setItem = () => { throw new Error('Forced failure'); };
+    (localStorage as unknown as { setItem: (...args: unknown[]) => void }).setItem = () => {
+      throw new Error('Forced failure');
+    };
 
     const keyId = 'fallback-test-key';
     const keyValue = 'abc123-fallback';
     await encryptionService['keyManager'].storeKey(keyId, keyValue);
 
     // Restore original localStorage.setItem
-  (localStorage as unknown as { setItem: typeof originalSetItem }).setItem = originalSetItem;
+    (localStorage as unknown as { setItem: typeof originalSetItem }).setItem = originalSetItem;
 
     // Verify key persisted in in-memory cache (private field access via bracket)
     const cached = encryptionService['inMemoryKeyCache'].get(keyId);
-  expect(cached).toBeTruthy();
-  if (!cached) throw new Error('Cached key missing');
-  expect(cached.key).toBe(keyValue);
+    expect(cached).toBeTruthy();
+    if (!cached) throw new Error('Cached key missing');
+    expect(cached.key).toBe(keyValue);
   });
 
   it('records failed key rotation without throwing (rotation failure branch)', async () => {
     // Ensure a key exists in in-memory cache to be picked up by listKeys
     const failingKeyId = 'failing-rotation-key';
-    encryptionService['inMemoryKeyCache'].set(failingKeyId, { key: 'old-key', created: new Date().toISOString() });
+    encryptionService['inMemoryKeyCache'].set(failingKeyId, {
+      key: 'old-key',
+      created: new Date().toISOString(),
+    });
 
     // Patch rotateKey to throw for this key while preserving original for others
     const originalRotate = encryptionService['keyManager'].rotateKey;
@@ -76,8 +81,8 @@ describe('EncryptionService additional fallback and legacy paths', () => {
         algorithm: 'AES-256',
         keyId: 'pain-tracker-master',
         timestamp: new Date(),
-        version: '1.0.0'
-      }
+        version: '1.0.0',
+      },
     };
 
     const result = await encryptionService.decrypt<string>(legacyEncrypted);

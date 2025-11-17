@@ -5,7 +5,7 @@
 
 import type { PainEntry } from '../types';
 
-const daysAgo = (days: number, hours = 0) => 
+const daysAgo = (days: number, hours = 0) =>
   new Date(Date.now() - days * 24 * 60 * 60 * 1000 - hours * 60 * 60 * 1000).toISOString();
 
 export const comprehensiveSampleData: PainEntry[] = [
@@ -24,22 +24,26 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: ['Cane'],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'Twice daily',
-        effectiveness: 'Minimal relief'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'Twice daily',
+          effectiveness: 'Minimal relief',
+        },
+      ],
       changes: 'Started naproxen after injury',
       effectiveness: 'Minimal relief',
     },
     treatments: {
-      recent: [{
-        type: 'Emergency Room Visit',
-        provider: 'General Hospital',
-        date: daysAgo(60),
-        effectiveness: 'X-rays showed no fractures'
-      }],
+      recent: [
+        {
+          type: 'Emergency Room Visit',
+          provider: 'General Hospital',
+          date: daysAgo(60),
+          effectiveness: 'X-rays showed no fractures',
+        },
+      ],
       effectiveness: 'Diagnosis obtained',
       planned: ['Follow-up with specialist'],
     },
@@ -59,7 +63,7 @@ export const comprehensiveSampleData: PainEntry[] = [
     },
     notes: 'Severe work injury. Pain radiating down right leg. Cannot perform daily activities.',
   },
-  
+
   {
     id: 2,
     timestamp: daysAgo(58, 14),
@@ -79,25 +83,27 @@ export const comprehensiveSampleData: PainEntry[] = [
           name: 'Naproxen',
           dosage: '500mg',
           frequency: 'Twice daily',
-          effectiveness: 'Slight improvement'
+          effectiveness: 'Slight improvement',
         },
         {
           name: 'Cyclobenzaprine',
           dosage: '10mg',
           frequency: 'At bedtime',
-          effectiveness: 'Helps with spasms'
-        }
+          effectiveness: 'Helps with spasms',
+        },
       ],
       changes: 'Added muscle relaxant',
       effectiveness: 'Sleeping better',
     },
     treatments: {
-      recent: [{
-        type: 'Specialist Consultation',
-        provider: 'Dr. Anderson',
-        date: daysAgo(58),
-        effectiveness: 'MRI ordered'
-      }],
+      recent: [
+        {
+          type: 'Specialist Consultation',
+          provider: 'Dr. Anderson',
+          date: daysAgo(58),
+          effectiveness: 'MRI ordered',
+        },
+      ],
       effectiveness: 'Awaiting results',
       planned: ['MRI scan'],
     },
@@ -137,25 +143,27 @@ export const comprehensiveSampleData: PainEntry[] = [
           name: 'Naproxen',
           dosage: '500mg',
           frequency: 'Twice daily',
-          effectiveness: 'Moderate relief'
+          effectiveness: 'Moderate relief',
         },
         {
           name: 'Cyclobenzaprine',
           dosage: '10mg',
           frequency: 'At bedtime',
-          effectiveness: 'Good for sleep'
-        }
+          effectiveness: 'Good for sleep',
+        },
       ],
       changes: 'No changes',
       effectiveness: 'Managing pain better',
     },
     treatments: {
-      recent: [{
-        type: 'MRI Scan',
-        provider: 'Imaging Center',
-        date: daysAgo(56),
-        effectiveness: 'Results pending'
-      }],
+      recent: [
+        {
+          type: 'MRI Scan',
+          provider: 'Imaging Center',
+          date: daysAgo(56),
+          effectiveness: 'Results pending',
+        },
+      ],
       effectiveness: 'Completed scan',
       planned: ['Follow-up for results'],
     },
@@ -196,25 +204,27 @@ export const comprehensiveSampleData: PainEntry[] = [
           name: 'Naproxen',
           dosage: '500mg',
           frequency: 'Twice daily',
-          effectiveness: 'Good relief'
+          effectiveness: 'Good relief',
         },
         {
           name: 'Cyclobenzaprine',
           dosage: '10mg',
           frequency: 'At bedtime',
-          effectiveness: 'Excellent for sleep'
-        }
+          effectiveness: 'Excellent for sleep',
+        },
       ],
       changes: 'No changes',
       effectiveness: 'Pain more manageable',
     },
     treatments: {
-      recent: [{
-        type: 'Results consultation',
-        provider: 'Dr. Anderson',
-        date: daysAgo(53),
-        effectiveness: 'Herniated disc confirmed, treatment plan created'
-      }],
+      recent: [
+        {
+          type: 'Results consultation',
+          provider: 'Dr. Anderson',
+          date: daysAgo(53),
+          effectiveness: 'Herniated disc confirmed, treatment plan created',
+        },
+      ],
       effectiveness: 'Clear diagnosis and plan',
       planned: ['Start physiotherapy', 'Epidural injection consult'],
     },
@@ -232,7 +242,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'MRI showed herniated disc at L4-L5. Starting physio next week. Feeling more hopeful with clear diagnosis.',
+    notes:
+      'MRI showed herniated disc at L4-L5. Starting physio next week. Feeling more hopeful with clear diagnosis.',
   },
 
   {
@@ -254,25 +265,27 @@ export const comprehensiveSampleData: PainEntry[] = [
           name: 'Naproxen',
           dosage: '500mg',
           frequency: 'Twice daily',
-          effectiveness: 'Good relief'
+          effectiveness: 'Good relief',
         },
         {
           name: 'Cyclobenzaprine',
           dosage: '10mg',
           frequency: 'As needed',
-          effectiveness: 'Helps when needed'
-        }
+          effectiveness: 'Helps when needed',
+        },
       ],
       changes: 'Muscle relaxant only as needed now',
       effectiveness: 'Better pain management',
     },
     treatments: {
-      recent: [{
-        type: 'Physiotherapy - Initial Assessment',
-        provider: 'City Physiotherapy',
-        date: daysAgo(50),
-        effectiveness: 'Good assessment, exercises prescribed'
-      }],
+      recent: [
+        {
+          type: 'Physiotherapy - Initial Assessment',
+          provider: 'City Physiotherapy',
+          date: daysAgo(50),
+          effectiveness: 'Good assessment, exercises prescribed',
+        },
+      ],
       effectiveness: 'Learned proper posture and movements',
       planned: ['Continue physio twice weekly'],
     },
@@ -307,12 +320,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: ['Cane occasionally'],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'Twice daily',
-        effectiveness: 'Very good relief'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'Twice daily',
+          effectiveness: 'Very good relief',
+        },
+      ],
       changes: 'No changes',
       effectiveness: 'Pain well controlled most of the day',
     },
@@ -322,14 +337,14 @@ export const comprehensiveSampleData: PainEntry[] = [
           type: 'Physiotherapy',
           provider: 'City Physiotherapy',
           date: daysAgo(48),
-          effectiveness: 'Improved flexibility'
+          effectiveness: 'Improved flexibility',
         },
         {
           type: 'Heat therapy',
           provider: 'Self-administered',
           date: daysAgo(48),
-          effectiveness: 'Helps with morning stiffness'
-        }
+          effectiveness: 'Helps with morning stiffness',
+        },
       ],
       effectiveness: 'Exercises helping',
       planned: ['Continue physio program'],
@@ -366,22 +381,26 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'Twice daily',
-        effectiveness: 'Excellent relief'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'Twice daily',
+          effectiveness: 'Excellent relief',
+        },
+      ],
       changes: 'No changes',
       effectiveness: 'Pain manageable throughout day',
     },
     treatments: {
-      recent: [{
-        type: 'Physiotherapy',
-        provider: 'City Physiotherapy',
-        date: daysAgo(46),
-        effectiveness: 'Strengthening exercises added'
-      }],
+      recent: [
+        {
+          type: 'Physiotherapy',
+          provider: 'City Physiotherapy',
+          date: daysAgo(46),
+          effectiveness: 'Strengthening exercises added',
+        },
+      ],
       effectiveness: 'Building core strength',
       planned: ['Continue current program'],
     },
@@ -399,7 +418,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Can walk 30 minutes without issues. Sleeping much better. Starting to feel like myself again.',
+    notes:
+      'Can walk 30 minutes without issues. Sleeping much better. Starting to feel like myself again.',
   },
 
   {
@@ -416,22 +436,26 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'Once daily',
-        effectiveness: 'Good relief'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'Once daily',
+          effectiveness: 'Good relief',
+        },
+      ],
       changes: 'Reduced to once daily',
       effectiveness: 'Adequate pain control',
     },
     treatments: {
-      recent: [{
-        type: 'Physiotherapy',
-        provider: 'City Physiotherapy',
-        date: daysAgo(43),
-        effectiveness: 'Excellent progress noted'
-      }],
+      recent: [
+        {
+          type: 'Physiotherapy',
+          provider: 'City Physiotherapy',
+          date: daysAgo(43),
+          effectiveness: 'Excellent progress noted',
+        },
+      ],
       effectiveness: 'Significant improvement in strength',
       planned: ['Continue exercises, reduce frequency'],
     },
@@ -466,12 +490,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'Once daily',
-        effectiveness: 'Good'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'Once daily',
+          effectiveness: 'Good',
+        },
+      ],
       changes: 'No changes',
       effectiveness: 'Works well',
     },
@@ -481,14 +507,14 @@ export const comprehensiveSampleData: PainEntry[] = [
           type: 'Physiotherapy',
           provider: 'City Physiotherapy',
           date: daysAgo(40),
-          effectiveness: 'Maintaining progress'
+          effectiveness: 'Maintaining progress',
         },
         {
           type: 'Regular walking',
           provider: 'Self-administered',
           date: daysAgo(40),
-          effectiveness: 'Improved endurance'
-        }
+          effectiveness: 'Improved endurance',
+        },
       ],
       effectiveness: 'Consistent improvement',
       planned: ['Reduce physio to weekly'],
@@ -507,7 +533,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Back at work on modified duties! Can do most daily activities. Still cautious with lifting.',
+    notes:
+      'Back at work on modified duties! Can do most daily activities. Still cautious with lifting.',
   },
 
   // Week 6 (Days 39-33): Return to work phase
@@ -525,22 +552,26 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'Once daily',
-        effectiveness: 'Excellent'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'Once daily',
+          effectiveness: 'Excellent',
+        },
+      ],
       changes: 'No changes',
       effectiveness: 'Minimal pain with medication',
     },
     treatments: {
-      recent: [{
-        type: 'Work hardening exercises',
-        provider: 'City Physiotherapy',
-        date: daysAgo(38),
-        effectiveness: 'Building work-specific endurance'
-      }],
+      recent: [
+        {
+          type: 'Work hardening exercises',
+          provider: 'City Physiotherapy',
+          date: daysAgo(38),
+          effectiveness: 'Building work-specific endurance',
+        },
+      ],
       effectiveness: 'Preparing for full duties',
       planned: ['Continue work conditioning'],
     },
@@ -558,7 +589,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'First week of modified work went well. Energy levels improving. Adjusting to work routine.',
+    notes:
+      'First week of modified work went well. Energy levels improving. Adjusting to work routine.',
   },
 
   {
@@ -575,22 +607,26 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'Once daily',
-        effectiveness: 'Good'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'Once daily',
+          effectiveness: 'Good',
+        },
+      ],
       changes: 'No changes',
       effectiveness: 'Pain well controlled',
     },
     treatments: {
-      recent: [{
-        type: 'Physiotherapy',
-        provider: 'City Physiotherapy',
-        date: daysAgo(36),
-        effectiveness: 'Progressing to advanced exercises'
-      }],
+      recent: [
+        {
+          type: 'Physiotherapy',
+          provider: 'City Physiotherapy',
+          date: daysAgo(36),
+          effectiveness: 'Progressing to advanced exercises',
+        },
+      ],
       effectiveness: 'Strength improving',
       planned: ['Continue weekly sessions'],
     },
@@ -625,22 +661,26 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [{
-        name: 'Naproxen',
-        dosage: '500mg',
-        frequency: 'As needed',
-        effectiveness: 'Effective when needed'
-      }],
+      current: [
+        {
+          name: 'Naproxen',
+          dosage: '500mg',
+          frequency: 'As needed',
+          effectiveness: 'Effective when needed',
+        },
+      ],
       changes: 'Only taking when pain increases',
       effectiveness: 'Good symptom management',
     },
     treatments: {
-      recent: [{
-        type: 'Physiotherapy',
-        provider: 'City Physiotherapy',
-        date: daysAgo(33),
-        effectiveness: 'Excellent progress'
-      }],
+      recent: [
+        {
+          type: 'Physiotherapy',
+          provider: 'City Physiotherapy',
+          date: daysAgo(33),
+          effectiveness: 'Excellent progress',
+        },
+      ],
       effectiveness: 'Near full function',
       planned: ['Transition to maintenance program'],
     },
@@ -686,14 +726,14 @@ export const comprehensiveSampleData: PainEntry[] = [
           type: 'Physiotherapy',
           provider: 'City Physiotherapy',
           date: daysAgo(30),
-          effectiveness: 'Maintenance program established'
+          effectiveness: 'Maintenance program established',
         },
         {
           type: 'Regular exercise routine',
           provider: 'Self-administered',
           date: daysAgo(30),
-          effectiveness: 'Maintaining strength and flexibility'
-        }
+          effectiveness: 'Maintaining strength and flexibility',
+        },
       ],
       effectiveness: 'Excellent overall',
       planned: ['Monthly physio check-ins'],
@@ -734,12 +774,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Home exercise program',
-        provider: 'Self-administered',
-        date: daysAgo(28),
-        effectiveness: 'Maintaining progress'
-      }],
+      recent: [
+        {
+          type: 'Home exercise program',
+          provider: 'Self-administered',
+          date: daysAgo(28),
+          effectiveness: 'Maintaining progress',
+        },
+      ],
       effectiveness: 'Excellent',
       planned: ['Continue daily exercises'],
     },
@@ -757,7 +799,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Full duty at work. No restrictions. Doing all regular activities. Very happy with recovery.',
+    notes:
+      'Full duty at work. No restrictions. Doing all regular activities. Very happy with recovery.',
   },
 
   {
@@ -779,12 +822,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Regular exercise',
-        provider: 'Self-administered',
-        date: daysAgo(26),
-        effectiveness: 'Preventing recurrence'
-      }],
+      recent: [
+        {
+          type: 'Regular exercise',
+          provider: 'Self-administered',
+          date: daysAgo(26),
+          effectiveness: 'Preventing recurrence',
+        },
+      ],
       effectiveness: 'Excellent',
       planned: ['Maintain exercise routine'],
     },
@@ -820,22 +865,26 @@ export const comprehensiveSampleData: PainEntry[] = [
       mobilityAids: [],
     },
     medications: {
-      current: [{
-        name: 'Ibuprofen',
-        dosage: '400mg',
-        frequency: 'As needed',
-        effectiveness: 'Good for minor flare-ups'
-      }],
+      current: [
+        {
+          name: 'Ibuprofen',
+          dosage: '400mg',
+          frequency: 'As needed',
+          effectiveness: 'Good for minor flare-ups',
+        },
+      ],
       changes: 'Took ibuprofen after overdoing yardwork',
       effectiveness: 'Resolved quickly',
     },
     treatments: {
-      recent: [{
-        type: 'Ice therapy',
-        provider: 'Self-administered',
-        date: daysAgo(24),
-        effectiveness: 'Helped with minor inflammation'
-      }],
+      recent: [
+        {
+          type: 'Ice therapy',
+          provider: 'Self-administered',
+          date: daysAgo(24),
+          effectiveness: 'Helped with minor inflammation',
+        },
+      ],
       effectiveness: 'Quick recovery',
       planned: ['Be more careful with pacing'],
     },
@@ -875,12 +924,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Monthly physio check-in',
-        provider: 'City Physiotherapy',
-        date: daysAgo(21),
-        effectiveness: 'All progress maintained'
-      }],
+      recent: [
+        {
+          type: 'Monthly physio check-in',
+          provider: 'City Physiotherapy',
+          date: daysAgo(21),
+          effectiveness: 'All progress maintained',
+        },
+      ],
       effectiveness: 'Excellent',
       planned: ['Continue home program'],
     },
@@ -920,12 +971,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Regular exercise and stretching',
-        provider: 'Self-administered',
-        date: daysAgo(18),
-        effectiveness: 'Preventing issues'
-      }],
+      recent: [
+        {
+          type: 'Regular exercise and stretching',
+          provider: 'Self-administered',
+          date: daysAgo(18),
+          effectiveness: 'Preventing issues',
+        },
+      ],
       effectiveness: 'Excellent prevention',
       planned: ['Maintain current routine'],
     },
@@ -965,12 +1018,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Yoga and core strengthening',
-        provider: 'Community center',
-        date: daysAgo(15),
-        effectiveness: 'Improving flexibility and strength'
-      }],
+      recent: [
+        {
+          type: 'Yoga and core strengthening',
+          provider: 'Community center',
+          date: daysAgo(15),
+          effectiveness: 'Improving flexibility and strength',
+        },
+      ],
       effectiveness: 'Excellent',
       planned: ['Continue yoga weekly'],
     },
@@ -988,7 +1043,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Added yoga to routine. Feeling stronger than before injury. Very grateful for recovery.',
+    notes:
+      'Added yoga to routine. Feeling stronger than before injury. Very grateful for recovery.',
   },
 
   {
@@ -1010,12 +1066,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Preventive exercises',
-        provider: 'Self-administered',
-        date: daysAgo(12),
-        effectiveness: 'Maintaining excellent condition'
-      }],
+      recent: [
+        {
+          type: 'Preventive exercises',
+          provider: 'Self-administered',
+          date: daysAgo(12),
+          effectiveness: 'Maintaining excellent condition',
+        },
+      ],
       effectiveness: 'Excellent',
       planned: ['Keep up current routine'],
     },
@@ -1033,7 +1091,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Full recovery maintained. Back to all pre-injury activities and more. Exercise is now lifestyle.',
+    notes:
+      'Full recovery maintained. Back to all pre-injury activities and more. Exercise is now lifestyle.',
   },
 
   // Week 1-Current: Fully recovered
@@ -1056,12 +1115,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Regular exercise routine',
-        provider: 'Self-administered',
-        date: daysAgo(9),
-        effectiveness: 'Excellent fitness level'
-      }],
+      recent: [
+        {
+          type: 'Regular exercise routine',
+          provider: 'Self-administered',
+          date: daysAgo(9),
+          effectiveness: 'Excellent fitness level',
+        },
+      ],
       effectiveness: 'Maintaining peak condition',
       planned: ['Continue preventive exercises'],
     },
@@ -1101,12 +1162,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Strength training',
-        provider: 'Gym',
-        date: daysAgo(6),
-        effectiveness: 'Building beyond pre-injury strength'
-      }],
+      recent: [
+        {
+          type: 'Strength training',
+          provider: 'Gym',
+          date: daysAgo(6),
+          effectiveness: 'Building beyond pre-injury strength',
+        },
+      ],
       effectiveness: 'Excellent',
       planned: ['Continue strength program'],
     },
@@ -1124,7 +1187,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Started gym membership. Stronger and more flexible than before injury. Lesson learned about proper lifting.',
+    notes:
+      'Started gym membership. Stronger and more flexible than before injury. Lesson learned about proper lifting.',
   },
 
   {
@@ -1146,12 +1210,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Final physio discharge appointment',
-        provider: 'City Physiotherapy',
-        date: daysAgo(3),
-        effectiveness: 'Officially discharged - full recovery confirmed'
-      }],
+      recent: [
+        {
+          type: 'Final physio discharge appointment',
+          provider: 'City Physiotherapy',
+          date: daysAgo(3),
+          effectiveness: 'Officially discharged - full recovery confirmed',
+        },
+      ],
       effectiveness: 'Complete recovery',
       planned: ['Independent maintenance'],
     },
@@ -1169,7 +1235,8 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Officially discharged from physio! Full recovery confirmed. So grateful for the support and treatment.',
+    notes:
+      'Officially discharged from physio! Full recovery confirmed. So grateful for the support and treatment.',
   },
 
   {
@@ -1191,12 +1258,14 @@ export const comprehensiveSampleData: PainEntry[] = [
       effectiveness: 'N/A',
     },
     treatments: {
-      recent: [{
-        type: 'Preventive exercise routine',
-        provider: 'Self-administered',
-        date: daysAgo(1),
-        effectiveness: 'Excellent - injury prevention focus'
-      }],
+      recent: [
+        {
+          type: 'Preventive exercise routine',
+          provider: 'Self-administered',
+          date: daysAgo(1),
+          effectiveness: 'Excellent - injury prevention focus',
+        },
+      ],
       effectiveness: 'Maintaining optimal health',
       planned: ['Continue lifelong exercise habit'],
     },
@@ -1214,6 +1283,7 @@ export const comprehensiveSampleData: PainEntry[] = [
       worseningSince: '',
       newLimitations: [],
     },
-    notes: 'Living pain-free. Exercise is now part of daily routine. Back injury taught me valuable lessons about body care.',
+    notes:
+      'Living pain-free. Exercise is now part of daily routine. Back injury taught me valuable lessons about body care.',
   },
 ];

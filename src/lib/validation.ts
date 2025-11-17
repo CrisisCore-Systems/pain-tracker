@@ -2,52 +2,62 @@ import { z } from 'zod';
 
 // Custom error class for validation errors
 export class ValidationError extends Error {
-  constructor(message: string, public field?: string, public code?: string) {
+  constructor(
+    message: string,
+    public field?: string,
+    public code?: string
+  ) {
     super(message);
     this.name = 'ValidationError';
   }
 }
 
 // Pain intensity validation schema
-const PainIntensitySchema = z.number()
+const PainIntensitySchema = z
+  .number()
   .min(0, 'Pain intensity cannot be negative')
   .max(10, 'Pain intensity cannot exceed 10')
   .int('Pain intensity must be a whole number');
 
 // Location validation schema
-const LocationSchema = z.string()
+const LocationSchema = z
+  .string()
   .trim()
   .min(1, 'Location is required')
   .max(100, 'Location cannot exceed 100 characters')
   .regex(/^[a-zA-Z0-9\s\-_.,()]+$/, 'Location contains invalid characters');
 
 // Description validation schema
-const DescriptionSchema = z.string()
+const DescriptionSchema = z
+  .string()
   .trim()
   .min(1, 'Description is required')
   .max(500, 'Description cannot exceed 500 characters');
 
 // Timestamp validation schema
-const TimestampSchema = z.string()
+const TimestampSchema = z
+  .string()
   .datetime('Invalid timestamp format')
-  .refine((val) => {
+  .refine(val => {
     const date = new Date(val);
     const now = new Date();
     const oneYearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
     const oneDayFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-    
+
     return date >= oneYearAgo && date <= oneDayFromNow;
   }, 'Timestamp must be within the last year and not in the future');
 
 // Medication validation schema
-const MedicationSchema = z.string()
+const MedicationSchema = z
+  .string()
   .trim()
   .min(1, 'Medication name cannot be empty')
   .max(100, 'Medication name cannot exceed 100 characters')
   .regex(/^[a-zA-Z0-9\s\-_.,()]+$/, 'Medication name contains invalid characters');
 
-// Symptom validation schema  
-const SymptomSchema = z.string()
+// Symptom validation schema
+const SymptomSchema = z
+  .string()
   .trim()
   .min(1, 'Symptom cannot be empty')
   .max(50, 'Symptom cannot exceed 50 characters')
@@ -100,7 +110,9 @@ export const sanitizeNumber = (input: string | number): number => {
 };
 
 // Main validation function
-export const validatePain = (data: unknown): {
+export const validatePain = (
+  data: unknown
+): {
   intensity: number;
   location: string;
   description: string;
@@ -111,7 +123,7 @@ export const validatePain = (data: unknown): {
   try {
     // Validate the entire object structure
     const validated = PainEntrySchema.parse(data);
-    
+
     // Additional sanitization
     return {
       intensity: validated.intensity,
@@ -124,11 +136,7 @@ export const validatePain = (data: unknown): {
   } catch (error) {
     if (error instanceof z.ZodError) {
       const firstError = error.issues[0];
-      throw new ValidationError(
-        firstError.message,
-        firstError.path.join('.'),
-        firstError.code
-      );
+      throw new ValidationError(firstError.message, firstError.path.join('.'), firstError.code);
     }
     throw new ValidationError('Invalid pain entry data');
   }
@@ -166,35 +174,29 @@ export const validatePainEntries = (entries: unknown[]): ReturnType<typeof valid
 
 // Personal information validation schema
 const PersonalInfoSchema = z.object({
-  name: z.string()
+  name: z
+    .string()
     .trim()
     .min(1, 'Name is required')
     .max(100, 'Name cannot exceed 100 characters')
     .regex(/^[a-zA-Z\s'-]+$/, 'Name contains invalid characters'),
-  email: z.string()
-    .trim()
-    .email('Invalid email format')
-    .optional(),
-  phone: z.string()
-    .trim()
-    .refine(validatePhoneNumber, 'Invalid phone number format')
-    .optional(),
-  claimNumber: z.string()
+  email: z.string().trim().email('Invalid email format').optional(),
+  phone: z.string().trim().refine(validatePhoneNumber, 'Invalid phone number format').optional(),
+  claimNumber: z
+    .string()
     .trim()
     .min(1, 'Claim number is required')
     .max(50, 'Claim number cannot exceed 50 characters')
     .regex(/^[a-zA-Z0-9-]+$/, 'Claim number contains invalid characters')
     .optional(),
-  dateOfBirth: z.string()
-    .date('Invalid date format')
-    .optional(),
+  dateOfBirth: z.string().date('Invalid date format').optional(),
 });
 
 // Validate personal information
 export const validatePersonalInfo = (data: unknown): z.infer<typeof PersonalInfoSchema> => {
   try {
     const validated = PersonalInfoSchema.parse(data);
-    
+
     // Additional sanitization
     return {
       ...validated,
@@ -206,11 +208,7 @@ export const validatePersonalInfo = (data: unknown): z.infer<typeof PersonalInfo
   } catch (error) {
     if (error instanceof z.ZodError) {
       const firstError = error.issues[0];
-      throw new ValidationError(
-        firstError.message,
-        firstError.path.join('.'),
-        firstError.code
-      );
+      throw new ValidationError(firstError.message, firstError.path.join('.'), firstError.code);
     }
     throw new ValidationError('Invalid personal information');
   }

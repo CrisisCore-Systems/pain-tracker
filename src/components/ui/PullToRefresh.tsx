@@ -40,10 +40,12 @@ export function PullToRefresh({
     }
   }, [onRefresh]);
 
-  const { ref, pullDistance, pullProgress, isRefreshing: gestureRefreshing } = usePullToRefresh(
-    handleRefresh,
-    { pullThreshold: threshold }
-  );
+  const {
+    ref,
+    pullDistance,
+    pullProgress,
+    isRefreshing: gestureRefreshing,
+  } = usePullToRefresh(handleRefresh, { pullThreshold: threshold });
 
   const isCurrentlyRefreshing = isRefreshing || gestureRefreshing;
   const showIndicator = pullDistance > 10 && !isCurrentlyRefreshing;
@@ -53,7 +55,9 @@ export function PullToRefresh({
       ref={ref}
       className={cn('relative overflow-hidden', className)}
       style={{
-        transform: showIndicator ? `translateY(${Math.min(pullDistance * 0.5, threshold)}px)` : undefined,
+        transform: showIndicator
+          ? `translateY(${Math.min(pullDistance * 0.5, threshold)}px)`
+          : undefined,
         transition: showIndicator ? 'none' : 'transform 0.3s ease',
       }}
     >
@@ -92,9 +96,13 @@ export function PullToRefresh({
 
       {/* Status text for screen readers */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {isCurrentlyRefreshing ? refreshingText :
-         pullProgress >= 1 ? releaseText :
-         pullProgress > 0 ? pullText : ''}
+        {isCurrentlyRefreshing
+          ? refreshingText
+          : pullProgress >= 1
+            ? releaseText
+            : pullProgress > 0
+              ? pullText
+              : ''}
       </div>
     </div>
   );

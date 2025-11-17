@@ -19,7 +19,7 @@ interface ClinicalPDFExportButtonProps {
 
 /**
  * Clinical PDF Export Button with Patient Info Collection
- * 
+ *
  * Integrates patient info modal, chart capture, and PDF generation.
  * Provides user feedback during export process.
  */
@@ -38,7 +38,7 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
       action,
       actionType = 'export',
       outcome = 'success',
-      details = {}
+      details = {},
     }: {
       action: string;
       actionType?: AuditActionType;
@@ -56,8 +56,8 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
             action,
             entryCount: entries.length,
             moodEntryCount: moodEntries.length,
-            ...details
-          }
+            ...details,
+          },
         });
       } catch (auditError) {
         console.error('HIPAA audit logging failed', auditError);
@@ -72,7 +72,7 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
       void logPdfAudit({
         action: 'clinical-pdf-export',
         outcome: 'failure',
-        details: { reason: 'no-entries' }
+        details: { reason: 'no-entries' },
       });
       return;
     }
@@ -81,7 +81,7 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
     void logPdfAudit({
       action: 'clinical-pdf-export',
       actionType: 'access',
-      details: { step: 'patient-info-modal' }
+      details: { step: 'patient-info-modal' },
     });
   };
 
@@ -92,8 +92,8 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
       action: 'clinical-pdf-export',
       details: {
         stage: 'generation-start',
-        hasPatientInfo: Boolean(patientInfo)
-      }
+        hasPatientInfo: Boolean(patientInfo),
+      },
     });
 
     try {
@@ -128,8 +128,8 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
         action: 'clinical-pdf-export',
         details: {
           stage: 'generation-complete',
-          chartsCaptured: Object.keys(chartImages).length
-        }
+          chartsCaptured: Object.keys(chartImages).length,
+        },
       });
     } catch (err) {
       console.error('PDF export failed:', err);
@@ -139,8 +139,8 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
         outcome: 'failure',
         details: {
           stage: 'generation-error',
-          error: err instanceof Error ? err.message : 'unknown-error'
-        }
+          error: err instanceof Error ? err.message : 'unknown-error',
+        },
       });
     } finally {
       setIsExporting(false);

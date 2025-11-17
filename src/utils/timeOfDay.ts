@@ -38,7 +38,7 @@ export function getTimeOfDay(input: Date | string | number): TimeOfDay | null {
 
 export function bucketTimestamps<T extends { timestamp: string | Date | number }>(
   items: T[],
-  accessor: (i: T) => Date | string | number = (i) => i.timestamp,
+  accessor: (i: T) => Date | string | number = i => i.timestamp
 ): Record<TimeOfDay, T[]> {
   const out: Record<TimeOfDay, T[]> = {
     night: [],
@@ -57,7 +57,10 @@ export function bucketTimestamps<T extends { timestamp: string | Date | number }
 }
 
 export function histogram(items: Array<string | Date | number>): Record<TimeOfDay, number> {
-  const buckets = { night: 0, morning: 0, midday: 0, afternoon: 0, evening: 0 } as Record<TimeOfDay, number>;
+  const buckets = { night: 0, morning: 0, midday: 0, afternoon: 0, evening: 0 } as Record<
+    TimeOfDay,
+    number
+  >;
   for (const ts of items) {
     const k = getTimeOfDay(ts);
     if (k) buckets[k]++;

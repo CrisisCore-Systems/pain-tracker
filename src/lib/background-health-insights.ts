@@ -47,7 +47,13 @@ export interface HealthInsight {
 
 interface HealthInsightTask {
   id: string;
-  type: 'pattern-analysis' | 'trend-detection' | 'correlation-analysis' | 'anomaly-detection' | 'prediction' | 'summary-generation';
+  type:
+    | 'pattern-analysis'
+    | 'trend-detection'
+    | 'correlation-analysis'
+    | 'anomaly-detection'
+    | 'prediction'
+    | 'summary-generation';
   data: {
     entries: PainEntry[];
     timeframe?: 'week' | 'month' | 'quarter' | 'year';
@@ -94,7 +100,7 @@ export class BackgroundHealthInsightsService {
     failedTasks: 0,
     averageProcessingTime: 0,
     lastProcessed: null,
-    queueSize: 0
+    queueSize: 0,
   };
   private isInitialized: boolean = false;
   private readonly maxQueueSize = 50;
@@ -120,7 +126,7 @@ export class BackgroundHealthInsightsService {
 
       // Start background processing
       this.startBackgroundProcessing();
-      
+
       // Clean up old insights periodically
       setInterval(() => this.cleanupOldInsights(), 60 * 60 * 1000); // Every hour
 
@@ -135,11 +141,11 @@ export class BackgroundHealthInsightsService {
     try {
       // Create worker from the worker file
       const worker = new Worker(new URL('../workers/health-insights-worker.ts', import.meta.url), {
-        type: 'module'
+        type: 'module',
       });
 
-      worker.onmessage = (e) => this.handleWorkerMessage(workerId, e);
-      worker.onerror = (error) => this.handleWorkerError(workerId, error);
+      worker.onmessage = e => this.handleWorkerMessage(workerId, e);
+      worker.onerror = error => this.handleWorkerError(workerId, error);
 
       this.workers[workerId] = worker;
     } catch (error) {
@@ -156,11 +162,11 @@ export class BackgroundHealthInsightsService {
       case 'result':
         this.handleTaskCompletion(taskId, data as HealthInsight[], workerId);
         break;
-      
+
       case 'error':
         this.handleTaskError(taskId, error, workerId);
         break;
-      
+
       case 'progress':
         // Could emit progress events to UI if needed
         console.debug(`Task ${taskId} progress: ${progress}%`);
@@ -170,7 +176,7 @@ export class BackgroundHealthInsightsService {
 
   private handleWorkerError(workerId: number, error: ErrorEvent): void {
     console.error(`Worker ${workerId} error:`, error);
-    
+
     // Restart the worker
     this.workers[workerId].terminate();
     this.createWorker(workerId);
@@ -186,8 +192,9 @@ export class BackgroundHealthInsightsService {
     // Update processing stats
     const processingTime = Date.now() - taskInfo.startTime;
     this.processingStats.completedTasks++;
-    this.processingStats.averageProcessingTime = 
-      (this.processingStats.averageProcessingTime * (this.processingStats.completedTasks - 1) + processingTime) / 
+    this.processingStats.averageProcessingTime =
+      (this.processingStats.averageProcessingTime * (this.processingStats.completedTasks - 1) +
+        processingTime) /
       this.processingStats.completedTasks;
     this.processingStats.lastProcessed = new Date().toISOString();
 
@@ -205,15 +212,17 @@ export class BackgroundHealthInsightsService {
     // Process next task in queue
     this.processNextTask(workerId);
 
-    console.log(`Task ${taskId} completed by worker ${workerId}, generated ${insights.length} insights`);
+    console.log(
+      `Task ${taskId} completed by worker ${workerId}, generated ${insights.length} insights`
+    );
   }
 
   private handleTaskError(taskId: string, error: string, workerId: number): void {
     console.error(`Task ${taskId} failed on worker ${workerId}:`, error);
-    
+
     this.processingStats.failedTasks++;
     this.activeTasks.delete(taskId);
-    
+
     // Process next task
     this.processNextTask(workerId);
   }
@@ -244,7 +253,7 @@ export class BackgroundHealthInsightsService {
     // Track active task
     this.activeTasks.set(task.id, {
       workerId,
-      startTime: Date.now()
+      startTime: Date.now(),
     });
 
     this.processingStats.queueSize = this.taskQueue.length;
@@ -253,14 +262,14 @@ export class BackgroundHealthInsightsService {
     this.workers[workerId].postMessage({
       type: 'task',
       taskId: task.id,
-      data: task
+      data: task,
     });
 
     console.log(`Dispatched task ${task.id} to worker ${workerId}`);
   }
 
   public async analyzePatterns(
-    entries: PainEntry[], 
+    entries: PainEntry[],
     timeframe: 'week' | 'month' | 'quarter' | 'year' = 'month',
     priority: 'high' | 'medium' | 'low' = 'medium'
   ): Promise<string> {
@@ -276,11 +285,11 @@ export class BackgroundHealthInsightsService {
         entries,
         timeframe,
         context: {
-          currentDate: new Date().toISOString()
-        }
+          currentDate: new Date().toISOString(),
+        },
       },
       priority,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     return this.queueTask(task);
@@ -301,10 +310,10 @@ export class BackgroundHealthInsightsService {
       type: 'trend-detection',
       data: {
         entries,
-        timeframe
+        timeframe,
       },
       priority,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     return this.queueTask(task);
@@ -323,10 +332,10 @@ export class BackgroundHealthInsightsService {
       id: taskId,
       type: 'correlation-analysis',
       data: {
-        entries
+        entries,
       },
       priority,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     return this.queueTask(task);
@@ -369,12 +378,12 @@ export class BackgroundHealthInsightsService {
   private async waitForInitialization(): Promise<void> {
     let attempts = 0;
     const maxAttempts = 50; // 5 seconds
-    
+
     while (!this.isInitialized && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 100));
       attempts++;
     }
-    
+
     if (!this.isInitialized) {
       throw new Error('Health insights service failed to initialize');
     }
@@ -389,15 +398,15 @@ export class BackgroundHealthInsightsService {
     this.subscribers.set(subscriberId, {
       id: subscriberId,
       callback,
-      filters
+      filters,
     });
-    
+
     // Send existing insights that match filters
     const existingInsights = this.getInsights(filters);
     if (existingInsights.length > 0) {
       callback(existingInsights);
     }
-    
+
     return subscriberId;
   }
 
@@ -418,7 +427,10 @@ export class BackgroundHealthInsightsService {
     }
   }
 
-  private filterInsights(insights: HealthInsight[], filters?: InsightSubscriber['filters']): HealthInsight[] {
+  private filterInsights(
+    insights: HealthInsight[],
+    filters?: InsightSubscriber['filters']
+  ): HealthInsight[] {
     if (!filters) {
       return insights;
     }
@@ -476,7 +488,7 @@ export class BackgroundHealthInsightsService {
     }
 
     toDelete.forEach(id => this.insights.delete(id));
-    
+
     if (toDelete.length > 0) {
       console.log(`Cleaned up ${toDelete.length} old insights`);
     }
@@ -490,7 +502,7 @@ export class BackgroundHealthInsightsService {
 
     // Process immediately without queuing for urgent cases (e.g., severe pain patterns)
     const taskId = await this.analyzePatterns(entries, 'week', 'high');
-    
+
     // Wait for completion (with timeout)
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -534,22 +546,22 @@ export function getHealthInsightsService(): BackgroundHealthInsightsService {
 // Helper function for UI components
 export function getInsightIcon(type: HealthInsight['type']): string {
   const iconMap = {
-    'pattern': '📊',
-    'trend': '📈',
-    'correlation': '🔗',
-    'anomaly': '⚠️',
-    'prediction': '🔮',
-    'recommendation': '💡'
+    pattern: '📊',
+    trend: '📈',
+    correlation: '🔗',
+    anomaly: '⚠️',
+    prediction: '🔮',
+    recommendation: '💡',
   };
   return iconMap[type] || '📋';
 }
 
 export function getInsightColor(severity: HealthInsight['severity']): string {
   const colorMap = {
-    'critical': 'text-red-600 bg-red-50',
-    'high': 'text-orange-600 bg-orange-50',
-    'medium': 'text-blue-600 bg-blue-50',
-    'low': 'text-gray-600 bg-gray-50'
+    critical: 'text-red-600 bg-red-50',
+    high: 'text-orange-600 bg-orange-50',
+    medium: 'text-blue-600 bg-blue-50',
+    low: 'text-gray-600 bg-gray-50',
   };
   return colorMap[severity];
 }

@@ -109,5 +109,5 @@ export type {
   EmergencyPanelData,
   ReportSection,
   ScheduledReport,
-  ActivityLogEntry
+  ActivityLogEntry,
 } from './types/index';

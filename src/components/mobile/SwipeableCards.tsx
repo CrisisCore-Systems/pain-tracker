@@ -18,7 +18,7 @@ export function SwipeableCards({
   showIndicators = true,
   showNavigation = true,
   autoAdvance = false,
-  autoAdvanceDelay = 5000
+  autoAdvanceDelay = 5000,
 }: SwipeableCardsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -33,7 +33,7 @@ export function SwipeableCards({
   useEffect(() => {
     if (autoAdvance && !isDragging) {
       autoAdvanceRef.current = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % totalCards);
+        setCurrentIndex(prev => (prev + 1) % totalCards);
       }, autoAdvanceDelay);
 
       return () => {
@@ -44,11 +44,14 @@ export function SwipeableCards({
     }
   }, [autoAdvance, autoAdvanceDelay, isDragging, totalCards]);
 
-  const goToCard = useCallback((index: number) => {
-    const clampedIndex = Math.max(0, Math.min(totalCards - 1, index));
-    setCurrentIndex(clampedIndex);
-    onCardChange?.(clampedIndex);
-  }, [totalCards, onCardChange]);
+  const goToCard = useCallback(
+    (index: number) => {
+      const clampedIndex = Math.max(0, Math.min(totalCards - 1, index));
+      setCurrentIndex(clampedIndex);
+      onCardChange?.(clampedIndex);
+    },
+    [totalCards, onCardChange]
+  );
 
   const goToPrevious = useCallback(() => {
     goToCard(currentIndex - 1);
@@ -63,29 +66,32 @@ export function SwipeableCards({
     setIsDragging(true);
     setStartX(e.touches[0].clientX);
     setDragOffset(0);
-    
+
     // Clear auto-advance when user interacts
     if (autoAdvanceRef.current) {
       clearInterval(autoAdvanceRef.current);
     }
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging) return;
-    
-    const currentX = e.touches[0].clientX;
-    const offset = currentX - startX;
-    setDragOffset(offset);
-  }, [isDragging, startX]);
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isDragging) return;
+
+      const currentX = e.touches[0].clientX;
+      const offset = currentX - startX;
+      setDragOffset(offset);
+    },
+    [isDragging, startX]
+  );
 
   const handleTouchEnd = useCallback(() => {
     if (!isDragging) return;
-    
+
     setIsDragging(false);
-    
+
     const threshold = 100; // Minimum swipe distance
     const velocity = Math.abs(dragOffset);
-    
+
     if (Math.abs(dragOffset) > threshold || velocity > 50) {
       if (dragOffset > 0) {
         // Swiped right - go to previous
@@ -95,7 +101,7 @@ export function SwipeableCards({
         goToNext();
       }
     }
-    
+
     setDragOffset(0);
   }, [isDragging, dragOffset, goToPrevious, goToNext]);
 
@@ -107,20 +113,23 @@ export function SwipeableCards({
     setDragOffset(0);
   }, []);
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging) return;
-    
-    const offset = e.clientX - startX;
-    setDragOffset(offset);
-  }, [isDragging, startX]);
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDragging) return;
+
+      const offset = e.clientX - startX;
+      setDragOffset(offset);
+    },
+    [isDragging, startX]
+  );
 
   const handleMouseUp = useCallback(() => {
     if (!isDragging) return;
-    
+
     setIsDragging(false);
-    
+
     const threshold = 100;
-    
+
     if (Math.abs(dragOffset) > threshold) {
       if (dragOffset > 0) {
         goToPrevious();
@@ -128,7 +137,7 @@ export function SwipeableCards({
         goToNext();
       }
     }
-    
+
     setDragOffset(0);
   }, [isDragging, dragOffset, goToPrevious, goToNext]);
 
@@ -137,7 +146,7 @@ export function SwipeableCards({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       document.body.style.userSelect = 'none';
-      
+
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
@@ -162,7 +171,6 @@ export function SwipeableCards({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [goToPrevious, goToNext]);
 
-
   return (
     <div className={`swipeable-cards relative overflow-hidden ${className}`}>
       {/* Cards Container */}
@@ -170,8 +178,10 @@ export function SwipeableCards({
         ref={containerRef}
         className="flex transition-transform duration-300 ease-out touch-manipulation"
         style={{
-          transform: isDragging ? `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))` : `translateX(-${currentIndex * 100}%)`,
-          transition: isDragging ? 'none' : 'transform 0.3s ease-out'
+          transform: isDragging
+            ? `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`
+            : `translateX(-${currentIndex * 100}%)`,
+          transition: isDragging ? 'none' : 'transform 0.3s ease-out',
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -184,9 +194,10 @@ export function SwipeableCards({
             className="w-full flex-shrink-0"
             style={{
               opacity: isDragging ? 1 - Math.abs(dragOffset) / 300 : 1,
-              transform: isDragging && Math.abs(index - currentIndex) <= 1 
-                ? `scale(${1 - Math.abs(dragOffset) / 1000})`
-                : 'scale(1)'
+              transform:
+                isDragging && Math.abs(index - currentIndex) <= 1
+                  ? `scale(${1 - Math.abs(dragOffset) / 1000})`
+                  : 'scale(1)',
             }}
           >
             {child}
@@ -205,7 +216,7 @@ export function SwipeableCards({
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
-          
+
           <button
             onClick={goToNext}
             disabled={currentIndex === totalCards - 1}

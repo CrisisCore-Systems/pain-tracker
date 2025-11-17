@@ -5,7 +5,9 @@ import type { PainEntry } from '../../types';
 const MS_IN_DAY = 24 * 60 * 60 * 1000;
 const baseNow = new Date('2024-02-01T12:00:00Z').getTime();
 
-const makeEntry = (overrides: Partial<PainEntry> & { daysAgo: number; pain: number; hour?: number }): PainEntry => {
+const makeEntry = (
+  overrides: Partial<PainEntry> & { daysAgo: number; pain: number; hour?: number }
+): PainEntry => {
   const { daysAgo, pain, hour = 10, ...rest } = overrides;
   const timestamp = new Date(baseNow - daysAgo * MS_IN_DAY);
   timestamp.setUTCHours(hour, 0, 0, 0);
@@ -63,17 +65,17 @@ describe('generateDashboardAIInsights', () => {
 
     const insights = generateDashboardAIInsights(entries);
 
-    const trend = insights.find((insight) => insight.id === 'pain-trend');
+    const trend = insights.find(insight => insight.id === 'pain-trend');
     expect(trend).toBeDefined();
     expect(trend?.tone).toBe('gentle-nudge');
     expect(trend?.summary).toContain('risen roughly');
 
-    const trigger = insights.find((insight) => insight.id === 'trigger-focus');
+    const trigger = insights.find(insight => insight.id === 'trigger-focus');
     expect(trigger).toBeDefined();
     expect(trigger?.summary).toContain('Cold Weather');
     expect(trigger?.metricValue).toBe('Cold Weather');
 
-    const day = insights.find((insight) => insight.id === 'time-of-day');
+    const day = insights.find(insight => insight.id === 'time-of-day');
     expect(day).toBeDefined();
     expect(day?.metricLabel).toContain('average');
   });
@@ -95,7 +97,7 @@ describe('generateDashboardAIInsights', () => {
     ];
 
     const insights = generateDashboardAIInsights(entries);
-    const trend = insights.find((insight) => insight.id === 'pain-trend');
+    const trend = insights.find(insight => insight.id === 'pain-trend');
     expect(trend).toBeDefined();
     expect(trend?.tone).toBe('celebration');
     expect(trend?.summary).toContain('Pain levels eased');

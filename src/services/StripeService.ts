@@ -3,10 +3,7 @@
  * Handles Stripe checkout, webhooks, and subscription management
  */
 
-import type {
-  SubscriptionTier,
-  BillingInterval
-} from '../types/subscription';
+import type { SubscriptionTier, BillingInterval } from '../types/subscription';
 import { SUBSCRIPTION_PLANS } from '../config/subscription-tiers';
 import { subscriptionService } from './SubscriptionService';
 import { securityService } from './SecurityService';
@@ -16,8 +13,8 @@ import { securityService } from './SecurityService';
  */
 interface StripeConfig {
   publishableKey: string;
-  secretKey?: string;        // Server-side only
-  webhookSecret?: string;    // For webhook validation
+  secretKey?: string; // Server-side only
+  webhookSecret?: string; // For webhook validation
   apiVersion: string;
 }
 
@@ -50,8 +47,6 @@ interface StripeWebhookEvent {
   created: number;
 }
 
-
-
 /**
  * Stripe Service
  * Note: This is a client-side stub. In production, most Stripe operations
@@ -64,9 +59,10 @@ export class StripeService {
 
   constructor(config?: Partial<StripeConfig>) {
     this.config = {
-      publishableKey: (import.meta as { env?: Record<string, string> }).env?.VITE_STRIPE_PUBLISHABLE_KEY || '',
+      publishableKey:
+        (import.meta as { env?: Record<string, string> }).env?.VITE_STRIPE_PUBLISHABLE_KEY || '',
       apiVersion: '2023-10-16',
-      ...config
+      ...config,
     };
   }
 
@@ -79,19 +75,19 @@ export class StripeService {
     try {
       // Load Stripe.js from CDN
       await this.loadStripeScript();
-      
+
       // Initialize Stripe instance
       // @ts-expect-error - Stripe is loaded from CDN
       if (typeof window !== 'undefined' && window.Stripe) {
         // @ts-expect-error - Stripe is loaded from CDN
         this.stripe = window.Stripe(this.config.publishableKey);
         this.isInitialized = true;
-        
+
         await securityService.logSecurityEvent({
           type: 'audit',
           level: 'info',
           message: 'Stripe initialized successfully',
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       } else {
         throw new Error('Stripe.js not loaded');
@@ -101,7 +97,7 @@ export class StripeService {
         type: 'error',
         level: 'error',
         message: `Stripe initialization failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw err;
     }
@@ -161,7 +157,7 @@ export class StripeService {
         id: `cs_test_${Date.now()}`,
         url: `https://checkout.stripe.com/pay/${Date.now()}`,
         customerId: `cus_${userId}`,
-        subscriptionId: `sub_${Date.now()}`
+        subscriptionId: `sub_${Date.now()}`,
       };
 
       await securityService.logSecurityEvent({
@@ -170,7 +166,7 @@ export class StripeService {
         message: `Checkout session created: ${tier} tier, ${interval} billing`,
         userId,
         metadata: { tier, interval, amount: price.amount },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return mockSession;
@@ -180,7 +176,7 @@ export class StripeService {
         level: 'error',
         message: `Checkout session creation failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
         userId,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw err;
     }
@@ -208,7 +204,7 @@ export class StripeService {
         type: 'error',
         level: 'error',
         message: `Checkout redirect failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw err;
     }
@@ -233,7 +229,7 @@ export class StripeService {
 
       // Mock portal session
       const mockSession = {
-        url: `https://billing.stripe.com/p/session/${Date.now()}`
+        url: `https://billing.stripe.com/p/session/${Date.now()}`,
       };
 
       await securityService.logSecurityEvent({
@@ -241,7 +237,7 @@ export class StripeService {
         level: 'info',
         message: 'Customer portal session created',
         userId,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return mockSession;
@@ -251,7 +247,7 @@ export class StripeService {
         level: 'error',
         message: `Portal session creation failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
         userId,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw err;
     }
@@ -261,9 +257,7 @@ export class StripeService {
    * Handle webhook events (server-side operation)
    * This should be implemented on your backend
    */
-  async handleWebhook(
-    event: StripeWebhookEvent
-  ): Promise<void> {
+  async handleWebhook(event: StripeWebhookEvent): Promise<void> {
     try {
       const userId = event.data.object.metadata?.userId;
       if (!userId) {
@@ -309,7 +303,7 @@ export class StripeService {
         message: `Webhook processed: ${event.type}`,
         userId,
         metadata: { eventId: event.id, type: event.type },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     } catch (err) {
       await securityService.logSecurityEvent({
@@ -317,7 +311,7 @@ export class StripeService {
         level: 'error',
         message: `Webhook processing failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
         metadata: { eventId: event.id, type: event.type },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       throw err;
     }
@@ -326,17 +320,14 @@ export class StripeService {
   /**
    * Handle checkout completed
    */
-  private async handleCheckoutCompleted(
-    event: StripeWebhookEvent,
-    userId: string
-  ): Promise<void> {
+  private async handleCheckoutCompleted(event: StripeWebhookEvent, userId: string): Promise<void> {
     const session = event.data.object;
-    const tier = session.metadata?.tier as SubscriptionTier || 'basic';
-    const interval = session.metadata?.interval as BillingInterval || 'monthly';
+    const tier = (session.metadata?.tier as SubscriptionTier) || 'basic';
+    const interval = (session.metadata?.interval as BillingInterval) || 'monthly';
 
     // Create or update subscription in our system
     const subscription = await subscriptionService.getSubscription(userId);
-    
+
     if (!subscription) {
       await subscriptionService.createSubscription(userId, tier, interval);
     } else {
@@ -354,7 +345,7 @@ export class StripeService {
     userId: string
   ): Promise<void> {
     const subscription = event.data.object;
-    const tier = subscription.metadata?.tier as SubscriptionTier || 'basic';
+    const tier = (subscription.metadata?.tier as SubscriptionTier) || 'basic';
 
     console.log(`Subscription created for user ${userId}: ${tier} tier`);
   }
@@ -390,10 +381,7 @@ export class StripeService {
   /**
    * Handle invoice paid
    */
-  private async handleInvoicePaid(
-    event: StripeWebhookEvent,
-    userId: string
-  ): Promise<void> {
+  private async handleInvoicePaid(event: StripeWebhookEvent, userId: string): Promise<void> {
     const invoice = event.data.object;
     console.log(`Invoice paid for user ${userId}: ${invoice.id}`);
   }
@@ -401,12 +389,9 @@ export class StripeService {
   /**
    * Handle payment failed
    */
-  private async handlePaymentFailed(
-    event: StripeWebhookEvent,
-    userId: string
-  ): Promise<void> {
+  private async handlePaymentFailed(event: StripeWebhookEvent, userId: string): Promise<void> {
     const invoice = event.data.object;
-    
+
     // Update subscription status to past_due
     const subscription = await subscriptionService.getSubscription(userId);
     if (subscription) {
@@ -419,10 +404,7 @@ export class StripeService {
   /**
    * Handle trial ending soon
    */
-  private async handleTrialEnding(
-    event: StripeWebhookEvent,
-    userId: string
-  ): Promise<void> {
+  private async handleTrialEnding(event: StripeWebhookEvent, userId: string): Promise<void> {
     // Send notification to user
     console.log(`Trial ending soon for user ${userId}`);
   }
@@ -438,18 +420,14 @@ export class StripeService {
       amount: price.amount,
       currency: price.currency,
       display: price.display,
-      interval: interval === 'monthly' ? 'month' : 'year'
+      interval: interval === 'monthly' ? 'month' : 'year',
     };
   }
 
   /**
    * Validate webhook signature (server-side)
    */
-  validateWebhookSignature(
-    _payload: string,
-    _signature: string,
-    _secret: string
-  ): boolean {
+  validateWebhookSignature(_payload: string, _signature: string, _secret: string): boolean {
     // In production, use Stripe's webhook signature validation
     // const event = stripe.webhooks.constructEvent(payload, signature, secret);
     // For now, just return true
@@ -472,12 +450,10 @@ export interface StripeElementsOptions {
 /**
  * Create Stripe Elements instance
  */
-export async function createStripeElements(
-  options: StripeElementsOptions
-): Promise<unknown> {
+export async function createStripeElements(options: StripeElementsOptions): Promise<unknown> {
   const stripeService = new StripeService();
   await stripeService.initialize();
-  
+
   // @ts-expect-error - Stripe types
   return stripeService.stripe?.elements(options);
 }

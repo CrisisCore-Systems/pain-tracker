@@ -6,7 +6,7 @@ import type {
   ComparisonChart,
   ComparisonDataset,
   StatisticalMeasure,
-  StatisticalComparison
+  StatisticalComparison,
 } from '../../types/comparison';
 import type { PainEntry } from '../../types';
 import { formatNumber } from '../formatting';
@@ -34,7 +34,7 @@ export class DataComparisonEngine {
       insights,
       charts,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
   }
 
@@ -49,8 +49,8 @@ export class DataComparisonEngine {
     const [baseline, comparison] = datasets;
 
     // Calculate overall statistics
-  const baselinePainLevels = baseline.entries.map((e: PainEntry) => e.baselineData.pain);
-  const comparisonPainLevels = comparison.entries.map((e: PainEntry) => e.baselineData.pain);
+    const baselinePainLevels = baseline.entries.map((e: PainEntry) => e.baselineData.pain);
+    const comparisonPainLevels = comparison.entries.map((e: PainEntry) => e.baselineData.pain);
 
     const baselineMean = this.calculateMean(baselinePainLevels);
     const comparisonMean = this.calculateMean(comparisonPainLevels);
@@ -94,18 +94,18 @@ export class DataComparisonEngine {
         difference,
         percentageChange,
         statisticalSignificance,
-        effectSize
+        effectSize,
       },
       byMetric: {
         pain: painStats,
         mood: moodStats,
-        sleep: sleepStats
+        sleep: sleepStats,
       },
       trends: {
         baselineTrend,
         comparisonTrend,
-        trendDifference
-      }
+        trendDifference,
+      },
     };
   }
 
@@ -132,7 +132,7 @@ export class DataComparisonEngine {
       comparison: comparisonStats,
       difference,
       percentageChange,
-      confidence
+      confidence,
     };
   }
 
@@ -191,7 +191,7 @@ export class DataComparisonEngine {
       { type: 'range', value: range },
       { type: 'percentile-25', value: p25 },
       { type: 'percentile-75', value: p75 },
-      { type: 'percentile-95', value: p95 }
+      { type: 'percentile-95', value: p95 },
     ];
   }
   /**
@@ -273,11 +273,11 @@ export class DataComparisonEngine {
     if (n1 < 2 || n2 < 2) return 1; // Not enough data
 
     const pooledStd = Math.sqrt(((n1 - 1) * std1 * std1 + (n2 - 1) * std2 * std2) / (n1 + n2 - 2));
-    const se = pooledStd * Math.sqrt(1/n1 + 1/n2);
+    const se = pooledStd * Math.sqrt(1 / n1 + 1 / n2);
     const t = Math.abs(mean1 - mean2) / se;
 
     // Approximate p-value (simplified)
-    return Math.max(0.001, Math.exp(-t * t / 2) / Math.sqrt(2 * Math.PI));
+    return Math.max(0.001, Math.exp((-t * t) / 2) / Math.sqrt(2 * Math.PI));
   }
 
   /**
@@ -339,13 +339,13 @@ export class DataComparisonEngine {
         id: `overall-${isImprovement ? 'improvement' : 'worsening'}`,
         type: isImprovement ? 'improvement' : 'worsening',
         title: `Overall ${isImprovement ? 'Improvement' : 'Worsening'} Detected`,
-  description: `Pain levels ${isImprovement ? 'decreased' : 'increased'} by ${formatNumber(Math.abs(percentageChange), 1)}% compared to baseline`,
+        description: `Pain levels ${isImprovement ? 'decreased' : 'increased'} by ${formatNumber(Math.abs(percentageChange), 1)}% compared to baseline`,
         severity: Math.abs(percentageChange) > 25 ? 'high' : 'medium',
         confidence: (1 - statisticalSignificance) * 100,
         actionable: true,
         recommendation: isImprovement
           ? 'Consider maintaining current treatment approach'
-          : 'May need to adjust treatment or investigate contributing factors'
+          : 'May need to adjust treatment or investigate contributing factors',
       });
     }
 
@@ -360,7 +360,7 @@ export class DataComparisonEngine {
         description: `Pain trend is ${improvingTrend ? 'improving' : 'worsening'} over time`,
         severity: 'medium',
         confidence: 75,
-        actionable: true
+        actionable: true,
       });
     }
 
@@ -375,7 +375,7 @@ export class DataComparisonEngine {
           description: `Mood impact ${moodChange < 0 ? 'improved' : 'worsened'} by ${formatNumber(Math.abs(moodChange), 1)}%`,
           severity: 'medium',
           confidence: 70,
-          actionable: true
+          actionable: true,
         });
       }
     }
@@ -414,7 +414,7 @@ export class DataComparisonEngine {
       data: dataset.entries.map((entry: PainEntry) => entry.baselineData.pain),
       borderColor: dataset.color,
       backgroundColor: dataset.color + '20',
-      fill: false
+      fill: false,
     }));
 
     // Generate time labels
@@ -429,34 +429,34 @@ export class DataComparisonEngine {
       title,
       data: {
         labels,
-        datasets: chartDatasets
+        datasets: chartDatasets,
       },
       config: {
         responsive: true,
         plugins: {
           legend: {
             display: true,
-            position: 'top'
+            position: 'top',
           },
           tooltip: {
-            enabled: true
-          }
+            enabled: true,
+          },
         },
         scales: {
           x: {
             title: {
               display: true,
-              text: 'Time'
-            }
+              text: 'Time',
+            },
           },
           y: {
             title: {
               display: true,
-              text: 'Pain Level'
-            }
-          }
-        }
-      }
+              text: 'Pain Level',
+            },
+          },
+        },
+      },
     };
   }
 
@@ -476,31 +476,33 @@ export class DataComparisonEngine {
       title,
       data: {
         labels,
-        datasets: [{
-          label: 'Average Pain Level',
-          data,
-          backgroundColor: datasets.map(d => d.color),
-          borderColor: datasets.map(d => d.color),
-          borderWidth: 1
-        }]
+        datasets: [
+          {
+            label: 'Average Pain Level',
+            data,
+            backgroundColor: datasets.map(d => d.color),
+            borderColor: datasets.map(d => d.color),
+            borderWidth: 1,
+          },
+        ],
       },
       config: {
         responsive: true,
         plugins: {
           legend: {
-            display: false
-          }
+            display: false,
+          },
         },
         scales: {
           y: {
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Pain Level'
-            }
-          }
-        }
-      }
+              text: 'Pain Level',
+            },
+          },
+        },
+      },
     };
   }
 
@@ -527,22 +529,24 @@ export class DataComparisonEngine {
       title,
       data: {
         labels,
-        datasets: [{
-          label: 'Pain Distribution',
-          data: data.flat(),
-          backgroundColor: datasets.map(d => d.color + '40'),
-          borderColor: datasets.map(d => d.color),
-          borderWidth: 1
-        }]
+        datasets: [
+          {
+            label: 'Pain Distribution',
+            data: data.flat(),
+            backgroundColor: datasets.map(d => d.color + '40'),
+            borderColor: datasets.map(d => d.color),
+            borderWidth: 1,
+          },
+        ],
       },
       config: {
         responsive: true,
         plugins: {
           legend: {
-            display: false
-          }
-        }
-      }
+            display: false,
+          },
+        },
+      },
     };
   }
 }

@@ -16,16 +16,11 @@ interface GatedSavePanelProps {
  * - JSON Export: Requires Basic tier or higher
  * - Enforces export quota limits
  */
-export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({ 
-  entries, 
-  userId,
-  onClearData 
-}) => {
-
+export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({ entries, userId, onClearData }) => {
   const handleExport = async (format: 'json' | 'csv') => {
     // Check quota before export
     const quotaCheck = await checkExportQuota(userId);
-    
+
     if (!quotaCheck.success) {
       // Quota exceeded - upgrade prompt will be shown by SavePanel wrapper
       alert(quotaCheck.error || 'Export quota exceeded. Please upgrade your plan.');
@@ -50,14 +45,14 @@ export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({
         'Symptoms',
         'Limited Activities',
         'Medications',
-        'Notes'
+        'Notes',
       ];
 
       const rows = entries.map(entry => {
         const medications = (entry.medications?.current ?? [])
           .map(med => `${med.name} ${med.dosage}`)
           .join(';');
-        
+
         const rowData = [
           new Date(entry.timestamp).toISOString(),
           entry.baselineData.pain.toString(),
@@ -65,7 +60,7 @@ export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({
           Array.prototype.join.call(entry.baselineData.symptoms ?? [], ';'),
           Array.prototype.join.call(entry.functionalImpact?.limitedActivities ?? [], ';'),
           medications,
-          `"${entry.notes || ''}"`
+          `"${entry.notes || ''}"`,
         ];
         return rowData;
       });
@@ -94,13 +89,13 @@ export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({
     <div className="space-y-4">
       {/* Export quota warning based on per-tier numeric limit (maxExportsPerMonth) */}
       <UsageWarning feature="maxExportsPerMonth" threshold={80} />
-      
+
       {/* CSV Export - Available on all tiers */}
       <div>
-        <SavePanel 
+        <SavePanel
           entries={entries}
           onClearData={onClearData}
-          onExport={(format) => {
+          onExport={format => {
             if (format === 'csv') {
               void handleExport('csv');
             }

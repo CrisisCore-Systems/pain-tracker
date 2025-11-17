@@ -9,12 +9,16 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
 } from 'recharts';
 import { format as formatDate } from 'date-fns';
 import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
-import { analyzeTrends, calculateStatistics, buildDailySeries } from '../../utils/pain-tracker/trending';
+import {
+  analyzeTrends,
+  calculateStatistics,
+  buildDailySeries,
+} from '../../utils/pain-tracker/trending';
 import { exportToCSV, exportToJSON, downloadData } from '../../utils/pain-tracker/export';
 import { ComparisonAnalytics, LocationHeatmap, TreatmentOverlay } from './analytics-v2';
 import { VisitSummary, ClinicalExports } from './clinician-export';
@@ -29,12 +33,20 @@ interface PainAnalyticsProps {
   onApplyTemplate?: (template: Partial<PainEntry>) => void;
 }
 
-type TabId = 'overview' | 'comparison' | 'heatmap' | 'treatment' | 'clinical' | 'accessibility' | 'backup' | 'templates';
+type TabId =
+  | 'overview'
+  | 'comparison'
+  | 'heatmap'
+  | 'treatment'
+  | 'clinical'
+  | 'accessibility'
+  | 'backup'
+  | 'templates';
 
-export const PainAnalytics: React.FC<PainAnalyticsProps> = ({ 
-  entries, 
-  onDataRestore = () => {}, 
-  onApplyTemplate = () => {} 
+export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
+  entries,
+  onDataRestore = () => {},
+  onApplyTemplate = () => {},
 }) => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const prefersReducedMotion = useReducedMotion();
@@ -53,27 +65,32 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
     { id: 'clinical', label: 'Clinical Export', icon: '🏥' },
     { id: 'backup', label: 'Data Backup', icon: '💾' },
     { id: 'templates', label: 'Templates', icon: '📋' },
-    { id: 'accessibility', label: 'Accessibility', icon: '♿' }
+    { id: 'accessibility', label: 'Accessibility', icon: '♿' },
   ];
 
   const timeOfDayData = Object.entries(trends.timeOfDayPattern).map(([hour, pain]) => ({
     hour,
-    avgPain: pain / Math.max(1, entries.filter(e => {
-      const h = new Date(e.timestamp).getUTCHours();
-      return `${h.toString().padStart(2, '0')}:00` === hour;
-    }).length)
+    avgPain:
+      pain /
+      Math.max(
+        1,
+        entries.filter(e => {
+          const h = new Date(e.timestamp).getUTCHours();
+          return `${h.toString().padStart(2, '0')}:00` === hour;
+        }).length
+      ),
   }));
 
   const locationData = Object.entries(trends.locationFrequency).map(([location, frequency]) => ({
     location,
     frequency,
-    avgPain: stats.locationStats[location]?.avgPain || 0
+    avgPain: stats.locationStats[location]?.avgPain || 0,
   }));
 
   const symptomData = Object.entries(trends.symptomCorrelations).map(([symptom]) => ({
     symptom,
     frequency: stats.symptomStats[symptom]?.frequency || 0,
-    avgPain: stats.symptomStats[symptom]?.avgPain || 0
+    avgPain: stats.symptomStats[symptom]?.avgPain || 0,
   }));
 
   const handleExport = (format: 'csv' | 'json') => {
@@ -93,15 +110,16 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
       <div className="bg-white rounded-lg shadow">
         <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="flex space-x-8 px-6" aria-label="Analytics Tabs">
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`
                   flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm
-                  ${activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ${
+                    activeTab === tab.id
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }
                 `}
               >
@@ -146,7 +164,8 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
               <div className="stat-card">
                 <h3 className="text-gray-600 dark:text-gray-400">Pain Trend</h3>
                 <p className="text-2xl font-bold">
-                  {trends.painTrends.increasing ? '↑' : '↓'} {formatNumber(Math.abs(trends.painTrends.averageChange), 1)}
+                  {trends.painTrends.increasing ? '↑' : '↓'}{' '}
+                  {formatNumber(Math.abs(trends.painTrends.averageChange), 1)}
                 </p>
               </div>
             </div>
@@ -184,7 +203,13 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                   <YAxis domain={[0, 10]} />
                   <Tooltip />
                   <Legend wrapperStyle={{ whiteSpace: 'normal', maxWidth: 200 }} />
-                  <Line type="monotone" dataKey="pain" stroke="#ef4444" name="Average" isAnimationActive={!prefersReducedMotion} />
+                  <Line
+                    type="monotone"
+                    dataKey="pain"
+                    stroke="#ef4444"
+                    name="Average"
+                    isAnimationActive={!prefersReducedMotion}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -243,9 +268,7 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
           <DataRestore onDataRestore={onDataRestore} />
         </div>
       )}
-      {activeTab === 'templates' && (
-        <TemplateLibrary onApplyTemplate={onApplyTemplate} />
-      )}
+      {activeTab === 'templates' && <TemplateLibrary onApplyTemplate={onApplyTemplate} />}
       {activeTab === 'accessibility' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

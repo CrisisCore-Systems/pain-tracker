@@ -63,7 +63,7 @@ class PainAnalyticsService {
     }
 
     const patterns: PainPattern[] = [];
-    
+
     // Pattern 1: High pain correlation with specific symptoms
     const symptomPainAnalysis = this.analyzeSymptomPainCorrelation(entries);
     if (symptomPainAnalysis.length > 0) {
@@ -76,8 +76,8 @@ class PainAnalyticsService {
         recommendations: [
           'Monitor and manage high-correlation symptoms early',
           'Consider preventive measures for identified triggers',
-          'Discuss symptom management with healthcare provider'
-        ]
+          'Discuss symptom management with healthcare provider',
+        ],
       });
     }
 
@@ -93,8 +93,8 @@ class PainAnalyticsService {
         recommendations: [
           'Plan activities around predictable pain cycles',
           'Prepare pain management strategies in advance',
-          'Track additional factors during high-pain periods'
-        ]
+          'Track additional factors during high-pain periods',
+        ],
       });
     }
 
@@ -110,8 +110,8 @@ class PainAnalyticsService {
         recommendations: [
           'Review medication timing and effectiveness with provider',
           'Consider dose adjustments for low-effectiveness medications',
-          'Track side effects and their impact on daily function'
-        ]
+          'Track side effects and their impact on daily function',
+        ],
       });
     }
 
@@ -127,25 +127,26 @@ class PainAnalyticsService {
         predictedPain: 0,
         confidence: 0,
         timeframe,
-        factors: []
+        factors: [],
       };
     }
 
     const recentEntries = entries.slice(-10);
-    const avgRecentPain = recentEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / recentEntries.length;
-    
+    const avgRecentPain =
+      recentEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / recentEntries.length;
+
     // Simple trend analysis
     const trend = this.calculateTrend(recentEntries);
     const seasonalFactor = this.calculateSeasonalFactor(new Date());
     const stressFactor = this.calculateStressFactor(recentEntries);
-    
+
     let prediction = avgRecentPain;
     prediction += trend * this.getTimeframeMultiplier(timeframe);
     prediction += seasonalFactor;
     prediction += stressFactor;
-    
+
     prediction = Math.max(0, Math.min(10, prediction));
-    
+
     return {
       predictedPain: Math.round(prediction * 10) / 10,
       confidence: Math.min(0.9, entries.length / 20), // Confidence increases with data
@@ -154,19 +155,20 @@ class PainAnalyticsService {
         {
           factor: 'Recent Trend',
           impact: trend,
-          description: trend > 0 ? 'Pain increasing' : trend < 0 ? 'Pain decreasing' : 'Pain stable'
+          description:
+            trend > 0 ? 'Pain increasing' : trend < 0 ? 'Pain decreasing' : 'Pain stable',
         },
         {
           factor: 'Seasonal',
           impact: seasonalFactor,
-          description: this.getSeasonalDescription(seasonalFactor)
+          description: this.getSeasonalDescription(seasonalFactor),
         },
         {
           factor: 'Stress/Sleep',
           impact: stressFactor,
-          description: this.getStressDescription(stressFactor)
-        }
-      ]
+          description: this.getStressDescription(stressFactor),
+        },
+      ],
     };
   }
 
@@ -177,7 +179,7 @@ class PainAnalyticsService {
     return {
       symptomCorrelations: this.analyzeSymptomPainCorrelation(entries),
       activityCorrelations: this.analyzeActivityCorrelations(entries),
-      medicationEffectiveness: this.analyzeMedicationEffectiveness(entries)
+      medicationEffectiveness: this.analyzeMedicationEffectiveness(entries),
     };
   }
 
@@ -187,7 +189,7 @@ class PainAnalyticsService {
   analyzeTrends(entries: PainEntry[]): TrendAnalysis {
     const trend = this.calculateOverallTrend(entries);
     const periodicPatterns = this.analyzeTemporalPatterns(entries);
-    
+
     return {
       overallTrend: trend.direction,
       trendStrength: Math.abs(trend.strength),
@@ -195,23 +197,23 @@ class PainAnalyticsService {
         {
           pattern: 'Weekly Cycle',
           strength: periodicPatterns.weekly.strength,
-          description: `${periodicPatterns.weekly.strength > 0.5 ? 'Strong' : 'Weak'} weekly pattern detected`
+          description: `${periodicPatterns.weekly.strength > 0.5 ? 'Strong' : 'Weak'} weekly pattern detected`,
         },
         {
           pattern: 'Monthly Cycle',
           strength: periodicPatterns.monthly.strength,
-          description: `${periodicPatterns.monthly.strength > 0.5 ? 'Strong' : 'Weak'} monthly pattern detected`
-        }
+          description: `${periodicPatterns.monthly.strength > 0.5 ? 'Strong' : 'Weak'} monthly pattern detected`,
+        },
       ],
-        seasonalFactors: this.analyzeSeasonalFactors()
+      seasonalFactors: this.analyzeSeasonalFactors(),
     };
   }
 
   // Private helper methods
 
   private analyzeSymptomPainCorrelation(entries: PainEntry[]) {
-    const symptomPainMap = new Map<string, { painSum: number; count: number; }>();
-    
+    const symptomPainMap = new Map<string, { painSum: number; count: number }>();
+
     entries.forEach(entry => {
       (entry.baselineData.symptoms || []).forEach(symptom => {
         if (!symptomPainMap.has(symptom)) {
@@ -227,7 +229,7 @@ class PainAnalyticsService {
       .map(([symptom, data]) => ({
         symptom,
         painCorrelation: data.painSum / data.count,
-        frequency: data.count
+        frequency: data.count,
       }))
       .filter(item => item.frequency >= 2)
       .sort((a, b) => b.painCorrelation - a.painCorrelation);
@@ -235,8 +237,8 @@ class PainAnalyticsService {
 
   private analyzeActivityCorrelations(entries: PainEntry[]) {
     // Analyze correlation between limited activities and pain levels
-    const activityPainMap = new Map<string, { painSum: number; count: number; }>();
-    
+    const activityPainMap = new Map<string, { painSum: number; count: number }>();
+
     entries.forEach(entry => {
       (entry.functionalImpact?.limitedActivities || []).forEach(activity => {
         if (!activityPainMap.has(activity)) {
@@ -252,22 +254,25 @@ class PainAnalyticsService {
       .map(([activity, data]) => ({
         activity,
         painImpact: data.painSum / data.count,
-        frequency: data.count
+        frequency: data.count,
       }))
       .filter(item => item.frequency >= 2)
       .sort((a, b) => b.painImpact - a.painImpact);
   }
 
   private analyzeMedicationEffectiveness(entries: PainEntry[]) {
-    const medicationMap = new Map<string, { effectiveness: number; painReduction: number; count: number; }>();
-    
+    const medicationMap = new Map<
+      string,
+      { effectiveness: number; painReduction: number; count: number }
+    >();
+
     entries.forEach(entry => {
       (entry.medications?.current || []).forEach(med => {
         if (!medicationMap.has(med.name)) {
           medicationMap.set(med.name, { effectiveness: 0, painReduction: 0, count: 0 });
         }
         const data = medicationMap.get(med.name)!;
-        
+
         // Simple effectiveness scoring
         const effectScore = this.parseEffectiveness(med.effectiveness || 'moderate');
         data.effectiveness += effectScore;
@@ -280,7 +285,7 @@ class PainAnalyticsService {
       .map(([medication, data]) => ({
         medication,
         effectivenessScore: data.effectiveness / data.count,
-        painReduction: data.painReduction / data.count
+        painReduction: data.painReduction / data.count,
       }))
       .filter(item => item.effectivenessScore > 0)
       .sort((a, b) => b.effectivenessScore - a.effectivenessScore);
@@ -290,7 +295,7 @@ class PainAnalyticsService {
     // Analyze weekly and monthly patterns
     const weeklyData = new Array(7).fill(0).map(() => ({ sum: 0, count: 0 }));
     const monthlyData = new Array(31).fill(0).map(() => ({ sum: 0, count: 0 }));
-    
+
     entries.forEach(entry => {
       const d = new Date(entry.timestamp);
       const localStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -306,50 +311,53 @@ class PainAnalyticsService {
       }
     });
 
-    const weeklyAvg = weeklyData.map(d => d.count > 0 ? d.sum / d.count : 0);
-    const monthlyAvg = monthlyData.map(d => d.count > 0 ? d.sum / d.count : 0);
-    
+    const weeklyAvg = weeklyData.map(d => (d.count > 0 ? d.sum / d.count : 0));
+    const monthlyAvg = monthlyData.map(d => (d.count > 0 ? d.sum / d.count : 0));
+
     return {
       cyclical: {
         period: 'weekly',
-        strength: this.calculateVariance(weeklyAvg) / 10 // Normalize to 0-1
+        strength: this.calculateVariance(weeklyAvg) / 10, // Normalize to 0-1
       },
       weekly: {
         strength: this.calculateVariance(weeklyAvg) / 10,
-        data: weeklyAvg
+        data: weeklyAvg,
       },
       monthly: {
         strength: this.calculateVariance(monthlyAvg) / 10,
-        data: monthlyAvg
-      }
+        data: monthlyAvg,
+      },
     };
   }
 
   private calculateTrend(entries: PainEntry[]): number {
     if (entries.length < 3) return 0;
-    
+
     const painLevels = entries.map(e => e.baselineData.pain);
     const n = painLevels.length;
     const x = Array.from({ length: n }, (_, i) => i);
-    
+
     // Simple linear regression slope
     const sumX = x.reduce((a, b) => a + b, 0);
     const sumY = painLevels.reduce((a, b) => a + b, 0);
     const sumXY = x.reduce((sum, xi, i) => sum + xi * painLevels[i], 0);
     const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
-    
+
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
     return slope;
   }
 
   private calculateOverallTrend(entries: PainEntry[]) {
     const trend = this.calculateTrend(entries.slice(-10));
-    
+
     return {
-      direction: trend > 0.1 ? 'worsening' as const : 
-                trend < -0.1 ? 'improving' as const : 
-                'stable' as const,
-      strength: Math.abs(trend)
+      direction:
+        trend > 0.1
+          ? ('worsening' as const)
+          : trend < -0.1
+            ? ('improving' as const)
+            : ('stable' as const),
+      strength: Math.abs(trend),
     };
   }
 
@@ -357,43 +365,49 @@ class PainAnalyticsService {
     const month = date.getMonth();
     // Simple seasonal adjustments (customize based on regional patterns)
     const seasonalFactors = [
-      0.2,  // January - Winter blues
-      0.1,  // February
+      0.2, // January - Winter blues
+      0.1, // February
       -0.1, // March - Spring improvement
       -0.2, // April
       -0.2, // May
-      0.0,  // June
-      0.0,  // July
-      0.0,  // August
+      0.0, // June
+      0.0, // July
+      0.0, // August
       -0.1, // September
-      0.1,  // October
-      0.2,  // November - Weather changes
-      0.2   // December - Holiday stress
+      0.1, // October
+      0.2, // November - Weather changes
+      0.2, // December - Holiday stress
     ];
-    
+
     return seasonalFactors[month];
   }
 
   private calculateStressFactor(entries: PainEntry[]): number {
     const recentEntries = entries.slice(-3);
-    const avgSleepQuality = recentEntries.reduce((sum, e) => 
-      sum + (e.qualityOfLife?.sleepQuality || 5), 0) / recentEntries.length;
-    const avgMoodImpact = recentEntries.reduce((sum, e) => 
-      sum + (e.qualityOfLife?.moodImpact || 5), 0) / recentEntries.length;
-    
+    const avgSleepQuality =
+      recentEntries.reduce((sum, e) => sum + (e.qualityOfLife?.sleepQuality || 5), 0) /
+      recentEntries.length;
+    const avgMoodImpact =
+      recentEntries.reduce((sum, e) => sum + (e.qualityOfLife?.moodImpact || 5), 0) /
+      recentEntries.length;
+
     // Poor sleep and high mood impact increase predicted pain
     const sleepFactor = (5 - avgSleepQuality) * 0.2;
     const moodFactor = (avgMoodImpact - 5) * 0.2;
-    
+
     return sleepFactor + moodFactor;
   }
 
   private getTimeframeMultiplier(timeframe: string): number {
     switch (timeframe) {
-      case '24h': return 0.5;
-      case '7d': return 2.0;
-      case '30d': return 5.0;
-      default: return 1.0;
+      case '24h':
+        return 0.5;
+      case '7d':
+        return 2.0;
+      case '30d':
+        return 5.0;
+      default:
+        return 1.0;
     }
   }
 
@@ -414,13 +428,13 @@ class PainAnalyticsService {
       {
         factor: 'Weather Sensitivity',
         impact: 0.2,
-        season: 'Winter'
+        season: 'Winter',
       },
       {
         factor: 'Activity Level',
         impact: -0.1,
-        season: 'Spring'
-      }
+        season: 'Spring',
+      },
     ];
   }
 

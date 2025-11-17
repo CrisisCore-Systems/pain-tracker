@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Mic, 
-  MicOff, 
-  Eye, 
-  Hand, 
-  Keyboard, 
+import {
+  Mic,
+  MicOff,
+  Eye,
+  Hand,
+  Keyboard,
   Gamepad2,
   Accessibility,
   Volume2,
@@ -16,7 +16,7 @@ import {
   HelpCircle,
   Smartphone,
   Monitor,
-  Zap
+  Zap,
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -97,7 +97,7 @@ function useVoiceRecognition(): VoiceRecognitionHook {
       // Cast the platform SpeechRecognition instance to our lightweight interface
       // so we don't require exact runtime types. Use a defensive null-check
       // before accessing instance properties to satisfy strict null checks.
-      recognitionRef.current = (new SpeechRecognitionCtor() as unknown) as SpeechRecognitionLike;
+      recognitionRef.current = new SpeechRecognitionCtor() as unknown as SpeechRecognitionLike;
 
       if (recognitionRef.current) {
         recognitionRef.current.continuous = true;
@@ -134,7 +134,9 @@ function useVoiceRecognition(): VoiceRecognitionHook {
 // Eye tracking simulation hook
 function useEyeTracking() {
   const [isActive, setIsActive] = useState(false);
-  const [calibrationStatus, setCalibrationStatus] = useState<'uncalibrated' | 'calibrating' | 'calibrated'>('uncalibrated');
+  const [calibrationStatus, setCalibrationStatus] = useState<
+    'uncalibrated' | 'calibrating' | 'calibrated'
+  >('uncalibrated');
 
   const startCalibration = () => {
     setCalibrationStatus('calibrating');
@@ -150,11 +152,11 @@ function useEyeTracking() {
     setCalibrationStatus('uncalibrated');
   };
 
-  return { 
-    isActive, 
-    calibrationStatus, 
-    startCalibration, 
-    stopEyeTracking 
+  return {
+    isActive,
+    calibrationStatus,
+    startCalibration,
+    stopEyeTracking,
   };
 }
 
@@ -163,7 +165,8 @@ const inputMethods: InputMethod[] = [
   {
     id: 'voice-recognition',
     name: 'Voice Recognition',
-    description: 'Speak your pain levels and symptoms naturally. Say "My pain is 7" or "I feel stiff in my neck"',
+    description:
+      'Speak your pain levels and symptoms naturally. Say "My pain is 7" or "I feel stiff in my neck"',
     icon: Mic,
     status: 'available',
     capabilities: [
@@ -171,9 +174,9 @@ const inputMethods: InputMethod[] = [
       'Symptom description',
       'Medication logging',
       'Quick notes dictation',
-      'Navigation commands'
+      'Navigation commands',
     ],
-    requirements: ['Microphone access', 'Quiet environment preferred']
+    requirements: ['Microphone access', 'Quiet environment preferred'],
   },
   {
     id: 'eye-tracking',
@@ -186,9 +189,9 @@ const inputMethods: InputMethod[] = [
       'Dwell-click selection',
       'Eye gesture commands',
       'Hands-free operation',
-      'Fatigue-reducing interaction'
+      'Fatigue-reducing interaction',
     ],
-    requirements: ['Webcam access', 'Good lighting', 'Head stability']
+    requirements: ['Webcam access', 'Good lighting', 'Head stability'],
   },
   {
     id: 'gesture-control',
@@ -201,9 +204,9 @@ const inputMethods: InputMethod[] = [
       'Hand wave navigation',
       'Finger pointing selection',
       'Gesture-based pain rating',
-      'Motion-based input'
+      'Motion-based input',
     ],
-    requirements: ['Camera access', 'Adequate lighting', 'Visible hand movements']
+    requirements: ['Camera access', 'Adequate lighting', 'Visible hand movements'],
   },
   {
     id: 'switch-access',
@@ -216,9 +219,9 @@ const inputMethods: InputMethod[] = [
       'Multi-switch direct access',
       'Sip-and-puff control',
       'Foot switch operation',
-      'Head switch activation'
+      'Head switch activation',
     ],
-    requirements: ['Compatible switch device', 'USB or Bluetooth connection']
+    requirements: ['Compatible switch device', 'USB or Bluetooth connection'],
   },
   {
     id: 'keyboard-navigation',
@@ -231,9 +234,9 @@ const inputMethods: InputMethod[] = [
       'Custom keyboard shortcuts',
       'Sticky keys support',
       'One-handed typing',
-      'Voice-to-text combination'
+      'Voice-to-text combination',
     ],
-    requirements: ['Physical or virtual keyboard']
+    requirements: ['Physical or virtual keyboard'],
   },
   {
     id: 'large-touch-targets',
@@ -246,16 +249,16 @@ const inputMethods: InputMethod[] = [
       'Reduced precision requirements',
       'Tremor compensation',
       'Accidental touch prevention',
-      'Swipe gesture alternatives'
+      'Swipe gesture alternatives',
     ],
-    requirements: ['Touch screen device']
-  }
+    requirements: ['Touch screen device'],
+  },
 ];
 
 export function MultiModalInputSupport({
   onInputMethodChange,
   onAccessibilitySettingChange,
-  className = ''
+  className = '',
 }: MultiModalInputProps) {
   const [activeInputMethods, setActiveInputMethods] = useState<string[]>([]);
   const [accessibilitySettings, setAccessibilitySettings] = useState({
@@ -266,7 +269,7 @@ export function MultiModalInputSupport({
     touchTargetSize: 'normal',
     reducedMotion: false,
     highContrast: false,
-    audioFeedback: true
+    audioFeedback: true,
   });
 
   const voiceRecognition = useVoiceRecognition();
@@ -277,9 +280,9 @@ export function MultiModalInputSupport({
     const updatedMethods = isActive
       ? activeInputMethods.filter(id => id !== method.id)
       : [...activeInputMethods, method.id];
-    
+
     setActiveInputMethods(updatedMethods);
-    
+
     if (onInputMethodChange) {
       onInputMethodChange(method, !isActive);
     }
@@ -287,14 +290,16 @@ export function MultiModalInputSupport({
 
   const handleAccessibilityChange = (setting: string, value: boolean | number | string) => {
     setAccessibilitySettings(prev => ({ ...prev, [setting]: value }));
-    
+
     if (onAccessibilitySettingChange) {
       onAccessibilitySettingChange(setting, value);
     }
   };
 
   return (
-    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
+    <div
+      className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}
+    >
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-blue-100 rounded-lg">
           <Accessibility className="w-6 h-6 text-blue-600" />
@@ -304,8 +309,8 @@ export function MultiModalInputSupport({
             Multi-Modal Input Support
           </h2>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Choose input methods that work best for your physical needs and abilities. 
-            Multiple methods can be used together for maximum accessibility and comfort.
+            Choose input methods that work best for your physical needs and abilities. Multiple
+            methods can be used together for maximum accessibility and comfort.
           </p>
         </div>
       </div>
@@ -328,9 +333,9 @@ export function MultiModalInputSupport({
         </h3>
 
         <div className="grid gap-4">
-          {inputMethods.map((method) => {
+          {inputMethods.map(method => {
             const isActive = activeInputMethods.includes(method.id);
-            
+
             return (
               <InputMethodCard
                 key={method.id}
@@ -369,8 +374,12 @@ function VoiceRecognitionPanel({ voiceRecognition }: { voiceRecognition: VoiceRe
         </div>
         <div className="flex items-center space-x-2">
           <TouchOptimizedButton
-            variant={voiceRecognition.isListening ? "primary" : "secondary"}
-            onClick={voiceRecognition.isListening ? voiceRecognition.stopListening : voiceRecognition.startListening}
+            variant={voiceRecognition.isListening ? 'primary' : 'secondary'}
+            onClick={
+              voiceRecognition.isListening
+                ? voiceRecognition.stopListening
+                : voiceRecognition.startListening
+            }
             className="px-3 py-1"
           >
             {voiceRecognition.isListening ? (
@@ -387,7 +396,7 @@ function VoiceRecognitionPanel({ voiceRecognition }: { voiceRecognition: VoiceRe
           </TouchOptimizedButton>
         </div>
       </div>
-      
+
       {voiceRecognition.isListening && (
         <div className="bg-white p-3 rounded border">
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Listening... Try saying:</p>
@@ -399,7 +408,9 @@ function VoiceRecognitionPanel({ voiceRecognition }: { voiceRecognition: VoiceRe
           </ul>
           {voiceRecognition.transcript && (
             <div className="mt-3 p-2 bg-blue-100 rounded">
-              <p className="text-sm font-medium text-blue-900">Heard: "{voiceRecognition.transcript}"</p>
+              <p className="text-sm font-medium text-blue-900">
+                Heard: "{voiceRecognition.transcript}"
+              </p>
             </div>
           )}
         </div>
@@ -440,7 +451,7 @@ function EyeTrackingPanel({ eyeTracking }: { eyeTracking: EyeTrackingHook }) {
           )}
         </div>
       </div>
-      
+
       <div className="text-sm">
         {eyeTracking.calibrationStatus === 'calibrating' && (
           <div className="flex items-center space-x-2 text-purple-700">
@@ -463,7 +474,7 @@ function EyeTrackingPanel({ eyeTracking }: { eyeTracking: EyeTrackingHook }) {
 function InputMethodCard({
   method,
   isActive,
-  onToggle
+  onToggle,
 }: {
   method: InputMethod;
   isActive: boolean;
@@ -474,20 +485,28 @@ function InputMethodCard({
     available: 'text-green-600 bg-green-100',
     testing: 'text-yellow-600 bg-yellow-100',
     unavailable: 'text-red-600 bg-red-100',
-    active: 'text-blue-600 bg-blue-100'
+    active: 'text-blue-600 bg-blue-100',
   };
 
   return (
-    <div className={`border-2 rounded-lg p-4 transition-all ${
-      isActive ? 'border-blue-300 bg-blue-50' : 'border-gray-200 hover:border-blue-200'
-    }`}>
+    <div
+      className={`border-2 rounded-lg p-4 transition-all ${
+        isActive ? 'border-blue-300 bg-blue-50' : 'border-gray-200 hover:border-blue-200'
+      }`}
+    >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <div className={`p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'bg-gray-100 dark:bg-gray-800'}`}>
-            <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-600 dark:text-gray-400'}`} />
+          <div
+            className={`p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'bg-gray-100 dark:bg-gray-800'}`}
+          >
+            <Icon
+              className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-600 dark:text-gray-400'}`}
+            />
           </div>
           <div>
-            <h4 className={`font-semibold ${isActive ? 'text-blue-900' : 'text-gray-900 dark:text-gray-100'}`}>
+            <h4
+              className={`font-semibold ${isActive ? 'text-blue-900' : 'text-gray-900 dark:text-gray-100'}`}
+            >
               {method.name}
             </h4>
             <span className={`px-2 py-1 text-xs rounded-full ${statusColors[method.status]}`}>
@@ -496,7 +515,7 @@ function InputMethodCard({
           </div>
         </div>
         <TouchOptimizedButton
-          variant={isActive ? "primary" : "secondary"}
+          variant={isActive ? 'primary' : 'secondary'}
           onClick={onToggle}
           className="px-4 py-2"
         >
@@ -537,7 +556,7 @@ function InputMethodCard({
 // Accessibility settings panel
 function AccessibilitySettingsPanel({
   settings,
-  onSettingChange
+  onSettingChange,
 }: {
   settings: AccessibilitySettings;
   onSettingChange: (setting: string, value: boolean | number | string) => void;
@@ -546,26 +565,36 @@ function AccessibilitySettingsPanel({
     <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
       <div className="flex items-center space-x-2 mb-4">
         <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Accessibility Settings</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Accessibility Settings
+        </h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Audio Feedback</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Audio Feedback
+            </label>
             <TouchOptimizedButton
-              variant={settings.audioFeedback ? "primary" : "secondary"}
+              variant={settings.audioFeedback ? 'primary' : 'secondary'}
               onClick={() => onSettingChange('audioFeedback', !settings.audioFeedback)}
               className="px-3 py-1"
             >
-              {settings.audioFeedback ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+              {settings.audioFeedback ? (
+                <Volume2 className="w-4 h-4" />
+              ) : (
+                <VolumeX className="w-4 h-4" />
+              )}
             </TouchOptimizedButton>
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">High Contrast</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              High Contrast
+            </label>
             <TouchOptimizedButton
-              variant={settings.highContrast ? "primary" : "secondary"}
+              variant={settings.highContrast ? 'primary' : 'secondary'}
               onClick={() => onSettingChange('highContrast', !settings.highContrast)}
               className="px-3 py-1"
             >
@@ -574,9 +603,11 @@ function AccessibilitySettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Reduced Motion</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Reduced Motion
+            </label>
             <TouchOptimizedButton
-              variant={settings.reducedMotion ? "primary" : "secondary"}
+              variant={settings.reducedMotion ? 'primary' : 'secondary'}
               onClick={() => onSettingChange('reducedMotion', !settings.reducedMotion)}
               className="px-3 py-1"
             >
@@ -596,7 +627,7 @@ function AccessibilitySettingsPanel({
               max="3000"
               step="100"
               value={settings.dwellTime}
-              onChange={(e) => onSettingChange('dwellTime', parseInt(e.target.value))}
+              onChange={e => onSettingChange('dwellTime', parseInt(e.target.value))}
               className="w-full"
             />
           </div>
@@ -607,7 +638,7 @@ function AccessibilitySettingsPanel({
             </label>
             <select
               value={settings.touchTargetSize}
-              onChange={(e) => onSettingChange('touchTargetSize', e.target.value)}
+              onChange={e => onSettingChange('touchTargetSize', e.target.value)}
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg"
             >
               <option value="small">Small</option>
@@ -625,7 +656,7 @@ function AccessibilitySettingsPanel({
 // Quick setup recommendations
 function QuickSetupRecommendations({
   activeInputMethods,
-  onMethodToggle
+  onMethodToggle,
 }: {
   activeInputMethods: string[];
   onMethodToggle: (method: InputMethod) => void;
@@ -635,36 +666,41 @@ function QuickSetupRecommendations({
       title: 'Limited Hand Mobility',
       description: 'Voice recognition + eye tracking for hands-free control',
       methods: ['voice-recognition', 'eye-tracking'],
-      icon: Hand
+      icon: Hand,
     },
     {
       title: 'Fatigue Management',
       description: 'Large touch targets + voice commands for energy conservation',
       methods: ['large-touch-targets', 'voice-recognition'],
-      icon: Zap
+      icon: Zap,
     },
     {
       title: 'Tremor Support',
       description: 'Switch access + large targets for precise control',
       methods: ['switch-access', 'large-touch-targets'],
-      icon: Gamepad2
-    }
+      icon: Gamepad2,
+    },
   ];
 
   return (
     <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
       <div className="flex items-center space-x-2 mb-4">
         <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Setup Recommendations</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Quick Setup Recommendations
+        </h3>
       </div>
 
       <div className="grid gap-3">
         {recommendations.map((rec, index) => {
           const Icon = rec.icon;
           const isActive = rec.methods.every(methodId => activeInputMethods.includes(methodId));
-          
+
           return (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg"
+            >
               <div className="flex items-center space-x-3">
                 <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 <div>
@@ -673,7 +709,7 @@ function QuickSetupRecommendations({
                 </div>
               </div>
               <TouchOptimizedButton
-                variant={isActive ? "primary" : "secondary"}
+                variant={isActive ? 'primary' : 'secondary'}
                 onClick={() => {
                   rec.methods.forEach(methodId => {
                     const method = inputMethods.find(m => m.id === methodId);

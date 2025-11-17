@@ -59,13 +59,13 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should calculate pain vs time of day correlation', () => {
       const results = engine.calculateCorrelationMatrix(mockEntries);
-      
+
       expect(results.length).toBeGreaterThan(0);
-      
+
       const timeCorrelation = results.find(
-        (r) => r.variable1 === 'Pain Level' && r.variable2 === 'Hour of Day'
+        r => r.variable1 === 'Pain Level' && r.variable2 === 'Hour of Day'
       );
-      
+
       expect(timeCorrelation).toBeDefined();
       expect(timeCorrelation?.coefficient).toBeGreaterThanOrEqual(-1);
       expect(timeCorrelation?.coefficient).toBeLessThanOrEqual(1);
@@ -74,29 +74,29 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should calculate pain vs day of week correlation', () => {
       const results = engine.calculateCorrelationMatrix(mockEntries);
-      
+
       const dayCorrelation = results.find(
-        (r) => r.variable1 === 'Pain Level' && r.variable2 === 'Day of Week'
+        r => r.variable1 === 'Pain Level' && r.variable2 === 'Day of Week'
       );
-      
+
       expect(dayCorrelation).toBeDefined();
       expect(['positive', 'negative', 'none']).toContain(dayCorrelation?.direction);
     });
 
     it('should include mood correlation when mood data provided', () => {
       const results = engine.calculateCorrelationMatrix(mockEntries, mockMoodEntries);
-      
+
       const moodCorrelation = results.find(
-        (r) => r.variable1 === 'Pain Level' && r.variable2 === 'Mood Score'
+        r => r.variable1 === 'Pain Level' && r.variable2 === 'Mood Score'
       );
-      
+
       expect(moodCorrelation).toBeDefined();
     });
 
     it('should classify correlation strength correctly', () => {
       const results = engine.calculateCorrelationMatrix(mockEntries);
-      
-      results.forEach((result) => {
+
+      results.forEach(result => {
         expect(['very weak', 'weak', 'moderate', 'strong', 'very strong']).toContain(
           result.strength
         );
@@ -105,8 +105,8 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should filter out results with insufficient sample size', () => {
       const results = engine.calculateCorrelationMatrix(mockEntries);
-      
-      results.forEach((result) => {
+
+      results.forEach(result => {
         expect(result.sampleSize).toBeGreaterThanOrEqual(10);
       });
     });
@@ -114,21 +114,21 @@ describe('AdvancedAnalyticsEngine', () => {
 
   describe('scoreInterventions', () => {
     it('should return empty array when no interventions used', () => {
-      const entriesWithoutInterventions = mockEntries.map((e) => ({
+      const entriesWithoutInterventions = mockEntries.map(e => ({
         ...e,
         reliefMethods: [],
       }));
-      
+
       const scores = engine.scoreInterventions(entriesWithoutInterventions);
       expect(scores).toEqual([]);
     });
 
     it('should calculate effectiveness scores', () => {
       const scores = engine.scoreInterventions(mockEntries);
-      
+
       expect(scores.length).toBeGreaterThan(0);
-      
-      scores.forEach((score) => {
+
+      scores.forEach(score => {
         expect(score.effectivenessScore).toBeGreaterThanOrEqual(0);
         expect(score.effectivenessScore).toBeLessThanOrEqual(100);
         expect(score.usageCount).toBeGreaterThanOrEqual(3); // Min threshold
@@ -137,7 +137,7 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should sort interventions by effectiveness', () => {
       const scores = engine.scoreInterventions(mockEntries);
-      
+
       for (let i = 1; i < scores.length; i++) {
         expect(scores[i - 1].effectivenessScore).toBeGreaterThanOrEqual(
           scores[i].effectivenessScore
@@ -147,20 +147,18 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should categorize interventions by type', () => {
       const scores = engine.scoreInterventions(mockEntries);
-      
-      scores.forEach((score) => {
-        expect(['medication', 'treatment', 'coping_strategy', 'lifestyle']).toContain(
-          score.type
-        );
+
+      scores.forEach(score => {
+        expect(['medication', 'treatment', 'coping_strategy', 'lifestyle']).toContain(score.type);
       });
     });
 
     it('should assign confidence levels based on usage', () => {
       const scores = engine.scoreInterventions(mockEntries);
-      
-      scores.forEach((score) => {
+
+      scores.forEach(score => {
         expect(['low', 'medium', 'high']).toContain(score.confidence);
-        
+
         if (score.usageCount >= 10) {
           expect(score.confidence).toBe('high');
         } else if (score.usageCount >= 5) {
@@ -173,8 +171,8 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should provide recommendations', () => {
       const scores = engine.scoreInterventions(mockEntries);
-      
-      scores.forEach((score) => {
+
+      scores.forEach(score => {
         expect(score.recommendation).toBeTruthy();
         expect(score.recommendation.length).toBeGreaterThan(0);
       });
@@ -183,21 +181,21 @@ describe('AdvancedAnalyticsEngine', () => {
 
   describe('detectTriggerPatterns', () => {
     it('should return empty array when no triggers recorded', () => {
-      const entriesWithoutTriggers = mockEntries.map((e) => ({
+      const entriesWithoutTriggers = mockEntries.map(e => ({
         ...e,
         triggers: [],
       }));
-      
+
       const patterns = engine.detectTriggerPatterns(entriesWithoutTriggers);
       expect(patterns).toEqual([]);
     });
 
     it('should identify trigger patterns', () => {
       const patterns = engine.detectTriggerPatterns(mockEntries);
-      
+
       expect(patterns.length).toBeGreaterThan(0);
-      
-      patterns.forEach((pattern) => {
+
+      patterns.forEach(pattern => {
         expect(pattern.frequency).toBeGreaterThanOrEqual(3); // Min threshold
         expect(pattern.riskScore).toBeGreaterThanOrEqual(0);
         expect(pattern.riskScore).toBeLessThanOrEqual(100);
@@ -206,22 +204,20 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should sort patterns by risk score', () => {
       const patterns = engine.detectTriggerPatterns(mockEntries);
-      
+
       for (let i = 1; i < patterns.length; i++) {
-        expect(patterns[i - 1].riskScore).toBeGreaterThanOrEqual(
-          patterns[i].riskScore
-        );
+        expect(patterns[i - 1].riskScore).toBeGreaterThanOrEqual(patterns[i].riskScore);
       }
     });
 
     it('should analyze time of day patterns', () => {
       const patterns = engine.detectTriggerPatterns(mockEntries);
-      
-      const patternWithTime = patterns.find((p) => p.timeOfDayPattern);
-      
+
+      const patternWithTime = patterns.find(p => p.timeOfDayPattern);
+
       if (patternWithTime) {
         expect(patternWithTime.timeOfDayPattern).toBeDefined();
-        patternWithTime.timeOfDayPattern?.forEach((time) => {
+        patternWithTime.timeOfDayPattern?.forEach(time => {
           expect(time.hour).toBeGreaterThanOrEqual(0);
           expect(time.hour).toBeLessThan(24);
           expect(time.count).toBeGreaterThan(0);
@@ -231,12 +227,12 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should analyze day of week patterns', () => {
       const patterns = engine.detectTriggerPatterns(mockEntries);
-      
-      const patternWithDays = patterns.find((p) => p.dayOfWeekPattern);
-      
+
+      const patternWithDays = patterns.find(p => p.dayOfWeekPattern);
+
       if (patternWithDays) {
         expect(patternWithDays.dayOfWeekPattern).toBeDefined();
-        patternWithDays.dayOfWeekPattern?.forEach((day) => {
+        patternWithDays.dayOfWeekPattern?.forEach(day => {
           expect(day.day).toBeTruthy();
           expect(day.count).toBeGreaterThan(0);
         });
@@ -245,8 +241,8 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should track associated symptoms', () => {
       const patterns = engine.detectTriggerPatterns(mockEntries);
-      
-      patterns.forEach((pattern) => {
+
+      patterns.forEach(pattern => {
         expect(Array.isArray(pattern.associatedSymptoms)).toBe(true);
       });
     });
@@ -291,12 +287,12 @@ describe('AdvancedAnalyticsEngine', () => {
         },
         ...mockEntries, // Add more for sufficient data
       ];
-      
+
       const indicators = engine.identifyPredictiveIndicators(escalationEntries);
-      
-      const escalation = indicators.find((i) => i.type === 'escalation');
+
+      const escalation = indicators.find(i => i.type === 'escalation');
       expect(escalation).toBeDefined();
-      
+
       if (escalation) {
         expect(escalation.confidence).toBeGreaterThan(0);
         expect(escalation.confidence).toBeLessThanOrEqual(1);
@@ -305,16 +301,16 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should categorize indicators by type', () => {
       const indicators = engine.identifyPredictiveIndicators(mockEntries);
-      
-      indicators.forEach((indicator) => {
+
+      indicators.forEach(indicator => {
         expect(['warning', 'onset', 'escalation']).toContain(indicator.type);
       });
     });
 
     it('should provide lead time estimates', () => {
       const indicators = engine.identifyPredictiveIndicators(mockEntries);
-      
-      indicators.forEach((indicator) => {
+
+      indicators.forEach(indicator => {
         expect(indicator.leadTime).toBeTruthy();
         expect(indicator.leadTime.length).toBeGreaterThan(0);
       });
@@ -322,8 +318,8 @@ describe('AdvancedAnalyticsEngine', () => {
 
     it('should include descriptions', () => {
       const indicators = engine.identifyPredictiveIndicators(mockEntries);
-      
-      indicators.forEach((indicator) => {
+
+      indicators.forEach(indicator => {
         expect(indicator.description).toBeTruthy();
         expect(indicator.description.length).toBeGreaterThan(0);
       });
@@ -333,73 +329,72 @@ describe('AdvancedAnalyticsEngine', () => {
   describe('generateWeeklyClinicalBrief', () => {
     it('should generate brief with correct date range', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(brief.weekStartDate).toBeInstanceOf(Date);
       expect(brief.weekEndDate).toBeInstanceOf(Date);
-      
+
       const daysDiff =
-        (brief.weekEndDate.getTime() - brief.weekStartDate.getTime()) /
-        (1000 * 60 * 60 * 24);
-      
+        (brief.weekEndDate.getTime() - brief.weekStartDate.getTime()) / (1000 * 60 * 60 * 24);
+
       expect(daysDiff).toBeCloseTo(7, 1);
     });
 
     it('should calculate average pain level', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(brief.avgPainLevel).toBeGreaterThanOrEqual(0);
       expect(brief.avgPainLevel).toBeLessThanOrEqual(10);
     });
 
     it('should determine trend correctly', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(['improving', 'stable', 'worsening']).toContain(brief.overallTrend);
     });
 
     it('should provide key insights', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(Array.isArray(brief.keyInsights)).toBe(true);
       expect(brief.keyInsights.length).toBeGreaterThan(0);
     });
 
     it('should identify top triggers', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(Array.isArray(brief.topTriggers)).toBe(true);
     });
 
     it('should list effective interventions', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(Array.isArray(brief.effectiveInterventions)).toBe(true);
     });
 
     it('should flag concerns', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(Array.isArray(brief.concerns)).toBe(true);
       expect(brief.concerns.length).toBeGreaterThan(0);
     });
 
     it('should provide recommendations', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(Array.isArray(brief.recommendations)).toBe(true);
       expect(brief.recommendations.length).toBeGreaterThan(0);
     });
 
     it('should include next steps', () => {
       const brief = engine.generateWeeklyClinicalBrief(mockEntries, mockMoodEntries);
-      
+
       expect(Array.isArray(brief.nextSteps)).toBe(true);
       expect(brief.nextSteps.length).toBeGreaterThan(0);
     });
 
     it('should handle empty data gracefully', () => {
       const brief = engine.generateWeeklyClinicalBrief([], []);
-      
+
       expect(brief.avgPainLevel).toBe(0);
       expect(brief.keyInsights).toContain('No pain entries recorded this week');
     });
@@ -408,14 +403,12 @@ describe('AdvancedAnalyticsEngine', () => {
   describe('Edge cases', () => {
     it('should handle single entry', () => {
       const singleEntry = [mockEntries[0]];
-      
+
       expect(() => engine.calculateCorrelationMatrix(singleEntry)).not.toThrow();
       expect(() => engine.scoreInterventions(singleEntry)).not.toThrow();
       expect(() => engine.detectTriggerPatterns(singleEntry)).not.toThrow();
       expect(() => engine.identifyPredictiveIndicators(singleEntry)).not.toThrow();
-      expect(() =>
-        engine.generateWeeklyClinicalBrief(singleEntry)
-      ).not.toThrow();
+      expect(() => engine.generateWeeklyClinicalBrief(singleEntry)).not.toThrow();
     });
 
     it('should handle entries without optional fields', () => {
@@ -435,7 +428,7 @@ describe('AdvancedAnalyticsEngine', () => {
           },
         },
       ];
-      
+
       expect(() => engine.calculateCorrelationMatrix(minimalEntries)).not.toThrow();
       expect(() => engine.scoreInterventions(minimalEntries)).not.toThrow();
     });
@@ -446,7 +439,7 @@ describe('AdvancedAnalyticsEngine', () => {
         id: i,
         timestamp: new Date(Date.now() - i * 60 * 60 * 1000).toISOString(),
       }));
-      
+
       expect(() => engine.calculateCorrelationMatrix(largeDataset)).not.toThrow();
       expect(() => engine.scoreInterventions(largeDataset)).not.toThrow();
     }, 10000);

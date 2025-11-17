@@ -1,7 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { encryptionService } from '../services/EncryptionService';
 
-interface Dummy { text: string; repeat: string; }
+interface Dummy {
+  text: string;
+  repeat: string;
+}
 
 const sample: Dummy = { text: 'hello world', repeat: 'aaaaaaaaaaaaabbbbbbbbbbbbcccccccccccc' };
 

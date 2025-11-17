@@ -12,7 +12,7 @@ interface DashboardSectionNavigationProps {
 export function DashboardSectionNavigation({
   sections,
   activeSection,
-  onSectionChange
+  onSectionChange,
 }: DashboardSectionNavigationProps) {
   return (
     <nav
@@ -20,10 +20,8 @@ export function DashboardSectionNavigation({
       role="tablist"
       aria-label="Dashboard focus modes"
     >
-      <div className="flex w-full gap-2 overflow-x-auto pb-1"
-           style={{ scrollbarWidth: 'thin' }}
-      >
-        {sections.map((section) => {
+      <div className="flex w-full gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'thin' }}>
+        {sections.map(section => {
           const Icon = section.icon;
           const isActive = activeSection === section.id;
           return (
@@ -43,7 +41,9 @@ export function DashboardSectionNavigation({
                 <Icon className="h-4 w-4" />
               </span>
               <div className="min-w-0 text-left">
-                <span className="block text-sm font-semibold text-foreground text-balance">{section.label}</span>
+                <span className="block text-sm font-semibold text-foreground text-balance">
+                  {section.label}
+                </span>
                 <span className="block text-xs leading-tight text-muted-foreground text-pretty">
                   {section.description}
                 </span>
@@ -55,4 +55,3 @@ export function DashboardSectionNavigation({
     </nav>
   );
 }
-

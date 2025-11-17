@@ -1,8 +1,25 @@
 import { describe, it, expect } from 'vitest';
-import { categorizeWisdom, assessApplicability, extractWisdomInsights } from '../services/empathy/WisdomModule';
+import {
+  categorizeWisdom,
+  assessApplicability,
+  extractWisdomInsights,
+} from '../services/empathy/WisdomModule';
 
 interface TestMoodEntry {
-  notes: string; timestamp: Date; emotionalClarity: number; emotionalRegulation: number; hopefulness: number; context: string; copingStrategies: string[]; anxiety: number; socialSupport: 'none'|'minimal'|'moderate'|'strong'; mood: number; energy: number; stress: number; selfEfficacy: number; triggers: string[];
+  notes: string;
+  timestamp: Date;
+  emotionalClarity: number;
+  emotionalRegulation: number;
+  hopefulness: number;
+  context: string;
+  copingStrategies: string[];
+  anxiety: number;
+  socialSupport: 'none' | 'minimal' | 'moderate' | 'strong';
+  mood: number;
+  energy: number;
+  stress: number;
+  selfEfficacy: number;
+  triggers: string[];
 }
 const mkMood = (notes: string): TestMoodEntry => ({
   notes,
@@ -18,7 +35,7 @@ const mkMood = (notes: string): TestMoodEntry => ({
   energy: 5,
   stress: 5,
   selfEfficacy: 5,
-  triggers: [] as string[]
+  triggers: [] as string[],
 });
 
 describe('WisdomModule', () => {
@@ -29,7 +46,15 @@ describe('WisdomModule', () => {
     expect(assessApplicability('I can and will improve')).toBeGreaterThan(40);
   });
   it('extracts wisdom insights', async () => {
-    const insights = await extractWisdomInsights('u', [], [mkMood('I realized something important and learned a deep lesson about growth and purpose in life')]);
+    const insights = await extractWisdomInsights(
+      'u',
+      [],
+      [
+        mkMood(
+          'I realized something important and learned a deep lesson about growth and purpose in life'
+        ),
+      ]
+    );
     expect(insights.length).toBe(1);
   });
 });

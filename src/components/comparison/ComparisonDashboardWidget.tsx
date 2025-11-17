@@ -13,7 +13,7 @@ import {
   AlertTriangle,
   TrendingUp,
   Clock,
-  Activity
+  Activity,
 } from 'lucide-react';
 
 interface ComparisonDashboardWidgetProps {
@@ -27,7 +27,7 @@ const COMPARISON_TYPES = [
     label: 'Time Periods',
     description: 'Compare pain levels across different time periods',
     icon: Calendar,
-  component: TimePeriodComparisonComponent,
+    component: TimePeriodComparisonComponent,
   },
   {
     id: 'treatment',
@@ -50,13 +50,15 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
   className,
 }) => {
   const [activeComparison, setActiveComparison] = useState<string>('time-period');
-  const [recentComparisons, setRecentComparisons] = useState<Array<{
-    id: string;
-    type: string;
-    title: string;
-    timestamp: Date;
-    insights: number;
-  }>>([]);
+  const [recentComparisons, setRecentComparisons] = useState<
+    Array<{
+      id: string;
+      type: string;
+      title: string;
+      timestamp: Date;
+      insights: number;
+    }>
+  >([]);
 
   const handleComparisonComplete = (result: ComparisonResult, type: string) => {
     // Add to recent comparisons
@@ -85,7 +87,7 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
       <CardContent>
         <div>
           <div className="grid w-full grid-cols-3 gap-2">
-            {COMPARISON_TYPES.map((type) => {
+            {COMPARISON_TYPES.map(type => {
               const Icon = type.icon;
               const active = activeComparison === type.id;
               return (
@@ -104,26 +106,24 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
           {/* Time period comparison uses 'entries' prop; others use painEntries per their definitions */}
           {activeComparison === 'time-period' && (
             <div className="mt-6">
-            <TimePeriodComparisonComponent
-              entries={painEntries}
-              onComparisonComplete={(result: ComparisonResult) => handleComparisonComplete(result, 'time-period')}
-            />
+              <TimePeriodComparisonComponent
+                entries={painEntries}
+                onComparisonComplete={(result: ComparisonResult) =>
+                  handleComparisonComplete(result, 'time-period')
+                }
+              />
             </div>
           )}
 
           {activeComparison === 'treatment' && (
             <div className="mt-6">
-            <TreatmentComparison
-              entries={painEntries}
-            />
+              <TreatmentComparison entries={painEntries} />
             </div>
           )}
 
           {activeComparison === 'condition' && (
             <div className="mt-6">
-            <ConditionComparison
-              entries={painEntries}
-            />
+              <ConditionComparison entries={painEntries} />
             </div>
           )}
         </div>
@@ -136,14 +136,20 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
               <span>Recent Comparisons</span>
             </h4>
             <div className="space-y-3">
-              {recentComparisons.map((comparison) => (
+              {recentComparisons.map(comparison => (
                 <Card key={comparison.id} className="p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="flex items-center space-x-2">
-                        {comparison.type === 'time-period' && <Calendar className="h-4 w-4 text-blue-600" />}
-                        {comparison.type === 'treatment' && <Pill className="h-4 w-4 text-green-600" />}
-                        {comparison.type === 'condition' && <AlertTriangle className="h-4 w-4 text-orange-600" />}
+                        {comparison.type === 'time-period' && (
+                          <Calendar className="h-4 w-4 text-blue-600" />
+                        )}
+                        {comparison.type === 'treatment' && (
+                          <Pill className="h-4 w-4 text-green-600" />
+                        )}
+                        {comparison.type === 'condition' && (
+                          <AlertTriangle className="h-4 w-4 text-orange-600" />
+                        )}
                         <span className="font-medium">{comparison.title}</span>
                       </div>
                       {comparison.insights > 0 && (

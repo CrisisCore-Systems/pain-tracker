@@ -1,4 +1,3 @@
-
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import EmergencyPanel from './EmergencyPanel';
@@ -15,25 +14,25 @@ describe('EmergencyPanel Component', () => {
         email: 'dr.smith@example.com',
         isHealthcareProvider: true,
         specialty: 'Family Medicine',
-        notes: 'Available Mon-Fri'
-      }
+        notes: 'Available Mon-Fri',
+      },
     ],
     protocols: [
       {
-  name: 'Primary Protocol',
+        name: 'Primary Protocol',
         painThreshold: 8,
         symptoms: ['Severe Pain', 'Numbness'],
         medications: [
           {
             name: 'Emergency Pain Relief',
             dosage: '10mg',
-            instructions: 'Take with water'
-          }
+            instructions: 'Take with water',
+          },
         ],
         immediateActions: ['Rest', 'Apply ice'],
         contactPriority: [1],
-        additionalInstructions: 'Seek immediate medical attention if symptoms persist'
-      }
+        additionalInstructions: 'Seek immediate medical attention if symptoms persist',
+      },
     ],
     medicalHistory: {
       conditions: ['Chronic Back Pain'],
@@ -42,12 +41,12 @@ describe('EmergencyPanel Component', () => {
         {
           date: '2024-01-01',
           description: 'Severe pain episode',
-          outcome: 'Resolved with medication'
-        }
-      ]
+          outcome: 'Resolved with medication',
+        },
+      ],
     },
     currentPainLevel: 5,
-    lastUpdated: new Date().toISOString()
+    lastUpdated: new Date().toISOString(),
   };
 
   const mockOnChange = vi.fn();
@@ -71,7 +70,7 @@ describe('EmergencyPanel Component', () => {
   it('shows emergency alert when pain level exceeds threshold', () => {
     const highPainData = {
       ...mockData,
-      currentPainLevel: 9
+      currentPainLevel: 9,
     };
 
     render(<EmergencyPanel data={highPainData} onChange={mockOnChange} />);
@@ -81,18 +80,18 @@ describe('EmergencyPanel Component', () => {
 
   it('allows adding new emergency contact', () => {
     render(<EmergencyPanel data={mockData} onChange={mockOnChange} />);
-    
+
     // Fill in contact form
     fireEvent.change(screen.getByPlaceholderText('Name'), {
-      target: { value: 'Jane Doe' }
+      target: { value: 'Jane Doe' },
     });
     fireEvent.change(screen.getByPlaceholderText('Relationship'), {
-      target: { value: 'Family Member' }
+      target: { value: 'Family Member' },
     });
     fireEvent.change(screen.getByPlaceholderText('Phone Number'), {
-      target: { value: '555-9876' }
+      target: { value: '555-9876' },
     });
-    
+
     // Add contact
     fireEvent.click(screen.getByText('Add Contact'));
 
@@ -103,15 +102,15 @@ describe('EmergencyPanel Component', () => {
         expect.objectContaining({
           name: 'Jane Doe',
           relationship: 'Family Member',
-          phoneNumber: '555-9876'
-        })
-      ]
+          phoneNumber: '555-9876',
+        }),
+      ],
     });
   });
 
   it('allows removing emergency contact', () => {
     render(<EmergencyPanel data={mockData} onChange={mockOnChange} />);
-    
+
     const removeButton = screen.getByRole('button', { name: /remove contact/i });
     fireEvent.click(removeButton);
 
@@ -121,9 +120,9 @@ describe('EmergencyPanel Component', () => {
       protocols: [
         {
           ...mockData.protocols[0],
-          contactPriority: []
-        }
-      ]
+          contactPriority: [],
+        },
+      ],
     });
   });
 
@@ -148,10 +147,10 @@ describe('EmergencyPanel Component', () => {
 
   it('allows toggling healthcare provider status for new contact', () => {
     render(<EmergencyPanel data={mockData} onChange={mockOnChange} />);
-    
+
     const checkbox = screen.getByRole('checkbox');
     fireEvent.click(checkbox);
-    
+
     expect(screen.getByPlaceholderText('Medical Specialty')).toBeInTheDocument();
   });
-}); 
+});

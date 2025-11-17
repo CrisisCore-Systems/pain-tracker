@@ -1,7 +1,5 @@
-
 import type { PainEntry } from '../../types';
 import { formatNumber } from '../../utils/formatting';
-
 
 interface NerveSymptomsProps {
   entries: PainEntry[];
@@ -11,12 +9,7 @@ interface NerveSymptomsProps {
   };
 }
 
-const NERVE_SYMPTOMS = [
-  'tingling',
-  'numbness',
-  'burning',
-  'radiating',
-] as const;
+const NERVE_SYMPTOMS = ['tingling', 'numbness', 'burning', 'radiating'] as const;
 
 export function NerveSymptoms({ entries, period }: NerveSymptomsProps) {
   const filteredEntries = period
@@ -27,30 +20,37 @@ export function NerveSymptoms({ entries, period }: NerveSymptomsProps) {
     : entries;
 
   // Analyze nerve symptoms
-  const nerveSymptomAnalysis = filteredEntries.reduce((acc, entry) => {
-    const nerveSymptoms = (entry.baselineData.symptoms || [])
-      .filter(symptom => NERVE_SYMPTOMS.includes(symptom as typeof NERVE_SYMPTOMS[number]));
-
-    nerveSymptoms.forEach(symptom => {
-      if (!acc[symptom]) {
-        acc[symptom] = {
-          count: 0,
-          locations: new Set<string>(),
-          painLevels: [],
-        };
-      }
-      acc[symptom].count += 1;
-      acc[symptom].painLevels.push(entry.baselineData.pain);
-      (entry.baselineData.locations || []).forEach(location => 
-        acc[symptom].locations.add(location)
+  const nerveSymptomAnalysis = filteredEntries.reduce(
+    (acc, entry) => {
+      const nerveSymptoms = (entry.baselineData.symptoms || []).filter(symptom =>
+        NERVE_SYMPTOMS.includes(symptom as (typeof NERVE_SYMPTOMS)[number])
       );
-    });
-    return acc;
-  }, {} as Record<string, {
-    count: number;
-    locations: Set<string>;
-    painLevels: number[];
-  }>);
+
+      nerveSymptoms.forEach(symptom => {
+        if (!acc[symptom]) {
+          acc[symptom] = {
+            count: 0,
+            locations: new Set<string>(),
+            painLevels: [],
+          };
+        }
+        acc[symptom].count += 1;
+        acc[symptom].painLevels.push(entry.baselineData.pain);
+        (entry.baselineData.locations || []).forEach(location =>
+          acc[symptom].locations.add(location)
+        );
+      });
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        count: number;
+        locations: Set<string>;
+        painLevels: number[];
+      }
+    >
+  );
 
   // Convert analysis to sorted array
   const symptomsSummary = Object.entries(nerveSymptomAnalysis)
@@ -77,15 +77,15 @@ export function NerveSymptoms({ entries, period }: NerveSymptomsProps) {
                 </p>
               </div>
               <div className="text-right">
-                <div className="font-medium">
-                  Avg. Pain: {formatNumber(symptom.averagePain, 1)}
-                </div>
+                <div className="font-medium">Avg. Pain: {formatNumber(symptom.averagePain, 1)}</div>
               </div>
             </div>
 
             {symptom.locations.length > 0 && (
               <div className="mt-2">
-                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">Affected Areas:</h5>
+                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Affected Areas:
+                </h5>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {symptom.locations.map(location => (
                     <span
@@ -109,4 +109,4 @@ export function NerveSymptoms({ entries, period }: NerveSymptomsProps) {
       </div>
     </div>
   );
-} 
+}

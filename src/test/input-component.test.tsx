@@ -62,7 +62,9 @@ describe('Input Component Accessibility', () => {
     });
 
     it('prioritizes error over hint in aria-describedby', () => {
-      render(<Input label="Test Input" hint="Enter your name here" error="This field is required" />);
+      render(
+        <Input label="Test Input" hint="Enter your name here" error="This field is required" />
+      );
       const input = screen.getByLabelText('Test Input');
       expect(input).toHaveAttribute('aria-describedby', 'input-test-input-error');
       expect(screen.queryByText('Enter your name here')).not.toBeInTheDocument();

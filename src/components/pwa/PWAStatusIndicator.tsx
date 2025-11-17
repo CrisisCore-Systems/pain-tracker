@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 interface PWAStatus {
   isOnline: boolean;
@@ -14,7 +14,7 @@ export function PWAStatusIndicator() {
   const [status, setStatus] = useState<PWAStatus>({
     isOnline: navigator.onLine,
     pendingSync: 0,
-    isSyncing: false
+    isSyncing: false,
   });
 
   useEffect(() => {
@@ -28,14 +28,14 @@ export function PWAStatusIndicator() {
         setStatus(prev => ({
           ...prev,
           pendingSync,
-          isSyncing
+          isSyncing,
         }));
       } catch {
         // Background sync not available, continue without it
         setStatus(prev => ({
           ...prev,
           pendingSync: 0,
-          isSyncing: false
+          isSyncing: false,
         }));
       }
     };

@@ -9,7 +9,7 @@ export function OfflineIndicator() {
     const handleOnline = () => {
       setIsOnline(true);
       setShowOfflineMessage(false);
-      
+
       // Show brief "back online" message
       setTimeout(() => {
         setShowOfflineMessage(false);
@@ -24,7 +24,7 @@ export function OfflineIndicator() {
     // Listen to PWA events
     window.addEventListener('pwa-online', handleOnline);
     window.addEventListener('pwa-offline', handleOffline);
-    
+
     // Listen to browser events
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
@@ -46,9 +46,7 @@ export function OfflineIndicator() {
     <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
       <div
         className={`flex items-center space-x-2 px-4 py-2 rounded-lg shadow-lg text-sm font-medium transition-all duration-300 ${
-          isOnline
-            ? 'bg-green-500 text-white'
-            : 'bg-orange-500 text-white'
+          isOnline ? 'bg-green-500 text-white' : 'bg-orange-500 text-white'
         }`}
       >
         {isOnline ? (
@@ -97,7 +95,7 @@ export function OfflineBanner() {
             </p>
           </div>
         </div>
-        
+
         <button
           onClick={() => window.location.reload()}
           className="flex items-center space-x-1 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-md transition-colors"

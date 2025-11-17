@@ -7,7 +7,9 @@ interface ComparisonAnalyticsProps {
 }
 
 export const ComparisonAnalytics: React.FC<ComparisonAnalyticsProps> = ({ entries }) => {
-  const [comparisonType, setComparisonType] = useState<'treatment' | 'time' | 'custom'>('treatment');
+  const [comparisonType, setComparisonType] = useState<'treatment' | 'time' | 'custom'>(
+    'treatment'
+  );
   const [selectedDate, setSelectedDate] = useState<string>('');
 
   if (!entries.length) {
@@ -29,7 +31,7 @@ export const ComparisonAnalytics: React.FC<ComparisonAnalyticsProps> = ({ entrie
           <div className="flex gap-2">
             <select
               value={comparisonType}
-              onChange={(e) => setComparisonType(e.target.value as 'treatment' | 'time' | 'custom')}
+              onChange={e => setComparisonType(e.target.value as 'treatment' | 'time' | 'custom')}
               className="border rounded px-3 py-1"
             >
               <option value="treatment">Before/After Treatment</option>
@@ -40,7 +42,7 @@ export const ComparisonAnalytics: React.FC<ComparisonAnalyticsProps> = ({ entrie
               <input
                 type="date"
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={e => setSelectedDate(e.target.value)}
                 className="border rounded px-3 py-1"
               />
             )}

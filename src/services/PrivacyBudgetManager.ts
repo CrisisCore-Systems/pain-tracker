@@ -26,7 +26,10 @@ export class PrivacyBudgetManager {
 
   // For testing/inspection
   dump(): PrivacyBudgetRecord[] {
-    return Array.from(this.budgets.entries()).map(([userId, epsilonRemaining]) => ({ userId, epsilonRemaining }));
+    return Array.from(this.budgets.entries()).map(([userId, epsilonRemaining]) => ({
+      userId,
+      epsilonRemaining,
+    }));
   }
 }
 

@@ -15,47 +15,48 @@ interface MedicationsSectionProps {
   current: Medication[];
   changes: string;
   effectiveness: string;
-  onChange: (data: Partial<{
-    current: Medication[];
-    changes: string;
-    effectiveness: string;
-  }>) => void;
+  onChange: (
+    data: Partial<{
+      current: Medication[];
+      changes: string;
+      effectiveness: string;
+    }>
+  ) => void;
 }
 
 export function MedicationsSection({
   current,
   changes,
   effectiveness,
-  onChange
+  onChange,
 }: MedicationsSectionProps) {
   const handleMedicationChange = (index: number, field: keyof Medication, value: string) => {
     const updatedMedications = [...current];
     updatedMedications[index] = {
       ...updatedMedications[index],
-      [field]: value
+      [field]: value,
     };
     onChange({ current: updatedMedications });
   };
 
   const addMedication = () => {
     onChange({
-      current: [
-        ...current,
-        { name: "", dosage: "", frequency: "", effectiveness: "" }
-      ]
+      current: [...current, { name: '', dosage: '', frequency: '', effectiveness: '' }],
     });
   };
 
   const removeMedication = (index: number) => {
     onChange({
-      current: current.filter((_, i) => i !== index)
+      current: current.filter((_, i) => i !== index),
     });
   };
 
   return (
     <div className="space-y-6" role="group" aria-labelledby="medications-title">
       <div className="flex items-center space-x-3">
-        <span className="text-2xl" role="img" aria-label="medications">💊</span>
+        <span className="text-2xl" role="img" aria-label="medications">
+          💊
+        </span>
         <h3 id="medications-title" className="text-xl font-semibold text-foreground">
           Medications
         </h3>
@@ -82,32 +83,35 @@ export function MedicationsSection({
                 <Input
                   label="Name"
                   value={medication.name}
-                  onChange={(e) => handleMedicationChange(index, "name", e.target.value)}
+                  onChange={e => handleMedicationChange(index, 'name', e.target.value)}
                   placeholder="e.g., Ibuprofen"
                 />
 
                 <Input
                   label="Dosage"
                   value={medication.dosage}
-                  onChange={(e) => handleMedicationChange(index, "dosage", e.target.value)}
+                  onChange={e => handleMedicationChange(index, 'dosage', e.target.value)}
                   placeholder="e.g., 200mg"
                 />
 
                 <Input
                   label="Frequency"
                   value={medication.frequency}
-                  onChange={(e) => handleMedicationChange(index, "frequency", e.target.value)}
+                  onChange={e => handleMedicationChange(index, 'frequency', e.target.value)}
                   placeholder="e.g., Twice daily"
                 />
 
                 <div className="space-y-1">
-                  <label htmlFor={`effectiveness-${index}`} className="block text-sm font-medium text-foreground">
+                  <label
+                    htmlFor={`effectiveness-${index}`}
+                    className="block text-sm font-medium text-foreground"
+                  >
                     Effectiveness
                   </label>
                   <select
                     id={`effectiveness-${index}`}
                     value={medication.effectiveness}
-                    onChange={(e) => handleMedicationChange(index, "effectiveness", e.target.value)}
+                    onChange={e => handleMedicationChange(index, 'effectiveness', e.target.value)}
                     className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     aria-label={`Effectiveness of medication ${index + 1}`}
                   >
@@ -136,13 +140,16 @@ export function MedicationsSection({
 
       <div className="space-y-4">
         <div>
-          <label htmlFor="medication-changes" className="block text-sm font-medium text-foreground mb-2">
+          <label
+            htmlFor="medication-changes"
+            className="block text-sm font-medium text-foreground mb-2"
+          >
             Recent Changes in Medications
           </label>
           <textarea
             id="medication-changes"
             value={changes}
-            onChange={(e) => onChange({ changes: e.target.value })}
+            onChange={e => onChange({ changes: e.target.value })}
             className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 min-h-[80px] resize-vertical"
             rows={3}
             placeholder="Describe any recent changes to your medication regimen..."
@@ -154,13 +161,16 @@ export function MedicationsSection({
         </div>
 
         <div>
-          <label htmlFor="overall-effectiveness" className="block text-sm font-medium text-foreground mb-2">
+          <label
+            htmlFor="overall-effectiveness"
+            className="block text-sm font-medium text-foreground mb-2"
+          >
             Overall Medication Effectiveness
           </label>
           <select
             id="overall-effectiveness"
             value={effectiveness}
-            onChange={(e) => onChange({ effectiveness: e.target.value })}
+            onChange={e => onChange({ effectiveness: e.target.value })}
             className="w-full px-3 py-2 border border-border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             aria-describedby="overall-effectiveness-hint"
           >
@@ -178,7 +188,8 @@ export function MedicationsSection({
 
       {current.length === 0 && (
         <Alert tone="info">
-          No medications recorded yet. Add your current medications above to track their effectiveness.
+          No medications recorded yet. Add your current medications above to track their
+          effectiveness.
         </Alert>
       )}
     </div>

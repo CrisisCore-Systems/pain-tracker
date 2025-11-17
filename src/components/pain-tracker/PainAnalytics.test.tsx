@@ -1,4 +1,3 @@
-
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { PainAnalytics } from './PainAnalytics';
@@ -13,38 +12,38 @@ describe('PainAnalytics', () => {
       baselineData: {
         pain: 5,
         locations: ['Lower Back', 'Neck'],
-        symptoms: ['Stiffness', 'Burning']
+        symptoms: ['Stiffness', 'Burning'],
       },
       functionalImpact: {
         limitedActivities: ['Walking', 'Sitting'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 6,
         moodImpact: 5,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
+      notes: '',
     },
     {
       id: 2,
@@ -52,39 +51,39 @@ describe('PainAnalytics', () => {
       baselineData: {
         pain: 7,
         locations: ['Lower Back'],
-        symptoms: ['Stiffness']
+        symptoms: ['Stiffness'],
       },
       functionalImpact: {
         limitedActivities: ['Walking'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 5,
         moodImpact: 6,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
-    }
+      notes: '',
+    },
   ];
 
   it('renders without crashing', () => {
@@ -94,8 +93,8 @@ describe('PainAnalytics', () => {
 
   it('displays correct average pain', () => {
     render(<PainAnalytics entries={mockEntries} />);
-  const avgPain = (5 + 7) / 2;
-  expect(screen.getByText(formatNumber(avgPain, 1))).toBeInTheDocument();
+    const avgPain = (5 + 7) / 2;
+    expect(screen.getByText(formatNumber(avgPain, 1))).toBeInTheDocument();
   });
 
   it('shows pain trend information', () => {
@@ -125,6 +124,6 @@ describe('PainAnalytics', () => {
   it('handles empty entries gracefully', () => {
     render(<PainAnalytics entries={[]} />);
     expect(screen.getByText('Average Pain')).toBeInTheDocument();
-  expect(screen.getByText(formatNumber(0, 1))).toBeInTheDocument();
+    expect(screen.getByText(formatNumber(0, 1))).toBeInTheDocument();
   });
-}); 
+});

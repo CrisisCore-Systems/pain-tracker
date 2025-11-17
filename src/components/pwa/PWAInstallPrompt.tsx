@@ -74,15 +74,13 @@ export function PWAInstallPrompt() {
               <Smartphone className="h-6 w-6 text-primary" />
             </div>
           </div>
-          
+
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-foreground">
-              Install Pain Tracker
-            </h3>
+            <h3 className="text-sm font-semibold text-foreground">Install Pain Tracker</h3>
             <p className="text-xs text-muted-foreground mt-1">
               Add to your home screen for quick access and offline use
             </p>
-            
+
             <div className="flex items-center space-x-2 mt-3">
               <Button
                 size="sm"
@@ -93,7 +91,7 @@ export function PWAInstallPrompt() {
                 <Download className="h-4 w-4" />
                 <span>{isInstalling ? 'Installing...' : 'Install'}</span>
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -123,7 +121,7 @@ export function PWAInstallPrompt() {
             </div>
           </div>
         </div>
-        </CardContent>
-      </Card>
+      </CardContent>
+    </Card>
   );
 }

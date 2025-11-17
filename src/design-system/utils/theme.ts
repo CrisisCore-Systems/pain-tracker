@@ -5,17 +5,22 @@ export const colorVar = (name: string) => {
   // Prefer runtime computed style in browser
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     try {
-      const computed = getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
+      const computed = getComputedStyle(document.documentElement)
+        .getPropertyValue(`--${name}`)
+        .trim();
       if (computed) return computed;
     } catch (err) {
-       
       console.warn('colorVar computedStyle failed', err);
     }
   }
 
   // Fallback to brand-defined cssVariables (concrete hex values)
   try {
-    if (cssVariables && cssVariables[':root'] && Object.prototype.hasOwnProperty.call(cssVariables[':root'], `--${name}`)) {
+    if (
+      cssVariables &&
+      cssVariables[':root'] &&
+      Object.prototype.hasOwnProperty.call(cssVariables[':root'], `--${name}`)
+    ) {
       return (cssVariables[':root'] as Record<string, string>)[`--${name}`];
     }
   } catch (err) {
@@ -51,7 +56,9 @@ export const colorVarAlpha = (name: string, alpha: number | string) => {
   // Try computed style first (browser)
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     try {
-      const computed = getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
+      const computed = getComputedStyle(document.documentElement)
+        .getPropertyValue(`--${name}`)
+        .trim();
       if (computed) {
         if (computed.startsWith('#')) {
           const rgba = hexToRgba(computed, Number.isFinite(alphaNum) ? alphaNum : 1);
@@ -60,19 +67,24 @@ export const colorVarAlpha = (name: string, alpha: number | string) => {
 
         const rgbMatch = computed.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/i);
         if (rgbMatch) {
-          const r = rgbMatch[1], g = rgbMatch[2], b = rgbMatch[3];
+          const r = rgbMatch[1],
+            g = rgbMatch[2],
+            b = rgbMatch[3];
           return `rgba(${r}, ${g}, ${b}, ${Number.isFinite(alphaNum) ? alphaNum : 1})`;
         }
       }
     } catch (err) {
-       
       console.warn('colorVarAlpha computedStyle failed', err);
     }
   }
 
   // Fallback to brand css variables
   try {
-    if (cssVariables && cssVariables[':root'] && Object.prototype.hasOwnProperty.call(cssVariables[':root'], `--${name}`)) {
+    if (
+      cssVariables &&
+      cssVariables[':root'] &&
+      Object.prototype.hasOwnProperty.call(cssVariables[':root'], `--${name}`)
+    ) {
       const val = (cssVariables[':root'] as Record<string, string>)[`--${name}`];
       if (val && val.startsWith('#')) {
         const rgba = hexToRgba(val, Number.isFinite(alphaNum) ? alphaNum : 1);
@@ -80,7 +92,9 @@ export const colorVarAlpha = (name: string, alpha: number | string) => {
       }
       const rgbMatch = (val || '').match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/i);
       if (rgbMatch) {
-        const r = rgbMatch[1], g = rgbMatch[2], b = rgbMatch[3];
+        const r = rgbMatch[1],
+          g = rgbMatch[2],
+          b = rgbMatch[3];
         return `rgba(${r}, ${g}, ${b}, ${Number.isFinite(alphaNum) ? alphaNum : 1})`;
       }
     }

@@ -102,7 +102,7 @@ export class SecurityService {
       keySize: 256,
       mode: 'CBC',
       padding: 'PKCS7',
-      ...encryptionConfig
+      ...encryptionConfig,
     };
 
     this.privacyConfig = {
@@ -111,7 +111,7 @@ export class SecurityService {
       anonymizationLevel: 'advanced',
       consentRequired: true,
       minimumNoiseLevel: 0.1,
-      ...privacyConfig
+      ...privacyConfig,
     };
 
     this.sessionId = this.generateSessionId();
@@ -131,7 +131,9 @@ export class SecurityService {
   private generateSessionId(): string {
     const arr = new Uint8Array(16);
     crypto.getRandomValues(arr);
-    return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+    return Array.from(arr)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
   }
 
   private initializeSecurity(): void {
@@ -142,10 +144,10 @@ export class SecurityService {
       metadata: {
         encryptionAlgorithm: this.encryptionConfig.algorithm,
         keySize: this.encryptionConfig.keySize,
-        privacyLevel: this.privacyConfig.anonymizationLevel
+        privacyLevel: this.privacyConfig.anonymizationLevel,
       },
       timestamp: new Date(),
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     });
   }
 
@@ -156,15 +158,21 @@ export class SecurityService {
     try {
       // Use SubtleCrypto to derive or generate a non-extractable AES-GCM key and an HMAC key.
       const subtle = crypto.subtle;
-      const iterationOverride = (typeof process !== 'undefined' && process.env && (process.env.VITEST || process.env.NODE_ENV === 'test'))
-        ? 500
-        : 150000; // Increased PBKDF2 iterations for production
+      const iterationOverride =
+        typeof process !== 'undefined' &&
+        process.env &&
+        (process.env.VITEST || process.env.NODE_ENV === 'test')
+          ? 500
+          : 150000; // Increased PBKDF2 iterations for production
 
       if (password) {
         // Derive a base key from password
         const salt = crypto.getRandomValues(new Uint8Array(16));
         const pwUtf8 = new TextEncoder().encode(password);
-        const baseKey = await subtle.importKey('raw', pwUtf8, 'PBKDF2', false, ['deriveBits', 'deriveKey']);
+        const baseKey = await subtle.importKey('raw', pwUtf8, 'PBKDF2', false, [
+          'deriveBits',
+          'deriveKey',
+        ]);
 
         // Derive AES-GCM key
         this.masterCryptoKey = await subtle.deriveKey(
@@ -181,11 +189,25 @@ export class SecurityService {
           baseKey,
           256
         );
-        this.masterHmacKey = await subtle.importKey('raw', hmacBits, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+        this.masterHmacKey = await subtle.importKey(
+          'raw',
+          hmacBits,
+          { name: 'HMAC', hash: 'SHA-256' },
+          false,
+          ['sign', 'verify']
+        );
       } else {
         // Generate ephemeral non-extractable keys for the session
-        this.masterCryptoKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
-        this.masterHmacKey = await crypto.subtle.generateKey({ name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
+        this.masterCryptoKey = await crypto.subtle.generateKey(
+          { name: 'AES-GCM', length: 256 },
+          false,
+          ['encrypt', 'decrypt']
+        );
+        this.masterHmacKey = await crypto.subtle.generateKey(
+          { name: 'HMAC', hash: 'SHA-256' },
+          false,
+          ['sign', 'verify']
+        );
       }
 
       this.logSecurityEvent({
@@ -193,7 +215,7 @@ export class SecurityService {
         level: 'info',
         message: 'Master key initialized',
         timestamp: new Date(),
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
     } catch (error) {
       this.logSecurityEvent({
@@ -202,7 +224,7 @@ export class SecurityService {
         message: 'Failed to initialize master key',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
         timestamp: new Date(),
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
       throw new Error('Failed to initialize encryption key');
     }
@@ -224,14 +246,27 @@ export class SecurityService {
 
       const iv = crypto.getRandomValues(new Uint8Array(12));
       const enc = new TextEncoder().encode(data);
-      const cipherBuffer = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, this.masterCryptoKey, enc);
+      const cipherBuffer = await crypto.subtle.encrypt(
+        { name: 'AES-GCM', iv },
+        this.masterCryptoKey,
+        enc
+      );
       const cipherB64 = arrayBufferToBase64(cipherBuffer);
 
       // Compute HMAC over ciphertext for integrity (do not include raw key)
-      const hmacSig = await crypto.subtle.sign('HMAC', this.masterHmacKey, base64ToArrayBuffer(cipherB64));
+      const hmacSig = await crypto.subtle.sign(
+        'HMAC',
+        this.masterHmacKey,
+        base64ToArrayBuffer(cipherB64)
+      );
       const hmacB64 = arrayBufferToBase64(hmacSig);
 
-  const payload = JSON.stringify({ v: '1', cipher: cipherB64, iv: arrayBufferToBase64(iv.buffer), hmac: hmacB64 });
+      const payload = JSON.stringify({
+        v: '1',
+        cipher: cipherB64,
+        iv: arrayBufferToBase64(iv.buffer),
+        hmac: hmacB64,
+      });
 
       this.logSecurityEvent({
         type: 'encryption',
@@ -239,10 +274,10 @@ export class SecurityService {
         message: 'Data encrypted successfully',
         metadata: { dataLength: data.length },
         timestamp: new Date(),
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
 
-  return payload;
+      return payload;
     } catch (error) {
       this.logSecurityEvent({
         type: 'encryption',
@@ -250,7 +285,7 @@ export class SecurityService {
         message: 'Data encryption failed',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
         timestamp: new Date(),
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
       throw error;
     }
@@ -275,7 +310,7 @@ export class SecurityService {
       }
 
       // Expect a JSON blob with cipher, iv, hmac
-  let parsed: { v?: string; cipher?: string; iv?: string; hmac?: string; payload?: string };
+      let parsed: { v?: string; cipher?: string; iv?: string; hmac?: string; payload?: string };
       try {
         parsed = JSON.parse(encryptedData);
       } catch (e) {
@@ -286,17 +321,27 @@ export class SecurityService {
         return parsed.payload as unknown as string;
       }
 
-      if (!parsed.cipher || !parsed.iv || !parsed.hmac) throw new Error('Encrypted payload missing fields');
+      if (!parsed.cipher || !parsed.iv || !parsed.hmac)
+        throw new Error('Encrypted payload missing fields');
 
       // Verify HMAC
-      const expected = await crypto.subtle.verify('HMAC', this.masterHmacKey, base64ToArrayBuffer(parsed.hmac), base64ToArrayBuffer(parsed.cipher));
+      const expected = await crypto.subtle.verify(
+        'HMAC',
+        this.masterHmacKey,
+        base64ToArrayBuffer(parsed.hmac),
+        base64ToArrayBuffer(parsed.cipher)
+      );
       if (!expected) throw new Error('Integrity check failed - HMAC mismatch');
 
       const iv = new Uint8Array(base64ToArrayBuffer(parsed.iv));
       const cipherBuf = base64ToArrayBuffer(parsed.cipher);
       let decryptedBuf: ArrayBuffer;
       try {
-        decryptedBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, this.masterCryptoKey, cipherBuf);
+        decryptedBuf = await crypto.subtle.decrypt(
+          { name: 'AES-GCM', iv },
+          this.masterCryptoKey,
+          cipherBuf
+        );
       } catch {
         throw new Error('Decryption failed - invalid key or corrupted data');
       }
@@ -308,7 +353,7 @@ export class SecurityService {
         level: 'info',
         message: 'Data decrypted successfully',
         timestamp: new Date(),
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
 
       return decrypted;
@@ -319,7 +364,7 @@ export class SecurityService {
         message: 'Data decryption failed',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
         timestamp: new Date(),
-        sessionId: this.sessionId
+        sessionId: this.sessionId,
       });
       throw error;
     }
@@ -342,7 +387,8 @@ export class SecurityService {
         const serialized = JSON.stringify(data);
         if (encrypted) {
           if (!this.masterCryptoKey) {
-            if (!this.isTestEnv()) throw new Error('Secure storage requires initialized master key');
+            if (!this.isTestEnv())
+              throw new Error('Secure storage requires initialized master key');
             // In tests allow passthrough to avoid setup complexity
             localStorage.setItem(key, serialized);
           } else {
@@ -351,7 +397,8 @@ export class SecurityService {
           }
         } else {
           // Disallow storing plaintext in production
-          if (!this.isTestEnv()) throw new Error('Storing plaintext sensitive data in localStorage is forbidden');
+          if (!this.isTestEnv())
+            throw new Error('Storing plaintext sensitive data in localStorage is forbidden');
           localStorage.setItem(key, serialized);
         }
 
@@ -361,7 +408,7 @@ export class SecurityService {
           message: `Data stored: ${key}`,
           metadata: { encrypted, dataSize: serialized.length },
           timestamp: new Date(),
-          sessionId: this.sessionId
+          sessionId: this.sessionId,
         });
       },
 
@@ -379,7 +426,7 @@ export class SecurityService {
             message: `Failed to retrieve data: ${key}`,
             metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
             timestamp: new Date(),
-            sessionId: this.sessionId
+            sessionId: this.sessionId,
           });
           return null;
         }
@@ -392,7 +439,7 @@ export class SecurityService {
           level: 'info',
           message: `Data deleted: ${key}`,
           timestamp: new Date(),
-          sessionId: this.sessionId
+          sessionId: this.sessionId,
         });
       },
 
@@ -403,9 +450,9 @@ export class SecurityService {
           level: 'warning',
           message: 'All local storage cleared',
           timestamp: new Date(),
-          sessionId: this.sessionId
+          sessionId: this.sessionId,
         });
-      }
+      },
     };
   }
 
@@ -415,7 +462,7 @@ export class SecurityService {
   logSecurityEvent(event: SecurityEvent): void {
     this.events.push({
       ...event,
-      sessionId: event.sessionId || this.sessionId
+      sessionId: event.sessionId || this.sessionId,
     });
 
     // Keep only recent events to prevent memory issues
@@ -445,7 +492,7 @@ export class SecurityService {
         title: 'No Master Key Initialized',
         description: 'Encryption is not properly configured',
         remediation: 'Initialize master key using initializeMasterKey()',
-        affectedComponents: ['SecureStorage', 'DataEncryption']
+        affectedComponents: ['SecureStorage', 'DataEncryption'],
       });
       recommendations.push('Initialize encryption system with a strong master key');
     }
@@ -453,7 +500,7 @@ export class SecurityService {
     // Check for recent security errors
     const recentErrors = this.events
       .filter(e => e.level === 'error' || e.level === 'critical')
-      .filter(e => (Date.now() - e.timestamp.getTime()) < 24 * 60 * 60 * 1000); // Last 24 hours
+      .filter(e => Date.now() - e.timestamp.getTime() < 24 * 60 * 60 * 1000); // Last 24 hours
 
     if (recentErrors.length > 0) {
       issues.push({
@@ -463,7 +510,7 @@ export class SecurityService {
         title: 'Recent Security Errors Detected',
         description: `${recentErrors.length} security errors in the last 24 hours`,
         remediation: 'Review security event logs and address recurring issues',
-        affectedComponents: ['SecurityMonitoring']
+        affectedComponents: ['SecurityMonitoring'],
       });
       recommendations.push('Review and address recent security errors');
     }
@@ -483,7 +530,7 @@ export class SecurityService {
         title: 'Storage Encryption Test Failed',
         description: 'Secure storage operations are not working correctly',
         remediation: 'Debug encryption/decryption process and ensure proper key management',
-        affectedComponents: ['SecureStorage']
+        affectedComponents: ['SecureStorage'],
       });
       console.error('Storage encryption test failed:', error);
     }
@@ -498,16 +545,16 @@ export class SecurityService {
     this.logSecurityEvent({
       type: 'audit',
       level: issues.length === 0 ? 'info' : 'warning',
-  message: `Security audit completed. Score: ${formatNumber(score * 100, 1)}%`,
+      message: `Security audit completed. Score: ${formatNumber(score * 100, 1)}%`,
       metadata: {
         totalIssues: issues.length,
         criticalIssues,
         highIssues,
         mediumIssues,
-        score
+        score,
       },
       timestamp: new Date(),
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     });
 
     return {
@@ -515,7 +562,7 @@ export class SecurityService {
       score,
       issues,
       recommendations,
-      lastAudit: new Date()
+      lastAudit: new Date(),
     };
   }
 
@@ -539,8 +586,15 @@ export class SecurityService {
 
     // Use AES-GCM wrapping with a random IV
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const wrapped = await crypto.subtle.wrapKey('raw', key, this.masterCryptoKey, { name: 'AES-GCM', iv });
-    return JSON.stringify({ wrapped: arrayBufferToBase64(wrapped), iv: arrayBufferToBase64(iv.buffer), format: 'raw' });
+    const wrapped = await crypto.subtle.wrapKey('raw', key, this.masterCryptoKey, {
+      name: 'AES-GCM',
+      iv,
+    });
+    return JSON.stringify({
+      wrapped: arrayBufferToBase64(wrapped),
+      iv: arrayBufferToBase64(iv.buffer),
+      format: 'raw',
+    });
   }
 
   /**
@@ -553,7 +607,9 @@ export class SecurityService {
     usages: Array<'encrypt' | 'decrypt' | 'sign' | 'verify'> = ['encrypt', 'decrypt']
   ): Promise<CryptoKey | null> {
     try {
-      const obj = JSON.parse(wrappedJson) as WrappedKeyPayload | { wrapped?: string | null; iv?: string | null; format?: string };
+      const obj = JSON.parse(wrappedJson) as
+        | WrappedKeyPayload
+        | { wrapped?: string | null; iv?: string | null; format?: string };
       if (!obj || !obj.wrapped) return null;
       if (obj.format === 'raw' && (!obj.iv || !this.masterCryptoKey)) {
         if (this.isTestEnv()) {
@@ -569,10 +625,25 @@ export class SecurityService {
       const wrappedBuf = base64ToArrayBuffer(obj.wrapped);
       if (!this.masterCryptoKey) throw new Error('Master crypto key not initialized');
       // Unwrap key
-      const key = await crypto.subtle.unwrapKey('raw', wrappedBuf, this.masterCryptoKey, { name: 'AES-GCM', iv: iv ? new Uint8Array(iv) : new Uint8Array(12) }, algorithm, false, usages);
+      const key = await crypto.subtle.unwrapKey(
+        'raw',
+        wrappedBuf,
+        this.masterCryptoKey,
+        { name: 'AES-GCM', iv: iv ? new Uint8Array(iv) : new Uint8Array(12) },
+        algorithm,
+        false,
+        usages
+      );
       return key;
     } catch (e) {
-      this.logSecurityEvent({ type: 'encryption', level: 'error', message: 'Failed to unwrap key', metadata: { error: e instanceof Error ? e.message : String(e) }, timestamp: new Date(), sessionId: this.sessionId });
+      this.logSecurityEvent({
+        type: 'encryption',
+        level: 'error',
+        message: 'Failed to unwrap key',
+        metadata: { error: e instanceof Error ? e.message : String(e) },
+        timestamp: new Date(),
+        sessionId: this.sessionId,
+      });
       if (this.isTestEnv()) return null;
       throw e;
     }
@@ -623,7 +694,7 @@ export class SecurityService {
       message: 'Security events cleared',
       metadata: { olderThan: olderThan?.toISOString() },
       timestamp: new Date(),
-      sessionId: this.sessionId
+      sessionId: this.sessionId,
     });
   }
 
@@ -650,7 +721,7 @@ export class SecurityService {
       masterKeyInitialized: !!this.masterCryptoKey,
       recentEvents: recentEvents.length,
       recentErrors: recentErrors.length,
-      lastAudit: lastAuditEvent?.timestamp || null
+      lastAudit: lastAuditEvent?.timestamp || null,
     };
   }
 }

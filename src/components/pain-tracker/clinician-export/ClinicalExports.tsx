@@ -14,19 +14,23 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
   const generateClinicalCSV = (exportType: 'standard' | 'detailed' | 'summary'): string => {
     if (exportType === 'summary') {
       // Summary format for quick overview
-      const avgPain = entries.length > 0 
-        ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
-        : 0;
+      const avgPain =
+        entries.length > 0
+          ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
+          : 0;
 
-      const locationFreq = entries.reduce((acc, entry) => {
-        entry.baselineData?.locations?.forEach(loc => {
-          acc[loc] = (acc[loc] || 0) + 1;
-        });
-        return acc;
-      }, {} as Record<string, number>);
+      const locationFreq = entries.reduce(
+        (acc, entry) => {
+          entry.baselineData?.locations?.forEach(loc => {
+            acc[loc] = (acc[loc] || 0) + 1;
+          });
+          return acc;
+        },
+        {} as Record<string, number>
+      );
 
-      const topLocation = Object.entries(locationFreq)
-        .sort(([,a], [,b]) => b - a)[0]?.[0] || 'None';
+      const topLocation =
+        Object.entries(locationFreq).sort(([, a], [, b]) => b - a)[0]?.[0] || 'None';
 
       const workDays = entries.reduce((sum, entry) => sum + (entry.workImpact?.missedWork || 0), 0);
       const latestEntry = entries[0];
@@ -40,21 +44,48 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
         ['Total Missed Work Days', workDays.toString()],
         ['Current Sleep Quality', latestEntry?.qualityOfLife?.sleepQuality?.toString() || 'N/A'],
         ['Current Mood Impact', latestEntry?.qualityOfLife?.moodImpact?.toString() || 'N/A'],
-        ['Current Medications', latestEntry?.medications?.current?.map(m => `${m.name} (${m.dosage})`).join('; ') || 'None'],
-        ['Recent Treatments', latestEntry?.treatments?.recent?.map(t => `${t.type} - ${t.provider}`).join('; ') || 'None']
-      ];      return ['Field,Value', ...summaryData.map(([field, value]) => `"${field}","${value}"`)].join('\n');
+        [
+          'Current Medications',
+          latestEntry?.medications?.current?.map(m => `${m.name} (${m.dosage})`).join('; ') ||
+            'None',
+        ],
+        [
+          'Recent Treatments',
+          latestEntry?.treatments?.recent?.map(t => `${t.type} - ${t.provider}`).join('; ') ||
+            'None',
+        ],
+      ];
+      return ['Field,Value', ...summaryData.map(([field, value]) => `"${field}","${value}"`)].join(
+        '\n'
+      );
     }
 
     if (exportType === 'detailed') {
       // Detailed format for comprehensive analysis
       const headers = [
-        'Date', 'Time', 'Pain Level', 'Locations', 'Symptoms',
-        'Limited Activities', 'Assistance Needed', 'Mobility Aids',
-        'Current Medications', 'Medication Changes', 'Medication Effectiveness',
-        'Recent Treatments', 'Treatment Effectiveness', 'Planned Treatments',
-        'Sleep Quality', 'Mood Impact', 'Social Impact',
-        'Missed Work Days', 'Modified Duties', 'Work Limitations',
-        'Worsening Since', 'New Limitations', 'Clinical Notes'
+        'Date',
+        'Time',
+        'Pain Level',
+        'Locations',
+        'Symptoms',
+        'Limited Activities',
+        'Assistance Needed',
+        'Mobility Aids',
+        'Current Medications',
+        'Medication Changes',
+        'Medication Effectiveness',
+        'Recent Treatments',
+        'Treatment Effectiveness',
+        'Planned Treatments',
+        'Sleep Quality',
+        'Mood Impact',
+        'Social Impact',
+        'Missed Work Days',
+        'Modified Duties',
+        'Work Limitations',
+        'Worsening Since',
+        'New Limitations',
+        'Clinical Notes',
       ].join(',');
 
       const rows = entries.map(entry => {
@@ -82,7 +113,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
           `"${entry.workImpact?.workLimitations?.join('; ') || ''}"`,
           `"${entry.comparison?.worseningSince || ''}"`,
           `"${entry.comparison?.newLimitations?.join('; ') || ''}"`,
-          `"${entry.notes?.replace(/"/g, '""') || ''}"`
+          `"${entry.notes?.replace(/"/g, '""') || ''}"`,
         ].join(',');
       });
 
@@ -91,9 +122,17 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
 
     // Standard format - same as existing export but with clinical focus
     const headers = [
-      'Date', 'Time', 'Pain Level', 'Primary Location', 'Symptoms',
-      'Sleep Quality', 'Mood Impact', 'Missed Work Days',
-      'Current Medications', 'Recent Treatments', 'Notes'
+      'Date',
+      'Time',
+      'Pain Level',
+      'Primary Location',
+      'Symptoms',
+      'Sleep Quality',
+      'Mood Impact',
+      'Missed Work Days',
+      'Current Medications',
+      'Recent Treatments',
+      'Notes',
     ].join(',');
 
     const rows = entries.map(entry => {
@@ -109,7 +148,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
         entry.workImpact?.missedWork || 0,
         `"${entry.medications?.current?.map(m => m.name).join('; ') || ''}"`,
         `"${entry.treatments?.recent?.map(t => t.type).join('; ') || ''}"`,
-        `"${entry.notes?.replace(/"/g, '""').substring(0, 100)}${entry.notes && entry.notes.length > 100 ? '...' : ''}"`
+        `"${entry.notes?.replace(/"/g, '""').substring(0, 100)}${entry.notes && entry.notes.length > 100 ? '...' : ''}"`,
       ].join(',');
     });
 
@@ -121,105 +160,133 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       exportDate: new Date().toISOString(),
       format: exportType,
       totalEntries: entries.length,
-      dateRange: entries.length > 0 ? {
-        start: entries[entries.length - 1].timestamp,
-        end: entries[0].timestamp
-      } : null
+      dateRange:
+        entries.length > 0
+          ? {
+              start: entries[entries.length - 1].timestamp,
+              end: entries[0].timestamp,
+            }
+          : null,
     };
 
     if (exportType === 'summary') {
-      const avgPain = entries.length > 0 
-        ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
-        : 0;
+      const avgPain =
+        entries.length > 0
+          ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
+          : 0;
 
-      const locationStats = entries.reduce((acc, entry) => {
-        entry.baselineData?.locations?.forEach(location => {
-          if (!acc[location]) acc[location] = { count: 0, totalPain: 0 };
-          acc[location].count++;
-          acc[location].totalPain += entry.baselineData?.pain || 0;
-        });
-        return acc;
-      }, {} as Record<string, { count: number; totalPain: number }>);
+      const locationStats = entries.reduce(
+        (acc, entry) => {
+          entry.baselineData?.locations?.forEach(location => {
+            if (!acc[location]) acc[location] = { count: 0, totalPain: 0 };
+            acc[location].count++;
+            acc[location].totalPain += entry.baselineData?.pain || 0;
+          });
+          return acc;
+        },
+        {} as Record<string, { count: number; totalPain: number }>
+      );
 
-      const processedLocationStats = Object.entries(locationStats).map(([location, stats]) => ({
-        location,
-        frequency: stats.count,
-  averagePain: Number(formatNumber(stats.totalPain / stats.count, 1))
-      })).sort((a, b) => b.frequency - a.frequency);
+      const processedLocationStats = Object.entries(locationStats)
+        .map(([location, stats]) => ({
+          location,
+          frequency: stats.count,
+          averagePain: Number(formatNumber(stats.totalPain / stats.count, 1)),
+        }))
+        .sort((a, b) => b.frequency - a.frequency);
 
       const latestEntry = entries[0];
-      const workImpact = entries.reduce((sum, entry) => sum + (entry.workImpact?.missedWork || 0), 0);
+      const workImpact = entries.reduce(
+        (sum, entry) => sum + (entry.workImpact?.missedWork || 0),
+        0
+      );
 
-      return JSON.stringify({
-        metadata,
-        summary: {
-          averagePainLevel: Number(formatNumber(avgPain, 1)),
-          currentPainLevel: latestEntry?.baselineData.pain || null,
-          totalMissedWorkDays: workImpact,
-          locationStatistics: processedLocationStats,
-          currentMedications: latestEntry?.medications?.current || [],
-          recentTreatments: latestEntry?.treatments?.recent || [],
-          qualityOfLife: latestEntry ? {
-            sleepQuality: latestEntry.qualityOfLife?.sleepQuality || 0,
-            moodImpact: latestEntry.qualityOfLife?.moodImpact || 0,
-            socialImpact: latestEntry.qualityOfLife?.socialImpact || 0
-          } : null,
-          functionalLimitations: latestEntry?.functionalImpact?.limitedActivities || []
-        }
-      }, null, 2);
+      return JSON.stringify(
+        {
+          metadata,
+          summary: {
+            averagePainLevel: Number(formatNumber(avgPain, 1)),
+            currentPainLevel: latestEntry?.baselineData.pain || null,
+            totalMissedWorkDays: workImpact,
+            locationStatistics: processedLocationStats,
+            currentMedications: latestEntry?.medications?.current || [],
+            recentTreatments: latestEntry?.treatments?.recent || [],
+            qualityOfLife: latestEntry
+              ? {
+                  sleepQuality: latestEntry.qualityOfLife?.sleepQuality || 0,
+                  moodImpact: latestEntry.qualityOfLife?.moodImpact || 0,
+                  socialImpact: latestEntry.qualityOfLife?.socialImpact || 0,
+                }
+              : null,
+            functionalLimitations: latestEntry?.functionalImpact?.limitedActivities || [],
+          },
+        },
+        null,
+        2
+      );
     }
 
     if (exportType === 'detailed') {
-      return JSON.stringify({
-        metadata,
-        entries: entries.map(entry => ({
-          ...entry,
-          timestamp: entry.timestamp,
-          clinicalAnalysis: {
-            painTrend: null, // Could be calculated based on previous entries
-            medicationCompliance: null,
-            treatmentResponse: null,
-            functionalDecline: null
-          }
-        }))
-      }, null, 2);
+      return JSON.stringify(
+        {
+          metadata,
+          entries: entries.map(entry => ({
+            ...entry,
+            timestamp: entry.timestamp,
+            clinicalAnalysis: {
+              painTrend: null, // Could be calculated based on previous entries
+              medicationCompliance: null,
+              treatmentResponse: null,
+              functionalDecline: null,
+            },
+          })),
+        },
+        null,
+        2
+      );
     }
 
     // Standard format
-    return JSON.stringify({
-      metadata,
-      entries: entries.map(entry => ({
-        date: entry.timestamp,
-        painLevel: entry.baselineData?.pain || 0,
-        primaryLocation: entry.baselineData?.locations?.[0] || null,
-        symptoms: entry.baselineData?.symptoms || [],
-        qualityOfLife: {
-          sleep: entry.qualityOfLife?.sleepQuality || 0,
-          mood: entry.qualityOfLife?.moodImpact || 0
-        },
-        medications: entry.medications?.current?.map(m => ({
-          name: m.name,
-          dosage: m.dosage,
-          effectiveness: m.effectiveness
-        })) || [],
-        treatments: entry.treatments?.recent?.map(t => ({
-          type: t.type,
-          provider: t.provider,
-          effectiveness: t.effectiveness
-        })) || [],
-        workImpact: {
-          missedDays: entry.workImpact?.missedWork || 0,
-          limitations: entry.workImpact?.workLimitations || []
-        },
-        notes: entry.notes || ''
-      }))
-    }, null, 2);
+    return JSON.stringify(
+      {
+        metadata,
+        entries: entries.map(entry => ({
+          date: entry.timestamp,
+          painLevel: entry.baselineData?.pain || 0,
+          primaryLocation: entry.baselineData?.locations?.[0] || null,
+          symptoms: entry.baselineData?.symptoms || [],
+          qualityOfLife: {
+            sleep: entry.qualityOfLife?.sleepQuality || 0,
+            mood: entry.qualityOfLife?.moodImpact || 0,
+          },
+          medications:
+            entry.medications?.current?.map(m => ({
+              name: m.name,
+              dosage: m.dosage,
+              effectiveness: m.effectiveness,
+            })) || [],
+          treatments:
+            entry.treatments?.recent?.map(t => ({
+              type: t.type,
+              provider: t.provider,
+              effectiveness: t.effectiveness,
+            })) || [],
+          workImpact: {
+            missedDays: entry.workImpact?.missedWork || 0,
+            limitations: entry.workImpact?.workLimitations || [],
+          },
+          notes: entry.notes || '',
+        })),
+      },
+      null,
+      2
+    );
   };
 
   const handleExport = (fileFormat: 'csv' | 'json') => {
     const timestamp = format(new Date(), 'yyyy-MM-dd-HHmm');
     const formatSuffix = exportFormat === 'standard' ? '' : `-${exportFormat}`;
-    
+
     if (fileFormat === 'csv') {
       const csvData = generateClinicalCSV(exportFormat);
       downloadData(csvData, `clinical-export${formatSuffix}-${timestamp}.csv`);
@@ -232,7 +299,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-semibold mb-4">Clinical Data Export</h2>
-      
+
       {entries.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400">No data available for export.</p>
       ) : (
@@ -244,7 +311,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
             </label>
             <select
               value={exportFormat}
-              onChange={(e) => setExportFormat(e.target.value as 'standard' | 'detailed' | 'summary')}
+              onChange={e => setExportFormat(e.target.value as 'standard' | 'detailed' | 'summary')}
               className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full max-w-xs"
             >
               <option value="standard">Standard Clinical Export</option>
@@ -281,13 +348,21 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
             <h3 className="font-medium mb-2">Export Preview</h3>
             <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
               <div>Total entries: {entries.length}</div>
-              <div>Date range: {format(new Date(entries[entries.length - 1]?.timestamp || new Date()), 'MMM d, yyyy')} - {format(new Date(entries[0]?.timestamp || new Date()), 'MMM d, yyyy')}</div>
               <div>
-                Fields included: {
-                  exportFormat === 'summary' ? '10 summary fields' :
-                  exportFormat === 'detailed' ? '23 comprehensive fields' :
-                  '11 standard fields'
-                }
+                Date range:{' '}
+                {format(
+                  new Date(entries[entries.length - 1]?.timestamp || new Date()),
+                  'MMM d, yyyy'
+                )}{' '}
+                - {format(new Date(entries[0]?.timestamp || new Date()), 'MMM d, yyyy')}
+              </div>
+              <div>
+                Fields included:{' '}
+                {exportFormat === 'summary'
+                  ? '10 summary fields'
+                  : exportFormat === 'detailed'
+                    ? '23 comprehensive fields'
+                    : '11 standard fields'}
               </div>
             </div>
           </div>
@@ -300,8 +375,15 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
                 <div className="text-gray-600 dark:text-gray-400">Avg Pain</div>
                 <div className="font-bold">
                   {entries.length > 0
-                    ? Number(formatNumber((entries.reduce((sum, entry) => sum + (entry.baselineData?.pain || 0), 0) / entries.length), 1))
-                    : 'N/A'}/10
+                    ? Number(
+                        formatNumber(
+                          entries.reduce((sum, entry) => sum + (entry.baselineData?.pain || 0), 0) /
+                            entries.length,
+                          1
+                        )
+                      )
+                    : 'N/A'}
+                  /10
                 </div>
               </div>
               <div>

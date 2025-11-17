@@ -1,10 +1,10 @@
-import { useRef, useEffect } from "react";
-import { FileText } from "lucide-react";
-import type { PainEntry } from "../../types";
-import { WCBReportGenerator } from "../pain-tracker/WCBReport";
+import { useRef, useEffect } from 'react';
+import { FileText } from 'lucide-react';
+import type { PainEntry } from '../../types';
+import { WCBReportGenerator } from '../pain-tracker/WCBReport';
 import { isFeatureEnabled } from '../../config/beta';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../design-system";
-import { usePainTrackerStore } from "../../stores/pain-tracker-store";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../design-system';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 interface WCBReportPanelProps {
   entries: PainEntry[];
@@ -43,7 +43,7 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
               id="start-date"
               type="date"
               value={ui.reportPeriod.start}
-              onChange={(e) => setReportPeriod({ start: e.target.value })}
+              onChange={e => setReportPeriod({ start: e.target.value })}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Report start date"
             />
@@ -56,7 +56,7 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
               id="end-date"
               type="date"
               value={ui.reportPeriod.end}
-              onChange={(e) => setReportPeriod({ end: e.target.value })}
+              onChange={e => setReportPeriod({ end: e.target.value })}
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Report end date"
             />
@@ -65,7 +65,9 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
         {isFeatureEnabled('workSafeBCExport') ? (
           <WCBReportGenerator entries={entries} period={ui.reportPeriod} />
         ) : (
-          <div className="text-sm text-muted-foreground p-4 bg-muted/5 rounded">WorkSafe BC report export is not available in this release.</div>
+          <div className="text-sm text-muted-foreground p-4 bg-muted/5 rounded">
+            WorkSafe BC report export is not available in this release.
+          </div>
         )}
       </CardContent>
     </Card>

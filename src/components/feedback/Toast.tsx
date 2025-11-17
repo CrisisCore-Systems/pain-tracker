@@ -23,7 +23,16 @@ interface ToastProps extends Omit<ToastData, 'onDismiss'> {
   customOnDismiss?: () => void;
 }
 
-export function Toast({ id, type, title, message, duration = 5000, action, customOnDismiss, onDismiss }: ToastProps) {
+export function Toast({
+  id,
+  type,
+  title,
+  message,
+  duration = 5000,
+  action,
+  customOnDismiss,
+  onDismiss,
+}: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -90,16 +99,12 @@ export function Toast({ id, type, title, message, duration = 5000, action, custo
       aria-live="polite"
     >
       <div className="flex items-start space-x-3">
-        <div className="flex-shrink-0">
-          {getIcon()}
-        </div>
-        
+        <div className="flex-shrink-0">{getIcon()}</div>
+
         <div className="flex-1 min-w-0">
           <h4 className="text-sm font-semibold text-foreground">{title}</h4>
-          {message && (
-            <p className="text-sm text-muted-foreground mt-1">{message}</p>
-          )}
-          
+          {message && <p className="text-sm text-muted-foreground mt-1">{message}</p>}
+
           {action && (
             <button
               onClick={action.onClick}
@@ -109,7 +114,7 @@ export function Toast({ id, type, title, message, duration = 5000, action, custo
             </button>
           )}
         </div>
-        
+
         <button
           onClick={handleDismiss}
           className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors"

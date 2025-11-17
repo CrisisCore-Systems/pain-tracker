@@ -88,11 +88,14 @@ export class BackgroundSyncService {
 
   private startPeriodicSync(): void {
     // Sync every 5 minutes when online
-    setInterval(() => {
-      if (this.isOnline && !this.syncInProgress) {
-        this.syncAllPendingData();
-      }
-    }, 5 * 60 * 1000);
+    setInterval(
+      () => {
+        if (this.isOnline && !this.syncInProgress) {
+          this.syncAllPendingData();
+        }
+      },
+      5 * 60 * 1000
+    );
   }
 
   async queueForSync(
@@ -103,11 +106,11 @@ export class BackgroundSyncService {
   ): Promise<void> {
     try {
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       };
 
       // Add authentication headers if available
-  const token = secureStorage.get<string>('auth-token', { encrypt: true });
+      const token = secureStorage.get<string>('auth-token', { encrypt: true });
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       }
@@ -118,7 +121,7 @@ export class BackgroundSyncService {
         headers,
         body: data ? JSON.stringify(data) : undefined,
         priority,
-        type: 'api-request'
+        type: 'api-request',
       });
 
       console.log(`BackgroundSync: Queued ${method} ${url} for sync`);
@@ -152,7 +155,7 @@ export class BackgroundSyncService {
       successCount: 0,
       failureCount: 0,
       skippedCount: 0,
-      errors: []
+      errors: [],
     };
 
     try {
@@ -171,7 +174,7 @@ export class BackgroundSyncService {
       for (const item of syncQueue) {
         try {
           const result = await this.syncItem(item);
-          
+
           if (result.success) {
             stats.successCount++;
             await offlineStorage.removeSyncQueueItem(item.id!);
@@ -202,7 +205,6 @@ export class BackgroundSyncService {
 
       console.log('BackgroundSync: Sync completed', stats);
       this.dispatchSyncEvent('sync-completed', stats);
-
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.error('BackgroundSync: Sync process failed:', error);
@@ -225,14 +227,14 @@ export class BackgroundSyncService {
       const response = await fetch(item.url, {
         method: item.method,
         headers: item.headers,
-        body: item.body
+        body: item.body,
       });
 
       if (response.ok) {
         return { success: true, itemId: item.id! };
       } else {
         let errorMessage = `HTTP ${response.status}`;
-        
+
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
@@ -242,26 +244,26 @@ export class BackgroundSyncService {
 
         // Determine if we should retry based on status code
         const shouldRetry = response.status >= 500 || response.status === 429;
-        
+
         return {
           success: false,
           itemId: item.id!,
           error: errorMessage,
-          retryAfter: shouldRetry ? this.getRetryDelay(item.retryCount || 0) : undefined
+          retryAfter: shouldRetry ? this.getRetryDelay(item.retryCount || 0) : undefined,
         };
       }
     } catch (error) {
       return {
         success: false,
         itemId: item.id!,
-        error: error instanceof Error ? error.message : 'Network error'
+        error: error instanceof Error ? error.message : 'Network error',
       };
     }
   }
 
   private async scheduleRetry(item: SyncQueueItemShape, result: SyncResult): Promise<void> {
     const delay = result.retryAfter || this.getRetryDelay(item.retryCount || 0);
-    
+
     // Clear existing timeout for this item
     if (this.retryTimeouts.has(item.id!)) {
       clearTimeout(this.retryTimeouts.get(item.id!)!);
@@ -269,7 +271,7 @@ export class BackgroundSyncService {
 
     // Update retry count
     await offlineStorage.updateSyncQueueItem(item.id!, {
-      retryCount: (item.retryCount || 0) + 1
+      retryCount: (item.retryCount || 0) + 1,
     });
 
     // Schedule retry
@@ -279,7 +281,7 @@ export class BackgroundSyncService {
     }, delay);
 
     this.retryTimeouts.set(item.id!, timeout);
-    
+
     console.log(`BackgroundSync: Scheduled retry for ${item.url} in ${delay}ms`);
   }
 
@@ -288,14 +290,18 @@ export class BackgroundSyncService {
       return this.retryDelays[retryCount];
     }
     // Exponential backoff for higher retry counts
-    return Math.min(30000, this.retryDelays[this.retryDelays.length - 1] * Math.pow(2, retryCount - this.retryDelays.length));
+    return Math.min(
+      30000,
+      this.retryDelays[this.retryDelays.length - 1] *
+        Math.pow(2, retryCount - this.retryDelays.length)
+    );
   }
 
   private async updateLocalStore(): Promise<void> {
     try {
       // Get all unsynced data
       const unsyncedData = await offlineStorage.getUnsyncedData();
-      
+
       // Update Zustand store with synced data
       for (const item of unsyncedData) {
         if (item.type === 'pain-entry' && item.synced) {
@@ -314,7 +320,7 @@ export class BackgroundSyncService {
       successCount: 0,
       failureCount: 0,
       skippedCount: 0,
-      errors: []
+      errors: [],
     };
   }
 
@@ -325,7 +331,7 @@ export class BackgroundSyncService {
 
   // Public methods for managing sync
   async forcSync(): Promise<SyncStats> {
-  // cspell:ignore forc
+    // cspell:ignore forc
     console.log('BackgroundSync: Force sync requested');
     return this.syncAllPendingData();
   }
@@ -339,11 +345,9 @@ export class BackgroundSyncService {
     try {
       const syncQueue = await offlineStorage.getSyncQueue();
       const failedItems = syncQueue.filter(item => (item.retryCount || 0) >= this.maxRetries);
-      
-      await Promise.all(
-        failedItems.map(item => offlineStorage.removeSyncQueueItem(item.id!))
-      );
-      
+
+      await Promise.all(failedItems.map(item => offlineStorage.removeSyncQueueItem(item.id!)));
+
       console.log(`BackgroundSync: Cleared ${failedItems.length} failed items`);
     } catch (error) {
       console.error('BackgroundSync: Failed to clear failed items:', error);
@@ -363,7 +367,7 @@ export class BackgroundSyncService {
   getSyncStatus(): { isOnline: boolean; isSyncing: boolean } {
     return {
       isOnline: this.isOnline,
-      isSyncing: this.syncInProgress
+      isSyncing: this.syncInProgress,
     };
   }
 
@@ -379,9 +383,9 @@ export class BackgroundSyncService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${secureStorage.get<string>('auth-token', { encrypt: true }) || ''}`
+          Authorization: `Bearer ${secureStorage.get<string>('auth-token', { encrypt: true }) || ''}`,
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
 
       if (response.ok) {
@@ -443,26 +447,24 @@ export class PainTrackerSync {
     isSyncing: boolean;
   }> {
     const syncQueue = await offlineStorage.getSyncQueue();
-    const painEntryQueue = syncQueue.filter(item => 
-      item.url.includes('/pain-entries')
-    );
+    const painEntryQueue = syncQueue.filter(item => item.url.includes('/pain-entries'));
 
-  const lastSyncTime = secureStorage.get<string>('last-sync-time');
+    const lastSyncTime = secureStorage.get<string>('last-sync-time');
     const { isOnline, isSyncing } = this.backgroundSync.getSyncStatus();
 
     return {
       pendingEntries: painEntryQueue.length,
       lastSync: lastSyncTime,
       isOnline,
-      isSyncing
+      isSyncing,
     };
   }
 
   async forceSync(): Promise<void> {
     const stats = await this.backgroundSync.forceSync();
-    
+
     if (stats.successCount > 0) {
-  secureStorage.set('last-sync-time', new Date().toISOString());
+      secureStorage.set('last-sync-time', new Date().toISOString());
     }
   }
 }

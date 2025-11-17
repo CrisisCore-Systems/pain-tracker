@@ -66,10 +66,18 @@ export class PDFReportGenerator {
 
     // Date range
     this.doc.setFontSize(10);
-    this.doc.text(`Period: ${new Date(dateRange.start).toLocaleDateString()} - ${new Date(dateRange.end).toLocaleDateString()}`, 20, 55);
+    this.doc.text(
+      `Period: ${new Date(dateRange.start).toLocaleDateString()} - ${new Date(dateRange.end).toLocaleDateString()}`,
+      20,
+      55
+    );
 
     // Generated date
-    this.doc.text(`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 20, 62);
+    this.doc.text(
+      `Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+      20,
+      62
+    );
 
     // Add a line separator
     this.doc.line(20, 70, 190, 70);
@@ -95,16 +103,22 @@ export class PDFReportGenerator {
     let yPos = 95;
 
     // Basic statistics
-    const avgPain = filteredEntries.length > 0
-      ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length
-      : 0;
+    const avgPain =
+      filteredEntries.length > 0
+        ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) /
+          filteredEntries.length
+        : 0;
 
-    const mostCommonLocation = this.getMostCommon(filteredEntries.flatMap(e => e.baselineData.locations || []));
-    const mostCommonSymptom = this.getMostCommon(filteredEntries.flatMap(e => e.baselineData.symptoms || []));
+    const mostCommonLocation = this.getMostCommon(
+      filteredEntries.flatMap(e => e.baselineData.locations || [])
+    );
+    const mostCommonSymptom = this.getMostCommon(
+      filteredEntries.flatMap(e => e.baselineData.symptoms || [])
+    );
 
     this.doc.text(`Total Entries: ${filteredEntries.length}`, 20, yPos);
     yPos += 8;
-  this.doc.text(`Average Pain Level: ${formatNumber(avgPain, 1)}/10`, 20, yPos);
+    this.doc.text(`Average Pain Level: ${formatNumber(avgPain, 1)}/10`, 20, yPos);
     yPos += 8;
     this.doc.text(`Most Common Location: ${mostCommonLocation}`, 20, yPos);
     yPos += 8;
@@ -129,7 +143,7 @@ export class PDFReportGenerator {
 
     template.sections.forEach((section: unknown) => {
       const pdfSection = section as PDFSection;
-      
+
       if (yPos > 250) {
         this.doc.addPage();
         yPos = 30;
@@ -162,7 +176,12 @@ export class PDFReportGenerator {
     });
   }
 
-  private addMetricsSection(section: PDFSection, entries: PainEntry[], dateRange: DateRange, yPos: number): number {
+  private addMetricsSection(
+    section: PDFSection,
+    entries: PainEntry[],
+    dateRange: DateRange,
+    yPos: number
+  ): number {
     const filteredEntries = entries.filter(entry => {
       const entryDate = new Date(entry.timestamp);
       const startDate = new Date(dateRange.start);
@@ -172,20 +191,26 @@ export class PDFReportGenerator {
 
     switch (section.dataSource) {
       case 'medications': {
-        const medications = new Set(filteredEntries.flatMap(e => e.medications?.current?.map(m => m.name) || []));
+        const medications = new Set(
+          filteredEntries.flatMap(e => e.medications?.current?.map(m => m.name) || [])
+        );
         this.doc.text(`Total Unique Medications: ${medications.size}`, 20, yPos);
         yPos += 8;
-        Array.from(medications).slice(0, 5).forEach(med => {
-          this.doc.text(`• ${med}`, 30, yPos);
-          yPos += 6;
-        });
+        Array.from(medications)
+          .slice(0, 5)
+          .forEach(med => {
+            this.doc.text(`• ${med}`, 30, yPos);
+            yPos += 6;
+          });
         break;
       }
       case 'progress': {
-        const avgPain = filteredEntries.length > 0
-          ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length
-          : 0;
-  this.doc.text(`Average Pain Level: ${formatNumber(avgPain, 1)}/10`, 20, yPos);
+        const avgPain =
+          filteredEntries.length > 0
+            ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) /
+              filteredEntries.length
+            : 0;
+        this.doc.text(`Average Pain Level: ${formatNumber(avgPain, 1)}/10`, 20, yPos);
         yPos += 8;
         this.doc.text(`Total Entries: ${filteredEntries.length}`, 20, yPos);
         yPos += 8;
@@ -196,7 +221,12 @@ export class PDFReportGenerator {
     return yPos;
   }
 
-  private addTableSection(section: PDFSection, entries: PainEntry[], dateRange: DateRange, yPos: number): number {
+  private addTableSection(
+    section: PDFSection,
+    entries: PainEntry[],
+    dateRange: DateRange,
+    yPos: number
+  ): number {
     const filteredEntries = entries.filter(entry => {
       const entryDate = new Date(entry.timestamp);
       const startDate = new Date(dateRange.start);
@@ -208,22 +238,22 @@ export class PDFReportGenerator {
       case 'symptoms': {
         const symptomCounts = this.getSymptomCounts(filteredEntries);
         const topSymptoms = Object.entries(symptomCounts)
-          .sort(([,a], [,b]) => b - a)
+          .sort(([, a], [, b]) => b - a)
           .slice(0, 10);
 
         if (topSymptoms.length > 0) {
           const tableData = topSymptoms.map(([symptom, count]) => [symptom, count.toString()]);
 
-          ((this.doc as unknown) as JSDocWithAutoTable).autoTable({
+          (this.doc as unknown as JSDocWithAutoTable).autoTable({
             startY: yPos,
             head: [['Symptom', 'Frequency']],
             body: tableData,
             margin: { left: 20 },
             styles: { fontSize: 8 },
-            headStyles: { fillColor: [66, 139, 202] }
+            headStyles: { fillColor: [66, 139, 202] },
           });
 
-          yPos = (((this.doc as unknown) as JSDocWithAutoTable).lastAutoTable?.finalY ?? yPos) + 10;
+          yPos = ((this.doc as unknown as JSDocWithAutoTable).lastAutoTable?.finalY ?? yPos) + 10;
         }
         break;
       }
@@ -232,7 +262,12 @@ export class PDFReportGenerator {
     return yPos;
   }
 
-  private addTextSection(section: PDFSection, entries: PainEntry[], dateRange: DateRange, yPos: number): number {
+  private addTextSection(
+    section: PDFSection,
+    entries: PainEntry[],
+    dateRange: DateRange,
+    yPos: number
+  ): number {
     const filteredEntries = entries.filter(entry => {
       const entryDate = new Date(entry.timestamp);
       const startDate = new Date(dateRange.start);
@@ -242,12 +277,18 @@ export class PDFReportGenerator {
 
     switch (section.dataSource) {
       case 'overview': {
-        this.doc.text(`Report covers ${filteredEntries.length} pain entries from ${new Date(dateRange.start).toLocaleDateString()} to ${new Date(dateRange.end).toLocaleDateString()}.`, 20, yPos);
+        this.doc.text(
+          `Report covers ${filteredEntries.length} pain entries from ${new Date(dateRange.start).toLocaleDateString()} to ${new Date(dateRange.end).toLocaleDateString()}.`,
+          20,
+          yPos
+        );
         yPos += 8;
         break;
       }
       case 'treatments': {
-        const treatments = new Set(filteredEntries.flatMap(e => e.treatments?.recent?.map(t => t.type) || []));
+        const treatments = new Set(
+          filteredEntries.flatMap(e => e.treatments?.recent?.map(t => t.type) || [])
+        );
         this.doc.text(`Treatments received: ${Array.from(treatments).join(', ')}`, 20, yPos);
         yPos += 8;
         break;
@@ -277,10 +318,10 @@ export class PDFReportGenerator {
       entry.baselineData.pain.toString(),
       (entry.baselineData.locations || []).join(', '),
       (entry.baselineData.symptoms || []).join(', '),
-      (entry.notes || '').substring(0, 50) + ((entry.notes || '').length > 50 ? '...' : '')
+      (entry.notes || '').substring(0, 50) + ((entry.notes || '').length > 50 ? '...' : ''),
     ]);
 
-  ((this.doc as unknown) as JSDocWithAutoTable).autoTable({
+    (this.doc as unknown as JSDocWithAutoTable).autoTable({
       startY: 40,
       head: [['Date', 'Pain Level', 'Locations', 'Symptoms', 'Notes']],
       body: tableData,
@@ -292,8 +333,8 @@ export class PDFReportGenerator {
         1: { cellWidth: 20 },
         2: { cellWidth: 35 },
         3: { cellWidth: 35 },
-        4: { cellWidth: 55 }
-      }
+        4: { cellWidth: 55 },
+      },
     });
   }
 
@@ -315,12 +356,15 @@ export class PDFReportGenerator {
   private getMostCommon(items: string[]): string {
     if (items.length === 0) return 'None';
 
-    const counts = items.reduce((acc, item) => {
-      acc[item] = (acc[item] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const counts = items.reduce(
+      (acc, item) => {
+        acc[item] = (acc[item] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    return Object.entries(counts).sort(([,a], [,b]) => b - a)[0][0];
+    return Object.entries(counts).sort(([, a], [, b]) => b - a)[0][0];
   }
 
   private getPainDistribution(entries: PainEntry[]): Record<string, number> {

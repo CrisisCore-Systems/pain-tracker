@@ -11,17 +11,18 @@ export function useInterfaceSimplification() {
   const { crisisLevel } = useCrisisDetection();
   const { hasFog, isSevere } = useCognitiveFog();
   const { preferences } = useTraumaInformed();
-  
-  const isSimplified = preferences.simplifiedMode || 
-    crisisLevel === 'severe' || 
+
+  const isSimplified =
+    preferences.simplifiedMode ||
+    crisisLevel === 'severe' ||
     crisisLevel === 'emergency' ||
     (hasFog && isSevere);
-  
+
   return {
     isSimplified,
     shouldHideDecorative: isSimplified,
     shouldUseLargeTouchTargets: isSimplified,
     shouldReduceColors: isSimplified,
-    shouldRemoveAnimations: isSimplified
+    shouldRemoveAnimations: isSimplified,
   };
 }

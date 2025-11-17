@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import { Settings, Eye, EyeOff, RotateCcw, Save, Layout } from 'lucide-react';
-import { Modal, Card, CardHeader, CardTitle, CardContent, Button, Badge } from '../../design-system';
+import {
+  Modal,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  Button,
+  Badge,
+} from '../../design-system';
 import { cn } from '../../design-system/utils';
 import type { DashboardLayout, WidgetType } from './constants';
 import { AVAILABLE_WIDGETS } from './constants';
 
 type WidgetCategory = 'all' | 'core' | 'analytics' | 'reports' | 'utilities';
 
-type LayoutSettings = Partial<Pick<DashboardLayout, 'layout' | 'columns'>> & { widgets?: DashboardLayout['widgets'] };
+type LayoutSettings = Partial<Pick<DashboardLayout, 'layout' | 'columns'>> & {
+  widgets?: DashboardLayout['widgets'];
+};
 
 export interface WidgetManagementModalProps {
   isOpen: boolean;
@@ -22,7 +32,7 @@ const CATEGORY_LABELS: Record<Exclude<WidgetCategory, 'all'>, string> = {
   core: 'Core',
   analytics: 'Analytics',
   reports: 'Reports',
-  utilities: 'Utilities'
+  utilities: 'Utilities',
 };
 
 function getCategoryCount(layout: DashboardLayout, category: WidgetCategory) {
@@ -30,7 +40,8 @@ function getCategoryCount(layout: DashboardLayout, category: WidgetCategory) {
     return layout.widgets.length;
   }
 
-  return layout.widgets.filter(widget => AVAILABLE_WIDGETS[widget.type].category === category).length;
+  return layout.widgets.filter(widget => AVAILABLE_WIDGETS[widget.type].category === category)
+    .length;
 }
 
 function getWidgetsForCategory(layout: DashboardLayout, category: WidgetCategory) {
@@ -47,21 +58,32 @@ export function WidgetManagementModal({
   layout,
   onToggleWidget,
   onResetLayout,
-  onUpdateLayoutSettings
+  onUpdateLayoutSettings,
 }: WidgetManagementModalProps) {
   const [selectedCategory, setSelectedCategory] = useState<WidgetCategory>('all');
 
   const categories: { id: WidgetCategory; label: string; count: number }[] = [
     { id: 'all', label: 'All Widgets', count: getCategoryCount(layout, 'all') },
     { id: 'core', label: CATEGORY_LABELS.core, count: getCategoryCount(layout, 'core') },
-    { id: 'analytics', label: CATEGORY_LABELS.analytics, count: getCategoryCount(layout, 'analytics') },
+    {
+      id: 'analytics',
+      label: CATEGORY_LABELS.analytics,
+      count: getCategoryCount(layout, 'analytics'),
+    },
     { id: 'reports', label: CATEGORY_LABELS.reports, count: getCategoryCount(layout, 'reports') },
-    { id: 'utilities', label: CATEGORY_LABELS.utilities, count: getCategoryCount(layout, 'utilities') }
+    {
+      id: 'utilities',
+      label: CATEGORY_LABELS.utilities,
+      count: getCategoryCount(layout, 'utilities'),
+    },
   ];
 
   const filteredWidgets = getWidgetsForCategory(layout, selectedCategory);
 
-  const handleLayoutChange = (property: 'layout' | 'columns', value: DashboardLayout['layout'] | DashboardLayout['columns']) => {
+  const handleLayoutChange = (
+    property: 'layout' | 'columns',
+    value: DashboardLayout['layout'] | DashboardLayout['columns']
+  ) => {
     if (property === 'columns') {
       const normalized = value === 1 ? 1 : 2;
       onUpdateLayoutSettings({ columns: normalized });
@@ -104,7 +126,9 @@ export function WidgetManagementModal({
                 <label className="block text-sm font-medium mb-2">Layout Style</label>
                 <select
                   value={layout.layout}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleLayoutChange('layout', e.target.value as DashboardLayout['layout'])}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    handleLayoutChange('layout', e.target.value as DashboardLayout['layout'])
+                  }
                   className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="grid">Grid</option>
@@ -116,7 +140,12 @@ export function WidgetManagementModal({
                 <label className="block text-sm font-medium mb-2">Columns</label>
                 <select
                   value={layout.columns}
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleLayoutChange('columns', parseInt(e.target.value, 10) as DashboardLayout['columns'])}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    handleLayoutChange(
+                      'columns',
+                      parseInt(e.target.value, 10) as DashboardLayout['columns']
+                    )
+                  }
                   className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value={1}>1 Column</option>
@@ -129,7 +158,7 @@ export function WidgetManagementModal({
 
         {/* Widget Categories */}
         <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
+          {categories.map(category => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
@@ -147,7 +176,7 @@ export function WidgetManagementModal({
 
         {/* Widget List */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredWidgets.map((widget) => {
+          {filteredWidgets.map(widget => {
             const config = AVAILABLE_WIDGETS[widget.type];
             return (
               <Card
@@ -160,14 +189,10 @@ export function WidgetManagementModal({
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3">
-                      <div className="text-primary mt-1">
-                        {config.icon}
-                      </div>
+                      <div className="text-primary mt-1">{config.icon}</div>
                       <div className="flex-1">
                         <h3 className="font-medium">{config.title}</h3>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {config.description}
-                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">{config.description}</p>
                         <div className="flex items-center space-x-2 mt-2">
                           <Badge variant="outline" className="text-xs">
                             {config.category}

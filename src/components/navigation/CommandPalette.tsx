@@ -33,9 +33,9 @@ interface CommandPaletteProps {
 
 /**
  * Command Palette (⌘K / Ctrl+K)
- * 
+ *
  * Quick navigation and action launcher with fuzzy search
- * 
+ *
  * Features:
  * - Fuzzy search across commands
  * - Keyboard-first navigation (↑↓, Enter, Esc)
@@ -44,18 +44,18 @@ interface CommandPaletteProps {
  * - Categorized results
  * - Global keyboard shortcut (⌘K / Ctrl+K)
  * - Accessible modal dialog
- * 
+ *
  * Usage:
  * ```tsx
  * const [commandOpen, setCommandOpen] = useState(false);
- * 
+ *
  * <CommandPalette
  *   isOpen={commandOpen}
  *   onClose={() => setCommandOpen(false)}
  *   items={commands}
  *   recentItems={recentCommands}
  * />
- * 
+ *
  * // Trigger with keyboard shortcut
  * useEffect(() => {
  *   const handleKeyDown = (e: KeyboardEvent) => {
@@ -103,9 +103,9 @@ export function CommandPalette({
   // Filter and group items
   const groupedItems = useMemo(() => {
     const allItems = [...items];
-    
+
     // Add recent items with flag
-    const recentWithFlag = recentItems.map((item) => ({
+    const recentWithFlag = recentItems.map(item => ({
       ...item,
       recent: true,
     }));
@@ -123,7 +123,7 @@ export function CommandPalette({
 
       // Group by category
       const categorized = new Map<string, CommandItem[]>();
-      allItems.forEach((item) => {
+      allItems.forEach(item => {
         const category = item.category || 'Commands';
         if (!categorized.has(category)) {
           categorized.set(category, []);
@@ -139,7 +139,7 @@ export function CommandPalette({
     }
 
     // With search: filter and rank
-    const filtered = allItems.filter((item) => {
+    const filtered = allItems.filter(item => {
       const searchable = [
         item.label,
         item.description || '',
@@ -169,7 +169,7 @@ export function CommandPalette({
 
     // Group search results by category
     const categorized = new Map<string, CommandItem[]>();
-    filtered.forEach((item) => {
+    filtered.forEach(item => {
       const category = item.category || 'Commands';
       if (!categorized.has(category)) {
         categorized.set(category, []);
@@ -187,7 +187,7 @@ export function CommandPalette({
 
   // Flatten for keyboard navigation
   const flatItems = useMemo(() => {
-    return groupedItems.flatMap((group) => group.items);
+    return groupedItems.flatMap(group => group.items);
   }, [groupedItems]);
 
   // Reset selection when results change
@@ -219,13 +219,13 @@ export function CommandPalette({
     switch (e.key) {
       case 'ArrowDown': {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev + 1) % flatItems.length);
+        setSelectedIndex(prev => (prev + 1) % flatItems.length);
         break;
       }
 
       case 'ArrowUp': {
         e.preventDefault();
-        setSelectedIndex((prev) => (prev - 1 + flatItems.length) % flatItems.length);
+        setSelectedIndex(prev => (prev - 1 + flatItems.length) % flatItems.length);
         break;
       }
 
@@ -294,12 +294,15 @@ export function CommandPalette({
       >
         {/* Search Input */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-          <Search className="h-5 w-5 text-gray-400 dark:text-gray-500 flex-shrink-0" aria-hidden="true" />
+          <Search
+            className="h-5 w-5 text-gray-400 dark:text-gray-500 flex-shrink-0"
+            aria-hidden="true"
+          />
           <input
             ref={inputRef}
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             placeholder={placeholder}
             className={cn(
               'flex-1 bg-transparent text-gray-900 dark:text-gray-100',
@@ -330,7 +333,7 @@ export function CommandPalette({
               {emptyMessage}
             </div>
           ) : (
-            groupedItems.map((group) => (
+            groupedItems.map(group => (
               <div key={group.name} className="mb-4 last:mb-0">
                 {/* Group Header */}
                 <div className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -339,7 +342,7 @@ export function CommandPalette({
 
                 {/* Group Items */}
                 <div className="space-y-1">
-                  {group.items.map((item) => {
+                  {group.items.map(item => {
                     const itemIndex = flatIndex++;
                     const Icon = item.icon || Hash;
                     const isSelected = itemIndex === selectedIndex;
@@ -347,7 +350,7 @@ export function CommandPalette({
                     return (
                       <button
                         key={item.id}
-                        ref={(el) => (itemRefs.current[itemIndex] = el)}
+                        ref={el => (itemRefs.current[itemIndex] = el)}
                         id={`command-item-${item.id}`}
                         role="option"
                         aria-selected={isSelected}
@@ -372,9 +375,7 @@ export function CommandPalette({
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium truncate">
-                              {item.label}
-                            </span>
+                            <span className="text-sm font-medium truncate">{item.label}</span>
                             {item.recent && (
                               <Clock
                                 className="h-3 w-3 text-gray-400 dark:text-gray-500"

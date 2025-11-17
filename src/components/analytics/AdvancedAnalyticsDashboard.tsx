@@ -21,7 +21,7 @@ import {
   Eye,
   EyeOff,
   Maximize2,
-  Minimize2
+  Minimize2,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '../../design-system';
 import Chart from '../../design-system/components/Chart';
@@ -59,7 +59,10 @@ interface AdvancedMetric {
   chartData?: unknown[];
 }
 
-export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnalyticsDashboardProps) {
+export function AdvancedAnalyticsDashboard({
+  entries,
+  className,
+}: AdvancedAnalyticsDashboardProps) {
   // Initialize all hooks first (must be called unconditionally)
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
   const [showPredictions, setShowPredictions] = useState(true);
@@ -77,32 +80,38 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       week: 7,
       month: 30,
       quarter: 90,
-      year: 365
+      year: 365,
     };
 
     const days = timeframeDays[timeframe];
     const startDate = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
 
-    const filteredEntries = entries.filter(entry =>
-      new Date(entry.timestamp) >= startDate
-    );
+    const filteredEntries = entries.filter(entry => new Date(entry.timestamp) >= startDate);
 
-  const metrics: AdvancedMetric[] = [];
+    const metrics: AdvancedMetric[] = [];
 
     // Pain Level Trends
-  const avgPain = filteredEntries.length > 0 ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length : 0;
-    const prevPeriodAvg = entries
-      .filter(entry => {
-        const entryDate = new Date(entry.timestamp);
-        const prevStart = new Date(startDate.getTime() - days * 24 * 60 * 60 * 1000);
-        return entryDate >= prevStart && entryDate < startDate;
-      })
-      .reduce((sum, entry) => sum + entry.baselineData.pain, 0) /
-      Math.max(entries.filter(entry => {
-        const entryDate = new Date(entry.timestamp);
-        const prevStart = new Date(startDate.getTime() - days * 24 * 60 * 60 * 1000);
-        return entryDate >= prevStart && entryDate < startDate;
-      }).length, 1);
+    const avgPain =
+      filteredEntries.length > 0
+        ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) /
+          filteredEntries.length
+        : 0;
+    const prevPeriodAvg =
+      entries
+        .filter(entry => {
+          const entryDate = new Date(entry.timestamp);
+          const prevStart = new Date(startDate.getTime() - days * 24 * 60 * 60 * 1000);
+          return entryDate >= prevStart && entryDate < startDate;
+        })
+        .reduce((sum, entry) => sum + entry.baselineData.pain, 0) /
+      Math.max(
+        entries.filter(entry => {
+          const entryDate = new Date(entry.timestamp);
+          const prevStart = new Date(startDate.getTime() - days * 24 * 60 * 60 * 1000);
+          return entryDate >= prevStart && entryDate < startDate;
+        }).length,
+        1
+      );
 
     const painChange = prevPeriodAvg > 0 ? ((avgPain - prevPeriodAvg) / prevPeriodAvg) * 100 : 0;
 
@@ -114,18 +123,20 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       trend: painChange > 5 ? 'up' : painChange < -5 ? 'down' : 'stable',
       category: 'Pain Management',
       description: 'Average pain intensity across all entries',
-      chartData: generateTrendData(filteredEntries, 'pain')
+      chartData: generateTrendData(filteredEntries, 'pain'),
     });
 
     // Entry Frequency
-  const entriesPerDay = filteredEntries.length > 0 ? filteredEntries.length / days : 0;
-    const prevEntriesPerDay = entries.filter(entry => {
-      const entryDate = new Date(entry.timestamp);
-      const prevStart = new Date(startDate.getTime() - days * 24 * 60 * 60 * 1000);
-      return entryDate >= prevStart && entryDate < startDate;
-    }).length / days;
+    const entriesPerDay = filteredEntries.length > 0 ? filteredEntries.length / days : 0;
+    const prevEntriesPerDay =
+      entries.filter(entry => {
+        const entryDate = new Date(entry.timestamp);
+        const prevStart = new Date(startDate.getTime() - days * 24 * 60 * 60 * 1000);
+        return entryDate >= prevStart && entryDate < startDate;
+      }).length / days;
 
-    const frequencyChange = prevEntriesPerDay > 0 ? ((entriesPerDay - prevEntriesPerDay) / prevEntriesPerDay) * 100 : 0;
+    const frequencyChange =
+      prevEntriesPerDay > 0 ? ((entriesPerDay - prevEntriesPerDay) / prevEntriesPerDay) * 100 : 0;
 
     metrics.push({
       id: 'frequency',
@@ -135,7 +146,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       trend: frequencyChange > 10 ? 'up' : frequencyChange < -10 ? 'down' : 'stable',
       category: 'Tracking Habits',
       description: 'Average entries per day',
-      chartData: generateFrequencyData(filteredEntries, days)
+      chartData: generateFrequencyData(filteredEntries, days),
     });
 
     // Pain Intensity Distribution
@@ -148,7 +159,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       trend: 'stable',
       category: 'Pain Patterns',
       description: 'Variability in pain intensity levels',
-      chartData: intensityDistribution.data
+      chartData: intensityDistribution.data,
     });
 
     // Symptom Correlation
@@ -161,7 +172,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       trend: 'stable',
       category: 'Symptom Analysis',
       description: 'Correlation between symptoms and pain levels',
-      chartData: symptomCorrelation.data
+      chartData: symptomCorrelation.data,
     });
 
     // Quality of Life Impact
@@ -174,7 +185,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       trend: qolImpact.change > 5 ? 'up' : qolImpact.change < -5 ? 'down' : 'stable',
       category: 'Wellbeing',
       description: 'Impact on daily quality of life',
-      chartData: qolImpact.trendData
+      chartData: qolImpact.trendData,
     });
 
     return metrics;
@@ -195,11 +206,14 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       insights.push({
         type: 'trend',
         title: trend > 0 ? 'Increasing Pain Trend' : 'Decreasing Pain Trend',
-  description: `Your pain levels have been ${trend > 0 ? 'increasing' : 'decreasing'} over the past 2 weeks with a slope of ${formatNumber(trend, 2)} points per day.`,
+        description: `Your pain levels have been ${trend > 0 ? 'increasing' : 'decreasing'} over the past 2 weeks with a slope of ${formatNumber(trend, 2)} points per day.`,
         confidence: Math.min(Math.abs(trend) * 20, 95),
         impact: Math.abs(trend) > 1 ? 'high' : 'medium',
         timeframe: 'Next 7 days',
-        recommendation: trend > 0 ? 'Consider reviewing your pain management strategies' : 'Great progress! Keep up your current approach'
+        recommendation:
+          trend > 0
+            ? 'Consider reviewing your pain management strategies'
+            : 'Great progress! Keep up your current approach',
       });
     }
 
@@ -209,11 +223,11 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       insights.push({
         type: 'pattern',
         title: 'Time-based Pain Pattern',
-  description: `Higher pain levels detected ${patterns.timeOfDay.time} (${formatNumber(patterns.timeOfDay.avgPain,1)}/10 avg)`,
+        description: `Higher pain levels detected ${patterns.timeOfDay.time} (${formatNumber(patterns.timeOfDay.avgPain, 1)}/10 avg)`,
         confidence: patterns.timeOfDay.confidence,
         impact: 'medium',
         timeframe: 'Daily pattern',
-        recommendation: `Consider adjusting activities around ${patterns.timeOfDay.time}`
+        recommendation: `Consider adjusting activities around ${patterns.timeOfDay.time}`,
       });
     }
 
@@ -223,16 +237,18 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       insights.push({
         type: 'forecast',
         title: 'Pain Level Forecast',
-  description: `Projected average pain level for next week: ${formatNumber(forecast.predictedAvg,1)}/10`,
+        description: `Projected average pain level for next week: ${formatNumber(forecast.predictedAvg, 1)}/10`,
         confidence: forecast.confidence,
         impact: forecast.predictedAvg > 7 ? 'high' : 'medium',
         timeframe: 'Next 7 days',
-        recommendation: forecast.predictedAvg > 7 ? 'Consider proactive pain management' : 'Continue current strategies'
+        recommendation:
+          forecast.predictedAvg > 7
+            ? 'Consider proactive pain management'
+            : 'Continue current strategies',
       });
     }
 
     return insights;
-   
   }, [entries]);
 
   // Helper functions (delegated to analyticsHelpers) — keeps this file small for linting
@@ -286,8 +302,12 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
     const hexB = '#ef4444';
     const a = hexA.replace('#', '');
     const b = hexB.replace('#', '');
-    const ra = parseInt(a.slice(0, 2), 16), ga = parseInt(a.slice(2, 4), 16), ba = parseInt(a.slice(4, 6), 16);
-    const rb = parseInt(b.slice(0, 2), 16), gb = parseInt(b.slice(2, 4), 16), bb = parseInt(b.slice(4, 6), 16);
+    const ra = parseInt(a.slice(0, 2), 16),
+      ga = parseInt(a.slice(2, 4), 16),
+      ba = parseInt(a.slice(4, 6), 16);
+    const rb = parseInt(b.slice(0, 2), 16),
+      gb = parseInt(b.slice(2, 4), 16),
+      bb = parseInt(b.slice(4, 6), 16);
     const r = Math.round(ra + (rb - ra) * clamp);
     const g = Math.round(ga + (gb - ga) * clamp);
     const bcol = Math.round(ba + (bb - ba) * clamp);
@@ -305,7 +325,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
           (d.value ?? '').toString(),
           (rolling7[i] ?? '').toString(),
           (std7[i] ?? '').toString(),
-          anomalies.includes(i) ? '1' : '0'
+          anomalies.includes(i) ? '1' : '0',
         ];
         lines.push(row.join(','));
       }
@@ -314,30 +334,35 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `pain-analytics-${new Date().toISOString().slice(0,10)}.csv`;
+      a.download = `pain-analytics-${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
     } catch (err) {
-       
       console.error('CSV export failed', err);
     }
   }
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp className="h-4 w-4 text-red-500" />;
-      case 'down': return <TrendingDown className="h-4 w-4 text-green-500" />;
-      default: return <Activity className="h-4 w-4 text-blue-500" />;
+      case 'up':
+        return <TrendingUp className="h-4 w-4 text-red-500" />;
+      case 'down':
+        return <TrendingDown className="h-4 w-4 text-green-500" />;
+      default:
+        return <Activity className="h-4 w-4 text-blue-500" />;
     }
   };
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
-      case 'high': return 'text-red-600 bg-red-50 border-red-200';
-      case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      default: return 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'high':
+        return 'text-red-600 bg-red-50 border-red-200';
+      case 'medium':
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      default:
+        return 'text-blue-600 bg-blue-50 border-blue-200';
     }
   };
 
@@ -386,9 +411,13 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                   onClick={() => setShowTimeframeDropdown(!showTimeframeDropdown)}
                   className="w-32 justify-between"
                 >
-                  {timeframe === 'week' ? 'Past Week' :
-                   timeframe === 'month' ? 'Past Month' :
-                   timeframe === 'quarter' ? 'Past Quarter' : 'Past Year'}
+                  {timeframe === 'week'
+                    ? 'Past Week'
+                    : timeframe === 'month'
+                      ? 'Past Month'
+                      : timeframe === 'quarter'
+                        ? 'Past Quarter'
+                        : 'Past Year'}
                   <Calendar className="h-4 w-4 ml-2" />
                 </Button>
                 {showTimeframeDropdown && (
@@ -397,7 +426,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                       { value: 'week', label: 'Past Week' },
                       { value: 'month', label: 'Past Month' },
                       { value: 'quarter', label: 'Past Quarter' },
-                      { value: 'year', label: 'Past Year' }
+                      { value: 'year', label: 'Past Year' },
                     ].map(({ value, label }) => (
                       <button
                         key={value}
@@ -429,7 +458,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                   <div className="absolute top-full mt-1 w-32 bg-card border rounded-md shadow-lg z-10">
                     {[
                       { value: 'line', label: 'Line Chart' },
-                      { value: 'bar', label: 'Bar Chart' }
+                      { value: 'bar', label: 'Bar Chart' },
                     ].map(({ value, label }) => (
                       <button
                         key={value}
@@ -456,12 +485,12 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
                 {showPredictions ? 'Hide' : 'Show'} Predictions
               </Button>
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsFullscreen(!isFullscreen)}
-              >
-                {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+              <Button variant="outline" size="sm" onClick={() => setIsFullscreen(!isFullscreen)}>
+                {isFullscreen ? (
+                  <Minimize2 className="h-4 w-4" />
+                ) : (
+                  <Maximize2 className="h-4 w-4" />
+                )}
               </Button>
 
               <Button variant="outline" size="sm" onClick={() => handleExportCSV()}>
@@ -475,7 +504,7 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
 
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        {advancedMetrics.map((metric) => (
+        {advancedMetrics.map(metric => (
           <Card key={metric.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
@@ -489,11 +518,17 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
               </div>
 
               {metric.change !== 0 && (
-                <div className={cn(
-                  'text-xs flex items-center',
-                  metric.change > 0 ? 'text-red-600' : 'text-green-600'
-                )}>
-                  {metric.change > 0 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
+                <div
+                  className={cn(
+                    'text-xs flex items-center',
+                    metric.change > 0 ? 'text-red-600' : 'text-green-600'
+                  )}
+                >
+                  {metric.change > 0 ? (
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3 mr-1" />
+                  )}
                   {formatNumber(Math.abs(metric.change), 1)}% vs previous period
                 </div>
               )}
@@ -518,18 +553,13 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
               {predictiveInsights.map((insight, index) => (
                 <div
                   key={index}
-                  className={cn(
-                    'p-4 rounded-lg border',
-                    getImpactColor(insight.impact)
-                  )}
+                  className={cn('p-4 rounded-lg border', getImpactColor(insight.impact))}
                 >
                   <div className="flex items-start justify-between mb-2">
                     <Badge variant="outline" className="text-xs capitalize">
                       {insight.type}
                     </Badge>
-                    <span className="text-xs font-medium">
-                      {insight.confidence}% confidence
-                    </span>
+                    <span className="text-xs font-medium">{insight.confidence}% confidence</span>
                   </div>
 
                   <h4 className="font-medium mb-2">{insight.title}</h4>
@@ -562,56 +592,58 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
           </CardHeader>
           <CardContent>
             {dailyAverages.length > 0 && (
-                <Chart
-                  data={{
-                    labels: (function buildLabels() {
-                      const days = dailyAverages.length;
-                      // If short window (<=7) show Day 1..N for compact X-axis, otherwise show dates
-                      if (days <= 7) return dailyAverages.map((_, i) => `Day ${i + 1}`);
-                      return dailyAverages.map(d => d.date);
-                    })(),
-                    datasets: [
-                      {
-                        label: 'Average Pain Level',
-                        data: dailyAverages.map(d => d.value),
-                        // attach per-point metadata so Chart tooltip callbacks can read entries/notes/meds
-                        _meta: dailyMeta as ChartPointMetaArray,
-                        borderColor: painValues.map(v => painColorForValue(v, 1)),
-                        backgroundColor: painValues.map(v => painColorForValue(v, 0.08)),
-                        fill: false,
-                        tension: 0.35,
-                        // point styling uses ramp and anomaly emphasis
-                        pointBackgroundColor: dailyAverages.map((d, i) => anomalies.includes(i) ? 'rgba(239,68,68,1)' : painColorForValue(d.value, 1)),
-                        pointRadius: dailyAverages.map((_, i) => anomalies.includes(i) ? 6 : 4),
-                        yAxisID: 'y'
-                      } as any,
-                        {
-                        label: 'Entries',
-                        data: dailyMeta.map(m => m.count),
-                        borderColor: 'rgba(75,85,99,0.95)',
-                        backgroundColor: 'rgba(75,85,99,0.12)',
-                        borderWidth: 1,
-                        tension: 0.2,
-                        type: 'bar',
-                        yAxisID: 'y1'
-                        } as any,
-                      {
-                        label: '7-day rolling avg',
-                        data: rolling7,
-                        borderColor: colorVar('color-accent'),
-                        backgroundColor: 'transparent',
-                        borderDash: [6, 4],
-                        tension: 0.25,
-                        pointRadius: 0,
-                        fill: false,
-                        yAxisID: 'y'
-                      } as any
-                    ]
-                  }}
-                  type="line"
-                  height={isFullscreen ? 420 : 320}
-                  // Provide additional scales and tooltip callbacks via Chart props' scales prop
-                />
+              <Chart
+                data={{
+                  labels: (function buildLabels() {
+                    const days = dailyAverages.length;
+                    // If short window (<=7) show Day 1..N for compact X-axis, otherwise show dates
+                    if (days <= 7) return dailyAverages.map((_, i) => `Day ${i + 1}`);
+                    return dailyAverages.map(d => d.date);
+                  })(),
+                  datasets: [
+                    {
+                      label: 'Average Pain Level',
+                      data: dailyAverages.map(d => d.value),
+                      // attach per-point metadata so Chart tooltip callbacks can read entries/notes/meds
+                      _meta: dailyMeta as ChartPointMetaArray,
+                      borderColor: painValues.map(v => painColorForValue(v, 1)),
+                      backgroundColor: painValues.map(v => painColorForValue(v, 0.08)),
+                      fill: false,
+                      tension: 0.35,
+                      // point styling uses ramp and anomaly emphasis
+                      pointBackgroundColor: dailyAverages.map((d, i) =>
+                        anomalies.includes(i) ? 'rgba(239,68,68,1)' : painColorForValue(d.value, 1)
+                      ),
+                      pointRadius: dailyAverages.map((_, i) => (anomalies.includes(i) ? 6 : 4)),
+                      yAxisID: 'y',
+                    } as any,
+                    {
+                      label: 'Entries',
+                      data: dailyMeta.map(m => m.count),
+                      borderColor: 'rgba(75,85,99,0.95)',
+                      backgroundColor: 'rgba(75,85,99,0.12)',
+                      borderWidth: 1,
+                      tension: 0.2,
+                      type: 'bar',
+                      yAxisID: 'y1',
+                    } as any,
+                    {
+                      label: '7-day rolling avg',
+                      data: rolling7,
+                      borderColor: colorVar('color-accent'),
+                      backgroundColor: 'transparent',
+                      borderDash: [6, 4],
+                      tension: 0.25,
+                      pointRadius: 0,
+                      fill: false,
+                      yAxisID: 'y',
+                    } as any,
+                  ],
+                }}
+                type="line"
+                height={isFullscreen ? 420 : 320}
+                // Provide additional scales and tooltip callbacks via Chart props' scales prop
+              />
             )}
           </CardContent>
         </Card>
@@ -628,17 +660,31 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
             {advancedMetrics.find(m => m.id === 'intensity')?.chartData && (
               <Chart
                 data={{
-                  labels: (advancedMetrics.find(m => m.id === 'intensity')!.chartData as Array<{ label: string; value: number; percentage: number }>).map(d => d.label),
-                  datasets: [{
-                    label: 'Entries',
-                    data: (advancedMetrics.find(m => m.id === 'intensity')!.chartData as Array<{ label: string; value: number; percentage: number }>).map(d => d.value),
-                    backgroundColor: [
-                      colorVar('color-secondary'),
-                      colorVar('color-accent'),
-                      colorVar('color-warning'),
-                      colorVar('color-destructive')
-                    ]
-                  }]
+                  labels: (
+                    advancedMetrics.find(m => m.id === 'intensity')!.chartData as Array<{
+                      label: string;
+                      value: number;
+                      percentage: number;
+                    }>
+                  ).map(d => d.label),
+                  datasets: [
+                    {
+                      label: 'Entries',
+                      data: (
+                        advancedMetrics.find(m => m.id === 'intensity')!.chartData as Array<{
+                          label: string;
+                          value: number;
+                          percentage: number;
+                        }>
+                      ).map(d => d.value),
+                      backgroundColor: [
+                        colorVar('color-secondary'),
+                        colorVar('color-accent'),
+                        colorVar('color-warning'),
+                        colorVar('color-destructive'),
+                      ],
+                    },
+                  ],
                 }}
                 type="doughnut"
                 height={300}
@@ -659,12 +705,26 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
             {advancedMetrics.find(m => m.id === 'symptoms')?.chartData && (
               <Chart
                 data={{
-                  labels: (advancedMetrics.find(m => m.id === 'symptoms')!.chartData as Array<{ symptom: string; avgPain: number; count: number }>).map(d => d.symptom),
-                  datasets: [{
-                    label: 'Average Pain Level',
-                    data: (advancedMetrics.find(m => m.id === 'symptoms')!.chartData as Array<{ symptom: string; avgPain: number; count: number }>).map(d => d.avgPain),
-                    backgroundColor: colorVar('color-primary')
-                  }]
+                  labels: (
+                    advancedMetrics.find(m => m.id === 'symptoms')!.chartData as Array<{
+                      symptom: string;
+                      avgPain: number;
+                      count: number;
+                    }>
+                  ).map(d => d.symptom),
+                  datasets: [
+                    {
+                      label: 'Average Pain Level',
+                      data: (
+                        advancedMetrics.find(m => m.id === 'symptoms')!.chartData as Array<{
+                          symptom: string;
+                          avgPain: number;
+                          count: number;
+                        }>
+                      ).map(d => d.avgPain),
+                      backgroundColor: colorVar('color-primary'),
+                    },
+                  ],
                 }}
                 type="bar"
                 height={300}
@@ -685,23 +745,44 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
             {advancedMetrics.find(m => m.id === 'quality-of-life')?.chartData && (
               <Chart
                 data={{
-                  labels: (advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{ date: string; sleep: number; mood: number; average: number }>).map(d => d.date),
+                  labels: (
+                    advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{
+                      date: string;
+                      sleep: number;
+                      mood: number;
+                      average: number;
+                    }>
+                  ).map(d => d.date),
                   datasets: [
                     {
                       label: 'Sleep Quality',
-                      data: (advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{ date: string; sleep: number; mood: number; average: number }>).map(d => d.sleep),
+                      data: (
+                        advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{
+                          date: string;
+                          sleep: number;
+                          mood: number;
+                          average: number;
+                        }>
+                      ).map(d => d.sleep),
                       borderColor: colorVar('color-secondary'),
                       backgroundColor: colorVarAlpha('color-secondary', 0.1),
-                      tension: 0.4
+                      tension: 0.4,
                     },
                     {
                       label: 'Mood Impact',
-                      data: (advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{ date: string; sleep: number; mood: number; average: number }>).map(d => d.mood),
+                      data: (
+                        advancedMetrics.find(m => m.id === 'quality-of-life')!.chartData as Array<{
+                          date: string;
+                          sleep: number;
+                          mood: number;
+                          average: number;
+                        }>
+                      ).map(d => d.mood),
                       borderColor: colorVar('color-accent'),
                       backgroundColor: colorVarAlpha('color-accent', 0.1),
-                      tension: 0.4
-                    }
-                  ]
+                      tension: 0.4,
+                    },
+                  ],
                 }}
                 type="line"
                 height={300}
@@ -723,17 +804,33 @@ export function AdvancedAnalyticsDashboard({ entries, className }: AdvancedAnaly
           {advancedMetrics.find(m => m.id === 'frequency')?.chartData && (
             <Chart
               data={{
-                labels: (advancedMetrics.find(m => m.id === 'frequency')!.chartData as Array<{ date: string; value: number }>).map(d => {
+                labels: (
+                  advancedMetrics.find(m => m.id === 'frequency')!.chartData as Array<{
+                    date: string;
+                    value: number;
+                  }>
+                ).map(d => {
                   const date = new Date(d.date);
-                  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                  return date.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                  });
                 }),
-                datasets: [{
-                  label: 'Entries per Day',
-                  data: (advancedMetrics.find(m => m.id === 'frequency')!.chartData as Array<{ date: string; value: number }>).map(d => d.value),
+                datasets: [
+                  {
+                    label: 'Entries per Day',
+                    data: (
+                      advancedMetrics.find(m => m.id === 'frequency')!.chartData as Array<{
+                        date: string;
+                        value: number;
+                      }>
+                    ).map(d => d.value),
                     backgroundColor: colorVar('color-primary'),
                     borderColor: colorVar('color-primary'),
-                  borderWidth: 2
-                }]
+                    borderWidth: 2,
+                  },
+                ],
               }}
               type="bar"
               height={250}

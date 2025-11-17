@@ -9,7 +9,7 @@ export {
   useBreakpoint,
   useResponsive,
   useIsTouchDevice,
-  type Breakpoint
+  type Breakpoint,
 } from './useMediaQuery';
 
 // Other Hooks

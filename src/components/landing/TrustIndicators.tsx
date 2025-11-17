@@ -50,7 +50,7 @@ export const TrustIndicators: React.FC = () => {
 
         {/* Trust Badges Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
-          {trustBadges.map((badge) => {
+          {trustBadges.map(badge => {
             const Icon = badge.icon;
             return (
               <div
@@ -60,12 +60,8 @@ export const TrustIndicators: React.FC = () => {
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-sm">
-                  {badge.title}
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  {badge.description}
-                </p>
+                <h3 className="font-semibold text-sm">{badge.title}</h3>
+                <p className="text-xs text-muted-foreground">{badge.description}</p>
               </div>
             );
           })}
@@ -74,8 +70,16 @@ export const TrustIndicators: React.FC = () => {
         {/* Bottom Note */}
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            <strong>Your data, your device.</strong> We use local-first architecture with IndexedDB storage. 
-            No servers, no cloud, no third parties. <a href="https://github.com/CrisisCore-Systems/pain-tracker" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">View source code →</a>
+            <strong>Your data, your device.</strong> We use local-first architecture with IndexedDB
+            storage. No servers, no cloud, no third parties.{' '}
+            <a
+              href="https://github.com/CrisisCore-Systems/pain-tracker"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              View source code →
+            </a>
           </p>
         </div>
       </div>

@@ -5,7 +5,14 @@ import type { PainEntry } from '../../types';
 import { PainChart } from '../pain-tracker/PainChart';
 import { InteractiveBodyMap } from '../body-mapping/InteractiveBodyMap';
 import { PainAnalyticsPanel } from '../analytics/PainAnalyticsPanel';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button } from '../../design-system';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Button,
+} from '../../design-system';
 
 interface EnhancedPainVisualizationPanelProps {
   entries: PainEntry[];
@@ -21,20 +28,20 @@ export function EnhancedPainVisualizationPanel({ entries }: EnhancedPainVisualiz
       id: 'chart' as const,
       name: 'Trend Chart',
       icon: BarChart3,
-      description: 'Pain levels over time'
+      description: 'Pain levels over time',
     },
     {
       id: 'bodymap' as const,
       name: 'Body Map',
       icon: Map,
-      description: 'Pain location heatmap'
+      description: 'Pain location heatmap',
     },
     {
       id: 'analytics' as const,
       name: 'AI Insights',
       icon: Brain,
-      description: 'Predictive analysis'
-    }
+      description: 'Predictive analysis',
+    },
   ];
 
   return (
@@ -44,19 +51,17 @@ export function EnhancedPainVisualizationPanel({ entries }: EnhancedPainVisualiz
           <TrendingUp className="h-5 w-5" />
           <span>Advanced Pain Visualization</span>
         </CardTitle>
-        <CardDescription>
-          Comprehensive analysis of your pain patterns and trends
-        </CardDescription>
+        <CardDescription>Comprehensive analysis of your pain patterns and trends</CardDescription>
       </CardHeader>
       <CardContent>
         {/* Visualization Type Selector */}
         <div className="flex flex-wrap gap-2 mb-6 p-1 bg-muted rounded-lg">
-          {visualizationOptions.map((option) => {
+          {visualizationOptions.map(option => {
             const Icon = option.icon;
             return (
               <Button
                 key={option.id}
-                variant={activeView === option.id ? "default" : "ghost"}
+                variant={activeView === option.id ? 'default' : 'ghost'}
                 size="sm"
                 onClick={() => setActiveView(option.id)}
                 className="flex-1 min-w-fit"
@@ -89,11 +94,7 @@ export function EnhancedPainVisualizationPanel({ entries }: EnhancedPainVisualiz
 
           {activeView === 'bodymap' && (
             <div>
-              <InteractiveBodyMap
-                entries={entries}
-                mode="heatmap"
-                className="mb-4"
-              />
+              <InteractiveBodyMap entries={entries} mode="heatmap" className="mb-4" />
               {entries.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
                   <Map className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -115,9 +116,7 @@ export function EnhancedPainVisualizationPanel({ entries }: EnhancedPainVisualiz
           <div className="mt-6 pt-4 border-t border-muted">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-primary">
-                  {entries.length}
-                </div>
+                <div className="text-2xl font-bold text-primary">{entries.length}</div>
                 <div className="text-xs text-muted-foreground">Entries</div>
               </div>
               <div>
@@ -127,9 +126,7 @@ export function EnhancedPainVisualizationPanel({ entries }: EnhancedPainVisualiz
                 <div className="text-xs text-muted-foreground">Avg Pain</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-primary">
-                  {getUniqueLocations(entries)}
-                </div>
+                <div className="text-2xl font-bold text-primary">{getUniqueLocations(entries)}</div>
                 <div className="text-xs text-muted-foreground">Locations</div>
               </div>
             </div>
@@ -149,11 +146,11 @@ function calculateAveragePain(entries: PainEntry[]): string {
 
 function calculateTrackingPeriod(entries: PainEntry[]): number {
   if (entries.length === 0) return 0;
-  
+
   const dates = entries.map(entry => new Date(entry.timestamp));
   const earliest = Math.min(...dates.map(d => d.getTime()));
   const latest = Math.max(...dates.map(d => d.getTime()));
-  
+
   return Math.ceil((latest - earliest) / (1000 * 60 * 60 * 24)) + 1;
 }
 

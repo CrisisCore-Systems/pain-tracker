@@ -1,6 +1,25 @@
 import React, { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, Button, Modal, Badge, Input } from '../../design-system';
-import { FileText, Download, Calendar, Clock, Settings, Plus, Trash2, Eye, Send } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+  Modal,
+  Badge,
+  Input,
+} from '../../design-system';
+import {
+  FileText,
+  Download,
+  Calendar,
+  Clock,
+  Settings,
+  Plus,
+  Trash2,
+  Eye,
+  Send,
+} from 'lucide-react';
 import type { PainEntry, ReportTemplate, ScheduledReport } from '../../types';
 import { generatePDFReport, downloadPDF } from '../../utils/pdfReportGenerator';
 
@@ -22,25 +41,25 @@ const DEFAULT_TEMPLATES: ReportTemplate[] = [
         title: 'Pain Level Trends',
         type: 'chart',
         dataSource: 'pain-levels',
-        config: { period: '7d', chartType: 'line' }
+        config: { period: '7d', chartType: 'line' },
       },
       {
         id: 'symptoms-summary',
         title: 'Common Symptoms',
         type: 'table',
         dataSource: 'symptoms',
-        config: { groupBy: 'frequency', limit: 10 }
+        config: { groupBy: 'frequency', limit: 10 },
       },
       {
         id: 'medication-effectiveness',
         title: 'Medication Effectiveness',
         type: 'metrics',
         dataSource: 'medications',
-        config: { showEffectiveness: true }
-      }
+        config: { showEffectiveness: true },
+      },
     ],
     createdAt: new Date().toISOString(),
-    lastModified: new Date().toISOString()
+    lastModified: new Date().toISOString(),
   },
   {
     id: 'monthly-clinical',
@@ -53,32 +72,32 @@ const DEFAULT_TEMPLATES: ReportTemplate[] = [
         title: 'Patient Overview',
         type: 'text',
         dataSource: 'overview',
-        config: { includeDemographics: true }
+        config: { includeDemographics: true },
       },
       {
         id: 'pain-analysis',
         title: 'Pain Analysis',
         type: 'chart',
         dataSource: 'pain-analysis',
-        config: { period: '30d', includeStats: true }
+        config: { period: '30d', includeStats: true },
       },
       {
         id: 'functional-impact',
         title: 'Functional Impact Assessment',
         type: 'table',
         dataSource: 'functional-impact',
-        config: { detailed: true }
+        config: { detailed: true },
       },
       {
         id: 'treatment-summary',
         title: 'Treatment Summary',
         type: 'text',
         dataSource: 'treatments',
-        config: { includeEffectiveness: true }
-      }
+        config: { includeEffectiveness: true },
+      },
     ],
     createdAt: new Date().toISOString(),
-    lastModified: new Date().toISOString()
+    lastModified: new Date().toISOString(),
   },
   {
     id: 'progress-report',
@@ -91,32 +110,32 @@ const DEFAULT_TEMPLATES: ReportTemplate[] = [
         title: 'Key Progress Metrics',
         type: 'metrics',
         dataSource: 'progress',
-        config: { comparePeriods: true }
+        config: { comparePeriods: true },
       },
       {
         id: 'improvement-trends',
         title: 'Improvement Trends',
         type: 'chart',
         dataSource: 'trends',
-        config: { showImprovements: true }
+        config: { showImprovements: true },
       },
       {
         id: 'goals-achievement',
         title: 'Goals Achievement',
         type: 'table',
         dataSource: 'goals',
-        config: { showCompletion: true }
-      }
+        config: { showCompletion: true },
+      },
     ],
     createdAt: new Date().toISOString(),
-    lastModified: new Date().toISOString()
-  }
+    lastModified: new Date().toISOString(),
+  },
 ];
 
 export function ReportingSystem({
   entries,
   onGenerateReport,
-  onDeleteSchedule
+  onDeleteSchedule,
 }: ReportingSystemProps) {
   const [templates] = useState<ReportTemplate[]>(DEFAULT_TEMPLATES);
   const [scheduledReports] = useState<ScheduledReport[]>([]);
@@ -125,7 +144,7 @@ export function ReportingSystem({
   const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null);
   const [reportDateRange, setReportDateRange] = useState({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    end: new Date().toISOString().split('T')[0]
+    end: new Date().toISOString().split('T')[0],
   });
 
   // Generate report data based on template and date range
@@ -143,28 +162,43 @@ export function ReportingSystem({
       period: {
         start: reportDateRange.start,
         end: reportDateRange.end,
-        totalEntries: filteredEntries.length
+        totalEntries: filteredEntries.length,
       },
       summary: {
-        avgPainLevel: filteredEntries.length > 0
-          ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / filteredEntries.length
-          : 0,
-        mostCommonLocation: getMostCommon(filteredEntries.flatMap(e => e.baselineData.locations).filter((loc): loc is string => loc != null)),
-        mostCommonSymptom: getMostCommon(filteredEntries.flatMap(e => e.baselineData.symptoms).filter((sym): sym is string => sym != null)),
-        totalMedications: new Set(filteredEntries.flatMap(e => e.medications?.current?.map(m => m.name) ?? [])).size
-      }
+        avgPainLevel:
+          filteredEntries.length > 0
+            ? filteredEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) /
+              filteredEntries.length
+            : 0,
+        mostCommonLocation: getMostCommon(
+          filteredEntries
+            .flatMap(e => e.baselineData.locations)
+            .filter((loc): loc is string => loc != null)
+        ),
+        mostCommonSymptom: getMostCommon(
+          filteredEntries
+            .flatMap(e => e.baselineData.symptoms)
+            .filter((sym): sym is string => sym != null)
+        ),
+        totalMedications: new Set(
+          filteredEntries.flatMap(e => e.medications?.current?.map(m => m.name) ?? [])
+        ).size,
+      },
     };
 
     return reportData;
   }, [selectedTemplate, entries, reportDateRange]);
 
   const getMostCommon = (items: string[]): string => {
-    const counts = items.reduce((acc, item) => {
-      acc[item] = (acc[item] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const counts = items.reduce(
+      (acc, item) => {
+        acc[item] = (acc[item] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-    return Object.entries(counts).sort(([,a], [,b]) => b - a)[0]?.[0] || 'None';
+    return Object.entries(counts).sort(([, a], [, b]) => b - a)[0]?.[0] || 'None';
   };
 
   const handleGenerateReport = async () => {
@@ -176,8 +210,8 @@ export function ReportingSystem({
           entries,
           dateRange: {
             start: reportDateRange.start + 'T00:00:00Z',
-            end: reportDateRange.end + 'T23:59:59Z'
-          }
+            end: reportDateRange.end + 'T23:59:59Z',
+          },
         });
 
         // Download the PDF
@@ -201,20 +235,29 @@ export function ReportingSystem({
 
   const getTemplateIcon = (type: ReportTemplate['type']) => {
     switch (type) {
-      case 'summary': return '📊';
-      case 'detailed': return '📋';
-      case 'clinical': return '🏥';
-      case 'progress': return '📈';
-      default: return '📄';
+      case 'summary':
+        return '📊';
+      case 'detailed':
+        return '📋';
+      case 'clinical':
+        return '🏥';
+      case 'progress':
+        return '📈';
+      default:
+        return '📄';
     }
   };
 
   const getFrequencyLabel = (frequency: ScheduledReport['frequency']) => {
     switch (frequency) {
-      case 'daily': return 'Daily';
-      case 'weekly': return 'Weekly';
-      case 'monthly': return 'Monthly';
-      default: return frequency;
+      case 'daily':
+        return 'Daily';
+      case 'weekly':
+        return 'Weekly';
+      case 'monthly':
+        return 'Monthly';
+      default:
+        return frequency;
     }
   };
 
@@ -229,17 +272,11 @@ export function ReportingSystem({
           </p>
         </div>
         <div className="flex space-x-3">
-          <Button
-            variant="outline"
-            onClick={() => setShowTemplateModal(true)}
-          >
+          <Button variant="outline" onClick={() => setShowTemplateModal(true)}>
             <Settings className="h-4 w-4 mr-2" />
             Manage Templates
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => setShowScheduleModal(true)}
-          >
+          <Button variant="outline" onClick={() => setShowScheduleModal(true)}>
             <Calendar className="h-4 w-4 mr-2" />
             Schedule Report
           </Button>
@@ -260,7 +297,9 @@ export function ReportingSystem({
               <label className="block text-sm font-medium mb-2">Report Template</label>
               <select
                 value={selectedTemplate?.id || ''}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSelectedTemplate(templates.find(t => t.id === e.target.value) || null)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setSelectedTemplate(templates.find(t => t.id === e.target.value) || null)
+                }
                 className="w-full p-2 border rounded"
               >
                 <option value="">Select a template...</option>
@@ -276,7 +315,7 @@ export function ReportingSystem({
               <Input
                 type="date"
                 value={reportDateRange.start}
-                onChange={(e) => setReportDateRange(prev => ({ ...prev, start: e.target.value }))}
+                onChange={e => setReportDateRange(prev => ({ ...prev, start: e.target.value }))}
               />
             </div>
             <div>
@@ -284,7 +323,7 @@ export function ReportingSystem({
               <Input
                 type="date"
                 value={reportDateRange.end}
-                onChange={(e) => setReportDateRange(prev => ({ ...prev, end: e.target.value }))}
+                onChange={e => setReportDateRange(prev => ({ ...prev, end: e.target.value }))}
               />
             </div>
           </div>
@@ -307,10 +346,7 @@ export function ReportingSystem({
                     <Clock className="h-4 w-4 mr-1" />
                     Schedule
                   </Button>
-                  <Button
-                    onClick={handleGenerateReport}
-                    disabled={!generateReportData}
-                  >
+                  <Button onClick={handleGenerateReport} disabled={!generateReportData}>
                     <Download className="h-4 w-4 mr-1" />
                     Generate Report
                   </Button>
@@ -351,8 +387,10 @@ export function ReportingSystem({
                       onClick={() => {
                         setSelectedTemplate(template);
                         setReportDateRange({
-                          start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                          end: new Date().toISOString().split('T')[0]
+                          start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+                            .toISOString()
+                            .split('T')[0],
+                          end: new Date().toISOString().split('T')[0],
                         });
                       }}
                     >
@@ -389,19 +427,24 @@ export function ReportingSystem({
               {scheduledReports.map(schedule => {
                 const template = templates.find(t => t.id === schedule.templateId);
                 return (
-                  <div key={schedule.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div
+                    key={schedule.id}
+                    className="flex items-center justify-between p-3 border rounded-lg"
+                  >
                     <div className="flex items-center space-x-3">
-                      <div className="text-lg">{template ? getTemplateIcon(template.type) : '📄'}</div>
+                      <div className="text-lg">
+                        {template ? getTemplateIcon(template.type) : '📄'}
+                      </div>
                       <div>
                         <h4 className="font-medium">{schedule.name}</h4>
                         <p className="text-sm text-muted-foreground">
-                          {template?.name} • {getFrequencyLabel(schedule.frequency)} •
-                          Next: {new Date(schedule.nextRun).toLocaleDateString()}
+                          {template?.name} • {getFrequencyLabel(schedule.frequency)} • Next:{' '}
+                          {new Date(schedule.nextRun).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Badge variant={schedule.isActive ? "default" : "secondary"}>
+                      <Badge variant={schedule.isActive ? 'default' : 'secondary'}>
                         {schedule.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                       <Button
@@ -515,10 +558,12 @@ export function ReportingSystem({
             <Button variant="outline" onClick={() => setShowScheduleModal(false)}>
               Cancel
             </Button>
-            <Button onClick={() => {
-              // Handle schedule creation
-              setShowScheduleModal(false);
-            }}>
+            <Button
+              onClick={() => {
+                // Handle schedule creation
+                setShowScheduleModal(false);
+              }}
+            >
               <Send className="h-4 w-4 mr-2" />
               Schedule Report
             </Button>

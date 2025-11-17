@@ -1,5 +1,9 @@
 // Shared heuristic + statistical helpers for analytics & workers
-export interface RegressionResult { slope: number; intercept: number; r2: number; }
+export interface RegressionResult {
+  slope: number;
+  intercept: number;
+  r2: number;
+}
 
 export function movingAverage(values: number[], window = 3): number[] {
   if (window <= 1) return [...values];
@@ -33,22 +37,25 @@ export function linearRegression(values: number[]): RegressionResult {
 export function pearsonCorrelation(x: number[], y: number[]): number {
   const n = x.length;
   if (n === 0 || y.length !== n) return 0;
-  const sumX = x.reduce((s,v)=>s+v,0);
-  const sumY = y.reduce((s,v)=>s+v,0);
-  const sumXY = x.reduce((s,v,i)=>s+v*y[i],0);
-  const sumXX = x.reduce((s,v)=>s+v*v,0);
-  const sumYY = y.reduce((s,v)=>s+v*v,0);
-  const num = n*sumXY - sumX*sumY;
-  const den = Math.sqrt((n*sumXX - sumX*sumX) * (n*sumYY - sumY*sumY));
+  const sumX = x.reduce((s, v) => s + v, 0);
+  const sumY = y.reduce((s, v) => s + v, 0);
+  const sumXY = x.reduce((s, v, i) => s + v * y[i], 0);
+  const sumXX = x.reduce((s, v) => s + v * v, 0);
+  const sumYY = y.reduce((s, v) => s + v * v, 0);
+  const num = n * sumXY - sumX * sumY;
+  const den = Math.sqrt((n * sumXX - sumX * sumX) * (n * sumYY - sumY * sumY));
   return den === 0 ? 0 : num / den;
 }
 
 export function detectStdDevAnomalies(values: number[], threshold = 1.5): number[] {
   if (values.length < 2) return [];
-  const mean = values.reduce((s,v)=>s+v,0) / values.length;
-  const variance = values.reduce((s,v)=> s + Math.pow(v-mean,2),0) / values.length;
+  const mean = values.reduce((s, v) => s + v, 0) / values.length;
+  const variance = values.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / values.length;
   const sd = Math.sqrt(variance);
-  return values.map((v,i)=> ({v,i})).filter(o => Math.abs(o.v-mean) > sd*threshold).map(o => o.i);
+  return values
+    .map((v, i) => ({ v, i }))
+    .filter(o => Math.abs(o.v - mean) > sd * threshold)
+    .map(o => o.i);
 }
 
 export function keywordHitCount(text: string, keywords: string[]): number {

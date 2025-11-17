@@ -28,17 +28,18 @@ export function RecommendedActions({
   onLogNow,
   onViewCalendar,
   onViewAnalytics,
-  onExport
+  onExport,
 }: RecommendedActionsProps) {
   const actions = useMemo(() => {
     const recommendations: RecommendedAction[] = [];
 
     // Check time since last entry
-    const lastEntry = entries.length > 0
-      ? entries.reduce((latest, e) => 
-          new Date(e.timestamp) > new Date(latest.timestamp) ? e : latest
-        )
-      : null;
+    const lastEntry =
+      entries.length > 0
+        ? entries.reduce((latest, e) =>
+            new Date(e.timestamp) > new Date(latest.timestamp) ? e : latest
+          )
+        : null;
 
     const hoursSinceLastEntry = lastEntry
       ? (Date.now() - new Date(lastEntry.timestamp).getTime()) / (1000 * 60 * 60)
@@ -51,12 +52,12 @@ export function RecommendedActions({
         priority: 'primary',
         icon: Activity,
         title: 'Log pain now',
-        subtitle: lastEntry 
+        subtitle: lastEntry
           ? `Last entry: ${Math.floor(hoursSinceLastEntry)}h ago`
           : 'Start your tracking journey',
         action: onLogNow,
         badge: 'Quick',
-        estimatedTime: '~10s'
+        estimatedTime: '~10s',
       });
     }
 
@@ -76,7 +77,7 @@ export function RecommendedActions({
           title: 'Review weekly trends',
           subtitle: `${last7Days.length} entries logged this week`,
           action: onViewAnalytics,
-          estimatedTime: '2 min'
+          estimatedTime: '2 min',
         });
       }
     }
@@ -90,7 +91,7 @@ export function RecommendedActions({
         title: 'View calendar',
         subtitle: 'See your pain patterns at a glance',
         action: onViewCalendar,
-        estimatedTime: '1 min'
+        estimatedTime: '1 min',
       });
     }
 
@@ -110,7 +111,7 @@ export function RecommendedActions({
         subtitle: '7 days of data ready to export',
         action: onExport,
         badge: 'Ready',
-        estimatedTime: '30s'
+        estimatedTime: '30s',
       });
     }
 
@@ -118,7 +119,8 @@ export function RecommendedActions({
     if (entries.length >= 7) {
       const painValues = recentEntries.map(e => e.baselineData.pain);
       const mean = painValues.reduce((sum, p) => sum + p, 0) / painValues.length;
-      const variance = painValues.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / painValues.length;
+      const variance =
+        painValues.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / painValues.length;
       const stdDev = Math.sqrt(variance);
 
       if (stdDev > 2) {
@@ -130,7 +132,7 @@ export function RecommendedActions({
           subtitle: 'High pain variability detected',
           action: onViewAnalytics,
           badge: 'Insight',
-          estimatedTime: '3 min'
+          estimatedTime: '3 min',
         });
       }
     }
@@ -174,9 +176,7 @@ export function RecommendedActions({
                 <primaryAction.icon className="w-5 h-5 text-ink-900" />
               </div>
               <div>
-                <div className="text-body-medium text-ink-900 mb-0.5">
-                  {primaryAction.title}
-                </div>
+                <div className="text-body-medium text-ink-900 mb-0.5">{primaryAction.title}</div>
                 <div className="text-tiny text-ink-800">
                   {primaryAction.subtitle}
                   {primaryAction.estimatedTime && ` • ${primaryAction.estimatedTime}`}
@@ -192,7 +192,7 @@ export function RecommendedActions({
         )}
 
         {/* Secondary Actions - Medium prominence */}
-        {secondaryActions.map((action) => (
+        {secondaryActions.map(action => (
           <button
             key={action.id}
             onClick={action.action}
@@ -225,7 +225,7 @@ export function RecommendedActions({
         ))}
 
         {/* Tertiary Actions - Subtle */}
-        {tertiaryActions.map((action) => (
+        {tertiaryActions.map(action => (
           <button
             key={action.id}
             onClick={action.action}
@@ -242,9 +242,7 @@ export function RecommendedActions({
                 <span className="text-small text-ink-300 group-hover:text-ink-200 transition-colors">
                   {action.title}
                 </span>
-                <div className="text-tiny text-ink-500 mt-0.5">
-                  {action.subtitle}
-                </div>
+                <div className="text-tiny text-ink-500 mt-0.5">{action.subtitle}</div>
               </div>
             </div>
             {action.badge && (

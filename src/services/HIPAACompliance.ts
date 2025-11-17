@@ -6,10 +6,10 @@ export interface PHIDetectionResult {
 export class HIPAACompliance {
   // Very small PHI detectors for common PHI patterns. Security must review/expand.
   private phiPatterns: RegExp[] = [
-  /\b\d{3}-\d{2}-\d{4}\b/g, // SSN-like (literal)
-  /\b\d{3}-\d{3}-\d{4}\b/g, // phone (literal)
-  /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi // email (literal)
-  // All patterns above are statically defined and do not use user input
+    /\b\d{3}-\d{2}-\d{4}\b/g, // SSN-like (literal)
+    /\b\d{3}-\d{3}-\d{4}\b/g, // phone (literal)
+    /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, // email (literal)
+    // All patterns above are statically defined and do not use user input
   ];
 
   detectPHI(text: string): PHIDetectionResult {
@@ -24,11 +24,15 @@ export class HIPAACompliance {
   // Hook to log PHI detection events; real implementation must forward to secure audit sink.
   async logPHIDetection(userId: string, textSample: string, matches: string[]) {
     // Minimal local logging (console usage acceptable here for visibility; remove directive to satisfy lint)
-    console.warn(`[HIPAA] PHI detected for user=${userId}, matches=${JSON.stringify(matches.slice(0,5))}`);
+    console.warn(
+      `[HIPAA] PHI detected for user=${userId}, matches=${JSON.stringify(matches.slice(0, 5))}`
+    );
   }
 }
 
-export function createHIPAACompliance() { return new HIPAACompliance(); }
+export function createHIPAACompliance() {
+  return new HIPAACompliance();
+}
 // HIPAA Compliance and Data Validation Service
 // Ensures healthcare data handling meets HIPAA requirements and validates data integrity
 
@@ -151,7 +155,24 @@ export interface AdministrativeSafeguards {
 }
 
 export interface PHIIdentifier {
-  type: 'name' | 'address' | 'date' | 'phone' | 'fax' | 'email' | 'ssn' | 'mrn' | 'account' | 'certificate' | 'vehicle' | 'device' | 'url' | 'ip' | 'biometric' | 'photo' | 'other';
+  type:
+    | 'name'
+    | 'address'
+    | 'date'
+    | 'phone'
+    | 'fax'
+    | 'email'
+    | 'ssn'
+    | 'mrn'
+    | 'account'
+    | 'certificate'
+    | 'vehicle'
+    | 'device'
+    | 'url'
+    | 'ip'
+    | 'biometric'
+    | 'photo'
+    | 'other';
   value: string;
   location: string;
   confidence: number;
@@ -206,7 +227,16 @@ export interface AuditTrail {
   timestamp: string;
   userId: string;
   userRole: string;
-  actionType: 'create' | 'read' | 'update' | 'delete' | 'export' | 'print' | 'access' | 'login' | 'logout';
+  actionType:
+    | 'create'
+    | 'read'
+    | 'update'
+    | 'delete'
+    | 'export'
+    | 'print'
+    | 'access'
+    | 'login'
+    | 'logout';
   resourceType: string;
   resourceId?: string;
   patientId?: string;
@@ -264,13 +294,18 @@ export class HIPAAComplianceService {
       isValid: errors.length === 0,
       errors,
       warnings,
-      complianceScore
+      complianceScore,
     };
   }
 
   async validateFHIRBundle(bundle: FHIRBundle): Promise<{
     isValid: boolean;
-    resourceResults: Array<{ resourceId?: string; isValid: boolean; errors: string[]; warnings: string[] }>;
+    resourceResults: Array<{
+      resourceId?: string;
+      isValid: boolean;
+      errors: string[];
+      warnings: string[];
+    }>;
     overallErrors: string[];
     complianceScore: number;
   }> {
@@ -291,25 +326,28 @@ export class HIPAAComplianceService {
             resourceId: entry.resource.id,
             isValid: validation.isValid,
             errors: validation.errors,
-            warnings: validation.warnings
+            warnings: validation.warnings,
           });
         }
       }
     }
 
-    const totalErrors = overallErrors.length + resourceResults.reduce((sum, r) => sum + r.errors.length, 0);
-    const complianceScore = Math.max(0, 100 - (totalErrors * 10));
+    const totalErrors =
+      overallErrors.length + resourceResults.reduce((sum, r) => sum + r.errors.length, 0);
+    const complianceScore = Math.max(0, 100 - totalErrors * 10);
 
     return {
       isValid: overallErrors.length === 0 && resourceResults.every(r => r.isValid),
       resourceResults,
       overallErrors,
-      complianceScore
+      complianceScore,
     };
   }
 
   // PHI Detection and De-identification
-  async scanForPHI(data: unknown): Promise<{ identifiers: PHIIdentifier[]; riskLevel: 'low' | 'medium' | 'high' }> {
+  async scanForPHI(
+    data: unknown
+  ): Promise<{ identifiers: PHIIdentifier[]; riskLevel: 'low' | 'medium' | 'high' }> {
     const identifiers: PHIIdentifier[] = [];
     const dataStr = JSON.stringify(data);
 
@@ -320,7 +358,7 @@ export class HIPAAComplianceService {
       email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
       ipAddress: /\b(?:\d{1,3}\.){3}\d{1,3}\b/g,
       creditCard: /\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b/g,
-      zipCode: /\b\d{5}(?:-\d{4})?\b/g
+      zipCode: /\b\d{5}(?:-\d{4})?\b/g,
     };
 
     // Scan for patterns
@@ -332,7 +370,7 @@ export class HIPAAComplianceService {
             type: type as PHIIdentifier['type'],
             value: match,
             location: 'data',
-            confidence: 0.8
+            confidence: 0.8,
           });
         });
       }
@@ -349,7 +387,10 @@ export class HIPAAComplianceService {
     return { identifiers, riskLevel };
   }
 
-  async deidentifyData(data: unknown, method: 'safe-harbor' | 'expert-determination' | 'limited-dataset' = 'safe-harbor'): Promise<DeidentificationResult> {
+  async deidentifyData(
+    data: unknown,
+    method: 'safe-harbor' | 'expert-determination' | 'limited-dataset' = 'safe-harbor'
+  ): Promise<DeidentificationResult> {
     const originalData = JSON.parse(JSON.stringify(data));
     const deidentifiedData = JSON.parse(JSON.stringify(data));
     const identifiersRemoved: PHIIdentifier[] = [];
@@ -365,7 +406,10 @@ export class HIPAAComplianceService {
       scanResult.identifiers.forEach(identifier => {
         // Defensive: identifier.value is always from a known pattern match, not user input
         // If identifier.value ever comes from user input, this must be reviewed
-        dataStr = dataStr.replace(new RegExp(this.escapeRegExp(identifier.value), 'g'), '[REDACTED]');
+        dataStr = dataStr.replace(
+          new RegExp(this.escapeRegExp(identifier.value), 'g'),
+          '[REDACTED]'
+        );
       });
 
       try {
@@ -381,19 +425,21 @@ export class HIPAAComplianceService {
       identifiersRemoved,
       method,
       timestamp: new Date().toISOString(),
-      processedBy: 'hipaa-compliance-service'
+      processedBy: 'hipaa-compliance-service',
     };
   }
 
   // Access Control and Authorization
-  async requestDataAccess(request: Omit<AccessRequest, 'requestId' | 'requestDate' | 'approvalStatus'>): Promise<string> {
+  async requestDataAccess(
+    request: Omit<AccessRequest, 'requestId' | 'requestDate' | 'approvalStatus'>
+  ): Promise<string> {
     const requestId = `ar-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const accessRequest: AccessRequest = {
       ...request,
       requestId,
       requestDate: new Date().toISOString(),
-      approvalStatus: 'pending'
+      approvalStatus: 'pending',
     };
 
     // Auto-approve emergency requests with appropriate logging
@@ -402,7 +448,7 @@ export class HIPAAComplianceService {
       accessRequest.approvedBy = 'emergency-protocol';
       accessRequest.approvalDate = new Date().toISOString();
       accessRequest.expirationDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
-      
+
       await this.logAuditEvent({
         actionType: 'access',
         userId: request.requesterId,
@@ -410,7 +456,7 @@ export class HIPAAComplianceService {
         resourceType: 'patient-data',
         patientId: request.patientId,
         outcome: 'success',
-        details: { emergency: true, autoApproved: true }
+        details: { emergency: true, autoApproved: true },
       });
     }
 
@@ -418,7 +464,10 @@ export class HIPAAComplianceService {
     return requestId;
   }
 
-  async approveAccessRequest(requestId: string, approverInfo: { userId: string; conditions?: string[] }): Promise<void> {
+  async approveAccessRequest(
+    requestId: string,
+    approverInfo: { userId: string; conditions?: string[] }
+  ): Promise<void> {
     const request = this.accessRequests.get(requestId);
     if (!request) {
       throw new Error('Access request not found');
@@ -439,19 +488,21 @@ export class HIPAAComplianceService {
       resourceType: 'access-request',
       resourceId: requestId,
       outcome: 'success',
-      details: { action: 'approved', conditions: approverInfo.conditions }
+      details: { action: 'approved', conditions: approverInfo.conditions },
     });
   }
 
   // Audit Logging
-  async logAuditEvent(event: Omit<AuditTrail, 'eventId' | 'timestamp' | 'ipAddress' | 'userAgent' | 'riskScore'>): Promise<void> {
+  async logAuditEvent(
+    event: Omit<AuditTrail, 'eventId' | 'timestamp' | 'ipAddress' | 'userAgent' | 'riskScore'>
+  ): Promise<void> {
     const auditEvent: AuditTrail = {
       ...event,
       eventId: `ae-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date().toISOString(),
       ipAddress: '0.0.0.0', // Would be populated from request context
       userAgent: 'system', // Would be populated from request context
-      riskScore: this.calculateRiskScore(event)
+      riskScore: this.calculateRiskScore(event),
     };
 
     this.auditTrails.push(auditEvent);
@@ -473,32 +524,34 @@ export class HIPAAComplianceService {
       if (filters.userId && event.userId !== filters.userId) return false;
       if (filters.patientId && event.patientId !== filters.patientId) return false;
       if (filters.actionType && event.actionType !== filters.actionType) return false;
-      
+
       if (filters.startDate) {
         const eventDate = new Date(event.timestamp);
         const startDate = new Date(filters.startDate);
         if (eventDate < startDate) return false;
       }
-      
+
       if (filters.endDate) {
         const eventDate = new Date(event.timestamp);
         const endDate = new Date(filters.endDate);
         if (eventDate > endDate) return false;
       }
-      
+
       return true;
     });
   }
 
   // Breach Management
-  async reportBreach(breach: Omit<BreachAssessment, 'incidentId' | 'reportedDate' | 'investigationStatus'>): Promise<string> {
+  async reportBreach(
+    breach: Omit<BreachAssessment, 'incidentId' | 'reportedDate' | 'investigationStatus'>
+  ): Promise<string> {
     const incidentId = `br-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const breachAssessment: BreachAssessment = {
       ...breach,
       incidentId,
       reportedDate: new Date().toISOString(),
-      investigationStatus: 'open'
+      investigationStatus: 'open',
     };
 
     this.breachAssessments.set(incidentId, breachAssessment);
@@ -517,7 +570,7 @@ export class HIPAAComplianceService {
       resourceType: 'breach-report',
       resourceId: incidentId,
       outcome: 'success',
-      details: { patientCount: breach.phiInvolved.patientCount, riskLevel: breach.riskLevel }
+      details: { patientCount: breach.phiInvolved.patientCount, riskLevel: breach.riskLevel },
     });
 
     return incidentId;
@@ -571,14 +624,14 @@ export class HIPAAComplianceService {
           return requestDate >= startDate && requestDate <= endDate;
         }).length,
         dataValidations: periodEvents.filter(e => e.actionType === 'read').length,
-        complianceScore
+        complianceScore,
       },
       riskAnalysis: {
         highRiskEvents,
         suspiciousActivity,
-        recommendations
+        recommendations,
       },
-      generatedAt: new Date().toISOString()
+      generatedAt: new Date().toISOString(),
     };
   }
 
@@ -598,20 +651,22 @@ export class HIPAAComplianceService {
     return Math.max(0, 100 - errorPenalty - warningPenalty);
   }
 
-  private calculateRiskScore(event: Omit<AuditTrail, 'eventId' | 'timestamp' | 'ipAddress' | 'userAgent' | 'riskScore'>): number {
+  private calculateRiskScore(
+    event: Omit<AuditTrail, 'eventId' | 'timestamp' | 'ipAddress' | 'userAgent' | 'riskScore'>
+  ): number {
     let score = 0;
 
     // Base risk by action type
     const riskByAction = {
-      'delete': 40,
-      'export': 30,
-      'print': 25,
-      'update': 20,
-      'read': 10,
-      'create': 15,
-      'access': 20,
-      'login': 5,
-      'logout': 0
+      delete: 40,
+      export: 30,
+      print: 25,
+      update: 20,
+      read: 10,
+      create: 15,
+      access: 20,
+      login: 5,
+      logout: 0,
     };
 
     score += riskByAction[event.actionType] || 10;
@@ -635,7 +690,7 @@ export class HIPAAComplianceService {
       eventId: event.eventId,
       userId: event.userId,
       riskScore: event.riskScore,
-      actionType: event.actionType
+      actionType: event.actionType,
     });
 
     // In a real implementation, this would trigger alerts to security officers
@@ -682,19 +737,19 @@ export const hipaaComplianceService = new HIPAAComplianceService({
     name: 'Privacy Officer',
     title: 'Chief Privacy Officer',
     email: 'privacy@paintracker.app',
-    phone: '+1-555-0100'
+    phone: '+1-555-0100',
   },
   securityOfficer: {
     name: 'Security Officer',
     title: 'Chief Security Officer',
     email: 'security@paintracker.app',
-    phone: '+1-555-0101'
+    phone: '+1-555-0101',
   },
   complianceOfficer: {
     name: 'Compliance Officer',
     title: 'Chief Compliance Officer',
     email: 'compliance@paintracker.app',
-    phone: '+1-555-0102'
+    phone: '+1-555-0102',
   },
   businessAssociates: [],
   policies: [],
@@ -702,68 +757,68 @@ export const hipaaComplianceService = new HIPAAComplianceService({
     accessControl: {
       uniqueUserIdentification: true,
       automaticLogoff: true,
-      encryptionDecryption: true
+      encryptionDecryption: true,
     },
     auditControls: {
       hardwareSystemsAccess: true,
       softwareSystemsAccess: true,
-      activityReviews: true
+      activityReviews: true,
     },
     integrity: {
       protectionFromAlteration: true,
-      protectionFromDestruction: true
+      protectionFromDestruction: true,
     },
     personOrEntityAuthentication: {
-      verifyUserIdentity: true
+      verifyUserIdentity: true,
     },
     transmissionSecurity: {
       guardAgainstUnauthorizedAccess: true,
       dataIntegrityControls: true,
-      encryptionStandards: ['TLS-1.3', 'AES-256']
-    }
+      encryptionStandards: ['TLS-1.3', 'AES-256'],
+    },
   },
   physicalSafeguards: {
     facilityAccessControls: {
       limitPhysicalAccess: true,
       workstationAccess: true,
-      mediaControls: true
+      mediaControls: true,
     },
     workstationUse: {
       limitedAccess: true,
-      physicalAttributes: ['locked-room', 'secure-access']
+      physicalAttributes: ['locked-room', 'secure-access'],
     },
     deviceMediaControls: {
       disposalProcedures: true,
       reuseProtocols: true,
       accountabilityMeasures: true,
-      dataBackupStorage: true
-    }
+      dataBackupStorage: true,
+    },
   },
   administrativeSafeguards: {
     securityManagement: {
       securityOfficerAssigned: true,
-      managementResponsibilities: ['policy-enforcement', 'incident-response']
+      managementResponsibilities: ['policy-enforcement', 'incident-response'],
     },
     workforceTraining: {
       privacyTraining: true,
       securityTraining: true,
       trainingFrequency: 'annually',
-      lastCompleted: '2025-01-01'
+      lastCompleted: '2025-01-01',
     },
     accessManagement: {
       accessAuthorizationProcedures: true,
       accessEstablishmentModification: true,
-      accessTerminationProcedures: true
+      accessTerminationProcedures: true,
     },
     contingencyPlan: {
       dataBackupPlan: true,
       disasterRecoveryPlan: true,
       emergencyModeOperationPlan: true,
-      dataRecoveryPlan: true
+      dataRecoveryPlan: true,
     },
     businessAssociateContracts: {
       writtenContracts: true,
-      safeguardRequirements: true
-    }
-  }
+      safeguardRequirements: true,
+    },
+  },
 });

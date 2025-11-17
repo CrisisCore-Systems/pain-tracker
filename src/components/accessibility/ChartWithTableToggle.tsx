@@ -6,7 +6,7 @@ import Chart from '../../design-system/components/Chart';
 /**
  * Accessible chart component with table view toggle
  * Provides dual-path access to data visualization for screen reader users
- * 
+ *
  * WCAG 2.2 AA: Complex graphics must have text alternatives
  */
 
@@ -53,25 +53,27 @@ export function ChartWithTableToggle({
   icon: Icon,
   height = 256,
   className,
-  footer
+  footer,
 }: ChartWithTableToggleProps) {
   const [viewMode, setViewMode] = useState<'chart' | 'table'>('chart');
 
   return (
-    <div className={cn(
-      'bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-lg',
-      className
-    )}>
+    <div
+      className={cn(
+        'bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-lg',
+        className
+      )}
+    >
       {/* Header with Toggle */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex-1">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">{description}</p>
         </div>
-        
+
         <div className="flex items-center gap-3">
           {Icon && <Icon className="h-6 w-6 text-gray-400 dark:text-gray-500" aria-hidden="true" />}
-          
+
           {/* View Toggle Button */}
           <button
             onClick={() => setViewMode(viewMode === 'chart' ? 'table' : 'chart')}
@@ -107,8 +109,7 @@ export function ChartWithTableToggle({
             <Chart type={type} data={chartData} height={height} />
             {/* Screen reader summary */}
             <div className="sr-only">
-              {title}. {description}.
-              Data summary: {tableData.length} items.
+              {title}. {description}. Data summary: {tableData.length} items.
               {tableData.slice(0, 3).map((item, i) => (
                 <span key={i}>
                   {item.label}: {item.value}.
@@ -145,9 +146,7 @@ export function ChartWithTableToggle({
                       'hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors'
                     )}
                   >
-                    <td className="py-3 px-4 text-gray-700 dark:text-gray-300">
-                      {item.label}
-                    </td>
+                    <td className="py-3 px-4 text-gray-700 dark:text-gray-300">{item.label}</td>
                     <td className="py-3 px-4 text-right font-mono text-gray-900 dark:text-white">
                       {typeof item.value === 'number' ? item.value.toFixed(1) : item.value}
                     </td>
@@ -162,7 +161,10 @@ export function ChartWithTableToggle({
               {tableData.length > 0 && (
                 <tfoot>
                   <tr>
-                    <td colSpan={tableData.some(d => d.additionalInfo) ? 3 : 2} className="py-3 px-4 text-xs text-gray-500 dark:text-gray-400">
+                    <td
+                      colSpan={tableData.some(d => d.additionalInfo) ? 3 : 2}
+                      className="py-3 px-4 text-xs text-gray-500 dark:text-gray-400"
+                    >
                       {tableData.length} {tableData.length === 1 ? 'row' : 'rows'} total
                     </td>
                   </tr>
@@ -175,9 +177,7 @@ export function ChartWithTableToggle({
 
       {/* Optional Footer */}
       {footer && (
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          {footer}
-        </div>
+        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">{footer}</div>
       )}
     </div>
   );

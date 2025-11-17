@@ -11,16 +11,10 @@ export const SECTION_WIDGETS: Record<DashboardSection, WidgetType[]> = {
     'goal-tracking',
     'current-stats',
     'recent-history',
-    'quick-actions'
+    'quick-actions',
   ],
-  insights: [
-    'pain-visualization',
-    'empathy-analytics',
-    'intelligent-triggers'
-  ],
-  reports: [
-    'wcb-report'
-  ]
+  insights: ['pain-visualization', 'empathy-analytics', 'intelligent-triggers'],
+  reports: ['wcb-report'],
 };
 
 export interface DashboardSectionDefinition {
@@ -31,7 +25,22 @@ export interface DashboardSectionDefinition {
 }
 
 export const DASHBOARD_SECTIONS: DashboardSectionDefinition[] = [
-  { id: 'overview', label: 'Overview', description: 'Daily essentials and quick capture', icon: Sun },
-  { id: 'insights', label: 'Insights', description: 'Visual trends and smart guidance', icon: LineChart },
-  { id: 'reports', label: 'Reports & Admin', description: 'Exports and claim-ready documents', icon: ClipboardList }
+  {
+    id: 'overview',
+    label: 'Overview',
+    description: 'Daily essentials and quick capture',
+    icon: Sun,
+  },
+  {
+    id: 'insights',
+    label: 'Insights',
+    description: 'Visual trends and smart guidance',
+    icon: LineChart,
+  },
+  {
+    id: 'reports',
+    label: 'Reports & Admin',
+    description: 'Exports and claim-ready documents',
+    icon: ClipboardList,
+  },
 ];

@@ -4,7 +4,11 @@ import { vi } from 'vitest';
 // Mock PredictivePanel (lazy-loaded) so Suspense doesn't delay tests
 vi.mock('../../PredictivePanel', () => ({
   __esModule: true,
-  default: ({ entries }: any) => <div data-testid="predictive-panel-mock" data-entries={JSON.stringify(entries)}>Predictive</div>
+  default: ({ entries }: any) => (
+    <div data-testid="predictive-panel-mock" data-entries={JSON.stringify(entries)}>
+      Predictive
+    </div>
+  ),
 }));
 // Mock Chart to avoid Chart.js rendering inside tests
 vi.mock('../../design-system/components/Chart', () => ({
@@ -35,15 +39,15 @@ function makeEntry(id: string, iso: string, pain: number) {
   return {
     id,
     timestamp: iso,
-  baselineData: { pain, symptoms: [] },
-  qualityOfLife: null,
-  functionalImpact: null,
-  medications: [],
-  treatments: [],
-  workImpact: null,
-  metadata: {},
-  comparison: null,
-  notes: ''
+    baselineData: { pain, symptoms: [] },
+    qualityOfLife: null,
+    functionalImpact: null,
+    medications: [],
+    treatments: [],
+    workImpact: null,
+    metadata: {},
+    comparison: null,
+    notes: '',
   };
 }
 
@@ -52,11 +56,19 @@ describe('DashboardOverview', () => {
     const today = new Date();
     const entries = [
       makeEntry('1', new Date(today.getTime() - 2 * 24 * 3600 * 1000).toISOString(), 3),
-      makeEntry('2', new Date(today.getTime() - 1 * 24 * 3600 * 1000).toISOString(), 5)
+      makeEntry('2', new Date(today.getTime() - 1 * 24 * 3600 * 1000).toISOString(), 5),
     ];
-    const allEntries = [...entries, makeEntry('3', new Date(today.getTime() - 30 * 24 * 3600 * 1000).toISOString(), 4)];
+    const allEntries = [
+      ...entries,
+      makeEntry('3', new Date(today.getTime() - 30 * 24 * 3600 * 1000).toISOString(), 4),
+    ];
 
-    render(<DashboardOverview entries={entries as unknown as PainEntry[]} allEntries={allEntries as unknown as PainEntry[]} />);
+    render(
+      <DashboardOverview
+        entries={entries as unknown as PainEntry[]}
+        allEntries={allEntries as unknown as PainEntry[]}
+      />
+    );
     await screen.findByTestId('predictive-panel-mock');
 
     const totalSection = screen.getByText('Total Entries').closest('div.space-y-1');
@@ -71,10 +83,15 @@ describe('DashboardOverview', () => {
     const today = new Date();
     const entries = [
       makeEntry('1', today.toISOString(), 3),
-      makeEntry('2', today.toISOString(), 4)
+      makeEntry('2', today.toISOString(), 4),
     ];
 
-    render(<DashboardOverview entries={entries as unknown as PainEntry[]} allEntries={entries as unknown as PainEntry[]} />);
+    render(
+      <DashboardOverview
+        entries={entries as unknown as PainEntry[]}
+        allEntries={entries as unknown as PainEntry[]}
+      />
+    );
     await screen.findByTestId('predictive-panel-mock');
 
     // Average pain should be displayed with one decimal (3.5) inside the Average Pain card
@@ -89,9 +106,17 @@ describe('DashboardOverview', () => {
   it('counts today entries using local date match', async () => {
     const now = new Date();
     const isoNow = now.toISOString();
-    const entries = [makeEntry('1', isoNow, 2), makeEntry('2', new Date(now.getTime() - 24 * 3600 * 1000).toISOString(), 2)];
+    const entries = [
+      makeEntry('1', isoNow, 2),
+      makeEntry('2', new Date(now.getTime() - 24 * 3600 * 1000).toISOString(), 2),
+    ];
 
-    render(<DashboardOverview entries={entries as unknown as PainEntry[]} allEntries={entries as unknown as PainEntry[]} />);
+    render(
+      <DashboardOverview
+        entries={entries as unknown as PainEntry[]}
+        allEntries={entries as unknown as PainEntry[]}
+      />
+    );
     await screen.findByTestId('predictive-panel-mock');
 
     // Today's entries should be 1 (scoped within the card to avoid duplicates)
@@ -110,7 +135,12 @@ describe('DashboardOverview', () => {
       makeEntry('2', new Date(today.getTime() - 2 * 24 * 3600 * 1000).toISOString(), 4),
     ];
 
-    render(<DashboardOverview entries={entries as unknown as PainEntry[]} allEntries={entries as unknown as PainEntry[]} />);
+    render(
+      <DashboardOverview
+        entries={entries as unknown as PainEntry[]}
+        allEntries={entries as unknown as PainEntry[]}
+      />
+    );
     await screen.findByTestId('predictive-panel-mock');
 
     expect(await screen.findByText('AI insight highlights')).toBeInTheDocument();

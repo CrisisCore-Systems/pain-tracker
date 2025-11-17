@@ -6,14 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Progress } from '../ui/progress';
 import { Badge } from '../ui/badge';
-import {
-  Target,
-  TrendingUp,
-  Clock,
-  Plus,
-  ArrowRight,
-  Award
-} from 'lucide-react';
+import { Target, TrendingUp, Clock, Plus, ArrowRight, Award } from 'lucide-react';
 
 interface GoalDashboardWidgetProps {
   onOpenManager: () => void;
@@ -24,7 +17,7 @@ interface GoalDashboardWidgetProps {
 export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
   onOpenManager,
   className = '',
-  compact = false
+  compact = false,
 }) => {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [analytics, setAnalytics] = useState<{
@@ -71,7 +64,7 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
         activeGoals: activeGoals.length,
         completedGoals: completedGoals.length,
         avgProgress: Math.round(avgProgress),
-        totalEntries
+        totalEntries,
       });
     } catch (error) {
       console.error('Failed to load goals data:', error);
@@ -82,27 +75,36 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
 
   const getStatusColor = (status: Goal['status']) => {
     switch (status) {
-      case 'active': return 'bg-blue-100 text-blue-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      case 'paused': return 'bg-yellow-100 text-yellow-800';
-  case 'abandoned': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active':
+        return 'bg-blue-100 text-blue-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'paused':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'abandoned':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getPriorityColor = (priority: Goal['priority']) => {
     switch (priority) {
-      case 'high': return 'border-red-200 bg-red-50';
-      case 'medium': return 'border-yellow-200 bg-yellow-50';
-      case 'low': return 'border-green-200 bg-green-50';
-      default: return 'border-gray-200 bg-gray-50';
+      case 'high':
+        return 'border-red-200 bg-red-50';
+      case 'medium':
+        return 'border-yellow-200 bg-yellow-50';
+      case 'low':
+        return 'border-green-200 bg-green-50';
+      default:
+        return 'border-gray-200 bg-gray-50';
     }
   };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -196,7 +198,9 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
         ) : analytics.totalGoals === 0 ? (
           <div className="text-center py-12">
             <Target className="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Start Your Journey</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+              Start Your Journey
+            </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
               Set meaningful goals to track your progress and celebrate your achievements.
             </p>
@@ -238,7 +242,7 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
                   .filter(g => g.status === 'active')
                   .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
                   .slice(0, 3)
-                  .map((goal) => (
+                  .map(goal => (
                     <div
                       key={goal.id}
                       className={`p-4 border rounded-lg cursor-pointer hover:shadow-md transition-shadow ${getPriorityColor(goal.priority)}`}

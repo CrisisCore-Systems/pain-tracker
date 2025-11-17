@@ -31,7 +31,12 @@ interface OfflineStatus {
 
 // Message types for service worker communication
 interface ServiceWorkerMessage {
-  type: 'PROCESS_INSIGHTS' | 'DOWNLOAD_RESOURCES' | 'SYNC_DATA' | 'GET_STATUS' | 'CONFLICT_RESOLVED';
+  type:
+    | 'PROCESS_INSIGHTS'
+    | 'DOWNLOAD_RESOURCES'
+    | 'SYNC_DATA'
+    | 'GET_STATUS'
+    | 'CONFLICT_RESOLVED';
   payload?: unknown;
   id?: string;
 }
@@ -58,7 +63,7 @@ export class EnhancedServiceWorkerIntegration {
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js');
-        
+
         if (registration.active) {
           this.sw = registration.active;
         } else if (registration.installing) {
@@ -89,7 +94,7 @@ export class EnhancedServiceWorkerIntegration {
   }
 
   private waitForServiceWorker(worker: ServiceWorker): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       worker.addEventListener('statechange', () => {
         if (worker.state === 'activated') {
           resolve();
@@ -111,9 +116,9 @@ export class EnhancedServiceWorkerIntegration {
   }
 
   private setupMessageListeners(): void {
-    navigator.serviceWorker?.addEventListener('message', (event) => {
+    navigator.serviceWorker?.addEventListener('message', event => {
       const response: ServiceWorkerResponse = event.data;
-      
+
       if (response.id && this.messageHandlers.has(response.id)) {
         const handler = this.messageHandlers.get(response.id)!;
         handler(response);
@@ -139,10 +144,10 @@ export class EnhancedServiceWorkerIntegration {
     if (isOnline) {
       // Trigger background sync when coming online
       await this.triggerBackgroundSync();
-      
+
       // Process any pending insights
       await this.processHealthInsights();
-      
+
       // Download new resources
       await this.downloadEssentialResources();
     }
@@ -150,29 +155,33 @@ export class EnhancedServiceWorkerIntegration {
 
   private handleInsightsProcessed(insights: HealthInsight[]): void {
     // Emit custom event for UI to update
-    window.dispatchEvent(new CustomEvent('health-insights-updated', {
-      detail: { insights }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('health-insights-updated', {
+        detail: { insights },
+      })
+    );
   }
 
   private handleStatusUpdate(status: OfflineStatus): void {
     // Emit status update event
-    window.dispatchEvent(new CustomEvent('offline-status-updated', {
-      detail: { status }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('offline-status-updated', {
+        detail: { status },
+      })
+    );
   }
 
   // Public API methods
   async processHealthInsights(): Promise<HealthInsight[]> {
     return this.sendMessage({
-      type: 'PROCESS_INSIGHTS'
+      type: 'PROCESS_INSIGHTS',
     }) as Promise<HealthInsight[]>;
   }
 
   async downloadEssentialResources(): Promise<boolean> {
     const result = await this.sendMessage({
       type: 'DOWNLOAD_RESOURCES',
-      payload: { type: 'essential' }
+      payload: { type: 'essential' },
     });
     return result as boolean;
   }
@@ -180,27 +189,30 @@ export class EnhancedServiceWorkerIntegration {
   async downloadResource(resourceId: string, url: string): Promise<boolean> {
     const result = await this.sendMessage({
       type: 'DOWNLOAD_RESOURCES',
-      payload: { resourceId, url }
+      payload: { resourceId, url },
     });
     return result as boolean;
   }
 
   async triggerBackgroundSync(): Promise<void> {
     await this.sendMessage({
-      type: 'SYNC_DATA'
+      type: 'SYNC_DATA',
     });
   }
 
   async getOfflineStatus(): Promise<OfflineStatus> {
     return this.sendMessage({
-      type: 'GET_STATUS'
+      type: 'GET_STATUS',
     }) as Promise<OfflineStatus>;
   }
 
-  async resolveConflict(conflictId: string, resolution: { type: string; [key: string]: unknown }): Promise<void> {
+  async resolveConflict(
+    conflictId: string,
+    resolution: { type: string; [key: string]: unknown }
+  ): Promise<void> {
     return this.sendMessage({
       type: 'CONFLICT_RESOLVED',
-      payload: { conflictId, resolution }
+      payload: { conflictId, resolution },
     }) as Promise<void>;
   }
 
@@ -264,7 +276,7 @@ export async function registerEnhancedServiceWorker(): Promise<void> {
   if ('serviceWorker' in navigator) {
     try {
       const registration = await navigator.serviceWorker.register('/sw.js', {
-        scope: '/'
+        scope: '/',
       });
 
       // Request persistent storage for offline resources
@@ -285,7 +297,10 @@ export async function registerEnhancedServiceWorker(): Promise<void> {
 
       // Set up periodic background sync for health insights (experimental)
       try {
-        if ('serviceWorker' in navigator && 'periodicSync' in window.ServiceWorkerRegistration.prototype) {
+        if (
+          'serviceWorker' in navigator &&
+          'periodicSync' in window.ServiceWorkerRegistration.prototype
+        ) {
           // Check for periodic sync support without using experimental API names
           console.log('Periodic sync API available (experimental feature)');
         }

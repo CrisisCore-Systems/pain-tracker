@@ -4,45 +4,45 @@
  */
 
 // Real-time Emotional Validation
-export { 
-  EmotionalValidation, 
+export {
+  EmotionalValidation,
   ValidationHistory,
   type ValidationResponse,
-  type EmotionalState 
+  type EmotionalState,
 } from '../../services/EmotionalValidationService';
 
 // Holistic Progress Tracking
-export { 
+export {
   HolisticProgressTracker,
   type WellbeingMetrics,
   type ProgressMilestone,
   type CopingStrategy,
-  type ProgressEntry 
+  type ProgressEntry,
 } from '../progress/HolisticProgressTracker';
 
 // User Agency & Empowerment
-export { 
+export {
   UserControlPanel,
   ChoiceEmphasis,
-  EmpowermentMessageDisplay
+  EmpowermentMessageDisplay,
 } from '../agency/UserAgencyComponents';
 
 // Integration Services
-export { 
+export {
   ValidationAnalyticsService,
   ValidationIntegrationService,
   validationAnalytics,
   validationIntegration,
   type ValidationMetrics,
   type ValidationPattern,
-  type ValidationPreferences 
+  type ValidationPreferences,
 } from '../../services/ValidationIntegrationService';
 
 // Main Integration Components
-export { 
+export {
   ValidationTechnologyIntegration,
   ValidationIntegratedPainForm,
-  ValidationDashboard 
+  ValidationDashboard,
 } from '../integration/ValidationTechnologyIntegration';
 
 // Hooks
@@ -50,22 +50,22 @@ export { useEmotionalValidation } from '../../hooks/useEmotionalValidation';
 
 /**
  * Quick Setup Guide:
- * 
+ *
  * 1. Import the main integration component:
  *    import { ValidationTechnologyIntegration } from './path/to/validation-technology';
- * 
+ *
  * 2. Use it in your pain tracker:
- *    <ValidationTechnologyIntegration 
+ *    <ValidationTechnologyIntegration
  *      painEntries={entries}
  *      onPainEntrySubmit={handleSubmit}
  *      showDashboard={true}
  *    />
- * 
+ *
  * 3. Or use individual components:
  *    - EmotionalValidation: Real-time supportive messaging
  *    - HolisticProgressTracker: Beyond pain score tracking
  *    - UserControlPanel: User empowerment and control
- * 
+ *
  * Features included:
  * ✓ Real-time emotional validation with empathetic messaging
  * ✓ Holistic progress tracking (emotional, functional, social, coping)

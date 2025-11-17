@@ -14,14 +14,20 @@ export class ApiError extends Error {
 }
 
 export class ValidationError extends Error {
-  constructor(message: string, public field?: string) {
+  constructor(
+    message: string,
+    public field?: string
+  ) {
     super(message);
     this.name = 'ValidationError';
   }
 }
 
 export class NetworkError extends Error {
-  constructor(message: string, public originalError?: Error) {
+  constructor(
+    message: string,
+    public originalError?: Error
+  ) {
     super(message);
     this.name = 'NetworkError';
   }
@@ -29,19 +35,23 @@ export class NetworkError extends Error {
 
 // Input validation schemas
 const SubmissionDataSchema = z.object({
-  painEntries: z.array(z.object({
-    intensity: z.number().min(0).max(10),
-    location: z.string().min(1).max(100),
-    description: z.string().min(1).max(500),
-    timestamp: z.string().datetime(),
-    medications: z.array(z.string()).optional(),
-    symptoms: z.array(z.string()).optional(),
-  })),
-  personalInfo: z.object({
-    claimNumber: z.string().optional(),
-    name: z.string().min(1).max(100),
-    dateOfBirth: z.string().optional(),
-  }).optional(),
+  painEntries: z.array(
+    z.object({
+      intensity: z.number().min(0).max(10),
+      location: z.string().min(1).max(100),
+      description: z.string().min(1).max(500),
+      timestamp: z.string().datetime(),
+      medications: z.array(z.string()).optional(),
+      symptoms: z.array(z.string()).optional(),
+    })
+  ),
+  personalInfo: z
+    .object({
+      claimNumber: z.string().optional(),
+      name: z.string().min(1).max(100),
+      dateOfBirth: z.string().optional(),
+    })
+    .optional(),
   reportType: z.enum(['pain-tracking', 'wcb-submission']).default('pain-tracking'),
 });
 
@@ -59,13 +69,12 @@ const API_CONFIG = {
 };
 
 // Helper function for delays
-const delay = (ms: number): Promise<void> => 
-  new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 // Enhanced fetch with timeout and retry logic
 async function fetchWithTimeout(
-  url: string, 
-  options: RequestInit, 
+  url: string,
+  options: RequestInit,
   timeout: number = API_CONFIG.timeout
 ): Promise<Response> {
   const controller = new AbortController();
@@ -117,47 +126,42 @@ export async function wcbSubmit(data: SubmissionData): Promise<unknown> {
   // Retry logic
   for (let attempt = 1; attempt <= API_CONFIG.retryAttempts; attempt++) {
     try {
-      const response = await fetchWithTimeout(
-        `${API_CONFIG.baseUrl}/submissions`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Request-ID': crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36),
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetchWithTimeout(`${API_CONFIG.baseUrl}/submissions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Request-ID': crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36),
+        },
+        body: JSON.stringify(data),
+      });
 
       // Handle HTTP errors
       if (!response.ok) {
         const errorText = await response.text().catch(() => 'Unknown error');
         wcbBreaker.failure();
-        
+
         if (response.status >= 400 && response.status < 500) {
           // Client errors - don't retry
           throw new ApiError(
             `Request failed: ${errorText}`,
             response.status,
-            response.status === 401 ? 'UNAUTHORIZED' : 
-            response.status === 403 ? 'FORBIDDEN' : 
-            response.status === 404 ? 'NOT_FOUND' : 
-            'CLIENT_ERROR'
+            response.status === 401
+              ? 'UNAUTHORIZED'
+              : response.status === 403
+                ? 'FORBIDDEN'
+                : response.status === 404
+                  ? 'NOT_FOUND'
+                  : 'CLIENT_ERROR'
           );
         } else {
           // Server errors - may retry
-          throw new ApiError(
-            `Server error: ${errorText}`,
-            response.status,
-            'SERVER_ERROR'
-          );
+          throw new ApiError(`Server error: ${errorText}`, response.status, 'SERVER_ERROR');
         }
       }
 
       // Success
       wcbBreaker.success();
       return await response.json();
-
     } catch (error) {
       lastError = error as Error;
       wcbBreaker.failure();

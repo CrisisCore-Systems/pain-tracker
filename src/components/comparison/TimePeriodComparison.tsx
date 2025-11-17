@@ -4,20 +4,14 @@ import type { PainEntry } from '../../types';
 import type {
   TimePeriodComparison,
   ComparisonDataset,
-  ComparisonResult
+  ComparisonResult,
 } from '../../types/comparison';
 import { DataComparisonEngine } from '../../utils/comparison/engine';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system/components/Card';
 import { Button } from '../../design-system/components/Button';
 import { Input } from '../../design-system/components/Input';
 import { Badge } from '../../design-system/components/Badge';
-import {
-  Calendar,
-  TrendingUp,
-  BarChart3,
-  Activity,
-  RefreshCw
-} from 'lucide-react';
+import { Calendar, TrendingUp, BarChart3, Activity, RefreshCw } from 'lucide-react';
 import { PlannedFeatureNotice } from '../common/PlannedFeatureNotice';
 
 interface TimePeriodComparisonProps {
@@ -29,9 +23,11 @@ interface TimePeriodComparisonProps {
 export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> = ({
   entries,
   onComparisonComplete,
-  className = ''
+  className = '',
 }) => {
-  const [comparisonType, setComparisonType] = useState<'day-to-day' | 'week-to-week' | 'month-to-month' | 'custom-range'>('week-to-week');
+  const [comparisonType, setComparisonType] = useState<
+    'day-to-day' | 'week-to-week' | 'month-to-month' | 'custom-range'
+  >('week-to-week');
   const [baselineStart, setBaselineStart] = useState('');
   const [baselineEnd, setBaselineEnd] = useState('');
   const [comparisonStart, setComparisonStart] = useState('');
@@ -148,9 +144,9 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             source: 'time-period-comparison',
             dateRange: {
               start: new Date(baselineStart),
-              end: new Date(baselineEnd)
-            }
-          }
+              end: new Date(baselineEnd),
+            },
+          },
         },
         {
           id: 'comparison',
@@ -162,10 +158,10 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             source: 'time-period-comparison',
             dateRange: {
               start: new Date(comparisonStart),
-              end: new Date(comparisonEnd)
-            }
-          }
-        }
+              end: new Date(comparisonEnd),
+            },
+          },
+        },
       ];
 
       // Create comparison config
@@ -174,13 +170,13 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
         periodType: comparisonType,
         baselinePeriod: {
           start: new Date(baselineStart),
-          end: new Date(baselineEnd)
+          end: new Date(baselineEnd),
         },
         comparisonPeriod: {
           start: new Date(comparisonStart),
-          end: new Date(comparisonEnd)
+          end: new Date(comparisonEnd),
         },
-        datasets
+        datasets,
       };
 
       // Run comparison
@@ -209,12 +205,14 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
       <CardContent className="space-y-6">
         {/* Comparison Type Selection */}
         <div>
-          <label htmlFor="comparison-type" className="text-sm font-medium">Comparison Type</label>
+          <label htmlFor="comparison-type" className="text-sm font-medium">
+            Comparison Type
+          </label>
           <select
             id="comparison-type"
             className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={comparisonType}
-            onChange={(e) => setComparisonType(e.target.value as typeof comparisonType)}
+            onChange={e => setComparisonType(e.target.value as typeof comparisonType)}
           >
             <option value="day-to-day">Day-to-Day (Yesterday vs Today)</option>
             <option value="week-to-week">Week-to-Week (Last Week vs This Week)</option>
@@ -233,21 +231,29 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             </h3>
             <div className="space-y-2">
               <div>
-                <label htmlFor="baseline-start" className="text-sm font-medium">Start Date</label>
+                <label htmlFor="baseline-start" className="text-sm font-medium">
+                  Start Date
+                </label>
                 <Input
                   id="baseline-start"
                   type="date"
                   value={baselineStart}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBaselineStart(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setBaselineStart(e.target.value)
+                  }
                 />
               </div>
               <div>
-                <label htmlFor="baseline-end" className="text-sm font-medium">End Date</label>
+                <label htmlFor="baseline-end" className="text-sm font-medium">
+                  End Date
+                </label>
                 <Input
                   id="baseline-end"
                   type="date"
                   value={baselineEnd}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBaselineEnd(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setBaselineEnd(e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -261,21 +267,29 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             </h3>
             <div className="space-y-2">
               <div>
-                <label htmlFor="comparison-start" className="text-sm font-medium">Start Date</label>
+                <label htmlFor="comparison-start" className="text-sm font-medium">
+                  Start Date
+                </label>
                 <Input
                   id="comparison-start"
                   type="date"
                   value={comparisonStart}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setComparisonStart(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setComparisonStart(e.target.value)
+                  }
                 />
               </div>
               <div>
-                <label htmlFor="comparison-end" className="text-sm font-medium">End Date</label>
+                <label htmlFor="comparison-end" className="text-sm font-medium">
+                  End Date
+                </label>
                 <Input
                   id="comparison-end"
                   type="date"
                   value={comparisonEnd}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setComparisonEnd(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setComparisonEnd(e.target.value)
+                  }
                 />
               </div>
             </div>
@@ -284,11 +298,7 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
 
         {/* Action Button */}
         <div className="flex justify-center">
-          <Button
-            onClick={handleCompare}
-            disabled={isLoading}
-            className="min-w-32"
-          >
+          <Button onClick={handleCompare} disabled={isLoading} className="min-w-32">
             {isLoading ? (
               <>
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
@@ -336,9 +346,11 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
                 <div className="text-sm text-gray-600 dark:text-gray-400">Comparison Avg</div>
               </div>
               <div className="text-center">
-                <div className={`text-2xl font-bold ${
-                  statistics.overall.percentageChange < 0 ? 'text-green-600' : 'text-red-600'
-                }`}>
+                <div
+                  className={`text-2xl font-bold ${
+                    statistics.overall.percentageChange < 0 ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
                   {statistics.overall.percentageChange > 0 ? '+' : ''}
                   {formatNumber(statistics.overall.percentageChange, 1)}%
                 </div>
@@ -350,8 +362,14 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Statistical Significance</span>
-                <Badge variant={statistics.overall.statisticalSignificance < 0.05 ? "default" : "secondary"}>
-                  {statistics.overall.statisticalSignificance < 0.05 ? 'Significant' : 'Not Significant'}
+                <Badge
+                  variant={
+                    statistics.overall.statisticalSignificance < 0.05 ? 'default' : 'secondary'
+                  }
+                >
+                  {statistics.overall.statisticalSignificance < 0.05
+                    ? 'Significant'
+                    : 'Not Significant'}
                 </Badge>
               </div>
               <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -372,12 +390,14 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {insights.map((insight) => (
+                {insights.map(insight => (
                   <div key={insight.id} className="p-3 border rounded-lg">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h4 className="font-medium text-sm">{insight.title}</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{insight.description}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          {insight.description}
+                        </p>
                         {insight.recommendation && (
                           <p className="text-sm text-blue-600 mt-2 font-medium">
                             💡 {insight.recommendation}
@@ -389,8 +409,13 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
                           {Math.round(insight.confidence)}% confidence
                         </Badge>
                         <Badge
-                          variant={insight.severity === 'high' ? 'destructive' :
-                                 insight.severity === 'medium' ? 'default' : 'secondary'}
+                          variant={
+                            insight.severity === 'high'
+                              ? 'destructive'
+                              : insight.severity === 'medium'
+                                ? 'default'
+                                : 'secondary'
+                          }
                           className="text-xs"
                         >
                           {insight.severity}
@@ -439,13 +464,16 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
             aria-selected={!!result}
             disabled={!result}
           >
-            Results {result && <Badge variant="outline" className="ml-2">{insights.length}</Badge>}
+            Results{' '}
+            {result && (
+              <Badge variant="outline" className="ml-2">
+                {insights.length}
+              </Badge>
+            )}
           </button>
         </div>
 
-        <div className="mt-6">
-          {!result ? renderComparisonForm() : renderComparisonResults()}
-        </div>
+        <div className="mt-6">{!result ? renderComparisonForm() : renderComparisonResults()}</div>
       </div>
     </div>
   );

@@ -6,12 +6,13 @@ class EmpathyMetricsCollector {
       metrics: undefined as QuantifiedEmpathyMetrics | undefined,
       insights: [] as EmpathyInsight[],
       recommendations: [] as EmpathyRecommendation[],
-      redactions: 0
+      redactions: 0,
     };
   }
 }
 
-const createEmpathyCollector = (_security: unknown, _analytics: unknown) => new EmpathyMetricsCollector();
+const createEmpathyCollector = (_security: unknown, _analytics: unknown) =>
+  new EmpathyMetricsCollector();
 
 class SecurityService {
   constructor(_options?: unknown, _config?: unknown) {}
@@ -25,7 +26,12 @@ class EmpathyDrivenAnalyticsService {
 // import { SecurityService } from '@pain-tracker/services/SecurityService';
 // import { EmpathyDrivenAnalyticsService } from '@pain-tracker/services/EmpathyDrivenAnalytics';
 import type { PainEntry } from '../types';
-import type { MoodEntry, QuantifiedEmpathyMetrics, EmpathyInsight, EmpathyRecommendation } from '../types/quantified-empathy';
+import type {
+  MoodEntry,
+  QuantifiedEmpathyMetrics,
+  EmpathyInsight,
+  EmpathyRecommendation,
+} from '../types/quantified-empathy';
 import { useEmpathyConsent } from './useEmpathyConsent';
 
 interface UseEmpathyMetricsOptions {
@@ -51,7 +57,13 @@ let collectorSingleton: EmpathyMetricsCollector | null = null;
 export function useEmpathyMetrics(options: UseEmpathyMetricsOptions): EmpathyMetricsState {
   const { userId, painEntries, moodEntries, auto, differentialPrivacy } = options;
   const { consentGranted } = useEmpathyConsent();
-  const [state, setState] = useState<EmpathyMetricsState>({ loading: !!auto, insights: [], recommendations: [], redactions: 0, refresh: async () => {} });
+  const [state, setState] = useState<EmpathyMetricsState>({
+    loading: !!auto,
+    insights: [],
+    recommendations: [],
+    redactions: 0,
+    refresh: async () => {},
+  });
 
   const ensureCollector = () => {
     if (!collectorSingleton) {
@@ -61,7 +73,7 @@ export function useEmpathyMetrics(options: UseEmpathyMetricsOptions): EmpathyMet
         celebrationFrequency: 'daily',
         reportingStyle: 'balanced',
         privacyLevel: 'personal',
-        languagePreference: 'everyday'
+        languagePreference: 'everyday',
       });
       collectorSingleton = createEmpathyCollector(security, analytics);
     }
@@ -80,7 +92,7 @@ export function useEmpathyMetrics(options: UseEmpathyMetricsOptions): EmpathyMet
         userId,
         consentGranted: true,
         sanitize: true,
-        differentialPrivacy
+        differentialPrivacy,
       });
       setState({
         loading: false,
@@ -88,7 +100,7 @@ export function useEmpathyMetrics(options: UseEmpathyMetricsOptions): EmpathyMet
         insights: result.insights,
         recommendations: result.recommendations,
         redactions: result.redactions,
-        refresh: load
+        refresh: load,
       });
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : 'Unknown error';

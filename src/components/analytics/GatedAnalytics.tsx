@@ -20,7 +20,7 @@ interface GatedAdvancedAnalyticsProps {
  * Advanced Analytics with Feature Gate
  * Requires Basic tier or higher
  */
-export const GatedAdvancedAnalytics: React.FC<GatedAdvancedAnalyticsProps> = (props) => {
+export const GatedAdvancedAnalytics: React.FC<GatedAdvancedAnalyticsProps> = props => {
   return (
     <FeatureGate feature="advancedAnalytics" showUpgradePrompt>
       <AdvancedAnalyticsDashboard {...props} />
@@ -39,7 +39,7 @@ interface GatedEmpathyAnalyticsProps {
  * Empathy Intelligence Analytics with Feature Gate
  * Requires Basic tier or higher
  */
-export const GatedEmpathyAnalytics: React.FC<GatedEmpathyAnalyticsProps> = (props) => {
+export const GatedEmpathyAnalytics: React.FC<GatedEmpathyAnalyticsProps> = props => {
   return (
     <FeatureGate feature="empathyIntelligence" showUpgradePrompt>
       <EmpathyAnalyticsDashboard {...props} />

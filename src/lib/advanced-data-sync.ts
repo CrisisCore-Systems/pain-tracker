@@ -104,7 +104,7 @@ export class AdvancedDataSynchronizationService {
     averageSyncTime: 0,
     compressionSaved: 0,
     lastSync: null,
-    networkEfficiency: 100
+    networkEfficiency: 100,
   };
   private clientId: string;
   private isOnline: boolean = navigator.onLine;
@@ -114,66 +114,81 @@ export class AdvancedDataSynchronizationService {
 
   // Predefined sync strategies
   private readonly strategies: Map<string, SyncStrategy> = new Map([
-    ['emergency', {
-      name: 'Emergency Sync',
-      description: 'Immediate sync for critical data',
-      bandwidth: 'adaptive',
-      frequency: 0, // immediate
-      batchSize: 1,
-      retryAttempts: 5,
-      conflictResolution: 'automatic',
-      deltaSync: false,
-      compression: false,
-      priority: 10
-    }],
-    ['real-time', {
-      name: 'Real-time Sync',
-      description: 'Continuous sync for active users',
-      bandwidth: 'high',
-      frequency: 30000, // 30 seconds
-      batchSize: 10,
-      retryAttempts: 3,
-      conflictResolution: 'hybrid',
-      deltaSync: true,
-      compression: true,
-      priority: 8
-    }],
-    ['standard', {
-      name: 'Standard Sync',
-      description: 'Balanced sync for normal usage',
-      bandwidth: 'medium',
-      frequency: 300000, // 5 minutes
-      batchSize: 50,
-      retryAttempts: 3,
-      conflictResolution: 'automatic',
-      deltaSync: true,
-      compression: true,
-      priority: 5
-    }],
-    ['battery-saver', {
-      name: 'Battery Saver',
-      description: 'Minimal sync to preserve battery',
-      bandwidth: 'low',
-      frequency: 1800000, // 30 minutes
-      batchSize: 100,
-      retryAttempts: 2,
-      conflictResolution: 'automatic',
-      deltaSync: true,
-      compression: true,
-      priority: 3
-    }],
-    ['wifi-only', {
-      name: 'WiFi Only',
-      description: 'Sync only on WiFi networks',
-      bandwidth: 'high',
-      frequency: 60000, // 1 minute
-      batchSize: 200,
-      retryAttempts: 2,
-      conflictResolution: 'hybrid',
-      deltaSync: true,
-      compression: false,
-      priority: 6
-    }]
+    [
+      'emergency',
+      {
+        name: 'Emergency Sync',
+        description: 'Immediate sync for critical data',
+        bandwidth: 'adaptive',
+        frequency: 0, // immediate
+        batchSize: 1,
+        retryAttempts: 5,
+        conflictResolution: 'automatic',
+        deltaSync: false,
+        compression: false,
+        priority: 10,
+      },
+    ],
+    [
+      'real-time',
+      {
+        name: 'Real-time Sync',
+        description: 'Continuous sync for active users',
+        bandwidth: 'high',
+        frequency: 30000, // 30 seconds
+        batchSize: 10,
+        retryAttempts: 3,
+        conflictResolution: 'hybrid',
+        deltaSync: true,
+        compression: true,
+        priority: 8,
+      },
+    ],
+    [
+      'standard',
+      {
+        name: 'Standard Sync',
+        description: 'Balanced sync for normal usage',
+        bandwidth: 'medium',
+        frequency: 300000, // 5 minutes
+        batchSize: 50,
+        retryAttempts: 3,
+        conflictResolution: 'automatic',
+        deltaSync: true,
+        compression: true,
+        priority: 5,
+      },
+    ],
+    [
+      'battery-saver',
+      {
+        name: 'Battery Saver',
+        description: 'Minimal sync to preserve battery',
+        bandwidth: 'low',
+        frequency: 1800000, // 30 minutes
+        batchSize: 100,
+        retryAttempts: 2,
+        conflictResolution: 'automatic',
+        deltaSync: true,
+        compression: true,
+        priority: 3,
+      },
+    ],
+    [
+      'wifi-only',
+      {
+        name: 'WiFi Only',
+        description: 'Sync only on WiFi networks',
+        bandwidth: 'high',
+        frequency: 60000, // 1 minute
+        batchSize: 200,
+        retryAttempts: 2,
+        conflictResolution: 'hybrid',
+        deltaSync: true,
+        compression: false,
+        priority: 6,
+      },
+    ],
   ]);
 
   private currentStrategy: string = 'standard';
@@ -195,13 +210,13 @@ export class AdvancedDataSynchronizationService {
   private async initialize(): Promise<void> {
     // Monitor network conditions
     this.setupNetworkMonitoring();
-    
+
     // Load persisted delta changes
     await this.loadPersistedChanges();
-    
+
     // Start sync processing
     this.startSyncProcessor();
-    
+
     // Set up periodic sync based on current strategy
     this.updateSyncSchedule();
 
@@ -231,19 +246,24 @@ export class AdvancedDataSynchronizationService {
 
     // Monitor network quality if available
     if ('connection' in navigator) {
-      const connection: NetworkConnection | undefined = (navigator as unknown as { connection?: NetworkConnection }).connection;
-      
+      const connection: NetworkConnection | undefined = (
+        navigator as unknown as { connection?: NetworkConnection }
+      ).connection;
+
       const updateNetworkCondition = () => {
         const eff = connection?.effectiveType;
-        const type: NetworkCondition['type'] = eff === 'slow-2g' || eff === '2g' || eff === '3g' || eff === '4g' || eff === 'wifi' ? eff : 'unknown';
+        const type: NetworkCondition['type'] =
+          eff === 'slow-2g' || eff === '2g' || eff === '3g' || eff === '4g' || eff === 'wifi'
+            ? eff
+            : 'unknown';
         this.networkCondition = {
           type,
           downlink: connection?.downlink,
           rtt: connection?.rtt,
           effectiveType: eff,
-          saveData: connection?.saveData
+          saveData: connection?.saveData,
         };
-        
+
         // Adapt strategy based on network conditions
         this.adaptToNetworkConditions();
       };
@@ -255,7 +275,7 @@ export class AdvancedDataSynchronizationService {
 
   private adaptToNetworkConditions(): void {
     const { type, saveData } = this.networkCondition;
-    
+
     if (saveData || type === 'slow-2g' || type === '2g') {
       this.setStrategy('battery-saver');
     } else if (type === 'wifi') {
@@ -285,10 +305,14 @@ export class AdvancedDataSynchronizationService {
 
   private async persistChanges(): Promise<void> {
     try {
-      await this.offlineStorage.setItem('sync-delta-changes', 
-        Object.fromEntries(this.deltaChanges));
-      await this.offlineStorage.setItem('sync-timestamps', 
-        Object.fromEntries(this.lastSyncTimestamps));
+      await this.offlineStorage.setItem(
+        'sync-delta-changes',
+        Object.fromEntries(this.deltaChanges)
+      );
+      await this.offlineStorage.setItem(
+        'sync-timestamps',
+        Object.fromEntries(this.lastSyncTimestamps)
+      );
     } catch (error) {
       console.warn('Failed to persist sync data:', error);
     }
@@ -303,11 +327,11 @@ export class AdvancedDataSynchronizationService {
 
     // Check if we have delta changes for this table
     const changes = this.deltaChanges.get(tableName) || [];
-  // const lastSync = this.lastSyncTimestamps.get(tableName);
-    
+    // const lastSync = this.lastSyncTimestamps.get(tableName);
+
     // Determine sync type
     const syncType = changes.length > 0 ? 'delta-sync' : 'full-sync';
-    
+
     const task: SyncTask = {
       id: crypto.randomUUID(),
       type: syncType,
@@ -320,7 +344,7 @@ export class AdvancedDataSynchronizationService {
       retryCount: 0,
       maxRetries: syncStrategy.retryAttempts,
       status: 'pending',
-      metadata: {}
+      metadata: {},
     };
 
     return this.queueTask(task);
@@ -344,17 +368,17 @@ export class AdvancedDataSynchronizationService {
 
   public async emergencySync(data: PainEntry | PainEntry[]): Promise<string> {
     const entries = Array.isArray(data) ? data : [data];
-    
+
     // Create delta changes for emergency data
-  const changes: DeltaChange[] = entries.map(entry => ({
+    const changes: DeltaChange[] = entries.map(entry => ({
       id: (entry.id ?? crypto.randomUUID()).toString(),
       type: 'create',
       tableName: 'pain-entries',
       data: entry as unknown as Record<string, unknown>,
       timestamp: new Date().toISOString(),
-  checksum: this.calculateChecksum(entry as unknown),
+      checksum: this.calculateChecksum(entry as unknown),
       version: 1,
-      clientId: this.clientId
+      clientId: this.clientId,
     }));
 
     const task: SyncTask = {
@@ -369,7 +393,7 @@ export class AdvancedDataSynchronizationService {
       retryCount: 0,
       maxRetries: 5,
       status: 'pending',
-      metadata: {}
+      metadata: {},
     };
 
     // Add to front of queue for immediate processing
@@ -380,7 +404,12 @@ export class AdvancedDataSynchronizationService {
   }
 
   // Delta change tracking
-  public trackChange(tableName: string, operation: 'create' | 'update' | 'delete', data: Record<string, unknown>, oldData?: Record<string, unknown>): void {
+  public trackChange(
+    tableName: string,
+    operation: 'create' | 'update' | 'delete',
+    data: Record<string, unknown>,
+    oldData?: Record<string, unknown>
+  ): void {
     const change: DeltaChange = {
       id: (data.id as string) || crypto.randomUUID(),
       type: operation,
@@ -390,7 +419,7 @@ export class AdvancedDataSynchronizationService {
       timestamp: new Date().toISOString(),
       checksum: this.calculateChecksum(data),
       version: ((data.version as number) || 0) + 1,
-      clientId: this.clientId
+      clientId: this.clientId,
     };
 
     const tableChanges = this.deltaChanges.get(tableName) || [];
@@ -409,7 +438,7 @@ export class AdvancedDataSynchronizationService {
     if (!strategy) return;
 
     const changes = this.deltaChanges.get(tableName) || [];
-    
+
     // Auto-sync if we have enough changes or it's been too long
     if (changes.length >= strategy.batchSize) {
       this.syncTable(tableName);
@@ -420,13 +449,13 @@ export class AdvancedDataSynchronizationService {
   private queueTask(task: SyncTask): string {
     if (this.syncQueue.length >= this.maxQueueSize) {
       // Remove lowest priority completed or failed tasks
-      this.syncQueue = this.syncQueue.filter(t => 
-        t.status === 'pending' || t.status === 'in-progress'
-      ).slice(0, this.maxQueueSize - 1);
+      this.syncQueue = this.syncQueue
+        .filter(t => t.status === 'pending' || t.status === 'in-progress')
+        .slice(0, this.maxQueueSize - 1);
     }
 
     this.syncQueue.push(task);
-    
+
     // Sort by priority (higher priority first)
     this.syncQueue.sort((a, b) => b.priority - a.priority);
 
@@ -450,7 +479,7 @@ export class AdvancedDataSynchronizationService {
 
     const pendingTasks = this.syncQueue.filter(task => task.status === 'pending');
     const availableSlots = this.maxConcurrentSyncs - this.activeSyncs.size;
-    
+
     for (let i = 0; i < Math.min(pendingTasks.length, availableSlots); i++) {
       const task = pendingTasks[i];
       this.executeTask(task);
@@ -460,33 +489,35 @@ export class AdvancedDataSynchronizationService {
   private async executeTask(task: SyncTask): Promise<void> {
     task.status = 'in-progress';
     this.activeSyncs.set(task.id, task);
-    
+
     const startTime = Date.now();
 
     try {
       await this.performSync(task);
-      
+
       task.status = 'completed';
       task.metadata.duration = Date.now() - startTime;
-      
+
       this.metrics.successfulSyncs++;
       this.metrics.lastSync = new Date().toISOString();
-      
+
       // Clear synced changes from delta
       this.clearSyncedChanges(task);
-      
+
       console.log(`Sync task ${task.id} completed successfully`);
-      
     } catch (error) {
       console.error(`Sync task ${task.id} failed:`, error);
-      
+
       task.retryCount++;
       if (task.retryCount < task.maxRetries) {
         task.status = 'pending';
         // Exponential backoff
-        setTimeout(() => {
-          this.processQueue();
-        }, Math.pow(2, task.retryCount) * 1000);
+        setTimeout(
+          () => {
+            this.processQueue();
+          },
+          Math.pow(2, task.retryCount) * 1000
+        );
       } else {
         task.status = 'failed';
         this.metrics.failedSyncs++;
@@ -494,11 +525,11 @@ export class AdvancedDataSynchronizationService {
     } finally {
       this.activeSyncs.delete(task.id);
       this.metrics.totalSyncs++;
-      
+
       // Update average sync time
       if (task.metadata.duration) {
-        this.metrics.averageSyncTime = 
-          (this.metrics.averageSyncTime * (this.metrics.totalSyncs - 1) + task.metadata.duration) / 
+        this.metrics.averageSyncTime =
+          (this.metrics.averageSyncTime * (this.metrics.totalSyncs - 1) + task.metadata.duration) /
           this.metrics.totalSyncs;
       }
     }
@@ -529,7 +560,7 @@ export class AdvancedDataSynchronizationService {
   private async performDeltaSync(task: SyncTask, strategy: SyncStrategy): Promise<void> {
     // Prepare delta payload
     let payload = task.changes;
-    
+
     if (strategy.compression) {
       payload = await this.compressData(payload);
       task.metadata.compressionRatio = payload.length / task.changes.length;
@@ -540,7 +571,7 @@ export class AdvancedDataSynchronizationService {
       tableName: task.tableName,
       changes: payload,
       lastSync: this.lastSyncTimestamps.get(task.tableName),
-      clientId: this.clientId
+      clientId: this.clientId,
     });
 
     // Handle server response
@@ -550,7 +581,7 @@ export class AdvancedDataSynchronizationService {
 
     // Update last sync timestamp
     this.lastSyncTimestamps.set(task.tableName, response.timestamp);
-    
+
     // Apply any changes from server
     if (response.serverChanges && response.serverChanges.length > 0) {
       await this.applyServerChanges(response.serverChanges, task.tableName);
@@ -559,8 +590,8 @@ export class AdvancedDataSynchronizationService {
 
   private async performFullSync(task: SyncTask, strategy: SyncStrategy): Promise<void> {
     // Get all local data for the table
-  const localData = await this.offlineStorage.getAllFromTable(task.tableName);
-    
+    const localData = await this.offlineStorage.getAllFromTable(task.tableName);
+
     let payload = localData;
     if (strategy.compression) {
       payload = await this.compressData(localData);
@@ -571,7 +602,7 @@ export class AdvancedDataSynchronizationService {
     const response = await this.sendToServer('/api/sync/full', {
       tableName: task.tableName,
       data: payload,
-      clientId: this.clientId
+      clientId: this.clientId,
     });
 
     // Resolve any conflicts
@@ -580,15 +611,15 @@ export class AdvancedDataSynchronizationService {
     }
 
     // Replace local data with merged result
-  await this.offlineStorage.replaceTable(task.tableName, response.mergedData || []);
-    
+    await this.offlineStorage.replaceTable(task.tableName, response.mergedData || []);
+
     // Update timestamp
     this.lastSyncTimestamps.set(task.tableName, response.timestamp);
   }
 
   private async performUpload(task: SyncTask, strategy: SyncStrategy): Promise<void> {
     let payload = task.changes;
-    
+
     if (strategy.compression) {
       payload = await this.compressData(payload);
     }
@@ -596,7 +627,7 @@ export class AdvancedDataSynchronizationService {
     const response = await this.sendToServer('/api/sync/upload', {
       tableName: task.tableName,
       changes: payload,
-      clientId: this.clientId
+      clientId: this.clientId,
     });
 
     if (response.conflicts) {
@@ -606,11 +637,11 @@ export class AdvancedDataSynchronizationService {
 
   private async performDownload(task: SyncTask): Promise<void> {
     const lastSync = this.lastSyncTimestamps.get(task.tableName);
-    
+
     const response = await this.sendToServer('/api/sync/download', {
       tableName: task.tableName,
       since: lastSync,
-      clientId: this.clientId
+      clientId: this.clientId,
     });
 
     if (response.data && response.data.length > 0) {
@@ -622,7 +653,7 @@ export class AdvancedDataSynchronizationService {
 
   private async handleSyncConflicts(conflicts: SyncConflictData[], task: SyncTask): Promise<void> {
     task.metadata.conflictCount = conflicts.length;
-    
+
     for (const conflict of conflicts) {
       // Store conflict for user resolution (automatic resolution requires user context)
       await this.storeConflictForUser(conflict, task);
@@ -639,11 +670,14 @@ export class AdvancedDataSynchronizationService {
       tableName: task.tableName,
       conflict,
       createdAt: new Date().toISOString(),
-      status: 'pending'
+      status: 'pending',
     });
   }
 
-  private async applyConflictResolution(resolution: { resolvedData?: Record<string, unknown> }, tableName: string): Promise<void> {
+  private async applyConflictResolution(
+    resolution: { resolvedData?: Record<string, unknown> },
+    tableName: string
+  ): Promise<void> {
     if (resolution.resolvedData) {
       const idRaw = (resolution.resolvedData as { id?: string | number }).id;
       const id = idRaw !== undefined ? idRaw : crypto.randomUUID();
@@ -652,7 +686,11 @@ export class AdvancedDataSynchronizationService {
   }
 
   private async applyServerChanges(
-    changes: Array<{ type: 'create' | 'update' | 'delete'; id: string; data?: Record<string, unknown> }>,
+    changes: Array<{
+      type: 'create' | 'update' | 'delete';
+      id: string;
+      data?: Record<string, unknown>;
+    }>,
     tableName: string
   ): Promise<void> {
     for (const change of changes) {
@@ -671,11 +709,11 @@ export class AdvancedDataSynchronizationService {
   private clearSyncedChanges(task: SyncTask): void {
     const tableChanges = this.deltaChanges.get(task.tableName) || [];
     const syncedIds = new Set(task.changes.map(c => c.id));
-    
+
     // Remove synced changes
     const remainingChanges = tableChanges.filter(change => !syncedIds.has(change.id));
     this.deltaChanges.set(task.tableName, remainingChanges);
-    
+
     this.persistChanges();
   }
 
@@ -696,7 +734,7 @@ export class AdvancedDataSynchronizationService {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return hash.toString(16);
@@ -712,20 +750,23 @@ export class AdvancedDataSynchronizationService {
     const compressed = JSON.stringify(data);
     const originalSize = compressed.length;
     const compressedSize = Math.floor(originalSize * 0.7); // Simulate 30% compression
-    
+
     this.metrics.compressionSaved += originalSize - compressedSize;
-    
+
     return data; // Return original data for now
   }
 
-  private async sendToServer(endpoint: string, data: Record<string, unknown>): Promise<ServerResponse> {
+  private async sendToServer(
+    endpoint: string,
+    data: Record<string, unknown>
+  ): Promise<ServerResponse> {
     // Simulate server communication
     // In real implementation, use fetch() with proper error handling
     await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
-    
+
     const bytes = JSON.stringify(data).length;
     this.metrics.bytesTransferred += bytes;
-    
+
     // Simulate successful response
     const mergedData = (data.data as Record<string, unknown>[] | undefined) || [];
     return {
@@ -733,7 +774,7 @@ export class AdvancedDataSynchronizationService {
       timestamp: new Date().toISOString(),
       conflicts: [],
       serverChanges: [],
-      mergedData
+      mergedData,
     };
   }
 
@@ -745,7 +786,7 @@ export class AdvancedDataSynchronizationService {
 
     this.currentStrategy = strategyName;
     this.updateSyncSchedule();
-    
+
     console.log(`Sync strategy changed to: ${strategyName}`);
   }
 
@@ -804,8 +845,8 @@ export class AdvancedDataSynchronizationService {
       metrics: this.metrics,
       pendingChanges: Array.from(this.deltaChanges.entries()).map(([table, changes]) => ({
         table,
-        count: changes.length
-      }))
+        count: changes.length,
+      })),
     };
   }
 
@@ -823,7 +864,7 @@ export class AdvancedDataSynchronizationService {
       averageSyncTime: 0,
       compressionSaved: 0,
       lastSync: null,
-      networkEfficiency: 100
+      networkEfficiency: 100,
     };
   }
 
@@ -835,7 +876,7 @@ export class AdvancedDataSynchronizationService {
   public async syncSpecificData(tableName: string, ids: string[]): Promise<string> {
     // Create targeted sync task for specific records
     const changes: DeltaChange[] = [];
-    
+
     for (const id of ids) {
       const data = await this.offlineStorage.getFromTable<Record<string, unknown>>(tableName, id);
       if (data) {
@@ -849,7 +890,7 @@ export class AdvancedDataSynchronizationService {
           timestamp: new Date().toISOString(),
           checksum: this.calculateChecksum(data),
           version: versionNum,
-          clientId: this.clientId
+          clientId: this.clientId,
         });
       }
     }
@@ -866,7 +907,7 @@ export class AdvancedDataSynchronizationService {
       retryCount: 0,
       maxRetries: 3,
       status: 'pending',
-      metadata: {}
+      metadata: {},
     };
 
     return this.queueTask(task);

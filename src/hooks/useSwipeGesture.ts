@@ -52,110 +52,122 @@ export function useSwipeGesture<T extends HTMLElement = HTMLElement>(
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
   const animationFrameRef = useRef<number>();
 
-  const calculateDirection = useCallback((deltaX: number, deltaY: number): SwipeState['direction'] => {
-    const absX = Math.abs(deltaX);
-    const absY = Math.abs(deltaY);
+  const calculateDirection = useCallback(
+    (deltaX: number, deltaY: number): SwipeState['direction'] => {
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
 
-    if (absX > absY) {
-      return deltaX > 0 ? 'right' : 'left';
-    } else {
-      return deltaY > 0 ? 'down' : 'up';
-    }
-  }, []);
+      if (absX > absY) {
+        return deltaX > 0 ? 'right' : 'left';
+      } else {
+        return deltaY > 0 ? 'down' : 'up';
+      }
+    },
+    []
+  );
 
   const calculateVelocity = useCallback((distance: number, time: number): number => {
     return Math.abs(distance) / Math.max(time, 1); // pixels per ms
   }, []);
 
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    if (finalConfig.preventDefault) {
-      e.preventDefault();
-    }
-
-    const touch = e.touches[0];
-    touchStartRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-      time: Date.now(),
-    };
-
-    setSwipeState({
-      isSwiping: true,
-      direction: null,
-      distance: 0,
-      velocity: 0,
-    });
-
-    handlers.onSwipeStart?.(swipeState);
-  }, [finalConfig.preventDefault, swipeState, handlers]);
-
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (!touchStartRef.current) return;
-
-    if (finalConfig.preventDefault) {
-      e.preventDefault();
-    }
-
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - touchStartRef.current.x;
-    const deltaY = touch.clientY - touchStartRef.current.y;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const direction = calculateDirection(deltaX, deltaY);
-    const timeElapsed = Date.now() - touchStartRef.current.time;
-    const velocity = calculateVelocity(distance, timeElapsed);
-
-    const newState: SwipeState = {
-      isSwiping: true,
-      direction,
-      distance,
-      velocity,
-    };
-
-    setSwipeState(newState);
-    handlers.onSwipeMove?.(newState);
-  }, [finalConfig.preventDefault, calculateDirection, calculateVelocity, handlers]);
-
-  const handleTouchEnd = useCallback((e: TouchEvent) => {
-    if (!touchStartRef.current) return;
-
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - touchStartRef.current.x;
-    const deltaY = touch.clientY - touchStartRef.current.y;
-    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    const direction = calculateDirection(deltaX, deltaY);
-    const timeElapsed = Date.now() - touchStartRef.current.time;
-    const velocity = calculateVelocity(distance, timeElapsed);
-
-    const finalState: SwipeState = {
-      isSwiping: false,
-      direction,
-      distance,
-      velocity,
-    };
-
-    // Trigger direction-specific handlers if threshold and velocity are met
-    if (distance >= finalConfig.threshold && velocity >= finalConfig.velocity) {
-      switch (direction) {
-        case 'left':
-          handlers.onSwipeLeft?.(distance, velocity);
-          break;
-        case 'right':
-          handlers.onSwipeRight?.(distance, velocity);
-          break;
-        case 'up':
-          handlers.onSwipeUp?.(distance, velocity);
-          break;
-        case 'down':
-          handlers.onSwipeDown?.(distance, velocity);
-          break;
+  const handleTouchStart = useCallback(
+    (e: TouchEvent) => {
+      if (finalConfig.preventDefault) {
+        e.preventDefault();
       }
-    }
 
-    setSwipeState(finalState);
-    handlers.onSwipeEnd?.(finalState);
+      const touch = e.touches[0];
+      touchStartRef.current = {
+        x: touch.clientX,
+        y: touch.clientY,
+        time: Date.now(),
+      };
 
-    touchStartRef.current = null;
-  }, [calculateDirection, calculateVelocity, finalConfig.threshold, finalConfig.velocity, handlers]);
+      setSwipeState({
+        isSwiping: true,
+        direction: null,
+        distance: 0,
+        velocity: 0,
+      });
+
+      handlers.onSwipeStart?.(swipeState);
+    },
+    [finalConfig.preventDefault, swipeState, handlers]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      if (!touchStartRef.current) return;
+
+      if (finalConfig.preventDefault) {
+        e.preventDefault();
+      }
+
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartRef.current.x;
+      const deltaY = touch.clientY - touchStartRef.current.y;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const direction = calculateDirection(deltaX, deltaY);
+      const timeElapsed = Date.now() - touchStartRef.current.time;
+      const velocity = calculateVelocity(distance, timeElapsed);
+
+      const newState: SwipeState = {
+        isSwiping: true,
+        direction,
+        distance,
+        velocity,
+      };
+
+      setSwipeState(newState);
+      handlers.onSwipeMove?.(newState);
+    },
+    [finalConfig.preventDefault, calculateDirection, calculateVelocity, handlers]
+  );
+
+  const handleTouchEnd = useCallback(
+    (e: TouchEvent) => {
+      if (!touchStartRef.current) return;
+
+      const touch = e.changedTouches[0];
+      const deltaX = touch.clientX - touchStartRef.current.x;
+      const deltaY = touch.clientY - touchStartRef.current.y;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const direction = calculateDirection(deltaX, deltaY);
+      const timeElapsed = Date.now() - touchStartRef.current.time;
+      const velocity = calculateVelocity(distance, timeElapsed);
+
+      const finalState: SwipeState = {
+        isSwiping: false,
+        direction,
+        distance,
+        velocity,
+      };
+
+      // Trigger direction-specific handlers if threshold and velocity are met
+      if (distance >= finalConfig.threshold && velocity >= finalConfig.velocity) {
+        switch (direction) {
+          case 'left':
+            handlers.onSwipeLeft?.(distance, velocity);
+            break;
+          case 'right':
+            handlers.onSwipeRight?.(distance, velocity);
+            break;
+          case 'up':
+            handlers.onSwipeUp?.(distance, velocity);
+            break;
+          case 'down':
+            handlers.onSwipeDown?.(distance, velocity);
+            break;
+        }
+      }
+
+      setSwipeState(finalState);
+      handlers.onSwipeEnd?.(finalState);
+
+      touchStartRef.current = null;
+    },
+    [calculateDirection, calculateVelocity, finalConfig.threshold, finalConfig.velocity, handlers]
+  );
 
   // Set up event listeners
   useEffect(() => {
@@ -210,12 +222,12 @@ export function usePullToRefresh(
   const swipeGesture = useSwipeGesture<HTMLDivElement>(
     { threshold: 10, velocity: 0.1, ...config },
     {
-      onSwipeMove: (state) => {
+      onSwipeMove: state => {
         if (state.direction === 'down' && !isRefreshing) {
           setPullDistance(Math.max(0, state.distance));
         }
       },
-      onSwipeEnd: async (state) => {
+      onSwipeEnd: async state => {
         if (state.direction === 'down' && state.distance >= pullThreshold && !isRefreshing) {
           setIsRefreshing(true);
           setPullDistance(0);

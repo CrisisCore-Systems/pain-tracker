@@ -3,13 +3,13 @@
  * Continuous empathy state tracking with micro-interactions and sentiment analysis
  */
 
-import { 
+import {
   MicroEmpathyMoment,
   EmpathyInterruption,
   EmpathyRecoveryMoment,
   MoodEntry,
   EmpathyInsight,
-  EmpathyRecommendation
+  EmpathyRecommendation,
 } from '../types/quantified-empathy';
 
 export interface RealTimeEmpathyConfig {
@@ -34,7 +34,12 @@ export interface EmpathyStateSnapshot {
 
 export interface RealTimeAlert {
   id: string;
-  type: 'empathy_overload' | 'empathy_depletion' | 'boundary_needed' | 'recovery_opportunity' | 'growth_moment';
+  type:
+    | 'empathy_overload'
+    | 'empathy_depletion'
+    | 'boundary_needed'
+    | 'recovery_opportunity'
+    | 'growth_moment';
   severity: 'low' | 'medium' | 'high' | 'critical';
   message: string;
   recommendations: string[];
@@ -54,11 +59,11 @@ export class RealTimeEmpathyMonitor {
 
   constructor(config: RealTimeEmpathyConfig) {
     this.config = config;
-    
+
     if (config.sentimentAnalysisEnabled) {
       this.sentimentAnalyzer = new SentimentAnalyzer();
     }
-    
+
     if (config.microInteractionTracking) {
       this.microInteractionTracker = new MicroInteractionTracker();
     }
@@ -71,7 +76,7 @@ export class RealTimeEmpathyMonitor {
     if (this.isMonitoring) return;
 
     this.isMonitoring = true;
-    
+
     this.monitoringInterval = setInterval(async () => {
       try {
         const snapshot = await this.captureEmpathySnapshot(userId);
@@ -179,7 +184,7 @@ export class RealTimeEmpathyMonitor {
       response: interaction.response,
       effectOnOther: await this.assessEffectOnOther(interaction),
       effectOnSelf: await this.assessEffectOnSelf(interaction),
-      qualityIndicators: await this.assessQualityIndicators(interaction)
+      qualityIndicators: await this.assessQualityIndicators(interaction),
     };
 
     // Add to current empathy state
@@ -195,7 +200,11 @@ export class RealTimeEmpathyMonitor {
   /**
    * Process text input for sentiment and empathy signals
    */
-  async analyzeTextForEmpathy(userId: string, text: string, context: string): Promise<{
+  async analyzeTextForEmpathy(
+    userId: string,
+    text: string,
+    context: string
+  ): Promise<{
     empathyLevel: number;
     sentiment: string;
     empathyIndicators: string[];
@@ -206,7 +215,7 @@ export class RealTimeEmpathyMonitor {
         empathyLevel: 50,
         sentiment: 'neutral',
         empathyIndicators: [],
-        concerns: []
+        concerns: [],
       };
     }
 
@@ -218,18 +227,19 @@ export class RealTimeEmpathyMonitor {
   private async captureEmpathySnapshot(userId: string): Promise<EmpathyStateSnapshot> {
     // Simulate real-time empathy assessment
     // In a real implementation, this would integrate with various data sources
-    
+
     const previousSnapshot = this.getCurrentEmpathyState(userId);
     const baseEmpathyLevel = previousSnapshot?.empathyLevel || 70;
-    
+
     // Simulate natural variations and patterns
     const timeOfDay = new Date().getHours();
     const timeFactorAdjustment = this.getTimeBasedEmpathyAdjustment(timeOfDay);
     const randomVariation = (Math.random() - 0.5) * 10; // ±5 point variation
-    
-    const empathyLevel = Math.max(0, Math.min(100, 
-      baseEmpathyLevel + timeFactorAdjustment + randomVariation
-    ));
+
+    const empathyLevel = Math.max(
+      0,
+      Math.min(100, baseEmpathyLevel + timeFactorAdjustment + randomVariation)
+    );
 
     const snapshot: EmpathyStateSnapshot = {
       timestamp: new Date(),
@@ -239,7 +249,7 @@ export class RealTimeEmpathyMonitor {
       burnoutRisk: this.assessBurnoutRisk(userId, empathyLevel),
       microMoments: [],
       contextualFactors: await this.identifyContextualFactors(userId, timeOfDay),
-      aiConfidence: this.calculateAIConfidence(userId)
+      aiConfidence: this.calculateAIConfidence(userId),
     };
 
     return snapshot;
@@ -252,7 +262,7 @@ export class RealTimeEmpathyMonitor {
     }
     const history = this.empathyStateHistory.get(userId)!;
     history.push(snapshot);
-    
+
     // Keep only last 24 hours of data
     const cutoffTime = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const filteredHistory = history.filter(s => s.timestamp >= cutoffTime);
@@ -282,7 +292,10 @@ export class RealTimeEmpathyMonitor {
     return -5; // Late night/early morning low
   }
 
-  private determineEmpathyQuality(empathyLevel: number, timeOfDay: number): EmpathyStateSnapshot['empathyQuality'] {
+  private determineEmpathyQuality(
+    empathyLevel: number,
+    timeOfDay: number
+  ): EmpathyStateSnapshot['empathyQuality'] {
     if (empathyLevel > 85) return 'energized';
     if (empathyLevel > 70) return timeOfDay < 12 ? 'tender' : 'fierce';
     if (empathyLevel > 50) return 'boundaried';
@@ -304,57 +317,58 @@ export class RealTimeEmpathyMonitor {
     // Check for sustained high empathy without recovery
     const recentHigh = history.slice(-6).filter(s => s.empathyLevel > 80).length;
     const recentLow = history.slice(-6).filter(s => s.empathyLevel < 40).length;
-    
+
     let burnoutRisk = 30; // Base risk
-    
+
     if (recentHigh >= 4) burnoutRisk += 30; // Sustained high empathy
     if (recentLow === 0) burnoutRisk += 20; // No recovery periods
     if (currentEmpathyLevel < 30) burnoutRisk += 25; // Current depletion
-    
+
     return Math.min(100, burnoutRisk);
   }
 
   private async identifyContextualFactors(userId: string, timeOfDay: number): Promise<string[]> {
     const factors: string[] = [];
-    
+
     // Time-based factors
     if (timeOfDay >= 6 && timeOfDay < 9) factors.push('morning-routine');
     if (timeOfDay >= 9 && timeOfDay < 17) factors.push('work-hours');
     if (timeOfDay >= 17 && timeOfDay < 21) factors.push('evening-transition');
     if (timeOfDay >= 21 || timeOfDay < 6) factors.push('rest-period');
-    
+
     // Simulate other contextual factors
     if (Math.random() > 0.7) factors.push('social-interaction');
     if (Math.random() > 0.8) factors.push('high-stress-environment');
     if (Math.random() > 0.9) factors.push('triggering-content');
-    
+
     return factors;
   }
 
   private calculateAIConfidence(userId: string): number {
     const history = this.getEmpathyStateHistory(userId, 24);
-    
+
     // Confidence increases with more data
     const dataPoints = history.length;
-    const baseConfidence = Math.min(90, 30 + (dataPoints * 2));
-    
+    const baseConfidence = Math.min(90, 30 + dataPoints * 2);
+
     // Reduce confidence if patterns are inconsistent
     if (dataPoints > 10) {
       const variance = this.calculateEmpathyVariance(history);
-      const consistencyFactor = Math.max(0.7, 1 - (variance / 100));
+      const consistencyFactor = Math.max(0.7, 1 - variance / 100);
       return Math.round(baseConfidence * consistencyFactor);
     }
-    
+
     return baseConfidence;
   }
 
   private calculateEmpathyVariance(history: EmpathyStateSnapshot[]): number {
     if (history.length < 2) return 0;
-    
+
     const levels = history.map(s => s.empathyLevel);
     const mean = levels.reduce((sum, level) => sum + level, 0) / levels.length;
-    const variance = levels.reduce((sum, level) => sum + Math.pow(level - mean, 2), 0) / levels.length;
-    
+    const variance =
+      levels.reduce((sum, level) => sum + Math.pow(level - mean, 2), 0) / levels.length;
+
     return Math.sqrt(variance);
   }
 
@@ -371,9 +385,9 @@ export class RealTimeEmpathyMonitor {
         recommendations: [
           'Practice grounding techniques',
           'Set gentle boundaries',
-          'Take 5 minutes for self-care'
+          'Take 5 minutes for self-care',
         ],
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -387,9 +401,9 @@ export class RealTimeEmpathyMonitor {
         recommendations: [
           'Engage in activities that fill your cup',
           'Connect with supportive people',
-          'Practice self-compassion'
+          'Practice self-compassion',
         ],
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -403,9 +417,9 @@ export class RealTimeEmpathyMonitor {
         recommendations: [
           'Visualize protective boundaries',
           'Limit exposure to intense emotions',
-          'Practice the "not mine" technique'
+          'Practice the "not mine" technique',
         ],
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
 
@@ -418,38 +432,51 @@ export class RealTimeEmpathyMonitor {
     }
   }
 
-  private async assessEffectOnOther(interaction: { response: string; intensity: number }): Promise<number> {
+  private async assessEffectOnOther(interaction: {
+    response: string;
+    intensity: number;
+  }): Promise<number> {
     // Simulate assessment of positive impact on others
     const responseQuality = interaction.response.length > 10 ? 1 : 0.5;
     const intensityFactor = Math.min(1, interaction.intensity / 100);
-    return Math.round((responseQuality * intensityFactor) * 100);
+    return Math.round(responseQuality * intensityFactor * 100);
   }
 
-  private async assessEffectOnSelf(interaction: { type: string; intensity: number }): Promise<number> {
+  private async assessEffectOnSelf(interaction: {
+    type: string;
+    intensity: number;
+  }): Promise<number> {
     // Simulate assessment of impact on self
     if (interaction.type === 'self-directed') return Math.round(interaction.intensity * 0.8);
     if (interaction.intensity > 80) return Math.round(70 - (interaction.intensity - 80)); // High intensity can be draining
     return Math.round(interaction.intensity * 0.9);
   }
 
-  private async assessQualityIndicators(interaction: { response: string; type: string }): Promise<string[]> {
+  private async assessQualityIndicators(interaction: {
+    response: string;
+    type: string;
+  }): Promise<string[]> {
     const indicators: string[] = [];
-    
+
     if (interaction.response.toLowerCase().includes('understand')) indicators.push('understanding');
-    if (interaction.response.toLowerCase().includes('feel')) indicators.push('emotional-connection');
+    if (interaction.response.toLowerCase().includes('feel'))
+      indicators.push('emotional-connection');
     if (interaction.type === 'spontaneous') indicators.push('natural-response');
     if (interaction.response.length > 20) indicators.push('thoughtful-response');
-    
+
     return indicators;
   }
 
-  private async analyzeMicroMomentPatterns(userId: string, moment: MicroEmpathyMoment): Promise<void> {
+  private async analyzeMicroMomentPatterns(
+    userId: string,
+    moment: MicroEmpathyMoment
+  ): Promise<void> {
     // Analyze patterns in micro-moments for insights
     const currentState = this.getCurrentEmpathyState(userId);
     if (!currentState) return;
 
     const recentMoments = currentState.microMoments.slice(-10);
-    
+
     // Check for empathy fatigue pattern
     const lowEffectMoments = recentMoments.filter(m => m.effectOnSelf < 40).length;
     if (lowEffectMoments >= 5) {
@@ -462,7 +489,10 @@ export class RealTimeEmpathyMonitor {
 // Supporting classes for sentiment analysis and micro-interaction tracking
 
 class SentimentAnalyzer {
-  async analyzeEmpathySignals(text: string, context: string): Promise<{
+  async analyzeEmpathySignals(
+    text: string,
+    context: string
+  ): Promise<{
     empathyLevel: number;
     sentiment: string;
     empathyIndicators: string[];
@@ -470,23 +500,23 @@ class SentimentAnalyzer {
   }> {
     // Simple sentiment analysis simulation
     const empathyWords = ['understand', 'feel', 'care', 'support', 'compassion', 'empathy'];
-    const concernWords = ['overwhelmed', 'drained', 'exhausted', 'too much', 'can\'t handle'];
-    
+    const concernWords = ['overwhelmed', 'drained', 'exhausted', 'too much', "can't handle"];
+
     const lowerText = text.toLowerCase();
     const empathyCount = empathyWords.filter(word => lowerText.includes(word)).length;
     const concernCount = concernWords.filter(word => lowerText.includes(word)).length;
-    
-    const empathyLevel = Math.min(100, (empathyCount * 20) + 40 - (concernCount * 15));
+
+    const empathyLevel = Math.min(100, empathyCount * 20 + 40 - concernCount * 15);
     const sentiment = empathyLevel > 60 ? 'positive' : empathyLevel > 40 ? 'neutral' : 'concerning';
-    
+
     const indicators = empathyWords.filter(word => lowerText.includes(word));
     const concerns = concernWords.filter(word => lowerText.includes(word));
-    
+
     return {
       empathyLevel,
       sentiment,
       empathyIndicators: indicators,
-      concerns
+      concerns,
     };
   }
 }
@@ -503,5 +533,5 @@ export const realTimeEmpathyMonitor = new RealTimeEmpathyMonitor({
   microInteractionTracking: true,
   emotionalContagionDetection: true,
   empathyBurnoutPrevention: true,
-  culturalContextAwareness: true
+  culturalContextAwareness: true,
 });

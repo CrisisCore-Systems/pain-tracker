@@ -6,21 +6,19 @@
 // Existing accessibility components
 export { AccessibilityControls } from './AccessibilityControls';
 export { KeyboardNavigation, useFocusManagement } from './KeyboardNavigation';
-export { 
-  ScreenReaderAnnouncement, 
-  useScreenReader, 
-  SkipLink, 
+export {
+  ScreenReaderAnnouncement,
+  useScreenReader,
+  SkipLink,
   VisuallyHidden,
   AccessibleButton,
-  AccessibleField 
+  AccessibleField,
 } from './ScreenReaderUtils';
 export { LanguageSelector } from './LanguageSelector';
 
 // Trauma-Informed UX Components
 // Core types and interfaces
-export type { 
-  TraumaInformedPreferences
-} from './TraumaInformedTypes';
+export type { TraumaInformedPreferences } from './TraumaInformedTypes';
 
 // Context and hooks
 export { TraumaInformedContext } from './TraumaInformedHooks';
@@ -35,7 +33,7 @@ export {
   TouchOptimizedButton,
   CognitiveLoadReducer,
   ComfortPrompt,
-  AutoSaveIndicator
+  AutoSaveIndicator,
 } from './TraumaInformedUX';
 
 // Physical accommodation components
@@ -44,13 +42,11 @@ export {
   LargeTouchSlider,
   GestureNavigation,
   TremorFriendlyInput,
-  SwitchControl
+  SwitchControl,
 } from './PhysicalAccommodations';
 
 // Trauma-informed form components
-export {
-  TraumaInformedPainEntryForm
-} from './TraumaInformedPainForm';
+export { TraumaInformedPainEntryForm } from './TraumaInformedPainForm';
 
 // Settings and customization
 export { AccessibilitySettingsPanel } from './AccessibilitySettings';
@@ -59,13 +55,13 @@ export { AccessibilitySettingsPanel } from './AccessibilitySettings';
 export {
   TraumaInformedLayout,
   TraumaInformedPage,
-  TraumaInformedSection
+  TraumaInformedSection,
 } from './TraumaInformedLayout';
 
 // Testing and validation components
 export {
   TraumaInformedValidationPanel,
-  TraumaInformedTestingChecklist
+  TraumaInformedTestingChecklist,
 } from './TraumaInformedValidation';
 
 // Integration summary
@@ -75,37 +71,28 @@ export { IntegrationSummary } from './IntegrationSummary';
 export {
   CognitiveLoadIndicator,
   CognitiveLoadWrapper,
-  CognitiveLoadMonitor
+  CognitiveLoadMonitor,
 } from './CognitiveLoadIndicator';
 
 export { CognitiveFogIndicator } from './CognitiveFogIndicator';
 
-export { 
-  CrisisNavigationBar,
-  CrisisCompassNavigation
-} from './CrisisNavigationPatterns';
+export { CrisisNavigationBar, CrisisCompassNavigation } from './CrisisNavigationPatterns';
 
-export {
-  CrisisStateAdaptation
-} from './CrisisStateAdaptation';
+export { CrisisStateAdaptation } from './CrisisStateAdaptation';
 
-export {
-  ContentWarning,
-  InlineContentWarning,
-  AutoContentWarning
-} from './ContentWarning';
+export { ContentWarning, InlineContentWarning, AutoContentWarning } from './ContentWarning';
 
 export { EnhancedContentWarning } from './EnhancedContentWarning';
 
 export {
   ProgressiveDisclosure as EnhancedProgressiveDisclosure,
   LayeredDisclosure,
-  AdaptiveDisclosure
+  AdaptiveDisclosure,
 } from './ProgressiveDisclosurePatterns';
 
 export {
   MedicalProgressiveDisclosure,
-  OrganizedMedicalSections
+  OrganizedMedicalSections,
 } from './MedicalProgressiveDisclosure';
 
 export { InterfaceSimplifier } from './InterfaceSimplification';

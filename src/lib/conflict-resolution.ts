@@ -48,7 +48,15 @@ export interface ConflictResolution {
 
 export interface MergeRule {
   field: string;
-  strategy: 'last-writer-wins' | 'prefer-local' | 'prefer-remote' | 'user-decides' | 'merge-arrays' | 'sum-numbers' | 'min-value' | 'max-value';
+  strategy:
+    | 'last-writer-wins'
+    | 'prefer-local'
+    | 'prefer-remote'
+    | 'user-decides'
+    | 'merge-arrays'
+    | 'sum-numbers'
+    | 'min-value'
+    | 'max-value';
   priority: number;
   condition?: (local: unknown, remote: unknown) => boolean;
   traumaInformed?: boolean; // Protects user from losing important emotional data
@@ -112,11 +120,12 @@ export class ConflictResolutionService {
     // Trauma-informed automatic resolution
     this.strategies.set('trauma-informed-auto', {
       name: 'Trauma-Informed Auto Resolution',
-      description: 'Automatically resolves conflicts while preserving user emotional data and agency',
+      description:
+        'Automatically resolves conflicts while preserving user emotional data and agency',
       automatic: true,
       traumaInformed: true,
       preservesUserAgency: true,
-      apply: this.applyTraumaInformedAutoResolution.bind(this)
+      apply: this.applyTraumaInformedAutoResolution.bind(this),
     });
 
     // Conservative merge - preserves all user data
@@ -126,7 +135,7 @@ export class ConflictResolutionService {
       automatic: true,
       traumaInformed: true,
       preservesUserAgency: true,
-      apply: this.applyConservativeMerge.bind(this)
+      apply: this.applyConservativeMerge.bind(this),
     });
 
     // Smart merge using field-level rules
@@ -136,7 +145,7 @@ export class ConflictResolutionService {
       automatic: true,
       traumaInformed: true,
       preservesUserAgency: false,
-      apply: this.applySmartMerge.bind(this)
+      apply: this.applySmartMerge.bind(this),
     });
 
     // User-guided resolution
@@ -146,7 +155,7 @@ export class ConflictResolutionService {
       automatic: false,
       traumaInformed: true,
       preservesUserAgency: true,
-      apply: this.prepareUserGuidedResolution.bind(this)
+      apply: this.prepareUserGuidedResolution.bind(this),
     });
 
     // Timestamp-based resolution
@@ -156,7 +165,7 @@ export class ConflictResolutionService {
       automatic: true,
       traumaInformed: false,
       preservesUserAgency: false,
-      apply: this.applyTimestampBasedResolution.bind(this)
+      apply: this.applyTimestampBasedResolution.bind(this),
     });
   }
 
@@ -167,44 +176,44 @@ export class ConflictResolutionService {
         field: 'baselineData.pain',
         strategy: 'prefer-local', // User's pain assessment is most important
         priority: 1,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'baselineData.locations',
         strategy: 'merge-arrays', // Combine pain locations
         priority: 2,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'baselineData.symptoms',
         strategy: 'merge-arrays', // Combine symptoms
         priority: 2,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'notes',
         strategy: 'user-decides', // Never lose user notes
         priority: 1,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'medications.current',
         strategy: 'prefer-local', // User knows current medications best
         priority: 1,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'qualityOfLife.moodImpact',
         strategy: 'prefer-local', // User's mood assessment is personal
         priority: 1,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'timestamp',
         strategy: 'prefer-local', // Keep user's timing
         priority: 1,
-        traumaInformed: true
-      }
+        traumaInformed: true,
+      },
     ]);
 
     // Settings merge rules
@@ -213,26 +222,26 @@ export class ConflictResolutionService {
         field: 'accessibility.*',
         strategy: 'prefer-local', // User accessibility needs are critical
         priority: 1,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'privacy.*',
         strategy: 'prefer-local', // User privacy choices are paramount
         priority: 1,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'notifications.*',
         strategy: 'prefer-local', // User notification preferences
         priority: 2,
-        traumaInformed: true
+        traumaInformed: true,
       },
       {
         field: 'theme',
         strategy: 'prefer-local', // User interface preferences
         priority: 3,
-        traumaInformed: false
-      }
+        traumaInformed: false,
+      },
     ]);
 
     // Emergency data merge rules
@@ -241,18 +250,21 @@ export class ConflictResolutionService {
         field: '*',
         strategy: 'user-decides', // Emergency data is too critical for automatic merge
         priority: 1,
-        traumaInformed: true
-      }
+        traumaInformed: true,
+      },
     ]);
   }
 
-  async detectConflicts(localData: DataEntity[], remoteData: DataEntity[]): Promise<DataConflict[]> {
+  async detectConflicts(
+    localData: DataEntity[],
+    remoteData: DataEntity[]
+  ): Promise<DataConflict[]> {
     const conflicts: DataConflict[] = [];
     const remoteMap = new Map(remoteData.map(item => [item.id, item]));
 
     for (const localItem of localData) {
       const remoteItem = remoteMap.get(localItem.id);
-      
+
       if (remoteItem) {
         const conflict = await this.compareVersions(localItem, remoteItem);
         if (conflict) {
@@ -277,7 +289,10 @@ export class ConflictResolutionService {
     return conflicts;
   }
 
-  private async compareVersions(localItem: DataEntity, remoteItem: DataEntity): Promise<DataConflict | null> {
+  private async compareVersions(
+    localItem: DataEntity,
+    remoteItem: DataEntity
+  ): Promise<DataConflict | null> {
     // Generate checksums for comparison
     const localChecksum = await this.generateChecksum(localItem);
     const remoteChecksum = await this.generateChecksum(remoteItem);
@@ -288,11 +303,11 @@ export class ConflictResolutionService {
 
     // Determine conflict type
     let conflictType: DataConflict['conflictType'] = 'modification';
-    
+
     if (localItem.lastModified && remoteItem.lastModified) {
       const localTime = new Date(localItem.lastModified);
       const remoteTime = new Date(remoteItem.lastModified);
-      
+
       if (Math.abs(localTime.getTime() - remoteTime.getTime()) < 1000) {
         conflictType = 'version'; // Simultaneous edits
       }
@@ -302,10 +317,13 @@ export class ConflictResolutionService {
     const priority = this.determinePriority(localItem, remoteItem);
     const autoResolvable = this.isAutoResolvable(localItem, remoteItem);
 
-    const entityType: DataConflict['entityType'] = (['pain-entry','settings','emergency-data','activity-log'] as const)
-      .includes((localItem.type as DataConflict['entityType'])) ? (localItem.type as DataConflict['entityType']) : 'pain-entry';
+    const entityType: DataConflict['entityType'] = (
+      ['pain-entry', 'settings', 'emergency-data', 'activity-log'] as const
+    ).includes(localItem.type as DataConflict['entityType'])
+      ? (localItem.type as DataConflict['entityType'])
+      : 'pain-entry';
     return {
-      id: `${(localItem.type || 'unknown')}-${localItem.id}-${Date.now()}`,
+      id: `${localItem.type || 'unknown'}-${localItem.id}-${Date.now()}`,
       entityType,
       entityId: localItem.id,
       conflictType,
@@ -319,18 +337,21 @@ export class ConflictResolutionService {
         userDeviceId: this.getDeviceId(),
         conflictDetectedAt: new Date().toISOString(),
         priority,
-        autoResolvable
-      }
+        autoResolvable,
+      },
     };
   }
 
   private async handleMissingLocal(remoteItem: DataEntity): Promise<DataConflict | null> {
     // Check if this was intentionally deleted locally
     const deletionRecord = await this.checkDeletionRecord(remoteItem.id);
-    
+
     if (deletionRecord) {
-      const entityType: DataConflict['entityType'] = (['pain-entry','settings','emergency-data','activity-log'] as const)
-        .includes((remoteItem.type as DataConflict['entityType'])) ? (remoteItem.type as DataConflict['entityType']) : 'pain-entry';
+      const entityType: DataConflict['entityType'] = (
+        ['pain-entry', 'settings', 'emergency-data', 'activity-log'] as const
+      ).includes(remoteItem.type as DataConflict['entityType'])
+        ? (remoteItem.type as DataConflict['entityType'])
+        : 'pain-entry';
       return {
         id: `deletion-${remoteItem.id}-${Date.now()}`,
         entityType,
@@ -339,13 +360,14 @@ export class ConflictResolutionService {
         localVersion: null,
         remoteVersion: remoteItem,
         localTimestamp: deletionRecord.timestamp,
-        remoteTimestamp: remoteItem.lastModified || remoteItem.timestamp || new Date().toISOString(),
+        remoteTimestamp:
+          remoteItem.lastModified || remoteItem.timestamp || new Date().toISOString(),
         metadata: {
           userDeviceId: this.getDeviceId(),
           conflictDetectedAt: new Date().toISOString(),
           priority: 'medium',
-          autoResolvable: false
-        }
+          autoResolvable: false,
+        },
       };
     }
 
@@ -361,17 +383,17 @@ export class ConflictResolutionService {
     // Choose strategy
     const strategyName = strategy || this.selectBestStrategy(conflict);
     const resolutionStrategy = this.strategies.get(strategyName);
-    
+
     if (!resolutionStrategy) {
       throw new Error(`Unknown strategy: ${strategyName}`);
     }
 
     try {
       const resolution = await resolutionStrategy.apply(conflict);
-      
+
       // Store resolution for audit trail
       await this.storeResolution(conflictId, resolution);
-      
+
       // Remove resolved conflict
       if (resolution.resolved) {
         this.conflicts.delete(conflictId);
@@ -405,10 +427,12 @@ export class ConflictResolutionService {
     return 'conservative-merge'; // Default to conservative approach
   }
 
-  private async applyTraumaInformedAutoResolution(conflict: DataConflict): Promise<ConflictResolution> {
+  private async applyTraumaInformedAutoResolution(
+    conflict: DataConflict
+  ): Promise<ConflictResolution> {
     const rules = this.mergeRules.get(conflict.entityType) || [];
     const traumaInformedRules = rules.filter(rule => rule.traumaInformed);
-    
+
     if (traumaInformedRules.length === 0) {
       // No trauma-informed rules, defer to user
       return {
@@ -416,8 +440,9 @@ export class ConflictResolutionService {
         resolved: false,
         requiresUserReview: true,
         confidence: 0,
-        explanation: 'This conflict requires your review to ensure your personal data is handled correctly.',
-        preservedUserChanges: true
+        explanation:
+          'This conflict requires your review to ensure your personal data is handled correctly.',
+        preservedUserChanges: true,
       };
     }
 
@@ -433,17 +458,18 @@ export class ConflictResolutionService {
       mergedData,
       confidence: 85,
       requiresUserReview: false,
-      explanation: 'Automatically resolved while preserving all your personal data and preferences.',
-      preservedUserChanges: true
+      explanation:
+        'Automatically resolved while preserving all your personal data and preferences.',
+      preservedUserChanges: true,
     };
   }
 
   private async applyConservativeMerge(conflict: DataConflict): Promise<ConflictResolution> {
     // Always preserve user data, merge arrays, keep both versions of conflicting fields
-  const merged: Record<string, unknown> = { ...(conflict.remoteVersion || {}) };
-    
+    const merged: Record<string, unknown> = { ...(conflict.remoteVersion || {}) };
+
     // Overlay local changes
-  for (const [key, value] of Object.entries(conflict.localVersion || {})) {
+    for (const [key, value] of Object.entries(conflict.localVersion || {})) {
       if (Array.isArray(value) && Array.isArray(merged[key])) {
         // Merge arrays and remove duplicates
         merged[key] = [...new Set([...merged[key], ...value])];
@@ -463,7 +489,7 @@ export class ConflictResolutionService {
       confidence: 75,
       requiresUserReview: false,
       explanation: 'Combined both versions while preserving all your local changes.',
-      preservedUserChanges: true
+      preservedUserChanges: true,
     };
   }
 
@@ -475,10 +501,9 @@ export class ConflictResolutionService {
       rules
     );
 
-    const preservedUserChanges = conflict.localVersion ? this.checkUserChangesPreserved(
-      conflict.localVersion,
-      mergedData
-    ) : true;
+    const preservedUserChanges = conflict.localVersion
+      ? this.checkUserChangesPreserved(conflict.localVersion, mergedData)
+      : true;
 
     return {
       strategy: 'smart-merge',
@@ -486,31 +511,31 @@ export class ConflictResolutionService {
       mergedData,
       confidence: 90,
       requiresUserReview: !preservedUserChanges,
-      explanation: preservedUserChanges 
+      explanation: preservedUserChanges
         ? 'Intelligently merged data while preserving your changes.'
         : 'Merged data - please review to ensure your important changes are preserved.',
-      preservedUserChanges
+      preservedUserChanges,
     };
   }
 
   private async prepareUserGuidedResolution(conflict: DataConflict): Promise<ConflictResolution> {
     // Prepare user-friendly conflict presentation
     const explanation = this.generateUserFriendlyExplanation(conflict);
-    
+
     return {
       strategy: 'user-guided',
       resolved: false,
       requiresUserReview: true,
       confidence: 100, // User will decide
       explanation,
-      preservedUserChanges: true // User will control this
+      preservedUserChanges: true, // User will control this
     };
   }
 
   private async applyTimestampBasedResolution(conflict: DataConflict): Promise<ConflictResolution> {
     const localTime = new Date(conflict.localTimestamp);
     const remoteTime = new Date(conflict.remoteTimestamp);
-    
+
     const useLocal = localTime > remoteTime;
     const winner = useLocal ? conflict.localVersion : conflict.remoteVersion;
 
@@ -521,29 +546,29 @@ export class ConflictResolutionService {
       confidence: 70,
       requiresUserReview: false,
       explanation: `Used ${useLocal ? 'your local' : 'remote'} version as it was modified more recently.`,
-      preservedUserChanges: useLocal
+      preservedUserChanges: useLocal,
     };
   }
 
-  private async applyMergeRules<T extends Record<string, unknown>>(local: T, remote: T, rules: MergeRule[]): Promise<T> {
+  private async applyMergeRules<T extends Record<string, unknown>>(
+    local: T,
+    remote: T,
+    rules: MergeRule[]
+  ): Promise<T> {
     const merged: T = { ...(remote as Record<string, unknown>) } as T; // Start with remote as base
-    
+
     // Sort rules by priority
     const sortedRules = rules.sort((a, b) => a.priority - b.priority);
-    
+
     for (const rule of sortedRules) {
-  const localValue = this.getValueByPath(local, rule.field);
-  const remoteValue = this.getValueByPath(remote, rule.field);
-      
+      const localValue = this.getValueByPath(local, rule.field);
+      const remoteValue = this.getValueByPath(remote, rule.field);
+
       if (localValue === undefined && remoteValue === undefined) {
         continue;
       }
 
-      const mergedValue = await this.applyMergeStrategy(
-        localValue,
-        remoteValue,
-        rule.strategy
-      );
+      const mergedValue = await this.applyMergeStrategy(localValue, remoteValue, rule.strategy);
 
       this.setValueByPath(merged, rule.field, mergedValue);
     }
@@ -551,46 +576,50 @@ export class ConflictResolutionService {
     return merged;
   }
 
-  private async applyMergeStrategy(local: unknown, remote: unknown, strategy: MergeRule['strategy']): Promise<unknown> {
+  private async applyMergeStrategy(
+    local: unknown,
+    remote: unknown,
+    strategy: MergeRule['strategy']
+  ): Promise<unknown> {
     switch (strategy) {
       case 'prefer-local':
         return local !== undefined ? local : remote;
-      
+
       case 'prefer-remote':
         return remote !== undefined ? remote : local;
-      
+
       case 'last-writer-wins':
         // Would need timestamp comparison logic
         return local; // Simplified
-      
+
       case 'merge-arrays':
         if (Array.isArray(local) && Array.isArray(remote)) {
           return [...new Set([...remote, ...local])];
         }
         return local !== undefined ? local : remote;
-      
+
       case 'sum-numbers':
         if (typeof local === 'number' && typeof remote === 'number') {
           return local + remote;
         }
         return local !== undefined ? local : remote;
-      
+
       case 'max-value':
         if (typeof local === 'number' && typeof remote === 'number') {
           return Math.max(local, remote);
         }
         return local !== undefined ? local : remote;
-      
+
       case 'min-value':
         if (typeof local === 'number' && typeof remote === 'number') {
           return Math.min(local, remote);
         }
         return local !== undefined ? local : remote;
-      
+
       case 'user-decides':
         // Mark for user review
         return { _conflict: true, local, remote } as Record<string, unknown>;
-      
+
       default:
         return local !== undefined ? local : remote;
     }
@@ -605,14 +634,18 @@ export class ConflictResolutionService {
         const prefix = key.slice(0, -1);
         if (current && typeof current === 'object') {
           const out: Record<string, unknown> = {};
-            for (const [k, v] of Object.entries(current as Record<string, unknown>)) {
-              if (k.startsWith(prefix)) out[k] = v;
-            }
+          for (const [k, v] of Object.entries(current as Record<string, unknown>)) {
+            if (k.startsWith(prefix)) out[k] = v;
+          }
           current = out;
         } else {
           current = undefined;
         }
-      } else if (current && typeof current === 'object' && key in (current as Record<string, unknown>)) {
+      } else if (
+        current &&
+        typeof current === 'object' &&
+        key in (current as Record<string, unknown>)
+      ) {
         current = (current as Record<string, unknown>)[key];
       } else {
         return undefined;
@@ -629,7 +662,7 @@ export class ConflictResolutionService {
 
     const keys = path.split('.');
     const lastKey = keys.pop()!;
-    
+
     const target = keys.reduce<Record<string, unknown>>((current, key) => {
       if (!current[key] || typeof current[key] !== 'object') {
         current[key] = {} as Record<string, unknown>;
@@ -677,14 +710,17 @@ export class ConflictResolutionService {
     return true;
   }
 
-  private checkUserChangesPreserved(original: DataEntity, merged: Record<string, unknown> | DataEntity | null): boolean {
+  private checkUserChangesPreserved(
+    original: DataEntity,
+    merged: Record<string, unknown> | DataEntity | null
+  ): boolean {
     // Check if critical user fields are preserved
     const criticalFields = ['notes', 'baselineData.pain', 'qualityOfLife.moodImpact'];
-    
+
     for (const field of criticalFields) {
       const originalValue = this.getValueByPath(original, field);
       const mergedValue = this.getValueByPath(merged, field);
-      
+
       if (originalValue !== undefined && originalValue !== mergedValue) {
         return false;
       }
@@ -696,18 +732,25 @@ export class ConflictResolutionService {
   private generateUserFriendlyExplanation(conflict: DataConflict): string {
     const entityName = this.getEntityDisplayName(conflict.entityType);
     const timeAgo = this.getTimeAgo(conflict.remoteTimestamp);
-    
-    return `We found differences in your ${entityName} data. The version on our servers was updated ${timeAgo}, ` +
-           `but you've also made changes locally. We want to make sure your personal data is handled exactly how you prefer.`;
+
+    return (
+      `We found differences in your ${entityName} data. The version on our servers was updated ${timeAgo}, ` +
+      `but you've also made changes locally. We want to make sure your personal data is handled exactly how you prefer.`
+    );
   }
 
   private getEntityDisplayName(type: string): string {
     switch (type) {
-      case 'pain-entry': return 'pain entry';
-      case 'emergency-data': return 'emergency contact information';
-      case 'settings': return 'app settings';
-      case 'activity-log': return 'activity log';
-      default: return 'data';
+      case 'pain-entry':
+        return 'pain entry';
+      case 'emergency-data':
+        return 'emergency contact information';
+      case 'settings':
+        return 'app settings';
+      case 'activity-log':
+        return 'activity log';
+      default:
+        return 'data';
     }
   }
 
@@ -715,11 +758,11 @@ export class ConflictResolutionService {
     const now = new Date();
     const time = new Date(timestamp);
     const diffMs = now.getTime() - time.getTime();
-    
+
     const minutes = Math.floor(diffMs / 60000);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
     if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
     if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
@@ -744,7 +787,9 @@ export class ConflictResolutionService {
     return deviceId;
   }
 
-  private async checkDeletionRecord(itemId: string | number): Promise<{ timestamp: string } | null> {
+  private async checkDeletionRecord(
+    itemId: string | number
+  ): Promise<{ timestamp: string } | null> {
     try {
       // Deletion records are stored under a dedicated key in settings
       const deletionRecords = await offlineStorage.getItem<DeletionRecord[]>('conflict:deletions');
@@ -761,7 +806,7 @@ export class ConflictResolutionService {
   private async storeResolution(conflictId: string, resolution: ConflictResolution): Promise<void> {
     try {
       const key = 'conflict:resolutions';
-      const existing = await offlineStorage.getItem<StoredConflictResolutionRecord[]>(key) || [];
+      const existing = (await offlineStorage.getItem<StoredConflictResolutionRecord[]>(key)) || [];
       existing.push({ conflictId, resolution, timestamp: new Date().toISOString() });
       await offlineStorage.setItem(key, existing);
     } catch (error) {
@@ -786,7 +831,7 @@ export class ConflictResolutionService {
     );
 
     const resolutions: ConflictResolution[] = [];
-    
+
     for (const conflict of autoResolvable) {
       try {
         const resolution = await this.resolveConflict(conflict.id);
@@ -805,13 +850,13 @@ export class ConflictResolutionService {
       // Store postponement info under key-value settings
       try {
         const key = 'conflict:postponed';
-        const existing = await offlineStorage.getItem<PostponedConflictRecord[]>(key) || [];
+        const existing = (await offlineStorage.getItem<PostponedConflictRecord[]>(key)) || [];
         existing.push({ conflictId, postponeUntil: postponeUntil.toISOString(), conflict });
         await offlineStorage.setItem(key, existing);
       } catch (error) {
         console.error('Failed to store postponed conflict:', error);
       }
-      
+
       // Remove from active conflicts
       this.conflicts.delete(conflictId);
     }
@@ -833,9 +878,11 @@ export const conflictResolver = ConflictResolutionService.getInstance();
 
 // Helper functions for UI components
 export function isConflictCritical(conflict: DataConflict): boolean {
-  return conflict.metadata.priority === 'high' || 
-         conflict.entityType === 'emergency-data' ||
-         !conflict.metadata.autoResolvable;
+  return (
+    conflict.metadata.priority === 'high' ||
+    conflict.entityType === 'emergency-data' ||
+    !conflict.metadata.autoResolvable
+  );
 }
 
 export function getConflictDisplayData(conflict: DataConflict) {
@@ -844,6 +891,6 @@ export function getConflictDisplayData(conflict: DataConflict) {
     description: conflictResolver['generateUserFriendlyExplanation'](conflict),
     priority: conflict.metadata.priority,
     canAutoResolve: conflict.metadata.autoResolvable,
-    isTraumaInformed: true // All our conflicts are handled with trauma-informed care
+    isTraumaInformed: true, // All our conflicts are handled with trauma-informed care
   };
 }

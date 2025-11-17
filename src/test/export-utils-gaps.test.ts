@@ -12,7 +12,7 @@ const sample: PainEntry = {
   qualityOfLife: { sleepQuality: 6, moodImpact: 4, socialImpact: [] },
   workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
   comparison: { worseningSince: '', newLimitations: [] },
-  notes: 'Contains "quotes", commas, and newline\nsecond line'
+  notes: 'Contains "quotes", commas, and newline\nsecond line',
 };
 
 describe('export utils gaps', () => {
@@ -26,10 +26,12 @@ describe('export utils gaps', () => {
 
   it('downloadData creates and cleans link', () => {
     if (!window.URL.revokeObjectURL) {
-      (window.URL as unknown as { revokeObjectURL: (u?: string) => void }).revokeObjectURL = () => {};
+      (window.URL as unknown as { revokeObjectURL: (u?: string) => void }).revokeObjectURL =
+        () => {};
     }
     if (!window.URL.createObjectURL) {
-      (window.URL as unknown as { createObjectURL: (b: Blob) => string }).createObjectURL = () => 'blob:temp';
+      (window.URL as unknown as { createObjectURL: (b: Blob) => string }).createObjectURL = () =>
+        'blob:temp';
     }
     const revokeSpy = vi.spyOn(window.URL, 'revokeObjectURL');
     const createSpy = vi.spyOn(window.URL, 'createObjectURL').mockReturnValue('blob:fake');

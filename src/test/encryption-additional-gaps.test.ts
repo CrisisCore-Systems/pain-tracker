@@ -15,12 +15,17 @@ describe('EncryptionService additional gaps', () => {
 
   it('falls back to in-memory key cache when secure storage fails (storeKey path)', async () => {
     const secureStorage = securityService.createSecureStorage();
-    vi.spyOn(securityService, 'createSecureStorage').mockImplementation(() => ({
-      ...secureStorage,
-      store: async () => { throw new Error('secure storage unavailable'); },
-      retrieve: async () => null,
-      delete: async () => {}
-  }) as unknown as ReturnType<typeof securityService.createSecureStorage>);
+    vi.spyOn(securityService, 'createSecureStorage').mockImplementation(
+      () =>
+        ({
+          ...secureStorage,
+          store: async () => {
+            throw new Error('secure storage unavailable');
+          },
+          retrieve: async () => null,
+          delete: async () => {},
+        }) as unknown as ReturnType<typeof securityService.createSecureStorage>
+    );
     const svc = new EndToEndEncryptionService();
     // Force generateKey -> storeKey fallback
     const data = await svc.encrypt({ hello: 'world' });
@@ -28,9 +33,12 @@ describe('EncryptionService additional gaps', () => {
   });
 
   it('compresses large data and successfully decrypts (compression + decompress branches)', async () => {
-    const encrypted = await encryptionService.encrypt({ blob: largePayload }, { addIntegrityCheck: true });
+    const encrypted = await encryptionService.encrypt(
+      { blob: largePayload },
+      { addIntegrityCheck: true }
+    );
     expect(encrypted.data.length).toBeGreaterThan(0);
-  const decrypted = await encryptionService.decrypt<{ blob: string }>(encrypted);
+    const decrypted = await encryptionService.decrypt<{ blob: string }>(encrypted);
     expect(decrypted.blob).toBe(largePayload);
   });
 

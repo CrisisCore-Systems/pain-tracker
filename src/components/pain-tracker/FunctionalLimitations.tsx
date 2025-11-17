@@ -1,4 +1,3 @@
-
 import type { PainEntry } from '../../types';
 import { formatNumber } from '../../utils/formatting';
 
@@ -19,32 +18,36 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
     : entries;
 
   // Analyze functional limitations
-  const limitationsAnalysis = filteredEntries.reduce((acc, entry) => {
-    entry.functionalImpact?.limitedActivities?.forEach(activity => {
-      if (!acc[activity]) {
-        acc[activity] = {
-          count: 0,
-          painLevels: [],
-          assistanceNeeded: new Set<string>(),
-          mobilityAids: new Set<string>(),
-        };
+  const limitationsAnalysis = filteredEntries.reduce(
+    (acc, entry) => {
+      entry.functionalImpact?.limitedActivities?.forEach(activity => {
+        if (!acc[activity]) {
+          acc[activity] = {
+            count: 0,
+            painLevels: [],
+            assistanceNeeded: new Set<string>(),
+            mobilityAids: new Set<string>(),
+          };
+        }
+        acc[activity].count += 1;
+        acc[activity].painLevels.push(entry.baselineData.pain);
+        entry.functionalImpact?.assistanceNeeded?.forEach(assistance =>
+          acc[activity].assistanceNeeded.add(assistance)
+        );
+        entry.functionalImpact?.mobilityAids?.forEach(aid => acc[activity].mobilityAids.add(aid));
+      });
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        count: number;
+        painLevels: number[];
+        assistanceNeeded: Set<string>;
+        mobilityAids: Set<string>;
       }
-      acc[activity].count += 1;
-      acc[activity].painLevels.push(entry.baselineData.pain);
-      entry.functionalImpact?.assistanceNeeded?.forEach(assistance => 
-        acc[activity].assistanceNeeded.add(assistance)
-      );
-      entry.functionalImpact?.mobilityAids?.forEach(aid => 
-        acc[activity].mobilityAids.add(aid)
-      );
-    });
-    return acc;
-  }, {} as Record<string, {
-    count: number;
-    painLevels: number[];
-    assistanceNeeded: Set<string>;
-    mobilityAids: Set<string>;
-  }>);
+    >
+  );
 
   // Convert analysis to sorted array
   const limitationsSummary = Object.entries(limitationsAnalysis)
@@ -80,7 +83,9 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
 
             {limitation.assistanceNeeded.length > 0 && (
               <div className="mt-2">
-                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">Assistance Needed:</h5>
+                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Assistance Needed:
+                </h5>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {limitation.assistanceNeeded.map(assistance => (
                     <span
@@ -96,7 +101,9 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
 
             {limitation.mobilityAids.length > 0 && (
               <div className="mt-2">
-                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">Mobility Aids Used:</h5>
+                <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Mobility Aids Used:
+                </h5>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {limitation.mobilityAids.map(aid => (
                     <span
@@ -120,4 +127,4 @@ export function FunctionalLimitations({ entries, period }: FunctionalLimitations
       </div>
     </div>
   );
-} 
+}

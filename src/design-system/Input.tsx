@@ -25,7 +25,11 @@ export const Input: React.FC<Props> = ({ label, error, hint, id, className = '',
 
   return (
     <div className={`space-y-1 ${className}`}>
-      <label htmlFor={inputId} className="block text-sm font-medium" style={{ color: 'rgb(var(--color-foreground))' }}>
+      <label
+        htmlFor={inputId}
+        className="block text-sm font-medium"
+        style={{ color: 'rgb(var(--color-foreground))' }}
+      >
         {label}
       </label>
       <input
@@ -34,17 +38,26 @@ export const Input: React.FC<Props> = ({ label, error, hint, id, className = '',
         aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
         className={`mt-1 block w-full rounded-md shadow-sm`}
         style={{ ...(baseStyle as any), ...(errorStyle as any) }}
-        onFocus={(e) => Object.assign((e.target as HTMLInputElement).style, focusStyle)}
-        onBlur={(e) => Object.assign((e.target as HTMLInputElement).style, baseStyle, errorStyle)}
+        onFocus={e => Object.assign((e.target as HTMLInputElement).style, focusStyle)}
+        onBlur={e => Object.assign((e.target as HTMLInputElement).style, baseStyle, errorStyle)}
         {...rest}
       />
       {hint && !error && (
-        <p id={`${inputId}-hint`} style={{ color: 'rgb(var(--color-muted-foreground))' }} className="text-xs">
+        <p
+          id={`${inputId}-hint`}
+          style={{ color: 'rgb(var(--color-muted-foreground))' }}
+          className="text-xs"
+        >
           {hint}
         </p>
       )}
       {error && (
-        <p id={`${inputId}-error`} className="text-xs" role="alert" style={{ color: 'rgb(var(--color-destructive))' }}>
+        <p
+          id={`${inputId}-error`}
+          className="text-xs"
+          role="alert"
+          style={{ color: 'rgb(var(--color-destructive))' }}
+        >
           {error}
         </p>
       )}

@@ -12,17 +12,17 @@ const sampleEntry: PainEntry = {
   qualityOfLife: { sleepQuality: 6, moodImpact: 4, socialImpact: [] },
   workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
   comparison: { worseningSince: '', newLimitations: [] },
-  notes: 'test'
+  notes: 'test',
 };
 
 describe('storage util error paths', () => {
   it('handles quota exceeded error', async () => {
     const proto = Object.getPrototypeOf(window.localStorage);
     const original = proto.setItem;
-    proto.setItem = function() { 
+    proto.setItem = function () {
       const err = new Error('Quota exceeded');
       (err as Error & { name: string }).name = 'QuotaExceededError';
-      throw err; 
+      throw err;
     } as Storage['setItem'];
     await expect(savePainEntry(sampleEntry)).rejects.toMatchObject({ code: 'STORAGE_FULL' });
     // restore

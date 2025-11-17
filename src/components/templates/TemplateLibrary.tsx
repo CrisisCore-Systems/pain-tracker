@@ -26,23 +26,23 @@ const WORKSAFE_BC_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: ['Lower Back', 'Upper Back'],
-        symptoms: ['Muscle stiffness', 'Sharp pain', 'Limited mobility']
+        symptoms: ['Muscle stiffness', 'Sharp pain', 'Limited mobility'],
       },
       functionalImpact: {
         limitedActivities: ['Heavy lifting', 'Bending', 'Prolonged sitting'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: ['No heavy lifting', 'Frequent breaks', 'Ergonomic workstation'],
-        workLimitations: ['Cannot lift over 10 lbs', 'Limited bending and twisting']
+        workLimitations: ['Cannot lift over 10 lbs', 'Limited bending and twisting'],
       },
       comparison: {
         worseningSince: 'Work incident',
-        newLimitations: ['Cannot perform usual job duties']
-      }
-    }
+        newLimitations: ['Cannot perform usual job duties'],
+      },
+    },
   },
   {
     id: 'wsbc-repetitive-strain',
@@ -54,19 +54,19 @@ const WORKSAFE_BC_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: ['Right Arm', 'Right Hand', 'Right Shoulder'],
-        symptoms: ['Tingling', 'Numbness', 'Burning sensation', 'Muscle fatigue']
+        symptoms: ['Tingling', 'Numbness', 'Burning sensation', 'Muscle fatigue'],
       },
       functionalImpact: {
         limitedActivities: ['Typing', 'Gripping', 'Fine motor tasks'],
         assistanceNeeded: [],
-        mobilityAids: ['Wrist brace', 'Ergonomic keyboard']
+        mobilityAids: ['Wrist brace', 'Ergonomic keyboard'],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: ['Reduced computer time', 'Regular breaks', 'Alternative input methods'],
-        workLimitations: ['Limited typing duration', 'Cannot perform repetitive tasks']
-      }
-    }
+        workLimitations: ['Limited typing duration', 'Cannot perform repetitive tasks'],
+      },
+    },
   },
   {
     id: 'wsbc-head-injury',
@@ -78,20 +78,20 @@ const WORKSAFE_BC_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: ['Head/Neck'],
-        symptoms: ['Headache', 'Dizziness', 'Nausea', 'Light sensitivity', 'Confusion']
+        symptoms: ['Headache', 'Dizziness', 'Nausea', 'Light sensitivity', 'Confusion'],
       },
       functionalImpact: {
         limitedActivities: ['Concentration tasks', 'Screen time', 'Driving'],
         assistanceNeeded: ['Transportation', 'Task reminders'],
-        mobilityAids: []
+        mobilityAids: [],
       },
       qualityOfLife: {
         sleepQuality: 0,
         moodImpact: 0,
-        socialImpact: ['Avoiding social activities', 'Difficulty with conversations']
-      }
-    }
-  }
+        socialImpact: ['Avoiding social activities', 'Difficulty with conversations'],
+      },
+    },
+  },
 ];
 
 const CLINIC_TEMPLATES: Template[] = [
@@ -105,24 +105,24 @@ const CLINIC_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: [],
-        symptoms: ['Chronic pain', 'Fatigue']
+        symptoms: ['Chronic pain', 'Fatigue'],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: ['Pain management consultation', 'Physical therapy assessment']
+        planned: ['Pain management consultation', 'Physical therapy assessment'],
       },
       qualityOfLife: {
         sleepQuality: 0,
         moodImpact: 0,
-        socialImpact: []
-      }
-    }
+        socialImpact: [],
+      },
+    },
   },
   {
     id: 'clinic-post-surgery',
@@ -134,19 +134,19 @@ const CLINIC_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: [],
-        symptoms: ['Surgical site pain', 'Swelling', 'Limited mobility']
+        symptoms: ['Surgical site pain', 'Swelling', 'Limited mobility'],
       },
       functionalImpact: {
         limitedActivities: ['Physical activity', 'Heavy lifting'],
         assistanceNeeded: ['Daily activities', 'Transportation'],
-        mobilityAids: []
+        mobilityAids: [],
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: ['Surgical follow-up', 'Physical therapy']
-      }
-    }
+        planned: ['Surgical follow-up', 'Physical therapy'],
+      },
+    },
   },
   {
     id: 'clinic-arthritis',
@@ -158,20 +158,20 @@ const CLINIC_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: ['Joints'],
-        symptoms: ['Joint stiffness', 'Swelling', 'Morning stiffness']
+        symptoms: ['Joint stiffness', 'Swelling', 'Morning stiffness'],
       },
       functionalImpact: {
         limitedActivities: ['Fine motor tasks', 'Walking', 'Stairs'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       qualityOfLife: {
         sleepQuality: 0,
         moodImpact: 0,
-        socialImpact: ['Reduced social activities']
-      }
-    }
-  }
+        socialImpact: ['Reduced social activities'],
+      },
+    },
+  },
 ];
 
 const GENERAL_TEMPLATES: Template[] = [
@@ -185,14 +185,14 @@ const GENERAL_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: ['Head/Neck'],
-        symptoms: ['Headache', 'Light sensitivity', 'Nausea']
+        symptoms: ['Headache', 'Light sensitivity', 'Nausea'],
       },
       qualityOfLife: {
         sleepQuality: 0,
         moodImpact: 0,
-        socialImpact: ['Avoiding bright lights', 'Cancelled activities']
-      }
-    }
+        socialImpact: ['Avoiding bright lights', 'Cancelled activities'],
+      },
+    },
   },
   {
     id: 'general-sports-injury',
@@ -204,20 +204,20 @@ const GENERAL_TEMPLATES: Template[] = [
       baselineData: {
         pain: 0,
         locations: [],
-        symptoms: ['Acute pain', 'Swelling', 'Limited range of motion']
+        symptoms: ['Acute pain', 'Swelling', 'Limited range of motion'],
       },
       functionalImpact: {
         limitedActivities: ['Sports activities', 'Exercise'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: ['RICE protocol', 'Physical therapy assessment']
-      }
-    }
-  }
+        planned: ['RICE protocol', 'Physical therapy assessment'],
+      },
+    },
+  },
 ];
 
 type CategoryType = 'all' | 'worksafe-bc' | 'clinic' | 'general';
@@ -228,10 +228,13 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
 
   // Respect WorkSafe BC feature flag: optionally exclude WorkSafe templates
   const includeWorkSafe = isFeatureEnabled('workSafeBCExport');
-  const allTemplates = includeWorkSafe ? [...WORKSAFE_BC_TEMPLATES, ...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES] : [...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES];
-  const filteredTemplates = selectedCategory === 'all' 
-    ? allTemplates 
-    : allTemplates.filter(t => t.category === selectedCategory);
+  const allTemplates = includeWorkSafe
+    ? [...WORKSAFE_BC_TEMPLATES, ...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES]
+    : [...CLINIC_TEMPLATES, ...GENERAL_TEMPLATES];
+  const filteredTemplates =
+    selectedCategory === 'all'
+      ? allTemplates
+      : allTemplates.filter(t => t.category === selectedCategory);
 
   const handleApplyTemplate = (template: Template) => {
     onApplyTemplate(template.data);
@@ -240,17 +243,23 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'worksafe-bc': return 'bg-blue-100 text-blue-800';
-      case 'clinic': return 'bg-green-100 text-green-800';
-      case 'general': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'worksafe-bc':
+        return 'bg-blue-100 text-blue-800';
+      case 'clinic':
+        return 'bg-green-100 text-green-800';
+      case 'general':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-        <span role="img" aria-label="templates">📋</span>
+        <span role="img" aria-label="templates">
+          📋
+        </span>
         Template Library
       </h2>
 
@@ -261,12 +270,14 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
             Filter by Category
           </label>
           <div className="flex flex-wrap gap-2">
-            {([
-              { value: 'all', label: 'All Templates' },
-              { value: 'worksafe-bc', label: 'WorkSafe BC' },
-              { value: 'clinic', label: 'Clinical' },
-              { value: 'general', label: 'General' }
-            ] as Array<{ value: CategoryType; label: string }>).map((category) => (
+            {(
+              [
+                { value: 'all', label: 'All Templates' },
+                { value: 'worksafe-bc', label: 'WorkSafe BC' },
+                { value: 'clinic', label: 'Clinical' },
+                { value: 'general', label: 'General' },
+              ] as Array<{ value: CategoryType; label: string }>
+            ).map(category => (
               <button
                 key={category.value}
                 onClick={() => setSelectedCategory(category.value)}
@@ -284,7 +295,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
 
         {/* Template Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredTemplates.map((template) => (
+          {filteredTemplates.map(template => (
             <div
               key={template.id}
               className="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
@@ -297,9 +308,14 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                   </span>
                   <h3 className="font-medium text-gray-900 dark:text-gray-100">{template.name}</h3>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded-full ${getCategoryColor(template.category)}`}>
-                  {template.category === 'worksafe-bc' ? 'WorkSafe BC' : 
-                   template.category === 'clinic' ? 'Clinical' : 'General'}
+                <span
+                  className={`text-xs px-2 py-1 rounded-full ${getCategoryColor(template.category)}`}
+                >
+                  {template.category === 'worksafe-bc'
+                    ? 'WorkSafe BC'
+                    : template.category === 'clinic'
+                      ? 'Clinical'
+                      : 'General'}
                 </span>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">{template.description}</p>
@@ -326,7 +342,9 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                   </span>
                   <div>
                     <h3 className="text-lg font-semibold">{selectedTemplate.name}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{selectedTemplate.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {selectedTemplate.description}
+                    </p>
                   </div>
                 </div>
                 <button
@@ -343,27 +361,43 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
                 <div className="space-y-3 text-sm">
                   {selectedTemplate.data.baselineData && (
                     <div>
-                      <div className="font-medium text-gray-700 dark:text-gray-300">Pain Assessment:</div>
+                      <div className="font-medium text-gray-700 dark:text-gray-300">
+                        Pain Assessment:
+                      </div>
                       <div className="ml-4">
-                        {selectedTemplate.data.baselineData.locations && selectedTemplate.data.baselineData.locations.length > 0 && (
-                          <div>• Locations: {selectedTemplate.data.baselineData.locations.join(', ')}</div>
-                        )}
-                        {selectedTemplate.data.baselineData.symptoms && selectedTemplate.data.baselineData.symptoms.length > 0 && (
-                          <div>• Symptoms: {selectedTemplate.data.baselineData.symptoms.join(', ')}</div>
-                        )}
+                        {selectedTemplate.data.baselineData.locations &&
+                          selectedTemplate.data.baselineData.locations.length > 0 && (
+                            <div>
+                              • Locations: {selectedTemplate.data.baselineData.locations.join(', ')}
+                            </div>
+                          )}
+                        {selectedTemplate.data.baselineData.symptoms &&
+                          selectedTemplate.data.baselineData.symptoms.length > 0 && (
+                            <div>
+                              • Symptoms: {selectedTemplate.data.baselineData.symptoms.join(', ')}
+                            </div>
+                          )}
                       </div>
                     </div>
                   )}
 
                   {selectedTemplate.data.functionalImpact && (
                     <div>
-                      <div className="font-medium text-gray-700 dark:text-gray-300">Functional Impact:</div>
+                      <div className="font-medium text-gray-700 dark:text-gray-300">
+                        Functional Impact:
+                      </div>
                       <div className="ml-4">
                         {selectedTemplate.data.functionalImpact.limitedActivities?.length > 0 && (
-                          <div>• Limited activities: {selectedTemplate.data.functionalImpact.limitedActivities.join(', ')}</div>
+                          <div>
+                            • Limited activities:{' '}
+                            {selectedTemplate.data.functionalImpact.limitedActivities.join(', ')}
+                          </div>
                         )}
                         {selectedTemplate.data.functionalImpact.mobilityAids?.length > 0 && (
-                          <div>• Mobility aids: {selectedTemplate.data.functionalImpact.mobilityAids.join(', ')}</div>
+                          <div>
+                            • Mobility aids:{' '}
+                            {selectedTemplate.data.functionalImpact.mobilityAids.join(', ')}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -371,13 +405,21 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({ onApplyTemplat
 
                   {selectedTemplate.data.workImpact && (
                     <div>
-                      <div className="font-medium text-gray-700 dark:text-gray-300">Work Impact:</div>
+                      <div className="font-medium text-gray-700 dark:text-gray-300">
+                        Work Impact:
+                      </div>
                       <div className="ml-4">
                         {selectedTemplate.data.workImpact.modifiedDuties?.length > 0 && (
-                          <div>• Modified duties: {selectedTemplate.data.workImpact.modifiedDuties.join(', ')}</div>
+                          <div>
+                            • Modified duties:{' '}
+                            {selectedTemplate.data.workImpact.modifiedDuties.join(', ')}
+                          </div>
                         )}
                         {selectedTemplate.data.workImpact.workLimitations?.length > 0 && (
-                          <div>• Work limitations: {selectedTemplate.data.workImpact.workLimitations.join(', ')}</div>
+                          <div>
+                            • Work limitations:{' '}
+                            {selectedTemplate.data.workImpact.workLimitations.join(', ')}
+                          </div>
                         )}
                       </div>
                     </div>

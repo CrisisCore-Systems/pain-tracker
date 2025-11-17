@@ -8,7 +8,7 @@ import crypto from 'crypto';
 export interface ProviderCredentials {
   providerId: string;
   organizationId: string;
-  npi: string;  // National Provider Identifier
+  npi: string; // National Provider Identifier
   apiKey: string;
   scope: ProviderScope[];
 }
@@ -66,11 +66,11 @@ export interface WebhookEndpoint {
   active: boolean;
 }
 
-export type WebhookEvent = 
-  | 'patient.created' 
-  | 'patient.updated' 
-  | 'observation.created' 
-  | 'alert.high-risk' 
+export type WebhookEvent =
+  | 'patient.created'
+  | 'patient.updated'
+  | 'observation.created'
+  | 'alert.high-risk'
   | 'sync.completed';
 
 export interface AlertConfiguration {
@@ -105,14 +105,14 @@ export class HealthcareProviderAPI {
   async registerProvider(credentials: ProviderCredentials): Promise<string> {
     // Validate NPI and organization credentials
     await this.validateProviderCredentials(credentials);
-    
+
     const providerId = credentials.providerId;
     this.credentials.set(providerId, credentials);
-    
+
     // Initialize webhook and alert storage
     this.webhooks.set(providerId, []);
     this.alerts.set(providerId, []);
-    
+
     return providerId;
   }
 
@@ -134,11 +134,14 @@ export class HealthcareProviderAPI {
   }
 
   // Patient Data Access
-  async getPatients(providerId: string, filters?: {
-    since?: string;
-    riskLevel?: string;
-    active?: boolean;
-  }): Promise<PatientSummary[]> {
+  async getPatients(
+    providerId: string,
+    filters?: {
+      since?: string;
+      riskLevel?: string;
+      active?: boolean;
+    }
+  ): Promise<PatientSummary[]> {
     const credentials = this.credentials.get(providerId);
     if (!credentials) {
       throw new Error('Invalid provider credentials');
@@ -160,11 +163,11 @@ export class HealthcareProviderAPI {
         averagePainLevel: 5.2,
         riskLevel: 'medium' as const,
         conditions: ['Chronic back pain', 'Arthritis'],
-        lastSyncDate: '2025-09-15T08:00:00Z'
+        lastSyncDate: '2025-09-15T08:00:00Z',
       },
       {
         id: 'patient-002',
-        fhirId: 'Patient/002', 
+        fhirId: 'Patient/002',
         name: 'Jane Smith',
         dateOfBirth: '1982-03-22',
         gender: 'female',
@@ -174,22 +177,22 @@ export class HealthcareProviderAPI {
         averagePainLevel: 7.8,
         riskLevel: 'high' as const,
         conditions: ['Fibromyalgia', 'Migraines'],
-        lastSyncDate: '2025-09-15T08:00:00Z'
-      }
+        lastSyncDate: '2025-09-15T08:00:00Z',
+      },
     ];
 
     // Apply filters if provided
     let filteredPatients = allPatients;
-    
+
     if (filters?.riskLevel) {
       filteredPatients = filteredPatients.filter(p => p.riskLevel === filters.riskLevel);
     }
-    
+
     if (filters?.since) {
       const sinceDate = new Date(filters.since);
       filteredPatients = filteredPatients.filter(p => new Date(p.lastEntryDate) > sinceDate);
     }
-    
+
     if (filters?.active !== undefined) {
       // For demo purposes, consider all patients active
       // In real implementation, this would check patient active status
@@ -201,7 +204,11 @@ export class HealthcareProviderAPI {
     return filteredPatients;
   }
 
-  async getPatientData(providerId: string, patientId: string, format: 'fhir' | 'summary' = 'fhir'): Promise<FHIRBundle | PatientSummary> {
+  async getPatientData(
+    providerId: string,
+    patientId: string,
+    format: 'fhir' | 'summary' = 'fhir'
+  ): Promise<FHIRBundle | PatientSummary> {
     const credentials = this.credentials.get(providerId);
     if (!credentials) {
       throw new Error('Invalid provider credentials');
@@ -231,7 +238,7 @@ export class HealthcareProviderAPI {
     }
 
     const syncId = `sync-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Process sync request asynchronously
     setTimeout(() => this.processDataSync(syncId, request), 100);
 
@@ -240,7 +247,7 @@ export class HealthcareProviderAPI {
       status: 'pending',
       patientCount: request.patientIds?.length || 0,
       recordsCount: 0,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
     };
   }
 
@@ -252,7 +259,7 @@ export class HealthcareProviderAPI {
       patientCount: 2,
       recordsCount: 123,
       downloadUrl: `/api/v1/healthcare/sync/${syncId}/download`,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     };
   }
 
@@ -260,21 +267,21 @@ export class HealthcareProviderAPI {
     try {
       // Collect patient data based on request parameters
       const bundle = await this.createSyncBundle(request);
-      
+
       // Store bundle for download
       // In a real implementation, this would be stored in secure cloud storage
-      
+
       // Trigger webhook if configured
       await this.triggerWebhook(request.providerId, 'sync.completed', {
         syncId,
         status: 'completed',
-        patientCount: bundle.total || 0
+        patientCount: bundle.total || 0,
       });
     } catch (error) {
       await this.triggerWebhook(request.providerId, 'sync.completed', {
         syncId,
         status: 'failed',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   }
@@ -292,7 +299,9 @@ export class HealthcareProviderAPI {
     });
 
     // Create SSE connection for real-time updates
-    const eventSource = new EventSource(`${this.baseUrl}/stream/${providerId}?patients=${patientIds.join(',')}`);
+    const eventSource = new EventSource(
+      `${this.baseUrl}/stream/${providerId}?patients=${patientIds.join(',')}`
+    );
     return eventSource;
   }
 
@@ -310,9 +319,13 @@ export class HealthcareProviderAPI {
     return `webhook-${Date.now()}`;
   }
 
-  async triggerWebhook(providerId: string, event: WebhookEvent, data: Record<string, unknown>): Promise<void> {
+  async triggerWebhook(
+    providerId: string,
+    event: WebhookEvent,
+    data: Record<string, unknown>
+  ): Promise<void> {
     const webhooks = this.webhooks.get(providerId) || [];
-    
+
     for (const webhook of webhooks) {
       if (webhook.active && webhook.events.includes(event)) {
         try {
@@ -320,14 +333,14 @@ export class HealthcareProviderAPI {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-Webhook-Signature': this.generateWebhookSignature(data, webhook.secret)
+              'X-Webhook-Signature': this.generateWebhookSignature(data, webhook.secret),
             },
             body: JSON.stringify({
               event,
               data,
               timestamp: new Date().toISOString(),
-              providerId
-            })
+              providerId,
+            }),
           });
         } catch (error) {
           console.error(`Failed to trigger webhook: ${webhook.url}`, error);
@@ -356,7 +369,7 @@ export class HealthcareProviderAPI {
     // Check all configured alerts for this patient
     for (const [providerId, alerts] of this.alerts.entries()) {
       const patientAlerts = alerts.filter(alert => alert.patientId === patientId);
-      
+
       for (const alert of patientAlerts) {
         if (this.shouldTriggerAlert(alert, painEntry)) {
           await this.triggerAlert(providerId, alert, painEntry);
@@ -367,11 +380,11 @@ export class HealthcareProviderAPI {
 
   private shouldTriggerAlert(alert: AlertConfiguration, painEntry: PainEntry): boolean {
     const { triggers } = alert;
-    
+
     if (triggers.painThreshold && painEntry.baselineData.pain >= triggers.painThreshold) {
       return true;
     }
-    
+
     if (triggers.emergencyKeywords && painEntry.notes) {
       const hasEmergencyKeyword = triggers.emergencyKeywords.some(keyword =>
         painEntry.notes?.toLowerCase().includes(keyword.toLowerCase())
@@ -380,17 +393,21 @@ export class HealthcareProviderAPI {
         return true;
       }
     }
-    
+
     return false;
   }
 
-  private async triggerAlert(providerId: string, alert: AlertConfiguration, painEntry: PainEntry): Promise<void> {
+  private async triggerAlert(
+    providerId: string,
+    alert: AlertConfiguration,
+    painEntry: PainEntry
+  ): Promise<void> {
     const alertData = {
       patientId: alert.patientId,
       painLevel: painEntry.baselineData.pain,
       timestamp: painEntry.timestamp,
       notes: painEntry.notes,
-      severity: painEntry.baselineData.pain >= 8 ? 'critical' : 'warning'
+      severity: painEntry.baselineData.pain >= 8 ? 'critical' : 'warning',
     };
 
     if (alert.actions.webhook) {
@@ -402,7 +419,11 @@ export class HealthcareProviderAPI {
   }
 
   // Utility Methods
-  private validateScope(credentials: ProviderCredentials, resource: string, permission: string): void {
+  private validateScope(
+    credentials: ProviderCredentials,
+    resource: string,
+    permission: string
+  ): void {
     const scope = credentials.scope.find(s => s.resource === resource);
     if (!scope || !scope.permissions.includes(permission as 'read' | 'write' | 'delete')) {
       throw new Error(`Insufficient permissions for ${permission} on ${resource}`);
@@ -411,8 +432,10 @@ export class HealthcareProviderAPI {
 
   private validatePatientAccess(credentials: ProviderCredentials, patientId: string): void {
     const patientScope = credentials.scope.find(s => s.resource === 'Patient');
-    if (patientScope?.constraints?.patientIds && 
-        !patientScope.constraints.patientIds.includes(patientId)) {
+    if (
+      patientScope?.constraints?.patientIds &&
+      !patientScope.constraints.patientIds.includes(patientId)
+    ) {
       throw new Error('Access denied for patient');
     }
   }
@@ -422,14 +445,18 @@ export class HealthcareProviderAPI {
     const patientResource: FHIRPatient = {
       resourceType: 'Patient',
       id: patientId,
-      identifier: [{
-        system: 'http://paintracker.app/patient-id',
-        value: patientId
-      }],
-      name: [{
-        text: 'Patient Name'
-      }],
-      gender: 'unknown'
+      identifier: [
+        {
+          system: 'http://paintracker.app/patient-id',
+          value: patientId,
+        },
+      ],
+      name: [
+        {
+          text: 'Patient Name',
+        },
+      ],
+      gender: 'unknown',
     };
 
     return {
@@ -440,9 +467,9 @@ export class HealthcareProviderAPI {
       entry: [
         {
           fullUrl: `Patient/${patientId}`,
-          resource: patientResource
-        }
-      ]
+          resource: patientResource,
+        },
+      ],
     };
   }
 
@@ -454,7 +481,7 @@ export class HealthcareProviderAPI {
       type: 'collection',
       timestamp: new Date().toISOString(),
       total: 0,
-      entry: []
+      entry: [],
     };
   }
 

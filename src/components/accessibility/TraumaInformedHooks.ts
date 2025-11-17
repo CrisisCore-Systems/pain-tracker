@@ -3,10 +3,7 @@
  */
 
 import { useContext, createContext } from 'react';
-import { 
-  TraumaInformedContextType, 
-  defaultPreferences
-} from './TraumaInformedTypes';
+import { TraumaInformedContextType, defaultPreferences } from './TraumaInformedTypes';
 
 // Context for trauma-informed preferences
 export const TraumaInformedContext = createContext<TraumaInformedContextType>({

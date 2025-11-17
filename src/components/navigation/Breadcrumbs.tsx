@@ -26,9 +26,9 @@ interface BreadcrumbsProps {
 
 /**
  * Breadcrumb Navigation Component
- * 
+ *
  * Provides hierarchical navigation context and quick backtracking
- * 
+ *
  * Features:
  * - ARIA-compliant navigation
  * - Keyboard accessible
@@ -36,7 +36,7 @@ interface BreadcrumbsProps {
  * - Customizable separators
  * - Home icon shortcut
  * - Screen reader friendly
- * 
+ *
  * Usage:
  * ```tsx
  * <Breadcrumbs
@@ -92,26 +92,17 @@ export function Breadcrumbs({
   };
 
   const defaultSeparator = (
-    <ChevronRight
-      className="h-4 w-4 text-gray-400 dark:text-gray-600"
-      aria-hidden="true"
-    />
+    <ChevronRight className="h-4 w-4 text-gray-400 dark:text-gray-600" aria-hidden="true" />
   );
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className={cn('flex items-center text-sm', className)}
-    >
-      <ol
-        className="flex items-center space-x-2"
-        role="list"
-      >
+    <nav aria-label="Breadcrumb" className={cn('flex items-center text-sm', className)}>
+      <ol className="flex items-center space-x-2" role="list">
         {/* Home icon */}
         {showHome && (
           <li>
             <button
-              onClick={(e) => {
+              onClick={e => {
                 e.preventDefault();
                 onNavigate?.('dashboard');
               }}
@@ -134,15 +125,10 @@ export function Breadcrumbs({
           const isCollapsed = 'collapsed' in item && item.collapsed;
 
           return (
-            <li
-              key={item.id}
-              className="flex items-center space-x-2"
-            >
+            <li key={item.id} className="flex items-center space-x-2">
               {/* Separator */}
               {(showHome || index > 0) && (
-                <span aria-hidden="true">
-                  {separator || defaultSeparator}
-                </span>
+                <span aria-hidden="true">{separator || defaultSeparator}</span>
               )}
 
               {/* Collapsed indicator (dropdown could be added here) */}
@@ -170,7 +156,7 @@ export function Breadcrumbs({
                   ) : (
                     <a
                       href={item.href || '#'}
-                      onClick={(e) => handleClick(item, e)}
+                      onClick={e => handleClick(item, e)}
                       className={cn(
                         'flex items-center gap-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200',
                         'transition-colors rounded-md px-2 py-1 hover:bg-gray-100 dark:hover:bg-gray-800',
@@ -180,9 +166,7 @@ export function Breadcrumbs({
                     >
                       {Icon && <Icon className="h-4 w-4" aria-hidden="true" />}
                       <span className="hidden sm:inline">{item.label}</span>
-                      <span className="sm:hidden truncate max-w-[100px]">
-                        {item.label}
-                      </span>
+                      <span className="sm:hidden truncate max-w-[100px]">{item.label}</span>
                     </a>
                   )}
                 </div>

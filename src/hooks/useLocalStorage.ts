@@ -1,9 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import { secureStorage } from '../lib/storage/secureStorage';
 
 // Storage error types
 export class StorageError extends Error {
-  constructor(message: string, public operation: 'read' | 'write' | 'remove', public key?: string) {
+  constructor(
+    message: string,
+    public operation: 'read' | 'write' | 'remove',
+    public key?: string
+  ) {
     super(message);
     this.name = 'StorageError';
   }
@@ -82,12 +86,12 @@ function useLocalStorage<T>(
 ): [T, (value: T | ((prevValue: T) => T)) => void, () => void] {
   const {
     serializer = defaultSerializer,
-    onError = (error) => console.error('Storage error:', error),
+    onError = error => console.error('Storage error:', error),
     storage = window.localStorage,
-  syncAcrossTabs = false,
-  secure = false,
-  encrypt = false,
-  namespace,
+    syncAcrossTabs = false,
+    secure = false,
+    encrypt = false,
+    namespace,
   } = options;
 
   // Initialize state with type safety
@@ -106,58 +110,67 @@ function useLocalStorage<T>(
       if (item === null) return initialValue;
       return serializer.parse(item);
     } catch (error) {
-      const storageError = error instanceof StorageError ? error : 
-        new StorageError(`Failed to read from storage: ${error}`, 'read', key);
+      const storageError =
+        error instanceof StorageError
+          ? error
+          : new StorageError(`Failed to read from storage: ${error}`, 'read', key);
       onError(storageError);
       return initialValue;
     }
   });
 
   // Enhanced setValue function with error handling and validation
-  const setValue = useCallback((value: T | ((prevValue: T) => T)) => {
-    try {
-      // Allow value to be a function so we have the same API as useState
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      
-      // Validate the value before storing
-      if (valueToStore === undefined) {
-        throw new StorageError('Cannot store undefined value', 'write', key);
-      }
+  const setValue = useCallback(
+    (value: T | ((prevValue: T) => T)) => {
+      try {
+        // Allow value to be a function so we have the same API as useState
+        const valueToStore = value instanceof Function ? value(storedValue) : value;
 
-      setStoredValue(valueToStore);
-
-      if (secure) {
-        const result = secureStorage.set(key, valueToStore as unknown as unknown, { encrypt, namespace });
-        if (!result.success) {
-          if (result.error === 'VALUE_TOO_LARGE' || /quota/i.test(result.error || '')) {
-            throw new StorageQuotaError(key);
-          }
-            throw new StorageError(`Secure storage write failed: ${result.error}`, 'write', key);
+        // Validate the value before storing
+        if (valueToStore === undefined) {
+          throw new StorageError('Cannot store undefined value', 'write', key);
         }
-        return;
+
+        setStoredValue(valueToStore);
+
+        if (secure) {
+          const result = secureStorage.set(key, valueToStore as unknown as unknown, {
+            encrypt,
+            namespace,
+          });
+          if (!result.success) {
+            if (result.error === 'VALUE_TOO_LARGE' || /quota/i.test(result.error || '')) {
+              throw new StorageQuotaError(key);
+            }
+            throw new StorageError(`Secure storage write failed: ${result.error}`, 'write', key);
+          }
+          return;
+        }
+        if (!isStorageAvailable(storage))
+          throw new StorageError('Storage is not available', 'write', key);
+        const serializedValue = serializer.stringify(valueToStore);
+        if (serializedValue.length > 5242880) throw new StorageQuotaError(key);
+        storage.setItem(key, serializedValue);
+      } catch (error) {
+        let storageError: StorageError;
+
+        if (error instanceof StorageError) {
+          storageError = error;
+        } else if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+          storageError = new StorageQuotaError(key);
+        } else {
+          storageError = new StorageError(
+            `Failed to write to storage: ${error instanceof Error ? error.message : error}`,
+            'write',
+            key
+          );
+        }
+
+        onError(storageError);
       }
-      if (!isStorageAvailable(storage)) throw new StorageError('Storage is not available', 'write', key);
-      const serializedValue = serializer.stringify(valueToStore);
-      if (serializedValue.length > 5242880) throw new StorageQuotaError(key);
-      storage.setItem(key, serializedValue);
-    } catch (error) {
-      let storageError: StorageError;
-      
-      if (error instanceof StorageError) {
-        storageError = error;
-      } else if (error instanceof DOMException && error.name === 'QuotaExceededError') {
-        storageError = new StorageQuotaError(key);
-      } else {
-        storageError = new StorageError(
-          `Failed to write to storage: ${error instanceof Error ? error.message : error}`,
-          'write',
-          key
-        );
-      }
-      
-      onError(storageError);
-    }
-  }, [key, storedValue, storage, serializer, onError, secure, encrypt, namespace]);
+    },
+    [key, storedValue, storage, serializer, onError, secure, encrypt, namespace]
+  );
 
   // Remove value function
   const removeValue = useCallback(() => {
@@ -165,13 +178,16 @@ function useLocalStorage<T>(
       if (secure) {
         secureStorage.remove(key, { namespace });
       } else {
-        if (!isStorageAvailable(storage)) throw new StorageError('Storage is not available', 'remove', key);
+        if (!isStorageAvailable(storage))
+          throw new StorageError('Storage is not available', 'remove', key);
         storage.removeItem(key);
       }
       setStoredValue(initialValue);
     } catch (error) {
-      const storageError = error instanceof StorageError ? error :
-        new StorageError(`Failed to remove from storage: ${error}`, 'remove', key);
+      const storageError =
+        error instanceof StorageError
+          ? error
+          : new StorageError(`Failed to remove from storage: ${error}`, 'remove', key);
       onError(storageError);
     }
   }, [key, initialValue, storage, onError, secure, namespace]);

@@ -15,7 +15,7 @@ describe('usePatternAlerts integration', () => {
 
   beforeEach(() => {
     notificationCalls = [];
-    (global as any).Notification = vi.fn().mockImplementation(function(title: string, opts: any) {
+    (global as any).Notification = vi.fn().mockImplementation(function (title: string, opts: any) {
       notificationCalls.push([title, opts]);
       return { title, opts };
     });
@@ -32,16 +32,38 @@ describe('usePatternAlerts integration', () => {
 
   test('does not notify without consent', () => {
     localStorage.setItem('pain-tracker:notification-consent', 'dismissed');
-    const { rerender } = render(<TestHarness entries={[{ time: 't1', pain: 2 }, { time: 't2', pain: 6 }]} />);
+    const { rerender } = render(
+      <TestHarness
+        entries={[
+          { time: 't1', pain: 2 },
+          { time: 't2', pain: 6 },
+        ]}
+      />
+    );
     expect(notificationCalls.length).toBe(0);
 
-    rerender(<TestHarness entries={[{ time: 't1', pain: 2 }, { time: 't2', pain: 6 }, { time: 't3', pain: 10 }]} />);
+    rerender(
+      <TestHarness
+        entries={[
+          { time: 't1', pain: 2 },
+          { time: 't2', pain: 6 },
+          { time: 't3', pain: 10 },
+        ]}
+      />
+    );
     expect(notificationCalls.length).toBe(0);
   });
 
   test('notifies when consent granted', () => {
     localStorage.setItem('pain-tracker:notification-consent', 'granted');
-    render(<TestHarness entries={[{ time: 't1', pain: 1 }, { time: 't2', pain: 5 }]} />);
+    render(
+      <TestHarness
+        entries={[
+          { time: 't1', pain: 1 },
+          { time: 't2', pain: 5 },
+        ]}
+      />
+    );
     expect(notificationCalls.length).toBeGreaterThanOrEqual(1);
   });
 });

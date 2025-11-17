@@ -63,7 +63,7 @@ export function DashboardMenu({
         role="tablist"
         aria-label="Dashboard sections"
       >
-        {tabs.map((tab) => {
+        {tabs.map(tab => {
           const isActive = active === tab.id;
           const Icon = tab.icon;
           return (
@@ -84,7 +84,10 @@ export function DashboardMenu({
               aria-selected={isActive}
               aria-pressed={isActive}
             >
-              <Icon className={cn('h-4 w-4', isActive ? 'text-primary-foreground' : 'text-primary')} aria-hidden="true" />
+              <Icon
+                className={cn('h-4 w-4', isActive ? 'text-primary-foreground' : 'text-primary')}
+                aria-hidden="true"
+              />
               <span>{tab.label}</span>
               <span className="sr-only">{tab.description}</span>
             </Button>

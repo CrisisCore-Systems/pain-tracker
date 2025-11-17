@@ -19,7 +19,7 @@ export function ClinicalDashboard({
   onLogNow,
   onViewCalendar,
   onViewAnalytics,
-  onExport
+  onExport,
 }: ClinicalDashboardProps) {
   const analytics = useMemo(() => {
     if (entries.length === 0) {
@@ -30,12 +30,12 @@ export function ClinicalDashboard({
         daysTracked: 0,
         variability: 0,
         lastEntry: null,
-        insights: []
+        insights: [],
       };
     }
 
-    const sorted = [...entries].sort((a, b) => 
-      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    const sorted = [...entries].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
 
     // Last 7 days
@@ -48,13 +48,15 @@ export function ClinicalDashboard({
       return date >= fourteenDaysAgo && date < sevenDaysAgo;
     });
 
-    const avgPain = recent.length > 0
-      ? recent.reduce((sum, e) => sum + e.baselineData.pain, 0) / recent.length
-      : 0;
+    const avgPain =
+      recent.length > 0
+        ? recent.reduce((sum, e) => sum + e.baselineData.pain, 0) / recent.length
+        : 0;
 
-    const prevAvgPain = previous.length > 0
-      ? previous.reduce((sum, e) => sum + e.baselineData.pain, 0) / previous.length
-      : avgPain;
+    const prevAvgPain =
+      previous.length > 0
+        ? previous.reduce((sum, e) => sum + e.baselineData.pain, 0) / previous.length
+        : avgPain;
 
     const delta = avgPain - prevAvgPain;
 
@@ -63,15 +65,15 @@ export function ClinicalDashboard({
 
     // Variability (rolling SD)
     const mean = avgPain;
-    const variance = recent.length > 1
-      ? recent.reduce((sum, e) => sum + Math.pow(e.baselineData.pain - mean, 2), 0) / recent.length
-      : 0;
+    const variance =
+      recent.length > 1
+        ? recent.reduce((sum, e) => sum + Math.pow(e.baselineData.pain - mean, 2), 0) /
+          recent.length
+        : 0;
     const variability = Math.sqrt(variance);
 
     // Days tracked
-    const uniqueDays = new Set(
-      recent.map(e => new Date(e.timestamp).toDateString())
-    ).size;
+    const uniqueDays = new Set(recent.map(e => new Date(e.timestamp).toDateString())).size;
 
     // Generate insights
     const insights = [];
@@ -80,7 +82,7 @@ export function ClinicalDashboard({
       insights.push({
         statement: `Pain trending down ${Math.abs(delta).toFixed(1)} points vs last week`,
         confidence: delta < -1 ? 3 : 2,
-        rationale: `Your 7-day average is ${avgPain.toFixed(1)}, compared to ${prevAvgPain.toFixed(1)} the previous week. This represents a ${Math.abs(delta / prevAvgPain * 100).toFixed(0)}% improvement.`
+        rationale: `Your 7-day average is ${avgPain.toFixed(1)}, compared to ${prevAvgPain.toFixed(1)} the previous week. This represents a ${Math.abs((delta / prevAvgPain) * 100).toFixed(0)}% improvement.`,
       });
     }
 
@@ -88,7 +90,7 @@ export function ClinicalDashboard({
       insights.push({
         statement: `High pain variability detected (SD: ${variability.toFixed(1)})`,
         confidence: 2,
-        rationale: `Your pain levels vary significantly day-to-day. This could indicate external triggers or inconsistent management. Consider tracking context factors.`
+        rationale: `Your pain levels vary significantly day-to-day. This could indicate external triggers or inconsistent management. Consider tracking context factors.`,
       });
     }
 
@@ -96,7 +98,7 @@ export function ClinicalDashboard({
       insights.push({
         statement: `Excellent tracking consistency (${uniqueDays}/7 days)`,
         confidence: 3,
-        rationale: `You've logged pain on ${uniqueDays} out of the last 7 days. Consistent tracking helps identify patterns and measure treatment effectiveness.`
+        rationale: `You've logged pain on ${uniqueDays} out of the last 7 days. Consistent tracking helps identify patterns and measure treatment effectiveness.`,
       });
     }
 
@@ -107,17 +109,17 @@ export function ClinicalDashboard({
       daysTracked: uniqueDays,
       variability,
       lastEntry: sorted[sorted.length - 1],
-      insights: insights as Array<{ statement: string; confidence: 1 | 2 | 3; rationale: string }>
+      insights: insights as Array<{ statement: string; confidence: 1 | 2 | 3; rationale: string }>,
     };
   }, [entries]);
 
   const getTimeSinceLastEntry = () => {
     if (!analytics.lastEntry) return 'Never';
-    
+
     const diff = Date.now() - new Date(analytics.lastEntry.timestamp).getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) return `${days}d ago`;
     if (hours > 0) return `${hours}h ago`;
     return 'Just now';
@@ -131,18 +133,16 @@ export function ClinicalDashboard({
           <div>
             <h1 className="text-display text-ink-50 mb-1">Today</h1>
             <p className="text-small text-ink-400">
-              {new Date().toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                month: 'long', 
-                day: 'numeric' 
+              {new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
               })}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-ink-500" />
-            <span className="text-small text-ink-400">
-              Last entry: {getTimeSinceLastEntry()}
-            </span>
+            <span className="text-small text-ink-400">Last entry: {getTimeSinceLastEntry()}</span>
           </div>
         </div>
 
@@ -164,7 +164,7 @@ export function ClinicalDashboard({
             delta={{
               value: -analytics.delta,
               direction: analytics.delta < -0.3 ? 'down' : analytics.delta > 0.3 ? 'up' : 'neutral',
-              label: 'vs last week'
+              label: 'vs last week',
             }}
             sparkline={analytics.sparkline}
             severity={Math.round(analytics.avgPain) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10}
@@ -177,7 +177,7 @@ export function ClinicalDashboard({
             delta={{
               value: analytics.daysTracked >= 5 ? 1 : -1,
               direction: analytics.daysTracked >= 5 ? 'up' : 'down',
-              label: 'this week'
+              label: 'this week',
             }}
           />
 
@@ -187,7 +187,7 @@ export function ClinicalDashboard({
             delta={{
               value: 0,
               direction: 'neutral',
-              label: 'rolling SD'
+              label: 'rolling SD',
             }}
           />
         </div>

@@ -3,17 +3,7 @@
  */
 
 import { useState } from 'react';
-import { 
-  Heart, 
-  Sparkles, 
-  Shield, 
-  Sun, 
-  Moon, 
-  CloudRain,
-  Feather,
-  Star,
-  Target
-} from 'lucide-react';
+import { Heart, Sparkles, Shield, Sun, Moon, CloudRain, Feather, Star, Target } from 'lucide-react';
 
 interface EmotionalState {
   feeling: string;
@@ -36,121 +26,130 @@ interface ValidationResponse {
 const validationResponses = {
   highPain: [
     {
-      message: "I see you're experiencing significant pain right now. Your courage in tracking this shows incredible strength.",
+      message:
+        "I see you're experiencing significant pain right now. Your courage in tracking this shows incredible strength.",
       supportType: 'acknowledgment' as const,
       icon: Shield,
       affirmations: [
-        "Your pain is real and valid",
+        'Your pain is real and valid',
         "You're doing your best with what you have",
-        "This moment doesn't define your entire day"
+        "This moment doesn't define your entire day",
       ],
       actionSuggestions: [
-        "Try a gentle breathing exercise",
-        "Consider your comfort kit strategies",
-        "Remember: it's okay to rest"
-      ]
+        'Try a gentle breathing exercise',
+        'Consider your comfort kit strategies',
+        "Remember: it's okay to rest",
+      ],
     },
     {
-      message: "High pain days are tough, and you're tougher. Thank you for taking care of yourself by tracking this.",
+      message:
+        "High pain days are tough, and you're tougher. Thank you for taking care of yourself by tracking this.",
       supportType: 'encouragement' as const,
       icon: Heart,
       affirmations: [
         "You're resilient and strong",
-        "Every small step counts",
-        "You deserve compassion, especially from yourself"
-      ]
-    }
+        'Every small step counts',
+        'You deserve compassion, especially from yourself',
+      ],
+    },
   ],
   struggling: [
     {
-      message: "It sounds like you're having a difficult time right now. Your feelings are completely valid and understandable.",
+      message:
+        "It sounds like you're having a difficult time right now. Your feelings are completely valid and understandable.",
       supportType: 'acknowledgment' as const,
       icon: CloudRain,
       affirmations: [
         "It's okay to have hard days",
         "Your struggles don't make you weak",
-        "You've overcome challenges before"
+        "You've overcome challenges before",
       ],
       actionSuggestions: [
-        "Reach out to someone you trust",
-        "Try one small comfort activity",
-        "Remember your coping strategies"
-      ]
+        'Reach out to someone you trust',
+        'Try one small comfort activity',
+        'Remember your coping strategies',
+      ],
     },
     {
-      message: "Struggling doesn't mean you're failing. It means you're human, and you're doing something incredibly difficult.",
+      message:
+        "Struggling doesn't mean you're failing. It means you're human, and you're doing something incredibly difficult.",
       supportType: 'encouragement' as const,
       icon: Feather,
       affirmations: [
         "You don't have to be perfect",
         "Progress isn't always linear",
-        "You're worthy of support and care"
-      ]
-    }
+        "You're worthy of support and care",
+      ],
+    },
   ],
   smallVictory: [
     {
-      message: "Look at you go! What might seem small to others is actually huge when you're managing pain. I'm proud of you.",
+      message:
+        "Look at you go! What might seem small to others is actually huge when you're managing pain. I'm proud of you.",
       supportType: 'celebration' as const,
       icon: Star,
       affirmations: [
-        "Your efforts matter",
-        "Small victories are still victories",
-        "You're making progress in your own way"
-      ]
+        'Your efforts matter',
+        'Small victories are still victories',
+        "You're making progress in your own way",
+      ],
     },
     {
-      message: "Every positive step you take is worth celebrating. You're building strength and resilience with each choice.",
+      message:
+        "Every positive step you take is worth celebrating. You're building strength and resilience with each choice.",
       supportType: 'encouragement' as const,
       icon: Sparkles,
       affirmations: [
         "You're capable of amazing things",
-        "Your persistence is inspiring",
-        "You deserve to feel proud"
-      ]
-    }
+        'Your persistence is inspiring',
+        'You deserve to feel proud',
+      ],
+    },
   ],
   consistentTracking: [
     {
-      message: "Your consistency in tracking shows incredible self-awareness and dedication to your wellbeing. That's remarkable.",
+      message:
+        "Your consistency in tracking shows incredible self-awareness and dedication to your wellbeing. That's remarkable.",
       supportType: 'celebration' as const,
       icon: Target,
       affirmations: [
-        "Consistency is a form of self-love",
+        'Consistency is a form of self-love',
         "You're learning about yourself",
-        "This data helps you and your care team"
-      ]
-    }
+        'This data helps you and your care team',
+      ],
+    },
   ],
   lowPainDay: [
     {
-      message: "A lower pain day - what a gift! I hope you're able to enjoy this moment and be gentle with yourself.",
+      message:
+        "A lower pain day - what a gift! I hope you're able to enjoy this moment and be gentle with yourself.",
       supportType: 'celebration' as const,
       icon: Sun,
       affirmations: [
-        "You deserve these good moments",
+        'You deserve these good moments',
         "It's okay to feel hopeful",
-        "Your body is working with you today"
+        'Your body is working with you today',
       ],
       actionSuggestions: [
-        "Do something that brings you joy",
-        "Connect with someone you care about",
-        "Store up this positive energy"
-      ]
-    }
+        'Do something that brings you joy',
+        'Connect with someone you care about',
+        'Store up this positive energy',
+      ],
+    },
   ],
   eveningReflection: [
     {
-      message: "You made it through another day, and that's worth acknowledging. Your perseverance is remarkable.",
+      message:
+        "You made it through another day, and that's worth acknowledging. Your perseverance is remarkable.",
       supportType: 'acknowledgment' as const,
       icon: Moon,
       affirmations: [
-        "You did your best today",
-        "Rest is earned and deserved",
-        "Tomorrow is a new opportunity"
-      ]
-    }
-  ]
+        'You did your best today',
+        'Rest is earned and deserved',
+        'Tomorrow is a new opportunity',
+      ],
+    },
+  ],
 };
 
 // Real-time emotional validation hook
@@ -162,7 +161,7 @@ export function useEmotionalValidation() {
     context: 'pain-spike' | 'struggling' | 'victory' | 'consistency' | 'low-pain' | 'evening'
   ) => {
     let responses: ValidationResponse[] = [];
-    
+
     switch (context) {
       case 'pain-spike':
         responses = validationResponses.highPain;
@@ -201,7 +200,7 @@ export function useEmotionalValidation() {
 
   const recordEmotionalState = (state: EmotionalState) => {
     setCurrentEmotionalState(state);
-    
+
     // Auto-trigger appropriate validation
     if (state.needsSupport) {
       triggerValidation('struggling');
@@ -215,7 +214,7 @@ export function useEmotionalValidation() {
     processNextValidation,
     recordEmotionalState,
     currentEmotionalState,
-    hasQueuedValidation: validationQueue.length > 0
+    hasQueuedValidation: validationQueue.length > 0,
   };
 }
 

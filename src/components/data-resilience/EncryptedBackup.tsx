@@ -49,9 +49,9 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
           version: '1.0.0',
           timestamp: new Date().toISOString(),
           entryCount: entries.length,
-          encrypted: isEncrypted
+          encrypted: isEncrypted,
         },
-        data: entries
+        data: entries,
       };
 
       let backupContent = '';
@@ -67,11 +67,13 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
 
       const timestamp = format(new Date(), 'yyyy-MM-dd-HHmm');
       const filename = `pain-tracker-backup-${timestamp}${isEncrypted ? '-encrypted' : ''}.json`;
-      
+
       downloadData(backupContent, filename);
       setBackupStatus(`Backup created successfully: ${filename}`);
     } catch (error) {
-      setBackupStatus(`Error creating backup: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setBackupStatus(
+        `Error creating backup: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     } finally {
       setIsCreatingBackup(false);
     }
@@ -90,7 +92,9 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-        <span role="img" aria-label="backup">💾</span>
+        <span role="img" aria-label="backup">
+          💾
+        </span>
         Create Encrypted Backup
       </h2>
 
@@ -104,7 +108,7 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
               <input
                 type="checkbox"
                 checked={isEncrypted}
-                onChange={(e) => setIsEncrypted(e.target.checked)}
+                onChange={e => setIsEncrypted(e.target.checked)}
                 className="rounded focus:ring-2 focus:ring-blue-500"
               />
               <span className="font-medium">Enable encryption (recommended)</span>
@@ -125,7 +129,7 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
                   <input
                     type="password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     placeholder="Enter a strong password"
                     className="flex-1 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     minLength={8}
@@ -139,7 +143,8 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
                   </button>
                 </div>
                 <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Minimum 8 characters. Store this password safely - you'll need it to restore the backup.
+                  Minimum 8 characters. Store this password safely - you'll need it to restore the
+                  backup.
                 </p>
               </div>
 
@@ -150,7 +155,7 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
                 <input
                   type="password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={e => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
                   className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -163,8 +168,16 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
             <h3 className="font-medium mb-2">Backup Contents</h3>
             <div className="text-sm space-y-1">
               <div>• Total entries: {entries.length}</div>
-              <div>• Date range: {entries.length > 0 ? `${format(new Date(entries[entries.length - 1].timestamp), 'MMM d, yyyy')} - ${format(new Date(entries[0].timestamp), 'MMM d, yyyy')}` : 'No data'}</div>
-              <div>• Encryption: {isEncrypted ? 'AES-256 encryption enabled' : 'Plain text (not recommended)'}</div>
+              <div>
+                • Date range:{' '}
+                {entries.length > 0
+                  ? `${format(new Date(entries[entries.length - 1].timestamp), 'MMM d, yyyy')} - ${format(new Date(entries[0].timestamp), 'MMM d, yyyy')}`
+                  : 'No data'}
+              </div>
+              <div>
+                • Encryption:{' '}
+                {isEncrypted ? 'AES-256 encryption enabled' : 'Plain text (not recommended)'}
+              </div>
               <div>• File format: JSON</div>
             </div>
           </div>
@@ -183,18 +196,24 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
                 </>
               ) : (
                 <>
-                  <span role="img" aria-hidden="true">📦</span>
+                  <span role="img" aria-hidden="true">
+                    📦
+                  </span>
                   Create Backup
                 </>
               )}
             </button>
 
             {backupStatus && (
-              <div className={`p-3 rounded text-sm ${
-                backupStatus.includes('Error') ? 'bg-red-100 text-red-700' : 
-                backupStatus.includes('successfully') ? 'bg-green-100 text-green-700' : 
-                'bg-blue-100 text-blue-700'
-              }`}>
+              <div
+                className={`p-3 rounded text-sm ${
+                  backupStatus.includes('Error')
+                    ? 'bg-red-100 text-red-700'
+                    : backupStatus.includes('successfully')
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-blue-100 text-blue-700'
+                }`}
+              >
                 {backupStatus}
               </div>
             )}
@@ -204,9 +223,7 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
           <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4">
             <div className="flex">
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-yellow-800">
-                  Security Notice
-                </h3>
+                <h3 className="text-sm font-medium text-yellow-800">Security Notice</h3>
                 <div className="mt-2 text-sm text-yellow-700">
                   <ul className="list-disc list-inside space-y-1">
                     <li>Store your backup password securely - it cannot be recovered if lost</li>

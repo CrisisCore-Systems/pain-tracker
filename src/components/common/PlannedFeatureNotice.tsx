@@ -11,7 +11,7 @@ interface PlannedFeatureNoticeProps {
 export const PlannedFeatureNotice: React.FC<PlannedFeatureNoticeProps> = ({
   feature,
   align = 'center',
-  className
+  className,
 }) => {
   const roadmap = roadmapLinks[feature];
 
@@ -24,8 +24,7 @@ export const PlannedFeatureNotice: React.FC<PlannedFeatureNoticeProps> = ({
 
   return (
     <p className={cn('text-sm text-gray-500 dark:text-gray-400', alignmentClass, className)}>
-      {roadmap.summary}{' '}
-      Follow the{' '}
+      {roadmap.summary} Follow the{' '}
       <a
         href={roadmap.href}
         className="text-primary hover:underline"
@@ -36,7 +35,8 @@ export const PlannedFeatureNotice: React.FC<PlannedFeatureNoticeProps> = ({
       </a>
       {roadmap.issueUrl && (
         <>
-          {' '}or{' '}
+          {' '}
+          or{' '}
           <a
             href={roadmap.issueUrl}
             className="text-primary hover:underline"

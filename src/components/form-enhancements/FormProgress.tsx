@@ -17,11 +17,11 @@ interface FormProgressProps {
   className?: string;
 }
 
-export function FormProgress({ 
-  steps, 
-  currentStep, 
-  completedSteps = [], 
-  className = '' 
+export function FormProgress({
+  steps,
+  currentStep,
+  completedSteps = [],
+  className = '',
 }: FormProgressProps) {
   const getStepStatus = (stepIndex: number) => {
     if (completedSteps.includes(stepIndex)) {
@@ -50,9 +50,7 @@ export function FormProgress({
 
   const getConnectorClasses = (stepIndex: number) => {
     const status = getStepStatus(stepIndex);
-    return status === 'completed' || (stepIndex < currentStep)
-      ? 'bg-primary'
-      : 'bg-muted';
+    return status === 'completed' || stepIndex < currentStep ? 'bg-primary' : 'bg-muted';
   };
 
   return (
@@ -82,19 +80,21 @@ export function FormProgress({
 
                 {/* Step label */}
                 <div className="mt-2 text-center">
-                  <div className={`text-sm font-medium ${
-                    status === 'current' 
-                      ? 'text-primary' 
-                      : status === 'completed'
-                      ? 'text-foreground'
-                      : 'text-muted-foreground'
-                  }`}>
+                  <div
+                    className={`text-sm font-medium ${
+                      status === 'current'
+                        ? 'text-primary'
+                        : status === 'completed'
+                          ? 'text-foreground'
+                          : 'text-muted-foreground'
+                    }`}
+                  >
                     {step.label}
                     {step.isOptional && (
                       <span className="text-xs text-muted-foreground ml-1">(optional)</span>
                     )}
                   </div>
-                  
+
                   {step.description && (
                     <div className="text-xs text-muted-foreground mt-1 max-w-24">
                       {step.description}
@@ -106,7 +106,7 @@ export function FormProgress({
               {/* Connector line */}
               {!isLast && (
                 <div className="flex-1 mx-4">
-                  <div 
+                  <div
                     className={`h-0.5 transition-all duration-200 ${getConnectorClasses(index)}`}
                     aria-hidden="true"
                   />

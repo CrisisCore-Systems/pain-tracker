@@ -11,7 +11,12 @@ describe('SecurityService core behaviors', () => {
 
   it('logs events and trims when exceeding limit', () => {
     for (let i = 0; i < 1100; i++) {
-      svc.logSecurityEvent({ type: 'audit', level: 'info', message: `e${i}`, timestamp: new Date() });
+      svc.logSecurityEvent({
+        type: 'audit',
+        level: 'info',
+        message: `e${i}`,
+        timestamp: new Date(),
+      });
     }
     const events = svc.getSecurityEvents();
     expect(events.length).toBeLessThanOrEqual(1000); // trimming logic
@@ -21,8 +26,8 @@ describe('SecurityService core behaviors', () => {
     await svc.initializeMasterKey();
     const store = svc.createSecureStorage();
     await store.store('k1', { alpha: 1 }, true);
-  const val = await store.retrieve('k1', true) as { alpha: number } | null;
-  expect(val?.alpha).toBe(1);
+    const val = (await store.retrieve('k1', true)) as { alpha: number } | null;
+    expect(val?.alpha).toBe(1);
   });
 
   it('decryptData errors without key', async () => {

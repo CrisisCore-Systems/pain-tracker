@@ -29,9 +29,9 @@ interface DropdownMenuProps {
 
 /**
  * Enhanced Dropdown Menu
- * 
+ *
  * Fully accessible dropdown menu with keyboard navigation
- * 
+ *
  * Features:
  * - Full keyboard navigation (arrows, home, end, type-ahead)
  * - ARIA-compliant
@@ -42,7 +42,7 @@ interface DropdownMenuProps {
  * - Selected state indicators
  * - Dangerous actions styling
  * - Auto-positioning
- * 
+ *
  * Usage:
  * ```tsx
  * <DropdownMenu
@@ -86,7 +86,7 @@ export function DropdownMenu({
   const typeAheadTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Filter out dividers for keyboard navigation
-  const navigableItems = items.filter((item) => !item.divider && !item.disabled);
+  const navigableItems = items.filter(item => !item.divider && !item.disabled);
 
   // Handle open/close
   const handleOpenChange = useCallback(
@@ -140,14 +140,12 @@ export function DropdownMenu({
       setTypeAheadQuery(newQuery);
 
       // Find matching item
-      const matchIndex = navigableItems.findIndex((item) =>
+      const matchIndex = navigableItems.findIndex(item =>
         item.label?.toLowerCase().startsWith(newQuery)
       );
 
       if (matchIndex !== -1) {
-        const globalIndex = items.findIndex(
-          (item) => item.id === navigableItems[matchIndex].id
-        );
+        const globalIndex = items.findIndex(item => item.id === navigableItems[matchIndex].id);
         setFocusedIndex(globalIndex);
         itemRefs.current[globalIndex]?.focus();
       }
@@ -163,17 +161,13 @@ export function DropdownMenu({
   // Keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      const currentNavIndex = navigableItems.findIndex(
-        (item) => items[focusedIndex].id === item.id
-      );
+      const currentNavIndex = navigableItems.findIndex(item => items[focusedIndex].id === item.id);
 
       switch (e.key) {
         case 'ArrowDown': {
           e.preventDefault();
           const nextIndex = (currentNavIndex + 1) % navigableItems.length;
-          const globalIndex = items.findIndex(
-            (item) => item.id === navigableItems[nextIndex].id
-          );
+          const globalIndex = items.findIndex(item => item.id === navigableItems[nextIndex].id);
           setFocusedIndex(globalIndex);
           itemRefs.current[globalIndex]?.focus();
           break;
@@ -181,11 +175,8 @@ export function DropdownMenu({
 
         case 'ArrowUp': {
           e.preventDefault();
-          const prevIndex =
-            (currentNavIndex - 1 + navigableItems.length) % navigableItems.length;
-          const globalIndex = items.findIndex(
-            (item) => item.id === navigableItems[prevIndex].id
-          );
+          const prevIndex = (currentNavIndex - 1 + navigableItems.length) % navigableItems.length;
+          const globalIndex = items.findIndex(item => item.id === navigableItems[prevIndex].id);
           setFocusedIndex(globalIndex);
           itemRefs.current[globalIndex]?.focus();
           break;
@@ -194,7 +185,7 @@ export function DropdownMenu({
         case 'Home': {
           e.preventDefault();
           const firstItem = navigableItems[0];
-          const globalIndex = items.findIndex((item) => item.id === firstItem.id);
+          const globalIndex = items.findIndex(item => item.id === firstItem.id);
           setFocusedIndex(globalIndex);
           itemRefs.current[globalIndex]?.focus();
           break;
@@ -203,7 +194,7 @@ export function DropdownMenu({
         case 'End': {
           e.preventDefault();
           const lastItem = navigableItems[navigableItems.length - 1];
-          const globalIndex = items.findIndex((item) => item.id === lastItem.id);
+          const globalIndex = items.findIndex(item => item.id === lastItem.id);
           setFocusedIndex(globalIndex);
           itemRefs.current[globalIndex]?.focus();
           break;
@@ -237,14 +228,7 @@ export function DropdownMenu({
         }
       }
     },
-    [
-      focusedIndex,
-      items,
-      navigableItems,
-      closeOnSelect,
-      handleOpenChange,
-      handleTypeAhead,
-    ]
+    [focusedIndex, items, navigableItems, closeOnSelect, handleOpenChange, handleTypeAhead]
   );
 
   const alignClass = align === 'end' ? 'right-0' : 'left-0';
@@ -262,10 +246,7 @@ export function DropdownMenu({
       >
         {trigger}
         <ChevronDown
-          className={cn(
-            'h-4 w-4 transition-transform',
-            isOpen && 'rotate-180'
-          )}
+          className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')}
           aria-hidden="true"
         />
       </button>
@@ -308,7 +289,7 @@ export function DropdownMenu({
             return (
               <button
                 key={item.id}
-                ref={(el) => (itemRefs.current[index] = el)}
+                ref={el => (itemRefs.current[index] = el)}
                 role="menuitem"
                 tabIndex={isFocused ? 0 : -1}
                 disabled={item.disabled}
@@ -333,9 +314,7 @@ export function DropdownMenu({
                 aria-disabled={item.disabled}
               >
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                  {Icon && (
-                    <Icon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-                  )}
+                  {Icon && <Icon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />}
                   <span className="truncate">{item.label}</span>
                 </div>
 

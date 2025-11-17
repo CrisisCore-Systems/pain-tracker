@@ -12,39 +12,39 @@ describe('Pain Tracker Export', () => {
       baselineData: {
         pain: 5,
         locations: ['Lower Back', 'Neck'],
-        symptoms: ['Stiffness', 'Burning']
+        symptoms: ['Stiffness', 'Burning'],
       },
       functionalImpact: {
         limitedActivities: ['Walking', 'Sitting'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 6,
         moodImpact: 5,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: 'Test note'
-    }
+      notes: 'Test note',
+    },
   ];
 
   describe('exportToCSV', () => {
@@ -61,10 +61,12 @@ describe('Pain Tracker Export', () => {
     });
 
     it('should escape quotes in notes', () => {
-      const entriesWithQuotes = [{
-        ...mockEntries[0],
-        notes: 'Test "quoted" note'
-      }];
+      const entriesWithQuotes = [
+        {
+          ...mockEntries[0],
+          notes: 'Test "quoted" note',
+        },
+      ];
       const csv = exportToCSV(entriesWithQuotes);
       expect(csv).toContain('"Test ""quoted"" note"');
     });
@@ -88,35 +90,37 @@ describe('Pain Tracker Export', () => {
 
     beforeEach(() => {
       originalWindow = { ...window };
-      
+
       // Mock URL methods
       const mockURL = {
         createObjectURL: vi.fn(() => 'mock-url'),
-        revokeObjectURL: vi.fn()
+        revokeObjectURL: vi.fn(),
       };
 
       Object.defineProperty(window, 'URL', {
         value: mockURL,
-        writable: true
+        writable: true,
       });
 
       // Mock document methods
       const mockLink = {
         href: '',
         download: '',
-        click: vi.fn()
+        click: vi.fn(),
       };
 
-      vi.spyOn(document, 'createElement').mockImplementation(() => mockLink as unknown as HTMLElement);
+      vi.spyOn(document, 'createElement').mockImplementation(
+        () => mockLink as unknown as HTMLElement
+      );
 
       const mockBody = {
         appendChild: vi.fn(),
-        removeChild: vi.fn()
+        removeChild: vi.fn(),
       };
 
       Object.defineProperty(document, 'body', {
         value: mockBody,
-        writable: true
+        writable: true,
       });
     });
 
@@ -124,7 +128,7 @@ describe('Pain Tracker Export', () => {
       // Restore original window
       Object.defineProperty(window, 'URL', {
         value: originalWindow.URL,
-        writable: true
+        writable: true,
       });
       vi.restoreAllMocks();
     });
@@ -139,4 +143,4 @@ describe('Pain Tracker Export', () => {
       expect(document.body.removeChild).toHaveBeenCalled();
     });
   });
-}); 
+});

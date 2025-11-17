@@ -1,7 +1,4 @@
-import type {
-  NotificationSchedule,
-  Notification
-} from '../../types/notifications';
+import type { NotificationSchedule, Notification } from '../../types/notifications';
 import { notificationStorage } from './storage';
 import { browserNotificationManager } from './browser';
 import { DEFAULT_NOTIFICATION_TEMPLATES } from '../../types/notifications';
@@ -141,7 +138,9 @@ class NotificationScheduler {
   }
 
   // Trigger a notification
-  private async triggerNotification(schedule: NotificationSchedule): Promise<ScheduledNotificationResult> {
+  private async triggerNotification(
+    schedule: NotificationSchedule
+  ): Promise<ScheduledNotificationResult> {
     try {
       // Create notification from template
       const notification: Omit<Notification, 'id'> = {
@@ -156,10 +155,10 @@ class NotificationScheduler {
         sentAt: new Date().toISOString(),
         metadata: {
           scheduleId: schedule.id,
-          templateId: schedule.template.id
+          templateId: schedule.template.id,
         },
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       // Generate ID and save
@@ -172,7 +171,7 @@ class NotificationScheduler {
       const updatedSchedule: NotificationSchedule = {
         ...schedule,
         lastTriggered: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
       await notificationStorage.saveSchedule(updatedSchedule);
 
@@ -180,8 +179,10 @@ class NotificationScheduler {
       this.scheduleNotificationTimeout(updatedSchedule);
 
       // Show browser notification if supported and enabled
-      if (browserNotificationManager.isSupported() &&
-          browserNotificationManager.getPermission() === 'granted') {
+      if (
+        browserNotificationManager.isSupported() &&
+        browserNotificationManager.getPermission() === 'granted'
+      ) {
         await browserNotificationManager.showFromNotification(fullNotification);
       }
 
@@ -190,7 +191,7 @@ class NotificationScheduler {
       console.error('Failed to trigger notification:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -289,7 +290,7 @@ class NotificationScheduler {
     const [hours, minutes] = timeString.split(':').map(Number);
     return {
       hours: isNaN(hours) ? 9 : hours,
-      minutes: isNaN(minutes) ? 0 : minutes
+      minutes: isNaN(minutes) ? 0 : minutes,
     };
   }
 
@@ -304,20 +305,23 @@ class NotificationScheduler {
         type: 'time_based',
         schedule: {
           frequency: 'daily',
-          time: time
-        }
+          time: time,
+        },
       },
       template: DEFAULT_NOTIFICATION_TEMPLATES.find(t => t.type === 'pain_reminder')!,
       isActive: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     await this.scheduleNotification(schedule);
     return schedule;
   }
 
-  async createMedicationReminder(medicationName: string, times: string[]): Promise<NotificationSchedule[]> {
+  async createMedicationReminder(
+    medicationName: string,
+    times: string[]
+  ): Promise<NotificationSchedule[]> {
     const schedules: NotificationSchedule[] = [];
 
     for (const time of times) {
@@ -330,16 +334,18 @@ class NotificationScheduler {
           type: 'time_based',
           schedule: {
             frequency: 'daily',
-            time: time
-          }
+            time: time,
+          },
         },
         template: {
           ...DEFAULT_NOTIFICATION_TEMPLATES.find(t => t.type === 'medication_alert')!,
-          message: DEFAULT_NOTIFICATION_TEMPLATES.find(t => t.type === 'medication_alert')!.message.replace('{{medication_name}}', medicationName)
+          message: DEFAULT_NOTIFICATION_TEMPLATES.find(
+            t => t.type === 'medication_alert'
+          )!.message.replace('{{medication_name}}', medicationName),
         },
         isActive: true,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       await this.scheduleNotification(schedule);
@@ -349,7 +355,10 @@ class NotificationScheduler {
     return schedules;
   }
 
-  async createWeeklyProgressCheckin(dayOfWeek: number = 1, time: string = '09:00'): Promise<NotificationSchedule> {
+  async createWeeklyProgressCheckin(
+    dayOfWeek: number = 1,
+    time: string = '09:00'
+  ): Promise<NotificationSchedule> {
     const schedule: NotificationSchedule = {
       id: `weekly_progress_${Date.now()}`,
       name: 'Weekly Progress Check-in',
@@ -360,13 +369,13 @@ class NotificationScheduler {
         schedule: {
           frequency: 'weekly',
           daysOfWeek: [dayOfWeek],
-          time: time
-        }
+          time: time,
+        },
       },
       template: DEFAULT_NOTIFICATION_TEMPLATES.find(t => t.type === 'progress_checkin')!,
       isActive: true,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     await this.scheduleNotification(schedule);
@@ -381,13 +390,13 @@ class NotificationScheduler {
   } {
     const nextTriggers = Array.from(this.activeTimeouts.keys()).map(scheduleId => ({
       scheduleId,
-      nextTrigger: null // Would need to calculate this properly
+      nextTrigger: null, // Would need to calculate this properly
     }));
 
     return {
       isRunning: this.isRunning,
       activeSchedules: this.activeTimeouts.size,
-      nextTriggers
+      nextTriggers,
     };
   }
 }

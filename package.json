@@ -6,7 +6,7 @@
   "description": "A comprehensive tool for tracking and managing chronic pain and injuries",
   "author": "CrisisCore-Systems",
   "license": "MIT",
-  "homepage": "https://crisiscore-systems.github.io/pain-tracker",
+  "homepage": "https://paintracker.ca",
   "repository": {
     "type": "git",
     "url": "https://github.com/CrisisCore-Systems/pain-tracker"
@@ -85,7 +85,6 @@
     "e2e:pwa:firefox": "npx playwright test e2e/tests/pwa-*.spec.ts --project=firefox --config=e2e/playwright.config.ts",
     "e2e:pwa:webkit": "npx playwright test e2e/tests/pwa-*.spec.ts --project=webkit --config=e2e/playwright.config.ts",
     "e2e:pwa:report": "node scripts/run-pwa-tests.js",
-  "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
@@ -130,7 +129,7 @@
     "react-i18next": "^15.7.3",
     "react-is": "^19.1.1",
     "react-router-dom": "^7.9.6",
-    "recharts": "^3.2.0",
+    "recharts": "^3.4.1",
     "sonner": "^2.0.7",
     "stripe": "^19.3.0",
     "tailwind-merge": "^3.3.1",

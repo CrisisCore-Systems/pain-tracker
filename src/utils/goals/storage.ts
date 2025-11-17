@@ -5,7 +5,7 @@ import type {
   GoalReminder,
   GoalStatus,
   GoalTarget,
-  GoalMilestone
+  GoalMilestone,
 } from '../../types/goals';
 
 export class GoalStorage {
@@ -214,8 +214,10 @@ export class GoalStorage {
 
       const progress = await this.getGoalProgress(goalId);
       const now = new Date();
-  // const startDate = new Date(goal.startDate); // not used currently
-      const endDate = goal.endDate ? new Date(goal.endDate) : new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      // const startDate = new Date(goal.startDate); // not used currently
+      const endDate = goal.endDate
+        ? new Date(goal.endDate)
+        : new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
 
       // Calculate progress metrics
       const totalProgress = progress.reduce((sum, p) => sum + p.value, 0);
@@ -228,7 +230,10 @@ export class GoalStorage {
       const completionPercentage = this.calculateCompletionPercentage(goal, progress);
 
       // Calculate days remaining
-      const daysRemaining = Math.max(0, Math.ceil((endDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)));
+      const daysRemaining = Math.max(
+        0,
+        Math.ceil((endDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000))
+      );
 
       // Project completion date
       const projectedCompletion = this.projectCompletionDate(goal, progress);
@@ -249,7 +254,7 @@ export class GoalStorage {
         daysRemaining,
         projectedCompletion,
         trend,
-        insights
+        insights,
       };
     } catch (error) {
       console.error('Failed to calculate goal analytics:', error);
@@ -257,11 +262,16 @@ export class GoalStorage {
     }
   }
 
-  private calculateStreaks(progress: GoalProgress[], targets: GoalTarget[]): { bestStreak: number; currentStreak: number } {
+  private calculateStreaks(
+    progress: GoalProgress[],
+    targets: GoalTarget[]
+  ): { bestStreak: number; currentStreak: number } {
     if (progress.length === 0) return { bestStreak: 0, currentStreak: 0 };
 
     // Sort progress by date
-    const sortedProgress = progress.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const sortedProgress = progress.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
 
     let bestStreak = 0;
     let currentStreak = 0;
@@ -323,10 +333,12 @@ export class GoalStorage {
     const recentProgress = progress.slice(-7); // Last 7 days
     if (recentProgress.length < 2) return 'Insufficient data';
 
-    const avgDailyChange = recentProgress.reduce((sum, p, i) => {
-      if (i === 0) return 0;
-      return sum + (p.value - recentProgress[i - 1].value);
-    }, 0) / (recentProgress.length - 1);
+    const avgDailyChange =
+      recentProgress.reduce((sum, p, i) => {
+        if (i === 0) return 0;
+        return sum + (p.value - recentProgress[i - 1].value);
+      }, 0) /
+      (recentProgress.length - 1);
 
     if (avgDailyChange === 0) return 'Stable progress';
 
@@ -349,23 +361,30 @@ export class GoalStorage {
 
     const recent = progress.slice(-5);
     const values = recent.map(p => p.value);
-    const trend = values.reduce((sum, val, i) => {
-      if (i === 0) return 0;
-      return sum + (val - values[i - 1]);
-    }, 0) / (values.length - 1);
+    const trend =
+      values.reduce((sum, val, i) => {
+        if (i === 0) return 0;
+        return sum + (val - values[i - 1]);
+      }, 0) /
+      (values.length - 1);
 
     if (trend > 0.1) return 'improving';
     if (trend < -0.1) return 'declining';
     return 'stable';
   }
 
-  private generateInsights(goal: Goal, progress: GoalProgress[], completion: number, trend: string): string[] {
+  private generateInsights(
+    goal: Goal,
+    progress: GoalProgress[],
+    completion: number,
+    trend: string
+  ): string[] {
     const insights: string[] = [];
 
     if (completion >= 100) {
       insights.push('🎉 Goal achieved! Congratulations!');
     } else if (completion >= 75) {
-      insights.push('🚀 Great progress! You\'re almost there!');
+      insights.push("🚀 Great progress! You're almost there!");
     } else if (completion >= 50) {
       insights.push('📈 Halfway there! Keep up the momentum!');
     }
@@ -389,12 +408,16 @@ export class GoalStorage {
     const progress = await this.getAllProgress();
     const reminders = await this.getAllReminders();
 
-    return JSON.stringify({
-      goals,
-      progress,
-      reminders,
-      exportedAt: new Date().toISOString()
-    }, null, 2);
+    return JSON.stringify(
+      {
+        goals,
+        progress,
+        reminders,
+        exportedAt: new Date().toISOString(),
+      },
+      null,
+      2
+    );
   }
 
   async importGoals(data: string): Promise<void> {

@@ -17,12 +17,11 @@ export function DashboardHeader({
   activeFilterCount,
   filterSummary,
   onOpenFilters,
-  onOpenCustomize
+  onOpenCustomize,
 }: DashboardHeaderProps) {
   const hasFiltersActive = activeFilterCount > 0 || visibleEntries !== totalEntries;
-  const showingPercentage = totalEntries === 0
-    ? 100
-    : Math.round((visibleEntries / totalEntries) * 100);
+  const showingPercentage =
+    totalEntries === 0 ? 100 : Math.round((visibleEntries / totalEntries) * 100);
   const safeFilterCount = activeFilterCount > 99 ? '99+' : activeFilterCount;
 
   const stats = [
@@ -43,7 +42,8 @@ export function DashboardHeader({
     },
   ];
 
-  const filterLabel = filterSummary ?? `${activeFilterCount} active filter${activeFilterCount === 1 ? '' : 's'}`;
+  const filterLabel =
+    filterSummary ?? `${activeFilterCount} active filter${activeFilterCount === 1 ? '' : 's'}`;
 
   return (
     <section className="space-y-4">
@@ -55,19 +55,24 @@ export function DashboardHeader({
               Personalized overview
             </div>
             <div className="space-y-2">
-              <h2 className="text-balance text-3xl font-semibold text-foreground">Custom dashboard, intentionally calmer</h2>
+              <h2 className="text-balance text-3xl font-semibold text-foreground">
+                Custom dashboard, intentionally calmer
+              </h2>
               <p className="text-base text-muted-foreground">
-                Reduce overwhelm with curated widgets, flexible focus modes, and trauma-informed pacing.
+                Reduce overwhelm with curated widgets, flexible focus modes, and trauma-informed
+                pacing.
               </p>
             </div>
           </div>
           <div className="w-full max-w-xl grid gap-3 sm:grid-cols-3">
-            {stats.map((stat) => (
+            {stats.map(stat => (
               <div
                 key={stat.label}
                 className="rounded-2xl border border-border/50 bg-background/70 backdrop-blur-sm px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
               >
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">{stat.label}</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
+                  {stat.label}
+                </p>
                 <p className="mt-2 text-2xl font-semibold text-foreground">
                   {stat.label === 'Filters active' ? safeFilterCount : stat.value}
                 </p>

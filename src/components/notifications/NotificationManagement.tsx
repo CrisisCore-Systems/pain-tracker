@@ -16,7 +16,7 @@ import {
   AlertTriangle,
   Info,
   CheckCircle,
-  X
+  X,
 } from 'lucide-react';
 import type { Notification, NotificationStatus, NotificationType } from '../../types/notifications';
 import { notificationStorage } from '../../utils/notifications/storage';
@@ -36,7 +36,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   onMarkAsUnread,
   onDismiss,
   onArchive,
-  onDelete
+  onDelete,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -82,19 +82,21 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   };
 
   return (
-    <div className={`border rounded-lg p-4 transition-all duration-200 ${
-      notification.status === 'read' ? 'bg-gray-50' : 'bg-white shadow-sm'
-    }`}>
+    <div
+      className={`border rounded-lg p-4 transition-all duration-200 ${
+        notification.status === 'read' ? 'bg-gray-50' : 'bg-white shadow-sm'
+      }`}
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
-          <div className="flex-shrink-0 mt-1">
-            {getPriorityIcon(notification.priority)}
-          </div>
+          <div className="flex-shrink-0 mt-1">{getPriorityIcon(notification.priority)}</div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-1">
-              <h4 className={`text-sm font-medium truncate ${
-                notification.status === 'read' ? 'text-gray-600' : 'text-gray-900'
-              }`}>
+              <h4
+                className={`text-sm font-medium truncate ${
+                  notification.status === 'read' ? 'text-gray-600' : 'text-gray-900'
+                }`}
+              >
                 {notification.title}
               </h4>
               <Badge variant="outline" className="text-xs">
@@ -102,9 +104,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
               </Badge>
               {getStatusIcon(notification.status)}
             </div>
-            <p className={`text-sm ${
-              notification.status === 'read' ? 'text-gray-500' : 'text-gray-700'
-            }`}>
+            <p
+              className={`text-sm ${
+                notification.status === 'read' ? 'text-gray-500' : 'text-gray-700'
+              }`}
+            >
               {isExpanded ? notification.message : notification.message.substring(0, 100)}
               {notification.message.length > 100 && (
                 <button
@@ -197,7 +201,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
   const [filters, setFilters] = useState<NotificationFilters>({
     status: 'all',
     type: 'all',
-    search: ''
+    search: '',
   });
 
   // Load notifications on mount
@@ -209,9 +213,11 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
     try {
       setLoading(true);
       const allNotifications = await notificationStorage.getAllNotifications();
-      setNotifications(allNotifications.sort((a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      ));
+      setNotifications(
+        allNotifications.sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+      );
     } catch (error) {
       console.error('Failed to load notifications:', error);
     } finally {
@@ -368,7 +374,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
               <Input
                 placeholder="Search notifications..."
                 value={filters.search}
-                onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
                 className="pl-10"
               />
             </div>
@@ -376,7 +382,9 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
           <Select>
             <SelectTrigger
               value={filters.status}
-              onValueChange={(value) => setFilters(prev => ({ ...prev, status: value as NotificationStatus | 'all' }))}
+              onValueChange={value =>
+                setFilters(prev => ({ ...prev, status: value as NotificationStatus | 'all' }))
+              }
             >
               <option value="all">All Status</option>
               <option value="sent">Unread</option>
@@ -388,7 +396,9 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
           <Select>
             <SelectTrigger
               value={filters.type}
-              onValueChange={(value) => setFilters(prev => ({ ...prev, type: value as NotificationType | 'all' }))}
+              onValueChange={value =>
+                setFilters(prev => ({ ...prev, type: value as NotificationType | 'all' }))
+              }
             >
               <option value="all">All Types</option>
               <option value="pain_reminder">Pain Reminders</option>
@@ -406,7 +416,8 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
         {showBulkActions && (
           <div className="flex items-center space-x-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <span className="text-sm text-blue-700">
-              {selectedNotifications.size} notification{selectedNotifications.size !== 1 ? 's' : ''} selected
+              {selectedNotifications.size} notification{selectedNotifications.size !== 1 ? 's' : ''}{' '}
+              selected
             </span>
             <Button variant="outline" size="sm" onClick={handleBulkMarkAsRead}>
               <CheckCheck className="h-4 w-4 mr-1" />
@@ -416,7 +427,12 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
               <Archive className="h-4 w-4 mr-1" />
               Archive
             </Button>
-            <Button variant="outline" size="sm" onClick={handleBulkDelete} className="text-red-600 hover:text-red-700">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleBulkDelete}
+              className="text-red-600 hover:text-red-700"
+            >
               <Trash2 className="h-4 w-4 mr-1" />
               Delete
             </Button>
@@ -428,8 +444,11 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
-              checked={selectedNotifications.size === filteredNotifications.length && filteredNotifications.length > 0}
-              onChange={(e) => handleSelectAll(e.target.checked)}
+              checked={
+                selectedNotifications.size === filteredNotifications.length &&
+                filteredNotifications.length > 0
+              }
+              onChange={e => handleSelectAll(e.target.checked)}
             />
             <span className="text-sm text-gray-600 dark:text-gray-400">Select all</span>
           </div>
@@ -449,7 +468,7 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
                 <input
                   type="checkbox"
                   checked={selectedNotifications.has(notification.id)}
-                  onChange={(e) => handleSelectNotification(notification.id, e.target.checked)}
+                  onChange={e => handleSelectNotification(notification.id, e.target.checked)}
                   className="mt-4"
                 />
                 <div className="flex-1">

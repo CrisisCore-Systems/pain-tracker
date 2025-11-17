@@ -14,19 +14,20 @@ interface EnhancedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   glowColor?: 'primary' | 'success' | 'warning' | 'danger';
 }
 
-export function EnhancedCard({ 
-  children, 
-  className, 
+export function EnhancedCard({
+  children,
+  className,
   variant = 'default',
   hoverable = false,
   animated = false,
   glowColor,
-  ...props 
+  ...props
 }: EnhancedCardProps) {
   const variantClasses = {
     default: 'bg-card border border-border shadow-md',
     glass: 'backdrop-blur-xl bg-card/50 border border-white/20 dark:border-gray-800/50 shadow-xl',
-    gradient: 'bg-gradient-to-br from-card via-card/95 to-primary/5 border border-border/50 shadow-lg',
+    gradient:
+      'bg-gradient-to-br from-card via-card/95 to-primary/5 border border-border/50 shadow-lg',
     elevated: 'bg-card border border-border shadow-2xl shadow-black/10',
     glow: cn(
       'bg-card border border-border shadow-xl',
@@ -41,9 +42,7 @@ export function EnhancedCard({
     ? 'transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02] cursor-pointer'
     : '';
 
-  const animationClasses = animated
-    ? 'animate-[fadeInUp_0.5s_ease-out]'
-    : '';
+  const animationClasses = animated ? 'animate-[fadeInUp_0.5s_ease-out]' : '';
 
   return (
     <div
@@ -67,18 +66,15 @@ interface EnhancedCardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   badge?: React.ReactNode;
 }
 
-export function EnhancedCardHeader({ 
-  children, 
-  className, 
-  icon, 
+export function EnhancedCardHeader({
+  children,
+  className,
+  icon,
   badge,
-  ...props 
+  ...props
 }: EnhancedCardHeaderProps) {
   return (
-    <div 
-      className={cn('flex items-center justify-between mb-4', className)} 
-      {...props}
-    >
+    <div className={cn('flex items-center justify-between mb-4', className)} {...props}>
       <div className="flex items-center space-x-3">
         {icon && (
           <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -97,20 +93,20 @@ interface EnhancedCardTitleProps extends React.HTMLAttributes<HTMLHeadingElement
   gradient?: boolean;
 }
 
-export function EnhancedCardTitle({ 
-  children, 
-  className, 
+export function EnhancedCardTitle({
+  children,
+  className,
   gradient = false,
-  ...props 
+  ...props
 }: EnhancedCardTitleProps) {
   return (
-    <h3 
+    <h3
       className={cn(
         'text-lg font-semibold tracking-tight',
         gradient && 'bg-gradient-to-r from-foreground to-primary/90 bg-clip-text text-transparent',
         !gradient && 'text-foreground',
         className
-      )} 
+      )}
       {...props}
     >
       {children}
@@ -122,16 +118,13 @@ interface EnhancedCardDescriptionProps extends React.HTMLAttributes<HTMLParagrap
   children: React.ReactNode;
 }
 
-export function EnhancedCardDescription({ 
-  children, 
-  className, 
-  ...props 
+export function EnhancedCardDescription({
+  children,
+  className,
+  ...props
 }: EnhancedCardDescriptionProps) {
   return (
-    <p 
-      className={cn('text-sm text-muted-foreground mt-1', className)} 
-      {...props}
-    >
+    <p className={cn('text-sm text-muted-foreground mt-1', className)} {...props}>
       {children}
     </p>
   );
@@ -141,11 +134,7 @@ interface EnhancedCardContentProps extends React.HTMLAttributes<HTMLDivElement> 
   children: React.ReactNode;
 }
 
-export function EnhancedCardContent({ 
-  children, 
-  className, 
-  ...props 
-}: EnhancedCardContentProps) {
+export function EnhancedCardContent({ children, className, ...props }: EnhancedCardContentProps) {
   return (
     <div className={cn('space-y-4', className)} {...props}>
       {children}
@@ -157,17 +146,13 @@ interface EnhancedCardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export function EnhancedCardFooter({ 
-  children, 
-  className, 
-  ...props 
-}: EnhancedCardFooterProps) {
+export function EnhancedCardFooter({ children, className, ...props }: EnhancedCardFooterProps) {
   return (
-    <div 
+    <div
       className={cn(
         'mt-6 pt-4 border-t border-border/50 flex items-center justify-between',
         className
-      )} 
+      )}
       {...props}
     >
       {children}
@@ -188,13 +173,13 @@ interface MetricCardProps {
   variant?: 'default' | 'success' | 'warning' | 'danger';
 }
 
-export function MetricCard({ 
-  title, 
-  value, 
-  change, 
-  icon, 
+export function MetricCard({
+  title,
+  value,
+  change,
+  icon,
   trend = 'neutral',
-  variant = 'default'
+  variant = 'default',
 }: MetricCardProps) {
   const variantColors = {
     default: 'bg-primary/10 text-primary',
@@ -219,15 +204,18 @@ export function MetricCard({
           </p>
           {change && (
             <p className={cn('text-xs font-medium', trendColors[trend])}>
-              {change.value > 0 ? '+' : ''}{change.value}% {change.label}
+              {change.value > 0 ? '+' : ''}
+              {change.value}% {change.label}
             </p>
           )}
         </div>
         {icon && (
-          <div className={cn(
-            'flex items-center justify-center w-16 h-16 rounded-full transition-transform group-hover:scale-110 group-hover:rotate-6',
-            variantColors[variant]
-          )}>
+          <div
+            className={cn(
+              'flex items-center justify-center w-16 h-16 rounded-full transition-transform group-hover:scale-110 group-hover:rotate-6',
+              variantColors[variant]
+            )}
+          >
             {icon}
           </div>
         )}
@@ -248,17 +236,17 @@ interface ActionCardProps {
   variant?: 'primary' | 'secondary';
 }
 
-export function ActionCard({ 
-  title, 
-  description, 
-  action, 
+export function ActionCard({
+  title,
+  description,
+  action,
   icon,
-  variant = 'primary' 
+  variant = 'primary',
 }: ActionCardProps) {
   return (
-    <EnhancedCard 
-      variant="gradient" 
-      hoverable 
+    <EnhancedCard
+      variant="gradient"
+      hoverable
       animated
       className="group cursor-pointer"
       onClick={action.onClick}
@@ -273,18 +261,28 @@ export function ActionCard({
           <h4 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
             {title}
           </h4>
-          <p className="text-sm text-muted-foreground mt-1">
-            {description}
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">{description}</p>
           <div className="mt-4">
-            <span className={cn(
-              'inline-flex items-center text-sm font-medium transition-colors',
-              variant === 'primary' && 'text-primary group-hover:text-primary/80',
-              variant === 'secondary' && 'text-foreground group-hover:text-muted-foreground'
-            )}>
+            <span
+              className={cn(
+                'inline-flex items-center text-sm font-medium transition-colors',
+                variant === 'primary' && 'text-primary group-hover:text-primary/80',
+                variant === 'secondary' && 'text-foreground group-hover:text-muted-foreground'
+              )}
+            >
               {action.label}
-              <svg className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </span>
           </div>

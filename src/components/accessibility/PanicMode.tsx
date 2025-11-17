@@ -6,10 +6,10 @@ import { panicModeCopy } from '../../content/microcopy';
 
 /**
  * Panic Mode Component - Trauma-Informed Crisis Support
- * 
+ *
  * WCAG 2.2 AAA: Provides low-stimulus, calming interface during pain flares or emotional crises
  * Target: <2 second activation time from anywhere in app
- * 
+ *
  * Features:
  * - Breathing guide with visual pulse
  * - Haptic feedback (if supported)
@@ -35,19 +35,21 @@ export interface PanicModeProps {
 const DEFAULT_AFFIRMATIONS = panicModeCopy.affirmations;
 
 const BREATHING_PATTERN = {
-  inhale: 4000,    // 4 seconds
-  hold: 4000,      // 4 seconds
-  exhale: 6000,    // 6 seconds
-  pause: 2000      // 2 seconds
+  inhale: 4000, // 4 seconds
+  hold: 4000, // 4 seconds
+  exhale: 6000, // 6 seconds
+  pause: 2000, // 2 seconds
 };
 
 export function PanicMode({
   isActive,
   onClose,
   affirmations = DEFAULT_AFFIRMATIONS,
-  showRedactionToggle = false
+  showRedactionToggle = false,
 }: PanicModeProps) {
-  const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'pause'>('inhale');
+  const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'pause'>(
+    'inhale'
+  );
   const [currentAffirmation, setCurrentAffirmation] = useState(0);
   const [isRedacted, setIsRedacted] = useState(false);
   const [cycleCount, setCycleCount] = useState(0);
@@ -77,7 +79,7 @@ export function PanicMode({
       const patterns = {
         light: [10],
         medium: [20],
-        heavy: [30, 10, 30]
+        heavy: [30, 10, 30],
       };
       navigator.vibrate(patterns[pattern]);
     }
@@ -91,7 +93,7 @@ export function PanicMode({
       { phase: 'inhale', duration: BREATHING_PATTERN.inhale },
       { phase: 'hold', duration: BREATHING_PATTERN.hold },
       { phase: 'exhale', duration: BREATHING_PATTERN.exhale },
-      { phase: 'pause', duration: BREATHING_PATTERN.pause }
+      { phase: 'pause', duration: BREATHING_PATTERN.pause },
     ];
 
     let currentPhaseIndex = 0;
@@ -99,9 +101,9 @@ export function PanicMode({
     const advancePhase = () => {
       currentPhaseIndex = (currentPhaseIndex + 1) % phases.length;
       const { phase, duration } = phases[currentPhaseIndex];
-      
+
       setBreathingPhase(phase);
-      
+
       // Haptic feedback on phase change
       if (phase === 'inhale') {
         triggerHaptic('light');
@@ -143,19 +145,27 @@ export function PanicMode({
 
   const getBreathingInstruction = () => {
     switch (breathingPhase) {
-      case 'inhale': return inhaleText;
-      case 'hold': return holdText;
-      case 'exhale': return exhaleText;
-      case 'pause': return pauseText;
+      case 'inhale':
+        return inhaleText;
+      case 'hold':
+        return holdText;
+      case 'exhale':
+        return exhaleText;
+      case 'pause':
+        return pauseText;
     }
   };
 
   const getBreathingScale = () => {
     switch (breathingPhase) {
-      case 'inhale': return 'scale-150';
-      case 'hold': return 'scale-150';
-      case 'exhale': return 'scale-100';
-      case 'pause': return 'scale-100';
+      case 'inhale':
+        return 'scale-150';
+      case 'hold':
+        return 'scale-150';
+      case 'exhale':
+        return 'scale-100';
+      case 'pause':
+        return 'scale-100';
     }
   };
 
@@ -240,7 +250,7 @@ export function PanicMode({
           >
             {/* Inner glow */}
             <div className="absolute inset-4 rounded-full bg-gradient-to-br from-blue-300/20 to-purple-300/20 blur-xl" />
-            
+
             {/* Center icon */}
             <Heart className="w-16 h-16 text-white/50 animate-pulse" aria-hidden="true" />
           </div>

@@ -15,12 +15,12 @@ interface AutoSaveProps<TData> {
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
-export function AutoSave<TData extends object>({ 
-  data, 
-  onSave, 
-  delay = 2000, 
+export function AutoSave<TData extends object>({
+  data,
+  onSave,
+  delay = 2000,
   storageKey,
-  className = '' 
+  className = '',
 }: AutoSaveProps<TData>) {
   const [status, setStatus] = useState<SaveStatus>('idle');
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -30,21 +30,21 @@ export function AutoSave<TData extends object>({
   const handleSave = useCallback(async () => {
     try {
       setStatus('saving');
-      
+
       if (storageKey) {
         localStorage.setItem(storageKey, JSON.stringify(data));
       }
-      
+
       await onSave(data);
-      
+
       setStatus('saved');
       setLastSaved(new Date());
-      
+
       setTimeout(() => setStatus('idle'), 2000);
     } catch (error) {
       console.error('Auto-save failed:', error);
       setStatus('error');
-      
+
       setTimeout(() => setStatus('idle'), 3000);
     }
   }, [data, onSave, storageKey]);
@@ -98,25 +98,25 @@ export function AutoSave<TData extends object>({
         return {
           icon: <RotateCcw className="h-4 w-4 animate-spin" />,
           text: 'Saving...',
-          color: 'text-blue-600'
+          color: 'text-blue-600',
         };
       case 'saved':
         return {
           icon: <Check className="h-4 w-4" />,
           text: 'Saved',
-          color: 'text-green-600'
+          color: 'text-green-600',
         };
       case 'error':
         return {
           icon: <CloudOff className="h-4 w-4" />,
           text: 'Save failed',
-          color: 'text-red-600'
+          color: 'text-red-600',
         };
       default:
         return {
           icon: <Cloud className="h-4 w-4" />,
           text: lastSaved ? `Last saved ${formatTime(lastSaved)}` : 'Auto-save enabled',
-          color: 'text-muted-foreground'
+          color: 'text-muted-foreground',
         };
     }
   };
@@ -124,10 +124,12 @@ export function AutoSave<TData extends object>({
   const formatTime = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
-    
-    if (diff < 60000) { // Less than 1 minute
+
+    if (diff < 60000) {
+      // Less than 1 minute
       return 'just now';
-    } else if (diff < 3600000) { // Less than 1 hour
+    } else if (diff < 3600000) {
+      // Less than 1 hour
       const minutes = Math.floor(diff / 60000);
       return `${minutes}m ago`;
     } else {

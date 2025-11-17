@@ -78,7 +78,9 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
   };
 
   const handleResetVault = async () => {
-    const confirmed = window.confirm('Resetting the secure vault will permanently remove all locally stored entries and settings. This action cannot be undone. Do you want to continue?');
+    const confirmed = window.confirm(
+      'Resetting the secure vault will permanently remove all locally stored entries and settings. This action cannot be undone. Do you want to continue?'
+    );
     if (!confirmed) return;
     clearAll();
     lock();
@@ -88,11 +90,16 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
   const renderSetup = () => (
     <form onSubmit={handleSetup} className="space-y-6" aria-labelledby="vault-setup-title">
       <div>
-        <h2 id="vault-setup-title" className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+        <h2
+          id="vault-setup-title"
+          className="text-2xl font-semibold text-gray-900 dark:text-gray-100"
+        >
           Create a secure passphrase
         </h2>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Choose a gentle yet strong passphrase that you will remember. It protects your pain entries and personal notes on this device. For security, your passphrase is never stored anywhere.
+          Choose a gentle yet strong passphrase that you will remember. It protects your pain
+          entries and personal notes on this device. For security, your passphrase is never stored
+          anywhere.
         </p>
       </div>
 
@@ -104,7 +111,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
             ref={passphraseInputRef}
             type={showPassphrase ? 'text' : 'password'}
             value={passphrase}
-            onChange={(e) => setPassphrase(e.target.value)}
+            onChange={e => setPassphrase(e.target.value)}
             className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             minLength={MIN_PASSPHRASE_LENGTH}
             aria-describedby="vault-passphrase-help"
@@ -113,16 +120,19 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
           />
         </label>
         <p id="vault-passphrase-help" className="text-xs text-gray-500 dark:text-gray-400">
-          Use at least {MIN_PASSPHRASE_LENGTH} characters. Short sentences or unique phrases are often easiest to recall.
+          Use at least {MIN_PASSPHRASE_LENGTH} characters. Short sentences or unique phrases are
+          often easiest to recall.
         </p>
 
         <label className="block" htmlFor="vault-passphrase-confirm">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Confirm passphrase</span>
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            Confirm passphrase
+          </span>
           <input
             id="vault-passphrase-confirm"
             type={showPassphrase ? 'text' : 'password'}
             value={confirmPassphrase}
-            onChange={(e) => setConfirmPassphrase(e.target.value)}
+            onChange={e => setConfirmPassphrase(e.target.value)}
             className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             autoComplete="new-password"
             required
@@ -131,7 +141,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
 
         <button
           type="button"
-          onClick={() => setShowPassphrase((prev) => !prev)}
+          onClick={() => setShowPassphrase(prev => !prev)}
           className="text-sm text-indigo-600 hover:text-indigo-500 focus:outline-none"
         >
           {showPassphrase ? 'Hide passphrase' : 'Show passphrase'}
@@ -139,7 +149,10 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
       </div>
 
       {error && (
-        <div role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700 border border-red-100">
+        <div
+          role="alert"
+          className="rounded-md bg-red-50 p-3 text-sm text-red-700 border border-red-100"
+        >
           {error}
         </div>
       )}
@@ -167,7 +180,10 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
     <form onSubmit={handleUnlock} className="space-y-6" aria-labelledby="vault-unlock-title">
       <div className="flex items-start justify-between">
         <div>
-          <h2 id="vault-unlock-title" className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+          <h2
+            id="vault-unlock-title"
+            className="text-2xl font-semibold text-gray-900 dark:text-gray-100"
+          >
             Unlock secure vault
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -191,7 +207,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
             ref={passphraseInputRef}
             type={showPassphrase ? 'text' : 'password'}
             value={passphrase}
-            onChange={(e) => setPassphrase(e.target.value)}
+            onChange={e => setPassphrase(e.target.value)}
             className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             autoComplete="current-password"
             required
@@ -199,7 +215,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
         </label>
         <button
           type="button"
-          onClick={() => setShowPassphrase((prev) => !prev)}
+          onClick={() => setShowPassphrase(prev => !prev)}
           className="text-sm text-indigo-600 hover:text-indigo-500 focus:outline-none"
         >
           {showPassphrase ? 'Hide passphrase' : 'Show passphrase'}
@@ -207,7 +223,10 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
       </div>
 
       {error && (
-        <div role="alert" className="rounded-md bg-yellow-50 p-3 text-sm text-yellow-800 border border-yellow-100">
+        <div
+          role="alert"
+          className="rounded-md bg-yellow-50 p-3 text-sm text-yellow-800 border border-yellow-100"
+        >
           {error}
         </div>
       )}
@@ -238,8 +257,12 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
     if (!status.sodiumReady) {
       return (
         <div className="text-center">
-          <p className="text-lg font-medium text-gray-900 dark:text-gray-100">Preparing secure vault…</p>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Loading privacy protections. Thank you for your patience.</p>
+          <p className="text-lg font-medium text-gray-900 dark:text-gray-100">
+            Preparing secure vault…
+          </p>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Loading privacy protections. Thank you for your patience.
+          </p>
         </div>
       );
     }
@@ -249,31 +272,41 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
     }
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 dark:bg-slate-100/80 px-4" role="dialog" aria-modal="true" aria-labelledby="vault-dialog-title">
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 dark:bg-slate-100/80 px-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="vault-dialog-title"
+      >
         <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 id="vault-dialog-title" className="text-3xl font-semibold text-gray-900 dark:text-gray-100">Secure vault</h1>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">End-to-end encrypted storage protects your story and wellbeing.</p>
+              <h1
+                id="vault-dialog-title"
+                className="text-3xl font-semibold text-gray-900 dark:text-gray-100"
+              >
+                Secure vault
+              </h1>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                End-to-end encrypted storage protects your story and wellbeing.
+              </p>
             </div>
-            <span aria-hidden="true" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 text-lg font-semibold">
+            <span
+              aria-hidden="true"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 text-lg font-semibold"
+            >
               🔒
             </span>
           </div>
-          <div>
-            {status.state === 'uninitialized' ? renderSetup() : renderUnlock()}
-          </div>
+          <div>{status.state === 'uninitialized' ? renderSetup() : renderUnlock()}</div>
           <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
-            Tip: If you ever need to safely reset the vault, choose “Reset vault”. This keeps your account secure but removes local data from this device.
+            Tip: If you ever need to safely reset the vault, choose “Reset vault”. This keeps your
+            account secure but removes local data from this device.
           </p>
         </div>
       </div>
     );
   };
 
-  return (
-    <>
-      {status.state === 'unlocked' ? children : renderContent()}
-    </>
-  );
+  return <>{status.state === 'unlocked' ? children : renderContent()}</>;
 };

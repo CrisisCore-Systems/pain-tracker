@@ -37,7 +37,7 @@ export function usePWAStatus() {
     isInstalled: false,
     canInstall: false,
     pendingSync: 0,
-    isSyncing: false
+    isSyncing: false,
   });
 
   useEffect(() => {
@@ -47,12 +47,13 @@ export function usePWAStatus() {
 
     // PWA install events
     const handleInstallAvailable = () => setStatus(prev => ({ ...prev, canInstall: true }));
-    const handleInstalled = () => setStatus(prev => ({ 
-      ...prev, 
-      isInstalled: true, 
-      canInstall: false, 
-      isInstalling: false 
-    }));
+    const handleInstalled = () =>
+      setStatus(prev => ({
+        ...prev,
+        isInstalled: true,
+        canInstall: false,
+        isInstalling: false,
+      }));
 
     // Background sync events
     const handleSyncStart = () => setStatus(prev => ({ ...prev, isSyncing: true }));
@@ -61,7 +62,7 @@ export function usePWAStatus() {
       setStatus(prev => ({
         ...prev,
         isSyncing: false,
-        pendingSync: Math.max(0, prev.pendingSync - (customEvent.detail?.successCount || 0))
+        pendingSync: Math.max(0, prev.pendingSync - (customEvent.detail?.successCount || 0)),
       }));
     };
 
@@ -77,7 +78,7 @@ export function usePWAStatus() {
       try {
         const extWindow = window as PWAWindow;
         const extNavigator = navigator as PWANavigator;
-        
+
         // Check if app is installed
         if (extNavigator.getInstalledRelatedApps) {
           const apps = await extNavigator.getInstalledRelatedApps();
@@ -119,7 +120,7 @@ export function useInstallPWA() {
     try {
       setIsInstalling(true);
       const extWindow = window as PWAWindow;
-      
+
       if (extWindow.pwaManager?.showInstallPrompt) {
         await extWindow.pwaManager.showInstallPrompt();
       } else {
@@ -144,7 +145,7 @@ export function useBackgroundSync() {
     try {
       setIsSyncing(true);
       const extWindow = window as PWAWindow;
-      
+
       if (extWindow.forcePWASync) {
         await extWindow.forcePWASync();
       } else {
@@ -167,7 +168,7 @@ export function useOfflineStorage() {
     used: 0,
     quota: 0,
     available: 0,
-    percentage: 0
+    percentage: 0,
   });
 
   useEffect(() => {
@@ -188,7 +189,7 @@ export function useOfflineStorage() {
     };
 
     updateStorageStats();
-    
+
     // Update periodically
     const interval = setInterval(updateStorageStats, 30000);
     return () => clearInterval(interval);

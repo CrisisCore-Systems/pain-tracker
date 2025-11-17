@@ -8,7 +8,7 @@ interface WeeklyClinicalBriefCardProps {
 
 /**
  * Weekly Clinical Brief Display
- * 
+ *
  * Professional-grade weekly summary optimized for clinical review.
  * Clean, printable design with actionable insights.
  */
@@ -62,8 +62,8 @@ export const WeeklyClinicalBriefCard: React.FC<WeeklyClinicalBriefCardProps> = (
     brief.painLevelChange > 0
       ? 'text-red-600 dark:text-red-400'
       : brief.painLevelChange < 0
-      ? 'text-green-600 dark:text-green-400'
-      : 'text-gray-600 dark:text-gray-400';
+        ? 'text-green-600 dark:text-green-400'
+        : 'text-gray-600 dark:text-gray-400';
 
   return (
     <div
@@ -193,10 +193,7 @@ export const WeeklyClinicalBriefCard: React.FC<WeeklyClinicalBriefCardProps> = (
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
             <ol className="space-y-2 list-decimal list-inside">
               {brief.recommendations.map((rec, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-blue-800 dark:text-blue-300"
-                >
+                <li key={index} className="text-sm text-blue-800 dark:text-blue-300">
                   {rec}
                 </li>
               ))}
@@ -241,8 +238,8 @@ export const WeeklyClinicalBriefCard: React.FC<WeeklyClinicalBriefCardProps> = (
             className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium text-sm"
             onClick={() => {
               // Trigger PDF export from parent component
-              const event = new CustomEvent('exportClinicalPDF', { 
-                detail: { weeklyBrief: brief } 
+              const event = new CustomEvent('exportClinicalPDF', {
+                detail: { weeklyBrief: brief },
               });
               window.dispatchEvent(event);
             }}

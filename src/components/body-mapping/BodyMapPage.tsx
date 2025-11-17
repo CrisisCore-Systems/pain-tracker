@@ -27,9 +27,9 @@ export function BodyMapPage() {
         baselineData: {
           pain: painLevel,
           locations: selectedRegions,
-          symptoms: []
+          symptoms: [],
         },
-        notes: notes || undefined
+        notes: notes || undefined,
       });
 
       // Reset form
@@ -45,9 +45,7 @@ export function BodyMapPage() {
     <div className="max-w-6xl mx-auto p-4 space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          Body Map
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Body Map</h1>
         <p className="text-gray-600 dark:text-gray-400">
           Click on the body diagram to select pain locations
         </p>
@@ -93,7 +91,7 @@ export function BodyMapPage() {
             Selected Areas ({selectedRegions.length})
           </h3>
           <div className="flex flex-wrap gap-2">
-            {selectedRegions.map((region) => (
+            {selectedRegions.map(region => (
               <span
                 key={region}
                 className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/40 text-blue-900 dark:text-blue-100 rounded-md text-sm"
@@ -120,7 +118,7 @@ export function BodyMapPage() {
               min="0"
               max="10"
               value={painLevel}
-              onChange={(e) => setPainLevel(Number(e.target.value))}
+              onChange={e => setPainLevel(Number(e.target.value))}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
             />
             <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
@@ -136,7 +134,7 @@ export function BodyMapPage() {
             </label>
             <textarea
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={e => setNotes(e.target.value)}
               placeholder="Describe your pain, triggers, or any relevant details..."
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               rows={3}
@@ -160,8 +158,18 @@ export function BodyMapPage() {
       {selectedRegions.length === 0 && (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="inline-flex p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-4">
-            <svg className="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            <svg
+              className="w-8 h-8 text-gray-400 dark:text-gray-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+              />
             </svg>
           </div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">

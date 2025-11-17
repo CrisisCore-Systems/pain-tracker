@@ -17,26 +17,47 @@ import {
   Upload,
   Activity,
   Eye,
-  EyeOff
+  EyeOff,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Input } from '../../design-system';
 // Lightweight local tab primitives (since Tabs not in design-system export)
-interface SimpleTabsProps { value: string; onValueChange: (val: string) => void; children: React.ReactNode; }
+interface SimpleTabsProps {
+  value: string;
+  onValueChange: (val: string) => void;
+  children: React.ReactNode;
+}
 // onValueChange kept in props shape for API parity though not used directly here
-const SimpleTabs: React.FC<SimpleTabsProps> = ({ value, children }) => <div data-active-tab={value}>{children}</div>;
-const SimpleTabsList: React.FC<{ children: React.ReactNode; }> = ({ children }) => <div className="flex flex-wrap gap-2 border-b pb-2">{children}</div>;
-const SimpleTabsTrigger: React.FC<{ value: string; activeValue: string; onSelect: (v: string) => void; children: React.ReactNode; }> = ({ value, activeValue, onSelect, children }) => (
+const SimpleTabs: React.FC<SimpleTabsProps> = ({ value, children }) => (
+  <div data-active-tab={value}>{children}</div>
+);
+const SimpleTabsList: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="flex flex-wrap gap-2 border-b pb-2">{children}</div>
+);
+const SimpleTabsTrigger: React.FC<{
+  value: string;
+  activeValue: string;
+  onSelect: (v: string) => void;
+  children: React.ReactNode;
+}> = ({ value, activeValue, onSelect, children }) => (
   <button
     type="button"
     onClick={() => onSelect(value)}
     className={`text-sm px-3 py-1 rounded-md border transition-colors ${
-      activeValue === value ? 'bg-primary text-primary-foreground border-primary' : 'bg-accent/30 text-foreground border-transparent hover:bg-accent'
+      activeValue === value
+        ? 'bg-primary text-primary-foreground border-primary'
+        : 'bg-accent/30 text-foreground border-transparent hover:bg-accent'
     }`}
-  >{children}</button>
+  >
+    {children}
+  </button>
 );
-const SimpleTabsContent: React.FC<{ when: string; activeValue: string; children: React.ReactNode; className?: string; }> = ({ when, activeValue, children, className = '' }) => (
-  activeValue === when ? <div className={className}>{children}</div> : null
-);
+const SimpleTabsContent: React.FC<{
+  when: string;
+  activeValue: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ when, activeValue, children, className = '' }) =>
+  activeValue === when ? <div className={className}>{children}</div> : null;
 
 interface IntegrationStatus {
   fhir: {
@@ -95,23 +116,23 @@ export function InstitutionalBridgesDashboard() {
       connected: false,
       endpoint: '',
       lastSync: '',
-      resourceCount: 0
+      resourceCount: 0,
     },
     oauth: {
       configured: false,
       clientCount: 0,
-      activeTokens: 0
+      activeTokens: 0,
     },
     dataSharing: {
       activeAgreements: 0,
       pendingRequests: 0,
-      dataVolume: 0
+      dataVolume: 0,
     },
     compliance: {
       score: 0,
       issues: 0,
-      lastAudit: ''
-    }
+      lastAudit: '',
+    },
   });
 
   const [connectionConfig, setConnectionConfig] = useState<ConnectionConfig>({
@@ -120,7 +141,7 @@ export function InstitutionalBridgesDashboard() {
     clientSecret: '',
     scopes: ['patient/*.read', 'patient/*.write'],
     organizationId: '',
-    npi: ''
+    npi: '',
   });
 
   const [agreements, setAgreements] = useState<DataSharingAgreement[]>([]);
@@ -141,23 +162,23 @@ export function InstitutionalBridgesDashboard() {
         connected: true,
         endpoint: 'https://fhir.hospital.org/R4',
         lastSync: '2025-09-15T10:30:00Z',
-        resourceCount: 1234
+        resourceCount: 1234,
       },
       oauth: {
         configured: true,
         clientCount: 3,
-        activeTokens: 12
+        activeTokens: 12,
       },
       dataSharing: {
         activeAgreements: 2,
         pendingRequests: 1,
-        dataVolume: 45678
+        dataVolume: 45678,
       },
       compliance: {
         score: 95,
         issues: 2,
-        lastAudit: '2025-09-01T00:00:00Z'
-      }
+        lastAudit: '2025-09-01T00:00:00Z',
+      },
     });
   };
 
@@ -169,7 +190,7 @@ export function InstitutionalBridgesDashboard() {
         purpose: 'Clinical care coordination',
         status: 'active',
         dataTypes: ['Patient', 'Observation', 'Medication'],
-        expirationDate: '2026-01-15'
+        expirationDate: '2026-01-15',
       },
       {
         id: 'dsa-002',
@@ -177,8 +198,8 @@ export function InstitutionalBridgesDashboard() {
         purpose: 'Pain management research',
         status: 'pending',
         dataTypes: ['Observation', 'QuestionnaireResponse'],
-        expirationDate: '2025-12-31'
-      }
+        expirationDate: '2025-12-31',
+      },
     ]);
   };
 
@@ -189,15 +210,15 @@ export function InstitutionalBridgesDashboard() {
         type: 'warning',
         message: 'Certificate expires in 30 days',
         timestamp: '2025-09-15T08:00:00Z',
-        resolved: false
+        resolved: false,
       },
       {
         id: 'alert-002',
         type: 'info',
         message: 'Security audit completed successfully',
         timestamp: '2025-09-14T16:30:00Z',
-        resolved: true
-      }
+        resolved: true,
+      },
     ]);
   };
 
@@ -219,9 +240,10 @@ export function InstitutionalBridgesDashboard() {
     try {
       // Mock data export
       await new Promise(resolve => setTimeout(resolve, 1500));
-      const dataUri = 'data:application/json;charset=utf-8,' + 
+      const dataUri =
+        'data:application/json;charset=utf-8,' +
         encodeURIComponent(JSON.stringify({ exported: 'data' }, null, 2));
-      
+
       const link = document.createElement('a');
       link.setAttribute('href', dataUri);
       link.setAttribute('download', 'fhir-export.json');
@@ -251,7 +273,9 @@ export function InstitutionalBridgesDashboard() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Institutional Bridges</h1>
-          <p className="text-muted-foreground">Healthcare integration and data sharing management</p>
+          <p className="text-muted-foreground">
+            Healthcare integration and data sharing management
+          </p>
         </div>
         <div className="flex space-x-3">
           <Button variant="outline" onClick={handleExportData} disabled={isLoading}>
@@ -267,15 +291,25 @@ export function InstitutionalBridgesDashboard() {
 
       <SimpleTabs value={activeTab} onValueChange={setActiveTab}>
         <SimpleTabsList>
-          <SimpleTabsTrigger value="overview" activeValue={activeTab} onSelect={setActiveTab}>Overview</SimpleTabsTrigger>
-          <SimpleTabsTrigger value="fhir" activeValue={activeTab} onSelect={setActiveTab}>FHIR Integration</SimpleTabsTrigger>
-          <SimpleTabsTrigger value="oauth" activeValue={activeTab} onSelect={setActiveTab}>Authentication</SimpleTabsTrigger>
-          <SimpleTabsTrigger value="data-sharing" activeValue={activeTab} onSelect={setActiveTab}>Data Sharing</SimpleTabsTrigger>
-          <SimpleTabsTrigger value="compliance" activeValue={activeTab} onSelect={setActiveTab}>Compliance</SimpleTabsTrigger>
+          <SimpleTabsTrigger value="overview" activeValue={activeTab} onSelect={setActiveTab}>
+            Overview
+          </SimpleTabsTrigger>
+          <SimpleTabsTrigger value="fhir" activeValue={activeTab} onSelect={setActiveTab}>
+            FHIR Integration
+          </SimpleTabsTrigger>
+          <SimpleTabsTrigger value="oauth" activeValue={activeTab} onSelect={setActiveTab}>
+            Authentication
+          </SimpleTabsTrigger>
+          <SimpleTabsTrigger value="data-sharing" activeValue={activeTab} onSelect={setActiveTab}>
+            Data Sharing
+          </SimpleTabsTrigger>
+          <SimpleTabsTrigger value="compliance" activeValue={activeTab} onSelect={setActiveTab}>
+            Compliance
+          </SimpleTabsTrigger>
         </SimpleTabsList>
 
         {/* Overview Tab */}
-  <SimpleTabsContent when="overview" activeValue={activeTab} className="space-y-6">
+        <SimpleTabsContent when="overview" activeValue={activeTab} className="space-y-6">
           {/* Status Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
@@ -284,7 +318,9 @@ export function InstitutionalBridgesDashboard() {
                 <Building2 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className={`flex items-center space-x-2 ${getStatusColor(integrationStatus.fhir.connected)}`}>
+                <div
+                  className={`flex items-center space-x-2 ${getStatusColor(integrationStatus.fhir.connected)}`}
+                >
                   {getStatusIcon(integrationStatus.fhir.connected)}
                   <span className="text-sm font-medium">
                     {integrationStatus.fhir.connected ? 'Connected' : 'Disconnected'}
@@ -302,7 +338,9 @@ export function InstitutionalBridgesDashboard() {
                 <Key className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className={`flex items-center space-x-2 ${getStatusColor(integrationStatus.oauth.configured)}`}>
+                <div
+                  className={`flex items-center space-x-2 ${getStatusColor(integrationStatus.oauth.configured)}`}
+                >
                   {getStatusIcon(integrationStatus.oauth.configured)}
                   <span className="text-sm font-medium">
                     {integrationStatus.oauth.configured ? 'Configured' : 'Not Configured'}
@@ -320,7 +358,9 @@ export function InstitutionalBridgesDashboard() {
                 <Share2 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{integrationStatus.dataSharing.activeAgreements}</div>
+                <div className="text-2xl font-bold">
+                  {integrationStatus.dataSharing.activeAgreements}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   Active agreements, {integrationStatus.dataSharing.pendingRequests} pending
                 </p>
@@ -333,7 +373,9 @@ export function InstitutionalBridgesDashboard() {
                 <Shield className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className={`text-2xl font-bold ${getComplianceScoreColor(integrationStatus.compliance.score)}`}>
+                <div
+                  className={`text-2xl font-bold ${getComplianceScoreColor(integrationStatus.compliance.score)}`}
+                >
                   {integrationStatus.compliance.score}%
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -357,16 +399,20 @@ export function InstitutionalBridgesDashboard() {
                   <CheckCircle className="h-5 w-5 text-green-600" />
                   <div>
                     <div className="text-sm font-medium">FHIR sync completed</div>
-                    <div className="text-xs text-muted-foreground">1,234 resources synchronized successfully</div>
+                    <div className="text-xs text-muted-foreground">
+                      1,234 resources synchronized successfully
+                    </div>
                   </div>
                   <div className="text-xs text-muted-foreground ml-auto">2 hours ago</div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
                   <Users className="h-5 w-5 text-blue-600" />
                   <div>
                     <div className="text-sm font-medium">New data sharing agreement</div>
-                    <div className="text-xs text-muted-foreground">Research Institute partnership approved</div>
+                    <div className="text-xs text-muted-foreground">
+                      Research Institute partnership approved
+                    </div>
                   </div>
                   <div className="text-xs text-muted-foreground ml-auto">1 day ago</div>
                 </div>
@@ -375,17 +421,19 @@ export function InstitutionalBridgesDashboard() {
                   <AlertTriangle className="h-5 w-5 text-yellow-600" />
                   <div>
                     <div className="text-sm font-medium">Certificate expiring soon</div>
-                    <div className="text-xs text-muted-foreground">SSL certificate expires in 30 days</div>
+                    <div className="text-xs text-muted-foreground">
+                      SSL certificate expires in 30 days
+                    </div>
                   </div>
                   <div className="text-xs text-muted-foreground ml-auto">3 days ago</div>
                 </div>
               </div>
             </CardContent>
           </Card>
-  </SimpleTabsContent>
+        </SimpleTabsContent>
 
         {/* FHIR Integration Tab */}
-  <SimpleTabsContent when="fhir" activeValue={activeTab} className="space-y-6">
+        <SimpleTabsContent when="fhir" activeValue={activeTab} className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>FHIR Server Configuration</CardTitle>
@@ -395,7 +443,9 @@ export function InstitutionalBridgesDashboard() {
                 <label className="block text-sm font-medium mb-2">FHIR Endpoint URL</label>
                 <Input
                   value={connectionConfig.fhirEndpoint}
-                  onChange={(e) => setConnectionConfig(prev => ({ ...prev, fhirEndpoint: e.target.value }))}
+                  onChange={e =>
+                    setConnectionConfig(prev => ({ ...prev, fhirEndpoint: e.target.value }))
+                  }
                   placeholder="https://fhir.hospital.org/R4"
                 />
               </div>
@@ -405,7 +455,9 @@ export function InstitutionalBridgesDashboard() {
                   <label className="block text-sm font-medium mb-2">Organization ID</label>
                   <Input
                     value={connectionConfig.organizationId}
-                    onChange={(e) => setConnectionConfig(prev => ({ ...prev, organizationId: e.target.value }))}
+                    onChange={e =>
+                      setConnectionConfig(prev => ({ ...prev, organizationId: e.target.value }))
+                    }
                     placeholder="org-12345"
                   />
                 </div>
@@ -413,7 +465,7 @@ export function InstitutionalBridgesDashboard() {
                   <label className="block text-sm font-medium mb-2">NPI Number</label>
                   <Input
                     value={connectionConfig.npi}
-                    onChange={(e) => setConnectionConfig(prev => ({ ...prev, npi: e.target.value }))}
+                    onChange={e => setConnectionConfig(prev => ({ ...prev, npi: e.target.value }))}
                     placeholder="1234567890"
                   />
                 </div>
@@ -421,7 +473,11 @@ export function InstitutionalBridgesDashboard() {
 
               <div className="flex space-x-3">
                 <Button onClick={handleTestConnection} disabled={isLoading}>
-                  {isLoading ? <Clock className="h-4 w-4 mr-2 animate-spin" /> : <CheckCircle className="h-4 w-4 mr-2" />}
+                  {isLoading ? (
+                    <Clock className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                  )}
                   Test Connection
                 </Button>
                 <Button variant="outline">
@@ -439,7 +495,14 @@ export function InstitutionalBridgesDashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {['Patient', 'Observation', 'Medication', 'Encounter', 'Practitioner', 'Organization'].map((resource) => (
+                {[
+                  'Patient',
+                  'Observation',
+                  'Medication',
+                  'Encounter',
+                  'Practitioner',
+                  'Organization',
+                ].map(resource => (
                   <div key={resource} className="p-3 border rounded-lg text-center">
                     <div className="font-medium">{resource}</div>
                     <div className="text-sm text-muted-foreground">
@@ -450,10 +513,10 @@ export function InstitutionalBridgesDashboard() {
               </div>
             </CardContent>
           </Card>
-  </SimpleTabsContent>
+        </SimpleTabsContent>
 
         {/* OAuth Authentication Tab */}
-  <SimpleTabsContent when="oauth" activeValue={activeTab} className="space-y-6">
+        <SimpleTabsContent when="oauth" activeValue={activeTab} className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>OAuth2 Client Configuration</CardTitle>
@@ -464,7 +527,9 @@ export function InstitutionalBridgesDashboard() {
                   <label className="block text-sm font-medium mb-2">Client ID</label>
                   <Input
                     value={connectionConfig.clientId}
-                    onChange={(e) => setConnectionConfig(prev => ({ ...prev, clientId: e.target.value }))}
+                    onChange={e =>
+                      setConnectionConfig(prev => ({ ...prev, clientId: e.target.value }))
+                    }
                     placeholder="client_12345"
                   />
                 </div>
@@ -474,7 +539,9 @@ export function InstitutionalBridgesDashboard() {
                     <Input
                       type={showSecrets ? 'text' : 'password'}
                       value={connectionConfig.clientSecret}
-                      onChange={(e) => setConnectionConfig(prev => ({ ...prev, clientSecret: e.target.value }))}
+                      onChange={e =>
+                        setConnectionConfig(prev => ({ ...prev, clientSecret: e.target.value }))
+                      }
                       placeholder="client_secret_xyz"
                     />
                     <Button
@@ -493,29 +560,31 @@ export function InstitutionalBridgesDashboard() {
               <div>
                 <label className="block text-sm font-medium mb-2">Scopes</label>
                 <div className="space-y-2">
-                  {['patient/*.read', 'patient/*.write', 'system/*.read', 'openid', 'fhirUser'].map((scope) => (
-                    <label key={scope} className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={connectionConfig.scopes.includes(scope)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setConnectionConfig(prev => ({
-                              ...prev,
-                              scopes: [...prev.scopes, scope]
-                            }));
-                          } else {
-                            setConnectionConfig(prev => ({
-                              ...prev,
-                              scopes: prev.scopes.filter(s => s !== scope)
-                            }));
-                          }
-                        }}
-                        className="rounded"
-                      />
-                      <span className="text-sm">{scope}</span>
-                    </label>
-                  ))}
+                  {['patient/*.read', 'patient/*.write', 'system/*.read', 'openid', 'fhirUser'].map(
+                    scope => (
+                      <label key={scope} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={connectionConfig.scopes.includes(scope)}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              setConnectionConfig(prev => ({
+                                ...prev,
+                                scopes: [...prev.scopes, scope],
+                              }));
+                            } else {
+                              setConnectionConfig(prev => ({
+                                ...prev,
+                                scopes: prev.scopes.filter(s => s !== scope),
+                              }));
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <span className="text-sm">{scope}</span>
+                      </label>
+                    )
+                  )}
                 </div>
               </div>
 
@@ -538,7 +607,8 @@ export function InstitutionalBridgesDashboard() {
                     <div>
                       <div className="font-medium">Token {i + 1}</div>
                       <div className="text-sm text-muted-foreground">
-                        Expires: {new Date(Date.now() + (i + 1) * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                        Expires:{' '}
+                        {new Date(Date.now() + (i + 1) * 24 * 60 * 60 * 1000).toLocaleDateString()}
                       </div>
                     </div>
                     <Button variant="outline" size="sm">
@@ -549,33 +619,40 @@ export function InstitutionalBridgesDashboard() {
               </div>
             </CardContent>
           </Card>
-  </SimpleTabsContent>
+        </SimpleTabsContent>
 
         {/* Data Sharing Tab */}
-  <SimpleTabsContent when="data-sharing" activeValue={activeTab} className="space-y-6">
+        <SimpleTabsContent when="data-sharing" activeValue={activeTab} className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Data Sharing Agreements</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {agreements.map((agreement) => (
+                {agreements.map(agreement => (
                   <div key={agreement.id} className="p-4 border rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">{agreement.partnerName}</h4>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        agreement.status === 'active' ? 'bg-green-100 text-green-600' :
-                        agreement.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
-                        'bg-red-100 text-red-600'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          agreement.status === 'active'
+                            ? 'bg-green-100 text-green-600'
+                            : agreement.status === 'pending'
+                              ? 'bg-yellow-100 text-yellow-600'
+                              : 'bg-red-100 text-red-600'
+                        }`}
+                      >
                         {agreement.status}
                       </span>
                     </div>
                     <p className="text-sm text-muted-foreground mb-2">{agreement.purpose}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex space-x-1">
-                        {agreement.dataTypes.map((type) => (
-                          <span key={type} className="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded">
+                        {agreement.dataTypes.map(type => (
+                          <span
+                            key={type}
+                            className="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded"
+                          >
                             {type}
                           </span>
                         ))}
@@ -587,17 +664,17 @@ export function InstitutionalBridgesDashboard() {
                   </div>
                 ))}
               </div>
-              
+
               <Button className="mt-4">
                 <FileText className="h-4 w-4 mr-2" />
                 Create New Agreement
               </Button>
             </CardContent>
           </Card>
-  </SimpleTabsContent>
+        </SimpleTabsContent>
 
         {/* Compliance Tab */}
-  <SimpleTabsContent when="compliance" activeValue={activeTab} className="space-y-6">
+        <SimpleTabsContent when="compliance" activeValue={activeTab} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Compliance Score */}
             <Card>
@@ -605,11 +682,14 @@ export function InstitutionalBridgesDashboard() {
                 <CardTitle>HIPAA Compliance Score</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className={`text-4xl font-bold ${getComplianceScoreColor(integrationStatus.compliance.score)}`}>
+                <div
+                  className={`text-4xl font-bold ${getComplianceScoreColor(integrationStatus.compliance.score)}`}
+                >
                   {integrationStatus.compliance.score}%
                 </div>
                 <p className="text-muted-foreground mt-2">
-                  Last audit: {new Date(integrationStatus.compliance.lastAudit).toLocaleDateString()}
+                  Last audit:{' '}
+                  {new Date(integrationStatus.compliance.lastAudit).toLocaleDateString()}
                 </p>
                 <Button className="mt-4" variant="outline">
                   <Shield className="h-4 w-4 mr-2" />
@@ -630,12 +710,18 @@ export function InstitutionalBridgesDashboard() {
                     { feature: 'Audit logging', enabled: true },
                     { feature: 'Access controls', enabled: true },
                     { feature: 'Data validation', enabled: true },
-                    { feature: 'Backup encryption', enabled: false }
+                    { feature: 'Backup encryption', enabled: false },
                   ].map(({ feature, enabled }) => (
                     <div key={feature} className="flex items-center justify-between">
                       <span className="text-sm">{feature}</span>
-                      <div className={`flex items-center space-x-2 ${enabled ? 'text-green-600' : 'text-red-600'}`}>
-                        {enabled ? <CheckCircle className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+                      <div
+                        className={`flex items-center space-x-2 ${enabled ? 'text-green-600' : 'text-red-600'}`}
+                      >
+                        {enabled ? (
+                          <CheckCircle className="h-4 w-4" />
+                        ) : (
+                          <AlertTriangle className="h-4 w-4" />
+                        )}
                         <span className="text-xs">{enabled ? 'Enabled' : 'Disabled'}</span>
                       </div>
                     </div>
@@ -652,20 +738,26 @@ export function InstitutionalBridgesDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {complianceAlerts.map((alert) => (
+                {complianceAlerts.map(alert => (
                   <div
                     key={alert.id}
                     className={`p-3 rounded-lg border-l-4 ${
-                      alert.type === 'error' ? 'border-red-500 bg-red-50' :
-                      alert.type === 'warning' ? 'border-yellow-500 bg-yellow-50' :
-                      'border-blue-500 bg-blue-50'
+                      alert.type === 'error'
+                        ? 'border-red-500 bg-red-50'
+                        : alert.type === 'warning'
+                          ? 'border-yellow-500 bg-yellow-50'
+                          : 'border-blue-500 bg-blue-50'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        {alert.type === 'error' ? <AlertTriangle className="h-4 w-4 text-red-500" /> :
-                         alert.type === 'warning' ? <AlertTriangle className="h-4 w-4 text-yellow-500" /> :
-                         <CheckCircle className="h-4 w-4 text-blue-500" />}
+                        {alert.type === 'error' ? (
+                          <AlertTriangle className="h-4 w-4 text-red-500" />
+                        ) : alert.type === 'warning' ? (
+                          <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                        ) : (
+                          <CheckCircle className="h-4 w-4 text-blue-500" />
+                        )}
                         <span className="text-sm font-medium">{alert.message}</span>
                       </div>
                       <span className="text-xs text-muted-foreground">

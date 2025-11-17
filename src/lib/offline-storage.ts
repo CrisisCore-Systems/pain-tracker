@@ -34,12 +34,14 @@ type ActivityLogData = {
   notes?: string;
 };
 
-type SettingsData = {
-  key: string;
-  value: unknown;
-} | {
-  [key: string]: unknown;
-};
+type SettingsData =
+  | {
+      key: string;
+      value: unknown;
+    }
+  | {
+      [key: string]: unknown;
+    };
 
 type SyncQueueData = {
   operation: string;
@@ -47,7 +49,12 @@ type SyncQueueData = {
   priority: 'high' | 'medium' | 'low';
 };
 
-type StoredDataPayload = PainEntryData | EmergencyData | ActivityLogData | SettingsData | SyncQueueData;
+type StoredDataPayload =
+  | PainEntryData
+  | EmergencyData
+  | ActivityLogData
+  | SettingsData
+  | SyncQueueData;
 
 interface StoredData {
   id?: number;
@@ -81,7 +88,7 @@ export class OfflineStorageService {
   private stores = {
     data: 'offline-data',
     syncQueue: 'sync-queue',
-    cache: 'cache-metadata'
+    cache: 'cache-metadata',
   };
 
   async init(): Promise<void> {
@@ -94,14 +101,14 @@ export class OfflineStorageService {
         resolve();
       };
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result;
 
         // Offline data store
         if (!db.objectStoreNames.contains(this.stores.data)) {
           const dataStore = db.createObjectStore(this.stores.data, {
             keyPath: 'id',
-            autoIncrement: true
+            autoIncrement: true,
           });
           dataStore.createIndex('type', 'type', { unique: false });
           dataStore.createIndex('timestamp', 'timestamp', { unique: false });
@@ -112,7 +119,7 @@ export class OfflineStorageService {
         if (!db.objectStoreNames.contains(this.stores.syncQueue)) {
           const syncStore = db.createObjectStore(this.stores.syncQueue, {
             keyPath: 'id',
-            autoIncrement: true
+            autoIncrement: true,
           });
           syncStore.createIndex('priority', 'priority', { unique: false });
           syncStore.createIndex('timestamp', 'timestamp', { unique: false });
@@ -122,7 +129,7 @@ export class OfflineStorageService {
         // Cache metadata store
         if (!db.objectStoreNames.contains(this.stores.cache)) {
           const cacheStore = db.createObjectStore(this.stores.cache, {
-            keyPath: 'url'
+            keyPath: 'url',
           });
           cacheStore.createIndex('expiry', 'expiry', { unique: false });
         }
@@ -150,7 +157,13 @@ export class OfflineStorageService {
     }
     try {
       const settings = await this.getData('settings');
-      const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === key);
+      const match = settings.find(
+        s =>
+          s.data &&
+          typeof s.data === 'object' &&
+          'key' in s.data &&
+          (s.data as Record<string, unknown>).key === key
+      );
       if (match && match.data && typeof match.data === 'object' && 'value' in match.data) {
         return (match.data as Record<string, unknown>).value as T;
       }
@@ -170,13 +183,18 @@ export class OfflineStorageService {
     const parts = key.split(':');
     if (parts.length < 3) return null;
     return { table: parts[1], id: parts.slice(2).join(':') };
-    }
+  }
 
   async getAllFromTable<T = unknown>(tableName: string): Promise<T[]> {
     const settings = await this.getData('settings');
     const items: T[] = [];
     for (const entry of settings) {
-      if (entry.data && typeof entry.data === 'object' && 'key' in entry.data && 'value' in entry.data) {
+      if (
+        entry.data &&
+        typeof entry.data === 'object' &&
+        'key' in entry.data &&
+        'value' in entry.data
+      ) {
         const key = (entry.data as Record<string, unknown>).key as string;
         const parsed = this.parseTableKey(key);
         if (parsed && parsed.table === tableName) {
@@ -192,7 +210,12 @@ export class OfflineStorageService {
     // Remove existing rows for table
     const deletions: Promise<void>[] = [];
     for (const entry of settings) {
-      if (entry.id !== undefined && entry.data && typeof entry.data === 'object' && 'key' in entry.data) {
+      if (
+        entry.id !== undefined &&
+        entry.data &&
+        typeof entry.data === 'object' &&
+        'key' in entry.data
+      ) {
         const key = (entry.data as Record<string, unknown>).key as string;
         const parsed = this.parseTableKey(key);
         if (parsed && parsed.table === tableName) {
@@ -204,19 +227,31 @@ export class OfflineStorageService {
     // Add new items
     for (const item of items) {
       const id = (item as unknown as { id?: string }).id || crypto.randomUUID();
-      await this.storeData('settings', { key: this.makeTableKey(tableName, String(id)), value: item });
+      await this.storeData('settings', {
+        key: this.makeTableKey(tableName, String(id)),
+        value: item,
+      });
     }
   }
 
   async addToTable<T = unknown>(tableName: string, item: T & { id?: string }): Promise<void> {
     const id = item.id || crypto.randomUUID();
-    await this.storeData('settings', { key: this.makeTableKey(tableName, String(id)), value: { ...item, id } });
+    await this.storeData('settings', {
+      key: this.makeTableKey(tableName, String(id)),
+      value: { ...item, id },
+    });
   }
 
   async updateInTable<T = unknown>(tableName: string, id: string | number, item: T): Promise<void> {
     const settings = await this.getData('settings');
     const keyToFind = this.makeTableKey(tableName, String(id));
-    const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === keyToFind);
+    const match = settings.find(
+      s =>
+        s.data &&
+        typeof s.data === 'object' &&
+        'key' in s.data &&
+        (s.data as Record<string, unknown>).key === keyToFind
+    );
     if (match && match.id !== undefined) {
       await this.updateData(match.id, { key: keyToFind, value: item });
     } else {
@@ -228,7 +263,13 @@ export class OfflineStorageService {
   async removeFromTable(tableName: string, id: string | number): Promise<void> {
     const settings = await this.getData('settings');
     const keyToFind = this.makeTableKey(tableName, String(id));
-    const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === keyToFind);
+    const match = settings.find(
+      s =>
+        s.data &&
+        typeof s.data === 'object' &&
+        'key' in s.data &&
+        (s.data as Record<string, unknown>).key === keyToFind
+    );
     if (match && match.id !== undefined) {
       await this.deleteData(match.id);
     }
@@ -237,7 +278,13 @@ export class OfflineStorageService {
   async getFromTable<T = unknown>(tableName: string, id: string | number): Promise<T | null> {
     const settings = await this.getData('settings');
     const keyToFind = this.makeTableKey(tableName, String(id));
-    const match = settings.find(s => s.data && typeof s.data === 'object' && 'key' in s.data && (s.data as Record<string, unknown>).key === keyToFind);
+    const match = settings.find(
+      s =>
+        s.data &&
+        typeof s.data === 'object' &&
+        'key' in s.data &&
+        (s.data as Record<string, unknown>).key === keyToFind
+    );
     if (match && match.data && typeof match.data === 'object' && 'value' in match.data) {
       return (match.data as Record<string, unknown>).value as T;
     }
@@ -257,7 +304,7 @@ export class OfflineStorageService {
         type,
         data,
         synced: false,
-        lastModified: new Date().toISOString()
+        lastModified: new Date().toISOString(),
       };
 
       const request = store.add(storedData);
@@ -357,7 +404,9 @@ export class OfflineStorageService {
   }
 
   // Sync Queue Methods
-  async addToSyncQueue(item: Omit<SyncQueueItem, 'id' | 'timestamp' | 'retryCount'>): Promise<number> {
+  async addToSyncQueue(
+    item: Omit<SyncQueueItem, 'id' | 'timestamp' | 'retryCount'>
+  ): Promise<number> {
     if (!this.db) await this.init();
 
     return new Promise((resolve, reject) => {
@@ -367,7 +416,7 @@ export class OfflineStorageService {
       const queueItem: SyncQueueItem = {
         ...item,
         timestamp: new Date().toISOString(),
-        retryCount: 0
+        retryCount: 0,
       };
 
       const request = store.add(queueItem);
@@ -439,7 +488,10 @@ export class OfflineStorageService {
     if (!this.db) await this.init();
 
     return new Promise((resolve, reject) => {
-      const transaction = this.db!.transaction([this.stores.data, this.stores.syncQueue], 'readwrite');
+      const transaction = this.db!.transaction(
+        [this.stores.data, this.stores.syncQueue],
+        'readwrite'
+      );
       let completed = 0;
 
       const complete = () => {
@@ -465,17 +517,14 @@ export class OfflineStorageService {
       const estimate = await navigator.storage.estimate();
       return {
         used: estimate.usage || 0,
-        quota: estimate.quota || 0
+        quota: estimate.quota || 0,
       };
     }
     return { used: 0, quota: 0 };
   }
 
   async exportData(): Promise<{ data: StoredData[]; syncQueue: SyncQueueItem[] }> {
-    const [data, syncQueue] = await Promise.all([
-      this.getAllData(),
-      this.getSyncQueue()
-    ]);
+    const [data, syncQueue] = await Promise.all([this.getAllData(), this.getSyncQueue()]);
 
     return { data, syncQueue };
   }
@@ -560,7 +609,7 @@ export class EnhancedLocalStorage {
     try {
       // Try localStorage first
       localStorage.setItem(key, JSON.stringify(value));
-      
+
       // Also store in IndexedDB as backup
       await this.storage.storeData('settings', { key, value });
     } catch (error) {
@@ -588,8 +637,8 @@ export class EnhancedLocalStorage {
         // Type guard to check if data has key property
         return s.data && typeof s.data === 'object' && 'key' in s.data && s.data.key === key;
       });
-      return setting && setting.data && typeof setting.data === 'object' && 'value' in setting.data 
-        ? setting.data.value 
+      return setting && setting.data && typeof setting.data === 'object' && 'value' in setting.data
+        ? setting.data.value
         : null;
     } catch (error) {
       console.error('IndexedDB read failed:', error);

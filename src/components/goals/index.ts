@@ -15,7 +15,7 @@ export type {
   GoalProgress,
   GoalMilestone,
   GoalAnalytics,
-  GoalTemplate
+  GoalTemplate,
 } from '../../types/goals';
 
 // Re-export utilities for convenience

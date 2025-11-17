@@ -16,30 +16,30 @@ export type BillingInterval = 'monthly' | 'yearly' | 'lifetime';
 /**
  * Subscription Status
  */
-export type SubscriptionStatus = 
-  | 'active'           // Currently active and paid
-  | 'trialing'         // In trial period
-  | 'past_due'         // Payment failed but still accessible
-  | 'canceled'         // Canceled but still valid until period end
-  | 'expired'          // Subscription has ended
-  | 'paused'           // Temporarily paused
-  | 'incomplete'       // Payment incomplete
+export type SubscriptionStatus =
+  | 'active' // Currently active and paid
+  | 'trialing' // In trial period
+  | 'past_due' // Payment failed but still accessible
+  | 'canceled' // Canceled but still valid until period end
+  | 'expired' // Subscription has ended
+  | 'paused' // Temporarily paused
+  | 'incomplete' // Payment incomplete
   | 'incomplete_expired'; // Payment incomplete and expired
 
 /**
  * Feature Categories
  */
 export type FeatureCategory =
-  | 'storage'          // Data storage limits
-  | 'analytics'        // Analytics and insights
-  | 'export'           // Export capabilities
-  | 'integration'      // Third-party integrations
-  | 'support'          // Support level
-  | 'customization'    // Customization options
-  | 'collaboration'    // Multi-user features
-  | 'security'         // Advanced security features
-  | 'ai'               // AI-powered features
-  | 'compliance';      // Compliance features
+  | 'storage' // Data storage limits
+  | 'analytics' // Analytics and insights
+  | 'export' // Export capabilities
+  | 'integration' // Third-party integrations
+  | 'support' // Support level
+  | 'customization' // Customization options
+  | 'collaboration' // Multi-user features
+  | 'security' // Advanced security features
+  | 'ai' // AI-powered features
+  | 'compliance'; // Compliance features
 
 /**
  * Feature Access Levels
@@ -56,10 +56,10 @@ export interface Feature {
   category: FeatureCategory;
   tier: SubscriptionTier;
   accessLevel: FeatureAccessLevel;
-  limit?: number;               // Numeric limit (e.g., storage MB, entries per month)
+  limit?: number; // Numeric limit (e.g., storage MB, entries per month)
   enabled: boolean;
   betaAccess?: boolean;
-  traumaInformed?: boolean;     // Special trauma-informed features
+  traumaInformed?: boolean; // Special trauma-informed features
 }
 
 /**
@@ -67,19 +67,19 @@ export interface Feature {
  */
 export interface TierFeatures {
   // Storage Limits
-  maxPainEntries: number;        // -1 = unlimited
+  maxPainEntries: number; // -1 = unlimited
   maxMoodEntries: number;
   maxActivityLogs: number;
   maxStorageMB: number;
-  dataRetentionDays: number;     // -1 = unlimited
-  
+  dataRetentionDays: number; // -1 = unlimited
+
   // Analytics & Insights
   basicAnalytics: boolean;
   advancedAnalytics: boolean;
   predictiveInsights: boolean;
   customReports: boolean;
   empathyIntelligence: boolean;
-  
+
   // Export Capabilities
   csvExport: boolean;
   jsonExport: boolean;
@@ -89,19 +89,19 @@ export interface TierFeatures {
   scheduledReports: boolean;
   /** Monthly export quota (-1 = unlimited). Numeric so UsageWarning can monitor. */
   maxExportsPerMonth: number;
-  
+
   // Integration Features
   healthcareProviderAPI: boolean;
   fhirIntegration: boolean;
   calendarSync: boolean;
   wearableDevices: boolean;
-  
+
   // Collaboration
   multiUser: boolean;
   familySharing: boolean;
   caregiverAccess: boolean;
   maxSharedUsers: number;
-  
+
   // Security & Privacy
   encryption: 'basic' | 'advanced' | 'enterprise';
   twoFactorAuth: boolean;
@@ -109,26 +109,26 @@ export interface TierFeatures {
   hipaaCompliance: boolean;
   soc2Compliance: boolean;
   customDataRetention: boolean;
-  
+
   // Support
   supportLevel: 'community' | 'email' | 'priority' | 'dedicated';
-  responseTime: string;         // e.g., "48h", "24h", "4h", "1h"
+  responseTime: string; // e.g., "48h", "24h", "4h", "1h"
   onboarding: boolean;
   customTraining: boolean;
-  
+
   // AI & Automation
   aiInsights: boolean;
   automatedReminders: boolean;
   smartSuggestions: boolean;
   patternRecognition: boolean;
-  
+
   // Customization
   customThemes: boolean;
   customDashboard: boolean;
   customFields: boolean;
-  branding: boolean;            // For enterprise
+  branding: boolean; // For enterprise
   whiteLabel: boolean;
-  
+
   // Advanced Features
   offlineMode: boolean;
   mobileApp: boolean;
@@ -143,7 +143,7 @@ export interface TierFeatures {
 export interface PricingInfo {
   tier: SubscriptionTier;
   monthly: {
-    amount: number;              // In cents
+    amount: number; // In cents
     currency: string;
     display: string;
   };
@@ -151,7 +151,7 @@ export interface PricingInfo {
     amount: number;
     currency: string;
     display: string;
-    savings: number;             // Percentage saved vs monthly
+    savings: number; // Percentage saved vs monthly
   };
   lifetime?: {
     amount: number;
@@ -172,23 +172,23 @@ export interface UserSubscription {
   userId: string;
   tier: SubscriptionTier;
   status: SubscriptionStatus;
-  
+
   // Billing Information
   billingInterval: BillingInterval;
-  currentPeriodStart: string;   // ISO date
+  currentPeriodStart: string; // ISO date
   currentPeriodEnd: string;
   cancelAtPeriodEnd: boolean;
-  
+
   // Trial Information
   trialStart?: string;
   trialEnd?: string;
-  
+
   // Payment Information
   paymentProvider?: 'stripe' | 'paddle' | 'manual';
   paymentMethodId?: string;
-  customerId?: string;          // Provider customer ID
-  subscriptionId?: string;      // Provider subscription ID
-  
+  customerId?: string; // Provider customer ID
+  subscriptionId?: string; // Provider subscription ID
+
   // Usage Tracking
   usage: {
     painEntries: number;
@@ -198,30 +198,30 @@ export interface UserSubscription {
     apiCalls: number;
     exportCount: number;
   };
-  
+
   // Metadata
   createdAt: string;
   updatedAt: string;
   lastBillingDate?: string;
   nextBillingDate?: string;
-  
+
   // Upgrade/Downgrade
   scheduledChange?: {
     newTier: SubscriptionTier;
     effectiveDate: string;
     reason: 'upgrade' | 'downgrade' | 'plan_change';
   };
-  
+
   // Discounts & Credits
   discounts?: Array<{
     code: string;
     percentage: number;
     expiresAt?: string;
   }>;
-  credits?: number;              // In cents
-  
+  credits?: number; // In cents
+
   // Compliance & Security
-  dataRegion?: string;           // e.g., "us", "eu", "ca"
+  dataRegion?: string; // e.g., "us", "eu", "ca"
   complianceLevel?: 'standard' | 'hipaa' | 'soc2';
 }
 
@@ -235,15 +235,15 @@ export interface SubscriptionPlan {
   description: string;
   features: TierFeatures;
   pricing: PricingInfo;
-  popular?: boolean;             // Highlight as popular
+  popular?: boolean; // Highlight as popular
   recommended?: boolean;
   limits: {
-    softLimits: boolean;         // Allow temporary overages
-    gracePeriodDays: number;     // Days before enforcement
+    softLimits: boolean; // Allow temporary overages
+    gracePeriodDays: number; // Days before enforcement
   };
   targeting?: {
-    userType: string[];          // e.g., ["individual", "caregiver", "patient"]
-    painLevel?: string;          // e.g., "chronic", "acute", "mild"
+    userType: string[]; // e.g., ["individual", "caregiver", "patient"]
+    painLevel?: string; // e.g., "chronic", "acute", "mild"
   };
 }
 
@@ -252,16 +252,16 @@ export interface SubscriptionPlan {
  */
 export interface UsageQuota {
   feature: string;
-  limit: number;                 // -1 = unlimited
+  limit: number; // -1 = unlimited
   current: number;
   remaining: number;
-  percentage: number;            // 0-100
-  resetDate?: string;            // For monthly limits
+  percentage: number; // 0-100
+  resetDate?: string; // For monthly limits
   overage?: {
     allowed: boolean;
     currentOverage: number;
     maxOverage: number;
-    cost?: number;               // Per unit cost
+    cost?: number; // Per unit cost
   };
 }
 
@@ -285,7 +285,7 @@ export interface FeatureAccessResult {
  */
 export interface BillingEvent {
   id: string;
-  type: 
+  type:
     | 'subscription_created'
     | 'subscription_updated'
     | 'subscription_canceled'
@@ -313,20 +313,20 @@ export interface Invoice {
   subscriptionId: string;
   userId: string;
   status: 'draft' | 'open' | 'paid' | 'void' | 'uncollectible';
-  
+
   // Amounts
-  subtotal: number;              // In cents
+  subtotal: number; // In cents
   tax: number;
   total: number;
   amountPaid: number;
   amountDue: number;
-  
+
   // Dates
   createdAt: string;
   dueDate: string;
   paidAt?: string;
   voidedAt?: string;
-  
+
   // Line Items
   items: Array<{
     description: string;
@@ -334,7 +334,7 @@ export interface Invoice {
     unitAmount: number;
     amount: number;
   }>;
-  
+
   // Payment Info
   paymentMethod?: string;
   receiptUrl?: string;
@@ -348,15 +348,15 @@ export interface TierChangeOption {
   fromTier: SubscriptionTier;
   toTier: SubscriptionTier;
   type: 'upgrade' | 'downgrade';
-  
+
   // Pricing
-  immediateCharge?: number;      // Prorated amount
+  immediateCharge?: number; // Prorated amount
   nextBillingChange: number;
-  
+
   // Feature Changes
   featuresGained: string[];
   featuresLost: string[];
-  
+
   // Data Migration
   requiresMigration: boolean;
   dataImpact?: {
@@ -364,11 +364,11 @@ export interface TierChangeOption {
     storageReduction?: number;
     retentionChange?: number;
   };
-  
+
   // Timing
   effectiveImmediately: boolean;
   effectiveDate?: string;
-  
+
   // Warnings
   warnings?: string[];
   confirmationRequired: boolean;
@@ -380,29 +380,29 @@ export interface TierChangeOption {
 export interface SubscriptionAnalytics {
   userId: string;
   tier: SubscriptionTier;
-  
+
   // Usage Metrics
   dailyActive: boolean;
   weeklyActive: boolean;
   monthlyActive: boolean;
-  
+
   // Feature Usage
   mostUsedFeatures: Array<{
     feature: string;
     count: number;
     lastUsed: string;
   }>;
-  
+
   // Value Metrics
   entriesCreated: number;
   reportsGenerated: number;
   insightsViewed: number;
   exportsMade: number;
-  
+
   // Engagement Score
-  engagementScore: number;       // 0-100
+  engagementScore: number; // 0-100
   churnRisk: 'low' | 'medium' | 'high';
-  
+
   // Recommendations
   recommendedTier?: SubscriptionTier;
   recommendedFeatures?: string[];
@@ -413,13 +413,13 @@ export interface SubscriptionAnalytics {
  */
 export interface TrialConfig {
   tier: SubscriptionTier;
-  duration: number;              // Days
+  duration: number; // Days
   requiresPaymentMethod: boolean;
-  autoConvert: boolean;          // Auto-convert to paid at end
+  autoConvert: boolean; // Auto-convert to paid at end
   features: TierFeatures;
   limitations?: string[];
   conversionIncentive?: {
-    discount: number;            // Percentage
+    discount: number; // Percentage
     validDays: number;
   };
 }
@@ -429,15 +429,15 @@ export interface TrialConfig {
  */
 export interface EnterpriseConfig {
   subscriptionId: string;
-  
+
   // Custom Limits
   customLimits?: {
     [key: string]: number;
   };
-  
+
   // Custom Features
   customFeatures?: string[];
-  
+
   // Branding
   branding?: {
     logo?: string;
@@ -445,15 +445,15 @@ export interface EnterpriseConfig {
     secondaryColor?: string;
     customDomain?: string;
   };
-  
+
   // SLA
   sla?: {
-    uptime: number;              // Percentage
+    uptime: number; // Percentage
     supportResponseTime: number; // Hours
     dataBackupFrequency: string;
     dedicatedSupport: boolean;
   };
-  
+
   // Compliance
   compliance?: {
     hipaa: boolean;
@@ -461,18 +461,18 @@ export interface EnterpriseConfig {
     gdpr: boolean;
     customAgreements?: string[];
   };
-  
+
   // Integration
   sso?: {
     enabled: boolean;
     provider: string;
     metadata?: Record<string, unknown>;
   };
-  
+
   // Billing
   customBilling?: {
     invoiceFrequency: string;
-    paymentTerms: number;        // Days
+    paymentTerms: number; // Days
     poRequired: boolean;
   };
 }

@@ -6,7 +6,11 @@ const STORAGE_KEY = 'pain-tracker:analytics-consent';
 
 export default function BetaAnalyticsConsentPrompt() {
   const [consent, setConsent] = useState<string | null>(() => {
-    try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+    try {
+      return localStorage.getItem(STORAGE_KEY);
+    } catch {
+      return null;
+    }
   });
   const { bottomLeft } = useToast();
 
@@ -14,10 +18,10 @@ export default function BetaAnalyticsConsentPrompt() {
     try {
       localStorage.setItem(STORAGE_KEY, 'granted');
       setConsent('granted');
-      
+
       // Enable analytics in the service
       const consentGranted = await privacyAnalytics.requestConsent();
-      
+
       if (consentGranted) {
         bottomLeft.success(
           'Thank you!',
@@ -37,10 +41,10 @@ export default function BetaAnalyticsConsentPrompt() {
       const timer = setTimeout(() => {
         bottomLeft.info(
           'Help improve Pain Tracker?',
-          'We\'d like to collect anonymous usage data to improve the app. Your pain data stays private and local. No personal information is collected.',
+          "We'd like to collect anonymous usage data to improve the app. Your pain data stays private and local. No personal information is collected.",
           {
             label: 'Allow',
-            onClick: grant
+            onClick: grant,
           },
           {
             onDismiss: () => {
@@ -48,7 +52,7 @@ export default function BetaAnalyticsConsentPrompt() {
               localStorage.setItem(STORAGE_KEY, 'declined');
               setConsent('declined');
               privacyAnalytics.updatePrivacyConfig({ enableAnalytics: false });
-            }
+            },
           }
         );
       }, 2000); // 2 second delay to avoid prompt collision

@@ -53,19 +53,19 @@ export class HealthcareAPIRouter {
 
     const token = authHeader.substring(7);
     const tokenInfo = await healthcareOAuthProvider.validateAccessToken(token);
-    
+
     if (!tokenInfo) {
       throw new Error('Invalid or expired access token');
     }
 
     // Get user info
     const userInfo = await healthcareOAuthProvider.getUserInfo(token);
-    
+
     request.user = {
       id: tokenInfo.userId,
       role: userInfo?.role || 'unknown',
       permissions: this.getPermissionsFromScope(tokenInfo.scope),
-      organizationId: userInfo?.organizationId
+      organizationId: userInfo?.organizationId,
     };
 
     return request;
@@ -97,7 +97,7 @@ export class HealthcareAPIRouter {
     try {
       await this.authenticateRequest(request);
       await this.checkRateLimit(request);
-      
+
       const { method, path, body, query } = request;
       const pathParts = path.split('/').filter(p => p);
 
@@ -107,7 +107,7 @@ export class HealthcareAPIRouter {
         userId: request.user!.id,
         userRole: request.user!.role,
         resourceType: 'fhir-resource',
-        outcome: 'success'
+        outcome: 'success',
       });
 
       // Handle different FHIR operations
@@ -116,14 +116,14 @@ export class HealthcareAPIRouter {
         const resourceType = pathParts[0];
         const searchParams = query;
         const bundle = await fhirService.searchResources(resourceType, searchParams);
-        
+
         return {
           success: true,
           data: bundle,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -131,14 +131,14 @@ export class HealthcareAPIRouter {
         // Read resource: GET /Patient/123
         const [resourceType, id] = pathParts;
         const resource = await fhirService.getResource(resourceType, id);
-        
+
         return {
           success: true,
           data: resource,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -157,24 +157,24 @@ export class HealthcareAPIRouter {
             error: {
               code: 'VALIDATION_ERROR',
               message: 'Resource validation failed',
-              details: validation.errors
+              details: validation.errors,
             },
             meta: {
               timestamp: new Date().toISOString(),
-              requestId: this.generateRequestId()
-            }
+              requestId: this.generateRequestId(),
+            },
           };
         }
 
         const createdResource = await fhirService.createResource(body as any);
-        
+
         return {
           success: true,
           data: createdResource,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -185,7 +185,7 @@ export class HealthcareAPIRouter {
           throw new Error('Invalid request body');
         }
 
-        const resourceWithId = { ...body as any, id };
+        const resourceWithId = { ...(body as any), id };
         const validation = await hipaaComplianceService.validateFHIRResource(resourceWithId);
         if (!validation.isValid) {
           return {
@@ -193,24 +193,24 @@ export class HealthcareAPIRouter {
             error: {
               code: 'VALIDATION_ERROR',
               message: 'Resource validation failed',
-              details: validation.errors
+              details: validation.errors,
             },
             meta: {
               timestamp: new Date().toISOString(),
-              requestId: this.generateRequestId()
-            }
+              requestId: this.generateRequestId(),
+            },
           };
         }
 
         const updatedResource = await fhirService.updateResource(resourceWithId);
-        
+
         return {
           success: true,
           data: updatedResource,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -218,18 +218,17 @@ export class HealthcareAPIRouter {
         // Delete resource: DELETE /Patient/123
         const [resourceType, id] = pathParts;
         await fhirService.deleteResource(resourceType, id);
-        
+
         return {
           success: true,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       throw new Error('Unsupported FHIR operation');
-
     } catch (error) {
       await hipaaComplianceService.logAuditEvent({
         actionType: 'access',
@@ -237,19 +236,19 @@ export class HealthcareAPIRouter {
         userRole: request.user?.role || 'unknown',
         resourceType: 'fhir-resource',
         outcome: 'failure',
-        details: { error: error instanceof Error ? error.message : 'Unknown error' }
+        details: { error: error instanceof Error ? error.message : 'Unknown error' },
       });
 
       return {
         success: false,
         error: {
           code: 'OPERATION_FAILED',
-          message: error instanceof Error ? error.message : 'Unknown error'
+          message: error instanceof Error ? error.message : 'Unknown error',
         },
         meta: {
           timestamp: new Date().toISOString(),
-          requestId: this.generateRequestId()
-        }
+          requestId: this.generateRequestId(),
+        },
       };
     }
   }
@@ -259,23 +258,20 @@ export class HealthcareAPIRouter {
     try {
       await this.authenticateRequest(request);
       await this.checkRateLimit(request);
-      
+
       const { method, path, body, query } = request;
       const pathParts = path.split('/').filter(p => p);
 
       if (method === 'GET' && pathParts[0] === 'patients') {
-        const patients = await healthcareProviderAPI.getPatients(
-          request.user!.id,
-          query as any
-        );
-        
+        const patients = await healthcareProviderAPI.getPatients(request.user!.id, query as any);
+
         return {
           success: true,
           data: patients,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -285,14 +281,14 @@ export class HealthcareAPIRouter {
           pathParts[1],
           query.format as 'fhir' | 'summary'
         );
-        
+
         return {
           success: true,
           data: patientData,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -303,45 +299,44 @@ export class HealthcareAPIRouter {
 
         const syncResponse = await healthcareProviderAPI.requestDataSync({
           providerId: request.user!.id,
-          ...(body as any)
+          ...(body as any),
         });
-        
+
         return {
           success: true,
           data: syncResponse,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       if (method === 'GET' && pathParts[0] === 'sync' && pathParts[1]) {
         const syncStatus = await healthcareProviderAPI.getSyncStatus(pathParts[1]);
-        
+
         return {
           success: true,
           data: syncStatus,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       throw new Error('Unsupported provider operation');
-
     } catch (error) {
       return {
         success: false,
         error: {
           code: 'OPERATION_FAILED',
-          message: error instanceof Error ? error.message : 'Unknown error'
+          message: error instanceof Error ? error.message : 'Unknown error',
         },
         meta: {
           timestamp: new Date().toISOString(),
-          requestId: this.generateRequestId()
-        }
+          requestId: this.generateRequestId(),
+        },
       };
     }
   }
@@ -351,7 +346,7 @@ export class HealthcareAPIRouter {
     try {
       await this.authenticateRequest(request);
       await this.checkRateLimit(request);
-      
+
       const { method, path, body } = request;
       const pathParts = path.split('/').filter(p => p);
 
@@ -361,14 +356,14 @@ export class HealthcareAPIRouter {
         }
 
         const agreementId = await dataSharingProtocols.createAgreement(body as any);
-        
+
         return {
           success: true,
           data: { agreementId },
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -378,30 +373,29 @@ export class HealthcareAPIRouter {
         }
 
         const requestId = await dataSharingProtocols.requestDataExchange(body as any);
-        
+
         return {
           success: true,
           data: { requestId },
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       throw new Error('Unsupported data sharing operation');
-
     } catch (error) {
       return {
         success: false,
         error: {
           code: 'OPERATION_FAILED',
-          message: error instanceof Error ? error.message : 'Unknown error'
+          message: error instanceof Error ? error.message : 'Unknown error',
         },
         meta: {
           timestamp: new Date().toISOString(),
-          requestId: this.generateRequestId()
-        }
+          requestId: this.generateRequestId(),
+        },
       };
     }
   }
@@ -418,27 +412,27 @@ export class HealthcareAPIRouter {
         }
 
         const tokenResponse = await healthcareOAuthProvider.exchangeCodeForToken(body as any);
-        
+
         return {
           success: true,
           data: tokenResponse,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       if (method === 'GET' && pathParts[0] === 'authorize') {
         const authUrl = await healthcareOAuthProvider.createAuthorizationUrl(query as any);
-        
+
         return {
           success: true,
           data: { authUrl },
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
@@ -448,60 +442,59 @@ export class HealthcareAPIRouter {
         }
 
         const tokenInfo = await healthcareOAuthProvider.introspectToken((body as any).token);
-        
+
         return {
           success: true,
           data: tokenInfo,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       if (method === 'GET' && pathParts[0] === 'userinfo') {
         await this.authenticateRequest(request);
-        
+
         const authHeader = request.headers['authorization'];
         const token = authHeader!.substring(7);
         const userInfo = await healthcareOAuthProvider.getUserInfo(token);
-        
+
         return {
           success: true,
           data: userInfo,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       if (method === 'GET' && pathParts[0] === 'jwks') {
         const jwks = await healthcareOAuthProvider.getJWKS();
-        
+
         return {
           success: true,
           data: jwks,
           meta: {
             timestamp: new Date().toISOString(),
-            requestId: this.generateRequestId()
-          }
+            requestId: this.generateRequestId(),
+          },
         };
       }
 
       throw new Error('Unsupported OAuth operation');
-
     } catch (error) {
       return {
         success: false,
         error: {
           code: 'OPERATION_FAILED',
-          message: error instanceof Error ? error.message : 'Unknown error'
+          message: error instanceof Error ? error.message : 'Unknown error',
         },
         meta: {
           timestamp: new Date().toISOString(),
-          requestId: this.generateRequestId()
-        }
+          requestId: this.generateRequestId(),
+        },
       };
     }
   }
@@ -509,18 +502,18 @@ export class HealthcareAPIRouter {
   // Main Router
   async route(request: APIRequest): Promise<APIResponse> {
     const pathParts = request.path.split('/').filter(p => p);
-    
+
     if (!pathParts.length) {
       return {
         success: false,
         error: {
           code: 'INVALID_PATH',
-          message: 'Invalid API path'
+          message: 'Invalid API path',
         },
         meta: {
           timestamp: new Date().toISOString(),
-          requestId: this.generateRequestId()
-        }
+          requestId: this.generateRequestId(),
+        },
       };
     }
 
@@ -530,30 +523,30 @@ export class HealthcareAPIRouter {
         case 'fhir':
           request.path = '/' + pathParts.slice(1).join('/');
           return await this.handleFHIRRequest(request);
-          
+
         case 'provider':
           request.path = '/' + pathParts.slice(1).join('/');
           return await this.handleProviderRequest(request);
-          
+
         case 'data-sharing':
           request.path = '/' + pathParts.slice(1).join('/');
           return await this.handleDataSharingRequest(request);
-          
+
         case 'oauth':
           request.path = '/' + pathParts.slice(1).join('/');
           return await this.handleOAuthRequest(request);
-          
+
         default:
           return {
             success: false,
             error: {
               code: 'UNKNOWN_ENDPOINT',
-              message: `Unknown API endpoint: ${pathParts[0]}`
+              message: `Unknown API endpoint: ${pathParts[0]}`,
             },
             meta: {
               timestamp: new Date().toISOString(),
-              requestId: this.generateRequestId()
-            }
+              requestId: this.generateRequestId(),
+            },
           };
       }
     } catch (error) {
@@ -561,12 +554,12 @@ export class HealthcareAPIRouter {
         success: false,
         error: {
           code: 'INTERNAL_ERROR',
-          message: error instanceof Error ? error.message : 'Internal server error'
+          message: error instanceof Error ? error.message : 'Internal server error',
         },
         meta: {
           timestamp: new Date().toISOString(),
-          requestId: this.generateRequestId()
-        }
+          requestId: this.generateRequestId(),
+        },
       };
     }
   }
@@ -606,23 +599,23 @@ export const API_DOCUMENTATION = {
         'GET /fhir/Patient - Search patients',
         'GET /fhir/Patient/123 - Get specific patient',
         'POST /fhir/Observation - Create observation',
-        'PUT /fhir/Patient/123 - Update patient'
-      ]
+        'PUT /fhir/Patient/123 - Update patient',
+      ],
     },
     provider: {
       description: 'Healthcare provider specific endpoints',
       examples: [
         'GET /provider/patients - Get provider patients',
         'POST /provider/sync - Request data synchronization',
-        'GET /provider/sync/123 - Check sync status'
-      ]
+        'GET /provider/sync/123 - Check sync status',
+      ],
     },
     'data-sharing': {
       description: 'Data sharing agreement and exchange endpoints',
       examples: [
         'POST /data-sharing/agreements - Create data sharing agreement',
-        'POST /data-sharing/exchange - Request data exchange'
-      ]
+        'POST /data-sharing/exchange - Request data exchange',
+      ],
     },
     oauth: {
       description: 'OAuth2/OIDC authentication endpoints',
@@ -630,9 +623,9 @@ export const API_DOCUMENTATION = {
         'GET /oauth/authorize - Authorization endpoint',
         'POST /oauth/token - Token exchange',
         'GET /oauth/userinfo - User information',
-        'GET /oauth/jwks - JSON Web Key Set'
-      ]
-    }
+        'GET /oauth/jwks - JSON Web Key Set',
+      ],
+    },
   },
   authentication: {
     type: 'OAuth2',
@@ -643,8 +636,8 @@ export const API_DOCUMENTATION = {
       'patient/*.read - Read patient data',
       'patient/*.write - Write patient data',
       'system/*.read - System level read access',
-      'system/*.write - System level write access'
-    ]
+      'system/*.write - System level write access',
+    ],
   },
   compliance: {
     standards: ['FHIR R4', 'HIPAA', 'OAuth2', 'OIDC'],
@@ -653,7 +646,7 @@ export const API_DOCUMENTATION = {
       'Audit logging',
       'Access controls',
       'Data validation',
-      'Rate limiting'
-    ]
-  }
+      'Rate limiting',
+    ],
+  },
 };

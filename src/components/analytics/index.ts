@@ -18,19 +18,19 @@ export { PredictiveIndicatorPanel } from './PredictiveIndicatorPanel';
 export { WeeklyClinicalBriefCard } from './WeeklyClinicalBriefCard';
 
 // Re-export enhanced analytics services
-export { 
+export {
   EmpathyDrivenAnalyticsService,
-  empathyAnalytics 
+  empathyAnalytics,
 } from '../../services/EmpathyDrivenAnalytics';
 
 export {
   EmpathyIntelligenceEngine,
-  empathyIntelligenceEngine
+  empathyIntelligenceEngine,
 } from '../../services/EmpathyIntelligenceEngine';
 
 export {
   RealTimeEmpathyMonitor,
-  realTimeEmpathyMonitor
+  realTimeEmpathyMonitor,
 } from '../../services/RealTimeEmpathyMonitor';
 
 // Re-export types
@@ -42,7 +42,7 @@ export type {
   Achievement,
   Milestone,
   MeaningfulMoment,
-  EmpathyAnalyticsConfig
+  EmpathyAnalyticsConfig,
 } from '../../services/EmpathyDrivenAnalytics';
 
 // Re-export enhanced empathy types
@@ -62,14 +62,14 @@ export type {
   TemporalEmpathyPatterns,
   MicroEmpathyTracking,
   PredictiveEmpathyModel,
-  EmpathyMetricsSnapshot
+  EmpathyMetricsSnapshot,
 } from '../../types/quantified-empathy';
 
 // Re-export real-time monitoring types
 export type {
   RealTimeEmpathyConfig,
   EmpathyStateSnapshot,
-  RealTimeAlert
+  RealTimeAlert,
 } from '../../services/RealTimeEmpathyMonitor';
 
 // Re-export Advanced Analytics types

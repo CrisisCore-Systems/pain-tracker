@@ -1,0 +1,177 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - link "Skip to main content" [ref=e3] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=e5]:
+    - link "Skip to main content" [ref=e6] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e7]:
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - img [ref=e13]
+            - generic [ref=e15]: 100% Local & Private
+          - heading "Transform Chronic Pain Management" [level=1] [ref=e16]:
+            - text: Transform Chronic Pain
+            - generic [ref=e17]: Management
+          - paragraph [ref=e18]: Clinical-grade pain tracking with empathy-driven design. Your data stays on your device—secure, private, and always accessible.
+          - generic [ref=e19]:
+            - generic [ref=e20]:
+              - img [ref=e21]
+              - generic [ref=e23]: Advanced Analytics
+            - generic [ref=e24]:
+              - img [ref=e25]
+              - generic [ref=e27]: Military-Grade Security
+            - generic [ref=e28]:
+              - img [ref=e29]
+              - generic [ref=e31]: Trauma-Informed
+          - generic [ref=e32]:
+            - button "Start tracking your pain for free" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34] [cursor=pointer]:
+                - text: Start Free
+                - generic [ref=e35] [cursor=pointer]: →
+            - button "See Features" [ref=e36] [cursor=pointer]:
+              - generic [ref=e37] [cursor=pointer]: See Features
+          - paragraph [ref=e38]: No account required • No data collection • Works offline
+        - generic [ref=e40]:
+          - img "Pain Tracker Pro Dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design" [ref=e42]
+          - generic [ref=e43]: Open Source
+          - generic [ref=e44]: WCAG 2.1 AA
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - heading "Why Choose Pain Tracker Pro?" [level=2] [ref=e50]
+          - paragraph [ref=e51]: Powerful features designed with your privacy, security, and well-being in mind.
+        - generic [ref=e52]:
+          - generic [ref=e54]:
+            - img [ref=e56]
+            - heading "100% Local & Private" [level=2] [ref=e59]
+            - paragraph [ref=e60]: Your pain data never leaves your device. No cloud uploads, no tracking, no data collection. Complete privacy guaranteed.
+          - generic [ref=e63]:
+            - img [ref=e65]
+            - heading "Clinical-Grade Analytics" [level=2] [ref=e67]
+            - paragraph [ref=e68]: Advanced pattern recognition, trigger correlations, and WorkSafe BC reporting. Tools designed for patients and healthcare providers.
+          - generic [ref=e71]:
+            - img [ref=e73]
+            - heading "Trauma-Informed Design" [level=2] [ref=e75]
+            - paragraph [ref=e76]: Built with empathy for chronic pain sufferers. Gentle language, accessible interface, crisis support, and customizable sensitivity.
+          - generic [ref=e79]:
+            - img [ref=e81]
+            - heading "Works Completely Offline" [level=2] [ref=e88]
+            - paragraph [ref=e89]: Full functionality without internet. Progressive Web App technology ensures you can track pain anytime, anywhere.
+      - generic [ref=e92]:
+        - generic [ref=e93]:
+          - heading "Security & Trust You Can Verify" [level=2] [ref=e94]
+          - paragraph [ref=e95]: Your health data deserves the highest level of protection
+        - generic [ref=e96]:
+          - generic [ref=e97]:
+            - img [ref=e99]
+            - heading "AES-256 Encryption" [level=3] [ref=e101]
+            - paragraph [ref=e102]: Military-grade encryption
+          - generic [ref=e103]:
+            - img [ref=e105]
+            - heading "HIPAA-Aligned" [level=3] [ref=e108]
+            - paragraph [ref=e109]: Healthcare data standards
+          - generic [ref=e110]:
+            - img [ref=e112]
+            - heading "Zero Tracking" [level=3] [ref=e115]
+            - paragraph [ref=e116]: No analytics or cookies
+          - generic [ref=e117]:
+            - img [ref=e119]
+            - heading "Open Source" [level=3] [ref=e122]
+            - paragraph [ref=e123]: Auditable & transparent
+          - generic [ref=e124]:
+            - img [ref=e126]
+            - heading "WCAG 2.1 AA" [level=3] [ref=e130]
+            - paragraph [ref=e131]: Accessibility certified
+          - generic [ref=e132]:
+            - img [ref=e134]
+            - heading "Community-Driven" [level=3] [ref=e139]
+            - paragraph [ref=e140]: Built with patients
+        - paragraph [ref=e142]:
+          - strong [ref=e143]: Your data, your device.
+          - text: We use local-first architecture with IndexedDB storage. No servers, no cloud, no third parties.
+          - link "View source code →" [ref=e144] [cursor=pointer]:
+            - /url: https://github.com/CrisisCore-Systems/pain-tracker
+      - generic [ref=e146]:
+        - generic [ref=e147]:
+          - heading "Comprehensive Pain Management Tools" [level=2] [ref=e148]
+          - paragraph [ref=e149]: Everything you need to understand, track, and communicate your pain effectively.
+        - generic [ref=e150]:
+          - generic [ref=e151]:
+            - img [ref=e154]
+            - generic [ref=e156]:
+              - heading "7-Step Pain Assessment" [level=3] [ref=e157]
+              - paragraph [ref=e158]: Comprehensive tracking across 25+ anatomical locations with severity gradients.
+          - generic [ref=e159]:
+            - img [ref=e162]
+            - generic [ref=e165]:
+              - heading "Pattern Recognition" [level=3] [ref=e166]
+              - paragraph [ref=e167]: Advanced heuristic analysis detects pain trends, flares, and correlations.
+          - generic [ref=e168]:
+            - img [ref=e171]
+            - generic [ref=e174]:
+              - heading "WorkSafe BC Export" [level=3] [ref=e175]
+              - paragraph [ref=e176]: Generate clinical reports for claims, healthcare providers, and legal documentation.
+          - generic [ref=e177]:
+            - img [ref=e180]
+            - generic [ref=e183]:
+              - heading "Medication Tracking" [level=3] [ref=e184]
+              - paragraph [ref=e185]: Monitor dosages, side effects, and treatment effectiveness over time.
+          - generic [ref=e186]:
+            - img [ref=e189]
+            - generic [ref=e191]:
+              - heading "Quality of Life Metrics" [level=3] [ref=e192]
+              - paragraph [ref=e193]: Track mood, sleep, and activity impact with correlation analysis.
+          - generic [ref=e194]:
+            - img [ref=e197]
+            - generic [ref=e200]:
+              - heading "Body Mapping" [level=3] [ref=e201]
+              - paragraph [ref=e202]: Visual anatomical heatmaps show pain distribution and progression.
+        - generic [ref=e203]:
+          - paragraph [ref=e204]: Ready to take control of your pain management?
+          - link "Get Started Now →" [ref=e205] [cursor=pointer]:
+            - /url: /start
+            - text: Get Started Now
+            - generic [ref=e206] [cursor=pointer]: →
+    - contentinfo [ref=e207]:
+      - generic [ref=e208]:
+        - generic [ref=e209]:
+          - generic [ref=e210]:
+            - generic [ref=e211]:
+              - img [ref=e212]
+              - generic [ref=e214]: Pain Tracker Pro
+            - paragraph [ref=e215]: Empowering chronic pain management through privacy-first technology and trauma-informed design.
+          - generic [ref=e216]:
+            - heading "Resources" [level=3] [ref=e217]
+            - list [ref=e218]:
+              - listitem [ref=e219]:
+                - link "Source Code" [ref=e220] [cursor=pointer]:
+                  - /url: https://github.com/CrisisCore-Systems/pain-tracker
+                  - img [ref=e221] [cursor=pointer]
+                  - text: Source Code
+              - listitem [ref=e224]:
+                - link "Documentation" [ref=e225] [cursor=pointer]:
+                  - /url: https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md
+              - listitem [ref=e226]:
+                - link "Security Policy" [ref=e227] [cursor=pointer]:
+                  - /url: https://github.com/CrisisCore-Systems/pain-tracker/blob/main/SECURITY.md
+                  - img [ref=e228] [cursor=pointer]
+                  - text: Security Policy
+          - generic [ref=e230]:
+            - heading "Legal" [level=3] [ref=e231]
+            - list [ref=e232]:
+              - listitem [ref=e233]:
+                - link "MIT License" [ref=e234] [cursor=pointer]:
+                  - /url: https://github.com/CrisisCore-Systems/pain-tracker/blob/main/LICENSE
+              - listitem [ref=e235]: No Privacy Policy needed—we don't collect data
+              - listitem [ref=e236]: No Terms of Service—it's open source software
+        - generic [ref=e237]:
+          - paragraph [ref=e238]: © 2025 CrisisCore Systems. Released under MIT License.
+          - paragraph [ref=e239]:
+            - text: Made with
+            - img [ref=e240]
+            - text: for chronic pain survivors
+  - status [ref=e242]: Welcome to Pain Tracker Pro. A privacy-first chronic pain tracking application.
+```

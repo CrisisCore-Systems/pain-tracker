@@ -40,7 +40,10 @@ export class ErrorBoundary extends Component<Props, State> {
       const isDev = (() => {
         try {
           if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-            return (import.meta as any).env.MODE === 'development' || (import.meta as any).env.NODE_ENV === 'development';
+            return (
+              (import.meta as any).env.MODE === 'development' ||
+              (import.meta as any).env.NODE_ENV === 'development'
+            );
           }
         } catch (e) {
           // import.meta may not be available in some transpilation targets
@@ -60,7 +63,9 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div role="alert" className="bg-red-50 border border-red-200 rounded-lg p-4 m-4">
           <h2 className="text-lg font-semibold text-red-700 mb-2">Something went wrong</h2>
-          <p className="text-red-600 mb-4">We encountered an error while displaying this component.</p>
+          <p className="text-red-600 mb-4">
+            We encountered an error while displaying this component.
+          </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
@@ -78,4 +83,4 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children;
   }
-} 
+}

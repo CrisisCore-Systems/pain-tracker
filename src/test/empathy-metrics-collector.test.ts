@@ -11,7 +11,7 @@ const analytics = new EmpathyDrivenAnalyticsService({
   celebrationFrequency: 'daily',
   reportingStyle: 'balanced',
   privacyLevel: 'personal',
-  languagePreference: 'everyday'
+  languagePreference: 'everyday',
 });
 
 const security = new SecurityService(undefined, { consentRequired: true });
@@ -27,7 +27,7 @@ const basePain: PainEntry = {
   qualityOfLife: { sleepQuality: 5, moodImpact: 4, socialImpact: [] },
   workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
   comparison: { worseningSince: '', newLimitations: [] },
-  notes: 'Talked with friend and felt understood. Email test@example.com'
+  notes: 'Talked with friend and felt understood. Email test@example.com',
 };
 
 const baseMood: MoodEntry = {
@@ -44,30 +44,42 @@ const baseMood: MoodEntry = {
   triggers: [],
   copingStrategies: ['self-compassion'],
   socialSupport: 'moderate',
-  notes: 'I feel supported and understood after boundary practice.'
+  notes: 'I feel supported and understood after boundary practice.',
 };
 
 describe('EmpathyMetricsCollector', () => {
   it('enforces consent', async () => {
-    await expect(collector.collect([basePain], [baseMood], {
-      userId: 'user-1',
-      consentGranted: false
-    })).rejects.toThrow(/Consent required/);
+    await expect(
+      collector.collect([basePain], [baseMood], {
+        userId: 'user-1',
+        consentGranted: false,
+      })
+    ).rejects.toThrow(/Consent required/);
   });
 
   it('sanitizes PII-like patterns and returns metrics', async () => {
     const result = await collector.collect([basePain], [baseMood], {
       userId: 'user-1',
       consentGranted: true,
-      sanitize: true
+      sanitize: true,
     });
     expect(result.metrics.emotionalIntelligence.empathy).toBeGreaterThanOrEqual(0);
     expect(result.redactions).toBeGreaterThanOrEqual(1); // email redacted
   });
 
   it('applies differential privacy noise when enabled', async () => {
-    const r1 = await collector.collect([basePain], [baseMood], { userId: 'user-1', consentGranted: true, differentialPrivacy: true, noiseEpsilon: 0.5 });
-    const r2 = await collector.collect([basePain], [baseMood], { userId: 'user-1', consentGranted: true, differentialPrivacy: true, noiseEpsilon: 0.5 });
+    const r1 = await collector.collect([basePain], [baseMood], {
+      userId: 'user-1',
+      consentGranted: true,
+      differentialPrivacy: true,
+      noiseEpsilon: 0.5,
+    });
+    const r2 = await collector.collect([basePain], [baseMood], {
+      userId: 'user-1',
+      consentGranted: true,
+      differentialPrivacy: true,
+      noiseEpsilon: 0.5,
+    });
     // Value likely differs due to noise (non-deterministic, so allow equality but check flag)
     expect(r1.noiseInjected).toBe(true);
     expect(r2.noiseInjected).toBe(true);

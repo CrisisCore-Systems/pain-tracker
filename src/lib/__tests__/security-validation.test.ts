@@ -25,7 +25,7 @@ describe('Security Validation Tests', () => {
       };
 
       const result = validatePain(validData);
-      
+
       // Should accept and properly format valid data
       expect(result.intensity).toBe(5);
       expect(result.location).toBe('Lower back');
@@ -35,56 +35,68 @@ describe('Security Validation Tests', () => {
     });
 
     it('should validate pain intensity bounds', () => {
-      expect(() => validatePain({
-        intensity: -1,
-        location: 'back',
-        description: 'pain',
-        timestamp: new Date().toISOString(),
-      })).toThrow(ValidationError);
+      expect(() =>
+        validatePain({
+          intensity: -1,
+          location: 'back',
+          description: 'pain',
+          timestamp: new Date().toISOString(),
+        })
+      ).toThrow(ValidationError);
 
-      expect(() => validatePain({
-        intensity: 11,
-        location: 'back', 
-        description: 'pain',
-        timestamp: new Date().toISOString(),
-      })).toThrow(ValidationError);
+      expect(() =>
+        validatePain({
+          intensity: 11,
+          location: 'back',
+          description: 'pain',
+          timestamp: new Date().toISOString(),
+        })
+      ).toThrow(ValidationError);
     });
 
     it('should validate required fields', () => {
-      expect(() => validatePain({
-        intensity: 5,
-        location: '',
-        description: 'pain',
-        timestamp: new Date().toISOString(),
-      })).toThrow(ValidationError);
+      expect(() =>
+        validatePain({
+          intensity: 5,
+          location: '',
+          description: 'pain',
+          timestamp: new Date().toISOString(),
+        })
+      ).toThrow(ValidationError);
 
-      expect(() => validatePain({
-        intensity: 5,
-        location: 'back',
-        description: '',
-        timestamp: new Date().toISOString(),
-      })).toThrow(ValidationError);
+      expect(() =>
+        validatePain({
+          intensity: 5,
+          location: 'back',
+          description: '',
+          timestamp: new Date().toISOString(),
+        })
+      ).toThrow(ValidationError);
     });
 
     it('should validate timestamp format and range', () => {
       // Invalid timestamp
-      expect(() => validatePain({
-        intensity: 5,
-        location: 'back',
-        description: 'pain',
-        timestamp: 'invalid-date',
-      })).toThrow(ValidationError);
+      expect(() =>
+        validatePain({
+          intensity: 5,
+          location: 'back',
+          description: 'pain',
+          timestamp: 'invalid-date',
+        })
+      ).toThrow(ValidationError);
 
       // Future date
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + 2);
-      
-      expect(() => validatePain({
-        intensity: 5,
-        location: 'back',
-        description: 'pain',
-        timestamp: futureDate.toISOString(),
-      })).toThrow(ValidationError);
+
+      expect(() =>
+        validatePain({
+          intensity: 5,
+          location: 'back',
+          description: 'pain',
+          timestamp: futureDate.toISOString(),
+        })
+      ).toThrow(ValidationError);
     });
   });
 
@@ -114,16 +126,20 @@ describe('Security Validation Tests', () => {
     });
 
     it('should validate email format', () => {
-      expect(() => validatePersonalInfo({
-        name: 'John Doe',
-        email: 'invalid-email',
-      })).toThrow(ValidationError);
+      expect(() =>
+        validatePersonalInfo({
+          name: 'John Doe',
+          email: 'invalid-email',
+        })
+      ).toThrow(ValidationError);
     });
 
     it('should validate name format', () => {
-      expect(() => validatePersonalInfo({
-        name: 'John123', // Numbers not allowed in names
-      })).toThrow(ValidationError);
+      expect(() =>
+        validatePersonalInfo({
+          name: 'John123', // Numbers not allowed in names
+        })
+      ).toThrow(ValidationError);
     });
   });
 
