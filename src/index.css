@@ -20,12 +20,12 @@
   --color-card-foreground: 15 23 42;
   --color-popover: 255 255 255;
   --color-popover-foreground: 15 23 42;
-  --color-primary: 14 165 233;
+  --color-primary: 2 132 199;
   --color-primary-foreground: 255 255 255;
   --color-secondary: 34 197 94;
   --color-secondary-foreground: 255 255 255;
   --color-muted: 241 245 249;
-  --color-muted-foreground: 100 116 139;
+  --color-muted-foreground: 71 85 105;
   --color-accent: 168 85 247;
   --color-accent-foreground: 255 255 255;
   --color-destructive: 239 68 68;
@@ -72,7 +72,7 @@
   --color-secondary: 34 197 94;
   --color-secondary-foreground: 255 255 255;
   --color-muted: 51 65 85;
-  --color-muted-foreground: 148 163 184;
+  --color-muted-foreground: 203 213 225;
   --color-accent: 168 85 247;
   --color-accent-foreground: 255 255 255;
   --color-destructive: 239 68 68;

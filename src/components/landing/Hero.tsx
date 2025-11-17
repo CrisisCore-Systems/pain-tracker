@@ -21,7 +21,7 @@ export const Hero: React.FC = () => {
             {/* Heading */}
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               Transform Chronic Pain{' '}
-              <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              <span className="text-primary">
                 Management
               </span>
             </h1>
