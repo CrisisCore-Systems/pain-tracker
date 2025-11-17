@@ -78,18 +78,15 @@ export const Hero: React.FC = () => {
 
           {/* Right Column: Visual */}
           <div className="relative">
-            {/* Placeholder for screenshot/demo */}
+            {/* Dashboard Screenshot */}
             <div className="relative rounded-lg border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5 p-8 shadow-2xl">
-              <div className="aspect-video rounded-md bg-muted/50 flex items-center justify-center border border-border">
-                <div className="text-center space-y-2 p-4">
-                  <Activity className="h-12 w-12 mx-auto text-primary/50" />
-                  <p className="text-sm text-muted-foreground">
-                    Dashboard Preview
-                  </p>
-                  <p className="text-xs text-muted-foreground/70">
-                    Screenshot coming soon
-                  </p>
-                </div>
+              <div className="rounded-md overflow-hidden border border-border shadow-lg">
+                <img 
+                  src="/main-dashboard.png" 
+                  alt="Pain Tracker Pro Dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design"
+                  className="w-full h-auto"
+                  loading="lazy"
+                />
               </div>
               
               {/* Floating badges for visual interest */}
