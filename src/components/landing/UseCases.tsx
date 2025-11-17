@@ -92,19 +92,19 @@ export const UseCases: React.FC = () => {
                     </div>
 
                     {/* Title */}
-                    <CardTitle className="text-xl">{useCase.title}</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl break-words">{useCase.title}</CardTitle>
 
                     {/* Description */}
-                    <CardDescription className="text-base leading-relaxed">
+                    <CardDescription className="text-sm sm:text-base leading-relaxed break-words">
                       {useCase.description}
                     </CardDescription>
 
                     {/* Features List */}
-                    <ul className="space-y-2 text-sm text-muted-foreground">
+                    <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                       {useCase.features.map(feature => (
                         <li key={feature} className="flex items-start gap-2">
-                          <span className="text-primary mt-1">✓</span>
-                          <span>{feature}</span>
+                          <span className="text-primary mt-0.5 sm:mt-1 flex-shrink-0">✓</span>
+                          <span className="break-words">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -115,16 +115,16 @@ export const UseCases: React.FC = () => {
           </div>
 
           {/* Patient CTA */}
-          <div className="text-center">
+          <div className="text-center px-4">
             <Button
               size="lg"
               onClick={() => navigate('/start')}
-              className="gap-2 text-lg px-8 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
+              className="gap-2 text-base sm:text-lg px-6 sm:px-8 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 w-full sm:w-auto whitespace-nowrap"
             >
-              Start Tracking Free
-              <ArrowRight className="h-5 w-5" />
+              <span>Start Tracking Free</span>
+              <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
             </Button>
-            <p className="text-xs text-muted-foreground mt-3">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-3 break-words">
               No account required • 100% private • Works offline
             </p>
           </div>
@@ -162,19 +162,19 @@ export const UseCases: React.FC = () => {
                     </div>
 
                     {/* Title */}
-                    <CardTitle className="text-xl">{useCase.title}</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl break-words">{useCase.title}</CardTitle>
 
                     {/* Description */}
-                    <CardDescription className="text-base leading-relaxed">
+                    <CardDescription className="text-sm sm:text-base leading-relaxed break-words">
                       {useCase.description}
                     </CardDescription>
 
                     {/* Features List */}
-                    <ul className="space-y-2 text-sm text-muted-foreground">
+                    <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
                       {useCase.features.map(feature => (
                         <li key={feature} className="flex items-start gap-2">
-                          <span className="text-green-600 dark:text-green-400 mt-1">✓</span>
-                          <span>{feature}</span>
+                          <span className="text-green-600 dark:text-green-400 mt-0.5 sm:mt-1 flex-shrink-0">✓</span>
+                          <span className="break-words">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -185,16 +185,16 @@ export const UseCases: React.FC = () => {
           </div>
 
           {/* Clinician CTA */}
-          <div className="text-center">
+          <div className="text-center px-4">
             <Button
               size="lg"
               onClick={() => navigate('/clinic')}
-              className="gap-2 text-lg px-8 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-600/90 hover:to-emerald-600/90"
+              className="gap-2 text-base sm:text-lg px-6 sm:px-8 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-600/90 hover:to-emerald-600/90 w-full sm:w-auto whitespace-nowrap"
             >
-              <Stethoscope className="h-5 w-5" />
-              Access Clinician Portal
+              <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+              <span>Access Clinician Portal</span>
             </Button>
-            <p className="text-xs text-muted-foreground mt-3">
+            <p className="text-xs sm:text-sm text-muted-foreground mt-3 break-words">
               Role-based access • AI insights • HIPAA-aligned security
             </p>
           </div>

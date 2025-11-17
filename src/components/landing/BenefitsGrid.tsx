@@ -84,22 +84,22 @@ export const BenefitsGrid: React.FC = () => {
               >
                 <CardHeader className="space-y-4">
                   {/* Icon and Stat Badge */}
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between gap-2">
                     <div
-                      className={`w-12 h-12 rounded-lg ${benefit.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${benefit.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0`}
                     >
-                      <Icon className={`h-6 w-6 ${benefit.color}`} />
+                      <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${benefit.color}`} />
                     </div>
-                    <div className={`text-xs font-semibold ${benefit.color} px-2 py-1 rounded-full ${benefit.bgColor}`}>
+                    <div className={`text-xs font-semibold ${benefit.color} px-2 py-1 rounded-full ${benefit.bgColor} whitespace-nowrap`}>
                       {benefit.stat}
                     </div>
                   </div>
 
                   {/* Title */}
-                  <CardTitle className="text-xl">{benefit.title}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl break-words">{benefit.title}</CardTitle>
 
                   {/* Description */}
-                  <CardDescription className="text-base leading-relaxed">
+                  <CardDescription className="text-sm sm:text-base leading-relaxed break-words">
                     {benefit.description}
                   </CardDescription>
                 </CardHeader>

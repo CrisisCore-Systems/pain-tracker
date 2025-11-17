@@ -11,34 +11,34 @@ export const LandingFooter: React.FC = () => {
     <footer className="border-t bg-gradient-to-b from-background to-muted/50">
       {/* Final CTA Section */}
       <div className="border-b bg-gradient-to-r from-primary/5 via-blue-500/5 to-primary/5">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+        <div className="container mx-auto px-4 py-8 sm:py-12">
+          <div className="max-w-4xl mx-auto text-center space-y-4 sm:space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight md:text-4xl break-words px-2">
               Ready to Transform Your Pain Management?
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-2">
               Join thousands of patients and clinicians using Pain Tracker Pro to understand, track, and manage chronic pain effectively.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2 sm:pt-4 px-2">
               <Button
                 size="lg"
                 onClick={() => navigate('/start')}
-                className="gap-2 text-lg px-8 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
+                className="gap-2 text-base sm:text-lg px-6 sm:px-8 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 w-full sm:w-auto whitespace-nowrap"
               >
-                Start as Patient
-                <ArrowRight className="h-5 w-5" />
+                <span>Start as Patient</span>
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 onClick={() => navigate('/clinic')}
-                className="gap-2 text-lg px-8 border-2"
+                className="gap-2 text-base sm:text-lg px-6 sm:px-8 border-2 w-full sm:w-auto whitespace-nowrap"
               >
-                <Stethoscope className="h-5 w-5" />
-                Clinician Login
+                <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                <span>Clinician Login</span>
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs sm:text-sm text-muted-foreground px-2 break-words">
               No credit card • No account required • 100% free forever
             </p>
           </div>

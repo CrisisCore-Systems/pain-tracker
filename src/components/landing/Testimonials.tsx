@@ -97,21 +97,21 @@ export const Testimonials: React.FC = () => {
                 </div>
 
                 {/* Quote */}
-                <CardDescription className="text-base leading-relaxed relative z-10">
+                <CardDescription className="text-sm sm:text-base leading-relaxed relative z-10 break-words">
                   "{testimonial.quote}"
                 </CardDescription>
 
                 {/* Highlight Badge */}
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary w-fit">
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary w-fit break-words">
                   {testimonial.highlight}
                 </div>
 
                 {/* Author */}
-                <div className="flex items-center gap-3 pt-2 border-t">
-                  <div className="text-3xl">{testimonial.avatar}</div>
-                  <div>
-                    <div className="font-semibold text-sm">{testimonial.name}</div>
-                    <div className="text-xs text-muted-foreground">{testimonial.role}</div>
+                <div className="flex items-center gap-3 pt-2 border-t min-w-0">
+                  <div className="text-2xl sm:text-3xl flex-shrink-0">{testimonial.avatar}</div>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-sm truncate">{testimonial.name}</div>
+                    <div className="text-xs text-muted-foreground truncate">{testimonial.role}</div>
                   </div>
                 </div>
               </CardHeader>
