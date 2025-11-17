@@ -1,10 +1,10 @@
 {
   "outputs": {
-    "assets/background-sync-BbUrH3OB.js": {
+    "assets/background-sync-XX6HOazI.js": {
       "bytes": 7020
     },
-    "assets/background-sync-BbUrH3OB.js.map": {
-      "bytes": 22381
+    "assets/background-sync-XX6HOazI.js.map": {
+      "bytes": 21425
     },
     "assets/chart-vendor-B7B0FrSV.js": {
       "bytes": 9448
@@ -12,17 +12,17 @@
     "assets/chart-vendor-B7B0FrSV.js.map": {
       "bytes": 53005
     },
-    "assets/ClinicalPDFExportButton-XFmRkKvU.js": {
+    "assets/ClinicalPDFExportButton-B9r0HwNm.js": {
       "bytes": 28056
     },
-    "assets/ClinicalPDFExportButton-XFmRkKvU.js.map": {
-      "bytes": 39944
+    "assets/ClinicalPDFExportButton-B9r0HwNm.js.map": {
+      "bytes": 38450
     },
-    "assets/ClinicalPDFExporter-CdQMgJYO.js": {
+    "assets/ClinicalPDFExporter-CCFtoHzR.js": {
       "bytes": 44485
     },
-    "assets/ClinicalPDFExporter-CdQMgJYO.js.map": {
-      "bytes": 169944
+    "assets/ClinicalPDFExporter-CCFtoHzR.js.map": {
+      "bytes": 168310
     },
     "assets/date-vendor-VbNwGsdS.js": {
       "bytes": 2850
@@ -36,31 +36,31 @@
     "assets/html2canvas.esm-Ge7aVWlp.js.map": {
       "bytes": 603097
     },
-    "assets/index-BoYn9Zfx.js": {
-      "bytes": 23398
+    "assets/index-BuEiHtOO.js": {
+      "bytes": 1462225
     },
-    "assets/index-BoYn9Zfx.js.map": {
-      "bytes": 30388
+    "assets/index-BuEiHtOO.js.map": {
+      "bytes": 4579366
     },
-    "assets/index-DfGxHJdT.js": {
+    "assets/index-DbND45l5.js": {
+      "bytes": 23397
+    },
+    "assets/index-DbND45l5.js.map": {
+      "bytes": 29218
+    },
+    "assets/index-l6YFyt_Z.js": {
       "bytes": 18653
     },
-    "assets/index-DfGxHJdT.js.map": {
-      "bytes": 33259
-    },
-    "assets/index-fQDdTo9I.js": {
-      "bytes": 1462167
-    },
-    "assets/index-fQDdTo9I.js.map": {
-      "bytes": 4619277
+    "assets/index-l6YFyt_Z.js.map": {
+      "bytes": 31916
     },
     "assets/index-vAmkTGCQ.css": {
       "bytes": 163890
     },
-    "assets/index.es-bheJ5z_i.js": {
+    "assets/index.es-BzuoI4Jk.js": {
       "bytes": 158675
     },
-    "assets/index.es-bheJ5z_i.js.map": {
+    "assets/index.es-BzuoI4Jk.js.map": {
       "bytes": 641349
     },
     "assets/libsodium-wrappers-DhqTdZPT.js": {
@@ -73,7 +73,7 @@
       "bytes": 7809
     },
     "assets/offline-storage-CQ7mII8k.js.map": {
-      "bytes": 33578
+      "bytes": 32718
     },
     "assets/purify.es-BkTlVNTa.js": {
       "bytes": 22011
@@ -91,7 +91,7 @@
       "bytes": 22081
     },
     "assets/sampleData-CQjumYEi.js.map": {
-      "bytes": 52322
+      "bytes": 50819
     },
     "pwa-demo.js": {
       "bytes": 8279
