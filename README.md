@@ -15,7 +15,10 @@
 
 Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinical-focused exports and tooling for WorkSafe BC reporting. Some advanced analytics and integrations are in active development; see the implementation snapshot in `.github/copilot-instructions.md` for current status.
 
-![Pain Tracker Dashboard](docs/screenshots/main-dashboard.png)
+<p align="center">
+  <img src="docs/screenshots/main-dashboard.png" alt="Pain Tracker Dashboard" style="max-height: 420px; width: auto; max-width: 100%; object-fit: contain; display: block; margin: 0 auto;" />
+</p>
+
 *The Pain Tracker dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design.*
 
 ---

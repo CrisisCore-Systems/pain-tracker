@@ -47,3 +47,4 @@ coverage/
 badges/*.json
 !badges/*.svg
 
+test-screenshots/

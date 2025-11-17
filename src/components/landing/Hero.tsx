@@ -84,7 +84,7 @@ export const Hero: React.FC = () => {
                 <img 
                   src="/main-dashboard.png" 
                   alt="Pain Tracker Pro Dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design"
-                  className="w-full h-auto"
+                  className="mx-auto max-h-[420px] w-auto max-w-full object-contain md:max-h-[480px]"
                   loading="lazy"
                 />
               </div>
