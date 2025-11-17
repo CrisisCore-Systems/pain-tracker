@@ -15,6 +15,7 @@ import { ToastProvider } from "./components/feedback";
 import { TraumaInformedProvider } from "./components/accessibility";
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { ToneProvider } from "./contexts/ToneContext";
+import { StartupPromptsProvider } from "./contexts/StartupPromptsContext";
 import { initializeToneEngine } from "./services/ToneEngine";
 import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
@@ -124,43 +125,45 @@ function App() {
           <ToneProvider>
             <TraumaInformedProvider>
               <ToastProvider>
-                <Routes>
-                  {/* Landing Page - Public */}
-                  <Route path="/" element={<LandingPage />} />
+                <StartupPromptsProvider>
+                  <Routes>
+                    {/* Landing Page - Public */}
+                    <Route path="/" element={<LandingPage />} />
 
-                  {/* Screenshot Showcase - Public */}
-                  <Route path="/demo/*" element={<ScreenshotShowcase />} />
+                    {/* Screenshot Showcase - Public */}
+                    <Route path="/demo/*" element={<ScreenshotShowcase />} />
 
-                  {/* Vault Setup/Login - Public */}
-                  <Route path="/start" element={
-                    <VaultGate>
-                      <Navigate to="/app" replace />
-                    </VaultGate>
-                  } />
+                    {/* Vault Setup/Login - Public */}
+                    <Route path="/start" element={
+                      <VaultGate>
+                        <Navigate to="/app" replace />
+                      </VaultGate>
+                    } />
 
-                  {/* Main Application - Protected */}
-                  <Route path="/app" element={
-                    <VaultGate>
-                      <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
-                        <OfflineBanner />
-                        <BetaWarning />
-                        <NotificationConsentPrompt />
-                        <BetaAnalyticsConsentPrompt />
-                        <ErrorBoundary fallback={<ErrorFallback />}>
-                          <Suspense fallback={<LoadingFallback />}>
-                            <PainTrackerContainer />
-                          </Suspense>
-                        </ErrorBoundary>
-                        <PWAInstallPrompt />
-                        <PWAStatusIndicator />
-                        <ToneStateTester />
-                      </div>
-                    </VaultGate>
-                  } />
+                    {/* Main Application - Protected */}
+                    <Route path="/app" element={
+                      <VaultGate>
+                        <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                          <OfflineBanner />
+                          <BetaWarning />
+                          <NotificationConsentPrompt />
+                          <BetaAnalyticsConsentPrompt />
+                          <ErrorBoundary fallback={<ErrorFallback />}>
+                            <Suspense fallback={<LoadingFallback />}>
+                              <PainTrackerContainer />
+                            </Suspense>
+                          </ErrorBoundary>
+                          <PWAInstallPrompt />
+                          <PWAStatusIndicator />
+                          <ToneStateTester />
+                        </div>
+                      </VaultGate>
+                    } />
 
-                  {/* Fallback - redirect to landing */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
+                    {/* Fallback - redirect to landing */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </StartupPromptsProvider>
               </ToastProvider>
             </TraumaInformedProvider>
           </ToneProvider>

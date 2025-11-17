@@ -1,18 +1,26 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { secureStorage } from '../lib/storage/secureStorage';
 import { BETA_WARNING, BETA_LOCALSTORAGE_KEY } from '../config/beta';
+import { useStartupPrompts } from '../contexts/StartupPromptsContext';
 
 export default function BetaWarning() {
   const [visible, setVisible] = useState<boolean>(false);
+  const { requestPrompt, dismissPrompt, canShowPrompt } = useStartupPrompts();
 
   useEffect(() => {
     try {
       const dismissed = secureStorage.get<string>(BETA_LOCALSTORAGE_KEY);
-      setVisible(dismissed !== 'true');
+      if (dismissed !== 'true') {
+        // Request to show this prompt with priority 1 (highest)
+        requestPrompt('beta-warning', 1);
+        setVisible(true);
+      }
     } catch {
+      // Request to show this prompt with priority 1 (highest)
+      requestPrompt('beta-warning', 1);
       setVisible(true);
     }
-  }, []);
+  }, [requestPrompt]);
 
   const dismiss = useCallback(() => {
     try {
@@ -25,7 +33,8 @@ export default function BetaWarning() {
       }
     }
     setVisible(false);
-  }, []);
+    dismissPrompt('beta-warning');
+  }, [dismissPrompt]);
 
   // Keyboard shortcut: Escape to dismiss
   useEffect(() => {
@@ -41,7 +50,8 @@ export default function BetaWarning() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [visible, dismiss]);
 
-  if (!visible) return null;
+  // Only show if this prompt is allowed by the coordinator
+  if (!visible || !canShowPrompt('beta-warning')) return null;
 
   return (
     <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-[60] max-w-3xl w-full px-4 animate-in fade-in slide-in-from-top-4 duration-300">
