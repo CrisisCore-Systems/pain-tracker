@@ -10,6 +10,8 @@
 
 :root {
   --radius: 0.5rem;
+  /* Prevent forced dark mode on browsers (Chrome Auto Dark Theme) */
+  color-scheme: only light;
 }
 
 /* Default light theme colors - Pain Tracker Brand */
