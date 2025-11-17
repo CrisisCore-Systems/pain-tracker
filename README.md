@@ -310,9 +310,23 @@ npm run deploy:precheck
 npm run deploy
 ```
 
-For comprehensive deployment instructions, see:
-- `docs/DEPLOYMENT.md` - Complete deployment guide
-- `docs/DEPLOYMENT_CHECKLIST.md` - Pre-deployment checklist
+### Deployment Options
+
+**Option 1: GitHub Pages** (Default - Static hosting)
+```bash
+npm run deploy
+```
+
+**Option 2: Ubuntu VM** (Self-hosted, always-on)
+- ✅ Free tier available (Oracle Cloud)
+- ✅ Full control and customization
+- ✅ Automated CI/CD with GitHub Actions
+- 📚 [Complete Ubuntu VM Deployment Guide](docs/UBUNTU_VM_DEPLOYMENT.md)
+- 📚 [Quick Reference Guide](docs/UBUNTU_VM_QUICKSTART.md)
+
+**Option 3: Other Platforms**
+- Vercel, Netlify, Cloudflare Pages, AWS S3, etc.
+- See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for platform-specific instructions
 
 ## 🧪 **Testing & Quality**
 
