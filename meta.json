@@ -1,34 +1,34 @@
 {
   "outputs": {
-    "assets/background-sync-XX6HOazI.js": {
+    "assets/background-sync-C0DUYxWS.js": {
       "bytes": 7020
     },
-    "assets/background-sync-XX6HOazI.js.map": {
+    "assets/background-sync-C0DUYxWS.js.map": {
       "bytes": 21425
     },
-    "assets/chart-vendor-B7B0FrSV.js": {
-      "bytes": 9448
+    "assets/chart-vendor-Cjsg3YbF.js": {
+      "bytes": 392975
     },
-    "assets/chart-vendor-B7B0FrSV.js.map": {
-      "bytes": 53005
+    "assets/chart-vendor-Cjsg3YbF.js.map": {
+      "bytes": 1863753
     },
-    "assets/ClinicalPDFExportButton-B9r0HwNm.js": {
+    "assets/ClinicalPDFExportButton-NfYP_vuT.js": {
       "bytes": 28056
     },
-    "assets/ClinicalPDFExportButton-B9r0HwNm.js.map": {
+    "assets/ClinicalPDFExportButton-NfYP_vuT.js.map": {
       "bytes": 38450
     },
-    "assets/ClinicalPDFExporter-CCFtoHzR.js": {
+    "assets/ClinicalPDFExporter-C8Zcgu44.js": {
       "bytes": 44485
     },
-    "assets/ClinicalPDFExporter-CCFtoHzR.js.map": {
+    "assets/ClinicalPDFExporter-C8Zcgu44.js.map": {
       "bytes": 168310
     },
-    "assets/date-vendor-VbNwGsdS.js": {
-      "bytes": 2850
+    "assets/date-vendor-Bjuqiw2y.js": {
+      "bytes": 22380
     },
-    "assets/date-vendor-VbNwGsdS.js.map": {
-      "bytes": 22296
+    "assets/date-vendor-Bjuqiw2y.js.map": {
+      "bytes": 147322
     },
     "assets/html2canvas.esm-Ge7aVWlp.js": {
       "bytes": 201454
@@ -36,31 +36,31 @@
     "assets/html2canvas.esm-Ge7aVWlp.js.map": {
       "bytes": 603097
     },
-    "assets/index-BuEiHtOO.js": {
-      "bytes": 1462225
+    "assets/index-B8evwRJL.js": {
+      "bytes": 18445
     },
-    "assets/index-BuEiHtOO.js.map": {
-      "bytes": 4579366
+    "assets/index-B8evwRJL.js.map": {
+      "bytes": 30369
     },
-    "assets/index-DbND45l5.js": {
+    "assets/index-B_OlMJtf.js": {
+      "bytes": 1709142
+    },
+    "assets/index-B_OlMJtf.js.map": {
+      "bytes": 4886475
+    },
+    "assets/index-D-5VeUnL.js": {
       "bytes": 23397
     },
-    "assets/index-DbND45l5.js.map": {
+    "assets/index-D-5VeUnL.js.map": {
       "bytes": 29218
     },
-    "assets/index-l6YFyt_Z.js": {
-      "bytes": 18653
+    "assets/index-XbuqgM6p.css": {
+      "bytes": 176706
     },
-    "assets/index-l6YFyt_Z.js.map": {
-      "bytes": 31916
-    },
-    "assets/index-vAmkTGCQ.css": {
-      "bytes": 163890
-    },
-    "assets/index.es-BzuoI4Jk.js": {
+    "assets/index.es-DtVbe0lW.js": {
       "bytes": 158675
     },
-    "assets/index.es-BzuoI4Jk.js.map": {
+    "assets/index.es-DtVbe0lW.js.map": {
       "bytes": 641349
     },
     "assets/libsodium-wrappers-DhqTdZPT.js": {
