@@ -562,7 +562,7 @@ export function AdvancedFilters({
                             updateFilter('locations', filters.locations.filter(l => l !== location));
                           }
                         }}
-                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                        className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                       />
                       <label htmlFor={`location-${location}`} className="text-sm">
                         {location}
@@ -589,7 +589,7 @@ export function AdvancedFilters({
                             updateFilter('symptoms', filters.symptoms.filter(s => s !== symptom));
                           }
                         }}
-                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                        className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                       />
                       <label htmlFor={`symptom-${symptom}`} className="text-sm">
                         {symptom}
@@ -616,7 +616,7 @@ export function AdvancedFilters({
                             updateFilter('medications', filters.medications.filter(m => m !== medication));
                           }
                         }}
-                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                        className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                       />
                       <label htmlFor={`medication-${medication}`} className="text-sm">
                         {medication}
@@ -643,7 +643,7 @@ export function AdvancedFilters({
                             updateFilter('treatments', filters.treatments.filter(t => t !== treatment));
                           }
                         }}
-                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                        className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                       />
                       <label htmlFor={`treatment-${treatment}`} className="text-sm">
                         {treatment}
@@ -710,7 +710,7 @@ export function AdvancedFilters({
                     id="has-missed-work"
                     checked={filters.workImpact.hasMissedWork}
                     onChange={(e) => updateNestedFilter('workImpact', 'hasMissedWork', e.target.checked)}
-                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                    className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                   />
                   <label htmlFor="has-missed-work" className="text-sm">
                     Has missed work
@@ -722,7 +722,7 @@ export function AdvancedFilters({
                     id="has-modified-duties"
                     checked={filters.workImpact.hasModifiedDuties}
                     onChange={(e) => updateNestedFilter('workImpact', 'hasModifiedDuties', e.target.checked)}
-                    className="rounded border-gray-300 text-primary focus:ring-primary"
+                    className="rounded border-gray-300 dark:border-gray-600 text-primary focus:ring-primary"
                   />
                   <label htmlFor="has-modified-duties" className="text-sm">
                     Has modified duties

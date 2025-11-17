@@ -181,8 +181,8 @@ export const EnhancedOfflineDemo: React.FC = () => {
   return (
     <div className="enhanced-offline-demo p-6 max-w-6xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Enhanced Offline Capabilities</h1>
-        <p className="text-gray-600">Advanced PWA features for pain tracking with sophisticated offline support</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Enhanced Offline Capabilities</h1>
+        <p className="text-gray-600 dark:text-gray-400">Advanced PWA features for pain tracking with sophisticated offline support</p>
       </div>
 
       {/* Connection Status */}
@@ -199,19 +199,19 @@ export const EnhancedOfflineDemo: React.FC = () => {
       {offlineStatus && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-gray-500">Resources Available</h3>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Resources Available</h3>
             <p className="text-2xl font-bold text-blue-600">{offlineStatus.resourcesAvailable}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-gray-500">Insights Generated</h3>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Insights Generated</h3>
             <p className="text-2xl font-bold text-green-600">{offlineStatus.insightsGenerated}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-gray-500">Unresolved Conflicts</h3>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Unresolved Conflicts</h3>
             <p className="text-2xl font-bold text-orange-600">{offlineStatus.unresolvedConflicts}</p>
           </div>
           <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-gray-500">Storage Used</h3>
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Storage Used</h3>
             <p className="text-2xl font-bold text-purple-600">{offlineStatus.storageUsed}</p>
           </div>
         </div>
@@ -223,7 +223,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
           <h2 className="text-xl font-semibold mb-4">Offline Coping Strategies</h2>
           
           <div className="mb-4 space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Pain Level: {painLevel}
             </label>
             <input
@@ -235,11 +235,11 @@ export const EnhancedOfflineDemo: React.FC = () => {
               className="w-full"
             />
             
-            <label className="block text-sm font-medium text-gray-700">Location (optional)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Location (optional)</label>
             <select
               value={selectedLocation}
               onChange={(e) => setSelectedLocation(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md"
             >
               <option value="">All locations</option>
               <option value="head">Head</option>
@@ -252,15 +252,15 @@ export const EnhancedOfflineDemo: React.FC = () => {
           <div className="space-y-2">
             {copingStrategies.length > 0 ? (
               copingStrategies.map((strategy) => (
-                <div key={strategy.id} className="p-3 border border-gray-200 rounded-md">
+                <div key={strategy.id} className="p-3 border border-gray-200 dark:border-gray-700 rounded-md">
                   <h3 className="font-medium">{strategy.title}</h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     Priority: <span className={getPriorityColor(strategy.priority)}>{strategy.priority}</span>
                   </p>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No offline coping strategies available for current criteria</p>
+              <p className="text-gray-500 dark:text-gray-400">No offline coping strategies available for current criteria</p>
             )}
           </div>
         </div>
@@ -280,7 +280,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
           <div className="space-y-3">
             {insights.length > 0 ? (
               insights.slice(-5).map((insight) => (
-                <div key={insight.id} className="p-3 border border-gray-200 rounded-md">
+                <div key={insight.id} className="p-3 border border-gray-200 dark:border-gray-700 rounded-md">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-medium capitalize">{insight.type.replace('-', ' ')}</h3>
                     <span className={`text-sm font-medium ${getConfidenceColor(insight.confidence)}`}>
@@ -289,7 +289,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
                   </div>
                   
                   {insight.recommendations && insight.recommendations.length > 0 && (
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       <p className="font-medium">Recommendations:</p>
                       <ul className="list-disc list-inside space-y-1">
                         {insight.recommendations.slice(0, 2).map((rec, index) => (
@@ -299,13 +299,13 @@ export const EnhancedOfflineDemo: React.FC = () => {
                     </div>
                   )}
                   
-                  <p className="text-xs text-gray-400 mt-2">
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                     {new Date(insight.generatedAt).toLocaleString()}
                   </p>
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No health insights available yet</p>
+              <p className="text-gray-500 dark:text-gray-400">No health insights available yet</p>
             )}
           </div>
         </div>
@@ -324,14 +324,14 @@ export const EnhancedOfflineDemo: React.FC = () => {
 
           <div className="space-y-2">
             {resources.map((resource) => (
-              <div key={resource.id} className="flex justify-between items-center p-3 border border-gray-200 rounded-md">
+              <div key={resource.id} className="flex justify-between items-center p-3 border border-gray-200 dark:border-gray-700 rounded-md">
                 <div>
                   <h3 className="font-medium">{resource.title}</h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     Type: {resource.type} | Priority: <span className={getPriorityColor(resource.priority)}>{resource.priority}</span>
                   </p>
                 </div>
-                <span className="text-sm text-gray-500">{formatBytes(resource.size)}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">{formatBytes(resource.size)}</span>
               </div>
             ))}
           </div>
@@ -373,7 +373,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
                     </button>
                   </div>
                   
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     Detected: {new Date(conflict.detectedAt).toLocaleString()}
                   </p>
                 </div>
@@ -394,7 +394,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
               ⚡
             </div>
             <h3 className="font-medium">Advanced Conflict Resolution</h3>
-            <p className="text-sm text-gray-600">Intelligent merge strategies for offline/online data conflicts</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Intelligent merge strategies for offline/online data conflicts</p>
           </div>
           
           <div className="text-center">
@@ -402,7 +402,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
               🔄
             </div>
             <h3 className="font-medium">Sophisticated Sync</h3>
-            <p className="text-sm text-gray-600">Differential sync with intelligent prioritization</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Differential sync with intelligent prioritization</p>
           </div>
           
           <div className="text-center">
@@ -410,7 +410,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
               📚
             </div>
             <h3 className="font-medium">Offline Resources</h3>
-            <p className="text-sm text-gray-600">Coping mechanisms and health resources available offline</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Coping mechanisms and health resources available offline</p>
           </div>
           
           <div className="text-center">
@@ -418,7 +418,7 @@ export const EnhancedOfflineDemo: React.FC = () => {
               🧠
             </div>
             <h3 className="font-medium">Background Insights</h3>
-            <p className="text-sm text-gray-600">AI-powered health pattern analysis in the background</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">AI-powered health pattern analysis in the background</p>
           </div>
         </div>
       </div>

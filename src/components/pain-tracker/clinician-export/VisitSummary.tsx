@@ -63,13 +63,13 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
     <div className="max-w-4xl mx-auto bg-white">
       <div className="p-8 print:p-6">
         {/* Header */}
-        <div className="border-b-2 border-gray-300 pb-6 mb-6">
+        <div className="border-b-2 border-gray-300 dark:border-gray-600 pb-6 mb-6">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 Pain Management Visit Summary
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-gray-600 dark:text-gray-400 mt-1">
                 Generated on {format(new Date(), 'MMMM d, yyyy')}
               </p>
             </div>
@@ -78,7 +78,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
                 <div className="font-semibold">{patientInfo.clinicName}</div>
               )}
               {patientInfo?.physicianName && (
-                <div className="text-gray-600">{patientInfo.physicianName}</div>
+                <div className="text-gray-600 dark:text-gray-400">{patientInfo.physicianName}</div>
               )}
             </div>
           </div>
@@ -133,20 +133,20 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-3">Pain Overview</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-gray-50 p-3 rounded">
-              <div className="text-sm text-gray-600">Average Pain Level</div>
+            <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Average Pain Level</div>
               <div className="text-xl font-bold">{formatNumber(avgPain, 1)}/10</div>
             </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <div className="text-sm text-gray-600">Current Pain Level</div>
+            <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Current Pain Level</div>
               <div className="text-xl font-bold">{latestEntry?.baselineData.pain || 'N/A'}/10</div>
             </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <div className="text-sm text-gray-600">Missed Work Days</div>
+            <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Missed Work Days</div>
               <div className="text-xl font-bold">{workImpact}</div>
             </div>
-            <div className="bg-gray-50 p-3 rounded">
-              <div className="text-sm text-gray-600">Areas Affected</div>
+            <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Areas Affected</div>
               <div className="text-xl font-bold">{topLocations.length}</div>
             </div>
           </div>
@@ -175,10 +175,10 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
               {currentMedications.map((med, index) => (
                 <div key={index} className="border rounded p-3">
                   <div className="font-medium">{med.name}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     {med.dosage} - {med.frequency}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     Effectiveness: {med.effectiveness}
                   </div>
                 </div>
@@ -195,13 +195,13 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
               {recentTreatments.map((treatment, index) => (
                 <div key={index} className="border rounded p-3">
                   <div className="font-medium">{treatment.type}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     Provider: {treatment.provider}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     Date: {treatment.date ? format(new Date(treatment.date), 'MMM d, yyyy') : 'N/A'}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     Effectiveness: {treatment.effectiveness}
                   </div>
                 </div>
@@ -227,12 +227,12 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-3">Quality of Life Assessment</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="text-sm text-gray-600">Sleep Quality</div>
+              <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
+                <div className="text-sm text-gray-600 dark:text-gray-400">Sleep Quality</div>
                 <div className="text-lg font-bold">{latestEntry.qualityOfLife?.sleepQuality || 0}/10</div>
               </div>
-              <div className="bg-gray-50 p-3 rounded">
-                <div className="text-sm text-gray-600">Mood Impact</div>
+              <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
+                <div className="text-sm text-gray-600 dark:text-gray-400">Mood Impact</div>
                 <div className="text-lg font-bold">{latestEntry.qualityOfLife?.moodImpact || 0}/10</div>
               </div>
             </div>
@@ -253,7 +253,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
         {latestEntry?.notes && (
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-3">Latest Clinical Notes</h2>
-            <div className="border rounded p-3 bg-gray-50">
+            <div className="border rounded p-3 bg-gray-50 dark:bg-gray-900">
               <p className="text-sm whitespace-pre-line">{latestEntry.notes}</p>
             </div>
           </div>

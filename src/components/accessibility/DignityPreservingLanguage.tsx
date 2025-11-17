@@ -176,16 +176,16 @@ export function DignityPreservingLanguage({
   };
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className}`}>
+    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-purple-100 rounded-lg">
           <MessageCircle className="w-6 h-6 text-purple-600" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Dignity-Preserving Language
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             Choose language that honors your whole person, not just your pain. 
             These settings help ensure all communication feels respectful, empowering, and humanizing.
           </p>
@@ -229,7 +229,7 @@ export function DignityPreservingLanguage({
       />
 
       {/* Language Examples Toggle */}
-      <div className="mt-6 pt-6 border-t border-gray-200">
+      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
         <TouchOptimizedButton
           variant="secondary"
           onClick={() => setShowLanguageExamples(!showLanguageExamples)}
@@ -277,8 +277,8 @@ function LanguagePreferenceSection({
   return (
     <div className="mb-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Icon className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
       </div>
       
       <div className="grid gap-3">
@@ -301,15 +301,15 @@ function LanguagePreferenceSection({
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
-                    <h4 className={`font-medium ${isSelected ? 'text-purple-900' : 'text-gray-900'}`}>
+                    <h4 className={`font-medium ${isSelected ? 'text-purple-900' : 'text-gray-900 dark:text-gray-100'}`}>
                       {preference.label}
                     </h4>
                     {isSelected && <Check className="w-4 h-4 text-purple-600" />}
                   </div>
-                  <p className={`text-sm mb-2 ${isSelected ? 'text-purple-700' : 'text-gray-600'}`}>
+                  <p className={`text-sm mb-2 ${isSelected ? 'text-purple-700' : 'text-gray-600 dark:text-gray-400'}`}>
                     {preference.description}
                   </p>
-                  <div className={`text-xs italic p-2 rounded ${isSelected ? 'bg-purple-100 text-purple-700' : 'bg-gray-50 text-gray-600'}`}>
+                  <div className={`text-xs italic p-2 rounded ${isSelected ? 'bg-purple-100 text-purple-700' : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400'}`}>
                     Example: {preference.example}
                   </div>
                 </div>
@@ -331,10 +331,10 @@ function LanguageExamplesPanel({
   const [activeCategory, setActiveCategory] = useState<string>('clinical');
 
   return (
-    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+    <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
       <div className="flex items-center space-x-2 mb-4">
         <Sparkles className="w-5 h-5 text-purple-600" />
-        <h4 className="font-semibold text-gray-900">Language Transformations</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-gray-100">Language Transformations</h4>
       </div>
 
       {/* Category tabs */}
@@ -358,11 +358,11 @@ function LanguageExamplesPanel({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <p className="text-xs font-medium text-red-600 mb-1">Instead of:</p>
-                <p className="text-sm text-gray-700 italic">"{original}"</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300 italic">"{original}"</p>
               </div>
               <div>
                 <p className="text-xs font-medium text-green-600 mb-1">We use:</p>
-                <p className="text-sm text-gray-900 font-medium">"{alternative}"</p>
+                <p className="text-sm text-gray-900 dark:text-gray-100 font-medium">"{alternative}"</p>
               </div>
             </div>
           </div>
@@ -383,10 +383,10 @@ function LanguageSettingsSummary({
   const selectedPrefs = languagePreferences.filter(p => selectedPreferences.includes(p.id));
 
   return (
-    <div className="mt-6 pt-6 border-t border-gray-200">
+    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
       <div className="flex items-center space-x-2 mb-4">
         <Star className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Your Language Preferences</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Your Language Preferences</h3>
       </div>
       
       <div className="bg-purple-50 p-4 rounded-lg">

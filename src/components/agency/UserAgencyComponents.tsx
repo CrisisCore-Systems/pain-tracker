@@ -156,10 +156,10 @@ export function UserControlPanel() {
                 <div key={pref.id} className="bg-white p-4 rounded-lg border">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <label className="block text-sm font-medium text-gray-900 mb-1">
+                      <label className="block text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
                         {pref.label}
                       </label>
-                      <p className="text-xs text-gray-600">{pref.description}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">{pref.description}</p>
                     </div>
                   </div>
                   
@@ -229,9 +229,9 @@ export function UserControlPanel() {
               </div>
               
               <div className="bg-white p-6 rounded-lg border text-center">
-                <Star className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Your Goals, Your Way</h3>
-                <p className="text-gray-600 mb-4">
+                <Star className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Your Goals, Your Way</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
                   Create personal goals that matter to you. Track progress on your terms.
                 </p>
                 <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
@@ -251,26 +251,26 @@ export function UserControlPanel() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-white p-4 rounded-lg border">
-                  <h4 className="font-medium text-gray-900 mb-2">Export Your Data</h4>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Export Your Data</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                     Download all your pain tracking data in your preferred format.
                   </p>
                   <div className="space-y-2">
-                    <button className="w-full p-2 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded border transition-colors">
+                    <button className="w-full p-2 text-left text-sm bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 rounded border transition-colors">
                       📄 Export as PDF Report
                     </button>
-                    <button className="w-full p-2 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded border transition-colors">
+                    <button className="w-full p-2 text-left text-sm bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 rounded border transition-colors">
                       📊 Export as Spreadsheet (CSV)
                     </button>
-                    <button className="w-full p-2 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded border transition-colors">
+                    <button className="w-full p-2 text-left text-sm bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 rounded border transition-colors">
                       🔧 Export Raw Data (JSON)
                     </button>
                   </div>
                 </div>
                 
                 <div className="bg-white p-4 rounded-lg border">
-                  <h4 className="font-medium text-gray-900 mb-2">Data Backup</h4>
-                  <p className="text-sm text-gray-600 mb-4">
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Data Backup</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                     Create a backup of all your data for peace of mind.
                   </p>
                   <button className="w-full p-2 bg-green-50 border border-green-200 text-green-700 rounded hover:bg-green-100 transition-colors">
@@ -290,28 +290,28 @@ export function UserControlPanel() {
               </div>
               
               <div className="bg-white p-4 rounded-lg border">
-                <h4 className="font-medium text-gray-900 mb-4">Privacy Controls</h4>
+                <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Privacy Controls</h4>
                 <div className="space-y-4">
-                  <label className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                  <label className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded">
                     <div>
                       <span className="text-sm font-medium">Share anonymized data for research</span>
-                      <p className="text-xs text-gray-600">Help improve pain management for others</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Help improve pain management for others</p>
                     </div>
                     <input type="checkbox" className="rounded text-blue-600" />
                   </label>
                   
-                  <label className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                  <label className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded">
                     <div>
                       <span className="text-sm font-medium">Analytics and improvements</span>
-                      <p className="text-xs text-gray-600">Help us improve the app experience</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Help us improve the app experience</p>
                     </div>
                     <input type="checkbox" className="rounded text-blue-600" />
                   </label>
                   
-                  <label className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                  <label className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded">
                     <div>
                       <span className="text-sm font-medium">Email notifications</span>
-                      <p className="text-xs text-gray-600">Receive updates and tips via email</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">Receive updates and tips via email</p>
                     </div>
                     <input type="checkbox" className="rounded text-blue-600" />
                   </label>
@@ -371,7 +371,7 @@ export function ChoiceEmphasis({
     <div className="space-y-4">
       <div className="flex items-center space-x-2">
         <Crown className="w-5 h-5 text-blue-600" />
-        <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{title}</h3>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -399,12 +399,12 @@ export function ChoiceEmphasis({
                   {isSelected ? (
                     <CheckCircle className="w-5 h-5 text-blue-600" />
                   ) : (
-                    <IconComponent className="w-5 h-5 text-gray-400" />
+                    <IconComponent className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                   )}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center space-x-2">
-                    <span className="font-medium text-gray-900">{choice.label}</span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">{choice.label}</span>
                     {choice.recommended && (
                       <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
                         Recommended
@@ -412,7 +412,7 @@ export function ChoiceEmphasis({
                     )}
                   </div>
                   {choice.description && (
-                    <p className="mt-1 text-sm text-gray-600">{choice.description}</p>
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{choice.description}</p>
                   )}
                 </div>
               </div>

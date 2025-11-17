@@ -159,7 +159,7 @@ export function TraumaInformedValidationPanel() {
       case 'fail': return <XCircle className="w-5 h-5 text-red-500" />;
       case 'warning': return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
       case 'info': return <Info className="w-5 h-5 text-blue-500" />;
-      default: return <Info className="w-5 h-5 text-gray-500" />;
+      default: return <Info className="w-5 h-5 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -201,7 +201,7 @@ export function TraumaInformedValidationPanel() {
               <Heart className="w-6 h-6 text-pink-500" />
               <span>Trauma-Informed UX Validation</span>
             </CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
               Testing accessibility and trauma-informed design compliance
             </p>
           </div>
@@ -209,7 +209,7 @@ export function TraumaInformedValidationPanel() {
             <div className={`text-2xl font-bold ${overallScore >= 80 ? 'text-green-600' : overallScore >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
               {overallScore}%
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               Overall Score
             </div>
           </div>
@@ -220,7 +220,7 @@ export function TraumaInformedValidationPanel() {
         {isRunning ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-600">Running accessibility tests...</p>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Running accessibility tests...</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -230,10 +230,10 @@ export function TraumaInformedValidationPanel() {
               
               return (
                 <div key={category} className="space-y-2">
-                  <h3 className="flex items-center space-x-2 font-medium text-gray-900 capitalize">
+                  <h3 className="flex items-center space-x-2 font-medium text-gray-900 dark:text-gray-100 capitalize">
                     {getCategoryIcon(category)}
                     <span>{category.replace('-', ' ')} Tests</span>
-                    <span className="text-sm text-gray-500">({results.length})</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">({results.length})</span>
                   </h3>
                   
                   <div className="space-y-2">
@@ -246,9 +246,9 @@ export function TraumaInformedValidationPanel() {
                           <div className="flex-1">
                             <div className="flex items-center space-x-2 mb-1">
                               {getStatusIcon(result.status)}
-                              <h4 className="font-medium text-gray-900">{result.name}</h4>
+                              <h4 className="font-medium text-gray-900 dark:text-gray-100">{result.name}</h4>
                             </div>
-                            <p className="text-sm text-gray-600">{result.message}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">{result.message}</p>
                           </div>
                         </div>
                       </div>
@@ -354,7 +354,7 @@ export function TraumaInformedTestingChecklist() {
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>Testing & Validation Checklist</CardTitle>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
           Complete these steps to ensure your trauma-informed implementation is ready
         </p>
       </CardHeader>
@@ -363,7 +363,7 @@ export function TraumaInformedTestingChecklist() {
         <div className="space-y-6">
           {checklistItems.map((section, sectionIndex) => (
             <div key={sectionIndex} className="space-y-3">
-              <h3 className="font-medium text-gray-900 text-lg">{section.category}</h3>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 text-lg">{section.category}</h3>
               <div className="space-y-2">
                 {section.items.map((item, itemIndex) => {
                   const key = `${section.category}-${itemIndex}`;
@@ -372,15 +372,15 @@ export function TraumaInformedTestingChecklist() {
                   return (
                     <label 
                       key={itemIndex}
-                      className="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-gray-50"
+                      className="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-gray-50 dark:bg-gray-900"
                     >
                       <input
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => handleItemCheck(section.category, itemIndex)}
-                        className="mt-1 h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                        className="mt-1 h-4 w-4 text-blue-600 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500"
                       />
-                      <span className={`text-sm ${isChecked ? 'text-gray-700 line-through' : 'text-gray-900'}`}>
+                      <span className={`text-sm ${isChecked ? 'text-gray-700 line-through' : 'text-gray-900 dark:text-gray-100'}`}>
                         {item}
                       </span>
                     </label>

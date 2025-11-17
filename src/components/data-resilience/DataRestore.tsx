@@ -124,7 +124,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
       <div className="space-y-6">
         {/* File Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Select Backup File
           </label>
           <div className="flex items-center gap-3">
@@ -137,13 +137,13 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+              className="px-4 py-2 bg-gray-600 dark:bg-gray-400 text-white rounded hover:bg-gray-700"
             >
               Choose File
             </button>
             {selectedFile && (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">{selectedFile.name}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">{selectedFile.name}</span>
                 <button
                   onClick={clearSelection}
                   className="text-red-500 hover:text-red-700 text-sm"
@@ -171,7 +171,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
         {/* Password Input for Encrypted Backups */}
         {backupMetadata?.encrypted && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Backup Password
             </label>
             <input
@@ -179,9 +179,9 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter backup password"
-              className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <p className="text-xs text-gray-600 mt-1">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
               Enter the password used when creating this backup
             </p>
           </div>
@@ -189,18 +189,18 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
 
         {/* Data Preview */}
         {previewData && (
-          <div className="bg-gray-50 p-4 rounded">
+          <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
             <h3 className="font-medium mb-2">Data Preview</h3>
             <div className="text-sm space-y-2">
               {previewData.map((entry, index) => (
-                <div key={index} className="border-b border-gray-200 pb-1">
+                <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-1">
                   <div>Date: {new Date(entry.timestamp).toLocaleDateString()}</div>
                   <div>Pain Level: {entry.baselineData.pain}/10</div>
                   <div>Locations: {entry.baselineData?.locations?.join(', ') || 'None'}</div>
                 </div>
               ))}
               {backupMetadata && backupMetadata.entryCount > 3 && (
-                <div className="text-gray-500">... and {backupMetadata.entryCount - 3} more entries</div>
+                <div className="text-gray-500 dark:text-gray-400">... and {backupMetadata.entryCount - 3} more entries</div>
               )}
             </div>
           </div>

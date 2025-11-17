@@ -106,20 +106,20 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
 
       {/* Emergency Contacts */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Emergency Contacts</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Emergency Contacts</h3>
         <div className="space-y-4">
           {data.contacts.map((contact) => (
-            <div key={contact.id} className="flex items-start justify-between bg-gray-50 p-4 rounded-md">
+            <div key={contact.id} className="flex items-start justify-between bg-gray-50 dark:bg-gray-900 p-4 rounded-md">
               <div className="flex-1">
                 <div className="flex items-center">
-                  <h4 className="text-sm font-medium text-gray-900">{contact.name}</h4>
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">{contact.name}</h4>
                   {contact.isHealthcareProvider && (
                     <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
                       Healthcare Provider
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-500">{contact.relationship}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{contact.relationship}</p>
                 <div className="mt-2 flex items-center space-x-4">
                   <button
                     type="button"
@@ -139,7 +139,7 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
                   )}
                 </div>
                 {contact.notes && (
-                  <p className="mt-2 text-sm text-gray-500">{contact.notes}</p>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{contact.notes}</p>
                 )}
               </div>
               <button
@@ -162,28 +162,28 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
               value={newContact.name || ''}
               onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
               placeholder="Name"
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
             <input
               type="text"
               value={newContact.relationship || ''}
               onChange={(e) => setNewContact({ ...newContact, relationship: e.target.value })}
               placeholder="Relationship"
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
             <input
               type="tel"
               value={newContact.phoneNumber || ''}
               onChange={(e) => setNewContact({ ...newContact, phoneNumber: e.target.value })}
               placeholder="Phone Number"
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
             <input
               type="email"
               value={newContact.email || ''}
               onChange={(e) => setNewContact({ ...newContact, email: e.target.value })}
               placeholder="Email (optional)"
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
           </div>
           <div className="flex items-center">
@@ -191,9 +191,9 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
               type="checkbox"
               checked={newContact.isHealthcareProvider || false}
               onChange={(e) => setNewContact({ ...newContact, isHealthcareProvider: e.target.checked })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
             />
-            <label className="ml-2 text-sm text-gray-700">Healthcare Provider</label>
+            <label className="ml-2 text-sm text-gray-700 dark:text-gray-300">Healthcare Provider</label>
           </div>
           {newContact.isHealthcareProvider && (
             <input
@@ -201,7 +201,7 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
               value={newContact.specialty || ''}
               onChange={(e) => setNewContact({ ...newContact, specialty: e.target.value })}
               placeholder="Medical Specialty"
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             />
           )}
           <textarea
@@ -209,7 +209,7 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
             onChange={(e) => setNewContact({ ...newContact, notes: e.target.value })}
             placeholder="Additional Notes"
             rows={2}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           />
           <button
             type="button"
@@ -224,32 +224,32 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
 
       {/* Medical History */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Medical History</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Medical History</h3>
         <div className="space-y-4">
           <div>
-            <h4 className="text-sm font-medium text-gray-700">Medical Conditions</h4>
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Medical Conditions</h4>
             <ul className="mt-2 list-disc pl-5">
               {data.medicalHistory.conditions.map((condition, index) => (
-                <li key={index} className="text-sm text-gray-600">{condition}</li>
+                <li key={index} className="text-sm text-gray-600 dark:text-gray-400">{condition}</li>
               ))}
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-medium text-gray-700">Allergies</h4>
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Allergies</h4>
             <ul className="mt-2 list-disc pl-5">
               {data.medicalHistory.allergies.map((allergy, index) => (
-                <li key={index} className="text-sm text-gray-600">{allergy}</li>
+                <li key={index} className="text-sm text-gray-600 dark:text-gray-400">{allergy}</li>
               ))}
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-medium text-gray-700">Previous Incidents</h4>
+            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Previous Incidents</h4>
             <div className="mt-2 space-y-2">
               {data.medicalHistory.previousIncidents.map((incident, index) => (
-                <div key={index} className="bg-gray-50 p-3 rounded-md">
-                  <p className="text-sm text-gray-900">{new Date(incident.date).toLocaleDateString()}</p>
-                  <p className="text-sm text-gray-600">{incident.description}</p>
-                  <p className="text-sm text-gray-500 mt-1">Outcome: {incident.outcome}</p>
+                <div key={index} className="bg-gray-50 dark:bg-gray-900 p-3 rounded-md">
+                  <p className="text-sm text-gray-900 dark:text-gray-100">{new Date(incident.date).toLocaleDateString()}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{incident.description}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Outcome: {incident.outcome}</p>
                 </div>
               ))}
             </div>
@@ -257,7 +257,7 @@ export default function EmergencyPanel({ data, onChange }: EmergencyPanelProps) 
         </div>
       </div>
 
-      <div className="text-sm text-gray-500 text-right">
+      <div className="text-sm text-gray-500 dark:text-gray-400 text-right">
         Last updated: {new Date(data.lastUpdated).toLocaleString()}
       </div>
     </div>

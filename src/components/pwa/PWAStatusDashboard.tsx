@@ -199,26 +199,26 @@ export function PWAStatusDashboard() {
         <div className="p-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">Status</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
               <span className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.isOnline ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                 {pwaStatus.isOnline ? 'Online' : 'Offline'}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">Quality</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Quality</span>
               <span className={`text-sm font-medium ${getConnectionQualityColor(connectionQuality)}`}>
                 {connectionQuality.charAt(0).toUpperCase() + connectionQuality.slice(1)}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">Service Worker</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Service Worker</span>
               <span className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.hasServiceWorker ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                 {pwaStatus.hasServiceWorker ? 'Active' : 'Inactive'}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">PWA Installed</span>
-              <span className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.isInstalled ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+              <span className="text-sm text-gray-600 dark:text-gray-400">PWA Installed</span>
+              <span className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.isInstalled ? 'bg-green-100 text-green-800' : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'}`}>
                 {pwaStatus.isInstalled ? 'Yes' : 'No'}
               </span>
             </div>
@@ -243,22 +243,22 @@ export function PWAStatusDashboard() {
         <div className="p-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">Status</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
               <span className="text-sm font-medium">
                 {syncStatus.isSyncing ? 'Syncing...' : 
                  syncStatus.pendingEntries > 0 ? 'Pending' : 'Up to date'}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">Pending Items</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Pending Items</span>
               <span className="text-sm font-medium">{syncStatus.pendingEntries}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">Pending Entries</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Pending Entries</span>
               <span className="text-sm font-medium">{syncStatus.pendingEntries}</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm text-gray-600">Last Sync</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">Last Sync</span>
               <span className="text-xs">{formatDate(syncStatus.lastSync)}</span>
             </div>
           </div>
@@ -291,13 +291,13 @@ export function PWAStatusDashboard() {
                 <span>Used Storage</span>
                 <span>{formatBytes(pwaStatus.storageUsage.used)} / {formatBytes(pwaStatus.storageUsage.quota)}</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div 
                   className={`h-2 rounded-full ${storagePercentage > 80 ? 'bg-red-600' : storagePercentage > 60 ? 'bg-yellow-600' : 'bg-blue-600'}`}
                   style={{ width: `${Math.min(storagePercentage, 100)}%` }}
                 ></div>
               </div>
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                 {formatNumber(storagePercentage, 1)}% of available storage used
               </p>
             </div>
@@ -305,7 +305,7 @@ export function PWAStatusDashboard() {
             <div className="flex space-x-2">
               <button
                 onClick={handleClearPWAData}
-                className="flex items-center space-x-1 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                className="flex items-center space-x-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:bg-gray-900"
               >
                 <Trash2 className="h-4 w-4" />
                 <span>Clear Cache</span>
@@ -342,7 +342,7 @@ export function PWAStatusDashboard() {
       </div>
 
       {/* Status Footer */}
-      <div className="text-xs text-gray-600 text-center">
+      <div className="text-xs text-gray-600 dark:text-gray-400 text-center">
         Last updated: {lastUpdate.toLocaleTimeString()}
       </div>
     </div>

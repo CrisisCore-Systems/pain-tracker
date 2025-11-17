@@ -161,7 +161,7 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
     <div className="space-y-8">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Pain Level (0-10)
           </label>
           <input
@@ -184,7 +184,7 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Pain Locations
           </label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -207,7 +207,7 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Symptoms
           </label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">

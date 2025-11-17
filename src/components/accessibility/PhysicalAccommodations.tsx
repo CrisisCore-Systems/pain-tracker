@@ -142,8 +142,8 @@ export function VoiceInput({ onTranscript, className = "" }: VoiceInputProps) {
       )}
 
       {!isListening && transcript && (
-        <div className="mt-2 p-3 bg-gray-50 border border-gray-200 rounded">
-          <p className="text-sm text-gray-700">{transcript}</p>
+        <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded">
+          <p className="text-sm text-gray-700 dark:text-gray-300">{transcript}</p>
         </div>
       )}
     </div>
@@ -266,7 +266,7 @@ export function LargeTouchSlider({
     <div className="large-touch-slider">
       {label && (
         <div className="flex justify-between items-center mb-4">
-          <label className="text-sm font-medium text-gray-700">{label}</label>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
           {showValue && (
             <span className="text-lg font-bold text-blue-600">{value}</span>
           )}
@@ -329,7 +329,7 @@ export function LargeTouchSlider({
       </div>
       
       {/* Value labels */}
-      <div className={`flex justify-between text-xs text-gray-500 mt-2 ${vertical ? 'flex-col h-24' : ''}`}>
+      <div className={`flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2 ${vertical ? 'flex-col h-24' : ''}`}>
         <span>{min}</span>
         <span>{max}</span>
       </div>
@@ -429,7 +429,7 @@ export function EyeTrackingIndicator() {
   if (!isSupported) return null;
 
   return (
-    <div className="flex items-center space-x-2 text-sm text-gray-600">
+    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
       <Eye className="w-4 h-4" />
       <span>Eye tracking {isActive ? 'active' : 'available'}</span>
       <TouchOptimizedButton
@@ -488,7 +488,7 @@ export function HeadMouseIndicator() {
   if (!isSupported) return null;
 
   return (
-    <div className="flex items-center space-x-2 text-sm text-gray-600">
+    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
       <Mouse className="w-4 h-4" />
       <span>Head mouse supported</span>
     </div>

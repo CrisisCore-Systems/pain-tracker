@@ -50,7 +50,7 @@ function TraumaInformedLayoutInner({
   const [showHelp, setShowHelp] = useState(false);
 
   return (
-    <div className="trauma-informed-layout min-h-screen bg-gray-50">
+    <div className="trauma-informed-layout min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Skip to main content link for screen readers */}
       <a
         href="#main-content"
@@ -60,16 +60,16 @@ function TraumaInformedLayoutInner({
       </a>
 
       {/* Header with trauma-informed navigation */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-white shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Title and logo */}
             <div className="flex items-center space-x-3">
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 {title}
               </h1>
               {preferences.showProgress && (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
                   Welcome back
                 </div>
               )}
@@ -109,7 +109,7 @@ function TraumaInformedLayoutInner({
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
             <div 
-              className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+              className="fixed inset-0 transition-opacity bg-gray-500 dark:bg-gray-500 bg-opacity-75"
               onClick={() => setShowSettings(false)}
               aria-hidden="true"
             />
@@ -117,7 +117,7 @@ function TraumaInformedLayoutInner({
             {/* Settings panel */}
             <div className="inline-block w-full max-w-5xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
                   Accessibility Settings
                 </h2>
                 <TouchOptimizedButton
@@ -137,9 +137,9 @@ function TraumaInformedLayoutInner({
 
       {/* Help panel */}
       {showHelp && (
-        <div className="fixed top-20 right-4 z-40 w-80 bg-white border border-gray-200 rounded-lg shadow-lg p-4">
+        <div className="fixed top-20 right-4 z-40 w-80 bg-white border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-gray-900">Need Help?</h3>
+            <h3 className="font-medium text-gray-900 dark:text-gray-100">Need Help?</h3>
             <TouchOptimizedButton
               variant="secondary"
               onClick={() => setShowHelp(false)}
@@ -149,7 +149,7 @@ function TraumaInformedLayoutInner({
             </TouchOptimizedButton>
           </div>
           
-          <div className="space-y-3 text-sm text-gray-600">
+          <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
             <p>This interface is designed to be gentle and supportive.</p>
             <ul className="space-y-2">
               <li>• Your data is automatically saved as you go</li>
@@ -209,10 +209,10 @@ function TraumaInformedLayoutInner({
       </main>
 
       {/* Footer with supportive messaging */}
-      <footer className="bg-white border-t border-gray-200 mt-auto">
+      <footer className="bg-white border-t border-gray-200 dark:border-gray-700 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               {preferences.gentleLanguage ? (
                 "Your health journey matters. Take it one step at a time."
               ) : (
@@ -221,7 +221,7 @@ function TraumaInformedLayoutInner({
             </div>
             
             {preferences.showComfortPrompts && (
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                 <Heart className="w-4 h-4 text-red-400" />
                 <span>Self-care is healthcare</span>
               </div>
@@ -265,12 +265,12 @@ export function TraumaInformedPage({
           </div>
         )}
         
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           {title}
         </h1>
         
         {description && (
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             {description}
           </p>
         )}
@@ -327,11 +327,11 @@ export function TraumaInformedSection({
   return (
     <section className="trauma-informed-section mb-6">
       <div className="mb-4">
-        <h2 className="text-lg font-medium text-gray-900 mb-1">
+        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">
           {title}
         </h2>
         {description && (
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             {description}
           </p>
         )}

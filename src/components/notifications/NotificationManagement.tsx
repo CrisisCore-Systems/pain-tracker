@@ -49,9 +49,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       case 'medium':
         return <Info className="h-4 w-4 text-blue-500" />;
       case 'low':
-        return <Info className="h-4 w-4 text-gray-500" />;
+        return <Info className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
       default:
-        return <Info className="h-4 w-4 text-gray-500" />;
+        return <Info className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -62,11 +62,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       case 'sent':
         return <Bell className="h-4 w-4 text-blue-500" />;
       case 'dismissed':
-        return <X className="h-4 w-4 text-gray-500" />;
+        return <X className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
       case 'archived':
-        return <Archive className="h-4 w-4 text-gray-500" />;
+        return <Archive className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
       default:
-        return <Bell className="h-4 w-4 text-gray-500" />;
+        return <Bell className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -115,7 +115,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
                 </button>
               )}
             </p>
-            <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+            <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500 dark:text-gray-400">
               <span className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
                 <span>{formatTime(notification.createdAt)}</span>
@@ -361,10 +361,10 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-lg">
+        <div className="flex flex-wrap gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
           <div className="flex-1 min-w-48">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input
                 placeholder="Search notifications..."
                 value={filters.search}
@@ -431,15 +431,15 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
               checked={selectedNotifications.size === filteredNotifications.length && filteredNotifications.length > 0}
               onChange={(e) => handleSelectAll(e.target.checked)}
             />
-            <span className="text-sm text-gray-600">Select all</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">Select all</span>
           </div>
         )}
 
         {/* Notifications List */}
         <div className="space-y-3">
           {filteredNotifications.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <BellOff className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <BellOff className="h-12 w-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
               <p>No notifications found</p>
               <p className="text-sm">Try adjusting your filters or check back later</p>
             </div>

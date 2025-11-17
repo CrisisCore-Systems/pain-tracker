@@ -88,7 +88,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
                   <div key={index} className="flex justify-between items-center text-sm">
                     <span>{pattern.pattern}</span>
                     <div className="flex items-center space-x-2">
-                      <div className="w-16 bg-gray-200 rounded-full h-2">
+                      <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div 
                           className="bg-blue-500 h-2 rounded-full" 
                           style={{ width: `${pattern.strength * 100}%` }}
@@ -226,7 +226,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
                       <div key={index} className="flex justify-between items-center text-sm">
                         <span>{item.symptom}</span>
                         <div className="flex items-center space-x-2">
-                          <div className="w-12 bg-gray-200 rounded-full h-2">
+                          <div className="w-12 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div 
                               className="bg-red-500 h-2 rounded-full" 
                               style={{ width: `${(item.painCorrelation / 10) * 100}%` }}
@@ -250,7 +250,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
                       <div key={index} className="flex justify-between items-center text-sm">
                         <span className="truncate">{item.medication}</span>
                         <div className="flex items-center space-x-2">
-                          <div className="w-12 bg-gray-200 rounded-full h-2">
+                          <div className="w-12 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                             <div 
                               className="bg-green-500 h-2 rounded-full" 
                               style={{ width: `${(item.effectivenessScore / 5) * 100}%` }}

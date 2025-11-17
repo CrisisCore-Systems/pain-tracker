@@ -193,7 +193,7 @@ function CrisisAlert({
       {getIcon()}
       
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 mb-2">
+        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
           {message}
         </p>
         
@@ -258,7 +258,7 @@ function CrisisAlert({
       <TouchOptimizedButton
         variant="secondary"
         onClick={onMinimize}
-        className="text-gray-400 hover:text-gray-600"
+        className="text-gray-400 hover:text-gray-600 dark:text-gray-400"
         aria-label="Minimize crisis support"
       >
         <Home className="w-4 h-4" />

@@ -243,7 +243,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
               <div className="mt-2">
                 <h4 className="text-sm font-medium">Common Locations:</h4>
                 {Object.keys(report.painTrends.locations).length === 0 ? (
-                  <p className="text-sm text-gray-500">No pain location data recorded.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">No pain location data recorded.</p>
                 ) : (
                   <ul className="list-disc pl-5">
                     {Object.entries(report.painTrends.locations)
@@ -256,7 +256,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
               </div>
             </>
           ) : (
-            <p className="text-sm text-gray-500">No pain trend data available.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">No pain trend data available.</p>
           )}
         </div>
 
@@ -266,7 +266,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <div className="mt-2">
             <h4 className="text-sm font-medium">Common Limitations:</h4>
             {report.workImpact.limitations.length === 0 ? (
-              <p className="text-sm text-gray-500">No work limitations reported.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">No work limitations reported.</p>
             ) : (
               <ul className="list-disc pl-5">
                 {report.workImpact.limitations.map(([limitation, frequency]) => (
@@ -278,7 +278,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <div className="mt-2">
             <h4 className="text-sm font-medium">Accommodations Needed:</h4>
             {report.workImpact.accommodationsNeeded.length === 0 ? (
-              <p className="text-sm text-gray-500">No accommodations documented.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">No accommodations documented.</p>
             ) : (
               <ul className="list-disc pl-5">
                 {report.workImpact.accommodationsNeeded.map(accommodation => (
@@ -294,7 +294,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           <div className="mt-2">
             <h4 className="text-sm font-medium">Limitations:</h4>
             {report.functionalAnalysis.limitations.length === 0 ? (
-              <p className="text-sm text-gray-500">No functional limitations reported.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">No functional limitations reported.</p>
             ) : (
               <ul className="list-disc pl-5">
                 {report.functionalAnalysis.limitations.map(limitation => (
@@ -329,14 +329,14 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
           )}
           {report.functionalAnalysis.deterioration.length === 0 &&
             report.functionalAnalysis.improvements.length === 0 && (
-              <p className="text-sm text-gray-500">No significant pain changes detected.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">No significant pain changes detected.</p>
             )}
         </div>
 
         <div>
           <h3 className="font-medium">Treatments</h3>
           {report.treatments.current.length === 0 ? (
-            <p className="text-sm text-gray-500">No active treatments recorded.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">No active treatments recorded.</p>
           ) : (
             <ul className="list-disc pl-5">
               {report.treatments.current.map(treatment => (
@@ -346,7 +346,7 @@ export function WCBReportGenerator({ entries, period }: WCBReportGeneratorProps)
               ))}
             </ul>
           )}
-          <p className="mt-2 text-sm text-gray-700">{report.treatments.effectiveness}</p>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{report.treatments.effectiveness}</p>
         </div>
 
         <div>

@@ -259,7 +259,7 @@ export function NavigationDemo() {
                     if (prev) setCurrentView(prev.id);
                   }}
                   disabled={!canGoBack}
-                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Go back"
                   title="Go back (Alt+←)"
                 >
@@ -271,7 +271,7 @@ export function NavigationDemo() {
                     if (next) setCurrentView(next.id);
                   }}
                   disabled={!canGoForward}
-                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-2 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Go forward"
                   title="Go forward (Alt+→)"
                 >
@@ -334,7 +334,7 @@ export function NavigationDemo() {
                       <button
                         key={item.id}
                         onClick={() => handleNavigate(item.id)}
-                        className="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md"
+                        className="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-800 rounded-md"
                       >
                         {item.label}
                       </button>

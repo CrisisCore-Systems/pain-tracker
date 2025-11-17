@@ -179,17 +179,17 @@ export const SecurityDashboard: React.FC = () => {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Security Dashboard</h1>
-            <p className="text-gray-600">Real-time security monitoring and status</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Security Dashboard</h1>
+            <p className="text-gray-600 dark:text-gray-400">Real-time security monitoring and status</p>
           </div>
           <div className="text-right">
             <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(securityStatus.overall)}`}>
               {getStatusIcon(securityStatus.overall)} {securityStatus.overall.toUpperCase()}
             </div>
-            <div className="text-sm text-gray-500 mt-1">
+            <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               Score: {securityStatus.score}/100
             </div>
-            <div className="text-xs text-gray-400">
+            <div className="text-xs text-gray-400 dark:text-gray-500">
               Updated: {securityStatus.lastUpdated.toLocaleTimeString()}
             </div>
           </div>
@@ -208,7 +208,7 @@ export const SecurityDashboard: React.FC = () => {
           </button>
           <button
             onClick={updateSecurityStatus}
-            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+            className="px-4 py-2 bg-gray-600 dark:bg-gray-400 text-white rounded hover:bg-gray-700"
           >
             Refresh Status
           </button>
@@ -223,7 +223,7 @@ export const SecurityDashboard: React.FC = () => {
 
       {/* Tabs */}
       <div className="bg-white rounded-lg shadow">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-gray-200 dark:border-gray-700">
           <nav className="-mb-px flex">
             {[
               { id: 'overview', name: 'Overview' },
@@ -252,12 +252,12 @@ export const SecurityDashboard: React.FC = () => {
               {/* Security Metrics Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {metrics.map((metric, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
+                  <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-medium text-gray-900">{metric.name}</h3>
+                        <h3 className="font-medium text-gray-900 dark:text-gray-100">{metric.name}</h3>
                         <p className="text-2xl font-bold mt-1">{metric.value}</p>
-                        <p className="text-sm text-gray-600 mt-1">{metric.description}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{metric.description}</p>
                       </div>
                       <div className={`text-2xl ${getStatusColor(metric.status)} w-12 h-12 rounded-full flex items-center justify-center`}>
                         {getStatusIcon(metric.status)}
@@ -269,32 +269,32 @@ export const SecurityDashboard: React.FC = () => {
 
               {/* Audit Results */}
               {auditResult && (
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-medium text-gray-900 mb-4">Latest Security Audit</h3>
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-4">Latest Security Audit</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-gray-600">Status</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Status</p>
                       <p className={`font-medium ${auditResult.passed ? 'text-green-600' : 'text-red-600'}`}>
                         {auditResult.passed ? 'PASSED' : 'FAILED'}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Score</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Score</p>
                       <p className="font-medium">{formatNumber(auditResult.score * 100, 1)}%</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Issues Found</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Issues Found</p>
                       <p className="font-medium">{auditResult.issues.length}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Last Audit</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Last Audit</p>
                       <p className="font-medium">{auditResult.lastAudit.toLocaleString()}</p>
                     </div>
                   </div>
                   
                   {auditResult.issues.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="font-medium text-gray-900 mb-2">Issues</h4>
+                      <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Issues</h4>
                       <div className="space-y-2">
                         {auditResult.issues.slice(0, 5).map((issue, index) => (
                           <div key={index} className="text-sm border-l-4 border-red-400 pl-4 py-2 bg-red-50">
@@ -304,7 +304,7 @@ export const SecurityDashboard: React.FC = () => {
                           </div>
                         ))}
                         {auditResult.issues.length > 5 && (
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
                             ... and {auditResult.issues.length - 5} more issues
                           </p>
                         )}
@@ -318,9 +318,9 @@ export const SecurityDashboard: React.FC = () => {
 
           {activeTab === 'events' && (
             <div className="space-y-4">
-              <h3 className="font-medium text-gray-900">Recent Security Events</h3>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">Recent Security Events</h3>
               {recentEvents.length === 0 ? (
-                <p className="text-gray-600">No recent security events</p>
+                <p className="text-gray-600 dark:text-gray-400">No recent security events</p>
               ) : (
                 <div className="space-y-2">
                   {recentEvents.map((event, index) => (
@@ -330,17 +330,17 @@ export const SecurityDashboard: React.FC = () => {
                           <span className={`text-sm font-medium px-2 py-1 rounded ${getStatusColor(event.level)}`}>
                             {event.level.toUpperCase()}
                           </span>
-                          <span className="text-sm font-medium text-gray-900">{event.type}</span>
+                          <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{event.type}</span>
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
                           {event.timestamp.toLocaleString()}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-700 mt-1">{event.message}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">{event.message}</p>
                       {event.metadata && Object.keys(event.metadata).length > 0 && (
                         <details className="mt-2">
-                          <summary className="text-xs text-gray-500 cursor-pointer">Metadata</summary>
-                          <pre className="text-xs text-gray-600 mt-1 overflow-x-auto">
+                          <summary className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer">Metadata</summary>
+                          <pre className="text-xs text-gray-600 dark:text-gray-400 mt-1 overflow-x-auto">
                             {JSON.stringify(event.metadata, null, 2)}
                           </pre>
                         </details>
@@ -354,13 +354,13 @@ export const SecurityDashboard: React.FC = () => {
 
           {activeTab === 'metrics' && (
             <div className="space-y-4">
-              <h3 className="font-medium text-gray-900">Detailed Security Metrics</h3>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">Detailed Security Metrics</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {metrics.map((metric, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-medium text-gray-900">{metric.name}</h4>
+                  <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100">{metric.name}</h4>
                     <p className="text-2xl font-bold mt-2 mb-2">{metric.value}</p>
-                    <p className="text-sm text-gray-600">{metric.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{metric.description}</p>
                     <div className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium mt-2 ${getStatusColor(metric.status)}`}>
                       {getStatusIcon(metric.status)} {metric.status.toUpperCase()}
                     </div>
@@ -372,9 +372,9 @@ export const SecurityDashboard: React.FC = () => {
 
           {activeTab === 'config' && (
             <div className="space-y-4">
-              <h3 className="font-medium text-gray-900">Security Configuration</h3>
-              <div className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-medium text-gray-900 mb-2">Configuration Validation</h4>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">Security Configuration</h3>
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Configuration Validation</h4>
                 {(() => {
                   const validation = validateSecurityConfig();
                   return (

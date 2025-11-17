@@ -85,14 +85,14 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
       <h2 className="text-xl font-semibold mb-4">Pain Location Heatmap</h2>
       
       {entries.length === 0 ? (
-        <p className="text-gray-600">No data available for location heatmap.</p>
+        <p className="text-gray-600 dark:text-gray-400">No data available for location heatmap.</p>
       ) : (
         <div className="space-y-6">
           {/* Legend */}
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium">Pain Intensity:</span>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-100 rounded"></div>
+              <div className="w-4 h-4 bg-gray-100 dark:bg-gray-800 rounded"></div>
               <span className="text-xs">None</span>
               <div className="w-4 h-4 bg-yellow-200 rounded"></div>
               <span className="text-xs">Low</span>
@@ -129,7 +129,7 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
 
           {/* Statistics */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
               <h3 className="font-semibold mb-2">Most Affected Area</h3>
               {(() => {
                 const topLocation = locationData.reduce((max, curr) => 
@@ -138,15 +138,15 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
                 return topLocation.frequency > 0 ? (
                   <div>
                     <div className="text-lg font-bold">{topLocation.location}</div>
-                    <div className="text-sm text-gray-600">{topLocation.avgPain}/10 average pain</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{topLocation.avgPain}/10 average pain</div>
                   </div>
                 ) : (
-                  <div className="text-gray-600">No data</div>
+                  <div className="text-gray-600 dark:text-gray-400">No data</div>
                 );
               })()}
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
               <h3 className="font-semibold mb-2">Most Frequent Area</h3>
               {(() => {
                 const topFrequent = locationData.reduce((max, curr) => 
@@ -155,21 +155,21 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
                 return topFrequent.frequency > 0 ? (
                   <div>
                     <div className="text-lg font-bold">{topFrequent.location}</div>
-                    <div className="text-sm text-gray-600">{topFrequent.frequency} entries</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{topFrequent.frequency} entries</div>
                   </div>
                 ) : (
-                  <div className="text-gray-600">No data</div>
+                  <div className="text-gray-600 dark:text-gray-400">No data</div>
                 );
               })()}
             </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
               <h3 className="font-semibold mb-2">Areas Affected</h3>
               <div>
                 <div className="text-lg font-bold">
                   {locationData.filter(d => d.frequency > 0).length}
                 </div>
-                <div className="text-sm text-gray-600">out of {BODY_LOCATIONS.length} tracked</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">out of {BODY_LOCATIONS.length} tracked</div>
               </div>
             </div>
           </div>

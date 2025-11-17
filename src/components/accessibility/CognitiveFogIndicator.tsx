@@ -329,7 +329,7 @@ export function CognitiveFogIndicator({
             </TouchOptimizedButton>
           </div>
           
-          <p className="text-sm text-gray-700 mb-3">
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
             {currentFogLevel.description}
           </p>
 
@@ -347,11 +347,11 @@ export function CognitiveFogIndicator({
               {/* Suggestions */}
               {currentFogLevel.suggestions.length > 0 && (
                 <div>
-                  <h5 className="text-sm font-medium text-gray-800 mb-2">Suggestions:</h5>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <h5 className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">Suggestions:</h5>
+                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                     {currentFogLevel.suggestions.map((suggestion, index) => (
                       <li key={index} className="flex items-start space-x-2">
-                        <span className="text-gray-400 mt-1">•</span>
+                        <span className="text-gray-400 dark:text-gray-500 mt-1">•</span>
                         <span>{suggestion}</span>
                       </li>
                     ))}
@@ -362,7 +362,7 @@ export function CognitiveFogIndicator({
               {/* Adaptations */}
               {currentFogLevel.adaptations.length > 0 && (
                 <div>
-                  <h5 className="text-sm font-medium text-gray-800 mb-2">
+                  <h5 className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
                     Quick Adaptations:
                   </h5>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -428,7 +428,7 @@ function FogFactorsDisplay({
   }
   
   return (
-    <div className="text-xs text-gray-600">
+    <div className="text-xs text-gray-600 dark:text-gray-400">
       <span className="font-medium">Contributing factors: </span>
       {factors.join(', ')}
     </div>

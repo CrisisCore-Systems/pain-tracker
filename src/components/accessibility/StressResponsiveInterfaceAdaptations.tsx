@@ -331,16 +331,16 @@ export function StressResponsiveInterfaceAdaptations({
   };
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className}`}>
+    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-blue-100 rounded-lg">
           <Activity className="w-6 h-6 text-blue-600" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Stress-Responsive Interface Adaptations
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             Automatically detects stress levels through interaction patterns and adapts the interface 
             to reduce cognitive load and provide appropriate support during difficult moments.
           </p>
@@ -422,11 +422,11 @@ function StressStatusDisplay({
   const StressIcon = getStressIcon(metrics.level);
 
   return (
-    <div className="bg-gray-50 rounded-lg p-4 mb-6">
+    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <StressIcon className="w-6 h-6 text-gray-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Current Stress Status</h3>
+          <StressIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Current Stress Status</h3>
         </div>
         <div className="flex items-center space-x-2">
           <TouchOptimizedButton
@@ -460,12 +460,12 @@ function StressStatusDisplay({
         {/* Stress Level Display */}
         <div className="bg-white rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-700">Stress Level</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Stress Level</span>
             <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStressColor(metrics.level)}`}>
               {metrics.level.toUpperCase()}
             </span>
           </div>
-          <div className="space-y-2 text-sm text-gray-600">
+          <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <div>Confidence: {metrics.confidence}%</div>
             <div>Interface: {adaptation.name}</div>
             <div>Last Updated: {metrics.timestamp.toLocaleTimeString()}</div>
@@ -474,7 +474,7 @@ function StressStatusDisplay({
 
         {/* Metrics Display */}
         <div className="bg-white rounded-lg p-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">Detection Metrics</h4>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Detection Metrics</h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Interaction Speed:</span>
@@ -510,19 +510,19 @@ function ManualStressRating({
   onRatingChange: (rating: number) => void;
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
         <Heart className="w-5 h-5 text-red-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Manual Stress Check</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Manual Stress Check</h3>
       </div>
       
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             How stressed do you feel right now? (1 = very calm, 10 = extremely stressed)
           </label>
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-500">1</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">1</span>
             <input
               type="range"
               min="1"
@@ -531,7 +531,7 @@ function ManualStressRating({
               onChange={(e) => onRatingChange(parseInt(e.target.value))}
               className="flex-1"
             />
-            <span className="text-sm text-gray-500">10</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">10</span>
           </div>
           <div className="text-center mt-2">
             <span className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -545,7 +545,7 @@ function ManualStressRating({
           </div>
         </div>
         
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-gray-600 dark:text-gray-400">
           Your manual rating helps improve automatic stress detection and ensures 
           appropriate interface adaptations are applied.
         </div>
@@ -558,12 +558,12 @@ function ManualStressRating({
 function StressHistoryChart({ history }: { history: StressMetrics[] }) {
   if (history.length === 0) {
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+      <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
         <div className="flex items-center space-x-2 mb-4">
-          <BarChart3 className="w-5 h-5 text-gray-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Stress Trends</h3>
+          <BarChart3 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Stress Trends</h3>
         </div>
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           No stress data collected yet. Start monitoring to see trends.
         </div>
       </div>
@@ -585,11 +585,11 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
     : 0;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
-          <BarChart3 className="w-5 h-5 text-gray-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Stress Trends</h3>
+          <BarChart3 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Stress Trends</h3>
         </div>
         <div className="flex items-center space-x-2">
           {trend > 0 ? (
@@ -597,9 +597,9 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
           ) : trend < 0 ? (
             <TrendingDown className="w-4 h-4 text-green-600" />
           ) : (
-            <MinusCircle className="w-4 h-4 text-gray-600" />
+            <MinusCircle className="w-4 h-4 text-gray-600 dark:text-gray-400" />
           )}
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-600 dark:text-gray-400">
             {trend > 0 ? 'Increasing' : trend < 0 ? 'Decreasing' : 'Stable'}
           </span>
         </div>
@@ -630,18 +630,18 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
         {/* Summary statistics */}
         <div className="grid grid-cols-3 gap-4 text-sm">
           <div className="text-center">
-            <div className="font-medium text-gray-900">Average</div>
-            <div className="text-gray-600">
+            <div className="font-medium text-gray-900 dark:text-gray-100">Average</div>
+            <div className="text-gray-600 dark:text-gray-400">
               {formatNumber(history.reduce((sum, h) => sum + getStressNumeric(h.level), 0) / history.length, 1)}
             </div>
           </div>
           <div className="text-center">
-            <div className="font-medium text-gray-900">Peak</div>
-            <div className="text-gray-600">{maxStress}/4</div>
+            <div className="font-medium text-gray-900 dark:text-gray-100">Peak</div>
+            <div className="text-gray-600 dark:text-gray-400">{maxStress}/4</div>
           </div>
           <div className="text-center">
-            <div className="font-medium text-gray-900">Readings</div>
-            <div className="text-gray-600">{history.length}</div>
+            <div className="font-medium text-gray-900 dark:text-gray-100">Readings</div>
+            <div className="text-gray-600 dark:text-gray-400">{history.length}</div>
           </div>
         </div>
       </div>
@@ -658,18 +658,18 @@ function InterfaceAdaptationPreview({
   stressLevel: StressLevel;
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
         <Monitor className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Active Interface Adaptation</h3>
-  <span className="ml-auto text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700 capitalize">{stressLevel}</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Active Interface Adaptation</h3>
+  <span className="ml-auto text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 capitalize">{stressLevel}</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Adaptation Details */}
         <div>
-          <h4 className="font-medium text-gray-900 mb-2">{adaptation.name}</h4>
-          <p className="text-sm text-gray-600 mb-3">{adaptation.description}</p>
+          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">{adaptation.name}</h4>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{adaptation.description}</p>
           
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -693,7 +693,7 @@ function InterfaceAdaptationPreview({
 
         {/* Active Features */}
         <div>
-          <h4 className="font-medium text-gray-900 mb-2">Active Support Features</h4>
+          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Active Support Features</h4>
           <div className="space-y-2">
             {adaptation.cognitiveSupport.hideNonEssential && (
               <div className="flex items-center space-x-2 text-sm">
@@ -743,10 +743,10 @@ function AdaptationControls({
   onAdaptationChange: (adaptation: InterfaceAdaptation) => void;
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Settings className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Manual Override</h3>
+        <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Manual Override</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -769,8 +769,8 @@ function AdaptationControls({
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-medium text-gray-900">{adaptation.name}</div>
-                  <div className="text-xs text-gray-500 mt-1">{adaptation.description}</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">{adaptation.name}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{adaptation.description}</div>
                 </div>
                 {isActive && <CheckCircle className="w-4 h-4 text-blue-600" />}
               </div>

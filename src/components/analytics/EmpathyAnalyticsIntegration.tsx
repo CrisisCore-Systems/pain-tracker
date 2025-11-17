@@ -108,8 +108,8 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
       <Card className="border-purple-200 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
         <CardContent className="p-6">
           <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">Welcome to Your Empathy Analytics</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">Welcome to Your Empathy Analytics</h2>
+            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               This space honors your full experience—not just your pain scores, but your courage, 
               growth, insights, and strength. Every entry you make is an act of self-care and bravery.
             </p>
@@ -131,7 +131,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
             <div className="text-2xl font-bold text-pink-600 mb-1">
               {entries.length}
             </div>
-            <div className="text-sm text-gray-600">Days of Self-Care</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Days of Self-Care</div>
             <div className="text-xs text-pink-700 mt-1">Every entry matters</div>
           </CardContent>
         </Card>
@@ -141,7 +141,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
             <div className="text-2xl font-bold text-blue-600 mb-1">
               {entries.filter(e => e.notes && e.notes.length > 0).length}
             </div>
-            <div className="text-sm text-gray-600">Reflection Moments</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Reflection Moments</div>
             <div className="text-xs text-blue-700 mt-1">Self-awareness is strength</div>
           </CardContent>
         </Card>
@@ -151,7 +151,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
             <div className="text-2xl font-bold text-green-600 mb-1">
               {Math.floor(entries.length / 7)}
             </div>
-            <div className="text-sm text-gray-600">Weeks of Journey</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Weeks of Journey</div>
             <div className="text-xs text-green-700 mt-1">Persistence pays off</div>
           </CardContent>
         </Card>
@@ -161,7 +161,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
             <div className="text-2xl font-bold text-orange-600 mb-1">
               {entries.filter(e => e.baselineData.pain >= 7).length}
             </div>
-            <div className="text-sm text-gray-600">Courage Moments</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">Courage Moments</div>
             <div className="text-xs text-orange-700 mt-1">Brave through the tough days</div>
           </CardContent>
         </Card>
@@ -187,9 +187,9 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
       )}
 
       {/* Quick Navigation */}
-      <Card className="border-gray-200">
+      <Card className="border-gray-200 dark:border-gray-700">
         <CardHeader className="pb-4">
-          <CardTitle className="text-gray-800">Explore Your Analytics</CardTitle>
+          <CardTitle className="text-gray-800 dark:text-gray-200">Explore Your Analytics</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3">
@@ -206,7 +206,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
                     <IconComponent className="w-5 h-5" />
                     <span className="font-medium">{item.label}</span>
                   </div>
-                  <span className="text-xs text-gray-600">{item.description}</span>
+                  <span className="text-xs text-gray-600 dark:text-gray-400">{item.description}</span>
                 </Button>
               );
             })}
@@ -223,8 +223,8 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
         <div className="bg-white rounded-lg p-6 max-w-md w-full text-center space-y-4 animate-pulse">
           <div className="text-4xl">{celebratedAchievement.icon}</div>
-          <h3 className="text-xl font-bold text-gray-800">{celebratedAchievement.title}</h3>
-          <p className="text-gray-600">{celebratedAchievement.celebrationMessage}</p>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">{celebratedAchievement.title}</h3>
+          <p className="text-gray-600 dark:text-gray-400">{celebratedAchievement.celebrationMessage}</p>
           <div className="text-2xl">🎉 ✨ 🌟</div>
           <Button
             onClick={() => handleCelebrationShared(celebratedAchievement.shareableMessage || celebratedAchievement.celebrationMessage)}

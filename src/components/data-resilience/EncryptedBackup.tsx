@@ -95,7 +95,7 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
       </h2>
 
       {entries.length === 0 ? (
-        <p className="text-gray-600">No data available to backup.</p>
+        <p className="text-gray-600 dark:text-gray-400">No data available to backup.</p>
       ) : (
         <div className="space-y-6">
           {/* Backup Options */}
@@ -109,16 +109,16 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
               />
               <span className="font-medium">Enable encryption (recommended)</span>
             </label>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
               Encrypt backup with a password for enhanced security
             </p>
           </div>
 
           {/* Password Fields */}
           {isEncrypted && (
-            <div className="space-y-4 p-4 bg-gray-50 rounded">
+            <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Backup Password
                 </label>
                 <div className="flex gap-2">
@@ -127,24 +127,24 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter a strong password"
-                    className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     minLength={8}
                   />
                   <button
                     type="button"
                     onClick={generateSecurePassword}
-                    className="px-3 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm"
+                    className="px-3 py-2 bg-gray-600 dark:bg-gray-400 text-white rounded hover:bg-gray-700 text-sm"
                   >
                     Generate
                   </button>
                 </div>
-                <p className="text-xs text-gray-600 mt-1">
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
                   Minimum 8 characters. Store this password safely - you'll need it to restore the backup.
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Confirm Password
                 </label>
                 <input
@@ -152,7 +152,7 @@ export const EncryptedBackup: React.FC<EncryptedBackupProps> = ({ entries }) => 
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
-                  className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>

@@ -125,7 +125,7 @@ export const GatedWCBReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
     <FeatureGate feature="wcbReports" showUpgradePrompt>
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold mb-4">WorkSafe BC Report</h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Generate a comprehensive report for your WorkSafe BC claim submission.
         </p>
         {/* WCB Report component would go here */}
@@ -162,7 +162,7 @@ export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
     <FeatureGate feature="pdfReports" showUpgradePrompt>
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold mb-4">PDF Report</h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Export your pain tracking data as a professional PDF report.
         </p>
         <button
@@ -198,10 +198,10 @@ export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }
     <FeatureGate feature="clinicalPDFExport" showUpgradePrompt>
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold mb-4">Clinical PDF Export</h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Generate HIPAA-compliant clinical reports for healthcare providers.
         </p>
-        <div className="text-xs text-gray-500 mb-4">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
           <p>✓ HIPAA Compliant</p>
           <p>✓ Clinical Formatting</p>
           <p>✓ Standardized Templates</p>

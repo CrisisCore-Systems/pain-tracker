@@ -459,11 +459,11 @@ export function HolisticProgressTracker({
                 ) : trends.painTrend === 'worsening' ? (
                   <TrendingUp className="w-5 h-5 text-red-500" />
                 ) : (
-                  <Minus className="w-5 h-5 text-gray-500" />
+                  <Minus className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                 )}
                 <div>
                   <p className="text-sm font-medium">Pain Trend</p>
-                  <p className="text-xs text-gray-600 capitalize">{trends.painTrend}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{trends.painTrend}</p>
                 </div>
               </div>
               
@@ -471,7 +471,7 @@ export function HolisticProgressTracker({
                 <Activity className="w-5 h-5 text-green-500" />
                 <div>
                   <p className="text-sm font-medium">Recent Avg</p>
-                  <p className="text-xs text-gray-600">{formatNumber(trends.recentAvg, 1)}/10</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{formatNumber(trends.recentAvg, 1)}/10</p>
                 </div>
               </div>
               
@@ -479,7 +479,7 @@ export function HolisticProgressTracker({
                 <Calendar className="w-5 h-5 text-purple-500" />
                 <div>
                   <p className="text-sm font-medium">Entries</p>
-                  <p className="text-xs text-gray-600">{painEntries.length} total</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{painEntries.length} total</p>
                 </div>
               </div>
             </div>
@@ -488,7 +488,7 @@ export function HolisticProgressTracker({
       )}
 
       {/* Tab Navigation */}
-      <div className="flex space-x-1 bg-gray-100 rounded-lg p-1">
+      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
         {[
           { id: 'metrics', label: 'Wellbeing Metrics', icon: BarChart3 },
           { id: 'milestones', label: 'Milestones', icon: Target },

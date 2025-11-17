@@ -210,7 +210,7 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
               <Heart className="w-5 h-5" />
               Emotional Validation
             </CardTitle>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Your feelings and experiences are valid. Here are some personalized messages for you:
             </p>
           </CardHeader>
@@ -235,10 +235,10 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
                       )}
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-800 mb-1">
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
                         {message.type.charAt(0).toUpperCase() + message.type.slice(1)}
                       </p>
-                      <p className="text-sm text-gray-700">{message.message}</p>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{message.message}</p>
                       {selectedValidation === message.id && (
                         <p className="text-xs text-green-600 mt-2 font-medium">
                           ✓ Validation received
@@ -255,11 +255,11 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={() => setShowValidations(false)}
-                className="text-gray-600"
+                className="text-gray-600 dark:text-gray-400"
               >
                 Hide for now
               </Button>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Click any message that resonates with you
               </p>
             </div>
@@ -274,7 +274,7 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
             <Lightbulb className="w-5 h-5" />
             Personal Insights
           </CardTitle>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Reflections on your journey and growth
           </p>
         </CardHeader>
@@ -288,11 +288,11 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-gray-800 capitalize">
+                      <h4 className="font-semibold text-gray-800 dark:text-gray-200 capitalize">
                         {insight.category} Insight
                       </h4>
                     </div>
-                    <p className="text-sm text-gray-700 mb-3">{insight.insight}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">{insight.insight}</p>
                     <div className="bg-blue-50 p-3 rounded-md mb-3">
                       <p className="text-xs font-medium text-blue-700 mb-1">ACTIONABLE:</p>
                       <p className="text-sm text-blue-800">{insight.actionable}</p>
@@ -330,7 +330,7 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
         </CardHeader>
         <CardContent>
           <div className="text-center space-y-4">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               You're not alone in this journey. Connect with others who understand.
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -349,7 +349,7 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
                 Peer Stories
               </Button>
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Your voice and experience matter to this community
             </p>
           </div>

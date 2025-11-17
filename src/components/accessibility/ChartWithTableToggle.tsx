@@ -70,7 +70,7 @@ export function ChartWithTableToggle({
         </div>
         
         <div className="flex items-center gap-3">
-          {Icon && <Icon className="h-6 w-6 text-gray-400" aria-hidden="true" />}
+          {Icon && <Icon className="h-6 w-6 text-gray-400 dark:text-gray-500" aria-hidden="true" />}
           
           {/* View Toggle Button */}
           <button

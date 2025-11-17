@@ -94,7 +94,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
     const events = treatmentEvents.filter(event => event.date === label);
 
     return (
-      <div className="bg-white p-3 border border-gray-300 rounded-lg shadow-lg">
+      <div className="bg-white p-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
         <p className="font-semibold">{label}</p>
         <p className="text-blue-600">Pain Level: {data.pain}/10</p>
         {events.length > 0 && (
@@ -118,7 +118,7 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
     return (
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Treatment Overlay Chart</h2>
-        <p className="text-gray-600">No data available for treatment overlay.</p>
+        <p className="text-gray-600 dark:text-gray-400">No data available for treatment overlay.</p>
       </div>
     );
   }
@@ -213,11 +213,11 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
             <h3 className="font-semibold mb-3">Treatment Timeline</h3>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {treatmentEvents.map((event, index) => (
-                <div key={index} className="flex items-start gap-3 p-2 bg-gray-50 rounded">
+                <div key={index} className="flex items-start gap-3 p-2 bg-gray-50 dark:bg-gray-900 rounded">
                   <div className="w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: event.type === 'treatment' ? chartColors.treatment.primary : chartColors.treatment.medication }}></div>
                   <div className="flex-1">
                     <div className="font-medium text-sm">{event.date}</div>
-                    <div className="text-sm text-gray-600">{event.description}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{event.description}</div>
                   </div>
                 </div>
               ))}

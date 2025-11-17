@@ -94,11 +94,11 @@ export function IntegrationSummary() {
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center space-x-3">
           <CheckCircle className="w-8 h-8 text-green-500" />
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             Trauma-Informed UX Integration Complete
           </h1>
         </div>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
           Your Pain Tracker application now includes comprehensive trauma-informed design patterns 
           that support users with cognitive fog, physical limitations, and trauma history.
         </p>
@@ -138,7 +138,7 @@ export function IntegrationSummary() {
             {features.map((feature, index) => (
               <div key={index} className="flex items-center space-x-2">
                 <CheckCircle className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                <span className="text-sm text-gray-700">{feature}</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
               </div>
             ))}
           </div>
@@ -156,23 +156,23 @@ export function IntegrationSummary() {
         <CardContent>
           <div className="space-y-4">
             {nextSteps.map((step, index) => (
-              <div key={index} className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
+              <div key={index} className="flex items-start space-x-4 p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                 <div className="flex-shrink-0">
                   {step.icon}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium text-gray-900">{step.title}</h3>
+                    <h3 className="font-medium text-gray-900 dark:text-gray-100">{step.title}</h3>
                     <div className="flex items-center space-x-2">
                       <span className={`px-2 py-1 text-xs rounded-full ${
                         step.priority === 'high' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
                       }`}>
                         {step.priority} priority
                       </span>
-                      <span className="text-xs text-gray-500">{step.timeline}</span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{step.timeline}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600">{step.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{step.description}</p>
                 </div>
               </div>
             ))}
@@ -235,25 +235,25 @@ export function IntegrationSummary() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h3 className="font-medium text-gray-900 mb-2">User Adoption</h3>
-              <ul className="text-sm text-gray-700 space-y-1">
+            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">User Adoption</h3>
+              <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                 <li>• % enabling accessibility features</li>
                 <li>• Most popular accommodations</li>
                 <li>• Settings retention rate</li>
               </ul>
             </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h3 className="font-medium text-gray-900 mb-2">User Experience</h3>
-              <ul className="text-sm text-gray-700 space-y-1">
+            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">User Experience</h3>
+              <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                 <li>• Task completion rates</li>
                 <li>• Error frequency reduction</li>
                 <li>• Session duration patterns</li>
               </ul>
             </div>
-            <div className="p-4 bg-gray-50 rounded-lg">
-              <h3 className="font-medium text-gray-900 mb-2">Clinical Outcomes</h3>
-              <ul className="text-sm text-gray-700 space-y-1">
+            <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Clinical Outcomes</h3>
+              <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
                 <li>• Data quality improvements</li>
                 <li>• Tracking consistency</li>
                 <li>• Provider satisfaction</li>
@@ -266,14 +266,14 @@ export function IntegrationSummary() {
       {/* Contact & Resources */}
       <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
         <CardContent className="pt-6 text-center">
-          <h3 className="font-semibold text-gray-900 mb-2">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
             🎉 Congratulations! Your trauma-informed Pain Tracker is ready to go.
           </h3>
-          <p className="text-sm text-gray-700 mb-4">
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
             You've successfully created a more inclusive, supportive, and accessible healthcare application.
             This implementation puts user wellbeing and choice at the center of the experience.
           </p>
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-gray-600 dark:text-gray-400">
             Built with trauma-informed care principles: Safety • Trustworthiness • Choice • Collaboration • Empowerment
           </div>
         </CardContent>

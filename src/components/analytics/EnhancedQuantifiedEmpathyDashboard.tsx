@@ -128,8 +128,8 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
       <Card className="w-full">
         <CardContent className="p-8 text-center space-y-4">
           <Heart className="w-10 h-10 mx-auto text-purple-500" />
-          <p className="text-gray-700 font-medium">Empathy analytics are privacy-protected.</p>
-          <p className="text-sm text-gray-500">Grant consent to process and view Quantified Empathy Metrics. You can revoke anytime.</p>
+          <p className="text-gray-700 dark:text-gray-300 font-medium">Empathy analytics are privacy-protected.</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Grant consent to process and view Quantified Empathy Metrics. You can revoke anytime.</p>
           <div className="flex justify-center space-x-4">
             <Button onClick={grantConsent} variant="default">Grant Consent</Button>
           </div>
@@ -144,8 +144,8 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
         <CardContent className="flex items-center justify-center p-8">
           <div className="text-center">
             <Brain className="w-8 h-8 mx-auto mb-4 text-purple-500 animate-pulse" />
-            <p className="text-gray-600">Analyzing your empathy patterns with AI...</p>
-            <div className="mt-4 w-64 mx-auto bg-gray-200 rounded-full h-2">
+            <p className="text-gray-600 dark:text-gray-400">Analyzing your empathy patterns with AI...</p>
+            <div className="mt-4 w-64 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div className="bg-purple-500 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
             </div>
           </div>
@@ -159,9 +159,9 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
       <Card className="w-full">
         <CardContent className="flex items-center justify-center p-8">
           <div className="text-center">
-            <Heart className="w-8 h-8 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-600">Building your empathy intelligence profile...</p>
-            <p className="text-sm text-gray-500 mt-2">Continue tracking to unlock advanced insights!</p>
+            <Heart className="w-8 h-8 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+            <p className="text-gray-600 dark:text-gray-400">Building your empathy intelligence profile...</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Continue tracking to unlock advanced insights!</p>
             <div className="mt-4"><Button size="sm" onClick={metricsState.refresh}>Retry</Button></div>
           </div>
         </CardContent>
@@ -343,7 +343,7 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
                       {insight.confidence}% confidence
                     </span>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2">{insight.description}</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">{insight.description}</p>
                   <div className="flex items-center justify-between">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       insight.type === 'celebration' ? 'bg-green-100 text-green-800' :
@@ -400,8 +400,8 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
                       </Button>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-700 mb-2">{recommendation.description}</p>
-                  <p className="text-xs text-gray-600 mb-2"><strong>Rationale:</strong> {recommendation.rationale}</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">{recommendation.description}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2"><strong>Rationale:</strong> {recommendation.rationale}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-green-600">
                       <strong>Timeframe:</strong> {recommendation.timeframe}
@@ -463,7 +463,7 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
           <CardContent className="flex items-center justify-center p-8">
             <div className="text-center space-y-2">
               <Sparkles className="w-8 h-8 mx-auto text-purple-500 mb-2" />
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 This dashboard view is actively in development and will unlock deeper empathy insights soon.
               </p>
               {roadmapKey && (

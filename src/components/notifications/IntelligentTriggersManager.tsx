@@ -101,14 +101,14 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
           <Brain className="w-6 h-6 text-blue-600" />
           <div>
             <h2 className="text-xl font-semibold">Intelligent Triggers</h2>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Smart notifications based on your pain patterns and goals
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {lastAnalysis && (
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               Last analyzed: {lastAnalysis.toLocaleTimeString()}
             </span>
           )}
@@ -156,7 +156,7 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
                     {getTriggerIcon(trigger.type)}
                     <div>
                       <CardTitle className="text-lg">{trigger.name}</CardTitle>
-                      <p className="text-sm text-gray-600">{trigger.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{trigger.description}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -182,25 +182,25 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
                     <div className="text-2xl font-bold text-blue-600">
                       {stats?.triggerCount || 0}
                     </div>
-                    <div className="text-xs text-gray-500">Triggers</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Triggers</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-600">
                       {formatCooldown(trigger.cooldownPeriod)}
                     </div>
-                    <div className="text-xs text-gray-500">Cooldown</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Cooldown</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-orange-600">
                       {trigger.maxTriggersPerDay}
                     </div>
-                    <div className="text-xs text-gray-500">Max/Day</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Max/Day</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-purple-600">
                       {formatLastTriggered(stats?.lastTriggered)}
                     </div>
-                    <div className="text-xs text-gray-500">Last Trigger</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Last Trigger</div>
                   </div>
                 </div>
 
@@ -281,9 +281,9 @@ export const IntelligentTriggersManager: React.FC<IntelligentTriggersManagerProp
       {triggers.length === 0 && (
         <Card className="text-center py-12">
           <CardContent>
-            <Brain className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <Brain className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">No Intelligent Triggers</h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
               Set up smart notifications that respond to your pain patterns and goals.
             </p>
             <Button onClick={resetToDefaults}>
@@ -301,26 +301,26 @@ const TriggerDetailsView: React.FC<{ trigger: IntelligentTrigger }> = ({ trigger
   <div className="space-y-4">
     <div>
       <h4 className="font-medium mb-2">Description</h4>
-      <p className="text-gray-600">{trigger.description}</p>
+      <p className="text-gray-600 dark:text-gray-400">{trigger.description}</p>
     </div>
 
     <div>
       <h4 className="font-medium mb-2">Trigger Conditions</h4>
       <div className="space-y-2">
         {trigger.conditions.map((condition, index) => (
-          <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+          <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
             <Info className="w-4 h-4 text-blue-600" />
             <div>
               <div className="font-medium capitalize">
                 {condition.type.replace('_', ' ')}
               </div>
               {condition.threshold && (
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
                   Threshold: {condition.threshold}
                 </div>
               )}
               {condition.timeWindow && (
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
                   Time Window: {condition.timeWindow}h
                 </div>
               )}
@@ -346,7 +346,7 @@ const TriggerDetailsView: React.FC<{ trigger: IntelligentTrigger }> = ({ trigger
             {trigger.isActive ? (
               <CheckCircle className="w-4 h-4 text-green-600" />
             ) : (
-              <AlertTriangle className="w-4 h-4 text-gray-400" />
+              <AlertTriangle className="w-4 h-4 text-gray-400 dark:text-gray-500" />
             )}
             {trigger.isActive ? 'Active' : 'Inactive'}
           </div>
@@ -365,19 +365,19 @@ const TriggerStatsView: React.FC<{
     <div className="grid grid-cols-3 gap-4">
       <div className="text-center p-4 bg-blue-50 rounded-lg">
         <div className="text-2xl font-bold text-blue-600">{stats?.triggerCount || 0}</div>
-        <div className="text-sm text-gray-600">Total Triggers</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">Total Triggers</div>
       </div>
       <div className="text-center p-4 bg-green-50 rounded-lg">
         <div className="text-2xl font-bold text-green-600">
           {stats?.lastTriggered ? formatLastTriggered(stats.lastTriggered) : 'Never'}
         </div>
-        <div className="text-sm text-gray-600">Last Triggered</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">Last Triggered</div>
       </div>
       <div className="text-center p-4 bg-orange-50 rounded-lg">
         <div className="text-2xl font-bold text-orange-600">
           {Math.round((trigger.triggerCount / Math.max(1, trigger.maxTriggersPerDay)) * 100)}%
         </div>
-        <div className="text-sm text-gray-600">Daily Usage</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">Daily Usage</div>
       </div>
     </div>
 
@@ -387,7 +387,7 @@ const TriggerStatsView: React.FC<{
         value={(trigger.triggerCount / Math.max(1, trigger.maxTriggersPerDay * 7)) * 100}
         className="mb-2"
       />
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-gray-600 dark:text-gray-400">
         {trigger.triggerCount} triggers sent this week
       </p>
     </div>
