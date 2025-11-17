@@ -80,6 +80,12 @@
     "screenshots:portfolio:phase3": "node scripts/capture-screenshot-portfolio.js --phase=phase3",
     "e2e": "npx playwright test --config=e2e/playwright.config.ts",
     "e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
+    "e2e:pwa": "npx playwright test e2e/tests/pwa-*.spec.ts --config=e2e/playwright.config.ts",
+    "e2e:pwa:chromium": "npx playwright test e2e/tests/pwa-*.spec.ts --project=chromium --config=e2e/playwright.config.ts",
+    "e2e:pwa:firefox": "npx playwright test e2e/tests/pwa-*.spec.ts --project=firefox --config=e2e/playwright.config.ts",
+    "e2e:pwa:webkit": "npx playwright test e2e/tests/pwa-*.spec.ts --project=webkit --config=e2e/playwright.config.ts",
+    "e2e:pwa:report": "node scripts/run-pwa-tests.js",
+  "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
