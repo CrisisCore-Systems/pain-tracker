@@ -49,7 +49,7 @@ export const LanguageSelector: React.FC = () => {
         ))}
       </div>
       
-      <div className="mt-3 pt-3 border-t border-gray-200">
+      <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
         <p className="text-xs text-gray-600 dark:text-gray-400">
           Current: {languages.find(l => l.code === i18n.language)?.name || 'Unknown'}
         </p>

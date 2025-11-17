@@ -614,7 +614,7 @@ export function CrisisAlertBanner({
               setIsVisible(false);
               onDismiss();
             }}
-            className="ml-2 text-white hover:text-gray-200 transition-colors"
+            className="ml-2 text-white hover:text-gray-200 dark:text-gray-700 transition-colors"
           >
             ×
           </button>

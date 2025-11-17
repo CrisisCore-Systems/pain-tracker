@@ -33,6 +33,8 @@ import { EmotionalValidation, ValidationHistory, useEmotionalValidation } from '
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 import { hipaaComplianceService } from '../../services/HIPAACompliance';
 import type { AuditTrail } from '../../services/HIPAACompliance';
+import { analyzePatterns } from '../../utils/pain-tracker/pattern-engine';
+import type { PatternAnalysisResult } from '../../types/pattern-engine';
 
 type TimePeriod = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -567,6 +569,20 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
     };
   }, [filteredEntries]);
 
+  // Advanced pattern recognition using heuristic engine
+  const patternAnalysis = useMemo<PatternAnalysisResult | null>(() => {
+    if (filteredEntries.length === 0) {
+      return null;
+    }
+    
+    try {
+      return analyzePatterns(filteredEntries);
+    } catch (error) {
+      console.error('Pattern analysis failed:', error);
+      return null;
+    }
+  }, [filteredEntries]);
+
   const reasoningTree = useMemo<ReasoningNode[]>(
     () => buildReasoningTree(analytics, filteredEntries.length),
     [analytics, filteredEntries.length]
@@ -668,7 +684,12 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
   {view === 'predictions' && <PredictionsView analytics={analytics} />}
         {view === 'clinical' && <ClinicalReportView analytics={analytics} entries={filteredEntries} />}
         {view === 'insights' && (
-          <InsightsView analytics={analytics} entries={filteredEntries} reasoningTree={reasoningTree} />
+          <InsightsView 
+            analytics={analytics} 
+            entries={filteredEntries} 
+            reasoningTree={reasoningTree}
+            patternAnalysis={patternAnalysis}
+          />
         )}
         {view === 'export' && <ExportView analytics={analytics} entries={filteredEntries} />}
       </div>
@@ -954,10 +975,10 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics })
                         <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{label}</p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">{window}</p>
                       </div>
-                      <div className={`px-2 py-1 rounded-lg text-sm font-semibold ${avg === null ? 'text-gray-400' : getSeverityColor(avg)}`}>
+                      <div className={`px-2 py-1 rounded-lg text-sm font-semibold ${avg === null ? 'text-gray-400 dark:text-gray-500' : getSeverityColor(avg)}`}>
                         {avg === null ? '—' : avg.toFixed(1)}
                       </div>
-                      <Icon className="w-4 h-4 text-gray-400" />
+                      <Icon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                     </div>
                   );
                 })}
@@ -973,7 +994,7 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics })
                   return (
                     <div key={`${label}-${idx}`} className="p-2 rounded-lg text-center bg-gray-50 dark:bg-gray-800">
                       <div className="text-xs font-semibold text-gray-600 dark:text-gray-300">{label}</div>
-                      <div className={`mt-1 text-sm font-bold ${avg === null ? 'text-gray-400' : getSeverityColor(avg)}`}>
+                      <div className={`mt-1 text-sm font-bold ${avg === null ? 'text-gray-400 dark:text-gray-500' : getSeverityColor(avg)}`}>
                         {avg === null ? '—' : avg.toFixed(1)}
                       </div>
                     </div>
@@ -1051,7 +1072,7 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics })
               const monthData = analytics.monthlyTrend.find((m) => m.month === idx + 1);
               if (!monthData) {
                 return (
-                  <div key={label} className="px-4 py-2 rounded-full border border-dashed border-gray-200 dark:border-gray-700 text-gray-400 text-sm">
+                  <div key={label} className="px-4 py-2 rounded-full border border-dashed border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 text-sm">
                     {label}
                   </div>
                 );
@@ -1185,13 +1206,13 @@ const PredictionsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-800 space-y-5">
           <div>
-            <p className="text-sm uppercase tracking-wide text-gray-500">Supporting Signals</p>
+            <p className="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">Supporting Signals</p>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">What drives the model</h3>
           </div>
           <div className="space-y-3">
             <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-between gap-2">
               <div>
-                <p className="text-xs text-gray-500">Most sensitive trigger</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Most sensitive trigger</p>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">{aggravatingTrigger ? aggravatingTrigger.trigger : 'Need more data'}</p>
               </div>
               {aggravatingTrigger && (
@@ -1200,7 +1221,7 @@ const PredictionsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics
             </div>
             <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-between gap-2">
               <div>
-                <p className="text-xs text-gray-500">Most stable trigger</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Most stable trigger</p>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">{stabilizingTrigger ? stabilizingTrigger.trigger : 'Logging needed'}</p>
               </div>
               {stabilizingTrigger && (
@@ -1209,7 +1230,7 @@ const PredictionsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics
             </div>
             <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-between gap-2">
               <div>
-                <p className="text-xs text-gray-500">Peak pain day</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Peak pain day</p>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">{toughestDay ? DAY_LABELS[toughestDay.day] : 'Need weekly coverage'}</p>
               </div>
               {toughestDay && (
@@ -1219,10 +1240,10 @@ const PredictionsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics
           </div>
 
             <div>
-              <p className="text-xs uppercase tracking-wide text-gray-500 mb-2">Top relief sources</p>
+              <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">Top relief sources</p>
               <div className="space-y-2">
                 {medicationLeaders.length === 0 ? (
-                  <p className="text-sm text-gray-500">Track medication usage to see which options your body responds to best.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Track medication usage to see which options your body responds to best.</p>
                 ) : (
                   medicationLeaders.map((med) => (
                     <div key={med.medication} className="flex items-center justify-between text-sm">
@@ -1303,17 +1324,17 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
       <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Clinical Summary</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Clinical Summary</p>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Pain Management Report</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">{totalEntries > 0 ? `${dateFormatter(rangeStart)} – ${dateFormatter(rangeEnd)} (${totalEntries} entries)` : 'Awaiting entries to generate report.'}</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <div className="px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800">
-              <p className="text-xs text-gray-500">Risk Level</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Risk Level</p>
               <p className="font-semibold text-gray-900 dark:text-white">{riskLevel}</p>
             </div>
             <div className="px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800">
-              <p className="text-xs text-gray-500">Latest Entry</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Latest Entry</p>
               <p className="font-semibold text-gray-900 dark:text-white">{dateFormatter(latestEntry?.timestamp)}</p>
             </div>
           </div>
@@ -1354,7 +1375,7 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">Medication & Treatment Summary</h3>
-            <span className="text-xs text-gray-400">Last documented: {dateFormatter(latestEntry?.timestamp)}</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">Last documented: {dateFormatter(latestEntry?.timestamp)}</span>
           </div>
           {medicationHighlights.length === 0 ? (
             <p className="text-sm text-gray-600 dark:text-gray-400">Document medication usage along with pain score changes to surface effectiveness insights.</p>
@@ -1399,18 +1420,18 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
       </div>
 
       <div className="bg-gray-50 dark:bg-gray-900/60 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-        <p className="text-xs uppercase tracking-[0.3em] text-gray-500 mb-2">Supporting Evidence</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400 mb-2">Supporting Evidence</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
           <div>
-            <p className="text-xs text-gray-500 uppercase">Top Pain Locations</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Top Pain Locations</p>
             <p>{analytics.topLocations.length > 0 ? analytics.topLocations.map((loc) => `${loc.location} (${loc.count})`).join(', ') : 'Not captured'}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500 uppercase">Primary Triggers</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Primary Triggers</p>
             <p>{analytics.topTriggers.length > 0 ? analytics.topTriggers.map((trigger) => `${trigger.trigger} (${trigger.count})`).join(', ') : 'Not documented'}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500 uppercase">Quality-of-Life Metrics</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Quality-of-Life Metrics</p>
             <p>
               Sleep avg: {functionalSummary.sleepCount > 0 ? (functionalSummary.sleepTotal / functionalSummary.sleepCount).toFixed(1) : '—'} ·
               Mood impact avg: {functionalSummary.moodCount > 0 ? (functionalSummary.moodTotal / functionalSummary.moodCount).toFixed(1) : '—'}
@@ -1427,7 +1448,8 @@ const InsightsView: React.FC<{
   analytics: AnalyticsSnapshot;
   entries: PainEntry[];
   reasoningTree: ReasoningNode[];
-}> = ({ analytics, entries, reasoningTree }) => {
+  patternAnalysis: PatternAnalysisResult | null;
+}> = ({ analytics, entries, reasoningTree, patternAnalysis }) => {
   const entryConfidence = entries.length >= 60 ? 'high' : entries.length >= 25 ? 'medium' : 'low';
   const latestRecommendation = analytics.personalizedRecommendations[0];
 
@@ -1436,7 +1458,7 @@ const InsightsView: React.FC<{
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Tree-of-Thought Reasoning</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">Tree-of-Thought Reasoning</p>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white">How the dashboard reached its conclusions</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
               Each branch represents a reasoning step that connects raw entries to clinical guidance. Confidence is weighted by data coverage.
@@ -1475,7 +1497,7 @@ const InsightsView: React.FC<{
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Coverage Snapshot</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">Coverage Snapshot</p>
           <div className="mt-4 space-y-3 text-sm text-gray-700 dark:text-gray-300">
             <div className="flex items-center justify-between">
               <span>Total entries analyzed</span>
@@ -1496,6 +1518,144 @@ const InsightsView: React.FC<{
           </div>
         </div>
       </div>
+
+      {/* Advanced Pattern Recognition Results */}
+      {patternAnalysis && (
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-6 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <Brain className="w-6 h-6" />
+              <div>
+                <h3 className="text-xl font-bold">Heuristic Pattern Recognition</h3>
+                <p className="text-sm text-white/80">Advanced analysis powered by local algorithms</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <p className="text-xs uppercase tracking-wider text-white/70">Trend Slope</p>
+                <p className="text-2xl font-bold">
+                  {patternAnalysis.dailyTrend.length > 0 
+                    ? (patternAnalysis.dailyTrend[patternAnalysis.dailyTrend.length - 1].value - 
+                       patternAnalysis.dailyTrend[0].value).toFixed(1)
+                    : '0.0'}
+                </p>
+                <p className="text-xs text-white/80">Recent trend direction</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <p className="text-xs uppercase tracking-wider text-white/70">Episodes Detected</p>
+                <p className="text-2xl font-bold">{patternAnalysis.episodes.length}</p>
+                <p className="text-xs text-white/80">Flare patterns identified</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <p className="text-xs uppercase tracking-wider text-white/70">Data Quality</p>
+                <p className="text-2xl font-bold capitalize">{patternAnalysis.meta.dataQuality}</p>
+                <p className="text-xs text-white/80">{patternAnalysis.meta.entryCount} entries analyzed</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Episodes Timeline */}
+          {patternAnalysis.episodes.length > 0 && (
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-500" />
+                Pain Episodes ({patternAnalysis.episodes.length})
+              </h4>
+              <div className="space-y-3">
+                {patternAnalysis.episodes.slice(0, 5).map((episode, idx) => (
+                  <div key={idx} className="border-l-4 border-red-500 pl-4 py-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-gray-900 dark:text-white capitalize">
+                          {episode.severity} Severity
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {episode.durationDays} days • Peak: {episode.peakPain.toFixed(1)}/10
+                        </p>
+                      </div>
+                      {episode.recoveryDays !== null && (
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          Recovery: {episode.recoveryDays}d
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Trigger Correlations */}
+          {patternAnalysis.triggerCorrelations.length > 0 && (
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Zap className="w-5 h-5 text-yellow-500" />
+                Trigger Correlations
+              </h4>
+              <div className="space-y-3">
+                {patternAnalysis.triggerCorrelations.slice(0, 5).map((corr, idx) => (
+                  <div key={idx} className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 dark:text-white">{corr.label}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {corr.support} occurrences • {corr.confidence.toFixed(0)}% confidence
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className={`text-sm font-semibold ${corr.deltaPain > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {corr.deltaPain > 0 ? '+' : ''}{corr.deltaPain.toFixed(1)}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{corr.strength}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* QoL Patterns */}
+          {patternAnalysis.qolPatterns.length > 0 && (
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
+              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <Heart className="w-5 h-5 text-pink-500" />
+                Quality of Life Insights
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {patternAnalysis.qolPatterns.map((pattern, idx) => (
+                  <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      {pattern.metric === 'sleep' && <Moon className="w-4 h-4" />}
+                      {pattern.metric === 'mood' && <Sun className="w-4 h-4" />}
+                      {pattern.metric === 'activity' && <Activity className="w-4 h-4" />}
+                      <p className="font-semibold text-gray-900 dark:text-white capitalize">{pattern.metric}</p>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{pattern.description}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 capitalize">{pattern.correlation} correlation</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Cautions */}
+          {patternAnalysis.meta.cautions.length > 0 && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="font-semibold text-yellow-900 dark:text-yellow-100">Analysis Notes</p>
+                  <ul className="mt-2 space-y-1 text-sm text-yellow-800 dark:text-yellow-200">
+                    {patternAnalysis.meta.cautions.map((caution, idx) => (
+                      <li key={idx}>• {caution}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -1518,7 +1678,7 @@ const ReasoningTree: React.FC<{ nodes: ReasoningNode[]; depth: number }> = ({ no
         >
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Step {depth + 1}</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">Step {depth + 1}</p>
               <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{node.title}</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{node.insight}</p>
               {node.evidence && (
@@ -1922,7 +2082,7 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-6">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-gray-500">Clinical-Grade Exports</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">Clinical-Grade Exports</p>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Share securely with care teams</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                   Generate WorkSafe BC-ready PDFs or quickly download data snapshots without leaving the browser.
@@ -1976,7 +2136,7 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Provider Snapshot</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">Provider Snapshot</p>
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Copy or email a clinical summary</h3>
               </div>
               <Share2 className="w-6 h-6 text-indigo-500" />
@@ -2042,7 +2202,7 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
               <button
                 onClick={handleEmailShare}
                 disabled={isOffline}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 ${
                   isOffline ? 'opacity-60 cursor-not-allowed' : ''
                 }`}
               >

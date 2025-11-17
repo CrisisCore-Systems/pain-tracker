@@ -33,23 +33,23 @@ export const PricingPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Choose Your Plan
         </h1>
-        <p className="text-xl text-gray-600 mb-8">
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
           Start free, upgrade when you need more power
         </p>
 
         {/* Current Tier Display */}
         {currentTier && (
           <div className="inline-flex items-center gap-2 mb-8">
-            <span className="text-sm text-gray-600">Current plan:</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">Current plan:</span>
             <TierBadge tier={currentTier} size="md" />
           </div>
         )}
 
         {/* Billing Interval Toggle */}
-        <div className="inline-flex items-center gap-4 bg-white rounded-full p-1 border-2 border-gray-200">
+        <div className="inline-flex items-center gap-4 bg-white rounded-full p-1 border-2 border-gray-200 dark:border-gray-700">
           <button
             onClick={() => setBillingInterval('monthly')}
             className={`px-6 py-2 rounded-full font-medium transition-colors ${
@@ -109,17 +109,17 @@ export const PricingPage: React.FC = () => {
 
               {/* Tier Icon */}
               <div className="mb-4">
-                {tierKey === 'free' && <Star className="w-12 h-12 text-gray-400" />}
+                {tierKey === 'free' && <Star className="w-12 h-12 text-gray-400 dark:text-gray-500" />}
                 {tierKey === 'basic' && <Star className="w-12 h-12 text-blue-500" />}
                 {tierKey === 'pro' && <Crown className="w-12 h-12 text-purple-500" />}
                 {tierKey === 'enterprise' && <Users className="w-12 h-12 text-amber-500" />}
               </div>
 
               {/* Plan Name & Tagline */}
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {plan.name}
               </h3>
-              <p className="text-sm text-gray-600 mb-6">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
                 {plan.tagline}
               </p>
 
@@ -127,21 +127,21 @@ export const PricingPage: React.FC = () => {
               <div className="mb-6">
                 {tierKey === 'enterprise' ? (
                   <div>
-                    <div className="text-3xl font-bold text-gray-900">
+                    <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                       Custom
                     </div>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                       Contact sales
                     </p>
                   </div>
                 ) : (
                   <div>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-bold text-gray-900">
+                      <span className="text-4xl font-bold text-gray-900 dark:text-gray-100">
                         {price.display}
                       </span>
                       {tierKey !== 'free' && (
-                        <span className="text-gray-600">
+                        <span className="text-gray-600 dark:text-gray-400">
                           /{billingInterval === 'monthly' ? 'mo' : 'yr'}
                         </span>
                       )}
@@ -172,18 +172,18 @@ export const PricingPage: React.FC = () => {
 
               {/* Trial Info */}
               {plan.pricing.trial.enabled && !isCurrentPlan && (
-                <p className="text-sm text-center text-gray-600 mb-6">
+                <p className="text-sm text-center text-gray-600 dark:text-gray-400 mb-6">
                   {plan.pricing.trial.days}-day free trial
                 </p>
               )}
 
               {/* Top Features */}
               <div className="space-y-3">
-                <p className="font-semibold text-gray-900 text-sm">Top features:</p>
+                <p className="font-semibold text-gray-900 dark:text-gray-100 text-sm">Top features:</p>
                 {getTopFeatures(tierKey).map((feature, idx) => (
                   <div key={idx} className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -202,20 +202,20 @@ export const PricingPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 border-b-2 border-gray-200">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
+                <tr className="bg-gray-50 dark:bg-gray-900 border-b-2 border-gray-200 dark:border-gray-700">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-gray-100">
                     Feature
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-gray-100">
                     Free
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-gray-100">
                     Basic
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 bg-purple-50">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-gray-100 bg-purple-50">
                     Pro
                   </th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900 dark:text-gray-100">
                     Enterprise
                   </th>
                 </tr>
@@ -226,16 +226,16 @@ export const PricingPage: React.FC = () => {
                   return (
                   <React.Fragment key={categoryKey}>
                     {/* Category Header */}
-                    <tr className="bg-gray-100">
-                      <td colSpan={5} className="px-6 py-3 text-sm font-bold text-gray-900">
+                    <tr className="bg-gray-100 dark:bg-gray-800">
+                      <td colSpan={5} className="px-6 py-3 text-sm font-bold text-gray-900 dark:text-gray-100">
                         {cat.category}
                       </td>
                     </tr>
                     
                     {/* Category Items */}
                     {cat.items.map((item, idx) => (
-                      <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm text-gray-700">
+                      <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50 dark:bg-gray-900">
+                        <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
                           {item.name}
                         </td>
                         <td className="px-6 py-4 text-center">
@@ -337,11 +337,11 @@ const FeatureCell: React.FC<{ value: string | number | boolean }> = ({ value }) 
     return value ? (
       <Check className="w-5 h-5 text-green-500 mx-auto" />
     ) : (
-      <X className="w-5 h-5 text-gray-300 mx-auto" />
+      <X className="w-5 h-5 text-gray-300 dark:text-gray-600 mx-auto" />
     );
   }
   
-  return <span className="text-sm text-gray-700">{value}</span>;
+  return <span className="text-sm text-gray-700 dark:text-gray-300">{value}</span>;
 };
 
 /**
@@ -351,17 +351,17 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, ans
   const [isOpen, setIsOpen] = useState(false);
   
   return (
-    <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+    <div className="bg-white rounded-lg border-2 border-gray-200 dark:border-gray-700 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:bg-gray-900 transition-colors"
       >
-        <span className="font-semibold text-gray-900">{question}</span>
-        <TrendingUp className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
+        <span className="font-semibold text-gray-900 dark:text-gray-100">{question}</span>
+        <TrendingUp className={`w-5 h-5 text-gray-400 dark:text-gray-500 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
       </button>
       {isOpen && (
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-          <p className="text-gray-700">{answer}</p>
+        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+          <p className="text-gray-700 dark:text-gray-300">{answer}</p>
         </div>
       )}
     </div>

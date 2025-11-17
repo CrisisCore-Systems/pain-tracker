@@ -77,7 +77,7 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
             <Target className="w-8 h-8 text-blue-600" />
             Goal Management
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-gray-600 dark:text-gray-400 mt-1">
             Set, track, and achieve your health and wellness goals
           </p>
         </div>
@@ -230,11 +230,11 @@ export const GoalQuickActions: React.FC<GoalQuickActionsProps> = ({
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="text-center">
             <div className="text-xl font-bold text-blue-600">{stats.activeGoals}</div>
-            <div className="text-xs text-gray-600">Active</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Active</div>
           </div>
           <div className="text-center">
             <div className="text-xl font-bold text-green-600">{stats.completedGoals}</div>
-            <div className="text-xs text-gray-600">Completed</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Completed</div>
           </div>
         </div>
 
@@ -244,7 +244,7 @@ export const GoalQuickActions: React.FC<GoalQuickActionsProps> = ({
               <span>Overall Progress</span>
               <span>{stats.avgProgress}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div
                 className="bg-blue-600 h-2 rounded-full transition-all"
                 style={{ width: `${stats.avgProgress}%` }}

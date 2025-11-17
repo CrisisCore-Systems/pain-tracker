@@ -17,7 +17,7 @@ export function ComparisonSection({
       <h3 className="font-semibold text-lg">Comparison to Previous</h3>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Pain Worsening Since
         </label>
         <input
@@ -29,7 +29,7 @@ export function ComparisonSection({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           New Limitations
         </label>
         <textarea

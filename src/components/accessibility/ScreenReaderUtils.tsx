@@ -158,7 +158,7 @@ export const AccessibleField: React.FC<AccessibleFieldProps> = ({
     <div className="space-y-1">
       <label 
         htmlFor={id}
-        className={`block text-sm font-medium ${error ? 'text-red-700' : 'text-gray-700'}`}
+        className={`block text-sm font-medium ${error ? 'text-red-700' : 'text-gray-700 dark:text-gray-300'}`}
       >
         {label}
         {required && (
@@ -167,7 +167,7 @@ export const AccessibleField: React.FC<AccessibleFieldProps> = ({
       </label>
       
       {description && (
-        <p id={descriptionId} className="text-sm text-gray-600">
+        <p id={descriptionId} className="text-sm text-gray-600 dark:text-gray-400">
           {description}
         </p>
       )}

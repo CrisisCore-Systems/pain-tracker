@@ -234,24 +234,24 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
       <h2 className="text-xl font-semibold mb-4">Clinical Data Export</h2>
       
       {entries.length === 0 ? (
-        <p className="text-gray-600">No data available for export.</p>
+        <p className="text-gray-600 dark:text-gray-400">No data available for export.</p>
       ) : (
         <div className="space-y-6">
           {/* Export Format Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Export Format
             </label>
             <select
               value={exportFormat}
               onChange={(e) => setExportFormat(e.target.value as 'standard' | 'detailed' | 'summary')}
-              className="border border-gray-300 rounded px-3 py-2 w-full max-w-xs"
+              className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 w-full max-w-xs"
             >
               <option value="standard">Standard Clinical Export</option>
               <option value="detailed">Detailed Comprehensive Export</option>
               <option value="summary">Executive Summary Export</option>
             </select>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
               {exportFormat === 'standard' && 'Essential clinical data for routine review'}
               {exportFormat === 'detailed' && 'Complete dataset for comprehensive analysis'}
               {exportFormat === 'summary' && 'High-level overview for quick assessment'}
@@ -279,7 +279,7 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
           {/* Export Preview */}
           <div className="border-t pt-4">
             <h3 className="font-medium mb-2">Export Preview</h3>
-            <div className="text-sm text-gray-600 space-y-1">
+            <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
               <div>Total entries: {entries.length}</div>
               <div>Date range: {format(new Date(entries[entries.length - 1]?.timestamp || new Date()), 'MMM d, yyyy')} - {format(new Date(entries[0]?.timestamp || new Date()), 'MMM d, yyyy')}</div>
               <div>
@@ -293,11 +293,11 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
           </div>
 
           {/* Clinical Data Summary */}
-          <div className="bg-gray-50 p-4 rounded">
+          <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
             <h3 className="font-medium mb-3">Quick Clinical Overview</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <div className="text-gray-600">Avg Pain</div>
+                <div className="text-gray-600 dark:text-gray-400">Avg Pain</div>
                 <div className="font-bold">
                   {entries.length > 0
                     ? Number(formatNumber((entries.reduce((sum, entry) => sum + (entry.baselineData?.pain || 0), 0) / entries.length), 1))
@@ -305,19 +305,19 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
                 </div>
               </div>
               <div>
-                <div className="text-gray-600">Unique Locations</div>
+                <div className="text-gray-600 dark:text-gray-400">Unique Locations</div>
                 <div className="font-bold">
                   {new Set(entries.flatMap(e => e.baselineData?.locations || [])).size}
                 </div>
               </div>
               <div>
-                <div className="text-gray-600">Work Days Lost</div>
+                <div className="text-gray-600 dark:text-gray-400">Work Days Lost</div>
                 <div className="font-bold">
                   {entries.reduce((sum, entry) => sum + (entry.workImpact?.missedWork || 0), 0)}
                 </div>
               </div>
               <div>
-                <div className="text-gray-600">Treatment Types</div>
+                <div className="text-gray-600 dark:text-gray-400">Treatment Types</div>
                 <div className="font-bold">
                   {new Set(entries.flatMap(e => e.treatments?.recent?.map(t => t.type) || [])).size}
                 </div>

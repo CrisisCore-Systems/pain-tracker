@@ -53,17 +53,17 @@ export function ProgressiveDisclosure({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {isOpen ? (
-              <ChevronDown className="w-5 h-5 text-gray-600" />
+              <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             ) : (
-              <ChevronRight className="w-5 h-5 text-gray-600" />
+              <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             )}
             <div>
-              <h3 className="font-medium text-gray-900">{title}</h3>
-              <span className="text-xs text-gray-500 font-medium">{levelLabels[level]}</span>
+              <h3 className="font-medium text-gray-900 dark:text-gray-100">{title}</h3>
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{levelLabels[level]}</span>
             </div>
           </div>
           {preferences.showMemoryAids && memoryAid && (
-            <div className="text-xs text-gray-600 bg-gray-200 px-2 py-1 rounded">
+            <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
               💡 {memoryAid}
             </div>
           )}
@@ -174,7 +174,7 @@ export function AutoSaveIndicator({ lastSaved, isSaving }: AutoSaveIndicatorProp
   if (!preferences.autoSave) return null;
 
   return (
-    <div className="flex items-center space-x-2 text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+    <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
       {isSaving ? (
         <>
           <RefreshCw className="w-3 h-3 animate-spin" />
@@ -220,14 +220,14 @@ export function ComfortPrompt({ intensity = 'gentle' }: ComfortPromptProps) {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm">
+    <div className="fixed bottom-4 right-4 bg-white border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-4 max-w-sm">
       <div className="flex items-start space-x-3">
         <Heart className="w-5 h-5 text-pink-500 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-sm text-gray-700 mb-2">{messages[intensity]}</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">{messages[intensity]}</p>
           <button
             onClick={() => setIsVisible(false)}
-            className="text-xs text-gray-500 hover:text-gray-700"
+            className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-300"
           >
             Dismiss
           </button>
@@ -365,7 +365,7 @@ export function TraumaInformedForm({
               {title}
             </CardTitle>
             {description && (
-              <p className="text-gray-600 mt-1" style={{ fontSize: 'calc(var(--ti-font-size) * 0.875)' }}>
+              <p className="text-gray-600 dark:text-gray-400 mt-1" style={{ fontSize: 'calc(var(--ti-font-size) * 0.875)' }}>
                 {description}
               </p>
             )}

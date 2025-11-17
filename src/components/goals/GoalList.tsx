@@ -158,7 +158,7 @@ export const GoalList: React.FC<GoalListProps> = ({
       case 'overdue':
         return <AlertTriangle className="w-4 h-4 text-red-500" />;
       default:
-        return <AlertTriangle className="w-4 h-4 text-gray-500" />;
+        return <AlertTriangle className="w-4 h-4 text-gray-500 dark:text-gray-400" />;
     }
   };
 
@@ -176,7 +176,7 @@ export const GoalList: React.FC<GoalListProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">My Goals</h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Track your progress and stay motivated on your health journey
           </p>
         </div>
@@ -191,7 +191,7 @@ export const GoalList: React.FC<GoalListProps> = ({
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-gray-500" />
               <Input
                 placeholder="Search goals..."
                 value={searchTerm}
@@ -243,11 +243,11 @@ export const GoalList: React.FC<GoalListProps> = ({
       {filteredGoals.length === 0 ? (
         <Card className="text-center py-12">
           <CardContent>
-            <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <Target className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">
               {goals.length === 0 ? 'No goals yet' : 'No goals match your filters'}
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
               {goals.length === 0
                 ? 'Create your first goal to start tracking your progress'
                 : 'Try adjusting your search or filters'
@@ -300,7 +300,7 @@ export const GoalList: React.FC<GoalListProps> = ({
 
                   {/* Target */}
                   {goal.targets[0] && (
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
                       Target: {formatGoalProgress(goal.targets[0].targetValue, goal.targets[0].unit)}
                     </div>
                   )}
@@ -327,7 +327,7 @@ export const GoalList: React.FC<GoalListProps> = ({
                       {goal.priority} priority
                     </Badge>
                     {goal.milestones.length > 0 && (
-                      <div className="flex items-center gap-1 text-sm text-gray-600">
+                      <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
                         <Award className="w-4 h-4" />
                         {goal.milestones.filter(m => m.isCompleted).length}/{goal.milestones.length}
                       </div>
@@ -399,19 +399,19 @@ export const GoalList: React.FC<GoalListProps> = ({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">{goals.length}</div>
-                <div className="text-sm text-gray-600">Total Goals</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Total Goals</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">
                   {goals.filter(g => g.status === 'completed').length}
                 </div>
-                <div className="text-sm text-gray-600">Completed</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-orange-600">
                   {goals.filter(g => g.status === 'active').length}
                 </div>
-                <div className="text-sm text-gray-600">Active</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Active</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-purple-600">
@@ -420,7 +420,7 @@ export const GoalList: React.FC<GoalListProps> = ({
                     return sum + progress;
                   }, 0) / goals.length)}%
                 </div>
-                <div className="text-sm text-gray-600">Avg Progress</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Avg Progress</div>
               </div>
             </div>
           </CardContent>

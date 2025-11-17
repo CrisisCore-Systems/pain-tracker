@@ -23,7 +23,7 @@ export const PlannedFeatureNotice: React.FC<PlannedFeatureNoticeProps> = ({
     align === 'center' ? 'text-center' : align === 'right' ? 'text-right' : 'text-left';
 
   return (
-    <p className={cn('text-sm text-gray-500', alignmentClass, className)}>
+    <p className={cn('text-sm text-gray-500 dark:text-gray-400', alignmentClass, className)}>
       {roadmap.summary}{' '}
       Follow the{' '}
       <a

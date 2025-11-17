@@ -259,16 +259,16 @@ export function EmergencyModeInterfaces({
   }
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className}`}>
+    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-red-100 rounded-lg">
           <AlertTriangle className="w-6 h-6 text-red-600" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Emergency Mode Interfaces
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             Quick access to emergency support, contacts, and simplified entry for acute pain episodes.
             Automatically activates when severe symptoms are detected.
           </p>
@@ -527,8 +527,8 @@ function EmergencyQuickAssessment({
             { key: 'canMove', label: 'Can move normally', critical: false },
             { key: 'medication', label: 'Took medication', critical: false }
           ].map(({ key, label, critical }) => (
-            <div key={key} className={`flex items-center justify-between p-3 rounded ${critical ? 'bg-red-50 border border-red-200' : 'bg-gray-50'}`}>
-              <span className={`font-medium ${critical ? 'text-red-700' : 'text-gray-700'}`}>
+            <div key={key} className={`flex items-center justify-between p-3 rounded ${critical ? 'bg-red-50 border border-red-200' : 'bg-gray-50 dark:bg-gray-900'}`}>
+              <span className={`font-medium ${critical ? 'text-red-700' : 'text-gray-700 dark:text-gray-300'}`}>
                 {critical && <AlertTriangle className="w-4 h-4 inline mr-1" />}
                 {label}
               </span>
@@ -646,7 +646,7 @@ function EmergencySymptomsChecklist({
                 {isSelected ? (
                   <Check className="w-3 h-3 text-red-600" />
                 ) : (
-                  <div className="w-3 h-3 border border-gray-300 rounded" />
+                  <div className="w-3 h-3 border border-gray-300 dark:border-gray-600 rounded" />
                 )}
                 <span>{symptom}</span>
               </div>
@@ -706,21 +706,21 @@ function EmergencyContactsList({
         {/* Medical Contacts */}
         {medicalContacts.length > 0 && (
           <div>
-            <h4 className="font-medium text-gray-800 mb-2">Medical Contacts</h4>
+            <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Medical Contacts</h4>
             <div className="space-y-2">
               {medicalContacts.map((contact) => (
                 <TouchOptimizedButton
                   key={contact.id}
                   variant="secondary"
                   onClick={() => onContactCall(contact)}
-                  className="w-full p-3 border border-gray-300 hover:border-red-300 rounded-lg"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 hover:border-red-300 rounded-lg"
                 >
                   <div className="flex items-center space-x-3">
-                    <PhoneCall className="w-5 h-5 text-gray-600" />
+                    <PhoneCall className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     <div className="text-left">
-                      <div className="font-medium text-gray-900">{contact.name}</div>
-                      <div className="text-sm text-gray-600">{contact.relationship}</div>
-                      <div className="text-sm text-gray-500">{contact.phone}</div>
+                      <div className="font-medium text-gray-900 dark:text-gray-100">{contact.name}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">{contact.relationship}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{contact.phone}</div>
                     </div>
                   </div>
                 </TouchOptimizedButton>
@@ -732,21 +732,21 @@ function EmergencyContactsList({
         {/* Personal Contacts */}
         {personalContacts.length > 0 && (
           <div>
-            <h4 className="font-medium text-gray-800 mb-2">Personal Support</h4>
+            <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Personal Support</h4>
             <div className="space-y-2">
               {personalContacts.map((contact) => (
                 <TouchOptimizedButton
                   key={contact.id}
                   variant="secondary"
                   onClick={() => onContactCall(contact)}
-                  className="w-full p-3 border border-gray-300 hover:border-blue-300 rounded-lg"
+                  className="w-full p-3 border border-gray-300 dark:border-gray-600 hover:border-blue-300 rounded-lg"
                 >
                   <div className="flex items-center space-x-3">
-                    <User className="w-5 h-5 text-gray-600" />
+                    <User className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     <div className="text-left">
-                      <div className="font-medium text-gray-900">{contact.name}</div>
-                      <div className="text-sm text-gray-600">{contact.relationship}</div>
-                      <div className="text-sm text-gray-500">{contact.phone}</div>
+                      <div className="font-medium text-gray-900 dark:text-gray-100">{contact.name}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">{contact.relationship}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{contact.phone}</div>
                     </div>
                     {contact.available247 && (
                       <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">24/7</span>
@@ -872,11 +872,11 @@ function EmergencyContactsManager({
   onContactAdd?: (contact: EmergencyContact) => void;
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
-          <PhoneCall className="w-5 h-5 text-gray-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Emergency Contacts</h3>
+          <PhoneCall className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Emergency Contacts</h3>
         </div>
         {onContactAdd && (
           <TouchOptimizedButton
@@ -892,10 +892,10 @@ function EmergencyContactsManager({
 
       <div className="space-y-2">
         {contacts.slice(0, 3).map((contact) => (
-          <div key={contact.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+          <div key={contact.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded">
             <div>
-              <div className="font-medium text-gray-900">{contact.name}</div>
-              <div className="text-sm text-gray-600">{contact.relationship} • {contact.phone}</div>
+              <div className="font-medium text-gray-900 dark:text-gray-100">{contact.name}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">{contact.relationship} • {contact.phone}</div>
             </div>
             <TouchOptimizedButton
               variant="primary"
@@ -922,10 +922,10 @@ function QuickActionsPreview({
   actionsTaken: string[];
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
-        <Zap className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+        <Zap className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Actions</h3>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">

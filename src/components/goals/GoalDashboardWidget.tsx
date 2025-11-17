@@ -122,14 +122,14 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
       <CardContent>
         {loading ? (
           <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-2 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded"></div>
           </div>
         ) : analytics.totalGoals === 0 ? (
           <div className="text-center py-6">
-            <Target className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-            <p className="text-sm text-gray-600 mb-3">No goals yet</p>
+            <Target className="w-8 h-8 mx-auto mb-2 text-gray-400 dark:text-gray-500" />
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">No goals yet</p>
             <Button onClick={onOpenManager} size="sm">
               <Plus className="w-4 h-4 mr-2" />
               Create Goal
@@ -140,15 +140,15 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-lg font-bold text-blue-600">{analytics.activeGoals}</div>
-                <div className="text-xs text-gray-600">Active</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">Active</div>
               </div>
               <div>
                 <div className="text-lg font-bold text-green-600">{analytics.completedGoals}</div>
-                <div className="text-xs text-gray-600">Done</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">Done</div>
               </div>
               <div>
                 <div className="text-lg font-bold text-purple-600">{analytics.totalEntries}</div>
-                <div className="text-xs text-gray-600">Entries</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">Entries</div>
               </div>
             </div>
 
@@ -186,18 +186,18 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
       <CardContent>
         {loading ? (
           <div className="animate-pulse space-y-4">
-            <div className="h-6 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
             <div className="space-y-3">
-              <div className="h-16 bg-gray-200 rounded"></div>
-              <div className="h-16 bg-gray-200 rounded"></div>
+              <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div className="h-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
             </div>
           </div>
         ) : analytics.totalGoals === 0 ? (
           <div className="text-center py-12">
-            <Target className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Start Your Journey</h3>
-            <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+            <Target className="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Start Your Journey</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
               Set meaningful goals to track your progress and celebrate your achievements.
             </p>
             <Button onClick={onOpenManager}>
@@ -211,19 +211,19 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-3 bg-blue-50 rounded-lg">
                 <div className="text-2xl font-bold text-blue-600">{analytics.totalGoals}</div>
-                <div className="text-sm text-gray-600">Total Goals</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Total Goals</div>
               </div>
               <div className="text-center p-3 bg-green-50 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">{analytics.activeGoals}</div>
-                <div className="text-sm text-gray-600">Active</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Active</div>
               </div>
               <div className="text-center p-3 bg-purple-50 rounded-lg">
                 <div className="text-2xl font-bold text-purple-600">{analytics.completedGoals}</div>
-                <div className="text-sm text-gray-600">Completed</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Completed</div>
               </div>
               <div className="text-center p-3 bg-orange-50 rounded-lg">
                 <div className="text-2xl font-bold text-orange-600">{analytics.avgProgress}%</div>
-                <div className="text-sm text-gray-600">Avg Progress</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Avg Progress</div>
               </div>
             </div>
 
@@ -247,7 +247,7 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
                           <h5 className="font-medium text-sm">{goal.title}</h5>
-                          <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 line-clamp-2">
                             {goal.description}
                           </p>
                         </div>
@@ -256,7 +256,7 @@ export const GoalDashboardWidget: React.FC<GoalDashboardWidgetProps> = ({
                         </Badge>
                       </div>
 
-                      <div className="flex items-center justify-between text-xs text-gray-600">
+                      <div className="flex items-center justify-between text-xs text-gray-600 dark:text-gray-400">
                         <span>Started {formatDate(goal.startDate)}</span>
                         <div className="flex items-center gap-1">
                           <TrendingUp className="w-3 h-3" />

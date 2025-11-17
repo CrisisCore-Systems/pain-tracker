@@ -72,11 +72,11 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">WCB Report Preview</h2>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">WCB Report Preview</h2>
         <div className="space-x-4">
           <button
             onClick={handleDownload}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200"
+            className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200"
             disabled={isSubmitting}
           >
             Download PDF
@@ -117,11 +117,11 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
           <h3 className="text-lg font-semibold mb-3">Claim Information</h3>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-600">Claim Number</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Claim Number</p>
               <p className="font-medium">{report.claimInfo.claimNumber || 'Not assigned'}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Injury Date</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Injury Date</p>
               <p className="font-medium">
                 {report.claimInfo?.injuryDate ? new Date(report.claimInfo.injuryDate).toLocaleDateString() : 'Not specified'}
               </p>
@@ -133,7 +133,7 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
       {/* Pain Trends */}
       <section className="mb-8">
         <h3 className="text-lg font-semibold mb-3">Pain Analysis</h3>
-        <div className="bg-gray-50 p-4 rounded">
+        <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
           {report.painTrends ? (
             <>
               <p className="mb-2">
@@ -157,7 +157,7 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
               </div>
             </>
           ) : (
-            <p className="text-gray-500">No pain trend data available</p>
+            <p className="text-gray-500 dark:text-gray-400">No pain trend data available</p>
           )}
         </div>
       </section>
@@ -165,7 +165,7 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
       {/* Work Impact */}
       <section className="mb-8">
         <h3 className="text-lg font-semibold mb-3">Work Impact</h3>
-        <div className="bg-gray-50 p-4 rounded">
+        <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
           <p className="mb-4">
             <span className="font-medium">Missed Work Days:</span> {report.workImpact.missedDays}
           </p>
@@ -174,7 +174,7 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
             <h4 className="text-sm font-medium mb-2">Work Limitations:</h4>
             <ul className="list-disc list-inside">
               {report.workImpact.limitations.map(([limitation]) => (
-                <li key={limitation} className="text-gray-700">{limitation}</li>
+                <li key={limitation} className="text-gray-700 dark:text-gray-300">{limitation}</li>
               ))}
             </ul>
           </div>
@@ -184,7 +184,7 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
               <h4 className="text-sm font-medium mb-2">Required Accommodations:</h4>
               <ul className="list-disc list-inside">
                 {report.workImpact.accommodationsNeeded.map((accommodation) => (
-                  <li key={accommodation} className="text-gray-700">{accommodation}</li>
+                  <li key={accommodation} className="text-gray-700 dark:text-gray-300">{accommodation}</li>
                 ))}
               </ul>
             </div>
@@ -195,12 +195,12 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
       {/* Treatment Progress */}
       <section className="mb-8">
         <h3 className="text-lg font-semibold mb-3">Treatment Progress</h3>
-        <div className="bg-gray-50 p-4 rounded">
+        <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
           <div className="mb-4">
             <h4 className="text-sm font-medium mb-2">Current Treatments:</h4>
             <ul className="list-disc list-inside">
               {report.treatments.current.map(({ treatment, frequency }) => (
-                <li key={treatment} className="text-gray-700">
+                <li key={treatment} className="text-gray-700 dark:text-gray-300">
                   {treatment} ({frequency} sessions)
                 </li>
               ))}
@@ -216,10 +216,10 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
       {/* Recommendations */}
       <section className="mb-8">
         <h3 className="text-lg font-semibold mb-3">Recommendations</h3>
-        <div className="bg-gray-50 p-4 rounded">
+        <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
           <ul className="list-disc list-inside">
             {report.recommendations.map((recommendation, index) => (
-              <li key={index} className="text-gray-700 mb-2">{recommendation}</li>
+              <li key={index} className="text-gray-700 dark:text-gray-300 mb-2">{recommendation}</li>
             ))}
           </ul>
         </div>

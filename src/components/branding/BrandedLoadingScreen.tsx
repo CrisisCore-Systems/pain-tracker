@@ -45,27 +45,27 @@ export function BrandedLoadingScreen({
 
         {/* Brand Name */}
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
             Pain Tracker
             <span className="inline-flex items-center ml-2 px-2 py-1 rounded-full text-xs bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold">
               PRO
             </span>
           </h1>
-          <p className="text-slate-600 font-medium">AI-Powered Pain Management</p>
+          <p className="text-slate-600 dark:text-slate-400 font-medium">AI-Powered Pain Management</p>
         </div>
 
         {/* Loading Message */}
         <div className="space-y-4">
-          <p className="text-slate-700 font-medium">{message}</p>
+          <p className="text-slate-700 dark:text-slate-300 font-medium">{message}</p>
           
           {/* Progress Bar */}
           {showProgress && (
             <div className="w-64 mx-auto">
-              <div className="flex justify-between text-sm text-slate-600 mb-2">
+              <div className="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-2">
                 <span>Loading...</span>
                 <span>{Math.round(animatedProgress)}%</span>
               </div>
-              <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-blue-500 to-green-500 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${animatedProgress}%` }}
@@ -85,7 +85,7 @@ export function BrandedLoadingScreen({
         </div>
 
         {/* Feature Highlights */}
-        <div className="grid grid-cols-3 gap-4 text-xs text-slate-600 max-w-md mx-auto">
+        <div className="grid grid-cols-3 gap-4 text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
           <div className="text-center space-y-1">
             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
               <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -126,7 +126,7 @@ export function BrandedSpinner({ size = 'md', className = '' }: { size?: 'sm' | 
 
   return (
     <div className={`relative ${sizeClasses[size]} ${className}`}>
-      <div className={`${sizeClasses[size]} rounded-full border-2 border-slate-200 animate-spin`}>
+      <div className={`${sizeClasses[size]} rounded-full border-2 border-slate-200 dark:border-slate-700 animate-spin`}>
         <div className={`${sizeClasses[size]} rounded-full border-t-2 border-blue-600`}></div>
       </div>
     </div>
@@ -154,8 +154,8 @@ export function BrandedSuccessScreen({ onContinue }: { onContinue: () => void })
 
         {/* Success Message */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-slate-900">Ready to Go!</h2>
-          <p className="text-slate-600">Pain Tracker Pro is loaded and ready to help you manage your pain with AI-powered insights.</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Ready to Go!</h2>
+          <p className="text-slate-600 dark:text-slate-400">Pain Tracker Pro is loaded and ready to help you manage your pain with AI-powered insights.</p>
         </div>
 
         {/* Continue Button */}

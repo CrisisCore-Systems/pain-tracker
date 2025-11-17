@@ -14,7 +14,7 @@ export const ComparisonAnalytics: React.FC<ComparisonAnalyticsProps> = ({ entrie
     return (
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold mb-4">Comparison Analytics</h2>
-        <p className="text-gray-600">
+        <p className="text-gray-600 dark:text-gray-400">
           No data available for comparison analysis.
         </p>
       </div>

@@ -134,7 +134,7 @@ export function CrisisNavigationBar({
           {/* Center: Crisis indicator and save status */}
           <div className="flex items-center space-x-4">
             {preferences.autoSave && lastSaved && (
-              <div className="flex items-center text-sm text-gray-600">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                 <Save className="w-4 h-4 mr-1 text-green-500" />
                 <span>Saved {formatTime(lastSaved)}</span>
               </div>
@@ -275,12 +275,12 @@ function CrisisBreadcrumbs({ currentPath }: { currentPath: string }) {
   if (pathSegments.length <= 1) return null;
 
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-600">
+    <nav className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
       <Home className="w-4 h-4" />
       {pathSegments.map((segment, index) => (
         <React.Fragment key={index}>
           <ChevronRight className="w-3 h-3" />
-          <span className={index === pathSegments.length - 1 ? 'font-medium text-gray-900' : ''}>
+          <span className={index === pathSegments.length - 1 ? 'font-medium text-gray-900 dark:text-gray-100' : ''}>
             {segment.replace('-', ' ')}
           </span>
         </React.Fragment>
@@ -475,8 +475,8 @@ export function CrisisCompassNavigation({
     <div className="crisis-compass-nav bg-white rounded-xl shadow-lg p-6 max-w-sm mx-auto">
       <div className="text-center mb-6">
         <Compass className="w-12 h-12 mx-auto text-blue-600 mb-2" />
-        <h2 className="text-xl font-semibold text-gray-800">Where do you need to go?</h2>
-        <p className="text-sm text-gray-600">Choose your destination</p>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Where do you need to go?</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400">Choose your destination</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

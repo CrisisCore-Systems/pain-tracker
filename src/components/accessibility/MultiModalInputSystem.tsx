@@ -209,10 +209,10 @@ function VoiceInputSection({
     }`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <Mic className={`w-6 h-6 ${isListening ? 'text-red-500 animate-pulse' : 'text-gray-500'}`} />
+          <Mic className={`w-6 h-6 ${isListening ? 'text-red-500 animate-pulse' : 'text-gray-500 dark:text-gray-400'}`} />
           <div>
-            <h3 className="font-medium text-gray-800">Voice Commands</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-medium text-gray-800 dark:text-gray-200">Voice Commands</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               {isListening ? 'Listening...' : 'Click to activate voice control'}
             </p>
           </div>
@@ -252,7 +252,7 @@ function VoiceInputSection({
       {/* Emergency Voice Commands */}
       {isEmergencyMode && (
         <div className="mt-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Emergency Commands:</h4>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Emergency Commands:</h4>
           <div className="grid grid-cols-2 gap-2 text-xs">
             {config.emergencyPhrases.map((phrase, index) => (
               <div key={index} className="bg-red-50 border border-red-200 rounded p-2">
@@ -355,8 +355,8 @@ function GestureRecognitionSection({
         <div className="flex items-center space-x-3">
           <Hand className="w-6 h-6 text-orange-500" />
           <div>
-            <h3 className="font-medium text-gray-800">Gesture Recognition</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-medium text-gray-800 dark:text-gray-200">Gesture Recognition</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               {isEnabled ? 'Gesture detection active' : 'Gesture detection disabled'}
             </p>
           </div>
@@ -398,7 +398,7 @@ function GestureRecognitionSection({
           {/* Emergency Gestures */}
           {isEmergencyMode && (
             <div className="mt-4">
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Emergency Gestures:</h4>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Emergency Gestures:</h4>
               <div className="space-y-2">
                 {EMERGENCY_GESTURES.filter(g => g.enabled).map((gesture, index) => (
                   <div key={index} className="bg-orange-50 border border-orange-200 rounded p-2 text-xs">
@@ -489,7 +489,7 @@ function GestureDetectionArea({ onGesture, sensitivity }: { onGesture: (gesture:
 
   return (
     <div
-      className="gesture-detection-area bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center"
+      className="gesture-detection-area bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onContextMenu={(e) => {
@@ -497,11 +497,11 @@ function GestureDetectionArea({ onGesture, sensitivity }: { onGesture: (gesture:
         handleLongPress();
       }}
     >
-      <Hand className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-      <p className="text-gray-600 text-sm">
+      <Hand className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+      <p className="text-gray-600 dark:text-gray-400 text-sm">
         Touch area for gesture detection
       </p>
-      <p className="text-gray-500 text-xs mt-2">
+      <p className="text-gray-500 dark:text-gray-400 text-xs mt-2">
         Try swiping, tapping, or long-pressing
       </p>
     </div>
@@ -543,8 +543,8 @@ function TouchAdaptationSection({ config, isEmergencyMode, crisisSeverity }: Tou
       <div className="flex items-center space-x-3 mb-3">
         <Zap className="w-6 h-6 text-blue-500" />
         <div>
-          <h3 className="font-medium text-gray-800">Touch Adaptations</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className="font-medium text-gray-800 dark:text-gray-200">Touch Adaptations</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Enhanced touch interactions for crisis situations
           </p>
         </div>
@@ -552,25 +552,25 @@ function TouchAdaptationSection({ config, isEmergencyMode, crisisSeverity }: Tou
 
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div className="adaptation-item">
-          <div className="font-medium text-gray-700">Target Size</div>
-          <div className="text-gray-600">{Math.round(config.targetSizeMultiplier * 100)}% larger</div>
+          <div className="font-medium text-gray-700 dark:text-gray-300">Target Size</div>
+          <div className="text-gray-600 dark:text-gray-400">{Math.round(config.targetSizeMultiplier * 100)}% larger</div>
         </div>
 
         <div className="adaptation-item">
-          <div className="font-medium text-gray-700">Dwell Time</div>
-          <div className="text-gray-600">{config.dwellTime}ms</div>
+          <div className="font-medium text-gray-700 dark:text-gray-300">Dwell Time</div>
+          <div className="text-gray-600 dark:text-gray-400">{config.dwellTime}ms</div>
         </div>
 
         <div className="adaptation-item">
-          <div className="font-medium text-gray-700">Haptic Feedback</div>
-          <div className="text-gray-600">
+          <div className="font-medium text-gray-700 dark:text-gray-300">Haptic Feedback</div>
+          <div className="text-gray-600 dark:text-gray-400">
             {hapticSupported && config.hapticFeedback ? 'Enabled' : 'Not available'}
           </div>
         </div>
 
         <div className="adaptation-item">
-          <div className="font-medium text-gray-700">Error Correction</div>
-          <div className="text-gray-600">{config.errorCorrection ? 'Enabled' : 'Disabled'}</div>
+          <div className="font-medium text-gray-700 dark:text-gray-300">Error Correction</div>
+          <div className="text-gray-600 dark:text-gray-400">{config.errorCorrection ? 'Enabled' : 'Disabled'}</div>
         </div>
       </div>
 
@@ -602,8 +602,8 @@ function CommandHistorySection({ commands, onRepeat }: CommandHistorySectionProp
     <div className="command-history-section bg-white rounded-xl shadow-sm p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <RefreshCw className="w-5 h-5 text-gray-500" />
-          <h3 className="font-medium text-gray-800">Recent Commands</h3>
+          <RefreshCw className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <h3 className="font-medium text-gray-800 dark:text-gray-200">Recent Commands</h3>
         </div>
 
         <TouchOptimizedButton
@@ -618,8 +618,8 @@ function CommandHistorySection({ commands, onRepeat }: CommandHistorySectionProp
       {isExpanded && (
         <div className="space-y-2">
           {commands.slice(-5).reverse().map((command, index) => (
-            <div key={index} className="flex items-center justify-between bg-gray-50 rounded p-2">
-              <span className="text-sm text-gray-700">"{command}"</span>
+            <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 rounded p-2">
+              <span className="text-sm text-gray-700 dark:text-gray-300">"{command}"</span>
               <TouchOptimizedButton
                 onClick={() => onRepeat(command)}
                 variant="secondary"
@@ -645,8 +645,8 @@ export function MultiModalSettingsPanel() {
     <div className="multimodal-settings bg-white rounded-xl shadow-sm p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <Settings className="w-6 h-6 text-gray-500" />
-          <h3 className="font-medium text-gray-800">Multi-Modal Input Settings</h3>
+          <Settings className="w-6 h-6 text-gray-500 dark:text-gray-400" />
+          <h3 className="font-medium text-gray-800 dark:text-gray-200">Multi-Modal Input Settings</h3>
         </div>
 
         <TouchOptimizedButton
@@ -661,7 +661,7 @@ export function MultiModalSettingsPanel() {
       {isExpanded && (
         <div className="space-y-4">
           <div className="setting-group">
-            <h4 className="font-medium text-gray-700 mb-2">Voice Control</h4>
+            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Voice Control</h4>
             <div className="space-y-2">
               <label className="flex items-center space-x-3">
                 <input
@@ -670,22 +670,22 @@ export function MultiModalSettingsPanel() {
                   onChange={(e) => updatePreferences({ voiceInput: e.target.checked })}
                   className="rounded"
                 />
-                <span className="text-sm text-gray-700">Enable voice commands</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">Enable voice commands</span>
               </label>
             </div>
           </div>
 
           <div className="setting-group">
-            <h4 className="font-medium text-gray-700 mb-2">Touch Adaptations</h4>
+            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Touch Adaptations</h4>
             <div className="space-y-2">
               <div>
-                <label className="block text-sm text-gray-700 mb-1">Touch Target Size</label>
+                <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">Touch Target Size</label>
                 <select
                   value={preferences.touchTargetSize}
                   onChange={(e) => updatePreferences({ 
                     touchTargetSize: e.target.value as 'normal' | 'large' | 'extra-large' 
                   })}
-                  className="w-full rounded border-gray-300"
+                  className="w-full rounded border-gray-300 dark:border-gray-600"
                 >
                   <option value="normal">Normal</option>
                   <option value="large">Large</option>

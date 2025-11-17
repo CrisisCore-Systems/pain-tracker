@@ -127,7 +127,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
         <CardContent className="space-y-4">
           <div>
             <h3 className="font-semibold text-lg">{goal.title}</h3>
-            <p className="text-gray-600 mt-1">{goal.description}</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">{goal.description}</p>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -144,12 +144,12 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
 
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-gray-600">Start Date:</span>
+              <span className="text-gray-600 dark:text-gray-400">Start Date:</span>
               <div className="font-medium">{formatDate(goal.startDate)}</div>
             </div>
             {goal.endDate && (
               <div>
-                <span className="text-gray-600">End Date:</span>
+                <span className="text-gray-600 dark:text-gray-400">End Date:</span>
                 <div className="font-medium">{formatDate(goal.endDate)}</div>
               </div>
             )}
@@ -157,7 +157,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
 
           {goal.tags && goal.tags.length > 0 && (
             <div>
-              <span className="text-gray-600 text-sm">Tags:</span>
+              <span className="text-gray-600 dark:text-gray-400 text-sm">Tags:</span>
               <div className="flex flex-wrap gap-1 mt-1">
                 {goal.tags.map((tag, index) => (
                   <Badge key={index} variant="secondary" className="text-xs">
@@ -190,22 +190,22 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">Current Streak:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Current Streak:</span>
                   <div className="font-medium">{analytics.currentStreak} days</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Best Streak:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Best Streak:</span>
                   <div className="font-medium">{analytics.bestStreak} days</div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">Total Entries:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Total Entries:</span>
                   <div className="font-medium">{analytics.totalEntries}</div>
                 </div>
                 <div>
-                  <span className="text-gray-600">Avg. Progress:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Avg. Progress:</span>
                   <div className="font-medium">{analytics.averageProgress ? formatNumber(analytics.averageProgress, 1) : 'N/A'}</div>
                 </div>
               </div>
@@ -236,7 +236,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
       </CardHeader>
       <CardContent>
         {isAddingProgress && (
-          <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+          <div className="mb-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-900">
             <h4 className="font-medium mb-3">Add New Progress</h4>
             <div className="space-y-3">
               <div>
@@ -278,7 +278,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
         )}
 
         {progress.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>No progress entries yet</p>
             <p className="text-sm mt-1">Start tracking your progress by adding your first entry!</p>
@@ -295,11 +295,11 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
                     </div>
                     <div>
                       <div className="font-medium">Progress: {entry.value}</div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
                         {formatDate(entry.timestamp ?? entry.date)}
                       </div>
                       {entry.notes && (
-                        <div className="text-sm text-gray-700 mt-1">{entry.notes}</div>
+                        <div className="text-sm text-gray-700 dark:text-gray-300 mt-1">{entry.notes}</div>
                       )}
                     </div>
                   </div>
@@ -321,7 +321,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
       </CardHeader>
       <CardContent>
         {milestones.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <Award className="w-12 h-12 mx-auto mb-4 opacity-50" />
             <p>No milestones set</p>
             <p className="text-sm mt-1">Milestones help you track significant achievements!</p>
@@ -336,14 +336,14 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
                   {milestone.completed ? (
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   ) : (
-                    <Clock className="w-5 h-5 text-gray-600" />
+                    <Clock className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                   )}
                 </div>
                 <div className="flex-1">
                   <div className="font-medium">{milestone.title}</div>
-                  <div className="text-sm text-gray-600">{milestone.description}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{milestone.description}</div>
                   {milestone.targetDate && (
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       Target: {formatDate(milestone.targetDate)}
                     </div>
                   )}
@@ -370,7 +370,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Goal Progress</h1>
-          <p className="text-gray-600">Track and analyze your goal progress</p>
+          <p className="text-gray-600 dark:text-gray-400">Track and analyze your goal progress</p>
         </div>
       </div>
 

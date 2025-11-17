@@ -4,6 +4,7 @@ import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { PainEntry, EmergencyPanelData, ActivityLogEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
+import type { FibromyalgiaEntry } from '../types/fibromyalgia';
 import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
 
 export interface UIState {
@@ -22,6 +23,7 @@ export interface PainTrackerState {
   // Data
   entries: PainEntry[];
   moodEntries: MoodEntry[];
+  fibromyalgiaEntries: FibromyalgiaEntry[];
   emergencyData: EmergencyPanelData | null;
   activityLogs: ActivityLogEntry[];
   
@@ -41,6 +43,11 @@ export interface PainTrackerState {
   addMoodEntry: (entry: Omit<MoodEntry, 'timestamp'>) => void;
   updateMoodEntry: (timestamp: string, updates: Partial<MoodEntry>) => void;
   deleteMoodEntry: (timestamp: string) => void;
+  
+  // Fibromyalgia Entry Actions
+  addFibromyalgiaEntry: (entry: FibromyalgiaEntry) => void;
+  updateFibromyalgiaEntry: (id: number, updates: Partial<FibromyalgiaEntry>) => void;
+  deleteFibromyalgiaEntry: (id: number) => void;
   
   // UI Actions
   setShowWCBReport: (show: boolean) => void;
@@ -73,6 +80,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
         immer((set) => ({
           entries: [],
           moodEntries: [],
+          fibromyalgiaEntries: [],
           emergencyData: null,
           activityLogs: [],
           ui: {
@@ -197,6 +205,33 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             set((state) => {
               state.moodEntries = state.moodEntries.filter(
                 entry => entry.timestamp.toISOString() !== timestamp
+              );
+            });
+          },
+
+          // Fibromyalgia Entry Actions
+          addFibromyalgiaEntry: (entry) => {
+            set((state) => {
+              state.fibromyalgiaEntries.push(entry);
+            });
+          },
+
+          updateFibromyalgiaEntry: (id, updates) => {
+            set((state) => {
+              const index = state.fibromyalgiaEntries.findIndex(entry => entry.id === id);
+              if (index !== -1) {
+                state.fibromyalgiaEntries[index] = {
+                  ...state.fibromyalgiaEntries[index],
+                  ...updates,
+                };
+              }
+            });
+          },
+
+          deleteFibromyalgiaEntry: (id) => {
+            set((state) => {
+              state.fibromyalgiaEntries = state.fibromyalgiaEntries.filter(
+                entry => entry.id !== id
               );
             });
           },

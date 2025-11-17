@@ -102,20 +102,20 @@ export function CognitiveLoadIndicator({
             <TouchOptimizedButton
               variant="secondary"
               onClick={handleDismiss}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 dark:text-gray-400"
               aria-label="Dismiss indicator"
             >
               ×
             </TouchOptimizedButton>
           </div>
           
-          <p className="text-sm text-gray-700 mt-1">
+          <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
             {description || config.message}
           </p>
           
           {showSuggestions && config.suggestion && (
             <div className="mt-3 space-y-2">
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-gray-600 dark:text-gray-400">
                 💡 {config.suggestion}
               </p>
               

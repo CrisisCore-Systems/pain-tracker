@@ -78,7 +78,7 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
           <BarChart3 className="h-5 w-5" />
           <span>Data Comparison</span>
         </CardTitle>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
           Compare your pain data across different dimensions to identify patterns and insights
         </p>
       </CardHeader>
@@ -152,7 +152,7 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
                         </Badge>
                       )}
                     </div>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       {comparison.timestamp.toLocaleDateString()}
                     </span>
                   </div>
@@ -168,7 +168,7 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
             <div className="flex items-center space-x-3">
               <Activity className="h-8 w-8 text-blue-600" />
               <div>
-                <p className="text-sm text-gray-600">Total Entries</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Total Entries</p>
                 <p className="text-2xl font-bold">{painEntries.length}</p>
               </div>
             </div>
@@ -178,7 +178,7 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
             <div className="flex items-center space-x-3">
               <TrendingUp className="h-8 w-8 text-green-600" />
               <div>
-                <p className="text-sm text-gray-600">Comparisons Made</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Comparisons Made</p>
                 <p className="text-2xl font-bold">{recentComparisons.length}</p>
               </div>
             </div>
@@ -188,7 +188,7 @@ export const ComparisonDashboardWidget: React.FC<ComparisonDashboardWidgetProps>
             <div className="flex items-center space-x-3">
               <BarChart3 className="h-8 w-8 text-purple-600" />
               <div>
-                <p className="text-sm text-gray-600">Insights Generated</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Insights Generated</p>
                 <p className="text-2xl font-bold">
                   {recentComparisons.reduce((sum, comp) => sum + comp.insights, 0)}
                 </p>

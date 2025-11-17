@@ -22,7 +22,7 @@ import type { PatientState } from '../../types/tone';
 
 export function ToneStateTester() {
   const { context, forceState, preferences, updatePreferences } = useTone();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false); // Start minimized by default
 
   if (!import.meta.env.DEV) {
     return null; // Only show in development
@@ -65,7 +65,7 @@ export function ToneStateTester() {
     return (
       <button
         onClick={toggleVisibility}
-        className="fixed bottom-20 right-4 z-[80] px-3 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105"
+        className="fixed bottom-24 right-4 z-50 px-3 py-2 bg-purple-600/90 hover:bg-purple-500 text-white text-xs rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-105 backdrop-blur-sm"
         aria-label="Show tone state tester (Ctrl+T)"
         title="Tone Tester (Ctrl+T)"
       >
@@ -82,12 +82,12 @@ export function ToneStateTester() {
   ];
 
   return (
-    <div className="fixed bottom-4 left-4 z-[80] bg-gray-900 text-white p-4 rounded-lg shadow-2xl max-w-md max-h-[85vh] overflow-y-auto border-2 border-purple-600 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="flex items-center justify-between mb-3 sticky top-0 bg-gray-900 pb-2 border-b border-gray-700 z-10">
+    <div className="fixed bottom-4 left-4 z-50 bg-gray-900 dark:bg-gray-100 text-white p-4 rounded-lg shadow-2xl max-w-md max-h-[85vh] overflow-y-auto border-2 border-purple-600 animate-in fade-in slide-in-from-bottom-4 duration-300">
+      <div className="flex items-center justify-between mb-3 sticky top-0 bg-gray-900 dark:bg-gray-100 pb-2 border-b border-gray-700 dark:border-gray-300 z-10">
         <h3 className="text-sm font-bold text-purple-400">🎭 Tone State Tester</h3>
         <button
           onClick={() => setIsVisible(false)}
-          className="text-gray-400 hover:text-white text-xl leading-none px-2 py-1 rounded hover:bg-gray-800 transition-colors"
+          className="text-gray-400 dark:text-gray-500 hover:text-white text-xl leading-none px-2 py-1 rounded hover:bg-gray-800 dark:bg-gray-200 transition-colors"
           aria-label="Minimize tone state tester (Esc)"
           title="Minimize (Esc)"
         >
@@ -99,18 +99,18 @@ export function ToneStateTester() {
       <div className="mb-3 p-2 bg-purple-900/30 rounded border border-purple-700/50 text-xs text-purple-300">
         <div className="font-bold mb-1">⌨️ Shortcuts:</div>
         <div className="space-y-0.5 text-purple-200">
-          <div><kbd className="px-1 py-0.5 bg-gray-800 rounded text-xs">Ctrl+T</kbd> Toggle panel</div>
-          <div><kbd className="px-1 py-0.5 bg-gray-800 rounded text-xs">Esc</kbd> Minimize</div>
-          <div><kbd className="px-1 py-0.5 bg-gray-800 rounded text-xs">1-4</kbd> Force states</div>
+          <div><kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">Ctrl+T</kbd> Toggle panel</div>
+          <div><kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">Esc</kbd> Minimize</div>
+          <div><kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">1-4</kbd> Force states</div>
         </div>
       </div>
 
       {/* Current State */}
-      <div className="mb-3 p-2 bg-gray-800 rounded border border-gray-700">
-        <div className="text-xs text-gray-400 mb-1">Current State:</div>
+      <div className="mb-3 p-2 bg-gray-800 dark:bg-gray-200 rounded border border-gray-700 dark:border-gray-300">
+        <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">Current State:</div>
         <div className="text-sm font-mono font-bold text-purple-300">{context.state.toUpperCase()}</div>
         {context.painTrend && (
-          <div className="text-xs text-gray-400 mt-1">
+          <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
             Pain: {context.painTrend.current.toFixed(1)} ({context.painTrend.direction === 'up' ? '↑' : context.painTrend.direction === 'down' ? '↓' : '→'})
           </div>
         )}
@@ -118,7 +118,7 @@ export function ToneStateTester() {
 
       {/* State Buttons */}
       <div className="space-y-2 mb-3">
-        <div className="text-xs text-gray-400 mb-2">Force State:</div>
+        <div className="text-xs text-gray-400 dark:text-gray-500 mb-2">Force State:</div>
         {states.map(({ state, emoji, description, key }) => (
           <button
             key={state}
@@ -134,7 +134,7 @@ export function ToneStateTester() {
                 <span className="mr-2">{emoji}</span>
                 <span className="font-bold">{state}</span>
               </div>
-              <kbd className="px-1.5 py-0.5 bg-gray-700 rounded text-xs">{key}</kbd>
+              <kbd className="px-1.5 py-0.5 bg-gray-700 dark:bg-gray-300 rounded text-xs">{key}</kbd>
             </div>
             <div className="text-xs opacity-70 mt-1">{description}</div>
           </button>
@@ -142,57 +142,57 @@ export function ToneStateTester() {
       </div>
 
       {/* Preferences */}
-      <div className="border-t border-gray-700 pt-3 space-y-2">
-        <div className="text-xs text-gray-400 mb-2">Preferences:</div>
+      <div className="border-t border-gray-700 dark:border-gray-300 pt-3 space-y-2">
+        <div className="text-xs text-gray-400 dark:text-gray-500 mb-2">Preferences:</div>
         
-        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 p-1 rounded transition-colors">
+        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 dark:bg-gray-200 p-1 rounded transition-colors">
           <span>Warmth</span>
           <select
             value={preferences.warmth}
             onChange={(e) => updatePreferences({ warmth: Number(e.target.value) as 0 | 1 })}
-            className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs hover:border-purple-600 transition-colors"
+            className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded px-2 py-1 text-xs hover:border-purple-600 transition-colors"
           >
             <option value="0">Neutral</option>
             <option value="1">Warm</option>
           </select>
         </label>
 
-        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 p-1 rounded transition-colors">
+        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 dark:bg-gray-200 p-1 rounded transition-colors">
           <span>Coach Intensity</span>
           <select
             value={preferences.coachIntensity}
             onChange={(e) => updatePreferences({ coachIntensity: Number(e.target.value) as 0 | 1 })}
-            className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs hover:border-purple-600 transition-colors"
+            className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded px-2 py-1 text-xs hover:border-purple-600 transition-colors"
           >
             <option value="0">Minimal</option>
             <option value="1">Guided</option>
           </select>
         </label>
 
-        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 p-1 rounded transition-colors">
+        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 dark:bg-gray-200 p-1 rounded transition-colors">
           <span>Medical Terms</span>
           <input
             type="checkbox"
             checked={preferences.medicalTerms}
             onChange={(e) => updatePreferences({ medicalTerms: e.target.checked })}
-            className="bg-gray-800 border border-gray-700 rounded"
+            className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded"
           />
         </label>
 
-        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 p-1 rounded transition-colors">
+        <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 dark:bg-gray-200 p-1 rounded transition-colors">
           <span>Allow Lightness</span>
           <input
             type="checkbox"
             checked={preferences.allowLightness}
             onChange={(e) => updatePreferences({ allowLightness: e.target.checked })}
-            className="bg-gray-800 border border-gray-700 rounded"
+            className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded"
           />
         </label>
       </div>
 
       {/* Testing Instructions */}
-      <div className="border-t border-gray-700 pt-3 mt-3">
-        <div className="text-xs text-gray-400 space-y-1">
+      <div className="border-t border-gray-700 dark:border-gray-300 pt-3 mt-3">
+        <div className="text-xs text-gray-400 dark:text-gray-500 space-y-1">
           <div className="font-bold mb-1">Test Areas:</div>
           <div>• QuickLogStepper: Pain slider, locations, notes</div>
           <div>• PanicMode: Greeting, breathing, crisis text</div>

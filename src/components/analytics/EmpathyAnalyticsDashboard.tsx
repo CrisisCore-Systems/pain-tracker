@@ -80,7 +80,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
             <div className="text-4xl font-bold text-pink-600 mb-2">
               {validationMetrics ? formatNumber(validationMetrics.validationScore, 0) : '0'}%
             </div>
-            <p className="text-gray-600">Your feelings and experiences are valid and acknowledged</p>
+            <p className="text-gray-600 dark:text-gray-400">Your feelings and experiences are valid and acknowledged</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
@@ -88,19 +88,19 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
               <div className="text-2xl font-semibold text-blue-600">
                 {validationMetrics?.validationSources.selfValidation || 0}%
               </div>
-              <p className="text-sm text-gray-600">Self-Validation</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Self-Validation</p>
             </div>
             <div className="text-center p-4 bg-white rounded-lg">
               <div className="text-2xl font-semibold text-green-600">
                 {validationMetrics?.validationSources.communitySupport || 0}%
               </div>
-              <p className="text-sm text-gray-600">Community Support</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Community Support</p>
             </div>
           </div>
 
           {validationMetrics?.emotionalTrends.copingStrategiesUsed && (
             <div className="bg-white p-4 rounded-lg">
-              <h4 className="font-semibold mb-2 text-gray-700">Coping Strategies You've Used</h4>
+              <h4 className="font-semibold mb-2 text-gray-700 dark:text-gray-300">Coping Strategies You've Used</h4>
               <div className="flex flex-wrap gap-2">
                 {validationMetrics.emotionalTrends.copingStrategiesUsed.map((strategy, index) => (
                   <span 
@@ -136,12 +136,12 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <Award className="w-4 h-4 text-yellow-600" />
-                      <h4 className="font-semibold text-gray-800">{achievement.title}</h4>
+                      <h4 className="font-semibold text-gray-800 dark:text-gray-200">{achievement.title}</h4>
                       <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">
                         {achievement.category.replace('_', ' ')}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{achievement.description}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{achievement.description}</p>
                     <p className="text-sm font-medium text-yellow-700">{achievement.celebrationMessage}</p>
                   </div>
                   <div className="flex gap-2">
@@ -185,25 +185,25 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
               <div className="text-2xl font-semibold text-green-600">
                 {celebrationMetrics?.personalGrowth.selfAwareness || 0}%
               </div>
-              <p className="text-sm text-gray-600">Self-Awareness</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Self-Awareness</p>
             </div>
             <div className="text-center p-4 bg-white rounded-lg">
               <div className="text-2xl font-semibold text-blue-600">
                 {celebrationMetrics?.personalGrowth.copingSkills || 0}%
               </div>
-              <p className="text-sm text-gray-600">Coping Skills</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Coping Skills</p>
             </div>
             <div className="text-center p-4 bg-white rounded-lg">
               <div className="text-2xl font-semibold text-purple-600">
                 {celebrationMetrics?.personalGrowth.communicationImprovement || 0}%
               </div>
-              <p className="text-sm text-gray-600">Communication</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Communication</p>
             </div>
             <div className="text-center p-4 bg-white rounded-lg">
               <div className="text-2xl font-semibold text-orange-600">
                 {celebrationMetrics?.personalGrowth.boundarySettingProgress || 0}%
               </div>
-              <p className="text-sm text-gray-600">Boundaries</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Boundaries</p>
             </div>
           </div>
         </CardContent>
@@ -222,8 +222,8 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
             <div className="space-y-4">
               {celebrationMetrics.milestones.slice(0, 2).map((milestone) => (
                 <div key={milestone.id} className="bg-white p-4 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-2">{milestone.title}</h4>
-                  <p className="text-sm text-gray-600 mb-2">{milestone.description}</p>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">{milestone.title}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{milestone.description}</p>
                   <p className="text-sm font-medium text-purple-700 mb-3">"{milestone.personalMeaning}"</p>
                   <div className="flex flex-wrap gap-1">
                     {milestone.nextSteps.map((step, index) => (
@@ -258,7 +258,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
             <div className="text-4xl font-bold text-blue-600 mb-2">
               {agencyMetrics ? formatNumber(agencyMetrics.decisionMakingPower, 0) : '0'}%
             </div>
-            <p className="text-gray-600">You have control and choice in your journey</p>
+            <p className="text-gray-600 dark:text-gray-400">You have control and choice in your journey</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
@@ -266,33 +266,33 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
                 <div className="text-2xl font-semibold text-green-600">
                 {agencyMetrics ? formatNumber(agencyMetrics.selfAdvocacyScore, 0) : '0'}%
               </div>
-              <p className="text-sm text-gray-600">Self-Advocacy</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Self-Advocacy</p>
             </div>
             <div className="text-center p-4 bg-white rounded-lg">
               <div className="text-2xl font-semibold text-purple-600">
                 {agencyMetrics?.choiceExercised.dailyChoices || 0}
               </div>
-              <p className="text-sm text-gray-600">Daily Choices Made</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Daily Choices Made</p>
             </div>
           </div>
 
           <div className="bg-white p-4 rounded-lg">
-            <h4 className="font-semibold mb-3 text-gray-700">Areas of Empowerment</h4>
+            <h4 className="font-semibold mb-3 text-gray-700 dark:text-gray-300">Areas of Empowerment</h4>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Education Seeking</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Education Seeking</span>
                 <span className="font-medium text-blue-600">
                   {agencyMetrics?.empowermentActivities.educationSeeking || 0} activities
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Resource Utilization</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Resource Utilization</span>
                 <span className="font-medium text-green-600">
                   {agencyMetrics?.empowermentActivities.resourceUtilization || 0} resources
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Self-Care Initiatives</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Self-Care Initiatives</span>
                 <span className="font-medium text-purple-600">
                   {agencyMetrics?.empowermentActivities.selfCareInitiatives || 0} initiatives
                 </span>
@@ -317,7 +317,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
           <div className="space-y-6">
             {/* Strengths */}
             <div className="bg-white p-4 rounded-lg">
-              <h4 className="font-semibold mb-3 text-gray-700">Your Strengths</h4>
+              <h4 className="font-semibold mb-3 text-gray-700 dark:text-gray-300">Your Strengths</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h5 className="text-sm font-medium text-emerald-700 mb-2">Resilience</h5>
@@ -325,7 +325,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
                     {dignityReport?.strengthsBased.resilience.map((strength, index) => (
                       <span 
                         key={index}
-                        className="block text-xs text-gray-600 bg-emerald-50 px-2 py-1 rounded"
+                        className="block text-xs text-gray-600 dark:text-gray-400 bg-emerald-50 px-2 py-1 rounded"
                       >
                         {strength}
                       </span>
@@ -338,7 +338,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
                     {dignityReport?.strengthsBased.wisdom.map((wisdom, index) => (
                       <span 
                         key={index}
-                        className="block text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded"
+                        className="block text-xs text-gray-600 dark:text-gray-400 bg-blue-50 px-2 py-1 rounded"
                       >
                         {wisdom}
                       </span>
@@ -350,7 +350,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
 
             {/* Personal Values */}
             <div className="bg-white p-4 rounded-lg">
-              <h4 className="font-semibold mb-3 text-gray-700">Your Values & Priorities</h4>
+              <h4 className="font-semibold mb-3 text-gray-700 dark:text-gray-300">Your Values & Priorities</h4>
               <div className="flex flex-wrap gap-2">
                 {dignityReport?.personCentered.values.map((value, index) => (
                   <span 
@@ -365,13 +365,13 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
 
             {/* Growth & Learning */}
             <div className="bg-white p-4 rounded-lg">
-              <h4 className="font-semibold mb-3 text-gray-700">Growth & Learning</h4>
+              <h4 className="font-semibold mb-3 text-gray-700 dark:text-gray-300">Growth & Learning</h4>
               <div className="space-y-3">
                 <div>
                   <h5 className="text-sm font-medium text-purple-700 mb-2">Key Learnings</h5>
                   <div className="space-y-1">
                     {dignityReport?.growthOriented.learnings.map((learning, index) => (
-                      <p key={index} className="text-sm text-gray-600 italic">
+                      <p key={index} className="text-sm text-gray-600 dark:text-gray-400 italic">
                         "{learning}"
                       </p>
                     ))}
@@ -401,8 +401,8 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Your Journey Dashboard</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200 mb-2">Your Journey Dashboard</h1>
+        <p className="text-gray-600 dark:text-gray-400">
           Celebrating your strength, honoring your experience, and recognizing your growth
         </p>
       </div>

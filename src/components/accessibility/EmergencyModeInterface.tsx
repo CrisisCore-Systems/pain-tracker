@@ -80,7 +80,7 @@ export function EmergencyModeLayout({
                 onClick={onExit}
                 variant="secondary"
                 size="large"
-                className="text-gray-600 hover:text-gray-800"
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-200"
               >
                 Exit Emergency Mode
               </TouchOptimizedButton>
@@ -191,7 +191,7 @@ export function EmergencyActionPanel({
 
       {/* Quick Actions */}
       <div className="quick-actions bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Quick Actions</h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Emergency Contacts */}
@@ -259,7 +259,7 @@ export function EmergencyActionPanel({
       {/* Voice Control */}
       <div className="voice-control bg-white rounded-xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Voice Control</h2>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Voice Control</h2>
           <TouchOptimizedButton
             onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
             variant={isVoiceEnabled ? "primary" : "secondary"}
@@ -286,7 +286,7 @@ export function EmergencyActionPanel({
               className="voice-emergency-input"
             />
             
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               <p className="font-medium mb-2">Voice Commands:</p>
               <ul className="space-y-1">
                 <li>• "Call [contact name]" - Call emergency contact</li>
@@ -301,12 +301,12 @@ export function EmergencyActionPanel({
 
       {/* Pain Level Quick Update */}
       <div className="pain-level-update bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Current Pain Level</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Current Pain Level</h2>
         
         <div className="flex items-center space-x-4 mb-4">
           <span className="text-3xl font-bold text-red-600">{currentPainLevel}/10</span>
           <div className="flex-1">
-            <div className="w-full bg-gray-200 rounded-full h-6">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6">
               <div 
                 className={`h-6 rounded-full transition-all duration-300 ${
                   currentPainLevel >= 8 ? 'bg-red-600' :
@@ -375,8 +375,8 @@ export function EmergencyProtocolDisplay({
         <div className="flex items-center space-x-3">
           <Shield className="w-8 h-8 text-blue-600" />
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">{protocol.name}</h2>
-            <p className="text-gray-600">Emergency Protocol</p>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">{protocol.name}</h2>
+            <p className="text-gray-600 dark:text-gray-400">Emergency Protocol</p>
           </div>
         </div>
 
@@ -413,11 +413,11 @@ export function EmergencyProtocolDisplay({
         <>
           {/* Progress Bar */}
           <div className="mb-6">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
               <span>Progress</span>
               <span>{completedSteps.filter(s => s).length} of {protocol.immediateActions.length} steps</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
               <div 
                 className="bg-blue-600 h-3 rounded-full transition-all duration-300"
                 style={{ 
@@ -449,7 +449,7 @@ export function EmergencyProtocolDisplay({
                   </div>
                   
                   <div className="flex-1">
-                    <p className="text-lg font-medium text-gray-800 mb-2">{action}</p>
+                    <p className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">{action}</p>
                     
                     {index === currentStep && !completedSteps[index] && (
                       <TouchOptimizedButton
@@ -477,11 +477,11 @@ export function EmergencyProtocolDisplay({
                     <div className="flex items-center space-x-3 mb-2">
                       <Heart className="w-6 h-6 text-red-500" />
                       <div>
-                        <p className="font-semibold text-gray-800">{med.name}</p>
-                        <p className="text-sm text-gray-600">Dosage: {med.dosage}</p>
+                        <p className="font-semibold text-gray-800 dark:text-gray-200">{med.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Dosage: {med.dosage}</p>
                       </div>
                     </div>
-                    <p className="text-sm text-gray-700">{med.instructions}</p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">{med.instructions}</p>
                   </div>
                 ))}
               </div>
@@ -514,9 +514,9 @@ export function EmergencyProtocolDisplay({
 
       {isPaused && (
         <div className="paused-state text-center py-12">
-          <Clock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 mb-2">Protocol Paused</h3>
-          <p className="text-gray-500 mb-6">Take your time. Resume when you're ready.</p>
+          <Clock className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">Protocol Paused</h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">Take your time. Resume when you're ready.</p>
           
           <TouchOptimizedButton
             onClick={() => setIsPaused(false)}
@@ -542,7 +542,7 @@ export function EmergencySettingsPanel() {
   return (
     <div className="emergency-settings bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Emergency Settings</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Emergency Settings</h2>
         <TouchOptimizedButton
           onClick={() => setIsExpanded(!isExpanded)}
           variant="secondary"
@@ -572,7 +572,7 @@ export function EmergencySettingsPanel() {
                 readOnly
                 className="w-5 h-5 text-blue-600 rounded"
               />
-              <span className="text-gray-700">Auto-activate emergency mode</span>
+              <span className="text-gray-700 dark:text-gray-300">Auto-activate emergency mode</span>
             </label>
           </div>
 
@@ -584,7 +584,7 @@ export function EmergencySettingsPanel() {
                 onChange={(e) => updatePreferences({ voiceInput: e.target.checked })}
                 className="w-5 h-5 text-blue-600 rounded"
               />
-              <span className="text-gray-700">Enable voice commands</span>
+              <span className="text-gray-700 dark:text-gray-300">Enable voice commands</span>
             </label>
           </div>
 
@@ -596,19 +596,19 @@ export function EmergencySettingsPanel() {
                 onChange={(e) => updatePreferences({ showComfortPrompts: e.target.checked })}
                 className="w-5 h-5 text-blue-600 rounded"
               />
-              <span className="text-gray-700">Show comfort prompts</span>
+              <span className="text-gray-700 dark:text-gray-300">Show comfort prompts</span>
             </label>
           </div>
 
           <div className="setting-item">
             <div className="flex items-center justify-between">
-              <span className="text-gray-700">Touch target size</span>
+              <span className="text-gray-700 dark:text-gray-300">Touch target size</span>
               <select
                 value={preferences.touchTargetSize}
                 onChange={(e) => updatePreferences({ 
                   touchTargetSize: e.target.value as 'normal' | 'large' | 'extra-large' 
                 })}
-                className="rounded-md border-gray-300 text-sm"
+                className="rounded-md border-gray-300 dark:border-gray-600 text-sm"
               >
                 <option value="normal">Normal</option>
                 <option value="large">Large</option>

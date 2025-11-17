@@ -401,10 +401,10 @@ export function InteractiveBodyMap({
             <User className="h-6 w-6 text-blue-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-gray-900">
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">
               {mode === 'selection' ? 'Select Pain Locations' : 'Pain Heat Map'}
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               {mode === 'selection' 
                 ? `${selectedCount} region${selectedCount !== 1 ? 's' : ''} selected`
                 : `${affectedRegionsCount} region${affectedRegionsCount !== 1 ? 's' : ''} with recorded pain`
@@ -415,30 +415,30 @@ export function InteractiveBodyMap({
         
         <div className="flex items-center space-x-2">
           {/* Zoom Controls */}
-          <div className="flex items-center space-x-1 bg-white rounded-md border border-gray-300 px-2 py-1">
+          <div className="flex items-center space-x-1 bg-white rounded-md border border-gray-300 dark:border-gray-600 px-2 py-1">
             <button
               onClick={handleZoomOut}
-              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              className="p-1 hover:bg-gray-100 dark:bg-gray-800 rounded transition-colors"
               title="Zoom Out"
             >
-              <ZoomOut className="h-4 w-4 text-gray-600" />
+              <ZoomOut className="h-4 w-4 text-gray-600 dark:text-gray-400" />
             </button>
-            <span className="text-xs text-gray-600 px-2 min-w-[3rem] text-center">
+            <span className="text-xs text-gray-600 dark:text-gray-400 px-2 min-w-[3rem] text-center">
               {Math.round(zoomLevel * 100)}%
             </span>
             <button
               onClick={handleZoomIn}
-              className="p-1 hover:bg-gray-100 rounded transition-colors"
+              className="p-1 hover:bg-gray-100 dark:bg-gray-800 rounded transition-colors"
               title="Zoom In"
             >
-              <ZoomIn className="h-4 w-4 text-gray-600" />
+              <ZoomIn className="h-4 w-4 text-gray-600 dark:text-gray-400" />
             </button>
           </div>
 
           {/* View Toggle */}
           <button
             onClick={() => setShowFront(!showFront)}
-            className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:bg-gray-900 transition-colors"
           >
             <RotateCcw className="h-4 w-4" />
             <span className="text-sm font-medium">{showFront ? 'Front' : 'Back'}</span>
@@ -447,7 +447,7 @@ export function InteractiveBodyMap({
           {/* Export Button */}
           <button
             onClick={exportAsPNG}
-            className="p-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            className="p-2 bg-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:bg-gray-900 transition-colors"
             title="Export as PNG"
           >
             <Download className="h-4 w-4" />
@@ -456,7 +456,7 @@ export function InteractiveBodyMap({
           {/* Fullscreen Toggle */}
           <button
             onClick={toggleFullscreen}
-            className="p-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+            className="p-2 bg-white border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:bg-gray-900 transition-colors"
             title="Toggle Fullscreen"
           >
             <Maximize2 className="h-4 w-4" />
@@ -465,7 +465,7 @@ export function InteractiveBodyMap({
       </div>
 
       {/* Body Map SVG */}
-      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 p-6 shadow-lg overflow-hidden">
+      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-6 shadow-lg overflow-hidden">
         {/* Background Grid Pattern */}
         <div className="absolute inset-0 opacity-5">
           <svg width="100%" height="100%">
@@ -562,7 +562,7 @@ export function InteractiveBodyMap({
 
         {/* Hover Tooltip */}
         {hoveredRegion && (
-          <div className="absolute top-8 right-8 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-xl pointer-events-none z-10 min-w-[200px]">
+          <div className="absolute top-8 right-8 bg-gray-900 dark:bg-gray-100 text-white px-4 py-3 rounded-lg shadow-xl pointer-events-none z-10 min-w-[200px]">
             <div className="font-semibold text-base mb-1">
               {BODY_REGIONS.find(r => r.id === hoveredRegion)?.name}
             </div>
@@ -571,24 +571,24 @@ export function InteractiveBodyMap({
               return painData.avg > 0 ? (
                 <div className="text-sm space-y-1">
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Avg Pain:</span>
+                    <span className="text-gray-300 dark:text-gray-600">Avg Pain:</span>
                     <span className="font-medium">{formatNumber(painData.avg, 1)}/10</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Max Pain:</span>
+                    <span className="text-gray-300 dark:text-gray-600">Max Pain:</span>
                     <span className="font-medium">{painData.max}/10</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Entries:</span>
+                    <span className="text-gray-300 dark:text-gray-600">Entries:</span>
                     <span className="font-medium">{painData.count}</span>
                   </div>
                 </div>
               ) : (
-                <div className="text-sm text-gray-400">No pain recorded</div>
+                <div className="text-sm text-gray-400 dark:text-gray-500">No pain recorded</div>
               );
             })()}
             {mode === 'selection' && (
-              <div className="text-sm text-gray-300">
+              <div className="text-sm text-gray-300 dark:text-gray-600">
                 Click to {selectedRegions.includes(hoveredRegion) ? 'deselect' : 'select'}
               </div>
             )}
@@ -600,15 +600,15 @@ export function InteractiveBodyMap({
       <div className="mt-6 space-y-4">
         {/* Heatmap Legend */}
         {mode === 'heatmap' && (
-          <div className="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-lg p-4 border border-gray-200">
+          <div className="bg-gradient-to-r from-green-50 via-yellow-50 to-red-50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-semibold text-gray-700">Pain Intensity Scale</span>
-              <Info className="h-4 w-4 text-gray-500" />
+              <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Pain Intensity Scale</span>
+              <Info className="h-4 w-4 text-gray-500 dark:text-gray-400" />
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex-1">
                 <div className="h-8 rounded-lg bg-gradient-to-r from-green-400 via-yellow-400 to-red-500 shadow-inner"></div>
-                <div className="flex justify-between text-xs text-gray-600 mt-1">
+                <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
                   <span>0</span>
                   <span>2.5</span>
                   <span>5</span>
@@ -620,15 +620,15 @@ export function InteractiveBodyMap({
             <div className="grid grid-cols-3 gap-3 mt-4 text-xs">
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                <span className="text-gray-600">Mild (0-4)</span>
+                <span className="text-gray-600 dark:text-gray-400">Mild (0-4)</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <span className="text-gray-600">Moderate (4-7)</span>
+                <span className="text-gray-600 dark:text-gray-400">Moderate (4-7)</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <span className="text-gray-600">Severe (7-10)</span>
+                <span className="text-gray-600 dark:text-gray-400">Severe (7-10)</span>
               </div>
             </div>
           </div>
@@ -680,18 +680,18 @@ export function InteractiveBodyMap({
         {/* Statistics Panel for Heatmap */}
         {mode === 'heatmap' && affectedRegionsCount > 0 && (
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Affected Regions</div>
-              <div className="text-2xl font-bold text-gray-900">{affectedRegionsCount}</div>
+            <div className="bg-white rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Affected Regions</div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{affectedRegionsCount}</div>
             </div>
-            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Highest Pain</div>
+            <div className="bg-white rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Highest Pain</div>
               <div className="text-2xl font-bold text-red-600">
                 {Math.max(...Array.from(regionPainMap.current.values()).map(d => d.max), 0)}/10
               </div>
             </div>
-            <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-              <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Avg Pain</div>
+            <div className="bg-white rounded-lg p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Avg Pain</div>
               <div className="text-2xl font-bold text-orange-600">
                 {formatNumber(
                   Array.from(regionPainMap.current.values()).reduce((sum, d) => sum + d.avg, 0) / 
@@ -704,8 +704,8 @@ export function InteractiveBodyMap({
         )}
 
         {/* Body Region Categories */}
-        <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-          <div className="text-sm font-semibold text-gray-700 mb-3">Body Region Categories</div>
+        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+          <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Body Region Categories</div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { name: 'Upper Body', category: 'upper', color: 'purple', icon: '🧠' },
@@ -720,7 +720,7 @@ export function InteractiveBodyMap({
               return (
                 <div key={category} className={`bg-${color}-50 border border-${color}-200 rounded-md p-2 text-center`}>
                   <div className="text-2xl mb-1">{icon}</div>
-                  <div className="text-xs font-medium text-gray-700">{name}</div>
+                  <div className="text-xs font-medium text-gray-700 dark:text-gray-300">{name}</div>
                   <div className={`text-sm font-bold text-${color}-700 mt-1`}>{count}</div>
                 </div>
               );

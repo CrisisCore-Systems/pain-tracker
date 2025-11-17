@@ -77,7 +77,7 @@ export function CognitiveBreadcrumbs({
             {steps.map((step, index) => (
               <li key={index} className="flex items-center">
                 {index > 0 && (
-                  <ArrowRight className="w-4 h-4 text-gray-400 mx-2" />
+                  <ArrowRight className="w-4 h-4 text-gray-400 dark:text-gray-500 mx-2" />
                 )}
                 
                 <button
@@ -108,11 +108,11 @@ export function CognitiveBreadcrumbs({
         {/* Progress bar */}
         {preferences.showProgress && (
           <div className="mb-3">
-            <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
               <span>Progress</span>
               <span>{currentStep + 1} of {steps.length} steps</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div 
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
@@ -123,7 +123,7 @@ export function CognitiveBreadcrumbs({
 
         {/* Estimated time */}
         {showEstimatedTime && (
-          <div className="text-xs text-gray-500 flex items-center space-x-4">
+          <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-4">
             <div className="flex items-center space-x-1">
               <Clock className="w-4 h-4" />
               <span>Step {currentStep + 1} of {steps.length}</span>
@@ -195,18 +195,18 @@ export function StepByStepNavigation({
   };
 
   return (
-    <div className="step-by-step-navigation min-h-screen bg-gray-50">
+    <div className="step-by-step-navigation min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">{session.title}</h1>
-              <p className="text-gray-600">{session.description}</p>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">{session.title}</h1>
+              <p className="text-gray-600 dark:text-gray-400">{session.description}</p>
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-500 dark:text-gray-400">
                 <Clock className="w-4 h-4 inline mr-1" />
                 {formatTime(sessionTime)}
               </div>
@@ -264,20 +264,20 @@ export function StepByStepNavigation({
                         session.currentStepIndex + 1
                       )}
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-800">
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                       {currentStep.title}
                     </h2>
                     {currentStep.isOptional && (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                      <span className="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-full">
                         Optional
                       </span>
                     )}
                   </div>
                   
-                  <p className="text-gray-600 mb-4">{currentStep.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">{currentStep.description}</p>
                   
                   {currentStep.estimatedTime > 0 && (
-                    <div className="flex items-center space-x-2 text-sm text-gray-500">
+                    <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                       <Clock className="w-4 h-4" />
                       <span>Estimated time: {currentStep.estimatedTime} minute{currentStep.estimatedTime !== 1 ? 's' : ''}</span>
                     </div>
@@ -586,9 +586,9 @@ export function SimplifiedChoice({
   return (
     <div className="simplified-choice bg-white rounded-xl shadow-sm p-6">
       <div className="choice-header mb-6">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">{title}</h3>
         {description && (
-          <p className="text-gray-600">{description}</p>
+          <p className="text-gray-600 dark:text-gray-400">{description}</p>
         )}
       </div>
 
@@ -612,14 +612,14 @@ export function SimplifiedChoice({
               )}
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-1">
-                  <h4 className="font-medium text-gray-800">{choice.title}</h4>
+                  <h4 className="font-medium text-gray-800 dark:text-gray-200">{choice.title}</h4>
                   {choice.recommended && showRecommended && (
                     <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">
                       Recommended
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-600">{choice.description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{choice.description}</p>
               </div>
             </div>
           </TouchOptimizedButton>

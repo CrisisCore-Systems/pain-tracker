@@ -70,6 +70,7 @@ export const FibromyalgiaTracker: React.FC = () => {
 
 // Daily Tracking Component
 const DailyTracking: React.FC = () => {
+  const addFibromyalgiaEntry = usePainTrackerStore((state) => state.addFibromyalgiaEntry);
   const [wpiRegions, setWpiRegions] = useState<Record<string, boolean>>({});
   const [sssScores, setSssScores] = useState({
     fatigue: 0,
@@ -77,6 +78,7 @@ const DailyTracking: React.FC = () => {
     cognitive_symptoms: 0,
     somatic_symptoms: 0,
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   const wpiBodyRegions = [
     { id: 'leftShoulder', label: 'Left Shoulder', side: 'left' },
@@ -111,6 +113,111 @@ const DailyTracking: React.FC = () => {
   const sssScore = calculateSSS();
   const meetsCriteria = (wpiScore >= 7 && sssScore >= 5) || (wpiScore >= 4 && wpiScore <= 6 && sssScore >= 9);
 
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      const entry: FibromyalgiaEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        
+        // ACR 2016 Criteria - WPI as nested object
+        wpi: {
+          leftShoulder: wpiRegions.leftShoulder || false,
+          rightShoulder: wpiRegions.rightShoulder || false,
+          leftUpperArm: wpiRegions.leftUpperArm || false,
+          rightUpperArm: wpiRegions.rightUpperArm || false,
+          leftLowerArm: wpiRegions.leftLowerArm || false,
+          rightLowerArm: wpiRegions.rightLowerArm || false,
+          leftHip: wpiRegions.leftHip || false,
+          rightHip: wpiRegions.rightHip || false,
+          leftUpperLeg: wpiRegions.leftUpperLeg || false,
+          rightUpperLeg: wpiRegions.rightUpperLeg || false,
+          leftLowerLeg: wpiRegions.leftLowerLeg || false,
+          rightLowerLeg: wpiRegions.rightLowerLeg || false,
+          jaw: wpiRegions.jaw || false,
+          chest: wpiRegions.chest || false,
+          abdomen: wpiRegions.abdomen || false,
+          upperBack: wpiRegions.upperBack || false,
+          lowerBack: wpiRegions.lowerBack || false,
+          neck: wpiRegions.neck || false,
+        },
+        
+        // SSS as nested object
+        sss: {
+          fatigue: sssScores.fatigue as 0 | 1 | 2 | 3,
+          waking_unrefreshed: sssScores.waking_unrefreshed as 0 | 1 | 2 | 3,
+          cognitive_symptoms: sssScores.cognitive_symptoms as 0 | 1 | 2 | 3,
+          somatic_symptoms: sssScores.somatic_symptoms as 0 | 1 | 2 | 3,
+        },
+        
+        // Default symptoms object
+        symptoms: {
+          headache: false,
+          migraine: false,
+          ibs: false,
+          temporomandibularDisorder: false,
+          restlessLegSyndrome: false,
+          lightSensitivity: false,
+          soundSensitivity: false,
+          temperatureSensitivity: false,
+          chemicalSensitivity: false,
+          clothingSensitivity: false,
+          touchSensitivity: false,
+          numbnessTingling: false,
+          muscleStiffness: false,
+          jointPain: false,
+          brainfog: false,
+          memoryProblems: false,
+          concentrationDifficulty: false,
+        },
+        
+        // Default triggers
+        triggers: {},
+        
+        // Default impact
+        impact: {
+          sleepQuality: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+          moodRating: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+          anxietyLevel: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+          functionalAbility: 2 as 0 | 1 | 2 | 3 | 4 | 5,
+        },
+        
+        // Default activity
+        activity: {
+          activityLevel: 'moderate',
+          restPeriods: 0,
+          overexerted: false,
+          paybackPeriod: false,
+        },
+        
+        // Default interventions
+        interventions: {},
+        
+        // Metadata
+        notes: '',
+      };
+
+      await addFibromyalgiaEntry(entry);
+      
+      // Reset form
+      setWpiRegions({});
+      setSssScores({
+        fatigue: 0,
+        waking_unrefreshed: 0,
+        cognitive_symptoms: 0,
+        somatic_symptoms: 0,
+      });
+      
+      // Success feedback
+      alert('Fibromyalgia entry saved successfully!');
+    } catch (error) {
+      console.error('Failed to save fibromyalgia entry:', error);
+      alert('Failed to save entry. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Diagnostic Criteria Card */}
@@ -136,13 +243,13 @@ const DailyTracking: React.FC = () => {
           <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
             <div className="text-sm text-gray-600 dark:text-gray-400">Widespread Pain Index (WPI)</div>
             <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{wpiScore} / 19</div>
-            <div className="text-xs text-gray-500 mt-1">Need ≥7 for primary criteria</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need ≥7 for primary criteria</div>
           </div>
           
           <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
             <div className="text-sm text-gray-600 dark:text-gray-400">Symptom Severity Scale (SSS)</div>
             <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">{sssScore} / 12</div>
-            <div className="text-xs text-gray-500 mt-1">Need ≥5 for primary criteria</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need ≥5 for primary criteria</div>
           </div>
         </div>
 
@@ -202,7 +309,7 @@ const DailyTracking: React.FC = () => {
             return (
               <div key={symptom.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="flex items-center gap-2 mb-3">
-                  <Icon className="w-4 h-4 text-gray-500" />
+                  <Icon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                   <span className="font-medium text-gray-900 dark:text-white">{symptom.label}</span>
                 </div>
                 <div className="flex gap-2">
@@ -233,8 +340,12 @@ const DailyTracking: React.FC = () => {
       </div>
 
       {/* Save Button */}
-      <button className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all">
-        Save Today's Entry
+      <button 
+        onClick={handleSave}
+        disabled={isSaving}
+        className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isSaving ? 'Saving...' : 'Save Today\'s Entry'}
       </button>
     </div>
   );

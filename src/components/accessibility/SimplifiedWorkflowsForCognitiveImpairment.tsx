@@ -326,16 +326,16 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
   }
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className}`}>
+    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-purple-100 rounded-lg">
           <Brain className="w-6 h-6 text-purple-600" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Simplified Workflows for Cognitive Support
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             Step-by-step guidance designed to reduce cognitive load and support you during 
             moments of brain fog, fatigue, or difficulty concentrating.
           </p>
@@ -526,11 +526,11 @@ function WorkflowSelection({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
         <Target className="w-5 h-5 text-blue-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Choose a Simple Task</h3>
-        <span className="text-sm text-gray-500">({suitableWorkflows.length} recommended for you)</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Choose a Simple Task</h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">({suitableWorkflows.length} recommended for you)</span>
       </div>
 
       <div className="space-y-3">
@@ -538,12 +538,12 @@ function WorkflowSelection({
           const adjustedDifficulty = getEstimatedDifficulty(workflow);
           
           return (
-            <div key={workflow.id} className="border border-gray-200 rounded-lg p-4 hover:border-blue-300 transition-all">
+            <div key={workflow.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-300 transition-all">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h4 className="font-semibold text-gray-900 text-lg">{workflow.name}</h4>
-                  <p className="text-gray-600 text-sm mt-1">{workflow.description}</p>
-                  <p className="text-gray-500 text-xs mt-1">Purpose: {workflow.purpose}</p>
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-lg">{workflow.name}</h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{workflow.description}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Purpose: {workflow.purpose}</p>
                 </div>
                 <TouchOptimizedButton
                   variant="primary"
@@ -557,13 +557,13 @@ function WorkflowSelection({
 
               <div className="flex flex-wrap items-center gap-3 text-sm">
                 <div className="flex items-center space-x-1">
-                  <Clock className="w-4 h-4 text-gray-500" />
-                  <span className="text-gray-600">~{workflow.estimatedTime} min</span>
+                  <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-gray-600 dark:text-gray-400">~{workflow.estimatedTime} min</span>
                 </div>
                 
                 <div className="flex items-center space-x-1">
-                  <Circle className="w-4 h-4 text-gray-500" />
-                  <span className="text-gray-600">{workflow.steps.length} steps</span>
+                  <Circle className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-gray-600 dark:text-gray-400">{workflow.steps.length} steps</span>
                 </div>
 
                 <span className={`px-2 py-1 text-xs rounded-full ${getCognitiveLoadColor(adjustedDifficulty)}`}>
@@ -587,8 +587,8 @@ function WorkflowSelection({
         })}
 
         {suitableWorkflows.length === 0 && (
-          <div className="text-center py-8 text-gray-500">
-            <Brain className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            <Brain className="w-12 h-12 mx-auto mb-3 text-gray-400 dark:text-gray-500" />
             <p>No workflows are recommended right now.</p>
             <p className="text-sm mt-1">Consider adjusting your cognitive state assessment or taking a break.</p>
           </div>
@@ -748,7 +748,7 @@ function WorkflowExecutionInterface({
             />
 
             {/* Navigation */}
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
+            <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
               <div>
                 {!isFirstStep && adaptiveSettings.allowBacktrack && (
                   <TouchOptimizedButton
@@ -812,13 +812,13 @@ function WorkflowStepContent({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+    <div className="bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6">
       {/* Step Header */}
       <div className="mb-6">
-        <h2 className={`font-semibold text-gray-900 mb-2 ${textSizeClass} md:text-2xl`}>
+        <h2 className={`font-semibold text-gray-900 dark:text-gray-100 mb-2 ${textSizeClass} md:text-2xl`}>
           {step.title}
         </h2>
-        <p className={`text-gray-600 ${textSizeClass}`}>
+        <p className={`text-gray-600 dark:text-gray-400 ${textSizeClass}`}>
           {step.description}
         </p>
         {step.supportText && (
@@ -872,11 +872,11 @@ function WorkflowStepContent({
 
       {/* Alternative Methods */}
       {step.alternatives && step.alternatives.length > 0 && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium text-gray-900 mb-2">Alternative ways to complete this step:</h4>
+        <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Alternative ways to complete this step:</h4>
           <ul className="space-y-1">
             {step.alternatives.map((alt, index) => (
-              <li key={index} className="text-sm text-gray-600 flex items-center space-x-2">
+              <li key={index} className="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-2">
                 <Circle className="w-2 h-2 fill-current" />
                 <span>{alt}</span>
               </li>
@@ -919,7 +919,7 @@ function StepInputField({
             onChange={(e) => onChange(parseInt(e.target.value))}
             className="w-full h-6 bg-purple-200 rounded-lg appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-sm text-gray-500 mt-2">
+          <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
             <span>No Pain</span>
             <span>Worst Pain</span>
           </div>
@@ -943,7 +943,7 @@ function StepInputField({
             onChange={(e) => onChange(parseInt(e.target.value))}
             className="w-full h-6 bg-green-200 rounded-lg appearance-none cursor-pointer"
           />
-          <div className="flex justify-between text-sm text-gray-500 mt-2">
+          <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
             <span>No Energy</span>
             <span>Full Energy</span>
           </div>
@@ -957,7 +957,7 @@ function StepInputField({
   value={typeof value === 'string' ? value : ''}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Type your response here..."
-      className={`w-full p-4 border border-gray-300 rounded-lg ${textSizeClass}`}
+      className={`w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg ${textSizeClass}`}
       rows={3}
     />
   );
@@ -1076,7 +1076,7 @@ function StepConfirmationField({
   void _step; void _value;
   return (
     <div className="text-center space-y-4">
-      <div className={`text-gray-700 ${textSizeClass}`}>
+      <div className={`text-gray-700 dark:text-gray-300 ${textSizeClass}`}>
         Ready to save your information?
       </div>
       
@@ -1101,7 +1101,7 @@ function StepInfoDisplay({
   textSizeClass: string;
 }) {
   return (
-    <div className={`text-gray-700 ${textSizeClass} leading-relaxed`}>
+    <div className={`text-gray-700 dark:text-gray-300 ${textSizeClass} leading-relaxed`}>
       {step.description}
     </div>
   );
@@ -1186,20 +1186,20 @@ function AdaptiveSettingsPanel({
   cognitiveState: CognitiveState;
 }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4">
+    <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
-        <Settings className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Adaptive Support Settings</h3>
+        <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Adaptive Support Settings</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Text Size</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Text Size</label>
             <select
               value={settings.textSize}
               onChange={(e) => onSettingsChange({ ...settings, textSize: e.target.value as AdaptiveSettings['textSize'] })}
-              className="w-full p-2 border border-gray-300 rounded"
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded"
             >
               <option value="normal">Normal</option>
               <option value="large">Large</option>
@@ -1208,7 +1208,7 @@ function AdaptiveSettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Voice Guidance</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Voice Guidance</label>
             <TouchOptimizedButton
               variant={settings.voiceGuidance ? "primary" : "secondary"}
               onClick={() => onSettingsChange({ ...settings, voiceGuidance: !settings.voiceGuidance })}
@@ -1219,7 +1219,7 @@ function AdaptiveSettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Show Progress</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Show Progress</label>
             <TouchOptimizedButton
               variant={settings.showProgress ? "primary" : "secondary"}
               onClick={() => onSettingsChange({ ...settings, showProgress: !settings.showProgress })}
@@ -1232,7 +1232,7 @@ function AdaptiveSettingsPanel({
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Auto Advance</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Auto Advance</label>
             <TouchOptimizedButton
               variant={settings.autoAdvance ? "primary" : "secondary"}
               onClick={() => onSettingsChange({ ...settings, autoAdvance: !settings.autoAdvance })}
@@ -1243,7 +1243,7 @@ function AdaptiveSettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Allow Going Back</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Allow Going Back</label>
             <TouchOptimizedButton
               variant={settings.allowBacktrack ? "primary" : "secondary"}
               onClick={() => onSettingsChange({ ...settings, allowBacktrack: !settings.allowBacktrack })}

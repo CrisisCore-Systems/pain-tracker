@@ -32,7 +32,7 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
       
       <div className="space-y-4">
         <div>
-          <h4 className="text-sm font-medium text-gray-700">Overall Trend</h4>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Trend</h4>
           <p className={`text-lg font-semibold ${
             trend.includes('deterioration') ? 'text-red-600' :
             trend === 'Stable' ? 'text-yellow-600' :
@@ -45,28 +45,28 @@ export function ProgressionSummary({ entries, period }: ProgressionSummaryProps)
         {latestEntry && (
           <>
             <div>
-              <h4 className="text-sm font-medium text-gray-700">Current Pain Level</h4>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Pain Level</h4>
               <p className="text-lg font-semibold">{latestEntry.averagePain}</p>
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-gray-700">Active Pain Locations</h4>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Active Pain Locations</h4>
               <ul className="mt-1 space-y-1">
                 {latestEntry.locations.length > 0 ? latestEntry.locations.map(location => (
-                  <li key={location} className="text-sm text-gray-600">{location}</li>
+                  <li key={location} className="text-sm text-gray-600 dark:text-gray-400">{location}</li>
                 )) : (
-                  <li className="text-sm text-gray-500 italic">No locations recorded</li>
+                  <li className="text-sm text-gray-500 dark:text-gray-400 italic">No locations recorded</li>
                 )}
               </ul>
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-gray-700">Current Symptoms</h4>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Current Symptoms</h4>
               <ul className="mt-1 space-y-1">
                 {latestEntry.symptoms.length > 0 ? latestEntry.symptoms.map(symptom => (
-                  <li key={symptom} className="text-sm text-gray-600">{symptom}</li>
+                  <li key={symptom} className="text-sm text-gray-600 dark:text-gray-400">{symptom}</li>
                 )) : (
-                  <li className="text-sm text-gray-500 italic">No symptoms recorded</li>
+                  <li className="text-sm text-gray-500 dark:text-gray-400 italic">No symptoms recorded</li>
                 )}
               </ul>
             </div>

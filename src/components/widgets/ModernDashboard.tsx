@@ -142,7 +142,7 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
   const getTrendIcon = (trend: number) => {
     if (trend < -0.5) return <ArrowDownRight className="h-4 w-4 text-green-500" />;
     if (trend > 0.5) return <ArrowUpRight className="h-4 w-4 text-red-500" />;
-    return <Minus className="h-4 w-4 text-gray-500" />;
+    return <Minus className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
   };
 
   return (

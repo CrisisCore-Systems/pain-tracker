@@ -74,7 +74,7 @@ export default defineConfig({
       }
     }
   ],
-  base: isProd ? '/pain-tracker/' : '/',
+  base: '/',
   resolve: {
     alias: {
       '@pain-tracker/services': path.resolve(__dirname, 'packages/services/src'),

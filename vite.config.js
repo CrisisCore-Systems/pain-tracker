@@ -61,7 +61,7 @@ export default defineConfig({
             }
         }
     ],
-    base: '/pain-tracker/',
+    base: '/',
     build: {
         sourcemap: true,
         outDir: 'dist',

@@ -185,7 +185,7 @@ export function TraumaInformedPainEntryForm({
     },
     {
       title: "Additional Notes",
-      icon: <MessageCircle className="w-5 h-5 text-gray-500" />,
+      icon: <MessageCircle className="w-5 h-5 text-gray-500 dark:text-gray-400" />,
       level: 'advanced' as const,
       content: (
         <NotesSection 
@@ -209,14 +209,14 @@ export function TraumaInformedPainEntryForm({
       <div className="space-y-6">
         {/* Progress indicator */}
         {preferences.showProgress && visibleSteps.length > 1 && (
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Progress</span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Progress</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 {currentStep + 1} of {visibleSteps.length}
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
               <div 
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentStep + 1) / visibleSteps.length) * 100}%` }}
@@ -230,7 +230,7 @@ export function TraumaInformedPainEntryForm({
           <CardContent className="pt-6">
             <div className="flex items-center space-x-3 mb-6">
               {visibleSteps[currentStep]?.icon}
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                 {visibleSteps[currentStep]?.title}
               </h2>
             </div>
@@ -345,7 +345,7 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
               <div className="text-4xl font-bold text-blue-600 mb-2">
                 {data.pain}
               </div>
-              <div className="text-lg text-gray-700 mb-4">
+              <div className="text-lg text-gray-700 dark:text-gray-300 mb-4">
                 {painDescriptions[data.pain]}
               </div>
             </div>
@@ -356,11 +356,11 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
               max="10"
               value={data.pain}
               onChange={(e) => onChange({ pain: parseInt(e.target.value) })}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb-large"
+              className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider-thumb-large"
               style={{ minHeight: 'var(--ti-touch-size)' }}
             />
             
-            <div className="flex justify-between text-sm text-gray-500">
+            <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
               <span>No pain</span>
               <span>Worst pain</span>
             </div>
@@ -481,7 +481,7 @@ function MedicationSection({
         memoryAid="What are you taking for pain right now?"
       >
         <textarea
-          className="w-full p-3 border border-gray-300 rounded-md"
+          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md"
           placeholder="List your current pain medications..."
           value={currentMedications.changes}
           onChange={(e) => onMedicationsChange({ changes: e.target.value })}
@@ -540,7 +540,7 @@ function WorkImpactSection({ data, onChange }: {
           min="0"
           value={currentData.missedWork}
           onChange={(e) => onChange({ missedWork: parseInt(e.target.value) || 0 })}
-          className="w-full p-2 border border-gray-300 rounded-md"
+          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md"
         />
       </div>
     </ProgressiveDisclosure>
@@ -562,7 +562,7 @@ function NotesSection({
         memoryAid="Anything else you'd like to remember about today?"
       >
         <textarea
-          className="w-full p-3 border border-gray-300 rounded-md"
+          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md"
           placeholder="Any other details about your pain, triggers, or what helped..."
           value={notes}
           onChange={(e) => onNotesChange(e.target.value)}

@@ -84,7 +84,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
     <div className="space-y-6">
       {/* Sleep Quality */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Sleep Quality</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Sleep Quality</h3>
         <div className="space-y-4">
           <input
             type="range"
@@ -97,7 +97,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
             })}
             className="w-full"
           />
-          <div className="flex justify-between text-sm text-gray-600">
+          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
             <span>Poor</span>
             <span>{SLEEP_DESCRIPTIONS[qualityOfLife.sleepQuality as keyof typeof SLEEP_DESCRIPTIONS]}</span>
             <span>Excellent</span>
@@ -107,7 +107,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
 
       {/* Mood Impact */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Mood Impact</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Mood Impact</h3>
         <div className="space-y-4">
           <input
             type="range"
@@ -120,7 +120,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
             })}
             className="w-full"
           />
-          <div className="flex justify-between text-sm text-gray-600">
+          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
             <span>Severe Impact</span>
             <span>{MOOD_DESCRIPTIONS[qualityOfLife.moodImpact as keyof typeof MOOD_DESCRIPTIONS]}</span>
             <span>No Impact</span>
@@ -130,13 +130,13 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
 
       {/* Social Impact */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Social Impact</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Social Impact</h3>
         
         {/* Current Impacts */}
         <div className="space-y-2 mb-4">
           {qualityOfLife.socialImpact.map((impact, index) => (
-            <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded-md">
-              <span className="text-sm text-gray-700">{impact}</span>
+            <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-2 rounded-md">
+              <span className="text-sm text-gray-700 dark:text-gray-300">{impact}</span>
               <button
                 type="button"
                 onClick={() => removeSocialImpact(index)}
@@ -151,7 +151,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
 
         {/* Common Impacts */}
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Common Impacts</h4>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Common Impacts</h4>
           <div className="flex flex-wrap gap-2">
             {COMMON_SOCIAL_IMPACTS.map((impact) => (
               <button
@@ -177,7 +177,7 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
             value={newImpact}
             onChange={(e) => setNewImpact(e.target.value)}
             placeholder="Add custom social impact..."
-            className="block flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            className="block flex-1 rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           />
           <button
             type="button"
@@ -191,16 +191,16 @@ export default function DailyLiving({ qualityOfLife, onChange }: DailyLivingProp
       </div>
 
       {/* Summary */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">Daily Living Summary</h4>
+      <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Daily Living Summary</h4>
         <ul className="list-disc pl-5 space-y-1">
-          <li className="text-sm text-gray-600">
+          <li className="text-sm text-gray-600 dark:text-gray-400">
             Sleep Quality: {SLEEP_DESCRIPTIONS[qualityOfLife.sleepQuality as keyof typeof SLEEP_DESCRIPTIONS]}
           </li>
-          <li className="text-sm text-gray-600">
+          <li className="text-sm text-gray-600 dark:text-gray-400">
             Mood: {MOOD_DESCRIPTIONS[qualityOfLife.moodImpact as keyof typeof MOOD_DESCRIPTIONS]}
           </li>
-          <li className="text-sm text-gray-600">
+          <li className="text-sm text-gray-600 dark:text-gray-400">
             Social Impacts: {qualityOfLife.socialImpact.length} reported
           </li>
         </ul>

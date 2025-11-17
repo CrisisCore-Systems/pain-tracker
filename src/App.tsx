@@ -7,6 +7,7 @@
  */
 
 import { Suspense, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { PainTrackerContainer } from "./containers/PainTrackerContainer";
 import { ThemeProvider } from "./design-system";
@@ -20,7 +21,6 @@ import './i18n/config';
 import { PWAInstallPrompt } from "./components/pwa/PWAInstallPrompt";
 import { PWAStatusIndicator } from "./components/pwa/PWAStatusIndicator";
 import BetaWarning from './components/BetaWarning';
-import QuickActions from './components/QuickActions';
 import NotificationConsentPrompt from './components/NotificationConsentPrompt';
 import BetaAnalyticsConsentPrompt from './components/BetaAnalyticsConsentPrompt';
 import { VaultGate } from './components/security/VaultGate';
@@ -31,6 +31,7 @@ import { BrandedLoadingScreen } from "./components/branding/BrandedLoadingScreen
 import { pwaManager } from "./utils/pwa-utils";
 import { ToneStateTester } from "./components/dev/ToneStateTester";
 import { ScreenshotShowcase } from "./pages/ScreenshotShowcase";
+import { LandingPage } from "./pages/LandingPage";
 
 const ErrorFallback = () => {
   return (
@@ -116,43 +117,56 @@ function App() {
   const patternEntries = storeEntries.map(e => ({ time: e.timestamp, pain: e.baselineData?.pain ?? 0 }));
   usePatternAlerts(patternEntries);
   
-  // Check if we're in screenshot showcase mode
-  const isShowcaseMode = window.location.hash.startsWith('#demo-');
-  
   return (
-    <ThemeProvider>
-      <SubscriptionProvider>
-        <ToneProvider>
-          <TraumaInformedProvider>
-            <ToastProvider>
-              <VaultGate>
-                {isShowcaseMode ? (
-                  // Screenshot showcase mode - clean views without UI chrome
-                  <ScreenshotShowcase />
-                ) : (
-                  // Normal application mode
-                  <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
-                    <OfflineBanner />
-                    <BetaWarning />
-                    <QuickActions />
-                    <NotificationConsentPrompt />
-                    <BetaAnalyticsConsentPrompt />
-                    <ErrorBoundary fallback={<ErrorFallback />}>
-                      <Suspense fallback={<LoadingFallback />}>
-                        <PainTrackerContainer />
-                    </Suspense>
-                  </ErrorBoundary>
-                  <PWAInstallPrompt />
-                  <PWAStatusIndicator />
-                  <ToneStateTester />
-                </div>
-                )}
-              </VaultGate>
-            </ToastProvider>
-          </TraumaInformedProvider>
-        </ToneProvider>
-      </SubscriptionProvider>
-    </ThemeProvider>
+    <BrowserRouter>
+      <ThemeProvider>
+        <SubscriptionProvider>
+          <ToneProvider>
+            <TraumaInformedProvider>
+              <ToastProvider>
+                <Routes>
+                  {/* Landing Page - Public */}
+                  <Route path="/" element={<LandingPage />} />
+
+                  {/* Screenshot Showcase - Public */}
+                  <Route path="/demo/*" element={<ScreenshotShowcase />} />
+
+                  {/* Vault Setup/Login - Public */}
+                  <Route path="/start" element={
+                    <VaultGate>
+                      <Navigate to="/app" replace />
+                    </VaultGate>
+                  } />
+
+                  {/* Main Application - Protected */}
+                  <Route path="/app" element={
+                    <VaultGate>
+                      <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                        <OfflineBanner />
+                        <BetaWarning />
+                        <NotificationConsentPrompt />
+                        <BetaAnalyticsConsentPrompt />
+                        <ErrorBoundary fallback={<ErrorFallback />}>
+                          <Suspense fallback={<LoadingFallback />}>
+                            <PainTrackerContainer />
+                          </Suspense>
+                        </ErrorBoundary>
+                        <PWAInstallPrompt />
+                        <PWAStatusIndicator />
+                        <ToneStateTester />
+                      </div>
+                    </VaultGate>
+                  } />
+
+                  {/* Fallback - redirect to landing */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </ToastProvider>
+            </TraumaInformedProvider>
+          </ToneProvider>
+        </SubscriptionProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 

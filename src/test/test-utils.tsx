@@ -1,19 +1,34 @@
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
+import { ThemeProvider } from '../design-system/ThemeProvider';
+import { ToneProvider } from '../contexts/ToneContext';
 
-// Add any providers here
-const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+// Add all required providers for testing
+const AllTheProviders = ({ children }: { children: ReactNode }) => {
   return (
-    <>
-      {children}
-    </>
+    <ThemeProvider defaultMode="light">
+      <ToneProvider>
+        {children}
+      </ToneProvider>
+    </ThemeProvider>
   );
 };
 
+// Custom render that wraps with ThemeProvider and ToneProvider by default
+// but allows additional wrapper to be passed in
 const customRender = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) => render(ui, { wrapper: AllTheProviders, ...options });
+  options?: RenderOptions
+) => {
+  const { wrapper: AdditionalWrapper, ...restOptions } = options || {};
+  
+  const Wrapper = ({ children }: { children: ReactNode }) => {
+    const content = <AllTheProviders>{children}</AllTheProviders>;
+    return AdditionalWrapper ? <AdditionalWrapper>{content}</AdditionalWrapper> : content;
+  };
+  
+  return render(ui, { wrapper: Wrapper, ...restOptions });
+};
 
 // Re-export everything
 export * from '@testing-library/react';

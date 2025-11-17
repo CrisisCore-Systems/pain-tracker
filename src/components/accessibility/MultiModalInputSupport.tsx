@@ -294,16 +294,16 @@ export function MultiModalInputSupport({
   };
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-6 ${className}`}>
+    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-blue-100 rounded-lg">
           <Accessibility className="w-6 h-6 text-blue-600" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
             Multi-Modal Input Support
           </h2>
-          <p className="text-gray-600 leading-relaxed">
+          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
             Choose input methods that work best for your physical needs and abilities. 
             Multiple methods can be used together for maximum accessibility and comfort.
           </p>
@@ -322,7 +322,7 @@ export function MultiModalInputSupport({
 
       {/* Input Method Selection */}
       <div className="space-y-4 mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center space-x-2">
           <Monitor className="w-5 h-5" />
           <span>Available Input Methods</span>
         </h3>
@@ -390,8 +390,8 @@ function VoiceRecognitionPanel({ voiceRecognition }: { voiceRecognition: VoiceRe
       
       {voiceRecognition.isListening && (
         <div className="bg-white p-3 rounded border">
-          <p className="text-sm text-gray-600 mb-2">Listening... Try saying:</p>
-          <ul className="text-sm text-gray-700 space-y-1">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Listening... Try saying:</p>
+          <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
             <li>• "My pain level is 5"</li>
             <li>• "I have a headache"</li>
             <li>• "Save entry"</li>
@@ -483,11 +483,11 @@ function InputMethodCard({
     }`}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <div className={`p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'bg-gray-100'}`}>
-            <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-600'}`} />
+          <div className={`p-2 rounded-lg ${isActive ? 'bg-blue-100' : 'bg-gray-100 dark:bg-gray-800'}`}>
+            <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-600 dark:text-gray-400'}`} />
           </div>
           <div>
-            <h4 className={`font-semibold ${isActive ? 'text-blue-900' : 'text-gray-900'}`}>
+            <h4 className={`font-semibold ${isActive ? 'text-blue-900' : 'text-gray-900 dark:text-gray-100'}`}>
               {method.name}
             </h4>
             <span className={`px-2 py-1 text-xs rounded-full ${statusColors[method.status]}`}>
@@ -504,27 +504,27 @@ function InputMethodCard({
         </TouchOptimizedButton>
       </div>
 
-      <p className="text-gray-600 text-sm mb-3">{method.description}</p>
+      <p className="text-gray-600 dark:text-gray-400 text-sm mb-3">{method.description}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
         <div>
-          <h5 className="font-medium text-gray-900 mb-2">Capabilities:</h5>
+          <h5 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Capabilities:</h5>
           <ul className="space-y-1">
             {method.capabilities.map((capability, index) => (
               <li key={index} className="flex items-start space-x-2">
                 <Check className="w-3 h-3 text-green-600 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-600">{capability}</span>
+                <span className="text-gray-600 dark:text-gray-400">{capability}</span>
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <h5 className="font-medium text-gray-900 mb-2">Requirements:</h5>
+          <h5 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Requirements:</h5>
           <ul className="space-y-1">
             {method.requirements.map((requirement, index) => (
               <li key={index} className="flex items-start space-x-2">
                 <AlertCircle className="w-3 h-3 text-amber-600 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-600">{requirement}</span>
+                <span className="text-gray-600 dark:text-gray-400">{requirement}</span>
               </li>
             ))}
           </ul>
@@ -543,16 +543,16 @@ function AccessibilitySettingsPanel({
   onSettingChange: (setting: string, value: boolean | number | string) => void;
 }) {
   return (
-    <div className="border-t border-gray-200 pt-6">
+    <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
       <div className="flex items-center space-x-2 mb-4">
-        <Settings className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Accessibility Settings</h3>
+        <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Accessibility Settings</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Audio Feedback</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Audio Feedback</label>
             <TouchOptimizedButton
               variant={settings.audioFeedback ? "primary" : "secondary"}
               onClick={() => onSettingChange('audioFeedback', !settings.audioFeedback)}
@@ -563,7 +563,7 @@ function AccessibilitySettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">High Contrast</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">High Contrast</label>
             <TouchOptimizedButton
               variant={settings.highContrast ? "primary" : "secondary"}
               onClick={() => onSettingChange('highContrast', !settings.highContrast)}
@@ -574,7 +574,7 @@ function AccessibilitySettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700">Reduced Motion</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Reduced Motion</label>
             <TouchOptimizedButton
               variant={settings.reducedMotion ? "primary" : "secondary"}
               onClick={() => onSettingChange('reducedMotion', !settings.reducedMotion)}
@@ -587,7 +587,7 @@ function AccessibilitySettingsPanel({
 
         <div className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-2 block">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
               Dwell Time (ms): {settings.dwellTime}
             </label>
             <input
@@ -602,13 +602,13 @@ function AccessibilitySettingsPanel({
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-2 block">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
               Touch Target Size
             </label>
             <select
               value={settings.touchTargetSize}
               onChange={(e) => onSettingChange('touchTargetSize', e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg"
             >
               <option value="small">Small</option>
               <option value="normal">Normal</option>
@@ -652,10 +652,10 @@ function QuickSetupRecommendations({
   ];
 
   return (
-    <div className="border-t border-gray-200 pt-6">
+    <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
       <div className="flex items-center space-x-2 mb-4">
-        <HelpCircle className="w-5 h-5 text-gray-600" />
-        <h3 className="text-lg font-semibold text-gray-900">Quick Setup Recommendations</h3>
+        <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Setup Recommendations</h3>
       </div>
 
       <div className="grid gap-3">
@@ -664,12 +664,12 @@ function QuickSetupRecommendations({
           const isActive = rec.methods.every(methodId => activeInputMethods.includes(methodId));
           
           return (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <div className="flex items-center space-x-3">
-                <Icon className="w-5 h-5 text-gray-600" />
+                <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 <div>
-                  <h4 className="font-medium text-gray-900">{rec.title}</h4>
-                  <p className="text-sm text-gray-600">{rec.description}</p>
+                  <h4 className="font-medium text-gray-900 dark:text-gray-100">{rec.title}</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{rec.description}</p>
                 </div>
               </div>
               <TouchOptimizedButton

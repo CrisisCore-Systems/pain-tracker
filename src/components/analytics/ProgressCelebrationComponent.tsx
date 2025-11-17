@@ -293,7 +293,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
             <Target className="w-5 h-5" />
             Your Progress Celebration
           </CardTitle>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Celebrating achievements beyond pain scores
           </p>
         </CardHeader>
@@ -304,11 +304,11 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
                 <div className={`w-12 h-12 ${metric.color} rounded-full flex items-center justify-center mx-auto mb-3 text-white`}>
                   {metric.icon}
                 </div>
-                <div className="text-2xl font-bold text-gray-800 mb-1">
+                <div className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-1">
                   {metric.value}
                 </div>
-                <div className="text-sm text-gray-600 mb-1">{metric.unit}</div>
-                <div className="text-xs text-gray-500">{metric.description}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">{metric.unit}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">{metric.description}</div>
                 {metric.value >= metric.celebrationThreshold && (
                   <div className="mt-2">
                     <span className="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">
@@ -329,7 +329,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
             <Trophy className="w-5 h-5" />
             Recent Achievements
           </CardTitle>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Celebrating your strength, courage, and growth
           </p>
         </CardHeader>
@@ -349,7 +349,7 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
                     <div className="text-2xl">{achievement.icon}</div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h4 className="font-semibold text-gray-800">{achievement.title}</h4>
+                        <h4 className="font-semibold text-gray-800 dark:text-gray-200">{achievement.title}</h4>
                         <span className={`px-2 py-1 text-xs rounded-full ${getCategoryTextColor(achievement.category)} bg-white`}>
                           {achievement.category.replace('_', ' ')}
                         </span>
@@ -359,9 +359,9 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mb-3">{achievement.description}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{achievement.description}</p>
                       <div className="bg-white p-3 rounded-md border-l-4 border-l-yellow-400">
-                        <p className="text-sm font-medium text-gray-800">
+                        <p className="text-sm font-medium text-gray-800 dark:text-gray-200">
                           {achievement.celebrationMessage}
                         </p>
                       </div>
@@ -406,10 +406,10 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
           {achievements.length === 0 && (
             <div className="text-center py-8">
               <div className="text-4xl mb-4">🌱</div>
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Your Journey is Just Beginning
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 Every entry you make is an achievement worth celebrating. Keep going!
               </p>
             </div>
@@ -432,22 +432,22 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
                 <div className="text-2xl font-bold text-purple-600">
                   {entries.filter(e => localDayStart(e.timestamp) >= localDayStart(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))).length}
                 </div>
-                <div className="text-xs text-gray-600">Days of Self-Care</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">Days of Self-Care</div>
               </div>
               <div className="bg-white p-3 rounded-lg">
                 <div className="text-2xl font-bold text-green-600">
                   {achievements.filter(a => a.significance === 'weekly').length}
                 </div>
-                <div className="text-xs text-gray-600">Achievements</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">Achievements</div>
               </div>
               <div className="bg-white p-3 rounded-lg">
                 <div className="text-2xl font-bold text-orange-600">
                   {achievements.filter(a => a.significance === 'milestone').length}
                 </div>
-                <div className="text-xs text-gray-600">Milestones</div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">Milestones</div>
               </div>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Every step on your journey matters and deserves recognition.
             </p>
           </div>
