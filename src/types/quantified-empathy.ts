@@ -81,7 +81,13 @@ export interface MoodPattern {
 export interface EmotionalTrigger {
   id: string;
   name: string;
-  type: 'pain_flare' | 'stress_event' | 'social_interaction' | 'medical_appointment' | 'weather' | 'other';
+  type:
+    | 'pain_flare'
+    | 'stress_event'
+    | 'social_interaction'
+    | 'medical_appointment'
+    | 'weather'
+    | 'other';
   severity: 'mild' | 'moderate' | 'severe';
   frequency: number; // times per month
   emotionalImpact: number; // 1-10
@@ -364,7 +370,7 @@ export interface QuantifiedEmpathyMetrics {
     metaEmotionalAwareness: number; // 0-100, awareness of emotional processes
     neuralEmpathyPatterns: NeuralEmpathyProfile;
   };
-  
+
   // Advanced Compassionate Progress Tracking
   compassionateProgress: {
     selfCompassion: number; // 0-100
@@ -378,7 +384,7 @@ export interface QuantifiedEmpathyMetrics {
     compassionFatigue: number; // 0-100, exhaustion from caring (reverse scored)
     recoveryPatterns: RecoveryPatternAnalysis;
   };
-  
+
   // Sophisticated Empathy KPIs with Context
   empathyKPIs: {
     validationReceived: number; // 0-100
@@ -393,7 +399,7 @@ export interface QuantifiedEmpathyMetrics {
     boundaryMaintenance: number; // 0-100, healthy empathy boundaries
     culturalEmpathy: CulturalEmpathyMetrics;
   };
-  
+
   // Deep Humanized Metrics with Wisdom Tracking
   humanizedMetrics: {
     courageScore: number; // 0-100, courage in facing challenges
@@ -407,16 +413,16 @@ export interface QuantifiedEmpathyMetrics {
     spiritualWellbeing: number; // 0-100, spiritual/existential wellness
     lifeNarrativeCoherence: number; // 0-100, coherent life story
   };
-  
+
   // Advanced Empathy Intelligence
   empathyIntelligence: EmpathyIntelligenceProfile;
-  
+
   // Temporal Empathy Evolution
   temporalPatterns: TemporalEmpathyPatterns;
-  
+
   // Micro-Empathy Moments
   microEmpathyMoments: MicroEmpathyTracking;
-  
+
   // Predictive Empathy Modeling
   predictiveMetrics: PredictiveEmpathyModel;
 }
@@ -719,7 +725,11 @@ export interface EmpathyRiskPrediction {
 }
 
 export interface EmpathyOpportunityPrediction {
-  opportunityType: 'growth_window' | 'teaching_moment' | 'healing_opportunity' | 'connection_potential';
+  opportunityType:
+    | 'growth_window'
+    | 'teaching_moment'
+    | 'healing_opportunity'
+    | 'connection_potential';
   potentialImpact: number; // 0-100
   timeWindow: string; // when this opportunity is likely
   preparationNeeded: string[];

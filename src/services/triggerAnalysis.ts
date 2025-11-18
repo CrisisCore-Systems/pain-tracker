@@ -23,10 +23,12 @@ export function analyzeTriggers(entries: any[], lookbackDays = 30): Trigger[] {
     const isHigh = pain >= 7;
     if (isHigh) totalHighPain++;
     const qol = (e as any).qualityOfLife;
-    if (isHigh && qol && typeof qol.sleepQuality === 'number' && qol.sleepQuality <= 4) poorSleepHits++;
+    if (isHigh && qol && typeof qol.sleepQuality === 'number' && qol.sleepQuality <= 4)
+      poorSleepHits++;
     if (isHigh && (e as any).activity && (e as any).activity.length === 0) lowActivityHits++;
     if (isHigh && qol && typeof qol.moodImpact === 'number' && qol.moodImpact >= 7) stressHits++;
-    if (isHigh && (e as any).weather && /(storm|rain|pressure|cold)/i.test((e as any).weather)) weatherHits++;
+    if (isHigh && (e as any).weather && /(storm|rain|pressure|cold)/i.test((e as any).weather))
+      weatherHits++;
   });
 
   const score = (hits: number) => {
@@ -35,13 +37,33 @@ export function analyzeTriggers(entries: any[], lookbackDays = 30): Trigger[] {
   };
 
   const triggers: Trigger[] = [];
-  if (poorSleepHits > 0) triggers.push({ name: 'Poor sleep', confidence: score(poorSleepHits), detail: `${poorSleepHits}/${totalHighPain} high-pain entries had low sleep` });
-  if (stressHits > 0) triggers.push({ name: 'High stress/mood impact', confidence: score(stressHits), detail: `${stressHits}/${totalHighPain} high-pain entries had high mood impact` });
-  if (lowActivityHits > 0) triggers.push({ name: 'Low activity', confidence: score(lowActivityHits), detail: `${lowActivityHits}/${totalHighPain} high-pain entries had low activity` });
-  if (weatherHits > 0) triggers.push({ name: 'Weather (pressure/rain)', confidence: score(weatherHits), detail: `${weatherHits}/${totalHighPain} high-pain entries mention weather` });
+  if (poorSleepHits > 0)
+    triggers.push({
+      name: 'Poor sleep',
+      confidence: score(poorSleepHits),
+      detail: `${poorSleepHits}/${totalHighPain} high-pain entries had low sleep`,
+    });
+  if (stressHits > 0)
+    triggers.push({
+      name: 'High stress/mood impact',
+      confidence: score(stressHits),
+      detail: `${stressHits}/${totalHighPain} high-pain entries had high mood impact`,
+    });
+  if (lowActivityHits > 0)
+    triggers.push({
+      name: 'Low activity',
+      confidence: score(lowActivityHits),
+      detail: `${lowActivityHits}/${totalHighPain} high-pain entries had low activity`,
+    });
+  if (weatherHits > 0)
+    triggers.push({
+      name: 'Weather (pressure/rain)',
+      confidence: score(weatherHits),
+      detail: `${weatherHits}/${totalHighPain} high-pain entries mention weather`,
+    });
 
   // sort by confidence desc
-  triggers.sort((a,b) => b.confidence - a.confidence);
+  triggers.sort((a, b) => b.confidence - a.confidence);
   return triggers;
 }
 

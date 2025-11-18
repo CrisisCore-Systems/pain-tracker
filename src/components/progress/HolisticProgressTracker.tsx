@@ -6,9 +6,19 @@
 import { useState } from 'react';
 import { formatNumber } from '../../utils/formatting';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { 
-  TrendingUp, TrendingDown, Minus, Heart, Activity, 
-  Brain, Shield, Star, Target, Calendar, Award, BarChart3
+import {
+  TrendingUp,
+  TrendingDown,
+  Minus,
+  Heart,
+  Activity,
+  Brain,
+  Shield,
+  Star,
+  Target,
+  Calendar,
+  Award,
+  BarChart3,
 } from 'lucide-react';
 import type { PainEntry } from '../../types';
 import { PlannedFeatureNotice } from '../common/PlannedFeatureNotice';
@@ -90,55 +100,59 @@ interface HolisticProgressTrackerProps {
   onProgressUpdate?: (entry: ProgressEntry) => void;
 }
 
-export function HolisticProgressTracker({ 
-  painEntries, 
-  onProgressUpdate 
+export function HolisticProgressTracker({
+  painEntries,
+  onProgressUpdate,
 }: HolisticProgressTrackerProps) {
   const [currentEntry, setCurrentEntry] = useState<Partial<ProgressEntry>>({
     wellbeingMetrics: {
       emotional: { mood: 5, anxiety: 5, stress: 5, hopefulness: 5, selfEfficacy: 5 },
-      functional: { 
-        mobilityScore: 5, 
-        independenceLevel: 5, 
-        activityTolerance: 5, 
-        energyLevel: 5, 
-        cognitiveClarity: 5 
+      functional: {
+        mobilityScore: 5,
+        independenceLevel: 5,
+        activityTolerance: 5,
+        energyLevel: 5,
+        cognitiveClarity: 5,
       },
-      social: { 
-        socialEngagement: 5, 
-        supportSystemStrength: 5, 
-        communicationAbility: 5, 
-        relationshipQuality: 5 
+      social: {
+        socialEngagement: 5,
+        supportSystemStrength: 5,
+        communicationAbility: 5,
+        relationshipQuality: 5,
       },
-      coping: { 
-        strategyEffectiveness: 5, 
-        resilienceScore: 5, 
-        adaptabilityScore: 5, 
-        selfAdvocacySkills: 5 
-      }
+      coping: {
+        strategyEffectiveness: 5,
+        resilienceScore: 5,
+        adaptabilityScore: 5,
+        selfAdvocacySkills: 5,
+      },
     },
     reflections: { wins: [], challenges: [], insights: [], gratitude: [] },
     overallSatisfaction: 5,
-    notes: ''
+    notes: '',
   });
 
-  const [activeTab, setActiveTab] = useState<'metrics' | 'milestones' | 'coping' | 'insights'>('metrics');
+  const [activeTab, setActiveTab] = useState<'metrics' | 'milestones' | 'coping' | 'insights'>(
+    'metrics'
+  );
 
   // Calculate trends from pain entries
   const calculateTrends = () => {
     if (painEntries.length < 2) return null;
-    
+
     const recent = painEntries.slice(-7); // Last 7 entries
     const older = painEntries.slice(-14, -7); // Previous 7 entries
-    
-    const recentAvg = recent.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / recent.length;
-    const olderAvg = older.length > 0 
-      ? older.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / older.length 
-      : recentAvg;
-    
-    const painTrend = recentAvg < olderAvg ? 'improving' : 
-                     recentAvg > olderAvg ? 'worsening' : 'stable';
-    
+
+    const recentAvg =
+      recent.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / recent.length;
+    const olderAvg =
+      older.length > 0
+        ? older.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / older.length
+        : recentAvg;
+
+    const painTrend =
+      recentAvg < olderAvg ? 'improving' : recentAvg > olderAvg ? 'worsening' : 'stable';
+
     return { painTrend, recentAvg, olderAvg };
   };
 
@@ -168,16 +182,18 @@ export function HolisticProgressTracker({
                     min="1"
                     max="10"
                     value={value}
-                    onChange={(e) => setCurrentEntry(prev => ({
-                      ...prev,
-                      wellbeingMetrics: {
-                        ...prev.wellbeingMetrics!,
-                        emotional: {
-                          ...prev.wellbeingMetrics!.emotional,
-                          [key]: parseInt(e.target.value)
-                        }
-                      }
-                    }))}
+                    onChange={e =>
+                      setCurrentEntry(prev => ({
+                        ...prev,
+                        wellbeingMetrics: {
+                          ...prev.wellbeingMetrics!,
+                          emotional: {
+                            ...prev.wellbeingMetrics!.emotional,
+                            [key]: parseInt(e.target.value),
+                          },
+                        },
+                      }))
+                    }
                     className="flex-1"
                   />
                   <span className="w-8 text-sm font-medium">{value}/10</span>
@@ -207,16 +223,18 @@ export function HolisticProgressTracker({
                     min="1"
                     max="10"
                     value={value}
-                    onChange={(e) => setCurrentEntry(prev => ({
-                      ...prev,
-                      wellbeingMetrics: {
-                        ...prev.wellbeingMetrics!,
-                        functional: {
-                          ...prev.wellbeingMetrics!.functional,
-                          [key]: parseInt(e.target.value)
-                        }
-                      }
-                    }))}
+                    onChange={e =>
+                      setCurrentEntry(prev => ({
+                        ...prev,
+                        wellbeingMetrics: {
+                          ...prev.wellbeingMetrics!,
+                          functional: {
+                            ...prev.wellbeingMetrics!.functional,
+                            [key]: parseInt(e.target.value),
+                          },
+                        },
+                      }))
+                    }
                     className="flex-1"
                   />
                   <span className="w-8 text-sm font-medium">{value}/10</span>
@@ -246,16 +264,18 @@ export function HolisticProgressTracker({
                     min="1"
                     max="10"
                     value={value}
-                    onChange={(e) => setCurrentEntry(prev => ({
-                      ...prev,
-                      wellbeingMetrics: {
-                        ...prev.wellbeingMetrics!,
-                        social: {
-                          ...prev.wellbeingMetrics!.social,
-                          [key]: parseInt(e.target.value)
-                        }
-                      }
-                    }))}
+                    onChange={e =>
+                      setCurrentEntry(prev => ({
+                        ...prev,
+                        wellbeingMetrics: {
+                          ...prev.wellbeingMetrics!,
+                          social: {
+                            ...prev.wellbeingMetrics!.social,
+                            [key]: parseInt(e.target.value),
+                          },
+                        },
+                      }))
+                    }
                     className="flex-1"
                   />
                   <span className="w-8 text-sm font-medium">{value}/10</span>
@@ -285,16 +305,18 @@ export function HolisticProgressTracker({
                     min="1"
                     max="10"
                     value={value}
-                    onChange={(e) => setCurrentEntry(prev => ({
-                      ...prev,
-                      wellbeingMetrics: {
-                        ...prev.wellbeingMetrics!,
-                        coping: {
-                          ...prev.wellbeingMetrics!.coping,
-                          [key]: parseInt(e.target.value)
-                        }
-                      }
-                    }))}
+                    onChange={e =>
+                      setCurrentEntry(prev => ({
+                        ...prev,
+                        wellbeingMetrics: {
+                          ...prev.wellbeingMetrics!,
+                          coping: {
+                            ...prev.wellbeingMetrics!.coping,
+                            [key]: parseInt(e.target.value),
+                          },
+                        },
+                      }))
+                    }
                     className="flex-1"
                   />
                   <span className="w-8 text-sm font-medium">{value}/10</span>
@@ -324,13 +346,15 @@ export function HolisticProgressTracker({
               rows={4}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               value={currentEntry.reflections?.wins.join('\n') || ''}
-              onChange={(e) => setCurrentEntry(prev => ({
-                ...prev,
-                reflections: {
-                  ...prev.reflections!,
-                  wins: e.target.value.split('\n').filter(line => line.trim())
-                }
-              }))}
+              onChange={e =>
+                setCurrentEntry(prev => ({
+                  ...prev,
+                  reflections: {
+                    ...prev.reflections!,
+                    wins: e.target.value.split('\n').filter(line => line.trim()),
+                  },
+                }))
+              }
             />
           </CardContent>
         </Card>
@@ -348,13 +372,15 @@ export function HolisticProgressTracker({
               rows={4}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               value={currentEntry.reflections?.challenges.join('\n') || ''}
-              onChange={(e) => setCurrentEntry(prev => ({
-                ...prev,
-                reflections: {
-                  ...prev.reflections!,
-                  challenges: e.target.value.split('\n').filter(line => line.trim())
-                }
-              }))}
+              onChange={e =>
+                setCurrentEntry(prev => ({
+                  ...prev,
+                  reflections: {
+                    ...prev.reflections!,
+                    challenges: e.target.value.split('\n').filter(line => line.trim()),
+                  },
+                }))
+              }
             />
           </CardContent>
         </Card>
@@ -372,13 +398,15 @@ export function HolisticProgressTracker({
               rows={4}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               value={currentEntry.reflections?.insights.join('\n') || ''}
-              onChange={(e) => setCurrentEntry(prev => ({
-                ...prev,
-                reflections: {
-                  ...prev.reflections!,
-                  insights: e.target.value.split('\n').filter(line => line.trim())
-                }
-              }))}
+              onChange={e =>
+                setCurrentEntry(prev => ({
+                  ...prev,
+                  reflections: {
+                    ...prev.reflections!,
+                    insights: e.target.value.split('\n').filter(line => line.trim()),
+                  },
+                }))
+              }
             />
           </CardContent>
         </Card>
@@ -396,13 +424,15 @@ export function HolisticProgressTracker({
               rows={4}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               value={currentEntry.reflections?.gratitude.join('\n') || ''}
-              onChange={(e) => setCurrentEntry(prev => ({
-                ...prev,
-                reflections: {
-                  ...prev.reflections!,
-                  gratitude: e.target.value.split('\n').filter(line => line.trim())
-                }
-              }))}
+              onChange={e =>
+                setCurrentEntry(prev => ({
+                  ...prev,
+                  reflections: {
+                    ...prev.reflections!,
+                    gratitude: e.target.value.split('\n').filter(line => line.trim()),
+                  },
+                }))
+              }
             />
           </CardContent>
         </Card>
@@ -424,10 +454,12 @@ export function HolisticProgressTracker({
                 min="1"
                 max="10"
                 value={currentEntry.overallSatisfaction || 5}
-                onChange={(e) => setCurrentEntry(prev => ({
-                  ...prev,
-                  overallSatisfaction: parseInt(e.target.value)
-                }))}
+                onChange={e =>
+                  setCurrentEntry(prev => ({
+                    ...prev,
+                    overallSatisfaction: parseInt(e.target.value),
+                  }))
+                }
                 className="flex-1"
               />
               <span className="w-12 text-sm font-medium">
@@ -463,23 +495,29 @@ export function HolisticProgressTracker({
                 )}
                 <div>
                   <p className="text-sm font-medium">Pain Trend</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{trends.painTrend}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">
+                    {trends.painTrend}
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
                 <Activity className="w-5 h-5 text-green-500" />
                 <div>
                   <p className="text-sm font-medium">Recent Avg</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{formatNumber(trends.recentAvg, 1)}/10</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {formatNumber(trends.recentAvg, 1)}/10
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
                 <Calendar className="w-5 h-5 text-purple-500" />
                 <div>
                   <p className="text-sm font-medium">Entries</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{painEntries.length} total</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    {painEntries.length} total
+                  </p>
                 </div>
               </div>
             </div>
@@ -493,13 +531,15 @@ export function HolisticProgressTracker({
           { id: 'metrics', label: 'Wellbeing Metrics', icon: BarChart3 },
           { id: 'milestones', label: 'Milestones', icon: Target },
           { id: 'coping', label: 'Coping Strategies', icon: Shield },
-          { id: 'insights', label: 'Reflections', icon: Brain }
+          { id: 'insights', label: 'Reflections', icon: Brain },
         ].map(tab => {
           const IconComponent = tab.icon;
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as 'metrics' | 'milestones' | 'coping' | 'insights')}
+              onClick={() =>
+                setActiveTab(tab.id as 'metrics' | 'milestones' | 'coping' | 'insights')
+              }
               className={`flex-1 flex items-center justify-center space-x-2 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
                 activeTab === tab.id
                   ? 'bg-white text-blue-600 shadow-sm'
@@ -516,19 +556,19 @@ export function HolisticProgressTracker({
       {/* Tab Content */}
       {activeTab === 'metrics' && <WellbeingMetricsSection />}
       {activeTab === 'insights' && <ReflectionsSection />}
-      
+
       {activeTab === 'milestones' && (
         <Card>
           <CardContent className="p-6">
-                <PlannedFeatureNotice feature="holisticMilestones" />
+            <PlannedFeatureNotice feature="holisticMilestones" />
           </CardContent>
         </Card>
       )}
-      
+
       {activeTab === 'coping' && (
         <Card>
           <CardContent className="p-6">
-                <PlannedFeatureNotice feature="copingCoach" />
+            <PlannedFeatureNotice feature="copingCoach" />
           </CardContent>
         </Card>
       )}
@@ -545,7 +585,7 @@ export function HolisticProgressTracker({
               copingStrategies: [],
               reflections: currentEntry.reflections!,
               overallSatisfaction: currentEntry.overallSatisfaction!,
-              notes: currentEntry.notes || ''
+              notes: currentEntry.notes || '',
             };
             onProgressUpdate?.(entry);
           }}

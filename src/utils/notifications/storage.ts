@@ -3,7 +3,7 @@ import type {
   NotificationPreferences,
   NotificationSchedule,
   NotificationStatus,
-  NotificationType
+  NotificationType,
 } from '../../types/notifications';
 // Lightweight fallback encryption shim; replace with real implementation if available
 const encryptData = (data: string) => data;
@@ -13,7 +13,7 @@ const STORAGE_KEYS = {
   NOTIFICATIONS: 'pain_tracker_notifications',
   PREFERENCES: 'pain_tracker_notification_preferences',
   SCHEDULES: 'pain_tracker_notification_schedules',
-  LAST_BACKUP: 'pain_tracker_notifications_last_backup'
+  LAST_BACKUP: 'pain_tracker_notifications_last_backup',
 } as const;
 
 // Storage utilities for notifications
@@ -94,7 +94,7 @@ export class NotificationStorage {
         status,
         updatedAt: new Date().toISOString(),
         ...(status === 'read' && { readAt: new Date().toISOString() }),
-        ...(status === 'dismissed' && { dismissedAt: new Date().toISOString() })
+        ...(status === 'dismissed' && { dismissedAt: new Date().toISOString() }),
       };
 
       await this.saveNotification(updatedNotification);
@@ -125,7 +125,7 @@ export class NotificationStorage {
               status,
               updatedAt: new Date().toISOString(),
               ...(status === 'read' && { readAt: new Date().toISOString() }),
-              ...(status === 'dismissed' && { dismissedAt: new Date().toISOString() })
+              ...(status === 'dismissed' && { dismissedAt: new Date().toISOString() }),
             }
           : n
       );
@@ -253,17 +253,19 @@ export class NotificationStorage {
   }
 
   private isValidSchedule(schedule: unknown): schedule is NotificationSchedule {
-  const s = schedule as Record<string, unknown> | null | undefined;
-  if (!s || typeof s !== 'object') return false;
-  const hasId = typeof s.id === 'string';
-  const hasName = typeof s.name === 'string';
-  const hasType = typeof s.type === 'string';
-  const hasTrigger = !!s.trigger;
-  const hasTemplate = !!s.template;
-  const hasIsActive = typeof s.isActive === 'boolean';
-  const hasCreatedAt = typeof s.createdAt === 'string';
+    const s = schedule as Record<string, unknown> | null | undefined;
+    if (!s || typeof s !== 'object') return false;
+    const hasId = typeof s.id === 'string';
+    const hasName = typeof s.name === 'string';
+    const hasType = typeof s.type === 'string';
+    const hasTrigger = !!s.trigger;
+    const hasTemplate = !!s.template;
+    const hasIsActive = typeof s.isActive === 'boolean';
+    const hasCreatedAt = typeof s.createdAt === 'string';
 
-  return Boolean(hasId && hasName && hasType && hasTrigger && hasTemplate && hasIsActive && hasCreatedAt);
+    return Boolean(
+      hasId && hasName && hasType && hasTrigger && hasTemplate && hasIsActive && hasCreatedAt
+    );
   }
 
   private getDefaultPreferences(): NotificationPreferences {
@@ -273,7 +275,7 @@ export class NotificationStorage {
         browser: true,
         in_app: true,
         email: false,
-        sms: false
+        sms: false,
       },
       categories: {
         pain_reminders: true,
@@ -282,17 +284,17 @@ export class NotificationStorage {
         goal_achievements: true,
         progress_checkins: true,
         system_updates: false,
-        custom: true
+        custom: true,
       },
       quietHours: {
         enabled: false,
         start: '22:00',
-        end: '08:00'
+        end: '08:00',
       },
       frequencyLimits: {
         maxPerDay: 10,
-        maxPerHour: 3
-      }
+        maxPerHour: 3,
+      },
     };
   }
 
@@ -307,29 +309,77 @@ export class NotificationStorage {
     return {
       enabled: typeof prefs.enabled === 'boolean' ? prefs.enabled : defaults.enabled,
       deliveryMethods: {
-        browser: typeof (prefs.deliveryMethods as Record<string, unknown>)?.browser === 'boolean' ? (prefs.deliveryMethods as Record<string, unknown>).browser as boolean : defaults.deliveryMethods.browser,
-        in_app: typeof (prefs.deliveryMethods as Record<string, unknown>)?.in_app === 'boolean' ? (prefs.deliveryMethods as Record<string, unknown>).in_app as boolean : defaults.deliveryMethods.in_app,
-        email: typeof (prefs.deliveryMethods as Record<string, unknown>)?.email === 'boolean' ? (prefs.deliveryMethods as Record<string, unknown>).email as boolean : defaults.deliveryMethods.email,
-        sms: typeof (prefs.deliveryMethods as Record<string, unknown>)?.sms === 'boolean' ? (prefs.deliveryMethods as Record<string, unknown>).sms as boolean : defaults.deliveryMethods.sms
+        browser:
+          typeof (prefs.deliveryMethods as Record<string, unknown>)?.browser === 'boolean'
+            ? ((prefs.deliveryMethods as Record<string, unknown>).browser as boolean)
+            : defaults.deliveryMethods.browser,
+        in_app:
+          typeof (prefs.deliveryMethods as Record<string, unknown>)?.in_app === 'boolean'
+            ? ((prefs.deliveryMethods as Record<string, unknown>).in_app as boolean)
+            : defaults.deliveryMethods.in_app,
+        email:
+          typeof (prefs.deliveryMethods as Record<string, unknown>)?.email === 'boolean'
+            ? ((prefs.deliveryMethods as Record<string, unknown>).email as boolean)
+            : defaults.deliveryMethods.email,
+        sms:
+          typeof (prefs.deliveryMethods as Record<string, unknown>)?.sms === 'boolean'
+            ? ((prefs.deliveryMethods as Record<string, unknown>).sms as boolean)
+            : defaults.deliveryMethods.sms,
       },
       categories: {
-        pain_reminders: typeof (prefs.categories as Record<string, unknown>)?.pain_reminders === 'boolean' ? (prefs.categories as Record<string, unknown>).pain_reminders as boolean : defaults.categories.pain_reminders,
-        medication_alerts: typeof (prefs.categories as Record<string, unknown>)?.medication_alerts === 'boolean' ? (prefs.categories as Record<string, unknown>).medication_alerts as boolean : defaults.categories.medication_alerts,
-        appointment_reminders: typeof (prefs.categories as Record<string, unknown>)?.appointment_reminders === 'boolean' ? (prefs.categories as Record<string, unknown>).appointment_reminders as boolean : defaults.categories.appointment_reminders,
-        goal_achievements: typeof (prefs.categories as Record<string, unknown>)?.goal_achievements === 'boolean' ? (prefs.categories as Record<string, unknown>).goal_achievements as boolean : defaults.categories.goal_achievements,
-        progress_checkins: typeof (prefs.categories as Record<string, unknown>)?.progress_checkins === 'boolean' ? (prefs.categories as Record<string, unknown>).progress_checkins as boolean : defaults.categories.progress_checkins,
-        system_updates: typeof (prefs.categories as Record<string, unknown>)?.system_updates === 'boolean' ? (prefs.categories as Record<string, unknown>).system_updates as boolean : defaults.categories.system_updates,
-        custom: typeof (prefs.categories as Record<string, unknown>)?.custom === 'boolean' ? (prefs.categories as Record<string, unknown>).custom as boolean : defaults.categories.custom
+        pain_reminders:
+          typeof (prefs.categories as Record<string, unknown>)?.pain_reminders === 'boolean'
+            ? ((prefs.categories as Record<string, unknown>).pain_reminders as boolean)
+            : defaults.categories.pain_reminders,
+        medication_alerts:
+          typeof (prefs.categories as Record<string, unknown>)?.medication_alerts === 'boolean'
+            ? ((prefs.categories as Record<string, unknown>).medication_alerts as boolean)
+            : defaults.categories.medication_alerts,
+        appointment_reminders:
+          typeof (prefs.categories as Record<string, unknown>)?.appointment_reminders === 'boolean'
+            ? ((prefs.categories as Record<string, unknown>).appointment_reminders as boolean)
+            : defaults.categories.appointment_reminders,
+        goal_achievements:
+          typeof (prefs.categories as Record<string, unknown>)?.goal_achievements === 'boolean'
+            ? ((prefs.categories as Record<string, unknown>).goal_achievements as boolean)
+            : defaults.categories.goal_achievements,
+        progress_checkins:
+          typeof (prefs.categories as Record<string, unknown>)?.progress_checkins === 'boolean'
+            ? ((prefs.categories as Record<string, unknown>).progress_checkins as boolean)
+            : defaults.categories.progress_checkins,
+        system_updates:
+          typeof (prefs.categories as Record<string, unknown>)?.system_updates === 'boolean'
+            ? ((prefs.categories as Record<string, unknown>).system_updates as boolean)
+            : defaults.categories.system_updates,
+        custom:
+          typeof (prefs.categories as Record<string, unknown>)?.custom === 'boolean'
+            ? ((prefs.categories as Record<string, unknown>).custom as boolean)
+            : defaults.categories.custom,
       },
       quietHours: {
-        enabled: typeof (prefs.quietHours as Record<string, unknown>)?.enabled === 'boolean' ? (prefs.quietHours as Record<string, unknown>).enabled as boolean : defaults.quietHours.enabled,
-        start: typeof (prefs.quietHours as Record<string, unknown>)?.start === 'string' ? (prefs.quietHours as Record<string, unknown>).start as string : defaults.quietHours.start,
-        end: typeof (prefs.quietHours as Record<string, unknown>)?.end === 'string' ? (prefs.quietHours as Record<string, unknown>).end as string : defaults.quietHours.end
+        enabled:
+          typeof (prefs.quietHours as Record<string, unknown>)?.enabled === 'boolean'
+            ? ((prefs.quietHours as Record<string, unknown>).enabled as boolean)
+            : defaults.quietHours.enabled,
+        start:
+          typeof (prefs.quietHours as Record<string, unknown>)?.start === 'string'
+            ? ((prefs.quietHours as Record<string, unknown>).start as string)
+            : defaults.quietHours.start,
+        end:
+          typeof (prefs.quietHours as Record<string, unknown>)?.end === 'string'
+            ? ((prefs.quietHours as Record<string, unknown>).end as string)
+            : defaults.quietHours.end,
       },
       frequencyLimits: {
-        maxPerDay: typeof (prefs.frequencyLimits as Record<string, unknown>)?.maxPerDay === 'number' ? (prefs.frequencyLimits as Record<string, unknown>).maxPerDay as number : defaults.frequencyLimits.maxPerDay,
-        maxPerHour: typeof (prefs.frequencyLimits as Record<string, unknown>)?.maxPerHour === 'number' ? (prefs.frequencyLimits as Record<string, unknown>).maxPerHour as number : defaults.frequencyLimits.maxPerHour
-      }
+        maxPerDay:
+          typeof (prefs.frequencyLimits as Record<string, unknown>)?.maxPerDay === 'number'
+            ? ((prefs.frequencyLimits as Record<string, unknown>).maxPerDay as number)
+            : defaults.frequencyLimits.maxPerDay,
+        maxPerHour:
+          typeof (prefs.frequencyLimits as Record<string, unknown>)?.maxPerHour === 'number'
+            ? ((prefs.frequencyLimits as Record<string, unknown>).maxPerHour as number)
+            : defaults.frequencyLimits.maxPerHour,
+      },
     };
   }
 
@@ -342,8 +392,8 @@ export class NotificationStorage {
       // Remove expired notifications
       const notifications = await this.getAllNotifications();
       const now = new Date();
-      const activeNotifications = notifications.filter(n =>
-        !n.expiresAt || new Date(n.expiresAt) > now
+      const activeNotifications = notifications.filter(
+        n => !n.expiresAt || new Date(n.expiresAt) > now
       );
 
       if (activeNotifications.length !== notifications.length) {

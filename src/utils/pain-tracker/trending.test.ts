@@ -10,38 +10,38 @@ describe('Pain Tracker Trending Analysis', () => {
       baselineData: {
         pain: 5,
         locations: ['Lower Back', 'Neck'],
-        symptoms: ['Stiffness', 'Burning']
+        symptoms: ['Stiffness', 'Burning'],
       },
       functionalImpact: {
         limitedActivities: ['Walking', 'Sitting'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 6,
         moodImpact: 5,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
+      notes: '',
     },
     {
       id: 2,
@@ -49,38 +49,38 @@ describe('Pain Tracker Trending Analysis', () => {
       baselineData: {
         pain: 7,
         locations: ['Lower Back'],
-        symptoms: ['Stiffness']
+        symptoms: ['Stiffness'],
       },
       functionalImpact: {
         limitedActivities: ['Walking'],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 5,
         moodImpact: 6,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
+      notes: '',
     },
     {
       id: 3,
@@ -88,39 +88,39 @@ describe('Pain Tracker Trending Analysis', () => {
       baselineData: {
         pain: 4,
         locations: ['Neck'],
-        symptoms: ['Burning']
+        symptoms: ['Burning'],
       },
       functionalImpact: {
         limitedActivities: [],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 7,
         moodImpact: 4,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
-    }
+      notes: '',
+    },
   ];
 
   describe('analyzeTrends', () => {
@@ -131,7 +131,7 @@ describe('Pain Tracker Trending Analysis', () => {
         dayOfWeekPattern: {},
         locationFrequency: {},
         symptomCorrelations: {},
-        painTrends: { increasing: false, averageChange: 0 }
+        painTrends: { increasing: false, averageChange: 0 },
       });
     });
 
@@ -149,15 +149,15 @@ describe('Pain Tracker Trending Analysis', () => {
       const result = analyzeTrends(mockEntries);
       expect(result.locationFrequency).toEqual({
         'Lower Back': 2,
-        'Neck': 2
+        Neck: 2,
       });
     });
 
     it('should calculate symptom correlations correctly', () => {
       const result = analyzeTrends(mockEntries);
       expect(result.symptomCorrelations).toEqual({
-        'Stiffness': 12,
-        'Burning': 9
+        Stiffness: 12,
+        Burning: 9,
       });
     });
 
@@ -181,8 +181,8 @@ describe('Pain Tracker Trending Analysis', () => {
           start: '',
           end: '',
           duration: 0,
-          totalEntries: 0
-        }
+          totalEntries: 0,
+        },
       });
     });
 
@@ -215,4 +215,4 @@ describe('Pain Tracker Trending Analysis', () => {
       expect(result.timeRangeStats.duration).toBeGreaterThan(0);
     });
   });
-}); 
+});

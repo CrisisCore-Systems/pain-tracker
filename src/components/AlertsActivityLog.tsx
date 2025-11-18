@@ -38,7 +38,7 @@ export function clearAlerts() {
 
 export function acknowledgeAlert(id: string) {
   try {
-    const curr = loadAlerts().filter((a) => a.id !== id);
+    const curr = loadAlerts().filter(a => a.id !== id);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(curr));
     window.dispatchEvent(new Event('alerts-log-updated'));
   } catch {
@@ -51,7 +51,10 @@ type AlertsActivityLogProps = {
   className?: string;
 };
 
-export default function AlertsActivityLog({ variant = 'overlay', className }: AlertsActivityLogProps) {
+export default function AlertsActivityLog({
+  variant = 'overlay',
+  className,
+}: AlertsActivityLogProps) {
   const [alerts, setAlerts] = useState<AlertRecord[]>(() => loadAlerts());
   const [showingConfirm, setShowingConfirm] = useState(false);
   const [prevAlerts, setPrevAlerts] = useState<AlertRecord[] | null>(null);
@@ -186,7 +189,7 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
     }
 
     acknowledgeAlert(id);
-    setAlerts((current) => current.filter((alert) => alert.id !== id));
+    setAlerts(current => current.filter(alert => alert.id !== id));
   };
 
   const renderConfirmDialog = () => (
@@ -271,7 +274,7 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
     if (context === 'inline') {
       return (
         <ul className="space-y-3 text-sm">
-          {items.map((alert) => (
+          {items.map(alert => (
             <li
               key={alert.id}
               className="flex items-start justify-between gap-3 rounded-md border border-border/60 bg-card/80 p-3"
@@ -291,12 +294,15 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
 
     return (
       <ul className="text-sm space-y-2">
-        {items.map((alert) => (
+        {items.map(alert => (
           <li key={alert.id} className="border rounded p-2">
             <div className="flex justify-between items-start">
               <div>
                 <div className="font-medium">{alert.message}</div>
-                <div className="text-muted-foreground text-xs" aria-label={new Date(alert.time).toLocaleString()}>
+                <div
+                  className="text-muted-foreground text-xs"
+                  aria-label={new Date(alert.time).toLocaleString()}
+                >
                   {timeAgo(alert.time)}
                 </div>
               </div>
@@ -337,7 +343,9 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
             aria-modal="true"
             tabIndex={-1}
             className={`absolute right-0 top-0 h-full w-full md:w-96 bg-card shadow-xl border-l p-4 overflow-auto transform transition-all duration-200 ${
-              slideIn ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'
+              slideIn
+                ? 'translate-x-0 opacity-100 scale-100'
+                : 'translate-x-full opacity-0 scale-95'
             }`}
             style={
               typeof window !== 'undefined' &&
@@ -351,7 +359,15 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
               id="__alerts-focus-anchor"
               tabIndex={0}
               onFocus={() => {}}
-              style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, margin: 0, padding: 0, border: 0 }}
+              style={{
+                position: 'absolute',
+                left: '-9999px',
+                width: 1,
+                height: 1,
+                margin: 0,
+                padding: 0,
+                border: 0,
+              }}
             />
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold">Recent Alerts</h3>
@@ -399,7 +415,11 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
           {renderUndoBanner('inline')}
 
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            {hasAlerts ? <span>Last update {timeAgo(alerts[0].time)}</span> : <span>Alerts appear here instantly.</span>}
+            {hasAlerts ? (
+              <span>Last update {timeAgo(alerts[0].time)}</span>
+            ) : (
+              <span>Alerts appear here instantly.</span>
+            )}
             <div className="flex gap-2">
               <button className="btn btn-xs btn-outline" onClick={() => setOpen(true)}>
                 Manage
@@ -446,7 +466,9 @@ export default function AlertsActivityLog({ variant = 'overlay', className }: Al
               {alerts.length}
             </span>
           )}
-          {hasAlerts && <span className="ml-2 text-xs text-muted-foreground">{timeAgo(alerts[0].time)}</span>}
+          {hasAlerts && (
+            <span className="ml-2 text-xs text-muted-foreground">{timeAgo(alerts[0].time)}</span>
+          )}
         </button>
       </div>
       {renderOverlay()}

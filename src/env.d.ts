@@ -3,28 +3,28 @@
 interface ImportMetaEnv {
   // API Configuration
   readonly VITE_WCB_API_ENDPOINT: string;
-  
+
   // Application Configuration
   readonly VITE_APP_TITLE: string;
   readonly VITE_APP_ENVIRONMENT: 'development' | 'staging' | 'production';
   readonly VITE_APP_VERSION: string;
   readonly VITE_APP_BUILD_TIME: string;
-  
+
   // Feature Flags
   readonly VITE_ENABLE_ANALYTICS: string;
   readonly VITE_ENABLE_DEBUG_MODE: string;
   readonly VITE_ENABLE_WCB_SUBMISSION: string;
   readonly VITE_ENABLE_EXPORT_FEATURES: string;
-  
+
   // Security Configuration
   readonly VITE_API_TIMEOUT: string;
   readonly VITE_MAX_FILE_SIZE: string;
   readonly VITE_ALLOWED_FILE_TYPES: string;
-  
+
   // Development/Testing
   readonly VITE_MOCK_API: string;
   readonly VITE_BYPASS_AUTH: string;
-  
+
   // Base Vite environment variables
   readonly MODE: string;
   readonly BASE_URL: string;
@@ -95,7 +95,7 @@ export function isDevelopment(): boolean {
 
 export function getAppConfig(): AppConfig {
   const env = import.meta.env;
-  
+
   return {
     apiEndpoint: env.VITE_WCB_API_ENDPOINT || '/api/wcb',
     environment: validateEnvironment(),
@@ -117,4 +117,4 @@ export function getAppConfig(): AppConfig {
       bypassAuth: env.VITE_BYPASS_AUTH === 'true' && isDevelopment(),
     },
   };
-} 
+}

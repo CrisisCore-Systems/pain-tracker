@@ -3,17 +3,17 @@ import { useEffect, useRef } from 'react';
 /**
  * Custom hook to trap focus within a modal or dialog component
  * Ensures keyboard users can't tab out of the modal until it's closed
- * 
+ *
  * @param isActive - Whether the focus trap is currently active
  * @returns ref - Ref to attach to the container element
- * 
+ *
  * @example
  * ```tsx
  * function Modal({ isOpen, onClose }) {
  *   const trapRef = useFocusTrap(isOpen);
- *   
+ *
  *   if (!isOpen) return null;
- *   
+ *
  *   return (
  *     <div ref={trapRef} role="dialog" aria-modal="true">
  *       <button onClick={onClose}>Close</button>
@@ -31,7 +31,7 @@ export function useFocusTrap(isActive: boolean) {
     if (!isActive || !containerRef.current) return;
 
     const container = containerRef.current;
-    
+
     // Store the element that had focus before the modal opened
     previousActiveElement.current = document.activeElement as HTMLElement;
 
@@ -46,11 +46,10 @@ export function useFocusTrap(isActive: boolean) {
         '[tabindex]:not([tabindex="-1"])',
       ].join(', ');
 
-      return Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors))
-        .filter(el => {
-          // Exclude elements that are hidden or have negative tabindex
-          return el.offsetParent !== null && el.tabIndex >= 0;
-        });
+      return Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors)).filter(el => {
+        // Exclude elements that are hidden or have negative tabindex
+        return el.offsetParent !== null && el.tabIndex >= 0;
+      });
     };
 
     // Focus the first focusable element when modal opens
@@ -78,7 +77,7 @@ export function useFocusTrap(isActive: boolean) {
           e.preventDefault();
           lastElement.focus();
         }
-      } 
+      }
       // Tab (forwards)
       else {
         if (document.activeElement === lastElement) {
@@ -94,7 +93,7 @@ export function useFocusTrap(isActive: boolean) {
     // Cleanup function
     return () => {
       container.removeEventListener('keydown', handleKeyDown);
-      
+
       // Restore focus to the element that had focus before the modal opened
       if (previousActiveElement.current) {
         previousActiveElement.current.focus();

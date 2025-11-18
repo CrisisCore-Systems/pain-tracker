@@ -16,7 +16,7 @@ function makePainEntry(id: number, pain: number, timestampOffsetDays: number): P
     qualityOfLife: { sleepQuality: 6, moodImpact: 4, socialImpact: [] },
     workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
     comparison: { worseningSince: '', newLimitations: [] },
-    notes: 'pain trend test'
+    notes: 'pain trend test',
   };
 }
 
@@ -35,7 +35,7 @@ function makeMoodEntry(_id: number, note: string, mood = 6): MoodEntry {
     triggers: [],
     copingStrategies: [],
     socialSupport: 'moderate',
-    notes: note
+    notes: note,
   };
 }
 
@@ -46,7 +46,7 @@ describe('EmpathyIntelligenceEngine targeted gaps', () => {
       // Earlier 7 days (higher pain)
       ...Array.from({ length: 7 }, (_, i) => makePainEntry(i + 1, 8, 14 - i)),
       // Recent 7 days (lower pain)
-      ...Array.from({ length: 7 }, (_, i) => makePainEntry(i + 100, 2, 7 - i))
+      ...Array.from({ length: 7 }, (_, i) => makePainEntry(i + 100, 2, 7 - i)),
     ];
 
     // Mood entries including insight + apply words for integrated wisdom and meaning/purpose words
@@ -57,10 +57,14 @@ describe('EmpathyIntelligenceEngine targeted gaps', () => {
       makeMoodEntry(4, 'Shared what I learned and applied to help someone'),
       makeMoodEntry(5, 'I practiced and applied and felt connection and meaning'),
       makeMoodEntry(6, 'I applied insight and practiced purpose'),
-      makeMoodEntry(7, 'Implemented applied learning purpose meaning')
+      makeMoodEntry(7, 'Implemented applied learning purpose meaning'),
     ];
 
-  const advanced = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics('userX', painEntries, moodEntries);
+    const advanced = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
+      'userX',
+      painEntries,
+      moodEntries
+    );
     expect(advanced.humanizedMetrics.innerStrength).toBeGreaterThan(0);
     expect(advanced.humanizedMetrics.purposeClarity).toBeGreaterThan(0);
   });

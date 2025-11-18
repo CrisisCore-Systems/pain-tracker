@@ -49,7 +49,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'core',
     canRemove: false,
     canResize: true,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'pain-entry': {
     id: 'pain-entry',
@@ -61,7 +61,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'core',
     canRemove: false,
     canResize: false,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'pain-visualization': {
     id: 'pain-visualization',
@@ -73,7 +73,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'analytics',
     canRemove: true,
     canResize: true,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'recent-history': {
     id: 'recent-history',
@@ -85,7 +85,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'core',
     canRemove: true,
     canResize: true,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'empathy-analytics': {
     id: 'empathy-analytics',
@@ -97,7 +97,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'analytics',
     canRemove: true,
     canResize: true,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'wcb-report': {
     id: 'wcb-report',
@@ -109,7 +109,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'reports',
     canRemove: true,
     canResize: true,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'current-stats': {
     id: 'current-stats',
@@ -121,7 +121,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'utilities',
     canRemove: true,
     canResize: false,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'quick-actions': {
     id: 'quick-actions',
@@ -133,7 +133,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'utilities',
     canRemove: true,
     canResize: false,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'intelligent-triggers': {
     id: 'intelligent-triggers',
@@ -145,7 +145,7 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'utilities',
     canRemove: true,
     canResize: true,
-    traumaInformed: true
+    traumaInformed: true,
   },
   'goal-tracking': {
     id: 'goal-tracking',
@@ -157,25 +157,49 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     category: 'core',
     canRemove: true,
     canResize: true,
-    traumaInformed: true
-  }
+    traumaInformed: true,
+  },
 };
 
 export const DEFAULT_DASHBOARD_LAYOUT: DashboardLayout = {
   widgets: [
-    { id: 'dashboard-overview', type: 'dashboard-overview', size: 'large', position: 0, visible: true },
+    {
+      id: 'dashboard-overview',
+      type: 'dashboard-overview',
+      size: 'large',
+      position: 0,
+      visible: true,
+    },
     { id: 'pain-entry', type: 'pain-entry', size: 'large', position: 1, visible: true },
     { id: 'goal-tracking', type: 'goal-tracking', size: 'large', position: 2, visible: true },
-    { id: 'pain-visualization', type: 'pain-visualization', size: 'large', position: 3, visible: true },
+    {
+      id: 'pain-visualization',
+      type: 'pain-visualization',
+      size: 'large',
+      position: 3,
+      visible: true,
+    },
     { id: 'recent-history', type: 'recent-history', size: 'medium', position: 4, visible: true },
     { id: 'current-stats', type: 'current-stats', size: 'small', position: 5, visible: true },
     { id: 'quick-actions', type: 'quick-actions', size: 'small', position: 6, visible: true },
-    { id: 'intelligent-triggers', type: 'intelligent-triggers', size: 'large', position: 7, visible: false },
-    { id: 'empathy-analytics', type: 'empathy-analytics', size: 'large', position: 8, visible: false },
-    { id: 'wcb-report', type: 'wcb-report', size: 'medium', position: 9, visible: false }
+    {
+      id: 'intelligent-triggers',
+      type: 'intelligent-triggers',
+      size: 'large',
+      position: 7,
+      visible: false,
+    },
+    {
+      id: 'empathy-analytics',
+      type: 'empathy-analytics',
+      size: 'large',
+      position: 8,
+      visible: false,
+    },
+    { id: 'wcb-report', type: 'wcb-report', size: 'medium', position: 9, visible: false },
   ],
   layout: 'grid',
-  columns: 2
+  columns: 2,
 };
 
 export const DASHBOARD_LAYOUT_KEY = 'pain-tracker-dashboard-layout';

@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  AlertTriangle, 
-  Phone, 
-  PhoneCall, 
-  MessageSquare, 
-  MapPin, 
-  Clock, 
-  Heart, 
-  Zap, 
-  Shield, 
-  User, 
+import {
+  AlertTriangle,
+  Phone,
+  PhoneCall,
+  MessageSquare,
+  MapPin,
+  Clock,
+  Heart,
+  Zap,
+  Shield,
+  User,
   UserCheck,
   Calendar,
   Pill,
@@ -29,7 +29,7 @@ import {
   ChevronRight,
   Home,
   Hospital,
-  Ambulance
+  Ambulance,
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -86,7 +86,7 @@ const defaultEmergencyContacts: EmergencyContact[] = [
     phone: '911',
     priority: 1,
     available247: true,
-    type: 'emergency'
+    type: 'emergency',
   },
   {
     id: 'poison-control',
@@ -95,8 +95,8 @@ const defaultEmergencyContacts: EmergencyContact[] = [
     phone: '1-800-222-1222',
     priority: 2,
     available247: true,
-    type: 'emergency'
-  }
+    type: 'emergency',
+  },
 ];
 
 // Emergency symptoms
@@ -112,7 +112,7 @@ const emergencySymptoms = [
   'Severe abdominal pain',
   'Severe back pain',
   'Loss of consciousness',
-  'Severe anxiety/panic'
+  'Severe anxiety/panic',
 ];
 
 // Quick actions
@@ -122,14 +122,14 @@ const quickActions = [
   { id: 'take-medication', label: 'Take Medication', icon: Pill, urgent: false },
   { id: 'rest-position', label: 'Rest Position', icon: Heart, urgent: false },
   { id: 'breathing-exercise', label: 'Breathing Exercise', icon: Activity, urgent: false },
-  { id: 'ice-heat', label: 'Ice/Heat', icon: Thermometer, urgent: false }
+  { id: 'ice-heat', label: 'Ice/Heat', icon: Thermometer, urgent: false },
 ];
 
 export function EmergencyModeInterfaces({
   onEmergencyEntry,
   onEmergencyContact,
   emergencyContacts = defaultEmergencyContacts,
-  className = ''
+  className = '',
 }: EmergencyModeProps) {
   const [isEmergencyMode, setIsEmergencyMode] = useState(false);
   const [currentAssessment, setCurrentAssessment] = useState<QuickAssessment>({
@@ -138,7 +138,7 @@ export function EmergencyModeInterfaces({
     breathing: true,
     consciousness: true,
     medication: true,
-    assistance: false
+    assistance: false,
   });
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [emergencyDescription, setEmergencyDescription] = useState('');
@@ -147,7 +147,11 @@ export function EmergencyModeInterfaces({
 
   // Auto-activate emergency mode based on pain level
   useEffect(() => {
-    if (currentAssessment.painLevel >= 9 || !currentAssessment.breathing || !currentAssessment.consciousness) {
+    if (
+      currentAssessment.painLevel >= 9 ||
+      !currentAssessment.breathing ||
+      !currentAssessment.consciousness
+    ) {
       setIsEmergencyMode(true);
     }
   }, [currentAssessment]);
@@ -168,10 +172,8 @@ export function EmergencyModeInterfaces({
   };
 
   const handleSymptomToggle = (symptom: string) => {
-    setSelectedSymptoms(prev => 
-      prev.includes(symptom) 
-        ? prev.filter(s => s !== symptom)
-        : [...prev, symptom]
+    setSelectedSymptoms(prev =>
+      prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
     );
   };
 
@@ -194,7 +196,7 @@ export function EmergencyModeInterfaces({
   const handleEmergencyCall = (contact: EmergencyContact) => {
     setContactsCalled(prev => [...prev, contact.id]);
     window.open(`tel:${contact.phone}`);
-    
+
     if (onEmergencyContact) {
       onEmergencyContact(contact);
     }
@@ -212,7 +214,7 @@ export function EmergencyModeInterfaces({
       actionsTaken,
       contactsCalled,
       resolved: false,
-      followUpNeeded: true
+      followUpNeeded: true,
     };
 
     if (onEmergencyEntry) {
@@ -221,7 +223,11 @@ export function EmergencyModeInterfaces({
   };
 
   const determineEmergencyLevel = (): EmergencyLevel => {
-    if (!currentAssessment.breathing || !currentAssessment.consciousness || currentAssessment.painLevel >= 9) {
+    if (
+      !currentAssessment.breathing ||
+      !currentAssessment.consciousness ||
+      currentAssessment.painLevel >= 9
+    ) {
       return 'critical';
     }
     if (currentAssessment.painLevel >= 7 || selectedSymptoms.length >= 3) {
@@ -259,7 +265,9 @@ export function EmergencyModeInterfaces({
   }
 
   return (
-    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
+    <div
+      className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}
+    >
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-red-100 rounded-lg">
           <AlertTriangle className="w-6 h-6 text-red-600" />
@@ -269,8 +277,8 @@ export function EmergencyModeInterfaces({
             Emergency Mode Interfaces
           </h2>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Quick access to emergency support, contacts, and simplified entry for acute pain episodes.
-            Automatically activates when severe symptoms are detected.
+            Quick access to emergency support, contacts, and simplified entry for acute pain
+            episodes. Automatically activates when severe symptoms are detected.
           </p>
         </div>
       </div>
@@ -286,7 +294,7 @@ export function EmergencyModeInterfaces({
       <EmergencyContactsManager
         contacts={emergencyContacts}
         onContactCall={handleEmergencyCall}
-        onContactAdd={(contact) => onEmergencyContact && onEmergencyContact(contact)}
+        onContactAdd={contact => onEmergencyContact && onEmergencyContact(contact)}
       />
 
       {/* Quick Actions Preview */}
@@ -311,7 +319,7 @@ function EmergencyModeInterface({
   actionsTaken,
   onDeactivate,
   onSave,
-  className
+  className,
 }: {
   assessment: QuickAssessment;
   onAssessmentChange: (field: keyof QuickAssessment, value: boolean | number) => void;
@@ -376,10 +384,7 @@ function EmergencyModeInterface({
           {/* Right Column: Contacts & Support */}
           <div className="space-y-4">
             {/* Emergency Contacts */}
-            <EmergencyContactsList
-              contacts={emergencyContacts}
-              onContactCall={onEmergencyCall}
-            />
+            <EmergencyContactsList contacts={emergencyContacts} onContactCall={onEmergencyCall} />
 
             {/* Breathing Support */}
             <EmergencyBreathingSupport />
@@ -397,13 +402,14 @@ function EmergencyModeInterface({
 function EmergencyActivationPanel({
   onActivate,
   assessment,
-  onAssessmentChange
+  onAssessmentChange,
 }: {
   onActivate: () => void;
   assessment: QuickAssessment;
   onAssessmentChange: (field: keyof QuickAssessment, value: boolean | number) => void;
 }) {
-  const shouldAutoActivate = assessment.painLevel >= 9 || !assessment.breathing || !assessment.consciousness;
+  const shouldAutoActivate =
+    assessment.painLevel >= 9 || !assessment.breathing || !assessment.consciousness;
 
   return (
     <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
@@ -423,7 +429,7 @@ function EmergencyActivationPanel({
             min="1"
             max="10"
             value={assessment.painLevel}
-            onChange={(e) => onAssessmentChange('painLevel', parseInt(e.target.value))}
+            onChange={e => onAssessmentChange('painLevel', parseInt(e.target.value))}
             className="w-full h-3 bg-red-200 rounded-lg appearance-none cursor-pointer"
           />
         </div>
@@ -433,7 +439,7 @@ function EmergencyActivationPanel({
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-red-700">Can you breathe normally?</span>
             <TouchOptimizedButton
-              variant={assessment.breathing ? "primary" : "secondary"}
+              variant={assessment.breathing ? 'primary' : 'secondary'}
               onClick={() => onAssessmentChange('breathing', !assessment.breathing)}
               className={`px-3 py-1 ${!assessment.breathing ? 'bg-red-600 text-white' : ''}`}
             >
@@ -444,7 +450,7 @@ function EmergencyActivationPanel({
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-red-700">Are you fully conscious?</span>
             <TouchOptimizedButton
-              variant={assessment.consciousness ? "primary" : "secondary"}
+              variant={assessment.consciousness ? 'primary' : 'secondary'}
               onClick={() => onAssessmentChange('consciousness', !assessment.consciousness)}
               className={`px-3 py-1 ${!assessment.consciousness ? 'bg-red-600 text-white' : ''}`}
             >
@@ -455,7 +461,7 @@ function EmergencyActivationPanel({
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-red-700">Do you need assistance?</span>
             <TouchOptimizedButton
-              variant={assessment.assistance ? "secondary" : "primary"}
+              variant={assessment.assistance ? 'secondary' : 'primary'}
               onClick={() => onAssessmentChange('assistance', !assessment.assistance)}
               className={`px-3 py-1 ${assessment.assistance ? 'bg-red-600 text-white' : ''}`}
             >
@@ -470,11 +476,13 @@ function EmergencyActivationPanel({
             <div className="bg-red-100 p-3 rounded border border-red-300 mb-3">
               <div className="flex items-center space-x-2 text-red-800">
                 <AlertTriangle className="w-4 h-4" />
-                <span className="text-sm font-medium">Emergency conditions detected - activation recommended</span>
+                <span className="text-sm font-medium">
+                  Emergency conditions detected - activation recommended
+                </span>
               </div>
             </div>
           ) : null}
-          
+
           <TouchOptimizedButton
             variant="primary"
             onClick={onActivate}
@@ -492,7 +500,7 @@ function EmergencyActivationPanel({
 // Emergency Quick Assessment
 function EmergencyQuickAssessment({
   assessment,
-  onAssessmentChange
+  onAssessmentChange,
 }: {
   assessment: QuickAssessment;
   onAssessmentChange: (field: keyof QuickAssessment, value: boolean | number) => void;
@@ -513,7 +521,7 @@ function EmergencyQuickAssessment({
             min="1"
             max="10"
             value={assessment.painLevel}
-            onChange={(e) => onAssessmentChange('painLevel', parseInt(e.target.value))}
+            onChange={e => onAssessmentChange('painLevel', parseInt(e.target.value))}
             className="w-full h-4 bg-red-200 rounded-lg appearance-none cursor-pointer"
           />
           <div className="text-sm text-red-700 mt-2">Pain Level</div>
@@ -525,19 +533,29 @@ function EmergencyQuickAssessment({
             { key: 'breathing', label: 'Breathing normally', critical: true },
             { key: 'consciousness', label: 'Fully conscious', critical: true },
             { key: 'canMove', label: 'Can move normally', critical: false },
-            { key: 'medication', label: 'Took medication', critical: false }
+            { key: 'medication', label: 'Took medication', critical: false },
           ].map(({ key, label, critical }) => (
-            <div key={key} className={`flex items-center justify-between p-3 rounded ${critical ? 'bg-red-50 border border-red-200' : 'bg-gray-50 dark:bg-gray-900'}`}>
-              <span className={`font-medium ${critical ? 'text-red-700' : 'text-gray-700 dark:text-gray-300'}`}>
+            <div
+              key={key}
+              className={`flex items-center justify-between p-3 rounded ${critical ? 'bg-red-50 border border-red-200' : 'bg-gray-50 dark:bg-gray-900'}`}
+            >
+              <span
+                className={`font-medium ${critical ? 'text-red-700' : 'text-gray-700 dark:text-gray-300'}`}
+              >
                 {critical && <AlertTriangle className="w-4 h-4 inline mr-1" />}
                 {label}
               </span>
               <TouchOptimizedButton
-                variant={assessment[key as keyof QuickAssessment] ? "primary" : "secondary"}
-                onClick={() => onAssessmentChange(key as keyof QuickAssessment, !assessment[key as keyof QuickAssessment])}
+                variant={assessment[key as keyof QuickAssessment] ? 'primary' : 'secondary'}
+                onClick={() =>
+                  onAssessmentChange(
+                    key as keyof QuickAssessment,
+                    !assessment[key as keyof QuickAssessment]
+                  )
+                }
                 className={`px-4 py-2 ${
-                  critical && !assessment[key as keyof QuickAssessment] 
-                    ? 'bg-red-600 text-white' 
+                  critical && !assessment[key as keyof QuickAssessment]
+                    ? 'bg-red-600 text-white'
                     : ''
                 }`}
               >
@@ -565,7 +583,7 @@ function EmergencyQuickAssessment({
 function EmergencyQuickActions({
   actions,
   onAction,
-  actionsTaken
+  actionsTaken,
 }: {
   actions: typeof quickActions;
   onAction: (actionId: string) => void;
@@ -579,21 +597,21 @@ function EmergencyQuickActions({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {actions.map((action) => {
+        {actions.map(action => {
           const Icon = action.icon;
           const isTaken = actionsTaken.includes(action.id);
-          
+
           return (
             <TouchOptimizedButton
               key={action.id}
-              variant={action.urgent ? "primary" : "secondary"}
+              variant={action.urgent ? 'primary' : 'secondary'}
               onClick={() => onAction(action.id)}
               className={`p-3 text-left border-2 rounded-lg transition-all ${
-                action.urgent 
-                  ? 'bg-red-600 text-white border-red-600 hover:bg-red-700' 
+                action.urgent
+                  ? 'bg-red-600 text-white border-red-600 hover:bg-red-700'
                   : isTaken
-                  ? 'bg-green-100 border-green-300 text-green-800'
-                  : 'border-gray-200 hover:border-red-300'
+                    ? 'bg-green-100 border-green-300 text-green-800'
+                    : 'border-gray-200 hover:border-red-300'
               }`}
             >
               <div className="flex items-center space-x-3">
@@ -613,7 +631,7 @@ function EmergencyQuickActions({
 function EmergencySymptomsChecklist({
   symptoms,
   selectedSymptoms,
-  onSymptomToggle
+  onSymptomToggle,
 }: {
   symptoms: string[];
   selectedSymptoms: string[];
@@ -628,17 +646,17 @@ function EmergencySymptomsChecklist({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-64 overflow-y-auto">
-        {symptoms.map((symptom) => {
+        {symptoms.map(symptom => {
           const isSelected = selectedSymptoms.includes(symptom);
-          
+
           return (
             <TouchOptimizedButton
               key={symptom}
               variant="secondary"
               onClick={() => onSymptomToggle(symptom)}
               className={`p-2 text-left text-sm border rounded transition-all ${
-                isSelected 
-                  ? 'bg-red-100 border-red-300 text-red-800' 
+                isSelected
+                  ? 'bg-red-100 border-red-300 text-red-800'
                   : 'border-gray-200 hover:border-red-200'
               }`}
             >
@@ -661,7 +679,7 @@ function EmergencySymptomsChecklist({
 // Emergency Contacts List
 function EmergencyContactsList({
   contacts,
-  onContactCall
+  onContactCall,
 }: {
   contacts: EmergencyContact[];
   onContactCall: (contact: EmergencyContact) => void;
@@ -683,7 +701,7 @@ function EmergencyContactsList({
           <div>
             <h4 className="font-medium text-red-800 mb-2">Emergency Services</h4>
             <div className="space-y-2">
-              {emergencyContacts.map((contact) => (
+              {emergencyContacts.map(contact => (
                 <TouchOptimizedButton
                   key={contact.id}
                   variant="primary"
@@ -708,7 +726,7 @@ function EmergencyContactsList({
           <div>
             <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Medical Contacts</h4>
             <div className="space-y-2">
-              {medicalContacts.map((contact) => (
+              {medicalContacts.map(contact => (
                 <TouchOptimizedButton
                   key={contact.id}
                   variant="secondary"
@@ -718,9 +736,15 @@ function EmergencyContactsList({
                   <div className="flex items-center space-x-3">
                     <PhoneCall className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     <div className="text-left">
-                      <div className="font-medium text-gray-900 dark:text-gray-100">{contact.name}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{contact.relationship}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">{contact.phone}</div>
+                      <div className="font-medium text-gray-900 dark:text-gray-100">
+                        {contact.name}
+                      </div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        {contact.relationship}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {contact.phone}
+                      </div>
                     </div>
                   </div>
                 </TouchOptimizedButton>
@@ -734,7 +758,7 @@ function EmergencyContactsList({
           <div>
             <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Personal Support</h4>
             <div className="space-y-2">
-              {personalContacts.map((contact) => (
+              {personalContacts.map(contact => (
                 <TouchOptimizedButton
                   key={contact.id}
                   variant="secondary"
@@ -744,12 +768,20 @@ function EmergencyContactsList({
                   <div className="flex items-center space-x-3">
                     <User className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                     <div className="text-left">
-                      <div className="font-medium text-gray-900 dark:text-gray-100">{contact.name}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{contact.relationship}</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">{contact.phone}</div>
+                      <div className="font-medium text-gray-900 dark:text-gray-100">
+                        {contact.name}
+                      </div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">
+                        {contact.relationship}
+                      </div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">
+                        {contact.phone}
+                      </div>
                     </div>
                     {contact.available247 && (
-                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">24/7</span>
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                        24/7
+                      </span>
                     )}
                   </div>
                 </TouchOptimizedButton>
@@ -773,9 +805,12 @@ function EmergencyBreathingSupport() {
     const cycle = setInterval(() => {
       setBreathingPhase(current => {
         switch (current) {
-          case 'inhale': return 'hold';
-          case 'hold': return 'exhale';
-          case 'exhale': return 'inhale';
+          case 'inhale':
+            return 'hold';
+          case 'hold':
+            return 'exhale';
+          case 'exhale':
+            return 'inhale';
         }
       });
     }, 4000); // 4 seconds per phase
@@ -792,7 +827,7 @@ function EmergencyBreathingSupport() {
 
       <div className="text-center">
         <TouchOptimizedButton
-          variant={isBreathingActive ? "secondary" : "primary"}
+          variant={isBreathingActive ? 'secondary' : 'primary'}
           onClick={() => setIsBreathingActive(!isBreathingActive)}
           className="mb-4"
         >
@@ -811,14 +846,20 @@ function EmergencyBreathingSupport() {
 
         {isBreathingActive && (
           <div className="space-y-4">
-            <div className={`w-32 h-32 mx-auto rounded-full flex items-center justify-center text-white font-bold text-lg transition-all duration-1000 ${
-              breathingPhase === 'inhale' ? 'bg-blue-500 scale-110' :
-              breathingPhase === 'hold' ? 'bg-purple-500 scale-105' :
-              'bg-green-500 scale-95'
-            }`}>
-              {breathingPhase === 'inhale' ? 'Breathe In' :
-               breathingPhase === 'hold' ? 'Hold' :
-               'Breathe Out'}
+            <div
+              className={`w-32 h-32 mx-auto rounded-full flex items-center justify-center text-white font-bold text-lg transition-all duration-1000 ${
+                breathingPhase === 'inhale'
+                  ? 'bg-blue-500 scale-110'
+                  : breathingPhase === 'hold'
+                    ? 'bg-purple-500 scale-105'
+                    : 'bg-green-500 scale-95'
+              }`}
+            >
+              {breathingPhase === 'inhale'
+                ? 'Breathe In'
+                : breathingPhase === 'hold'
+                  ? 'Hold'
+                  : 'Breathe Out'}
             </div>
             <p className="text-sm text-blue-700">
               Follow the circle and text prompts. Breathe slowly and deeply.
@@ -865,7 +906,7 @@ function EmergencyDocumentation({ onSave }: { onSave: () => void }) {
 function EmergencyContactsManager({
   contacts,
   onContactCall,
-  onContactAdd
+  onContactAdd,
 }: {
   contacts: EmergencyContact[];
   onContactCall: (contact: EmergencyContact) => void;
@@ -876,12 +917,16 @@ function EmergencyContactsManager({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <PhoneCall className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Emergency Contacts</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Emergency Contacts
+          </h3>
         </div>
         {onContactAdd && (
           <TouchOptimizedButton
             variant="secondary"
-            onClick={() => {/* Implement add contact modal */}}
+            onClick={() => {
+              /* Implement add contact modal */
+            }}
             className="px-3 py-1"
           >
             <Plus className="w-4 h-4 mr-1" />
@@ -891,11 +936,16 @@ function EmergencyContactsManager({
       </div>
 
       <div className="space-y-2">
-        {contacts.slice(0, 3).map((contact) => (
-          <div key={contact.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded">
+        {contacts.slice(0, 3).map(contact => (
+          <div
+            key={contact.id}
+            className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded"
+          >
             <div>
               <div className="font-medium text-gray-900 dark:text-gray-100">{contact.name}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">{contact.relationship} • {contact.phone}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                {contact.relationship} • {contact.phone}
+              </div>
             </div>
             <TouchOptimizedButton
               variant="primary"
@@ -915,7 +965,7 @@ function EmergencyContactsManager({
 function QuickActionsPreview({
   actions,
   onAction,
-  actionsTaken
+  actionsTaken,
 }: {
   actions: typeof quickActions;
   onAction: (actionId: string) => void;
@@ -929,26 +979,28 @@ function QuickActionsPreview({
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-        {actions.slice(0, 6).map((action) => {
+        {actions.slice(0, 6).map(action => {
           const Icon = action.icon;
           const isTaken = actionsTaken.includes(action.id);
-          
+
           return (
             <TouchOptimizedButton
               key={action.id}
               variant="secondary"
               onClick={() => onAction(action.id)}
               className={`p-3 text-center border rounded-lg transition-all ${
-                action.urgent 
-                  ? 'border-red-300 hover:bg-red-50' 
+                action.urgent
+                  ? 'border-red-300 hover:bg-red-50'
                   : isTaken
-                  ? 'border-green-300 bg-green-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                    ? 'border-green-300 bg-green-50'
+                    : 'border-gray-200 hover:border-gray-300'
               }`}
             >
-              <Icon className={`w-5 h-5 mx-auto mb-1 ${
-                action.urgent ? 'text-red-600' : isTaken ? 'text-green-600' : 'text-gray-600'
-              }`} />
+              <Icon
+                className={`w-5 h-5 mx-auto mb-1 ${
+                  action.urgent ? 'text-red-600' : isTaken ? 'text-green-600' : 'text-gray-600'
+                }`}
+              />
               <div className="text-xs font-medium">{action.label}</div>
             </TouchOptimizedButton>
           );

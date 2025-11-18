@@ -8,7 +8,7 @@ interface CorrelationMatrixViewProps {
 
 /**
  * Correlation Matrix Visualization
- * 
+ *
  * Displays correlation analysis results in an accessible, easy-to-understand format.
  * Uses color coding and clear labels for trauma-informed presentation.
  */
@@ -107,9 +107,7 @@ export const CorrelationMatrixView: React.FC<CorrelationMatrixViewProps> = ({
 
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  Coefficient
-                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Coefficient</p>
                 <p
                   className="font-mono text-sm font-semibold text-gray-900 dark:text-white"
                   aria-label={`Correlation coefficient: ${formatCoefficient(correlation.coefficient)}`}
@@ -119,9 +117,7 @@ export const CorrelationMatrixView: React.FC<CorrelationMatrixViewProps> = ({
               </div>
 
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  Strength
-                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Strength</p>
                 <span
                   className={`inline-block px-2 py-1 rounded text-xs font-medium ${getStrengthColor(
                     correlation.strength
@@ -133,9 +129,7 @@ export const CorrelationMatrixView: React.FC<CorrelationMatrixViewProps> = ({
               </div>
 
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  Sample Size
-                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Sample Size</p>
                 <p
                   className="text-sm font-medium text-gray-900 dark:text-white"
                   aria-label={`Based on ${correlation.sampleSize} data points`}
@@ -168,17 +162,16 @@ export const CorrelationMatrixView: React.FC<CorrelationMatrixViewProps> = ({
           </summary>
           <div className="mt-3 space-y-2 text-gray-600 dark:text-gray-400">
             <p>
-              <strong>Coefficient:</strong> Ranges from -1 to +1. Values closer to
-              +1 or -1 indicate stronger relationships.
+              <strong>Coefficient:</strong> Ranges from -1 to +1. Values closer to +1 or -1 indicate
+              stronger relationships.
             </p>
             <p>
-              <strong>Direction:</strong> Positive means factors increase together.
-              Negative means one increases as the other decreases.
+              <strong>Direction:</strong> Positive means factors increase together. Negative means
+              one increases as the other decreases.
             </p>
             <p>
-              <strong>Important:</strong> Correlation does not prove causation. These
-              patterns help identify potential relationships worth discussing with your
-              healthcare provider.
+              <strong>Important:</strong> Correlation does not prove causation. These patterns help
+              identify potential relationships worth discussing with your healthcare provider.
             </p>
           </div>
         </details>

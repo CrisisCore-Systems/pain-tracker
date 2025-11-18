@@ -18,30 +18,30 @@ export const axeConfig = configureAxe({
     'aria-valid-attr-value': { enabled: true },
     'button-name': { enabled: true },
     'image-alt': { enabled: true },
-    'label': { enabled: true },
+    label: { enabled: true },
     'link-name': { enabled: true },
-    
+
     // Focus Management
     'focus-order-semantics': { enabled: true },
-    'tabindex': { enabled: true },
-    
+    tabindex: { enabled: true },
+
     // Keyboard Navigation
-    'accesskeys': { enabled: true },
+    accesskeys: { enabled: true },
     'focus-trap': { enabled: false }, // Custom implementation
-    
+
     // Screen Reader Support
     'landmark-one-main': { enabled: true },
     'landmark-unique': { enabled: true },
-    'region': { enabled: true },
-    
+    region: { enabled: true },
+
     // Custom Rules
-    'bypass': { enabled: true }, // Skip links
+    bypass: { enabled: true }, // Skip links
     'page-has-heading-one': { enabled: true },
-    
+
     // Disable rules that conflict with design system
     'color-contrast-enhanced': { enabled: false }, // AAA - tested separately
     'meta-viewport': { enabled: false }, // Handled at build level
-  }
+  },
 });
 
 /**
@@ -59,7 +59,7 @@ export const manualTestingChecklist = {
     'Enter/Space activates buttons',
     'Arrow keys work on slider and stepper controls',
   ],
-  
+
   screenReader: {
     voiceOver: [
       'All images have alt text or aria-label',
@@ -70,19 +70,16 @@ export const manualTestingChecklist = {
       'Chart data accessible via table toggle',
       'Body map accessible via checkbox list',
     ],
-    
-    nvda: [
-      'Same tests as VoiceOver',
-      'Windows-specific keyboard shortcuts work',
-    ],
-    
+
+    nvda: ['Same tests as VoiceOver', 'Windows-specific keyboard shortcuts work'],
+
     talkBack: [
       'All touch targets ≥48×48dp',
       'Swipe gestures work for navigation',
       'TalkBack announces all content',
     ],
   },
-  
+
   fontScaling: [
     'Test at 100%, 150%, 200% zoom',
     'No horizontal scroll at any zoom level',
@@ -91,7 +88,7 @@ export const manualTestingChecklist = {
     'No overlapping content',
     'Images scale appropriately',
   ],
-  
+
   colorBlindness: [
     'Test with Deuteranopia (red-green)',
     'Test with Protanopia (red-green)',
@@ -99,14 +96,14 @@ export const manualTestingChecklist = {
     'Information not conveyed by color alone',
     'Pain severity scale works without color',
   ],
-  
+
   reducedMotion: [
     'Respect prefers-reduced-motion',
     'Breathing guide works without animation',
     'Page transitions minimal',
     'No auto-playing animations',
   ],
-  
+
   panicMode: [
     'Activates in <2 seconds from any screen',
     'Breathing guide clear and calming',
@@ -134,16 +131,16 @@ export const lighthouseConfig = {
         'categories:accessibility': ['error', { minScore: 0.95 }], // 95%+ accessibility score
         'categories:best-practices': ['warn', { minScore: 0.9 }],
         'categories:performance': ['warn', { minScore: 0.8 }],
-        
+
         // Specific accessibility assertions
-        'bypass': 'error', // Skip links required
+        bypass: 'error', // Skip links required
         'color-contrast': 'error', // WCAG AA contrast
         'image-alt': 'error', // Alt text required
-        'label': 'error', // Form labels required
+        label: 'error', // Form labels required
         'link-name': 'error', // Link text required
         'button-name': 'error', // Button labels required
         'aria-required-attr': 'error', // ARIA attributes valid
-        'tabindex': 'error', // No positive tabindex
+        tabindex: 'error', // No positive tabindex
       },
     },
   },
@@ -166,7 +163,7 @@ export const componentTests = {
     'Footer: Enter/Esc shortcuts work',
     'Footer: Back button visible when needed',
   ],
-  
+
   PanicMode: [
     'Activation button: 56×56px minimum',
     'Activation: <2 seconds from click',
@@ -179,7 +176,7 @@ export const componentTests = {
     'Crisis resources: Links work',
     'Screen reader: Announces phase changes',
   ],
-  
+
   BodyMapAccessible: [
     'Toggle: Switches between visual/list',
     'Checkbox list: All regions labeled',
@@ -189,7 +186,7 @@ export const componentTests = {
     'Clear all: Works and announces',
     'Keyboard: Navigate with Tab/Space',
   ],
-  
+
   ChartWithTableToggle: [
     'Toggle: 44×44px minimum',
     'Toggle: Keyboard accessible',
@@ -199,7 +196,7 @@ export const componentTests = {
     'Table view: Row count in footer',
     'Data: Matches between views',
   ],
-  
+
   Modal: [
     'Focus trap: Tab cycles within modal',
     'Focus trap: Shift+Tab cycles backward',
@@ -229,7 +226,7 @@ export const wcagCriteria = {
     '1.4.12': { name: 'Text Spacing', level: 'AA', status: 'pass' },
     '1.4.13': { name: 'Content on Hover or Focus', level: 'AA', status: 'pass' },
   },
-  
+
   operable: {
     '2.1.1': { name: 'Keyboard', level: 'A', status: 'pass' },
     '2.1.2': { name: 'No Keyboard Trap', level: 'A', status: 'pass' },
@@ -247,7 +244,7 @@ export const wcagCriteria = {
     '2.5.5': { name: 'Target Size (Enhanced)', level: 'AAA', status: 'pass' },
     '2.5.8': { name: 'Target Size (Minimum)', level: 'AA', status: 'pass' },
   },
-  
+
   understandable: {
     '3.1.1': { name: 'Language of Page', level: 'A', status: 'pass' },
     '3.2.1': { name: 'On Focus', level: 'A', status: 'pass' },
@@ -259,7 +256,7 @@ export const wcagCriteria = {
     '3.3.2': { name: 'Labels or Instructions', level: 'A', status: 'pass' },
     '3.3.7': { name: 'Redundant Entry', level: 'A', status: 'pass' },
   },
-  
+
   robust: {
     '4.1.2': { name: 'Name, Role, Value', level: 'A', status: 'pass' },
     '4.1.3': { name: 'Status Messages', level: 'AA', status: 'pass' },

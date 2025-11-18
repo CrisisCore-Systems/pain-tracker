@@ -7,7 +7,11 @@ import { useState, useCallback, useRef } from 'react';
 import { formatNumber } from '../../utils/formatting';
 import { useCrisisDetection } from './useCrisisDetection';
 import { useCrisisMode } from './useCrisisMode';
-import { StressAdaptiveButton, StressResponsiveCard, StressResponsiveText } from './StressResponsiveUI';
+import {
+  StressAdaptiveButton,
+  StressResponsiveCard,
+  StressResponsiveText,
+} from './StressResponsiveUI';
 import { Play, Pause, RotateCcw, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 
 // Test Scenario Types
@@ -50,13 +54,13 @@ const TEST_SCENARIOS: TestScenario[] = [
       rapidClicks: false,
       erraticMovement: true,
       longPauses: false,
-      frustrationIndicators: false
+      frustrationIndicators: false,
     },
     expectedOutcomes: [
       'UI slightly enlarges touch targets',
       'Stress indicator appears',
-      'Subtle color adaptations'
-    ]
+      'Subtle color adaptations',
+    ],
   },
   {
     id: 'moderate-stress',
@@ -68,14 +72,14 @@ const TEST_SCENARIOS: TestScenario[] = [
       rapidClicks: true,
       erraticMovement: true,
       longPauses: true,
-      frustrationIndicators: true
+      frustrationIndicators: true,
     },
     expectedOutcomes: [
       'Larger buttons and touch targets',
       'Cognitive fog navigation activates',
       'Color scheme adapts to warmer tones',
-      'Animation speeds reduce'
-    ]
+      'Animation speeds reduce',
+    ],
   },
   {
     id: 'severe-stress',
@@ -87,14 +91,14 @@ const TEST_SCENARIOS: TestScenario[] = [
       rapidClicks: true,
       erraticMovement: true,
       longPauses: true,
-      frustrationIndicators: true
+      frustrationIndicators: true,
     },
     expectedOutcomes: [
       'Emergency mode interface appears',
       'Multi-modal input system activates',
       'Crisis alert banner shows',
-      'Simplified navigation enabled'
-    ]
+      'Simplified navigation enabled',
+    ],
   },
   {
     id: 'emergency-crisis',
@@ -106,16 +110,16 @@ const TEST_SCENARIOS: TestScenario[] = [
       rapidClicks: true,
       erraticMovement: true,
       longPauses: true,
-      frustrationIndicators: true
+      frustrationIndicators: true,
     },
     expectedOutcomes: [
       'Full emergency interface active',
       'All animations disabled',
       'Maximum contrast enabled',
       'Emergency contacts readily accessible',
-      'Voice commands working'
-    ]
-  }
+      'Voice commands working',
+    ],
+  },
 ];
 
 // Crisis Testing Dashboard
@@ -125,174 +129,185 @@ export function CrisisTestingDashboard() {
   const [testProgress, setTestProgress] = useState(0);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [simulationActive, setSimulationActive] = useState(false);
-  
+
   const { crisisLevel, resetCrisisDetection } = useCrisisDetection();
   const { isCrisisModeActive, crisisFeatures } = useCrisisMode();
-  
+
   const testIntervalRef = useRef<NodeJS.Timeout>();
   const currentTestRef = useRef<TestResult | null>(null);
 
   // Simulate stress behaviors
-  const simulateStressBehaviors = useCallback((scenario: TestScenario) => {
-    if (!simulationActive) return;
+  const simulateStressBehaviors = useCallback(
+    (scenario: TestScenario) => {
+      if (!simulationActive) return;
 
-    // Simulate rapid clicks
-    if (scenario.simulatedBehaviors.rapidClicks) {
-      const clickEvents = Math.floor(Math.random() * 5) + 3;
-      for (let i = 0; i < clickEvents; i++) {
-        setTimeout(() => {
-          document.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-        }, i * 100);
-      }
-    }
-
-    // Simulate erratic movement
-    if (scenario.simulatedBehaviors.erraticMovement) {
-      const moveEvents = Math.floor(Math.random() * 10) + 5;
-      for (let i = 0; i < moveEvents; i++) {
-        setTimeout(() => {
-          document.dispatchEvent(new MouseEvent('mousemove', {
-            clientX: Math.random() * window.innerWidth,
-            clientY: Math.random() * window.innerHeight,
-            bubbles: true
-          }));
-        }, i * 200);
-      }
-    }
-
-    // Simulate long pauses (no activity)
-    if (scenario.simulatedBehaviors.longPauses) {
-      setTimeout(() => {
-        // Intentional pause - no events dispatched
-      }, 3000);
-    }
-
-    // Simulate frustration indicators
-    if (scenario.simulatedBehaviors.frustrationIndicators) {
-      setTimeout(() => {
-        // Rapid key presses
-        ['Escape', 'Escape', 'Backspace'].forEach((key, index) => {
+      // Simulate rapid clicks
+      if (scenario.simulatedBehaviors.rapidClicks) {
+        const clickEvents = Math.floor(Math.random() * 5) + 3;
+        for (let i = 0; i < clickEvents; i++) {
           setTimeout(() => {
-            document.dispatchEvent(new KeyboardEvent('keydown', { key }));
-          }, index * 100);
-        });
-      }, 1000);
-    }
-  }, [simulationActive]);
+            document.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+          }, i * 100);
+        }
+      }
+
+      // Simulate erratic movement
+      if (scenario.simulatedBehaviors.erraticMovement) {
+        const moveEvents = Math.floor(Math.random() * 10) + 5;
+        for (let i = 0; i < moveEvents; i++) {
+          setTimeout(() => {
+            document.dispatchEvent(
+              new MouseEvent('mousemove', {
+                clientX: Math.random() * window.innerWidth,
+                clientY: Math.random() * window.innerHeight,
+                bubbles: true,
+              })
+            );
+          }, i * 200);
+        }
+      }
+
+      // Simulate long pauses (no activity)
+      if (scenario.simulatedBehaviors.longPauses) {
+        setTimeout(() => {
+          // Intentional pause - no events dispatched
+        }, 3000);
+      }
+
+      // Simulate frustration indicators
+      if (scenario.simulatedBehaviors.frustrationIndicators) {
+        setTimeout(() => {
+          // Rapid key presses
+          ['Escape', 'Escape', 'Backspace'].forEach((key, index) => {
+            setTimeout(() => {
+              document.dispatchEvent(new KeyboardEvent('keydown', { key }));
+            }, index * 100);
+          });
+        }, 1000);
+      }
+    },
+    [simulationActive]
+  );
 
   // Complete test and evaluate results
-  const completeTest = useCallback((testResult: TestResult) => {
-    testResult.endTime = new Date();
-    
-    // Evaluate test outcomes
-    const issues: string[] = [];
-    let passed = true;
+  const completeTest = useCallback(
+    (testResult: TestResult) => {
+      testResult.endTime = new Date();
 
-    // Check if crisis level matches expected
-    const scenario = TEST_SCENARIOS.find(s => s.id === testResult.scenarioId);
-    if (scenario) {
-      if (crisisLevel !== scenario.stressLevel) {
-        issues.push(`Crisis level mismatch: expected ${scenario.stressLevel}, got ${crisisLevel}`);
-        passed = false;
-      }
+      // Evaluate test outcomes
+      const issues: string[] = [];
+      let passed = true;
 
-      // Check crisis mode activation
-      if (scenario.stressLevel === 'severe' || scenario.stressLevel === 'emergency') {
-        if (!isCrisisModeActive) {
-          issues.push('Crisis mode should be active but is not');
+      // Check if crisis level matches expected
+      const scenario = TEST_SCENARIOS.find(s => s.id === testResult.scenarioId);
+      if (scenario) {
+        if (crisisLevel !== scenario.stressLevel) {
+          issues.push(
+            `Crisis level mismatch: expected ${scenario.stressLevel}, got ${crisisLevel}`
+          );
+          passed = false;
+        }
+
+        // Check crisis mode activation
+        if (scenario.stressLevel === 'severe' || scenario.stressLevel === 'emergency') {
+          if (!isCrisisModeActive) {
+            issues.push('Crisis mode should be active but is not');
+            passed = false;
+          }
+        }
+
+        // Check specific features
+        if (scenario.stressLevel === 'moderate' && !crisisFeatures.cognitiveFogSupport) {
+          issues.push('Cognitive fog support should be active');
+          passed = false;
+        }
+
+        if (scenario.stressLevel === 'severe' && !crisisFeatures.emergencyMode) {
+          issues.push('Emergency mode should be active');
+          passed = false;
+        }
+
+        if (scenario.stressLevel === 'emergency' && !crisisFeatures.multiModalInput) {
+          issues.push('Multi-modal input should be active');
           passed = false;
         }
       }
 
-      // Check specific features
-      if (scenario.stressLevel === 'moderate' && !crisisFeatures.cognitiveFogSupport) {
-        issues.push('Cognitive fog support should be active');
-        passed = false;
-      }
+      // Calculate metrics
+      const responseTime = testResult.endTime.getTime() - testResult.startTime.getTime();
+      testResult.metrics = {
+        responseTime: responseTime / 1000,
+        adaptationSpeed: passed ? 5 : 2, // Simplified metric
+        userExperience: passed ? (issues.length === 0 ? 'excellent' : 'good') : 'poor',
+      };
 
-      if (scenario.stressLevel === 'severe' && !crisisFeatures.emergencyMode) {
-        issues.push('Emergency mode should be active');
-        passed = false;
-      }
+      testResult.passed = passed;
+      testResult.issues = issues;
 
-      if (scenario.stressLevel === 'emergency' && !crisisFeatures.multiModalInput) {
-        issues.push('Multi-modal input should be active');
-        passed = false;
-      }
-    }
-
-    // Calculate metrics
-    const responseTime = testResult.endTime.getTime() - testResult.startTime.getTime();
-    testResult.metrics = {
-      responseTime: responseTime / 1000,
-      adaptationSpeed: passed ? 5 : 2, // Simplified metric
-      userExperience: passed ? (issues.length === 0 ? 'excellent' : 'good') : 'poor'
-    };
-
-    testResult.passed = passed;
-    testResult.issues = issues;
-
-    setTestResults(prev => [...prev, testResult]);
-    setIsTestRunning(false);
-    setCurrentScenario(null);
-    setTestProgress(0);
-    setSimulationActive(false);
-
-  }, [crisisLevel, isCrisisModeActive, crisisFeatures]);
+      setTestResults(prev => [...prev, testResult]);
+      setIsTestRunning(false);
+      setCurrentScenario(null);
+      setTestProgress(0);
+      setSimulationActive(false);
+    },
+    [crisisLevel, isCrisisModeActive, crisisFeatures]
+  );
 
   // Run test scenario
-  const runTestScenario = useCallback(async (scenario: TestScenario) => {
-    setIsTestRunning(true);
-    setCurrentScenario(scenario);
-    setTestProgress(0);
-    setSimulationActive(true);
+  const runTestScenario = useCallback(
+    async (scenario: TestScenario) => {
+      setIsTestRunning(true);
+      setCurrentScenario(scenario);
+      setTestProgress(0);
+      setSimulationActive(true);
 
-    const testResult: TestResult = {
-      scenarioId: scenario.id,
-      startTime: new Date(),
-      passed: false,
-      issues: [],
-      metrics: {
-        responseTime: 0,
-        adaptationSpeed: 0,
-        userExperience: 'poor'
-      }
-    };
+      const testResult: TestResult = {
+        scenarioId: scenario.id,
+        startTime: new Date(),
+        passed: false,
+        issues: [],
+        metrics: {
+          responseTime: 0,
+          adaptationSpeed: 0,
+          userExperience: 'poor',
+        },
+      };
 
-    currentTestRef.current = testResult;
+      currentTestRef.current = testResult;
 
-    // Reset crisis detection before starting
-    resetCrisisDetection('resolved');
+      // Reset crisis detection before starting
+      resetCrisisDetection('resolved');
 
-    // Start progress tracking
-    const startTime = Date.now();
-    const progressInterval = setInterval(() => {
-      const elapsed = (Date.now() - startTime) / 1000;
-      const progress = Math.min((elapsed / scenario.duration) * 100, 100);
-      setTestProgress(progress);
+      // Start progress tracking
+      const startTime = Date.now();
+      const progressInterval = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        const progress = Math.min((elapsed / scenario.duration) * 100, 100);
+        setTestProgress(progress);
 
-      if (progress >= 100) {
+        if (progress >= 100) {
+          clearInterval(progressInterval);
+          completeTest(testResult);
+        }
+      }, 100);
+
+      // Simulate behaviors throughout test
+      const behaviorInterval = setInterval(() => {
+        simulateStressBehaviors(scenario);
+      }, 2000);
+
+      // Store intervals for cleanup
+      testIntervalRef.current = behaviorInterval;
+
+      // Set timeout to end test
+      setTimeout(() => {
         clearInterval(progressInterval);
-        completeTest(testResult);
-      }
-    }, 100);
-
-    // Simulate behaviors throughout test
-    const behaviorInterval = setInterval(() => {
-      simulateStressBehaviors(scenario);
-    }, 2000);
-
-    // Store intervals for cleanup
-    testIntervalRef.current = behaviorInterval;
-
-    // Set timeout to end test
-    setTimeout(() => {
-      clearInterval(progressInterval);
-      clearInterval(behaviorInterval);
-      setSimulationActive(false);
-    }, scenario.duration * 1000);
-
-  }, [simulateStressBehaviors, resetCrisisDetection, completeTest]);
+        clearInterval(behaviorInterval);
+        setSimulationActive(false);
+      }, scenario.duration * 1000);
+    },
+    [simulateStressBehaviors, resetCrisisDetection, completeTest]
+  );
 
   // Stop current test
   const stopTest = useCallback(() => {
@@ -309,9 +324,9 @@ export function CrisisTestingDashboard() {
   // Run all tests
   const runAllTests = useCallback(async () => {
     for (const scenario of TEST_SCENARIOS) {
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         runTestScenario(scenario);
-        
+
         const checkComplete = () => {
           if (!isTestRunning) {
             resolve();
@@ -321,7 +336,7 @@ export function CrisisTestingDashboard() {
         };
         setTimeout(checkComplete, (scenario.duration + 2) * 1000);
       });
-      
+
       // Wait between tests
       await new Promise(resolve => setTimeout(resolve, 3000));
     }
@@ -345,29 +360,17 @@ export function CrisisTestingDashboard() {
       {/* Test Controls */}
       <StressResponsiveCard title="Test Controls" className="mb-6">
         <div className="flex flex-wrap gap-3">
-          <StressAdaptiveButton
-            onClick={runAllTests}
-            disabled={isTestRunning}
-            urgency="medium"
-          >
+          <StressAdaptiveButton onClick={runAllTests} disabled={isTestRunning} urgency="medium">
             <Play className="w-4 h-4 mr-2" />
             Run All Tests
           </StressAdaptiveButton>
-          
-          <StressAdaptiveButton
-            onClick={stopTest}
-            disabled={!isTestRunning}
-            urgency="low"
-          >
+
+          <StressAdaptiveButton onClick={stopTest} disabled={!isTestRunning} urgency="low">
             <Pause className="w-4 h-4 mr-2" />
             Stop Test
           </StressAdaptiveButton>
-          
-          <StressAdaptiveButton
-            onClick={clearResults}
-            disabled={isTestRunning}
-            urgency="low"
-          >
+
+          <StressAdaptiveButton onClick={clearResults} disabled={isTestRunning} urgency="low">
             <RotateCcw className="w-4 h-4 mr-2" />
             Clear Results
           </StressAdaptiveButton>
@@ -386,11 +389,13 @@ export function CrisisTestingDashboard() {
                 {currentScenario.description}
               </StressResponsiveText>
             </div>
-            
+
             <div>
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm font-medium">Progress</span>
-                <span className="text-sm text-gray-600 dark:text-gray-400">{Math.round(testProgress)}%</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {Math.round(testProgress)}%
+                </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div
@@ -420,22 +425,29 @@ export function CrisisTestingDashboard() {
 
       {/* Individual Test Scenarios */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
-        {TEST_SCENARIOS.map((scenario) => (
+        {TEST_SCENARIOS.map(scenario => (
           <StressResponsiveCard
             key={scenario.id}
             title={scenario.name}
-            priority={scenario.stressLevel === 'emergency' ? 'emergency' : 
-                    scenario.stressLevel === 'severe' ? 'high' : 'medium'}
+            priority={
+              scenario.stressLevel === 'emergency'
+                ? 'emergency'
+                : scenario.stressLevel === 'severe'
+                  ? 'high'
+                  : 'medium'
+            }
             className="h-full"
           >
             <div className="space-y-3">
-              <StressResponsiveText level="body">
-                {scenario.description}
-              </StressResponsiveText>
-              
+              <StressResponsiveText level="body">{scenario.description}</StressResponsiveText>
+
               <div className="text-sm space-y-1">
-                <div><strong>Duration:</strong> {scenario.duration}s</div>
-                <div><strong>Stress Level:</strong> {scenario.stressLevel}</div>
+                <div>
+                  <strong>Duration:</strong> {scenario.duration}s
+                </div>
+                <div>
+                  <strong>Stress Level:</strong> {scenario.stressLevel}
+                </div>
               </div>
 
               <div className="text-sm">
@@ -472,9 +484,7 @@ export function CrisisTestingDashboard() {
                 <div
                   key={index}
                   className={`p-4 rounded-lg border-2 ${
-                    result.passed 
-                      ? 'border-green-200 bg-green-50' 
-                      : 'border-red-200 bg-red-50'
+                    result.passed ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
@@ -486,16 +496,19 @@ export function CrisisTestingDashboard() {
                       )}
                       {scenario?.name || result.scenarioId}
                     </h3>
-                    <span className={`text-sm font-medium ${
-                      result.passed ? 'text-green-600' : 'text-red-600'
-                    }`}>
+                    <span
+                      className={`text-sm font-medium ${
+                        result.passed ? 'text-green-600' : 'text-red-600'
+                      }`}
+                    >
                       {result.passed ? 'PASSED' : 'FAILED'}
                     </span>
                   </div>
 
                   <div className="grid md:grid-cols-3 gap-4 text-sm">
                     <div>
-                      <strong>Response Time:</strong> {formatNumber(result.metrics.responseTime, 1)}s
+                      <strong>Response Time:</strong> {formatNumber(result.metrics.responseTime, 1)}
+                      s
                     </div>
                     <div>
                       <strong>Adaptation Speed:</strong> {result.metrics.adaptationSpeed}/5
@@ -528,25 +541,29 @@ export function CrisisTestingDashboard() {
           <div className="flex items-start">
             <Info className="w-4 h-4 mt-0.5 mr-2 text-blue-600" />
             <div>
-              <strong>Automated Testing:</strong> Tests simulate user behaviors associated with stress and crisis states
+              <strong>Automated Testing:</strong> Tests simulate user behaviors associated with
+              stress and crisis states
             </div>
           </div>
           <div className="flex items-start">
             <Info className="w-4 h-4 mt-0.5 mr-2 text-blue-600" />
             <div>
-              <strong>Manual Validation:</strong> Observe UI changes, feature activation, and overall responsiveness
+              <strong>Manual Validation:</strong> Observe UI changes, feature activation, and
+              overall responsiveness
             </div>
           </div>
           <div className="flex items-start">
             <Info className="w-4 h-4 mt-0.5 mr-2 text-blue-600" />
             <div>
-              <strong>Expected Behavior:</strong> System should adapt progressively as stress levels increase
+              <strong>Expected Behavior:</strong> System should adapt progressively as stress levels
+              increase
             </div>
           </div>
           <div className="flex items-start">
             <Info className="w-4 h-4 mt-0.5 mr-2 text-blue-600" />
             <div>
-              <strong>Performance:</strong> Adaptations should occur within 2-3 seconds of stress detection
+              <strong>Performance:</strong> Adaptations should occur within 2-3 seconds of stress
+              detection
             </div>
           </div>
         </div>

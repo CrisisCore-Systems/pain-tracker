@@ -17,7 +17,10 @@ export function movingStdDev(values: number[], windowSize: number) {
   for (let i = 0; i < values.length; i++) {
     const start = Math.max(0, i - windowSize + 1);
     const window = values.slice(start, i + 1).filter(v => typeof v === 'number' && !isNaN(v));
-    if (window.length === 0) { res.push(0); continue; }
+    if (window.length === 0) {
+      res.push(0);
+      continue;
+    }
     const mean = window.reduce((a, b) => a + b, 0) / window.length;
     const variance = window.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / window.length;
     res.push(Math.sqrt(variance));

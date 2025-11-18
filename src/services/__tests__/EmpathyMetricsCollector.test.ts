@@ -10,8 +10,8 @@ import type { SecurityService } from '../SecurityService';
 const securityStub = {
   privacyConfig: {
     consentRequired: false,
-    minimumNoiseLevel: 0.2
-  }
+    minimumNoiseLevel: 0.2,
+  },
 } as unknown as SecurityService;
 
 const basePainEntry: PainEntry = {
@@ -20,12 +20,12 @@ const basePainEntry: PainEntry = {
   baselineData: {
     pain: 6,
     locations: ['Lower back at 1234 Elm Street'],
-    symptoms: ['stiffness']
+    symptoms: ['stiffness'],
   },
   functionalImpact: {
     limitedActivities: ['Jogging around the block'],
     assistanceNeeded: ['Temporary cane'],
-    mobilityAids: ['Brace']
+    mobilityAids: ['Brace'],
   },
   medications: {
     current: [
@@ -33,11 +33,11 @@ const basePainEntry: PainEntry = {
         name: 'Gabapentin',
         dosage: '300mg',
         frequency: 'twice daily',
-        effectiveness: 'helps with nighttime pain'
-      }
+        effectiveness: 'helps with nighttime pain',
+      },
     ],
     changes: 'None',
-    effectiveness: 'moderate relief'
+    effectiveness: 'moderate relief',
   },
   treatments: {
     recent: [
@@ -45,27 +45,28 @@ const basePainEntry: PainEntry = {
         type: 'Physiotherapy',
         provider: 'Dr. caret@example.com Suite 400',
         date: '2025-09-15',
-        effectiveness: 'encouraging'
-      }
+        effectiveness: 'encouraging',
+      },
     ],
     effectiveness: 'Incremental',
-    planned: ['Massage therapy']
+    planned: ['Massage therapy'],
   },
   qualityOfLife: {
     sleepQuality: 6,
     moodImpact: 5,
-    socialImpact: ['Cancelled visit to 500 Main Street']
+    socialImpact: ['Cancelled visit to 500 Main Street'],
   },
   workImpact: {
     missedWork: 2,
     modifiedDuties: ['Remote mornings'],
-    workLimitations: ['Avoid heavy lifting']
+    workLimitations: ['Avoid heavy lifting'],
   },
   comparison: {
     worseningSince: '2025-08-01',
-    newLimitations: ['Driving beyond 30 minutes']
+    newLimitations: ['Driving beyond 30 minutes'],
   },
-  notes: 'Contact me at 555-987-6543 or email me at person@example.com. Address: 987 Main Street, Apt 12.'
+  notes:
+    'Contact me at 555-987-6543 or email me at person@example.com. Address: 987 Main Street, Apt 12.',
 };
 
 const baseMoodEntry: MoodEntry = {
@@ -82,7 +83,7 @@ const baseMoodEntry: MoodEntry = {
   triggers: ['Unexpected phone call from 5553332211'],
   copingStrategies: ['deep breathing'],
   socialSupport: 'moderate',
-  notes: 'Reach me at support@example.org or +1 604 555 7788 for details.'
+  notes: 'Reach me at support@example.org or +1 604 555 7788 for details.',
 };
 
 function createStubMetrics(): QuantifiedEmpathyMetrics {
@@ -95,7 +96,8 @@ function createStubMetrics(): QuantifiedEmpathyMetrics {
       socialSkills: 48,
       emotionalGranularity: 49,
       metaEmotionalAwareness: 50,
-      neuralEmpathyPatterns: {} as unknown as QuantifiedEmpathyMetrics['emotionalIntelligence']['neuralEmpathyPatterns']
+      neuralEmpathyPatterns:
+        {} as unknown as QuantifiedEmpathyMetrics['emotionalIntelligence']['neuralEmpathyPatterns'],
     },
     compassionateProgress: {
       selfCompassion: 40,
@@ -107,7 +109,8 @@ function createStubMetrics(): QuantifiedEmpathyMetrics {
       meaningMaking: 45,
       adaptiveReframing: 46,
       compassionFatigue: 37,
-      recoveryPatterns: {} as unknown as QuantifiedEmpathyMetrics['compassionateProgress']['recoveryPatterns']
+      recoveryPatterns:
+        {} as unknown as QuantifiedEmpathyMetrics['compassionateProgress']['recoveryPatterns'],
     },
     empathyKPIs: {
       validationReceived: 55,
@@ -120,7 +123,7 @@ function createStubMetrics(): QuantifiedEmpathyMetrics {
       perspectiveTaking: 48,
       empathicMotivation: 47,
       boundaryMaintenance: 46,
-      culturalEmpathy: {} as unknown as QuantifiedEmpathyMetrics['empathyKPIs']['culturalEmpathy']
+      culturalEmpathy: {} as unknown as QuantifiedEmpathyMetrics['empathyKPIs']['culturalEmpathy'],
     },
     humanizedMetrics: {
       courageScore: 58,
@@ -132,12 +135,12 @@ function createStubMetrics(): QuantifiedEmpathyMetrics {
       purposeClarity: 52,
       spiritualWellbeing: 51,
       lifeNarrativeCoherence: 50,
-      wisdomGained: {} as unknown as QuantifiedEmpathyMetrics['humanizedMetrics']['wisdomGained']
+      wisdomGained: {} as unknown as QuantifiedEmpathyMetrics['humanizedMetrics']['wisdomGained'],
     },
     empathyIntelligence: {} as unknown as QuantifiedEmpathyMetrics['empathyIntelligence'],
     temporalPatterns: {} as unknown as QuantifiedEmpathyMetrics['temporalPatterns'],
     microEmpathyMoments: {} as unknown as QuantifiedEmpathyMetrics['microEmpathyMoments'],
-    predictiveMetrics: {} as unknown as QuantifiedEmpathyMetrics['predictiveMetrics']
+    predictiveMetrics: {} as unknown as QuantifiedEmpathyMetrics['predictiveMetrics'],
   } as QuantifiedEmpathyMetrics;
 }
 
@@ -150,7 +153,7 @@ describe('EmpathyMetricsCollector guardrails', () => {
     const analyticsMocks = {
       calculateQuantifiedEmpathy: vi.fn().mockResolvedValue(createStubMetrics()),
       generateEmpathyInsights: vi.fn().mockResolvedValue([]),
-      generateEmpathyRecommendations: vi.fn().mockResolvedValue([])
+      generateEmpathyRecommendations: vi.fn().mockResolvedValue([]),
     };
     const analytics = analyticsMocks as unknown as EmpathyDrivenAnalyticsService;
 
@@ -161,7 +164,7 @@ describe('EmpathyMetricsCollector guardrails', () => {
     const result = await collector.collect(painEntries, moodEntries, {
       userId: 'test-user',
       consentGranted: true,
-      sanitize: true
+      sanitize: true,
     });
 
     expect(result.redactions).toBeGreaterThan(0);
@@ -181,34 +184,48 @@ describe('EmpathyMetricsCollector guardrails', () => {
     const analyticsMocks = {
       calculateQuantifiedEmpathy: vi.fn().mockResolvedValue(metrics),
       generateEmpathyInsights: vi.fn().mockResolvedValue([]),
-      generateEmpathyRecommendations: vi.fn().mockResolvedValue([])
+      generateEmpathyRecommendations: vi.fn().mockResolvedValue([]),
     };
     const analytics = analyticsMocks as unknown as EmpathyDrivenAnalyticsService;
     const budgetManager = {
-      consume: vi.fn().mockReturnValue(true)
+      consume: vi.fn().mockReturnValue(true),
     } as unknown as PrivacyBudgetManager;
     const auditLogMock = vi.fn().mockResolvedValue(undefined);
     const auditLogger = { log: auditLogMock } as AuditLogger;
 
-    const collector = new EmpathyMetricsCollector(securityStub, analytics, budgetManager, undefined, auditLogger);
+    const collector = new EmpathyMetricsCollector(
+      securityStub,
+      analytics,
+      budgetManager,
+      undefined,
+      auditLogger
+    );
 
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.6);
 
-    const result = await collector.collect([structuredClone(basePainEntry)], [structuredClone(baseMoodEntry)], {
-      userId: 'dp-user',
-      consentGranted: true,
-      sanitize: false,
-      differentialPrivacy: true,
-      noiseEpsilon: 0.5
-    });
+    const result = await collector.collect(
+      [structuredClone(basePainEntry)],
+      [structuredClone(baseMoodEntry)],
+      {
+        userId: 'dp-user',
+        consentGranted: true,
+        sanitize: false,
+        differentialPrivacy: true,
+        noiseEpsilon: 0.5,
+      }
+    );
 
     expect(budgetManager.consume).toHaveBeenCalledWith('dp-user', 0.5);
     expect(result.noiseInjected).toBe(true);
-    expect(result.metrics.emotionalIntelligence.selfAwareness).not.toEqual(metrics.emotionalIntelligence.selfAwareness);
-    expect(auditLogMock).toHaveBeenCalledWith(expect.objectContaining({
-      eventType: 'dp_budget_consumption',
-      details: expect.objectContaining({ consumed: true, requestedEpsilon: 0.5 })
-    }));
+    expect(result.metrics.emotionalIntelligence.selfAwareness).not.toEqual(
+      metrics.emotionalIntelligence.selfAwareness
+    );
+    expect(auditLogMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        eventType: 'dp_budget_consumption',
+        details: expect.objectContaining({ consumed: true, requestedEpsilon: 0.5 }),
+      })
+    );
 
     randomSpy.mockRestore();
   });
@@ -218,34 +235,48 @@ describe('EmpathyMetricsCollector guardrails', () => {
     const analyticsMocks = {
       calculateQuantifiedEmpathy: vi.fn().mockResolvedValue(metrics),
       generateEmpathyInsights: vi.fn().mockResolvedValue([]),
-      generateEmpathyRecommendations: vi.fn().mockResolvedValue([])
+      generateEmpathyRecommendations: vi.fn().mockResolvedValue([]),
     };
     const analytics = analyticsMocks as unknown as EmpathyDrivenAnalyticsService;
     const budgetManager = {
-      consume: vi.fn().mockReturnValue(false)
+      consume: vi.fn().mockReturnValue(false),
     } as unknown as PrivacyBudgetManager;
     const auditLogMock = vi.fn().mockResolvedValue(undefined);
     const auditLogger = { log: auditLogMock } as AuditLogger;
 
-    const collector = new EmpathyMetricsCollector(securityStub, analytics, budgetManager, undefined, auditLogger);
+    const collector = new EmpathyMetricsCollector(
+      securityStub,
+      analytics,
+      budgetManager,
+      undefined,
+      auditLogger
+    );
 
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.6);
 
-    const result = await collector.collect([structuredClone(basePainEntry)], [structuredClone(baseMoodEntry)], {
-      userId: 'dp-user-denied',
-      consentGranted: true,
-      sanitize: false,
-      differentialPrivacy: true,
-      noiseEpsilon: 0.5
-    });
+    const result = await collector.collect(
+      [structuredClone(basePainEntry)],
+      [structuredClone(baseMoodEntry)],
+      {
+        userId: 'dp-user-denied',
+        consentGranted: true,
+        sanitize: false,
+        differentialPrivacy: true,
+        noiseEpsilon: 0.5,
+      }
+    );
 
     expect(budgetManager.consume).toHaveBeenCalledWith('dp-user-denied', 0.5);
     expect(result.noiseInjected).toBe(false);
-    expect(result.metrics.emotionalIntelligence.selfAwareness).toEqual(metrics.emotionalIntelligence.selfAwareness);
-    expect(auditLogMock).toHaveBeenCalledWith(expect.objectContaining({
-      eventType: 'dp_budget_denied',
-      details: expect.objectContaining({ consumed: false })
-    }));
+    expect(result.metrics.emotionalIntelligence.selfAwareness).toEqual(
+      metrics.emotionalIntelligence.selfAwareness
+    );
+    expect(auditLogMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        eventType: 'dp_budget_denied',
+        details: expect.objectContaining({ consumed: false }),
+      })
+    );
 
     randomSpy.mockRestore();
   });

@@ -23,13 +23,19 @@ export const testAriaLabels = (element: HTMLElement): { passed: boolean; issues:
   const issues: string[] = [];
   const interactiveElements = element.querySelectorAll('button, input, select, textarea, [role]');
 
-  interactiveElements.forEach((el) => {
+  interactiveElements.forEach(el => {
     const htmlEl = el as HTMLElement;
-    const hasAriaLabel = htmlEl.hasAttribute('aria-label') || htmlEl.hasAttribute('aria-labelledby');
-    const hasLabel = !!htmlEl.closest('label') || !!htmlEl.getAttribute('id') && !!document.querySelector(`label[for="${htmlEl.getAttribute('id')}"]`);
+    const hasAriaLabel =
+      htmlEl.hasAttribute('aria-label') || htmlEl.hasAttribute('aria-labelledby');
+    const hasLabel =
+      !!htmlEl.closest('label') ||
+      (!!htmlEl.getAttribute('id') &&
+        !!document.querySelector(`label[for="${htmlEl.getAttribute('id')}"]`));
 
     if (!hasAriaLabel && !hasLabel && !htmlEl.textContent?.trim()) {
-      issues.push(`Interactive element missing accessible label: ${htmlEl.tagName}${htmlEl.className ? '.' + htmlEl.className.split(' ').join('.') : ''}`);
+      issues.push(
+        `Interactive element missing accessible label: ${htmlEl.tagName}${htmlEl.className ? '.' + htmlEl.className.split(' ').join('.') : ''}`
+      );
     }
   });
 
@@ -42,12 +48,14 @@ export const testAriaLabels = (element: HTMLElement): { passed: boolean; issues:
 /**
  * Test for proper heading hierarchy
  */
-export const testHeadingHierarchy = (element: HTMLElement): { passed: boolean; issues: string[] } => {
+export const testHeadingHierarchy = (
+  element: HTMLElement
+): { passed: boolean; issues: string[] } => {
   const issues: string[] = [];
   const headings = element.querySelectorAll('h1, h2, h3, h4, h5, h6');
   let lastLevel = 0;
 
-  headings.forEach((heading) => {
+  headings.forEach(heading => {
     const level = parseInt(heading.tagName.charAt(1));
     if (level - lastLevel > 1) {
       issues.push(`Skipped heading level: ${heading.tagName} after h${lastLevel}`);
@@ -70,14 +78,16 @@ export const testColorContrast = (element: HTMLElement): { passed: boolean; issu
   // This is a simplified check - in a real implementation, you'd use a proper color contrast library
   const textElements = element.querySelectorAll('*');
 
-  textElements.forEach((el) => {
+  textElements.forEach(el => {
     const htmlEl = el as HTMLElement;
     const computedStyle = window.getComputedStyle(htmlEl);
     const backgroundColor = computedStyle.backgroundColor;
 
     // Basic check for transparent backgrounds
     if (backgroundColor.includes('rgba') && backgroundColor.includes('0)')) {
-      issues.push(`Element may have insufficient contrast: ${htmlEl.tagName}${htmlEl.className ? '.' + htmlEl.className.split(' ').join('.') : ''}`);
+      issues.push(
+        `Element may have insufficient contrast: ${htmlEl.tagName}${htmlEl.className ? '.' + htmlEl.className.split(' ').join('.') : ''}`
+      );
     }
   });
 
@@ -126,7 +136,9 @@ export const testFocusManagement = (): { passed: boolean; issues: string[] } => 
 /**
  * Comprehensive accessibility test
  */
-export const runAccessibilityTests = (element: HTMLElement): {
+export const runAccessibilityTests = (
+  element: HTMLElement
+): {
   keyboard: { passed: boolean; issues: string[] };
   aria: { passed: boolean; issues: string[] };
   headings: { passed: boolean; issues: string[] };
@@ -140,12 +152,8 @@ export const runAccessibilityTests = (element: HTMLElement): {
   const contrast = testColorContrast(element);
   const focus = testFocusManagement();
 
-  const totalIssues = [
-    ...aria.issues,
-    ...headings.issues,
-    ...contrast.issues,
-    ...focus.issues,
-  ].length;
+  const totalIssues = [...aria.issues, ...headings.issues, ...contrast.issues, ...focus.issues]
+    .length;
 
   return {
     keyboard,
@@ -178,19 +186,24 @@ const getNodeEnv = () => {
 };
 
 export const useAccessibilityTesting = (enabled = getNodeEnv() === 'development') => {
-  const [results, setResults] = React.useState<ReturnType<typeof runAccessibilityTests> | null>(null);
+  const [results, setResults] = React.useState<ReturnType<typeof runAccessibilityTests> | null>(
+    null
+  );
 
-  const testElement = React.useCallback((element: HTMLElement | null) => {
-    if (!enabled || !element) return;
+  const testElement = React.useCallback(
+    (element: HTMLElement | null) => {
+      if (!enabled || !element) return;
 
-    const testResults = runAccessibilityTests(element);
-    setResults(testResults);
+      const testResults = runAccessibilityTests(element);
+      setResults(testResults);
 
-    // Log results to console in development
-    if (!testResults.overall.passed) {
-      console.warn('Accessibility Issues Found:', testResults);
-    }
-  }, [enabled]);
+      // Log results to console in development
+      if (!testResults.overall.passed) {
+        console.warn('Accessibility Issues Found:', testResults);
+      }
+    },
+    [enabled]
+  );
 
   return { results, testElement };
 };

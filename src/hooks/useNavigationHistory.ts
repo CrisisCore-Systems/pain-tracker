@@ -15,16 +15,16 @@ interface UseNavigationHistoryOptions {
 
 /**
  * Navigation History Hook
- * 
+ *
  * Tracks navigation history and provides Alt+Tab style quick switching
- * 
+ *
  * Features:
  * - Track navigation history
  * - Quick switch between recent views (Alt+Tab)
  * - Persist history to localStorage
  * - LRU (Least Recently Used) eviction
  * - Keyboard shortcuts
- * 
+ *
  * Usage:
  * ```tsx
  * const {
@@ -42,27 +42,23 @@ interface UseNavigationHistoryOptions {
  *   persistKey: 'pain-tracker-nav-history',
  *   enableQuickSwitch: true,
  * });
- * 
+ *
  * // Push new navigation
  * pushHistory({
  *   id: 'analytics',
  *   label: 'Analytics Dashboard',
  *   metadata: { section: 'charts' },
  * });
- * 
+ *
  * // Go back
  * const previousView = goBack();
- * 
+ *
  * // Quick switch (Alt+Tab)
  * const switchedView = quickSwitch();
  * ```
  */
 export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) {
-  const {
-    maxHistory = 50,
-    persistKey,
-    enableQuickSwitch = true,
-  } = options;
+  const { maxHistory = 50, persistKey, enableQuickSwitch = true } = options;
 
   const [history, setHistory] = useState<NavigationHistoryItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -105,15 +101,12 @@ export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) 
   // Push new item to history
   const pushHistory = useCallback(
     (item: Omit<NavigationHistoryItem, 'timestamp'>) => {
-      setHistory((prev) => {
+      setHistory(prev => {
         // Remove any items after current position (branching)
         const newHistory = prev.slice(0, currentIndex + 1);
 
         // Check if same as current item (don't duplicate)
-        if (
-          newHistory.length > 0 &&
-          newHistory[newHistory.length - 1].id === item.id
-        ) {
+        if (newHistory.length > 0 && newHistory[newHistory.length - 1].id === item.id) {
           return prev;
         }
 
@@ -128,7 +121,7 @@ export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) 
         // Enforce max history (LRU eviction)
         if (newHistory.length > maxHistory) {
           newHistory.shift();
-          setCurrentIndex((idx) => idx - 1);
+          setCurrentIndex(idx => idx - 1);
         } else {
           setCurrentIndex(newHistory.length - 1);
         }
@@ -142,7 +135,7 @@ export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) 
   // Go back in history
   const goBack = useCallback((): NavigationHistoryItem | null => {
     if (currentIndex > 0) {
-      setCurrentIndex((idx) => idx - 1);
+      setCurrentIndex(idx => idx - 1);
       return history[currentIndex - 1];
     }
     return null;
@@ -151,7 +144,7 @@ export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) 
   // Go forward in history
   const goForward = useCallback((): NavigationHistoryItem | null => {
     if (currentIndex < history.length - 1) {
-      setCurrentIndex((idx) => idx + 1);
+      setCurrentIndex(idx => idx + 1);
       return history[currentIndex + 1];
     }
     return null;
@@ -171,7 +164,7 @@ export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) 
     // Start quick switching - go to previous item
     setIsQuickSwitching(true);
     if (currentIndex > 0) {
-      setCurrentIndex((idx) => idx - 1);
+      setCurrentIndex(idx => idx - 1);
       return history[currentIndex - 1];
     }
 
@@ -228,13 +221,16 @@ export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) 
   }, [enableQuickSwitch, goBack, goForward, quickSwitch]);
 
   // Get recent items (excluding current)
-  const getRecentItems = useCallback((count: number = 5): NavigationHistoryItem[] => {
-    return history
-      .slice()
-      .reverse()
-      .filter((_, index) => index !== history.length - currentIndex - 1)
-      .slice(0, count);
-  }, [history, currentIndex]);
+  const getRecentItems = useCallback(
+    (count: number = 5): NavigationHistoryItem[] => {
+      return history
+        .slice()
+        .reverse()
+        .filter((_, index) => index !== history.length - currentIndex - 1)
+        .slice(0, count);
+    },
+    [history, currentIndex]
+  );
 
   // Clear history
   const clearHistory = useCallback(() => {

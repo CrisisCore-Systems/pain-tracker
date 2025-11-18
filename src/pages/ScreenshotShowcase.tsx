@@ -19,10 +19,10 @@ const DEMO_PAIN_ENTRIES: PainEntry[] = [
     baselineData: {
       pain: 7,
       locations: ['lower-back', 'right-knee'],
-      symptoms: ['sharp', 'throbbing']
+      symptoms: ['sharp', 'throbbing'],
     },
-    notes: 'Demo pain entry for screenshot purposes'
-  }
+    notes: 'Demo pain entry for screenshot purposes',
+  },
 ];
 
 /**
@@ -76,21 +76,25 @@ export function PrivacySettingsShowcase() {
           <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-lg border-2 border-green-200">
             <Lock className="w-8 h-8 text-green-600 mt-1" />
             <div>
-              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Local Storage Only</h3>
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                Local Storage Only
+              </h3>
               <p className="text-gray-700 dark:text-gray-300 mt-2">
-                Your data is stored locally on your device using encrypted IndexedDB. 
-                We cannot access your information even if we wanted to.
+                Your data is stored locally on your device using encrypted IndexedDB. We cannot
+                access your information even if we wanted to.
               </p>
             </div>
           </div>
-          
+
           <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
             <Lock className="w-8 h-8 text-blue-600 mt-1" />
             <div>
-              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">AES-256 Encryption</h3>
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                AES-256 Encryption
+              </h3>
               <p className="text-gray-700 dark:text-gray-300 mt-2">
-                All sensitive pain data is encrypted using military-grade AES-256 encryption 
-                before storage.
+                All sensitive pain data is encrypted using military-grade AES-256 encryption before
+                storage.
               </p>
             </div>
           </div>
@@ -98,18 +102,20 @@ export function PrivacySettingsShowcase() {
           <div className="flex items-start space-x-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
             <Lock className="w-8 h-8 text-purple-600 mt-1" />
             <div>
-              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">HIPAA Aligned</h3>
+              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                HIPAA Aligned
+              </h3>
               <p className="text-gray-700 dark:text-gray-300 mt-2">
-                Built with HIPAA compliance in mind, including audit trails and 
-                data protection measures.
+                Built with HIPAA compliance in mind, including audit trails and data protection
+                measures.
               </p>
             </div>
           </div>
 
           <div className="text-center pt-4 border-t">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              <strong>Unlike cloud-based competitors,</strong> your medical data 
-              never leaves your device.
+              <strong>Unlike cloud-based competitors,</strong> your medical data never leaves your
+              device.
             </p>
           </div>
         </CardContent>
@@ -127,41 +133,41 @@ export function BenefitsGridShowcase() {
       icon: Lock,
       title: 'Privacy First',
       description: 'Local-only storage',
-      color: 'green'
+      color: 'green',
     },
     {
       icon: Zap,
       title: 'One-Click Forms',
       description: 'WorkSafe BC ready',
-      color: 'blue'
+      color: 'blue',
     },
     {
       icon: DollarSign,
       title: 'Free Forever',
       description: 'No subscriptions',
-      color: 'purple'
+      color: 'purple',
     },
     {
       icon: Heart,
       title: 'Clinical Grade',
       description: 'Evidence-based',
-      color: 'red'
-    }
+      color: 'red',
+    },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center p-8">
       <div className="max-w-4xl w-full">
-        <h1 className="text-4xl font-bold text-center mb-12 text-white">
-          Why Pain Tracker?
-        </h1>
+        <h1 className="text-4xl font-bold text-center mb-12 text-white">Why Pain Tracker?</h1>
         <div className="grid grid-cols-2 gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
               <Card key={index} className="bg-white shadow-xl">
                 <CardContent className="p-8 text-center">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-${benefit.color}-100 mb-4`}>
+                  <div
+                    className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-${benefit.color}-100 mb-4`}
+                  >
                     <Icon className={`w-8 h-8 text-${benefit.color}-600`} />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
@@ -203,8 +209,12 @@ export function ComparisonGridShowcase() {
               <tr className="border-b-2 border-gray-300 dark:border-gray-600">
                 <th className="text-left py-4 px-4 text-gray-900 dark:text-gray-100">Feature</th>
                 <th className="text-center py-4 px-4 text-blue-600 font-bold">Pain Tracker</th>
-                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">Competitor A</th>
-                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">Competitor B</th>
+                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">
+                  Competitor A
+                </th>
+                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">
+                  Competitor B
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -237,9 +247,7 @@ export function ComparisonGridShowcase() {
             </tbody>
           </table>
           <div className="text-center mt-8">
-            <p className="text-2xl font-bold text-blue-600">
-              Get More for Free
-            </p>
+            <p className="text-2xl font-bold text-blue-600">Get More for Free</p>
           </div>
         </CardContent>
       </Card>

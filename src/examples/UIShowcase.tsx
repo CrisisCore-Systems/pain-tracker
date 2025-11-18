@@ -4,14 +4,7 @@
  */
 
 import React from 'react';
-import { 
-  Heart, 
-  Activity, 
-  TrendingUp, 
-  Calendar,
-  BarChart3,
-  Sparkles
-} from 'lucide-react';
+import { Heart, Activity, TrendingUp, Calendar, BarChart3, Sparkles } from 'lucide-react';
 import {
   EnhancedCard,
   EnhancedCardHeader,
@@ -19,21 +12,20 @@ import {
   EnhancedCardDescription,
   EnhancedCardContent,
   MetricCard,
-  ActionCard
+  ActionCard,
 } from '../design-system';
 import {
   gradients,
   textGradients,
   glassmorphism,
   shadows,
-  depth
+  depth,
 } from '../design-system/theme/index';
 
 export function UIShowcase() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950 p-8">
       <div className="max-w-7xl mx-auto space-y-12">
-        
         {/* Header Section */}
         <div className="text-center space-y-4 animate-[fadeInUp_0.6s_ease-out]">
           <h1 className={`text-5xl font-bold ${textGradients.primary}`}>
@@ -48,15 +40,21 @@ export function UIShowcase() {
         <section className="space-y-6 animate-[fadeInUp_0.7s_ease-out]">
           <h2 className="text-3xl font-bold text-foreground">Gradient System</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={`${gradients.primary} rounded-xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer`}>
+            <div
+              className={`${gradients.primary} rounded-xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer`}
+            >
               <h3 className="text-xl font-semibold mb-2">Primary Gradient</h3>
               <p className="text-white/90">Blue → Indigo → Purple</p>
             </div>
-            <div className={`${gradients.healing} rounded-xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer`}>
+            <div
+              className={`${gradients.healing} rounded-xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer`}
+            >
               <h3 className="text-xl font-semibold mb-2">Healing Gradient</h3>
               <p className="text-white/90">Green → Emerald → Teal</p>
             </div>
-            <div className={`${gradients.alert} rounded-xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer`}>
+            <div
+              className={`${gradients.alert} rounded-xl p-8 text-white transform hover:scale-105 transition-transform cursor-pointer`}
+            >
               <h3 className="text-xl font-semibold mb-2">Alert Gradient</h3>
               <p className="text-white/90">Yellow → Amber → Orange</p>
             </div>
@@ -67,7 +65,6 @@ export function UIShowcase() {
         <section className="space-y-6 animate-[fadeInUp_0.8s_ease-out]">
           <h2 className="text-3xl font-bold text-foreground">Enhanced Cards</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
             {/* Glass Card */}
             <EnhancedCard variant="glass" hoverable animated>
               <EnhancedCardHeader icon={<Sparkles className="w-5 h-5" />}>
@@ -90,9 +87,7 @@ export function UIShowcase() {
               <EnhancedCardHeader icon={<TrendingUp className="w-5 h-5" />}>
                 <div>
                   <EnhancedCardTitle gradient>Gradient Card</EnhancedCardTitle>
-                  <EnhancedCardDescription>
-                    Subtle gradient background
-                  </EnhancedCardDescription>
+                  <EnhancedCardDescription>Subtle gradient background</EnhancedCardDescription>
                 </div>
               </EnhancedCardHeader>
               <EnhancedCardContent>
@@ -124,9 +119,7 @@ export function UIShowcase() {
               <EnhancedCardHeader icon={<Heart className="w-5 h-5" />}>
                 <div>
                   <EnhancedCardTitle>Glow Card</EnhancedCardTitle>
-                  <EnhancedCardDescription>
-                    Colored glow effect
-                  </EnhancedCardDescription>
+                  <EnhancedCardDescription>Colored glow effect</EnhancedCardDescription>
                 </div>
               </EnhancedCardHeader>
               <EnhancedCardContent>
@@ -141,9 +134,7 @@ export function UIShowcase() {
               <EnhancedCardHeader icon={<Calendar className="w-5 h-5" />}>
                 <div>
                   <EnhancedCardTitle>Success Glow</EnhancedCardTitle>
-                  <EnhancedCardDescription>
-                    Green glow for positive states
-                  </EnhancedCardDescription>
+                  <EnhancedCardDescription>Green glow for positive states</EnhancedCardDescription>
                 </div>
               </EnhancedCardHeader>
               <EnhancedCardContent>
@@ -158,9 +149,7 @@ export function UIShowcase() {
               <EnhancedCardHeader icon={<BarChart3 className="w-5 h-5" />}>
                 <div>
                   <EnhancedCardTitle>Warning Glow</EnhancedCardTitle>
-                  <EnhancedCardDescription>
-                    Amber glow for alerts
-                  </EnhancedCardDescription>
+                  <EnhancedCardDescription>Amber glow for alerts</EnhancedCardDescription>
                 </div>
               </EnhancedCardHeader>
               <EnhancedCardContent>
@@ -179,7 +168,7 @@ export function UIShowcase() {
             <MetricCard
               title="Pain Level Average"
               value={5.2}
-              change={{ value: -12, label: "from last week" }}
+              change={{ value: -12, label: 'from last week' }}
               icon={<Activity className="w-8 h-8" />}
               trend="down"
               variant="success"
@@ -187,7 +176,7 @@ export function UIShowcase() {
             <MetricCard
               title="Total Entries"
               value={128}
-              change={{ value: 8, label: "this week" }}
+              change={{ value: 8, label: 'this week' }}
               icon={<Calendar className="w-8 h-8" />}
               trend="up"
               variant="default"
@@ -195,7 +184,7 @@ export function UIShowcase() {
             <MetricCard
               title="Good Days"
               value={85}
-              change={{ value: 15, label: "improvement" }}
+              change={{ value: 15, label: 'improvement' }}
               icon={<Heart className="w-8 h-8" />}
               trend="up"
               variant="success"
@@ -218,8 +207,8 @@ export function UIShowcase() {
               title="Track Your Pain"
               description="Log your current pain level and symptoms to start building your health insights"
               action={{
-                label: "Start Tracking",
-                onClick: () => alert("Start Tracking clicked!")
+                label: 'Start Tracking',
+                onClick: () => alert('Start Tracking clicked!'),
               }}
               icon={<Activity className="w-6 h-6" />}
               variant="primary"
@@ -228,8 +217,8 @@ export function UIShowcase() {
               title="View Analytics"
               description="Explore advanced insights, trends, and patterns in your pain data"
               action={{
-                label: "View Dashboard",
-                onClick: () => alert("View Dashboard clicked!")
+                label: 'View Dashboard',
+                onClick: () => alert('View Dashboard clicked!'),
               }}
               icon={<BarChart3 className="w-6 h-6" />}
               variant="secondary"
@@ -243,7 +232,9 @@ export function UIShowcase() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 stagger-children">
             <div className="p-6 bg-card rounded-xl border border-border shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 cursor-pointer">
               <h3 className="font-semibold mb-2">Hover Lift</h3>
-              <p className="text-sm text-muted-foreground">Moves up on hover with enhanced shadow</p>
+              <p className="text-sm text-muted-foreground">
+                Moves up on hover with enhanced shadow
+              </p>
             </div>
             <div className="p-6 bg-card rounded-xl border border-border shadow-lg hover:scale-105 transition-transform cursor-pointer">
               <h3 className="font-semibold mb-2">Hover Scale</h3>
@@ -260,18 +251,12 @@ export function UIShowcase() {
         <section className="space-y-6 animate-[fadeInUp_1.2s_ease-out]">
           <h2 className="text-3xl font-bold text-foreground">Text Gradients</h2>
           <div className="space-y-4">
-            <h3 className={`text-4xl font-bold ${textGradients.primary}`}>
-              Primary Gradient Text
-            </h3>
+            <h3 className={`text-4xl font-bold ${textGradients.primary}`}>Primary Gradient Text</h3>
             <h3 className={`text-4xl font-bold ${textGradients.secondary}`}>
               Secondary Gradient Text
             </h3>
-            <h3 className={`text-4xl font-bold ${textGradients.success}`}>
-              Success Gradient Text
-            </h3>
-            <h3 className={`text-4xl font-bold ${textGradients.sunset}`}>
-              Sunset Gradient Text
-            </h3>
+            <h3 className={`text-4xl font-bold ${textGradients.success}`}>Success Gradient Text</h3>
+            <h3 className={`text-4xl font-bold ${textGradients.sunset}`}>Sunset Gradient Text</h3>
           </div>
         </section>
 
@@ -284,7 +269,6 @@ export function UIShowcase() {
             Pain Tracker Pro v2.0 • Enhanced UI/UX • October 2025
           </p>
         </footer>
-
       </div>
     </div>
   );

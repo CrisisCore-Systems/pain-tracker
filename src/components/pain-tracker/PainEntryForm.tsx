@@ -1,6 +1,6 @@
-﻿import { useCallback, useEffect, useMemo, useState } from "react";
-import type { PainEntry } from "../../types";
-import { usePainTrackerStore } from "../../stores/pain-tracker-store";
+﻿import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { PainEntry } from '../../types';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import {
   BaselineSection,
   ComparisonSection,
@@ -9,8 +9,16 @@ import {
   QualityOfLifeSection,
   TreatmentsSection,
   WorkImpactSection,
-} from "./form-sections";
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Loading } from '../../design-system';
+} from './form-sections';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Badge,
+  Loading,
+} from '../../design-system';
 // Optional validation technology integration (feature-flagged)
 import {
   EmotionalValidation,
@@ -20,7 +28,17 @@ import {
   validationIntegration,
   type ProgressEntry,
 } from '../../validation-technology';
-import { ChevronLeft, ChevronRight, Check, Save, Clock, AlertCircle, BarChart3, History, Loader2 } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Save,
+  Clock,
+  AlertCircle,
+  BarChart3,
+  History,
+  Loader2,
+} from 'lucide-react';
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 import type { ValidationResponse } from '../../services/EmotionalValidationService';
 
@@ -45,24 +63,28 @@ const ENABLE_VALIDATION = (() => {
   const env = getEnv();
   // Enable by default unless explicitly disabled
   // Support both Vite-prefixed and legacy env keys
-  return env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false';
+  return (
+    env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false'
+  );
 })();
 
 interface PainEntryFormProps {
-  onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
+  onSubmit: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
 }
 
 export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const { ui, setCurrentFormSection } = usePainTrackerStore();
-  const entries = usePainTrackerStore((state) => state.entries);
+  const entries = usePainTrackerStore(state => state.entries);
   const currentSection = ui.currentFormSection;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { preferences } = useTraumaInformed();
   const { validationHistory, addValidation, clearHistory } = useEmotionalValidation();
   const [showValidationHistory, setShowValidationHistory] = useState(true);
   const [showProgressTracker, setShowProgressTracker] = useState(preferences.showProgress);
-  const [progressStatus, setProgressStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
-  const [formData, setFormData] = useState<Omit<PainEntry, "id" | "timestamp">>({
+  const [progressStatus, setProgressStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>(
+    'idle'
+  );
+  const [formData, setFormData] = useState<Omit<PainEntry, 'id' | 'timestamp'>>({
     baselineData: {
       pain: 0,
       locations: [],
@@ -75,12 +97,12 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     },
     medications: {
       current: [],
-      changes: "",
-      effectiveness: "",
+      changes: '',
+      effectiveness: '',
     },
     treatments: {
       recent: [],
-      effectiveness: "",
+      effectiveness: '',
       planned: [],
     },
     qualityOfLife: {
@@ -94,155 +116,196 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       workLimitations: [],
     },
     comparison: {
-      worseningSince: "",
+      worseningSince: '',
       newLimitations: [],
     },
-    notes: "",
+    notes: '',
   });
 
   useEffect(() => {
     setShowProgressTracker(preferences.showProgress);
   }, [preferences.showProgress]);
 
-  const handleValidationGenerated = useCallback(async (validation: ValidationResponse) => {
-    addValidation(validation);
-    try {
-      await validationIntegration.saveValidation(validation);
-    } catch (error) {
-      console.error('Failed to persist validation message', error);
-    }
-  }, [addValidation, validationIntegration]);
+  const handleValidationGenerated = useCallback(
+    async (validation: ValidationResponse) => {
+      addValidation(validation);
+      try {
+        await validationIntegration.saveValidation(validation);
+      } catch (error) {
+        console.error('Failed to persist validation message', error);
+      }
+    },
+    [addValidation, validationIntegration]
+  );
 
-  const handleProgressUpdate = useCallback(async (entry: ProgressEntry) => {
-    try {
-      setProgressStatus('saving');
-      await validationIntegration.saveProgressEntry(entry);
-      setProgressStatus('saved');
-      setTimeout(() => setProgressStatus('idle'), 6000);
-    } catch (error) {
-      console.error('Failed to persist progress entry', error);
-      setProgressStatus('error');
-      setTimeout(() => setProgressStatus('idle'), 6000);
-    }
-  }, [validationIntegration]);
+  const handleProgressUpdate = useCallback(
+    async (entry: ProgressEntry) => {
+      try {
+        setProgressStatus('saving');
+        await validationIntegration.saveProgressEntry(entry);
+        setProgressStatus('saved');
+        setTimeout(() => setProgressStatus('idle'), 6000);
+      } catch (error) {
+        console.error('Failed to persist progress entry', error);
+        setProgressStatus('error');
+        setTimeout(() => setProgressStatus('idle'), 6000);
+      }
+    },
+    [validationIntegration]
+  );
 
-  const validationIsActive = useMemo(() => ENABLE_VALIDATION && preferences.realTimeValidation, [preferences.realTimeValidation]);
+  const validationIsActive = useMemo(
+    () => ENABLE_VALIDATION && preferences.realTimeValidation,
+    [preferences.realTimeValidation]
+  );
 
   const sections = [
     {
-      title: "Pain Assessment",
-      description: "Rate your current pain and identify affected areas",
-      icon: "🎯",
+      title: 'Pain Assessment',
+      description: 'Rate your current pain and identify affected areas',
+      icon: '🎯',
       component: (
         <BaselineSection
           {...formData.baselineData}
           locations={formData.baselineData.locations || []}
           symptoms={formData.baselineData.symptoms || []}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            baselineData: { ...prev.baselineData, ...data }
-          }))}
+          onChange={data =>
+            setFormData(prev => ({
+              ...prev,
+              baselineData: { ...prev.baselineData, ...data },
+            }))
+          }
         />
       ),
       required: true,
-      estimatedTime: "2 min",
+      estimatedTime: '2 min',
     },
     {
-      title: "Functional Impact",
-      description: "How is pain affecting your daily activities?",
-      icon: "🏃",
+      title: 'Functional Impact',
+      description: 'How is pain affecting your daily activities?',
+      icon: '🏃',
       component: (
         <FunctionalImpactSection
           limitedActivities={formData.functionalImpact?.limitedActivities || []}
           mobilityAids={formData.functionalImpact?.mobilityAids || []}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            functionalImpact: { ...prev.functionalImpact, ...data }
-          } as Omit<PainEntry, "id" | "timestamp">))}
+          onChange={data =>
+            setFormData(
+              prev =>
+                ({
+                  ...prev,
+                  functionalImpact: { ...prev.functionalImpact, ...data },
+                }) as Omit<PainEntry, 'id' | 'timestamp'>
+            )
+          }
         />
       ),
       required: false,
-      estimatedTime: "3 min",
+      estimatedTime: '3 min',
     },
     {
-      title: "Medications",
-      description: "Track your current medications and their effectiveness",
-      icon: "💊",
+      title: 'Medications',
+      description: 'Track your current medications and their effectiveness',
+      icon: '💊',
       component: (
         <MedicationsSection
           {...(formData.medications as any)}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            medications: { ...prev.medications, ...data }
-          } as Omit<PainEntry, "id" | "timestamp">))}
+          onChange={data =>
+            setFormData(
+              prev =>
+                ({
+                  ...prev,
+                  medications: { ...prev.medications, ...data },
+                }) as Omit<PainEntry, 'id' | 'timestamp'>
+            )
+          }
         />
       ),
       required: false,
-      estimatedTime: "2 min",
+      estimatedTime: '2 min',
     },
     {
-      title: "Treatments",
-      description: "Document recent treatments and their outcomes",
-      icon: "🏥",
+      title: 'Treatments',
+      description: 'Document recent treatments and their outcomes',
+      icon: '🏥',
       component: (
         <TreatmentsSection
           {...(formData.treatments as any)}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            treatments: { ...prev.treatments, ...data }
-          } as Omit<PainEntry, "id" | "timestamp">))}
+          onChange={data =>
+            setFormData(
+              prev =>
+                ({
+                  ...prev,
+                  treatments: { ...prev.treatments, ...data },
+                }) as Omit<PainEntry, 'id' | 'timestamp'>
+            )
+          }
         />
       ),
       required: false,
-      estimatedTime: "3 min",
+      estimatedTime: '3 min',
     },
     {
-      title: "Quality of Life",
-      description: "How is pain affecting your sleep, mood, and social life?",
-      icon: "😴",
+      title: 'Quality of Life',
+      description: 'How is pain affecting your sleep, mood, and social life?',
+      icon: '😴',
       component: (
         <QualityOfLifeSection
           {...(formData.qualityOfLife as any)}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            qualityOfLife: { ...prev.qualityOfLife, ...data }
-          } as Omit<PainEntry, "id" | "timestamp">))}
+          onChange={data =>
+            setFormData(
+              prev =>
+                ({
+                  ...prev,
+                  qualityOfLife: { ...prev.qualityOfLife, ...data },
+                }) as Omit<PainEntry, 'id' | 'timestamp'>
+            )
+          }
         />
       ),
       required: false,
-      estimatedTime: "2 min",
+      estimatedTime: '2 min',
     },
     {
-      title: "Work Impact",
-      description: "How has pain affected your work and productivity?",
-      icon: "💼",
+      title: 'Work Impact',
+      description: 'How has pain affected your work and productivity?',
+      icon: '💼',
       component: (
         <WorkImpactSection
           {...(formData.workImpact as any)}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            workImpact: { ...prev.workImpact, ...data }
-          } as Omit<PainEntry, "id" | "timestamp">))}
+          onChange={data =>
+            setFormData(
+              prev =>
+                ({
+                  ...prev,
+                  workImpact: { ...prev.workImpact, ...data },
+                }) as Omit<PainEntry, 'id' | 'timestamp'>
+            )
+          }
         />
       ),
       required: false,
-      estimatedTime: "2 min",
+      estimatedTime: '2 min',
     },
     {
-      title: "Comparison",
-      description: "Compare your current condition to previous assessments",
-      icon: "📊",
+      title: 'Comparison',
+      description: 'Compare your current condition to previous assessments',
+      icon: '📊',
       component: (
         <ComparisonSection
           {...(formData.comparison as any)}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            comparison: { ...prev.comparison, ...data }
-          } as Omit<PainEntry, "id" | "timestamp">))}
+          onChange={data =>
+            setFormData(
+              prev =>
+                ({
+                  ...prev,
+                  comparison: { ...prev.comparison, ...data },
+                }) as Omit<PainEntry, 'id' | 'timestamp'>
+            )
+          }
         />
       ),
       required: false,
-      estimatedTime: "2 min",
+      estimatedTime: '2 min',
     },
   ];
 
@@ -255,12 +318,12 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       setFormData({
         baselineData: { pain: 0, locations: [], symptoms: [] },
         functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
-        medications: { current: [], changes: "", effectiveness: "" },
-        treatments: { recent: [], effectiveness: "", planned: [] },
+        medications: { current: [], changes: '', effectiveness: '' },
+        treatments: { recent: [], effectiveness: '', planned: [] },
         qualityOfLife: { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
         workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
-        comparison: { worseningSince: "", newLimitations: [] },
-        notes: "",
+        comparison: { worseningSince: '', newLimitations: [] },
+        notes: '',
       });
       setCurrentFormSection(0);
     } finally {
@@ -288,9 +351,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
               <span className="text-2xl">{sections[currentSection].icon}</span>
               <span>{sections[currentSection].title}</span>
             </CardTitle>
-            <p className="text-muted-foreground mt-1">
-              {sections[currentSection].description}
-            </p>
+            <p className="text-muted-foreground mt-1">{sections[currentSection].description}</p>
           </div>
           <div className="flex items-center space-x-2">
             <Badge variant="outline" className="text-xs">
@@ -327,8 +388,8 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
                 index === currentSection
                   ? 'bg-primary text-primary-foreground'
                   : index < currentSection
-                  ? 'bg-success text-success-foreground'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                    ? 'bg-success text-success-foreground'
+                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
               aria-label={`Go to ${section.title} section`}
             >
@@ -348,7 +409,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
         <form
           role="form"
           aria-label="Pain Entry Form"
-          onSubmit={(e) => {
+          onSubmit={e => {
             e.preventDefault();
             if (isLastSection && canProceedToNext) {
               handleSubmit();
@@ -357,9 +418,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
           className="space-y-6"
         >
           {/* Current Section Content */}
-          <div className="min-h-[400px]">
-            {sections[currentSection].component}
-          </div>
+          <div className="min-h-[400px]">{sections[currentSection].component}</div>
 
           {/* Emotional validation panel (read-only, feature-flagged) */}
           {validationIsActive && (
@@ -432,7 +491,9 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
               {!isLastSection ? (
                 <Button
                   type="button"
-                  onClick={() => setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))}
+                  onClick={() =>
+                    setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))
+                  }
                   disabled={!canProceedToNext}
                   rightIcon={<ChevronRight className="h-4 w-4" />}
                 >
@@ -464,13 +525,15 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
                 <BarChart3 className="h-4 w-4 text-primary" />
-                <p className="text-sm font-semibold text-muted-foreground">Whole-person progress tracking</p>
+                <p className="text-sm font-semibold text-muted-foreground">
+                  Whole-person progress tracking
+                </p>
               </div>
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={() => setShowProgressTracker((prev) => !prev)}
+                onClick={() => setShowProgressTracker(prev => !prev)}
               >
                 {showProgressTracker ? 'Hide wellness tools' : 'Show wellness tools'}
               </Button>
@@ -489,15 +552,20 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
                   </div>
                 )}
                 {progressStatus === 'saved' && (
-                  <p className="text-xs text-success">Progress entry saved with validation technology.</p>
+                  <p className="text-xs text-success">
+                    Progress entry saved with validation technology.
+                  </p>
                 )}
                 {progressStatus === 'error' && (
-                  <p className="text-xs text-destructive">We couldn’t save your progress right now. Your notes stay on this device.</p>
+                  <p className="text-xs text-destructive">
+                    We couldn’t save your progress right now. Your notes stay on this device.
+                  </p>
                 )}
               </div>
             ) : (
               <p className="text-xs text-muted-foreground">
-                These tools celebrate growth beyond pain scores. You can open them whenever you’re ready.
+                These tools celebrate growth beyond pain scores. You can open them whenever you’re
+                ready.
               </p>
             )}
           </div>

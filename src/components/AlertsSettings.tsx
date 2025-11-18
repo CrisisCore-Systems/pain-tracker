@@ -12,7 +12,11 @@ type AlertsSettingsProps = {
   onClose?: () => void;
 };
 
-export default function AlertsSettings({ variant = 'overlay', className, onClose }: AlertsSettingsProps) {
+export default function AlertsSettings({
+  variant = 'overlay',
+  className,
+  onClose,
+}: AlertsSettingsProps) {
   const [settings, setSettings] = useState<Settings>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -39,7 +43,10 @@ export default function AlertsSettings({ variant = 'overlay', className, onClose
       return;
     }
 
-    const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (open) {
       prevActiveRef.current = document.activeElement as HTMLElement | null;
       if (prefersReduced) {
@@ -84,12 +91,13 @@ export default function AlertsSettings({ variant = 'overlay', className, onClose
         min={1}
         max={6}
         value={settings.threshold}
-        onChange={(e) => setSettings({ threshold: Number(e.target.value) })}
+        onChange={e => setSettings({ threshold: Number(e.target.value) })}
         className="w-full"
       />
       <div className="text-sm">Current threshold: {settings.threshold} points</div>
       <div className="text-sm text-muted-foreground">
-        Live preview: You&apos;ll be alerted when pain rises by {settings.threshold} points. For example, a baseline of 3/10 would flag entries of {Math.min(10, 3 + settings.threshold)}/10.
+        Live preview: You&apos;ll be alerted when pain rises by {settings.threshold} points. For
+        example, a baseline of 3/10 would flag entries of {Math.min(10, 3 + settings.threshold)}/10.
       </div>
     </div>
   );
@@ -109,8 +117,20 @@ export default function AlertsSettings({ variant = 'overlay', className, onClose
           onClick={() => setOpen(true)}
           className="bg-white border rounded-md px-3 py-2 shadow-sm text-sm flex items-center gap-2"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M12 2C13.1046 2 14 2.89543 14 4V5.178C16.39 6.006 18 8.388 18 11V16L20 18V19H4V18L6 16V11C6 8.388 7.61 6.006 10 5.178V4C10 2.89543 10.8954 2 12 2Z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+          >
+            <path
+              d="M12 2C13.1046 2 14 2.89543 14 4V5.178C16.39 6.006 18 8.388 18 11V16L20 18V19H4V18L6 16V11C6 8.388 7.61 6.006 10 5.178V4C10 2.89543 10.8954 2 12 2Z"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
           </svg>
           Alerts
         </button>
@@ -121,7 +141,11 @@ export default function AlertsSettings({ variant = 'overlay', className, onClose
           <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
           <FocusTrap
             active={true}
-            focusTrapOptions={{ clickOutsideDeactivates: true, escapeDeactivates: true, onDeactivate: handleClose }}
+            focusTrapOptions={{
+              clickOutsideDeactivates: true,
+              escapeDeactivates: true,
+              onDeactivate: handleClose,
+            }}
           >
             <div
               ref={containerRef}
@@ -129,7 +153,11 @@ export default function AlertsSettings({ variant = 'overlay', className, onClose
               aria-modal="true"
               tabIndex={-1}
               className={`absolute right-0 top-0 h-full w-full md:w-96 bg-card shadow-xl border-l p-4 overflow-auto transform transition-all duration-200 ${slideIn ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'}`}
-              style={window.matchMedia('(prefers-reduced-motion: reduce)').matches ? { transitionTimingFunction: 'linear' } : undefined}
+              style={
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                  ? { transitionTimingFunction: 'linear' }
+                  : undefined
+              }
             >
               {renderBody(true)}
             </div>
@@ -139,4 +167,3 @@ export default function AlertsSettings({ variant = 'overlay', className, onClose
     </>
   );
 }
-

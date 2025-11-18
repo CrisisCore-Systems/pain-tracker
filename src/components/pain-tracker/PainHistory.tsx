@@ -1,8 +1,8 @@
-﻿import { format } from "date-fns";
-import type { PainEntry } from "../../types";
+﻿import { format } from 'date-fns';
+import type { PainEntry } from '../../types';
 
 interface PainHistoryProps {
-  entries: Pick<PainEntry, "id" | "timestamp" | "baselineData" | "notes">[];
+  entries: Pick<PainEntry, 'id' | 'timestamp' | 'baselineData' | 'notes'>[];
 }
 
 export function PainHistory({ entries }: PainHistoryProps) {
@@ -21,27 +21,24 @@ export function PainHistory({ entries }: PainHistoryProps) {
       <div className="space-y-4">
         {[...entries]
           .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-          .map((entry) => (
-            <div
-              key={entry.id}
-              className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg"
-            >
+          .map(entry => (
+            <div key={entry.id} className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <span className="font-semibold">Pain Level: {entry.baselineData.pain}</span>
                 <span className="text-gray-500 dark:text-gray-400">
-                  {format(new Date(entry.timestamp), "MMM d, yyyy HH:mm")}
+                  {format(new Date(entry.timestamp), 'MMM d, yyyy HH:mm')}
                 </span>
               </div>
               {(entry.baselineData.locations?.length ?? 0) > 0 && (
                 <div className="mb-2">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Locations: </span>
-                  {entry.baselineData.locations?.join(", ")}
+                  {entry.baselineData.locations?.join(', ')}
                 </div>
               )}
               {(entry.baselineData.symptoms?.length ?? 0) > 0 && (
                 <div className="mb-2">
                   <span className="text-sm text-gray-600 dark:text-gray-400">Symptoms: </span>
-                  {entry.baselineData.symptoms?.join(", ")}
+                  {entry.baselineData.symptoms?.join(', ')}
                 </div>
               )}
               {entry.notes && (

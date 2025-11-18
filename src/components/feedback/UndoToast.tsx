@@ -51,7 +51,7 @@ export function UndoToast({ message, onUndo, onDismiss, duration = 5000 }: UndoT
         <div className="flex-1">
           <p className="text-sm text-foreground">{message}</p>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <button
             onClick={handleUndo}
@@ -60,7 +60,7 @@ export function UndoToast({ message, onUndo, onDismiss, duration = 5000 }: UndoT
             <RotateCcw className="h-3 w-3" />
             <span>Undo</span>
           </button>
-          
+
           <button
             onClick={handleDismiss}
             className="text-muted-foreground hover:text-foreground transition-colors"
@@ -70,10 +70,10 @@ export function UndoToast({ message, onUndo, onDismiss, duration = 5000 }: UndoT
           </button>
         </div>
       </div>
-      
+
       {/* Progress bar */}
       <div className="mt-3 w-full bg-muted rounded-full h-1">
-        <div 
+        <div
           className="bg-primary h-1 rounded-full transition-all duration-100 ease-linear"
           style={{ width: `${progressPercentage}%` }}
         />

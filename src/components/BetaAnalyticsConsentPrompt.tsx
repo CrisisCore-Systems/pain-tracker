@@ -7,7 +7,11 @@ const STORAGE_KEY = 'pain-tracker:analytics-consent';
 
 export default function BetaAnalyticsConsentPrompt() {
   const [consent, setConsent] = useState<string | null>(() => {
-    try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+    try {
+      return localStorage.getItem(STORAGE_KEY);
+    } catch {
+      return null;
+    }
   });
   const { bottomLeft } = useToast();
   const { requestPrompt, dismissPrompt, canShowPrompt } = useStartupPrompts();
@@ -16,10 +20,10 @@ export default function BetaAnalyticsConsentPrompt() {
     try {
       localStorage.setItem(STORAGE_KEY, 'granted');
       setConsent('granted');
-      
+
       // Enable analytics in the service
       const consentGranted = await privacyAnalytics.requestConsent();
-      
+
       if (consentGranted) {
         bottomLeft.success(
           'Thank you!',

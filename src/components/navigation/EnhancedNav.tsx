@@ -27,7 +27,7 @@ interface EnhancedNavProps {
 
 /**
  * Enhanced Navigation Component with full keyboard support
- * 
+ *
  * Features:
  * - Arrow key navigation (↑↓ for vertical, ←→ for horizontal)
  * - Tab/Shift+Tab support
@@ -37,7 +37,7 @@ interface EnhancedNavProps {
  * - Full ARIA support
  * - Focus management
  * - Screen reader friendly
- * 
+ *
  * Usage:
  * ```tsx
  * <EnhancedNav
@@ -67,7 +67,7 @@ export function EnhancedNav({
 
   // Update focused index when active item changes
   useEffect(() => {
-    const activeIndex = items.findIndex((item) => item.id === activeId);
+    const activeIndex = items.findIndex(item => item.id === activeId);
     if (activeIndex !== -1) {
       setFocusedIndex(activeIndex);
     }
@@ -83,9 +83,9 @@ export function EnhancedNav({
         return;
       }
 
-      const enabledItems = items.filter((item) => !item.disabled);
+      const enabledItems = items.filter(item => !item.disabled);
       const currentEnabledIndex = enabledItems.findIndex(
-        (item) => items[focusedIndex].id === item.id
+        item => items[focusedIndex].id === item.id
       );
 
       let handled = false;
@@ -101,7 +101,7 @@ export function EnhancedNav({
             handled = true;
             const nextIndex = (currentEnabledIndex + 1) % enabledItems.length;
             const nextItem = enabledItems[nextIndex];
-            const globalIndex = items.findIndex((item) => item.id === nextItem.id);
+            const globalIndex = items.findIndex(item => item.id === nextItem.id);
             setFocusedIndex(globalIndex);
             itemRefs.current[globalIndex]?.focus();
           }
@@ -116,10 +116,9 @@ export function EnhancedNav({
           ) {
             e.preventDefault();
             handled = true;
-            const prevIndex =
-              (currentEnabledIndex - 1 + enabledItems.length) % enabledItems.length;
+            const prevIndex = (currentEnabledIndex - 1 + enabledItems.length) % enabledItems.length;
             const prevItem = enabledItems[prevIndex];
-            const globalIndex = items.findIndex((item) => item.id === prevItem.id);
+            const globalIndex = items.findIndex(item => item.id === prevItem.id);
             setFocusedIndex(globalIndex);
             itemRefs.current[globalIndex]?.focus();
           }
@@ -130,7 +129,7 @@ export function EnhancedNav({
           e.preventDefault();
           handled = true;
           const firstEnabledItem = enabledItems[0];
-          const globalIndex = items.findIndex((item) => item.id === firstEnabledItem.id);
+          const globalIndex = items.findIndex(item => item.id === firstEnabledItem.id);
           setFocusedIndex(globalIndex);
           itemRefs.current[globalIndex]?.focus();
           break;
@@ -140,7 +139,7 @@ export function EnhancedNav({
           e.preventDefault();
           handled = true;
           const lastEnabledItem = enabledItems[enabledItems.length - 1];
-          const globalIndex = items.findIndex((item) => item.id === lastEnabledItem.id);
+          const globalIndex = items.findIndex(item => item.id === lastEnabledItem.id);
           setFocusedIndex(globalIndex);
           itemRefs.current[globalIndex]?.focus();
           break;
@@ -192,8 +191,7 @@ export function EnhancedNav({
       base: 'rounded-xl transition-all duration-200',
       active:
         'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30',
-      inactive:
-        'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+      inactive: 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
     },
     pills: {
       base: 'rounded-full transition-all duration-200',
@@ -210,15 +208,12 @@ export function EnhancedNav({
     minimal: {
       base: 'rounded-md transition-all duration-200',
       active: 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300',
-      inactive:
-        'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
+      inactive: 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100',
     },
   };
 
   const orientationClass =
-    orientation === 'horizontal'
-      ? 'flex flex-row flex-wrap'
-      : 'flex flex-col';
+    orientation === 'horizontal' ? 'flex flex-row flex-wrap' : 'flex flex-col';
 
   return (
     <nav
@@ -236,7 +231,7 @@ export function EnhancedNav({
         return (
           <button
             key={item.id}
-            ref={(el) => (itemRefs.current[index] = el)}
+            ref={el => (itemRefs.current[index] = el)}
             onClick={() => !item.disabled && onNavigate(item.id)}
             disabled={item.disabled}
             tabIndex={isFocused ? 0 : -1}
@@ -251,11 +246,7 @@ export function EnhancedNav({
             )}
             role="button"
             aria-current={isActive ? 'page' : undefined}
-            aria-label={
-              item.description
-                ? `${item.name} - ${item.description}`
-                : item.name
-            }
+            aria-label={item.description ? `${item.name} - ${item.description}` : item.name}
             title={item.description}
           >
             <div className="flex items-center gap-2">
@@ -315,17 +306,12 @@ export function EnhancedNav({
         {items[focusedIndex] && (
           <>
             Currently focused: {items[focusedIndex].name}.
-            {items[focusedIndex].description && (
-              <> {items[focusedIndex].description}.</>
-            )}
+            {items[focusedIndex].description && <> {items[focusedIndex].description}.</>}
             {enableKeyboardNav && (
               <>
                 {' '}
-                Press{' '}
-                {orientation === 'vertical'
-                  ? 'up or down arrow'
-                  : 'left or right arrow'}{' '}
-                to navigate. Press Enter or Space to activate.
+                Press {orientation === 'vertical' ? 'up or down arrow' : 'left or right arrow'} to
+                navigate. Press Enter or Space to activate.
               </>
             )}
           </>

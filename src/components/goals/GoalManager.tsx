@@ -7,22 +7,14 @@ import { GoalProgressTracker } from './GoalProgressTracker';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import {
-  Target,
-  BarChart3,
-  Settings,
-  ArrowLeft
-} from 'lucide-react';
+import { Target, BarChart3, Settings, ArrowLeft } from 'lucide-react';
 
 interface GoalManagerProps {
   onClose?: () => void;
   className?: string;
 }
 
-export const GoalManager: React.FC<GoalManagerProps> = ({
-  onClose,
-  className = ''
-}) => {
+export const GoalManager: React.FC<GoalManagerProps> = ({ onClose, className = '' }) => {
   const [activeTab, setActiveTab] = useState<'list' | 'create' | 'progress'>('list');
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
@@ -35,7 +27,7 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
         ...goalData,
         id: `goal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       await goalStorage.saveGoal(goal);
@@ -103,10 +95,7 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
 
       case 'progress':
         return selectedGoal ? (
-          <GoalProgressTracker
-            goal={selectedGoal}
-            onBack={handleBackToList}
-          />
+          <GoalProgressTracker goal={selectedGoal} onBack={handleBackToList} />
         ) : (
           <div className="text-center py-12">
             <p>No goal selected</p>
@@ -131,13 +120,17 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
   return (
     <div className={`max-w-7xl mx-auto ${className}`}>
       {renderHeader()}
-      
+
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div className="ml-3">
@@ -150,14 +143,18 @@ export const GoalManager: React.FC<GoalManagerProps> = ({
               >
                 <span className="sr-only">Dismiss</span>
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
             </div>
           </div>
         </div>
       )}
-      
+
       {renderContent()}
     </div>
   );
@@ -171,13 +168,13 @@ interface GoalQuickActionsProps {
 
 export const GoalQuickActions: React.FC<GoalQuickActionsProps> = ({
   onOpenManager,
-  className = ''
+  className = '',
 }) => {
   const [stats, setStats] = useState({
     totalGoals: 0,
     activeGoals: 0,
     completedGoals: 0,
-    avgProgress: 0
+    avgProgress: 0,
   });
 
   React.useEffect(() => {
@@ -196,9 +193,12 @@ export const GoalQuickActions: React.FC<GoalQuickActionsProps> = ({
         const daysSinceStart = Math.floor(
           (Date.now() - new Date(goal.startDate).getTime()) / (24 * 60 * 60 * 1000)
         );
-        const totalDays = goal.endDate ?
-          Math.floor((new Date(goal.endDate).getTime() - new Date(goal.startDate).getTime()) / (24 * 60 * 60 * 1000)) :
-          30;
+        const totalDays = goal.endDate
+          ? Math.floor(
+              (new Date(goal.endDate).getTime() - new Date(goal.startDate).getTime()) /
+                (24 * 60 * 60 * 1000)
+            )
+          : 30;
         return sum + Math.min(100, (daysSinceStart / totalDays) * 100);
       }, 0);
 
@@ -206,7 +206,7 @@ export const GoalQuickActions: React.FC<GoalQuickActionsProps> = ({
         totalGoals: goals.length,
         activeGoals: activeGoals.length,
         completedGoals: completedGoals.length,
-        avgProgress: goals.length > 0 ? Math.round(totalProgress / goals.length) : 0
+        avgProgress: goals.length > 0 ? Math.round(totalProgress / goals.length) : 0,
       });
     } catch (error) {
       console.error('Failed to load goal stats:', error);
@@ -256,7 +256,7 @@ export const GoalQuickActions: React.FC<GoalQuickActionsProps> = ({
         <Button
           onClick={onOpenManager}
           className="w-full"
-          variant={stats.totalGoals === 0 ? "default" : "outline"}
+          variant={stats.totalGoals === 0 ? 'default' : 'outline'}
         >
           {stats.totalGoals === 0 ? 'Create Your First Goal' : 'Manage Goals'}
         </Button>

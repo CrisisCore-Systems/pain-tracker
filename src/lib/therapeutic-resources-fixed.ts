@@ -4,12 +4,12 @@
  */
 
 import { OfflineStorageService } from './offline-storage';
-import type { 
+import type {
   UserContext as BaseUserContext,
-  SessionOutcomes as BaseSessionOutcomes, 
+  SessionOutcomes as BaseSessionOutcomes,
   ResourceRecommendation as BaseResourceRecommendation,
   TherapeuticResourceData,
-  CopingSessionData
+  CopingSessionData,
 } from '../types/extended-storage';
 
 // Extended UserContext for this service
@@ -45,7 +45,15 @@ export interface TherapeuticResource {
   id: string;
   title: string;
   description: string;
-  category: 'breathing' | 'grounding' | 'mindfulness' | 'movement' | 'distraction' | 'crisis' | 'sleep' | 'communication';
+  category:
+    | 'breathing'
+    | 'grounding'
+    | 'mindfulness'
+    | 'movement'
+    | 'distraction'
+    | 'crisis'
+    | 'sleep'
+    | 'communication';
   content: string;
   duration?: number; // minutes
   difficulty: 'beginner' | 'intermediate' | 'advanced';
@@ -137,19 +145,21 @@ export class OfflineTherapeuticResourcesService {
             'Inhale slowly through nose for 4 counts',
             'Hold breath for 7 counts',
             'Exhale slowly through mouth for 8 counts',
-            'Repeat 3-4 cycles or until feeling calmer'
+            'Repeat 3-4 cycles or until feeling calmer',
           ],
           warnings: ['Stop if feeling dizzy', 'Start with fewer cycles if new to technique'],
           alternatives: ['Box breathing if 4-7-8 feels too long', 'Simple deep breathing'],
           followUp: ['Notice any changes in pain or tension', 'Log effectiveness in pain tracker'],
-          timesUsed: 0
+          timesUsed: 0,
         },
         {
           id: 'grounding-5-4-3-2-1',
           title: '5-4-3-2-1 Grounding Technique',
-          description: 'Uses five senses to anchor you to the present moment during pain flares or anxiety',
+          description:
+            'Uses five senses to anchor you to the present moment during pain flares or anxiety',
           category: 'grounding',
-          content: 'Notice 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.',
+          content:
+            'Notice 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.',
           duration: 10,
           difficulty: 'beginner',
           tags: ['anxiety', 'dissociation', 'trauma-informed', 'present-moment'],
@@ -162,18 +172,19 @@ export class OfflineTherapeuticResourcesService {
             'Touch 4 different textures around you',
             'Listen for 3 different sounds',
             'Notice 2 different smells',
-            'Identify 1 taste in your mouth'
+            'Identify 1 taste in your mouth',
           ],
           alternatives: ['Use only available senses', 'Mental imagery if mobility limited'],
           followUp: ['Rate current pain level', 'Notice any shift in anxiety'],
-          timesUsed: 0
+          timesUsed: 0,
         },
         {
           id: 'progressive-muscle-relaxation',
           title: 'Progressive Muscle Relaxation',
           description: 'Systematic tensing and relaxing of muscle groups to reduce overall tension',
           category: 'movement',
-          content: 'Tense each muscle group for 5 seconds, then relax for 10 seconds, moving from toes to head.',
+          content:
+            'Tense each muscle group for 5 seconds, then relax for 10 seconds, moving from toes to head.',
           duration: 20,
           difficulty: 'intermediate',
           tags: ['tension', 'full-body', 'bedtime', 'chronic-pain'],
@@ -187,16 +198,16 @@ export class OfflineTherapeuticResourcesService {
             'Move up to calves, thighs, glutes',
             'Continue with arms, shoulders, face',
             'Notice the contrast between tension and relaxation',
-            'End with a few deep breaths'
+            'End with a few deep breaths',
           ],
           warnings: ['Skip areas of acute pain', 'Gentle tension only'],
           alternatives: ['Relaxation without tensing', 'Focus on one body area'],
-          timesUsed: 0
-        }
+          timesUsed: 0,
+        },
       ];
 
       // Crisis resources
-  // Crisis resources (currently returned via getCrisisInterventions on demand)
+      // Crisis resources (currently returned via getCrisisInterventions on demand)
 
       // Store resources
       for (const resource of defaultResources) {
@@ -225,13 +236,13 @@ export class OfflineTherapeuticResourcesService {
         traumaInformed: resource.traumaInformed,
         accessibilityFeatures: resource.accessibilityFeatures,
         lastAccessed: resource.lastAccessed,
-        timesUsed: resource.timesUsed
+        timesUsed: resource.timesUsed,
       };
 
       // For now, store in settings until we extend the storage service
       await this.offlineStorage.storeData('settings', {
         key: `therapeutic-resource-${resource.id}`,
-        value: resourceData
+        value: resourceData,
       });
     } catch (error) {
       console.error('Failed to store resource:', error);
@@ -251,7 +262,8 @@ export class OfflineTherapeuticResourcesService {
 
       for (const resource of allResources) {
         const relevanceScore = this.calculateRelevanceScore(resource, context);
-        if (relevanceScore > 50) { // Only recommend relevant resources
+        if (relevanceScore > 50) {
+          // Only recommend relevant resources
           recommendations.push({
             resource: {
               id: resource.id,
@@ -266,13 +278,13 @@ export class OfflineTherapeuticResourcesService {
               traumaInformed: resource.traumaInformed,
               accessibilityFeatures: resource.accessibilityFeatures,
               lastAccessed: resource.lastAccessed,
-              timesUsed: resource.timesUsed
+              timesUsed: resource.timesUsed,
             },
             relevanceScore,
             reason: this.generateRecommendationReason(resource, context),
             estimatedDuration: resource.duration || 10,
             priority: relevanceScore > 80 ? 'high' : relevanceScore > 65 ? 'medium' : 'low',
-            timing: this.determineTiming(resource, context)
+            timing: this.determineTiming(resource, context),
           });
         }
       }
@@ -324,7 +336,10 @@ export class OfflineTherapeuticResourcesService {
     return Math.min(100, Math.max(0, score));
   }
 
-  private generateRecommendationReason(resource: TherapeuticResource, context: UserContext): string {
+  private generateRecommendationReason(
+    resource: TherapeuticResource,
+    context: UserContext
+  ): string {
     const reasons: string[] = [];
 
     if (context.currentPainLevel && context.currentPainLevel > 6) {
@@ -346,9 +361,13 @@ export class OfflineTherapeuticResourcesService {
     return reasons.length > 0 ? reasons.join(', ') : 'Good general coping technique';
   }
 
-  private determineTiming(resource: TherapeuticResource, context: UserContext): 'immediate' | 'today' | 'this_week' | 'when_ready' {
+  private determineTiming(
+    resource: TherapeuticResource,
+    context: UserContext
+  ): 'immediate' | 'today' | 'this_week' | 'when_ready' {
     if (context.currentPainLevel && context.currentPainLevel > 7) return 'immediate';
-    if (resource.tags.includes('quick') || (resource.duration && resource.duration <= 5)) return 'immediate';
+    if (resource.tags.includes('quick') || (resource.duration && resource.duration <= 5))
+      return 'immediate';
     if (resource.difficulty === 'beginner') return 'today';
     return 'when_ready';
   }
@@ -363,8 +382,8 @@ export class OfflineTherapeuticResourcesService {
         completed: false,
         techniques: [],
         mood: {
-          before: context.currentMood
-        }
+          before: context.currentMood,
+        },
       };
 
       await this.storeSession(this.currentSession);
@@ -382,7 +401,7 @@ export class OfflineTherapeuticResourcesService {
 
     this.currentSession.notes = notes;
     this.currentSession.techniques = [...this.currentSession.techniques, ...techniques];
-    
+
     await this.storeSession(this.currentSession);
   }
 
@@ -398,7 +417,7 @@ export class OfflineTherapeuticResourcesService {
     this.currentSession.mood.after = outcomes.mood;
 
     await this.storeSession(this.currentSession);
-    
+
     if (this.currentSession.resourceId) {
       await this.updateResourceAnalytics(this.currentSession.resourceId, outcomes);
     }
@@ -410,14 +429,17 @@ export class OfflineTherapeuticResourcesService {
     const sessionData: CopingSessionData = session;
     await this.offlineStorage.storeData('settings', {
       key: `coping-session-${session.id}`,
-      value: sessionData
+      value: sessionData,
     });
   }
 
-  private async updateResourceAnalytics(resourceId: string, outcomes: SessionOutcomes): Promise<void> {
+  private async updateResourceAnalytics(
+    resourceId: string,
+    outcomes: SessionOutcomes
+  ): Promise<void> {
     try {
       let analytics = await this.getResourceAnalytics(resourceId);
-      
+
       const safe: ResourceAnalytics = analytics || {
         totalUses: 0,
         effectivenessRatings: [],
@@ -427,7 +449,7 @@ export class OfflineTherapeuticResourcesService {
         completionRate: 0,
         averageDuration: 0,
         lastUpdated: new Date().toISOString(),
-        trending: { daily: [], weekly: [], monthly: [] }
+        trending: { daily: [], weekly: [], monthly: [] },
       };
 
       safe.totalUses++;
@@ -435,16 +457,20 @@ export class OfflineTherapeuticResourcesService {
       safe.painReductions.push(outcomes.painReduction);
 
       if (safe.effectivenessRatings.length > 0) {
-        safe.averageEffectiveness = safe.effectivenessRatings.reduce((a: number, b: number) => a + b, 0) / safe.effectivenessRatings.length;
+        safe.averageEffectiveness =
+          safe.effectivenessRatings.reduce((a: number, b: number) => a + b, 0) /
+          safe.effectivenessRatings.length;
       }
       if (safe.painReductions.length > 0) {
-        safe.averagePainReduction = safe.painReductions.reduce((a: number, b: number) => a + b, 0) / safe.painReductions.length;
+        safe.averagePainReduction =
+          safe.painReductions.reduce((a: number, b: number) => a + b, 0) /
+          safe.painReductions.length;
       }
       safe.lastUpdated = new Date().toISOString();
 
       await this.offlineStorage.storeData('settings', {
         key: `resource-analytics-${resourceId}`,
-        value: safe
+        value: safe,
       });
     } catch (error) {
       console.error('Failed to update resource analytics:', error);
@@ -454,14 +480,19 @@ export class OfflineTherapeuticResourcesService {
   private async getResourceAnalytics(resourceId: string): Promise<ResourceAnalytics | null> {
     try {
       const data = await this.offlineStorage.getData('settings');
-      const analyticsEntry = data.find(item => 
-        typeof item.data === 'object' && 
-        item.data !== null && 
-        'key' in item.data && 
-        item.data.key === `resource-analytics-${resourceId}`
+      const analyticsEntry = data.find(
+        item =>
+          typeof item.data === 'object' &&
+          item.data !== null &&
+          'key' in item.data &&
+          item.data.key === `resource-analytics-${resourceId}`
       );
-      
-      if (analyticsEntry && typeof analyticsEntry.data === 'object' && 'value' in analyticsEntry.data) {
+
+      if (
+        analyticsEntry &&
+        typeof analyticsEntry.data === 'object' &&
+        'value' in analyticsEntry.data
+      ) {
         return analyticsEntry.data.value as ResourceAnalytics;
       }
       return null;
@@ -474,12 +505,13 @@ export class OfflineTherapeuticResourcesService {
   async getAllResources(): Promise<TherapeuticResource[]> {
     try {
       const data = await this.offlineStorage.getData('settings');
-      const resourceEntries = data.filter(item => 
-        typeof item.data === 'object' && 
-        item.data !== null && 
-        'key' in item.data && 
-        typeof item.data.key === 'string' &&
-        item.data.key.startsWith('therapeutic-resource-')
+      const resourceEntries = data.filter(
+        item =>
+          typeof item.data === 'object' &&
+          item.data !== null &&
+          'key' in item.data &&
+          typeof item.data.key === 'string' &&
+          item.data.key.startsWith('therapeutic-resource-')
       );
 
       return resourceEntries.map(entry => {
@@ -499,7 +531,7 @@ export class OfflineTherapeuticResourcesService {
             accessibilityFeatures: resourceData.accessibilityFeatures,
             instructions: [], // These would need to be stored separately
             lastAccessed: resourceData.lastAccessed,
-            timesUsed: resourceData.timesUsed
+            timesUsed: resourceData.timesUsed,
           };
         }
         throw new Error('Invalid resource data format');
@@ -513,12 +545,13 @@ export class OfflineTherapeuticResourcesService {
   async getRecentSessions(limit: number = 10): Promise<CopingSession[]> {
     try {
       const data = await this.offlineStorage.getData('settings');
-      const sessionEntries = data.filter(item => 
-        typeof item.data === 'object' && 
-        item.data !== null && 
-        'key' in item.data && 
-        typeof item.data.key === 'string' &&
-        item.data.key.startsWith('coping-session-')
+      const sessionEntries = data.filter(
+        item =>
+          typeof item.data === 'object' &&
+          item.data !== null &&
+          'key' in item.data &&
+          typeof item.data.key === 'string' &&
+          item.data.key.startsWith('coping-session-')
       );
 
       const sessions = sessionEntries.map(entry => {
@@ -540,18 +573,24 @@ export class OfflineTherapeuticResourcesService {
   async getResourceAnalyticsSummary(): Promise<Record<string, ResourceAnalytics>> {
     try {
       const data = await this.offlineStorage.getData('settings');
-      const analyticsEntries = data.filter(item => 
-        typeof item.data === 'object' && 
-        item.data !== null && 
-        'key' in item.data && 
-        typeof item.data.key === 'string' &&
-        item.data.key.startsWith('resource-analytics-')
+      const analyticsEntries = data.filter(
+        item =>
+          typeof item.data === 'object' &&
+          item.data !== null &&
+          'key' in item.data &&
+          typeof item.data.key === 'string' &&
+          item.data.key.startsWith('resource-analytics-')
       );
 
       const summary: Record<string, ResourceAnalytics> = {};
-      
+
       for (const entry of analyticsEntries) {
-        if (typeof entry.data === 'object' && entry.data !== null && 'key' in entry.data && 'value' in entry.data) {
+        if (
+          typeof entry.data === 'object' &&
+          entry.data !== null &&
+          'key' in entry.data &&
+          'value' in entry.data
+        ) {
           const key = entry.data.key as string;
           const resourceId = key.replace('resource-analytics-', '');
           summary[resourceId] = entry.data.value as ResourceAnalytics;
@@ -568,9 +607,8 @@ export class OfflineTherapeuticResourcesService {
   // Quick access methods
   async getQuickCopingStrategies(): Promise<TherapeuticResource[]> {
     const allResources = await this.getAllResources();
-    return allResources.filter(resource => 
-      resource.tags.includes('quick') || 
-      (resource.duration && resource.duration <= 5)
+    return allResources.filter(
+      resource => resource.tags.includes('quick') || (resource.duration && resource.duration <= 5)
     );
   }
 
@@ -582,11 +620,11 @@ export class OfflineTherapeuticResourcesService {
   async getTodaysRecommendations(userContext: UserContext): Promise<ResourceRecommendation[]> {
     // Get personalized recommendations based on user context
     const recommendations = await this.getResourcesForContext(userContext);
-    
+
     // Filter for today's recommendations (high relevance, appropriate timing)
-    return recommendations.filter(rec => 
-      rec.timing === 'immediate' || rec.timing === 'today'
-    ).slice(0, 3); // Limit to top 3
+    return recommendations
+      .filter(rec => rec.timing === 'immediate' || rec.timing === 'today')
+      .slice(0, 3); // Limit to top 3
   }
 
   // Crisis intervention
@@ -603,7 +641,7 @@ export class OfflineTherapeuticResourcesService {
         traumaSpecific: true,
         anonymous: true,
         languageSupport: ['English', 'Spanish'],
-        specialties: ['mental health', 'crisis intervention', 'trauma']
+        specialties: ['mental health', 'crisis intervention', 'trauma'],
       },
       {
         id: 'suicide-prevention-lifeline',
@@ -611,12 +649,13 @@ export class OfflineTherapeuticResourcesService {
         type: 'hotline',
         contact: '988',
         availability: '24/7',
-        description: 'National network of local crisis centers providing free and confidential support',
+        description:
+          'National network of local crisis centers providing free and confidential support',
         traumaSpecific: false,
         anonymous: true,
         languageSupport: ['English', 'Spanish'],
-        specialties: ['suicide prevention', 'mental health crisis']
-      }
+        specialties: ['suicide prevention', 'mental health crisis'],
+      },
     ];
   }
 

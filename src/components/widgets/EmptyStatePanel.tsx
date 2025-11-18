@@ -1,9 +1,9 @@
-import { PlayCircle } from "lucide-react";
-import { EmptyState, TrackingIllustration } from "../empty-state";
-import { Card, CardContent } from "../../design-system";
-import { usePainTrackerStore } from "../../stores/pain-tracker-store";
-import { useAdaptiveCopy } from "../../contexts/useTone";
-import { emptyStates } from "../../content/microcopy";
+import { PlayCircle } from 'lucide-react';
+import { EmptyState, TrackingIllustration } from '../empty-state';
+import { Card, CardContent } from '../../design-system';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import { useAdaptiveCopy } from '../../contexts/useTone';
+import { emptyStates } from '../../content/microcopy';
 
 interface EmptyStatePanelProps {
   onStartWalkthrough: () => void;
@@ -11,7 +11,7 @@ interface EmptyStatePanelProps {
 
 export function EmptyStatePanel({ onStartWalkthrough }: EmptyStatePanelProps) {
   const { loadSampleData } = usePainTrackerStore();
-  
+
   // Adaptive tone copy
   const noLogsHeadline = useAdaptiveCopy(emptyStates.noLogs.headline);
   const noLogsSubtext = useAdaptiveCopy(emptyStates.noLogs.subtext);
@@ -31,11 +31,11 @@ export function EmptyStatePanel({ onStartWalkthrough }: EmptyStatePanelProps) {
           primaryAction={{
             label: noLogsCTA,
             onClick: onStartWalkthrough,
-            icon: <PlayCircle className="h-4 w-4" />
+            icon: <PlayCircle className="h-4 w-4" />,
           }}
           secondaryAction={{
             label: secondaryCTA,
-            onClick: handleLoadSampleData
+            onClick: handleLoadSampleData,
           }}
           illustration={<TrackingIllustration />}
         />

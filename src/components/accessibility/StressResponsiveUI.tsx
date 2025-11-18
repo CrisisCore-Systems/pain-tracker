@@ -43,24 +43,24 @@ const STRESS_THEMES: Record<string, StressTheme> = {
       background: '#f9fafb',
       text: '#374151',
       accent: '#8b5cf6',
-      warning: '#f59e0b'
+      warning: '#f59e0b',
     },
     animation: {
       duration: 300,
       intensity: 'normal',
-      enableTransitions: true
+      enableTransitions: true,
     },
     layout: {
       spacing: 'normal',
       density: 'normal',
-      buttonSize: 'normal'
+      buttonSize: 'normal',
     },
     visual: {
       contrast: 'normal',
       blur: 0,
       brightness: 1,
-      saturation: 1
-    }
+      saturation: 1,
+    },
   },
   mild: {
     colors: {
@@ -69,24 +69,24 @@ const STRESS_THEMES: Record<string, StressTheme> = {
       background: '#f8fafc',
       text: '#1f2937',
       accent: '#6366f1',
-      warning: '#f59e0b'
+      warning: '#f59e0b',
     },
     animation: {
       duration: 200,
       intensity: 'reduced',
-      enableTransitions: true
+      enableTransitions: true,
     },
     layout: {
       spacing: 'relaxed',
       density: 'normal',
-      buttonSize: 'large'
+      buttonSize: 'large',
     },
     visual: {
       contrast: 'normal',
       blur: 0,
       brightness: 1.1,
-      saturation: 0.9
-    }
+      saturation: 0.9,
+    },
   },
   moderate: {
     colors: {
@@ -95,24 +95,24 @@ const STRESS_THEMES: Record<string, StressTheme> = {
       background: '#fffbeb',
       text: '#92400e',
       accent: '#d97706',
-      warning: '#dc2626'
+      warning: '#dc2626',
     },
     animation: {
       duration: 150,
       intensity: 'reduced',
-      enableTransitions: true
+      enableTransitions: true,
     },
     layout: {
       spacing: 'relaxed',
       density: 'spacious',
-      buttonSize: 'large'
+      buttonSize: 'large',
     },
     visual: {
       contrast: 'high',
       blur: 0,
       brightness: 1.2,
-      saturation: 0.8
-    }
+      saturation: 0.8,
+    },
   },
   severe: {
     colors: {
@@ -121,24 +121,24 @@ const STRESS_THEMES: Record<string, StressTheme> = {
       background: '#fef2f2',
       text: '#7f1d1d',
       accent: '#b91c1c',
-      warning: '#dc2626'
+      warning: '#dc2626',
     },
     animation: {
       duration: 100,
       intensity: 'minimal',
-      enableTransitions: false
+      enableTransitions: false,
     },
     layout: {
       spacing: 'relaxed',
       density: 'spacious',
-      buttonSize: 'extra-large'
+      buttonSize: 'extra-large',
     },
     visual: {
       contrast: 'high',
       blur: 0,
       brightness: 1.3,
-      saturation: 0.7
-    }
+      saturation: 0.7,
+    },
   },
   emergency: {
     colors: {
@@ -147,25 +147,25 @@ const STRESS_THEMES: Record<string, StressTheme> = {
       background: '#fef2f2',
       text: '#7f1d1d',
       accent: '#b91c1c',
-      warning: '#dc2626'
+      warning: '#dc2626',
     },
     animation: {
       duration: 0,
       intensity: 'minimal',
-      enableTransitions: false
+      enableTransitions: false,
     },
     layout: {
       spacing: 'relaxed',
       density: 'spacious',
-      buttonSize: 'extra-large'
+      buttonSize: 'extra-large',
     },
     visual: {
       contrast: 'maximum',
       blur: 0,
       brightness: 1.4,
-      saturation: 0.6
-    }
-  }
+      saturation: 0.6,
+    },
+  },
 };
 
 // Stress-Responsive Container
@@ -176,24 +176,27 @@ interface StressResponsiveContainerProps {
   overrideTheme?: StressTheme;
 }
 
-export function StressResponsiveContainer({ 
-  children, 
+export function StressResponsiveContainer({
+  children,
   className = '',
   enableStressAdaptation = true,
-  overrideTheme
+  overrideTheme,
 }: StressResponsiveContainerProps) {
   const { crisisLevel } = useCrisisDetection();
-  
-  const theme = overrideTheme || (enableStressAdaptation ? STRESS_THEMES[crisisLevel] : STRESS_THEMES.calm);
-  
+
+  const theme =
+    overrideTheme || (enableStressAdaptation ? STRESS_THEMES[crisisLevel] : STRESS_THEMES.calm);
+
   const containerStyle = {
     backgroundColor: theme.colors.background,
     color: theme.colors.text,
-    transition: theme.animation.enableTransitions ? `all ${theme.animation.duration}ms ease-out` : 'none',
+    transition: theme.animation.enableTransitions
+      ? `all ${theme.animation.duration}ms ease-out`
+      : 'none',
     filter: `brightness(${theme.visual.brightness}) saturate(${theme.visual.saturation}) blur(${theme.visual.blur}px)`,
     ...(theme.layout.spacing === 'tight' && { padding: '0.5rem' }),
     ...(theme.layout.spacing === 'relaxed' && { padding: '1.5rem' }),
-    ...(theme.layout.spacing === 'normal' && { padding: '1rem' })
+    ...(theme.layout.spacing === 'normal' && { padding: '1rem' }),
   };
 
   useEffect(() => {
@@ -211,7 +214,7 @@ export function StressResponsiveContainer({
   }, [theme, enableStressAdaptation]);
 
   return (
-    <div 
+    <div
       style={containerStyle}
       className={`stress-responsive-container ${className}`}
       data-stress-level={crisisLevel}
@@ -240,55 +243,64 @@ export function StressAdaptiveButton({
   disabled = false,
   className = '',
   size,
-  urgency = 'low'
+  urgency = 'low',
 }: StressAdaptiveButtonProps) {
   const { crisisLevel } = useCrisisDetection();
   const theme = STRESS_THEMES[crisisLevel];
-  
+
   // Determine button size based on stress level and explicit size
   const buttonSize = size || theme.layout.buttonSize;
-  
+
   // Urgency-based styling
   const urgencyStyles = {
     low: { animation: 'none' },
     medium: { animation: crisisLevel !== 'emergency' ? 'pulse 2s infinite' : 'none' },
     high: { animation: crisisLevel !== 'emergency' ? 'pulse 1s infinite' : 'none' },
-    critical: { animation: crisisLevel !== 'emergency' ? 'pulse 0.5s infinite' : 'none' }
+    critical: { animation: crisisLevel !== 'emergency' ? 'pulse 0.5s infinite' : 'none' },
   };
 
   const buttonStyle = {
-    backgroundColor: variant === 'emergency' ? theme.colors.warning : 
-                    variant === 'secondary' ? theme.colors.secondary : theme.colors.primary,
+    backgroundColor:
+      variant === 'emergency'
+        ? theme.colors.warning
+        : variant === 'secondary'
+          ? theme.colors.secondary
+          : theme.colors.primary,
     color: 'white',
     border: 'none',
     borderRadius: '0.5rem',
     fontWeight: '600',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.5 : 1,
-    transition: theme.animation.enableTransitions ? `all ${theme.animation.duration}ms ease-out` : 'none',
+    transition: theme.animation.enableTransitions
+      ? `all ${theme.animation.duration}ms ease-out`
+      : 'none',
     transform: 'scale(1)',
-    boxShadow: urgency === 'critical' ? '0 0 20px rgba(220, 38, 38, 0.5)' : 
-               urgency === 'high' ? '0 0 15px rgba(245, 158, 11, 0.5)' : 
-               '0 2px 4px rgba(0, 0, 0, 0.1)',
+    boxShadow:
+      urgency === 'critical'
+        ? '0 0 20px rgba(220, 38, 38, 0.5)'
+        : urgency === 'high'
+          ? '0 0 15px rgba(245, 158, 11, 0.5)'
+          : '0 2px 4px rgba(0, 0, 0, 0.1)',
     ...urgencyStyles[urgency],
-    ...(buttonSize === 'large' && { 
-      padding: '1rem 2rem', 
+    ...(buttonSize === 'large' && {
+      padding: '1rem 2rem',
       fontSize: '1.125rem',
       minHeight: '3rem',
-      minWidth: '8rem'
+      minWidth: '8rem',
     }),
-    ...(buttonSize === 'extra-large' && { 
-      padding: '1.5rem 3rem', 
+    ...(buttonSize === 'extra-large' && {
+      padding: '1.5rem 3rem',
       fontSize: '1.25rem',
       minHeight: '4rem',
-      minWidth: '10rem'
+      minWidth: '10rem',
     }),
-    ...(buttonSize === 'normal' && { 
-      padding: '0.75rem 1.5rem', 
+    ...(buttonSize === 'normal' && {
+      padding: '0.75rem 1.5rem',
       fontSize: '1rem',
       minHeight: '2.5rem',
-      minWidth: '6rem'
-    })
+      minWidth: '6rem',
+    }),
   };
 
   return (
@@ -299,12 +311,12 @@ export function StressAdaptiveButton({
       className={`stress-adaptive-button ${className}`}
       data-urgency={urgency}
       data-stress-level={crisisLevel}
-      onMouseEnter={(e) => {
+      onMouseEnter={e => {
         if (!disabled && theme.animation.enableTransitions) {
           e.currentTarget.style.transform = 'scale(1.05)';
         }
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={e => {
         if (!disabled && theme.animation.enableTransitions) {
           e.currentTarget.style.transform = 'scale(1)';
         }
@@ -327,7 +339,7 @@ export function StressResponsiveText({
   children,
   level = 'body',
   emphasis = 'normal',
-  className = ''
+  className = '',
 }: StressResponsiveTextProps) {
   const { crisisLevel } = useCrisisDetection();
   const theme = STRESS_THEMES[crisisLevel];
@@ -337,12 +349,12 @@ export function StressResponsiveText({
       heading: '1.5rem',
       subheading: '1.25rem',
       body: '1rem',
-      caption: '0.875rem'
+      caption: '0.875rem',
     };
 
-    const multiplier = theme.layout.density === 'spacious' ? 1.2 : 
-                     theme.layout.density === 'compact' ? 0.9 : 1;
-    
+    const multiplier =
+      theme.layout.density === 'spacious' ? 1.2 : theme.layout.density === 'compact' ? 0.9 : 1;
+
     return `calc(${baseSize[level]} * ${multiplier})`;
   };
 
@@ -350,17 +362,28 @@ export function StressResponsiveText({
     color: theme.colors.text,
     fontSize: getTextSize(),
     fontWeight: emphasis === 'high' ? '700' : emphasis === 'medium' ? '600' : '400',
-    lineHeight: theme.layout.spacing === 'relaxed' ? '1.75' : 
-               theme.layout.spacing === 'tight' ? '1.4' : '1.6',
-    transition: theme.animation.enableTransitions ? `all ${theme.animation.duration}ms ease-out` : 'none'
+    lineHeight:
+      theme.layout.spacing === 'relaxed'
+        ? '1.75'
+        : theme.layout.spacing === 'tight'
+          ? '1.4'
+          : '1.6',
+    transition: theme.animation.enableTransitions
+      ? `all ${theme.animation.duration}ms ease-out`
+      : 'none',
   };
 
-  const Component = level === 'heading' ? 'h2' : 
-                   level === 'subheading' ? 'h3' : 
-                   level === 'caption' ? 'small' : 'p';
+  const Component =
+    level === 'heading'
+      ? 'h2'
+      : level === 'subheading'
+        ? 'h3'
+        : level === 'caption'
+          ? 'small'
+          : 'p';
 
   return (
-    <Component 
+    <Component
       style={textStyle}
       className={`stress-responsive-text ${className}`}
       data-level={level}
@@ -382,7 +405,7 @@ interface StressLevelIndicatorProps {
 export function StressLevelIndicator({
   showLabel = true,
   position = 'top-right',
-  size = 'medium'
+  size = 'medium',
 }: StressLevelIndicatorProps) {
   const { crisisLevel } = useCrisisDetection();
   const theme = STRESS_THEMES[crisisLevel];
@@ -407,7 +430,7 @@ export function StressLevelIndicator({
       'top-left': 'top-4 left-4',
       'top-right': 'top-4 right-4',
       'bottom-left': 'bottom-4 left-4',
-      'bottom-right': 'bottom-4 right-4'
+      'bottom-right': 'bottom-4 right-4',
     };
     return positions[position];
   };
@@ -416,7 +439,7 @@ export function StressLevelIndicator({
     const sizes = {
       small: 'w-8 h-8',
       medium: 'w-12 h-12',
-      large: 'w-16 h-16'
+      large: 'w-16 h-16',
     };
     return sizes[size];
   };
@@ -426,14 +449,20 @@ export function StressLevelIndicator({
     borderRadius: '50%',
     padding: size === 'small' ? '0.25rem' : size === 'large' ? '0.75rem' : '0.5rem',
     boxShadow: `0 0 20px ${theme.colors.primary}40`,
-    animation: crisisLevel === 'emergency' ? 'pulse 1s infinite' : 
-              crisisLevel === 'severe' ? 'pulse 2s infinite' : 'none',
-    transition: theme.animation.enableTransitions ? `all ${theme.animation.duration}ms ease-out` : 'none'
+    animation:
+      crisisLevel === 'emergency'
+        ? 'pulse 1s infinite'
+        : crisisLevel === 'severe'
+          ? 'pulse 2s infinite'
+          : 'none',
+    transition: theme.animation.enableTransitions
+      ? `all ${theme.animation.duration}ms ease-out`
+      : 'none',
   };
 
   return (
     <div className={`fixed ${getPositionClasses()} z-50`}>
-      <div 
+      <div
         className={`${getSizeClasses()} flex items-center justify-center`}
         style={indicatorStyle}
         title={`Stress Level: ${crisisLevel}`}
@@ -441,10 +470,7 @@ export function StressLevelIndicator({
         {getIcon()}
       </div>
       {showLabel && (
-        <div 
-          className="mt-2 text-xs font-medium text-center"
-          style={{ color: theme.colors.text }}
-        >
+        <div className="mt-2 text-xs font-medium text-center" style={{ color: theme.colors.text }}>
           {crisisLevel.charAt(0).toUpperCase() + crisisLevel.slice(1)}
         </div>
       )}
@@ -468,7 +494,7 @@ export function StressResponsiveCard({
   priority = 'low',
   className = '',
   collapsible = false,
-  defaultExpanded = true
+  defaultExpanded = true,
 }: StressResponsiveCardProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const { crisisLevel } = useCrisisDetection();
@@ -476,18 +502,24 @@ export function StressResponsiveCard({
 
   // Auto-expand high priority cards during crisis
   useEffect(() => {
-    if ((priority === 'high' || priority === 'emergency') && 
-        (crisisLevel === 'severe' || crisisLevel === 'emergency')) {
+    if (
+      (priority === 'high' || priority === 'emergency') &&
+      (crisisLevel === 'severe' || crisisLevel === 'emergency')
+    ) {
       setIsExpanded(true);
     }
   }, [priority, crisisLevel]);
 
   const getBorderColor = () => {
     switch (priority) {
-      case 'emergency': return theme.colors.warning;
-      case 'high': return theme.colors.accent;
-      case 'medium': return theme.colors.secondary;
-      default: return theme.colors.primary;
+      case 'emergency':
+        return theme.colors.warning;
+      case 'high':
+        return theme.colors.accent;
+      case 'medium':
+        return theme.colors.secondary;
+      default:
+        return theme.colors.primary;
     }
   };
 
@@ -495,17 +527,27 @@ export function StressResponsiveCard({
     backgroundColor: theme.colors.background,
     border: `2px solid ${getBorderColor()}`,
     borderRadius: '0.75rem',
-    padding: theme.layout.spacing === 'relaxed' ? '1.5rem' : 
-            theme.layout.spacing === 'tight' ? '0.75rem' : '1rem',
-    boxShadow: priority === 'emergency' ? `0 0 30px ${theme.colors.warning}40` :
-              priority === 'high' ? `0 0 20px ${theme.colors.accent}30` :
-              '0 4px 6px rgba(0, 0, 0, 0.1)',
-    transition: theme.animation.enableTransitions ? `all ${theme.animation.duration}ms ease-out` : 'none',
-    animation: priority === 'emergency' && crisisLevel === 'emergency' ? 'pulse 2s infinite' : 'none'
+    padding:
+      theme.layout.spacing === 'relaxed'
+        ? '1.5rem'
+        : theme.layout.spacing === 'tight'
+          ? '0.75rem'
+          : '1rem',
+    boxShadow:
+      priority === 'emergency'
+        ? `0 0 30px ${theme.colors.warning}40`
+        : priority === 'high'
+          ? `0 0 20px ${theme.colors.accent}30`
+          : '0 4px 6px rgba(0, 0, 0, 0.1)',
+    transition: theme.animation.enableTransitions
+      ? `all ${theme.animation.duration}ms ease-out`
+      : 'none',
+    animation:
+      priority === 'emergency' && crisisLevel === 'emergency' ? 'pulse 2s infinite' : 'none',
   };
 
   return (
-    <div 
+    <div
       className={`stress-responsive-card ${className}`}
       style={cardStyle}
       data-priority={priority}
@@ -527,11 +569,7 @@ export function StressResponsiveCard({
           )}
         </div>
       )}
-      {(!collapsible || isExpanded) && (
-        <div className="stress-card-content">
-          {children}
-        </div>
-      )}
+      {(!collapsible || isExpanded) && <div className="stress-card-content">{children}</div>}
     </div>
   );
 }
@@ -552,7 +590,7 @@ export function CrisisAlertBanner({
   onDismiss,
   actions = [],
   autoHide = false,
-  hideDelay = 10000
+  hideDelay = 10000,
 }: CrisisAlertBannerProps) {
   const [isVisible, setIsVisible] = useState(true);
   const { crisisLevel } = useCrisisDetection();
@@ -594,11 +632,13 @@ export function CrisisAlertBanner({
     borderRadius: '0.5rem',
     boxShadow: `0 0 20px ${theme.colors.warning}40`,
     animation: crisisLevel === 'emergency' ? 'pulse 2s infinite' : 'none',
-    transition: theme.animation.enableTransitions ? `all ${theme.animation.duration}ms ease-out` : 'none'
+    transition: theme.animation.enableTransitions
+      ? `all ${theme.animation.duration}ms ease-out`
+      : 'none',
   };
 
   return (
-    <div 
+    <div
       className="crisis-alert-banner fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
       style={bannerStyle}
       data-crisis-level={crisisLevel}
@@ -645,5 +685,5 @@ export default {
   StressResponsiveText,
   StressLevelIndicator,
   StressResponsiveCard,
-  CrisisAlertBanner
+  CrisisAlertBanner,
 };

@@ -26,7 +26,7 @@ const effectivenessOptions = [
   'Moderately Effective',
   'Slightly Effective',
   'Not Effective',
-  'Made Things Worse'
+  'Made Things Worse',
 ];
 
 export default function Medications({ medications, onChange }: MedicationsProps) {
@@ -34,22 +34,22 @@ export default function Medications({ medications, onChange }: MedicationsProps)
     name: '',
     dosage: '',
     frequency: '',
-    effectiveness: 'Not Rated'
+    effectiveness: 'Not Rated',
   });
 
   const addMedication = () => {
     if (!newMedication.name) return;
-    
+
     onChange({
       ...medications,
-      current: [...medications.current, newMedication]
+      current: [...medications.current, newMedication],
     });
-    
+
     setNewMedication({
       name: '',
       dosage: '',
       frequency: '',
-      effectiveness: 'Not Rated'
+      effectiveness: 'Not Rated',
     });
   };
 
@@ -57,19 +57,24 @@ export default function Medications({ medications, onChange }: MedicationsProps)
     const updatedMedications = medications.current.filter((_, i) => i !== index);
     onChange({
       ...medications,
-      current: updatedMedications
+      current: updatedMedications,
     });
   };
 
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Current Medications</h3>
-        
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+          Current Medications
+        </h3>
+
         {/* Current Medications List */}
         <div className="space-y-4 mb-6">
           {medications.current.map((med, index) => (
-            <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-4 rounded-md">
+            <div
+              key={index}
+              className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 p-4 rounded-md"
+            >
               <div className="flex-1 grid grid-cols-4 gap-4">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{med.name}</p>
@@ -107,7 +112,7 @@ export default function Medications({ medications, onChange }: MedicationsProps)
               <input
                 type="text"
                 value={newMedication.name}
-                onChange={(e) => setNewMedication({ ...newMedication, name: e.target.value })}
+                onChange={e => setNewMedication({ ...newMedication, name: e.target.value })}
                 placeholder="Medication name"
                 className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               />
@@ -116,7 +121,7 @@ export default function Medications({ medications, onChange }: MedicationsProps)
               <input
                 type="text"
                 value={newMedication.dosage}
-                onChange={(e) => setNewMedication({ ...newMedication, dosage: e.target.value })}
+                onChange={e => setNewMedication({ ...newMedication, dosage: e.target.value })}
                 placeholder="Dosage"
                 className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               />
@@ -125,7 +130,7 @@ export default function Medications({ medications, onChange }: MedicationsProps)
               <input
                 type="text"
                 value={newMedication.frequency}
-                onChange={(e) => setNewMedication({ ...newMedication, frequency: e.target.value })}
+                onChange={e => setNewMedication({ ...newMedication, frequency: e.target.value })}
                 placeholder="Frequency"
                 className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               />
@@ -133,11 +138,13 @@ export default function Medications({ medications, onChange }: MedicationsProps)
             <div>
               <select
                 value={newMedication.effectiveness}
-                onChange={(e) => setNewMedication({ ...newMedication, effectiveness: e.target.value })}
+                onChange={e =>
+                  setNewMedication({ ...newMedication, effectiveness: e.target.value })
+                }
                 className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               >
                 <option value="Not Rated">Select Effectiveness</option>
-                {effectivenessOptions.map((option) => (
+                {effectivenessOptions.map(option => (
                   <option key={option} value={option}>
                     {option}
                   </option>
@@ -145,7 +152,7 @@ export default function Medications({ medications, onChange }: MedicationsProps)
               </select>
             </div>
           </div>
-          
+
           <button
             type="button"
             onClick={addMedication}
@@ -159,10 +166,12 @@ export default function Medications({ medications, onChange }: MedicationsProps)
 
       {/* Recent Changes */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Medication Changes</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+          Medication Changes
+        </h3>
         <textarea
           value={medications.changes}
-          onChange={(e) => onChange({ ...medications, changes: e.target.value })}
+          onChange={e => onChange({ ...medications, changes: e.target.value })}
           rows={3}
           className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           placeholder="Describe any recent changes to your medications..."
@@ -171,14 +180,16 @@ export default function Medications({ medications, onChange }: MedicationsProps)
 
       {/* Overall Effectiveness */}
       <div className="bg-white shadow rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Overall Effectiveness</h3>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+          Overall Effectiveness
+        </h3>
         <select
           value={medications.effectiveness}
-          onChange={(e) => onChange({ ...medications, effectiveness: e.target.value })}
+          onChange={e => onChange({ ...medications, effectiveness: e.target.value })}
           className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
         >
           <option value="">Select Overall Effectiveness</option>
-          {effectivenessOptions.map((option) => (
+          {effectivenessOptions.map(option => (
             <option key={option} value={option}>
               {option}
             </option>
@@ -187,4 +198,4 @@ export default function Medications({ medications, onChange }: MedicationsProps)
       </div>
     </div>
   );
-} 
+}

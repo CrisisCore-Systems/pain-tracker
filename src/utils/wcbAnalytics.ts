@@ -27,7 +27,7 @@ export function analyzeTreatmentChanges(entries: PainEntry[]): Treatment[] {
     }, {});
 
   return Object.entries(treatments)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([, a], [, b]) => b - a)
     .map(([treatment, count]) => ({
       treatment,
       frequency: count,
@@ -35,8 +35,7 @@ export function analyzeTreatmentChanges(entries: PainEntry[]): Treatment[] {
 }
 
 export function analyzeWorkImpact(entries: PainEntry[]): WorkImpactAnalysis {
-  const workDays = entries
-    .reduce((acc, entry) => acc + (entry.workImpact?.missedWork || 0), 0);
+  const workDays = entries.reduce((acc, entry) => acc + (entry.workImpact?.missedWork || 0), 0);
 
   const limitations = entries
     .flatMap(entry => entry.workImpact?.workLimitations || [])
@@ -48,24 +47,24 @@ export function analyzeWorkImpact(entries: PainEntry[]): WorkImpactAnalysis {
   return {
     missedDays: workDays,
     commonLimitations: Object.entries(limitations)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 5),
   };
 }
 
 export function calculateOverallTrend(progression: ProgressionPoint[]): string {
   const validPoints = progression.filter(p => p.averagePain !== null);
-  if (validPoints.length < 2) return "Insufficient data";
+  if (validPoints.length < 2) return 'Insufficient data';
 
   const firstPoint = validPoints[0].averagePain;
   const lastPoint = validPoints[validPoints.length - 1].averagePain;
   const difference = lastPoint - firstPoint;
 
-  if (difference > 2) return "Significant deterioration";
-  if (difference > 1) return "Moderate deterioration";
-  if (difference > 0) return "Slight deterioration";
-  if (difference === 0) return "Stable";
-  return "Improved";
+  if (difference > 2) return 'Significant deterioration';
+  if (difference > 1) return 'Moderate deterioration';
+  if (difference > 0) return 'Slight deterioration';
+  if (difference === 0) return 'Stable';
+  return 'Improved';
 }
 
 export function generateRecommendations(progression: ProgressionPoint[]): string[] {
@@ -73,12 +72,12 @@ export function generateRecommendations(progression: ProgressionPoint[]): string
   const recommendations: string[] = [];
 
   if (latest.averagePain > 7) {
-    recommendations.push("Immediate medical reassessment recommended");
+    recommendations.push('Immediate medical reassessment recommended');
   }
 
   if (latest.locations.length > 0) {
-    recommendations.push("Document new pain locations with medical professional");
+    recommendations.push('Document new pain locations with medical professional');
   }
 
   return recommendations;
-} 
+}

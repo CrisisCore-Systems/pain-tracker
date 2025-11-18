@@ -7,13 +7,13 @@ import React, { useState, useEffect } from 'react';
 import {
   EnhancedQuantifiedEmpathyDashboard,
   EmpathyDrivenAnalyticsService,
-  RealTimeEmpathyMonitor
+  RealTimeEmpathyMonitor,
 } from '../components/analytics';
-import { 
+import {
   QuantifiedEmpathyMetrics,
   EmpathyInsight,
   EmpathyRecommendation,
-  MoodEntry
+  MoodEntry,
 } from '../types/quantified-empathy';
 // Mock implementations for empathy services
 interface EmpathyStateSnapshot {
@@ -46,7 +46,7 @@ interface EmpathyIntegrationExampleProps {
 export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps> = ({
   userId,
   painEntries,
-  moodEntries
+  moodEntries,
 }) => {
   // State for empathy analytics
   const [empathyMetrics, setEmpathyMetrics] = useState<QuantifiedEmpathyMetrics | null>(null);
@@ -57,22 +57,28 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
   const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(false);
 
   // Services
-  const [analyticsService] = useState(() => new EmpathyDrivenAnalyticsService({
-    validationThreshold: 75,
-    celebrationFrequency: 'daily',
-    reportingStyle: 'balanced',
-    privacyLevel: 'personal',
-    languagePreference: 'everyday'
-  }));
+  const [analyticsService] = useState(
+    () =>
+      new EmpathyDrivenAnalyticsService({
+        validationThreshold: 75,
+        celebrationFrequency: 'daily',
+        reportingStyle: 'balanced',
+        privacyLevel: 'personal',
+        languagePreference: 'everyday',
+      })
+  );
 
-  const [empathyMonitor] = useState(() => new RealTimeEmpathyMonitor({
-    monitoringInterval: 30000, // 30 seconds
-    sentimentAnalysisEnabled: true,
-    microInteractionTracking: true,
-    emotionalContagionDetection: true,
-    empathyBurnoutPrevention: true,
-    culturalContextAwareness: true
-  }));
+  const [empathyMonitor] = useState(
+    () =>
+      new RealTimeEmpathyMonitor({
+        monitoringInterval: 30000, // 30 seconds
+        sentimentAnalysisEnabled: true,
+        microInteractionTracking: true,
+        emotionalContagionDetection: true,
+        empathyBurnoutPrevention: true,
+        culturalContextAwareness: true,
+      })
+  );
 
   // Initialize empathy analytics
   useEffect(() => {
@@ -102,7 +108,6 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
           empathyInsights
         );
         setRecommendations(empathyRecommendations);
-
       } catch (error) {
         console.error('Error initializing empathy analytics:', error);
       }
@@ -120,7 +125,7 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
       // Add state listener
       const stateListener = (snapshot: EmpathyStateSnapshot) => {
         setRealTimeState(snapshot);
-        
+
         // Check for new alerts
         const alerts = empathyMonitor.getActiveAlerts(userId);
         setActiveAlerts(alerts);
@@ -138,7 +143,7 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
   // Handlers
   const handleInsightSelect = (insight: EmpathyInsight) => {
     console.log('Selected insight:', insight);
-    
+
     // Example: Show detailed insight modal or navigate to specific view
     // You could also track user engagement with insights
     trackInsightEngagement(insight);
@@ -146,10 +151,10 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
 
   const handleRecommendationAccept = async (recommendation: EmpathyRecommendation) => {
     console.log('Accepted recommendation:', recommendation);
-    
+
     // Example: Track recommendation acceptance
     await trackRecommendationAcceptance(recommendation);
-    
+
     // Example: Set up intervention reminders
     if (recommendation.category === 'emotional') {
       scheduleEmotionalIntervention(recommendation);
@@ -158,10 +163,10 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
 
   const handleShareMetrics = (metrics: QuantifiedEmpathyMetrics) => {
     console.log('Sharing empathy metrics:', metrics);
-    
+
     // Example: Generate shareable empathy journey summary
     const shareableContent = generateShareableContent(metrics);
-    
+
     // Example: Open share modal or copy to clipboard
     navigator.clipboard.writeText(shareableContent);
   };
@@ -170,9 +175,9 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
     if (isRealTimeEnabled) {
       // Analyze text for empathy signals
       const analysis = await empathyMonitor.analyzeTextForEmpathy(userId, text, context);
-      
+
       console.log('Text empathy analysis:', analysis);
-      
+
       // Example: Show real-time feedback
       if (analysis.concerns.length > 0) {
         showEmpathyConcernAlert(analysis);
@@ -190,7 +195,7 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
     if (isRealTimeEnabled) {
       // Track micro-empathy moment
       await empathyMonitor.trackMicroEmpathyMoment(userId, interaction);
-      
+
       console.log('Tracked micro-empathy moment:', interaction);
     }
   };
@@ -208,9 +213,9 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
       timestamp: new Date(),
       userId,
       insightType: insight.type,
-      confidence: insight.confidence
+      confidence: insight.confidence,
     };
-    
+
     // Send to analytics service
     console.log('Tracking insight engagement:', engagement);
   };
@@ -222,9 +227,9 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
       timestamp: new Date(),
       userId,
       category: recommendation.category,
-      priority: recommendation.priority
+      priority: recommendation.priority,
     };
-    
+
     // Send to analytics service
     console.log('Tracking recommendation acceptance:', acceptance);
   };
@@ -235,9 +240,9 @@ export const EmpathyIntegrationExample: React.FC<EmpathyIntegrationExampleProps>
       title: recommendation.title,
       steps: recommendation.steps,
       timeframe: recommendation.timeframe,
-      userId
+      userId,
     };
-    
+
     console.log('Scheduling intervention:', intervention);
   };
 
@@ -255,10 +260,15 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
     `.trim();
   };
 
-  const showEmpathyConcernAlert = (analysis: { empathyLevel: number; sentiment: string; empathyIndicators: string[]; concerns: string[] }) => {
+  const showEmpathyConcernAlert = (analysis: {
+    empathyLevel: number;
+    sentiment: string;
+    empathyIndicators: string[];
+    concerns: string[];
+  }) => {
     // Example: Show gentle alert for empathy concerns
     console.log('Empathy concern detected:', analysis.concerns);
-    
+
     // You could show a gentle notification or suggestion
     // "It seems like you might be feeling overwhelmed. Would you like some gentle boundary suggestions?"
   };
@@ -269,25 +279,32 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
       {activeAlerts.length > 0 && (
         <div className="empathy-alerts mb-6 space-y-2">
           {activeAlerts.map(alert => (
-            <div 
+            <div
               key={alert.id}
               className={`p-4 rounded-lg border-l-4 ${
-                alert.severity === 'critical' ? 'bg-red-50 border-red-400' :
-                alert.severity === 'high' ? 'bg-orange-50 border-orange-400' :
-                alert.severity === 'medium' ? 'bg-yellow-50 border-yellow-400' :
-                'bg-blue-50 border-blue-400'
+                alert.severity === 'critical'
+                  ? 'bg-red-50 border-red-400'
+                  : alert.severity === 'high'
+                    ? 'bg-orange-50 border-orange-400'
+                    : alert.severity === 'medium'
+                      ? 'bg-yellow-50 border-yellow-400'
+                      : 'bg-blue-50 border-blue-400'
               }`}
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">{alert.message}</h4>
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">
+                    {alert.message}
+                  </h4>
                   <ul className="mt-2 text-sm text-gray-600 dark:text-gray-400">
                     {alert.recommendations.map((rec: string, index: number) => (
-                      <li key={index} className="mt-1">• {rec}</li>
+                      <li key={index} className="mt-1">
+                        • {rec}
+                      </li>
                     ))}
                   </ul>
                 </div>
-                <button 
+                <button
                   onClick={() => dismissAlert(alert.id)}
                   className="text-gray-400 hover:text-gray-600 dark:text-gray-400"
                 >
@@ -330,7 +347,7 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
           <input
             type="checkbox"
             checked={isRealTimeEnabled}
-            onChange={(e) => setIsRealTimeEnabled(e.target.checked)}
+            onChange={e => setIsRealTimeEnabled(e.target.checked)}
             className="rounded"
           />
           <span className="text-sm font-medium">Enable Real-time Empathy Monitoring</span>
@@ -354,7 +371,7 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
         <textarea
           placeholder="Write about your empathy experience..."
           className="w-full p-3 border rounded-lg"
-          onBlur={(e) => handleTextInput(e.target.value, 'journal_entry')}
+          onBlur={e => handleTextInput(e.target.value, 'journal_entry')}
         />
       </div>
 
@@ -362,13 +379,15 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
       <div className="mt-6">
         <h3 className="font-semibold mb-2">Track Micro-Empathy Moment</h3>
         <button
-          onClick={() => handleMicroEmpathyMoment({
-            type: 'spontaneous',
-            trigger: 'Friend shared difficult news',
-            response: 'Listened carefully and offered support',
-            duration: 300, // 5 minutes
-            intensity: 85
-          })}
+          onClick={() =>
+            handleMicroEmpathyMoment({
+              type: 'spontaneous',
+              trigger: 'Friend shared difficult news',
+              response: 'Listened carefully and offered support',
+              duration: 300, // 5 minutes
+              intensity: 85,
+            })
+          }
           className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
         >
           Record Example Empathy Moment
@@ -376,8 +395,13 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
       </div>
 
       {/* Debug information */}
-      {((typeof (import.meta as any) !== 'undefined' && (import.meta as any).env && ((import.meta as any).env.MODE === 'development' || (import.meta as any).env.NODE_ENV === 'development'))
-        || (typeof process !== 'undefined' && (process as any).env && (process as any).env.NODE_ENV === 'development')) && (
+      {((typeof (import.meta as any) !== 'undefined' &&
+        (import.meta as any).env &&
+        ((import.meta as any).env.MODE === 'development' ||
+          (import.meta as any).env.NODE_ENV === 'development')) ||
+        (typeof process !== 'undefined' &&
+          (process as any).env &&
+          (process as any).env.NODE_ENV === 'development')) && (
         <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
           <h3 className="font-semibold mb-2">Debug Information</h3>
           <div className="text-sm space-y-2">

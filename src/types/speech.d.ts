@@ -44,7 +44,7 @@ export interface SpeechRecognition extends EventTarget {
 
 export interface SpeechRecognitionConstructor {
   prototype: SpeechRecognition;
-  new(): SpeechRecognition;
+  new (): SpeechRecognition;
 }
 
 // Extend global Window interface

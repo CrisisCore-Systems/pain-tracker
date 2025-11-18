@@ -36,9 +36,7 @@ function getGridLayoutClasses(layout: Pick<DashboardLayout, 'layout' | 'columns'
     return cn(baseGrid, safeColumns === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2');
   }
 
-  const columnClass = safeColumns === 1
-    ? 'grid-cols-1'
-    : 'grid-cols-1 md:grid-cols-2';
+  const columnClass = safeColumns === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2';
 
   return cn(baseGrid, columnClass);
 }
@@ -58,7 +56,7 @@ export function DashboardGridSection({
   draggedWidget,
   onDragStart,
   onDragEnd,
-  onDrop
+  onDrop,
 }: DashboardGridSectionProps) {
   const sectionDefinition = sections.find(section => section.id === activeSection);
   const sectionLabel = sectionDefinition?.label ?? 'current';
@@ -70,9 +68,12 @@ export function DashboardGridSection({
       {isEmpty ? (
         <Card className="border-dashed border-border/60 bg-background/40">
           <CardContent className="flex flex-col gap-3 py-12 text-center">
-            <h3 className="text-lg font-semibold text-foreground">This space is clear and ready.</h3>
+            <h3 className="text-lg font-semibold text-foreground">
+              This space is clear and ready.
+            </h3>
             <p className="text-sm text-muted-foreground">
-              Add widgets that fit your {sectionLabel.toLowerCase()} view, or adjust filters to see more data.
+              Add widgets that fit your {sectionLabel.toLowerCase()} view, or adjust filters to see
+              more data.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Button variant="outline" onClick={onShowWidgetManager}>
@@ -89,10 +90,7 @@ export function DashboardGridSection({
           {widgets.map(widget => (
             <div
               key={widget.id}
-              className={cn(
-                'min-w-0',
-                layout.layout === 'masonry' && 'break-inside-avoid'
-              )}
+              className={cn('min-w-0', layout.layout === 'masonry' && 'break-inside-avoid')}
             >
               <DashboardWidget
                 widget={widget}
@@ -105,7 +103,7 @@ export function DashboardGridSection({
                   event.dataTransfer?.setData('text/plain', widgetId);
                   onDragStart(widgetId);
                 }}
-                onDragEnd={(event) => {
+                onDragEnd={event => {
                   event.preventDefault();
                   onDragEnd();
                 }}

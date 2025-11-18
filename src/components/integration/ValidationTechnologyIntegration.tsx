@@ -8,9 +8,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
 import { BarChart3, Heart, Crown, TrendingUp, Shield, Star } from 'lucide-react';
 
 // Import our new validation components
-import { EmotionalValidation, ValidationHistory, type ValidationResponse } from '../../services/EmotionalValidationService';
+import {
+  EmotionalValidation,
+  ValidationHistory,
+  type ValidationResponse,
+} from '../../services/EmotionalValidationService';
 import { HolisticProgressTracker } from '../progress/HolisticProgressTracker';
-import { UserControlPanel, ChoiceEmphasis, EmpowermentMessageDisplay } from '../agency/UserAgencyComponents';
+import {
+  UserControlPanel,
+  ChoiceEmphasis,
+  EmpowermentMessageDisplay,
+} from '../agency/UserAgencyComponents';
 import { useEmotionalValidation } from '../../hooks/useEmotionalValidation';
 import { validationIntegration } from '../../services/ValidationIntegrationService';
 
@@ -20,7 +28,7 @@ import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 
 interface DashboardData {
   recentValidations: ValidationResponse[];
-  progressSummary: Array<{id: string; date: Date}>;
+  progressSummary: Array<{ id: string; date: Date }>;
   insights: {
     validationEffectiveness: string;
     emotionalPatterns: string;
@@ -31,7 +39,12 @@ interface DashboardData {
     totalValidations: number;
     validationsByTone: Record<string, number>;
     averageResponseTime: number;
-    emotionalTrends: Array<{date: string; positiveValidations: number; negativeValidations: number; supportiveValidations: number}>;
+    emotionalTrends: Array<{
+      date: string;
+      positiveValidations: number;
+      negativeValidations: number;
+      supportiveValidations: number;
+    }>;
     userEngagement: {
       dismissed: number;
       interacted: number;
@@ -45,16 +58,16 @@ interface ValidationIntegratedPainFormProps {
   painEntries: PainEntry[];
 }
 
-export function ValidationIntegratedPainForm({ 
-  onSubmit, 
-  painEntries 
+export function ValidationIntegratedPainForm({
+  onSubmit,
+  painEntries,
 }: ValidationIntegratedPainFormProps) {
   const { preferences } = useTraumaInformed();
   const { validationHistory, addValidation, clearHistory } = useEmotionalValidation();
   const [formData, setFormData] = useState({
     notes: '',
     painLevel: 5,
-    mood: 5
+    mood: 5,
   });
   const [showProgress, setShowProgress] = useState(false);
 
@@ -78,32 +91,32 @@ export function ValidationIntegratedPainForm({
       label: 'Quick Entry',
       description: 'Just the essentials - pain level and location',
       icon: Shield,
-      recommended: preferences.simplifiedMode
+      recommended: preferences.simplifiedMode,
     },
     {
       id: 'standard',
       label: 'Standard Entry',
       description: 'Comprehensive tracking with all sections',
       icon: BarChart3,
-      recommended: !preferences.simplifiedMode
+      recommended: !preferences.simplifiedMode,
     },
     {
       id: 'wellness',
       label: 'Wellness Focus',
       description: 'Include emotional and functional wellbeing',
       icon: Heart,
-      recommended: false
-    }
+      recommended: false,
+    },
   ];
 
   return (
     <div className="space-y-6">
       {/* Empowerment Message */}
       <EmpowermentMessageDisplay context="starting" />
-      
+
       {/* User Control Panel */}
       <UserControlPanel />
-      
+
       {/* Tracking Choice */}
       <Card>
         <CardHeader>
@@ -116,7 +129,7 @@ export function ValidationIntegratedPainForm({
           <ChoiceEmphasis
             title="How would you like to track today?"
             choices={trackingChoices}
-            onChoiceSelect={(choice) => {
+            onChoiceSelect={choice => {
               if (choice === 'wellness') {
                 setShowProgress(true);
               }
@@ -143,15 +156,15 @@ export function ValidationIntegratedPainForm({
                 min="0"
                 max="10"
                 value={formData.painLevel}
-                onChange={(e) => setFormData(prev => ({ 
-                  ...prev, 
-                  painLevel: parseInt(e.target.value) 
-                }))}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    painLevel: parseInt(e.target.value),
+                  }))
+                }
                 className="flex-1"
               />
-              <span className="w-12 text-sm font-medium">
-                {formData.painLevel}/10
-              </span>
+              <span className="w-12 text-sm font-medium">{formData.painLevel}/10</span>
             </div>
           </div>
 
@@ -162,12 +175,12 @@ export function ValidationIntegratedPainForm({
             </label>
             <textarea
               value={formData.notes}
-              onChange={(e) => handleNotesChange(e.target.value)}
+              onChange={e => handleNotesChange(e.target.value)}
               placeholder="Describe your pain, what might have triggered it, or any other observations..."
               rows={4}
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             />
-            
+
             {/* Real-time Emotional Validation */}
             <EmotionalValidation
               text={formData.notes}
@@ -187,24 +200,21 @@ export function ValidationIntegratedPainForm({
                 min="1"
                 max="10"
                 value={formData.mood}
-                onChange={(e) => setFormData(prev => ({ 
-                  ...prev, 
-                  mood: parseInt(e.target.value) 
-                }))}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    mood: parseInt(e.target.value),
+                  }))
+                }
                 className="flex-1"
               />
-              <span className="w-12 text-sm font-medium">
-                {formData.mood}/10
-              </span>
+              <span className="w-12 text-sm font-medium">{formData.mood}/10</span>
             </div>
           </div>
 
           {/* Validation History */}
           {validationHistory.length > 0 && (
-            <ValidationHistory 
-              validations={validationHistory}
-              onClear={clearHistory}
-            />
+            <ValidationHistory validations={validationHistory} onClear={clearHistory} />
           )}
         </CardContent>
       </Card>
@@ -219,9 +229,9 @@ export function ValidationIntegratedPainForm({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <HolisticProgressTracker 
+            <HolisticProgressTracker
               painEntries={painEntries}
-              onProgressUpdate={async (entry) => {
+              onProgressUpdate={async entry => {
                 await validationIntegration.saveProgressEntry(entry);
               }}
             />
@@ -237,16 +247,16 @@ export function ValidationIntegratedPainForm({
               baselineData: {
                 pain: formData.painLevel,
                 locations: [],
-                symptoms: []
+                symptoms: [],
               },
               notes: formData.notes,
               qualityOfLife: {
                 moodImpact: formData.mood,
                 sleepQuality: 0,
-                socialImpact: []
-              }
+                socialImpact: [],
+              },
             });
-            
+
             // Reset form
             setFormData({ notes: '', painLevel: 5, mood: 5 });
           }}
@@ -275,32 +285,39 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
         const insights = await validationIntegration.generateProgressInsights();
         const validations = await validationIntegration.getValidationHistory();
         const progress = await validationIntegration.getProgressHistory();
-        
+
         setDashboardData({
           recentValidations: validations.slice(-5),
           progressSummary: progress.slice(-10).map(p => ({ id: p.id, date: new Date(p.date) })),
           insights: {
             validationEffectiveness: 'Validation system is providing consistent emotional support',
-            emotionalPatterns: insights.trends.emotional === 'improving' ? 'Emotional wellbeing shows positive trends' : 
-                             insights.trends.emotional === 'declining' ? 'Emotional wellbeing needs attention' : 
-                             'Emotional wellbeing remains stable',
-            progressHighlights: insights.achievements.join(', ') || 'Keep tracking to unlock achievements',
-            recommendations: insights.recommendations
+            emotionalPatterns:
+              insights.trends.emotional === 'improving'
+                ? 'Emotional wellbeing shows positive trends'
+                : insights.trends.emotional === 'declining'
+                  ? 'Emotional wellbeing needs attention'
+                  : 'Emotional wellbeing remains stable',
+            progressHighlights:
+              insights.achievements.join(', ') || 'Keep tracking to unlock achievements',
+            recommendations: insights.recommendations,
           },
           metrics: {
             totalValidations: validations.length,
-            validationsByTone: validations.reduce((acc, v) => {
-              acc[v.tone] = (acc[v.tone] || 0) + 1;
-              return acc;
-            }, {} as Record<string, number>),
+            validationsByTone: validations.reduce(
+              (acc, v) => {
+                acc[v.tone] = (acc[v.tone] || 0) + 1;
+                return acc;
+              },
+              {} as Record<string, number>
+            ),
             averageResponseTime: 0.8, // Static for now
             emotionalTrends: [],
             userEngagement: {
               dismissed: 0,
               interacted: validations.length,
-              followUpClicked: Math.floor(validations.length * 0.3)
-            }
-          }
+              followUpClicked: Math.floor(validations.length * 0.3),
+            },
+          },
         });
       } catch (error) {
         console.error('Failed to load dashboard data:', error);
@@ -329,7 +346,9 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
     return (
       <Card>
         <CardContent className="p-6">
-          <p className="text-gray-500 dark:text-gray-400 text-center">No validation data available yet.</p>
+          <p className="text-gray-500 dark:text-gray-400 text-center">
+            No validation data available yet.
+          </p>
         </CardContent>
       </Card>
     );
@@ -353,18 +372,16 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
               </div>
               <div className="text-sm text-blue-700">Supportive Messages</div>
             </div>
-            
+
             <div className="bg-green-50 p-4 rounded-lg">
               <div className="text-2xl font-bold text-green-600">
                 {dashboardData.progressSummary.length}
               </div>
               <div className="text-sm text-green-700">Progress Entries</div>
             </div>
-            
+
             <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">
-                {painEntries.length}
-              </div>
+              <div className="text-2xl font-bold text-purple-600">{painEntries.length}</div>
               <div className="text-sm text-purple-700">Pain Entries</div>
             </div>
           </div>
@@ -383,14 +400,16 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
           <div className="space-y-3">
             <div className="p-3 bg-blue-50 rounded-lg">
               <h4 className="font-medium text-blue-800 mb-1">Validation Effectiveness</h4>
-              <p className="text-sm text-blue-700">{dashboardData.insights.validationEffectiveness}</p>
+              <p className="text-sm text-blue-700">
+                {dashboardData.insights.validationEffectiveness}
+              </p>
             </div>
-            
+
             <div className="p-3 bg-green-50 rounded-lg">
               <h4 className="font-medium text-green-800 mb-1">Emotional Patterns</h4>
               <p className="text-sm text-green-700">{dashboardData.insights.emotionalPatterns}</p>
             </div>
-            
+
             <div className="p-3 bg-purple-50 rounded-lg">
               <h4 className="font-medium text-purple-800 mb-1">Progress Highlights</h4>
               <p className="text-sm text-purple-700">{dashboardData.insights.progressHighlights}</p>
@@ -405,7 +424,10 @@ export function ValidationDashboard({ painEntries }: ValidationDashboardProps) {
               </h4>
               <ul className="space-y-1">
                 {dashboardData.insights.recommendations.map((rec: string, index: number) => (
-                  <li key={index} className="text-sm text-gray-600 dark:text-gray-400 flex items-start">
+                  <li
+                    key={index}
+                    className="text-sm text-gray-600 dark:text-gray-400 flex items-start"
+                  >
                     <span className="w-1.5 h-1.5 bg-gray-400 dark:bg-gray-500 rounded-full mt-2 mr-2 flex-shrink-0"></span>
                     {rec}
                   </li>
@@ -432,7 +454,7 @@ interface ValidationTechnologyIntegrationProps {
 export function ValidationTechnologyIntegration({
   painEntries,
   onPainEntrySubmit,
-  showDashboard = false
+  showDashboard = false,
 }: ValidationTechnologyIntegrationProps) {
   const [activeView, setActiveView] = useState<'form' | 'dashboard'>('form');
 
@@ -466,10 +488,7 @@ export function ValidationTechnologyIntegration({
 
       {/* Content */}
       {activeView === 'form' ? (
-        <ValidationIntegratedPainForm 
-          onSubmit={onPainEntrySubmit}
-          painEntries={painEntries}
-        />
+        <ValidationIntegratedPainForm onSubmit={onPainEntrySubmit} painEntries={painEntries} />
       ) : (
         <ValidationDashboard painEntries={painEntries} />
       )}

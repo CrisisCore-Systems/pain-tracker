@@ -26,8 +26,8 @@ export default function BetaWarning() {
     try {
       secureStorage.set(BETA_LOCALSTORAGE_KEY, 'true');
     } catch {
-      try { 
-        localStorage.setItem(BETA_LOCALSTORAGE_KEY, '1'); 
+      try {
+        localStorage.setItem(BETA_LOCALSTORAGE_KEY, '1');
       } catch {
         // Ignore localStorage errors
       }
@@ -59,11 +59,18 @@ export default function BetaWarning() {
         <div className="flex-1">
           <h3 className="font-semibold text-base">{BETA_WARNING.title}</h3>
           <p className="text-sm mt-1">{BETA_WARNING.message}</p>
-          <a className="text-xs text-yellow-700 underline mt-2 inline-block hover:text-yellow-800" href={BETA_WARNING.supportUrl} target="_blank" rel="noreferrer">
+          <a
+            className="text-xs text-yellow-700 underline mt-2 inline-block hover:text-yellow-800"
+            href={BETA_WARNING.supportUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
             Report an issue or give feedback
           </a>
           <div className="text-xs text-yellow-600 mt-2 opacity-70">
-            Press <kbd className="px-1.5 py-0.5 bg-yellow-100 rounded border border-yellow-300">Esc</kbd> to dismiss
+            Press{' '}
+            <kbd className="px-1.5 py-0.5 bg-yellow-100 rounded border border-yellow-300">Esc</kbd>{' '}
+            to dismiss
           </div>
         </div>
         <div className="ml-4 flex items-start gap-2">
@@ -74,7 +81,12 @@ export default function BetaWarning() {
             title="Close (Esc)"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
           <button

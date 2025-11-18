@@ -6,10 +6,10 @@ interface KeyboardNavigationProps {
   'aria-label'?: string;
 }
 
-export const KeyboardNavigation: React.FC<KeyboardNavigationProps> = ({ 
-  children, 
+export const KeyboardNavigation: React.FC<KeyboardNavigationProps> = ({
+  children,
   className = '',
-  'aria-label': ariaLabel 
+  'aria-label': ariaLabel,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -63,13 +63,7 @@ export const KeyboardNavigation: React.FC<KeyboardNavigationProps> = ({
   }, []);
 
   return (
-    <div 
-      ref={containerRef}
-      className={className}
-      role="group"
-      aria-label={ariaLabel}
-      tabIndex={-1}
-    >
+    <div ref={containerRef} className={className} role="group" aria-label={ariaLabel} tabIndex={-1}>
       {children}
     </div>
   );
@@ -124,6 +118,6 @@ export const useFocusManagement = () => {
   return {
     captureFocus,
     restoreFocusToLastElement,
-    trapFocus
+    trapFocus,
   };
 };

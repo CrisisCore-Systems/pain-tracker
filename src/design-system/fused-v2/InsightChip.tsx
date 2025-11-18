@@ -16,7 +16,7 @@ export function InsightChip({
   confidence,
   rationale,
   onDismiss,
-  className
+  className,
 }: InsightChipProps) {
   const [showPopover, setShowPopover] = useState(false);
 
@@ -34,20 +34,20 @@ export function InsightChip({
 
   return (
     <div className={cn('relative inline-block', className)}>
-      <div className={cn(
-        'flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)]',
-        'bg-surface-700 border border-surface-600',
-        'text-small text-ink-100',
-        'transition-all duration-[var(--duration-fast)]',
-        'hover:bg-surface-600 hover:border-primary-500/30'
-      )}>
+      <div
+        className={cn(
+          'flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)]',
+          'bg-surface-700 border border-surface-600',
+          'text-small text-ink-100',
+          'transition-all duration-[var(--duration-fast)]',
+          'hover:bg-surface-600 hover:border-primary-500/30'
+        )}
+      >
         {/* Statement */}
         <span className="flex-1">{statement}</span>
 
         {/* Confidence Dots */}
-        <div className="flex items-center gap-0.5">
-          {getConfidenceDots()}
-        </div>
+        <div className="flex items-center gap-0.5">{getConfidenceDots()}</div>
 
         {/* Info Button */}
         <button
@@ -86,13 +86,15 @@ export function InsightChip({
           />
 
           {/* Popover Content */}
-          <div className={cn(
-            'absolute left-0 top-full mt-2 z-[calc(var(--z-popover)+1)]',
-            'w-80 max-w-[90vw]',
-            'bg-surface-700 border border-surface-500 rounded-[var(--radius-xl)]',
-            'shadow-[var(--elevation-3)] p-4',
-            'animate-in fade-in-0 slide-in-from-top-2 duration-[var(--duration-fast)]'
-          )}>
+          <div
+            className={cn(
+              'absolute left-0 top-full mt-2 z-[calc(var(--z-popover)+1)]',
+              'w-80 max-w-[90vw]',
+              'bg-surface-700 border border-surface-500 rounded-[var(--radius-xl)]',
+              'shadow-[var(--elevation-3)] p-4',
+              'animate-in fade-in-0 slide-in-from-top-2 duration-[var(--duration-fast)]'
+            )}
+          >
             <div className="flex items-start justify-between gap-3 mb-3">
               <h4 className="text-body-medium text-ink-50">Why this insight?</h4>
               <button
@@ -104,19 +106,13 @@ export function InsightChip({
               </button>
             </div>
 
-            <p className="text-small text-ink-200 leading-relaxed mb-3">
-              {rationale}
-            </p>
+            <p className="text-small text-ink-200 leading-relaxed mb-3">{rationale}</p>
 
             {/* Confidence Explanation */}
             <div className="flex items-center gap-2 text-tiny text-ink-400">
               <span>Confidence:</span>
-              <div className="flex items-center gap-1">
-                {getConfidenceDots()}
-              </div>
-              <span>
-                {confidence === 3 ? 'High' : confidence === 2 ? 'Medium' : 'Low'}
-              </span>
+              <div className="flex items-center gap-1">{getConfidenceDots()}</div>
+              <span>{confidence === 3 ? 'High' : confidence === 2 ? 'Medium' : 'Low'}</span>
             </div>
           </div>
         </>

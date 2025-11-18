@@ -7,7 +7,11 @@ const appliedKey = 'pt:migrations:applied';
 export async function runMigrations(migrations: Array<{ id: string; fn: MigrationFn }>) {
   const appliedRaw = secureStorage.get<string>(appliedKey) || '[]';
   let applied: string[] = [];
-  try { applied = JSON.parse(appliedRaw); } catch { applied = []; }
+  try {
+    applied = JSON.parse(appliedRaw);
+  } catch {
+    applied = [];
+  }
 
   for (const m of migrations) {
     if (applied.includes(m.id)) continue;
@@ -48,14 +52,26 @@ export function migrateLegacyKey(legacyKey: string, options: MigrateOptions = {}
 
     let value: unknown = raw;
     if (transform) {
-      try { value = transform(raw); } catch { /* keep raw */ }
+      try {
+        value = transform(raw);
+      } catch {
+        /* keep raw */
+      }
     } else {
-      try { value = JSON.parse(raw); } catch { /* leave as string */ }
+      try {
+        value = JSON.parse(raw);
+      } catch {
+        /* leave as string */
+      }
     }
 
     secureStorage.set(legacyKey, value, { encrypt, namespace });
     if (removeLegacy) {
-      try { localStorage.removeItem(legacyKey); } catch {/* ignore */}
+      try {
+        localStorage.removeItem(legacyKey);
+      } catch {
+        /* ignore */
+      }
     }
     return true;
   } catch {
@@ -66,7 +82,9 @@ export function migrateLegacyKey(legacyKey: string, options: MigrateOptions = {}
 /**
  * Bulk migration convenience: supply array of keys with per-key options.
  */
-export function migrateLegacyKeys(defs: Array<{ key: string; options?: MigrateOptions }>): Record<string, boolean> {
+export function migrateLegacyKeys(
+  defs: Array<{ key: string; options?: MigrateOptions }>
+): Record<string, boolean> {
   const results: Record<string, boolean> = {};
   for (const def of defs) {
     results[def.key] = migrateLegacyKey(def.key, def.options);

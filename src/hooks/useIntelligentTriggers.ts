@@ -5,7 +5,7 @@ import {
   type IntelligentTrigger,
   initializeIntelligentTriggers,
   analyzeEntriesForTriggers,
-  createDefaultIntelligentTriggers
+  createDefaultIntelligentTriggers,
 } from '../utils/notifications/intelligent';
 
 export interface UseIntelligentTriggersReturn {
@@ -79,7 +79,7 @@ export const useIntelligentTriggers = (): UseIntelligentTriggersReturn => {
     analyzeTriggers,
     updateTrigger,
     resetToDefaults,
-    getTriggerStats
+    getTriggerStats,
   };
 };
 
@@ -117,7 +117,7 @@ export const useTriggerManagement = () => {
   const [state, setState] = useState<TriggerManagementState>({
     selectedTrigger: null,
     isEditing: false,
-    showStats: false
+    showStats: false,
   });
 
   const selectTrigger = useCallback((trigger: IntelligentTrigger | null) => {
@@ -125,7 +125,7 @@ export const useTriggerManagement = () => {
       ...prev,
       selectedTrigger: trigger,
       isEditing: false,
-      showStats: false
+      showStats: false,
     }));
   }, []);
 
@@ -133,14 +133,14 @@ export const useTriggerManagement = () => {
     setState(prev => ({
       ...prev,
       isEditing: true,
-      showStats: false
+      showStats: false,
     }));
   }, []);
 
   const cancelEditing = useCallback(() => {
     setState(prev => ({
       ...prev,
-      isEditing: false
+      isEditing: false,
     }));
   }, []);
 
@@ -148,14 +148,14 @@ export const useTriggerManagement = () => {
     setState(prev => ({
       ...prev,
       showStats: true,
-      isEditing: false
+      isEditing: false,
     }));
   }, []);
 
   const hideStats = useCallback(() => {
     setState(prev => ({
       ...prev,
-      showStats: false
+      showStats: false,
     }));
   }, []);
 
@@ -165,6 +165,6 @@ export const useTriggerManagement = () => {
     startEditing,
     cancelEditing,
     openStats,
-    hideStats
+    hideStats,
   };
 };

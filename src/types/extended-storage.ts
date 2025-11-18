@@ -38,12 +38,14 @@ export type ActivityLogData = {
   notes?: string;
 };
 
-export type SettingsData = {
-  key: string;
-  value: unknown;
-} | {
-  [key: string]: unknown;
-};
+export type SettingsData =
+  | {
+      key: string;
+      value: unknown;
+    }
+  | {
+      [key: string]: unknown;
+    };
 
 export type SyncQueueData = {
   operation: string;
@@ -138,11 +140,11 @@ export interface HealthInsightData {
 }
 
 // Union type for all extended data types
-export type ExtendedStoredDataPayload = 
-  | PainEntryData 
-  | EmergencyData 
-  | ActivityLogData 
-  | SettingsData 
+export type ExtendedStoredDataPayload =
+  | PainEntryData
+  | EmergencyData
+  | ActivityLogData
+  | SettingsData
   | SyncQueueData
   | TherapeuticResourceData
   | CopingSessionData
@@ -151,11 +153,11 @@ export type ExtendedStoredDataPayload =
   | HealthInsightData;
 
 // Extended storage type enum
-export type ExtendedStorageType = 
-  | 'pain-entry' 
-  | 'emergency-data' 
-  | 'activity-log' 
-  | 'settings' 
+export type ExtendedStorageType =
+  | 'pain-entry'
+  | 'emergency-data'
+  | 'activity-log'
+  | 'settings'
   | 'sync-queue'
   | 'therapeutic-resource'
   | 'coping-session'

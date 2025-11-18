@@ -1,6 +1,6 @@
 /**
  * Advanced Pattern Recognition Engine Types
- * 
+ *
  * Comprehensive type definitions for heuristic-based pain trend analysis,
  * trigger/symptom correlations, episode detection, and Quality of Life insights.
  * All analysis runs locally - no cloud dependencies.

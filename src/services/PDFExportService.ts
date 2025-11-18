@@ -20,12 +20,9 @@ export class PDFExportService {
    */
   private async initializePDF(): Promise<jsPDFType> {
     if (this.doc) return this.doc;
-    
-    const [{ default: jsPDF }, _] = await Promise.all([
-      import('jspdf'),
-      import('jspdf-autotable')
-    ]);
-    
+
+    const [{ default: jsPDF }, _] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
+
     this.doc = new jsPDF();
     return this.doc;
   }
@@ -54,17 +51,19 @@ export class PDFExportService {
       try {
         const defaultFilename = `wcb-report-${new Date(report.period.start).toISOString().split('T')[0]}-to-${new Date(report.period.end).toISOString().split('T')[0]}.pdf`;
 
-        this.generateWCBReport(report).then(blob => {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = filename || defaultFilename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-          resolve();
-        }).catch(reject);
+        this.generateWCBReport(report)
+          .then(blob => {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename || defaultFilename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            resolve();
+          })
+          .catch(reject);
       } catch (error) {
         reject(error);
       }
@@ -78,7 +77,7 @@ export class PDFExportService {
       subject: 'Workers Compensation Board Pain Tracking Report',
       author: 'Pain Tracker Pro',
       keywords: 'pain, tracking, WCB, report',
-      creator: 'Pain Tracker Pro'
+      creator: 'Pain Tracker Pro',
     });
   }
 
@@ -92,10 +91,18 @@ export class PDFExportService {
     // Period
     this.doc!.setFontSize(12);
     this.doc!.setFont('helvetica', 'normal');
-    this.doc!.text(`Report Period: ${new Date(report.period.start).toLocaleDateString()} - ${new Date(report.period.end).toLocaleDateString()}`, 20, 60);
+    this.doc!.text(
+      `Report Period: ${new Date(report.period.start).toLocaleDateString()} - ${new Date(report.period.end).toLocaleDateString()}`,
+      20,
+      60
+    );
 
     // Generated date
-    this.doc!.text(`Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 20, 70);
+    this.doc!.text(
+      `Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
+      20,
+      70
+    );
 
     this.doc!.line(20, 80, 190, 80);
   }
@@ -133,7 +140,9 @@ export class PDFExportService {
         headStyles: { fillColor: [41, 128, 185] },
       });
 
-      yPosition = ((this.doc as any).lastAutoTable as any)?.finalY ? ((this.doc as any).lastAutoTable as any).finalY + 15 : yPosition + 15;
+      yPosition = ((this.doc as any).lastAutoTable as any)?.finalY
+        ? ((this.doc as any).lastAutoTable as any).finalY + 15
+        : yPosition + 15;
     } else {
       this.doc!.text('No pain location data recorded.', 20, yPosition);
       yPosition += 10;
@@ -145,7 +154,7 @@ export class PDFExportService {
     this.doc!.setFontSize(14);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Work Impact', 20, this.doc!.internal.pageSize.height > 150 ? 150 : 120);
-    let yPosition = (this.doc!.internal.pageSize.height > 150 ? 160 : 130);
+    let yPosition = this.doc!.internal.pageSize.height > 150 ? 160 : 130;
 
     // Missed days
     this.doc!.setFontSize(11);
@@ -158,10 +167,9 @@ export class PDFExportService {
       this.doc!.text('Work Limitations:', 20, yPosition);
       yPosition += 8;
 
-      const limitationData = report.workImpact.limitations.map(([limitation, frequency]: [string, number]) => [
-        limitation,
-        frequency.toString()
-      ]);
+      const limitationData = report.workImpact.limitations.map(
+        ([limitation, frequency]: [string, number]) => [limitation, frequency.toString()]
+      );
 
       this.doc!.autoTable({
         startY: yPosition,
@@ -232,13 +240,19 @@ export class PDFExportService {
     }
 
     // Changes over time
-    if (report.functionalAnalysis.deterioration.length > 0 || report.functionalAnalysis.improvements.length > 0) {
+    if (
+      report.functionalAnalysis.deterioration.length > 0 ||
+      report.functionalAnalysis.improvements.length > 0
+    ) {
       this.doc!.text('Changes Over Time:', 20, yPosition);
       yPosition += 8;
 
       const changes = [
-        ...report.functionalAnalysis.deterioration.map((change: string) => ['Deterioration', change]),
-        ...report.functionalAnalysis.improvements.map((change: string) => ['Improvement', change])
+        ...report.functionalAnalysis.deterioration.map((change: string) => [
+          'Deterioration',
+          change,
+        ]),
+        ...report.functionalAnalysis.improvements.map((change: string) => ['Improvement', change]),
       ];
 
       this.doc!.autoTable({
@@ -276,10 +290,12 @@ export class PDFExportService {
       this.doc!.text('Current Treatments:', 20, yPosition);
       yPosition += 8;
 
-      const treatmentData = report.treatments.current.map((treatment: { treatment: string; frequency: number }) => [
-        treatment.treatment,
-        treatment.frequency.toString()
-      ]);
+      const treatmentData = report.treatments.current.map(
+        (treatment: { treatment: string; frequency: number }) => [
+          treatment.treatment,
+          treatment.frequency.toString(),
+        ]
+      );
 
       this.doc!.autoTable({
         startY: yPosition,
@@ -326,7 +342,11 @@ export class PDFExportService {
     const pageHeight = this.doc!.internal.pageSize.height;
     this.doc!.setFontSize(8);
     this.doc!.setFont('helvetica', 'italic');
-    this.doc!.text('Generated by Pain Tracker Pro - Confidential Medical Information', 20, pageHeight - 20);
+    this.doc!.text(
+      'Generated by Pain Tracker Pro - Confidential Medical Information',
+      20,
+      pageHeight - 20
+    );
     this.doc!.text(`Page ${this.doc!.getNumberOfPages()}`, 180, pageHeight - 20);
   }
 }
@@ -356,5 +376,5 @@ export const pdfExportService = {
       _instance = new PDFExportService();
     }
     return _instance.generateWCBReport(report);
-  }
+  },
 };

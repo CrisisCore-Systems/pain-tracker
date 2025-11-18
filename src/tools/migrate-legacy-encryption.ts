@@ -21,15 +21,25 @@ type StoredRow = {
 export async function migrateLegacyEncryption(opts: MigrateOptions = {}) {
   const dryRun = !!opts.dryRun;
   const backupPath = opts.backupPath;
-  
+
   await offlineStorage.init();
 
   // Fetch all records; offlineStorage may expose getAllData or getData
   let rows: StoredRow[] = [];
-  if (typeof (offlineStorage as unknown as { getAllData?: () => Promise<StoredRow[]> }).getAllData === 'function') {
-    rows = await (offlineStorage as unknown as { getAllData: () => Promise<StoredRow[]> }).getAllData();
-  } else if (typeof (offlineStorage as unknown as { getData?: (type: string) => Promise<StoredRow[]> }).getData === 'function') {
-    rows = await (offlineStorage as unknown as { getData: (type: string) => Promise<StoredRow[]> }).getData('pain-entry');
+  if (
+    typeof (offlineStorage as unknown as { getAllData?: () => Promise<StoredRow[]> }).getAllData ===
+    'function'
+  ) {
+    rows = await (
+      offlineStorage as unknown as { getAllData: () => Promise<StoredRow[]> }
+    ).getAllData();
+  } else if (
+    typeof (offlineStorage as unknown as { getData?: (type: string) => Promise<StoredRow[]> })
+      .getData === 'function'
+  ) {
+    rows = await (
+      offlineStorage as unknown as { getData: (type: string) => Promise<StoredRow[]> }
+    ).getData('pain-entry');
   } else {
     throw new Error('offlineStorage does not provide getAllData or getData');
   }
@@ -49,7 +59,9 @@ export async function migrateLegacyEncryption(opts: MigrateOptions = {}) {
           console.info('[Migration] Backup:', backupData);
         }
       } else {
-        console.warn('[Migration] Backup requested but filesystem unavailable; backup data logged to console');
+        console.warn(
+          '[Migration] Backup requested but filesystem unavailable; backup data logged to console'
+        );
         console.info('[Migration] Backup:', backupData);
       }
     } catch (e) {
@@ -79,15 +91,22 @@ export async function migrateLegacyEncryption(opts: MigrateOptions = {}) {
         continue;
       }
 
-      const version = typeof metadata.version === 'string' ? metadata.version : String(metadata.version ?? '');
+      const version =
+        typeof metadata.version === 'string' ? metadata.version : String(metadata.version ?? '');
       if (!version.startsWith('1.')) {
         skipped.push({ id: row?.id as number, reason: `Already migrated (version: ${version})` });
         continue;
       }
 
       // Decrypt using encryptionService (legacy CryptoJS branch for v1.x)
-      const decryptFn = (encryptionService as unknown as { decryptPainEntry?: (p: unknown) => Promise<unknown>; decrypt?: (p: unknown) => Promise<unknown> }).decryptPainEntry
-        ?? (encryptionService as unknown as { decrypt?: (p: unknown) => Promise<unknown> }).decrypt;
+      const decryptFn =
+        (
+          encryptionService as unknown as {
+            decryptPainEntry?: (p: unknown) => Promise<unknown>;
+            decrypt?: (p: unknown) => Promise<unknown>;
+          }
+        ).decryptPainEntry ??
+        (encryptionService as unknown as { decrypt?: (p: unknown) => Promise<unknown> }).decrypt;
 
       if (typeof decryptFn !== 'function') {
         throw new Error('encryptionService does not expose a decrypt function');
@@ -96,8 +115,14 @@ export async function migrateLegacyEncryption(opts: MigrateOptions = {}) {
       const decrypted = await (decryptFn as (p: unknown) => Promise<unknown>)(data);
 
       // Re-encrypt with current AES-GCM + HMAC path (version 2.0.0)
-      const encryptFn = (encryptionService as unknown as { encryptPainEntry?: (p: unknown) => Promise<unknown>; encrypt?: (p: unknown) => Promise<unknown> }).encryptPainEntry
-        ?? (encryptionService as unknown as { encrypt?: (p: unknown) => Promise<unknown> }).encrypt;
+      const encryptFn =
+        (
+          encryptionService as unknown as {
+            encryptPainEntry?: (p: unknown) => Promise<unknown>;
+            encrypt?: (p: unknown) => Promise<unknown>;
+          }
+        ).encryptPainEntry ??
+        (encryptionService as unknown as { encrypt?: (p: unknown) => Promise<unknown> }).encrypt;
 
       if (typeof encryptFn !== 'function') {
         throw new Error('encryptionService does not expose an encrypt function');
@@ -108,21 +133,42 @@ export async function migrateLegacyEncryption(opts: MigrateOptions = {}) {
       // Validate re-encrypted payload has version 2.0.0, iv, hmac
       const reEncMeta = (reEncrypted as { metadata?: Record<string, unknown> })?.metadata;
       if (!reEncMeta || !String(reEncMeta.version).startsWith('2.')) {
-        throw new Error(`Re-encryption failed: metadata.version is ${reEncMeta?.version ?? 'missing'}, expected 2.x`);
+        throw new Error(
+          `Re-encryption failed: metadata.version is ${reEncMeta?.version ?? 'missing'}, expected 2.x`
+        );
       }
       if (!reEncMeta.iv || !reEncMeta.hmac) {
-        console.warn(`[Migration] Warning: re-encrypted payload for id=${row.id} missing iv or hmac in metadata`);
+        console.warn(
+          `[Migration] Warning: re-encrypted payload for id=${row.id} missing iv or hmac in metadata`
+        );
       }
 
       // Update stored record if not dry run
-      if (!dryRun && row.id !== undefined && typeof (offlineStorage as unknown as { updateData?: (id: number | string, payload: unknown) => Promise<void> }).updateData === 'function') {
-        await (offlineStorage as unknown as { updateData: (id: number | string, payload: unknown) => Promise<void> }).updateData(row.id as number | string, reEncrypted);
+      if (
+        !dryRun &&
+        row.id !== undefined &&
+        typeof (
+          offlineStorage as unknown as {
+            updateData?: (id: number | string, payload: unknown) => Promise<void>;
+          }
+        ).updateData === 'function'
+      ) {
+        await (
+          offlineStorage as unknown as {
+            updateData: (id: number | string, payload: unknown) => Promise<void>;
+          }
+        ).updateData(row.id as number | string, reEncrypted);
       }
 
       migrated++;
     } catch (err) {
       const rawId = row?.id;
-      const idNum = typeof rawId === 'number' ? rawId : typeof rawId === 'string' && /^\d+$/.test(rawId) ? Number(rawId) : undefined;
+      const idNum =
+        typeof rawId === 'number'
+          ? rawId
+          : typeof rawId === 'string' && /^\d+$/.test(rawId)
+            ? Number(rawId)
+            : undefined;
       errors.push({ id: idNum, error: err instanceof Error ? err.message : String(err) });
     }
   }
@@ -137,25 +183,29 @@ if (require.main === module) {
     const dry = argv.includes('--dry-run') || argv.includes('-n');
     const backupIdx = argv.indexOf('--backup');
     const backupPath = backupIdx >= 0 && argv[backupIdx + 1] ? argv[backupIdx + 1] : undefined;
-    
-    console.info(`[Migration] Starting legacy encryption migration (dryRun=${dry}, backup=${backupPath ?? 'none'})...`);
-    
+
+    console.info(
+      `[Migration] Starting legacy encryption migration (dryRun=${dry}, backup=${backupPath ?? 'none'})...`
+    );
+
     try {
       const result = await migrateLegacyEncryption({ dryRun: dry, backupPath });
       console.info('[Migration] Result:', result);
-      console.info(`[Migration] Scanned: ${result.scanned}, Migrated: ${result.migrated}, Skipped: ${result.skipped}, Errors: ${result.errors.length}`);
-      
+      console.info(
+        `[Migration] Scanned: ${result.scanned}, Migrated: ${result.migrated}, Skipped: ${result.skipped}, Errors: ${result.errors.length}`
+      );
+
       if (result.errors.length > 0) {
         console.error('[Migration] Errors encountered:');
         result.errors.forEach(e => console.error(`  - ID ${e.id ?? 'unknown'}: ${e.error}`));
       }
-      
+
       if (dry) {
         console.info('[Migration] Dry run complete. No changes were written to storage.');
       } else {
         console.info('[Migration] Migration complete. Records updated in storage.');
       }
-      
+
       process.exit(result.errors.length > 0 ? 1 : 0);
     } catch (e) {
       console.error('[Migration] Fatal error:', e);
@@ -163,4 +213,3 @@ if (require.main === module) {
     }
   })();
 }
-

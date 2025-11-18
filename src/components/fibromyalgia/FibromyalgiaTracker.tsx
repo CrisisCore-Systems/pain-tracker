@@ -4,7 +4,9 @@ import type { FibromyalgiaEntry } from '../../types/fibromyalgia';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 export const FibromyalgiaTracker: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'track' | 'patterns' | 'education' | 'community'>('track');
+  const [activeTab, setActiveTab] = useState<'track' | 'patterns' | 'education' | 'community'>(
+    'track'
+  );
 
   const tabs = [
     { id: 'track', label: 'Daily Tracking', icon: Activity },
@@ -34,7 +36,7 @@ export const FibromyalgiaTracker: React.FC = () => {
 
           {/* Tabs */}
           <div className="flex gap-2 mt-6 overflow-x-auto pb-2">
-            {tabs.map((tab) => {
+            {tabs.map(tab => {
               const Icon = tab.icon;
               return (
                 <button
@@ -42,9 +44,10 @@ export const FibromyalgiaTracker: React.FC = () => {
                   onClick={() => setActiveTab(tab.id)}
                   className={`
                     flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all whitespace-nowrap
-                    ${activeTab === tab.id
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
-                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600'
+                    ${
+                      activeTab === tab.id
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
+                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600'
                     }
                   `}
                 >
@@ -70,7 +73,7 @@ export const FibromyalgiaTracker: React.FC = () => {
 
 // Daily Tracking Component
 const DailyTracking: React.FC = () => {
-  const addFibromyalgiaEntry = usePainTrackerStore((state) => state.addFibromyalgiaEntry);
+  const addFibromyalgiaEntry = usePainTrackerStore(state => state.addFibromyalgiaEntry);
   const [wpiRegions, setWpiRegions] = useState<Record<string, boolean>>({});
   const [sssScores, setSssScores] = useState({
     fatigue: 0,
@@ -111,7 +114,8 @@ const DailyTracking: React.FC = () => {
 
   const wpiScore = calculateWPI();
   const sssScore = calculateSSS();
-  const meetsCriteria = (wpiScore >= 7 && sssScore >= 5) || (wpiScore >= 4 && wpiScore <= 6 && sssScore >= 9);
+  const meetsCriteria =
+    (wpiScore >= 7 && sssScore >= 5) || (wpiScore >= 4 && wpiScore <= 6 && sssScore >= 9);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -119,7 +123,7 @@ const DailyTracking: React.FC = () => {
       const entry: FibromyalgiaEntry = {
         id: Date.now(),
         timestamp: new Date().toISOString(),
-        
+
         // ACR 2016 Criteria - WPI as nested object
         wpi: {
           leftShoulder: wpiRegions.leftShoulder || false,
@@ -141,7 +145,7 @@ const DailyTracking: React.FC = () => {
           lowerBack: wpiRegions.lowerBack || false,
           neck: wpiRegions.neck || false,
         },
-        
+
         // SSS as nested object
         sss: {
           fatigue: sssScores.fatigue as 0 | 1 | 2 | 3,
@@ -149,7 +153,7 @@ const DailyTracking: React.FC = () => {
           cognitive_symptoms: sssScores.cognitive_symptoms as 0 | 1 | 2 | 3,
           somatic_symptoms: sssScores.somatic_symptoms as 0 | 1 | 2 | 3,
         },
-        
+
         // Default symptoms object
         symptoms: {
           headache: false,
@@ -170,10 +174,10 @@ const DailyTracking: React.FC = () => {
           memoryProblems: false,
           concentrationDifficulty: false,
         },
-        
+
         // Default triggers
         triggers: {},
-        
+
         // Default impact
         impact: {
           sleepQuality: 2 as 0 | 1 | 2 | 3 | 4 | 5,
@@ -181,7 +185,7 @@ const DailyTracking: React.FC = () => {
           anxietyLevel: 2 as 0 | 1 | 2 | 3 | 4 | 5,
           functionalAbility: 2 as 0 | 1 | 2 | 3 | 4 | 5,
         },
-        
+
         // Default activity
         activity: {
           activityLevel: 'moderate',
@@ -189,16 +193,16 @@ const DailyTracking: React.FC = () => {
           overexerted: false,
           paybackPeriod: false,
         },
-        
+
         // Default interventions
         interventions: {},
-        
+
         // Metadata
         notes: '',
       };
 
       await addFibromyalgiaEntry(entry);
-      
+
       // Reset form
       setWpiRegions({});
       setSssScores({
@@ -207,7 +211,7 @@ const DailyTracking: React.FC = () => {
         cognitive_symptoms: 0,
         somatic_symptoms: 0,
       });
-      
+
       // Success feedback
       alert('Fibromyalgia entry saved successfully!');
     } catch (error) {
@@ -221,13 +225,16 @@ const DailyTracking: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Diagnostic Criteria Card */}
-      <div className={`
+      <div
+        className={`
         p-6 rounded-xl shadow-lg border-2 transition-all
-        ${meetsCriteria
-          ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-300 dark:border-purple-700'
-          : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+        ${
+          meetsCriteria
+            ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-300 dark:border-purple-700'
+            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
         }
-      `}>
+      `}
+      >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
             ACR 2016 Diagnostic Criteria
@@ -238,18 +245,30 @@ const DailyTracking: React.FC = () => {
             </span>
           )}
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
-            <div className="text-sm text-gray-600 dark:text-gray-400">Widespread Pain Index (WPI)</div>
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{wpiScore} / 19</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need ≥7 for primary criteria</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Widespread Pain Index (WPI)
+            </div>
+            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+              {wpiScore} / 19
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Need ≥7 for primary criteria
+            </div>
           </div>
-          
+
           <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
-            <div className="text-sm text-gray-600 dark:text-gray-400">Symptom Severity Scale (SSS)</div>
-            <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">{sssScore} / 12</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Need ≥5 for primary criteria</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              Symptom Severity Scale (SSS)
+            </div>
+            <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">
+              {sssScore} / 12
+            </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Need ≥5 for primary criteria
+            </div>
           </div>
         </div>
 
@@ -269,20 +288,23 @@ const DailyTracking: React.FC = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {wpiBodyRegions.map((region) => (
+          {wpiBodyRegions.map(region => (
             <button
               key={region.id}
               onClick={() => setWpiRegions(prev => ({ ...prev, [region.id]: !prev[region.id] }))}
               className={`
                 p-3 rounded-lg border-2 text-left transition-all
-                ${wpiRegions[region.id]
-                  ? 'bg-purple-100 dark:bg-purple-900/30 border-purple-500 dark:border-purple-600'
-                  : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-purple-300'
+                ${
+                  wpiRegions[region.id]
+                    ? 'bg-purple-100 dark:bg-purple-900/30 border-purple-500 dark:border-purple-600'
+                    : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-purple-300'
                 }
               `}
             >
               <div className="font-medium text-gray-900 dark:text-white">{region.label}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 capitalize">{region.side}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 capitalize">
+                {region.side}
+              </div>
             </button>
           ))}
         </div>
@@ -303,8 +325,12 @@ const DailyTracking: React.FC = () => {
             { id: 'fatigue', label: 'Fatigue', icon: Moon },
             { id: 'waking_unrefreshed', label: 'Waking Unrefreshed', icon: Moon },
             { id: 'cognitive_symptoms', label: 'Cognitive Symptoms (Fibro Fog)', icon: Brain },
-            { id: 'somatic_symptoms', label: 'Somatic Symptoms (Headache, IBS, etc.)', icon: Heart },
-          ].map((symptom) => {
+            {
+              id: 'somatic_symptoms',
+              label: 'Somatic Symptoms (Headache, IBS, etc.)',
+              icon: Heart,
+            },
+          ].map(symptom => {
             const Icon = symptom.icon;
             return (
               <div key={symptom.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -313,15 +339,18 @@ const DailyTracking: React.FC = () => {
                   <span className="font-medium text-gray-900 dark:text-white">{symptom.label}</span>
                 </div>
                 <div className="flex gap-2">
-                  {[0, 1, 2, 3].map((score) => (
+                  {[0, 1, 2, 3].map(score => (
                     <button
                       key={score}
-                      onClick={() => setSssScores(prev => ({ ...prev, [symptom.id]: score as 0 | 1 | 2 | 3 }))}
+                      onClick={() =>
+                        setSssScores(prev => ({ ...prev, [symptom.id]: score as 0 | 1 | 2 | 3 }))
+                      }
                       className={`
                         flex-1 py-2 rounded-lg font-medium transition-all
-                        ${sssScores[symptom.id as keyof typeof sssScores] === score
-                          ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                          : 'bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-500'
+                        ${
+                          sssScores[symptom.id as keyof typeof sssScores] === score
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                            : 'bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-500'
                         }
                       `}
                     >
@@ -340,12 +369,12 @@ const DailyTracking: React.FC = () => {
       </div>
 
       {/* Save Button */}
-      <button 
+      <button
         onClick={handleSave}
         disabled={isSaving}
         className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isSaving ? 'Saving...' : 'Save Today\'s Entry'}
+        {isSaving ? 'Saving...' : "Save Today's Entry"}
       </button>
     </div>
   );
@@ -356,9 +385,12 @@ const PatternsInsights: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Pattern Analysis Coming Soon</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+          Pattern Analysis Coming Soon
+        </h3>
         <p className="text-gray-600 dark:text-gray-400">
-          Track your entries to see patterns in your fibromyalgia symptoms, triggers, and effective interventions.
+          Track your entries to see patterns in your fibromyalgia symptoms, triggers, and effective
+          interventions.
         </p>
       </div>
     </div>
@@ -393,10 +425,15 @@ const EducationResources: React.FC = () => {
   return (
     <div className="space-y-4">
       {resources.map((resource, index) => (
-        <div key={index} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all">
+        <div
+          key={index}
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all"
+        >
           <div className="flex items-start justify-between">
             <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{resource.title}</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                {resource.title}
+              </h3>
               <p className="text-gray-600 dark:text-gray-400 text-sm">{resource.description}</p>
             </div>
             <BookOpen className="w-5 h-5 text-purple-500 flex-shrink-0" />
@@ -422,7 +459,8 @@ const CommunitySupport: React.FC = () => {
     },
     {
       title: 'Weather Watch',
-      content: 'Many report flares with barometric pressure changes. Track weather alongside symptoms.',
+      content:
+        'Many report flares with barometric pressure changes. Track weather alongside symptoms.',
       author: 'Community Insight',
     },
   ];

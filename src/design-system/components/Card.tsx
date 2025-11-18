@@ -55,7 +55,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant, padding, hover, ...props }, ref) => (
     <div ref={ref} className={cn(cardVariants({ variant, padding, hover, className }))} {...props}>
       {/* severity indicator: small colored bar at the top-left */}
-      {('severity' in props) && props.severity ? (
+      {'severity' in props && props.severity ? (
         <div
           aria-hidden
           className={cn('absolute -top-2 -left-2 h-2 w-12 rounded-b-md')}
@@ -64,10 +64,10 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
               props.severity === 'low'
                 ? 'rgb(var(--color-pain-none))'
                 : props.severity === 'medium'
-                ? 'rgb(var(--color-pain-mild))'
-                : props.severity === 'high'
-                ? 'rgb(var(--color-pain-severe))'
-                : 'rgb(var(--color-pain-extreme))',
+                  ? 'rgb(var(--color-pain-mild))'
+                  : props.severity === 'high'
+                    ? 'rgb(var(--color-pain-severe))'
+                    : 'rgb(var(--color-pain-extreme))',
           }}
         />
       ) : null}
@@ -99,55 +99,39 @@ const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HT
 );
 CardTitle.displayName = 'CardTitle';
 
-const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
-  ({ className, ...props }, ref) => (
-    <p
-      ref={ref}
-      className={cn('text-sm text-muted-foreground', className)}
-      {...props}
-    />
-  )
-);
+const CardDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement>
+>(({ className, ...props }, ref) => (
+  <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+));
 CardDescription.displayName = 'CardDescription';
 
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('pt-0', className)} {...props} />
-  )
+  ({ className, ...props }, ref) => <div ref={ref} className={cn('pt-0', className)} {...props} />
 );
 CardContent.displayName = 'CardContent';
 
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex items-center pt-4', className)}
-      {...props}
-    />
+    <div ref={ref} className={cn('flex items-center pt-4', className)} {...props} />
   )
 );
 CardFooter.displayName = 'CardFooter';
 
 // New Card variants for specific use cases
-const CardAction = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, ...props }, ref) => (
-    <Card
-      ref={ref}
-      className={cn('cursor-pointer hover:shadow-md transition-shadow', className)}
-      {...props}
-    />
-  )
-);
+const CardAction = React.forwardRef<HTMLDivElement, CardProps>(({ className, ...props }, ref) => (
+  <Card
+    ref={ref}
+    className={cn('cursor-pointer hover:shadow-md transition-shadow', className)}
+    {...props}
+  />
+));
 CardAction.displayName = 'CardAction';
 
 const CardStats = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, children, ...props }, ref) => (
-    <Card
-      ref={ref}
-      variant="elevated"
-      className={cn('text-center', className)}
-      {...props}
-    >
+    <Card ref={ref} variant="elevated" className={cn('text-center', className)} {...props}>
       {children}
     </Card>
   )
@@ -163,5 +147,5 @@ export {
   CardContent,
   CardAction,
   CardStats,
-  cardVariants
+  cardVariants,
 };

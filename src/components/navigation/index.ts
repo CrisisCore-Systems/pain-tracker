@@ -1,14 +1,14 @@
 /**
  * Enhanced Navigation Components
- * 
+ *
  * A comprehensive suite of accessible navigation components for Pain Tracker
- * 
+ *
  * Components:
  * - EnhancedNav: Keyboard-navigable navigation with shortcuts
  * - Breadcrumbs: Hierarchical navigation with collapsing
  * - CommandPalette: ⌘K-style quick navigation and search
  * - DropdownMenu: Accessible dropdown with keyboard support
- * 
+ *
  * Hooks:
  * - useNavigationHistory: Track and manage navigation history with Alt+Tab quick-switch
  */

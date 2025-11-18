@@ -69,7 +69,9 @@ export function ContextualHelp({ sections, title, className = '' }: ContextualHe
         aria-controls="contextual-help-content"
       >
         <HelpCircle className="h-4 w-4" />
-        <span>{isExpanded ? 'Hide' : 'Show'} help for {title}</span>
+        <span>
+          {isExpanded ? 'Hide' : 'Show'} help for {title}
+        </span>
       </button>
 
       {isExpanded && (
@@ -83,10 +85,7 @@ export function ContextualHelp({ sections, title, className = '' }: ContextualHe
             </CardHeader>
             <CardContent className="space-y-4">
               {sections.map((section, index) => (
-                <div
-                  key={index}
-                  className={`border rounded-lg p-4 ${getTypeStyles(section.type)}`}
-                >
+                <div key={index} className={`border rounded-lg p-4 ${getTypeStyles(section.type)}`}>
                   <div className="flex items-start space-x-3">
                     <div className={`flex-shrink-0 ${getIconStyles(section.type)}`}>
                       {getIcon(section.type)}

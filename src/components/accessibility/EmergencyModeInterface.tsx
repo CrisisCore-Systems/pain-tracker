@@ -8,13 +8,13 @@ import { useCrisisDetection } from './useCrisisDetection';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 import { VoiceInput } from './PhysicalAccommodations';
-import { 
-  Phone, 
-  AlertTriangle, 
-  Heart, 
-  Clock, 
-  Shield, 
-  Home, 
+import {
+  Phone,
+  AlertTriangle,
+  Heart,
+  Clock,
+  Shield,
+  Home,
   Save,
   Volume2,
   VolumeX,
@@ -23,7 +23,7 @@ import {
   Pause,
   Play,
   RotateCcw,
-  Zap
+  Zap,
 } from 'lucide-react';
 import type { EmergencyContact, EmergencyProtocol } from '../../types';
 
@@ -35,15 +35,15 @@ interface EmergencyModeLayoutProps {
   severity?: 'mild' | 'moderate' | 'severe' | 'critical';
 }
 
-export function EmergencyModeLayout({ 
-  children, 
-  isActive = false, 
+export function EmergencyModeLayout({
+  children,
+  isActive = false,
   onExit,
-  severity = 'moderate' 
+  severity = 'moderate',
 }: EmergencyModeLayoutProps) {
   const crisisDetection = useCrisisDetection();
   const { activateEmergencyMode, deactivateEmergencyMode } = crisisDetection;
-  
+
   useEffect(() => {
     if (isActive) {
       activateEmergencyMode();
@@ -56,7 +56,7 @@ export function EmergencyModeLayout({
     mild: 'bg-yellow-50 border-yellow-200',
     moderate: 'bg-orange-50 border-orange-200',
     severe: 'bg-red-50 border-red-200',
-    critical: 'bg-red-100 border-red-300'
+    critical: 'bg-red-100 border-red-300',
   };
 
   if (!isActive) return <>{children}</>;
@@ -74,7 +74,7 @@ export function EmergencyModeLayout({
                 <p className="text-sm text-red-600">Simplified interface active</p>
               </div>
             </div>
-            
+
             {onExit && (
               <TouchOptimizedButton
                 onClick={onExit}
@@ -90,9 +90,7 @@ export function EmergencyModeLayout({
       </div>
 
       {/* Emergency Content */}
-      <div className="emergency-content max-w-4xl mx-auto px-6 py-8">
-        {children}
-      </div>
+      <div className="emergency-content max-w-4xl mx-auto px-6 py-8">{children}</div>
     </div>
   );
 }
@@ -113,7 +111,7 @@ export function EmergencyActionPanel({
   currentPainLevel,
   onPainLevelUpdate,
   onContactCall,
-  onProtocolActivate
+  onProtocolActivate,
 }: EmergencyActionPanelProps) {
   const crisisDetection = useCrisisDetection();
   const { trackHelpRequest } = crisisDetection;
@@ -129,11 +127,7 @@ export function EmergencyActionPanel({
   const primaryContacts = contacts
     .filter(c => c.isHealthcareProvider)
     .slice(0, 2)
-    .concat(
-      contacts
-        .filter(c => !c.isHealthcareProvider)
-        .slice(0, 2)
-    );
+    .concat(contacts.filter(c => !c.isHealthcareProvider).slice(0, 2));
 
   const handleEmergencyCall = (contact: EmergencyContact) => {
     trackHelpRequest();
@@ -147,7 +141,7 @@ export function EmergencyActionPanel({
 
   const handleVoiceCommand = (transcript: string) => {
     const command = transcript.toLowerCase();
-    
+
     if (command.includes('call') || command.includes('phone')) {
       if (primaryContacts.length > 0) {
         handleEmergencyCall(primaryContacts[0]);
@@ -171,10 +165,8 @@ export function EmergencyActionPanel({
               <h2 className="text-xl font-bold text-red-800 mb-2">
                 High Pain Level Detected ({currentPainLevel}/10)
               </h2>
-              <p className="text-red-700 mb-4">
-                Protocol activated: {activeProtocol.name}
-              </p>
-              
+              <p className="text-red-700 mb-4">Protocol activated: {activeProtocol.name}</p>
+
               <TouchOptimizedButton
                 onClick={() => handleProtocolActivation(activeProtocol)}
                 variant="primary"
@@ -191,11 +183,13 @@ export function EmergencyActionPanel({
 
       {/* Quick Actions */}
       <div className="quick-actions bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Quick Actions</h2>
-        
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+          Quick Actions
+        </h2>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Emergency Contacts */}
-          {primaryContacts.map((contact) => (
+          {primaryContacts.map(contact => (
             <TouchOptimizedButton
               key={contact.id}
               onClick={() => handleEmergencyCall(contact)}
@@ -219,26 +213,22 @@ export function EmergencyActionPanel({
               setAutoSaved(true);
               setTimeout(() => setAutoSaved(false), 3000);
             }}
-            variant={autoSaved ? "primary" : "secondary"}
+            variant={autoSaved ? 'primary' : 'secondary'}
             size="large"
             className={`h-20 ${autoSaved ? 'bg-green-600 text-white' : ''}`}
           >
             <div className="flex items-center space-x-3">
               <Save className="w-8 h-8" />
               <div className="text-left">
-                <div className="font-semibold">
-                  {autoSaved ? 'Saved!' : 'Save Data'}
-                </div>
-                <div className="text-sm opacity-75">
-                  Backup all information
-                </div>
+                <div className="font-semibold">{autoSaved ? 'Saved!' : 'Save Data'}</div>
+                <div className="text-sm opacity-75">Backup all information</div>
               </div>
             </div>
           </TouchOptimizedButton>
 
           {/* Return Home */}
           <TouchOptimizedButton
-            onClick={() => window.location.href = '/'}
+            onClick={() => (window.location.href = '/')}
             variant="secondary"
             size="large"
             className="h-20"
@@ -247,9 +237,7 @@ export function EmergencyActionPanel({
               <Home className="w-8 h-8" />
               <div className="text-left">
                 <div className="font-semibold">Go Home</div>
-                <div className="text-sm opacity-75">
-                  Return to main page
-                </div>
+                <div className="text-sm opacity-75">Return to main page</div>
               </div>
             </div>
           </TouchOptimizedButton>
@@ -262,7 +250,7 @@ export function EmergencyActionPanel({
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Voice Control</h2>
           <TouchOptimizedButton
             onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
-            variant={isVoiceEnabled ? "primary" : "secondary"}
+            variant={isVoiceEnabled ? 'primary' : 'secondary'}
             size="normal"
           >
             {isVoiceEnabled ? (
@@ -281,11 +269,8 @@ export function EmergencyActionPanel({
 
         {isVoiceEnabled && (
           <div className="space-y-4">
-            <VoiceInput
-              onTranscript={handleVoiceCommand}
-              className="voice-emergency-input"
-            />
-            
+            <VoiceInput onTranscript={handleVoiceCommand} className="voice-emergency-input" />
+
             <div className="text-sm text-gray-600 dark:text-gray-400">
               <p className="font-medium mb-2">Voice Commands:</p>
               <ul className="space-y-1">
@@ -301,17 +286,23 @@ export function EmergencyActionPanel({
 
       {/* Pain Level Quick Update */}
       <div className="pain-level-update bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Current Pain Level</h2>
-        
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+          Current Pain Level
+        </h2>
+
         <div className="flex items-center space-x-4 mb-4">
           <span className="text-3xl font-bold text-red-600">{currentPainLevel}/10</span>
           <div className="flex-1">
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-6">
-              <div 
+              <div
                 className={`h-6 rounded-full transition-all duration-300 ${
-                  currentPainLevel >= 8 ? 'bg-red-600' :
-                  currentPainLevel >= 6 ? 'bg-orange-500' :
-                  currentPainLevel >= 4 ? 'bg-yellow-500' : 'bg-green-500'
+                  currentPainLevel >= 8
+                    ? 'bg-red-600'
+                    : currentPainLevel >= 6
+                      ? 'bg-orange-500'
+                      : currentPainLevel >= 4
+                        ? 'bg-yellow-500'
+                        : 'bg-green-500'
                 }`}
                 style={{ width: `${(currentPainLevel / 10) * 100}%` }}
               />
@@ -324,7 +315,7 @@ export function EmergencyActionPanel({
             <TouchOptimizedButton
               key={level}
               onClick={() => onPainLevelUpdate(level)}
-              variant={currentPainLevel === level ? "primary" : "secondary"}
+              variant={currentPainLevel === level ? 'primary' : 'secondary'}
               size="normal"
               className="h-16 text-lg font-bold"
             >
@@ -344,10 +335,10 @@ interface EmergencyProtocolDisplayProps {
   onSkip: () => void;
 }
 
-export function EmergencyProtocolDisplay({ 
-  protocol, 
-  onComplete, 
-  onSkip 
+export function EmergencyProtocolDisplay({
+  protocol,
+  onComplete,
+  onSkip,
 }: EmergencyProtocolDisplayProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<boolean[]>([]);
@@ -399,11 +390,7 @@ export function EmergencyProtocolDisplay({
             )}
           </TouchOptimizedButton>
 
-          <TouchOptimizedButton
-            onClick={onSkip}
-            variant="secondary"
-            size="normal"
-          >
+          <TouchOptimizedButton onClick={onSkip} variant="secondary" size="normal">
             Skip Protocol
           </TouchOptimizedButton>
         </div>
@@ -415,13 +402,15 @@ export function EmergencyProtocolDisplay({
           <div className="mb-6">
             <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
               <span>Progress</span>
-              <span>{completedSteps.filter(s => s).length} of {protocol.immediateActions.length} steps</span>
+              <span>
+                {completedSteps.filter(s => s).length} of {protocol.immediateActions.length} steps
+              </span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
-              <div 
+              <div
                 className="bg-blue-600 h-3 rounded-full transition-all duration-300"
-                style={{ 
-                  width: `${(completedSteps.filter(s => s).length / protocol.immediateActions.length) * 100}%` 
+                style={{
+                  width: `${(completedSteps.filter(s => s).length / protocol.immediateActions.length) * 100}%`,
                 }}
               />
             </div>
@@ -430,27 +419,31 @@ export function EmergencyProtocolDisplay({
           {/* Protocol Steps */}
           <div className="space-y-4 mb-6">
             {protocol.immediateActions.map((action: string, index: number) => (
-              <div 
+              <div
                 key={index}
                 className={`protocol-step p-4 rounded-lg border-2 transition-all ${
-                  completedSteps[index] 
-                    ? 'bg-green-50 border-green-300' 
-                    : index === currentStep 
-                      ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-200' 
+                  completedSteps[index]
+                    ? 'bg-green-50 border-green-300'
+                    : index === currentStep
+                      ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-200'
                       : 'bg-gray-50 border-gray-200'
                 }`}
               >
                 <div className="flex items-start space-x-4">
-                  <div className={`
+                  <div
+                    className={`
                     flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-white font-bold
                     ${completedSteps[index] ? 'bg-green-500' : index === currentStep ? 'bg-blue-500' : 'bg-gray-400'}
-                  `}>
+                  `}
+                  >
                     {index + 1}
                   </div>
-                  
+
                   <div className="flex-1">
-                    <p className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">{action}</p>
-                    
+                    <p className="text-lg font-medium text-gray-800 dark:text-gray-200 mb-2">
+                      {action}
+                    </p>
+
                     {index === currentStep && !completedSteps[index] && (
                       <TouchOptimizedButton
                         onClick={() => handleStepComplete(index)}
@@ -472,18 +465,24 @@ export function EmergencyProtocolDisplay({
             <div className="medications bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 mb-6">
               <h3 className="text-lg font-semibold text-yellow-800 mb-3">Emergency Medications</h3>
               <div className="space-y-3">
-                {protocol.medications.map((med: { name: string; dosage: string; instructions: string }, index: number) => (
-                  <div key={index} className="bg-white rounded-lg p-4 border border-yellow-300">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <Heart className="w-6 h-6 text-red-500" />
-                      <div>
-                        <p className="font-semibold text-gray-800 dark:text-gray-200">{med.name}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">Dosage: {med.dosage}</p>
+                {protocol.medications.map(
+                  (med: { name: string; dosage: string; instructions: string }, index: number) => (
+                    <div key={index} className="bg-white rounded-lg p-4 border border-yellow-300">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <Heart className="w-6 h-6 text-red-500" />
+                        <div>
+                          <p className="font-semibold text-gray-800 dark:text-gray-200">
+                            {med.name}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Dosage: {med.dosage}
+                          </p>
+                        </div>
                       </div>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{med.instructions}</p>
                     </div>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">{med.instructions}</p>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           )}
@@ -496,9 +495,11 @@ export function EmergencyProtocolDisplay({
                   <Shield className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-green-800 mb-2">Protocol Completed</h3>
-                <p className="text-green-700">All emergency steps have been completed successfully.</p>
+                <p className="text-green-700">
+                  All emergency steps have been completed successfully.
+                </p>
               </div>
-              
+
               <TouchOptimizedButton
                 onClick={onComplete}
                 variant="primary"
@@ -515,14 +516,14 @@ export function EmergencyProtocolDisplay({
       {isPaused && (
         <div className="paused-state text-center py-12">
           <Clock className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">Protocol Paused</h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">Take your time. Resume when you're ready.</p>
-          
-          <TouchOptimizedButton
-            onClick={() => setIsPaused(false)}
-            variant="primary"
-            size="large"
-          >
+          <h3 className="text-xl font-semibold text-gray-600 dark:text-gray-400 mb-2">
+            Protocol Paused
+          </h3>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">
+            Take your time. Resume when you're ready.
+          </p>
+
+          <TouchOptimizedButton onClick={() => setIsPaused(false)} variant="primary" size="large">
             <Play className="w-6 h-6 mr-2" />
             Resume Protocol
           </TouchOptimizedButton>
@@ -542,7 +543,9 @@ export function EmergencySettingsPanel() {
   return (
     <div className="emergency-settings bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">Emergency Settings</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+          Emergency Settings
+        </h2>
         <TouchOptimizedButton
           onClick={() => setIsExpanded(!isExpanded)}
           variant="secondary"
@@ -581,7 +584,7 @@ export function EmergencySettingsPanel() {
               <input
                 type="checkbox"
                 checked={preferences.voiceInput}
-                onChange={(e) => updatePreferences({ voiceInput: e.target.checked })}
+                onChange={e => updatePreferences({ voiceInput: e.target.checked })}
                 className="w-5 h-5 text-blue-600 rounded"
               />
               <span className="text-gray-700 dark:text-gray-300">Enable voice commands</span>
@@ -593,7 +596,7 @@ export function EmergencySettingsPanel() {
               <input
                 type="checkbox"
                 checked={preferences.showComfortPrompts}
-                onChange={(e) => updatePreferences({ showComfortPrompts: e.target.checked })}
+                onChange={e => updatePreferences({ showComfortPrompts: e.target.checked })}
                 className="w-5 h-5 text-blue-600 rounded"
               />
               <span className="text-gray-700 dark:text-gray-300">Show comfort prompts</span>
@@ -605,9 +608,11 @@ export function EmergencySettingsPanel() {
               <span className="text-gray-700 dark:text-gray-300">Touch target size</span>
               <select
                 value={preferences.touchTargetSize}
-                onChange={(e) => updatePreferences({ 
-                  touchTargetSize: e.target.value as 'normal' | 'large' | 'extra-large' 
-                })}
+                onChange={e =>
+                  updatePreferences({
+                    touchTargetSize: e.target.value as 'normal' | 'large' | 'extra-large',
+                  })
+                }
                 className="rounded-md border-gray-300 dark:border-gray-600 text-sm"
               >
                 <option value="normal">Normal</option>
@@ -627,7 +632,7 @@ export function EmergencySettingsPanel() {
                 touchTargetSize: 'extra-large',
                 confirmationLevel: 'high',
                 showComfortPrompts: true,
-                voiceInput: true
+                voiceInput: true,
               });
             }}
             variant="secondary"

@@ -1,6 +1,6 @@
 /**
  * @fileoverview Tone Context Hooks
- * 
+ *
  * Separated from ToneContext.tsx to fix Fast Refresh warnings
  */
 
@@ -13,17 +13,17 @@ import { ToneContext, type ToneProviderValue } from './ToneContext';
  */
 export function useTone() {
   const context = useContext(ToneContext);
-  
+
   if (!context) {
     throw new Error('useTone must be used within ToneProvider');
   }
-  
+
   return context;
 }
 
 /**
  * Hook to get adaptive copy
- * 
+ *
  * Usage:
  * ```tsx
  * const copy = useAdaptiveCopy({
@@ -41,22 +41,25 @@ export function useAdaptiveCopy(copy: AdaptiveCopy): string {
 
 /**
  * Hook to track prompt interactions
- * 
+ *
  * Usage:
  * ```tsx
  * const trackPrompt = usePromptTracking('coach');
- * 
+ *
  * // When user accepts prompt
  * trackPrompt(true);
- * 
+ *
  * // When user dismisses
  * trackPrompt(false);
  * ```
  */
 export function usePromptTracking(intent: CopyIntent) {
   const { trackInteraction } = useTone();
-  
-  return useCallback((accepted: boolean) => {
-    trackInteraction(intent, accepted);
-  }, [intent, trackInteraction]);
+
+  return useCallback(
+    (accepted: boolean) => {
+      trackInteraction(intent, accepted);
+    },
+    [intent, trackInteraction]
+  );
 }

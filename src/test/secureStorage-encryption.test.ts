@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { secureStorage } from '../lib/storage/secureStorage';
 
 // Simple reversible transform (not real crypto) for test
-const enc = (s: string) => `x${Buffer.from(s,'utf8').toString('base64')}`;
+const enc = (s: string) => `x${Buffer.from(s, 'utf8').toString('base64')}`;
 const dec = (s: string) => Buffer.from(s.slice(1), 'base64').toString('utf8');
 
 beforeEach(() => {
@@ -24,7 +24,12 @@ describe('secureStorage encryption hook', () => {
   it('fails gracefully on bad decrypt', () => {
     const value = { z: 9 };
     secureStorage.set('bad_dec', value, { encrypt: true, encryptFn: enc });
-    const broken = secureStorage.get('bad_dec', { encrypt: true, decryptFn: () => { throw new Error('nope'); } });
+    const broken = secureStorage.get('bad_dec', {
+      encrypt: true,
+      decryptFn: () => {
+        throw new Error('nope');
+      },
+    });
     expect(broken).toBeNull();
   });
 });

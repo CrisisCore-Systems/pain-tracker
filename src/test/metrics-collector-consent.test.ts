@@ -11,15 +11,16 @@ const analytics = new EmpathyDrivenAnalyticsService({
   celebrationFrequency: 'daily',
   reportingStyle: 'balanced',
   privacyLevel: 'personal',
-  languagePreference: 'everyday'
+  languagePreference: 'everyday',
 });
 const collector = new EmpathyMetricsCollector(security, analytics);
 
 describe('EmpathyMetricsCollector consent enforcement', () => {
   it('throws when consent required and not granted', async () => {
     const painEntries: PainEntry[] = [];
-  const moodEntries: MoodEntry[] = [] as MoodEntry[];
-    await expect(collector.collect(painEntries, moodEntries, { userId: 'u1', consentGranted: false }))
-      .rejects.toThrow(/Consent required/);
+    const moodEntries: MoodEntry[] = [] as MoodEntry[];
+    await expect(
+      collector.collect(painEntries, moodEntries, { userId: 'u1', consentGranted: false })
+    ).rejects.toThrow(/Consent required/);
   });
 });

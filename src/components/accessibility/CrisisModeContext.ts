@@ -60,22 +60,22 @@ export const defaultCrisisSettings: CrisisSettings = {
       mild: false,
       moderate: true,
       severe: true,
-      emergency: true
-    }
+      emergency: true,
+    },
   },
   emergencyContacts: [
     {
       name: 'Emergency Services',
       phone: '911',
       type: 'emergency',
-      priority: 1
+      priority: 1,
     },
     {
       name: 'Crisis Hotline',
       phone: '988',
       type: 'support',
-      priority: 2
-    }
+      priority: 2,
+    },
   ],
   preferences: {
     showStressIndicator: true,
@@ -83,14 +83,14 @@ export const defaultCrisisSettings: CrisisSettings = {
     reducedAnimations: false,
     highContrast: false,
     largeText: false,
-    voiceGuidance: false
+    voiceGuidance: false,
   },
   customization: {
     primaryColor: '#3b82f6',
     emergencyColor: '#dc2626',
     fontScale: 1.0,
-    buttonSize: 'normal'
-  }
+    buttonSize: 'normal',
+  },
 };
 
 export const CrisisModeContext = createContext<CrisisModeContextType | null>(null);

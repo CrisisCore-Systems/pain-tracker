@@ -8,7 +8,7 @@ interface PredictiveIndicatorPanelProps {
 
 /**
  * Predictive Indicator Alert Panel
- * 
+ *
  * Displays early warning indicators and pattern-based predictions.
  * Trauma-informed design with clear, non-alarming language.
  */
@@ -29,8 +29,7 @@ export const PredictiveIndicatorPanel: React.FC<PredictiveIndicatorPanelProps> =
               No Warning Indicators
             </p>
             <p className="text-sm text-green-700 dark:text-green-400">
-              Your current data shows no concerning patterns. Continue your tracking
-              routine!
+              Your current data shows no concerning patterns. Continue your tracking routine!
             </p>
           </div>
         </div>
@@ -94,9 +93,9 @@ export const PredictiveIndicatorPanel: React.FC<PredictiveIndicatorPanelProps> =
   };
 
   // Group by type
-  const escalationIndicators = indicators.filter((i) => i.type === 'escalation');
-  const warningIndicators = indicators.filter((i) => i.type === 'warning');
-  const onsetIndicators = indicators.filter((i) => i.type === 'onset');
+  const escalationIndicators = indicators.filter(i => i.type === 'escalation');
+  const warningIndicators = indicators.filter(i => i.type === 'warning');
+  const onsetIndicators = indicators.filter(i => i.type === 'onset');
 
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ${className}`}>
@@ -145,9 +144,7 @@ export const PredictiveIndicatorPanel: React.FC<PredictiveIndicatorPanelProps> =
                 {/* Metadata */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                      Lead Time
-                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Lead Time</p>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
                       {indicator.leadTime}
                     </p>
@@ -210,23 +207,17 @@ export const PredictiveIndicatorPanel: React.FC<PredictiveIndicatorPanelProps> =
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                      Lead Time
-                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Lead Time</p>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
                       {indicator.leadTime}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                      Confidence
-                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Confidence</p>
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                         <div
-                          className={`h-full ${getConfidenceColor(
-                            indicator.confidence
-                          )}`}
+                          className={`h-full ${getConfidenceColor(indicator.confidence)}`}
                           style={{ width: getConfidenceWidth(indicator.confidence) }}
                           role="progressbar"
                           aria-valuenow={indicator.confidence * 100}
@@ -275,23 +266,17 @@ export const PredictiveIndicatorPanel: React.FC<PredictiveIndicatorPanelProps> =
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                      Lead Time
-                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Lead Time</p>
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
                       {indicator.leadTime}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                      Confidence
-                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Confidence</p>
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                         <div
-                          className={`h-full ${getConfidenceColor(
-                            indicator.confidence
-                          )}`}
+                          className={`h-full ${getConfidenceColor(indicator.confidence)}`}
                           style={{ width: getConfidenceWidth(indicator.confidence) }}
                           role="progressbar"
                           aria-valuenow={indicator.confidence * 100}

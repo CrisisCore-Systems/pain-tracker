@@ -1,6 +1,6 @@
 /**
  * Accessibility Utilities
- * 
+ *
  * Comprehensive utilities for accessibility enhancements including:
  * - Announce live regions
  * - Focus management
@@ -18,7 +18,7 @@ export const announceToScreenReader = (
 ): void => {
   // Find or create live region
   let liveRegion = document.getElementById('aria-live-region');
-  
+
   if (!liveRegion) {
     liveRegion = document.createElement('div');
     liveRegion.id = 'aria-live-region';
@@ -27,12 +27,12 @@ export const announceToScreenReader = (
     liveRegion.className = 'sr-only';
     document.body.appendChild(liveRegion);
   }
-  
+
   // Update aria-live priority if different
   if (liveRegion.getAttribute('aria-live') !== priority) {
     liveRegion.setAttribute('aria-live', priority);
   }
-  
+
   // Clear and set new message with slight delay for SR detection
   liveRegion.textContent = '';
   setTimeout(() => {
@@ -47,7 +47,7 @@ export const announceToScreenReader = (
  */
 export class FocusManager {
   private static focusStack: HTMLElement[] = [];
-  
+
   /**
    * Save current focus and move to new element
    */
@@ -56,12 +56,12 @@ export class FocusManager {
     if (currentFocus && currentFocus !== document.body) {
       this.focusStack.push(currentFocus);
     }
-    
+
     if (newElement) {
       newElement.focus();
     }
   }
-  
+
   /**
    * Restore previously saved focus
    */
@@ -71,7 +71,7 @@ export class FocusManager {
       previousFocus.focus();
     }
   }
-  
+
   /**
    * Get all focusable elements within a container
    */
@@ -85,11 +85,12 @@ export class FocusManager {
       '[tabindex]:not([tabindex="-1"])',
       '[contenteditable="true"]',
     ].join(', ');
-    
-    return Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors))
-      .filter(el => !el.hasAttribute('hidden') && el.offsetParent !== null);
+
+    return Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors)).filter(
+      el => !el.hasAttribute('hidden') && el.offsetParent !== null
+    );
   }
-  
+
   /**
    * Create focus trap for modal dialogs
    */
@@ -97,10 +98,10 @@ export class FocusManager {
     const focusableElements = this.getFocusableElements(container);
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
-    
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
-      
+
       if (e.shiftKey) {
         // Shift + Tab
         if (document.activeElement === firstElement) {
@@ -115,9 +116,9 @@ export class FocusManager {
         }
       }
     };
-    
+
     container.addEventListener('keydown', handleKeyDown);
-    
+
     // Return cleanup function
     return () => {
       container.removeEventListener('keydown', handleKeyDown);
@@ -142,15 +143,15 @@ export class KeyboardNavigationHelper {
     } = {}
   ): () => void {
     const { loop = true, orientation = 'vertical', onSelect } = options;
-    
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const items = Array.from(container.querySelectorAll<HTMLElement>(itemSelector));
       const currentIndex = items.findIndex(item => item === document.activeElement);
-      
+
       if (currentIndex === -1) return;
-      
+
       let nextIndex = currentIndex;
-      
+
       switch (e.key) {
         case 'ArrowDown':
           if (orientation === 'vertical' || orientation === 'grid') {
@@ -194,21 +195,21 @@ export class KeyboardNavigationHelper {
         default:
           return;
       }
-      
+
       // Handle looping
       if (loop) {
         nextIndex = (nextIndex + items.length) % items.length;
       } else {
         nextIndex = Math.max(0, Math.min(nextIndex, items.length - 1));
       }
-      
+
       if (nextIndex !== currentIndex) {
         items[nextIndex]?.focus();
       }
     };
-    
+
     container.addEventListener('keydown', handleKeyDown);
-    
+
     return () => {
       container.removeEventListener('keydown', handleKeyDown);
     };
@@ -225,33 +226,33 @@ export const setupSkipLinks = (): void => {
     { id: 'skip-to-nav', target: 'main-navigation', text: 'Skip to navigation' },
     { id: 'skip-to-footer', target: 'page-footer', text: 'Skip to footer' },
   ];
-  
+
   const existingContainer = document.getElementById('skip-links-container');
   if (existingContainer) return; // Already setup
-  
+
   const container = document.createElement('div');
   container.id = 'skip-links-container';
   container.className = 'sr-only-focusable';
-  
+
   skipLinks.forEach(({ id, target, text }) => {
     const targetElement = document.getElementById(target);
     if (!targetElement) return;
-    
+
     const link = document.createElement('a');
     link.id = id;
     link.href = `#${target}`;
     link.textContent = text;
     link.className = 'skip-link';
-    
-    link.addEventListener('click', (e) => {
+
+    link.addEventListener('click', e => {
       e.preventDefault();
       targetElement.focus();
       targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    
+
     container.appendChild(link);
   });
-  
+
   document.body.insertBefore(container, document.body.firstChild);
 };
 
@@ -268,7 +269,7 @@ export const addMissingAriaLabels = (container: HTMLElement = document.body): vo
       console.warn('Button missing aria-label:', button);
     }
   });
-  
+
   // Links without text
   const links = container.querySelectorAll<HTMLAnchorElement>('a:not([aria-label])');
   links.forEach(link => {
@@ -278,13 +279,15 @@ export const addMissingAriaLabels = (container: HTMLElement = document.body): vo
       console.warn('Link missing aria-label:', link);
     }
   });
-  
+
   // Form inputs without labels
-  const inputs = container.querySelectorAll<HTMLInputElement>('input:not([aria-label]):not([aria-labelledby])');
+  const inputs = container.querySelectorAll<HTMLInputElement>(
+    'input:not([aria-label]):not([aria-labelledby])'
+  );
   inputs.forEach(input => {
     const id = input.getAttribute('id');
     const label = id ? container.querySelector<HTMLLabelElement>(`label[for="${id}"]`) : null;
-    
+
     if (!label) {
       const placeholder = input.getAttribute('placeholder');
       input.setAttribute('aria-label', placeholder || 'Input field');
@@ -296,32 +299,67 @@ export const addMissingAriaLabels = (container: HTMLElement = document.body): vo
 /**
  * Validate ARIA implementation
  */
-export const validateARIA = (container: HTMLElement = document.body): {
+export const validateARIA = (
+  container: HTMLElement = document.body
+): {
   errors: string[];
   warnings: string[];
 } => {
   const errors: string[] = [];
   const warnings: string[] = [];
-  
+
   // Check for ARIA role validity
   const elementsWithRoles = container.querySelectorAll('[role]');
   const validRoles = [
-    'alert', 'alertdialog', 'application', 'article', 'banner', 'button',
-    'checkbox', 'dialog', 'grid', 'gridcell', 'heading', 'img', 'link',
-    'list', 'listbox', 'listitem', 'main', 'menu', 'menubar', 'menuitem',
-    'navigation', 'progressbar', 'radio', 'radiogroup', 'region', 'row',
-    'rowheader', 'search', 'slider', 'spinbutton', 'status', 'tab',
-    'tablist', 'tabpanel', 'textbox', 'toolbar', 'tooltip', 'tree',
-    'treegrid', 'treeitem',
+    'alert',
+    'alertdialog',
+    'application',
+    'article',
+    'banner',
+    'button',
+    'checkbox',
+    'dialog',
+    'grid',
+    'gridcell',
+    'heading',
+    'img',
+    'link',
+    'list',
+    'listbox',
+    'listitem',
+    'main',
+    'menu',
+    'menubar',
+    'menuitem',
+    'navigation',
+    'progressbar',
+    'radio',
+    'radiogroup',
+    'region',
+    'row',
+    'rowheader',
+    'search',
+    'slider',
+    'spinbutton',
+    'status',
+    'tab',
+    'tablist',
+    'tabpanel',
+    'textbox',
+    'toolbar',
+    'tooltip',
+    'tree',
+    'treegrid',
+    'treeitem',
   ];
-  
+
   elementsWithRoles.forEach(el => {
     const role = el.getAttribute('role');
     if (role && !validRoles.includes(role)) {
       errors.push(`Invalid ARIA role: ${role} on element ${el.tagName}`);
     }
   });
-  
+
   // Check for required aria-labelledby references
   const labelledByElements = container.querySelectorAll('[aria-labelledby]');
   labelledByElements.forEach(el => {
@@ -332,7 +370,7 @@ export const validateARIA = (container: HTMLElement = document.body): {
       }
     });
   });
-  
+
   // Check for required aria-describedby references
   const describedByElements = container.querySelectorAll('[aria-describedby]');
   describedByElements.forEach(el => {
@@ -343,7 +381,7 @@ export const validateARIA = (container: HTMLElement = document.body): {
       }
     });
   });
-  
+
   return { errors, warnings };
 };
 
@@ -355,7 +393,7 @@ export const enhanceFormAccessibility = (form: HTMLFormElement): void => {
   const requiredInputs = form.querySelectorAll<HTMLInputElement>('[required]');
   requiredInputs.forEach(input => {
     input.setAttribute('aria-required', 'true');
-    
+
     // Add visual indicator if missing
     const label = form.querySelector<HTMLLabelElement>(`label[for="${input.id}"]`);
     if (label && !label.querySelector('.required-indicator')) {
@@ -366,16 +404,16 @@ export const enhanceFormAccessibility = (form: HTMLFormElement): void => {
       label.appendChild(indicator);
     }
   });
-  
+
   // Enhance error messages
   const inputs = form.querySelectorAll<HTMLInputElement>('input, textarea, select');
   inputs.forEach(input => {
-    input.addEventListener('invalid', (e) => {
+    input.addEventListener('invalid', e => {
       e.preventDefault();
-      
+
       const errorId = `${input.id}-error`;
       let errorElement = document.getElementById(errorId);
-      
+
       if (!errorElement) {
         errorElement = document.createElement('div');
         errorElement.id = errorId;
@@ -383,14 +421,14 @@ export const enhanceFormAccessibility = (form: HTMLFormElement): void => {
         errorElement.setAttribute('role', 'alert');
         input.parentElement?.appendChild(errorElement);
       }
-      
+
       errorElement.textContent = input.validationMessage;
       input.setAttribute('aria-invalid', 'true');
       input.setAttribute('aria-describedby', errorId);
-      
+
       announceToScreenReader(`Error: ${input.validationMessage}`, 'assertive');
     });
-    
+
     input.addEventListener('input', () => {
       if (input.validity.valid) {
         input.removeAttribute('aria-invalid');

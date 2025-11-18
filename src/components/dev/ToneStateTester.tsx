@@ -1,15 +1,15 @@
 /**
  * @fileoverview Tone System State Testing Utility
- * 
+ *
  * Use this component in development to test all 4 patient states
  * and verify adaptive copy changes throughout the app.
- * 
+ *
  * Usage:
  * 1. Import and render in App.tsx (dev only)
  * 2. Click buttons to force different states
  * 3. Navigate through app to see copy adapt
  * 4. Check QuickLogStepper, PanicMode, Dashboard, Empty States
- * 
+ *
  * Keyboard shortcuts:
  * - Ctrl+T: Toggle visibility
  * - Escape: Minimize panel
@@ -36,8 +36,9 @@ export function ToneStateTester() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
-      
+      const isInputField =
+        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+
       // Ctrl+T to toggle
       if (e.key === 't' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
@@ -99,19 +100,36 @@ export function ToneStateTester() {
       <div className="mb-3 p-2 bg-purple-900/30 rounded border border-purple-700/50 text-xs text-purple-300">
         <div className="font-bold mb-1">⌨️ Shortcuts:</div>
         <div className="space-y-0.5 text-purple-200">
-          <div><kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">Ctrl+T</kbd> Toggle panel</div>
-          <div><kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">Esc</kbd> Minimize</div>
-          <div><kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">1-4</kbd> Force states</div>
+          <div>
+            <kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">Ctrl+T</kbd>{' '}
+            Toggle panel
+          </div>
+          <div>
+            <kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">Esc</kbd>{' '}
+            Minimize
+          </div>
+          <div>
+            <kbd className="px-1 py-0.5 bg-gray-800 dark:bg-gray-200 rounded text-xs">1-4</kbd>{' '}
+            Force states
+          </div>
         </div>
       </div>
 
       {/* Current State */}
       <div className="mb-3 p-2 bg-gray-800 dark:bg-gray-200 rounded border border-gray-700 dark:border-gray-300">
         <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">Current State:</div>
-        <div className="text-sm font-mono font-bold text-purple-300">{context.state.toUpperCase()}</div>
+        <div className="text-sm font-mono font-bold text-purple-300">
+          {context.state.toUpperCase()}
+        </div>
         {context.painTrend && (
           <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-            Pain: {context.painTrend.current.toFixed(1)} ({context.painTrend.direction === 'up' ? '↑' : context.painTrend.direction === 'down' ? '↓' : '→'})
+            Pain: {context.painTrend.current.toFixed(1)} (
+            {context.painTrend.direction === 'up'
+              ? '↑'
+              : context.painTrend.direction === 'down'
+                ? '↓'
+                : '→'}
+            )
           </div>
         )}
       </div>
@@ -134,7 +152,9 @@ export function ToneStateTester() {
                 <span className="mr-2">{emoji}</span>
                 <span className="font-bold">{state}</span>
               </div>
-              <kbd className="px-1.5 py-0.5 bg-gray-700 dark:bg-gray-300 rounded text-xs">{key}</kbd>
+              <kbd className="px-1.5 py-0.5 bg-gray-700 dark:bg-gray-300 rounded text-xs">
+                {key}
+              </kbd>
             </div>
             <div className="text-xs opacity-70 mt-1">{description}</div>
           </button>
@@ -144,12 +164,12 @@ export function ToneStateTester() {
       {/* Preferences */}
       <div className="border-t border-gray-700 dark:border-gray-300 pt-3 space-y-2">
         <div className="text-xs text-gray-400 dark:text-gray-500 mb-2">Preferences:</div>
-        
+
         <label className="flex items-center justify-between text-xs cursor-pointer hover:bg-gray-800 dark:bg-gray-200 p-1 rounded transition-colors">
           <span>Warmth</span>
           <select
             value={preferences.warmth}
-            onChange={(e) => updatePreferences({ warmth: Number(e.target.value) as 0 | 1 })}
+            onChange={e => updatePreferences({ warmth: Number(e.target.value) as 0 | 1 })}
             className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded px-2 py-1 text-xs hover:border-purple-600 transition-colors"
           >
             <option value="0">Neutral</option>
@@ -161,7 +181,7 @@ export function ToneStateTester() {
           <span>Coach Intensity</span>
           <select
             value={preferences.coachIntensity}
-            onChange={(e) => updatePreferences({ coachIntensity: Number(e.target.value) as 0 | 1 })}
+            onChange={e => updatePreferences({ coachIntensity: Number(e.target.value) as 0 | 1 })}
             className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded px-2 py-1 text-xs hover:border-purple-600 transition-colors"
           >
             <option value="0">Minimal</option>
@@ -174,7 +194,7 @@ export function ToneStateTester() {
           <input
             type="checkbox"
             checked={preferences.medicalTerms}
-            onChange={(e) => updatePreferences({ medicalTerms: e.target.checked })}
+            onChange={e => updatePreferences({ medicalTerms: e.target.checked })}
             className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded"
           />
         </label>
@@ -184,7 +204,7 @@ export function ToneStateTester() {
           <input
             type="checkbox"
             checked={preferences.allowLightness}
-            onChange={(e) => updatePreferences({ allowLightness: e.target.checked })}
+            onChange={e => updatePreferences({ allowLightness: e.target.checked })}
             className="bg-gray-800 dark:bg-gray-200 border border-gray-700 dark:border-gray-300 rounded"
           />
         </label>

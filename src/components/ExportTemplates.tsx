@@ -26,7 +26,9 @@ export default function ExportTemplates() {
               <div className="text-sm text-muted-foreground">{t.description}</div>
             </div>
             <div>
-              <button onClick={() => downloadTemplate(t.id)} className="btn btn-sm">Download</button>
+              <button onClick={() => downloadTemplate(t.id)} className="btn btn-sm">
+                Download
+              </button>
             </div>
           </div>
         ))}

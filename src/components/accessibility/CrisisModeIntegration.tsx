@@ -9,16 +9,16 @@ import { useTraumaInformed } from './TraumaInformedHooks';
 import { EmergencyModeLayout } from './EmergencyModeInterface';
 import { CognitiveBreadcrumbs, StepByStepNavigation } from './CognitiveFogNavigation';
 import { MultiModalInputManager } from './MultiModalInputSystem';
-import { 
-  StressResponsiveContainer, 
-  StressLevelIndicator, 
-  CrisisAlertBanner 
+import {
+  StressResponsiveContainer,
+  StressLevelIndicator,
+  CrisisAlertBanner,
 } from './StressResponsiveUI';
-import { 
-  CrisisModeContext, 
+import {
+  CrisisModeContext,
   CrisisModeContextType,
   CrisisSettings,
-  defaultCrisisSettings 
+  defaultCrisisSettings,
 } from './CrisisModeContext';
 import { useCrisisMode } from './useCrisisMode';
 
@@ -31,29 +31,29 @@ interface CrisisModeProviderProps {
 export function CrisisModeProvider({ children, initialSettings = {} }: CrisisModeProviderProps) {
   const { crisisLevel, resetCrisisDetection } = useCrisisDetection();
   const { preferences } = useTraumaInformed();
-  
+
   const [isCrisisModeActive, setIsCrisisModeActive] = useState(false);
   const [crisisFeatures, setCrisisFeatures] = useState({
     emergencyMode: false,
     cognitiveFogSupport: false,
     multiModalInput: false,
-    stressResponsiveUI: true
+    stressResponsiveUI: true,
   });
-  
+
   const [crisisSettings, setCrisisSettings] = useState<CrisisSettings>({
     ...defaultCrisisSettings,
-    ...initialSettings
+    ...initialSettings,
   });
 
   // Auto-activate crisis mode based on stress level
   useEffect(() => {
     if (crisisSettings.autoActivation.enabled) {
-      const shouldActivate = 
+      const shouldActivate =
         (crisisLevel === 'mild' && crisisSettings.autoActivation.thresholds.mild) ||
         (crisisLevel === 'moderate' && crisisSettings.autoActivation.thresholds.moderate) ||
         (crisisLevel === 'severe' && crisisSettings.autoActivation.thresholds.severe) ||
         (crisisLevel === 'emergency' && crisisSettings.autoActivation.thresholds.emergency);
-      
+
       if (shouldActivate && !isCrisisModeActive) {
         setIsCrisisModeActive(true);
         setCrisisFeatures(prev => ({
@@ -61,7 +61,7 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
           emergencyMode: crisisLevel === 'severe' || crisisLevel === 'emergency',
           cognitiveFogSupport: true,
           multiModalInput: true,
-          stressResponsiveUI: true
+          stressResponsiveUI: true,
         }));
       } else if (crisisLevel === 'none' && isCrisisModeActive) {
         // Auto-deactivate when stress returns to normal
@@ -71,7 +71,7 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
             ...prev,
             emergencyMode: false,
             cognitiveFogSupport: false,
-            multiModalInput: false
+            multiModalInput: false,
           }));
         }, 5000); // 5 second delay to prevent flapping
       }
@@ -87,15 +87,15 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
         reducedAnimations: preferences.reduceMotion,
         highContrast: preferences.contrast === 'high',
         largeText: preferences.fontSize === 'large' || preferences.fontSize === 'xl',
-        voiceGuidance: false
-      }
+        voiceGuidance: false,
+      },
     }));
   }, [preferences]);
 
   const toggleCrisisFeature = useCallback((feature: keyof typeof crisisFeatures) => {
     setCrisisFeatures(prev => ({
       ...prev,
-      [feature]: !prev[feature]
+      [feature]: !prev[feature],
     }));
   }, []);
 
@@ -105,7 +105,7 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
       emergencyMode: true,
       cognitiveFogSupport: true,
       multiModalInput: true,
-      stressResponsiveUI: true
+      stressResponsiveUI: true,
     });
   }, []);
 
@@ -115,7 +115,7 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
       emergencyMode: false,
       cognitiveFogSupport: false,
       multiModalInput: false,
-      stressResponsiveUI: true
+      stressResponsiveUI: true,
     });
     resetCrisisDetection('resolved');
   }, [resetCrisisDetection]);
@@ -123,7 +123,7 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
   const updateCrisisSettings = useCallback((settings: Partial<CrisisSettings>) => {
     setCrisisSettings(prev => ({
       ...prev,
-      ...settings
+      ...settings,
     }));
   }, []);
 
@@ -134,14 +134,10 @@ export function CrisisModeProvider({ children, initialSettings = {} }: CrisisMod
     activateEmergencyMode,
     deactivateEmergencyMode,
     crisisSettings,
-    updateCrisisSettings
+    updateCrisisSettings,
   };
 
-  return (
-    <CrisisModeContext.Provider value={contextValue}>
-      {children}
-    </CrisisModeContext.Provider>
-  );
+  return <CrisisModeContext.Provider value={contextValue}>{children}</CrisisModeContext.Provider>;
 }
 
 // Crisis Mode Layout Wrapper
@@ -151,71 +147,73 @@ interface CrisisModeLayoutProps {
   className?: string;
 }
 
-export function CrisisModeLayout({ 
-  children, 
+export function CrisisModeLayout({
+  children,
   showControls = false,
-  className = '' 
+  className = '',
 }: CrisisModeLayoutProps) {
-  const { 
-    isCrisisModeActive, 
-    crisisFeatures, 
-    crisisSettings,
-    deactivateEmergencyMode 
-  } = useCrisisMode();
+  const { isCrisisModeActive, crisisFeatures, crisisSettings, deactivateEmergencyMode } =
+    useCrisisMode();
   const { crisisLevel } = useCrisisDetection();
-  
+
   const [showAlertBanner, setShowAlertBanner] = useState(false);
 
   useEffect(() => {
     setShowAlertBanner(isCrisisModeActive && crisisLevel !== 'none');
   }, [isCrisisModeActive, crisisLevel]);
 
-  const handleEmergencyAction = useCallback((action: string) => {
-    switch (action) {
-      case 'call_emergency': {
-        const emergencyContact = crisisSettings.emergencyContacts.find(
-          (contact: CrisisSettings['emergencyContacts'][0]) => contact.type === 'emergency'
-        );
-        if (emergencyContact) {
-          window.location.href = `tel:${emergencyContact.phone}`;
+  const handleEmergencyAction = useCallback(
+    (action: string) => {
+      switch (action) {
+        case 'call_emergency': {
+          const emergencyContact = crisisSettings.emergencyContacts.find(
+            (contact: CrisisSettings['emergencyContacts'][0]) => contact.type === 'emergency'
+          );
+          if (emergencyContact) {
+            window.location.href = `tel:${emergencyContact.phone}`;
+          }
+          break;
         }
-        break;
-      }
-      case 'call_support': {
-        const supportContact = crisisSettings.emergencyContacts.find(
-          (contact: CrisisSettings['emergencyContacts'][0]) => contact.type === 'support'
-        );
-        if (supportContact) {
-          window.location.href = `tel:${supportContact.phone}`;
+        case 'call_support': {
+          const supportContact = crisisSettings.emergencyContacts.find(
+            (contact: CrisisSettings['emergencyContacts'][0]) => contact.type === 'support'
+          );
+          if (supportContact) {
+            window.location.href = `tel:${supportContact.phone}`;
+          }
+          break;
         }
-        break;
+        case 'exit_crisis_mode':
+          deactivateEmergencyMode();
+          break;
+        default:
+          console.log('Emergency action:', action);
       }
-      case 'exit_crisis_mode':
-        deactivateEmergencyMode();
-        break;
-      default:
-        console.log('Emergency action:', action);
-    }
-  }, [crisisSettings.emergencyContacts, deactivateEmergencyMode]);
+    },
+    [crisisSettings.emergencyContacts, deactivateEmergencyMode]
+  );
 
-  const handleVoiceCommand = useCallback((command: string) => {
-    switch (command) {
-      case 'emergency_help':
-        handleEmergencyAction('call_emergency');
-        break;
-      case 'call_support':
-        handleEmergencyAction('call_support');
-        break;
-      case 'calm_mode':
-        deactivateEmergencyMode();
-        break;
-      default:
-        console.log('Voice command:', command);
-    }
-  }, [handleEmergencyAction, deactivateEmergencyMode]);
+  const handleVoiceCommand = useCallback(
+    (command: string) => {
+      switch (command) {
+        case 'emergency_help':
+          handleEmergencyAction('call_emergency');
+          break;
+        case 'call_support':
+          handleEmergencyAction('call_support');
+          break;
+        case 'calm_mode':
+          deactivateEmergencyMode();
+          break;
+        default:
+          console.log('Voice command:', command);
+      }
+    },
+    [handleEmergencyAction, deactivateEmergencyMode]
+  );
 
   return (
-    <StressResponsiveContainer 
+    <StressResponsiveContainer
       className={`crisis-mode-layout ${className}`}
       enableStressAdaptation={crisisFeatures.stressResponsiveUI}
     >
@@ -227,18 +225,18 @@ export function CrisisModeLayout({
             {
               label: 'Get Help',
               action: () => handleEmergencyAction('call_emergency'),
-              urgency: 'critical'
+              urgency: 'critical',
             },
             {
               label: 'Call Support',
               action: () => handleEmergencyAction('call_support'),
-              urgency: 'high'
+              urgency: 'high',
             },
             {
               label: 'Exit Crisis Mode',
               action: () => handleEmergencyAction('exit_crisis_mode'),
-              urgency: 'medium'
-            }
+              urgency: 'medium',
+            },
           ]}
           autoHide={false}
         />
@@ -246,20 +244,13 @@ export function CrisisModeLayout({
 
       {/* Stress Level Indicator */}
       {crisisSettings.preferences.showStressIndicator && (
-        <StressLevelIndicator
-          showLabel={true}
-          position="top-right"
-          size="medium"
-        />
+        <StressLevelIndicator showLabel={true} position="top-right" size="medium" />
       )}
 
       {/* Emergency Mode Interface */}
       {crisisFeatures.emergencyMode && (
         <div className="crisis-emergency-overlay">
-          <EmergencyModeLayout
-            isActive={true}
-            severity="moderate"
-          >
+          <EmergencyModeLayout isActive={true} severity="moderate">
             {/* Emergency mode content would go here */}
             <div className="p-4">Emergency mode is active</div>
           </EmergencyModeLayout>
@@ -269,10 +260,10 @@ export function CrisisModeLayout({
       {/* Cognitive Fog Navigation */}
       {crisisFeatures.cognitiveFogSupport && (
         <div className="crisis-navigation-wrapper">
-          <CognitiveBreadcrumbs 
+          <CognitiveBreadcrumbs
             steps={['Home', 'Pain Tracker', 'Current Page']}
             currentStep={2}
-            onStepClick={(stepIndex) => console.log('Navigate to step:', stepIndex)}
+            onStepClick={stepIndex => console.log('Navigate to step:', stepIndex)}
             allowBackNavigation={true}
           />
           {(crisisLevel === 'severe' || crisisLevel === 'emergency') && (
@@ -289,16 +280,16 @@ export function CrisisModeLayout({
                     component: <div>Assessment content</div>,
                     isCompleted: false,
                     isOptional: false,
-                    estimatedTime: 2
-                  }
+                    estimatedTime: 2,
+                  },
                 ],
                 currentStepIndex: 0,
                 startTime: new Date(),
                 totalEstimatedTime: 10,
                 allowBackNavigation: true,
-                showProgress: true
+                showProgress: true,
               }}
-              onStepComplete={(stepId) => console.log('Step completed:', stepId)}
+              onStepComplete={stepId => console.log('Step completed:', stepId)}
               onNavigateBack={() => console.log('Navigate back')}
               onNavigateNext={() => console.log('Navigate next')}
               onSessionComplete={() => console.log('Session complete')}
@@ -319,9 +310,7 @@ export function CrisisModeLayout({
       )}
 
       {/* Main Content */}
-      <div className="crisis-content-wrapper">
-        {children}
-      </div>
+      <div className="crisis-content-wrapper">{children}</div>
 
       {/* Crisis Mode Controls (for testing/debugging) */}
       {showControls && (
@@ -357,26 +346,21 @@ interface CrisisModeSettingsPanelProps {
   className?: string;
 }
 
-export function CrisisModeSettingsPanel({ 
-  onClose, 
-  className = '' 
-}: CrisisModeSettingsPanelProps) {
-  const { 
-    crisisSettings, 
-    updateCrisisSettings, 
-    crisisFeatures, 
-    toggleCrisisFeature 
-  } = useCrisisMode();
+export function CrisisModeSettingsPanel({ onClose, className = '' }: CrisisModeSettingsPanelProps) {
+  const { crisisSettings, updateCrisisSettings, crisisFeatures, toggleCrisisFeature } =
+    useCrisisMode();
 
-  const handleAutoActivationChange = (level: keyof typeof crisisSettings.autoActivation.thresholds) => {
+  const handleAutoActivationChange = (
+    level: keyof typeof crisisSettings.autoActivation.thresholds
+  ) => {
     updateCrisisSettings({
       autoActivation: {
         ...crisisSettings.autoActivation,
         thresholds: {
           ...crisisSettings.autoActivation.thresholds,
-          [level]: !crisisSettings.autoActivation.thresholds[level]
-        }
-      }
+          [level]: !crisisSettings.autoActivation.thresholds[level],
+        },
+      },
     });
   };
 
@@ -384,8 +368,8 @@ export function CrisisModeSettingsPanel({
     updateCrisisSettings({
       preferences: {
         ...crisisSettings.preferences,
-        [key]: !crisisSettings.preferences[key]
-      }
+        [key]: !crisisSettings.preferences[key],
+      },
     });
   };
 
@@ -410,24 +394,34 @@ export function CrisisModeSettingsPanel({
               <input
                 type="checkbox"
                 checked={crisisSettings.autoActivation.enabled}
-                onChange={(e) => updateCrisisSettings({
-                  autoActivation: {
-                    ...crisisSettings.autoActivation,
-                    enabled: e.target.checked
-                  }
-                })}
+                onChange={e =>
+                  updateCrisisSettings({
+                    autoActivation: {
+                      ...crisisSettings.autoActivation,
+                      enabled: e.target.checked,
+                    },
+                  })
+                }
                 className="mr-2"
               />
               Enable automatic crisis mode activation
             </label>
             {crisisSettings.autoActivation.enabled && (
               <div className="ml-4 space-y-1">
-                {(Object.entries(crisisSettings.autoActivation.thresholds) as Array<[string, boolean]>).map(([level, enabled]) => (
+                {(
+                  Object.entries(crisisSettings.autoActivation.thresholds) as Array<
+                    [string, boolean]
+                  >
+                ).map(([level, enabled]) => (
                   <label key={level} className="flex items-center text-sm">
                     <input
                       type="checkbox"
                       checked={enabled}
-                      onChange={() => handleAutoActivationChange(level as keyof typeof crisisSettings.autoActivation.thresholds)}
+                      onChange={() =>
+                        handleAutoActivationChange(
+                          level as keyof typeof crisisSettings.autoActivation.thresholds
+                        )
+                      }
                       className="mr-2"
                     />
                     Activate on {level} stress
@@ -442,17 +436,19 @@ export function CrisisModeSettingsPanel({
         <div className="mb-6">
           <h3 className="text-lg font-medium mb-3">Crisis Features</h3>
           <div className="space-y-2">
-            {(Object.entries(crisisFeatures) as Array<[string, boolean]>).map(([feature, enabled]) => (
-              <label key={feature} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={() => toggleCrisisFeature(feature as keyof typeof crisisFeatures)}
-                  className="mr-2"
-                />
-                {feature.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-              </label>
-            ))}
+            {(Object.entries(crisisFeatures) as Array<[string, boolean]>).map(
+              ([feature, enabled]) => (
+                <label key={feature} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={enabled}
+                    onChange={() => toggleCrisisFeature(feature as keyof typeof crisisFeatures)}
+                    className="mr-2"
+                  />
+                  {feature.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                </label>
+              )
+            )}
           </div>
         </div>
 
@@ -460,17 +456,21 @@ export function CrisisModeSettingsPanel({
         <div className="mb-6">
           <h3 className="text-lg font-medium mb-3">Preferences</h3>
           <div className="space-y-2">
-            {(Object.entries(crisisSettings.preferences) as Array<[string, boolean]>).map(([pref, enabled]) => (
-              <label key={pref} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={enabled}
-                  onChange={() => handlePreferenceChange(pref as keyof typeof crisisSettings.preferences)}
-                  className="mr-2"
-                />
-                {pref.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-              </label>
-            ))}
+            {(Object.entries(crisisSettings.preferences) as Array<[string, boolean]>).map(
+              ([pref, enabled]) => (
+                <label key={pref} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={enabled}
+                    onChange={() =>
+                      handlePreferenceChange(pref as keyof typeof crisisSettings.preferences)
+                    }
+                    className="mr-2"
+                  />
+                  {pref.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                </label>
+              )
+            )}
           </div>
         </div>
 
@@ -478,12 +478,16 @@ export function CrisisModeSettingsPanel({
         <div className="mb-6">
           <h3 className="text-lg font-medium mb-3">Emergency Contacts</h3>
           <div className="space-y-2">
-            {crisisSettings.emergencyContacts.map((contact: CrisisSettings['emergencyContacts'][0], index: number) => (
-              <div key={index} className="p-2 bg-gray-50 dark:bg-gray-900 rounded text-sm">
-                <div className="font-medium">{contact.name}</div>
-                <div className="text-gray-600 dark:text-gray-400">{contact.phone} ({contact.type})</div>
-              </div>
-            ))}
+            {crisisSettings.emergencyContacts.map(
+              (contact: CrisisSettings['emergencyContacts'][0], index: number) => (
+                <div key={index} className="p-2 bg-gray-50 dark:bg-gray-900 rounded text-sm">
+                  <div className="font-medium">{contact.name}</div>
+                  <div className="text-gray-600 dark:text-gray-400">
+                    {contact.phone} ({contact.type})
+                  </div>
+                </div>
+              )
+            )}
           </div>
         </div>
 
@@ -501,5 +505,5 @@ export function CrisisModeSettingsPanel({
 export default {
   CrisisModeProvider,
   CrisisModeLayout,
-  CrisisModeSettingsPanel
+  CrisisModeSettingsPanel,
 };

@@ -26,17 +26,33 @@ const PAIN_LABELS = [
   'Intense',
   'Very intense',
   'Severe',
-  'Unbearable'
+  'Unbearable',
 ];
 
 const LOCATION_TAGS = [
-  'Lower back', 'Upper back', 'Neck', 'Shoulder (L)', 'Shoulder (R)',
-  'Hip (L)', 'Hip (R)', 'Knee (L)', 'Knee (R)', 'Head', 'Abdomen'
+  'Lower back',
+  'Upper back',
+  'Neck',
+  'Shoulder (L)',
+  'Shoulder (R)',
+  'Hip (L)',
+  'Hip (R)',
+  'Knee (L)',
+  'Knee (R)',
+  'Head',
+  'Abdomen',
 ];
 
 const SYMPTOM_TAGS = [
-  'Aching', 'Sharp', 'Burning', 'Throbbing', 'Stabbing',
-  'Tingling', 'Numbness', 'Stiffness', 'Weakness'
+  'Aching',
+  'Sharp',
+  'Burning',
+  'Throbbing',
+  'Stabbing',
+  'Tingling',
+  'Numbness',
+  'Stiffness',
+  'Weakness',
 ];
 
 export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) {
@@ -145,9 +161,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
           ))}
         </div>
 
-        <div className="text-small text-ink-400 text-mono w-16 text-right">
-          {step}/3
-        </div>
+        <div className="text-small text-ink-400 text-mono w-16 text-right">{step}/3</div>
       </div>
 
       {/* Content */}
@@ -184,7 +198,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                 min="0"
                 max="10"
                 value={pain}
-                onChange={(e) => {
+                onChange={e => {
                   const val = Math.max(0, Math.min(10, Number(e.target.value)));
                   handlePainChange(val);
                 }}
@@ -226,17 +240,13 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
               )}
               style={{
                 backgroundColor: getSeverityColor(pain),
-                color: pain > 5 ? 'var(--ink-50)' : 'var(--ink-900)'
+                color: pain > 5 ? 'var(--ink-50)' : 'var(--ink-900)',
               }}
               role="status"
               aria-live="polite"
             >
-              <div className="text-display text-mono mb-2 text-6xl font-bold">
-                {pain}
-              </div>
-              <div className="text-body-medium">
-                {PAIN_LABELS[pain]}
-              </div>
+              <div className="text-display text-mono mb-2 text-6xl font-bold">{pain}</div>
+              <div className="text-body-medium">{PAIN_LABELS[pain]}</div>
             </div>
 
             {/* Slider with Ladder */}
@@ -250,8 +260,8 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                 min="0"
                 max="10"
                 value={pain}
-                onChange={(e) => handlePainChange(Number(e.target.value))}
-                onKeyDown={(e) => {
+                onChange={e => handlePainChange(Number(e.target.value))}
+                onKeyDown={e => {
                   if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
                     e.preventDefault();
                     handlePainChange(Math.min(10, pain + 1));
@@ -280,9 +290,10 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                   focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900"
               />
               <div id="pain-slider-help" className="sr-only">
-                Use arrow keys to adjust pain level, or click the plus and minus buttons above for precise control.
+                Use arrow keys to adjust pain level, or click the plus and minus buttons above for
+                precise control.
               </div>
-              
+
               {/* Number Ladder */}
               <div className="flex justify-between text-tiny text-ink-400 text-mono px-1">
                 {Array.from({ length: 11 }, (_, i) => (
@@ -316,8 +327,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
             <div aria-live="polite" aria-atomic="true" className="sr-only">
               {locations.length > 0
                 ? `${locations.length} location${locations.length > 1 ? 's' : ''} selected: ${locations.join(', ')}`
-                : 'No locations selected'
-              }
+                : 'No locations selected'}
             </div>
 
             {/* Location Tags */}
@@ -340,7 +350,9 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                         : 'bg-surface-800 border-surface-600 text-ink-200 hover:border-primary-500/50'
                     )}
                   >
-                    {locations.includes(tag) && <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />}
+                    {locations.includes(tag) && (
+                      <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />
+                    )}
                     {tag}
                   </button>
                 ))}
@@ -350,13 +362,12 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
             {/* Symptoms */}
             <div className="mt-8">
               <h3 className="text-body-medium text-ink-200 mb-3">What does it feel like?</h3>
-              
+
               {/* Screen Reader Summary */}
               <div aria-live="polite" aria-atomic="true" className="sr-only">
                 {symptoms.length > 0
                   ? `${symptoms.length} symptom${symptoms.length > 1 ? 's' : ''} selected: ${symptoms.join(', ')}`
-                  : 'No symptoms selected'
-                }
+                  : 'No symptoms selected'}
               </div>
 
               <fieldset>
@@ -378,7 +389,9 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                           : 'bg-surface-800 border-surface-600 text-ink-200 hover:border-warn-500/50'
                       )}
                     >
-                      {symptoms.includes(tag) && <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />}
+                      {symptoms.includes(tag) && (
+                        <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />
+                      )}
                       {tag}
                     </button>
                   ))}
@@ -402,7 +415,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
               <textarea
                 id="pain-notes"
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={e => setNotes(e.target.value)}
                 placeholder={notesPlaceholder}
                 aria-label="Additional notes about pain"
                 aria-describedby="notes-hint notes-remaining"
@@ -418,9 +431,11 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
               />
               <div className="flex justify-between items-center mt-2">
                 <span id="notes-hint" className="text-small text-ink-400">
-                  {notes.length === 0 ? 'No notes yet' : `${notes.length} character${notes.length === 1 ? '' : 's'}`}
+                  {notes.length === 0
+                    ? 'No notes yet'
+                    : `${notes.length} character${notes.length === 1 ? '' : 's'}`}
                 </span>
-                <span 
+                <span
                   id="notes-remaining"
                   className="text-small text-ink-500"
                   aria-live="polite"
@@ -498,7 +513,13 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
         <div className="max-w-2xl mx-auto mt-2 text-center">
           <p className="text-xs text-ink-500">
             {keyboardHintText}
-            {step > 1 && <> or <kbd className="px-2 py-1 bg-surface-800 rounded text-ink-400">Esc</kbd> to go back</>}
+            {step > 1 && (
+              <>
+                {' '}
+                or <kbd className="px-2 py-1 bg-surface-800 rounded text-ink-400">Esc</kbd> to go
+                back
+              </>
+            )}
           </p>
         </div>
       </div>

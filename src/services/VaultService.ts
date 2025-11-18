@@ -19,8 +19,16 @@ function toBytes(input: unknown): Uint8Array {
     return input;
   }
 
-  if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(input)) {
-    return new Uint8Array((input as Buffer).buffer, (input as Buffer).byteOffset, (input as Buffer).byteLength);
+  if (
+    typeof Buffer !== 'undefined' &&
+    typeof Buffer.isBuffer === 'function' &&
+    Buffer.isBuffer(input)
+  ) {
+    return new Uint8Array(
+      (input as Buffer).buffer,
+      (input as Buffer).byteOffset,
+      (input as Buffer).byteLength
+    );
   }
 
   if (ArrayBuffer.isView(input)) {
@@ -48,7 +56,12 @@ async function ensureReady(): Promise<void> {
 function isEnvelopeString(raw: string): boolean {
   try {
     const parsed = JSON.parse(raw);
-    return typeof parsed === 'object' && parsed?.v === 'xchacha20-poly1305' && typeof parsed?.c === 'string' && typeof parsed?.n === 'string';
+    return (
+      typeof parsed === 'object' &&
+      parsed?.v === 'xchacha20-poly1305' &&
+      typeof parsed?.c === 'string' &&
+      typeof parsed?.n === 'string'
+    );
   } catch {
     return false;
   }
@@ -88,7 +101,7 @@ export class EncryptedVaultService {
   private status: VaultStatus = {
     state: 'uninitialized',
     metadata: null,
-    sodiumReady: false
+    sodiumReady: false,
   };
 
   private key: Uint8Array | null = null;
@@ -104,7 +117,9 @@ export class EncryptedVaultService {
       await getSodium();
       this.status.sodiumReady = true;
     } catch (error) {
-      this.logEvent('error', 'Failed to initialize libsodium', { error: error instanceof Error ? error.message : 'unknown' });
+      this.logEvent('error', 'Failed to initialize libsodium', {
+        error: error instanceof Error ? error.message : 'unknown',
+      });
       this.status.state = 'error';
       return this.status;
     }
@@ -141,19 +156,20 @@ export class EncryptedVaultService {
     // Ensure libsodium ready and reference stable instance
     await ensureReady();
     const sodium = await getSodium();
-    
+
     console.log('[VaultService] Sodium instance retrieved:', {
       sodiumType: typeof sodium,
       hasCryptoPwhash: typeof sodium.crypto_pwhash,
       hasCryptoPwhashStr: typeof sodium.crypto_pwhash_str,
-      saltBytes: sodium.crypto_pwhash_SALTBYTES
+      saltBytes: sodium.crypto_pwhash_SALTBYTES,
     });
-    
+
     // Defensive: crypto_pwhash_SALTBYTES must be a valid positive integer
     const configuredSaltBytes = sodium.crypto_pwhash_SALTBYTES as unknown;
-    const saltBytes = (Number.isInteger(configuredSaltBytes as number) && (configuredSaltBytes as number) > 0)
-      ? (configuredSaltBytes as number)
-      : 16; // fallback to 16 bytes in test/env edge cases
+    const saltBytes =
+      Number.isInteger(configuredSaltBytes as number) && (configuredSaltBytes as number) > 0
+        ? (configuredSaltBytes as number)
+        : 16; // fallback to 16 bytes in test/env edge cases
     if (saltBytes !== configuredSaltBytes) {
       this.logEvent('warning', 'Using fallback salt length', { configuredSaltBytes, saltBytes });
     }
@@ -168,7 +184,7 @@ export class EncryptedVaultService {
       keyLength,
       opslimit,
       memlimit,
-      saltLength: salt.length
+      saltLength: salt.length,
     });
 
     const key = sodium.crypto_pwhash(
@@ -182,11 +198,7 @@ export class EncryptedVaultService {
 
     console.log('[VaultService] Key derived, creating verification hash...');
 
-    const verificationHash = sodium.crypto_pwhash_str(
-      passphrase,
-      opslimit,
-      memlimit
-    );
+    const verificationHash = sodium.crypto_pwhash_str(passphrase, opslimit, memlimit);
 
     console.log('[VaultService] Verification hash created:', verificationHash?.length);
 
@@ -199,17 +211,17 @@ export class EncryptedVaultService {
         salt: sodium.to_base64(salt, BASE64_VARIANT),
         opslimit,
         memlimit,
-        keyLength
+        keyLength,
       },
       verification: {
         algorithm: 'argon2id',
-        hash: verificationHash
+        hash: verificationHash,
       },
       cipher: {
         algorithm: 'xchacha20-poly1305',
-        nonceLength: sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES
+        nonceLength: sodium.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES,
       },
-      migrations: {}
+      migrations: {},
     };
 
     const storeResult = secureStorage.set(STORAGE_KEY, metadata);
@@ -242,10 +254,7 @@ export class EncryptedVaultService {
 
     let isValid = false;
     try {
-      isValid = sodium.crypto_pwhash_str_verify(
-        metadata.verification.hash,
-        passphrase
-      );
+      isValid = sodium.crypto_pwhash_str_verify(metadata.verification.hash, passphrase);
     } catch (error) {
       this.logEvent('error', `Passphrase verification error: ${error}`);
       throw new Error('Passphrase verification failed.');
@@ -279,13 +288,17 @@ export class EncryptedVaultService {
 
   lock(): void {
     if (this.key) {
-      void getSodium().then((sodium) => {
-        sodium.memzero(this.key!);
-      }).catch(() => undefined);
+      void getSodium()
+        .then(sodium => {
+          sodium.memzero(this.key!);
+        })
+        .catch(() => undefined);
     }
     this.key = null;
-    delete (globalThis as { __secureStorageEncrypt?: (plaintext: string) => string }).__secureStorageEncrypt;
-    delete (globalThis as { __secureStorageDecrypt?: (ciphertext: string) => string }).__secureStorageDecrypt;
+    delete (globalThis as { __secureStorageEncrypt?: (plaintext: string) => string })
+      .__secureStorageEncrypt;
+    delete (globalThis as { __secureStorageDecrypt?: (ciphertext: string) => string })
+      .__secureStorageDecrypt;
     if (this.status.state !== 'uninitialized') {
       this.status = { ...this.status, state: 'locked' };
       this.emit();
@@ -307,7 +320,10 @@ export class EncryptedVaultService {
 
     const sodium = this.assertSodium();
     const key = this.key as Uint8Array;
-    if (!(key instanceof Uint8Array) || key.length !== sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES) {
+    if (
+      !(key instanceof Uint8Array) ||
+      key.length !== sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES
+    ) {
       throw new Error('encryptString: invalid key type/length');
     }
 
@@ -318,10 +334,16 @@ export class EncryptedVaultService {
       throw new Error('encryptString: invalid nonce length constant');
     }
     const nonce = sodium.randombytes_buf(nonceLen);
-    
+
     // Ensure msg is truly a Uint8Array for libsodium (realm-safe conversion)
-    const finalMsg = ArrayBuffer.isView(msg) ? new Uint8Array((msg as ArrayBufferView).buffer, (msg as ArrayBufferView).byteOffset, (msg as ArrayBufferView).byteLength) : msg;
-    
+    const finalMsg = ArrayBuffer.isView(msg)
+      ? new Uint8Array(
+          (msg as ArrayBufferView).buffer,
+          (msg as ArrayBufferView).byteOffset,
+          (msg as ArrayBufferView).byteLength
+        )
+      : msg;
+
     const cipher = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
       finalMsg,
       null,
@@ -333,7 +355,7 @@ export class EncryptedVaultService {
     return JSON.stringify({
       v: 'xchacha20-poly1305',
       n: sodium.to_base64(nonce, BASE64_VARIANT),
-      c: sodium.to_base64(cipher, BASE64_VARIANT)
+      c: sodium.to_base64(cipher, BASE64_VARIANT),
     });
   }
 
@@ -378,10 +400,16 @@ export class EncryptedVaultService {
       throw new Error('encryptBytes: invalid nonce length constant');
     }
     const nonce = sodium.randombytes_buf(nonceSize);
-    const cipher = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(data, null, null, nonce, this.key);
+    const cipher = sodium.crypto_aead_xchacha20poly1305_ietf_encrypt(
+      data,
+      null,
+      null,
+      nonce,
+      this.key
+    );
     return {
       nonce: sodium.to_base64(nonce, BASE64_VARIANT),
-      cipher: sodium.to_base64(cipher, BASE64_VARIANT)
+      cipher: sodium.to_base64(cipher, BASE64_VARIANT),
     };
   }
 
@@ -461,7 +489,7 @@ export class EncryptedVaultService {
         skipped += 1;
         this.logEvent('warning', 'Failed to migrate legacy secureStorage entry', {
           key: fullKey,
-          error: error instanceof Error ? error.message : 'unknown'
+          error: error instanceof Error ? error.message : 'unknown',
         });
       }
     }
@@ -471,9 +499,9 @@ export class EncryptedVaultService {
         ...this.status.metadata,
         migrations: {
           ...this.status.metadata?.migrations,
-          legacyCompletedAt: new Date().toISOString()
+          legacyCompletedAt: new Date().toISOString(),
         },
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
       const updateResult = secureStorage.set(STORAGE_KEY, metadata);
       if (!updateResult.success) {
@@ -486,8 +514,12 @@ export class EncryptedVaultService {
 
   private applyGlobalHooks(): void {
     if (!this.key) return;
-    (globalThis as { __secureStorageEncrypt?: (plaintext: string) => string }).__secureStorageEncrypt = (plaintext: string) => this.encryptString(plaintext);
-    (globalThis as { __secureStorageDecrypt?: (ciphertext: string) => string }).__secureStorageDecrypt = (ciphertext: string) => this.decryptString(ciphertext);
+    (
+      globalThis as { __secureStorageEncrypt?: (plaintext: string) => string }
+    ).__secureStorageEncrypt = (plaintext: string) => this.encryptString(plaintext);
+    (
+      globalThis as { __secureStorageDecrypt?: (ciphertext: string) => string }
+    ).__secureStorageDecrypt = (ciphertext: string) => this.decryptString(ciphertext);
   }
 
   private assertSodium(): typeof import('libsodium-wrappers') {
@@ -498,14 +530,18 @@ export class EncryptedVaultService {
     return sodium;
   }
 
-  private logEvent(level: 'info' | 'warning' | 'error', message: string, metadata?: Record<string, unknown>): void {
+  private logEvent(
+    level: 'info' | 'warning' | 'error',
+    message: string,
+    metadata?: Record<string, unknown>
+  ): void {
     try {
       securityService.logSecurityEvent({
         type: 'vault',
         level,
         message,
         metadata,
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     } catch {
       // ignore logging failures

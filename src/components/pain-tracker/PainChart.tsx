@@ -1,7 +1,7 @@
-﻿import { format } from "date-fns";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { useReducedMotion } from "../../design-system/utils/accessibility";
-import type { PainEntry } from "../../types";
+﻿import { format } from 'date-fns';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useReducedMotion } from '../../design-system/utils/accessibility';
+import type { PainEntry } from '../../types';
 
 interface ChartData {
   timestamp: string;
@@ -9,7 +9,7 @@ interface ChartData {
 }
 
 interface PainChartProps {
-  entries: Pick<PainEntry, "timestamp" | "baselineData">[];
+  entries: Pick<PainEntry, 'timestamp' | 'baselineData'>[];
 }
 
 export function PainChart({ entries }: PainChartProps) {
@@ -18,7 +18,7 @@ export function PainChart({ entries }: PainChartProps) {
   const chartData: ChartData[] = [...entries]
     .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
     .map(entry => ({
-      timestamp: format(new Date(entry.timestamp), "MM/dd HH:mm"),
+      timestamp: format(new Date(entry.timestamp), 'MM/dd HH:mm'),
       pain: entry.baselineData.pain,
     }));
 

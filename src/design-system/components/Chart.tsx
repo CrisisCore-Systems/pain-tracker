@@ -10,7 +10,6 @@ import {
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { Line, Bar, Doughnut, Radar } from 'react-chartjs-2';
 
-
 import { Card, CardContent } from './Card';
 import { cn } from '../utils';
 import { colorVar, colorVarAlpha } from '../utils/theme';
@@ -132,157 +131,185 @@ export function Chart({
     plugins,
   } = config;
 
-  const chartData = React.useMemo(() => ({
-    labels: data.labels,
-    datasets: data.datasets.map((ds, index) => mapDataset(ds, type, index)),
-  }) as ChartJSData<'line'>, [data, type]);
+  const chartData = React.useMemo(
+    () =>
+      ({
+        labels: data.labels,
+        datasets: data.datasets.map((ds, index) => mapDataset(ds, type, index)),
+      }) as ChartJSData<'line'>,
+    [data, type]
+  );
 
-  const options: ChartOptions<any> = React.useMemo(() => ({
-    responsive,
-    maintainAspectRatio,
-    devicePixelRatio: typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1,
-    interaction: {
-      mode: 'index' as const,
-      intersect: false,
-      includeInvisible: false,
-    },
-    plugins: {
-      legend: {
-        display: showLegend,
-        labels: {
-          color: colorVar('color-foreground'),
-          padding: typeof window !== 'undefined' && window.innerWidth < 768 ? 20 : 10,
-          usePointStyle: true,
-          pointStyle: 'circle',
-        },
-        position: typeof window !== 'undefined' && window.innerWidth < 768 ? 'bottom' as const : 'top' as const,
-      },
-      title: { display: showTitle && !!title, text: title, color: colorVar('color-foreground') },
-      tooltip: {
-        enabled: true,
-        mode: 'nearest' as const,
+  const options: ChartOptions<any> = React.useMemo(
+    () => ({
+      responsive,
+      maintainAspectRatio,
+      devicePixelRatio: typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1,
+      interaction: {
+        mode: 'index' as const,
         intersect: false,
-        backgroundColor: colorVar('color-card'),
-        titleColor: colorVar('color-foreground'),
-        bodyColor: colorVar('color-foreground'),
-        borderColor: colorVar('color-border'),
-        borderWidth: 1,
-        padding: 12,
-        titleFont: {
-          size: typeof window !== 'undefined' && window.innerWidth < 768 ? 14 : 12,
-        },
-        bodyFont: {
-          size: typeof window !== 'undefined' && window.innerWidth < 768 ? 13 : 11,
-        },
-        position: 'nearest' as const,
-        yAlign: 'bottom' as const,
-        callbacks: {
-          label: function (context: any) {
-            return generateTooltipLabel(context);
-          },
-        },
+        includeInvisible: false,
       },
-      zoom: {
-        pan: {
+      plugins: {
+        legend: {
+          display: showLegend,
+          labels: {
+            color: colorVar('color-foreground'),
+            padding: typeof window !== 'undefined' && window.innerWidth < 768 ? 20 : 10,
+            usePointStyle: true,
+            pointStyle: 'circle',
+          },
+          position:
+            typeof window !== 'undefined' && window.innerWidth < 768
+              ? ('bottom' as const)
+              : ('top' as const),
+        },
+        title: { display: showTitle && !!title, text: title, color: colorVar('color-foreground') },
+        tooltip: {
           enabled: true,
-          mode: 'xy' as const,
-          threshold: 10,
+          mode: 'nearest' as const,
+          intersect: false,
+          backgroundColor: colorVar('color-card'),
+          titleColor: colorVar('color-foreground'),
+          bodyColor: colorVar('color-foreground'),
+          borderColor: colorVar('color-border'),
+          borderWidth: 1,
+          padding: 12,
+          titleFont: {
+            size: typeof window !== 'undefined' && window.innerWidth < 768 ? 14 : 12,
+          },
+          bodyFont: {
+            size: typeof window !== 'undefined' && window.innerWidth < 768 ? 13 : 11,
+          },
+          position: 'nearest' as const,
+          yAlign: 'bottom' as const,
+          callbacks: {
+            label: function (context: any) {
+              return generateTooltipLabel(context);
+            },
+          },
         },
         zoom: {
-          wheel: {
-            enabled: false,
-          },
-          pinch: {
+          pan: {
             enabled: true,
+            mode: 'xy' as const,
+            threshold: 10,
           },
-          mode: 'xy' as const,
-        },
-      },
-      ...plugins,
-    },
-    elements: {
-      point: {
-        radius: typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 3,
-        hoverRadius: typeof window !== 'undefined' && window.innerWidth < 768 ? 8 : 6,
-        borderWidth: 2,
-      },
-      line: {
-        tension: 0.35,
-      },
-      bar: {
-        borderRadius: typeof window !== 'undefined' && window.innerWidth < 768 ? 2 : 0,
-      },
-    },
-    animation: {
-      duration: typeof window !== 'undefined' && window.innerWidth < 768 ? 200 : 400,
-      easing: 'easeOutQuart' as const,
-    },
-    scales: type !== 'doughnut' && type !== 'radar' ? {
-      x: {
-        ticks: {
-          color: colorVar('color-foreground'),
-          maxTicksLimit: typeof window !== 'undefined' && window.innerWidth < 768 ? 5 : 10,
-          font: {
-            size: typeof window !== 'undefined' && window.innerWidth < 768 ? 11 : 12,
+          zoom: {
+            wheel: {
+              enabled: false,
+            },
+            pinch: {
+              enabled: true,
+            },
+            mode: 'xy' as const,
           },
         },
-        grid: { color: colorVar('color-border') },
-        pan: { enabled: true },
-        zoom: {
-          wheel: { enabled: false },
-          pinch: { enabled: true },
+        ...plugins,
+      },
+      elements: {
+        point: {
+          radius: typeof window !== 'undefined' && window.innerWidth < 768 ? 4 : 3,
+          hoverRadius: typeof window !== 'undefined' && window.innerWidth < 768 ? 8 : 6,
+          borderWidth: 2,
+        },
+        line: {
+          tension: 0.35,
+        },
+        bar: {
+          borderRadius: typeof window !== 'undefined' && window.innerWidth < 768 ? 2 : 0,
         },
       },
-      y: {
-        min: 0,
-        max: 10,
-        ticks: {
-          color: colorVar('color-foreground'),
-          font: {
-            size: typeof window !== 'undefined' && window.innerWidth < 768 ? 11 : 12,
-          },
-        },
-        grid: { color: colorVar('color-border') },
-        title: { display: true, text: 'Pain Level' },
-        pan: { enabled: true },
-        zoom: {
-          wheel: { enabled: false },
-          pinch: { enabled: true },
-        },
+      animation: {
+        duration: typeof window !== 'undefined' && window.innerWidth < 768 ? 200 : 400,
+        easing: 'easeOutQuart' as const,
       },
-      y1: {
-        position: 'right' as const,
-        ticks: {
-          color: colorVar('color-foreground'),
-          font: {
-            size: typeof window !== 'undefined' && window.innerWidth < 768 ? 11 : 12,
-          },
-        },
-        grid: { display: false },
-        title: { display: true, text: 'Entries' },
-        pan: { enabled: true },
-        zoom: {
-          wheel: { enabled: false },
-          pinch: { enabled: true },
-        },
-      },
-      ...scales,
-    } : undefined,
-  }), [responsive, maintainAspectRatio, showLegend, showTitle, title, type, scales]);
+      scales:
+        type !== 'doughnut' && type !== 'radar'
+          ? {
+              x: {
+                ticks: {
+                  color: colorVar('color-foreground'),
+                  maxTicksLimit: typeof window !== 'undefined' && window.innerWidth < 768 ? 5 : 10,
+                  font: {
+                    size: typeof window !== 'undefined' && window.innerWidth < 768 ? 11 : 12,
+                  },
+                },
+                grid: { color: colorVar('color-border') },
+                pan: { enabled: true },
+                zoom: {
+                  wheel: { enabled: false },
+                  pinch: { enabled: true },
+                },
+              },
+              y: {
+                min: 0,
+                max: 10,
+                ticks: {
+                  color: colorVar('color-foreground'),
+                  font: {
+                    size: typeof window !== 'undefined' && window.innerWidth < 768 ? 11 : 12,
+                  },
+                },
+                grid: { color: colorVar('color-border') },
+                title: { display: true, text: 'Pain Level' },
+                pan: { enabled: true },
+                zoom: {
+                  wheel: { enabled: false },
+                  pinch: { enabled: true },
+                },
+              },
+              y1: {
+                position: 'right' as const,
+                ticks: {
+                  color: colorVar('color-foreground'),
+                  font: {
+                    size: typeof window !== 'undefined' && window.innerWidth < 768 ? 11 : 12,
+                  },
+                },
+                grid: { display: false },
+                title: { display: true, text: 'Entries' },
+                pan: { enabled: true },
+                zoom: {
+                  wheel: { enabled: false },
+                  pinch: { enabled: true },
+                },
+              },
+              ...scales,
+            }
+          : undefined,
+    }),
+    [responsive, maintainAspectRatio, showLegend, showTitle, title, type, scales]
+  );
 
-  const srSummary = summary ?? (title ? `${title} chart with ${data.datasets.length} dataset(s)` : 'Chart data');
+  const srSummary =
+    summary ?? (title ? `${title} chart with ${data.datasets.length} dataset(s)` : 'Chart data');
 
   return (
     <Card className={cn('w-full mobile-chart', className)}>
       <CardContent className="p-4 md:p-6">
         <figure aria-labelledby={title ? 'chart-title' : undefined}>
-          {title && <figcaption id="chart-title" className="sr-only">{title}</figcaption>}
-          <p className="sr-only" id="chart-summary">{srSummary}</p>
+          {title && (
+            <figcaption id="chart-title" className="sr-only">
+              {title}
+            </figcaption>
+          )}
+          <p className="sr-only" id="chart-summary">
+            {srSummary}
+          </p>
           <div aria-describedby="chart-summary">
-            {type === 'bar' && <Bar data={chartData as any} options={options as any} height={height} />}
-            {type === 'doughnut' && <Doughnut data={chartData as any} options={options as any} height={height} />}
-            {type === 'radar' && <Radar data={chartData as any} options={options as any} height={height} />}
-            {type === 'line' && <Line data={chartData as any} options={options as any} height={height} />}
+            {type === 'bar' && (
+              <Bar data={chartData as any} options={options as any} height={height} />
+            )}
+            {type === 'doughnut' && (
+              <Doughnut data={chartData as any} options={options as any} height={height} />
+            )}
+            {type === 'radar' && (
+              <Radar data={chartData as any} options={options as any} height={height} />
+            )}
+            {type === 'line' && (
+              <Line data={chartData as any} options={options as any} height={height} />
+            )}
           </div>
         </figure>
       </CardContent>
@@ -292,7 +319,7 @@ export function Chart({
 
 function generateTooltipLabel(context: any) {
   try {
-    const ds = context.dataset as unknown as (ChartDataset & { _meta?: ChartPointMetaArray });
+    const ds = context.dataset as unknown as ChartDataset & { _meta?: ChartPointMetaArray };
     const idx = context.dataIndex;
     const seriesLabel = context.dataset.label || '';
     const value = context.parsed?.y ?? context.parsed ?? context.raw ?? '';
@@ -304,7 +331,9 @@ function generateTooltipLabel(context: any) {
 
     return line;
   } catch (e) {
-    return context.dataset.label ? `${context.dataset.label}: ${context.formattedValue}` : `${context.formattedValue}`;
+    return context.dataset.label
+      ? `${context.dataset.label}: ${context.formattedValue}`
+      : `${context.formattedValue}`;
   }
 }
 

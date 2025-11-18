@@ -42,12 +42,7 @@ export function Skeleton({
 
   return (
     <div
-      className={cn(
-        'bg-muted/50',
-        variantClasses[variant],
-        animationClasses[animation],
-        className
-      )}
+      className={cn('bg-muted/50', variantClasses[variant], animationClasses[animation], className)}
       style={style}
       {...props}
     />
@@ -57,13 +52,7 @@ export function Skeleton({
 // Card Skeleton for dashboard widgets
 export function SkeletonCard({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn(
-        'rounded-lg border bg-card p-6 space-y-4',
-        className
-      )}
-      {...props}
-    >
+    <div className={cn('rounded-lg border bg-card p-6 space-y-4', className)} {...props}>
       <div className="flex items-center justify-between">
         <div className="space-y-2 flex-1">
           <Skeleton variant="text" width="40%" height={20} />
@@ -80,13 +69,7 @@ export function SkeletonCard({ className, ...props }: React.HTMLAttributes<HTMLD
 // Metric Card Skeleton
 export function SkeletonMetricCard({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn(
-        'rounded-lg border bg-card p-6',
-        className
-      )}
-      {...props}
-    >
+    <div className={cn('rounded-lg border bg-card p-6', className)} {...props}>
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <Skeleton variant="text" width={100} height={14} />
@@ -102,13 +85,7 @@ export function SkeletonMetricCard({ className, ...props }: React.HTMLAttributes
 // Chart Skeleton
 export function SkeletonChart({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn(
-        'rounded-lg border bg-card p-6 space-y-4',
-        className
-      )}
-      {...props}
-    >
+    <div className={cn('rounded-lg border bg-card p-6 space-y-4', className)} {...props}>
       <div className="flex items-center space-x-2">
         <Skeleton variant="circular" width={24} height={24} />
         <Skeleton variant="text" width={150} height={20} />
@@ -127,15 +104,13 @@ export function SkeletonChart({ className, ...props }: React.HTMLAttributes<HTML
 }
 
 // Table/List Skeleton
-export function SkeletonTable({ rows = 5, className, ...props }: { rows?: number } & React.HTMLAttributes<HTMLDivElement>) {
+export function SkeletonTable({
+  rows = 5,
+  className,
+  ...props
+}: { rows?: number } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn(
-        'rounded-lg border bg-card p-6 space-y-4',
-        className
-      )}
-      {...props}
-    >
+    <div className={cn('rounded-lg border bg-card p-6 space-y-4', className)} {...props}>
       <div className="flex items-center space-x-2 mb-4">
         <Skeleton variant="circular" width={24} height={24} />
         <Skeleton variant="text" width={150} height={20} />
@@ -157,15 +132,13 @@ export function SkeletonTable({ rows = 5, className, ...props }: { rows?: number
 }
 
 // Form Skeleton
-export function SkeletonForm({ fields = 4, className, ...props }: { fields?: number } & React.HTMLAttributes<HTMLDivElement>) {
+export function SkeletonForm({
+  fields = 4,
+  className,
+  ...props
+}: { fields?: number } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div
-      className={cn(
-        'rounded-lg border bg-card p-6 space-y-6',
-        className
-      )}
-      {...props}
-    >
+    <div className={cn('rounded-lg border bg-card p-6 space-y-6', className)} {...props}>
       <Skeleton variant="text" width={200} height={24} />
       <div className="space-y-4">
         {Array.from({ length: fields }).map((_, i) => (
@@ -184,7 +157,10 @@ export function SkeletonForm({ fields = 4, className, ...props }: { fields?: num
 }
 
 // Dashboard Overview Skeleton
-export function SkeletonDashboardOverview({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function SkeletonDashboardOverview({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn('space-y-6', className)} {...props}>
       {/* Metrics Row */}
@@ -208,38 +184,28 @@ export function SkeletonDashboardOverview({ className, ...props }: React.HTMLAtt
 }
 
 // Avatar Skeleton
-export function SkeletonAvatar({ size = 40, className, ...props }: { size?: number } & React.HTMLAttributes<HTMLDivElement>) {
+export function SkeletonAvatar({
+  size = 40,
+  className,
+  ...props
+}: { size?: number } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <Skeleton
-      variant="circular"
-      width={size}
-      height={size}
-      className={className}
-      {...props}
-    />
+    <Skeleton variant="circular" width={size} height={size} className={className} {...props} />
   );
 }
 
 // Button Skeleton
 export function SkeletonButton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <Skeleton
-      variant="rounded"
-      width={100}
-      height={40}
-      className={className}
-      {...props}
-    />
-  );
+  return <Skeleton variant="rounded" width={100} height={40} className={className} {...props} />;
 }
 
 // Text Line Skeleton
-export function SkeletonText({ 
-  lines = 1, 
-  className, 
-  ...props 
-}: { 
-  lines?: number 
+export function SkeletonText({
+  lines = 1,
+  className,
+  ...props
+}: {
+  lines?: number;
 } & React.HTMLAttributes<HTMLDivElement>) {
   if (lines === 1) {
     return <Skeleton variant="text" className={className} {...props} />;
@@ -248,11 +214,7 @@ export function SkeletonText({
   return (
     <div className={cn('space-y-2', className)} {...props}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton 
-          key={i} 
-          variant="text" 
-          width={i === lines - 1 ? '60%' : '100%'} 
-        />
+        <Skeleton key={i} variant="text" width={i === lines - 1 ? '60%' : '100%'} />
       ))}
     </div>
   );

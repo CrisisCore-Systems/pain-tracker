@@ -1,13 +1,22 @@
 import React, { useEffect } from 'react';
-import { Hero, BenefitsGrid, TrustIndicators, FeatureShowcase, LandingFooter } from '../components/landing';
+import {
+  Hero,
+  UseCases,
+  BenefitsGrid,
+  TrustIndicators,
+  FeatureShowcase,
+  Testimonials,
+  LandingFooter,
+} from '../components/landing';
 
 export const LandingPage: React.FC = () => {
   useEffect(() => {
     // Set page title
     document.title = 'Pain Tracker Pro - Clinical-Grade Pain Management';
-    
+
     // Announce page to screen readers
-    const announcement = 'Welcome to Pain Tracker Pro. A privacy-first chronic pain tracking application.';
+    const announcement =
+      'Welcome to Pain Tracker Pro. A privacy-first chronic pain tracking application.';
     const ariaLive = document.createElement('div');
     ariaLive.setAttribute('role', 'status');
     ariaLive.setAttribute('aria-live', 'polite');
@@ -34,9 +43,11 @@ export const LandingPage: React.FC = () => {
       {/* Main Content */}
       <main id="main-content" role="main">
         <Hero />
+        <UseCases />
         <BenefitsGrid />
         <TrustIndicators />
         <FeatureShowcase />
+        <Testimonials />
       </main>
 
       {/* Footer */}

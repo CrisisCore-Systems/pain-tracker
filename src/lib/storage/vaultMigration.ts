@@ -52,7 +52,11 @@ function looksEncrypted(raw: string): boolean {
   if (!raw.startsWith('{')) return false;
   try {
     const parsed = JSON.parse(raw);
-    return typeof parsed === 'object' && parsed?.v === 'xchacha20-poly1305' && typeof parsed.c === 'string';
+    return (
+      typeof parsed === 'object' &&
+      parsed?.v === 'xchacha20-poly1305' &&
+      typeof parsed.c === 'string'
+    );
   } catch {
     return false;
   }

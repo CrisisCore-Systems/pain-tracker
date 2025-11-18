@@ -2,18 +2,25 @@ import { describe, it, expect } from 'vitest';
 import { analyzeTrends, calculateStatistics, buildDailySeries } from '../trending';
 import type { PainEntry } from '../../../types';
 
-const makeEntry = (id: number, timestamp: string, pain: number, locations: string[] = [], symptoms: string[] = []) => ({
-  id,
-  timestamp,
-  baselineData: { pain, locations, symptoms },
-  functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
-  medications: { current: [], changes: '', effectiveness: '' },
-  treatments: { recent: [], effectiveness: '', planned: [] },
-  qualityOfLife: { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
-  workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
-  comparison: { worseningSince: '', newLimitations: [] },
-  notes: ''
-} as PainEntry);
+const makeEntry = (
+  id: number,
+  timestamp: string,
+  pain: number,
+  locations: string[] = [],
+  symptoms: string[] = []
+) =>
+  ({
+    id,
+    timestamp,
+    baselineData: { pain, locations, symptoms },
+    functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+    medications: { current: [], changes: '', effectiveness: '' },
+    treatments: { recent: [], effectiveness: '', planned: [] },
+    qualityOfLife: { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
+    workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+    comparison: { worseningSince: '', newLimitations: [] },
+    notes: '',
+  }) as PainEntry;
 
 describe('trending.extra', () => {
   it('analyzeTrends handles empty array', () => {

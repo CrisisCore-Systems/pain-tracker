@@ -8,21 +8,24 @@ export function useFetch<T = unknown>(url?: string, opts?: Parameters<typeof fet
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<unknown>(null);
 
-  const load = useCallback(async (u?: string) => {
-    if (!u) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const out = await fetcher<T>(u, opts);
-      if (mounted.current) setData(out);
-      return out;
-    } catch (e) {
-      if (mounted.current) setError(e);
-      throw e;
-    } finally {
-      if (mounted.current) setLoading(false);
-    }
-  }, [opts, mounted]);
+  const load = useCallback(
+    async (u?: string) => {
+      if (!u) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const out = await fetcher<T>(u, opts);
+        if (mounted.current) setData(out);
+        return out;
+      } catch (e) {
+        if (mounted.current) setError(e);
+        throw e;
+      } finally {
+        if (mounted.current) setLoading(false);
+      }
+    },
+    [opts, mounted]
+  );
 
   useEffect(() => {
     if (!url) return;

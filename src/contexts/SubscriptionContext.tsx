@@ -3,13 +3,20 @@
  * React context for managing subscription state throughout the app
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 import type {
   UserSubscription,
   SubscriptionTier,
   FeatureAccessResult,
   TierChangeOption,
-  SubscriptionAnalytics
+  SubscriptionAnalytics,
 } from '../types/subscription';
 import type { TierFeatures } from '../types/subscription';
 import { subscriptionService } from '../services/SubscriptionService';
@@ -21,22 +28,22 @@ interface SubscriptionContextValue {
   currentTier: SubscriptionTier;
   isLoading: boolean;
   error: string | null;
-  
+
   // Subscription management
   initialize: (userId: string) => Promise<void>;
   upgradeTier: (newTier: SubscriptionTier, immediate?: boolean) => Promise<TierChangeOption>;
   downgradeTier: (newTier: SubscriptionTier) => Promise<TierChangeOption>;
   cancelSubscription: (immediate?: boolean) => Promise<void>;
   reactivateSubscription: () => Promise<void>;
-  
+
   // Feature access
   checkFeatureAccess: (featureName: keyof TierFeatures) => Promise<FeatureAccessResult>;
   hasFeature: (featureName: keyof TierFeatures) => boolean;
   trackUsage: (usageType: keyof UserSubscription['usage'], amount?: number) => Promise<void>;
-  
+
   // Analytics
   getAnalytics: () => Promise<SubscriptionAnalytics | null>;
-  
+
   // Utility
   refresh: () => Promise<void>;
 }
@@ -60,16 +67,16 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   const initialize = useCallback(async (uid: string) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Try to get existing subscription
       let sub = await subscriptionService.getSubscription(uid);
-      
+
       // If no subscription exists, create a free one
       if (!sub) {
         sub = await subscriptionService.createSubscription(uid, 'free');
       }
-      
+
       setSubscription(sub);
       setCurrentTier(sub.tier);
     } catch (err) {
@@ -91,87 +98,88 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   /**
    * Upgrade subscription tier
    */
-  const upgradeTier = useCallback(async (
-    newTier: SubscriptionTier,
-    immediate: boolean = true
-  ): Promise<TierChangeOption> => {
-    if (!subscription) {
-      throw new Error('No active subscription');
-    }
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const changeOption = await subscriptionService.upgradeTier(
-        subscription.userId,
-        newTier,
-        immediate
-      );
-      
-      await refresh();
-      return changeOption;
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to upgrade subscription';
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [subscription, refresh]);
+  const upgradeTier = useCallback(
+    async (newTier: SubscriptionTier, immediate: boolean = true): Promise<TierChangeOption> => {
+      if (!subscription) {
+        throw new Error('No active subscription');
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const changeOption = await subscriptionService.upgradeTier(
+          subscription.userId,
+          newTier,
+          immediate
+        );
+
+        await refresh();
+        return changeOption;
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to upgrade subscription';
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [subscription, refresh]
+  );
 
   /**
    * Downgrade subscription tier
    */
-  const downgradeTier = useCallback(async (
-    newTier: SubscriptionTier
-  ): Promise<TierChangeOption> => {
-    if (!subscription) {
-      throw new Error('No active subscription');
-    }
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const changeOption = await subscriptionService.downgradeTier(
-        subscription.userId,
-        newTier
-      );
-      
-      await refresh();
-      return changeOption;
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to downgrade subscription';
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [subscription, refresh]);
+  const downgradeTier = useCallback(
+    async (newTier: SubscriptionTier): Promise<TierChangeOption> => {
+      if (!subscription) {
+        throw new Error('No active subscription');
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const changeOption = await subscriptionService.downgradeTier(subscription.userId, newTier);
+
+        await refresh();
+        return changeOption;
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to downgrade subscription';
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [subscription, refresh]
+  );
 
   /**
    * Cancel subscription
    */
-  const cancelSubscription = useCallback(async (immediate: boolean = false) => {
-    if (!subscription) {
-      throw new Error('No active subscription');
-    }
-    
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      await subscriptionService.cancelSubscription(subscription.userId, immediate);
-      await refresh();
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Failed to cancel subscription';
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [subscription, refresh]);
+  const cancelSubscription = useCallback(
+    async (immediate: boolean = false) => {
+      if (!subscription) {
+        throw new Error('No active subscription');
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        await subscriptionService.cancelSubscription(subscription.userId, immediate);
+        await refresh();
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : 'Failed to cancel subscription';
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [subscription, refresh]
+  );
 
   /**
    * Reactivate subscription
@@ -180,10 +188,10 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
     if (!subscription) {
       throw new Error('No active subscription');
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       await subscriptionService.reactivateSubscription(subscription.userId);
       await refresh();
@@ -199,63 +207,63 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
   /**
    * Check feature access
    */
-  const checkFeatureAccess = useCallback(async (
-    featureName: keyof TierFeatures
-  ): Promise<FeatureAccessResult> => {
-    if (!subscription) {
-      return {
-        hasAccess: false,
-        reason: 'No active subscription',
-        upgradeRequired: 'basic'
-      };
-    }
-    
-    return subscriptionService.checkFeatureAccess(subscription.userId, featureName);
-  }, [subscription]);
+  const checkFeatureAccess = useCallback(
+    async (featureName: keyof TierFeatures): Promise<FeatureAccessResult> => {
+      if (!subscription) {
+        return {
+          hasAccess: false,
+          reason: 'No active subscription',
+          upgradeRequired: 'basic',
+        };
+      }
+
+      return subscriptionService.checkFeatureAccess(subscription.userId, featureName);
+    },
+    [subscription]
+  );
 
   /**
    * Quick check if user has a feature (synchronous)
    */
-  const hasFeature = useCallback((featureName: keyof TierFeatures): boolean => {
-    const plan = SUBSCRIPTION_PLANS[currentTier];
-    const feature = plan.features[featureName];
-    
-    if (typeof feature === 'boolean') {
-      return feature;
-    }
-    
-    if (typeof feature === 'number') {
-      return feature !== 0;
-    }
-    
-    return !!feature;
-  }, [currentTier]);
+  const hasFeature = useCallback(
+    (featureName: keyof TierFeatures): boolean => {
+      const plan = SUBSCRIPTION_PLANS[currentTier];
+      const feature = plan.features[featureName];
+
+      if (typeof feature === 'boolean') {
+        return feature;
+      }
+
+      if (typeof feature === 'number') {
+        return feature !== 0;
+      }
+
+      return !!feature;
+    },
+    [currentTier]
+  );
 
   /**
    * Track usage
    */
-  const trackUsage = useCallback(async (
-    usageType: keyof UserSubscription['usage'],
-    amount: number = 1
-  ) => {
-    if (!subscription) return;
-    
-    try {
-      const result = await subscriptionService.trackUsage(
-        subscription.userId,
-        usageType,
-        amount
-      );
-      
-      if (result.success && result.quota && result.quota.remaining === 0) {
-        setError(`You've reached your ${usageType} limit. Consider upgrading your plan.`);
+  const trackUsage = useCallback(
+    async (usageType: keyof UserSubscription['usage'], amount: number = 1) => {
+      if (!subscription) return;
+
+      try {
+        const result = await subscriptionService.trackUsage(subscription.userId, usageType, amount);
+
+        if (result.success && result.quota && result.quota.remaining === 0) {
+          setError(`You've reached your ${usageType} limit. Consider upgrading your plan.`);
+        }
+
+        await refresh();
+      } catch (err) {
+        console.error('Failed to track usage:', err);
       }
-      
-      await refresh();
-    } catch (err) {
-      console.error('Failed to track usage:', err);
-    }
-  }, [subscription, refresh]);
+    },
+    [subscription, refresh]
+  );
 
   /**
    * Get analytics
@@ -286,14 +294,10 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
     hasFeature,
     trackUsage,
     getAnalytics,
-    refresh
+    refresh,
   };
 
-  return (
-    <SubscriptionContext.Provider value={value}>
-      {children}
-    </SubscriptionContext.Provider>
-  );
+  return <SubscriptionContext.Provider value={value}>{children}</SubscriptionContext.Provider>;
 };
 
 /**
@@ -312,11 +316,11 @@ export const useSubscription = (): SubscriptionContextValue => {
  */
 export const useHasTier = (requiredTier: SubscriptionTier): boolean => {
   const { currentTier } = useSubscription();
-  
+
   const tierOrder: SubscriptionTier[] = ['free', 'basic', 'pro', 'enterprise'];
   const currentIndex = tierOrder.indexOf(currentTier);
   const requiredIndex = tierOrder.indexOf(requiredTier);
-  
+
   return currentIndex >= requiredIndex;
 };
 
@@ -329,13 +333,13 @@ export const useFeatureAccess = (
   const { checkFeatureAccess } = useSubscription();
   const [result, setResult] = useState<FeatureAccessResult>({
     hasAccess: false,
-    reason: 'Checking...'
+    reason: 'Checking...',
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
-    
+
     const check = async () => {
       try {
         const access = await checkFeatureAccess(featureName);
@@ -346,7 +350,7 @@ export const useFeatureAccess = (
         if (mounted) {
           setResult({
             hasAccess: false,
-            reason: 'Error checking feature access'
+            reason: 'Error checking feature access',
           });
         }
       } finally {
@@ -355,9 +359,9 @@ export const useFeatureAccess = (
         }
       }
     };
-    
+
     void check();
-    
+
     return () => {
       mounted = false;
     };
@@ -371,29 +375,29 @@ export const useFeatureAccess = (
  */
 export const useTierBadge = () => {
   const { currentTier } = useSubscription();
-  
+
   const badges = {
     free: {
       label: 'Free',
       color: 'gray',
-      icon: '🆓'
+      icon: '🆓',
     },
     basic: {
       label: 'Basic',
       color: 'blue',
-      icon: '⭐'
+      icon: '⭐',
     },
     pro: {
       label: 'Pro',
       color: 'purple',
-      icon: '💎'
+      icon: '💎',
     },
     enterprise: {
       label: 'Enterprise',
       color: 'gold',
-      icon: '👑'
-    }
+      icon: '👑',
+    },
   };
-  
+
   return badges[currentTier];
 };

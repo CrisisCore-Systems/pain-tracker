@@ -12,32 +12,35 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Badge } from '../ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Label } from '../ui/label';
-import {
-  Target,
-  Calendar,
-  Award,
-  Plus,
-  X,
-  Star,
-  CheckCircle
-} from 'lucide-react';
+import { Target, Calendar, Award, Plus, X, Star, CheckCircle } from 'lucide-react';
 
 const goalSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title too long'),
   description: z.string().max(500, 'Description too long'),
-  type: z.enum(['pain_reduction', 'frequency_reduction', 'consistency', 'medication_adherence', 'activity_increase', 'sleep_improvement', 'mood_tracking', 'custom'] as const),
+  type: z.enum([
+    'pain_reduction',
+    'frequency_reduction',
+    'consistency',
+    'medication_adherence',
+    'activity_increase',
+    'sleep_improvement',
+    'mood_tracking',
+    'custom',
+  ] as const),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   duration: z.number().min(1).max(365),
   targetValue: z.number().min(0),
   targetUnit: z.string().min(1),
-  customFrequency: z.object({
-    interval: z.number().min(1),
-    reminderTime: z.string().optional()
-  }).optional(),
+  customFrequency: z
+    .object({
+      interval: z.number().min(1),
+      reminderTime: z.string().optional(),
+    })
+    .optional(),
   tags: z.array(z.string()),
   motivation: z.string().max(200),
   obstacles: z.array(z.string()),
-  strategies: z.array(z.string())
+  strategies: z.array(z.string()),
 });
 
 type GoalFormData = z.infer<typeof goalSchema>;
@@ -51,7 +54,7 @@ interface GoalCreationFormProps {
 export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
   onSubmit,
   onCancel,
-  initialData
+  initialData,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState<GoalTemplate | null>(null);
   const [activeTab, setActiveTab] = useState<'templates' | 'custom'>('templates');
@@ -64,7 +67,7 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
     handleSubmit,
     watch,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useForm<GoalFormData>({
     resolver: zodResolver(goalSchema),
     defaultValues: {
@@ -78,8 +81,8 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
       tags: initialData?.tags || [],
       motivation: initialData?.motivation || '',
       obstacles: initialData?.obstacles || [],
-      strategies: initialData?.strategies || []
-    }
+      strategies: initialData?.strategies || [],
+    },
   });
 
   const watchedType = watch('type');
@@ -113,28 +116,31 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
       type: data.type,
       status: 'active',
       priority: data.priority,
-      targets: [{
-        metric: data.type === 'pain_reduction' ? 'pain_level' : 'custom',
-        targetValue: data.targetValue,
-        currentValue: 0,
-        unit: data.targetUnit,
-        comparison: data.type === 'pain_reduction' ? 'percentage_decrease' : 'greater_than'
-      }],
+      targets: [
+        {
+          metric: data.type === 'pain_reduction' ? 'pain_level' : 'custom',
+          targetValue: data.targetValue,
+          currentValue: 0,
+          unit: data.targetUnit,
+          comparison: data.type === 'pain_reduction' ? 'percentage_decrease' : 'greater_than',
+        },
+      ],
       startDate: now.toISOString(),
       endDate: endDate.toISOString(),
       frequency: 'daily',
       customFrequency: data.customFrequency,
-      milestones: selectedTemplate?.milestones.map(m => ({
-        ...m,
-        id: `milestone_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        isCompleted: false
-      })) || [],
+      milestones:
+        selectedTemplate?.milestones.map(m => ({
+          ...m,
+          id: `milestone_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          isCompleted: false,
+        })) || [],
       progress: [],
       tags: data.tags,
       isPublic: false,
       motivation: data.motivation,
       obstacles: data.obstacles,
-      strategies: data.strategies
+      strategies: data.strategies,
     };
 
     onSubmit(goal);
@@ -148,7 +154,10 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
   };
 
   const removeTag = (tag: string) => {
-    setValue('tags', watchedTags.filter((t: string) => t !== tag));
+    setValue(
+      'tags',
+      watchedTags.filter((t: string) => t !== tag)
+    );
   };
 
   const addObstacle = () => {
@@ -159,7 +168,10 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
   };
 
   const removeObstacle = (obstacle: string) => {
-    setValue('obstacles', watchedObstacles.filter((o: string) => o !== obstacle));
+    setValue(
+      'obstacles',
+      watchedObstacles.filter((o: string) => o !== obstacle)
+    );
   };
 
   const addStrategy = () => {
@@ -170,15 +182,22 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
   };
 
   const removeStrategy = (strategy: string) => {
-    setValue('strategies', watchedStrategies.filter((s: string) => s !== strategy));
+    setValue(
+      'strategies',
+      watchedStrategies.filter((s: string) => s !== strategy)
+    );
   };
 
   const getDifficultyColor = (difficulty: GoalTemplate['difficulty']) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'easy':
+        return 'bg-green-100 text-green-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'hard':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -187,7 +206,9 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Create New Goal</h2>
-          <p className="text-gray-600 dark:text-gray-400">Set meaningful goals to track your progress and stay motivated</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Set meaningful goals to track your progress and stay motivated
+          </p>
         </div>
         <Button variant="outline" onClick={onCancel}>
           <X className="w-4 h-4 mr-2" />
@@ -195,7 +216,10 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
         </Button>
       </div>
 
-  <Tabs value={activeTab} onValueChange={(value: string) => setActiveTab(value as 'templates' | 'custom')}>
+      <Tabs
+        value={activeTab}
+        onValueChange={(value: string) => setActiveTab(value as 'templates' | 'custom')}
+      >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="templates">Use Template</TabsTrigger>
           <TabsTrigger value="custom">Custom Goal</TabsTrigger>
@@ -203,7 +227,7 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
 
         <TabsContent value="templates" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {DEFAULT_GOAL_TEMPLATES.map((template) => (
+            {DEFAULT_GOAL_TEMPLATES.map(template => (
               <Card
                 key={template.id}
                 className={`cursor-pointer transition-all ${
@@ -258,7 +282,8 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
                       {selectedTemplate.milestones.map((milestone, index) => (
                         <div key={index} className="flex items-center text-sm">
                           <Star className="w-4 h-4 mr-2 text-yellow-500" />
-                          {milestone.title} - {milestone.targetValue}{selectedTemplate.targets[0]?.unit}
+                          {milestone.title} - {milestone.targetValue}
+                          {selectedTemplate.targets[0]?.unit}
                         </div>
                       ))}
                     </div>
@@ -384,7 +409,9 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
                     value={newTag}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewTag(e.target.value)}
                     placeholder="Add a tag..."
-                    onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                    onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                      e.key === 'Enter' && (e.preventDefault(), addTag())
+                    }
                   />
                   <Button type="button" onClick={addTag} variant="outline">
                     <Plus className="w-4 h-4" />
@@ -394,10 +421,7 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
                   {watchedTags.map((tag: string) => (
                     <Badge key={tag} variant="secondary" className="flex items-center gap-1">
                       {tag}
-                      <X
-                        className="w-3 h-3 cursor-pointer"
-                        onClick={() => removeTag(tag)}
-                      />
+                      <X className="w-3 h-3 cursor-pointer" onClick={() => removeTag(tag)} />
                     </Badge>
                   ))}
                 </div>
@@ -425,9 +449,13 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
                   <div className="flex gap-2 mb-2">
                     <Input
                       value={newObstacle}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewObstacle(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setNewObstacle(e.target.value)
+                      }
                       placeholder="Add an obstacle..."
-                      onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && (e.preventDefault(), addObstacle())}
+                      onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                        e.key === 'Enter' && (e.preventDefault(), addObstacle())
+                      }
                     />
                     <Button type="button" onClick={addObstacle} variant="outline">
                       <Plus className="w-4 h-4" />
@@ -435,7 +463,11 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {watchedObstacles.map((obstacle: string) => (
-                      <Badge key={obstacle} variant="destructive" className="flex items-center gap-1">
+                      <Badge
+                        key={obstacle}
+                        variant="destructive"
+                        className="flex items-center gap-1"
+                      >
                         {obstacle}
                         <X
                           className="w-3 h-3 cursor-pointer"
@@ -451,9 +483,13 @@ export const GoalCreationForm: React.FC<GoalCreationFormProps> = ({
                   <div className="flex gap-2 mb-2">
                     <Input
                       value={newStrategy}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewStrategy(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setNewStrategy(e.target.value)
+                      }
                       placeholder="Add a strategy..."
-                      onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && (e.preventDefault(), addStrategy())}
+                      onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) =>
+                        e.key === 'Enter' && (e.preventDefault(), addStrategy())
+                      }
                     />
                     <Button type="button" onClick={addStrategy} variant="outline">
                       <Plus className="w-4 h-4" />

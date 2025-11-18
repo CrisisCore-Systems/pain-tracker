@@ -106,7 +106,7 @@ export function ThemeSwitcher({ className, showPreview = false }: ThemeSwitcherP
     },
   ];
 
-  const currentThemeMeta = themes.find((item) => item.value === mode) ?? themes[0];
+  const currentThemeMeta = themes.find(item => item.value === mode) ?? themes[0];
 
   const handleThemeChange = (newTheme: ThemeOption) => {
     if (showPreview) {
@@ -146,7 +146,7 @@ export function ThemeSwitcher({ className, showPreview = false }: ThemeSwitcherP
           <div className="space-y-6">
             {/* Theme Options */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              {themes.map((themeOption) => (
+              {themes.map(themeOption => (
                 <button
                   key={themeOption.value}
                   onClick={() => handleThemeChange(themeOption.value)}
@@ -172,9 +172,7 @@ export function ThemeSwitcher({ className, showPreview = false }: ThemeSwitcherP
                     </div>
                     <div className="text-center">
                       <div className="font-semibold">{themeOption.label}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {themeOption.description}
-                      </div>
+                      <div className="text-sm text-muted-foreground">{themeOption.description}</div>
                     </div>
                   </div>
                   {previewTheme === themeOption.value && (
@@ -247,7 +245,7 @@ export function ThemeSwitcher({ className, showPreview = false }: ThemeSwitcherP
   // Simple theme switcher without preview
   return (
     <div className={cn('flex items-center space-x-2 rounded-lg border p-1', className)}>
-      {themes.map((themeOption) => (
+      {themes.map(themeOption => (
         <button
           key={themeOption.value}
           onClick={() => setMode(themeOption.value)}
@@ -289,7 +287,7 @@ export function CompactThemeSwitcher({ className }: { className?: string }) {
       aria-label={`Switch theme (current: ${mode})`}
       title={`Switch theme (current: ${mode})`}
     >
-      {(['light', 'dark', 'high-contrast', 'colorblind'] as ThemeOption[]).map((themeOption) => (
+      {(['light', 'dark', 'high-contrast', 'colorblind'] as ThemeOption[]).map(themeOption => (
         <Scale key={themeOption} show={mode === themeOption} duration={200}>
           {getModeIcon(themeOption)}
         </Scale>

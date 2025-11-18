@@ -20,13 +20,11 @@ interface AnalyticsDashboardProps {
 
 /**
  * Advanced Analytics Dashboard
- * 
+ *
  * Main container for all analytics visualizations.
  * Orchestrates data processing and component rendering.
  */
-export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
-  className = '',
-}) => {
+export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ className = '' }) => {
   const { entries, moodEntries } = usePainTrackerStore();
   const [analytics, setAnalytics] = useState<{
     correlations: CorrelationResult[];
@@ -53,7 +51,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   useEffect(() => {
     const processAnalytics = async () => {
       try {
-        setAnalytics((prev) => ({ ...prev, loading: true, error: null }));
+        setAnalytics(prev => ({ ...prev, loading: true, error: null }));
 
         if (entries.length === 0) {
           setAnalytics({
@@ -71,7 +69,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         const engine = new AdvancedAnalyticsEngine();
 
         // Run analytics (simulated async for UI responsiveness)
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         const correlations = engine.calculateCorrelationMatrix(entries, moodEntries);
         const interventions = engine.scoreInterventions(entries);
@@ -90,7 +88,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         });
       } catch (error) {
         console.error('Analytics processing error:', error);
-        setAnalytics((prev) => ({
+        setAnalytics(prev => ({
           ...prev,
           loading: false,
           error: 'Failed to process analytics. Please try again.',
@@ -135,9 +133,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 ${className}`}>
         <div className="text-center">
           <span className="text-6xl mb-4 block">📊</span>
-          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-            No Data Yet
-          </h3>
+          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">No Data Yet</h3>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Start tracking your pain to unlock powerful analytics and insights!
           </p>
@@ -164,7 +160,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           role="tablist"
           aria-label="Analytics sections"
         >
-          {tabs.map((tab) => (
+          {tabs.map(tab => (
             <button
               key={tab.id}
               role="tab"
@@ -245,7 +241,10 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
         <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
           Analytics based on <strong>{entries.length}</strong> pain entries
           {moodEntries && moodEntries.length > 0 && (
-            <> and <strong>{moodEntries.length}</strong> mood entries</>
+            <>
+              {' '}
+              and <strong>{moodEntries.length}</strong> mood entries
+            </>
           )}
           . Last updated: {new Date().toLocaleString()}
         </p>

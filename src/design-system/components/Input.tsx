@@ -24,27 +24,30 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 };
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({
-    className,
-    type,
-    label,
-    error,
-    helperText,
-    startIcon,
-    endIcon,
-    fullWidth = false,
-    variant = 'default',
-    mobileOptimized = true,
-    inputMode,
-    autoComplete,
-    autoCapitalize,
-    autoCorrect,
-    spellCheck,
-    id,
-    required,
-    disabled,
-    ...props
-  }, ref) => {
+  (
+    {
+      className,
+      type,
+      label,
+      error,
+      helperText,
+      startIcon,
+      endIcon,
+      fullWidth = false,
+      variant = 'default',
+      mobileOptimized = true,
+      inputMode,
+      autoComplete,
+      autoCapitalize,
+      autoCorrect,
+      spellCheck,
+      id,
+      required,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [inputId] = React.useState(id || `input-${Math.random().toString(36).substr(2, 9)}`);
     const [inputType, setInputType] = React.useState(type);
@@ -107,18 +110,20 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const mobileAttributes = getMobileAttributes();
 
     const baseInputClasses = cn(
-  'flex h-12 w-full rounded-md border border-gray-300 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-offset-1 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200',
-  variant === 'filled' && 'bg-muted/50 border-muted',
-  variant === 'outlined' && 'border-2',
-  error && 'border-red-500 focus:ring-red-500 focus-visible:ring-red-500',
-  startIcon && 'pl-12',
-  (endIcon || type === 'password') && 'pr-12',
-  fullWidth && 'w-full',
-  mobileOptimized && 'mobile-keyboard-optimized touch-manipulation'
+      'flex h-12 w-full rounded-md border border-gray-300 bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-offset-1 focus-visible:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50 transition-colors duration-200',
+      variant === 'filled' && 'bg-muted/50 border-muted',
+      variant === 'outlined' && 'border-2',
+      error && 'border-red-500 focus:ring-red-500 focus-visible:ring-red-500',
+      startIcon && 'pl-12',
+      (endIcon || type === 'password') && 'pr-12',
+      fullWidth && 'w-full',
+      mobileOptimized && 'mobile-keyboard-optimized touch-manipulation'
     );
 
     return (
-      <div className={cn('space-y-2', fullWidth && 'w-full', mobileOptimized && 'mobile-form-spacing')}>
+      <div
+        className={cn('space-y-2', fullWidth && 'w-full', mobileOptimized && 'mobile-form-spacing')}
+      >
         {label && (
           <label
             htmlFor={inputId}
@@ -128,7 +133,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
           >
             {label}
-            {required && <span className="text-destructive ml-1" aria-label="required">*</span>}
+            {required && (
+              <span className="text-destructive ml-1" aria-label="required">
+                *
+              </span>
+            )}
           </label>
         )}
 
@@ -147,9 +156,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             disabled={disabled}
             aria-invalid={error ? 'true' : 'false'}
             aria-describedby={
-              error ? `${inputId}-error` :
-              helperText ? `${inputId}-helper` :
-              undefined
+              error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined
             }
             {...mobileAttributes}
             {...props}
@@ -163,11 +170,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               aria-label={showPassword ? 'Hide password' : 'Show password'}
               tabIndex={-1}
             >
-              {showPassword ? (
-                <EyeOff className="h-5 w-5" />
-              ) : (
-                <Eye className="h-5 w-5" />
-              )}
+              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
           )}
 
@@ -190,10 +193,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
 
         {helperText && !error && (
-          <p
-            id={`${inputId}-helper`}
-            className="text-sm text-muted-foreground"
-          >
+          <p id={`${inputId}-helper`} className="text-sm text-muted-foreground">
             {helperText}
           </p>
         )}

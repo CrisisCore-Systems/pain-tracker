@@ -1,22 +1,30 @@
-﻿import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from 'react';
 
-import type { PainEntry } from "../../types";
-import { PainChart } from "./PainChart";
-import { PainHistory } from "./PainHistory";
-import { PainEntryForm } from "./PainEntryForm";
-import { WCBReportGenerator } from "./WCBReport";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, Button, ThemeToggle } from "../../design-system";
-import { FileText, Plus, Activity, AlertCircle, HelpCircle, PlayCircle } from "lucide-react";
-import { OnboardingFlow } from "../onboarding";
-import { EmptyState, TrackingIllustration } from "../empty-state";
-import { useToast } from "../feedback";
-import { useAdaptiveCopy } from "../../contexts/useTone";
-import { emptyStates } from "../../content/microcopy";
+import type { PainEntry } from '../../types';
+import { PainChart } from './PainChart';
+import { PainHistory } from './PainHistory';
+import { PainEntryForm } from './PainEntryForm';
+import { WCBReportGenerator } from './WCBReport';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Button,
+  ThemeToggle,
+} from '../../design-system';
+import { FileText, Plus, Activity, AlertCircle, HelpCircle, PlayCircle } from 'lucide-react';
+import { OnboardingFlow } from '../onboarding';
+import { EmptyState, TrackingIllustration } from '../empty-state';
+import { useToast } from '../feedback';
+import { useAdaptiveCopy } from '../../contexts/useTone';
+import { emptyStates } from '../../content/microcopy';
 // Dynamic imports: samplePainEntries and walkthroughSteps loaded on demand
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
-import { Walkthrough } from "../tutorials";
-import type { WalkthroughStep } from "../tutorials/Walkthrough";
+import { Walkthrough } from '../tutorials';
+import type { WalkthroughStep } from '../tutorials/Walkthrough';
 
 // Validation Technology Integration (enabled by default)
 const ENABLE_VALIDATION_TECH = (() => {
@@ -57,8 +65,12 @@ const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
   if (entry.qualityOfLife) {
     const { sleepQuality, moodImpact } = entry.qualityOfLife;
     if (
-      typeof sleepQuality !== 'number' || sleepQuality < 0 || sleepQuality > 10 ||
-      typeof moodImpact !== 'number' || moodImpact < 0 || moodImpact > 10
+      typeof sleepQuality !== 'number' ||
+      sleepQuality < 0 ||
+      sleepQuality > 10 ||
+      typeof moodImpact !== 'number' ||
+      moodImpact < 0 ||
+      moodImpact > 10
     ) {
       return false;
     }
@@ -103,8 +115,8 @@ export function PainTracker() {
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
   const [reportPeriod, setReportPeriod] = useState({
-    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 days ago
-    end: new Date().toISOString().split("T")[0]
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
+    end: new Date().toISOString().split('T')[0],
   });
 
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
@@ -115,10 +127,10 @@ export function PainTracker() {
   useEffect(() => {
     if (ENABLE_VALIDATION_TECH) {
       import('../integration/ValidationTechnologyIntegration')
-        .then((module) => {
+        .then(module => {
           setValidationTechComponent(() => module.ValidationTechnologyIntegration);
         })
-        .catch((error) => {
+        .catch(error => {
           console.warn('Failed to load validation technology:', error);
         });
     }
@@ -134,7 +146,7 @@ export function PainTracker() {
           setWalkthroughSteps([]);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.warn('Failed to load walkthrough steps:', error);
         setWalkthroughSteps([]); // Fallback to empty array
       });
@@ -144,11 +156,14 @@ export function PainTracker() {
   useEffect(() => {
     try {
       // Prefer secure flag
-      const secureFlag = secureStorage.get<string>('pain-tracker-onboarding-completed', { encrypt: true });
+      const secureFlag = secureStorage.get<string>('pain-tracker-onboarding-completed', {
+        encrypt: true,
+      });
       let hasEntries = false;
       // Check secure entries key
       const secureEntries = secureStorage.get('pain_tracker_entries', { encrypt: true });
-      if (secureEntries && Array.isArray(secureEntries) && secureEntries.length > 0) hasEntries = true;
+      if (secureEntries && Array.isArray(secureEntries) && secureEntries.length > 0)
+        hasEntries = true;
       // Legacy fallback
       if (!secureFlag) {
         const legacyFlag = localStorage.getItem('pain-tracker-onboarding-completed');
@@ -164,11 +179,17 @@ export function PainTracker() {
             if (Array.isArray(parsed) && parsed.length > 0) {
               // migrate each silently
               parsed.forEach(p => {
-                try { savePainEntry(p); } catch {/* ignore individual */}
+                try {
+                  savePainEntry(p);
+                } catch {
+                  /* ignore individual */
+                }
               });
               hasEntries = true;
             }
-          } catch {/* ignore */}
+          } catch {
+            /* ignore */
+          }
         }
       }
       if (!secureFlag && !hasEntries) {
@@ -186,8 +207,8 @@ export function PainTracker() {
         const loaded = await loadPainEntries();
         setEntries(loaded);
       } catch (err) {
-        setError("Unable to load pain entries. Please try refreshing the page.");
-        console.error("Error loading pain entries:", err);
+        setError('Unable to load pain entries. Please try refreshing the page.');
+        console.error('Error loading pain entries:', err);
       }
     })();
   }, []);
@@ -212,7 +233,10 @@ export function PainTracker() {
           const { samplePainEntries } = await import('../../data/sampleData');
           setEntries(samplePainEntries);
           await Promise.allSettled(samplePainEntries.map(entry => savePainEntry(entry)));
-          toast.success('Sample data loaded!', 'Explore the features with example pain entries. You can clear this data anytime.');
+          toast.success(
+            'Sample data loaded!',
+            'Explore the features with example pain entries. You can clear this data anytime.'
+          );
         } catch (error) {
           console.error('Failed to load sample pain entries:', error);
           toast.error('Sample data unavailable', 'Unable to load example entries at this time.');
@@ -224,7 +248,11 @@ export function PainTracker() {
   };
 
   const handleOnboardingSkip = () => {
-    try { secureStorage.set('pain-tracker-onboarding-completed', 'true', { encrypt: true }); } catch {/* ignore */}
+    try {
+      secureStorage.set('pain-tracker-onboarding-completed', 'true', { encrypt: true });
+    } catch {
+      /* ignore */
+    }
     setShowOnboarding(false);
     toast.info('Onboarding skipped', 'You can always access help from the help menu.');
   };
@@ -235,7 +263,7 @@ export function PainTracker() {
 
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);
-    toast.success('Tutorial completed!', 'You\'re all set to start tracking your pain effectively.');
+    toast.success('Tutorial completed!', "You're all set to start tracking your pain effectively.");
   };
 
   const handleWalkthroughSkip = () => {
@@ -246,7 +274,7 @@ export function PainTracker() {
     try {
       // Validate entry data
       if (!validatePainEntry(entryData)) {
-        setError("Invalid pain entry data. Please check your input values.");
+        setError('Invalid pain entry data. Please check your input values.');
         toast.error('Invalid Entry', 'Please check your input values and try again.');
         return;
       }
@@ -258,66 +286,68 @@ export function PainTracker() {
           pain: 0,
           locations: [],
           symptoms: [],
-          ...entryData.baselineData
+          ...entryData.baselineData,
         },
         functionalImpact: {
           limitedActivities: [],
           assistanceNeeded: [],
           mobilityAids: [],
-          ...entryData.functionalImpact
+          ...entryData.functionalImpact,
         },
         medications: {
           current: [],
-          changes: "",
-          effectiveness: "",
-          ...entryData.medications
+          changes: '',
+          effectiveness: '',
+          ...entryData.medications,
         },
         treatments: {
           recent: [],
-          effectiveness: "",
+          effectiveness: '',
           planned: [],
-          ...entryData.treatments
+          ...entryData.treatments,
         },
         qualityOfLife: {
           sleepQuality: 0,
           moodImpact: 0,
           socialImpact: [],
-          ...entryData.qualityOfLife
+          ...entryData.qualityOfLife,
         },
         workImpact: {
           missedWork: 0,
           modifiedDuties: [],
           workLimitations: [],
-          ...entryData.workImpact
+          ...entryData.workImpact,
         },
         comparison: {
-          worseningSince: "",
+          worseningSince: '',
           newLimitations: [],
-          ...entryData.comparison
+          ...entryData.comparison,
         },
-        notes: entryData.notes || "",
+        notes: entryData.notes || '',
       };
 
       const updatedEntries = [...entries, newEntry];
       setEntries(updatedEntries);
       try {
-        savePainEntry(newEntry).then(() => {
-          setError(null);
-          toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
-        }).catch(err => {
-          setError('Failed to save entry. Your changes may not persist after refresh.');
-          toast.warning('Save Warning', 'Entry added but may not persist after refresh.');
-          console.error('Error saving entry:', err);
-        });
+        savePainEntry(newEntry)
+          .then(() => {
+            setError(null);
+            toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
+          })
+          .catch(err => {
+            setError('Failed to save entry. Your changes may not persist after refresh.');
+            toast.warning('Save Warning', 'Entry added but may not persist after refresh.');
+            console.error('Error saving entry:', err);
+          });
       } catch (err) {
         setError('Failed to save entry. Your changes may not persist after refresh.');
         toast.warning('Save Warning', 'Entry added but may not persist after refresh.');
         console.error('Error saving entry:', err);
       }
     } catch (err) {
-      setError("Failed to add pain entry. Please try again.");
+      setError('Failed to add pain entry. Please try again.');
       toast.error('Save Failed', 'Unable to add pain entry. Please try again.');
-      console.error("Error adding pain entry:", err);
+      console.error('Error adding pain entry:', err);
     }
   };
 
@@ -370,7 +400,7 @@ export function PainTracker() {
                 aria-controls="wcb-report-section"
               >
                 <FileText className="h-4 w-4 mr-2" />
-                {showWCBReport ? "Hide WCB Report" : "Show WCB Report"}
+                {showWCBReport ? 'Hide WCB Report' : 'Show WCB Report'}
               </Button>
               <ThemeToggle />
             </div>
@@ -407,7 +437,10 @@ export function PainTracker() {
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <div>
-                  <label htmlFor="start-date" className="block text-sm font-medium text-foreground mb-2">
+                  <label
+                    htmlFor="start-date"
+                    className="block text-sm font-medium text-foreground mb-2"
+                  >
                     Start Date
                   </label>
                   <input
@@ -415,20 +448,23 @@ export function PainTracker() {
                     id="start-date"
                     type="date"
                     value={reportPeriod.start}
-                    onChange={(e) => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
+                    onChange={e => setReportPeriod(prev => ({ ...prev, start: e.target.value }))}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     aria-label="Report start date"
                   />
                 </div>
                 <div>
-                  <label htmlFor="end-date" className="block text-sm font-medium text-foreground mb-2">
+                  <label
+                    htmlFor="end-date"
+                    className="block text-sm font-medium text-foreground mb-2"
+                  >
                     End Date
                   </label>
                   <input
                     id="end-date"
                     type="date"
                     value={reportPeriod.end}
-                    onChange={(e) => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
+                    onChange={e => setReportPeriod(prev => ({ ...prev, end: e.target.value }))}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     aria-label="Report end date"
                   />
@@ -446,16 +482,11 @@ export function PainTracker() {
                 <Plus className="h-5 w-5" />
                 <span>Record Pain Entry</span>
               </CardTitle>
-              <CardDescription>
-                Track your pain levels, symptoms, and daily impact
-              </CardDescription>
+              <CardDescription>Track your pain levels, symptoms, and daily impact</CardDescription>
             </CardHeader>
             <CardContent>
               {ValidationTechComponent ? (
-                <ValidationTechComponent
-                  painEntries={entries}
-                  onPainEntrySubmit={handleAddEntry}
-                />
+                <ValidationTechComponent painEntries={entries} onPainEntrySubmit={handleAddEntry} />
               ) : (
                 <PainEntryForm onSubmit={handleAddEntry} />
               )}
@@ -484,11 +515,11 @@ export function PainTracker() {
                 primaryAction={{
                   label: noLogsCTA,
                   onClick: handleStartWalkthrough,
-                  icon: <PlayCircle className="h-4 w-4" />
+                  icon: <PlayCircle className="h-4 w-4" />,
                 }}
                 secondaryAction={{
                   label: secondaryCTA,
-                  onClick: () => handleOnboardingComplete(true)
+                  onClick: () => handleOnboardingComplete(true),
                 }}
                 illustration={<TrackingIllustration />}
               />
@@ -498,9 +529,7 @@ export function PainTracker() {
           <Card data-walkthrough="pain-history">
             <CardHeader>
               <CardTitle>Pain History</CardTitle>
-              <CardDescription>
-                Detailed view of all your pain entries and patterns
-              </CardDescription>
+              <CardDescription>Detailed view of all your pain entries and patterns</CardDescription>
             </CardHeader>
             <CardContent>
               <PainHistory entries={entries} />
@@ -510,10 +539,7 @@ export function PainTracker() {
 
         {/* Onboarding Flow */}
         {showOnboarding && (
-          <OnboardingFlow
-            onComplete={handleOnboardingComplete}
-            onSkip={handleOnboardingSkip}
-          />
+          <OnboardingFlow onComplete={handleOnboardingComplete} onSkip={handleOnboardingSkip} />
         )}
 
         {/* Interactive Walkthrough */}

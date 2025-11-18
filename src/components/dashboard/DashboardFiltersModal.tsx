@@ -27,7 +27,7 @@ export function DashboardFiltersModal({
   onLoadFilter,
   onDeleteFilter,
   onCriteriaChange,
-  onActiveFiltersChange
+  onActiveFiltersChange,
 }: DashboardFiltersModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" aria-label="Advanced dashboard filters">

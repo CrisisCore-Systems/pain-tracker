@@ -1,9 +1,9 @@
 import { PainTrackerIcon } from './BrandedLogo';
-import { 
-  Brain, 
-  Smartphone, 
-  Shield, 
-  Zap, 
+import {
+  Brain,
+  Smartphone,
+  Shield,
+  Zap,
   Users,
   BarChart3,
   Globe,
@@ -25,7 +25,7 @@ export function HeroBanner() {
               <Award className="w-4 h-4 mr-2" />
               AI-Powered Pain Management Platform
             </div>
-            
+
             {/* Headline */}
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-100 leading-tight">
@@ -35,11 +35,11 @@ export function HeroBanner() {
                 </span>
               </h1>
               <p className="text-xl text-slate-600 dark:text-slate-400 max-w-xl">
-                Revolutionary pain management with predictive AI analytics, clinical integration, 
+                Revolutionary pain management with predictive AI analytics, clinical integration,
                 and evidence-based insights for better health outcomes.
               </p>
             </div>
-            
+
             {/* Key Stats */}
             <div className="flex items-center space-x-8">
               <div className="text-center">
@@ -55,7 +55,7 @@ export function HeroBanner() {
                 <div className="text-sm text-slate-600 dark:text-slate-400">Powered</div>
               </div>
             </div>
-            
+
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-green-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
@@ -66,7 +66,7 @@ export function HeroBanner() {
               </button>
             </div>
           </div>
-          
+
           {/* Visual */}
           <div className="relative">
             <div className="relative z-10 bg-white rounded-3xl shadow-2xl p-8 border border-slate-200 dark:border-slate-700">
@@ -77,16 +77,22 @@ export function HeroBanner() {
                   <div className="flex items-center space-x-3">
                     <PainTrackerIcon size={32} />
                     <div>
-                      <div className="font-semibold text-slate-900 dark:text-slate-100">Pain Tracker Pro</div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">AI-Powered Analytics</div>
+                      <div className="font-semibold text-slate-900 dark:text-slate-100">
+                        Pain Tracker Pro
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">
+                        AI-Powered Analytics
+                      </div>
                     </div>
                   </div>
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 </div>
-                
+
                 {/* Pain Level Visualization */}
                 <div className="bg-gradient-to-r from-blue-50 to-green-50 p-4 rounded-xl">
-                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Current Pain Level</div>
+                  <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Current Pain Level
+                  </div>
                   <div className="flex items-center space-x-3">
                     <div className="text-3xl font-bold text-blue-600">4.2</div>
                     <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
@@ -95,7 +101,7 @@ export function HeroBanner() {
                   </div>
                   <div className="text-xs text-green-600 mt-1">↓ 15% from last week</div>
                 </div>
-                
+
                 {/* Features Preview */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-purple-50 p-3 rounded-lg text-center">
@@ -109,7 +115,7 @@ export function HeroBanner() {
                 </div>
               </div>
             </div>
-            
+
             {/* Background Elements */}
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-200 rounded-full opacity-20"></div>
             <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-green-200 rounded-full opacity-20"></div>
@@ -126,39 +132,40 @@ export function FeaturesSection() {
     {
       icon: Brain,
       title: 'AI-Powered Predictions',
-      description: 'Machine learning algorithms predict pain patterns and provide personalized insights.',
-      color: 'purple'
+      description:
+        'Machine learning algorithms predict pain patterns and provide personalized insights.',
+      color: 'purple',
     },
     {
       icon: Stethoscope,
       title: 'FHIR Compliance',
       description: 'Full HL7 FHIR R4 compliance for seamless healthcare system integration.',
-      color: 'blue'
+      color: 'blue',
     },
     {
       icon: Smartphone,
       title: 'Mobile-First Design',
       description: 'Touch-optimized interface with haptic feedback and offline capabilities.',
-      color: 'green'
+      color: 'green',
     },
     {
       icon: Shield,
       title: 'Privacy-First',
       description: 'End-to-end encryption with local-only storage and optional sharing.',
-      color: 'red'
+      color: 'red',
     },
     {
       icon: BarChart3,
       title: 'Advanced Analytics',
       description: 'Comprehensive pain analysis with trend detection and correlation mapping.',
-      color: 'yellow'
+      color: 'yellow',
     },
     {
       icon: Globe,
       title: 'Clinical Integration',
       description: 'Provider dashboards and patient management tools for healthcare teams.',
-      color: 'indigo'
-    }
+      color: 'indigo',
+    },
   ];
 
   const colorMap = {
@@ -167,7 +174,7 @@ export function FeaturesSection() {
     green: 'from-green-500 to-green-600',
     red: 'from-red-500 to-red-600',
     yellow: 'from-yellow-500 to-yellow-600',
-    indigo: 'from-indigo-500 to-indigo-600'
+    indigo: 'from-indigo-500 to-indigo-600',
   };
 
   return (
@@ -177,22 +184,35 @@ export function FeaturesSection() {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             Everything You Need for
-            <span className="text-transparent bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text"> Pain Management</span>
+            <span className="text-transparent bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text">
+              {' '}
+              Pain Management
+            </span>
           </h2>
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Comprehensive tools designed by healthcare professionals for evidence-based pain tracking and analysis.
+            Comprehensive tools designed by healthcare professionals for evidence-based pain
+            tracking and analysis.
           </p>
         </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${colorMap[feature.color as keyof typeof colorMap]} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+            <div
+              key={index}
+              className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+            >
+              <div
+                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${colorMap[feature.color as keyof typeof colorMap]} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+              >
                 <feature.icon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-3">{feature.title}</h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{feature.description}</p>
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-3">
+                {feature.title}
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>
@@ -207,23 +227,23 @@ export function TrustSection() {
     {
       icon: Shield,
       title: 'HIPAA Compliant',
-      description: 'Full healthcare data protection compliance'
+      description: 'Full healthcare data protection compliance',
     },
     {
       icon: Award,
       title: 'Clinically Validated',
-      description: 'Evidence-based algorithms and methodologies'
+      description: 'Evidence-based algorithms and methodologies',
     },
     {
       icon: Users,
       title: 'Trusted by Providers',
-      description: '500+ healthcare organizations worldwide'
+      description: '500+ healthcare organizations worldwide',
     },
     {
       icon: Zap,
       title: 'Real-Time Sync',
-      description: 'Instant data synchronization across devices'
-    }
+      description: 'Instant data synchronization across devices',
+    },
   ];
 
   return (
@@ -281,17 +301,17 @@ export function CallToActionSection() {
           <div className="flex justify-center">
             <PainTrackerIcon size={64} color="rgba(255,255,255,0.9)" />
           </div>
-          
+
           <div>
             <h2 className="text-4xl font-bold text-white mb-4">
               Ready to Transform Pain Management?
             </h2>
             <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Join thousands of patients and healthcare providers using AI-powered insights 
-              to improve pain management outcomes.
+              Join thousands of patients and healthcare providers using AI-powered insights to
+              improve pain management outcomes.
             </p>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg">
               Start Free Trial
@@ -300,7 +320,7 @@ export function CallToActionSection() {
               Contact Sales
             </button>
           </div>
-          
+
           <div className="flex items-center justify-center space-x-6 text-blue-100">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5" />

@@ -22,7 +22,10 @@ const luminance = (hexOrRgb: string) => {
     g = parseInt(hex.substring(2, 4), 16);
     b = parseInt(hex.substring(4, 6), 16);
   } else {
-    const nums = hexOrRgb.replace(/[rgba()\s]/g, '').split(',').map(Number);
+    const nums = hexOrRgb
+      .replace(/[rgba()\s]/g, '')
+      .split(',')
+      .map(Number);
     [r, g, b] = nums;
   }
   const R = sRGBtoLinear(r);

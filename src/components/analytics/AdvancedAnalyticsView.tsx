@@ -7,7 +7,7 @@ import {
   LineChart,
   MapPin,
   Pill,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Badge } from '../../design-system';
@@ -34,8 +34,8 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
     if (entries.length === 0) return null;
 
     // Sort entries by date
-    const sortedEntries = [...entries].sort((a, b) => 
-      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    const sortedEntries = [...entries].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
 
     // Pain trends
@@ -43,14 +43,16 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
     const avgPain = painLevels.reduce((sum, p) => sum + p, 0) / painLevels.length;
     const maxPain = Math.max(...painLevels);
     const minPain = Math.min(...painLevels);
-    
+
     // Recent trend (last 7 entries vs previous 7)
     const recentEntries = sortedEntries.slice(-7);
     const previousEntries = sortedEntries.slice(-14, -7);
-    const recentAvg = recentEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / recentEntries.length;
-    const previousAvg = previousEntries.length > 0 
-      ? previousEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / previousEntries.length 
-      : recentAvg;
+    const recentAvg =
+      recentEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / recentEntries.length;
+    const previousAvg =
+      previousEntries.length > 0
+        ? previousEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / previousEntries.length
+        : recentAvg;
     const trend = recentAvg - previousAvg;
 
     // Location frequency
@@ -87,12 +89,16 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
 
     // Quality of life metrics
     const qolEntries = sortedEntries.filter(e => e.qualityOfLife);
-    const avgSleep = qolEntries.length > 0
-      ? qolEntries.reduce((sum, e) => sum + (e.qualityOfLife?.sleepQuality || 0), 0) / qolEntries.length
-      : 0;
-    const avgMood = qolEntries.length > 0
-      ? qolEntries.reduce((sum, e) => sum + (e.qualityOfLife?.moodImpact || 0), 0) / qolEntries.length
-      : 0;
+    const avgSleep =
+      qolEntries.length > 0
+        ? qolEntries.reduce((sum, e) => sum + (e.qualityOfLife?.sleepQuality || 0), 0) /
+          qolEntries.length
+        : 0;
+    const avgMood =
+      qolEntries.length > 0
+        ? qolEntries.reduce((sum, e) => sum + (e.qualityOfLife?.moodImpact || 0), 0) /
+          qolEntries.length
+        : 0;
 
     // Medication effectiveness
     const medEntries = sortedEntries.filter(e => {
@@ -123,68 +129,76 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
       avgSleep,
       avgMood,
       topMedications,
-      totalEntries: entries.length
+      totalEntries: entries.length,
     };
   }, [entries]);
 
   // Chart data
   const painTrendData = useMemo(() => {
-    const sorted = [...entries].sort((a, b) => 
-      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    const sorted = [...entries].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
 
     return {
-      labels: sorted.map(e => new Date(e.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
-      datasets: [{
-        label: 'Pain Level',
-        data: sorted.map(e => e.baselineData.pain),
-        borderColor: colorVar('--color-primary'),
-        backgroundColor: colorVar('--color-primary') + '20',
-        tension: 0.4,
-        fill: true
-      }]
+      labels: sorted.map(e =>
+        new Date(e.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      ),
+      datasets: [
+        {
+          label: 'Pain Level',
+          data: sorted.map(e => e.baselineData.pain),
+          borderColor: colorVar('--color-primary'),
+          backgroundColor: colorVar('--color-primary') + '20',
+          tension: 0.4,
+          fill: true,
+        },
+      ],
     };
   }, [entries]);
 
   const locationData = useMemo(() => {
     if (!analytics) return { labels: [], datasets: [] };
-    
+
     return {
       labels: analytics.topLocations.map(([loc]) => loc),
-      datasets: [{
-        label: 'Frequency',
-        data: analytics.topLocations.map(([, count]) => count),
-        backgroundColor: [
-          'rgba(239, 68, 68, 0.8)',
-          'rgba(249, 115, 22, 0.8)',
-          'rgba(234, 179, 8, 0.8)',
-          'rgba(34, 197, 94, 0.8)',
-          'rgba(59, 130, 246, 0.8)',
-        ]
-      }]
+      datasets: [
+        {
+          label: 'Frequency',
+          data: analytics.topLocations.map(([, count]) => count),
+          backgroundColor: [
+            'rgba(239, 68, 68, 0.8)',
+            'rgba(249, 115, 22, 0.8)',
+            'rgba(234, 179, 8, 0.8)',
+            'rgba(34, 197, 94, 0.8)',
+            'rgba(59, 130, 246, 0.8)',
+          ],
+        },
+      ],
     };
   }, [analytics]);
 
   const timeOfDayData = useMemo(() => {
     if (!analytics) return { labels: [], datasets: [] };
-    
+
     return {
       labels: ['Morning', 'Afternoon', 'Evening', 'Night'],
-      datasets: [{
-        label: 'Entries',
-        data: [
-          analytics.timePatterns.morning,
-          analytics.timePatterns.afternoon,
-          analytics.timePatterns.evening,
-          analytics.timePatterns.night
-        ],
-        backgroundColor: [
-          'rgba(251, 191, 36, 0.8)',
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(139, 92, 246, 0.8)',
-          'rgba(99, 102, 241, 0.8)',
-        ]
-      }]
+      datasets: [
+        {
+          label: 'Entries',
+          data: [
+            analytics.timePatterns.morning,
+            analytics.timePatterns.afternoon,
+            analytics.timePatterns.evening,
+            analytics.timePatterns.night,
+          ],
+          backgroundColor: [
+            'rgba(251, 191, 36, 0.8)',
+            'rgba(59, 130, 246, 0.8)',
+            'rgba(139, 92, 246, 0.8)',
+            'rgba(99, 102, 241, 0.8)',
+          ],
+        },
+      ],
     };
   }, [analytics]);
 
@@ -192,7 +206,9 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
     return (
       <div className="text-center py-20">
         <BarChart3 className="h-16 w-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
-        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{noTrendsHeadline}</h3>
+        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          {noTrendsHeadline}
+        </h3>
         <p className="text-gray-500 dark:text-gray-400">{noTrendsSubtext}</p>
       </div>
     );
@@ -203,8 +219,12 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Advanced Analytics</h2>
-          <p className="text-gray-600 dark:text-gray-400">Deep insights into your pain patterns and trends</p>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Advanced Analytics
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Deep insights into your pain patterns and trends
+          </p>
         </div>
         <Badge variant="outline" className="rounded-full">
           <Sparkles className="h-3 w-3 mr-1" />
@@ -221,7 +241,7 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           delta={{
             value: -analytics.trend,
             direction: analytics.trend < -0.5 ? 'down' : analytics.trend > 0.5 ? 'up' : 'neutral',
-            label: 'vs previous period'
+            label: 'vs previous period',
           }}
           severity={Math.round(analytics.avgPain) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10}
         />
@@ -232,7 +252,7 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           delta={{
             value: 0,
             direction: 'neutral',
-            label: 'min to max'
+            label: 'min to max',
           }}
         />
 
@@ -243,7 +263,12 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           delta={{
             value: 0,
             direction: 'neutral',
-            label: analytics.avgSleep >= 7 ? 'Good' : analytics.avgSleep >= 5 ? 'Fair' : 'Needs attention'
+            label:
+              analytics.avgSleep >= 7
+                ? 'Good'
+                : analytics.avgSleep >= 5
+                  ? 'Fair'
+                  : 'Needs attention',
           }}
         />
 
@@ -254,7 +279,12 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           delta={{
             value: 0,
             direction: 'neutral',
-            label: analytics.avgMood >= 7 ? 'Positive' : analytics.avgMood >= 5 ? 'Moderate' : 'Challenging'
+            label:
+              analytics.avgMood >= 7
+                ? 'Positive'
+                : analytics.avgMood >= 5
+                  ? 'Moderate'
+                  : 'Challenging',
           }}
         />
       </div>
@@ -267,19 +297,17 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           description="Your pain levels over time"
           type="line"
           chartData={painTrendData}
-          tableData={
-            [...entries]
-              .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
-              .map(e => ({
-                label: new Date(e.timestamp).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric',
-                  year: '2-digit'
-                }),
-                value: e.baselineData.pain,
-                additionalInfo: `Pain level: ${e.baselineData.pain}/10`
-              }))
-          }
+          tableData={[...entries]
+            .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+            .map(e => ({
+              label: new Date(e.timestamp).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: '2-digit',
+              }),
+              value: e.baselineData.pain,
+              additionalInfo: `Pain level: ${e.baselineData.pain}/10`,
+            }))}
           icon={LineChart}
           height={256}
         />
@@ -294,7 +322,7 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
             analytics?.topLocations.map(([location, count]) => ({
               label: location,
               value: count,
-              additionalInfo: `Reported ${count} time${count > 1 ? 's' : ''}`
+              additionalInfo: `Reported ${count} time${count > 1 ? 's' : ''}`,
             })) || []
           }
           icon={MapPin}
@@ -314,23 +342,23 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
             {
               label: 'Morning (5am-12pm)',
               value: analytics?.timePatterns.morning || 0,
-              additionalInfo: `${analytics?.timePatterns.morning || 0} entries`
+              additionalInfo: `${analytics?.timePatterns.morning || 0} entries`,
             },
             {
               label: 'Afternoon (12pm-5pm)',
               value: analytics?.timePatterns.afternoon || 0,
-              additionalInfo: `${analytics?.timePatterns.afternoon || 0} entries`
+              additionalInfo: `${analytics?.timePatterns.afternoon || 0} entries`,
             },
             {
               label: 'Evening (5pm-9pm)',
               value: analytics?.timePatterns.evening || 0,
-              additionalInfo: `${analytics?.timePatterns.evening || 0} entries`
+              additionalInfo: `${analytics?.timePatterns.evening || 0} entries`,
             },
             {
               label: 'Night (9pm-5am)',
               value: analytics?.timePatterns.night || 0,
-              additionalInfo: `${analytics?.timePatterns.night || 0} entries`
-            }
+              additionalInfo: `${analytics?.timePatterns.night || 0} entries`,
+            },
           ]}
           icon={Clock}
           height={256}
@@ -351,17 +379,23 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           <div className="space-y-3">
             {/* Trend Insight */}
             <InsightChip
-              statement={analytics.trend < -0.5 
-                ? `Pain improving by ${Math.abs(analytics.trend).toFixed(1)} points`
-                : analytics.trend > 0.5
-                ? `Pain increasing by ${analytics.trend.toFixed(1)} points`
-                : 'Pain levels stable'}
-              confidence={Math.abs(analytics.trend) > 1 ? 3 : Math.abs(analytics.trend) > 0.5 ? 2 : 1}
-              rationale={analytics.trend < -0.5 
-                ? `Your pain levels are trending downward. Recent average is ${analytics.avgPain.toFixed(1)}, showing improvement from previous period. Keep up with your current treatment plan.`
-                : analytics.trend > 0.5
-                ? `Your pain has increased recently from previous period. Average is ${analytics.avgPain.toFixed(1)}. Consider consulting with your healthcare provider.`
-                : 'Your pain levels are relatively stable. Continue monitoring for changes and patterns.'}
+              statement={
+                analytics.trend < -0.5
+                  ? `Pain improving by ${Math.abs(analytics.trend).toFixed(1)} points`
+                  : analytics.trend > 0.5
+                    ? `Pain increasing by ${analytics.trend.toFixed(1)} points`
+                    : 'Pain levels stable'
+              }
+              confidence={
+                Math.abs(analytics.trend) > 1 ? 3 : Math.abs(analytics.trend) > 0.5 ? 2 : 1
+              }
+              rationale={
+                analytics.trend < -0.5
+                  ? `Your pain levels are trending downward. Recent average is ${analytics.avgPain.toFixed(1)}, showing improvement from previous period. Keep up with your current treatment plan.`
+                  : analytics.trend > 0.5
+                    ? `Your pain has increased recently from previous period. Average is ${analytics.avgPain.toFixed(1)}. Consider consulting with your healthcare provider.`
+                    : 'Your pain levels are relatively stable. Continue monitoring for changes and patterns.'
+              }
             />
 
             {/* Most Common Location */}
@@ -376,13 +410,17 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
             {/* Sleep Correlation */}
             {analytics.avgSleep > 0 && (
               <InsightChip
-                statement={analytics.avgSleep >= 7 
-                  ? 'Good sleep quality observed'
-                  : 'Sleep quality may need attention'}
+                statement={
+                  analytics.avgSleep >= 7
+                    ? 'Good sleep quality observed'
+                    : 'Sleep quality may need attention'
+                }
                 confidence={2}
-                rationale={analytics.avgSleep >= 7 
-                  ? `Your average sleep quality is ${analytics.avgSleep.toFixed(1)}/10, which is good and may be helping with pain management. Research shows quality sleep aids recovery.`
-                  : `Your average sleep quality is ${analytics.avgSleep.toFixed(1)}/10. Improving sleep could help reduce pain levels. Consider discussing sleep hygiene with your healthcare provider.`}
+                rationale={
+                  analytics.avgSleep >= 7
+                    ? `Your average sleep quality is ${analytics.avgSleep.toFixed(1)}/10, which is good and may be helping with pain management. Research shows quality sleep aids recovery.`
+                    : `Your average sleep quality is ${analytics.avgSleep.toFixed(1)}/10. Improving sleep could help reduce pain levels. Consider discussing sleep hygiene with your healthcare provider.`
+                }
               />
             )}
           </div>
@@ -401,15 +439,22 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           </div>
           <div className="space-y-2">
             {analytics.topSymptoms.map(([symptom, count], idx) => (
-              <div key={symptom} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+              <div
+                key={symptom}
+                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl"
+              >
                 <div className="flex items-center gap-3">
-                  <div className={cn(
-                    'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold',
-                    idx === 0 && 'bg-red-100 dark:bg-red-950/30 text-red-600 dark:text-red-400',
-                    idx === 1 && 'bg-orange-100 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400',
-                    idx === 2 && 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400',
-                    idx >= 3 && 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                  )}>
+                  <div
+                    className={cn(
+                      'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold',
+                      idx === 0 && 'bg-red-100 dark:bg-red-950/30 text-red-600 dark:text-red-400',
+                      idx === 1 &&
+                        'bg-orange-100 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400',
+                      idx === 2 &&
+                        'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400',
+                      idx >= 3 && 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                    )}
+                  >
                     {idx + 1}
                   </div>
                   <span className="font-medium text-gray-900 dark:text-white">{symptom}</span>
@@ -428,19 +473,29 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
             <div className="p-2 bg-blue-100 dark:bg-blue-950/30 rounded-lg">
               <Pill className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">Frequent Medications</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+              Frequent Medications
+            </h3>
           </div>
           {analytics.topMedications.length > 0 ? (
             <div className="space-y-2">
               {analytics.topMedications.map(([med, count], idx) => (
-                <div key={med} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                <div
+                  key={med}
+                  className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl"
+                >
                   <div className="flex items-center gap-3">
-                    <div className={cn(
-                      'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold',
-                      idx === 0 && 'bg-blue-100 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400',
-                      idx === 1 && 'bg-cyan-100 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400',
-                      idx === 2 && 'bg-teal-100 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400'
-                    )}>
+                    <div
+                      className={cn(
+                        'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold',
+                        idx === 0 &&
+                          'bg-blue-100 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400',
+                        idx === 1 &&
+                          'bg-cyan-100 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400',
+                        idx === 2 &&
+                          'bg-teal-100 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400'
+                      )}
+                    >
                       {idx + 1}
                     </div>
                     <span className="font-medium text-gray-900 dark:text-white">{med}</span>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { formatNumber } from '../../utils/formatting';
-import { 
-  Activity, 
-  TrendingUp, 
-  TrendingDown, 
-  Heart, 
+import {
+  Activity,
+  TrendingUp,
+  TrendingDown,
+  Heart,
   Zap,
   AlertTriangle,
   CheckCircle,
@@ -15,7 +15,7 @@ import {
   Play,
   RotateCcw,
   Settings,
-  Monitor
+  Monitor,
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -85,21 +85,21 @@ const interfaceAdaptations: InterfaceAdaptation[] = [
       buttonSize: 100,
       colorSaturation: 100,
       contrast: 100,
-      spacing: 100
+      spacing: 100,
     },
     cognitiveSupport: {
       hideNonEssential: false,
       showProgress: true,
       reduceChoices: false,
       autoSave: false,
-      confirmationDialogs: true
+      confirmationDialogs: true,
     },
     emotionalSupport: {
       encouragingMessages: false,
       breathingPrompts: false,
       breakSuggestions: false,
-      stressAcknowledgment: false
-    }
+      stressAcknowledgment: false,
+    },
   },
   {
     id: 'moderate-stress',
@@ -112,21 +112,21 @@ const interfaceAdaptations: InterfaceAdaptation[] = [
       buttonSize: 110,
       colorSaturation: 85,
       contrast: 110,
-      spacing: 120
+      spacing: 120,
     },
     cognitiveSupport: {
       hideNonEssential: true,
       showProgress: true,
       reduceChoices: true,
       autoSave: true,
-      confirmationDialogs: true
+      confirmationDialogs: true,
     },
     emotionalSupport: {
       encouragingMessages: true,
       breathingPrompts: false,
       breakSuggestions: true,
-      stressAcknowledgment: true
-    }
+      stressAcknowledgment: true,
+    },
   },
   {
     id: 'high-stress',
@@ -139,21 +139,21 @@ const interfaceAdaptations: InterfaceAdaptation[] = [
       buttonSize: 130,
       colorSaturation: 70,
       contrast: 130,
-      spacing: 150
+      spacing: 150,
     },
     cognitiveSupport: {
       hideNonEssential: true,
       showProgress: true,
       reduceChoices: true,
       autoSave: true,
-      confirmationDialogs: false
+      confirmationDialogs: false,
     },
     emotionalSupport: {
       encouragingMessages: true,
       breathingPrompts: true,
       breakSuggestions: true,
-      stressAcknowledgment: true
-    }
+      stressAcknowledgment: true,
+    },
   },
   {
     id: 'critical-stress',
@@ -166,29 +166,29 @@ const interfaceAdaptations: InterfaceAdaptation[] = [
       buttonSize: 150,
       colorSaturation: 50,
       contrast: 150,
-      spacing: 200
+      spacing: 200,
     },
     cognitiveSupport: {
       hideNonEssential: true,
       showProgress: false,
       reduceChoices: true,
       autoSave: true,
-      confirmationDialogs: false
+      confirmationDialogs: false,
     },
     emotionalSupport: {
       encouragingMessages: true,
       breathingPrompts: true,
       breakSuggestions: true,
-      stressAcknowledgment: true
-    }
-  }
+      stressAcknowledgment: true,
+    },
+  },
 ];
 
 export function StressResponsiveInterfaceAdaptations({
   onStressLevelChange,
   onInterfaceAdaptation,
   enableAutoDetection = true,
-  className = ''
+  className = '',
 }: StressResponseInterfaceProps) {
   const [currentStressMetrics, setCurrentStressMetrics] = useState<StressMetrics>({
     level: 'low',
@@ -196,12 +196,14 @@ export function StressResponsiveInterfaceAdaptations({
     indicators: {
       interactionSpeed: 500,
       errorRate: 0,
-      sessionDuration: 0
+      sessionDuration: 0,
     },
-    timestamp: new Date()
+    timestamp: new Date(),
   });
 
-  const [currentAdaptation, setCurrentAdaptation] = useState<InterfaceAdaptation>(interfaceAdaptations[0]);
+  const [currentAdaptation, setCurrentAdaptation] = useState<InterfaceAdaptation>(
+    interfaceAdaptations[0]
+  );
   const [isMonitoring, setIsMonitoring] = useState(enableAutoDetection);
   const [stressHistory, setStressHistory] = useState<StressMetrics[]>([]);
   const [manualStressRating, setManualStressRating] = useState(5);
@@ -215,9 +217,10 @@ export function StressResponsiveInterfaceAdaptations({
   const detectStressLevel = useCallback(() => {
     const now = new Date();
     const sessionDuration = (now.getTime() - sessionStart.current.getTime()) / (1000 * 60); // minutes
-    const avgInteractionSpeed = interactionTimes.current.length > 0
-      ? interactionTimes.current.reduce((a, b) => a + b, 0) / interactionTimes.current.length
-      : 500;
+    const avgInteractionSpeed =
+      interactionTimes.current.length > 0
+        ? interactionTimes.current.reduce((a, b) => a + b, 0) / interactionTimes.current.length
+        : 500;
     const totalInteractions = interactionTimes.current.length + errorCount.current;
     const errorRate = totalInteractions > 0 ? (errorCount.current / totalInteractions) * 100 : 0;
 
@@ -263,9 +266,9 @@ export function StressResponsiveInterfaceAdaptations({
         interactionSpeed: avgInteractionSpeed,
         errorRate,
         sessionDuration,
-        manualRating: currentStressMetrics.indicators.manualRating
+        manualRating: currentStressMetrics.indicators.manualRating,
       },
-      timestamp: now
+      timestamp: now,
     };
 
     setCurrentStressMetrics(newMetrics);
@@ -288,10 +291,10 @@ export function StressResponsiveInterfaceAdaptations({
 
   // Auto-apply interface adaptations when stress level changes
   useEffect(() => {
-    const adaptation = interfaceAdaptations.find(a => 
+    const adaptation = interfaceAdaptations.find(a =>
       a.triggerStressLevel.includes(currentStressMetrics.level)
     );
-    
+
     if (adaptation && adaptation.id !== currentAdaptation.id) {
       setCurrentAdaptation(adaptation);
       if (onInterfaceAdaptation) {
@@ -308,8 +311,8 @@ export function StressResponsiveInterfaceAdaptations({
       ...prev,
       indicators: {
         ...prev.indicators,
-        manualRating: rating
-      }
+        manualRating: rating,
+      },
     }));
   };
 
@@ -324,14 +327,16 @@ export function StressResponsiveInterfaceAdaptations({
       indicators: {
         interactionSpeed: 500,
         errorRate: 0,
-        sessionDuration: 0
+        sessionDuration: 0,
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   };
 
   return (
-    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
+    <div
+      className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}
+    >
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-blue-100 rounded-lg">
           <Activity className="w-6 h-6 text-blue-600" />
@@ -341,8 +346,9 @@ export function StressResponsiveInterfaceAdaptations({
             Stress-Responsive Interface Adaptations
           </h2>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Automatically detects stress levels through interaction patterns and adapts the interface 
-            to reduce cognitive load and provide appropriate support during difficult moments.
+            Automatically detects stress levels through interaction patterns and adapts the
+            interface to reduce cognitive load and provide appropriate support during difficult
+            moments.
           </p>
         </div>
       </div>
@@ -393,7 +399,7 @@ function StressStatusDisplay({
   adaptation,
   isMonitoring,
   onToggleMonitoring,
-  onReset
+  onReset,
 }: {
   metrics: StressMetrics;
   adaptation: InterfaceAdaptation;
@@ -403,19 +409,27 @@ function StressStatusDisplay({
 }) {
   const getStressColor = (level: StressLevel) => {
     switch (level) {
-      case 'low': return 'text-green-600 bg-green-100';
-      case 'moderate': return 'text-yellow-600 bg-yellow-100';
-      case 'high': return 'text-orange-600 bg-orange-100';
-      case 'critical': return 'text-red-600 bg-red-100';
+      case 'low':
+        return 'text-green-600 bg-green-100';
+      case 'moderate':
+        return 'text-yellow-600 bg-yellow-100';
+      case 'high':
+        return 'text-orange-600 bg-orange-100';
+      case 'critical':
+        return 'text-red-600 bg-red-100';
     }
   };
 
   const getStressIcon = (level: StressLevel) => {
     switch (level) {
-      case 'low': return CheckCircle;
-      case 'moderate': return MinusCircle;
-      case 'high': return AlertTriangle;
-      case 'critical': return Zap;
+      case 'low':
+        return CheckCircle;
+      case 'moderate':
+        return MinusCircle;
+      case 'high':
+        return AlertTriangle;
+      case 'critical':
+        return Zap;
     }
   };
 
@@ -426,11 +440,13 @@ function StressStatusDisplay({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           <StressIcon className="w-6 h-6 text-gray-600 dark:text-gray-400" />
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Current Stress Status</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Current Stress Status
+          </h3>
         </div>
         <div className="flex items-center space-x-2">
           <TouchOptimizedButton
-            variant={isMonitoring ? "primary" : "secondary"}
+            variant={isMonitoring ? 'primary' : 'secondary'}
             onClick={onToggleMonitoring}
             className="px-3 py-1"
           >
@@ -446,11 +462,7 @@ function StressStatusDisplay({
               </>
             )}
           </TouchOptimizedButton>
-          <TouchOptimizedButton
-            variant="secondary"
-            onClick={onReset}
-            className="px-3 py-1"
-          >
+          <TouchOptimizedButton variant="secondary" onClick={onReset} className="px-3 py-1">
             <RotateCcw className="w-4 h-4" />
           </TouchOptimizedButton>
         </div>
@@ -460,8 +472,12 @@ function StressStatusDisplay({
         {/* Stress Level Display */}
         <div className="bg-white rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Stress Level</span>
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStressColor(metrics.level)}`}>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Stress Level
+            </span>
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium ${getStressColor(metrics.level)}`}
+            >
               {metrics.level.toUpperCase()}
             </span>
           </div>
@@ -474,7 +490,9 @@ function StressStatusDisplay({
 
         {/* Metrics Display */}
         <div className="bg-white rounded-lg p-4">
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Detection Metrics</h4>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Detection Metrics
+          </h4>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Interaction Speed:</span>
@@ -504,7 +522,7 @@ function StressStatusDisplay({
 // Manual Stress Rating Component
 function ManualStressRating({
   currentRating,
-  onRatingChange
+  onRatingChange,
 }: {
   currentRating: number;
   onRatingChange: (rating: number) => void;
@@ -513,9 +531,11 @@ function ManualStressRating({
     <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
         <Heart className="w-5 h-5 text-red-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Manual Stress Check</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Manual Stress Check
+        </h3>
       </div>
-      
+
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -528,26 +548,31 @@ function ManualStressRating({
               min="1"
               max="10"
               value={currentRating}
-              onChange={(e) => onRatingChange(parseInt(e.target.value))}
+              onChange={e => onRatingChange(parseInt(e.target.value))}
               className="flex-1"
             />
             <span className="text-sm text-gray-500 dark:text-gray-400">10</span>
           </div>
           <div className="text-center mt-2">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-              currentRating <= 3 ? 'bg-green-100 text-green-800' :
-              currentRating <= 6 ? 'bg-yellow-100 text-yellow-800' :
-              currentRating <= 8 ? 'bg-orange-100 text-orange-800' :
-              'bg-red-100 text-red-800'
-            }`}>
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                currentRating <= 3
+                  ? 'bg-green-100 text-green-800'
+                  : currentRating <= 6
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : currentRating <= 8
+                      ? 'bg-orange-100 text-orange-800'
+                      : 'bg-red-100 text-red-800'
+              }`}
+            >
               {currentRating}/10
             </span>
           </div>
         </div>
-        
+
         <div className="text-sm text-gray-600 dark:text-gray-400">
-          Your manual rating helps improve automatic stress detection and ensures 
-          appropriate interface adaptations are applied.
+          Your manual rating helps improve automatic stress detection and ensures appropriate
+          interface adaptations are applied.
         </div>
       </div>
     </div>
@@ -572,17 +597,22 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
 
   const getStressNumeric = (level: StressLevel): number => {
     switch (level) {
-      case 'low': return 1;
-      case 'moderate': return 2;
-      case 'high': return 3;
-      case 'critical': return 4;
+      case 'low':
+        return 1;
+      case 'moderate':
+        return 2;
+      case 'high':
+        return 3;
+      case 'critical':
+        return 4;
     }
   };
 
   const maxStress = Math.max(...history.map(h => getStressNumeric(h.level)));
-  const trend = history.length >= 2 
-    ? getStressNumeric(history[history.length - 1].level) - getStressNumeric(history[0].level)
-    : 0;
+  const trend =
+    history.length >= 2
+      ? getStressNumeric(history[history.length - 1].level) - getStressNumeric(history[0].level)
+      : 0;
 
   return (
     <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
@@ -610,12 +640,15 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
         <div className="h-24 flex items-end space-x-1">
           {history.map((metric, index) => {
             const height = (getStressNumeric(metric.level) / 4) * 100;
-            const color = 
-              metric.level === 'low' ? 'bg-green-400' :
-              metric.level === 'moderate' ? 'bg-yellow-400' :
-              metric.level === 'high' ? 'bg-orange-400' :
-              'bg-red-400';
-            
+            const color =
+              metric.level === 'low'
+                ? 'bg-green-400'
+                : metric.level === 'moderate'
+                  ? 'bg-yellow-400'
+                  : metric.level === 'high'
+                    ? 'bg-orange-400'
+                    : 'bg-red-400';
+
             return (
               <div
                 key={index}
@@ -632,7 +665,10 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
           <div className="text-center">
             <div className="font-medium text-gray-900 dark:text-gray-100">Average</div>
             <div className="text-gray-600 dark:text-gray-400">
-              {formatNumber(history.reduce((sum, h) => sum + getStressNumeric(h.level), 0) / history.length, 1)}
+              {formatNumber(
+                history.reduce((sum, h) => sum + getStressNumeric(h.level), 0) / history.length,
+                1
+              )}
             </div>
           </div>
           <div className="text-center">
@@ -652,7 +688,7 @@ function StressHistoryChart({ history }: { history: StressMetrics[] }) {
 // Interface Adaptation Preview Component
 function InterfaceAdaptationPreview({
   adaptation,
-  stressLevel
+  stressLevel,
 }: {
   adaptation: InterfaceAdaptation;
   stressLevel: StressLevel;
@@ -661,8 +697,12 @@ function InterfaceAdaptationPreview({
     <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
         <Monitor className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Active Interface Adaptation</h3>
-  <span className="ml-auto text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 capitalize">{stressLevel}</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Active Interface Adaptation
+        </h3>
+        <span className="ml-auto text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 capitalize">
+          {stressLevel}
+        </span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -670,7 +710,7 @@ function InterfaceAdaptationPreview({
         <div>
           <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">{adaptation.name}</h4>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{adaptation.description}</p>
-          
+
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Visual Simplification:</span>
@@ -693,7 +733,9 @@ function InterfaceAdaptationPreview({
 
         {/* Active Features */}
         <div>
-          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Active Support Features</h4>
+          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
+            Active Support Features
+          </h4>
           <div className="space-y-2">
             {adaptation.cognitiveSupport.hideNonEssential && (
               <div className="flex items-center space-x-2 text-sm">
@@ -736,7 +778,7 @@ function InterfaceAdaptationPreview({
 function AdaptationControls({
   adaptations,
   currentAdaptation,
-  onAdaptationChange
+  onAdaptationChange,
 }: {
   adaptations: InterfaceAdaptation[];
   currentAdaptation: InterfaceAdaptation;
@@ -750,13 +792,16 @@ function AdaptationControls({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {adaptations.map((adaptation) => {
+        {adaptations.map(adaptation => {
           const isActive = currentAdaptation.id === adaptation.id;
-          const colorClass = 
-            adaptation.triggerStressLevel[0] === 'low' ? 'border-green-200 hover:border-green-300' :
-            adaptation.triggerStressLevel[0] === 'moderate' ? 'border-yellow-200 hover:border-yellow-300' :
-            adaptation.triggerStressLevel[0] === 'high' ? 'border-orange-200 hover:border-orange-300' :
-            'border-red-200 hover:border-red-300';
+          const colorClass =
+            adaptation.triggerStressLevel[0] === 'low'
+              ? 'border-green-200 hover:border-green-300'
+              : adaptation.triggerStressLevel[0] === 'moderate'
+                ? 'border-yellow-200 hover:border-yellow-300'
+                : adaptation.triggerStressLevel[0] === 'high'
+                  ? 'border-orange-200 hover:border-orange-300'
+                  : 'border-red-200 hover:border-red-300';
 
           return (
             <TouchOptimizedButton
@@ -769,8 +814,12 @@ function AdaptationControls({
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-medium text-gray-900 dark:text-gray-100">{adaptation.name}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{adaptation.description}</div>
+                  <div className="font-medium text-gray-900 dark:text-gray-100">
+                    {adaptation.name}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {adaptation.description}
+                  </div>
                 </div>
                 {isActive && <CheckCircle className="w-4 h-4 text-blue-600" />}
               </div>
@@ -785,7 +834,7 @@ function AdaptationControls({
 // Stress Response Features Component
 function StressResponseFeatures({
   adaptation,
-  stressLevel
+  stressLevel,
 }: {
   adaptation: InterfaceAdaptation;
   stressLevel: StressLevel;
@@ -805,9 +854,9 @@ function StressResponseFeatures({
         {adaptation.emotionalSupport.stressAcknowledgment && (
           <div className="bg-white p-3 rounded border border-blue-200">
             <p className="text-sm text-blue-800">
-              <AlertTriangle className="w-4 h-4 inline mr-1" />
-              I notice you might be experiencing some stress right now. That's completely normal when managing pain.
-              The interface has been simplified to make things easier for you.
+              <AlertTriangle className="w-4 h-4 inline mr-1" />I notice you might be experiencing
+              some stress right now. That's completely normal when managing pain. The interface has
+              been simplified to make things easier for you.
             </p>
           </div>
         )}
@@ -837,8 +886,8 @@ function StressResponseFeatures({
           <div className="bg-white p-3 rounded border border-blue-200">
             <p className="text-sm text-blue-800">
               <CheckCircle className="w-4 h-4 inline mr-1" />
-              You're doing great by taking care of yourself and tracking your symptoms. 
-              Every entry helps build a better understanding of your health.
+              You're doing great by taking care of yourself and tracking your symptoms. Every entry
+              helps build a better understanding of your health.
             </p>
           </div>
         )}

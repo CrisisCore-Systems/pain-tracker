@@ -45,22 +45,26 @@ const getEnv = () => {
 const ENABLE_VALIDATION = (() => {
   const env = getEnv();
   // Enable by default unless explicitly disabled
-  return env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false';
+  return (
+    env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false'
+  );
 })();
 
 interface MobilePainEntryFormProps {
-  onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
+  onSubmit: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
 }
 
 export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
-  const entries = usePainTrackerStore((state) => state.entries);
+  const entries = usePainTrackerStore(state => state.entries);
   const { preferences } = useTraumaInformed();
   const { validationHistory, addValidation, clearHistory } = useEmotionalValidation();
   const [showValidationHistory, setShowValidationHistory] = useState(true);
   const [showProgressTracker, setShowProgressTracker] = useState(preferences.showProgress);
-  const [progressStatus, setProgressStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [progressStatus, setProgressStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>(
+    'idle'
+  );
   const [currentSection, setCurrentSection] = useState(0);
-  const [formData, setFormData] = useState<Omit<PainEntry, "id" | "timestamp">>({
+  const [formData, setFormData] = useState<Omit<PainEntry, 'id' | 'timestamp'>>({
     baselineData: {
       pain: 0,
       locations: [],
@@ -73,12 +77,12 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
     },
     medications: {
       current: [],
-      changes: "",
-      effectiveness: "",
+      changes: '',
+      effectiveness: '',
     },
     treatments: {
       recent: [],
-      effectiveness: "",
+      effectiveness: '',
       planned: [],
     },
     qualityOfLife: {
@@ -92,10 +96,10 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       workLimitations: [],
     },
     comparison: {
-      worseningSince: "",
+      worseningSince: '',
       newLimitations: [],
     },
-    notes: "",
+    notes: '',
   });
 
   useEffect(() => {
@@ -104,27 +108,33 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
 
   const validationIsActive = ENABLE_VALIDATION && preferences.realTimeValidation;
 
-  const handleValidationGenerated = useCallback(async (validation: ValidationResponse) => {
-    addValidation(validation);
-    try {
-      await validationIntegration.saveValidation(validation);
-    } catch (error) {
-      console.error('Failed to persist validation message (mobile)', error);
-    }
-  }, [addValidation, validationIntegration]);
+  const handleValidationGenerated = useCallback(
+    async (validation: ValidationResponse) => {
+      addValidation(validation);
+      try {
+        await validationIntegration.saveValidation(validation);
+      } catch (error) {
+        console.error('Failed to persist validation message (mobile)', error);
+      }
+    },
+    [addValidation, validationIntegration]
+  );
 
-  const handleProgressUpdate = useCallback(async (entry: ProgressEntry) => {
-    try {
-      setProgressStatus('saving');
-      await validationIntegration.saveProgressEntry(entry);
-      setProgressStatus('saved');
-      setTimeout(() => setProgressStatus('idle'), 6000);
-    } catch (error) {
-      console.error('Failed to persist mobile progress entry', error);
-      setProgressStatus('error');
-      setTimeout(() => setProgressStatus('idle'), 6000);
-    }
-  }, [validationIntegration]);
+  const handleProgressUpdate = useCallback(
+    async (entry: ProgressEntry) => {
+      try {
+        setProgressStatus('saving');
+        await validationIntegration.saveProgressEntry(entry);
+        setProgressStatus('saved');
+        setTimeout(() => setProgressStatus('idle'), 6000);
+      } catch (error) {
+        console.error('Failed to persist mobile progress entry', error);
+        setProgressStatus('error');
+        setTimeout(() => setProgressStatus('idle'), 6000);
+      }
+    },
+    [validationIntegration]
+  );
 
   // Mobile-optimized sections with touch-friendly components
   const sections = [
@@ -137,16 +147,20 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
             <div className="space-y-6">
               <div className="text-center">
                 <h3 className="text-2xl font-bold mb-2">How is your pain right now?</h3>
-                <p className="text-muted-foreground">Use the slider or buttons to set your pain level</p>
+                <p className="text-muted-foreground">
+                  Use the slider or buttons to set your pain level
+                </p>
               </div>
-              
+
               <div className="py-8">
                 <TouchOptimizedSlider
                   value={formData.baselineData.pain}
-                  onChange={(value) => setFormData(prev => ({
-                    ...prev,
-                    baselineData: { ...prev.baselineData, pain: value }
-                  }))}
+                  onChange={value =>
+                    setFormData(prev => ({
+                      ...prev,
+                      baselineData: { ...prev.baselineData, pain: value },
+                    }))
+                  }
                   min={0}
                   max={10}
                   label="Pain Level (0-10)"
@@ -161,10 +175,12 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
                   <button
                     key={level}
                     type="button"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      baselineData: { ...prev.baselineData, pain: level }
-                    }))}
+                    onClick={() =>
+                      setFormData(prev => ({
+                        ...prev,
+                        baselineData: { ...prev.baselineData, pain: level },
+                      }))
+                    }
                     className={`py-3 px-2 rounded-lg text-sm font-medium transition-all ${
                       formData.baselineData.pain === level
                         ? 'bg-primary text-primary-foreground'
@@ -185,7 +201,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
             </div>
           </CardContent>
         </Card>
-      )
+      ),
     },
     {
       id: 'body-mapping',
@@ -193,12 +209,14 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       component: (
         <BodyMappingSection
           selectedLocations={formData.baselineData?.locations || []}
-          onChange={(locations) => setFormData(prev => ({
-            ...prev,
-            baselineData: { ...prev.baselineData, locations }
-          }))}
+          onChange={locations =>
+            setFormData(prev => ({
+              ...prev,
+              baselineData: { ...prev.baselineData, locations },
+            }))
+          }
         />
-      )
+      ),
     },
     {
       id: 'symptoms',
@@ -208,12 +226,14 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
           pain={formData.baselineData?.pain || 0}
           locations={formData.baselineData?.locations || []}
           symptoms={formData.baselineData?.symptoms || []}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            baselineData: { ...prev.baselineData, ...data }
-          }))}
+          onChange={data =>
+            setFormData(prev => ({
+              ...prev,
+              baselineData: { ...prev.baselineData, ...data },
+            }))
+          }
         />
-      )
+      ),
     },
     {
       id: 'quality-of-life',
@@ -225,25 +245,39 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
               <h3 className="text-lg font-semibold mb-4">How is your sleep quality?</h3>
               <TouchOptimizedSlider
                 value={formData.qualityOfLife?.sleepQuality || 0}
-                onChange={(value) => setFormData(prev => ({
-                  ...prev,
-                  qualityOfLife: { ...prev.qualityOfLife, sleepQuality: value, moodImpact: prev.qualityOfLife?.moodImpact || 0, socialImpact: prev.qualityOfLife?.socialImpact || [] }
-                }))}
+                onChange={value =>
+                  setFormData(prev => ({
+                    ...prev,
+                    qualityOfLife: {
+                      ...prev.qualityOfLife,
+                      sleepQuality: value,
+                      moodImpact: prev.qualityOfLife?.moodImpact || 0,
+                      socialImpact: prev.qualityOfLife?.socialImpact || [],
+                    },
+                  }))
+                }
                 min={0}
                 max={10}
                 label="Sleep Quality (0=Poor, 10=Excellent)"
                 showValue={true}
               />
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold mb-4">How much is pain affecting your mood?</h3>
               <TouchOptimizedSlider
                 value={formData.qualityOfLife?.moodImpact || 0}
-                onChange={(value) => setFormData(prev => ({
-                  ...prev,
-                  qualityOfLife: { ...prev.qualityOfLife, moodImpact: value, sleepQuality: prev.qualityOfLife?.sleepQuality || 0, socialImpact: prev.qualityOfLife?.socialImpact || [] }
-                }))}
+                onChange={value =>
+                  setFormData(prev => ({
+                    ...prev,
+                    qualityOfLife: {
+                      ...prev.qualityOfLife,
+                      moodImpact: value,
+                      sleepQuality: prev.qualityOfLife?.sleepQuality || 0,
+                      socialImpact: prev.qualityOfLife?.socialImpact || [],
+                    },
+                  }))
+                }
                 min={0}
                 max={10}
                 label="Mood Impact (0=No impact, 10=Severe impact)"
@@ -255,18 +289,20 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
               sleepQuality={formData.qualityOfLife?.sleepQuality || 0}
               moodImpact={formData.qualityOfLife?.moodImpact || 0}
               socialImpact={formData.qualityOfLife?.socialImpact || []}
-              onChange={(data) => setFormData(prev => ({
-                ...prev,
-                qualityOfLife: {
-                  sleepQuality: data.sleepQuality ?? prev.qualityOfLife?.sleepQuality ?? 0,
-                  moodImpact: data.moodImpact ?? prev.qualityOfLife?.moodImpact ?? 0,
-                  socialImpact: data.socialImpact ?? prev.qualityOfLife?.socialImpact ?? []
-                }
-              }))}
+              onChange={data =>
+                setFormData(prev => ({
+                  ...prev,
+                  qualityOfLife: {
+                    sleepQuality: data.sleepQuality ?? prev.qualityOfLife?.sleepQuality ?? 0,
+                    moodImpact: data.moodImpact ?? prev.qualityOfLife?.moodImpact ?? 0,
+                    socialImpact: data.socialImpact ?? prev.qualityOfLife?.socialImpact ?? [],
+                  },
+                }))
+              }
             />
           </CardContent>
         </Card>
-      )
+      ),
     },
     {
       id: 'functional-impact',
@@ -275,16 +311,19 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
         <FunctionalImpactSection
           limitedActivities={formData.functionalImpact?.limitedActivities || []}
           mobilityAids={formData.functionalImpact?.mobilityAids || []}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            functionalImpact: {
-              limitedActivities: data.limitedActivities ?? prev.functionalImpact?.limitedActivities ?? [],
-              assistanceNeeded: prev.functionalImpact?.assistanceNeeded ?? [],
-              mobilityAids: data.mobilityAids ?? prev.functionalImpact?.mobilityAids ?? []
-            }
-          }))}
+          onChange={data =>
+            setFormData(prev => ({
+              ...prev,
+              functionalImpact: {
+                limitedActivities:
+                  data.limitedActivities ?? prev.functionalImpact?.limitedActivities ?? [],
+                assistanceNeeded: prev.functionalImpact?.assistanceNeeded ?? [],
+                mobilityAids: data.mobilityAids ?? prev.functionalImpact?.mobilityAids ?? [],
+              },
+            }))
+          }
         />
-      )
+      ),
     },
     {
       id: 'work-impact',
@@ -294,64 +333,74 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
           missedWork={formData.workImpact?.missedWork || 0}
           modifiedDuties={formData.workImpact?.modifiedDuties || []}
           workLimitations={formData.workImpact?.workLimitations || []}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            workImpact: {
-              missedWork: data.missedWork ?? prev.workImpact?.missedWork ?? 0,
-              modifiedDuties: data.modifiedDuties ?? prev.workImpact?.modifiedDuties ?? [],
-              workLimitations: data.workLimitations ?? prev.workImpact?.workLimitations ?? []
-            }
-          }))}
+          onChange={data =>
+            setFormData(prev => ({
+              ...prev,
+              workImpact: {
+                missedWork: data.missedWork ?? prev.workImpact?.missedWork ?? 0,
+                modifiedDuties: data.modifiedDuties ?? prev.workImpact?.modifiedDuties ?? [],
+                workLimitations: data.workLimitations ?? prev.workImpact?.workLimitations ?? [],
+              },
+            }))
+          }
         />
-      )
+      ),
     },
     {
       id: 'medications',
       title: 'Medications',
       component: (
         <MedicationsSection
-          current={formData.medications?.current?.map(med => ({
-            name: med.name,
-            dosage: med.dosage || '',
-            frequency: med.frequency || '',
-            effectiveness: med.effectiveness || ''
-          })) || []}
+          current={
+            formData.medications?.current?.map(med => ({
+              name: med.name,
+              dosage: med.dosage || '',
+              frequency: med.frequency || '',
+              effectiveness: med.effectiveness || '',
+            })) || []
+          }
           changes={formData.medications?.changes || ''}
           effectiveness={formData.medications?.effectiveness || ''}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            medications: {
-              current: data.current ?? prev.medications?.current ?? [],
-              changes: data.changes ?? prev.medications?.changes ?? '',
-              effectiveness: data.effectiveness ?? prev.medications?.effectiveness ?? ''
-            }
-          }))}
+          onChange={data =>
+            setFormData(prev => ({
+              ...prev,
+              medications: {
+                current: data.current ?? prev.medications?.current ?? [],
+                changes: data.changes ?? prev.medications?.changes ?? '',
+                effectiveness: data.effectiveness ?? prev.medications?.effectiveness ?? '',
+              },
+            }))
+          }
         />
-      )
+      ),
     },
     {
       id: 'treatments',
       title: 'Treatments',
       component: (
         <TreatmentsSection
-          recent={formData.treatments?.recent?.map(t => ({
-            type: t.type,
-            provider: t.provider || '',
-            effectiveness: t.effectiveness || '',
-            date: t.date || new Date().toISOString()
-          })) || []}
+          recent={
+            formData.treatments?.recent?.map(t => ({
+              type: t.type,
+              provider: t.provider || '',
+              effectiveness: t.effectiveness || '',
+              date: t.date || new Date().toISOString(),
+            })) || []
+          }
           effectiveness={formData.treatments?.effectiveness || ''}
           planned={formData.treatments?.planned || []}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            treatments: {
-              recent: data.recent ?? prev.treatments?.recent ?? [],
-              effectiveness: data.effectiveness ?? prev.treatments?.effectiveness ?? '',
-              planned: data.planned ?? prev.treatments?.planned ?? []
-            }
-          }))}
+          onChange={data =>
+            setFormData(prev => ({
+              ...prev,
+              treatments: {
+                recent: data.recent ?? prev.treatments?.recent ?? [],
+                effectiveness: data.effectiveness ?? prev.treatments?.effectiveness ?? '',
+                planned: data.planned ?? prev.treatments?.planned ?? [],
+              },
+            }))
+          }
         />
-      )
+      ),
     },
     {
       id: 'comparison',
@@ -360,15 +409,17 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
         <ComparisonSection
           worseningSince={formData.comparison?.worseningSince || ''}
           newLimitations={formData.comparison?.newLimitations || []}
-          onChange={(data) => setFormData(prev => ({
-            ...prev,
-            comparison: {
-              worseningSince: data.worseningSince ?? prev.comparison?.worseningSince ?? '',
-              newLimitations: data.newLimitations ?? prev.comparison?.newLimitations ?? []
-            }
-          }))}
+          onChange={data =>
+            setFormData(prev => ({
+              ...prev,
+              comparison: {
+                worseningSince: data.worseningSince ?? prev.comparison?.worseningSince ?? '',
+                newLimitations: data.newLimitations ?? prev.comparison?.newLimitations ?? [],
+              },
+            }))
+          }
         />
-      )
+      ),
     },
     {
       id: 'notes',
@@ -383,7 +434,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
               </p>
               <textarea
                 value={formData.notes}
-                onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+                onChange={e => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                 placeholder="Describe any additional details about your pain, what might have triggered it, or anything else that might be helpful..."
                 className="w-full h-32 p-4 border rounded-lg resize-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
@@ -397,7 +448,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
             </div>
           </CardContent>
         </Card>
-      )
+      ),
     },
     {
       id: 'wellness-toolkit',
@@ -416,7 +467,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowValidationHistory((prev) => !prev)}
+                    onClick={() => setShowValidationHistory(prev => !prev)}
                   >
                     {showValidationHistory ? 'Hide' : 'Show'}
                   </Button>
@@ -442,7 +493,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    onClick={() => setShowProgressTracker((prev) => !prev)}
+                    onClick={() => setShowProgressTracker(prev => !prev)}
                   >
                     {showProgressTracker ? 'Hide tools' : 'Open tools'}
                   </Button>
@@ -461,38 +512,43 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
                       </div>
                     )}
                     {progressStatus === 'saved' && (
-                      <p className="text-xs text-success">Progress entry saved with privacy protections.</p>
+                      <p className="text-xs text-success">
+                        Progress entry saved with privacy protections.
+                      </p>
                     )}
                     {progressStatus === 'error' && (
-                      <p className="text-xs text-destructive">We couldn’t save this right now, but your notes remain local.</p>
+                      <p className="text-xs text-destructive">
+                        We couldn’t save this right now, but your notes remain local.
+                      </p>
                     )}
                   </div>
                 ) : (
                   <p className="text-xs text-muted-foreground">
-                    These tools honour wins beyond pain scores. Open them whenever you have the energy.
+                    These tools honour wins beyond pain scores. Open them whenever you have the
+                    energy.
                   </p>
                 )}
               </div>
             )}
           </CardContent>
         </Card>
-      )
-    }
+      ),
+    },
   ];
 
   const handleSubmit = () => {
     onSubmit(formData);
-    
+
     // Reset form
     setFormData({
       baselineData: { pain: 0, locations: [], symptoms: [] },
       functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
-      medications: { current: [], changes: "", effectiveness: "" },
-      treatments: { recent: [], effectiveness: "", planned: [] },
+      medications: { current: [], changes: '', effectiveness: '' },
+      treatments: { recent: [], effectiveness: '', planned: [] },
       qualityOfLife: { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
       workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
-      comparison: { worseningSince: "", newLimitations: [] },
-      notes: "",
+      comparison: { worseningSince: '', newLimitations: [] },
+      notes: '',
     });
     setCurrentSection(0);
   };
@@ -502,8 +558,8 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
 
   return (
     <div className="mobile-pain-entry-form h-screen flex flex-col">
-      <form 
-        onSubmit={(e) => {
+      <form
+        onSubmit={e => {
           e.preventDefault();
           handleSubmit();
         }}
@@ -536,18 +592,18 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
 
 function getPainLevelDescription(level: number): string {
   const descriptions = [
-    "No pain - feeling good!",
-    "Very mild pain - barely noticeable",
-    "Mild pain - noticeable but not distracting", 
-    "Mild pain - slightly distracting",
-    "Moderate pain - can be ignored if busy",
+    'No pain - feeling good!',
+    'Very mild pain - barely noticeable',
+    'Mild pain - noticeable but not distracting',
+    'Mild pain - slightly distracting',
+    'Moderate pain - can be ignored if busy',
     "Moderate pain - can't be ignored, affects some activities",
-    "Moderately strong pain - interferes with normal activities",
-    "Strong pain - interferes with most activities",
-    "Very strong pain - difficult to concentrate",
-    "Intense pain - unable to engage in normal activities",
-    "Excruciating pain - bedridden and possibly delirious"
+    'Moderately strong pain - interferes with normal activities',
+    'Strong pain - interferes with most activities',
+    'Very strong pain - difficult to concentrate',
+    'Intense pain - unable to engage in normal activities',
+    'Excruciating pain - bedridden and possibly delirious',
   ];
-  
-  return descriptions[level] || "";
+
+  return descriptions[level] || '';
 }

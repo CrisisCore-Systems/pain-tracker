@@ -26,9 +26,9 @@ export function useHolisticProgress() {
     const newAchievement: Achievement = {
       ...achievement,
       id: `${achievement.type}-${Date.now()}`,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-    
+
     setAchievements(prev => [newAchievement, ...prev]);
     return newAchievement;
   };
@@ -41,7 +41,7 @@ export function useHolisticProgress() {
     achievements,
     weeklyMetrics,
     recordAchievement,
-    updateWeeklyMetrics
+    updateWeeklyMetrics,
   };
 }
 

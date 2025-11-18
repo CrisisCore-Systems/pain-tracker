@@ -9,12 +9,18 @@ export const AccessibilityControls: React.FC = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border" role="group" aria-labelledby="accessibility-controls">
+    <div
+      className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border"
+      role="group"
+      aria-labelledby="accessibility-controls"
+    >
       <h3 id="accessibility-controls" className="font-semibold mb-4 flex items-center gap-2">
-        <span role="img" aria-label="accessibility">♿</span>
+        <span role="img" aria-label="accessibility">
+          ♿
+        </span>
         Accessibility Settings
       </h3>
-      
+
       <div className="space-y-4">
         {/* Theme Selection */}
         <div>
@@ -26,8 +32,8 @@ export const AccessibilityControls: React.FC = () => {
               {[
                 { value: 'light' as const, label: 'Light Theme', icon: '☀️' },
                 { value: 'dark' as const, label: 'Dark Theme', icon: '🌙' },
-                { value: 'high-contrast' as const, label: 'High Contrast', icon: '⚫' }
-              ].map((option) => (
+                { value: 'high-contrast' as const, label: 'High Contrast', icon: '⚫' },
+              ].map(option => (
                 <label key={option.value} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
@@ -37,7 +43,9 @@ export const AccessibilityControls: React.FC = () => {
                     onChange={() => handleThemeChange(option.value)}
                     className="focus:ring-2 focus:ring-blue-500"
                   />
-                  <span role="img" aria-hidden="true">{option.icon}</span>
+                  <span role="img" aria-hidden="true">
+                    {option.icon}
+                  </span>
                   <span className="text-sm">{option.label}</span>
                 </label>
               ))}
@@ -52,11 +60,15 @@ export const AccessibilityControls: React.FC = () => {
           </h4>
           <div className="space-y-1 text-sm">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${isHighContrast ? 'bg-destructive-foreground' : 'bg-muted-foreground'}`}></span>
+              <span
+                className={`w-2 h-2 rounded-full ${isHighContrast ? 'bg-destructive-foreground' : 'bg-muted-foreground'}`}
+              ></span>
               <span>High Contrast: {isHighContrast ? 'Enabled' : 'Disabled'}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${hasReducedMotion ? 'bg-destructive-foreground' : 'bg-muted-foreground'}`}></span>
+              <span
+                className={`w-2 h-2 rounded-full ${hasReducedMotion ? 'bg-destructive-foreground' : 'bg-muted-foreground'}`}
+              ></span>
               <span>Reduced Motion: {hasReducedMotion ? 'Enabled' : 'Disabled'}</span>
             </div>
           </div>

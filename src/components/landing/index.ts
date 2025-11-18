@@ -3,3 +3,5 @@ export { BenefitsGrid } from './BenefitsGrid';
 export { TrustIndicators } from './TrustIndicators';
 export { FeatureShowcase } from './FeatureShowcase';
 export { LandingFooter } from './LandingFooter';
+export { UseCases } from './UseCases';
+export { Testimonials } from './Testimonials';

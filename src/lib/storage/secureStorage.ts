@@ -52,7 +52,10 @@ export const secureStorage = {
       try {
         let decoded = raw;
         if (options?.encrypt) {
-          const decrypt = options.decryptFn || (globalThis as unknown as { __secureStorageDecrypt?: (c: string)=>string }).__secureStorageDecrypt;
+          const decrypt =
+            options.decryptFn ||
+            (globalThis as unknown as { __secureStorageDecrypt?: (c: string) => string })
+              .__secureStorageDecrypt;
           if (!decrypt) {
             return null;
           }
@@ -85,7 +88,10 @@ export const secureStorage = {
       }
       let out = data;
       if (options?.encrypt) {
-        const encrypt = options.encryptFn || (globalThis as unknown as { __secureStorageEncrypt?: (p: string)=>string }).__secureStorageEncrypt;
+        const encrypt =
+          options.encryptFn ||
+          (globalThis as unknown as { __secureStorageEncrypt?: (p: string) => string })
+            .__secureStorageEncrypt;
         if (!encrypt) {
           return { success: false, error: 'ENCRYPTION_UNAVAILABLE' };
         }
@@ -125,5 +131,5 @@ export const secureStorage = {
       if (k && k.startsWith(prefix)) out.push(k.slice(prefix.length));
     }
     return out;
-  }
+  },
 };

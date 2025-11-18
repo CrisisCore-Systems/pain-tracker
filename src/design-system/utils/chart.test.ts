@@ -13,7 +13,7 @@ describe('buildRolling7DayChartData', () => {
     const entries: RawEntry[] = [
       { created_at: twoDaysAgo.toISOString(), pain_level: 2 },
       { created_at: yesterday.toISOString(), pain_level: 6 },
-      { created_at: today.toISOString(), pain_level: 4 }
+      { created_at: today.toISOString(), pain_level: 4 },
     ];
 
     const chart = buildRolling7DayChartData(entries, { timeZone: 'UTC', label: 'Avg pain' });

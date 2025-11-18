@@ -17,7 +17,12 @@ export function predictFlareUp(entries: PainEntry[]): { score: number; reason: s
   if (last > avg) score += 0.3;
   if (max >= 8) score += 0.2;
   score = Math.min(1, score);
-  const reason = score > 0.6 ? 'Recent high pain and upward trend' : score > 0.3 ? 'Mild upward trend' : 'No immediate risk detected';
+  const reason =
+    score > 0.6
+      ? 'Recent high pain and upward trend'
+      : score > 0.3
+        ? 'Mild upward trend'
+        : 'No immediate risk detected';
   return { score, reason };
 }
 
@@ -26,20 +31,17 @@ export function suggestCopingStrategies(score: number) {
     return [
       'Consider contacting your care team for medication review',
       'Prioritize rest and avoid strenuous activity',
-      'Use heat/cold as appropriate for symptom relief'
+      'Use heat/cold as appropriate for symptom relief',
     ];
   }
   if (score > 0.4) {
     return [
       'Try gentle stretching and pacing activity',
       'Review recent triggers (sleep, weather, stress)',
-      'Consider short-acting analgesic if recommended'
+      'Consider short-acting analgesic if recommended',
     ];
   }
-  return [
-    'Maintain regular sleep and hydration',
-    'Keep activity balanced and track triggers',
-  ];
+  return ['Maintain regular sleep and hydration', 'Keep activity balanced and track triggers'];
 }
 
 export function riskTrendOverDays(entries: import('../types').PainEntry[], days = 7) {
@@ -48,9 +50,14 @@ export function riskTrendOverDays(entries: import('../types').PainEntry[], days 
   const total = entries.length;
   for (let d = days - 1; d >= 0; d--) {
     const cutoff = Date.now() - d * 24 * 60 * 60 * 1000;
-    const slice = entries.filter(e => new Date(e.timestamp).getTime() >= cutoff - (24 * 60 * 60 * 1000));
+    const slice = entries.filter(
+      e => new Date(e.timestamp).getTime() >= cutoff - 24 * 60 * 60 * 1000
+    );
     const p = predictFlareUp(slice);
-    out.push({ label: new Date(Date.now() - d * 24 * 60 * 60 * 1000).toLocaleDateString(), score: Math.round(p.score * 100) });
+    out.push({
+      label: new Date(Date.now() - d * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      score: Math.round(p.score * 100),
+    });
   }
   return out;
 }

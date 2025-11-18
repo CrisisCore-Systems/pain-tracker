@@ -1,5 +1,10 @@
 // Lightweight runtime validation helpers
-export function assertNumericRange(value: number | null | undefined, name: string, min: number, max: number) {
+export function assertNumericRange(
+  value: number | null | undefined,
+  name: string,
+  min: number,
+  max: number
+) {
   if (value === null || value === undefined) {
     throw new Error(`${name} is required`);
   }

@@ -1,21 +1,23 @@
-import { AlertCircle, FileText, HelpCircle } from "lucide-react";
+import { AlertCircle, FileText, HelpCircle } from 'lucide-react';
 import { PainTrackerIcon } from '../branding/BrandedLogo';
-import type { PainEntry } from "../../types";
-import { PainEntryWidget } from "../widgets/PainEntryWidget";
-import { EnhancedPainVisualizationPanel } from "../widgets/EnhancedPainVisualizationPanel";
-import { PainHistoryPanel } from "../widgets/PainHistoryPanel";
-import { lazy, Suspense } from "react";
-import { EmptyStatePanel } from "../widgets/EmptyStatePanel";
-import { Card, CardContent, Button, ThemeToggle } from "../../design-system";
-import { usePainTrackerStore } from "../../stores/pain-tracker-store";
+import type { PainEntry } from '../../types';
+import { PainEntryWidget } from '../widgets/PainEntryWidget';
+import { EnhancedPainVisualizationPanel } from '../widgets/EnhancedPainVisualizationPanel';
+import { PainHistoryPanel } from '../widgets/PainHistoryPanel';
+import { lazy, Suspense } from 'react';
+import { EmptyStatePanel } from '../widgets/EmptyStatePanel';
+import { Card, CardContent, Button, ThemeToggle } from '../../design-system';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 // Lazy load WCBReportPanel to defer PDF library loading (Phase 3 optimization)
-const WCBReportPanel = lazy(() => import("../widgets/WCBReportPanel").then(m => ({ default: m.WCBReportPanel })));
+const WCBReportPanel = lazy(() =>
+  import('../widgets/WCBReportPanel').then(m => ({ default: m.WCBReportPanel }))
+);
 
 interface PainTrackerLayoutProps {
   entries: PainEntry[];
   error: string | null;
-  onAddEntry: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
+  onAddEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
   onStartWalkthrough: () => void;
 }
 
@@ -23,12 +25,9 @@ export function PainTrackerLayout({
   entries,
   error,
   onAddEntry,
-  onStartWalkthrough
+  onStartWalkthrough,
 }: PainTrackerLayoutProps) {
-  const { 
-    ui,
-    setShowWCBReport
-  } = usePainTrackerStore();
+  const { ui, setShowWCBReport } = usePainTrackerStore();
 
   const handleToggleReport = () => {
     setShowWCBReport(!ui.showWCBReport);
@@ -43,7 +42,9 @@ export function PainTrackerLayout({
               <PainTrackerIcon size={32} />
               <div>
                 <h1 className="text-2xl font-bold text-foreground">Pain Tracker</h1>
-                <div className="text-xs text-muted-foreground font-medium tracking-wide">AI-POWERED PAIN MANAGEMENT</div>
+                <div className="text-xs text-muted-foreground font-medium tracking-wide">
+                  AI-POWERED PAIN MANAGEMENT
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -67,7 +68,7 @@ export function PainTrackerLayout({
                 aria-controls="wcb-report-section"
               >
                 <FileText className="h-4 w-4 mr-2" />
-                {ui.showWCBReport ? "Hide WCB Report" : "Show WCB Report"}
+                {ui.showWCBReport ? 'Hide WCB Report' : 'Show WCB Report'}
               </Button>
               <ThemeToggle />
             </div>
@@ -91,11 +92,17 @@ export function PainTrackerLayout({
         )}
 
         {ui.showWCBReport && (
-          <Suspense fallback={
-            <div className="flex items-center justify-center p-8" role="status" aria-live="polite">
-              <div className="animate-pulse">Loading WCB Report...</div>
-            </div>
-          }>
+          <Suspense
+            fallback={
+              <div
+                className="flex items-center justify-center p-8"
+                role="status"
+                aria-live="polite"
+              >
+                <div className="animate-pulse">Loading WCB Report...</div>
+              </div>
+            }
+          >
             <WCBReportPanel entries={entries} />
           </Suspense>
         )}

@@ -8,7 +8,7 @@ interface TriggerPatternTimelineProps {
 
 /**
  * Trigger Pattern Timeline & Analysis
- * 
+ *
  * Visualizes pain triggers with temporal patterns and risk scoring.
  * Accessible design with clear warning indicators.
  */
@@ -38,10 +38,8 @@ export const TriggerPatternTimeline: React.FC<TriggerPatternTimelineProps> = ({
 
   const getRiskColor = (score: number): string => {
     if (score >= 75) return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-    if (score >= 50)
-      return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
-    if (score >= 25)
-      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+    if (score >= 50) return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+    if (score >= 25) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
     return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
   };
 
@@ -59,15 +57,7 @@ export const TriggerPatternTimeline: React.FC<TriggerPatternTimelineProps> = ({
     return `${hour - 12}pm`;
   };
 
-  const dayOrder = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
+  const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 ${className}`}>
@@ -112,9 +102,7 @@ export const TriggerPatternTimeline: React.FC<TriggerPatternTimelineProps> = ({
                 </div>
 
                 <div className="text-right ml-4">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                    Risk Score
-                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Risk Score</p>
                   <p className="text-2xl font-bold text-gray-900 dark:text-white">
                     {pattern.riskScore}
                   </p>
@@ -168,10 +156,7 @@ export const TriggerPatternTimeline: React.FC<TriggerPatternTimelineProps> = ({
                     </p>
                     <ul className="space-y-1">
                       {pattern.dayOfWeekPattern
-                        .sort(
-                          (a, b) =>
-                            dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day)
-                        )
+                        .sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day))
                         .slice(0, 3)
                         .map((day, idx) => (
                           <li
@@ -218,18 +203,16 @@ export const TriggerPatternTimeline: React.FC<TriggerPatternTimelineProps> = ({
           </summary>
           <div className="mt-3 space-y-2 text-gray-600 dark:text-gray-400">
             <p>
-              <strong>Risk Score:</strong> Combines frequency and pain impact.
-              Higher scores indicate triggers that occur often and cause significant
-              pain increases.
+              <strong>Risk Score:</strong> Combines frequency and pain impact. Higher scores
+              indicate triggers that occur often and cause significant pain increases.
             </p>
             <p>
-              <strong>Temporal Patterns:</strong> Shows when triggers are most
-              likely to occur, helping you prepare and implement preventive
-              strategies.
+              <strong>Temporal Patterns:</strong> Shows when triggers are most likely to occur,
+              helping you prepare and implement preventive strategies.
             </p>
             <p>
-              <strong>Action:</strong> Share high-risk triggers with your healthcare
-              provider to develop avoidance or mitigation strategies.
+              <strong>Action:</strong> Share high-risk triggers with your healthcare provider to
+              develop avoidance or mitigation strategies.
             </p>
           </div>
         </details>

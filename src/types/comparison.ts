@@ -233,8 +233,8 @@ export interface ComparisonChart {
     datasets: Array<{
       label: string;
       data: number[];
-  backgroundColor?: string | string[];
-  borderColor?: string | string[];
+      backgroundColor?: string | string[];
+      borderColor?: string | string[];
       fill?: boolean;
       [key: string]: unknown;
     }>;
@@ -263,7 +263,7 @@ export interface ComparisonChart {
       };
       y?: {
         type?: string;
-  beginAtZero?: boolean;
+        beginAtZero?: boolean;
         title?: {
           display?: boolean;
           text?: string;
@@ -311,14 +311,14 @@ export const DEFAULT_COMPARISON_PRESETS: ComparisonPreset[] = [
       periodType: 'week-to-week',
       baselinePeriod: {
         start: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
-        end: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        end: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       },
       comparisonPeriod: {
         start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        end: new Date()
+        end: new Date(),
       },
-      datasets: []
-    } as TimePeriodComparison
+      datasets: [],
+    } as TimePeriodComparison,
   },
   {
     id: 'before-after-treatment',
@@ -331,16 +331,16 @@ export const DEFAULT_COMPARISON_PRESETS: ComparisonPreset[] = [
       beforeTreatment: {
         start: new Date(),
         end: new Date(),
-        entries: []
+        entries: [],
       },
       afterTreatment: {
         start: new Date(),
         end: new Date(),
-        entries: []
+        entries: [],
       },
       treatmentDate: new Date(),
-      datasets: []
-    } as TreatmentComparison
+      datasets: [],
+    } as TreatmentComparison,
   },
   {
     id: 'weekend-vs-weekday',
@@ -350,11 +350,11 @@ export const DEFAULT_COMPARISON_PRESETS: ComparisonPreset[] = [
     config: {
       type: 'custom',
       customCriteria: {
-        comparisonType: 'weekend-weekday'
+        comparisonType: 'weekend-weekday',
       },
-      datasets: []
-    } as CustomComparison
-  }
+      datasets: [],
+    } as CustomComparison,
+  },
 ];
 
 export interface ComparisonSettings {
@@ -374,5 +374,5 @@ export const DEFAULT_COMPARISON_SETTINGS: ComparisonSettings = {
   statisticalSignificance: 0.05,
   maxDatasets: 5,
   autoRefresh: false,
-  refreshInterval: 300000 // 5 minutes
+  refreshInterval: 300000, // 5 minutes
 };

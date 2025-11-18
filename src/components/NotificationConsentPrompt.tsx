@@ -6,7 +6,11 @@ const STORAGE_KEY = 'pain-tracker:notification-consent';
 
 export default function NotificationConsentPrompt() {
   const [consent, setConsent] = useState<string | null>(() => {
-    try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+    try {
+      return localStorage.getItem(STORAGE_KEY);
+    } catch {
+      return null;
+    }
   });
   const { bottomLeft } = useToast();
   const { requestPrompt, dismissPrompt, canShowPrompt } = useStartupPrompts();
@@ -39,7 +43,7 @@ export default function NotificationConsentPrompt() {
         'We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.',
         {
           label: 'Allow',
-          onClick: grant
+          onClick: grant,
         },
         {
           onDismiss: () => {

@@ -44,11 +44,13 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock ResizeObserver
-(globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
+(globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = vi
+  .fn()
+  .mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
 
 // Mock canvas getContext for chart libraries (jsdom doesn't implement canvas)
 try {
@@ -90,25 +92,33 @@ try {
         setLineDash: () => {},
         getLineDash: () => [],
       };
-  };
+    };
   }
 }
 
 // Cleanup after each test case
 afterEach(() => {
   cleanup();
-}); 
+});
 
 // Provide localStorage polyfill if missing (should exist in jsdom but guard anyway)
 if (typeof window !== 'undefined' && !('localStorage' in window)) {
-  const store: Record<string,string> = {};
+  const store: Record<string, string> = {};
   (window as unknown as { localStorage: Storage }).localStorage = {
     getItem: (k: string) => (k in store ? store[k] : null),
-    setItem: (k: string, v: string) => { store[k] = v; },
-    removeItem: (k: string) => { delete store[k]; },
-    clear: () => { Object.keys(store).forEach(k => delete store[k]); },
+    setItem: (k: string, v: string) => {
+      store[k] = v;
+    },
+    removeItem: (k: string) => {
+      delete store[k];
+    },
+    clear: () => {
+      Object.keys(store).forEach(k => delete store[k]);
+    },
     key: (i: number) => Object.keys(store)[i] ?? null,
-    get length() { return Object.keys(store).length; }
+    get length() {
+      return Object.keys(store).length;
+    },
   } as Storage;
 }
 
@@ -142,7 +152,11 @@ beforeAll(async () => {
       }
 
       const storage = securityService.createSecureStorage();
-      await storage.store('key:pain-tracker-master', JSON.stringify({ key: seededHashB64, created: new Date().toISOString() }), true);
+      await storage.store(
+        'key:pain-tracker-master',
+        JSON.stringify({ key: seededHashB64, created: new Date().toISOString() }),
+        true
+      );
 
       // Test-only hooks: expose no-op passthroughs but only in test env
     } catch (e) {
@@ -150,10 +164,12 @@ beforeAll(async () => {
     }
   })();
 
-  const timeout = new Promise<void>((resolve) => setTimeout(() => {
-    console.warn('Test setup: security initialization timed out after 15s, continuing...');
-    resolve();
-  }, 15000));
+  const timeout = new Promise<void>(resolve =>
+    setTimeout(() => {
+      console.warn('Test setup: security initialization timed out after 15s, continuing...');
+      resolve();
+    }, 15000)
+  );
 
   // Wait for whichever finishes first: initialization or timeout
   await Promise.race([initPromise, timeout]);
@@ -162,7 +178,8 @@ beforeAll(async () => {
   const vaultPromise = (async () => {
     try {
       await getSodium();
-      const TEST_VAULT_PASSPHRASE = process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
+      const TEST_VAULT_PASSPHRASE =
+        process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
       const vaultStatus = await vaultService.initialize();
       if (vaultStatus.state === 'uninitialized') {
         await vaultService.setupPassphrase(TEST_VAULT_PASSPHRASE);
@@ -174,10 +191,12 @@ beforeAll(async () => {
     }
   })();
 
-  const vaultTimeout = new Promise<void>((resolve) => setTimeout(() => {
-    console.warn('Test setup: vault initialization timed out after 15s, continuing...');
-    resolve();
-  }, 15000));
+  const vaultTimeout = new Promise<void>(resolve =>
+    setTimeout(() => {
+      console.warn('Test setup: vault initialization timed out after 15s, continuing...');
+      resolve();
+    }, 15000)
+  );
 
   await Promise.race([vaultPromise, vaultTimeout]);
 
@@ -199,8 +218,8 @@ beforeAll(async () => {
         '--card': light.card,
         '--card-foreground': light.cardForeground,
       }).forEach(([k, v]) => {
-        try { 
-          document.documentElement.style.setProperty(k, v as string); 
+        try {
+          document.documentElement.style.setProperty(k, v as string);
         } catch {
           // Ignore errors setting CSS properties
         }
@@ -218,19 +237,64 @@ import React from 'react';
 // Test-only: mock focus-trap-react to be a no-op wrapper to avoid focus-trap differences in jsdom
 vi.mock('focus-trap-react', () => ({
   __esModule: true,
-  default: (props: { children?: React.ReactNode }) => React.createElement(React.Fragment, null, props.children),
+  default: (props: { children?: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, props.children),
 }));
 
 // Global test mocks: stub heavy or lazy-loaded modules used across components
 vi.mock('../components/PredictivePanel', () => ({
   __esModule: true,
-  default: (props: any) => React.createElement('div', { 'data-testid': 'predictive-panel-mock', 'data-entries': JSON.stringify(props?.entries || []) }, 'PredictivePanelMock')
+  default: (props: any) =>
+    React.createElement(
+      'div',
+      {
+        'data-testid': 'predictive-panel-mock',
+        'data-entries': JSON.stringify(props?.entries || []),
+      },
+      'PredictivePanelMock'
+    ),
 }));
 
 vi.mock('../design-system/components/Chart', () => ({
   __esModule: true,
-  default: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
-  PainTrendChart: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
-  SymptomFrequencyChart: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
-  PainDistributionChart: (props: any) => React.createElement('div', { 'data-testid': 'chart-mock', 'data-labels': JSON.stringify(props?.data?.labels || []), 'data-height': props?.height }, 'ChartMock'),
+  default: (props: any) =>
+    React.createElement(
+      'div',
+      {
+        'data-testid': 'chart-mock',
+        'data-labels': JSON.stringify(props?.data?.labels || []),
+        'data-height': props?.height,
+      },
+      'ChartMock'
+    ),
+  PainTrendChart: (props: any) =>
+    React.createElement(
+      'div',
+      {
+        'data-testid': 'chart-mock',
+        'data-labels': JSON.stringify(props?.data?.labels || []),
+        'data-height': props?.height,
+      },
+      'ChartMock'
+    ),
+  SymptomFrequencyChart: (props: any) =>
+    React.createElement(
+      'div',
+      {
+        'data-testid': 'chart-mock',
+        'data-labels': JSON.stringify(props?.data?.labels || []),
+        'data-height': props?.height,
+      },
+      'ChartMock'
+    ),
+  PainDistributionChart: (props: any) =>
+    React.createElement(
+      'div',
+      {
+        'data-testid': 'chart-mock',
+        'data-labels': JSON.stringify(props?.data?.labels || []),
+        'data-height': props?.height,
+      },
+      'ChartMock'
+    ),
 }));

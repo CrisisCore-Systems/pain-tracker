@@ -14,10 +14,16 @@ import {
   Sparkles,
   Lightbulb,
   Feather,
-  Trash2
+  Trash2,
 } from 'lucide-react';
 import { Button, Badge } from '../../design-system';
-import { EnhancedCard, MetricCard as EnhancedMetricCard, EnhancedCardHeader, EnhancedCardTitle, EnhancedCardContent } from '../../design-system/components/EnhancedCard';
+import {
+  EnhancedCard,
+  MetricCard as EnhancedMetricCard,
+  EnhancedCardHeader,
+  EnhancedCardTitle,
+  EnhancedCardContent,
+} from '../../design-system/components/EnhancedCard';
 import { Loading } from '../../design-system/components/Loading';
 import { PageTransition, StaggeredChildren } from '../../design-system/components/PageTransition';
 import Chart from '../../design-system/components/Chart';
@@ -44,7 +50,15 @@ interface DashboardOverviewProps {
   className?: string;
 }
 
-function MetricCard({ title, value, change, icon, className, tooltip, subtitle }: {
+function MetricCard({
+  title,
+  value,
+  change,
+  icon,
+  className,
+  tooltip,
+  subtitle,
+}: {
   title: string;
   value: string | number;
   change?: { value: number; label: string; trend: 'up' | 'down' | 'neutral' } | undefined;
@@ -54,9 +68,10 @@ function MetricCard({ title, value, change, icon, className, tooltip, subtitle }
   subtitle?: React.ReactNode;
 }) {
   // Map trend to variant for EnhancedMetricCard
-  const variant = change?.trend === 'down' ? 'success' : change?.trend === 'up' ? 'warning' : 'default';
+  const variant =
+    change?.trend === 'down' ? 'success' : change?.trend === 'up' ? 'warning' : 'default';
   const trend = change?.trend === 'up' ? 'up' : change?.trend === 'down' ? 'down' : 'neutral';
-  
+
   return (
     <div className={className}>
       <EnhancedMetricCard
@@ -77,9 +92,7 @@ function MetricCard({ title, value, change, icon, className, tooltip, subtitle }
           </Tooltip>
         </div>
       )}
-      {subtitle && (
-        <div className="text-xs text-muted-foreground mt-1">{subtitle}</div>
-      )}
+      {subtitle && <div className="text-xs text-muted-foreground mt-1">{subtitle}</div>}
     </div>
   );
 }
@@ -106,7 +119,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
     const painDistributionBuckets = [0, 0, 0, 0];
     const dailyAggregates = new Map<number, { sum: number; count: number }>();
 
-    activeEntries.forEach((entry) => {
+    activeEntries.forEach(entry => {
       const pain = entry.baselineData.pain;
       filteredPainTotal += pain;
 
@@ -139,8 +152,12 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
     const averagePainRaw = activeEntries.length > 0 ? filteredPainTotal / activeEntries.length : 0;
     const weeklyAverageRaw = weeklyEntryCount > 0 ? weeklyPainTotal / weeklyEntryCount : 0;
 
-    const overallPainTotal = referenceEntries.reduce((total, entry) => total + entry.baselineData.pain, 0);
-    const overallAverageRaw = referenceEntries.length > 0 ? overallPainTotal / referenceEntries.length : null;
+    const overallPainTotal = referenceEntries.reduce(
+      (total, entry) => total + entry.baselineData.pain,
+      0
+    );
+    const overallAverageRaw =
+      referenceEntries.length > 0 ? overallPainTotal / referenceEntries.length : null;
 
     const dateFormatter = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' });
 
@@ -160,7 +177,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
       .slice()
       .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
       .slice(0, 5)
-      .map((entry) => {
+      .map(entry => {
         const entryWithQuality = entry as PainEntry & {
           qualityOfLife?: PainEntry['qualityOfLife'] | null;
         };
@@ -190,7 +207,8 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
     return {
       totalEntries: referenceEntries.length,
       averagePain: formatNumber(Number(averagePainRaw), 1),
-      overallAverage: overallAverageRaw !== null ? formatNumber(Number(overallAverageRaw), 1) : undefined,
+      overallAverage:
+        overallAverageRaw !== null ? formatNumber(Number(overallAverageRaw), 1) : undefined,
       todayEntries: todayEntryCount,
       weeklyAverage: formatNumber(Number(weeklyAverageRaw), 1),
       painTrend,
@@ -199,13 +217,13 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
         { label: 'Mild', data: [painDistributionBuckets[0]] },
         { label: 'Moderate', data: [painDistributionBuckets[1]] },
         { label: 'Severe', data: [painDistributionBuckets[2]] },
-        { label: 'Extreme', data: [painDistributionBuckets[3]] }
+        { label: 'Extreme', data: [painDistributionBuckets[3]] },
       ],
       weeklyTrend,
     } as const;
   }, [entries, allEntries]);
 
-  const hasWeeklyData = metrics.weeklyTrend.some((day) => day.count > 0);
+  const hasWeeklyData = metrics.weeklyTrend.some(day => day.count > 0);
 
   // Adaptive tone copy
   const noLogsHeadline = useAdaptiveCopy(emptyStates.noLogs.headline);
@@ -256,7 +274,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
       return 'Great job staying ahead of your pain patterns this week.';
     }
 
-    return 'Keep observing the shifts—small notes today help tomorrow\'s insights.';
+    return "Keep observing the shifts—small notes today help tomorrow's insights.";
   }, [entries.length, metrics.todayEntries, metrics.weeklyAverage, noLogsHeadline, noLogsSubtext]);
 
   const heroHighlights = useMemo(
@@ -299,7 +317,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
       setLiveMessage('Preparing CSV export...');
       const mod = await import('../../features/export/exportCsv');
       const csv = mod.entriesToCsv(
-        entries.map((e) => ({
+        entries.map(e => ({
           id: e.id,
           timestamp: e.timestamp,
           pain: e.baselineData.pain,
@@ -318,7 +336,11 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
   }, [entries]);
 
   const handleClearData = React.useCallback(() => {
-    if (window.confirm('⚠️ Are you sure you want to delete ALL pain entries? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        '⚠️ Are you sure you want to delete ALL pain entries? This action cannot be undone.'
+      )
+    ) {
       clearAllData();
       setLiveMessage('All data cleared successfully.');
       setTimeout(() => setLiveMessage(null), 3000);
@@ -341,7 +363,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
 
   return (
     <div className={cn('dashboard-container space-y-8', className)} style={{ paddingTop: '12px' }}>
-      <DashboardMenu active={tab} onChange={(t) => setTab(t)} />
+      <DashboardMenu active={tab} onChange={t => setTab(t)} />
 
       <PageTransition type="slideUp" duration={450}>
         <section
@@ -367,16 +389,19 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                 Empathy-driven insights
               </span>
 
-              <h2 className={cn('text-3xl sm:text-4xl font-bold leading-tight', textGradients.primary)}>
+              <h2
+                className={cn(
+                  'text-3xl sm:text-4xl font-bold leading-tight',
+                  textGradients.primary
+                )}
+              >
                 {greeting}, let&apos;s review your progress
               </h2>
 
-              <p className="text-base text-muted-foreground max-w-xl">
-                {encouragement}
-              </p>
+              <p className="text-base text-muted-foreground max-w-xl">{encouragement}</p>
 
               <div className="flex flex-wrap gap-3">
-                {heroHighlights.map((highlight) => (
+                {heroHighlights.map(highlight => (
                   <div
                     key={highlight.label}
                     className={cn(
@@ -391,7 +416,9 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                       <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                         {highlight.label}
                       </span>
-                      <span className="text-lg font-semibold text-foreground">{highlight.value}</span>
+                      <span className="text-lg font-semibold text-foreground">
+                        {highlight.value}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -452,10 +479,13 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
       {entries.length > 0 && (
         <div>
           {/* Lazy-load PredictivePanel to keep initial bundle small */}
-          <React.Suspense fallback={<Loading text="Loading predictive insights..." /> }>
+          <React.Suspense fallback={<Loading text="Loading predictive insights..." />}>
             {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
             {/* @ts-ignore dynamic import typing */}
-            {React.createElement(React.lazy(() => import('../PredictivePanel')), { entries })}
+            {React.createElement(
+              React.lazy(() => import('../PredictivePanel')),
+              { entries }
+            )}
           </React.Suspense>
         </div>
       )}
@@ -471,7 +501,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
         </EnhancedCardHeader>
         <EnhancedCardContent>
           <StaggeredChildren className="grid grid-cols-1 gap-4 lg:grid-cols-3" delay={80}>
-            {aiInsights.map((insight) => {
+            {aiInsights.map(insight => {
               const tone = toneStyles[insight.tone] ?? toneStyles['observation'];
               const confidence = Math.round(clamp01(insight.confidence) * 100);
               return (
@@ -492,8 +522,12 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                         <h3 className="text-sm font-semibold text-foreground">{insight.title}</h3>
                         {insight.metricLabel && insight.metricValue && (
                           <p className="mt-1 text-xs font-medium text-muted-foreground">
-                            <span className="text-foreground font-semibold">{insight.metricValue}</span>
-                            <span className="ml-1 text-muted-foreground">{insight.metricLabel}</span>
+                            <span className="text-foreground font-semibold">
+                              {insight.metricValue}
+                            </span>
+                            <span className="ml-1 text-muted-foreground">
+                              {insight.metricLabel}
+                            </span>
                           </p>
                         )}
                       </div>
@@ -502,7 +536,9 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                       Confidence ~{confidence}%
                     </Badge>
                   </div>
-                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{insight.summary}</p>
+                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                    {insight.summary}
+                  </p>
                   {insight.detail && (
                     <p className="mt-2 text-xs text-muted-foreground/80">{insight.detail}</p>
                   )}
@@ -516,7 +552,10 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
       {tab === 'overview' ? (
         <>
           {/* Key Metrics Row */}
-          <StaggeredChildren className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5" delay={90}>
+          <StaggeredChildren
+            className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5"
+            delay={90}
+          >
             <div className="space-y-2 transition-all duration-200 hover:-translate-y-1">
               <MetricCard
                 title="Total Entries"
@@ -592,7 +631,8 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                 className="pointer-events-none absolute inset-y-0 right-0 w-40 opacity-25"
                 aria-hidden="true"
                 style={{
-                  background: 'radial-gradient(circle at 30% 20%, rgba(59,130,246,0.45), transparent 60%)',
+                  background:
+                    'radial-gradient(circle at 30% 20%, rgba(59,130,246,0.45), transparent 60%)',
                 }}
               />
               <EnhancedCardHeader icon={<BarChart3 className="h-5 w-5" />}>
@@ -602,15 +642,15 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                 {entries.length > 0 ? (
                   <Chart
                     data={{
-                      labels: metrics.painDistribution.map((d) => d.label),
+                      labels: metrics.painDistribution.map(d => d.label),
                       datasets: [
                         {
                           label: 'Entries',
-                          data: metrics.painDistribution.map((d) => d.data[0]),
-                          backgroundColor: metrics.painDistribution.map((d) =>
+                          data: metrics.painDistribution.map(d => d.data[0]),
+                          backgroundColor: metrics.painDistribution.map(d =>
                             d.data[0] === 0 ? 'rgba(148,163,184,0.15)' : 'rgba(59,130,246,0.35)'
                           ),
-                          borderColor: metrics.painDistribution.map((d) =>
+                          borderColor: metrics.painDistribution.map(d =>
                             d.data[0] === 0 ? 'rgba(148,163,184,0.3)' : 'rgba(59,130,246,0.7)'
                           ),
                           borderWidth: 2,
@@ -657,7 +697,12 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
               </EnhancedCardContent>
             </EnhancedCard>
 
-            <EnhancedCard variant="glass" hoverable animated className="border border-border/40 bg-card/70 backdrop-blur-xl">
+            <EnhancedCard
+              variant="glass"
+              hoverable
+              animated
+              className="border border-border/40 bg-card/70 backdrop-blur-xl"
+            >
               <EnhancedCardHeader icon={<TrendingUp className="h-5 w-5" />}>
                 <EnhancedCardTitle gradient>Weekly Trend</EnhancedCardTitle>
               </EnhancedCardHeader>
@@ -666,11 +711,11 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                   hasWeeklyData ? (
                     <Chart
                       data={{
-                        labels: metrics.weeklyTrend.map((d) => d.label),
+                        labels: metrics.weeklyTrend.map(d => d.label),
                         datasets: [
                           {
                             label: 'Average Pain',
-                            data: metrics.weeklyTrend.map((d) => d.avg as number | null),
+                            data: metrics.weeklyTrend.map(d => d.avg as number | null),
                             borderColor: colorVar('color-primary'),
                             backgroundColor: colorVarAlpha('color-primary', 0.18),
                             fill: true,
@@ -682,7 +727,7 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                           },
                           {
                             label: 'Entry Count',
-                            data: metrics.weeklyTrend.map((d) => d.count),
+                            data: metrics.weeklyTrend.map(d => d.count),
                             borderColor: colorVar('color-accent'),
                             backgroundColor: colorVarAlpha('color-accent', 0.12),
                             fill: true,
@@ -716,14 +761,22 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                             max: 10,
                             ticks: { stepSize: 1, color: 'rgba(148,163,184,0.9)' },
                             grid: { color: 'rgba(148,163,184,0.15)' },
-                            title: { display: true, text: 'Pain Level', color: 'rgba(148,163,184,0.9)' },
+                            title: {
+                              display: true,
+                              text: 'Pain Level',
+                              color: 'rgba(148,163,184,0.9)',
+                            },
                           },
                           y1: {
                             min: 0,
                             ticks: { stepSize: 1, color: 'rgba(148,163,184,0.9)' },
                             grid: { display: false },
                             position: 'right',
-                            title: { display: true, text: 'Entries', color: 'rgba(148,163,184,0.9)' },
+                            title: {
+                              display: true,
+                              text: 'Entries',
+                              color: 'rgba(148,163,184,0.9)',
+                            },
                           },
                           x: {
                             grid: { display: false },
@@ -735,7 +788,10 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                   ) : (
                     <div className="flex h-48 items-center justify-center text-muted-foreground">
                       <div className="text-center">
-                        <TrendingUp className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
+                        <TrendingUp
+                          className="mx-auto mb-2 h-12 w-12 opacity-50"
+                          aria-hidden="true"
+                        />
                         <p className="font-medium">{noTrendsHeadline}</p>
                         <p className="text-sm mt-1">{noTrendsSubtext}</p>
                       </div>
@@ -744,7 +800,10 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
                 ) : (
                   <div className="flex h-48 items-center justify-center text-muted-foreground">
                     <div className="text-center">
-                      <TrendingUp className="mx-auto mb-2 h-12 w-12 opacity-50" aria-hidden="true" />
+                      <TrendingUp
+                        className="mx-auto mb-2 h-12 w-12 opacity-50"
+                        aria-hidden="true"
+                      />
                       <p className="font-medium">{noTrendsHeadline}</p>
                       <p className="text-sm mt-1">{noTrendsSubtext}</p>
                     </div>
@@ -762,22 +821,38 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
             <EnhancedCardContent>
               {metrics.recentActivity.length > 0 ? (
                 <div className="space-y-4">
-                  {metrics.recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center justify-between p-3 rounded-lg border">
+                  {metrics.recentActivity.map(activity => (
+                    <div
+                      key={activity.id}
+                      className="flex items-center justify-between p-3 rounded-lg border"
+                    >
                       <div className="flex items-center space-x-3">
                         {getActivityIcon(activity.pain)}
                         <div>
                           <div className="flex items-center space-x-2">
                             <span className="font-medium">Pain Level: {activity.pain}/10</span>
-                            <span className={cn('px-2 py-1 rounded-full text-xs font-medium', getPainLevelColor(activity.pain))}>
-                              {activity.pain <= 2 ? 'Mild' : activity.pain <= 5 ? 'Moderate' : activity.pain <= 8 ? 'Severe' : 'Extreme'}
+                            <span
+                              className={cn(
+                                'px-2 py-1 rounded-full text-xs font-medium',
+                                getPainLevelColor(activity.pain)
+                              )}
+                            >
+                              {activity.pain <= 2
+                                ? 'Mild'
+                                : activity.pain <= 5
+                                  ? 'Moderate'
+                                  : activity.pain <= 8
+                                    ? 'Severe'
+                                    : 'Extreme'}
                             </span>
                           </div>
                           <div className="text-sm text-muted-foreground">
                             {new Date(activity.timestamp).toLocaleString()}
                           </div>
                           {activity.symptoms && activity.symptoms.length > 0 && (
-                            <div className="text-sm text-muted-foreground mt-1">Symptoms: {activity.symptoms.join(', ')}</div>
+                            <div className="text-sm text-muted-foreground mt-1">
+                              Symptoms: {activity.symptoms.join(', ')}
+                            </div>
                           )}
                         </div>
                       </div>

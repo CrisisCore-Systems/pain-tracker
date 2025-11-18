@@ -18,17 +18,17 @@ export function TraumaInformedDemo() {
       <div className="space-y-6">
         {/* Welcome section with trauma-informed messaging */}
         <WelcomeSection />
-        
+
         {/* Main pain entry form */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <TraumaInformedPainEntryForm 
-            onSubmit={(entry) => {
+          <TraumaInformedPainEntryForm
+            onSubmit={entry => {
               console.log('Pain entry submitted:', entry);
               // In demo mode, just log the submission
             }}
           />
         </div>
-        
+
         {/* Feature showcase */}
         <FeatureShowcase />
       </div>
@@ -38,25 +38,26 @@ export function TraumaInformedDemo() {
 
 function WelcomeSection() {
   const { preferences } = useTraumaInformed();
-  
+
   return (
     <div className="text-center space-y-4">
       <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
         Welcome to Your Pain Tracker
       </h1>
-      
+
       {preferences.gentleLanguage ? (
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          This is your safe space to track and understand your pain. 
-          You're in complete control of what you share and when. 
-          Take your time, and remember - you're taking an important step in your health journey.
+          This is your safe space to track and understand your pain. You're in complete control of
+          what you share and when. Take your time, and remember - you're taking an important step in
+          your health journey.
         </p>
       ) : (
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Track your pain levels, symptoms, and treatments to better understand your health patterns.
+          Track your pain levels, symptoms, and treatments to better understand your health
+          patterns.
         </p>
       )}
-      
+
       <ComfortPrompt />
     </div>
   );
@@ -64,34 +65,34 @@ function WelcomeSection() {
 
 function FeatureShowcase() {
   const { preferences } = useTraumaInformed();
-  
+
   const features = [
     {
       icon: <Brain className="w-8 h-8 text-purple-500" />,
-      title: "Cognitive Support",
-      description: "Memory aids, simplified interface, and gentle guidance reduce cognitive load",
-      enabled: preferences.showMemoryAids || preferences.simplifiedMode
+      title: 'Cognitive Support',
+      description: 'Memory aids, simplified interface, and gentle guidance reduce cognitive load',
+      enabled: preferences.showMemoryAids || preferences.simplifiedMode,
     },
     {
       icon: <Eye className="w-8 h-8 text-blue-500" />,
-      title: "Visual Accommodations", 
-      description: "Adjustable text size, contrast, and reduced motion for comfortable viewing",
-      enabled: preferences.fontSize !== 'medium' || preferences.contrast !== 'normal'
+      title: 'Visual Accommodations',
+      description: 'Adjustable text size, contrast, and reduced motion for comfortable viewing',
+      enabled: preferences.fontSize !== 'medium' || preferences.contrast !== 'normal',
     },
     {
       icon: <Heart className="w-8 h-8 text-red-500" />,
-      title: "Emotional Safety",
-      description: "Gentle language, comfort prompts, and trauma-informed interaction patterns",
-      enabled: preferences.gentleLanguage || preferences.showComfortPrompts
+      title: 'Emotional Safety',
+      description: 'Gentle language, comfort prompts, and trauma-informed interaction patterns',
+      enabled: preferences.gentleLanguage || preferences.showComfortPrompts,
     },
     {
       icon: <Shield className="w-8 h-8 text-green-500" />,
-      title: "Privacy & Control",
-      description: "You control what information to share and can take breaks anytime",
-      enabled: true
-    }
+      title: 'Privacy & Control',
+      description: 'You control what information to share and can take breaks anytime',
+      enabled: true,
+    },
   ];
-  
+
   if (preferences.simplifiedMode) {
     return (
       <ProgressiveDisclosure
@@ -106,7 +107,7 @@ function FeatureShowcase() {
       </ProgressiveDisclosure>
     );
   }
-  
+
   return (
     <Card>
       <CardHeader>
@@ -133,10 +134,11 @@ function FeatureGrid({ features }: { features: Feature[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {features.map((feature, index) => (
-        <div key={index} className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-          <div className="flex-shrink-0">
-            {feature.icon}
-          </div>
+        <div
+          key={index}
+          className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg"
+        >
+          <div className="flex-shrink-0">{feature.icon}</div>
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-2">
               <h3 className="font-medium text-gray-900 dark:text-gray-100">{feature.title}</h3>
@@ -163,13 +165,11 @@ export function IntegratedPainTracker() {
           text="Start by rating your current pain level, then add details about location and symptoms. Your information is saved automatically."
           type="tip"
         />
-        
+
         {/* Your existing pain tracker components would go here */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-xl font-semibold mb-4">Pain Entry</h2>
-          <TraumaInformedPainEntryForm 
-            onSubmit={(data) => console.log('Pain data:', data)}
-          />
+          <TraumaInformedPainEntryForm onSubmit={data => console.log('Pain data:', data)} />
         </div>
       </div>
     </TraumaInformedLayout>
@@ -189,7 +189,7 @@ export function SettingsIntegration() {
             Customize your experience to work best for your needs
           </p>
         </div>
-        
+
         <AccessibilitySettingsPanel />
       </div>
     </TraumaInformedLayout>

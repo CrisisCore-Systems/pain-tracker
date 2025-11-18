@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Brain, 
-  Check, 
-  X, 
-  Pause, 
-  Play, 
+import {
+  Brain,
+  Check,
+  X,
+  Pause,
+  Play,
   ChevronRight,
   ChevronLeft,
   Circle,
@@ -16,7 +16,6 @@ import {
   Zap,
   Settings,
   Volume2,
-  
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -89,14 +88,14 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
     estimatedTime: 2,
     cognitiveLoad: 1,
     steps: [
-  {
+      {
         id: 'pain-level',
         title: 'Pain Level',
         description: 'How much pain do you have right now?',
         type: 'input',
         required: true,
         cognitiveLoad: 1,
-        supportText: 'Use the slider or say a number from 1 to 10'
+        supportText: 'Use the slider or say a number from 1 to 10',
       },
       {
         id: 'pain-location',
@@ -106,7 +105,7 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
         required: true,
         cognitiveLoad: 2,
         alternatives: ['Point to your body', 'Describe in words'],
-        supportText: 'Choose the main area where you feel pain'
+        supportText: 'Choose the main area where you feel pain',
       },
       {
         id: 'save-entry',
@@ -115,8 +114,8 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
         type: 'confirmation',
         required: true,
         cognitiveLoad: 1,
-        supportText: 'This will save your pain entry to your records'
-      }
+        supportText: 'This will save your pain entry to your records',
+      },
     ],
     cognitiveSupport: {
       largeText: true,
@@ -125,8 +124,8 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
       progressIndicator: true,
       stepRepetition: true,
       pauseCapability: true,
-      autoSave: true
-    }
+      autoSave: true,
+    },
   },
   {
     id: 'medication-reminder',
@@ -143,7 +142,7 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
         type: 'choice',
         required: true,
         cognitiveLoad: 1,
-        supportText: 'Think about the last time you took your pills'
+        supportText: 'Think about the last time you took your pills',
       },
       {
         id: 'medication-time',
@@ -152,8 +151,8 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
         type: 'input',
         required: false,
         cognitiveLoad: 2,
-        supportText: 'If you remember, tell us when. If not, that\'s okay too.'
-      }
+        supportText: "If you remember, tell us when. If not, that's okay too.",
+      },
     ],
     cognitiveSupport: {
       largeText: true,
@@ -162,8 +161,8 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
       progressIndicator: true,
       stepRepetition: true,
       pauseCapability: true,
-      autoSave: true
-    }
+      autoSave: true,
+    },
   },
   {
     id: 'mood-check',
@@ -180,7 +179,7 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
         type: 'choice',
         required: true,
         cognitiveLoad: 1,
-        supportText: 'Pick the emoji that looks like how you feel inside'
+        supportText: 'Pick the emoji that looks like how you feel inside',
       },
       {
         id: 'energy-level',
@@ -189,7 +188,7 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
         type: 'input',
         required: true,
         cognitiveLoad: 2,
-        supportText: 'Think about how tired or energetic you feel'
+        supportText: 'Think about how tired or energetic you feel',
       },
       {
         id: 'notes',
@@ -198,8 +197,8 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
         type: 'input',
         required: false,
         cognitiveLoad: 3,
-        supportText: 'You can skip this if you want, or tell us more'
-      }
+        supportText: 'You can skip this if you want, or tell us more',
+      },
     ],
     cognitiveSupport: {
       largeText: true,
@@ -208,16 +207,16 @@ const simplifiedWorkflows: SimplifiedWorkflow[] = [
       progressIndicator: true,
       stepRepetition: true,
       pauseCapability: true,
-      autoSave: true
-    }
-  }
+      autoSave: true,
+    },
+  },
 ];
 
 export function SimplifiedWorkflowsForCognitiveImpairment({
   onWorkflowComplete,
   onCognitiveStateChange,
   initialCognitiveState = {},
-  className = ''
+  className = '',
 }: CognitiveWorkflowProps) {
   const [cognitiveState, setCognitiveState] = useState<CognitiveState>({
     impairmentLevel: 'mild',
@@ -225,7 +224,7 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
     fatigueLevel: 3,
     timeOfDay: 'morning',
     stressLevel: 3,
-    ...initialCognitiveState
+    ...initialCognitiveState,
   });
 
   const [selectedWorkflow, setSelectedWorkflow] = useState<SimplifiedWorkflow | null>(null);
@@ -238,33 +237,39 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
     voiceGuidance: true,
     autoAdvance: false,
     showProgress: true,
-    allowBacktrack: true
+    allowBacktrack: true,
   });
 
   const adaptInterfaceToState = useCallback((state: CognitiveState) => {
-     const adaptations: AdaptiveSettings = {
-       textSize: state.impairmentLevel === 'severe' ? 'extra-large' : 
-                 state.impairmentLevel === 'moderate' ? 'large' : 'normal',
-       voiceGuidance: state.affectedFunctions.includes('language') || state.affectedFunctions.includes('processing'),
-       autoAdvance: state.impairmentLevel === 'mild' && state.fatigueLevel < 5,
-       showProgress: state.affectedFunctions.includes('executive') || state.impairmentLevel !== 'mild',
-       allowBacktrack: state.affectedFunctions.includes('memory') || state.impairmentLevel !== 'mild'
-     };
+    const adaptations: AdaptiveSettings = {
+      textSize:
+        state.impairmentLevel === 'severe'
+          ? 'extra-large'
+          : state.impairmentLevel === 'moderate'
+            ? 'large'
+            : 'normal',
+      voiceGuidance:
+        state.affectedFunctions.includes('language') ||
+        state.affectedFunctions.includes('processing'),
+      autoAdvance: state.impairmentLevel === 'mild' && state.fatigueLevel < 5,
+      showProgress:
+        state.affectedFunctions.includes('executive') || state.impairmentLevel !== 'mild',
+      allowBacktrack:
+        state.affectedFunctions.includes('memory') || state.impairmentLevel !== 'mild',
+    };
 
-     setAdaptiveSettings(adaptations);
-   }, []);
+    setAdaptiveSettings(adaptations);
+  }, []);
 
   // Adapt interface based on cognitive state
   useEffect(() => {
     adaptInterfaceToState(cognitiveState);
   }, [cognitiveState, adaptInterfaceToState]);
 
-  
-
   const updateCognitiveState = (updates: Partial<CognitiveState>) => {
     const newState = { ...cognitiveState, ...updates };
     setCognitiveState(newState);
-    
+
     if (onCognitiveStateChange) {
       onCognitiveStateChange(newState);
     }
@@ -326,7 +331,9 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
   }
 
   return (
-    <div className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}>
+    <div
+      className={`bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-6 ${className}`}
+    >
       <div className="flex items-start space-x-3 mb-6">
         <div className="p-2 bg-purple-100 rounded-lg">
           <Brain className="w-6 h-6 text-purple-600" />
@@ -336,8 +343,8 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
             Simplified Workflows for Cognitive Support
           </h2>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Step-by-step guidance designed to reduce cognitive load and support you during 
-            moments of brain fog, fatigue, or difficulty concentrating.
+            Step-by-step guidance designed to reduce cognitive load and support you during moments
+            of brain fog, fatigue, or difficulty concentrating.
           </p>
         </div>
       </div>
@@ -368,15 +375,27 @@ export function SimplifiedWorkflowsForCognitiveImpairment({
 // Cognitive State Assessment Component
 function CognitiveStateAssessment({
   cognitiveState,
-  onStateChange
+  onStateChange,
 }: {
   cognitiveState: CognitiveState;
   onStateChange: (updates: Partial<CognitiveState>) => void;
 }) {
   const impairmentLevels = [
-    { level: 'mild' as CognitiveImpairmentLevel, label: 'Mild', description: 'Some difficulty concentrating' },
-    { level: 'moderate' as CognitiveImpairmentLevel, label: 'Moderate', description: 'Noticeable brain fog' },
-    { level: 'severe' as CognitiveImpairmentLevel, label: 'Severe', description: 'Significant cognitive challenges' }
+    {
+      level: 'mild' as CognitiveImpairmentLevel,
+      label: 'Mild',
+      description: 'Some difficulty concentrating',
+    },
+    {
+      level: 'moderate' as CognitiveImpairmentLevel,
+      label: 'Moderate',
+      description: 'Noticeable brain fog',
+    },
+    {
+      level: 'severe' as CognitiveImpairmentLevel,
+      label: 'Severe',
+      description: 'Significant cognitive challenges',
+    },
   ];
 
   const cognitiveAreas = [
@@ -384,14 +403,16 @@ function CognitiveStateAssessment({
     { function: 'memory' as CognitiveFunction, label: 'Memory', icon: Brain },
     { function: 'processing' as CognitiveFunction, label: 'Processing Speed', icon: Zap },
     { function: 'executive' as CognitiveFunction, label: 'Planning/Organization', icon: Settings },
-    { function: 'language' as CognitiveFunction, label: 'Language/Communication', icon: Volume2 }
+    { function: 'language' as CognitiveFunction, label: 'Language/Communication', icon: Volume2 },
   ];
 
   return (
     <div className="bg-purple-50 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
         <Brain className="w-5 h-5 text-purple-600" />
-        <h3 className="text-lg font-semibold text-purple-900">How are you feeling mentally today?</h3>
+        <h3 className="text-lg font-semibold text-purple-900">
+          How are you feeling mentally today?
+        </h3>
       </div>
 
       <div className="space-y-4">
@@ -401,7 +422,7 @@ function CognitiveStateAssessment({
             Overall cognitive clarity
           </label>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            {impairmentLevels.map((level) => {
+            {impairmentLevels.map(level => {
               const isSelected = cognitiveState.impairmentLevel === level.level;
               return (
                 <TouchOptimizedButton
@@ -409,7 +430,9 @@ function CognitiveStateAssessment({
                   variant="secondary"
                   onClick={() => onStateChange({ impairmentLevel: level.level })}
                   className={`p-3 text-left border-2 rounded-lg transition-all ${
-                    isSelected ? 'bg-purple-100 border-purple-300 text-purple-800' : 'border-gray-200 hover:border-purple-200'
+                    isSelected
+                      ? 'bg-purple-100 border-purple-300 text-purple-800'
+                      : 'border-gray-200 hover:border-purple-200'
                   }`}
                 >
                   <div className="font-medium">{level.label}</div>
@@ -427,10 +450,10 @@ function CognitiveStateAssessment({
             Areas that feel difficult today (select any that apply)
           </label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {cognitiveAreas.map((area) => {
+            {cognitiveAreas.map(area => {
               const Icon = area.icon;
               const isSelected = cognitiveState.affectedFunctions.includes(area.function);
-              
+
               return (
                 <TouchOptimizedButton
                   key={area.function}
@@ -442,7 +465,9 @@ function CognitiveStateAssessment({
                     onStateChange({ affectedFunctions: newFunctions });
                   }}
                   className={`p-3 text-left border rounded-lg transition-all ${
-                    isSelected ? 'bg-purple-100 border-purple-300 text-purple-800' : 'border-gray-200 hover:border-purple-200'
+                    isSelected
+                      ? 'bg-purple-100 border-purple-300 text-purple-800'
+                      : 'border-gray-200 hover:border-purple-200'
                   }`}
                 >
                   <div className="flex items-center space-x-2">
@@ -467,11 +492,11 @@ function CognitiveStateAssessment({
               min="1"
               max="10"
               value={cognitiveState.fatigueLevel}
-              onChange={(e) => onStateChange({ fatigueLevel: parseInt(e.target.value) })}
+              onChange={e => onStateChange({ fatigueLevel: parseInt(e.target.value) })}
               className="w-full"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-purple-700 mb-2">
               Stress level: {cognitiveState.stressLevel}/10
@@ -481,7 +506,7 @@ function CognitiveStateAssessment({
               min="1"
               max="10"
               value={cognitiveState.stressLevel}
-              onChange={(e) => onStateChange({ stressLevel: parseInt(e.target.value) })}
+              onChange={e => onStateChange({ stressLevel: parseInt(e.target.value) })}
               className="w-full"
             />
           </div>
@@ -495,7 +520,7 @@ function CognitiveStateAssessment({
 function WorkflowSelection({
   workflows,
   cognitiveState,
-  onWorkflowStart
+  onWorkflowStart,
 }: {
   workflows: SimplifiedWorkflow[];
   cognitiveState: CognitiveState;
@@ -503,7 +528,18 @@ function WorkflowSelection({
 }) {
   // Filter and sort workflows based on cognitive state
   const suitableWorkflows = workflows
-    .filter(w => w.cognitiveLoad <= (5 - Math.floor(cognitiveState.impairmentLevel === 'severe' ? 3 : cognitiveState.impairmentLevel === 'moderate' ? 2 : 1)))
+    .filter(
+      w =>
+        w.cognitiveLoad <=
+        5 -
+          Math.floor(
+            cognitiveState.impairmentLevel === 'severe'
+              ? 3
+              : cognitiveState.impairmentLevel === 'moderate'
+                ? 2
+                : 1
+          )
+    )
     .sort((a, b) => a.cognitiveLoad - b.cognitiveLoad);
 
   const getCognitiveLoadColor = (load: number) => {
@@ -529,21 +565,34 @@ function WorkflowSelection({
     <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-6">
       <div className="flex items-center space-x-2 mb-4">
         <Target className="w-5 h-5 text-blue-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Choose a Simple Task</h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400">({suitableWorkflows.length} recommended for you)</span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Choose a Simple Task
+        </h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          ({suitableWorkflows.length} recommended for you)
+        </span>
       </div>
 
       <div className="space-y-3">
-        {suitableWorkflows.map((workflow) => {
+        {suitableWorkflows.map(workflow => {
           const adjustedDifficulty = getEstimatedDifficulty(workflow);
-          
+
           return (
-            <div key={workflow.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-300 transition-all">
+            <div
+              key={workflow.id}
+              className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-300 transition-all"
+            >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-lg">{workflow.name}</h4>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{workflow.description}</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Purpose: {workflow.purpose}</p>
+                  <h4 className="font-semibold text-gray-900 dark:text-gray-100 text-lg">
+                    {workflow.name}
+                  </h4>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
+                    {workflow.description}
+                  </p>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
+                    Purpose: {workflow.purpose}
+                  </p>
                 </div>
                 <TouchOptimizedButton
                   variant="primary"
@@ -558,16 +607,26 @@ function WorkflowSelection({
               <div className="flex flex-wrap items-center gap-3 text-sm">
                 <div className="flex items-center space-x-1">
                   <Clock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-gray-600 dark:text-gray-400">~{workflow.estimatedTime} min</span>
-                </div>
-                
-                <div className="flex items-center space-x-1">
-                  <Circle className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                  <span className="text-gray-600 dark:text-gray-400">{workflow.steps.length} steps</span>
+                  <span className="text-gray-600 dark:text-gray-400">
+                    ~{workflow.estimatedTime} min
+                  </span>
                 </div>
 
-                <span className={`px-2 py-1 text-xs rounded-full ${getCognitiveLoadColor(adjustedDifficulty)}`}>
-                  {adjustedDifficulty <= 2 ? 'Easy' : adjustedDifficulty <= 3 ? 'Medium' : 'Challenging'}
+                <div className="flex items-center space-x-1">
+                  <Circle className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {workflow.steps.length} steps
+                  </span>
+                </div>
+
+                <span
+                  className={`px-2 py-1 text-xs rounded-full ${getCognitiveLoadColor(adjustedDifficulty)}`}
+                >
+                  {adjustedDifficulty <= 2
+                    ? 'Easy'
+                    : adjustedDifficulty <= 3
+                      ? 'Medium'
+                      : 'Challenging'}
                 </span>
 
                 {workflow.cognitiveSupport.audioSupport && (
@@ -590,7 +649,9 @@ function WorkflowSelection({
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <Brain className="w-12 h-12 mx-auto mb-3 text-gray-400 dark:text-gray-500" />
             <p>No workflows are recommended right now.</p>
-            <p className="text-sm mt-1">Consider adjusting your cognitive state assessment or taking a break.</p>
+            <p className="text-sm mt-1">
+              Consider adjusting your cognitive state assessment or taking a break.
+            </p>
           </div>
         )}
       </div>
@@ -613,7 +674,7 @@ function WorkflowExecutionInterface({
   onPause,
   onShowHelp,
   onExit,
-  className
+  className,
 }: {
   workflow: SimplifiedWorkflow;
   currentStepIndex: number;
@@ -637,7 +698,7 @@ function WorkflowExecutionInterface({
   const sizeMap: Record<AdaptiveSettings['textSize'], string> = {
     normal: 'text-base',
     large: 'text-lg',
-    'extra-large': 'text-xl'
+    'extra-large': 'text-xl',
   };
   const textSizeClass = sizeMap[adaptiveSettings.textSize] ?? 'text-base';
 
@@ -661,9 +722,11 @@ function WorkflowExecutionInterface({
                         <div
                           key={index}
                           className={`w-2 h-2 rounded-full ${
-                            index < currentStepIndex ? 'bg-green-500' :
-                            index === currentStepIndex ? 'bg-purple-500' :
-                            'bg-gray-300'
+                            index < currentStepIndex
+                              ? 'bg-green-500'
+                              : index === currentStepIndex
+                                ? 'bg-purple-500'
+                                : 'bg-gray-300'
                           }`}
                         />
                       ))}
@@ -672,22 +735,14 @@ function WorkflowExecutionInterface({
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <TouchOptimizedButton
-                variant="secondary"
-                onClick={onShowHelp}
-                className="px-3 py-2"
-              >
+              <TouchOptimizedButton variant="secondary" onClick={onShowHelp} className="px-3 py-2">
                 <HelpCircle className="w-4 h-4 mr-1" />
                 Help
               </TouchOptimizedButton>
-              
-              <TouchOptimizedButton
-                variant="secondary"
-                onClick={onPause}
-                className="px-3 py-2"
-              >
+
+              <TouchOptimizedButton variant="secondary" onClick={onPause} className="px-3 py-2">
                 {isPaused ? (
                   <>
                     <Play className="w-4 h-4 mr-1" />
@@ -700,12 +755,8 @@ function WorkflowExecutionInterface({
                   </>
                 )}
               </TouchOptimizedButton>
-              
-              <TouchOptimizedButton
-                variant="secondary"
-                onClick={onExit}
-                className="px-3 py-2"
-              >
+
+              <TouchOptimizedButton variant="secondary" onClick={onExit} className="px-3 py-2">
                 <X className="w-4 h-4 mr-1" />
                 Exit
               </TouchOptimizedButton>
@@ -731,7 +782,8 @@ function WorkflowExecutionInterface({
               <span className="font-medium">Workflow Paused</span>
             </div>
             <p className="text-sm text-blue-700 mt-1">
-              Take your time. Your progress is automatically saved. Click Resume when you're ready to continue.
+              Take your time. Your progress is automatically saved. Click Resume when you're ready
+              to continue.
             </p>
           </div>
         )}
@@ -796,7 +848,7 @@ function WorkflowStepContent({
   workflowResults,
   cognitiveState,
   onStepResult,
-  textSizeClass
+  textSizeClass,
 }: {
   step: WorkflowStep;
   workflowResults: Record<string, unknown>;
@@ -815,12 +867,12 @@ function WorkflowStepContent({
     <div className="bg-white rounded-lg border border-gray-200 dark:border-gray-700 p-6">
       {/* Step Header */}
       <div className="mb-6">
-        <h2 className={`font-semibold text-gray-900 dark:text-gray-100 mb-2 ${textSizeClass} md:text-2xl`}>
+        <h2
+          className={`font-semibold text-gray-900 dark:text-gray-100 mb-2 ${textSizeClass} md:text-2xl`}
+        >
           {step.title}
         </h2>
-        <p className={`text-gray-600 dark:text-gray-400 ${textSizeClass}`}>
-          {step.description}
-        </p>
+        <p className={`text-gray-600 dark:text-gray-400 ${textSizeClass}`}>{step.description}</p>
         {step.supportText && (
           <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
             <div className="flex items-start space-x-2">
@@ -862,21 +914,21 @@ function WorkflowStepContent({
           />
         )}
 
-        {step.type === 'info' && (
-          <StepInfoDisplay
-            step={step}
-            textSizeClass={textSizeClass}
-          />
-        )}
+        {step.type === 'info' && <StepInfoDisplay step={step} textSizeClass={textSizeClass} />}
       </div>
 
       {/* Alternative Methods */}
       {step.alternatives && step.alternatives.length > 0 && (
         <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Alternative ways to complete this step:</h4>
+          <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">
+            Alternative ways to complete this step:
+          </h4>
           <ul className="space-y-1">
             {step.alternatives.map((alt, index) => (
-              <li key={index} className="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-2">
+              <li
+                key={index}
+                className="text-sm text-gray-600 dark:text-gray-400 flex items-center space-x-2"
+              >
                 <Circle className="w-2 h-2 fill-current" />
                 <span>{alt}</span>
               </li>
@@ -894,7 +946,7 @@ function StepInputField({
   value,
   onChange,
   cognitiveState: _cognitiveState,
-  textSizeClass
+  textSizeClass,
 }: {
   step: WorkflowStep;
   value: unknown;
@@ -909,14 +961,25 @@ function StepInputField({
       <div className="space-y-4">
         <div className="text-center">
           <div className={`text-4xl font-bold text-purple-600 mb-4`}>
-            {(typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)) || 5}/10
+            {(typeof value === 'number'
+              ? value
+              : typeof value === 'string'
+                ? parseInt(value, 10)
+                : 5) || 5}
+            /10
           </div>
           <input
             type="range"
             min="1"
             max="10"
-            value={typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)}
-            onChange={(e) => onChange(parseInt(e.target.value))}
+            value={
+              typeof value === 'number'
+                ? value
+                : typeof value === 'string'
+                  ? parseInt(value, 10)
+                  : 5
+            }
+            onChange={e => onChange(parseInt(e.target.value))}
             className="w-full h-6 bg-purple-200 rounded-lg appearance-none cursor-pointer"
           />
           <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -933,14 +996,25 @@ function StepInputField({
       <div className="space-y-4">
         <div className="text-center">
           <div className={`text-3xl font-bold text-green-600 mb-4`}>
-            {(typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)) || 5}/10
+            {(typeof value === 'number'
+              ? value
+              : typeof value === 'string'
+                ? parseInt(value, 10)
+                : 5) || 5}
+            /10
           </div>
           <input
             type="range"
             min="1"
             max="10"
-            value={typeof value === 'number' ? value : (typeof value === 'string' ? parseInt(value, 10) : 5)}
-            onChange={(e) => onChange(parseInt(e.target.value))}
+            value={
+              typeof value === 'number'
+                ? value
+                : typeof value === 'string'
+                  ? parseInt(value, 10)
+                  : 5
+            }
+            onChange={e => onChange(parseInt(e.target.value))}
             className="w-full h-6 bg-green-200 rounded-lg appearance-none cursor-pointer"
           />
           <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mt-2">
@@ -954,8 +1028,8 @@ function StepInputField({
 
   return (
     <textarea
-  value={typeof value === 'string' ? value : ''}
-      onChange={(e) => onChange(e.target.value)}
+      value={typeof value === 'string' ? value : ''}
+      onChange={e => onChange(e.target.value)}
       placeholder="Type your response here..."
       className={`w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg ${textSizeClass}`}
       rows={3}
@@ -969,7 +1043,7 @@ function StepChoiceField({
   value,
   onChange,
   cognitiveState: _cognitiveState,
-  textSizeClass
+  textSizeClass,
 }: {
   step: WorkflowStep;
   value: unknown;
@@ -980,17 +1054,31 @@ function StepChoiceField({
   // intentionally unused in current UI; reserved for future adaptive inputs
   void _cognitiveState;
   if (step.id === 'pain-location') {
-    const bodyParts = ['Head', 'Neck', 'Shoulders', 'Back', 'Chest', 'Arms', 'Hands', 'Abdomen', 'Hips', 'Legs', 'Feet'];
-    
+    const bodyParts = [
+      'Head',
+      'Neck',
+      'Shoulders',
+      'Back',
+      'Chest',
+      'Arms',
+      'Hands',
+      'Abdomen',
+      'Hips',
+      'Legs',
+      'Feet',
+    ];
+
     return (
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {bodyParts.map((part) => (
+        {bodyParts.map(part => (
           <TouchOptimizedButton
             key={part}
             variant="secondary"
             onClick={() => onChange(part)}
             className={`p-4 text-center border-2 rounded-lg transition-all ${
-              value === part ? 'bg-purple-100 border-purple-300 text-purple-800' : 'border-gray-200 hover:border-purple-200'
+              value === part
+                ? 'bg-purple-100 border-purple-300 text-purple-800'
+                : 'border-gray-200 hover:border-purple-200'
             } ${textSizeClass}`}
           >
             {part}
@@ -1008,18 +1096,22 @@ function StepChoiceField({
           variant="secondary"
           onClick={() => onChange(true)}
           className={`p-6 text-center border-2 rounded-lg transition-all ${
-            value === true ? 'bg-green-100 border-green-300 text-green-800' : 'border-gray-200 hover:border-green-200'
+            value === true
+              ? 'bg-green-100 border-green-300 text-green-800'
+              : 'border-gray-200 hover:border-green-200'
           } ${textSizeClass}`}
         >
           <CheckCircle className="w-8 h-8 mx-auto mb-2" />
           Yes, I took my medication
         </TouchOptimizedButton>
-        
+
         <TouchOptimizedButton
           variant="secondary"
           onClick={() => onChange(false)}
           className={`p-6 text-center border-2 rounded-lg transition-all ${
-            value === false ? 'bg-red-100 border-red-300 text-red-800' : 'border-gray-200 hover:border-red-200'
+            value === false
+              ? 'bg-red-100 border-red-300 text-red-800'
+              : 'border-gray-200 hover:border-red-200'
           } ${textSizeClass}`}
         >
           <X className="w-8 h-8 mx-auto mb-2" />
@@ -1035,18 +1127,20 @@ function StepChoiceField({
       { emoji: '😔', label: 'Sad', value: 2 },
       { emoji: '😐', label: 'Okay', value: 3 },
       { emoji: '🙂', label: 'Good', value: 4 },
-      { emoji: '😊', label: 'Great', value: 5 }
+      { emoji: '😊', label: 'Great', value: 5 },
     ];
 
     return (
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {moods.map((mood) => (
+        {moods.map(mood => (
           <TouchOptimizedButton
             key={mood.value}
             variant="secondary"
             onClick={() => onChange(mood.value)}
             className={`p-4 text-center border-2 rounded-lg transition-all ${
-              value === mood.value ? 'bg-blue-100 border-blue-300 text-blue-800' : 'border-gray-200 hover:border-blue-200'
+              value === mood.value
+                ? 'bg-blue-100 border-blue-300 text-blue-800'
+                : 'border-gray-200 hover:border-blue-200'
             }`}
           >
             <div className="text-4xl mb-2">{mood.emoji}</div>
@@ -1065,7 +1159,7 @@ function StepConfirmationField({
   step: _step,
   value: _value,
   onChange,
-  textSizeClass
+  textSizeClass,
 }: {
   step: WorkflowStep;
   value: unknown;
@@ -1073,13 +1167,14 @@ function StepConfirmationField({
   textSizeClass: string;
 }) {
   // mark intentionally unused
-  void _step; void _value;
+  void _step;
+  void _value;
   return (
     <div className="text-center space-y-4">
       <div className={`text-gray-700 dark:text-gray-300 ${textSizeClass}`}>
         Ready to save your information?
       </div>
-      
+
       <TouchOptimizedButton
         variant="primary"
         onClick={() => onChange(true)}
@@ -1093,13 +1188,7 @@ function StepConfirmationField({
 }
 
 // Step Info Display Component
-function StepInfoDisplay({
-  step,
-  textSizeClass
-}: {
-  step: WorkflowStep;
-  textSizeClass: string;
-}) {
+function StepInfoDisplay({ step, textSizeClass }: { step: WorkflowStep; textSizeClass: string }) {
   return (
     <div className={`text-gray-700 dark:text-gray-300 ${textSizeClass} leading-relaxed`}>
       {step.description}
@@ -1112,7 +1201,7 @@ function WorkflowHelpPanel({
   workflow: _workflow,
   currentStep,
   cognitiveState,
-  onClose
+  onClose,
 }: {
   workflow: SimplifiedWorkflow;
   currentStep: WorkflowStep;
@@ -1127,11 +1216,7 @@ function WorkflowHelpPanel({
           <HelpCircle className="w-5 h-5 text-blue-600" />
           <h3 className="font-semibold text-blue-900">Help & Guidance</h3>
         </div>
-        <TouchOptimizedButton
-          variant="secondary"
-          onClick={onClose}
-          className="px-2 py-1"
-        >
+        <TouchOptimizedButton variant="secondary" onClick={onClose} className="px-2 py-1">
           <X className="w-4 h-4" />
         </TouchOptimizedButton>
       </div>
@@ -1140,7 +1225,7 @@ function WorkflowHelpPanel({
         <div>
           <strong>Current Step:</strong> {currentStep.title}
         </div>
-        
+
         {currentStep.supportText && (
           <div>
             <strong>Guidance:</strong> {currentStep.supportText}
@@ -1179,7 +1264,7 @@ function WorkflowHelpPanel({
 function AdaptiveSettingsPanel({
   settings,
   onSettingsChange,
-  cognitiveState
+  cognitiveState,
 }: {
   settings: AdaptiveSettings;
   onSettingsChange: (settings: AdaptiveSettings) => void;
@@ -1189,16 +1274,25 @@ function AdaptiveSettingsPanel({
     <div className="bg-white border border-gray-200 dark:border-gray-700 rounded-lg p-4">
       <div className="flex items-center space-x-2 mb-4">
         <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Adaptive Support Settings</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Adaptive Support Settings
+        </h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Text Size</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Text Size
+            </label>
             <select
               value={settings.textSize}
-              onChange={(e) => onSettingsChange({ ...settings, textSize: e.target.value as AdaptiveSettings['textSize'] })}
+              onChange={e =>
+                onSettingsChange({
+                  ...settings,
+                  textSize: e.target.value as AdaptiveSettings['textSize'],
+                })
+              }
               className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded"
             >
               <option value="normal">Normal</option>
@@ -1208,10 +1302,14 @@ function AdaptiveSettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Voice Guidance</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Voice Guidance
+            </label>
             <TouchOptimizedButton
-              variant={settings.voiceGuidance ? "primary" : "secondary"}
-              onClick={() => onSettingsChange({ ...settings, voiceGuidance: !settings.voiceGuidance })}
+              variant={settings.voiceGuidance ? 'primary' : 'secondary'}
+              onClick={() =>
+                onSettingsChange({ ...settings, voiceGuidance: !settings.voiceGuidance })
+              }
               className="px-3 py-1"
             >
               {settings.voiceGuidance ? 'On' : 'Off'}
@@ -1219,10 +1317,14 @@ function AdaptiveSettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Show Progress</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Show Progress
+            </label>
             <TouchOptimizedButton
-              variant={settings.showProgress ? "primary" : "secondary"}
-              onClick={() => onSettingsChange({ ...settings, showProgress: !settings.showProgress })}
+              variant={settings.showProgress ? 'primary' : 'secondary'}
+              onClick={() =>
+                onSettingsChange({ ...settings, showProgress: !settings.showProgress })
+              }
               className="px-3 py-1"
             >
               {settings.showProgress ? 'On' : 'Off'}
@@ -1232,9 +1334,11 @@ function AdaptiveSettingsPanel({
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Auto Advance</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Auto Advance
+            </label>
             <TouchOptimizedButton
-              variant={settings.autoAdvance ? "primary" : "secondary"}
+              variant={settings.autoAdvance ? 'primary' : 'secondary'}
               onClick={() => onSettingsChange({ ...settings, autoAdvance: !settings.autoAdvance })}
               className="px-3 py-1"
             >
@@ -1243,10 +1347,14 @@ function AdaptiveSettingsPanel({
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Allow Going Back</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Allow Going Back
+            </label>
             <TouchOptimizedButton
-              variant={settings.allowBacktrack ? "primary" : "secondary"}
-              onClick={() => onSettingsChange({ ...settings, allowBacktrack: !settings.allowBacktrack })}
+              variant={settings.allowBacktrack ? 'primary' : 'secondary'}
+              onClick={() =>
+                onSettingsChange({ ...settings, allowBacktrack: !settings.allowBacktrack })
+              }
               className="px-3 py-1"
             >
               {settings.allowBacktrack ? 'On' : 'Off'}
@@ -1260,8 +1368,10 @@ function AdaptiveSettingsPanel({
           <div className="flex items-start space-x-2">
             <Brain className="w-4 h-4 text-purple-600 mt-0.5" />
             <div className="text-sm text-purple-800">
-              <strong>Cognitive Support Active:</strong> Settings have been optimized for your current 
-              {cognitiveState.impairmentLevel === 'severe' ? ' severe' : ' moderate'} cognitive challenges.
+              <strong>Cognitive Support Active:</strong> Settings have been optimized for your
+              current
+              {cognitiveState.impairmentLevel === 'severe' ? ' severe' : ' moderate'} cognitive
+              challenges.
             </div>
           </div>
         </div>

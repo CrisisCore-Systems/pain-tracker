@@ -2,7 +2,7 @@ import {
   Card as DSCard,
   CardContent as DSCardContent,
   CardHeader as DSCardHeader,
-  CardTitle as DSCardTitle
+  CardTitle as DSCardTitle,
 } from '../../design-system/components/Card';
 
 export const Card = DSCard;

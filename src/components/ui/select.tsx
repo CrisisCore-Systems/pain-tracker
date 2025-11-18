@@ -15,12 +15,18 @@ export interface SelectTriggerProps extends React.SelectHTMLAttributes<HTMLSelec
   onValueChange?: (value: string) => void;
 }
 
-export const SelectTrigger: React.FC<SelectTriggerProps> = ({ value, onValueChange, children, className = '', ...props }) => {
+export const SelectTrigger: React.FC<SelectTriggerProps> = ({
+  value,
+  onValueChange,
+  children,
+  className = '',
+  ...props
+}) => {
   return (
     <select
       className={`mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm ${className}`}
       value={value}
-      onChange={(e) => onValueChange?.(e.target.value)}
+      onChange={e => onValueChange?.(e.target.value)}
       {...props}
     >
       {children}
@@ -28,18 +34,23 @@ export const SelectTrigger: React.FC<SelectTriggerProps> = ({ value, onValueChan
   );
 };
 
-export const SelectContent: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>;
+export const SelectContent: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <>{children}</>
+);
 
 export interface SelectItemProps extends React.OptionHTMLAttributes<HTMLOptionElement> {
   value: string;
 }
 
 export const SelectItem: React.FC<SelectItemProps> = ({ value, children, ...props }) => (
-  <option value={value} {...props}>{children}</option>
+  <option value={value} {...props}>
+    {children}
+  </option>
 );
 
-export const SelectValue: React.FC<{ placeholder?: string; value?: string }> = ({ placeholder, value }) => (
-  <span data-select-value>{value ?? placeholder ?? ''}</span>
-);
+export const SelectValue: React.FC<{ placeholder?: string; value?: string }> = ({
+  placeholder,
+  value,
+}) => <span data-select-value>{value ?? placeholder ?? ''}</span>;
 
 export default Select;

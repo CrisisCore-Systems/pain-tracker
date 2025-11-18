@@ -48,7 +48,7 @@ interface PDFMetadata {
 
 /**
  * Clinical PDF Exporter Service
- * 
+ *
  * Generates comprehensive clinical reports with:
  * - WorkSafe BC compliance formatting
  * - Embedded charts and visualizations
@@ -58,18 +58,15 @@ interface PDFMetadata {
  */
 export class ClinicalPDFExporter {
   private doc: jsPDFType | null = null;
-  
+
   /**
    * Dynamically import jsPDF and autoTable
    */
   private async initializePDF(): Promise<jsPDFType> {
     if (this.doc) return this.doc;
-    
-    const [{ default: jsPDF }, _] = await Promise.all([
-      import('jspdf'),
-      import('jspdf-autotable')
-    ]);
-    
+
+    const [{ default: jsPDF }, _] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
+
     this.doc = new jsPDF();
     return this.doc;
   }
@@ -92,45 +89,45 @@ export class ClinicalPDFExporter {
   async generateReport(options: PDFExportOptions): Promise<Blob> {
     // Dynamically load jsPDF
     await this.initializePDF();
-    
+
     this.pageWidth = this.doc!.internal.pageSize.getWidth();
     this.pageHeight = this.doc!.internal.pageSize.getHeight();
-    
+
     this.setupMetadata(options);
-    
+
     // Header and patient info
     this.addHeader(options.wcbCompliant || false);
     this.addPatientInformation(options.patientInfo);
-    
+
     // Executive summary
     this.addExecutiveSummary(options.entries, options.moodEntries);
-    
+
     // Charts and visualizations
     if (options.charts) {
       await this.addCharts(options.charts);
     }
-    
+
     // Pain entry table
     this.addPainEntryTable(options.entries, options.dateRange);
-    
+
     // Narrative timeline
     if (options.includeNarrative) {
       this.addNarrativeTimeline(options.entries, options.moodEntries);
     }
-    
+
     // Clinical notes
     if (options.clinicalNotes) {
       this.addClinicalNotes(options.clinicalNotes);
     }
-    
+
     // WorkSafe BC specific sections
     if (options.wcbCompliant) {
       this.addWCBComplianceSections(options.patientInfo);
     }
-    
+
     // Footer on all pages
     this.addFooters();
-    
+
     return this.doc!.output('blob');
   }
 
@@ -158,14 +155,14 @@ export class ClinicalPDFExporter {
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Clinical Pain Management Report', this.margin, this.currentY);
-    
+
     // Confidentiality notice
     this.currentY += 10;
     this.doc!.setFontSize(9);
     this.doc!.setTextColor(200, 0, 0);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('CONFIDENTIAL MEDICAL RECORD', this.margin, this.currentY);
-    
+
     this.currentY += 5;
     this.doc!.setFontSize(8);
     this.doc!.setTextColor(this.secondaryColor);
@@ -175,14 +172,14 @@ export class ClinicalPDFExporter {
       this.margin,
       this.currentY
     );
-    
+
     if (wcbCompliant) {
       this.currentY += 4;
       this.doc!.setTextColor(this.primaryColor);
       this.doc!.setFont('helvetica', 'bold');
       this.doc!.text('WorkSafe BC Claim Documentation', this.margin, this.currentY);
     }
-    
+
     // Date generated
     this.doc!.setFontSize(9);
     this.doc!.setTextColor(this.secondaryColor);
@@ -193,13 +190,13 @@ export class ClinicalPDFExporter {
       20,
       { align: 'right' }
     );
-    
+
     // Divider line
     this.currentY += 8;
     this.doc!.setDrawColor(this.secondaryColor);
     this.doc!.setLineWidth(0.5);
     this.doc!.line(this.margin, this.currentY, this.pageWidth - this.margin, this.currentY);
-    
+
     this.currentY += 10;
   }
 
@@ -210,17 +207,17 @@ export class ClinicalPDFExporter {
     if (!info) return;
 
     this.checkPageBreak(40);
-    
+
     this.doc!.setFontSize(14);
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Patient Information', this.margin, this.currentY);
-    
+
     this.currentY += 8;
     this.doc!.setFontSize(10);
     this.doc!.setTextColor(0, 0, 0);
     this.doc!.setFont('helvetica', 'normal');
-    
+
     const fields: Array<[string, string | undefined]> = [
       ['Name:', info.name],
       ['Date of Birth:', info.dateOfBirth],
@@ -230,7 +227,7 @@ export class ClinicalPDFExporter {
       ['Physician:', info.physicianName],
       ['Physician Contact:', info.physicianPhone],
     ];
-    
+
     fields.forEach(([label, value]) => {
       if (value) {
         this.doc!.setFont('helvetica', 'bold');
@@ -240,7 +237,7 @@ export class ClinicalPDFExporter {
         this.currentY += this.lineHeight;
       }
     });
-    
+
     this.currentY += 5;
   }
 
@@ -249,31 +246,32 @@ export class ClinicalPDFExporter {
    */
   private addExecutiveSummary(entries: PainEntry[], moodEntries?: MoodEntry[]): void {
     this.checkPageBreak(60);
-    
+
     this.doc!.setFontSize(14);
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Executive Summary', this.margin, this.currentY);
-    
+
     this.currentY += 8;
-    
+
     // Calculate statistics
     const avgPain = entries.reduce((sum, e) => sum + getPainIntensity(e), 0) / entries.length;
     const maxPain = Math.max(...entries.map(getPainIntensity));
     const minPain = Math.min(...entries.map(getPainIntensity));
     const totalEntries = entries.length;
-    
-    const dateRange = entries.length > 0 
-      ? `${new Date(entries[0].timestamp).toLocaleDateString()} to ${new Date(entries[entries.length - 1].timestamp).toLocaleDateString()}`
-      : 'No data';
-    
+
+    const dateRange =
+      entries.length > 0
+        ? `${new Date(entries[0].timestamp).toLocaleDateString()} to ${new Date(entries[entries.length - 1].timestamp).toLocaleDateString()}`
+        : 'No data';
+
     // Summary box
     this.doc!.setFillColor(245, 247, 250);
     this.doc!.rect(this.margin, this.currentY - 5, this.pageWidth - 2 * this.margin, 45, 'F');
-    
+
     this.doc!.setFontSize(10);
     this.doc!.setTextColor(0, 0, 0);
-    
+
     const summaryData = [
       ['Reporting Period:', dateRange],
       ['Total Pain Entries:', `${totalEntries} recordings`],
@@ -281,7 +279,7 @@ export class ClinicalPDFExporter {
       ['Pain Range:', `${minPain} - ${maxPain}/10`],
       ['Mood Entries:', moodEntries ? `${moodEntries.length} recordings` : 'N/A'],
     ];
-    
+
     summaryData.forEach(([label, value]) => {
       this.doc!.setFont('helvetica', 'bold');
       this.doc!.text(label, this.margin + 5, this.currentY);
@@ -289,7 +287,7 @@ export class ClinicalPDFExporter {
       this.doc!.text(value, this.margin + 55, this.currentY);
       this.currentY += this.lineHeight;
     });
-    
+
     this.currentY += 8;
   }
 
@@ -298,41 +296,63 @@ export class ClinicalPDFExporter {
    */
   private async addCharts(charts: ChartDataURL): Promise<void> {
     this.checkPageBreak(120);
-    
+
     this.doc!.setFontSize(14);
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Pain Trend Analysis', this.margin, this.currentY);
-    
+
     this.currentY += 10;
-    
+
     const chartWidth = this.pageWidth - 2 * this.margin;
     const chartHeight = 60;
-    
+
     if (charts.painTrend) {
       try {
-        this.doc!.addImage(charts.painTrend, 'PNG', this.margin, this.currentY, chartWidth, chartHeight);
+        this.doc!.addImage(
+          charts.painTrend,
+          'PNG',
+          this.margin,
+          this.currentY,
+          chartWidth,
+          chartHeight
+        );
         this.currentY += chartHeight + 5;
-        
+
         this.doc!.setFontSize(9);
         this.doc!.setTextColor(this.secondaryColor);
-        this.doc!.text('Figure 1: Pain intensity trends over reporting period', this.margin, this.currentY);
+        this.doc!.text(
+          'Figure 1: Pain intensity trends over reporting period',
+          this.margin,
+          this.currentY
+        );
         this.currentY += 10;
       } catch (error) {
         console.error('Failed to embed pain trend chart:', error);
       }
     }
-    
+
     this.checkPageBreak(80);
-    
+
     if (charts.painDistribution) {
       try {
-        this.doc!.addImage(charts.painDistribution, 'PNG', this.margin, this.currentY, chartWidth, chartHeight);
+        this.doc!.addImage(
+          charts.painDistribution,
+          'PNG',
+          this.margin,
+          this.currentY,
+          chartWidth,
+          chartHeight
+        );
         this.currentY += chartHeight + 5;
-        
+
         this.doc!.setFontSize(9);
         this.doc!.setTextColor(this.secondaryColor);
-        this.doc!.text('Figure 2: Pain level distribution and frequency analysis', this.margin, this.currentY);
+        this.doc!.text(
+          'Figure 2: Pain level distribution and frequency analysis',
+          this.margin,
+          this.currentY
+        );
         this.currentY += 10;
       } catch (error) {
         console.error('Failed to embed pain distribution chart:', error);
@@ -345,14 +365,14 @@ export class ClinicalPDFExporter {
    */
   private addPainEntryTable(entries: PainEntry[], dateRange?: { start: Date; end: Date }): void {
     this.checkPageBreak(40);
-    
+
     this.doc!.setFontSize(14);
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Detailed Pain Log', this.margin, this.currentY);
-    
+
     this.currentY += 8;
-    
+
     // Filter entries by date range if provided
     let filteredEntries = entries;
     if (dateRange) {
@@ -361,21 +381,21 @@ export class ClinicalPDFExporter {
         return entryDate >= dateRange.start && entryDate <= dateRange.end;
       });
     }
-    
+
     // Prepare table data
     const tableData = filteredEntries.slice(0, 50).map(entry => [
-      new Date(entry.timestamp).toLocaleString('en-US', { 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
+      new Date(entry.timestamp).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
       }),
       getPainIntensity(entry).toString(),
       getPainLocation(entry) || 'Not specified',
       getPainQuality(entry).join(', ') || 'N/A',
       entry.triggers?.join(', ') || 'None noted',
     ]);
-    
+
     autoTable(this.doc, {
       startY: this.currentY,
       head: [['Date/Time', 'Level', 'Location', 'Quality', 'Triggers']],
@@ -399,9 +419,9 @@ export class ClinicalPDFExporter {
         this.currentY = data.cursor?.y || this.currentY;
       },
     });
-    
+
     this.currentY += 10;
-    
+
     if (filteredEntries.length > 50) {
       this.doc!.setFontSize(9);
       this.doc!.setTextColor(this.secondaryColor);
@@ -419,65 +439,70 @@ export class ClinicalPDFExporter {
    */
   private addNarrativeTimeline(entries: PainEntry[], moodEntries?: MoodEntry[]): void {
     this.checkPageBreak(40);
-    
+
     this.doc!.setFontSize(14);
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Clinical Narrative Timeline', this.margin, this.currentY);
-    
+
     this.currentY += 8;
-    
+
     // Generate narrative from entries
     const recentEntries = entries.slice(-10);
-    
+
     recentEntries.forEach((entry, index) => {
       this.checkPageBreak(30);
-      
+
       const date = new Date(entry.timestamp);
-      const dateStr = date.toLocaleDateString('en-US', { 
-        weekday: 'short', 
-        month: 'short', 
-        day: 'numeric', 
-        year: 'numeric' 
+      const dateStr = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
       });
-      const timeStr = date.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+      const timeStr = date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
       });
-      
+
       // Date header
       this.doc!.setFontSize(10);
       this.doc!.setTextColor(this.primaryColor);
       this.doc!.setFont('helvetica', 'bold');
       this.doc!.text(`${dateStr} at ${timeStr}`, this.margin, this.currentY);
-      
+
       this.currentY += 6;
-      
+
       // Narrative text
       this.doc!.setFontSize(9);
       this.doc!.setTextColor(0, 0, 0);
       this.doc!.setFont('helvetica', 'normal');
-      
+
       const narrative = this.generateEntryNarrative(entry);
       const lines = this.doc!.splitTextToSize(narrative, this.pageWidth - 2 * this.margin - 10);
-      
+
       lines.forEach((line: string) => {
         this.checkPageBreak(10);
         this.doc!.text(line, this.margin + 5, this.currentY);
         this.currentY += 5;
       });
-      
+
       this.currentY += 3;
-      
+
       // Divider
       if (index < recentEntries.length - 1) {
         this.doc!.setDrawColor(220, 220, 220);
         this.doc!.setLineWidth(0.3);
-        this.doc!.line(this.margin + 5, this.currentY, this.pageWidth - this.margin - 5, this.currentY);
+        this.doc!.line(
+          this.margin + 5,
+          this.currentY,
+          this.pageWidth - this.margin - 5,
+          this.currentY
+        );
         this.currentY += 5;
       }
     });
-    
+
     this.currentY += 5;
   }
 
@@ -486,7 +511,7 @@ export class ClinicalPDFExporter {
    */
   private generateEntryNarrative(entry: PainEntry): string {
     const parts: string[] = [];
-    
+
     // Pain intensity
     const intensity = getPainIntensity(entry);
     const painCategory = this.getPainCategory(intensity);
@@ -503,22 +528,22 @@ export class ClinicalPDFExporter {
     if (quality.length > 0) {
       parts.push(`described as ${quality.join(', ')}`);
     }
-    
+
     // Triggers
     if (entry.triggers && entry.triggers.length > 0) {
       parts.push(`Triggers identified: ${entry.triggers.join(', ')}`);
     }
-    
+
     // Relief methods
     if (entry.reliefMethods && entry.reliefMethods.length > 0) {
       parts.push(`Relief attempted with: ${entry.reliefMethods.join(', ')}`);
     }
-    
+
     // Notes
     if (entry.notes) {
       parts.push(`Additional notes: "${entry.notes}"`);
     }
-    
+
     return parts.join('. ') + '.';
   }
 
@@ -527,26 +552,26 @@ export class ClinicalPDFExporter {
    */
   private addClinicalNotes(notes: string): void {
     this.checkPageBreak(40);
-    
+
     this.doc!.setFontSize(14);
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Clinical Notes & Observations', this.margin, this.currentY);
-    
+
     this.currentY += 8;
-    
+
     this.doc!.setFontSize(10);
     this.doc!.setTextColor(0, 0, 0);
     this.doc!.setFont('helvetica', 'normal');
-    
+
     const lines = this.doc!.splitTextToSize(notes, this.pageWidth - 2 * this.margin);
-    
+
     lines.forEach((line: string) => {
       this.checkPageBreak(10);
       this.doc!.text(line, this.margin, this.currentY);
       this.currentY += this.lineHeight;
     });
-    
+
     this.currentY += 5;
   }
 
@@ -557,105 +582,116 @@ export class ClinicalPDFExporter {
     // Add new page for WCB declaration
     this.doc!.addPage();
     this.currentY = this.margin;
-    
+
     this.doc!.setFontSize(16);
     this.doc!.setTextColor(this.primaryColor);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('WorkSafe BC Claim Documentation', this.margin, this.currentY);
-    
+
     this.currentY += 12;
-    
+
     // Claim information summary
     this.doc!.setFontSize(12);
     this.doc!.text('Claim Information', this.margin, this.currentY);
-    
+
     this.currentY += 8;
     this.doc!.setFontSize(10);
     this.doc!.setFont('helvetica', 'normal');
-    
+
     if (info?.claimNumber) {
       this.doc!.text(`Claim Number: ${info.claimNumber}`, this.margin, this.currentY);
       this.currentY += this.lineHeight;
     }
-    
+
     if (info?.injuryDate) {
       this.doc!.text(`Date of Injury: ${info.injuryDate}`, this.margin, this.currentY);
       this.currentY += this.lineHeight;
     }
-    
+
     this.currentY += 10;
-    
+
     // Declaration statement
     this.doc!.setFontSize(12);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('Medical Professional Declaration', this.margin, this.currentY);
-    
+
     this.currentY += 8;
     this.doc!.setFontSize(9);
     this.doc!.setFont('helvetica', 'normal');
-    
-    const declaration = 
+
+    const declaration =
       'I declare that the information contained in this report is true and accurate to the best of my ' +
       'knowledge and belief. This clinical documentation has been prepared in accordance with WorkSafe BC ' +
       'requirements and medical reporting standards. The patient data presented represents objective clinical ' +
       'observations and patient-reported outcomes collected during the reporting period.';
-    
-    const declarationLines = this.doc!.splitTextToSize(declaration, this.pageWidth - 2 * this.margin);
-    
+
+    const declarationLines = this.doc!.splitTextToSize(
+      declaration,
+      this.pageWidth - 2 * this.margin
+    );
+
     declarationLines.forEach((line: string) => {
       this.doc!.text(line, this.margin, this.currentY);
       this.currentY += 6;
     });
-    
+
     this.currentY += 15;
-    
+
     // Signature fields
     this.doc!.setDrawColor(0, 0, 0);
     this.doc!.setLineWidth(0.5);
-    
+
     // Physician signature
     this.doc!.line(this.margin, this.currentY, this.margin + 80, this.currentY);
     this.currentY += 5;
     this.doc!.setFontSize(9);
     this.doc!.text('Physician Signature', this.margin, this.currentY);
-    
+
     // Date
-    this.doc!.line(this.pageWidth - this.margin - 50, this.currentY - 5, this.pageWidth - this.margin, this.currentY - 5);
+    this.doc!.line(
+      this.pageWidth - this.margin - 50,
+      this.currentY - 5,
+      this.pageWidth - this.margin,
+      this.currentY - 5
+    );
     this.doc!.text('Date', this.pageWidth - this.margin - 50, this.currentY);
-    
+
     this.currentY += 15;
-    
+
     if (info?.physicianName) {
       this.doc!.text(`Printed Name: ${info.physicianName}`, this.margin, this.currentY);
       this.currentY += this.lineHeight;
     }
-    
+
     if (info?.physicianPhone) {
       this.doc!.text(`Contact: ${info.physicianPhone}`, this.margin, this.currentY);
       this.currentY += this.lineHeight;
     }
-    
+
     // Compliance notice
     this.currentY += 15;
     this.doc!.setFillColor(255, 250, 230);
     this.doc!.rect(this.margin, this.currentY - 5, this.pageWidth - 2 * this.margin, 25, 'F');
-    
+
     this.doc!.setFontSize(8);
     this.doc!.setTextColor(100, 100, 0);
     this.doc!.setFont('helvetica', 'bold');
     this.doc!.text('WorkSafe BC Notice:', this.margin + 5, this.currentY);
-    
+
     this.currentY += 5;
     this.doc!.setFont('helvetica', 'normal');
     this.doc!.setTextColor(0, 0, 0);
-    
-    const noticeText = 
+
+    const noticeText =
       'This report is submitted in support of a WorkSafe BC claim. The information provided is for the ' +
-      'purpose of assessing and managing the claimant\'s work-related injury or illness. Any questions ' +
+      "purpose of assessing and managing the claimant's work-related injury or illness. Any questions " +
       'regarding this documentation should be directed to the attending physician.';
-    
-    const noticeLines = this.doc!.splitTextToSize(noticeText, this.pageWidth - 2 * this.margin - 10);
-    
+
+    const noticeLines = this.doc!.splitTextToSize(
+      noticeText,
+      this.pageWidth - 2 * this.margin - 10
+    );
+
     noticeLines.forEach((line: string) => {
       this.doc!.text(line, this.margin + 5, this.currentY);
       this.currentY += 5;
@@ -667,27 +703,32 @@ export class ClinicalPDFExporter {
    */
   private addFooters(): void {
     const pageCount = this.doc!.getNumberOfPages();
-    
+
     for (let i = 1; i <= pageCount; i++) {
       this.doc!.setPage(i);
-      
+
       // Footer line
       this.doc!.setDrawColor(this.secondaryColor);
       this.doc!.setLineWidth(0.3);
-      this.doc!.line(this.margin, this.pageHeight - 15, this.pageWidth - this.margin, this.pageHeight - 15);
-      
+      this.doc!.line(
+        this.margin,
+        this.pageHeight - 15,
+        this.pageWidth - this.margin,
+        this.pageHeight - 15
+      );
+
       // Footer text
       this.doc!.setFontSize(8);
       this.doc!.setTextColor(this.secondaryColor);
       this.doc!.setFont('helvetica', 'normal');
-      
+
       // Left: Confidentiality
       this.doc!.text(
         'Confidential Medical Record - Do Not Distribute',
         this.margin,
         this.pageHeight - 10
       );
-      
+
       // Center: Generated by
       this.doc!.text(
         'Pain Tracker Clinical System v3.0',
@@ -695,7 +736,7 @@ export class ClinicalPDFExporter {
         this.pageHeight - 10,
         { align: 'center' }
       );
-      
+
       // Right: Page number
       this.doc!.text(
         `Page ${i} of ${pageCount}`,

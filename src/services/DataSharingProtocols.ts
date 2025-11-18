@@ -208,25 +208,27 @@ export class DataSharingProtocols {
   }
 
   // Data Sharing Agreement Management
-  async createAgreement(agreement: Omit<DataSharingAgreement, 'id' | 'status' | 'lastModified'>): Promise<string> {
+  async createAgreement(
+    agreement: Omit<DataSharingAgreement, 'id' | 'status' | 'lastModified'>
+  ): Promise<string> {
     const agreementId = `dsa-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const fullAgreement: DataSharingAgreement = {
       ...agreement,
       id: agreementId,
       status: 'draft',
-      lastModified: new Date().toISOString()
+      lastModified: new Date().toISOString(),
     };
 
     this.agreements.set(agreementId, fullAgreement);
-    
+
     await this.logAuditEvent({
       eventType: 'request',
       userId: 'system',
       userRole: 'admin',
       organizationId: agreement.organizationA.id,
       outcome: 'success',
-      details: { action: 'agreement-created', agreementId }
+      details: { action: 'agreement-created', agreementId },
     });
 
     return agreementId;
@@ -239,11 +241,11 @@ export class DataSharingProtocols {
     }
 
     agreement.signedBy.push(signatureInfo);
-    
+
     // Check if all required parties have signed
     const requiredSigners = [agreement.organizationA.id, agreement.organizationB.id];
     const signerOrgs = agreement.signedBy.map(s => s.organization);
-    
+
     if (requiredSigners.every(org => signerOrgs.includes(org))) {
       agreement.status = 'active';
     }
@@ -257,14 +259,14 @@ export class DataSharingProtocols {
       userRole: signatureInfo.title,
       organizationId: signatureInfo.organization,
       outcome: 'success',
-      details: { action: 'agreement-signed', agreementId }
+      details: { action: 'agreement-signed', agreementId },
     });
   }
 
   // Data Exchange Request Processing
   async requestDataExchange(request: DataExchangeRequest): Promise<string> {
     const requestId = `dxr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Validate agreement exists and is active
     const agreement = this.agreements.get(request.agreementId);
     if (!agreement || agreement.status !== 'active') {
@@ -278,25 +280,28 @@ export class DataSharingProtocols {
 
     // Auto-approve routine requests if they meet criteria
     const shouldAutoApprove = await this.shouldAutoApprove(request, agreement);
-    
+
     await this.logAuditEvent({
       eventType: 'request',
       userId: request.requesterId,
       userRole: 'provider',
       organizationId: request.targetOrganization,
       outcome: 'success',
-      details: { 
-        action: 'data-exchange-requested', 
+      details: {
+        action: 'data-exchange-requested',
         requestId,
         urgency: request.urgency,
-        autoApprove: shouldAutoApprove
-      }
+        autoApprove: shouldAutoApprove,
+      },
     });
 
     return requestId;
   }
 
-  async approveDataRequest(requestId: string, approverInfo: { userId: string; role: string; conditions?: string[] }): Promise<DataExchangeResponse> {
+  async approveDataRequest(
+    requestId: string,
+    approverInfo: { userId: string; role: string; conditions?: string[] }
+  ): Promise<DataExchangeResponse> {
     const request = this.exchangeRequests.get(requestId);
     if (!request) {
       throw new Error('Request not found');
@@ -313,9 +318,9 @@ export class DataSharingProtocols {
       approvalInfo: {
         approvedBy: approverInfo.userId,
         approvedAt: new Date().toISOString(),
-        conditions: approverInfo.conditions
+        conditions: approverInfo.conditions,
       },
-      auditTrail: []
+      auditTrail: [],
     };
 
     // Generate data based on request parameters
@@ -333,14 +338,17 @@ export class DataSharingProtocols {
       organizationId: request.targetOrganization,
       resourcesAccessed: request.parameters.resourceTypes,
       outcome: 'success',
-      details: { action: 'data-request-approved', requestId }
+      details: { action: 'data-request-approved', requestId },
     });
 
     return response;
   }
 
   // Security and Compliance
-  async validateDataRequest(request: DataExchangeRequest, agreement: DataSharingAgreement): Promise<boolean> {
+  async validateDataRequest(
+    request: DataExchangeRequest,
+    agreement: DataSharingAgreement
+  ): Promise<boolean> {
     // Validate purpose alignment
     if (!this.isPurposeAllowed(request, agreement)) {
       throw new Error('Request purpose not aligned with agreement');
@@ -364,7 +372,10 @@ export class DataSharingProtocols {
     return true;
   }
 
-  async generateComplianceReport(agreementId: string, period: { start: string; end: string }): Promise<ComplianceReport> {
+  async generateComplianceReport(
+    agreementId: string,
+    period: { start: string; end: string }
+  ): Promise<ComplianceReport> {
     const agreement = this.agreements.get(agreementId);
     if (!agreement) {
       throw new Error('Agreement not found');
@@ -376,8 +387,11 @@ export class DataSharingProtocols {
     // Filter audit events for this agreement and period
     const relevantEvents = this.auditLogs.filter(event => {
       const eventTime = new Date(event.timestamp);
-      return eventTime >= periodStart && eventTime <= periodEnd &&
-             event.details?.agreementId === agreementId;
+      return (
+        eventTime >= periodStart &&
+        eventTime <= periodEnd &&
+        event.details?.agreementId === agreementId
+      );
     });
 
     const requests = relevantEvents.filter(e => e.eventType === 'request');
@@ -390,7 +404,7 @@ export class DataSharingProtocols {
 
     // Security incident analysis
     const securityIncidents = await this.getSecurityIncidents(agreementId, period);
-    
+
     // Calculate compliance score (0-100)
     const complianceScore = this.calculateComplianceScore(relevantEvents, securityIncidents);
 
@@ -403,13 +417,13 @@ export class DataSharingProtocols {
       dataVolume: {
         recordsShared: this.calculateRecordsShared(relevantEvents),
         patientsAffected: this.calculatePatientsAffected(relevantEvents),
-        organizationsInvolved: this.calculateOrganizationsInvolved(relevantEvents)
+        organizationsInvolved: this.calculateOrganizationsInvolved(relevantEvents),
       },
       securityIncidents,
       complianceScore,
       recommendations: this.generateRecommendations(complianceScore, securityIncidents),
       generatedAt: new Date().toISOString(),
-      generatedBy: 'system'
+      generatedBy: 'system',
     };
   }
 
@@ -418,7 +432,7 @@ export class DataSharingProtocols {
     const fullEvent: AuditEvent = {
       ...event,
       timestamp: new Date().toISOString(),
-      ipAddress: '0.0.0.0' // Would be populated from request context
+      ipAddress: '0.0.0.0', // Would be populated from request context
     };
 
     this.auditLogs.push(fullEvent);
@@ -436,12 +450,13 @@ export class DataSharingProtocols {
     });
 
     // Flag unusual access patterns
-    if (recentEvents.length > 50) { // Threshold for unusual activity
+    if (recentEvents.length > 50) {
+      // Threshold for unusual activity
       await this.reportSecurityIncident({
         severity: 'medium',
         type: 'unauthorized-access',
         description: `Unusual access pattern detected for user ${event.userId}`,
-        reportedToAuthorities: false
+        reportedToAuthorities: false,
       });
     }
   }
@@ -452,16 +467,22 @@ export class DataSharingProtocols {
     return request.justification.toLowerCase().includes(agreement.purpose.primary);
   }
 
-  private areDataTypesAllowed(request: DataExchangeRequest, agreement: DataSharingAgreement): boolean {
+  private areDataTypesAllowed(
+    request: DataExchangeRequest,
+    agreement: DataSharingAgreement
+  ): boolean {
     if (!request.parameters.resourceTypes) return true;
-    
+
     const allowedResources = agreement.dataTypes.flatMap(dt => dt.fhirResourceTypes);
     return request.parameters.resourceTypes.every(rt => allowedResources.includes(rt));
   }
 
-  private meetsRestrictions(request: DataExchangeRequest, agreement: DataSharingAgreement): boolean {
+  private meetsRestrictions(
+    request: DataExchangeRequest,
+    agreement: DataSharingAgreement
+  ): boolean {
     const restrictions = agreement.restrictions;
-    
+
     // Check timeframe restrictions
     if (restrictions.timeframe.start && request.parameters.dateRange?.start) {
       const requestStart = new Date(request.parameters.dateRange.start);
@@ -477,41 +498,58 @@ export class DataSharingProtocols {
     return true;
   }
 
-  private isMinimumNecessary(request: DataExchangeRequest, agreement: DataSharingAgreement): boolean {
+  private isMinimumNecessary(
+    request: DataExchangeRequest,
+    agreement: DataSharingAgreement
+  ): boolean {
     // Implement minimum necessary validation
     const requiredFields = agreement.dataTypes
       .filter(dt => dt.minimumNecessary)
       .flatMap(dt => dt.includeFields || []);
-    
+
     // Validate that request doesn't exceed minimum necessary
     return requiredFields.length > 0; // Simplified check
   }
 
-  private async shouldAutoApprove(request: DataExchangeRequest, agreement: DataSharingAgreement): Promise<boolean> {
+  private async shouldAutoApprove(
+    request: DataExchangeRequest,
+    agreement: DataSharingAgreement
+  ): Promise<boolean> {
     // Auto-approve routine requests that meet all criteria
-    return request.urgency === 'routine' && 
-           (request.expectedVolume || 0) < 1000 &&
-           agreement.security.accessControl === 'RBAC';
+    return (
+      request.urgency === 'routine' &&
+      (request.expectedVolume || 0) < 1000 &&
+      agreement.security.accessControl === 'RBAC'
+    );
   }
 
-  private async generateBulkExport(_request: DataExchangeRequest, _agreement: DataSharingAgreement): Promise<string> {
+  private async generateBulkExport(
+    _request: DataExchangeRequest,
+    _agreement: DataSharingAgreement
+  ): Promise<string> {
     // Generate secure download URL for bulk data export
     const exportId = `export-${Date.now()}`;
     return `/api/v1/data-sharing/export/${exportId}`;
   }
 
-  private async generateDataResponse(_request: DataExchangeRequest, _agreement: DataSharingAgreement): Promise<FHIRBundle> {
+  private async generateDataResponse(
+    _request: DataExchangeRequest,
+    _agreement: DataSharingAgreement
+  ): Promise<FHIRBundle> {
     // Generate FHIR bundle based on request parameters
     return {
       resourceType: 'Bundle',
       type: 'searchset',
       timestamp: new Date().toISOString(),
       total: 0,
-      entry: []
+      entry: [],
     };
   }
 
-  private async getSecurityIncidents(_agreementId: string, _period: { start: string; end: string }): Promise<SecurityIncident[]> {
+  private async getSecurityIncidents(
+    _agreementId: string,
+    _period: { start: string; end: string }
+  ): Promise<SecurityIncident[]> {
     // Filter security incidents for the specified period and agreement
     return []; // Simplified - would query incident database
   }
@@ -521,11 +559,16 @@ export class DataSharingProtocols {
     const baseScore = 100;
     const incidentPenalty = incidents.reduce((penalty, incident) => {
       switch (incident.severity) {
-        case 'critical': return penalty + 25;
-        case 'high': return penalty + 15;
-        case 'medium': return penalty + 10;
-        case 'low': return penalty + 5;
-        default: return penalty;
+        case 'critical':
+          return penalty + 25;
+        case 'high':
+          return penalty + 15;
+        case 'medium':
+          return penalty + 10;
+        case 'low':
+          return penalty + 5;
+        default:
+          return penalty;
       }
     }, 0);
 
@@ -572,12 +615,14 @@ export class DataSharingProtocols {
     return recommendations;
   }
 
-  private async reportSecurityIncident(incident: Omit<SecurityIncident, 'id' | 'timestamp'>): Promise<void> {
+  private async reportSecurityIncident(
+    incident: Omit<SecurityIncident, 'id' | 'timestamp'>
+  ): Promise<void> {
     // Report security incident to appropriate authorities
     const fullIncident: SecurityIncident = {
       ...incident,
       id: `inc-${Date.now()}`,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     // Log incident and trigger alerts
@@ -586,6 +631,4 @@ export class DataSharingProtocols {
 }
 
 // Export singleton instance
-export const dataSharingProtocols = new DataSharingProtocols(
-  new HealthcareProviderAPI()
-);
+export const dataSharingProtocols = new DataSharingProtocols(new HealthcareProviderAPI());

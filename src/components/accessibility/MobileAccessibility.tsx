@@ -7,7 +7,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Mic, MicOff, Volume2 } from 'lucide-react';
 import { Button } from '../../design-system';
 import { ScreenReaderAnnouncement } from './ScreenReaderUtils';
-import type { SpeechRecognition, SpeechRecognitionEvent, SpeechRecognitionErrorEvent } from '../../types/speech';
+import type {
+  SpeechRecognition,
+  SpeechRecognitionEvent,
+  SpeechRecognitionErrorEvent,
+} from '../../types/speech';
 
 interface VoiceInputProps {
   onResult: (text: string) => void;
@@ -42,7 +46,7 @@ export function VoiceInput({
       recognition.interimResults = true;
       recognition.lang = language;
 
-      recognition.onresult = (event) => {
+      recognition.onresult = event => {
         let finalTranscript = '';
         let interimTranscript = '';
 
@@ -63,7 +67,7 @@ export function VoiceInput({
         }
       };
 
-      recognition.onerror = (event) => {
+      recognition.onerror = event => {
         setIsListening(false);
         onError?.(`Speech recognition error: ${event.error}`);
         // Haptic feedback for error
@@ -124,14 +128,8 @@ export function VoiceInput({
         aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
         aria-pressed={isListening}
       >
-        {isListening ? (
-          <MicOff className="h-5 w-5" />
-        ) : (
-          <Mic className="h-5 w-5" />
-        )}
-        <span className="sr-only">
-          {isListening ? 'Stop listening' : 'Start voice input'}
-        </span>
+        {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+        <span className="sr-only">{isListening ? 'Stop listening' : 'Start voice input'}</span>
       </Button>
 
       {isListening && (
@@ -140,9 +138,7 @@ export function VoiceInput({
             <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
             <span className="text-sm font-medium">Listening...</span>
           </div>
-          {transcript && (
-            <p className="text-xs text-muted-foreground mt-1">{transcript}</p>
-          )}
+          {transcript && <p className="text-xs text-muted-foreground mt-1">{transcript}</p>}
         </div>
       )}
 
@@ -163,23 +159,26 @@ export function useTextToSpeech() {
     setIsSupported('speechSynthesis' in window);
   }, []);
 
-  const speak = useCallback((text: string, options: Partial<SpeechSynthesisUtterance> = {}) => {
-    if (!isSupported || isSpeaking) return;
+  const speak = useCallback(
+    (text: string, options: Partial<SpeechSynthesisUtterance> = {}) => {
+      if (!isSupported || isSpeaking) return;
 
-    const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(text);
 
-    // Apply options
-    if (options.lang) utterance.lang = options.lang;
-    if (options.rate !== undefined) utterance.rate = options.rate;
-    if (options.pitch !== undefined) utterance.pitch = options.pitch;
-    if (options.volume !== undefined) utterance.volume = options.volume;
+      // Apply options
+      if (options.lang) utterance.lang = options.lang;
+      if (options.rate !== undefined) utterance.rate = options.rate;
+      if (options.pitch !== undefined) utterance.pitch = options.pitch;
+      if (options.volume !== undefined) utterance.volume = options.volume;
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
 
-    window.speechSynthesis.speak(utterance);
-  }, [isSupported, isSpeaking]);
+      window.speechSynthesis.speak(utterance);
+    },
+    [isSupported, isSpeaking]
+  );
 
   const stop = useCallback(() => {
     window.speechSynthesis.cancel();
@@ -201,7 +200,7 @@ export function TextToSpeechButton({
   text,
   children,
   className,
-  size = 'default'
+  size = 'default',
 }: TextToSpeechButtonProps) {
   const { speak, stop, isSpeaking, isSupported } = useTextToSpeech();
 
@@ -225,9 +224,7 @@ export function TextToSpeechButton({
       aria-pressed={isSpeaking}
     >
       {children || <Volume2 className={`h-4 w-4 ${isSpeaking ? 'text-primary' : ''}`} />}
-      <span className="sr-only">
-        {isSpeaking ? 'Stop text-to-speech' : 'Start text-to-speech'}
-      </span>
+      <span className="sr-only">{isSpeaking ? 'Stop text-to-speech' : 'Start text-to-speech'}</span>
     </Button>
   );
 }
@@ -246,7 +243,13 @@ export function GestureHint({ gesture, direction, description, show = true }: Ge
   const getGestureIcon = () => {
     switch (gesture) {
       case 'swipe':
-        return direction === 'left' ? '←' : direction === 'right' ? '→' : direction === 'up' ? '↑' : '↓';
+        return direction === 'left'
+          ? '←'
+          : direction === 'right'
+            ? '→'
+            : direction === 'up'
+              ? '↑'
+              : '↓';
       case 'pinch':
         return '🤏';
       case 'tap':
@@ -298,15 +301,18 @@ export function useMobileAccessibility() {
   }, []);
 
   // Save preferences to localStorage
-  const updatePreferences = useCallback((updates: Partial<typeof preferences>) => {
-    const newPrefs = { ...preferences, ...updates };
-    setPreferences(newPrefs);
-    try {
-      localStorage.setItem('mobile-accessibility-prefs', JSON.stringify(newPrefs));
-    } catch (error) {
-      console.warn('Failed to save mobile accessibility preferences:', error);
-    }
-  }, [preferences]);
+  const updatePreferences = useCallback(
+    (updates: Partial<typeof preferences>) => {
+      const newPrefs = { ...preferences, ...updates };
+      setPreferences(newPrefs);
+      try {
+        localStorage.setItem('mobile-accessibility-prefs', JSON.stringify(newPrefs));
+      } catch (error) {
+        console.warn('Failed to save mobile accessibility preferences:', error);
+      }
+    },
+    [preferences]
+  );
 
   return { preferences, updatePreferences };
 }

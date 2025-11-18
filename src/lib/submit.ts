@@ -7,7 +7,7 @@ export async function submitPain(raw: unknown) {
     // Convert single pain entry to submission format
     const submissionData = {
       painEntries: [valid],
-      reportType: 'pain-tracking' as const
+      reportType: 'pain-tracking' as const,
     };
     await wcbSubmit(submissionData);
     return { success: true };

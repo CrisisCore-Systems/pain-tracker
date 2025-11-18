@@ -23,7 +23,7 @@ export interface FibromyalgiaEntry {
     rightUpperLeg: boolean;
     leftLowerLeg: boolean;
     rightLowerLeg: boolean;
-    
+
     // Axial
     jaw: boolean;
     chest: boolean;
@@ -32,7 +32,7 @@ export interface FibromyalgiaEntry {
     lowerBack: boolean;
     neck: boolean;
   };
-  
+
   // Symptom Severity Scale (SSS) - 0-12 scale
   sss: {
     fatigue: 0 | 1 | 2 | 3; // 0=none, 3=severe
@@ -49,17 +49,17 @@ export interface FibromyalgiaEntry {
     ibs: boolean;
     temporomandibularDisorder: boolean;
     restlessLegSyndrome: boolean;
-    
+
     // Environmental sensitivities
     lightSensitivity: boolean;
     soundSensitivity: boolean;
     temperatureSensitivity: boolean;
     chemicalSensitivity: boolean;
-    
+
     // Allodynia (pain from non-painful stimuli)
     clothingSensitivity: boolean;
     touchSensitivity: boolean;
-    
+
     // Other symptoms
     numbnessTingling: boolean;
     muscleStiffness: boolean;
@@ -120,19 +120,19 @@ export interface FibromyalgiaAnalytics {
   wpiScore: number; // 0-19
   sssScore: number; // 0-12
   meetsDiagnosticCriteria: boolean; // WPI ≥7 and SSS ≥5, or WPI 4-6 and SSS ≥9
-  
+
   // Pattern Analysis
   mostAffectedRegions: Array<{
     region: string;
     frequency: number;
     percentage: number;
   }>;
-  
+
   commonTriggers: Array<{
     trigger: string;
     frequency: number;
   }>;
-  
+
   symptomTrends: {
     fatigue: {
       current: number;
@@ -150,12 +150,12 @@ export interface FibromyalgiaAnalytics {
       average: number;
     };
   };
-  
+
   // Flare Tracking
   flareFrequency: number; // flares per month
   averageFlareDuration: number; // days
   flareIntensity: 'mild' | 'moderate' | 'severe';
-  
+
   // Quality of Life Metrics
   functionalCapacity: {
     average: number;
@@ -163,7 +163,7 @@ export interface FibromyalgiaAnalytics {
     badDays: number;
     bedridden: number;
   };
-  
+
   // Effective Interventions
   effectiveInterventions: Array<{
     intervention: string;
@@ -184,22 +184,22 @@ export interface FibromyalgiaPacingPlan {
   id: string;
   name: string;
   description: string;
-  
+
   // Activity Guidelines
   maxActivityDuration: number; // minutes
   requiredRestInterval: number; // minutes
   dailyActivityBudget: number; // total minutes
-  
+
   // Energy Envelope
   baseline: {
     goodDayCapacity: number;
     averageDayCapacity: number;
     badDayCapacity: number;
   };
-  
+
   // Warning Signs
   warningSignsToRest: string[];
-  
+
   // Activity Examples
   lightActivities: string[];
   moderateActivities: string[];
@@ -215,15 +215,25 @@ export const FIBROMYALGIA_TENDER_POINTS = [
   'Lateral Epicondyle (elbows)',
   'Gluteal (buttocks)',
   'Greater Trochanter (hips)',
-  'Knees'
+  'Knees',
 ] as const;
 
 export const FIBROMYALGIA_SYMPTOM_CLUSTERS = {
   pain: ['widespread pain', 'tender points', 'allodynia', 'muscle stiffness'],
   fatigue: ['chronic fatigue', 'post-exertional malaise', 'unrefreshing sleep'],
-  cognitive: ['fibro fog', 'memory problems', 'concentration difficulty', 'word-finding difficulty'],
-  sensory: ['light sensitivity', 'sound sensitivity', 'temperature sensitivity', 'chemical sensitivity'],
+  cognitive: [
+    'fibro fog',
+    'memory problems',
+    'concentration difficulty',
+    'word-finding difficulty',
+  ],
+  sensory: [
+    'light sensitivity',
+    'sound sensitivity',
+    'temperature sensitivity',
+    'chemical sensitivity',
+  ],
   autonomic: ['dizziness', 'irregular heartbeat', 'breathing difficulties'],
   digestive: ['IBS', 'nausea', 'food sensitivities'],
-  mood: ['anxiety', 'depression', 'emotional sensitivity']
+  mood: ['anxiety', 'depression', 'emotional sensitivity'],
 } as const;

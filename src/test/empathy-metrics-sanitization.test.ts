@@ -11,7 +11,7 @@ const analytics = new EmpathyDrivenAnalyticsService({
   celebrationFrequency: 'daily',
   reportingStyle: 'balanced',
   privacyLevel: 'personal',
-  languagePreference: 'everyday'
+  languagePreference: 'everyday',
 });
 const collector = new EmpathyMetricsCollector(security, analytics);
 
@@ -26,7 +26,7 @@ function makePain(notes: string): PainEntry {
     qualityOfLife: { sleepQuality: 5, moodImpact: 4, socialImpact: [] },
     workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
     comparison: { worseningSince: '', newLimitations: [] },
-    notes
+    notes,
   };
 }
 
@@ -45,16 +45,27 @@ function makeMood(notes: string): MoodEntry {
     triggers: [],
     copingStrategies: ['mindfulness'],
     socialSupport: 'moderate',
-    notes
+    notes,
   };
 }
 
 describe('EmpathyMetricsCollector sanitization & ranges', () => {
   it('clamps and/or noises values within 0-100', async () => {
-    const res = await collector.collect([makePain('Phone 123-456-7890')], [makeMood('I feel understood')], {
-      userId: 'u', consentGranted: true, differentialPrivacy: true
-    });
-    const sections = [res.metrics.emotionalIntelligence, res.metrics.compassionateProgress, res.metrics.empathyKPIs, res.metrics.humanizedMetrics];
+    const res = await collector.collect(
+      [makePain('Phone 123-456-7890')],
+      [makeMood('I feel understood')],
+      {
+        userId: 'u',
+        consentGranted: true,
+        differentialPrivacy: true,
+      }
+    );
+    const sections = [
+      res.metrics.emotionalIntelligence,
+      res.metrics.compassionateProgress,
+      res.metrics.empathyKPIs,
+      res.metrics.humanizedMetrics,
+    ];
     for (const section of sections) {
       for (const v of Object.values(section)) {
         if (typeof v === 'number') {
@@ -67,9 +78,15 @@ describe('EmpathyMetricsCollector sanitization & ranges', () => {
 
   it('redacts obvious PII patterns', async () => {
     const email = 'test@example.com';
-    const res = await collector.collect([makePain(`Contact: ${email}`)], [makeMood('Feeling supported')], {
-      userId: 'u', consentGranted: true, sanitize: true
-    });
+    const res = await collector.collect(
+      [makePain(`Contact: ${email}`)],
+      [makeMood('Feeling supported')],
+      {
+        userId: 'u',
+        consentGranted: true,
+        sanitize: true,
+      }
+    );
     expect(res.redactions).toBeGreaterThanOrEqual(1);
     // Ensure metrics output doesn't contain raw email
     expect(JSON.stringify(res.metrics)).not.toContain(email);

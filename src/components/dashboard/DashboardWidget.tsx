@@ -15,7 +15,9 @@ import type { WidgetType } from './constants';
 import type { PainEntry } from '../../types';
 
 // Lazy load WCBReportPanel to defer PDF library loading (Phase 3 optimization)
-const WCBReportPanel = lazy(() => import('../widgets/WCBReportPanel').then(m => ({ default: m.WCBReportPanel })));
+const WCBReportPanel = lazy(() =>
+  import('../widgets/WCBReportPanel').then(m => ({ default: m.WCBReportPanel }))
+);
 
 type LayoutStyle = 'grid' | 'masonry' | 'list';
 
@@ -76,17 +78,17 @@ const renderEmpathyAnalytics: WidgetRenderer = ({ entries }) => (
     <QuantifiedEmpathyDashboard
       userId="current-user"
       painEntries={entries}
-      onInsightSelect={(insight) => {
+      onInsightSelect={insight => {
         if (process.env.NODE_ENV === 'development') {
           console.log('Insight selected:', insight);
         }
       }}
-      onRecommendationAccept={(recommendation) => {
+      onRecommendationAccept={recommendation => {
         if (process.env.NODE_ENV === 'development') {
           console.log('Recommendation accepted:', recommendation);
         }
       }}
-      onShareMetrics={(metrics) => {
+      onShareMetrics={metrics => {
         if (process.env.NODE_ENV === 'development') {
           console.log('Share metrics:', metrics);
         }
@@ -103,11 +105,13 @@ const renderWcbReport: WidgetRenderer = ({ entries }) => (
     importance="normal"
     canCollapse={true}
   >
-    <Suspense fallback={
-      <div className="flex items-center justify-center p-8" role="status" aria-live="polite">
-        <div className="animate-pulse">Loading WCB Report...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center p-8" role="status" aria-live="polite">
+          <div className="animate-pulse">Loading WCB Report...</div>
+        </div>
+      }
+    >
       <WCBReportPanel entries={entries} />
     </Suspense>
   </TraumaInformedSection>
@@ -115,12 +119,17 @@ const renderWcbReport: WidgetRenderer = ({ entries }) => (
 
 const renderCurrentStats: WidgetRenderer = ({ entries }) => {
   const totalEntries = entries.length;
-  const averagePain = totalEntries > 0
-    ? formatNumber(entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / totalEntries, 1)
-    : '0';
-  const lastEntryDate = totalEntries > 0
-    ? new Date(entries[entries.length - 1]?.timestamp || '').toLocaleDateString()
-    : '—';
+  const averagePain =
+    totalEntries > 0
+      ? formatNumber(
+          entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / totalEntries,
+          1
+        )
+      : '0';
+  const lastEntryDate =
+    totalEntries > 0
+      ? new Date(entries[entries.length - 1]?.timestamp || '').toLocaleDateString()
+      : '—';
 
   return (
     <div className="flex h-full flex-col gap-5 rounded-2xl bg-background/70 p-6 text-sm shadow-inner shadow-black/5">
@@ -196,14 +205,14 @@ const WIDGET_RENDERERS: Record<WidgetType, WidgetRenderer> = {
   'current-stats': renderCurrentStats,
   'quick-actions': renderQuickActions,
   'intelligent-triggers': renderIntelligentTriggers,
-  'goal-tracking': renderGoalTracking
+  'goal-tracking': renderGoalTracking,
 };
 
 const sizeClasses = {
   small: 'col-span-1',
   medium: 'col-span-1 md:col-span-2',
   large: 'col-span-1 md:col-span-2',
-  full: 'col-span-1 md:col-span-2'
+  full: 'col-span-1 md:col-span-2',
 } as const;
 
 export interface DashboardWidgetProps {
@@ -237,35 +246,35 @@ export function DashboardWidget({
   onDragEnd,
   onDrop,
   isDragging,
-  layout
+  layout,
 }: DashboardWidgetProps) {
   const renderer = WIDGET_RENDERERS[widget.type];
 
-  const content = renderer
-    ? renderer({ entries, allEntries, onAddEntry, onStartWalkthrough, onOpenGoalManager })
-    : (
-      <Card>
-        <CardContent className="p-6 text-center text-muted-foreground">
-          <h3 className="text-lg font-medium mb-2">Unknown widget</h3>
-          <p className="mb-3">This widget type <span className="font-mono">{widget.type}</span> is not available in your current build.</p>
-          <p className="text-sm mb-4">See the feature matrix for planned widgets and timelines.</p>
-          <div className="flex items-center justify-center space-x-3">
-            <a
-              href="/docs/FEATURE_MATRIX.md"
-              className="text-sm text-primary hover:underline"
-            >
-              View feature matrix
-            </a>
-            <a
-              href={`mailto:hello@crisiscore.systems?subject=Feature%20request%3A%20${encodeURIComponent(widget.type)}`}
-              className="text-sm inline-flex items-center px-3 py-1.5 border border-border rounded-md hover:bg-primary/5"
-            >
-              Request this feature
-            </a>
-          </div>
-        </CardContent>
-      </Card>
-    );
+  const content = renderer ? (
+    renderer({ entries, allEntries, onAddEntry, onStartWalkthrough, onOpenGoalManager })
+  ) : (
+    <Card>
+      <CardContent className="p-6 text-center text-muted-foreground">
+        <h3 className="text-lg font-medium mb-2">Unknown widget</h3>
+        <p className="mb-3">
+          This widget type <span className="font-mono">{widget.type}</span> is not available in your
+          current build.
+        </p>
+        <p className="text-sm mb-4">See the feature matrix for planned widgets and timelines.</p>
+        <div className="flex items-center justify-center space-x-3">
+          <a href="/docs/FEATURE_MATRIX.md" className="text-sm text-primary hover:underline">
+            View feature matrix
+          </a>
+          <a
+            href={`mailto:hello@crisiscore.systems?subject=Feature%20request%3A%20${encodeURIComponent(widget.type)}`}
+            className="text-sm inline-flex items-center px-3 py-1.5 border border-border rounded-md hover:bg-primary/5"
+          >
+            Request this feature
+          </a>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <div
@@ -276,10 +285,10 @@ export function DashboardWidget({
         isDragging && 'opacity-60 blur-[1px]'
       )}
       draggable
-      onDragStart={(event) => onDragStart(event, widget.id)}
-      onDragEnd={(event) => onDragEnd(event)}
-      onDragOver={(event) => event.preventDefault()}
-      onDrop={(event) => onDrop(event, widget.id)}
+      onDragStart={event => onDragStart(event, widget.id)}
+      onDragEnd={event => onDragEnd(event)}
+      onDragOver={event => event.preventDefault()}
+      onDrop={event => onDrop(event, widget.id)}
     >
       <div
         className={cn(
@@ -299,9 +308,7 @@ export function DashboardWidget({
           <GripVertical className="h-4 w-4" aria-hidden="true" />
         </div>
 
-        <div className="flex h-full flex-col">
-          {content}
-        </div>
+        <div className="flex h-full flex-col">{content}</div>
       </div>
     </div>
   );

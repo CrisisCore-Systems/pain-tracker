@@ -8,7 +8,7 @@ interface InterventionScorecardProps {
 
 /**
  * Intervention Effectiveness Scorecard
- * 
+ *
  * Displays ranked interventions with effectiveness scores and recommendations.
  * Trauma-informed design with gentle language and actionable insights.
  */
@@ -99,11 +99,7 @@ export const InterventionScorecard: React.FC<InterventionScorecardProps> = ({
             {/* Header */}
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-start gap-3 flex-1">
-                <span
-                  className="text-2xl"
-                  role="img"
-                  aria-label={getTypeLabel(intervention.type)}
-                >
+                <span className="text-2xl" role="img" aria-label={getTypeLabel(intervention.type)}>
                   {getTypeIcon(intervention.type)}
                 </span>
                 <div className="flex-1">
@@ -133,33 +129,25 @@ export const InterventionScorecard: React.FC<InterventionScorecardProps> = ({
                 aria-label={`Effectiveness score: ${intervention.effectivenessScore} out of 100`}
               >
                 <span
-                  className={`text-2xl font-bold ${getScoreColor(
-                    intervention.effectivenessScore
-                  )}`}
+                  className={`text-2xl font-bold ${getScoreColor(intervention.effectivenessScore)}`}
                 >
                   {intervention.effectivenessScore}
                 </span>
-                <span className="text-xs text-gray-600 dark:text-gray-400">
-                  / 100
-                </span>
+                <span className="text-xs text-gray-600 dark:text-gray-400">/ 100</span>
               </div>
             </div>
 
             {/* Metrics */}
             <div className="grid grid-cols-3 gap-3 mb-3">
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded p-2">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  Times Used
-                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Times Used</p>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
                   {intervention.usageCount}
                 </p>
               </div>
 
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded p-2">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  Avg. Reduction
-                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Avg. Reduction</p>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
                   {intervention.averagePainReduction > 0 ? '-' : '+'}
                   {Math.abs(intervention.averagePainReduction).toFixed(1)}
@@ -167,9 +155,7 @@ export const InterventionScorecard: React.FC<InterventionScorecardProps> = ({
               </div>
 
               <div className="bg-gray-50 dark:bg-gray-700/50 rounded p-2">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                  Success Rate
-                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Success Rate</p>
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
                   {intervention.successRate}%
                 </p>
@@ -179,9 +165,7 @@ export const InterventionScorecard: React.FC<InterventionScorecardProps> = ({
             {/* Recommendation */}
             <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-3 rounded">
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                <strong className="text-blue-700 dark:text-blue-400">
-                  Recommendation:
-                </strong>{' '}
+                <strong className="text-blue-700 dark:text-blue-400">Recommendation:</strong>{' '}
                 {intervention.recommendation}
               </p>
             </div>
@@ -197,17 +181,16 @@ export const InterventionScorecard: React.FC<InterventionScorecardProps> = ({
           </summary>
           <div className="mt-3 space-y-2 text-gray-600 dark:text-gray-400">
             <p>
-              <strong>Score (0-100):</strong> Combines pain reduction, success rate,
-              and usage frequency to provide a comprehensive effectiveness rating.
+              <strong>Score (0-100):</strong> Combines pain reduction, success rate, and usage
+              frequency to provide a comprehensive effectiveness rating.
             </p>
             <p>
-              <strong>Confidence:</strong> Based on number of uses. More data points
-              = higher confidence in the score.
+              <strong>Confidence:</strong> Based on number of uses. More data points = higher
+              confidence in the score.
             </p>
             <p>
-              <strong>Note:</strong> Individual results vary. Use this data to guide
-              conversations with your healthcare provider about your pain management
-              plan.
+              <strong>Note:</strong> Individual results vary. Use this data to guide conversations
+              with your healthcare provider about your pain management plan.
             </p>
           </div>
         </details>

@@ -111,8 +111,14 @@ export function Tabs({
 
   return (
     <div className={cn(variantClasses[variant], className)}>
-      <div className={cn('flex', fullWidth ? 'w-full' : 'inline-flex', variant === 'pills' ? 'gap-0' : 'gap-0')}>
-        {tabs.map((tab) => {
+      <div
+        className={cn(
+          'flex',
+          fullWidth ? 'w-full' : 'inline-flex',
+          variant === 'pills' ? 'gap-0' : 'gap-0'
+        )}
+      >
+        {tabs.map(tab => {
           const isActive = activeTab === tab.id;
           return (
             <button
@@ -130,12 +136,14 @@ export function Tabs({
               {tab.icon && <span>{tab.icon}</span>}
               <span>{tab.label}</span>
               {tab.badge && (
-                <span className={cn(
-                  'px-2 py-0.5 text-xs rounded-full',
-                  isActive
-                    ? 'bg-primary-foreground text-primary'
-                    : 'bg-muted text-muted-foreground'
-                )}>
+                <span
+                  className={cn(
+                    'px-2 py-0.5 text-xs rounded-full',
+                    isActive
+                      ? 'bg-primary-foreground text-primary'
+                      : 'bg-muted text-muted-foreground'
+                  )}
+                >
                   {tab.badge}
                 </span>
               )}
@@ -180,7 +188,7 @@ export function Sidebar({
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
   const toggleExpanded = (itemId: string) => {
-    setExpandedItems((prev) => {
+    setExpandedItems(prev => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
         newSet.delete(itemId);
@@ -226,10 +234,7 @@ export function Sidebar({
               )}
               {hasChildren && (
                 <ChevronRight
-                  className={cn(
-                    'h-4 w-4 transition-transform',
-                    isExpanded && 'rotate-90'
-                  )}
+                  className={cn('h-4 w-4 transition-transform', isExpanded && 'rotate-90')}
                 />
               )}
             </>
@@ -237,9 +242,7 @@ export function Sidebar({
         </button>
 
         {hasChildren && isExpanded && !collapsed && (
-          <div className="ml-2">
-            {item.children!.map((child) => renderItem(child, level + 1))}
-          </div>
+          <div className="ml-2">{item.children!.map(child => renderItem(child, level + 1))}</div>
         )}
       </div>
     );
@@ -247,21 +250,11 @@ export function Sidebar({
 
   return (
     <Card className={cn('flex flex-col h-full', className)}>
-      {header && (
-        <div className="p-4 border-b">
-          {header}
-        </div>
-      )}
+      {header && <div className="p-4 border-b">{header}</div>}
 
-      <div className="flex-1 overflow-y-auto p-2">
-        {items.map((item) => renderItem(item))}
-      </div>
+      <div className="flex-1 overflow-y-auto p-2">{items.map(item => renderItem(item))}</div>
 
-      {footer && (
-        <div className="p-4 border-t">
-          {footer}
-        </div>
-      )}
+      {footer && <div className="p-4 border-t">{footer}</div>}
     </Card>
   );
 }
@@ -292,12 +285,7 @@ export function Navigation({
         <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="flex h-14 items-center px-4">
             {sidebar && onSidebarToggle && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onSidebarToggle}
-                className="mr-2"
-              >
+              <Button variant="ghost" size="sm" onClick={onSidebarToggle} className="mr-2">
                 <Menu className="h-5 w-5" />
               </Button>
             )}
@@ -309,28 +297,24 @@ export function Navigation({
       <div className="flex">
         {/* Sidebar */}
         {sidebar && (
-          <aside className={cn(
-            'transition-all duration-300 ease-in-out',
-            sidebarCollapsed ? 'w-16' : 'w-64'
-          )}>
+          <aside
+            className={cn(
+              'transition-all duration-300 ease-in-out',
+              sidebarCollapsed ? 'w-16' : 'w-64'
+            )}
+          >
             {sidebar}
           </aside>
         )}
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto">
-          <div className="container mx-auto p-6">
-            {children}
-          </div>
+          <div className="container mx-auto p-6">{children}</div>
         </main>
       </div>
 
       {/* Footer */}
-      {footer && (
-        <footer className="border-t bg-background">
-          {footer}
-        </footer>
-      )}
+      {footer && <footer className="border-t bg-background">{footer}</footer>}
     </div>
   );
 }

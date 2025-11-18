@@ -22,7 +22,7 @@ type AnalyticsView = 'overview' | 'validation' | 'celebration' | 'agency' | 'ful
 export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationProps> = ({
   userId,
   entries,
-  currentEntry
+  currentEntry,
 }) => {
   const [currentView, setCurrentView] = useState<AnalyticsView>('overview');
   const [showCelebrationModal, setShowCelebrationModal] = useState(false);
@@ -41,7 +41,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
   const handleCelebration = useCallback((achievement: Achievement) => {
     setCelebratedAchievement(achievement);
     setShowCelebrationModal(true);
-    
+
     // Auto-close after celebration
     setTimeout(() => {
       setShowCelebrationModal(false);
@@ -74,32 +74,32 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
       key: 'overview' as const,
       label: 'Overview',
       icon: TrendingUp,
-      description: 'Quick snapshot of your empathy analytics'
+      description: 'Quick snapshot of your empathy analytics',
     },
     {
       key: 'validation' as const,
       label: 'Emotional Support',
       icon: Heart,
-      description: 'Validation and emotional feedback'
+      description: 'Validation and emotional feedback',
     },
     {
       key: 'celebration' as const,
       label: 'Achievements',
       icon: Award,
-      description: 'Celebrate your progress and growth'
+      description: 'Celebrate your progress and growth',
     },
     {
       key: 'agency' as const,
       label: 'Your Control',
       icon: User,
-      description: 'Reinforce your autonomy and choices'
+      description: 'Reinforce your autonomy and choices',
     },
     {
       key: 'full-dashboard' as const,
       label: 'Full Dashboard',
       icon: Settings,
-      description: 'Complete analytics experience'
-    }
+      description: 'Complete analytics experience',
+    },
   ];
 
   const OverviewSection = () => (
@@ -108,10 +108,13 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
       <Card className="border-purple-200 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
         <CardContent className="p-6">
           <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">Welcome to Your Empathy Analytics</h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+              Welcome to Your Empathy Analytics
+            </h2>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              This space honors your full experience—not just your pain scores, but your courage, 
-              growth, insights, and strength. Every entry you make is an act of self-care and bravery.
+              This space honors your full experience—not just your pain scores, but your courage,
+              growth, insights, and strength. Every entry you make is an act of self-care and
+              bravery.
             </p>
             <div className="flex justify-center space-x-2 text-2xl">
               <span>💜</span>
@@ -128,9 +131,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card className="border-pink-200 bg-pink-50">
           <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-pink-600 mb-1">
-              {entries.length}
-            </div>
+            <div className="text-2xl font-bold text-pink-600 mb-1">{entries.length}</div>
             <div className="text-sm text-gray-600 dark:text-gray-400">Days of Self-Care</div>
             <div className="text-xs text-pink-700 mt-1">Every entry matters</div>
           </CardContent>
@@ -193,7 +194,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3">
-            {navigationItems.slice(1, 5).map((item) => {
+            {navigationItems.slice(1, 5).map(item => {
               const IconComponent = item.icon;
               return (
                 <Button
@@ -206,7 +207,9 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
                     <IconComponent className="w-5 h-5" />
                     <span className="font-medium">{item.label}</span>
                   </div>
-                  <span className="text-xs text-gray-600 dark:text-gray-400">{item.description}</span>
+                  <span className="text-xs text-gray-600 dark:text-gray-400">
+                    {item.description}
+                  </span>
                 </Button>
               );
             })}
@@ -223,11 +226,19 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
         <div className="bg-white rounded-lg p-6 max-w-md w-full text-center space-y-4 animate-pulse">
           <div className="text-4xl">{celebratedAchievement.icon}</div>
-          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">{celebratedAchievement.title}</h3>
-          <p className="text-gray-600 dark:text-gray-400">{celebratedAchievement.celebrationMessage}</p>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+            {celebratedAchievement.title}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            {celebratedAchievement.celebrationMessage}
+          </p>
           <div className="text-2xl">🎉 ✨ 🌟</div>
           <Button
-            onClick={() => handleCelebrationShared(celebratedAchievement.shareableMessage || celebratedAchievement.celebrationMessage)}
+            onClick={() =>
+              handleCelebrationShared(
+                celebratedAchievement.shareableMessage || celebratedAchievement.celebrationMessage
+              )
+            }
             className="bg-yellow-500 hover:bg-yellow-600 text-white"
           >
             <Share2 className="w-4 h-4 mr-2" />
@@ -244,7 +255,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
         {/* Navigation */}
         <div className="mb-8">
           <div className="flex flex-wrap justify-center gap-2 bg-white rounded-lg p-1 border shadow-sm">
-            {navigationItems.map((item) => {
+            {navigationItems.map(item => {
               const IconComponent = item.icon;
               return (
                 <button
@@ -267,7 +278,7 @@ export const EmpathyAnalyticsIntegration: React.FC<EmpathyAnalyticsIntegrationPr
         {/* Content */}
         <div className="space-y-6">
           {currentView === 'overview' && <OverviewSection />}
-          
+
           {currentView === 'validation' && currentEntry && (
             <Card className="border-pink-200 bg-gradient-to-br from-pink-50 to-purple-50">
               <CardHeader>

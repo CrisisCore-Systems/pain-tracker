@@ -94,11 +94,7 @@ export function SkipLink({ href, children }: { href: string; children: React.Rea
 
 // Screen reader only text
 export function ScreenReaderOnly({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="sr-only">
-      {children}
-    </span>
-  );
+  return <span className="sr-only">{children}</span>;
 }
 
 // Accessible button with loading state
@@ -295,15 +291,18 @@ export function useColorScheme() {
 export function useAnnouncer() {
   const [announcements, setAnnouncements] = React.useState<string[]>([]);
 
-  const announce = React.useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
-    const id = Date.now().toString();
-    setAnnouncements(prev => [...prev, `${priority}:${id}:${message}`]);
+  const announce = React.useCallback(
+    (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+      const id = Date.now().toString();
+      setAnnouncements(prev => [...prev, `${priority}:${id}:${message}`]);
 
-    // Clean up old announcements
-    setTimeout(() => {
-      setAnnouncements(prev => prev.filter(ann => !ann.includes(id)));
-    }, 1000);
-  }, []);
+      // Clean up old announcements
+      setTimeout(() => {
+        setAnnouncements(prev => prev.filter(ann => !ann.includes(id)));
+      }, 1000);
+    },
+    []
+  );
 
   return {
     announcements,

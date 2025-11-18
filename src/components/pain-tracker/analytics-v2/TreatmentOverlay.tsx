@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ReferenceLine
+  ReferenceLine,
 } from 'recharts';
 import { format as formatDate, parseISO } from 'date-fns';
 import { chartColors } from '../../../design-system/utils/chart-colors';
@@ -49,37 +49,37 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
   const { chartData, treatmentEvents } = useMemo(() => {
     if (!entries.length) return { chartData: [], treatmentEvents: [] };
 
-    const sortedEntries = [...entries].sort((a, b) => 
-      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    const sortedEntries = [...entries].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
     );
 
     const chartData: ChartDataPoint[] = sortedEntries.map(entry => ({
       date: formatDate(parseISO(entry.timestamp), 'MMM dd'),
       pain: entry.baselineData.pain,
       treatment: (entry.treatments?.recent?.length ?? 0) > 0 ? 'Treatment' : undefined,
-      medication: entry.medications?.changes ? 'Med Change' : undefined
+      medication: entry.medications?.changes ? 'Med Change' : undefined,
     }));
 
     const treatmentEvents: TreatmentEvent[] = [];
-    
+
     sortedEntries.forEach(entry => {
       const date = formatDate(parseISO(entry.timestamp), 'MMM dd');
-      
+
       if ((entry.treatments?.recent?.length ?? 0) > 0) {
         entry.treatments?.recent?.forEach(treatment => {
           treatmentEvents.push({
             date,
             type: 'treatment',
-            description: `${treatment.type} - ${treatment.provider}`
+            description: `${treatment.type} - ${treatment.provider}`,
           });
         });
       }
-      
+
       if (entry.medications?.changes) {
         treatmentEvents.push({
           date,
           type: 'medication',
-          description: `Medication change: ${entry.medications.changes}`
+          description: `Medication change: ${entry.medications.changes}`,
         });
       }
     });
@@ -102,9 +102,11 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
             <p className="font-medium text-sm">Events:</p>
             {events.map((event, index) => (
               <div key={index} className="text-xs mt-1">
-                <span className={`inline-block w-2 h-2 rounded-full mr-2 ${
-                  event.type === 'treatment' ? 'bg-green-500' : 'bg-orange-500'
-                }`}></span>
+                <span
+                  className={`inline-block w-2 h-2 rounded-full mr-2 ${
+                    event.type === 'treatment' ? 'bg-green-500' : 'bg-orange-500'
+                  }`}
+                ></span>
                 {event.description}
               </div>
             ))}
@@ -126,26 +128,22 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-semibold mb-4">Pain Timeline with Treatment Overlay</h2>
-      
+
       <div className="space-y-6">
         {/* Chart */}
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="date" 
-                tick={{ fontSize: 12 }}
-                interval="preserveStartEnd"
-              />
-              <YAxis 
-                domain={[0, 10]} 
+              <XAxis dataKey="date" tick={{ fontSize: 12 }} interval="preserveStartEnd" />
+              <YAxis
+                domain={[0, 10]}
                 tick={{ fontSize: 12 }}
                 label={{ value: 'Pain Level', angle: -90, position: 'insideLeft' }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              
+
               <Line
                 type="monotone"
                 dataKey="pain"
@@ -194,15 +192,24 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
         {/* Legend */}
         <div className="flex flex-wrap gap-6 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5" style={{ backgroundColor: chartColors.analytics.trend }}></div>
+            <div
+              className="w-4 h-0.5"
+              style={{ backgroundColor: chartColors.analytics.trend }}
+            ></div>
             <span>Pain Level</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 border-dashed border-t-2" style={{ borderColor: chartColors.treatment.primary }}></div>
+            <div
+              className="w-4 h-0.5 border-dashed border-t-2"
+              style={{ borderColor: chartColors.treatment.primary }}
+            ></div>
             <span>Treatment</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 border-dotted border-t-2" style={{ borderColor: chartColors.treatment.medication }}></div>
+            <div
+              className="w-4 h-0.5 border-dotted border-t-2"
+              style={{ borderColor: chartColors.treatment.medication }}
+            ></div>
             <span>Medication Change</span>
           </div>
         </div>
@@ -213,11 +220,24 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
             <h3 className="font-semibold mb-3">Treatment Timeline</h3>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {treatmentEvents.map((event, index) => (
-                <div key={index} className="flex items-start gap-3 p-2 bg-gray-50 dark:bg-gray-900 rounded">
-                  <div className="w-3 h-3 rounded-full mt-0.5" style={{ backgroundColor: event.type === 'treatment' ? chartColors.treatment.primary : chartColors.treatment.medication }}></div>
+                <div
+                  key={index}
+                  className="flex items-start gap-3 p-2 bg-gray-50 dark:bg-gray-900 rounded"
+                >
+                  <div
+                    className="w-3 h-3 rounded-full mt-0.5"
+                    style={{
+                      backgroundColor:
+                        event.type === 'treatment'
+                          ? chartColors.treatment.primary
+                          : chartColors.treatment.medication,
+                    }}
+                  ></div>
                   <div className="flex-1">
                     <div className="font-medium text-sm">{event.date}</div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400">{event.description}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      {event.description}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -230,15 +250,29 @@ export const TreatmentOverlay: React.FC<TreatmentOverlayProps> = ({ entries }) =
           <h3 className="font-semibold mb-2">Treatment Impact Analysis</h3>
           <div className="text-sm space-y-1">
             {(() => {
-              const treatmentDates = new Set(treatmentEvents.filter(e => e.type === 'treatment').map(e => e.date));
-              const medicationDates = new Set(treatmentEvents.filter(e => e.type === 'medication').map(e => e.date));
-              
+              const treatmentDates = new Set(
+                treatmentEvents.filter(e => e.type === 'treatment').map(e => e.date)
+              );
+              const medicationDates = new Set(
+                treatmentEvents.filter(e => e.type === 'medication').map(e => e.date)
+              );
+
               return (
                 <>
                   <div>• Total treatments recorded: {treatmentDates.size}</div>
                   <div>• Medication changes recorded: {medicationDates.size}</div>
-                  <div>• Pain range: {Math.min(...chartData.map(d => d.pain))} - {Math.max(...chartData.map(d => d.pain))}/10</div>
-                  <div>• Average pain level: {formatNumber((chartData.reduce((sum, d) => sum + d.pain, 0) / chartData.length), 1)}/10</div>
+                  <div>
+                    • Pain range: {Math.min(...chartData.map(d => d.pain))} -{' '}
+                    {Math.max(...chartData.map(d => d.pain))}/10
+                  </div>
+                  <div>
+                    • Average pain level:{' '}
+                    {formatNumber(
+                      chartData.reduce((sum, d) => sum + d.pain, 0) / chartData.length,
+                      1
+                    )}
+                    /10
+                  </div>
                 </>
               );
             })()}

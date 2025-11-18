@@ -1,4 +1,4 @@
-import type { PainEntry } from "../../types";
+import type { PainEntry } from '../../types';
 
 export interface PainScore {
   total: number;
@@ -11,10 +11,10 @@ export const calculatePainScore = (entry: PainEntry): PainScore => {
   const { baselineData } = entry;
   const locationFactor = (baselineData.locations?.length || 0) * 0.5;
   const symptomFactor = (baselineData.symptoms?.length || 0) * 0.3;
-  
+
   // Calculate total score based on pain level, locations, and symptoms
   const total = baselineData.pain + locationFactor + symptomFactor;
-  
+
   // Determine severity based on total score
   let severity: PainScore['severity'] = 'low';
   if (total >= 8) {
@@ -22,12 +22,12 @@ export const calculatePainScore = (entry: PainEntry): PainScore => {
   } else if (total >= 5) {
     severity = 'moderate';
   }
-  
+
   return {
     total,
     severity,
     locationFactor,
-    symptomFactor
+    symptomFactor,
   };
 };
 
@@ -56,14 +56,14 @@ export const aggregatePainData = (entries: PainEntry[]): AggregatedPainData => {
       timeAnalysis: { worstTime: null, bestTime: null },
       functionalImpactSummary: {
         mostLimitedActivities: [],
-        commonMobilityAids: []
-      }
+        commonMobilityAids: [],
+      },
     };
   }
 
   // Calculate average pain
-  const averagePain = entries.reduce((sum, entry) => 
-    sum + entry.baselineData.pain, 0) / entries.length;
+  const averagePain =
+    entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length;
 
   // Analyze locations frequency
   const locationCount: Record<string, number> = {};
@@ -88,13 +88,13 @@ export const aggregatePainData = (entries: PainEntry[]): AggregatedPainData => {
     .sort((a, b) => b.frequency - a.frequency);
 
   // Determine pain trend
-  const sortedEntries = [...entries].sort((a, b) => 
-    new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  const sortedEntries = [...entries].sort(
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
   const firstPain = sortedEntries[0].baselineData.pain;
   const lastPain = sortedEntries[sortedEntries.length - 1].baselineData.pain;
-  const painTrend = firstPain < lastPain ? 'worsening' : 
-                    firstPain > lastPain ? 'improving' : 'stable';
+  const painTrend =
+    firstPain < lastPain ? 'worsening' : firstPain > lastPain ? 'improving' : 'stable';
 
   // Find worst and best times
   const painByHour: Record<number, number[]> = {};
@@ -106,13 +106,15 @@ export const aggregatePainData = (entries: PainEntry[]): AggregatedPainData => {
 
   const hourlyAverages = Object.entries(painByHour).map(([hour, pains]) => ({
     hour: parseInt(hour),
-    average: pains.reduce((a, b) => a + b, 0) / pains.length
+    average: pains.reduce((a, b) => a + b, 0) / pains.length,
   }));
 
-  const worstTime = hourlyAverages.length ? 
-    `${hourlyAverages.reduce((a, b) => a.average > b.average ? a : b).hour}:00` : null;
-  const bestTime = hourlyAverages.length ?
-    `${hourlyAverages.reduce((a, b) => a.average < b.average ? a : b).hour}:00` : null;
+  const worstTime = hourlyAverages.length
+    ? `${hourlyAverages.reduce((a, b) => (a.average > b.average ? a : b)).hour}:00`
+    : null;
+  const bestTime = hourlyAverages.length
+    ? `${hourlyAverages.reduce((a, b) => (a.average < b.average ? a : b)).hour}:00`
+    : null;
 
   // Analyze functional impact
   const activityCount: Record<string, number> = {};
@@ -143,11 +145,11 @@ export const aggregatePainData = (entries: PainEntry[]): AggregatedPainData => {
     painTrend,
     timeAnalysis: {
       worstTime,
-      bestTime
+      bestTime,
     },
     functionalImpactSummary: {
       mostLimitedActivities,
-      commonMobilityAids
-    }
+      commonMobilityAids,
+    },
   };
 };

@@ -4,15 +4,15 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Minimize2, 
-  Maximize2, 
-  EyeOff, 
-  Settings, 
+import {
+  Minimize2,
+  Maximize2,
+  EyeOff,
+  Settings,
   Brain,
   Shield,
   ToggleLeft,
-  ToggleRight
+  ToggleRight,
 } from 'lucide-react';
 import { useCrisisDetection } from './useCrisisDetection';
 import { useTraumaInformed } from './TraumaInformedHooks';
@@ -49,13 +49,13 @@ const defaultConfig: SimplificationConfig = {
   reduceColors: true,
   simplifyLanguage: false,
   removeAnimations: true,
-  consolidateActions: true
+  consolidateActions: true,
 };
 
 export function InterfaceSimplifier({
   children,
   triggerLevel = 'crisis',
-  onSimplificationChange
+  onSimplificationChange,
 }: InterfaceSimplifierProps) {
   const { crisisLevel } = useCrisisDetection();
   const { preferences, updatePreferences } = useTraumaInformed();
@@ -68,20 +68,28 @@ export function InterfaceSimplifier({
   const shouldSimplify = useCallback(() => {
     if (isManuallySimplified) return true;
     if (!config.enabled || !config.autoActivate) return false;
-    
+
     // Crisis-based simplification
     if (triggerLevel === 'crisis' && (crisisLevel === 'severe' || crisisLevel === 'emergency')) {
       return true;
     }
-    
+
     // Cognitive overload simplification
-    if (triggerLevel === 'cognitive-overload' && (hasFog && isSevere)) {
+    if (triggerLevel === 'cognitive-overload' && hasFog && isSevere) {
       return true;
     }
-    
+
     // User preference based
     return preferences.simplifiedMode;
-  }, [isManuallySimplified, config, triggerLevel, crisisLevel, hasFog, isSevere, preferences.simplifiedMode]);
+  }, [
+    isManuallySimplified,
+    config,
+    triggerLevel,
+    crisisLevel,
+    hasFog,
+    isSevere,
+    preferences.simplifiedMode,
+  ]);
 
   const isSimplified = shouldSimplify();
 
@@ -102,12 +110,12 @@ export function InterfaceSimplifier({
 
   const handleManualToggle = () => {
     setIsManuallySimplified(!isManuallySimplified);
-    
+
     // Update user preferences
     updatePreferences({
       simplifiedMode: !isManuallySimplified,
       showMemoryAids: !isManuallySimplified,
-      autoSave: !isManuallySimplified
+      autoSave: !isManuallySimplified,
     });
   };
 
@@ -128,16 +136,14 @@ export function InterfaceSimplifier({
       />
 
       {/* Main Content with Conditional Simplification */}
-      <div className={`
+      <div
+        className={`
         interface-content transition-all duration-300
         ${isSimplified ? 'simplified-layout' : ''}
-      `}>
+      `}
+      >
         {isSimplified ? (
-          <SimplifiedContentWrapper 
-            config={config}
-          >
-            {children}
-          </SimplifiedContentWrapper>
+          <SimplifiedContentWrapper config={config}>{children}</SimplifiedContentWrapper>
         ) : (
           children
         )}
@@ -158,7 +164,7 @@ function SimplificationControls({
   onToggle,
   onConfigUpdate,
   showAdvanced,
-  onShowAdvanced
+  onShowAdvanced,
 }: {
   isSimplified: boolean;
   config: SimplificationConfig;
@@ -168,14 +174,16 @@ function SimplificationControls({
   onShowAdvanced: (show: boolean) => void;
 }) {
   return (
-    <div className={`
+    <div
+      className={`
       simplification-controls fixed top-4 right-4 z-50 bg-white rounded-lg shadow-lg border transition-all duration-200
       ${isSimplified ? 'bg-blue-50 border-blue-200' : 'border-gray-200'}
-    `}>
+    `}
+    >
       <div className="p-3">
         <div className="flex items-center space-x-3">
           <TouchOptimizedButton
-            variant={isSimplified ? "primary" : "secondary"}
+            variant={isSimplified ? 'primary' : 'secondary'}
             onClick={onToggle}
             className={`
               flex items-center space-x-2 text-sm
@@ -206,10 +214,7 @@ function SimplificationControls({
 
         {showAdvanced && (
           <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
-            <SimplificationSettings
-              config={config}
-              onUpdate={onConfigUpdate}
-            />
+            <SimplificationSettings config={config} onUpdate={onConfigUpdate} />
           </div>
         )}
       </div>
@@ -220,7 +225,7 @@ function SimplificationControls({
 // Advanced simplification settings
 function SimplificationSettings({
   config,
-  onUpdate
+  onUpdate,
 }: {
   config: SimplificationConfig;
   onUpdate: (updates: Partial<SimplificationConfig>) => void;
@@ -233,7 +238,7 @@ function SimplificationSettings({
         </label>
         <select
           value={config.level}
-          onChange={(e) => onUpdate({ level: e.target.value as SimplificationConfig['level'] })}
+          onChange={e => onUpdate({ level: e.target.value as SimplificationConfig['level'] })}
           className="w-full text-xs p-1 border border-gray-300 dark:border-gray-600 rounded"
         >
           <option value="minimal">Minimal</option>
@@ -246,31 +251,31 @@ function SimplificationSettings({
         <SimplificationToggle
           label="Auto-activate"
           enabled={config.autoActivate}
-          onChange={(enabled) => onUpdate({ autoActivate: enabled })}
+          onChange={enabled => onUpdate({ autoActivate: enabled })}
         />
-        
+
         <SimplificationToggle
           label="Hide decorative elements"
           enabled={config.hideDecorative}
-          onChange={(enabled) => onUpdate({ hideDecorative: enabled })}
+          onChange={enabled => onUpdate({ hideDecorative: enabled })}
         />
-        
+
         <SimplificationToggle
           label="Increase touch targets"
           enabled={config.increaseTouchTargets}
-          onChange={(enabled) => onUpdate({ increaseTouchTargets: enabled })}
+          onChange={enabled => onUpdate({ increaseTouchTargets: enabled })}
         />
-        
+
         <SimplificationToggle
           label="Reduce colors"
           enabled={config.reduceColors}
-          onChange={(enabled) => onUpdate({ reduceColors: enabled })}
+          onChange={enabled => onUpdate({ reduceColors: enabled })}
         />
-        
+
         <SimplificationToggle
           label="Remove animations"
           enabled={config.removeAnimations}
-          onChange={(enabled) => onUpdate({ removeAnimations: enabled })}
+          onChange={enabled => onUpdate({ removeAnimations: enabled })}
         />
       </div>
     </div>
@@ -281,7 +286,7 @@ function SimplificationSettings({
 function SimplificationToggle({
   label,
   enabled,
-  onChange
+  onChange,
 }: {
   label: string;
   enabled: boolean;
@@ -308,27 +313,27 @@ function SimplificationToggle({
 // Wrapper for simplified content
 function SimplifiedContentWrapper({
   children,
-  config
+  config,
 }: {
   children: React.ReactNode;
   config: SimplificationConfig;
 }) {
   return (
-    <div className={`
+    <div
+      className={`
       simplified-content-wrapper
       ${config.hideDecorative ? 'hide-decorative' : ''}
       ${config.increaseTouchTargets ? 'large-touch-targets' : ''}
       ${config.reduceColors ? 'reduced-colors' : ''}
       ${config.removeAnimations ? 'no-animations' : ''}
-    `}>
+    `}
+    >
       {/* Simplification indicator */}
       <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
         <div className="flex items-center space-x-2">
           <Brain className="w-5 h-5 text-blue-600" />
           <div>
-            <h3 className="text-sm font-medium text-blue-800">
-              Simplified Interface Active
-            </h3>
+            <h3 className="text-sm font-medium text-blue-800">Simplified Interface Active</h3>
             <p className="text-xs text-blue-600">
               Interface complexity reduced for easier use. Essential functions highlighted.
             </p>
@@ -355,12 +360,8 @@ function EmergencySimplificationBanner({ onDisable }: { onDisable: () => void })
             </p>
           </div>
         </div>
-        
-        <TouchOptimizedButton
-          variant="secondary"
-          onClick={onDisable}
-          className="text-red-600"
-        >
+
+        <TouchOptimizedButton variant="secondary" onClick={onDisable} className="text-red-600">
           <EyeOff className="w-4 h-4 mr-1" />
           Disable
         </TouchOptimizedButton>
@@ -372,23 +373,23 @@ function EmergencySimplificationBanner({ onDisable }: { onDisable: () => void })
 // CSS class application functions
 function applySimplificationStyles(config: SimplificationConfig) {
   const root = document.documentElement;
-  
+
   if (config.hideDecorative) {
     root.classList.add('hide-decorative-elements');
   }
-  
+
   if (config.increaseTouchTargets) {
     root.classList.add('large-touch-targets');
   }
-  
+
   if (config.reduceColors) {
     root.classList.add('reduced-color-palette');
   }
-  
+
   if (config.removeAnimations) {
     root.classList.add('no-animations');
   }
-  
+
   root.classList.add('interface-simplified');
 }
 
@@ -399,9 +400,9 @@ function removeSimplificationStyles() {
     'large-touch-targets',
     'reduced-color-palette',
     'no-animations',
-    'interface-simplified'
+    'interface-simplified',
   ];
-  
+
   classesToRemove.forEach(className => {
     root.classList.remove(className);
   });

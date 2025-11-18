@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { PAIN_LOCATIONS, SYMPTOMS } from "../../../utils/constants";
+import { PAIN_LOCATIONS, SYMPTOMS } from '../../../utils/constants';
 import { Button, Badge, Card, CardContent } from '../../../design-system';
 import { Activity, MapPin, AlertTriangle } from 'lucide-react';
 
@@ -75,15 +75,25 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
                 min="0"
                 max="10"
                 value={pain}
-                onChange={(e) => onChange({ pain: parseInt(e.target.value) })}
+                onChange={e => onChange({ pain: parseInt(e.target.value) })}
                 className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
                 aria-label={`Pain level: ${pain} out of 10 - ${getPainLevelDescription(pain)}`}
               />
 
               <div className="flex justify-between text-xs text-muted-foreground px-1">
-                <span>0<br />No pain</span>
-                <span>5<br />Moderate</span>
-                <span>10<br />Worst</span>
+                <span>
+                  0<br />
+                  No pain
+                </span>
+                <span>
+                  5<br />
+                  Moderate
+                </span>
+                <span>
+                  10
+                  <br />
+                  Worst
+                </span>
               </div>
             </div>
 
@@ -97,8 +107,8 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
                     i === pain
                       ? 'bg-primary text-primary-foreground shadow-md scale-110'
                       : i <= pain
-                      ? 'bg-primary/20 hover:bg-primary/30'
-                      : 'bg-muted hover:bg-muted/80'
+                        ? 'bg-primary/20 hover:bg-primary/30'
+                        : 'bg-muted hover:bg-muted/80'
                   }`}
                   aria-label={`Set pain level to ${i}`}
                 >
@@ -135,8 +145,8 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
                 <Button
                   key={location}
                   onClick={() => toggleLocation(location)}
-                  onKeyPress={(e) => handleKeyPress(e, () => toggleLocation(location))}
-                  variant={locations.includes(location) ? "default" : "outline"}
+                  onKeyPress={e => handleKeyPress(e, () => toggleLocation(location))}
+                  variant={locations.includes(location) ? 'default' : 'outline'}
                   size="sm"
                   className="justify-start h-auto py-2 px-3 text-left"
                   role="checkbox"
@@ -171,13 +181,16 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
               Select any symptoms you're experiencing along with the pain
             </p>
 
-            <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
+            <div
+              className="grid gap-2"
+              style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}
+            >
               {SYMPTOMS.map((symptom: string) => (
                 <Button
                   key={symptom}
                   onClick={() => toggleSymptom(symptom)}
-                  onKeyPress={(e) => handleKeyPress(e, () => toggleSymptom(symptom))}
-                  variant={symptoms.includes(symptom) ? "default" : "outline"}
+                  onKeyPress={e => handleKeyPress(e, () => toggleSymptom(symptom))}
+                  variant={symptoms.includes(symptom) ? 'default' : 'outline'}
                   size="sm"
                   className="justify-start h-auto py-2 px-3 text-left"
                   role="checkbox"

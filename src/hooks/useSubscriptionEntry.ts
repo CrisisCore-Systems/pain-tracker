@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
-import { 
-  checkPainEntryQuota, 
+import {
+  checkPainEntryQuota,
   trackPainEntryUsage,
   checkMoodEntryQuota,
   trackMoodEntryUsage,
   checkActivityLogQuota,
-  trackActivityLogUsage
+  trackActivityLogUsage,
 } from '../stores/subscription-actions';
 import type { PainEntry, ActivityLogEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
@@ -23,14 +23,14 @@ interface UseSubscriptionEntryResult {
 /**
  * Hook for subscription-aware entry creation
  * Handles quota checks, usage tracking, and user feedback
- * 
+ *
  * @param userId - Current user ID
  * @returns Methods for adding entries with quota enforcement
- * 
+ *
  * @example
  * ```tsx
  * const { addPainEntry, isQuotaExceeded, quotaMessage } = useSubscriptionEntry(userId);
- * 
+ *
  * const handleSubmit = async (data) => {
  *   try {
  *     await addPainEntry(data);
@@ -53,7 +53,7 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
     try {
       // Check quota before adding
       const quotaCheck = await checkPainEntryQuota(userId);
-      
+
       if (!quotaCheck.success) {
         setIsQuotaExceeded(true);
         setQuotaMessage(quotaCheck.error || 'Pain entry quota exceeded. Please upgrade your plan.');
@@ -79,7 +79,7 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
     try {
       // Check quota before adding
       const quotaCheck = await checkMoodEntryQuota(userId);
-      
+
       if (!quotaCheck.success) {
         setIsQuotaExceeded(true);
         setQuotaMessage(quotaCheck.error || 'Mood entry quota exceeded. Please upgrade your plan.');
@@ -106,10 +106,12 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
     try {
       // Check quota before adding
       const quotaCheck = await checkActivityLogQuota(userId);
-      
+
       if (!quotaCheck.success) {
         setIsQuotaExceeded(true);
-        setQuotaMessage(quotaCheck.error || 'Activity log quota exceeded. Please upgrade your plan.');
+        setQuotaMessage(
+          quotaCheck.error || 'Activity log quota exceeded. Please upgrade your plan.'
+        );
         throw new Error(quotaCheck.error || 'Quota exceeded');
       }
 
@@ -132,6 +134,6 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
     addActivityLog,
     isQuotaExceeded,
     quotaMessage,
-    isLoading
+    isLoading,
   };
 }

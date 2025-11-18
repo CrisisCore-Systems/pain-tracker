@@ -14,28 +14,32 @@ export async function generateWCBReportPDF(
   const {
     filename = `WCB_Report_${report.claimInfo?.claimNumber || 'Draft'}.pdf`,
     orientation = 'portrait',
-    format = 'letter'
+    format = 'letter',
   } = options;
 
   const doc = new jsPDF({
     orientation,
     unit: 'mm',
-    format
+    format,
   });
 
   // Add header
   doc.setFontSize(20);
   doc.text('Workers Compensation Board Report', 20, 20);
-  
+
   // Add claim info
   doc.setFontSize(12);
   let yPos = 40;
-  
+
   if (report.claimInfo) {
     doc.text(`Claim Number: ${report.claimInfo.claimNumber || 'Not Assigned'}`, 20, yPos);
     yPos += 10;
     if (report.claimInfo.injuryDate) {
-      doc.text(`Injury Date: ${new Date(report.claimInfo.injuryDate).toLocaleDateString()}`, 20, yPos);
+      doc.text(
+        `Injury Date: ${new Date(report.claimInfo.injuryDate).toLocaleDateString()}`,
+        20,
+        yPos
+      );
       yPos += 20;
     }
   }
@@ -45,16 +49,16 @@ export async function generateWCBReportPDF(
   doc.text('Pain Analysis', 20, yPos);
   doc.setFontSize(12);
   yPos += 10;
-  
+
   if (report.painTrends) {
     doc.text(`Average Pain Level: ${report.painTrends.average}/10`, 20, yPos);
-    
+
     // Add most affected areas
     yPos += 10;
     doc.text('Most Affected Areas:', 20, yPos);
     yPos += 5;
     Object.entries(report.painTrends.locations)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
       .forEach(([location, frequency]) => {
         yPos += 5;
@@ -113,7 +117,8 @@ export async function generateWCBReportPDF(
       // Split long recommendations into multiple lines
       const lines = doc.splitTextToSize(recommendation, 170) as string[];
       lines.forEach((line: string) => {
-        if (yPos > 270) { // Check if we need a new page
+        if (yPos > 270) {
+          // Check if we need a new page
           doc.addPage();
           yPos = 20;
         }
@@ -124,7 +129,7 @@ export async function generateWCBReportPDF(
   }
 
   // Add footer with date and page numbers
-    const pageCount = doc.getNumberOfPages();
+  const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(10);
@@ -137,4 +142,4 @@ export async function generateWCBReportPDF(
 
   // Save the PDF
   doc.save(filename);
-} 
+}

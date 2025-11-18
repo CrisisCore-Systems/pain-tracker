@@ -7,38 +7,38 @@
 import { secureStorage } from '../../lib/storage/secureStorage';
 
 export function createPWAStatusComponent() {
-  return function PWAStatus({ className = "", style = {} }) {
+  return function PWAStatus({ className = '', style = {} }) {
     // Use the PWA status from the global PWA manager
     const getPWAStatus = () => {
       const isOnline = navigator.onLine;
-  const pendingSync = parseInt(secureStorage.get<string>('pwa-pending-sync') || '0');
-  const isSyncing = secureStorage.get<string>('pwa-is-syncing') === 'true';
-  const isInstalled = secureStorage.get<string>('pwa-is-installed') === 'true';
-      
+      const pendingSync = parseInt(secureStorage.get<string>('pwa-pending-sync') || '0');
+      const isSyncing = secureStorage.get<string>('pwa-is-syncing') === 'true';
+      const isInstalled = secureStorage.get<string>('pwa-is-installed') === 'true';
+
       return { isOnline, pendingSync, isSyncing, isInstalled };
     };
 
     const status = getPWAStatus();
-    
+
     // Create status indicator
     const createStatusIndicator = () => {
       if (status.isOnline && status.pendingSync === 0 && !status.isSyncing) {
         return null; // All good, no indicator needed
       }
 
-      const statusText = !status.isOnline 
+      const statusText = !status.isOnline
         ? 'Offline - Data saved locally'
-        : status.isSyncing 
+        : status.isSyncing
           ? 'Syncing data...'
-          : status.pendingSync > 0 
+          : status.pendingSync > 0
             ? `${status.pendingSync} items pending sync`
             : 'Online';
 
-      const statusColor = !status.isOnline 
-        ? '#ef4444' 
-        : status.isSyncing 
+      const statusColor = !status.isOnline
+        ? '#ef4444'
+        : status.isSyncing
           ? '#3b82f6'
-          : status.pendingSync > 0 
+          : status.pendingSync > 0
             ? '#f59e0b'
             : '#10b981';
 
@@ -55,7 +55,7 @@ export function createPWAStatusComponent() {
             borderRadius: '0.375rem',
             backgroundColor: '#f9fafb',
             border: '1px solid #e5e7eb',
-            ...style
+            ...style,
           },
           children: [
             {
@@ -66,22 +66,22 @@ export function createPWAStatusComponent() {
                   height: '0.5rem',
                   borderRadius: '50%',
                   backgroundColor: statusColor,
-                  animation: status.isSyncing ? 'pulse 2s infinite' : 'none'
-                }
-              }
+                  animation: status.isSyncing ? 'pulse 2s infinite' : 'none',
+                },
+              },
             },
             {
               type: 'span',
               props: {
                 style: {
                   fontWeight: '500',
-                  color: '#374151'
+                  color: '#374151',
                 },
-                children: statusText
-              }
-            }
-          ]
-        }
+                children: statusText,
+              },
+            },
+          ],
+        },
       };
     };
 
@@ -91,14 +91,14 @@ export function createPWAStatusComponent() {
 
 // Simple PWA install button component factory
 export function createPWAInstallButton() {
-  return function PWAInstallButton({ 
-    className = "", 
+  return function PWAInstallButton({
+    className = '',
     style = {},
-    children = "Install App",
-    onInstall = () => {}
+    children = 'Install App',
+    onInstall = () => {},
   }) {
-  const canInstall = secureStorage.get<string>('pwa-can-install') === 'true';
-  const isInstalled = secureStorage.get<string>('pwa-is-installed') === 'true';
+    const canInstall = secureStorage.get<string>('pwa-can-install') === 'true';
+    const isInstalled = secureStorage.get<string>('pwa-is-installed') === 'true';
 
     if (!canInstall || isInstalled) {
       return null;
@@ -131,39 +131,39 @@ export function createPWAInstallButton() {
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          ...style
+          ...style,
         },
         onClick: handleClick,
         children: [
           {
             type: 'span',
             props: {
-              children: '📱'
-            }
+              children: '📱',
+            },
           },
           {
             type: 'span',
             props: {
-              children: children
-            }
-          }
-        ]
-      }
+              children: children,
+            },
+          },
+        ],
+      },
     };
   };
 }
 
 // Simple sync button component factory
 export function createPWASyncButton() {
-  return function PWASyncButton({ 
-    className = "", 
+  return function PWASyncButton({
+    className = '',
     style = {},
-    children = "Sync Now",
-    onSync = () => {}
+    children = 'Sync Now',
+    onSync = () => {},
   }) {
     const isOnline = navigator.onLine;
-  const pendingSync = parseInt(secureStorage.get<string>('pwa-pending-sync') || '0');
-  const isSyncing = secureStorage.get<string>('pwa-is-syncing') === 'true';
+    const pendingSync = parseInt(secureStorage.get<string>('pwa-pending-sync') || '0');
+    const isSyncing = secureStorage.get<string>('pwa-is-syncing') === 'true';
 
     if (!isOnline || (pendingSync === 0 && !isSyncing)) {
       return null;
@@ -197,7 +197,7 @@ export function createPWASyncButton() {
           alignItems: 'center',
           gap: '0.5rem',
           opacity: isSyncing ? 0.7 : 1,
-          ...style
+          ...style,
         },
         onClick: handleClick,
         disabled: isSyncing,
@@ -205,17 +205,17 @@ export function createPWASyncButton() {
           {
             type: 'span',
             props: {
-              children: isSyncing ? '⏳' : '🔄'
-            }
+              children: isSyncing ? '⏳' : '🔄',
+            },
           },
           {
             type: 'span',
             props: {
-              children: isSyncing ? 'Syncing...' : children
-            }
-          }
-        ]
-      }
+              children: isSyncing ? 'Syncing...' : children,
+            },
+          },
+        ],
+      },
     };
   };
 }
@@ -240,20 +240,20 @@ export function renderPWAComponent(component: PWAComponentConfig, container: HTM
 
   function createElement(config: PWAComponentConfig): HTMLElement | null {
     if (!config) return null;
-    
+
     const element = document.createElement(config.type);
-    
+
     if (config.props) {
       // Handle style
       if (config.props.style) {
         Object.assign(element.style, config.props.style);
       }
-      
+
       // Handle className
       if (config.props.className) {
         element.className = config.props.className;
       }
-      
+
       // Handle other attributes
       Object.keys(config.props).forEach(key => {
         if (key !== 'style' && key !== 'className' && key !== 'children' && key !== 'onClick') {
@@ -263,12 +263,12 @@ export function renderPWAComponent(component: PWAComponentConfig, container: HTM
           }
         }
       });
-      
+
       // Handle click events
       if (config.props.onClick) {
         element.addEventListener('click', config.props.onClick);
       }
-      
+
       // Handle children
       if (config.props.children) {
         if (typeof config.props.children === 'string') {
@@ -288,7 +288,7 @@ export function renderPWAComponent(component: PWAComponentConfig, container: HTM
         }
       }
     }
-    
+
     return element;
   }
 
@@ -306,5 +306,5 @@ export default {
   createPWAStatusComponent,
   createPWAInstallButton,
   createPWASyncButton,
-  renderPWAComponent
+  renderPWAComponent,
 };

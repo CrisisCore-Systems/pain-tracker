@@ -17,7 +17,7 @@ import {
   FileText,
   HelpCircle,
   Bell,
-  Wind
+  Wind,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge, useTheme } from '../../design-system';
@@ -34,11 +34,11 @@ interface ModernAppLayoutProps {
   };
 }
 
-export function ModernAppLayout({ 
-  children, 
-  onNavigate, 
+export function ModernAppLayout({
+  children,
+  onNavigate,
   currentView = 'dashboard',
-  stats
+  stats,
 }: ModernAppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [panicModeActive, setPanicModeActive] = useState(false);
@@ -83,7 +83,7 @@ export function ModernAppLayout({
               >
                 {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
-              
+
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg shadow-blue-500/30">
                   <Heart className="h-6 w-6 text-white" />
@@ -117,26 +117,17 @@ export function ModernAppLayout({
 
             {/* Actions */}
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="rounded-xl"
-                onClick={() => {}}
-              >
+              <Button variant="ghost" size="sm" className="rounded-xl" onClick={() => {}}>
                 <Bell className="h-4 w-4" />
               </Button>
-              
+
               <Button
                 variant="ghost"
                 size="sm"
                 className="rounded-xl"
                 onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
               >
-                {mode === 'dark' ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
+                {mode === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
 
               <div className="p-2 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-green-500/30 transition-all">
@@ -151,10 +142,10 @@ export function ModernAppLayout({
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 lg:pt-16">
         <div className="h-full px-4 py-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border-r border-gray-200/50 dark:border-gray-700/50">
           <nav className="space-y-1">
-            {navigation.map((item) => {
+            {navigation.map(item => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
-              
+
               return (
                 <button
                   key={item.id}
@@ -168,10 +159,12 @@ export function ModernAppLayout({
                   )}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={cn(
-                      'h-5 w-5 transition-transform group-hover:scale-110',
-                      isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'
-                    )} />
+                    <Icon
+                      className={cn(
+                        'h-5 w-5 transition-transform group-hover:scale-110',
+                        isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'
+                      )}
+                    />
                     <span>{item.name}</span>
                   </div>
                   {item.badge && (
@@ -186,10 +179,10 @@ export function ModernAppLayout({
 
           <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
             <nav className="space-y-1">
-              {bottomNavigation.map((item) => {
+              {bottomNavigation.map(item => {
                 const Icon = item.icon;
                 const isActive = currentView === item.id;
-                
+
                 return (
                   <button
                     key={item.id}
@@ -232,10 +225,10 @@ export function ModernAppLayout({
           <aside className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-900 shadow-xl">
             <div className="h-full px-4 py-6 pt-20">
               <nav className="space-y-1">
-                {navigation.map((item) => {
+                {navigation.map(item => {
                   const Icon = item.icon;
                   const isActive = currentView === item.id;
-                  
+
                   return (
                     <button
                       key={item.id}
@@ -271,9 +264,7 @@ export function ModernAppLayout({
 
       {/* Main Content */}
       <main id="main-content" className="lg:pl-64 pt-16" tabIndex={-1}>
-        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-8">
-          {children}
-        </div>
+        <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-8">{children}</div>
       </main>
 
       {/* Floating Action Button - Mobile */}

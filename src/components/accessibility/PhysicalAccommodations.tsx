@@ -7,7 +7,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { Mic, MicOff, Eye, Mouse } from 'lucide-react';
-import type { SpeechRecognition, SpeechRecognitionEvent, SpeechRecognitionErrorEvent, SpeechRecognitionConstructor } from '../../types/speech';
+import type {
+  SpeechRecognition,
+  SpeechRecognitionEvent,
+  SpeechRecognitionErrorEvent,
+  SpeechRecognitionConstructor,
+} from '../../types/speech';
 
 // Extend global Window interface
 declare global {
@@ -26,10 +31,10 @@ interface VoiceInputProps {
   className?: string;
 }
 
-export function VoiceInput({ onTranscript, className = "" }: VoiceInputProps) {
+export function VoiceInput({ onTranscript, className = '' }: VoiceInputProps) {
   const { preferences } = useTraumaInformed();
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
+  const [transcript, setTranscript] = useState('');
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
@@ -39,7 +44,7 @@ export function VoiceInput({ onTranscript, className = "" }: VoiceInputProps) {
     // Check for speech recognition support
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      setError("Voice input not supported in this browser");
+      setError('Voice input not supported in this browser');
       return;
     }
 
@@ -63,7 +68,7 @@ export function VoiceInput({ onTranscript, className = "" }: VoiceInputProps) {
 
       const fullTranscript = finalTranscript || interimTranscript;
       setTranscript(fullTranscript);
-      
+
       if (finalTranscript) {
         onTranscript(finalTranscript);
       }
@@ -93,7 +98,7 @@ export function VoiceInput({ onTranscript, className = "" }: VoiceInputProps) {
       setIsListening(false);
     } else {
       setError(null);
-      setTranscript("");
+      setTranscript('');
       recognitionRef.current.start();
       setIsListening(true);
     }
@@ -105,7 +110,7 @@ export function VoiceInput({ onTranscript, className = "" }: VoiceInputProps) {
     <div className={`voice-input ${className}`}>
       <div className="flex items-center space-x-3">
         <TouchOptimizedButton
-          variant={isListening ? "primary" : "secondary"}
+          variant={isListening ? 'primary' : 'secondary'}
           onClick={toggleListening}
           disabled={!!error}
           size="large"
@@ -122,14 +127,12 @@ export function VoiceInput({ onTranscript, className = "" }: VoiceInputProps) {
             </>
           )}
         </TouchOptimizedButton>
-        
+
         {isListening && (
           <div className="flex-1 bg-blue-50 rounded-lg p-3 border-2 border-blue-200">
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
-              <span className="text-sm text-blue-700">
-                {transcript || "Listening..."}
-              </span>
+              <span className="text-sm text-blue-700">{transcript || 'Listening...'}</span>
             </div>
           </div>
         )}
@@ -170,7 +173,7 @@ export function LargeTouchSlider({
   step = 1,
   label,
   showValue = true,
-  vertical = false
+  vertical = false,
 }: LargeTouchSliderProps) {
   const { preferences } = useTraumaInformed();
   const [isDragging, setIsDragging] = useState(false);
@@ -182,14 +185,14 @@ export function LargeTouchSlider({
     const rect = sliderRef.current.getBoundingClientRect();
     const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
     const clientY = 'touches' in event ? event.touches[0].clientY : event.clientY;
-    
+
     let percentage;
     if (vertical) {
       percentage = 1 - (clientY - rect.top) / rect.height;
     } else {
       percentage = (clientX - rect.left) / rect.width;
     }
-    
+
     percentage = Math.max(0, Math.min(1, percentage));
     const newValue = Math.round((min + percentage * (max - min)) / step) * step;
     onChange(newValue);
@@ -267,12 +270,10 @@ export function LargeTouchSlider({
       {label && (
         <div className="flex justify-between items-center mb-4">
           <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
-          {showValue && (
-            <span className="text-lg font-bold text-blue-600">{value}</span>
-          )}
+          {showValue && <span className="text-lg font-bold text-blue-600">{value}</span>}
         </div>
       )}
-      
+
       <div
         ref={sliderRef}
         className={`
@@ -296,19 +297,23 @@ export function LargeTouchSlider({
         {/* Progress fill */}
         <div
           className="absolute bg-blue-500 rounded-full transition-all duration-150"
-          style={vertical ? {
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: `${percentage}%`
-          } : {
-            top: 0,
-            left: 0,
-            bottom: 0,
-            width: `${percentage}%`
-          }}
+          style={
+            vertical
+              ? {
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: `${percentage}%`,
+                }
+              : {
+                  top: 0,
+                  left: 0,
+                  bottom: 0,
+                  width: `${percentage}%`,
+                }
+          }
         />
-        
+
         {/* Thumb */}
         <div
           className={`
@@ -316,20 +321,26 @@ export function LargeTouchSlider({
             shadow-lg transform transition-all duration-150
             ${isDragging ? 'scale-110' : 'hover:scale-105'}
           `}
-          style={vertical ? {
-            left: '50%',
-            bottom: `calc(${percentage}% - 1rem)`,
-            transform: 'translateX(-50%)'
-          } : {
-            top: '50%',
-            left: `calc(${percentage}% - 1rem)`,
-            transform: 'translateY(-50%)'
-          }}
+          style={
+            vertical
+              ? {
+                  left: '50%',
+                  bottom: `calc(${percentage}% - 1rem)`,
+                  transform: 'translateX(-50%)',
+                }
+              : {
+                  top: '50%',
+                  left: `calc(${percentage}% - 1rem)`,
+                  transform: 'translateY(-50%)',
+                }
+          }
         />
       </div>
-      
+
       {/* Value labels */}
-      <div className={`flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2 ${vertical ? 'flex-col h-24' : ''}`}>
+      <div
+        className={`flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2 ${vertical ? 'flex-col h-24' : ''}`}
+      >
         <span>{min}</span>
         <span>{max}</span>
       </div>
@@ -353,7 +364,7 @@ export function GestureNavigation({
   onSwipeUp,
   onSwipeDown,
   children,
-  disabled = false
+  disabled = false,
 }: GestureNavigationProps) {
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [touchEnd, setTouchEnd] = useState<{ x: number; y: number } | null>(null);
@@ -365,7 +376,7 @@ export function GestureNavigation({
     setTouchEnd(null);
     setTouchStart({
       x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY
+      y: e.targetTouches[0].clientY,
     });
   };
 
@@ -373,7 +384,7 @@ export function GestureNavigation({
     if (disabled) return;
     setTouchEnd({
       x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY
+      y: e.targetTouches[0].clientY,
     });
   };
 
@@ -509,7 +520,7 @@ export function TremorFriendlyInput({
   onChange,
   placeholder,
   multiline = false,
-  autoComplete = true
+  autoComplete = true,
 }: TremorFriendlyInputProps) {
   const { preferences } = useTraumaInformed();
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
@@ -521,22 +532,22 @@ export function TremorFriendlyInput({
 
   const handleChange = (newValue: string) => {
     setInternalValue(newValue);
-    
+
     // Debounce the onChange to reduce jitter from tremors
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
-    
+
     const timer = setTimeout(() => {
       onChange(newValue);
     }, 300); // 300ms debounce
-    
+
     setDebounceTimer(timer);
   };
 
   const inputProps = {
     value: internalValue,
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       handleChange(e.target.value),
     placeholder,
     className: `
@@ -547,17 +558,13 @@ export function TremorFriendlyInput({
     `,
     style: {
       fontSize: 'var(--ti-font-size)',
-      minHeight: preferences.touchTargetSize === 'extra-large' ? '72px' : '56px'
+      minHeight: preferences.touchTargetSize === 'extra-large' ? '72px' : '56px',
     },
     autoComplete: autoComplete ? 'on' : 'off',
     // cspell:disable-next-line
     'data-gramm': 'false', // Disable Grammarly to reduce interference
-    spellCheck: false // Reduce distractions for users with cognitive fog
+    spellCheck: false, // Reduce distractions for users with cognitive fog
   };
 
-  return multiline ? (
-    <textarea {...inputProps} rows={4} />
-  ) : (
-    <input {...inputProps} type="text" />
-  );
+  return multiline ? <textarea {...inputProps} rows={4} /> : <input {...inputProps} type="text" />;
 }

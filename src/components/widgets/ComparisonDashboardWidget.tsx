@@ -11,7 +11,7 @@ import {
   Zap,
   AlertTriangle,
   CheckCircle,
-  Clock
+  Clock,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-system';
 import type { PainEntry } from '../../types';
@@ -60,31 +60,27 @@ function InsightCard({ insight, onViewDetails }: InsightCardProps) {
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-3 flex-1">
-            <div className="mt-0.5">
-              {getInsightIcon(insight.type)}
-            </div>
+            <div className="mt-0.5">{getInsightIcon(insight.type)}</div>
             <div className="flex-1">
               <h4 className="font-medium text-sm leading-tight">{insight.title}</h4>
               <p className="text-sm text-muted-foreground mt-1">{insight.description}</p>
               <div className="flex items-center justify-between mt-2">
-                <span className={cn('px-2 py-1 rounded-full text-xs font-medium', getConfidenceColor(insight.confidence))}>
+                <span
+                  className={cn(
+                    'px-2 py-1 rounded-full text-xs font-medium',
+                    getConfidenceColor(insight.confidence)
+                  )}
+                >
                   {Math.round(insight.confidence * 100)}% confidence
                 </span>
                 {insight.recommendation && (
-                  <span className="text-xs text-muted-foreground">
-                    {insight.recommendation}
-                  </span>
+                  <span className="text-xs text-muted-foreground">{insight.recommendation}</span>
                 )}
               </div>
             </div>
           </div>
           {onViewDetails && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onViewDetails}
-              className="ml-2 p-1 h-8 w-8"
-            >
+            <Button variant="ghost" size="sm" onClick={onViewDetails} className="ml-2 p-1 h-8 w-8">
               <Eye className="h-4 w-4" />
             </Button>
           )}
@@ -107,12 +103,23 @@ interface ComparisonMetricCardProps {
   className?: string;
 }
 
-function ComparisonMetricCard({ title, value, change, icon, onClick, className }: ComparisonMetricCardProps) {
-  const TrendIcon = change?.trend === 'up' ? TrendingUp :
-                   change?.trend === 'down' ? TrendingDown : Target;
+function ComparisonMetricCard({
+  title,
+  value,
+  change,
+  icon,
+  onClick,
+  className,
+}: ComparisonMetricCardProps) {
+  const TrendIcon =
+    change?.trend === 'up' ? TrendingUp : change?.trend === 'down' ? TrendingDown : Target;
 
-  const trendColor = change?.trend === 'up' ? 'text-green-600' :
-                    change?.trend === 'down' ? 'text-red-600' : 'text-blue-600';
+  const trendColor =
+    change?.trend === 'up'
+      ? 'text-green-600'
+      : change?.trend === 'down'
+        ? 'text-red-600'
+        : 'text-blue-600';
 
   return (
     <Card
@@ -127,13 +134,14 @@ function ComparisonMetricCard({ title, value, change, icon, onClick, className }
             {change && (
               <div className={cn('flex items-center text-sm mt-1', trendColor)}>
                 <TrendIcon className="h-4 w-4 mr-1" />
-                <span>{change.value > 0 ? '+' : ''}{change.value}% {change.label}</span>
+                <span>
+                  {change.value > 0 ? '+' : ''}
+                  {change.value}% {change.label}
+                </span>
               </div>
             )}
           </div>
-          <div className="text-muted-foreground ml-2">
-            {icon}
-          </div>
+          <div className="text-muted-foreground ml-2">{icon}</div>
         </div>
       </CardContent>
     </Card>
@@ -143,7 +151,7 @@ function ComparisonMetricCard({ title, value, change, icon, onClick, className }
 export function ComparisonDashboardWidget({
   entries,
   className,
-  onViewDetailedComparison
+  onViewDetailedComparison,
 }: ComparisonDashboardWidgetProps) {
   const [selectedInsight, setSelectedInsight] = useState<ComparisonInsight | null>(null);
 
@@ -155,22 +163,22 @@ export function ComparisonDashboardWidget({
           totalComparisons: 0,
           significantFindings: 0,
           improvementAreas: 0,
-          correlationsFound: 0
+          correlationsFound: 0,
         },
         chartData: [],
-        recentComparisons: []
+        recentComparisons: [],
       };
     }
 
-  // Aggregate simple heuristics for now; detailed insights come from sub-comparisons
-  const topInsights: ComparisonInsight[] = [];
+    // Aggregate simple heuristics for now; detailed insights come from sub-comparisons
+    const topInsights: ComparisonInsight[] = [];
 
     // Calculate metrics
     const metrics = {
       totalComparisons: 0,
       significantFindings: 0,
       improvementAreas: 0,
-      correlationsFound: 0
+      correlationsFound: 0,
     };
 
     // Generate chart data for comparison trends
@@ -180,13 +188,14 @@ export function ComparisonDashboardWidget({
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dayEntries = entries.filter(entry => isSameLocalDay(entry.timestamp, date));
 
-      const avgPain = dayEntries.length > 0
-        ? dayEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / dayEntries.length
-        : null;
+      const avgPain =
+        dayEntries.length > 0
+          ? dayEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / dayEntries.length
+          : null;
 
       chartData.push({
         label: date.toLocaleDateString('en-US', { weekday: 'short' }),
-        data: avgPain !== null ? [avgPain] : [0]
+        data: avgPain !== null ? [avgPain] : [0],
       });
     }
 
@@ -197,22 +206,22 @@ export function ComparisonDashboardWidget({
         type: 'time-period',
         title: 'Last Week vs Previous Week',
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        significance: 0.85
+        significance: 0.85,
       },
       {
         id: '2',
         type: 'treatment',
         title: 'Pain Levels Before/After Treatment',
         timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
-        significance: 0.72
-      }
+        significance: 0.72,
+      },
     ];
 
     return {
       insights: topInsights,
       metrics,
       chartData,
-      recentComparisons
+      recentComparisons,
     };
   }, [entries]);
 
@@ -337,7 +346,7 @@ export function ComparisonDashboardWidget({
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {comparisonData.recentComparisons.map((comparison) => (
+              {comparisonData.recentComparisons.map(comparison => (
                 <div
                   key={comparison.id}
                   className="flex items-center justify-between p-3 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors"
@@ -375,9 +384,7 @@ export function ComparisonDashboardWidget({
             <div className="space-y-4">
               <div>
                 <h4 className="font-medium">{selectedInsight.title}</h4>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {selectedInsight.description}
-                </p>
+                <p className="text-sm text-muted-foreground mt-1">{selectedInsight.description}</p>
               </div>
               {/* Additional details could be displayed here in the future */}
               {selectedInsight.recommendation && (
@@ -389,9 +396,7 @@ export function ComparisonDashboardWidget({
                 </div>
               )}
               <div className="flex justify-end">
-                <Button onClick={() => setSelectedInsight(null)}>
-                  Close
-                </Button>
+                <Button onClick={() => setSelectedInsight(null)}>Close</Button>
               </div>
             </div>
           </CardContent>

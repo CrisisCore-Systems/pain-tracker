@@ -1,6 +1,6 @@
 /**
  * Database Client for Subscription Management
- * 
+ *
  * Simple database client using PostgreSQL with pg library.
  * For production, consider using Prisma, TypeORM, or Drizzle ORM.
  */
@@ -17,7 +17,7 @@ const pool = new Pool({
 });
 
 // Handle pool errors
-pool.on('error', (err) => {
+pool.on('error', err => {
   console.error('Unexpected error on idle client', err);
   process.exit(-1);
 });
@@ -31,7 +31,14 @@ export interface SubscriptionRecord {
   customerId: string;
   subscriptionId?: string;
   tier: 'free' | 'basic' | 'pro' | 'enterprise';
-  status: 'active' | 'trialing' | 'past_due' | 'canceled' | 'incomplete' | 'incomplete_expired' | 'unpaid';
+  status:
+    | 'active'
+    | 'trialing'
+    | 'past_due'
+    | 'canceled'
+    | 'incomplete'
+    | 'incomplete_expired'
+    | 'unpaid';
   billingInterval?: 'monthly' | 'yearly';
   currentPeriodStart?: Date;
   currentPeriodEnd?: Date;
@@ -244,7 +251,14 @@ export class DatabaseClient {
        DO UPDATE SET 
          amount = usage_tracking.amount + $3,
          tracked_at = CURRENT_TIMESTAMP`,
-      [userId, usageType, amount, periodStart, periodEnd, metadata ? JSON.stringify(metadata) : null]
+      [
+        userId,
+        usageType,
+        amount,
+        periodStart,
+        periodEnd,
+        metadata ? JSON.stringify(metadata) : null,
+      ]
     );
   }
 
@@ -272,10 +286,7 @@ export class DatabaseClient {
   /**
    * Get usage total for current period
    */
-  async getUsageTotal(
-    userId: string,
-    usageType: UsageRecord['usageType']
-  ): Promise<number> {
+  async getUsageTotal(userId: string, usageType: UsageRecord['usageType']): Promise<number> {
     const usage = await this.getCurrentUsage(userId, usageType);
     return usage.reduce((sum, record) => sum + record.amount, 0);
   }
@@ -324,7 +335,10 @@ export class DatabaseClient {
   /**
    * Get billing events for subscription
    */
-  async getBillingEvents(subscriptionId: string, limit: number = 50): Promise<BillingEventRecord[]> {
+  async getBillingEvents(
+    subscriptionId: string,
+    limit: number = 50
+  ): Promise<BillingEventRecord[]> {
     return await this.query<BillingEventRecord>(
       `SELECT * FROM billing_events 
        WHERE subscription_id = $1 
@@ -349,8 +363,12 @@ export class DatabaseClient {
   }> {
     const [totals, byTier, byStatus, mrr] = await Promise.all([
       this.query<{ count: number }>('SELECT COUNT(*) as count FROM subscriptions'),
-      this.query<{ tier: string; count: number }>('SELECT tier, COUNT(*) as count FROM subscriptions GROUP BY tier'),
-      this.query<{ status: string; count: number }>('SELECT status, COUNT(*) as count FROM subscriptions GROUP BY status'),
+      this.query<{ tier: string; count: number }>(
+        'SELECT tier, COUNT(*) as count FROM subscriptions GROUP BY tier'
+      ),
+      this.query<{ status: string; count: number }>(
+        'SELECT status, COUNT(*) as count FROM subscriptions GROUP BY status'
+      ),
       this.query<{ mrr: number }>(
         `SELECT SUM(
           CASE tier

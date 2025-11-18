@@ -18,7 +18,7 @@ import {
   Plus,
   ArrowLeft,
   BarChart3,
-  Award
+  Award,
 } from 'lucide-react';
 
 interface GoalProgressTrackerProps {
@@ -26,10 +26,7 @@ interface GoalProgressTrackerProps {
   onBack: () => void;
 }
 
-export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
-  goal,
-  onBack
-}) => {
+export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({ goal, onBack }) => {
   const [progress, setProgress] = useState<GoalProgress[]>([]);
   const [milestones, setMilestones] = useState<GoalMilestone[]>([]);
   const [analytics, setAnalytics] = useState<{
@@ -75,7 +72,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
         notes: newProgressNotes.trim() || undefined,
         timestamp: nowIso,
         date: nowIso,
-        isManualEntry: true
+        isManualEntry: true,
       };
 
       await goalStorage.saveGoalProgress(progressEntry);
@@ -90,20 +87,29 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
 
   const getStatusColor = (status: Goal['status']) => {
     switch (status) {
-      case 'active': return 'bg-blue-100 text-blue-800';
-      case 'completed': return 'bg-green-100 text-green-800';
-      case 'paused': return 'bg-yellow-100 text-yellow-800';
-  case 'abandoned': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active':
+        return 'bg-blue-100 text-blue-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'paused':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'abandoned':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getPriorityColor = (priority: Goal['priority']) => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800';
-      case 'medium': return 'bg-yellow-100 text-yellow-800';
-      case 'low': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'high':
+        return 'bg-red-100 text-red-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'low':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -111,7 +117,7 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -206,7 +212,9 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
                 </div>
                 <div>
                   <span className="text-gray-600 dark:text-gray-400">Avg. Progress:</span>
-                  <div className="font-medium">{analytics.averageProgress ? formatNumber(analytics.averageProgress, 1) : 'N/A'}</div>
+                  <div className="font-medium">
+                    {analytics.averageProgress ? formatNumber(analytics.averageProgress, 1) : 'N/A'}
+                  </div>
                 </div>
               </div>
             </>
@@ -245,7 +253,9 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
                   type="number"
                   placeholder="Enter progress value"
                   value={newProgressValue}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewProgressValue(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setNewProgressValue(e.target.value)
+                  }
                 />
               </div>
               <div>
@@ -253,7 +263,9 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
                 <Textarea
                   placeholder="Add any notes about this progress..."
                   value={newProgressNotes}
-                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewProgressNotes(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setNewProgressNotes(e.target.value)
+                  }
                   rows={3}
                 />
               </div>
@@ -286,9 +298,16 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
         ) : (
           <div className="space-y-3">
             {progress
-              .sort((a, b) => new Date(b.timestamp ?? b.date).getTime() - new Date(a.timestamp ?? a.date).getTime())
-              .map((entry) => (
-                <div key={entry.id} className="flex items-center justify-between p-3 border rounded-lg">
+              .sort(
+                (a, b) =>
+                  new Date(b.timestamp ?? b.date).getTime() -
+                  new Date(a.timestamp ?? a.date).getTime()
+              )
+              .map(entry => (
+                <div
+                  key={entry.id}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                       <TrendingUp className="w-5 h-5 text-blue-600" />
@@ -299,7 +318,9 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
                         {formatDate(entry.timestamp ?? entry.date)}
                       </div>
                       {entry.notes && (
-                        <div className="text-sm text-gray-700 dark:text-gray-300 mt-1">{entry.notes}</div>
+                        <div className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                          {entry.notes}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -328,11 +349,13 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
           </div>
         ) : (
           <div className="space-y-3">
-            {milestones.map((milestone) => (
+            {milestones.map(milestone => (
               <div key={milestone.id} className="flex items-center gap-3 p-3 border rounded-lg">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  milestone.completed ? 'bg-green-100' : 'bg-gray-100'
-                }`}>
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    milestone.completed ? 'bg-green-100' : 'bg-gray-100'
+                  }`}
+                >
                   {milestone.completed ? (
                     <CheckCircle className="w-5 h-5 text-green-600" />
                   ) : (
@@ -341,7 +364,9 @@ export const GoalProgressTracker: React.FC<GoalProgressTrackerProps> = ({
                 </div>
                 <div className="flex-1">
                   <div className="font-medium">{milestone.title}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{milestone.description}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    {milestone.description}
+                  </div>
                   {milestone.targetDate && (
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       Target: {formatDate(milestone.targetDate)}

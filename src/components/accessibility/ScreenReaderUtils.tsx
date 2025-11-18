@@ -6,10 +6,10 @@ interface ScreenReaderAnnouncementProps {
   delay?: number;
 }
 
-export const ScreenReaderAnnouncement: React.FC<ScreenReaderAnnouncementProps> = ({ 
-  message, 
+export const ScreenReaderAnnouncement: React.FC<ScreenReaderAnnouncementProps> = ({
+  message,
   priority = 'polite',
-  delay = 0 
+  delay = 0,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -31,14 +31,7 @@ export const ScreenReaderAnnouncement: React.FC<ScreenReaderAnnouncementProps> =
     }
   }, [message, delay]);
 
-  return (
-    <div
-      ref={ref}
-      aria-live={priority}
-      aria-atomic="true"
-      className="sr-only"
-    />
-  );
+  return <div ref={ref} aria-live={priority} aria-atomic="true" className="sr-only" />;
 };
 
 // Hook for programmatic announcements
@@ -49,7 +42,7 @@ export const useScreenReader = () => {
     if (announcementRef.current) {
       announcementRef.current.setAttribute('aria-live', priority);
       announcementRef.current.textContent = message;
-      
+
       setTimeout(() => {
         if (announcementRef.current) {
           announcementRef.current.textContent = '';
@@ -59,21 +52,16 @@ export const useScreenReader = () => {
   };
 
   const AnnouncementElement = () => (
-    <div
-      ref={announcementRef}
-      aria-live="polite"
-      aria-atomic="true"
-      className="sr-only"
-    />
+    <div ref={announcementRef} aria-live="polite" aria-atomic="true" className="sr-only" />
   );
 
   return { announce, AnnouncementElement };
 };
 
 // Skip Link Component with Mobile Optimization
-export const SkipLink: React.FC<{ href: string; children: React.ReactNode }> = ({ 
-  href, 
-  children 
+export const SkipLink: React.FC<{ href: string; children: React.ReactNode }> = ({
+  href,
+  children,
 }) => {
   return (
     <a
@@ -148,7 +136,7 @@ export const AccessibleField: React.FC<AccessibleFieldProps> = ({
   error,
   description,
   required = false,
-  children
+  children,
 }) => {
   const descriptionId = description ? `${id}-description` : undefined;
   const errorId = error ? `${id}-error` : undefined;
@@ -156,22 +144,24 @@ export const AccessibleField: React.FC<AccessibleFieldProps> = ({
 
   return (
     <div className="space-y-1">
-      <label 
+      <label
         htmlFor={id}
         className={`block text-sm font-medium ${error ? 'text-red-700' : 'text-gray-700 dark:text-gray-300'}`}
       >
         {label}
         {required && (
-          <span className="text-red-500 ml-1" aria-label="required">*</span>
+          <span className="text-red-500 ml-1" aria-label="required">
+            *
+          </span>
         )}
       </label>
-      
+
       {description && (
         <p id={descriptionId} className="text-sm text-gray-600 dark:text-gray-400">
           {description}
         </p>
       )}
-      
+
       <div className="relative">
         {React.cloneElement(children as React.ReactElement, {
           id,
@@ -180,10 +170,10 @@ export const AccessibleField: React.FC<AccessibleFieldProps> = ({
           'aria-required': required,
           className: `${(children as React.ReactElement).props.className || ''} ${
             error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
-          }`
+          }`,
         })}
       </div>
-      
+
       {error && (
         <p id={errorId} className="text-sm text-red-600" role="alert">
           {error}

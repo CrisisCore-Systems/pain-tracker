@@ -58,7 +58,7 @@ export async function encryptAndStore(
       c: cipher,
       createdAt: new Date().toISOString(),
       keyVersion: vaultService.getStatus().metadata?.version ?? 'unknown',
-      metadata
+      metadata,
     };
 
     await new Promise<void>((resolve, reject) => {
@@ -85,13 +85,15 @@ export async function retrieveAndDecrypt(
   const db = await openDb(dbName, storeName);
 
   try {
-    const record = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>((resolve, reject) => {
-      const tx = db.transaction(storeName, 'readonly');
-      const store = tx.objectStore(storeName);
-      const request = store.get(entryKey);
-      request.onsuccess = () => resolve(request.result ?? null);
-      request.onerror = () => reject(request.error);
-    });
+    const record = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>(
+      (resolve, reject) => {
+        const tx = db.transaction(storeName, 'readonly');
+        const store = tx.objectStore(storeName);
+        const request = store.get(entryKey);
+        request.onsuccess = () => resolve(request.result ?? null);
+        request.onerror = () => reject(request.error);
+      }
+    );
 
     if (!record) {
       return null;
@@ -115,8 +117,14 @@ export async function retrieveAndDecrypt(
           throw new Error('Legacy key unavailable');
         }
         const subtle = crypto.subtle;
-        const cryptoKey = await subtle.importKey('raw', key, { name: 'AES-GCM' }, false, ['decrypt']);
-        const decrypted = await subtle.decrypt({ name: 'AES-GCM', iv }, cryptoKey, cipher.buffer as ArrayBuffer);
+        const cryptoKey = await subtle.importKey('raw', key, { name: 'AES-GCM' }, false, [
+          'decrypt',
+        ]);
+        const decrypted = await subtle.decrypt(
+          { name: 'AES-GCM', iv },
+          cryptoKey,
+          cipher.buffer as ArrayBuffer
+        );
         const plain = new Uint8Array(decrypted);
         const text = decoder.decode(plain);
 
@@ -138,7 +146,10 @@ export async function retrieveAndDecrypt(
   }
 }
 
-export async function migrateIndexedDBStore(dbName: string, storeName: string): Promise<{ migrated: number }> {
+export async function migrateIndexedDBStore(
+  dbName: string,
+  storeName: string
+): Promise<{ migrated: number }> {
   if (!vaultService.isUnlocked()) {
     throw new Error('Vault must be unlocked before running migrations.');
   }
@@ -157,14 +168,16 @@ export async function migrateIndexedDBStore(dbName: string, storeName: string): 
       request.onerror = () => reject(request.error);
     });
 
-      for (const key of keys as string[]) {
-      const raw = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>((resolve, reject) => {
-        const tx = db.transaction(storeName, 'readonly');
-        const store = tx.objectStore(storeName);
-        const request = store.get(key);
-        request.onsuccess = () => resolve(request.result ?? null);
-        request.onerror = () => reject(request.error);
-      });
+    for (const key of keys as string[]) {
+      const raw = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>(
+        (resolve, reject) => {
+          const tx = db.transaction(storeName, 'readonly');
+          const store = tx.objectStore(storeName);
+          const request = store.get(key);
+          request.onsuccess = () => resolve(request.result ?? null);
+          request.onerror = () => reject(request.error);
+        }
+      );
 
       if (!raw) continue;
       if (isVaultRecord(raw)) continue;
@@ -182,7 +195,9 @@ export async function migrateIndexedDBStore(dbName: string, storeName: string): 
   return { migrated };
 }
 
-function isVaultRecord(record: VaultIndexedDBRecord | LegacyRecord): record is VaultIndexedDBRecord {
+function isVaultRecord(
+  record: VaultIndexedDBRecord | LegacyRecord
+): record is VaultIndexedDBRecord {
   return (record as VaultIndexedDBRecord).v === 'xchacha20-poly1305';
 }
 
@@ -192,7 +207,10 @@ function isLegacyRecord(record: VaultIndexedDBRecord | LegacyRecord): record is 
 
 async function deriveLegacyKey(): Promise<ArrayBuffer | null> {
   try {
-    const key = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+    const key = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, [
+      'encrypt',
+      'decrypt',
+    ]);
     return crypto.subtle.exportKey('raw', key);
   } catch {
     return null;

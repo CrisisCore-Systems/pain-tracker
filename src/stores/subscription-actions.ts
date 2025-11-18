@@ -21,26 +21,24 @@ export interface SubscriptionActionResult<T = void> {
 /**
  * Check quota before adding entry
  */
-export async function checkPainEntryQuota(
-  userId: string
-): Promise<SubscriptionActionResult> {
+export async function checkPainEntryQuota(userId: string): Promise<SubscriptionActionResult> {
   try {
     const access = await subscriptionService.checkFeatureAccess(userId, 'maxPainEntries');
-    
+
     if (!access.hasAccess) {
       return {
         success: false,
         error: access.reason || 'Quota exceeded',
         quotaExceeded: true,
-        upgradeRequired: access.upgradeRequired
+        upgradeRequired: access.upgradeRequired,
       };
     }
-    
+
     return { success: true };
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error'
+      error: err instanceof Error ? err.message : 'Unknown error',
     };
   }
 }
@@ -60,26 +58,24 @@ export async function trackPainEntryUsage(userId: string): Promise<void> {
 /**
  * Check mood entry quota
  */
-export async function checkMoodEntryQuota(
-  userId: string
-): Promise<SubscriptionActionResult> {
+export async function checkMoodEntryQuota(userId: string): Promise<SubscriptionActionResult> {
   try {
     const access = await subscriptionService.checkFeatureAccess(userId, 'maxMoodEntries');
-    
+
     if (!access.hasAccess) {
       return {
         success: false,
         error: access.reason || 'Quota exceeded',
         quotaExceeded: true,
-        upgradeRequired: access.upgradeRequired
+        upgradeRequired: access.upgradeRequired,
       };
     }
-    
+
     return { success: true };
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error'
+      error: err instanceof Error ? err.message : 'Unknown error',
     };
   }
 }
@@ -98,26 +94,24 @@ export async function trackMoodEntryUsage(userId: string): Promise<void> {
 /**
  * Check activity log quota
  */
-export async function checkActivityLogQuota(
-  userId: string
-): Promise<SubscriptionActionResult> {
+export async function checkActivityLogQuota(userId: string): Promise<SubscriptionActionResult> {
   try {
     const access = await subscriptionService.checkFeatureAccess(userId, 'maxActivityLogs');
-    
+
     if (!access.hasAccess) {
       return {
         success: false,
         error: access.reason || 'Quota exceeded',
         quotaExceeded: true,
-        upgradeRequired: access.upgradeRequired
+        upgradeRequired: access.upgradeRequired,
       };
     }
-    
+
     return { success: true };
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error'
+      error: err instanceof Error ? err.message : 'Unknown error',
     };
   }
 }
@@ -136,27 +130,25 @@ export async function trackActivityLogUsage(userId: string): Promise<void> {
 /**
  * Check export quota
  */
-export async function checkExportQuota(
-  userId: string
-): Promise<SubscriptionActionResult> {
+export async function checkExportQuota(userId: string): Promise<SubscriptionActionResult> {
   try {
     // Check if export feature is available for user's tier
     const csvAccess = await subscriptionService.checkFeatureAccess(userId, 'csvExport');
     const pdfAccess = await subscriptionService.checkFeatureAccess(userId, 'pdfReports');
-    
+
     if (!csvAccess.hasAccess && !pdfAccess.hasAccess) {
       return {
         success: false,
         error: 'Export feature not available in your plan',
-        upgradeRequired: csvAccess.upgradeRequired
+        upgradeRequired: csvAccess.upgradeRequired,
       };
     }
-    
+
     return { success: true };
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error'
+      error: err instanceof Error ? err.message : 'Unknown error',
     };
   }
 }
@@ -198,11 +190,11 @@ export class SubscriptionAwareActions {
       // Track usage (async, fire-and-forget)
       void trackPainEntryUsage(this.userId);
 
-  return { success: true };
+      return { success: true };
     } catch (err) {
       return {
         success: false,
-        error: err instanceof Error ? err.message : 'Failed to add entry'
+        error: err instanceof Error ? err.message : 'Failed to add entry',
       };
     }
   }
@@ -222,11 +214,11 @@ export class SubscriptionAwareActions {
     try {
       storeAction(entry);
       void trackMoodEntryUsage(this.userId);
-  return { success: true };
+      return { success: true };
     } catch (err) {
       return {
         success: false,
-        error: err instanceof Error ? err.message : 'Failed to add mood entry'
+        error: err instanceof Error ? err.message : 'Failed to add mood entry',
       };
     }
   }
@@ -246,11 +238,11 @@ export class SubscriptionAwareActions {
     try {
       storeAction(log);
       void trackActivityLogUsage(this.userId);
-  return { success: true };
+      return { success: true };
     } catch (err) {
       return {
         success: false,
-        error: err instanceof Error ? err.message : 'Failed to add activity log'
+        error: err instanceof Error ? err.message : 'Failed to add activity log',
       };
     }
   }
@@ -258,9 +250,7 @@ export class SubscriptionAwareActions {
   /**
    * Export data with quota check
    */
-  async exportData(
-    exportAction: () => Promise<void> | void
-  ): Promise<SubscriptionActionResult> {
+  async exportData(exportAction: () => Promise<void> | void): Promise<SubscriptionActionResult> {
     const quotaCheck = await checkExportQuota(this.userId);
     if (!quotaCheck.success) {
       return quotaCheck;
@@ -273,7 +263,7 @@ export class SubscriptionAwareActions {
     } catch (err) {
       return {
         success: false,
-        error: err instanceof Error ? err.message : 'Export failed'
+        error: err instanceof Error ? err.message : 'Export failed',
       };
     }
   }
@@ -296,6 +286,6 @@ export function useSubscriptionActions(userId: string) {
     addPainEntry: actions.addPainEntry.bind(actions),
     addMoodEntry: actions.addMoodEntry.bind(actions),
     addActivityLog: actions.addActivityLog.bind(actions),
-    exportData: actions.exportData.bind(actions)
+    exportData: actions.exportData.bind(actions),
   };
 }

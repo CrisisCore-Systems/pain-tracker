@@ -35,16 +35,16 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
     const element = document.querySelector(currentStepData.target) as HTMLElement;
     if (element) {
       setTargetElement(element);
-      
+
       // Scroll element into view
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
       });
 
       // Add highlight class
       element.classList.add('walkthrough-highlight');
-      
+
       return () => {
         element.classList.remove('walkthrough-highlight');
       };
@@ -63,31 +63,31 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
         return {
           top: rect.top - 20,
           left: rect.left + rect.width / 2,
-          transform: 'translate(-50%, -100%)'
+          transform: 'translate(-50%, -100%)',
         };
       case 'bottom':
         return {
           top: rect.bottom + 20,
           left: rect.left + rect.width / 2,
-          transform: 'translate(-50%, 0)'
+          transform: 'translate(-50%, 0)',
         };
       case 'left':
         return {
           top: rect.top + rect.height / 2,
           left: rect.left - 20,
-          transform: 'translate(-100%, -50%)'
+          transform: 'translate(-100%, -50%)',
         };
       case 'right':
         return {
           top: rect.top + rect.height / 2,
           left: rect.right + 20,
-          transform: 'translate(0, -50%)'
+          transform: 'translate(0, -50%)',
         };
       default:
         return {
           top: rect.bottom + 20,
           left: rect.left + rect.width / 2,
-          transform: 'translate(-50%, 0)'
+          transform: 'translate(-50%, 0)',
         };
     }
   };
@@ -117,7 +117,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
   };
 
   useEffect(() => {
-    const styleSheet = document.createElement("style");
+    const styleSheet = document.createElement('style');
     const styles = `
       .walkthrough-highlight {
         position: relative;
@@ -139,7 +139,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
     <>
       {/* Backdrop overlay */}
       <div className="fixed inset-0 bg-black/50 z-40" />
-      
+
       {/* Walkthrough overlay */}
       <div
         ref={overlayRef}
@@ -170,9 +170,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
             {steps.map((_, index) => (
               <div
                 key={index}
-                className={`h-1 flex-1 rounded ${
-                  index <= currentStep ? 'bg-primary' : 'bg-muted'
-                }`}
+                className={`h-1 flex-1 rounded ${index <= currentStep ? 'bg-primary' : 'bg-muted'}`}
               />
             ))}
           </div>
@@ -201,18 +199,13 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
               <span>Previous</span>
             </Button>
 
-            <Button
-              size="sm"
-              onClick={handleNext}
-              className="flex items-center space-x-1"
-            >
+            <Button size="sm" onClick={handleNext} className="flex items-center space-x-1">
               <span>{currentStep === steps.length - 1 ? 'Finish' : 'Next'}</span>
               {currentStep < steps.length - 1 && <ArrowRight className="h-3 w-3" />}
             </Button>
           </div>
         </div>
       </div>
-
     </>
   );
 }

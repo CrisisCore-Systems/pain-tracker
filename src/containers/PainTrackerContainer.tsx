@@ -14,19 +14,16 @@ import { BodyMapPage } from '../components/body-mapping/BodyMapPage';
 import { FibromyalgiaTracker } from '../components/fibromyalgia/FibromyalgiaTracker';
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
-const OnboardingFlow = lazy(() => import('../components/onboarding').then(m => ({ default: m.OnboardingFlow })));
-const Walkthrough = lazy(() => import('../components/tutorials').then(m => ({ default: m.Walkthrough })));
+const OnboardingFlow = lazy(() =>
+  import('../components/onboarding').then(m => ({ default: m.OnboardingFlow }))
+);
+const Walkthrough = lazy(() =>
+  import('../components/tutorials').then(m => ({ default: m.Walkthrough }))
+);
 
 export function PainTrackerContainer() {
-  const {
-    entries,
-    ui,
-    addEntry,
-    setShowOnboarding,
-    setShowWalkthrough,
-    setError,
-    loadSampleData
-  } = usePainTrackerStore();
+  const { entries, ui, addEntry, setShowOnboarding, setShowWalkthrough, setError, loadSampleData } =
+    usePainTrackerStore();
 
   const toast = useToast();
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
@@ -42,9 +39,9 @@ export function PainTrackerContainer() {
   // Check for first-time user
   useEffect(() => {
     try {
-  const hasSeenOnboarding = secureStorage.get<string>('pain-tracker-onboarding-completed');
+      const hasSeenOnboarding = secureStorage.get<string>('pain-tracker-onboarding-completed');
       const hasEntries = entries.length > 0;
-      
+
       if (!hasSeenOnboarding && !hasEntries) {
         setShowOnboarding(true);
       }
@@ -55,16 +52,19 @@ export function PainTrackerContainer() {
 
   const handleOnboardingComplete = (setupWithSampleData: boolean) => {
     try {
-  secureStorage.set('pain-tracker-onboarding-completed', 'true');
+      secureStorage.set('pain-tracker-onboarding-completed', 'true');
     } catch (err) {
       console.warn('Unable to save onboarding status:', err);
     }
-    
+
     setShowOnboarding(false);
-    
+
     if (setupWithSampleData) {
       loadSampleData();
-      toast.success('Sample data loaded!', 'Explore the features with example pain entries. You can clear this data anytime.');
+      toast.success(
+        'Sample data loaded!',
+        'Explore the features with example pain entries. You can clear this data anytime.'
+      );
     } else {
       toast.info('Welcome to Pain Tracker!', 'Start by recording your first pain entry above.');
     }
@@ -72,11 +72,11 @@ export function PainTrackerContainer() {
 
   const handleOnboardingSkip = () => {
     try {
-  secureStorage.set('pain-tracker-onboarding-completed', 'true');
+      secureStorage.set('pain-tracker-onboarding-completed', 'true');
     } catch (err) {
       console.warn('Unable to save onboarding status:', err);
     }
-    
+
     setShowOnboarding(false);
     toast.info('Onboarding skipped', 'You can always access help from the help menu.');
   };
@@ -87,7 +87,7 @@ export function PainTrackerContainer() {
 
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);
-    toast.success('Tutorial completed!', 'You\'re all set to start tracking your pain effectively.');
+    toast.success('Tutorial completed!', "You're all set to start tracking your pain effectively.");
   };
 
   const handleWalkthroughSkip = () => {
@@ -96,15 +96,19 @@ export function PainTrackerContainer() {
 
   const validatePainEntry = (entry: Omit<PainEntry, 'id' | 'timestamp'>): boolean => {
     if (!entry.baselineData) return false;
-    
+
     const { pain } = entry.baselineData;
     if (typeof pain !== 'number' || pain < 0 || pain > 10) return false;
 
     if (entry.qualityOfLife) {
       const { sleepQuality, moodImpact } = entry.qualityOfLife;
       if (
-        typeof sleepQuality !== 'number' || sleepQuality < 0 || sleepQuality > 10 ||
-        typeof moodImpact !== 'number' || moodImpact < 0 || moodImpact > 10
+        typeof sleepQuality !== 'number' ||
+        sleepQuality < 0 ||
+        sleepQuality > 10 ||
+        typeof moodImpact !== 'number' ||
+        moodImpact < 0 ||
+        moodImpact > 10
       ) {
         return false;
       }
@@ -116,7 +120,7 @@ export function PainTrackerContainer() {
   const handleAddEntry = (entryData: Omit<PainEntry, 'id' | 'timestamp'>) => {
     try {
       if (!validatePainEntry(entryData)) {
-        setError("Invalid pain entry data. Please check your input values.");
+        setError('Invalid pain entry data. Please check your input values.');
         toast.error('Invalid Entry', 'Please check your input values and try again.');
         return;
       }
@@ -126,26 +130,27 @@ export function PainTrackerContainer() {
       toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
       setCurrentView('dashboard'); // Navigate back to dashboard after saving
     } catch (err) {
-      setError("Failed to add pain entry. Please try again.");
+      setError('Failed to add pain entry. Please try again.');
       toast.error('Save Failed', 'Unable to add pain entry. Please try again.');
-      console.error("Error adding pain entry:", err);
+      console.error('Error adding pain entry:', err);
     }
   };
 
   // Calculate stats for header
   const stats = {
     totalEntries: entries.length,
-    avgPain: entries.length > 0 
-      ? entries.reduce((sum, e) => sum + e.baselineData.pain, 0) / entries.length 
-      : 0,
-    streak: entries.length > 0 ? Math.min(entries.length, 7) : 0 // Simplified streak calc
+    avgPain:
+      entries.length > 0
+        ? entries.reduce((sum, e) => sum + e.baselineData.pain, 0) / entries.length
+        : 0,
+    streak: entries.length > 0 ? Math.min(entries.length, 7) : 0, // Simplified streak calc
   };
 
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
         return entries.length > 0 ? (
-          <ClinicalDashboard 
+          <ClinicalDashboard
             entries={entries}
             onLogNow={() => setCurrentView('new-entry')}
             onViewCalendar={() => setCurrentView('calendar')}
@@ -158,37 +163,37 @@ export function PainTrackerContainer() {
         ) : (
           <EmptyStatePanel onStartWalkthrough={handleStartWalkthrough} />
         );
-      
+
       case 'new-entry':
         return (
           <QuickLogStepper
-            onComplete={(data) => {
+            onComplete={data => {
               // Convert QuickLogStepper data to PainEntry format
               handleAddEntry({
                 baselineData: {
                   pain: data.pain,
                   locations: data.locations,
-                  symptoms: data.symptoms
+                  symptoms: data.symptoms,
                 },
-                notes: data.notes
+                notes: data.notes,
               } as Omit<PainEntry, 'id' | 'timestamp'>);
             }}
             onCancel={() => setCurrentView('dashboard')}
           />
         );
-      
+
       case 'analytics':
         return <PremiumAnalyticsDashboard entries={entries} />;
-      
+
       case 'body-map':
         return <BodyMapPage />;
-      
+
       case 'fibromyalgia':
         return <FibromyalgiaTracker />;
-      
+
       case 'calendar':
         return <CalendarView entries={entries} />;
-      
+
       case 'reports':
         return (
           <div className="text-center py-20">
@@ -199,7 +204,7 @@ export function PainTrackerContainer() {
             <p className="text-gray-600 dark:text-gray-400">This feature is under development</p>
           </div>
         );
-      
+
       case 'settings':
       case 'help':
         return (
@@ -207,14 +212,16 @@ export function PainTrackerContainer() {
             <div className="inline-flex p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl mb-4">
               <span className="text-4xl">⚙️</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{currentView === 'settings' ? 'Settings' : 'Help & Support'}</h3>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              {currentView === 'settings' ? 'Settings' : 'Help & Support'}
+            </h3>
             <p className="text-gray-600 dark:text-gray-400">Configuration options coming soon</p>
           </div>
         );
-      
+
       default:
         return entries.length > 0 ? (
-          <ClinicalDashboard 
+          <ClinicalDashboard
             entries={entries}
             onLogNow={() => setCurrentView('new-entry')}
             onViewCalendar={() => setCurrentView('calendar')}
@@ -231,21 +238,14 @@ export function PainTrackerContainer() {
 
   return (
     <>
-      <ModernAppLayout 
-        currentView={currentView}
-        onNavigate={setCurrentView}
-        stats={stats}
-      >
+      <ModernAppLayout currentView={currentView} onNavigate={setCurrentView} stats={stats}>
         {renderView()}
       </ModernAppLayout>
 
       {/* Onboarding Flow - Lazy loaded only when needed */}
       {ui.showOnboarding && (
         <Suspense fallback={null}>
-          <OnboardingFlow
-            onComplete={handleOnboardingComplete}
-            onSkip={handleOnboardingSkip}
-          />
+          <OnboardingFlow onComplete={handleOnboardingComplete} onSkip={handleOnboardingSkip} />
         </Suspense>
       )}
 

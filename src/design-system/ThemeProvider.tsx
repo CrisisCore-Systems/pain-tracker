@@ -34,24 +34,24 @@ interface ThemeProviderProps {
   defaultMode?: ThemeMode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ 
-  children, 
-  defaultMode = 'light' 
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({
+  children,
+  defaultMode = 'light',
 }) => {
   const [mode, setModeState] = useState<ThemeMode>(() => {
     // Check localStorage for saved theme preference
     if (typeof window !== 'undefined') {
       try {
-  const savedMode = secureStorage.get<string>('pain-tracker-theme');
+        const savedMode = secureStorage.get<string>('pain-tracker-theme');
         if (savedMode === 'light' || savedMode === 'dark' || savedMode === 'high-contrast') {
           return savedMode;
         }
-        
+
         // Check system preference for high contrast
         if (window.matchMedia && window.matchMedia('(prefers-contrast: high)').matches) {
           return 'high-contrast';
         }
-        
+
         // Check system preference for dark mode
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
           return 'dark';
@@ -74,14 +74,14 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
   // Update CSS custom properties when mode changes
   const updateCSSVariables = useCallback((newMode: ThemeMode) => {
-  const themeColors = getThemeColors(newMode) as ThemeColors;
-  const root = document.documentElement;
-    
+    const themeColors = getThemeColors(newMode) as ThemeColors;
+    const root = document.documentElement;
+
     // Set CSS custom properties for seamless integration with Tailwind
     Object.entries(themeColors).forEach(([key, value]) => {
       root.style.setProperty(`--color-${key}`, value);
     });
-    
+
     // Helper to convert hex color to "r g b" string for CSS variable storage
     const hexToRgb = (hex?: string) => {
       if (!hex) return '0 0 0';
@@ -94,23 +94,56 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     };
 
     // Set chart series tokens (use theme values with brand fallbacks)
-  root.style.setProperty('--chart-series-1', hexToRgb(themeColors.primary ?? brand.colors.primary[500]));
-  root.style.setProperty('--chart-series-2', hexToRgb(themeColors.secondary ?? brand.colors.secondary[500]));
-  root.style.setProperty('--chart-series-3', hexToRgb(themeColors.accent ?? brand.colors.accent[500]));
-  root.style.setProperty('--chart-series-4', hexToRgb(themeColors.warning ?? brand.colors.status.warning));
-  root.style.setProperty('--chart-series-5', hexToRgb(themeColors.info ?? brand.colors.status.info));
-  root.style.setProperty('--chart-series-6', hexToRgb(themeColors.destructive ?? brand.colors.status.error));
+    root.style.setProperty(
+      '--chart-series-1',
+      hexToRgb(themeColors.primary ?? brand.colors.primary[500])
+    );
+    root.style.setProperty(
+      '--chart-series-2',
+      hexToRgb(themeColors.secondary ?? brand.colors.secondary[500])
+    );
+    root.style.setProperty(
+      '--chart-series-3',
+      hexToRgb(themeColors.accent ?? brand.colors.accent[500])
+    );
+    root.style.setProperty(
+      '--chart-series-4',
+      hexToRgb(themeColors.warning ?? brand.colors.status.warning)
+    );
+    root.style.setProperty(
+      '--chart-series-5',
+      hexToRgb(themeColors.info ?? brand.colors.status.info)
+    );
+    root.style.setProperty(
+      '--chart-series-6',
+      hexToRgb(themeColors.destructive ?? brand.colors.status.error)
+    );
 
     // Pain-specific tokens
-  root.style.setProperty('--color-pain-none', hexToRgb(themeColors.success ?? brand.colors.pain.none));
-  root.style.setProperty('--color-pain-mild', hexToRgb(themeColors.success ?? brand.colors.pain.mild));
-  root.style.setProperty('--color-pain-moderate', hexToRgb(themeColors.warning ?? brand.colors.pain.moderate));
-  root.style.setProperty('--color-pain-severe', hexToRgb(themeColors.warning ?? brand.colors.pain.severe));
-  root.style.setProperty('--color-pain-extreme', hexToRgb(themeColors.destructive ?? brand.colors.pain.extreme));
-    
+    root.style.setProperty(
+      '--color-pain-none',
+      hexToRgb(themeColors.success ?? brand.colors.pain.none)
+    );
+    root.style.setProperty(
+      '--color-pain-mild',
+      hexToRgb(themeColors.success ?? brand.colors.pain.mild)
+    );
+    root.style.setProperty(
+      '--color-pain-moderate',
+      hexToRgb(themeColors.warning ?? brand.colors.pain.moderate)
+    );
+    root.style.setProperty(
+      '--color-pain-severe',
+      hexToRgb(themeColors.warning ?? brand.colors.pain.severe)
+    );
+    root.style.setProperty(
+      '--color-pain-extreme',
+      hexToRgb(themeColors.destructive ?? brand.colors.pain.extreme)
+    );
+
     // Set data attribute for CSS targeting
     root.setAttribute('data-theme', newMode);
-    
+
     // Add/remove 'dark' class for Tailwind dark mode
     if (newMode === 'dark' || newMode === 'high-contrast') {
       root.classList.add('dark');
@@ -119,17 +152,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     }
   }, []);
 
-  const setMode = useCallback((newMode: ThemeMode) => {
-    setModeState(newMode);
-    try {
-  secureStorage.set('pain-tracker-theme', newMode);
-    } catch (error) {
-      console.warn('Failed to save theme preference to localStorage:', error);
-    }
-    
-    // Update CSS custom properties
-    updateCSSVariables(newMode);
-  }, [updateCSSVariables]);
+  const setMode = useCallback(
+    (newMode: ThemeMode) => {
+      setModeState(newMode);
+      try {
+        secureStorage.set('pain-tracker-theme', newMode);
+      } catch (error) {
+        console.warn('Failed to save theme preference to localStorage:', error);
+      }
+
+      // Update CSS custom properties
+      updateCSSVariables(newMode);
+    },
+    [updateCSSVariables]
+  );
 
   const toggleMode = useCallback(() => {
     const nextMode = mode === 'light' ? 'dark' : mode === 'dark' ? 'high-contrast' : 'light';
@@ -139,38 +175,47 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   // Listen for system accessibility preferences
   useEffect(() => {
     const mediaQueries = [
-      { query: '(prefers-color-scheme: dark)', handler: (e: MediaQueryListEvent) => {
-        try {
-          const savedMode = secureStorage.get<string>('pain-tracker-theme');
-          // Only update if user hasn't set a preference and not already in high contrast
-          if (!savedMode && mode !== 'high-contrast') {
-            setMode(e.matches ? 'dark' : 'light');
+      {
+        query: '(prefers-color-scheme: dark)',
+        handler: (e: MediaQueryListEvent) => {
+          try {
+            const savedMode = secureStorage.get<string>('pain-tracker-theme');
+            // Only update if user hasn't set a preference and not already in high contrast
+            if (!savedMode && mode !== 'high-contrast') {
+              setMode(e.matches ? 'dark' : 'light');
+            }
+          } catch (error) {
+            console.warn('Failed to access localStorage for system theme detection:', error);
           }
-        } catch (error) {
-          console.warn('Failed to access localStorage for system theme detection:', error);
-        }
-      }},
-      { query: '(prefers-contrast: high)', handler: (e: MediaQueryListEvent) => {
-        try {
-          const savedMode = secureStorage.get<string>('pain-tracker-theme');
-          // Update to high contrast if system preference changes
-          if (!savedMode && e.matches) {
-            setMode('high-contrast');
+        },
+      },
+      {
+        query: '(prefers-contrast: high)',
+        handler: (e: MediaQueryListEvent) => {
+          try {
+            const savedMode = secureStorage.get<string>('pain-tracker-theme');
+            // Update to high contrast if system preference changes
+            if (!savedMode && e.matches) {
+              setMode('high-contrast');
+            }
+          } catch (error) {
+            console.warn('Failed to handle high contrast preference:', error);
           }
-        } catch (error) {
-          console.warn('Failed to handle high contrast preference:', error);
-        }
-      }},
-      { query: '(prefers-reduced-motion: reduce)', handler: (e: MediaQueryListEvent) => {
-        setHasReducedMotion(e.matches);
-      }}
+        },
+      },
+      {
+        query: '(prefers-reduced-motion: reduce)',
+        handler: (e: MediaQueryListEvent) => {
+          setHasReducedMotion(e.matches);
+        },
+      },
     ];
 
     const cleanupFunctions: (() => void)[] = [];
 
     mediaQueries.forEach(({ query, handler }) => {
       const mediaQuery = window.matchMedia(query);
-      
+
       if (mediaQuery.addEventListener) {
         mediaQuery.addEventListener('change', handler);
         cleanupFunctions.push(() => mediaQuery.removeEventListener('change', handler));
@@ -200,9 +245,5 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     hasReducedMotion,
   };
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

@@ -9,7 +9,8 @@ const predictFlareUp = (entries: PainEntry[]) => {
 };
 
 const suggestCopingStrategies = (score: number) => {
-  if (score > 0.7) return ['Rest and consult healthcare provider', 'Use pain management techniques'];
+  if (score > 0.7)
+    return ['Rest and consult healthcare provider', 'Use pain management techniques'];
   if (score > 0.4) return ['Monitor symptoms closely', 'Consider preventive measures'];
   return ['Maintain healthy habits', 'Continue regular monitoring'];
 };
@@ -17,7 +18,7 @@ const suggestCopingStrategies = (score: number) => {
 const riskTrendOverDays = (entries: PainEntry[], days: number) => {
   return Array.from({ length: days }, (_, i) => ({
     label: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),
-    score: Math.floor(Math.random() * 100)
+    score: Math.floor(Math.random() * 100),
   }));
 };
 
@@ -25,7 +26,7 @@ const analyzeTriggers = (entries: PainEntry[], days: number) => {
   // Mock trigger analysis
   return [
     { name: 'Weather changes', confidence: 75, detail: 'Cold weather correlation' },
-    { name: 'Sleep quality', confidence: 60, detail: 'Poor sleep patterns' }
+    { name: 'Sleep quality', confidence: 60, detail: 'Poor sleep patterns' },
   ];
 };
 
@@ -39,7 +40,7 @@ export default function PredictivePanel({ entries }: { entries: PainEntry[] }) {
   const { score, reason } = predictFlareUp(entries);
   const strategies = suggestCopingStrategies(score);
   const trend = riskTrendOverDays(entries, 7);
-  const triggers = analyzeTriggers(entries, 30).slice(0,2);
+  const triggers = analyzeTriggers(entries, 30).slice(0, 2);
 
   return (
     <div className="mb-4">
@@ -51,21 +52,33 @@ export default function PredictivePanel({ entries }: { entries: PainEntry[] }) {
           <div className="mb-3">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-lg font-semibold">Risk: {(score*100).toFixed(0)}%</div>
+                <div className="text-lg font-semibold">Risk: {(score * 100).toFixed(0)}%</div>
                 <div className="text-sm text-muted-foreground">{reason}</div>
               </div>
               <div style={{ width: 200 }}>
                 <div className="h-3 bg-muted rounded overflow-hidden">
                   <div
                     className={`h-3 rounded`}
-                    style={{ width: `${Math.round(score*100)}%`, background: score < 0.4 ? 'linear-gradient(90deg,#34d399,#10b981)' : score < 0.7 ? 'linear-gradient(90deg,#f59e0b,#f97316)' : 'linear-gradient(90deg,#fb7185,#ef4444)' }}
+                    style={{
+                      width: `${Math.round(score * 100)}%`,
+                      background:
+                        score < 0.4
+                          ? 'linear-gradient(90deg,#34d399,#10b981)'
+                          : score < 0.7
+                            ? 'linear-gradient(90deg,#f59e0b,#f97316)'
+                            : 'linear-gradient(90deg,#fb7185,#ef4444)',
+                    }}
                   />
                 </div>
               </div>
             </div>
 
             <div className="mt-3">
-              <TrendChart labels={trend.map(t => t.label)} data={trend.map(t => t.score)} height={80} />
+              <TrendChart
+                labels={trend.map(t => t.label)}
+                data={trend.map(t => t.score)}
+                height={80}
+              />
             </div>
           </div>
 
@@ -75,7 +88,9 @@ export default function PredictivePanel({ entries }: { entries: PainEntry[] }) {
                 <div className="text-sm font-medium">Top triggers</div>
                 <ul className="mt-1 list-disc list-inside text-sm text-muted-foreground">
                   {triggers.map(t => (
-                    <li key={t.name}>{t.name} — {t.confidence}% ({t.detail})</li>
+                    <li key={t.name}>
+                      {t.name} — {t.confidence}% ({t.detail})
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -84,7 +99,9 @@ export default function PredictivePanel({ entries }: { entries: PainEntry[] }) {
             <div className="text-sm font-medium mb-2">Suggested actions</div>
             <ul className="mt-1 list-disc list-inside text-sm space-y-1">
               {strategies.map(s => (
-                <li key={s} className="text-muted-foreground">{s}</li>
+                <li key={s} className="text-muted-foreground">
+                  {s}
+                </li>
               ))}
             </ul>
           </div>

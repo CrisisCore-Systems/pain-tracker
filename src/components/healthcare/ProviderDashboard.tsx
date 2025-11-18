@@ -1,16 +1,16 @@
 import { useState, useMemo } from 'react';
 import { formatNumber } from '../../utils/formatting';
-import { 
-  Users, 
-  TrendingUp, 
-  Calendar, 
-  FileText, 
+import {
+  Users,
+  TrendingUp,
+  Calendar,
+  FileText,
   AlertTriangle,
   CheckCircle,
   Clock,
   Download,
   Search,
-  BarChart3
+  BarChart3,
 } from 'lucide-react';
 import type { PainEntry } from '../../types';
 import { painAnalyticsService } from '../../services/PainAnalyticsService';
@@ -78,7 +78,8 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
         return lastEntry >= weekAgo;
       }).length,
       highRiskPatients: patients.filter(p => p.riskLevel === 'high').length,
-      averagePainLevel: patients.reduce((sum, p) => sum + p.averagePain, 0) / (patients.length || 1)
+      averagePainLevel:
+        patients.reduce((sum, p) => sum + p.averagePain, 0) / (patients.length || 1),
     };
   }, [patients]);
 
@@ -90,10 +91,10 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
     try {
       const bundle = fhirService.painEntriesToFHIRBundle(patient.entries, patient.id);
       const dataStr = JSON.stringify(bundle, null, 2);
-      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-      
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
       const exportFileDefaultName = `${patient.name.replace(/\s+/g, '_')}_pain_data_fhir.json`;
-      
+
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
       linkElement.setAttribute('download', exportFileDefaultName);
@@ -105,19 +106,27 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
 
   const getRiskColor = (level: string) => {
     switch (level) {
-      case 'high': return 'text-red-600 bg-red-50 border-red-200';
-      case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'low': return 'text-green-600 bg-green-50 border-green-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'high':
+        return 'text-red-600 bg-red-50 border-red-200';
+      case 'medium':
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      case 'low':
+        return 'text-green-600 bg-green-50 border-green-200';
+      default:
+        return 'text-gray-600 bg-gray-50 border-gray-200';
     }
   };
 
   const getRiskIcon = (level: string) => {
     switch (level) {
-      case 'high': return <AlertTriangle className="h-4 w-4" />;
-      case 'medium': return <Clock className="h-4 w-4" />;
-      case 'low': return <CheckCircle className="h-4 w-4" />;
-      default: return null;
+      case 'high':
+        return <AlertTriangle className="h-4 w-4" />;
+      case 'medium':
+        return <Clock className="h-4 w-4" />;
+      case 'low':
+        return <CheckCircle className="h-4 w-4" />;
+      default:
+        return null;
     }
   };
 
@@ -150,9 +159,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalPatients}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.activePatients} active this week
-            </p>
+            <p className="text-xs text-muted-foreground">{stats.activePatients} active this week</p>
           </CardContent>
         </Card>
 
@@ -163,9 +170,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatNumber(stats.averagePainLevel, 1)}</div>
-            <p className="text-xs text-muted-foreground">
-              Across all active patients
-            </p>
+            <p className="text-xs text-muted-foreground">Across all active patients</p>
           </CardContent>
         </Card>
 
@@ -176,9 +181,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">{stats.highRiskPatients}</div>
-            <p className="text-xs text-muted-foreground">
-              Require immediate attention
-            </p>
+            <p className="text-xs text-muted-foreground">Require immediate attention</p>
           </CardContent>
         </Card>
 
@@ -189,9 +192,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">{stats.activePatients}</div>
-            <p className="text-xs text-muted-foreground">
-              Logged data this week
-            </p>
+            <p className="text-xs text-muted-foreground">Logged data this week</p>
           </CardContent>
         </Card>
       </div>
@@ -209,13 +210,15 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
                     <Input
                       placeholder="Search patients..."
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={e => setSearchTerm(e.target.value)}
                       className="pl-10 w-64"
                     />
                   </div>
                   <select
                     value={riskFilter}
-                    onChange={(e) => setRiskFilter(e.target.value as 'all' | 'low' | 'medium' | 'high')}
+                    onChange={e =>
+                      setRiskFilter(e.target.value as 'all' | 'low' | 'medium' | 'high')
+                    }
                     className="px-3 py-2 border rounded-md text-sm"
                   >
                     <option value="all">All Risk Levels</option>
@@ -228,7 +231,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {filteredPatients.map((patient) => (
+                {filteredPatients.map(patient => (
                   <div
                     key={patient.id}
                     className={`p-4 rounded-lg border cursor-pointer transition-colors ${
@@ -242,13 +245,19 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
                       <div className="flex-1">
                         <div className="flex items-center space-x-3">
                           <h4 className="font-medium text-foreground">{patient.name}</h4>
-                          <div className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs border ${getRiskColor(patient.riskLevel)}`}>
+                          <div
+                            className={`inline-flex items-center space-x-1 px-2 py-1 rounded-full text-xs border ${getRiskColor(patient.riskLevel)}`}
+                          >
                             {getRiskIcon(patient.riskLevel)}
                             <span className="capitalize">{patient.riskLevel} Risk</span>
                           </div>
                         </div>
                         <div className="flex items-center space-x-4 mt-1 text-sm text-muted-foreground">
-                          <span>{patient.gender}, {new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear()} years</span>
+                          <span>
+                            {patient.gender},{' '}
+                            {new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear()}{' '}
+                            years
+                          </span>
                           <span>Avg Pain: {formatNumber(patient.averagePain, 1)}</span>
                           <span>{patient.totalEntries} entries</span>
                         </div>
@@ -278,7 +287,7 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={(e) => {
+                          onClick={e => {
                             e.stopPropagation();
                             handleExportFHIR(patient);
                           }}
@@ -319,11 +328,11 @@ export function ProviderDashboard({ patients = [] }: ProviderDashboardProps) {
 function PatientDetailPanel({ patient }: { patient: Patient }) {
   const analytics = useMemo(() => {
     if (patient.entries.length < 3) return null;
-    
+
     return {
       patterns: painAnalyticsService.analyzePatterns(patient.entries),
       prediction: painAnalyticsService.predictPain(patient.entries, '7d'),
-      trends: painAnalyticsService.analyzeTrends(patient.entries)
+      trends: painAnalyticsService.analyzeTrends(patient.entries),
     };
   }, [patient.entries]);
 
@@ -347,10 +356,11 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
           <div>
             <h4 className="font-medium text-foreground">{patient.name}</h4>
             <p className="text-sm text-muted-foreground">
-              {patient.gender}, {new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear()} years old
+              {patient.gender},{' '}
+              {new Date().getFullYear() - new Date(patient.dateOfBirth).getFullYear()} years old
             </p>
           </div>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="text-sm text-muted-foreground">Avg Pain</div>
@@ -368,9 +378,9 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
             <div>
               <div className="text-sm text-muted-foreground mb-2">Conditions</div>
               <div className="flex flex-wrap gap-1">
-                  {patient.conditions.map((condition, index) => (
-                    <span
-                      key={index}
+                {patient.conditions.map((condition, index) => (
+                  <span
+                    key={index}
                     className="px-2 py-1 bg-secondary text-secondary-foreground text-xs rounded-md"
                   >
                     {condition}
@@ -394,16 +404,21 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
           <CardContent className="space-y-3">
             <div>
               <div className="text-sm text-muted-foreground">Trend</div>
-              <div className={`text-sm font-medium ${
-                analytics.trends.overallTrend === 'improving' ? 'text-green-600' :
-                analytics.trends.overallTrend === 'worsening' ? 'text-red-600' :
-                'text-blue-600'
-              }`}>
-                {analytics.trends.overallTrend.charAt(0).toUpperCase() + analytics.trends.overallTrend.slice(1)}
+              <div
+                className={`text-sm font-medium ${
+                  analytics.trends.overallTrend === 'improving'
+                    ? 'text-green-600'
+                    : analytics.trends.overallTrend === 'worsening'
+                      ? 'text-red-600'
+                      : 'text-blue-600'
+                }`}
+              >
+                {analytics.trends.overallTrend.charAt(0).toUpperCase() +
+                  analytics.trends.overallTrend.slice(1)}
                 ({Math.round(analytics.trends.trendStrength * 100)}% confidence)
               </div>
             </div>
-            
+
             <div>
               <div className="text-sm text-muted-foreground">7-Day Prediction</div>
               <div className="text-sm font-medium">
@@ -418,7 +433,8 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
               <div>
                 <div className="text-sm text-muted-foreground mb-1">Patterns Detected</div>
                 <div className="text-xs text-foreground">
-                  {analytics.patterns[0].name} - {Math.round(analytics.patterns[0].confidence * 100)}% confidence
+                  {analytics.patterns[0].name} -{' '}
+                  {Math.round(analytics.patterns[0].confidence * 100)}% confidence
                 </div>
               </div>
             )}
@@ -436,7 +452,7 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {recentEntries.map((entry) => (
+            {recentEntries.map(entry => (
               <div key={entry.id} className="flex items-center justify-between p-2 rounded border">
                 <div>
                   <div className="text-sm font-medium">
@@ -446,11 +462,15 @@ function PatientDetailPanel({ patient }: { patient: Patient }) {
                     {new Date(entry.timestamp).toLocaleDateString()}
                   </div>
                 </div>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
-                  entry.baselineData.pain >= 7 ? 'bg-red-100 text-red-600' :
-                  entry.baselineData.pain >= 4 ? 'bg-yellow-100 text-yellow-600' :
-                  'bg-green-100 text-green-600'
-                }`}>
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+                    entry.baselineData.pain >= 7
+                      ? 'bg-red-100 text-red-600'
+                      : entry.baselineData.pain >= 4
+                        ? 'bg-yellow-100 text-yellow-600'
+                        : 'bg-green-100 text-green-600'
+                  }`}
+                >
                   {entry.baselineData.pain}
                 </div>
               </div>

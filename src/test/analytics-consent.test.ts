@@ -10,7 +10,7 @@ describe('PrivacyAnalyticsService consent management', () => {
 
   it('should grant consent when requestConsent is called', async () => {
     const result = await privacyAnalytics.requestConsent();
-    
+
     expect(result).toBe(true);
     expect(privacyAnalytics.hasConsent()).toBe(true);
   });
@@ -18,123 +18,123 @@ describe('PrivacyAnalyticsService consent management', () => {
   it('should revoke consent when revokeConsent is called', async () => {
     await privacyAnalytics.requestConsent();
     expect(privacyAnalytics.hasConsent()).toBe(true);
-    
+
     privacyAnalytics.revokeConsent();
     expect(privacyAnalytics.hasConsent()).toBe(false);
   });
 
   it('should not track events when consent is not given', async () => {
     privacyAnalytics.revokeConsent();
-    
+
     const mockEntry = {
       id: 1,
       timestamp: new Date().toISOString(),
       baselineData: {
         pain: 5,
         locations: ['back'],
-        symptoms: ['aching']
+        symptoms: ['aching'],
       },
       functionalImpact: {
         limitedActivities: [],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 7,
         moodImpact: 6,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
+      notes: '',
     };
 
     await privacyAnalytics.trackPainEntry(mockEntry);
-    
+
     const status = privacyAnalytics.getPrivacyStatus();
     expect(status.eventsCollected).toBe(0);
   });
 
   it('should track events when consent is given', async () => {
     await privacyAnalytics.requestConsent();
-    
+
     const mockEntry = {
       id: 1,
       timestamp: new Date().toISOString(),
       baselineData: {
         pain: 5,
         locations: ['back'],
-        symptoms: ['aching']
+        symptoms: ['aching'],
       },
       functionalImpact: {
         limitedActivities: [],
         assistanceNeeded: [],
-        mobilityAids: []
+        mobilityAids: [],
       },
       medications: {
         current: [],
         changes: '',
-        effectiveness: ''
+        effectiveness: '',
       },
       treatments: {
         recent: [],
         effectiveness: '',
-        planned: []
+        planned: [],
       },
       qualityOfLife: {
         sleepQuality: 7,
         moodImpact: 6,
-        socialImpact: []
+        socialImpact: [],
       },
       workImpact: {
         missedWork: 0,
         modifiedDuties: [],
-        workLimitations: []
+        workLimitations: [],
       },
       comparison: {
         worseningSince: '',
-        newLimitations: []
+        newLimitations: [],
       },
-      notes: ''
+      notes: '',
     };
 
     await privacyAnalytics.trackPainEntry(mockEntry);
-    
+
     const status = privacyAnalytics.getPrivacyStatus();
     expect(status.eventsCollected).toBeGreaterThan(0);
   });
 
   it('should track validation usage', async () => {
     await privacyAnalytics.requestConsent();
-    
+
     await privacyAnalytics.trackValidationUsage('emotion-validation');
-    
+
     const status = privacyAnalytics.getPrivacyStatus();
     expect(status.eventsCollected).toBe(1);
   });
 
   it('should track data exports', async () => {
     await privacyAnalytics.requestConsent();
-    
+
     await privacyAnalytics.trackDataExport('csv');
-    
+
     const status = privacyAnalytics.getPrivacyStatus();
     expect(status.eventsCollected).toBe(1);
   });

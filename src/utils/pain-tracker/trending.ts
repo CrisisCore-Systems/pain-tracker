@@ -35,46 +35,66 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
 
   // Time of day patterns
   // Use local hours so analysis reflects user's local experience.
-  const timeOfDayPattern = entries.reduce((acc, entry) => {
-    const hour = new Date(entry.timestamp).getHours();
-    const timeBlock = `${hour.toString().padStart(2, '0')}:00`;
-    acc[timeBlock] = (acc[timeBlock] || 0) + entry.baselineData.pain;
-    return acc;
-  }, {} as { [key: string]: number });
+  const timeOfDayPattern = entries.reduce(
+    (acc, entry) => {
+      const hour = new Date(entry.timestamp).getHours();
+      const timeBlock = `${hour.toString().padStart(2, '0')}:00`;
+      acc[timeBlock] = (acc[timeBlock] || 0) + entry.baselineData.pain;
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
 
   // Day of week patterns
   // Use local weekday so results map to the user's local calendar days.
-  const dayOfWeekPattern = entries.reduce((acc, entry) => {
-    const weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const dayIdx = new Date(entry.timestamp).getDay();
-    const dayName = weekdayNames[dayIdx];
-    acc[dayName] = (acc[dayName] || 0) + entry.baselineData.pain;
-    return acc;
-  }, {} as { [key: string]: number });
+  const dayOfWeekPattern = entries.reduce(
+    (acc, entry) => {
+      const weekdayNames = [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+      ];
+      const dayIdx = new Date(entry.timestamp).getDay();
+      const dayName = weekdayNames[dayIdx];
+      acc[dayName] = (acc[dayName] || 0) + entry.baselineData.pain;
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
 
   // Location frequency
-  const locationFrequency = entries.reduce((acc, entry) => {
-    entry.baselineData.locations?.forEach(location => {
-      acc[location] = (acc[location] || 0) + 1;
-    });
-    return acc;
-  }, {} as { [key: string]: number });
+  const locationFrequency = entries.reduce(
+    (acc, entry) => {
+      entry.baselineData.locations?.forEach(location => {
+        acc[location] = (acc[location] || 0) + 1;
+      });
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
 
   // Symptom correlations with pain levels
-  const symptomCorrelations = entries.reduce((acc, entry) => {
-    entry.baselineData.symptoms?.forEach(symptom => {
-      acc[symptom] = (acc[symptom] || 0) + entry.baselineData.pain;
-    });
-    return acc;
-  }, {} as { [key: string]: number });
+  const symptomCorrelations = entries.reduce(
+    (acc, entry) => {
+      entry.baselineData.symptoms?.forEach(symptom => {
+        acc[symptom] = (acc[symptom] || 0) + entry.baselineData.pain;
+      });
+      return acc;
+    },
+    {} as { [key: string]: number }
+  );
 
   // Pain level trends
-  const sortedEntries = [...entries].sort((a, b) => 
-    new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  const sortedEntries = [...entries].sort(
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
-  const changes = sortedEntries.slice(1).map((entry, i) => 
-    entry.baselineData.pain - sortedEntries[i].baselineData.pain
-  );
+  const changes = sortedEntries
+    .slice(1)
+    .map((entry, i) => entry.baselineData.pain - sortedEntries[i].baselineData.pain);
   const averageChange = changes.reduce((sum, change) => sum + change, 0) / changes.length || 0;
 
   return {
@@ -109,39 +129,43 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
   // Basic pain level statistics
   const painLevels = entries.map(e => e.baselineData.pain);
   const mean = painLevels.reduce((sum, pain) => sum + pain, 0) / painLevels.length;
-  
+
   const sortedPain = [...painLevels].sort((a, b) => a - b);
-  const median = sortedPain.length % 2 === 0
-    ? (sortedPain[sortedPain.length / 2 - 1] + sortedPain[sortedPain.length / 2]) / 2
-    : sortedPain[Math.floor(sortedPain.length / 2)];
+  const median =
+    sortedPain.length % 2 === 0
+      ? (sortedPain[sortedPain.length / 2 - 1] + sortedPain[sortedPain.length / 2]) / 2
+      : sortedPain[Math.floor(sortedPain.length / 2)];
 
   const mode = sortedPain.reduce(
     (acc, curr) => {
       const count = sortedPain.filter(num => num === curr).length;
       // If current count is higher, use current value
       // If count is equal and current value is the original first value, use it (for tie-breaking)
-      return count > acc.count || (count === acc.count && curr === painLevels[0]) 
-        ? { value: curr, count } 
+      return count > acc.count || (count === acc.count && curr === painLevels[0])
+        ? { value: curr, count }
         : acc;
     },
     { value: painLevels[0], count: 0 }
   ).value;
 
   // Location statistics
-  const locationStats = entries.reduce((acc, entry) => {
-    entry.baselineData.locations?.forEach(location => {
-      if (!acc[location]) {
-        acc[location] = { frequency: 0, totalPain: 0, avgPain: 0 };
-      }
-      const stats = acc[location];
-      if (stats) {
-        stats.frequency += 1;
-        stats.totalPain = (stats.totalPain || 0) + entry.baselineData.pain;
-      }
-    });
-    
-    return acc;
-  }, {} as Record<string, { frequency: number; totalPain?: number; avgPain: number }>);
+  const locationStats = entries.reduce(
+    (acc, entry) => {
+      entry.baselineData.locations?.forEach(location => {
+        if (!acc[location]) {
+          acc[location] = { frequency: 0, totalPain: 0, avgPain: 0 };
+        }
+        const stats = acc[location];
+        if (stats) {
+          stats.frequency += 1;
+          stats.totalPain = (stats.totalPain || 0) + entry.baselineData.pain;
+        }
+      });
+
+      return acc;
+    },
+    {} as Record<string, { frequency: number; totalPain?: number; avgPain: number }>
+  );
 
   // Calculate average pain for each location
   Object.keys(locationStats).forEach(location => {
@@ -153,20 +177,23 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
   });
 
   // Symptom statistics
-  const symptomStats = entries.reduce((acc, entry) => {
-    entry.baselineData.symptoms?.forEach(symptom => {
-      if (!acc[symptom]) {
-        acc[symptom] = { frequency: 0, totalPain: 0, avgPain: 0 };
-      }
-      const stats = acc[symptom];
-      if (stats) {
-        stats.frequency += 1;
-        stats.totalPain = (stats.totalPain || 0) + entry.baselineData.pain;
-      }
-    });
-    
-    return acc;
-  }, {} as Record<string, { frequency: number; totalPain?: number; avgPain: number }>);
+  const symptomStats = entries.reduce(
+    (acc, entry) => {
+      entry.baselineData.symptoms?.forEach(symptom => {
+        if (!acc[symptom]) {
+          acc[symptom] = { frequency: 0, totalPain: 0, avgPain: 0 };
+        }
+        const stats = acc[symptom];
+        if (stats) {
+          stats.frequency += 1;
+          stats.totalPain = (stats.totalPain || 0) + entry.baselineData.pain;
+        }
+      });
+
+      return acc;
+    },
+    {} as Record<string, { frequency: number; totalPain?: number; avgPain: number }>
+  );
 
   // Calculate average pain for each symptom
   Object.keys(symptomStats).forEach(symptom => {
@@ -204,20 +231,28 @@ export const calculateStatistics = (entries: PainEntry[]): Statistics => {
  * - If a `period` is provided it will ensure all days in the range are present.
  */
 export function buildDailySeries(entries: PainEntry[], period?: { start: string; end: string }) {
-  const dailyData = entries.reduce((acc, entry) => {
-    // Use local date key so buckets align with user's local calendar days
-    const d = new Date(entry.timestamp);
-  // Build local YYYY-MM-DD manually
-    const localYear = d.getFullYear();
-    const localMonth = (d.getMonth() + 1).toString().padStart(2, '0');
-    const localDate = d.getDate().toString().padStart(2, '0');
-    const localKey = `${localYear}-${localMonth}-${localDate}`;
-    if (!acc[localKey]) acc[localKey] = { painLevels: [] as number[], symptoms: new Set<string>(), locations: new Set<string>() };
-    acc[localKey].painLevels.push(entry.baselineData.pain);
-    entry.baselineData.symptoms?.forEach(s => acc[localKey].symptoms.add(s));
-    entry.baselineData.locations?.forEach(l => acc[localKey].locations.add(l));
-    return acc;
-  }, {} as Record<string, { painLevels: number[]; symptoms: Set<string>; locations: Set<string> }>);
+  const dailyData = entries.reduce(
+    (acc, entry) => {
+      // Use local date key so buckets align with user's local calendar days
+      const d = new Date(entry.timestamp);
+      // Build local YYYY-MM-DD manually
+      const localYear = d.getFullYear();
+      const localMonth = (d.getMonth() + 1).toString().padStart(2, '0');
+      const localDate = d.getDate().toString().padStart(2, '0');
+      const localKey = `${localYear}-${localMonth}-${localDate}`;
+      if (!acc[localKey])
+        acc[localKey] = {
+          painLevels: [] as number[],
+          symptoms: new Set<string>(),
+          locations: new Set<string>(),
+        };
+      acc[localKey].painLevels.push(entry.baselineData.pain);
+      entry.baselineData.symptoms?.forEach(s => acc[localKey].symptoms.add(s));
+      entry.baselineData.locations?.forEach(l => acc[localKey].locations.add(l));
+      return acc;
+    },
+    {} as Record<string, { painLevels: number[]; symptoms: Set<string>; locations: Set<string> }>
+  );
 
   const entriesByDate = Object.entries(dailyData).map(([date, data]) => ({
     date,
@@ -232,7 +267,12 @@ export function buildDailySeries(entries: PainEntry[], period?: { start: string;
     const endParts = period.end.split('-').map(p => parseInt(p, 10));
     const start = new Date(startParts[0], startParts[1] - 1, startParts[2]);
     const end = new Date(endParts[0], endParts[1] - 1, endParts[2]);
-    const days: { date: string; pain: number | null; symptoms: number | null; locations: number | null }[] = [];
+    const days: {
+      date: string;
+      pain: number | null;
+      symptoms: number | null;
+      locations: number | null;
+    }[] = [];
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       const y = d.getFullYear();
       const m = (d.getMonth() + 1).toString().padStart(2, '0');

@@ -11,7 +11,12 @@ const DEFAULTS = { timeout: 15000, retries: 2, retryDelay: 500 };
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export async function fetcher<T = unknown>(url: string, opts: FetcherOptions = {}): Promise<T> {
-  const { timeout = DEFAULTS.timeout, retries = DEFAULTS.retries, retryDelay = DEFAULTS.retryDelay, ...rest } = opts;
+  const {
+    timeout = DEFAULTS.timeout,
+    retries = DEFAULTS.retries,
+    retryDelay = DEFAULTS.retryDelay,
+    ...rest
+  } = opts;
 
   let lastErr: Error | null = null;
   for (let attempt = 0; attempt <= retries; attempt++) {

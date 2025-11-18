@@ -36,7 +36,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
 
       if (backupData.metadata) {
         setBackupMetadata(backupData.metadata);
-        
+
         // If not encrypted, show preview
         if (!backupData.encrypted && backupData.data) {
           setPreviewData(backupData.data.slice(0, 3)); // Show first 3 entries as preview
@@ -63,7 +63,9 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
 
       if (backupData.encrypted) {
         try {
-          const restored = await encryptionService.restoreFromEncryptedBackup<{ data: PainEntry[] }>(fileContent, password);
+          const restored = await encryptionService.restoreFromEncryptedBackup<{
+            data: PainEntry[];
+          }>(fileContent, password);
           entries = restored.data || [];
         } catch (e) {
           setRestoreStatus('Failed to decrypt backup - check your password');
@@ -82,22 +84,27 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
       }
 
       // Basic validation of pain entries
-      const validEntries = entries.filter(entry => 
-        entry && 
-        typeof entry.id === 'number' &&
-        typeof entry.timestamp === 'string' &&
-        entry.baselineData &&
-        typeof entry.baselineData.pain === 'number'
+      const validEntries = entries.filter(
+        entry =>
+          entry &&
+          typeof entry.id === 'number' &&
+          typeof entry.timestamp === 'string' &&
+          entry.baselineData &&
+          typeof entry.baselineData.pain === 'number'
       );
 
       if (validEntries.length !== entries.length) {
-        setRestoreStatus(`Warning: ${entries.length - validEntries.length} invalid entries were skipped`);
+        setRestoreStatus(
+          `Warning: ${entries.length - validEntries.length} invalid entries were skipped`
+        );
       }
 
       onDataRestore(validEntries);
       setRestoreStatus(`Successfully restored ${validEntries.length} pain entries`);
     } catch (error) {
-      setRestoreStatus(`Error restoring data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setRestoreStatus(
+        `Error restoring data: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     } finally {
       setIsRestoring(false);
     }
@@ -117,7 +124,9 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-        <span role="img" aria-label="restore">📥</span>
+        <span role="img" aria-label="restore">
+          📥
+        </span>
         Restore from Backup
       </h2>
 
@@ -143,7 +152,9 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
             </button>
             {selectedFile && (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600 dark:text-gray-400">{selectedFile.name}</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  {selectedFile.name}
+                </span>
                 <button
                   onClick={clearSelection}
                   className="text-red-500 hover:text-red-700 text-sm"
@@ -177,7 +188,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               placeholder="Enter backup password"
               className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -200,7 +211,9 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
                 </div>
               ))}
               {backupMetadata && backupMetadata.entryCount > 3 && (
-                <div className="text-gray-500 dark:text-gray-400">... and {backupMetadata.entryCount - 3} more entries</div>
+                <div className="text-gray-500 dark:text-gray-400">
+                  ... and {backupMetadata.entryCount - 3} more entries
+                </div>
               )}
             </div>
           </div>
@@ -220,19 +233,28 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
               </>
             ) : (
               <>
-                <span role="img" aria-hidden="true">📂</span>
+                <span role="img" aria-hidden="true">
+                  📂
+                </span>
                 Restore Data
               </>
             )}
           </button>
 
           {restoreStatus && (
-            <div className={`p-3 rounded text-sm ${
-              restoreStatus.includes('Error') || restoreStatus.includes('Invalid') || restoreStatus.includes('Failed') ? 'bg-red-100 text-red-700' : 
-              restoreStatus.includes('Successfully') ? 'bg-green-100 text-green-700' : 
-              restoreStatus.includes('Warning') ? 'bg-yellow-100 text-yellow-700' :
-              'bg-blue-100 text-blue-700'
-            }`}>
+            <div
+              className={`p-3 rounded text-sm ${
+                restoreStatus.includes('Error') ||
+                restoreStatus.includes('Invalid') ||
+                restoreStatus.includes('Failed')
+                  ? 'bg-red-100 text-red-700'
+                  : restoreStatus.includes('Successfully')
+                    ? 'bg-green-100 text-green-700'
+                    : restoreStatus.includes('Warning')
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-blue-100 text-blue-700'
+              }`}
+            >
               {restoreStatus}
             </div>
           )}
@@ -242,9 +264,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
         <div className="border-l-4 border-red-400 bg-red-50 p-4">
           <div className="flex">
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                Data Restore Warning
-              </h3>
+              <h3 className="text-sm font-medium text-red-800">Data Restore Warning</h3>
               <div className="mt-2 text-sm text-red-700">
                 <ul className="list-disc list-inside space-y-1">
                   <li>Restoring will merge data with existing entries</li>

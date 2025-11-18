@@ -46,4 +46,3 @@ export interface MoodEntry {
   mood: number;
   notes?: string;
 }
-

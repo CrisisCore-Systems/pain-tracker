@@ -65,7 +65,7 @@ class DifferentialPrivacyEngine {
     const scale = sensitivity / this.epsilon;
     const noise = this.generateLaplaceNoise(scale);
     this.budgetUsed += this.epsilon * 0.1; // Use 10% of budget per query
-    
+
     return Math.max(0, value + noise); // Ensure non-negative results
   }
 
@@ -104,7 +104,7 @@ export class PrivacyPreservingAnalyticsService {
       minimumAggregationSize: 5,
       allowedMetrics: ['pain_level', 'location', 'usage_time', 'validation_usage'],
       consentRequired: true,
-      ...config
+      ...config,
     };
 
     this.privacyEngine = new DifferentialPrivacyEngine(this.config.noiseLevel);
@@ -118,7 +118,7 @@ export class PrivacyPreservingAnalyticsService {
     let hash = 0;
     for (let i = 0; i < randomData.length; i++) {
       const char = randomData.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return Math.abs(hash).toString(36);
@@ -132,9 +132,9 @@ export class PrivacyPreservingAnalyticsService {
       metadata: {
         differentialPrivacyEnabled: this.config.differentialPrivacyEnabled,
         noiseLevel: this.config.noiseLevel,
-        consentRequired: this.config.consentRequired
+        consentRequired: this.config.consentRequired,
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Clean old events on initialization
@@ -158,7 +158,7 @@ export class PrivacyPreservingAnalyticsService {
       level: 'info',
       message: 'User consent for analytics granted',
       metadata: { consentGiven: this.userConsent },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     return this.userConsent;
@@ -169,13 +169,13 @@ export class PrivacyPreservingAnalyticsService {
    */
   revokeConsent(): void {
     this.userConsent = false;
-    
+
     securityService.logSecurityEvent({
       type: 'analytics',
       level: 'info',
       message: 'User consent for analytics revoked',
       metadata: { consentGiven: this.userConsent },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -198,7 +198,7 @@ export class PrivacyPreservingAnalyticsService {
       hasLocation: !!entry.baselineData.locations && entry.baselineData.locations.length > 0,
       hasDescription: !!entry.notes && entry.notes.length > 0,
       timeOfDay: new Date(entry.timestamp).getHours(),
-      dayOfWeek: new Date(entry.timestamp).getDay()
+      dayOfWeek: new Date(entry.timestamp).getDay(),
     };
 
     const event: AnonymizedEvent = {
@@ -206,7 +206,7 @@ export class PrivacyPreservingAnalyticsService {
       timestamp: new Date(),
       metadata: anonymizedMetadata,
       sessionHash: this.sessionHash,
-      isAnonymized: true
+      isAnonymized: true,
     };
 
     this.addEvent(event);
@@ -216,7 +216,7 @@ export class PrivacyPreservingAnalyticsService {
       level: 'info',
       message: 'Pain entry tracked (anonymized)',
       metadata: { sessionHash: this.sessionHash },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -231,10 +231,10 @@ export class PrivacyPreservingAnalyticsService {
       timestamp: new Date(),
       metadata: {
         validationType: this.anonymizeString(validationType),
-        timeOfDay: new Date().getHours()
+        timeOfDay: new Date().getHours(),
       },
       sessionHash: this.sessionHash,
-      isAnonymized: true
+      isAnonymized: true,
     };
 
     this.addEvent(event);
@@ -251,10 +251,10 @@ export class PrivacyPreservingAnalyticsService {
       timestamp: new Date(),
       metadata: {
         viewType: this.anonymizeString(viewType),
-        timeOfDay: new Date().getHours()
+        timeOfDay: new Date().getHours(),
       },
       sessionHash: this.sessionHash,
-      isAnonymized: true
+      isAnonymized: true,
     };
 
     this.addEvent(event);
@@ -271,10 +271,10 @@ export class PrivacyPreservingAnalyticsService {
       timestamp: new Date(),
       metadata: {
         exportType,
-        timeOfDay: new Date().getHours()
+        timeOfDay: new Date().getHours(),
       },
       sessionHash: this.sessionHash,
-      isAnonymized: true
+      isAnonymized: true,
     };
 
     this.addEvent(event);
@@ -293,7 +293,7 @@ export class PrivacyPreservingAnalyticsService {
       const validationEvents = this.events.filter(e => e.eventType === 'validation_used');
 
       // Calculate metrics with noise
-      const totalUsers = this.config.differentialPrivacyEnabled 
+      const totalUsers = this.config.differentialPrivacyEnabled
         ? this.privacyEngine.addLaplaceNoise(this.getUniqueSessionCount())
         : this.getUniqueSessionCount();
 
@@ -302,30 +302,32 @@ export class PrivacyPreservingAnalyticsService {
         : this.calculateAveragePainLevel(painEvents);
 
       const commonLocations = this.getCommonPainLocations();
-      
+
       const usagePatterns = {
         averageEntriesPerWeek: this.config.differentialPrivacyEnabled
           ? this.privacyEngine.addLaplaceNoise(this.calculateWeeklyAverage(painEvents))
           : this.calculateWeeklyAverage(painEvents),
         peakUsageHours: this.getPeakUsageHours(this.events),
         validationUsageRate: this.config.differentialPrivacyEnabled
-          ? this.privacyEngine.addLaplaceNoise(validationEvents.length / Math.max(1, painEvents.length))
-          : validationEvents.length / Math.max(1, painEvents.length)
+          ? this.privacyEngine.addLaplaceNoise(
+              validationEvents.length / Math.max(1, painEvents.length)
+            )
+          : validationEvents.length / Math.max(1, painEvents.length),
       };
 
       const insights: AggregatedInsights = {
         totalUsers: Math.round(totalUsers),
-  averagePainLevel: Number(formatNumber(averagePainLevel, 1)),
+        averagePainLevel: Number(formatNumber(averagePainLevel, 1)),
         commonPainLocations: commonLocations,
         usagePatterns,
         privacyMetrics: {
           noiseAdded: this.config.differentialPrivacyEnabled ? this.config.noiseLevel : 0,
           dataPointsAggregated: this.events.length,
-          privacyBudgetUsed: this.config.differentialPrivacyEnabled 
-            ? this.privacyEngine.getRemainingBudget() 
-            : 0
+          privacyBudgetUsed: this.config.differentialPrivacyEnabled
+            ? this.privacyEngine.getRemainingBudget()
+            : 0,
         },
-        generatedAt: new Date()
+        generatedAt: new Date(),
       };
 
       securityService.logSecurityEvent({
@@ -335,9 +337,9 @@ export class PrivacyPreservingAnalyticsService {
         metadata: {
           totalEvents: this.events.length,
           uniqueSessions: this.getUniqueSessionCount(),
-          privacyBudgetRemaining: this.privacyEngine.getRemainingBudget()
+          privacyBudgetRemaining: this.privacyEngine.getRemainingBudget(),
         },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
 
       return insights;
@@ -347,7 +349,7 @@ export class PrivacyPreservingAnalyticsService {
         level: 'error',
         message: 'Failed to generate insights',
         metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
       return null;
     }
@@ -370,7 +372,7 @@ export class PrivacyPreservingAnalyticsService {
       differentialPrivacyEnabled: this.config.differentialPrivacyEnabled,
       eventsCollected: this.events.length,
       privacyBudgetRemaining: this.privacyEngine.getRemainingBudget(),
-      dataRetentionDays: this.config.dataRetentionDays
+      dataRetentionDays: this.config.dataRetentionDays,
     };
   }
 
@@ -380,12 +382,12 @@ export class PrivacyPreservingAnalyticsService {
   async clearAnalyticsData(): Promise<void> {
     this.events = [];
     this.privacyEngine.resetBudget();
-    
+
     securityService.logSecurityEvent({
       type: 'analytics',
       level: 'info',
       message: 'Analytics data cleared',
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -394,7 +396,7 @@ export class PrivacyPreservingAnalyticsService {
    */
   updatePrivacyConfig(newConfig: Partial<PrivacyPreservingConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    
+
     if (newConfig.noiseLevel) {
       this.privacyEngine = new DifferentialPrivacyEngine(newConfig.noiseLevel);
     }
@@ -404,15 +406,14 @@ export class PrivacyPreservingAnalyticsService {
       level: 'info',
       message: 'Privacy configuration updated',
       metadata: newConfig,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
   // Private helper methods
 
   private shouldTrack(): boolean {
-    return this.config.enableAnalytics && 
-           (!this.config.consentRequired || this.userConsent);
+    return this.config.enableAnalytics && (!this.config.consentRequired || this.userConsent);
   }
 
   private addEvent(event: AnonymizedEvent): void {
@@ -423,17 +424,17 @@ export class PrivacyPreservingAnalyticsService {
   private cleanOldEvents(): void {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - this.config.dataRetentionDays);
-    
+
     const initialCount = this.events.length;
     this.events = this.events.filter(event => event.timestamp >= cutoffDate);
-    
+
     if (this.events.length < initialCount) {
       securityService.logSecurityEvent({
         type: 'analytics',
         level: 'info',
         message: 'Old analytics events cleaned',
         metadata: { removed: initialCount - this.events.length },
-        timestamp: new Date()
+        timestamp: new Date(),
       });
     }
   }
@@ -458,12 +459,12 @@ export class PrivacyPreservingAnalyticsService {
 
   private calculateAveragePainLevel(painEvents: AnonymizedEvent[]): number {
     if (painEvents.length === 0) return 0;
-    
+
     const total = painEvents.reduce((sum, event) => {
       const painLevel = event.metadata.painLevel as number;
       return sum + (painLevel || 0);
     }, 0);
-    
+
     return total / painEvents.length;
   }
 
@@ -498,13 +499,13 @@ export class PrivacyPreservingAnalyticsService {
     return [
       { location: 'upper_body', frequency: Math.random() * 50 },
       { location: 'lower_body', frequency: Math.random() * 50 },
-      { location: 'extremities', frequency: Math.random() * 30 }
+      { location: 'extremities', frequency: Math.random() * 30 },
     ];
   }
 
   private getPeakUsageHours(events: AnonymizedEvent[]): number[] {
     const hourCounts = new Array(24).fill(0);
-    
+
     events.forEach(event => {
       const hour = event.metadata.timeOfDay as number;
       if (hour >= 0 && hour < 24) {

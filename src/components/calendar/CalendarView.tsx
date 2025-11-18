@@ -10,7 +10,7 @@ import {
   Clock,
   AlertCircle,
   CheckCircle2,
-  Info
+  Info,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge } from '../../design-system';
@@ -36,24 +36,24 @@ export function CalendarView({ entries }: CalendarViewProps) {
   const calendarData = useMemo(() => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    
+
     // Get first day of month and last day
     const firstDay = new Date(year, month, 1);
-    
+
     // Get starting point (previous month days to fill the week)
     const startingDayOfWeek = firstDay.getDay();
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - startingDayOfWeek);
-    
+
     // Generate 42 days (6 weeks)
     const days: DayData[] = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     for (let i = 0; i < 42; i++) {
       const date = new Date(startDate);
       date.setDate(date.getDate() + i);
-      
+
       // Find entries for this day
       const dayEntries = entries.filter(entry => {
         const entryDate = new Date(entry.timestamp);
@@ -63,20 +63,21 @@ export function CalendarView({ entries }: CalendarViewProps) {
           entryDate.getDate() === date.getDate()
         );
       });
-      
-      const avgPain = dayEntries.length > 0
-        ? dayEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / dayEntries.length
-        : 0;
-      
+
+      const avgPain =
+        dayEntries.length > 0
+          ? dayEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / dayEntries.length
+          : 0;
+
       days.push({
         date,
         entries: dayEntries,
         avgPain,
         isCurrentMonth: date.getMonth() === month,
-        isToday: date.getTime() === today.getTime()
+        isToday: date.getTime() === today.getTime(),
       });
     }
-    
+
     return days;
   }, [currentDate, entries]);
 
@@ -85,38 +86,44 @@ export function CalendarView({ entries }: CalendarViewProps) {
     const monthEntries = calendarData
       .filter(day => day.isCurrentMonth && day.entries.length > 0)
       .flatMap(day => day.entries);
-    
+
     if (monthEntries.length === 0) {
       return {
         avgPain: 0,
         totalEntries: 0,
         daysTracked: 0,
         bestDay: null,
-        worstDay: null
+        worstDay: null,
       };
     }
-    
-    const avgPain = monthEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / monthEntries.length;
-    const daysTracked = calendarData.filter(day => day.isCurrentMonth && day.entries.length > 0).length;
-    
+
+    const avgPain =
+      monthEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / monthEntries.length;
+    const daysTracked = calendarData.filter(
+      day => day.isCurrentMonth && day.entries.length > 0
+    ).length;
+
     const sortedDays = [...calendarData]
       .filter(day => day.isCurrentMonth && day.entries.length > 0)
       .sort((a, b) => a.avgPain - b.avgPain);
-    
+
     return {
       avgPain,
       totalEntries: monthEntries.length,
       daysTracked,
       bestDay: sortedDays[0],
-      worstDay: sortedDays[sortedDays.length - 1]
+      worstDay: sortedDays[sortedDays.length - 1],
     };
   }, [calendarData]);
 
   const getPainColor = (pain: number) => {
     if (pain === 0) return 'bg-gray-100 dark:bg-gray-800 text-gray-400';
-    if (pain <= 3) return 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700';
-    if (pain <= 5) return 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700';
-    if (pain <= 7) return 'bg-orange-100 dark:bg-orange-950/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700';
+    if (pain <= 3)
+      return 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700';
+    if (pain <= 5)
+      return 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700';
+    if (pain <= 7)
+      return 'bg-orange-100 dark:bg-orange-950/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700';
     return 'bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700';
   };
 
@@ -152,7 +159,9 @@ export function CalendarView({ entries }: CalendarViewProps) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Calendar View</h2>
-          <p className="text-gray-600 dark:text-gray-400">Visual timeline of your pain tracking journey</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Visual timeline of your pain tracking journey
+          </p>
         </div>
         <Button variant="outline" onClick={goToToday} className="rounded-xl">
           <CalendarIcon className="h-4 w-4 mr-2" />
@@ -207,20 +216,10 @@ export function CalendarView({ entries }: CalendarViewProps) {
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white">{monthName}</h3>
               <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={prevMonth}
-                  className="rounded-xl"
-                >
+                <Button variant="ghost" size="sm" onClick={prevMonth} className="rounded-xl">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={nextMonth}
-                  className="rounded-xl"
-                >
+                <Button variant="ghost" size="sm" onClick={nextMonth} className="rounded-xl">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -252,28 +251,28 @@ export function CalendarView({ entries }: CalendarViewProps) {
                     day.entries.length === 0 && 'cursor-default',
                     !day.isCurrentMonth && 'opacity-30',
                     day.isToday && 'ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-gray-900',
-                    day.entries.length > 0 ? getPainColor(day.avgPain) : 'bg-gray-50 dark:bg-gray-800/50 text-gray-400',
-                    selectedDay?.date.getTime() === day.date.getTime() && 'ring-2 ring-offset-2 dark:ring-offset-gray-900'
+                    day.entries.length > 0
+                      ? getPainColor(day.avgPain)
+                      : 'bg-gray-50 dark:bg-gray-800/50 text-gray-400',
+                    selectedDay?.date.getTime() === day.date.getTime() &&
+                      'ring-2 ring-offset-2 dark:ring-offset-gray-900'
                   )}
                 >
-                  <span className={cn(
-                    'text-sm font-medium mb-1',
-                    day.isToday && 'font-bold'
-                  )}>
+                  <span className={cn('text-sm font-medium mb-1', day.isToday && 'font-bold')}>
                     {day.date.getDate()}
                   </span>
-                  
+
                   {day.entries.length > 0 && (
                     <>
-                      <div className={cn(
-                        'w-1.5 h-1.5 rounded-full',
-                        getPainColor(day.avgPain).split(' ')[0].replace('bg-', 'bg-'),
-                        getPainIntensity(day.avgPain)
-                      )} />
+                      <div
+                        className={cn(
+                          'w-1.5 h-1.5 rounded-full',
+                          getPainColor(day.avgPain).split(' ')[0].replace('bg-', 'bg-'),
+                          getPainIntensity(day.avgPain)
+                        )}
+                      />
                       {day.entries.length > 1 && (
-                        <span className="text-xs opacity-60 mt-0.5">
-                          {day.entries.length}
-                        </span>
+                        <span className="text-xs opacity-60 mt-0.5">{day.entries.length}</span>
                       )}
                     </>
                   )}
@@ -314,22 +313,20 @@ export function CalendarView({ entries }: CalendarViewProps) {
             <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg p-6 sticky top-24">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                  {selectedDay.date.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    month: 'short', 
-                    day: 'numeric' 
+                  {selectedDay.date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric',
                   })}
                 </h3>
                 <Badge variant="outline" className="rounded-full">
-                  {selectedDay.entries.length} {selectedDay.entries.length === 1 ? 'entry' : 'entries'}
+                  {selectedDay.entries.length}{' '}
+                  {selectedDay.entries.length === 1 ? 'entry' : 'entries'}
                 </Badge>
               </div>
 
               {/* Average Pain */}
-              <div className={cn(
-                'rounded-xl p-4 mb-4',
-                getPainColor(selectedDay.avgPain)
-              )}>
+              <div className={cn('rounded-xl p-4 mb-4', getPainColor(selectedDay.avgPain))}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium opacity-80">Average Pain</span>
                   <div className="text-2xl font-bold">{selectedDay.avgPain.toFixed(1)}/10</div>
@@ -338,7 +335,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
 
               {/* Entries List */}
               <div className="space-y-3">
-                {selectedDay.entries.map((entry) => (
+                {selectedDay.entries.map(entry => (
                   <div
                     key={entry.id}
                     className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2"
@@ -349,7 +346,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
                           {new Date(entry.timestamp).toLocaleTimeString('en-US', {
                             hour: '2-digit',
-                            minute: '2-digit'
+                            minute: '2-digit',
                           })}
                         </span>
                       </div>

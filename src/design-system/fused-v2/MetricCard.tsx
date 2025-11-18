@@ -26,7 +26,7 @@ export function MetricCard({
   severity,
   unit,
   className,
-  compact = false
+  compact = false,
 }: MetricCardProps) {
   const getSeverityColor = (level: number) => {
     return `var(--severity-${level})`;
@@ -34,7 +34,7 @@ export function MetricCard({
 
   const getDeltaIcon = () => {
     if (!delta) return null;
-    
+
     switch (delta.direction) {
       case 'up':
         return <TrendingUp className="w-4 h-4" />;
@@ -47,7 +47,7 @@ export function MetricCard({
 
   const getDeltaColor = () => {
     if (!delta) return 'text-ink-400';
-    
+
     // For pain metrics, down is good
     if (delta.direction === 'down') return 'text-good-500';
     if (delta.direction === 'up') return 'text-bad-500';
@@ -55,47 +55,34 @@ export function MetricCard({
   };
 
   return (
-    <div className={cn(
-      'surface-card transition-all duration-[var(--duration-fast)]',
-      'hover:surface-elevated hover:shadow-[var(--elevation-2)]',
-      compact && 'p-4',
-      className
-    )}>
+    <div
+      className={cn(
+        'surface-card transition-all duration-[var(--duration-fast)]',
+        'hover:surface-elevated hover:shadow-[var(--elevation-2)]',
+        compact && 'p-4',
+        className
+      )}
+    >
       {/* Title */}
-      <div className="text-small text-ink-300 mb-2">
-        {title}
-      </div>
+      <div className="text-small text-ink-300 mb-2">{title}</div>
 
       {/* Value */}
       <div className="flex items-baseline gap-2 mb-1">
-        <span className={cn(
-          compact ? 'text-h2' : 'text-display',
-          'text-mono text-ink-50'
-        )}>
+        <span className={cn(compact ? 'text-h2' : 'text-display', 'text-mono text-ink-50')}>
           {value}
         </span>
-        {unit && (
-          <span className="text-small text-ink-400">
-            {unit}
-          </span>
-        )}
+        {unit && <span className="text-small text-ink-400">{unit}</span>}
       </div>
 
       {/* Delta */}
       {delta && (
-        <div className={cn(
-          'flex items-center gap-1 text-small',
-          getDeltaColor()
-        )}>
+        <div className={cn('flex items-center gap-1 text-small', getDeltaColor())}>
           {getDeltaIcon()}
           <span className="text-mono">
-            {delta.value > 0 ? '+' : ''}{delta.value.toFixed(1)}
+            {delta.value > 0 ? '+' : ''}
+            {delta.value.toFixed(1)}
           </span>
-          {delta.label && (
-            <span className="text-ink-400">
-              {delta.label}
-            </span>
-          )}
+          {delta.label && <span className="text-ink-400">{delta.label}</span>}
         </div>
       )}
 
@@ -115,14 +102,16 @@ export function MetricCard({
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              points={sparkline.map((val, i) => {
-                const x = (i / (sparkline.length - 1)) * 100;
-                const max = Math.max(...sparkline);
-                const min = Math.min(...sparkline);
-                const range = max - min || 1;
-                const y = 32 - ((val - min) / range) * 28;
-                return `${x},${y}`;
-              }).join(' ')}
+              points={sparkline
+                .map((val, i) => {
+                  const x = (i / (sparkline.length - 1)) * 100;
+                  const max = Math.max(...sparkline);
+                  const min = Math.min(...sparkline);
+                  const range = max - min || 1;
+                  const y = 32 - ((val - min) / range) * 28;
+                  return `${x},${y}`;
+                })
+                .join(' ')}
             />
           </svg>
         </div>
@@ -135,7 +124,7 @@ export function MetricCard({
             className="h-full transition-all duration-[var(--duration-normal)]"
             style={{
               width: `${(severity / 10) * 100}%`,
-              backgroundColor: getSeverityColor(severity)
+              backgroundColor: getSeverityColor(severity),
             }}
           />
         </div>

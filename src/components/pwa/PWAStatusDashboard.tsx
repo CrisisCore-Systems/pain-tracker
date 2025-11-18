@@ -11,7 +11,7 @@ import {
   AlertCircle,
   RefreshCw,
   Trash2,
-  Settings
+  Settings,
 } from 'lucide-react';
 import { pwaManager } from '../../utils/pwa-utils';
 import { formatNumber } from '../../utils/formatting';
@@ -76,11 +76,11 @@ export function PWAStatusDashboard() {
       const syncManager = await import('../../lib/background-sync').then(m => m.painTrackerSync);
       const status = await syncManager.getSyncStatus();
       const { isOnline, isSyncing } = backgroundSync.getSyncStatus();
-      
+
       setSyncStatus({
         ...status,
         isOnline,
-        isSyncing
+        isSyncing,
       });
     } catch (error) {
       console.error('Failed to load sync status:', error);
@@ -131,7 +131,11 @@ export function PWAStatusDashboard() {
   };
 
   const handleClearPWAData = async () => {
-    if (window.confirm('Are you sure you want to clear all PWA data? This will remove offline cache and sync queue.')) {
+    if (
+      window.confirm(
+        'Are you sure you want to clear all PWA data? This will remove offline cache and sync queue.'
+      )
+    ) {
       try {
         await pwaManager.clearPWAData();
         await loadPWAStatus();
@@ -160,10 +164,14 @@ export function PWAStatusDashboard() {
 
   const getConnectionQualityColor = (quality: string) => {
     switch (quality) {
-      case 'good': return 'text-green-600';
-      case 'moderate': return 'text-yellow-600';
-      case 'poor': return 'text-red-600';
-      default: return 'text-gray-600';
+      case 'good':
+        return 'text-green-600';
+      case 'moderate':
+        return 'text-yellow-600';
+      case 'poor':
+        return 'text-red-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -178,9 +186,10 @@ export function PWAStatusDashboard() {
     );
   }
 
-  const storagePercentage = pwaStatus.storageUsage.quota > 0 
-    ? (pwaStatus.storageUsage.used / pwaStatus.storageUsage.quota) * 100 
-    : 0;
+  const storagePercentage =
+    pwaStatus.storageUsage.quota > 0
+      ? (pwaStatus.storageUsage.used / pwaStatus.storageUsage.quota) * 100
+      : 0;
 
   return (
     <div className="space-y-6">
@@ -200,25 +209,33 @@ export function PWAStatusDashboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex flex-col">
               <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
-              <span className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.isOnline ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+              <span
+                className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.isOnline ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+              >
                 {pwaStatus.isOnline ? 'Online' : 'Offline'}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm text-gray-600 dark:text-gray-400">Quality</span>
-              <span className={`text-sm font-medium ${getConnectionQualityColor(connectionQuality)}`}>
+              <span
+                className={`text-sm font-medium ${getConnectionQualityColor(connectionQuality)}`}
+              >
                 {connectionQuality.charAt(0).toUpperCase() + connectionQuality.slice(1)}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm text-gray-600 dark:text-gray-400">Service Worker</span>
-              <span className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.hasServiceWorker ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+              <span
+                className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.hasServiceWorker ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+              >
                 {pwaStatus.hasServiceWorker ? 'Active' : 'Inactive'}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm text-gray-600 dark:text-gray-400">PWA Installed</span>
-              <span className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.isInstalled ? 'bg-green-100 text-green-800' : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'}`}>
+              <span
+                className={`text-sm font-medium px-2 py-1 rounded ${pwaStatus.isInstalled ? 'bg-green-100 text-green-800' : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'}`}
+              >
                 {pwaStatus.isInstalled ? 'Yes' : 'No'}
               </span>
             </div>
@@ -245,8 +262,11 @@ export function PWAStatusDashboard() {
             <div className="flex flex-col">
               <span className="text-sm text-gray-600 dark:text-gray-400">Status</span>
               <span className="text-sm font-medium">
-                {syncStatus.isSyncing ? 'Syncing...' : 
-                 syncStatus.pendingEntries > 0 ? 'Pending' : 'Up to date'}
+                {syncStatus.isSyncing
+                  ? 'Syncing...'
+                  : syncStatus.pendingEntries > 0
+                    ? 'Pending'
+                    : 'Up to date'}
               </span>
             </div>
             <div className="flex flex-col">
@@ -262,7 +282,7 @@ export function PWAStatusDashboard() {
               <span className="text-xs">{formatDate(syncStatus.lastSync)}</span>
             </div>
           </div>
-          
+
           <div className="flex space-x-2">
             <button
               onClick={handleForceSync}
@@ -289,10 +309,13 @@ export function PWAStatusDashboard() {
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span>Used Storage</span>
-                <span>{formatBytes(pwaStatus.storageUsage.used)} / {formatBytes(pwaStatus.storageUsage.quota)}</span>
+                <span>
+                  {formatBytes(pwaStatus.storageUsage.used)} /{' '}
+                  {formatBytes(pwaStatus.storageUsage.quota)}
+                </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div 
+                <div
                   className={`h-2 rounded-full ${storagePercentage > 80 ? 'bg-red-600' : storagePercentage > 60 ? 'bg-yellow-600' : 'bg-blue-600'}`}
                   style={{ width: `${Math.min(storagePercentage, 100)}%` }}
                 ></div>
@@ -301,7 +324,7 @@ export function PWAStatusDashboard() {
                 {formatNumber(storagePercentage, 1)}% of available storage used
               </p>
             </div>
-            
+
             <div className="flex space-x-2">
               <button
                 onClick={handleClearPWAData}

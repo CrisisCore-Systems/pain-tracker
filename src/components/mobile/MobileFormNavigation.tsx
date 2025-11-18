@@ -24,7 +24,7 @@ export function MobileFormNavigation({
   onSectionChange,
   onSubmit,
   submitLabel = 'Submit',
-  className = ''
+  className = '',
 }: MobileFormNavigationProps) {
   const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
 
@@ -84,15 +84,13 @@ export function MobileFormNavigation({
                   index === currentSection
                     ? 'bg-primary text-primary-foreground'
                     : completedSections.has(index)
-                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                    : index < currentSection
-                    ? 'bg-muted text-muted-foreground hover:bg-muted/80'
-                    : 'bg-muted/50 text-muted-foreground/70'
+                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                      : index < currentSection
+                        ? 'bg-muted text-muted-foreground hover:bg-muted/80'
+                        : 'bg-muted/50 text-muted-foreground/70'
                 }`}
               >
-                {completedSections.has(index) && (
-                  <Check className="h-3 w-3" />
-                )}
+                {completedSections.has(index) && <Check className="h-3 w-3" />}
                 <span>{section.title}</span>
               </button>
             ))}
@@ -101,9 +99,7 @@ export function MobileFormNavigation({
       </div>
 
       {/* Form Content */}
-      <div className="flex-1 px-4 py-6">
-        {sections[currentSection]?.component}
-      </div>
+      <div className="flex-1 px-4 py-6">{sections[currentSection]?.component}</div>
 
       {/* Navigation Footer */}
       <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur-sm border-t">
@@ -132,10 +128,10 @@ export function MobileFormNavigation({
                       index === currentSection
                         ? 'bg-primary w-4'
                         : completedSections.has(index)
-                        ? 'bg-green-400'
-                        : index < currentSection
-                        ? 'bg-muted'
-                        : 'bg-muted/50'
+                          ? 'bg-green-400'
+                          : index < currentSection
+                            ? 'bg-muted'
+                            : 'bg-muted/50'
                     }`}
                     aria-label={`Go to ${sections[index].title}`}
                   />

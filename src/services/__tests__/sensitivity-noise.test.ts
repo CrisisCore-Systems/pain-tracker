@@ -5,18 +5,70 @@ import { EmpathyMetricsCollector } from '../EmpathyMetricsCollector';
 // Import module to access and mutate the sensitivity map for testing
 import * as CollectorModule from '../EmpathyMetricsCollector';
 
-class FakeSecurityService { privacyConfig = { consentRequired: false }; }
-class FakeAnalyticsService { /* not used in this test */ }
+class FakeSecurityService {
+  privacyConfig = { consentRequired: false };
+}
+class FakeAnalyticsService {
+  /* not used in this test */
+}
 
 describe('sensitivity-aware noise', () => {
   it('produces larger average absolute noise for higher sensitivity', () => {
-    const collector = new EmpathyMetricsCollector(new FakeSecurityService() as any, new FakeAnalyticsService() as any);
+    const collector = new EmpathyMetricsCollector(
+      new FakeSecurityService() as any,
+      new FakeAnalyticsService() as any
+    );
 
     const baseMetrics: any = {
-      emotionalIntelligence: { selfAwareness: 50, selfRegulation: 50, motivation: 50, empathy: 50, socialSkills: 50, emotionalGranularity: 50, metaEmotionalAwareness: 50 },
-      compassionateProgress: Object.fromEntries(['selfCompassion','selfCriticism','progressCelebration','setbackResilience','hopefulness','postTraumaticGrowth','meaningMaking','adaptiveReframing','compassionFatigue'].map(k => [k, 50])),
-      empathyKPIs: Object.fromEntries(['validationReceived','validationGiven','emotionalSupport','understandingFelt','connectionQuality','empathicAccuracy','empathicConcern','perspectiveTaking','empathicMotivation','boundaryMaintenance'].map(k => [k, 50])),
-      humanizedMetrics: Object.fromEntries(['courageScore','vulnerabilityAcceptance','authenticityLevel','growthMindset','innerStrength','dignityMaintenance','purposeClarity','spiritualWellbeing','lifeNarrativeCoherence'].map(k => [k, 50]))
+      emotionalIntelligence: {
+        selfAwareness: 50,
+        selfRegulation: 50,
+        motivation: 50,
+        empathy: 50,
+        socialSkills: 50,
+        emotionalGranularity: 50,
+        metaEmotionalAwareness: 50,
+      },
+      compassionateProgress: Object.fromEntries(
+        [
+          'selfCompassion',
+          'selfCriticism',
+          'progressCelebration',
+          'setbackResilience',
+          'hopefulness',
+          'postTraumaticGrowth',
+          'meaningMaking',
+          'adaptiveReframing',
+          'compassionFatigue',
+        ].map(k => [k, 50])
+      ),
+      empathyKPIs: Object.fromEntries(
+        [
+          'validationReceived',
+          'validationGiven',
+          'emotionalSupport',
+          'understandingFelt',
+          'connectionQuality',
+          'empathicAccuracy',
+          'empathicConcern',
+          'perspectiveTaking',
+          'empathicMotivation',
+          'boundaryMaintenance',
+        ].map(k => [k, 50])
+      ),
+      humanizedMetrics: Object.fromEntries(
+        [
+          'courageScore',
+          'vulnerabilityAcceptance',
+          'authenticityLevel',
+          'growthMindset',
+          'innerStrength',
+          'dignityMaintenance',
+          'purposeClarity',
+          'spiritualWellbeing',
+          'lifeNarrativeCoherence',
+        ].map(k => [k, 50])
+      ),
     };
 
     const trials = 300;

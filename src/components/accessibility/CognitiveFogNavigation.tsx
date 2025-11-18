@@ -8,12 +8,12 @@ import { secureStorage } from '../../lib/storage/secureStorage';
 import { useCrisisDetection } from './useCrisisDetection';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { TouchOptimizedButton, MemoryAid } from './TraumaInformedUX';
-import { 
-  ArrowLeft, 
-  ArrowRight, 
-  Home, 
-  Compass, 
-  Check, 
+import {
+  ArrowLeft,
+  ArrowRight,
+  Home,
+  Compass,
+  Check,
   Clock,
   BookOpen,
   HelpCircle,
@@ -22,7 +22,7 @@ import {
   Volume2,
   VolumeX,
   Star,
-  Target
+  Target,
 } from 'lucide-react';
 
 // Navigation Context Types
@@ -59,15 +59,15 @@ interface CognitiveBreadcrumbsProps {
   allowBackNavigation?: boolean;
 }
 
-export function CognitiveBreadcrumbs({ 
-  steps, 
-  currentStep, 
+export function CognitiveBreadcrumbs({
+  steps,
+  currentStep,
   onStepClick,
   showEstimatedTime = true,
-  allowBackNavigation = true
+  allowBackNavigation = true,
 }: CognitiveBreadcrumbsProps) {
   const { preferences } = useTraumaInformed();
-  
+
   return (
     <div className="cognitive-breadcrumbs bg-white border-b-2 border-blue-100 p-4 mb-6">
       <div className="max-w-4xl mx-auto">
@@ -79,17 +79,18 @@ export function CognitiveBreadcrumbs({
                 {index > 0 && (
                   <ArrowRight className="w-4 h-4 text-gray-400 dark:text-gray-500 mx-2" />
                 )}
-                
+
                 <button
                   onClick={() => allowBackNavigation && onStepClick?.(index)}
                   disabled={!allowBackNavigation || index > currentStep}
                   className={`
                     px-3 py-2 rounded-lg transition-colors
-                    ${index === currentStep 
-                      ? 'bg-blue-100 text-blue-800 font-medium' 
-                      : index < currentStep 
-                        ? 'bg-green-50 text-green-700 hover:bg-green-100' 
-                        : 'bg-gray-50 text-gray-500'
+                    ${
+                      index === currentStep
+                        ? 'bg-blue-100 text-blue-800 font-medium'
+                        : index < currentStep
+                          ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                          : 'bg-gray-50 text-gray-500'
                     }
                     ${allowBackNavigation && index <= currentStep ? 'cursor-pointer' : 'cursor-default'}
                   `}
@@ -110,10 +111,12 @@ export function CognitiveBreadcrumbs({
           <div className="mb-3">
             <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
               <span>Progress</span>
-              <span>{currentStep + 1} of {steps.length} steps</span>
+              <span>
+                {currentStep + 1} of {steps.length} steps
+              </span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
               />
@@ -126,7 +129,9 @@ export function CognitiveBreadcrumbs({
           <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-4">
             <div className="flex items-center space-x-1">
               <Clock className="w-4 h-4" />
-              <span>Step {currentStep + 1} of {steps.length}</span>
+              <span>
+                Step {currentStep + 1} of {steps.length}
+              </span>
             </div>
             <div className="flex items-center space-x-1">
               <Compass className="w-4 h-4" />
@@ -155,7 +160,7 @@ export function StepByStepNavigation({
   onNavigateBack,
   onNavigateNext,
   onSessionComplete,
-  onSessionExit
+  onSessionExit,
 }: StepByStepNavigationProps) {
   const { preferences } = useTraumaInformed();
   const { trackHelpRequest } = useCrisisDetection();
@@ -201,30 +206,24 @@ export function StepByStepNavigation({
         <div className="max-w-4xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">{session.title}</h1>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                {session.title}
+              </h1>
               <p className="text-gray-600 dark:text-gray-400">{session.description}</p>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-500 dark:text-gray-400">
                 <Clock className="w-4 h-4 inline mr-1" />
                 {formatTime(sessionTime)}
               </div>
-              
-              <TouchOptimizedButton
-                onClick={handleHelpRequest}
-                variant="secondary"
-                size="normal"
-              >
+
+              <TouchOptimizedButton onClick={handleHelpRequest} variant="secondary" size="normal">
                 <HelpCircle className="w-5 h-5 mr-2" />
                 Help
               </TouchOptimizedButton>
-              
-              <TouchOptimizedButton
-                onClick={onSessionExit}
-                variant="secondary"
-                size="normal"
-              >
+
+              <TouchOptimizedButton onClick={onSessionExit} variant="secondary" size="normal">
                 Exit
               </TouchOptimizedButton>
             </div>
@@ -236,7 +235,7 @@ export function StepByStepNavigation({
       <CognitiveBreadcrumbs
         steps={session.steps.map(step => step.title)}
         currentStep={session.currentStepIndex}
-        onStepClick={(stepIndex) => {
+        onStepClick={stepIndex => {
           if (session.allowBackNavigation && stepIndex < session.currentStepIndex) {
             // Navigate to previous completed step
           }
@@ -254,10 +253,12 @@ export function StepByStepNavigation({
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3 mb-2">
-                    <div className={`
+                    <div
+                      className={`
                       w-8 h-8 rounded-full flex items-center justify-center text-white font-bold
                       ${currentStep.isCompleted ? 'bg-green-500' : 'bg-blue-500'}
-                    `}>
+                    `}
+                    >
                       {currentStep.isCompleted ? (
                         <Check className="w-5 h-5" />
                       ) : (
@@ -273,13 +274,16 @@ export function StepByStepNavigation({
                       </span>
                     )}
                   </div>
-                  
+
                   <p className="text-gray-600 dark:text-gray-400 mb-4">{currentStep.description}</p>
-                  
+
                   {currentStep.estimatedTime > 0 && (
                     <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                       <Clock className="w-4 h-4" />
-                      <span>Estimated time: {currentStep.estimatedTime} minute{currentStep.estimatedTime !== 1 ? 's' : ''}</span>
+                      <span>
+                        Estimated time: {currentStep.estimatedTime} minute
+                        {currentStep.estimatedTime !== 1 ? 's' : ''}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -288,10 +292,7 @@ export function StepByStepNavigation({
               {/* Memory Aids */}
               {preferences.showMemoryAids && currentStep.memoryAids && (
                 <div className="memory-aids mb-4">
-                  <MemoryAid
-                    title="Remember:"
-                    items={currentStep.memoryAids}
-                  />
+                  <MemoryAid title="Remember:" items={currentStep.memoryAids} />
                 </div>
               )}
 
@@ -319,18 +320,14 @@ export function StepByStepNavigation({
               <div className="flex items-center justify-between">
                 <div className="flex space-x-3">
                   {!isFirstStep && session.allowBackNavigation && (
-                    <TouchOptimizedButton
-                      onClick={onNavigateBack}
-                      variant="secondary"
-                      size="large"
-                    >
+                    <TouchOptimizedButton onClick={onNavigateBack} variant="secondary" size="large">
                       <ArrowLeft className="w-5 h-5 mr-2" />
                       Previous Step
                     </TouchOptimizedButton>
                   )}
-                  
+
                   <TouchOptimizedButton
-                    onClick={() => window.location.href = '/'}
+                    onClick={() => (window.location.href = '/')}
                     variant="secondary"
                     size="large"
                   >
@@ -363,11 +360,7 @@ export function StepByStepNavigation({
                       Finish Session
                     </TouchOptimizedButton>
                   ) : canProceed && !isLastStep ? (
-                    <TouchOptimizedButton
-                      onClick={onNavigateNext}
-                      variant="primary"
-                      size="large"
-                    >
+                    <TouchOptimizedButton onClick={onNavigateNext} variant="primary" size="large">
                       Next Step
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </TouchOptimizedButton>
@@ -405,7 +398,7 @@ export function ContextPreservation({
   children,
   contextKey,
   preserveScrollPosition = true,
-  autoSaveInterval = 30000 // 30 seconds
+  autoSaveInterval = 30000, // 30 seconds
 }: ContextPreservationProps) {
   const [contextData, setContextData] = useState<Record<string, unknown>>({});
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -414,12 +407,12 @@ export function ContextPreservation({
   const saveContext = useCallback(() => {
     const dataToSave = {
       ...contextData,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     try {
       // Dynamic keys: ensure they pass allowed pattern by replacing non-alphanumerics with '-' for storage key suffix
-      const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi,'-')}`;
+      const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi, '-')}`;
       secureStorage.set(safeKey, dataToSave, { encrypt: true });
       setLastSaved(new Date());
     } catch (error) {
@@ -429,12 +422,17 @@ export function ContextPreservation({
 
   // Load preserved context on mount
   useEffect(() => {
-    const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi,'-')}`;
+    const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi, '-')}`;
     // Secure first
     const secure = secureStorage.get<Record<string, unknown>>(safeKey, { encrypt: true });
     if (secure) {
       setContextData(secure);
-      if (secure.timestamp) try { setLastSaved(new Date(secure.timestamp as string)); } catch {/* ignore */}
+      if (secure.timestamp)
+        try {
+          setLastSaved(new Date(secure.timestamp as string));
+        } catch {
+          /* ignore */
+        }
       return;
     }
     // Legacy fallback
@@ -444,7 +442,12 @@ export function ContextPreservation({
         const parsed = JSON.parse(legacyRaw);
         secureStorage.set(safeKey, parsed, { encrypt: true });
         setContextData(parsed);
-        if (parsed.timestamp) try { setLastSaved(new Date(parsed.timestamp)); } catch {/* ignore */}
+        if (parsed.timestamp)
+          try {
+            setLastSaved(new Date(parsed.timestamp));
+          } catch {
+            /* ignore */
+          }
       }
     } catch (error) {
       console.warn('Failed to load preserved context:', error);
@@ -472,7 +475,7 @@ export function ContextPreservation({
       if (preserveScrollPosition) {
         setContextData(prev => ({
           ...prev,
-          scrollPosition: window.pageYOffset
+          scrollPosition: window.pageYOffset,
         }));
       }
     };
@@ -482,20 +485,24 @@ export function ContextPreservation({
       return () => window.removeEventListener('scroll', handleScroll);
     }
   }, [preserveScrollPosition, contextData.scrollPosition]);
-  
+
   const updateContext = useCallback((key: string, value: unknown) => {
     setContextData(prev => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   }, []);
 
   const clearContext = useCallback(() => {
-  const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi,'-')}`;
-  secureStorage.remove(safeKey);
-  try { localStorage.removeItem(safeKey); } catch {/* ignore */}
-  setContextData({});
-  setLastSaved(null);
+    const safeKey = `context_${contextKey.replace(/[^a-z0-9_-]/gi, '-')}`;
+    secureStorage.remove(safeKey);
+    try {
+      localStorage.removeItem(safeKey);
+    } catch {
+      /* ignore */
+    }
+    setContextData({});
+    setLastSaved(null);
   }, [contextKey]);
 
   return (
@@ -509,12 +516,10 @@ export function ContextPreservation({
               <span>Context preserved</span>
             </div>
             {lastSaved && (
-              <div className="text-blue-600">
-                Last saved: {lastSaved.toLocaleTimeString()}
-              </div>
+              <div className="text-blue-600">Last saved: {lastSaved.toLocaleTimeString()}</div>
             )}
           </div>
-          
+
           <div className="flex space-x-2">
             <button
               onClick={saveContext}
@@ -537,7 +542,7 @@ export function ContextPreservation({
         {React.cloneElement(children as React.ReactElement, {
           contextData,
           updateContext,
-          saveContext
+          saveContext,
         })}
       </div>
     </div>
@@ -568,18 +573,17 @@ export function SimplifiedChoice({
   onSelect,
   selectedId,
   maxChoices = 3,
-  showRecommended = true
+  showRecommended = true,
 }: SimplifiedChoiceProps) {
   const { preferences } = useTraumaInformed();
   const [showAll, setShowAll] = useState(false);
 
   // Reduce choices based on preferences
-  const displayChoices = preferences.simplifiedMode && !showAll 
-    ? choices.slice(0, maxChoices)
-    : choices;
+  const displayChoices =
+    preferences.simplifiedMode && !showAll ? choices.slice(0, maxChoices) : choices;
 
   // Sort to show recommended first
-  const sortedChoices = showRecommended 
+  const sortedChoices = showRecommended
     ? displayChoices.sort((a, b) => (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0))
     : displayChoices;
 
@@ -587,17 +591,15 @@ export function SimplifiedChoice({
     <div className="simplified-choice bg-white rounded-xl shadow-sm p-6">
       <div className="choice-header mb-6">
         <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">{title}</h3>
-        {description && (
-          <p className="text-gray-600 dark:text-gray-400">{description}</p>
-        )}
+        {description && <p className="text-gray-600 dark:text-gray-400">{description}</p>}
       </div>
 
       <div className="choice-options space-y-3">
-        {sortedChoices.map((choice) => (
+        {sortedChoices.map(choice => (
           <TouchOptimizedButton
             key={choice.id}
             onClick={() => onSelect(choice.id)}
-            variant={selectedId === choice.id ? "primary" : "secondary"}
+            variant={selectedId === choice.id ? 'primary' : 'secondary'}
             size="large"
             className={`
               w-full text-left h-auto p-4
@@ -605,11 +607,7 @@ export function SimplifiedChoice({
             `}
           >
             <div className="flex items-start space-x-4">
-              {choice.icon && (
-                <div className="flex-shrink-0 mt-1">
-                  {choice.icon}
-                </div>
-              )}
+              {choice.icon && <div className="flex-shrink-0 mt-1">{choice.icon}</div>}
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-1">
                   <h4 className="font-medium text-gray-800 dark:text-gray-200">{choice.title}</h4>
@@ -659,11 +657,11 @@ interface VoiceGuidanceProps {
   onComplete?: () => void;
 }
 
-export function VoiceGuidance({ 
-  text, 
-  autoPlay = false, 
+export function VoiceGuidance({
+  text,
+  autoPlay = false,
   showControls = true,
-  onComplete 
+  onComplete,
 }: VoiceGuidanceProps) {
   const { preferences } = useTraumaInformed();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -682,13 +680,13 @@ export function VoiceGuidance({
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 0.9; // Slightly slower for clarity
     utterance.volume = 0.8;
-    
+
     utterance.onstart = () => setIsPlaying(true);
     utterance.onend = () => {
       setIsPlaying(false);
       onComplete?.();
     };
-    
+
     utterance.onerror = () => setIsPlaying(false);
 
     window.speechSynthesis.speak(utterance);

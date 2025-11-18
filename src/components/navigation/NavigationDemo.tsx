@@ -27,9 +27,9 @@ import {
 
 /**
  * Enhanced Navigation Demo
- * 
+ *
  * Demonstrates all navigation components working together
- * 
+ *
  * Features demonstrated:
  * - Sidebar navigation with keyboard shortcuts
  * - Breadcrumb trail
@@ -42,18 +42,12 @@ export function NavigationDemo() {
   const [commandOpen, setCommandOpen] = useState(false);
 
   // Navigation history
-  const {
-    pushHistory,
-    canGoBack,
-    canGoForward,
-    goBack,
-    goForward,
-    getRecentItems,
-  } = useNavigationHistory({
-    maxHistory: 50,
-    persistKey: 'pain-tracker-nav-demo',
-    enableQuickSwitch: true,
-  });
+  const { pushHistory, canGoBack, canGoForward, goBack, goForward, getRecentItems } =
+    useNavigationHistory({
+      maxHistory: 50,
+      persistKey: 'pain-tracker-nav-demo',
+      enableQuickSwitch: true,
+    });
 
   // Navigation items
   const navItems: NavItem[] = [
@@ -113,16 +107,22 @@ export function NavigationDemo() {
           { id: 'charts', label: 'Pain Charts', isCurrent: true },
         ]
       : currentView === 'reports'
-      ? [
-          { id: 'reports', label: 'Reports' },
-          { id: 'worksafebc', label: 'WorkSafeBC', isCurrent: true },
-        ]
-      : [{ id: currentView, label: navItems.find((i) => i.id === currentView)?.name || currentView, isCurrent: true }]),
+        ? [
+            { id: 'reports', label: 'Reports' },
+            { id: 'worksafebc', label: 'WorkSafeBC', isCurrent: true },
+          ]
+        : [
+            {
+              id: currentView,
+              label: navItems.find(i => i.id === currentView)?.name || currentView,
+              isCurrent: true,
+            },
+          ]),
   ];
 
   // Command palette items
   const commandItems: CommandItem[] = [
-    ...navItems.map((item) => ({
+    ...navItems.map(item => ({
       id: item.id,
       label: item.name,
       description: item.description,
@@ -199,7 +199,7 @@ export function NavigationDemo() {
 
   // Handle navigation
   const handleNavigate = (viewId: string) => {
-    const item = navItems.find((i) => i.id === viewId);
+    const item = navItems.find(i => i.id === viewId);
     if (item) {
       setCurrentView(viewId);
       pushHistory({
@@ -237,16 +237,10 @@ export function NavigationDemo() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                Pain Tracker
-              </h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Pain Tracker</h1>
 
               {/* Breadcrumbs */}
-              <Breadcrumbs
-                items={breadcrumbItems}
-                onNavigate={handleNavigate}
-                showHome
-              />
+              <Breadcrumbs items={breadcrumbItems} onNavigate={handleNavigate} showHome />
             </div>
 
             {/* Actions */}
@@ -330,7 +324,7 @@ export function NavigationDemo() {
                     Recent
                   </h2>
                   <div className="space-y-1">
-                    {getRecentItems(3).map((item) => (
+                    {getRecentItems(3).map(item => (
                       <button
                         key={item.id}
                         onClick={() => handleNavigate(item.id)}
@@ -349,10 +343,13 @@ export function NavigationDemo() {
           <main className="flex-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                {navItems.find((i) => i.id === currentView)?.name || 'Unknown View'}
+                {navItems.find(i => i.id === currentView)?.name || 'Unknown View'}
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Current view: <code className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">{currentView}</code>
+                Current view:{' '}
+                <code className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">
+                  {currentView}
+                </code>
               </p>
 
               <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
@@ -360,13 +357,27 @@ export function NavigationDemo() {
                   Keyboard Shortcuts
                 </h3>
                 <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                  <li><kbd>⌘K</kbd> or <kbd>Ctrl+K</kbd> - Open command palette</li>
-                  <li><kbd>1-7</kbd> - Quick navigate to menu items</li>
-                  <li><kbd>Alt+←</kbd> - Go back in history</li>
-                  <li><kbd>Alt+→</kbd> - Go forward in history</li>
-                  <li><kbd>Alt+Tab</kbd> - Quick switch between views</li>
-                  <li><kbd>↑</kbd> <kbd>↓</kbd> - Navigate menu items</li>
-                  <li><kbd>?</kbd> - Open help</li>
+                  <li>
+                    <kbd>⌘K</kbd> or <kbd>Ctrl+K</kbd> - Open command palette
+                  </li>
+                  <li>
+                    <kbd>1-7</kbd> - Quick navigate to menu items
+                  </li>
+                  <li>
+                    <kbd>Alt+←</kbd> - Go back in history
+                  </li>
+                  <li>
+                    <kbd>Alt+→</kbd> - Go forward in history
+                  </li>
+                  <li>
+                    <kbd>Alt+Tab</kbd> - Quick switch between views
+                  </li>
+                  <li>
+                    <kbd>↑</kbd> <kbd>↓</kbd> - Navigate menu items
+                  </li>
+                  <li>
+                    <kbd>?</kbd> - Open help
+                  </li>
                 </ul>
               </div>
             </div>
@@ -379,7 +390,7 @@ export function NavigationDemo() {
         isOpen={commandOpen}
         onClose={() => setCommandOpen(false)}
         items={commandItems}
-        recentItems={getRecentItems(5).map((item) => ({
+        recentItems={getRecentItems(5).map(item => ({
           id: item.id,
           label: item.label,
           category: 'Recent',

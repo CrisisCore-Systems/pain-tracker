@@ -11,7 +11,7 @@ import { VoiceInput } from './PhysicalAccommodations';
 import {
   EMERGENCY_VOICE_COMMANDS,
   EMERGENCY_GESTURES,
-  MultiModalInputConfig
+  MultiModalInputConfig,
 } from './CrisisStateTypes';
 import {
   Mic,
@@ -23,7 +23,7 @@ import {
   Settings,
   Shield,
   RefreshCw,
-  Power
+  Power,
 } from 'lucide-react';
 
 // Multi-Modal Input Manager
@@ -38,15 +38,18 @@ export function MultiModalInputManager({
   onCommand,
   onEmergencyAction,
   isEmergencyMode = false,
-  sensitivity = 'medium'
+  sensitivity = 'medium',
 }: MultiModalInputManagerProps) {
   const { preferences } = useTraumaInformed();
   const { crisisLevel } = useCrisisDetection();
   const isInCrisis = crisisLevel !== 'none';
-  const crisisSeverity = crisisLevel === 'none' ? 'mild' : 
-                       crisisLevel === 'emergency' || crisisLevel === 'critical' || crisisLevel === 'acute' ? 'critical' : 
-                       crisisLevel;
-  
+  const crisisSeverity =
+    crisisLevel === 'none'
+      ? 'mild'
+      : crisisLevel === 'emergency' || crisisLevel === 'critical' || crisisLevel === 'acute'
+        ? 'critical'
+        : crisisLevel;
+
   const [isListening, setIsListening] = useState(false);
   const [gestureEnabled, setGestureEnabled] = useState(true);
   const [lastCommand, setLastCommand] = useState<string | null>(null);
@@ -59,75 +62,89 @@ export function MultiModalInputManager({
       language: 'en-US',
       commands: EMERGENCY_VOICE_COMMANDS,
       continualListening: isEmergencyMode,
-      emergencyPhrases: ["help me", "emergency", "call doctor"]
+      emergencyPhrases: ['help me', 'emergency', 'call doctor'],
     },
     gesture: {
       enabled: gestureEnabled,
       sensitivity,
       swipeToNavigate: true,
       pinchToZoom: true,
-      tapPatterns: true
+      tapPatterns: true,
     },
     touch: {
-      targetSizeMultiplier: preferences.touchTargetSize === 'extra-large' ? 2.0 : 
-                            preferences.touchTargetSize === 'large' ? 1.5 : 1.0,
+      targetSizeMultiplier:
+        preferences.touchTargetSize === 'extra-large'
+          ? 2.0
+          : preferences.touchTargetSize === 'large'
+            ? 1.5
+            : 1.0,
       pressureThreshold: 0.3,
       dwellTime: isInCrisis ? 100 : 150,
       hapticFeedback: true,
-      errorCorrection: true
-    }
+      errorCorrection: true,
+    },
   };
 
   // Voice Command Processing
-  const processVoiceCommand = useCallback((transcript: string) => {
-    const normalizedTranscript = transcript.toLowerCase().trim();
-    
-    // Find matching command
-    const matchingCommand = config.voice.commands.find(cmd => 
-      cmd.phrase.toLowerCase() === normalizedTranscript ||
-      cmd.aliases.some(alias => alias.toLowerCase() === normalizedTranscript)
-    );
+  const processVoiceCommand = useCallback(
+    (transcript: string) => {
+      const normalizedTranscript = transcript.toLowerCase().trim();
 
-    if (matchingCommand) {
-      setLastCommand(matchingCommand.phrase);
-      setCommandHistory(prev => [...prev, matchingCommand.phrase].slice(-10)); // Keep last 10
-
-      if (matchingCommand.emergencyCommand) {
-        onEmergencyAction(matchingCommand.action);
-      } else {
-        onCommand(matchingCommand.action, matchingCommand.parameters);
-      }
-
-      // Provide feedback
-      if ('speechSynthesis' in window && preferences.voiceInput) {
-        const feedback = new SpeechSynthesisUtterance(
-          matchingCommand.emergencyCommand 
-            ? `Emergency action: ${matchingCommand.phrase}` 
-            : `Command executed: ${matchingCommand.phrase}`
-        );
-        feedback.volume = 0.6;
-        feedback.rate = 1.1;
-        window.speechSynthesis.speak(feedback);
-      }
-    } else {
-      // Handle partial matches or suggestions
-      const partialMatches = config.voice.commands.filter(cmd =>
-        cmd.phrase.toLowerCase().includes(normalizedTranscript) ||
-        cmd.aliases.some(alias => alias.toLowerCase().includes(normalizedTranscript))
+      // Find matching command
+      const matchingCommand = config.voice.commands.find(
+        cmd =>
+          cmd.phrase.toLowerCase() === normalizedTranscript ||
+          cmd.aliases.some(alias => alias.toLowerCase() === normalizedTranscript)
       );
 
-      if (partialMatches.length > 0) {
-        console.log('Partial matches found:', partialMatches.map(cmd => cmd.phrase));
+      if (matchingCommand) {
+        setLastCommand(matchingCommand.phrase);
+        setCommandHistory(prev => [...prev, matchingCommand.phrase].slice(-10)); // Keep last 10
+
+        if (matchingCommand.emergencyCommand) {
+          onEmergencyAction(matchingCommand.action);
+        } else {
+          onCommand(matchingCommand.action, matchingCommand.parameters);
+        }
+
+        // Provide feedback
+        if ('speechSynthesis' in window && preferences.voiceInput) {
+          const feedback = new SpeechSynthesisUtterance(
+            matchingCommand.emergencyCommand
+              ? `Emergency action: ${matchingCommand.phrase}`
+              : `Command executed: ${matchingCommand.phrase}`
+          );
+          feedback.volume = 0.6;
+          feedback.rate = 1.1;
+          window.speechSynthesis.speak(feedback);
+        }
+      } else {
+        // Handle partial matches or suggestions
+        const partialMatches = config.voice.commands.filter(
+          cmd =>
+            cmd.phrase.toLowerCase().includes(normalizedTranscript) ||
+            cmd.aliases.some(alias => alias.toLowerCase().includes(normalizedTranscript))
+        );
+
+        if (partialMatches.length > 0) {
+          console.log(
+            'Partial matches found:',
+            partialMatches.map(cmd => cmd.phrase)
+          );
+        }
       }
-    }
-  }, [config.voice.commands, onCommand, onEmergencyAction, preferences.voiceInput]);
+    },
+    [config.voice.commands, onCommand, onEmergencyAction, preferences.voiceInput]
+  );
 
   return (
-    <div className={`
+    <div
+      className={`
       multi-modal-input-manager
       ${isEmergencyMode ? 'emergency-mode' : ''}
       ${isInCrisis ? `crisis-${crisisSeverity}` : ''}
-    `}>
+    `}
+    >
       {/* Voice Input Section */}
       <VoiceInputSection
         config={config.voice}
@@ -141,7 +158,7 @@ export function MultiModalInputManager({
       {/* Gesture Recognition Section */}
       <GestureRecognitionSection
         config={config.gesture}
-        onGesture={(gesture) => {
+        onGesture={gesture => {
           const emergencyGesture = EMERGENCY_GESTURES.find(g => g.pattern === gesture);
           if (emergencyGesture) {
             onEmergencyAction(emergencyGesture.action);
@@ -165,7 +182,7 @@ export function MultiModalInputManager({
       {commandHistory.length > 0 && (
         <CommandHistorySection
           commands={commandHistory}
-          onRepeat={(command) => {
+          onRepeat={command => {
             const cmd = config.voice.commands.find(c => c.phrase === command);
             if (cmd) {
               onCommand(cmd.action, cmd.parameters);
@@ -193,7 +210,7 @@ function VoiceInputSection({
   onListeningChange,
   onTranscript,
   lastCommand,
-  isEmergencyMode
+  isEmergencyMode,
 }: VoiceInputSectionProps) {
   const [isSupported, setIsSupported] = useState(false);
 
@@ -204,12 +221,16 @@ function VoiceInputSection({
   if (!config.enabled || !isSupported) return null;
 
   return (
-    <div className={`voice-input-section bg-white rounded-xl shadow-sm p-4 mb-4 ${
-      isEmergencyMode ? 'border-l-4 border-red-500' : ''
-    }`}>
+    <div
+      className={`voice-input-section bg-white rounded-xl shadow-sm p-4 mb-4 ${
+        isEmergencyMode ? 'border-l-4 border-red-500' : ''
+      }`}
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <Mic className={`w-6 h-6 ${isListening ? 'text-red-500 animate-pulse' : 'text-gray-500 dark:text-gray-400'}`} />
+          <Mic
+            className={`w-6 h-6 ${isListening ? 'text-red-500 animate-pulse' : 'text-gray-500 dark:text-gray-400'}`}
+          />
           <div>
             <h3 className="font-medium text-gray-800 dark:text-gray-200">Voice Commands</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -220,7 +241,7 @@ function VoiceInputSection({
 
         <TouchOptimizedButton
           onClick={() => onListeningChange(!isListening)}
-          variant={isListening ? "primary" : "secondary"}
+          variant={isListening ? 'primary' : 'secondary'}
           size="normal"
           className={isListening ? 'bg-red-600 hover:bg-red-700' : ''}
         >
@@ -238,10 +259,7 @@ function VoiceInputSection({
         </TouchOptimizedButton>
       </div>
 
-      <VoiceInput
-        onTranscript={onTranscript}
-        className="voice-crisis-input"
-      />
+      <VoiceInput onTranscript={onTranscript} className="voice-crisis-input" />
 
       {lastCommand && (
         <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-sm">
@@ -252,7 +270,9 @@ function VoiceInputSection({
       {/* Emergency Voice Commands */}
       {isEmergencyMode && (
         <div className="mt-4">
-          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Emergency Commands:</h4>
+          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Emergency Commands:
+          </h4>
           <div className="grid grid-cols-2 gap-2 text-xs">
             {config.emergencyPhrases.map((phrase, index) => (
               <div key={index} className="bg-red-50 border border-red-200 rounded p-2">
@@ -280,7 +300,7 @@ function GestureRecognitionSection({
   onGesture,
   isEnabled,
   onEnabledChange,
-  isEmergencyMode
+  isEmergencyMode,
 }: GestureRecognitionSectionProps) {
   const [detectedGesture, setDetectedGesture] = useState<string | null>(null);
   const [shakeCount, setShakeCount] = useState(0);
@@ -290,30 +310,35 @@ function GestureRecognitionSection({
   useEffect(() => {
     if (!isEnabled || !config.enabled) return;
 
-    let lastX = 0, lastY = 0, lastZ = 0;
-    let shakeThreshold = config.sensitivity === 'high' ? 15 : 
-                       config.sensitivity === 'medium' ? 20 : 25;
+    let lastX = 0,
+      lastY = 0,
+      lastZ = 0;
+    let shakeThreshold =
+      config.sensitivity === 'high' ? 15 : config.sensitivity === 'medium' ? 20 : 25;
 
     const handleDeviceMotion = (event: DeviceMotionEvent) => {
       const acceleration = event.accelerationIncludingGravity;
-      if (!acceleration || 
-          acceleration.x === null || 
-          acceleration.y === null || 
-          acceleration.z === null) return;
+      if (
+        !acceleration ||
+        acceleration.x === null ||
+        acceleration.y === null ||
+        acceleration.z === null
+      )
+        return;
 
       const { x, y, z } = acceleration;
-      
+
       const deltaX = Math.abs(x - lastX);
       const deltaY = Math.abs(y - lastY);
       const deltaZ = Math.abs(z - lastZ);
 
       if (deltaX > shakeThreshold || deltaY > shakeThreshold || deltaZ > shakeThreshold) {
         setShakeCount(prev => prev + 1);
-        
+
         if (gestureTimeoutRef.current) {
           clearTimeout(gestureTimeoutRef.current);
         }
-        
+
         gestureTimeoutRef.current = setTimeout(() => {
           if (shakeCount >= 3) {
             setDetectedGesture('shake_device');
@@ -338,19 +363,24 @@ function GestureRecognitionSection({
   }, [isEnabled, config.enabled, config.sensitivity, shakeCount, onGesture]);
 
   // Touch gesture detection
-  const handleTouchGesture = useCallback((gesture: string) => {
-    setDetectedGesture(gesture);
-    onGesture(gesture);
-    
-    setTimeout(() => setDetectedGesture(null), 2000);
-  }, [onGesture]);
+  const handleTouchGesture = useCallback(
+    (gesture: string) => {
+      setDetectedGesture(gesture);
+      onGesture(gesture);
+
+      setTimeout(() => setDetectedGesture(null), 2000);
+    },
+    [onGesture]
+  );
 
   if (!config.enabled) return null;
 
   return (
-    <div className={`gesture-recognition-section bg-white rounded-xl shadow-sm p-4 mb-4 ${
-      isEmergencyMode ? 'border-l-4 border-orange-500' : ''
-    }`}>
+    <div
+      className={`gesture-recognition-section bg-white rounded-xl shadow-sm p-4 mb-4 ${
+        isEmergencyMode ? 'border-l-4 border-orange-500' : ''
+      }`}
+    >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-3">
           <Hand className="w-6 h-6 text-orange-500" />
@@ -364,7 +394,7 @@ function GestureRecognitionSection({
 
         <TouchOptimizedButton
           onClick={() => onEnabledChange(!isEnabled)}
-          variant={isEnabled ? "primary" : "secondary"}
+          variant={isEnabled ? 'primary' : 'secondary'}
           size="normal"
         >
           {isEnabled ? (
@@ -384,10 +414,7 @@ function GestureRecognitionSection({
       {isEnabled && (
         <>
           {/* Gesture Detection Area */}
-          <GestureDetectionArea
-            onGesture={handleTouchGesture}
-            sensitivity={config.sensitivity}
-          />
+          <GestureDetectionArea onGesture={handleTouchGesture} sensitivity={config.sensitivity} />
 
           {detectedGesture && (
             <div className="mt-3 p-2 bg-orange-50 border border-orange-200 rounded text-sm">
@@ -398,10 +425,15 @@ function GestureRecognitionSection({
           {/* Emergency Gestures */}
           {isEmergencyMode && (
             <div className="mt-4">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Emergency Gestures:</h4>
+              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Emergency Gestures:
+              </h4>
               <div className="space-y-2">
                 {EMERGENCY_GESTURES.filter(g => g.enabled).map((gesture, index) => (
-                  <div key={index} className="bg-orange-50 border border-orange-200 rounded p-2 text-xs">
+                  <div
+                    key={index}
+                    className="bg-orange-50 border border-orange-200 rounded p-2 text-xs"
+                  >
                     <div className="font-medium text-orange-800">{gesture.pattern}</div>
                     <div className="text-orange-600">{gesture.description}</div>
                   </div>
@@ -416,7 +448,13 @@ function GestureRecognitionSection({
 }
 
 // Gesture Detection Area
-function GestureDetectionArea({ onGesture, sensitivity }: { onGesture: (gesture: string) => void; sensitivity: string }) {
+function GestureDetectionArea({
+  onGesture,
+  sensitivity,
+}: {
+  onGesture: (gesture: string) => void;
+  sensitivity: string;
+}) {
   const [touchCount, setTouchCount] = useState(0);
   const [lastTouchTime, setLastTouchTime] = useState(0);
   const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);
@@ -425,15 +463,17 @@ function GestureDetectionArea({ onGesture, sensitivity }: { onGesture: (gesture:
   const sensitivityThresholds = {
     low: { swipeDistance: 100, tapSpeed: 500 },
     medium: { swipeDistance: 75, tapSpeed: 400 },
-    high: { swipeDistance: 50, tapSpeed: 300 }
+    high: { swipeDistance: 50, tapSpeed: 300 },
   };
 
-  const threshold = sensitivityThresholds[sensitivity as keyof typeof sensitivityThresholds] || sensitivityThresholds.medium;
+  const threshold =
+    sensitivityThresholds[sensitivity as keyof typeof sensitivityThresholds] ||
+    sensitivityThresholds.medium;
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
     setTouchStartPos({ x: touch.clientX, y: touch.clientY });
-    
+
     const now = Date.now();
     if (now - lastTouchTime < threshold.tapSpeed) {
       setTouchCount(prev => prev + 1);
@@ -492,15 +532,13 @@ function GestureDetectionArea({ onGesture, sensitivity }: { onGesture: (gesture:
       className="gesture-detection-area bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      onContextMenu={(e) => {
+      onContextMenu={e => {
         e.preventDefault();
         handleLongPress();
       }}
     >
       <Hand className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-      <p className="text-gray-600 dark:text-gray-400 text-sm">
-        Touch area for gesture detection
-      </p>
+      <p className="text-gray-600 dark:text-gray-400 text-sm">Touch area for gesture detection</p>
       <p className="text-gray-500 dark:text-gray-400 text-xs mt-2">
         Try swiping, tapping, or long-pressing
       </p>
@@ -515,7 +553,11 @@ interface TouchAdaptationSectionProps {
   crisisSeverity: 'mild' | 'moderate' | 'severe' | 'critical';
 }
 
-function TouchAdaptationSection({ config, isEmergencyMode, crisisSeverity }: TouchAdaptationSectionProps) {
+function TouchAdaptationSection({
+  config,
+  isEmergencyMode,
+  crisisSeverity,
+}: TouchAdaptationSectionProps) {
   const [hapticSupported, setHapticSupported] = useState(false);
 
   useEffect(() => {
@@ -533,13 +575,15 @@ function TouchAdaptationSection({ config, isEmergencyMode, crisisSeverity }: Tou
     mild: 'border-yellow-300 bg-yellow-50',
     moderate: 'border-orange-300 bg-orange-50',
     severe: 'border-red-300 bg-red-50',
-    critical: 'border-red-500 bg-red-100'
+    critical: 'border-red-500 bg-red-100',
   };
 
   return (
-    <div className={`touch-adaptation-section bg-white rounded-xl shadow-sm p-4 mb-4 ${
-      isEmergencyMode ? `border-l-4 ${severityStyles[crisisSeverity]}` : ''
-    }`}>
+    <div
+      className={`touch-adaptation-section bg-white rounded-xl shadow-sm p-4 mb-4 ${
+        isEmergencyMode ? `border-l-4 ${severityStyles[crisisSeverity]}` : ''
+      }`}
+    >
       <div className="flex items-center space-x-3 mb-3">
         <Zap className="w-6 h-6 text-blue-500" />
         <div>
@@ -553,7 +597,9 @@ function TouchAdaptationSection({ config, isEmergencyMode, crisisSeverity }: Tou
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div className="adaptation-item">
           <div className="font-medium text-gray-700 dark:text-gray-300">Target Size</div>
-          <div className="text-gray-600 dark:text-gray-400">{Math.round(config.targetSizeMultiplier * 100)}% larger</div>
+          <div className="text-gray-600 dark:text-gray-400">
+            {Math.round(config.targetSizeMultiplier * 100)}% larger
+          </div>
         </div>
 
         <div className="adaptation-item">
@@ -570,7 +616,9 @@ function TouchAdaptationSection({ config, isEmergencyMode, crisisSeverity }: Tou
 
         <div className="adaptation-item">
           <div className="font-medium text-gray-700 dark:text-gray-300">Error Correction</div>
-          <div className="text-gray-600 dark:text-gray-400">{config.errorCorrection ? 'Enabled' : 'Disabled'}</div>
+          <div className="text-gray-600 dark:text-gray-400">
+            {config.errorCorrection ? 'Enabled' : 'Disabled'}
+          </div>
         </div>
       </div>
 
@@ -581,7 +629,8 @@ function TouchAdaptationSection({ config, isEmergencyMode, crisisSeverity }: Tou
             <span className="text-sm font-medium text-blue-800">Emergency Mode Active</span>
           </div>
           <p className="text-xs text-blue-700 mt-1">
-            Touch targets are automatically enlarged and sensitivity is increased for easier interaction during crisis situations.
+            Touch targets are automatically enlarged and sensitivity is increased for easier
+            interaction during crisis situations.
           </p>
         </div>
       )}
@@ -617,19 +666,25 @@ function CommandHistorySection({ commands, onRepeat }: CommandHistorySectionProp
 
       {isExpanded && (
         <div className="space-y-2">
-          {commands.slice(-5).reverse().map((command, index) => (
-            <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 rounded p-2">
-              <span className="text-sm text-gray-700 dark:text-gray-300">"{command}"</span>
-              <TouchOptimizedButton
-                onClick={() => onRepeat(command)}
-                variant="secondary"
-                size="normal"
-                className="text-xs"
+          {commands
+            .slice(-5)
+            .reverse()
+            .map((command, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between bg-gray-50 dark:bg-gray-900 rounded p-2"
               >
-                Repeat
-              </TouchOptimizedButton>
-            </div>
-          ))}
+                <span className="text-sm text-gray-700 dark:text-gray-300">"{command}"</span>
+                <TouchOptimizedButton
+                  onClick={() => onRepeat(command)}
+                  variant="secondary"
+                  size="normal"
+                  className="text-xs"
+                >
+                  Repeat
+                </TouchOptimizedButton>
+              </div>
+            ))}
         </div>
       )}
     </div>
@@ -646,7 +701,9 @@ export function MultiModalSettingsPanel() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           <Settings className="w-6 h-6 text-gray-500 dark:text-gray-400" />
-          <h3 className="font-medium text-gray-800 dark:text-gray-200">Multi-Modal Input Settings</h3>
+          <h3 className="font-medium text-gray-800 dark:text-gray-200">
+            Multi-Modal Input Settings
+          </h3>
         </div>
 
         <TouchOptimizedButton
@@ -667,10 +724,12 @@ export function MultiModalSettingsPanel() {
                 <input
                   type="checkbox"
                   checked={preferences.voiceInput}
-                  onChange={(e) => updatePreferences({ voiceInput: e.target.checked })}
+                  onChange={e => updatePreferences({ voiceInput: e.target.checked })}
                   className="rounded"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Enable voice commands</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">
+                  Enable voice commands
+                </span>
               </label>
             </div>
           </div>
@@ -679,12 +738,16 @@ export function MultiModalSettingsPanel() {
             <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Touch Adaptations</h4>
             <div className="space-y-2">
               <div>
-                <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">Touch Target Size</label>
+                <label className="block text-sm text-gray-700 dark:text-gray-300 mb-1">
+                  Touch Target Size
+                </label>
                 <select
                   value={preferences.touchTargetSize}
-                  onChange={(e) => updatePreferences({ 
-                    touchTargetSize: e.target.value as 'normal' | 'large' | 'extra-large' 
-                  })}
+                  onChange={e =>
+                    updatePreferences({
+                      touchTargetSize: e.target.value as 'normal' | 'large' | 'extra-large',
+                    })
+                  }
                   className="w-full rounded border-gray-300 dark:border-gray-600"
                 >
                   <option value="normal">Normal</option>
@@ -700,7 +763,7 @@ export function MultiModalSettingsPanel() {
               updatePreferences({
                 voiceInput: true,
                 touchTargetSize: 'extra-large',
-                confirmationLevel: 'high'
+                confirmationLevel: 'high',
               });
             }}
             variant="primary"

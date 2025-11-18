@@ -46,7 +46,7 @@ export class ValidationAnalyticsService {
   async recordEvent(event: ValidationEvent): Promise<void> {
     this.events.push({
       ...event,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
@@ -62,18 +62,14 @@ export class ValidationAnalyticsService {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
-    return this.validations.filter(v => 
-      new Date(v.timestamp) >= cutoffDate
-    );
+    return this.validations.filter(v => new Date(v.timestamp) >= cutoffDate);
   }
 
   async getProgressHistory(days: number = 30): Promise<ProgressEntry[]> {
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
-    return this.progressEntries.filter(entry => 
-      new Date(entry.date) >= cutoffDate
-    );
+    return this.progressEntries.filter(entry => new Date(entry.date) >= cutoffDate);
   }
 
   async detectPatterns(): Promise<ValidationPattern[]> {
@@ -88,7 +84,10 @@ export class ValidationAnalyticsService {
         description: 'User frequently seeks emotional validation',
         frequency: validationCount,
         lastSeen: new Date(),
-        insights: ['Strong engagement with validation features', 'Consistent emotional support seeking']
+        insights: [
+          'Strong engagement with validation features',
+          'Consistent emotional support seeking',
+        ],
       });
     }
 
@@ -97,18 +96,18 @@ export class ValidationAnalyticsService {
 
   async generateInsights(): Promise<ProgressInsights> {
     const recentProgress = await this.getProgressHistory(14);
-    
+
     if (recentProgress.length === 0) {
       return {
         trends: {
           emotional: 'stable',
           functional: 'stable',
           social: 'stable',
-          coping: 'stable'
+          coping: 'stable',
         },
         achievements: [],
         recommendations: ['Start tracking your progress to get personalized insights'],
-        patterns: []
+        patterns: [],
       };
     }
 
@@ -126,11 +125,11 @@ export class ValidationAnalyticsService {
         emotional: emotionalTrend,
         functional: 'stable',
         social: 'stable',
-        coping: 'stable'
+        coping: 'stable',
       },
       achievements: this.calculateAchievements(recentProgress),
       recommendations: this.generateRecommendations(recentProgress),
-      patterns: await this.detectPatterns()
+      patterns: await this.detectPatterns(),
     };
   }
 
@@ -143,11 +142,11 @@ export class ValidationAnalyticsService {
 
   private calculateAchievements(entries: ProgressEntry[]): string[] {
     const achievements: string[] = [];
-    
+
     if (entries.length >= 7) {
       achievements.push('Tracked progress for a full week');
     }
-    
+
     if (entries.length >= 30) {
       achievements.push('Maintained consistent tracking for a month');
     }
@@ -157,15 +156,15 @@ export class ValidationAnalyticsService {
 
   private generateRecommendations(entries: ProgressEntry[]): string[] {
     const recommendations: string[] = [];
-    
+
     if (entries.length > 0) {
       const latest = entries[entries.length - 1];
-      
+
       if (latest.wellbeingMetrics.emotional.mood < 5) {
         recommendations.push('Consider reaching out to your support network');
         recommendations.push('Try a gentle coping strategy like deep breathing');
       }
-      
+
       if (latest.wellbeingMetrics.functional.independenceLevel < 7) {
         recommendations.push('Focus on small, achievable daily tasks');
       }
@@ -185,28 +184,28 @@ export class ValidationIntegrationService {
 
   async saveValidation(validation: ValidationResponse): Promise<void> {
     await this.analytics.saveValidation(validation);
-    
+
     await this.trackValidationEvent({
       type: 'validation_generated',
-      data: { 
+      data: {
         tone: validation.tone,
         message: validation.message,
-        timestamp: validation.timestamp
+        timestamp: validation.timestamp,
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 
   async saveProgressEntry(entry: ProgressEntry): Promise<void> {
     await this.analytics.saveProgressEntry(entry);
-    
+
     await this.trackValidationEvent({
       type: 'progress_updated',
       data: {
         emotional: entry.wellbeingMetrics.emotional,
-        functional: entry.wellbeingMetrics.functional
+        functional: entry.wellbeingMetrics.functional,
       },
-      timestamp: new Date()
+      timestamp: new Date(),
     });
   }
 

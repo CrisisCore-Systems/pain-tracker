@@ -15,7 +15,7 @@ export function NoDataIllustration() {
       >
         {/* Background elements */}
         <circle cx="100" cy="80" r="60" fill="currentColor" opacity="0.1" />
-        
+
         {/* Chart bars */}
         <rect x="60" y="100" width="8" height="20" rx="4" fill="currentColor" opacity="0.3" />
         <rect x="72" y="90" width="8" height="30" rx="4" fill="currentColor" opacity="0.4" />
@@ -24,12 +24,12 @@ export function NoDataIllustration() {
         <rect x="108" y="105" width="8" height="15" rx="4" fill="currentColor" opacity="0.3" />
         <rect x="120" y="80" width="8" height="40" rx="4" fill="currentColor" opacity="0.5" />
         <rect x="132" y="88" width="8" height="32" rx="4" fill="currentColor" opacity="0.4" />
-        
+
         {/* Floating elements */}
         <circle cx="70" cy="50" r="3" fill="currentColor" opacity="0.3" />
         <circle cx="130" cy="45" r="2" fill="currentColor" opacity="0.4" />
         <circle cx="150" cy="65" r="2.5" fill="currentColor" opacity="0.3" />
-        
+
         {/* Activity icon in center */}
         <g transform="translate(85, 65)">
           <path
@@ -42,10 +42,26 @@ export function NoDataIllustration() {
           />
           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" opacity="0.3" />
         </g>
-        
+
         {/* Decorative lines */}
-        <line x1="40" y1="130" x2="160" y2="130" stroke="currentColor" strokeWidth="1" opacity="0.2" />
-        <line x1="50" y1="135" x2="150" y2="135" stroke="currentColor" strokeWidth="1" opacity="0.1" />
+        <line
+          x1="40"
+          y1="130"
+          x2="160"
+          y2="130"
+          stroke="currentColor"
+          strokeWidth="1"
+          opacity="0.2"
+        />
+        <line
+          x1="50"
+          y1="135"
+          x2="150"
+          y2="135"
+          stroke="currentColor"
+          strokeWidth="1"
+          opacity="0.1"
+        />
       </svg>
     </div>
   );
@@ -64,12 +80,21 @@ export function TrackingIllustration() {
       >
         {/* Background circle */}
         <circle cx="100" cy="80" r="70" fill="currentColor" opacity="0.1" />
-        
+
         {/* Calendar grid */}
-        <rect x="70" y="50" width="60" height="45" rx="4" stroke="currentColor" strokeWidth="2" opacity="0.4" />
-        
+        <rect
+          x="70"
+          y="50"
+          width="60"
+          height="45"
+          rx="4"
+          stroke="currentColor"
+          strokeWidth="2"
+          opacity="0.4"
+        />
+
         {/* Calendar days */}
-        {[0, 1, 2, 3, 4].map(row => 
+        {[0, 1, 2, 3, 4].map(row =>
           [0, 1, 2, 3, 4, 5].map(col => {
             // Use deterministic pattern instead of Math.random() to avoid collapse vectors
             const isHighlighted = (row + col) % 3 === 0 || (row === 2 && col === 3);
@@ -87,7 +112,7 @@ export function TrackingIllustration() {
             );
           })
         )}
-        
+
         {/* Heart/health icon */}
         <g transform="translate(85, 105)">
           <path
@@ -96,13 +121,31 @@ export function TrackingIllustration() {
             opacity="0.6"
           />
         </g>
-        
+
         {/* Progress indicators */}
         <circle cx="45" cy="80" r="8" stroke="currentColor" strokeWidth="2" opacity="0.3" />
-        <circle cx="45" cy="80" r="8" stroke="currentColor" strokeWidth="2" strokeDasharray="15,10" opacity="0.6" transform="rotate(-90 45 80)" />
-        
+        <circle
+          cx="45"
+          cy="80"
+          r="8"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeDasharray="15,10"
+          opacity="0.6"
+          transform="rotate(-90 45 80)"
+        />
+
         <circle cx="155" cy="80" r="8" stroke="currentColor" strokeWidth="2" opacity="0.3" />
-        <circle cx="155" cy="80" r="8" stroke="currentColor" strokeWidth="2" strokeDasharray="20,5" opacity="0.6" transform="rotate(-90 155 80)" />
+        <circle
+          cx="155"
+          cy="80"
+          r="8"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeDasharray="20,5"
+          opacity="0.6"
+          transform="rotate(-90 155 80)"
+        />
       </svg>
     </div>
   );

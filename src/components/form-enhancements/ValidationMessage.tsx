@@ -11,7 +11,12 @@ interface ValidationMessageProps {
   className?: string;
 }
 
-export function ValidationMessage({ type, message, fieldId, className = '' }: ValidationMessageProps) {
+export function ValidationMessage({
+  type,
+  message,
+  fieldId,
+  className = '',
+}: ValidationMessageProps) {
   const getIcon = () => {
     switch (type) {
       case 'error':
@@ -49,9 +54,7 @@ export function ValidationMessage({ type, message, fieldId, className = '' }: Va
       role={type === 'error' ? 'alert' : 'status'}
       aria-live={type === 'error' ? 'assertive' : 'polite'}
     >
-      <div className="flex-shrink-0 mt-0.5">
-        {getIcon()}
-      </div>
+      <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
       <span>{message}</span>
     </div>
   );

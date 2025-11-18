@@ -25,27 +25,28 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
     : entries;
 
   // Get unique activities from all entries
-  const activities = Array.from(new Set(
-    filteredEntries.flatMap(entry => entry.functionalImpact?.limitedActivities || [])
-  ));
+  const activities = Array.from(
+    new Set(filteredEntries.flatMap(entry => entry.functionalImpact?.limitedActivities || []))
+  );
 
   // Calculate impact score for each activity
-  const activityImpact = activities.map(activity => {
-    const entriesWithActivity = filteredEntries.filter(entry =>
-      entry.functionalImpact?.limitedActivities?.includes(activity)
-    );
+  const activityImpact = activities
+    .map(activity => {
+      const entriesWithActivity = filteredEntries.filter(entry =>
+        entry.functionalImpact?.limitedActivities?.includes(activity)
+      );
 
-    const averagePain = entriesWithActivity.reduce(
-      (sum, entry) => sum + entry.baselineData.pain,
-      0
-    ) / entriesWithActivity.length;
+      const averagePain =
+        entriesWithActivity.reduce((sum, entry) => sum + entry.baselineData.pain, 0) /
+        entriesWithActivity.length;
 
-    return {
-      activity,
-      frequency: entriesWithActivity.length,
-      averagePain: averagePain || 0,
-    };
-  }).sort((a, b) => b.frequency - a.frequency);
+      return {
+        activity,
+        frequency: entriesWithActivity.length,
+        averagePain: averagePain || 0,
+      };
+    })
+    .sort((a, b) => b.frequency - a.frequency);
 
   // Handle keyboard navigation
   const handleKeyDown = (event: React.KeyboardEvent, index: number) => {
@@ -86,7 +87,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
 
   return (
     <ErrorBoundary>
-      <div 
+      <div
         className="bg-white p-6 rounded-lg shadow-md"
         role="region"
         aria-label="Activity Impact Log"
@@ -96,13 +97,13 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
         <div className="space-y-6">
           {/* Activity List */}
           <div>
-            <h4 
+            <h4
               className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               id="activities-heading"
             >
               Limited Activities
             </h4>
-            <div 
+            <div
               className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
               role="grid"
               aria-labelledby="activities-heading"
@@ -110,9 +111,9 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
               {activityImpact.map(({ activity, frequency, averagePain }, index) => (
                 <button
                   key={activity}
-                  ref={el => activityRefs.current[index] = el}
+                  ref={el => (activityRefs.current[index] = el)}
                   onClick={() => setSelectedActivity(activity)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onKeyDown={e => handleKeyDown(e, index)}
                   className={`p-3 rounded-lg text-left transition-colors ${
                     selectedActivity === activity
                       ? 'bg-blue-50 border-blue-200 border'
@@ -121,7 +122,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                   role="gridcell"
                   aria-selected={selectedActivity === activity}
                   aria-label={`${activity}: ${frequency} times, average pain ${formatNumber(averagePain, 1)}`}
-                  tabIndex={activityImpact.length === 0 ? -1 : (focusedIndex === index ? 0 : -1)}
+                  tabIndex={activityImpact.length === 0 ? -1 : focusedIndex === index ? 0 : -1}
                 >
                   <div className="font-medium">{activity}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
@@ -137,38 +138,27 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
 
           {/* Activity Details */}
           {selectedActivity && (
-            <div 
-              className="mt-6"
-              role="region"
-              aria-label={`Details for ${selectedActivity}`}
-            >
+            <div className="mt-6" role="region" aria-label={`Details for ${selectedActivity}`}>
               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Activity Details: {selectedActivity}
               </h4>
               <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                <div 
-                  className="space-y-4"
-                  role="list"
-                >
+                <div className="space-y-4" role="list">
                   {filteredEntries
-                    .filter(entry => 
+                    .filter(entry =>
                       entry.functionalImpact?.limitedActivities?.includes(selectedActivity)
                     )
                     .map(entry => (
-                      <div 
-                        key={entry.id} 
-                        className="border-b pb-2"
-                        role="listitem"
-                      >
+                      <div key={entry.id} className="border-b pb-2" role="listitem">
                         <div className="flex justify-between items-start">
                           <div>
-                            <div 
+                            <div
                               className="font-medium"
                               aria-label={`Pain Level: ${entry.baselineData.pain}`}
                             >
                               Pain Level: {entry.baselineData.pain}
                             </div>
-                            <div 
+                            <div
                               className="text-sm text-gray-600 dark:text-gray-400"
                               aria-label={`Date: ${format(new Date(entry.timestamp), 'MMM d, yyyy HH:mm')}`}
                             >
@@ -176,7 +166,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
                             </div>
                           </div>
                           {entry.notes && (
-                            <div 
+                            <div
                               className="text-sm text-gray-600 dark:text-gray-400 max-w-xs"
                               aria-label={`Notes: ${entry.notes}`}
                             >
@@ -194,4 +184,4 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
       </div>
     </ErrorBoundary>
   );
-} 
+}

@@ -50,16 +50,18 @@ export class FileAuditSink implements AuditSink {
     this.path = path;
     this.auditKey = auditKey;
     if (typeof window === 'undefined') {
-      import('fs').then(mod => {
-        this.fs = mod;
-        try {
-          if (!this.fs.existsSync(this.path)) this.fs.writeFileSync(this.path, '');
-        } catch {
-          // ignore fs init errors
-        }
-      }).catch(() => {
-        // ignore dynamic import failure in non-Node env
-      });
+      import('fs')
+        .then(mod => {
+          this.fs = mod;
+          try {
+            if (!this.fs.existsSync(this.path)) this.fs.writeFileSync(this.path, '');
+          } catch {
+            // ignore fs init errors
+          }
+        })
+        .catch(() => {
+          // ignore dynamic import failure in non-Node env
+        });
     }
   }
 

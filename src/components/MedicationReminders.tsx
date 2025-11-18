@@ -3,7 +3,14 @@ import FocusTrap from 'focus-trap-react';
 import { cn } from '../design-system/utils';
 import { saveAlert } from './AlertsActivityLog';
 import { useToast } from './feedback';
-import { loadReminders, createReminder, updateReminder, deleteReminder, Reminder, saveReminders } from '../services/reminders';
+import {
+  loadReminders,
+  createReminder,
+  updateReminder,
+  deleteReminder,
+  Reminder,
+  saveReminders,
+} from '../services/reminders';
 
 type MedicationRemindersProps = {
   variant?: 'overlay' | 'inline';
@@ -72,14 +79,20 @@ function buildAlertMessage(reminder: Reminder) {
   return detailParts.join(' • ');
 }
 
-export default function MedicationReminders({ variant = 'overlay', className, onClose }: MedicationRemindersProps) {
+export default function MedicationReminders({
+  variant = 'overlay',
+  className,
+  onClose,
+}: MedicationRemindersProps) {
   const [reminders, setReminders] = useState<Reminder[]>(() => loadReminders());
   const [title, setTitle] = useState('');
   const [time, setTime] = useState('08:00');
   const [extraTimes, setExtraTimes] = useState<string[]>([]);
   const [dosage, setDosage] = useState('');
   const [recurrence, setRecurrence] = useState<'none' | 'daily' | 'weekly'>('none');
-  const [frequency, setFrequency] = useState<'once' | 'daily' | 'twice-daily' | 'weekly' | 'custom'>('once');
+  const [frequency, setFrequency] = useState<
+    'once' | 'daily' | 'twice-daily' | 'weekly' | 'custom'
+  >('once');
   const [notes, setNotes] = useState('');
   const [open, setOpen] = useState(false);
   const [slideIn, setSlideIn] = useState(false);
@@ -93,7 +106,10 @@ export default function MedicationReminders({ variant = 'overlay', className, on
   }, [toast]);
 
   useEffect(() => {
-    const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (open) {
       prevActiveRef.current = document.activeElement as HTMLElement | null;
       if (prefersReduced) {
@@ -140,7 +156,7 @@ export default function MedicationReminders({ variant = 'overlay', className, on
     let intervalId: number | null = null;
 
     const shouldTrigger = (reminder: Reminder, currentHhmm: string) => {
-      return getScheduledTimes(reminder).some((t) => t === currentHhmm);
+      return getScheduledTimes(reminder).some(t => t === currentHhmm);
     };
 
     const runCheck = () => {
@@ -148,9 +164,9 @@ export default function MedicationReminders({ variant = 'overlay', className, on
       const hhmm = now.toTimeString().slice(0, 5);
       const fired: Reminder[] = [];
 
-      setReminders((prev) => {
+      setReminders(prev => {
         let changed = false;
-        const next = prev.map((reminder) => {
+        const next = prev.map(reminder => {
           if (!reminder.enabled) {
             return reminder;
           }
@@ -185,10 +201,13 @@ export default function MedicationReminders({ variant = 'overlay', className, on
     const scheduleNextRun = () => {
       const now = new Date();
       const remainingMs = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
-      timeoutId = window.setTimeout(() => {
-        runCheck();
-        intervalId = window.setInterval(runCheck, 60_000);
-      }, Math.max(250, remainingMs));
+      timeoutId = window.setTimeout(
+        () => {
+          runCheck();
+          intervalId = window.setInterval(runCheck, 60_000);
+        },
+        Math.max(250, remainingMs)
+      );
     };
 
     runCheck();
@@ -237,18 +256,21 @@ export default function MedicationReminders({ variant = 'overlay', className, on
     setExtraTimes([]);
 
     try {
-      toastRef.current?.bottomLeft?.success?.('Reminder saved', `${trimmedTitle} has been scheduled.`);
+      toastRef.current?.bottomLeft?.success?.(
+        'Reminder saved',
+        `${trimmedTitle} has been scheduled.`
+      );
     } catch {
       // toast optional
     }
   };
 
   const addExtraTime = () => {
-    setExtraTimes((prev) => [...prev, '12:00']);
+    setExtraTimes(prev => [...prev, '12:00']);
   };
 
   const updateExtraTime = (idx: number, value: string) => {
-    setExtraTimes((prev) => {
+    setExtraTimes(prev => {
       const next = [...prev];
       next[idx] = value;
       return next;
@@ -256,15 +278,15 @@ export default function MedicationReminders({ variant = 'overlay', className, on
   };
 
   const removeExtraTime = (idx: number) => {
-    setExtraTimes((prev) => prev.filter((_, i) => i !== idx));
+    setExtraTimes(prev => prev.filter((_, i) => i !== idx));
   };
 
-  const activeCount = useMemo(() => reminders.filter((r) => r.enabled).length, [reminders]);
+  const activeCount = useMemo(() => reminders.filter(r => r.enabled).length, [reminders]);
 
   const nextReminder = useMemo(() => {
     const dated = reminders
-      .filter((r) => r.enabled)
-      .map((r) => ({ reminder: r, date: getNextOccurrenceDate(r) }))
+      .filter(r => r.enabled)
+      .map(r => ({ reminder: r, date: getNextOccurrenceDate(r) }))
       .filter((entry): entry is { reminder: Reminder; date: Date } => Boolean(entry.date));
 
     if (!dated.length) {
@@ -303,14 +325,28 @@ export default function MedicationReminders({ variant = 'overlay', className, on
           <div className="flex flex-col gap-2">
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={e => setTitle(e.target.value)}
               placeholder="Medication name"
               className="input w-full"
             />
             <div className="flex flex-col sm:flex-row gap-2">
-              <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input" />
-              <input value={dosage} onChange={(e) => setDosage(e.target.value)} placeholder="Dosage (e.g. 10mg)" className="input" />
-              <select value={frequency} onChange={(e) => setFrequency(e.target.value as any)} className="input">
+              <input
+                type="time"
+                value={time}
+                onChange={e => setTime(e.target.value)}
+                className="input"
+              />
+              <input
+                value={dosage}
+                onChange={e => setDosage(e.target.value)}
+                placeholder="Dosage (e.g. 10mg)"
+                className="input"
+              />
+              <select
+                value={frequency}
+                onChange={e => setFrequency(e.target.value as any)}
+                className="input"
+              >
                 <option value="once">Once</option>
                 <option value="daily">Daily</option>
                 <option value="twice-daily">Twice daily</option>
@@ -323,11 +359,16 @@ export default function MedicationReminders({ variant = 'overlay', className, on
               <div className="flex flex-col gap-2">
                 {frequency === 'twice-daily' ? (
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input" />
+                    <input
+                      type="time"
+                      value={time}
+                      onChange={e => setTime(e.target.value)}
+                      className="input"
+                    />
                     <input
                       type="time"
                       value={extraTimes[0] || addHoursToTime(time, 12)}
-                      onChange={(e) => updateExtraTime(0, e.target.value)}
+                      onChange={e => updateExtraTime(0, e.target.value)}
                       className="input"
                     />
                   </div>
@@ -335,7 +376,12 @@ export default function MedicationReminders({ variant = 'overlay', className, on
                   <div className="space-y-2">
                     {extraTimes.map((t, idx) => (
                       <div key={idx} className="flex items-center gap-2">
-                        <input type="time" value={t} onChange={(e) => updateExtraTime(idx, e.target.value)} className="input" />
+                        <input
+                          type="time"
+                          value={t}
+                          onChange={e => updateExtraTime(idx, e.target.value)}
+                          className="input"
+                        />
                         <button className="btn btn-sm" onClick={() => removeExtraTime(idx)}>
                           Remove
                         </button>
@@ -350,14 +396,18 @@ export default function MedicationReminders({ variant = 'overlay', className, on
             )}
 
             <div className="flex flex-col sm:flex-row gap-2">
-              <select value={recurrence} onChange={(e) => setRecurrence(e.target.value as any)} className="input">
+              <select
+                value={recurrence}
+                onChange={e => setRecurrence(e.target.value as any)}
+                className="input"
+              >
                 <option value="none">No recurrence</option>
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
               </select>
               <input
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={e => setNotes(e.target.value)}
                 placeholder="Notes (e.g. before meals)"
                 className="input flex-1"
               />
@@ -371,12 +421,19 @@ export default function MedicationReminders({ variant = 'overlay', className, on
         <div>
           {hasReminders ? (
             <ul className="space-y-3">
-              {reminders.map((r) => (
-                <li key={r.id} className="flex items-start justify-between gap-4 rounded-lg border p-3 bg-card/80">
+              {reminders.map(r => (
+                <li
+                  key={r.id}
+                  className="flex items-start justify-between gap-4 rounded-lg border p-3 bg-card/80"
+                >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="font-medium">{r.title}</span>
-                      {!r.enabled && <span className="text-xs text-muted-foreground rounded-full border px-2 py-0.5">Paused</span>}
+                      {!r.enabled && (
+                        <span className="text-xs text-muted-foreground rounded-full border px-2 py-0.5">
+                          Paused
+                        </span>
+                      )}
                     </div>
                     <div className="text-sm text-muted-foreground">
                       {getScheduledTimes(r).join(' • ')}
@@ -386,17 +443,21 @@ export default function MedicationReminders({ variant = 'overlay', className, on
                       Frequency: {r.frequency ?? r.recurrence ?? 'once'}
                       {r.notes ? ` • ${r.notes}` : ''}
                     </div>
-                    <div className="text-xs text-muted-foreground">Next: {formatNextOccurrence(r)}</div>
+                    <div className="text-xs text-muted-foreground">
+                      Next: {formatNextOccurrence(r)}
+                    </div>
                   </div>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <button
-                      onClick={() => setReminders((prev) => updateReminder(prev, r.id, { enabled: !r.enabled }))}
+                      onClick={() =>
+                        setReminders(prev => updateReminder(prev, r.id, { enabled: !r.enabled }))
+                      }
                       className="btn btn-sm"
                     >
                       {r.enabled ? 'Pause' : 'Resume'}
                     </button>
                     <button
-                      onClick={() => setReminders((prev) => deleteReminder(prev, r.id))}
+                      onClick={() => setReminders(prev => deleteReminder(prev, r.id))}
                       className="btn btn-sm btn-outline"
                     >
                       Delete
@@ -416,7 +477,11 @@ export default function MedicationReminders({ variant = 'overlay', className, on
   );
 
   if (variant === 'inline') {
-    return <div className={cn('bg-card border rounded-lg shadow-sm p-4 space-y-4', className)}>{renderPanel(false)}</div>;
+    return (
+      <div className={cn('bg-card border rounded-lg shadow-sm p-4 space-y-4', className)}>
+        {renderPanel(false)}
+      </div>
+    );
   }
 
   return (
@@ -427,10 +492,15 @@ export default function MedicationReminders({ variant = 'overlay', className, on
           className="bg-white border rounded-md px-3 py-2 shadow-sm text-sm flex items-center gap-2"
         >
           Medication Reminders
-          {activeCount > 0 && <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">{activeCount} active</span>}
+          {activeCount > 0 && (
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
+              {activeCount} active
+            </span>
+          )}
           {nextReminder && (
             <span className="text-xs text-muted-foreground">
-              Next: {nextReminder.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              Next:{' '}
+              {nextReminder.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
         </button>

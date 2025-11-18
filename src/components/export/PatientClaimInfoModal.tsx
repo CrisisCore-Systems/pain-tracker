@@ -22,7 +22,7 @@ interface PatientClaimInfoModalProps {
 
 /**
  * Patient and Claim Information Form
- * 
+ *
  * Collects WorkSafe BC required information for clinical PDF export.
  * Trauma-informed design with gentle validation and clear labels.
  */
@@ -77,10 +77,10 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
   };
 
   const handleChange = (field: keyof PatientClaimInfo, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+      setErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -98,9 +98,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
             <h2 id="patient-info-title" className="text-xl font-bold">
               Patient & Claim Information
             </h2>
-            <p className="text-sm text-blue-100 mt-1">
-              Required for WorkSafe BC clinical report
-            </p>
+            <p className="text-sm text-blue-100 mt-1">Required for WorkSafe BC clinical report</p>
           </div>
           <button
             onClick={onClose}
@@ -131,7 +129,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                   type="text"
                   id="patientName"
                   value={formData.patientName}
-                  onChange={(e) => handleChange('patientName', e.target.value)}
+                  onChange={e => handleChange('patientName', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
                     errors.patientName ? 'border-red-500' : 'border-gray-300'
                   }`}
@@ -158,7 +156,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     type="date"
                     id="patientDOB"
                     value={formData.patientDOB}
-                    onChange={(e) => handleChange('patientDOB', e.target.value)}
+                    onChange={e => handleChange('patientDOB', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
@@ -174,7 +172,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     type="tel"
                     id="patientPhone"
                     value={formData.patientPhone}
-                    onChange={(e) => handleChange('patientPhone', e.target.value)}
+                    onChange={e => handleChange('patientPhone', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     placeholder="(555) 123-4567"
                   />
@@ -191,7 +189,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                 <textarea
                   id="patientAddress"
                   value={formData.patientAddress}
-                  onChange={(e) => handleChange('patientAddress', e.target.value)}
+                  onChange={e => handleChange('patientAddress', e.target.value)}
                   rows={2}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   placeholder="123 Main St, City, Province, Postal Code"
@@ -219,7 +217,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     type="text"
                     id="claimNumber"
                     value={formData.claimNumber}
-                    onChange={(e) => handleChange('claimNumber', e.target.value)}
+                    onChange={e => handleChange('claimNumber', e.target.value)}
                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
                       errors.claimNumber ? 'border-red-500' : 'border-gray-300'
                     }`}
@@ -228,7 +226,10 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     aria-describedby={errors.claimNumber ? 'claimNumber-error' : undefined}
                   />
                   {errors.claimNumber && (
-                    <p id="claimNumber-error" className="mt-1 text-sm text-red-600 dark:text-red-400">
+                    <p
+                      id="claimNumber-error"
+                      className="mt-1 text-sm text-red-600 dark:text-red-400"
+                    >
                       {errors.claimNumber}
                     </p>
                   )}
@@ -245,7 +246,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     type="date"
                     id="injuryDate"
                     value={formData.injuryDate}
-                    onChange={(e) => handleChange('injuryDate', e.target.value)}
+                    onChange={e => handleChange('injuryDate', e.target.value)}
                     className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
                       errors.injuryDate ? 'border-red-500' : 'border-gray-300'
                     }`}
@@ -253,7 +254,10 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     aria-describedby={errors.injuryDate ? 'injuryDate-error' : undefined}
                   />
                   {errors.injuryDate && (
-                    <p id="injuryDate-error" className="mt-1 text-sm text-red-600 dark:text-red-400">
+                    <p
+                      id="injuryDate-error"
+                      className="mt-1 text-sm text-red-600 dark:text-red-400"
+                    >
                       {errors.injuryDate}
                     </p>
                   )}
@@ -271,7 +275,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                   type="text"
                   id="employerName"
                   value={formData.employerName}
-                  onChange={(e) => handleChange('employerName', e.target.value)}
+                  onChange={e => handleChange('employerName', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   placeholder="Company Name"
                 />
@@ -298,7 +302,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     type="text"
                     id="physicianName"
                     value={formData.physicianName}
-                    onChange={(e) => handleChange('physicianName', e.target.value)}
+                    onChange={e => handleChange('physicianName', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     placeholder="Dr. Jane Smith"
                   />
@@ -315,7 +319,7 @@ export const PatientClaimInfoModal: React.FC<PatientClaimInfoModalProps> = ({
                     type="tel"
                     id="physicianPhone"
                     value={formData.physicianPhone}
-                    onChange={(e) => handleChange('physicianPhone', e.target.value)}
+                    onChange={e => handleChange('physicianPhone', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     placeholder="(555) 987-6543"
                   />

@@ -18,38 +18,36 @@ interface VisitSummaryProps {
   };
 }
 
-export const VisitSummary: React.FC<VisitSummaryProps> = ({ 
-  entries, 
-  dateRange,
-  patientInfo 
-}) => {
-  const sortedEntries = [...entries].sort((a, b) => 
-    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+export const VisitSummary: React.FC<VisitSummaryProps> = ({ entries, dateRange, patientInfo }) => {
+  const sortedEntries = [...entries].sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   );
 
   const latestEntry = sortedEntries[0];
-  const avgPain = entries.length > 0 
-    ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
-    : 0;
+  const avgPain =
+    entries.length > 0
+      ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
+      : 0;
 
-  const locationFrequency = entries.reduce((acc, entry) => {
-    entry.baselineData.locations?.forEach(location => {
-      acc[location] = (acc[location] || 0) + 1;
-    });
-    return acc;
-  }, {} as Record<string, number>);
+  const locationFrequency = entries.reduce(
+    (acc, entry) => {
+      entry.baselineData.locations?.forEach(location => {
+        acc[location] = (acc[location] || 0) + 1;
+      });
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   const topLocations = Object.entries(locationFrequency)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([, a], [, b]) => b - a)
     .slice(0, 5)
     .map(([location, count]) => ({ location, count }));
 
   const currentMedications = latestEntry?.medications?.current || [];
   const recentTreatments = entries
     .flatMap(entry => entry.treatments?.recent || [])
-    .filter((treatment, index, arr) => 
-      arr.findIndex(t => t.type === treatment.type) === index
-    )
+    .filter((treatment, index, arr) => arr.findIndex(t => t.type === treatment.type) === index)
     .slice(0, 5);
 
   const functionalLimitations = latestEntry?.functionalImpact?.limitedActivities || [];
@@ -101,7 +99,8 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
               )}
               {patientInfo.healthcareNumber && (
                 <div>
-                  <span className="font-medium">Healthcare Number:</span> {patientInfo.healthcareNumber}
+                  <span className="font-medium">Healthcare Number:</span>{' '}
+                  {patientInfo.healthcareNumber}
                 </div>
               )}
             </div>
@@ -114,11 +113,15 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
           <div className="text-sm">
             {dateRange ? (
               <p>
-                <span className="font-medium">Period:</span> {format(new Date(dateRange.start), 'MMMM d, yyyy')} - {format(new Date(dateRange.end), 'MMMM d, yyyy')}
+                <span className="font-medium">Period:</span>{' '}
+                {format(new Date(dateRange.start), 'MMMM d, yyyy')} -{' '}
+                {format(new Date(dateRange.end), 'MMMM d, yyyy')}
               </p>
             ) : entries.length > 0 ? (
               <p>
-                <span className="font-medium">Period:</span> {format(new Date(entries[entries.length - 1].timestamp), 'MMMM d, yyyy')} - {format(new Date(entries[0].timestamp), 'MMMM d, yyyy')}
+                <span className="font-medium">Period:</span>{' '}
+                {format(new Date(entries[entries.length - 1].timestamp), 'MMMM d, yyyy')} -{' '}
+                {format(new Date(entries[0].timestamp), 'MMMM d, yyyy')}
               </p>
             ) : (
               <p>No data available</p>
@@ -157,7 +160,7 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-3">Most Affected Areas</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {topLocations.map((item) => (
+              {topLocations.map(item => (
                 <div key={item.location} className="flex justify-between py-2 border-b">
                   <span>{item.location}</span>
                   <span className="font-medium">{item.count} entries</span>
@@ -216,7 +219,9 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
             <h2 className="text-lg font-semibold mb-3">Current Functional Limitations</h2>
             <ul className="list-disc list-inside space-y-1">
               {functionalLimitations.map((limitation, index) => (
-                <li key={index} className="text-sm">{limitation}</li>
+                <li key={index} className="text-sm">
+                  {limitation}
+                </li>
               ))}
             </ul>
           </div>
@@ -229,11 +234,15 @@ export const VisitSummary: React.FC<VisitSummaryProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
                 <div className="text-sm text-gray-600 dark:text-gray-400">Sleep Quality</div>
-                <div className="text-lg font-bold">{latestEntry.qualityOfLife?.sleepQuality || 0}/10</div>
+                <div className="text-lg font-bold">
+                  {latestEntry.qualityOfLife?.sleepQuality || 0}/10
+                </div>
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded">
                 <div className="text-sm text-gray-600 dark:text-gray-400">Mood Impact</div>
-                <div className="text-lg font-bold">{latestEntry.qualityOfLife?.moodImpact || 0}/10</div>
+                <div className="text-lg font-bold">
+                  {latestEntry.qualityOfLife?.moodImpact || 0}/10
+                </div>
               </div>
             </div>
             {(latestEntry.qualityOfLife?.socialImpact?.length ?? 0) > 0 && (

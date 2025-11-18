@@ -28,44 +28,32 @@ export function EmptyState({
   primaryAction,
   secondaryAction,
   illustration,
-  className = ''
+  className = '',
 }: EmptyStateProps) {
   return (
     <div className={`text-center py-12 px-6 ${className}`}>
       <div className="max-w-md mx-auto">
         {/* Illustration */}
-        <div className="mb-8">
-          {illustration || <NoDataIllustration />}
-        </div>
+        <div className="mb-8">{illustration || <NoDataIllustration />}</div>
 
         {/* Content */}
         <div className="mb-8">
-          <h3 className="text-xl font-semibold text-foreground mb-3">
-            {title}
-          </h3>
-          <p className="text-muted-foreground leading-relaxed">
-            {description}
-          </p>
+          <h3 className="text-xl font-semibold text-foreground mb-3">{title}</h3>
+          <p className="text-muted-foreground leading-relaxed">{description}</p>
         </div>
 
         {/* Actions */}
         {(primaryAction || secondaryAction) && (
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {primaryAction && (
-              <Button
-                onClick={primaryAction.onClick}
-                className="flex items-center space-x-2"
-              >
+              <Button onClick={primaryAction.onClick} className="flex items-center space-x-2">
                 {primaryAction.icon}
                 <span>{primaryAction.label}</span>
               </Button>
             )}
-            
+
             {secondaryAction && (
-              <Button
-                variant="outline"
-                onClick={secondaryAction.onClick}
-              >
+              <Button variant="outline" onClick={secondaryAction.onClick}>
                 {secondaryAction.label}
               </Button>
             )}

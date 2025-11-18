@@ -19,15 +19,15 @@ interface TraumaInformedLayoutProps {
 }
 
 // Main layout wrapper with provider
-export function TraumaInformedLayout({ 
-  children, 
-  title = "Pain Tracker",
+export function TraumaInformedLayout({
+  children,
+  title = 'Pain Tracker',
   showComfortPrompts = true,
-  showMemoryAids = true
+  showMemoryAids = true,
 }: TraumaInformedLayoutProps) {
   return (
     <TraumaInformedProvider>
-      <TraumaInformedLayoutInner 
+      <TraumaInformedLayoutInner
         title={title}
         showComfortPrompts={showComfortPrompts}
         showMemoryAids={showMemoryAids}
@@ -39,11 +39,11 @@ export function TraumaInformedLayout({
 }
 
 // Inner layout component that uses the context
-function TraumaInformedLayoutInner({ 
-  children, 
+function TraumaInformedLayoutInner({
+  children,
   title,
   showComfortPrompts,
-  showMemoryAids
+  showMemoryAids,
 }: TraumaInformedLayoutProps & { title: string }) {
   const { preferences } = useTraumaInformed();
   const [showSettings, setShowSettings] = useState(false);
@@ -65,13 +65,9 @@ function TraumaInformedLayoutInner({
           <div className="flex items-center justify-between h-16">
             {/* Title and logo */}
             <div className="flex items-center space-x-3">
-              <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-                {title}
-              </h1>
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">{title}</h1>
               {preferences.showProgress && (
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Welcome back
-                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Welcome back</div>
               )}
             </div>
 
@@ -108,7 +104,7 @@ function TraumaInformedLayoutInner({
         <div className="fixed inset-0 z-[100] overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
-            <div 
+            <div
               className="fixed inset-0 transition-opacity bg-gray-500 dark:bg-gray-500 bg-opacity-75"
               onClick={() => setShowSettings(false)}
               aria-hidden="true"
@@ -128,7 +124,7 @@ function TraumaInformedLayoutInner({
                   <X className="w-5 h-5" />
                 </TouchOptimizedButton>
               </div>
-              
+
               <AccessibilitySettingsPanel />
             </div>
           </div>
@@ -148,7 +144,7 @@ function TraumaInformedLayoutInner({
               <X className="w-4 h-4" />
             </TouchOptimizedButton>
           </div>
-          
+
           <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
             <p>This interface is designed to be gentle and supportive.</p>
             <ul className="space-y-2">
@@ -157,12 +153,11 @@ function TraumaInformedLayoutInner({
               <li>• Take breaks whenever you need them</li>
               <li>• You're in control of what information you share</li>
             </ul>
-            
+
             {preferences.gentleLanguage && (
               <div className="mt-3 p-3 bg-blue-50 rounded-md">
                 <p className="text-blue-800 text-sm">
-                  Remember: You're doing great by taking care of your health. 
-                  Go at your own pace.
+                  Remember: You're doing great by taking care of your health. Go at your own pace.
                 </p>
               </div>
             )}
@@ -197,14 +192,10 @@ function TraumaInformedLayoutInner({
             memoryAid="Record and track your pain levels, symptoms, and treatments"
             defaultOpen={true}
           >
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              {children}
-            </div>
+            <div className="bg-white rounded-lg shadow-sm p-6">{children}</div>
           </ProgressiveDisclosure>
         ) : (
-          <div className="bg-white rounded-lg shadow-sm">
-            {children}
-          </div>
+          <div className="bg-white rounded-lg shadow-sm">{children}</div>
         )}
       </main>
 
@@ -213,13 +204,11 @@ function TraumaInformedLayoutInner({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {preferences.gentleLanguage ? (
-                "Your health journey matters. Take it one step at a time."
-              ) : (
-                "Pain Tracker - Manage your health information"
-              )}
+              {preferences.gentleLanguage
+                ? 'Your health journey matters. Take it one step at a time.'
+                : 'Pain Tracker - Manage your health information'}
             </div>
-            
+
             {preferences.showComfortPrompts && (
               <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                 <Heart className="w-4 h-4 text-red-400" />
@@ -234,12 +223,12 @@ function TraumaInformedLayoutInner({
 }
 
 // Trauma-informed page wrapper for individual pages
-export function TraumaInformedPage({ 
-  children, 
-  title, 
+export function TraumaInformedPage({
+  children,
+  title,
   description,
   showBackButton = false,
-  onBack
+  onBack,
 }: {
   children: React.ReactNode;
   title: string;
@@ -255,25 +244,15 @@ export function TraumaInformedPage({
       <div className="mb-6">
         {showBackButton && onBack && (
           <div className="mb-4">
-            <TouchOptimizedButton
-              variant="secondary"
-              onClick={onBack}
-              size="normal"
-            >
+            <TouchOptimizedButton variant="secondary" onClick={onBack} size="normal">
               ← Back
             </TouchOptimizedButton>
           </div>
         )}
-        
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          {title}
-        </h1>
-        
-        {description && (
-          <p className="text-gray-600 dark:text-gray-400">
-            {description}
-          </p>
-        )}
+
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{title}</h1>
+
+        {description && <p className="text-gray-600 dark:text-gray-400">{description}</p>}
       </div>
 
       {/* Page content with progressive disclosure if simplified mode */}
@@ -281,7 +260,7 @@ export function TraumaInformedPage({
         <ProgressiveDisclosure
           title="Page Content"
           level="essential"
-          memoryAid={description || "Click to view content"}
+          memoryAid={description || 'Click to view content'}
           defaultOpen={true}
         >
           {children}
@@ -294,12 +273,12 @@ export function TraumaInformedPage({
 }
 
 // Trauma-informed section wrapper
-export function TraumaInformedSection({ 
-  children, 
-  title, 
+export function TraumaInformedSection({
+  children,
+  title,
   description,
   importance = 'normal',
-  canCollapse = true
+  canCollapse = true,
 }: {
   children: React.ReactNode;
   title: string;
@@ -314,12 +293,10 @@ export function TraumaInformedSection({
       <ProgressiveDisclosure
         title={title}
         level="advanced"
-        memoryAid={description || "Optional information"}
+        memoryAid={description || 'Optional information'}
         defaultOpen={false}
       >
-        <div className="mb-6">
-          {children}
-        </div>
+        <div className="mb-6">{children}</div>
       </ProgressiveDisclosure>
     );
   }
@@ -327,14 +304,8 @@ export function TraumaInformedSection({
   return (
     <section className="trauma-informed-section mb-6">
       <div className="mb-4">
-        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">
-          {title}
-        </h2>
-        {description && (
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {description}
-          </p>
-        )}
+        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">{title}</h2>
+        {description && <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>}
       </div>
       {children}
     </section>

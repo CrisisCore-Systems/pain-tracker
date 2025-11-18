@@ -9,7 +9,7 @@ const engine = new EmpathyIntelligenceEngine({
   personalizationDepth: 'moderate',
   culturalSensitivity: 'standard',
   interventionStyle: 'balanced',
-  privacyLevel: 'standard'
+  privacyLevel: 'standard',
 });
 
 function mood(note: string, overrides: Partial<MoodEntry> = {}): MoodEntry {
@@ -27,7 +27,7 @@ function mood(note: string, overrides: Partial<MoodEntry> = {}): MoodEntry {
     triggers: [],
     copingStrategies: [],
     socialSupport: 'minimal',
-    notes: note
+    notes: note,
   };
   return { ...base, ...overrides };
 }
@@ -42,25 +42,37 @@ const pain: PainEntry = {
   qualityOfLife: { sleepQuality: 6, moodImpact: 4, socialImpact: [] },
   workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
   comparison: { worseningSince: '', newLimitations: [] },
-  notes: 'baseline'
+  notes: 'baseline',
 };
 
 describe('Wisdom metric heuristics', () => {
   it('produces higher self-knowledge with introspective language', async () => {
     const moods = [
       mood('I realized I feel patterns emerging and I understand triggers'),
-      mood('I learned today and I feel aware of my needs')
+      mood('I learned today and I feel aware of my needs'),
     ];
     const metrics = await engine.calculateAdvancedEmpathyMetrics('u1', [pain], moods);
     expect(metrics.humanizedMetrics.wisdomGained.insights.length).toBeGreaterThanOrEqual(0);
     // selfKnowledgeWisdom inside wisdomCategories
-    expect(metrics.humanizedMetrics.wisdomGained.wisdomCategories.selfKnowledgeWisdom).toBeGreaterThan(50);
+    expect(
+      metrics.humanizedMetrics.wisdomGained.wisdomCategories.selfKnowledgeWisdom
+    ).toBeGreaterThan(50);
   });
 
   it('calculates wisdom growth rate based on increased insight density', async () => {
-    const early = Array.from({length:3}, (_,i)=> mood('just a day', { timestamp: new Date(Date.now() - (10-i)*86400000) }));
-    const later = Array.from({length:4}, (_,i)=> mood('I learned an insight about growth', { timestamp: new Date(Date.now() - (4-i)*86400000) }));
-    const metrics = await engine.calculateAdvancedEmpathyMetrics('u2', [pain], [...early, ...later]);
+    const early = Array.from({ length: 3 }, (_, i) =>
+      mood('just a day', { timestamp: new Date(Date.now() - (10 - i) * 86400000) })
+    );
+    const later = Array.from({ length: 4 }, (_, i) =>
+      mood('I learned an insight about growth', {
+        timestamp: new Date(Date.now() - (4 - i) * 86400000),
+      })
+    );
+    const metrics = await engine.calculateAdvancedEmpathyMetrics(
+      'u2',
+      [pain],
+      [...early, ...later]
+    );
     expect(metrics.humanizedMetrics.wisdomGained.wisdomGrowthRate).toBeGreaterThan(40);
   });
 });

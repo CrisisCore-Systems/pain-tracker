@@ -1,6 +1,6 @@
 /**
  * @fileoverview Adaptive Tone Engine
- * 
+ *
  * Determines patient state, selects appropriate copy variations,
  * and tracks tone effectiveness metrics.
  */
@@ -19,7 +19,7 @@ import type { PainEntry } from '../types/pain-tracker';
 
 /**
  * Adaptive Tone Engine
- * 
+ *
  * Core responsibilities:
  * 1. Detect patient state from pain data
  * 2. Select appropriate copy variation
@@ -31,10 +31,7 @@ export class ToneEngine {
   /**
    * Detect patient state from recent pain entries
    */
-  detectState(
-    entries: PainEntry[],
-    timeSinceFlare?: number
-  ): PatientState {
+  detectState(entries: PainEntry[], timeSinceFlare?: number): PatientState {
     if (entries.length === 0) {
       return 'stable';
     }
@@ -92,7 +89,8 @@ export class ToneEngine {
     return {
       current,
       previous,
-      direction: diff > 0.5 ? 'up' as const : diff < -0.5 ? 'down' as const : 'stable' as const,
+      direction:
+        diff > 0.5 ? ('up' as const) : diff < -0.5 ? ('down' as const) : ('stable' as const),
     };
   }
 
@@ -119,10 +117,7 @@ export class ToneEngine {
   /**
    * Select copy variation based on context
    */
-  selectCopy(
-    copy: AdaptiveCopy,
-    context: ToneContext
-  ): string {
+  selectCopy(copy: AdaptiveCopy, context: ToneContext): string {
     // 1. State-specific variation (highest priority)
     if (copy.states) {
       const stateVariation = copy.states[context.state];
@@ -148,10 +143,7 @@ export class ToneEngine {
   /**
    * Generate progress insight with confidence
    */
-  generateInsight(
-    entries: PainEntry[],
-    days: number = 14
-  ): ProgressInsight | null {
+  generateInsight(entries: PainEntry[], days: number = 14): ProgressInsight | null {
     if (entries.length < 2) {
       return null;
     }
@@ -159,17 +151,17 @@ export class ToneEngine {
     // Filter to date range
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - days);
-    const recent = entries.filter(
-      e => new Date(e.timestamp) >= cutoff
-    );
+    const recent = entries.filter(e => new Date(e.timestamp) >= cutoff);
 
     if (recent.length < 2) {
       return null;
     }
 
     // Calculate average pain
-    const avg = recent.reduce((sum, e) => sum + (e.baselineData?.pain ?? e.intensity ?? 0), 0) / recent.length;
-    
+    const avg =
+      recent.reduce((sum, e) => sum + (e.baselineData?.pain ?? e.intensity ?? 0), 0) /
+      recent.length;
+
     // Compare to previous period
     const previousCutoff = new Date(cutoff);
     previousCutoff.setDate(previousCutoff.getDate() - days);
@@ -184,23 +176,23 @@ export class ToneEngine {
       };
     }
 
-    const prevAvg = previous.reduce((sum, e) => sum + (e.baselineData?.pain ?? e.intensity ?? 0), 0) / previous.length;
+    const prevAvg =
+      previous.reduce((sum, e) => sum + (e.baselineData?.pain ?? e.intensity ?? 0), 0) /
+      previous.length;
     const change = avg - prevAvg;
     const direction = change > 0 ? '↑' : '↓';
     const absChange = Math.abs(change);
 
     // Determine confidence based on data points and consistency
-    const confidence: 'low' | 'medium' | 'high' = 
-      recent.length >= 10 ? 'high' : 
-      recent.length >= 5 ? 'medium' : 
-      'low';
+    const confidence: 'low' | 'medium' | 'high' =
+      recent.length >= 10 ? 'high' : recent.length >= 5 ? 'medium' : 'low';
 
     // Build summary
     const summary = `Last ${days} days: average pain ${prevAvg.toFixed(1)} → ${avg.toFixed(1)} (${direction}${absChange.toFixed(1)}).`;
 
     // Identify likely factors (simplified - would use more sophisticated analysis)
     const factors: string[] = [];
-    
+
     // Check for sleep correlation (if we had sleep data)
     // Check for activity correlation
     // Check for time-of-day patterns
@@ -217,7 +209,7 @@ export class ToneEngine {
    */
   trackMeasurement(measurement: ToneMeasurement): void {
     this.measurements.push(measurement);
-    
+
     // Persist to storage (IndexedDB)
     this.persistMeasurement(measurement);
   }
@@ -225,14 +217,12 @@ export class ToneEngine {
   /**
    * Get acceptance rate for a specific intent/state combination
    */
-  getAcceptanceRate(
-    intent: CopyIntent,
-    state?: PatientState
-  ): number | undefined {
+  getAcceptanceRate(intent: CopyIntent, state?: PatientState): number | undefined {
     const relevant = this.measurements.filter(
-      m => m.metric === 'prompt_acceptance' &&
-           m.context.intent === intent &&
-           (!state || m.context.state === state)
+      m =>
+        m.metric === 'prompt_acceptance' &&
+        m.context.intent === intent &&
+        (!state || m.context.state === state)
     );
 
     if (relevant.length === 0) {
@@ -247,9 +237,7 @@ export class ToneEngine {
    * Get average time to calm in panic mode
    */
   getAverageTimeToCalm(): number | undefined {
-    const relevant = this.measurements.filter(
-      m => m.metric === 'time_to_calm'
-    );
+    const relevant = this.measurements.filter(m => m.metric === 'time_to_calm');
 
     if (relevant.length === 0) {
       return undefined;
@@ -284,13 +272,13 @@ export class ToneEngine {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result;
-        
+
         if (!db.objectStoreNames.contains('tone-measurements')) {
-          db.createObjectStore('tone-measurements', { 
+          db.createObjectStore('tone-measurements', {
             keyPath: 'timestamp',
-            autoIncrement: true 
+            autoIncrement: true,
           });
         }
       };

@@ -32,14 +32,14 @@ function averagePain(entries: PainEntry[]): number | null {
 function splitByDayWindow(entries: PainEntry[], daysBack: number): PainEntry[] {
   const now = Date.now();
   const earliest = now - daysBack * MS_IN_DAY;
-  return entries.filter((entry) => new Date(entry.timestamp).getTime() >= earliest);
+  return entries.filter(entry => new Date(entry.timestamp).getTime() >= earliest);
 }
 
 function splitWindow(entries: PainEntry[], startDaysAgo: number, endDaysAgo: number): PainEntry[] {
   const now = Date.now();
   const startTs = now - startDaysAgo * MS_IN_DAY;
   const endTs = now - endDaysAgo * MS_IN_DAY;
-  return entries.filter((entry) => {
+  return entries.filter(entry => {
     const ts = new Date(entry.timestamp).getTime();
     return ts < startTs && ts >= endTs;
   });
@@ -55,13 +55,31 @@ type DaySegment = {
 
 function buildDaySegments(entries: PainEntry[]): DaySegment[] {
   const segments: Record<DaySegment['key'], DaySegment> = {
-    morning: { key: 'morning', label: 'Morning', description: '5:00 – 11:59', totalPain: 0, count: 0 },
-    afternoon: { key: 'afternoon', label: 'Afternoon', description: '12:00 – 16:59', totalPain: 0, count: 0 },
-    evening: { key: 'evening', label: 'Evening', description: '17:00 – 21:59', totalPain: 0, count: 0 },
+    morning: {
+      key: 'morning',
+      label: 'Morning',
+      description: '5:00 – 11:59',
+      totalPain: 0,
+      count: 0,
+    },
+    afternoon: {
+      key: 'afternoon',
+      label: 'Afternoon',
+      description: '12:00 – 16:59',
+      totalPain: 0,
+      count: 0,
+    },
+    evening: {
+      key: 'evening',
+      label: 'Evening',
+      description: '17:00 – 21:59',
+      totalPain: 0,
+      count: 0,
+    },
     night: { key: 'night', label: 'Night', description: '22:00 – 4:59', totalPain: 0, count: 0 },
   };
 
-  entries.forEach((entry) => {
+  entries.forEach(entry => {
     const hour = new Date(entry.timestamp).getHours();
     const pain = entry.baselineData.pain;
     if (Number.isNaN(hour)) return;
@@ -91,8 +109,8 @@ interface TriggerStat {
 
 function collectTriggerStats(entries: PainEntry[]): TriggerStat[] {
   const map = new Map<string, { count: number; totalPain: number }>();
-  entries.forEach((entry) => {
-    entry.triggers?.forEach((trigger) => {
+  entries.forEach(entry => {
+    entry.triggers?.forEach(trigger => {
       const key = trigger.trim().toLowerCase();
       if (!key) return;
       const stat = map.get(key);
@@ -115,7 +133,7 @@ function collectTriggerStats(entries: PainEntry[]): TriggerStat[] {
 function formatTrigger(trigger: string): string {
   return trigger
     .split(' ')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ');
 }
 
@@ -128,7 +146,8 @@ export function generateDashboardAIInsights(
       {
         id: 'no-data',
         title: 'Start your insight journey',
-        summary: 'Once you add a few pain entries, we will highlight gentle patterns to support your care plan.',
+        summary:
+          'Once you add a few pain entries, we will highlight gentle patterns to support your care plan.',
         tone: 'observation',
         confidence: 0.2,
       },
@@ -139,9 +158,12 @@ export function generateDashboardAIInsights(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
 
-  const allEntries = options.allEntries && options.allEntries.length > entries.length
-    ? [...options.allEntries].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
-    : sortedEntries;
+  const allEntries =
+    options.allEntries && options.allEntries.length > entries.length
+      ? [...options.allEntries].sort(
+          (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        )
+      : sortedEntries;
 
   const lastSevenDays = splitByDayWindow(sortedEntries, 7);
   const previousSevenDays = splitWindow(sortedEntries, 7, 14);
@@ -151,9 +173,8 @@ export function generateDashboardAIInsights(
   const lifetimeAvg = averagePain(allEntries) ?? averagePain(sortedEntries) ?? 0;
 
   const comparisonAvg = prevAvg ?? lifetimeAvg;
-  const recentChange = lastAvg !== null && comparisonAvg !== null
-    ? roundToTenth(lastAvg - comparisonAvg)
-    : 0;
+  const recentChange =
+    lastAvg !== null && comparisonAvg !== null ? roundToTenth(lastAvg - comparisonAvg) : 0;
 
   const trendInsight: DashboardAIInsight = {
     id: 'pain-trend',
@@ -166,7 +187,8 @@ export function generateDashboardAIInsights(
   };
 
   if (lastAvg === null) {
-    trendInsight.summary = 'Not enough recent entries to compare weeks yet—each note you add uncloses richer guidance.';
+    trendInsight.summary =
+      'Not enough recent entries to compare weeks yet—each note you add uncloses richer guidance.';
   } else if (recentChange <= -0.4) {
     trendInsight.summary = `Pain levels eased about ${Math.abs(recentChange).toFixed(1)} points compared to earlier weeks. Notice what supported you and celebrate the care you offered yourself.`;
     trendInsight.tone = 'celebration';
@@ -174,11 +196,12 @@ export function generateDashboardAIInsights(
     trendInsight.summary = `Pain has risen roughly ${recentChange.toFixed(1)} points over the past week. Consider jotting triggers or pacing ideas so we can watch for supportive adjustments.`;
     trendInsight.tone = 'gentle-nudge';
   } else {
-    trendInsight.summary = 'Pain levels are holding steady week over week. Keep noting small shifts—the steadiness itself is valuable information.';
+    trendInsight.summary =
+      'Pain levels are holding steady week over week. Keep noting small shifts—the steadiness itself is valuable information.';
   }
 
   const segments = buildDaySegments(sortedEntries);
-  const segmentsWithData = segments.filter((segment) => segment.count > 0);
+  const segmentsWithData = segments.filter(segment => segment.count > 0);
 
   const dayInsight: DashboardAIInsight = {
     id: 'time-of-day',
@@ -189,9 +212,10 @@ export function generateDashboardAIInsights(
   };
 
   if (segmentsWithData.length < 2) {
-    dayInsight.summary = 'Keep logging at different times of day and we will gently surface when your body feels the most taxed or supported.';
+    dayInsight.summary =
+      'Keep logging at different times of day and we will gently surface when your body feels the most taxed or supported.';
   } else {
-    const enriched = segmentsWithData.map((segment) => ({
+    const enriched = segmentsWithData.map(segment => ({
       ...segment,
       average: segment.totalPain / segment.count,
     }));
@@ -223,7 +247,8 @@ export function generateDashboardAIInsights(
   };
 
   if (!triggerStats.length) {
-    triggerInsight.summary = 'No repeating triggers are standing out yet. When you notice one, jot it down so we can gently connect the dots for you.';
+    triggerInsight.summary =
+      'No repeating triggers are standing out yet. When you notice one, jot it down so we can gently connect the dots for you.';
   } else {
     triggerStats.sort((a, b) => b.count - a.count || b.averagePain - a.averagePain);
     const totalTriggerMentions = triggerStats.reduce((sum, stat) => sum + stat.count, 0);
@@ -232,7 +257,11 @@ export function generateDashboardAIInsights(
 
     triggerInsight.metricLabel = 'Most noted trigger';
     triggerInsight.metricValue = formatTrigger(primary.trigger);
-    triggerInsight.confidence = clamp(primary.count / Math.max(sortedEntries.length, 1) + 0.2, 0.35, 0.9);
+    triggerInsight.confidence = clamp(
+      primary.count / Math.max(sortedEntries.length, 1) + 0.2,
+      0.35,
+      0.9
+    );
 
     const avgPain = roundToTenth(primary.averagePain);
     const share = Math.round((primary.count / totalTriggerMentions) * 100);
@@ -258,9 +287,10 @@ export function generateDashboardAIInsights(
       insights.push({
         id: 'overall-shift',
         title: 'Overall shift alert',
-        summary: signal > 0
-          ? 'Recent entries suggest a steady upward climb in pain. Pairing pacing breaks with grounding practices could cushion the lift.'
-          : 'Pain entries lean downward overall—a meaningful signal that your care routines are helping.',
+        summary:
+          signal > 0
+            ? 'Recent entries suggest a steady upward climb in pain. Pairing pacing breaks with grounding practices could cushion the lift.'
+            : 'Pain entries lean downward overall—a meaningful signal that your care routines are helping.',
         tone: signal > 0 ? 'gentle-nudge' : 'celebration',
         confidence: clamp(Math.abs(signal) / 2 + 0.3, 0.35, 0.85),
       });

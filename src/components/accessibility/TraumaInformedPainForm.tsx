@@ -5,13 +5,13 @@
 
 import { useState, useEffect } from 'react';
 import { secureStorage } from '../../lib/storage/secureStorage';
-import { 
-  ProgressiveDisclosure, 
-  MemoryAid, 
-  GentleValidation, 
+import {
+  ProgressiveDisclosure,
+  MemoryAid,
+  GentleValidation,
   TouchOptimizedButton,
   CognitiveLoadReducer,
-  TraumaInformedForm
+  TraumaInformedForm,
 } from './TraumaInformedUX';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { Card, CardContent } from '../../design-system';
@@ -19,18 +19,18 @@ import { Heart, MapPin, Activity, Pill, Star, Briefcase, MessageCircle } from 'l
 import type { PainEntry } from '../../types';
 
 interface TraumaInformedPainEntryFormProps {
-  onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
+  onSubmit: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
   initialData?: Partial<PainEntry>;
 }
 
-export function TraumaInformedPainEntryForm({ 
-  onSubmit, 
-  initialData 
+export function TraumaInformedPainEntryForm({
+  onSubmit,
+  initialData,
 }: TraumaInformedPainEntryFormProps) {
   const { preferences, updatePreferences } = useTraumaInformed();
   const [currentStep, setCurrentStep] = useState(0);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [formData, setFormData] = useState<Omit<PainEntry, "id" | "timestamp">>({
+  const [formData, setFormData] = useState<Omit<PainEntry, 'id' | 'timestamp'>>({
     baselineData: {
       pain: initialData?.baselineData?.pain || 0,
       locations: initialData?.baselineData?.locations || [],
@@ -43,12 +43,12 @@ export function TraumaInformedPainEntryForm({
     },
     medications: {
       current: initialData?.medications?.current || [],
-      changes: initialData?.medications?.changes || "",
-      effectiveness: initialData?.medications?.effectiveness || "",
+      changes: initialData?.medications?.changes || '',
+      effectiveness: initialData?.medications?.effectiveness || '',
     },
     treatments: {
       recent: initialData?.treatments?.recent || [],
-      effectiveness: initialData?.treatments?.effectiveness || "",
+      effectiveness: initialData?.treatments?.effectiveness || '',
       planned: initialData?.treatments?.planned || [],
     },
     qualityOfLife: {
@@ -62,10 +62,10 @@ export function TraumaInformedPainEntryForm({
       workLimitations: initialData?.workImpact?.workLimitations || [],
     },
     comparison: {
-      worseningSince: initialData?.comparison?.worseningSince || "",
+      worseningSince: initialData?.comparison?.worseningSince || '',
       newLimitations: initialData?.comparison?.newLimitations || [],
     },
-    notes: initialData?.notes || "",
+    notes: initialData?.notes || '',
   });
 
   // Auto-save functionality
@@ -82,7 +82,9 @@ export function TraumaInformedPainEntryForm({
   useEffect(() => {
     if (preferences.autoSave && !initialData) {
       // Try secure storage first
-      const secureDraft = secureStorage.get<typeof formData>('pain-tracker-draft', { encrypt: true });
+      const secureDraft = secureStorage.get<typeof formData>('pain-tracker-draft', {
+        encrypt: true,
+      });
       if (secureDraft) {
         setFormData(secureDraft);
         return;
@@ -92,7 +94,7 @@ export function TraumaInformedPainEntryForm({
         const legacy = localStorage.getItem('pain-tracker-draft');
         if (legacy) {
           const parsed = JSON.parse(legacy);
-            secureStorage.set('pain-tracker-draft', parsed, { encrypt: true });
+          secureStorage.set('pain-tracker-draft', parsed, { encrypt: true });
           setFormData(parsed);
         }
       } catch (error) {
@@ -103,26 +105,33 @@ export function TraumaInformedPainEntryForm({
 
   const handleSubmit = () => {
     const newErrors: Record<string, string> = {};
-    
+
     // Gentle validation
     if (formData.baselineData.pain === 0 && (formData.baselineData.locations?.length ?? 0) === 0) {
-      newErrors.baseline = "It would be helpful to know about your current pain level or location";
+      newErrors.baseline = 'It would be helpful to know about your current pain level or location';
     }
-    
+
     setErrors(newErrors);
-    
+
     if (Object.keys(newErrors).length === 0) {
       onSubmit(formData);
-  // Clear draft (both secure and legacy)
-  secureStorage.remove('pain-tracker-draft');
-  try { localStorage.removeItem('pain-tracker-draft'); } catch {/* ignore */}
+      // Clear draft (both secure and legacy)
+      secureStorage.remove('pain-tracker-draft');
+      try {
+        localStorage.removeItem('pain-tracker-draft');
+      } catch {
+        /* ignore */
+      }
     }
   };
 
-  const updateFormData = <K extends keyof typeof formData>(section: K, data: Partial<typeof formData[K]>) => {
+  const updateFormData = <K extends keyof typeof formData>(
+    section: K,
+    data: Partial<(typeof formData)[K]>
+  ) => {
     setFormData(prev => ({
       ...prev,
-      [section]: { ...prev[section] as any, ...data }
+      [section]: { ...(prev[section] as any), ...data },
     }));
   };
 
@@ -132,72 +141,72 @@ export function TraumaInformedPainEntryForm({
       icon: <Heart className="w-5 h-5 text-red-500" />,
       level: 'essential' as const,
       content: (
-        <PainLevelSection 
+        <PainLevelSection
           data={formData.baselineData}
-          onChange={(data) => updateFormData('baselineData', data)}
+          onChange={data => updateFormData('baselineData', data)}
           error={errors.baseline}
         />
-      )
+      ),
     },
     {
-      title: "Daily Activities & Function",
+      title: 'Daily Activities & Function',
       icon: <Activity className="w-5 h-5 text-blue-500" />,
       level: 'helpful' as const,
       content: (
-        <FunctionalImpactSection 
+        <FunctionalImpactSection
           data={formData.functionalImpact}
-          onChange={(data) => updateFormData('functionalImpact', data)}
+          onChange={data => updateFormData('functionalImpact', data)}
         />
-      )
+      ),
     },
     {
-      title: "Medications & Treatments",
+      title: 'Medications & Treatments',
       icon: <Pill className="w-5 h-5 text-green-500" />,
       level: 'helpful' as const,
       content: (
-        <MedicationSection 
+        <MedicationSection
           medications={formData.medications}
-          onMedicationsChange={(data) => updateFormData('medications', data)}
+          onMedicationsChange={data => updateFormData('medications', data)}
         />
-      )
+      ),
     },
     {
-      title: "Quality of Life Impact",
+      title: 'Quality of Life Impact',
       icon: <Star className="w-5 h-5 text-yellow-500" />,
       level: 'helpful' as const,
       content: (
-        <QualityOfLifeSection 
+        <QualityOfLifeSection
           data={formData.qualityOfLife}
-          onChange={(data) => updateFormData('qualityOfLife', data)}
+          onChange={data => updateFormData('qualityOfLife', data)}
         />
-      )
+      ),
     },
     {
-      title: "Work & Daily Life",
+      title: 'Work & Daily Life',
       icon: <Briefcase className="w-5 h-5 text-purple-500" />,
       level: 'advanced' as const,
       content: (
-        <WorkImpactSection 
+        <WorkImpactSection
           data={formData.workImpact}
-          onChange={(data) => updateFormData('workImpact', data)}
+          onChange={data => updateFormData('workImpact', data)}
         />
-      )
+      ),
     },
     {
-      title: "Additional Notes",
+      title: 'Additional Notes',
       icon: <MessageCircle className="w-5 h-5 text-gray-500 dark:text-gray-400" />,
       level: 'advanced' as const,
       content: (
-        <NotesSection 
+        <NotesSection
           notes={formData.notes || ''}
-          onNotesChange={(notes) => setFormData(prev => ({ ...prev, notes }))}
+          onNotesChange={notes => setFormData(prev => ({ ...prev, notes }))}
         />
-      )
-    }
+      ),
+    },
   ];
 
   // In simplified mode, show only essential sections
-  const visibleSteps = preferences.simplifiedMode 
+  const visibleSteps = preferences.simplifiedMode
     ? steps.filter(step => step.level === 'essential')
     : steps;
 
@@ -217,7 +226,7 @@ export function TraumaInformedPainEntryForm({
               </span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${((currentStep + 1) / visibleSteps.length) * 100}%` }}
               />
@@ -234,7 +243,7 @@ export function TraumaInformedPainEntryForm({
                 {visibleSteps[currentStep]?.title}
               </h2>
             </div>
-            
+
             {visibleSteps[currentStep]?.content}
           </CardContent>
         </Card>
@@ -255,10 +264,10 @@ export function TraumaInformedPainEntryForm({
                 key={index}
                 onClick={() => setCurrentStep(index)}
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentStep 
-                    ? 'bg-blue-500' 
-                    : index < currentStep 
-                      ? 'bg-green-500' 
+                  index === currentStep
+                    ? 'bg-blue-500'
+                    : index < currentStep
+                      ? 'bg-green-500'
                       : 'bg-gray-300'
                 }`}
                 aria-label={`Go to step ${index + 1}`}
@@ -267,10 +276,7 @@ export function TraumaInformedPainEntryForm({
           </div>
 
           {currentStep === visibleSteps.length - 1 ? (
-            <TouchOptimizedButton
-              variant="gentle"
-              onClick={handleSubmit}
-            >
+            <TouchOptimizedButton variant="gentle" onClick={handleSubmit}>
               Save Entry
             </TouchOptimizedButton>
           ) : (
@@ -308,27 +314,41 @@ interface PainLevelSectionProps {
 
 function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
   const painDescriptions = [
-    "No pain",
-    "Very mild pain", 
-    "Mild pain",
-    "Moderate pain",
-    "Strong pain",
-    "Severe pain",
-    "Very severe pain", 
-    "Intense pain",
-    "Extremely intense pain",
-    "Nearly unbearable pain",
-    "Unbearable pain"
+    'No pain',
+    'Very mild pain',
+    'Mild pain',
+    'Moderate pain',
+    'Strong pain',
+    'Severe pain',
+    'Very severe pain',
+    'Intense pain',
+    'Extremely intense pain',
+    'Nearly unbearable pain',
+    'Unbearable pain',
   ];
 
   const commonLocations = [
-    "Head/Neck", "Shoulders", "Upper Back", "Lower Back", 
-    "Arms", "Hands", "Chest", "Hips", "Legs", "Feet"
+    'Head/Neck',
+    'Shoulders',
+    'Upper Back',
+    'Lower Back',
+    'Arms',
+    'Hands',
+    'Chest',
+    'Hips',
+    'Legs',
+    'Feet',
   ];
 
   const commonSymptoms = [
-    "Sharp/Stabbing", "Dull Ache", "Burning", "Tingling",
-    "Numbness", "Stiffness", "Swelling", "Muscle Spasms"
+    'Sharp/Stabbing',
+    'Dull Ache',
+    'Burning',
+    'Tingling',
+    'Numbness',
+    'Stiffness',
+    'Swelling',
+    'Muscle Spasms',
   ];
 
   return (
@@ -342,24 +362,22 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
         <GentleValidation field="pain level" error={error}>
           <div className="space-y-4">
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">
-                {data.pain}
-              </div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">{data.pain}</div>
               <div className="text-lg text-gray-700 dark:text-gray-300 mb-4">
                 {painDescriptions[data.pain]}
               </div>
             </div>
-            
+
             <input
               type="range"
               min="0"
               max="10"
               value={data.pain}
-              onChange={(e) => onChange({ pain: parseInt(e.target.value) })}
+              onChange={e => onChange({ pain: parseInt(e.target.value) })}
               className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider-thumb-large"
               style={{ minHeight: 'var(--ti-touch-size)' }}
             />
-            
+
             <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
               <span>No pain</span>
               <span>Worst pain</span>
@@ -377,7 +395,7 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
           {commonLocations.map(location => (
             <TouchOptimizedButton
               key={location}
-              variant={(data.locations || []).includes(location) ? "primary" : "secondary"}
+              variant={(data.locations || []).includes(location) ? 'primary' : 'secondary'}
               onClick={() => {
                 const currentLocations = data.locations || [];
                 const newLocations = currentLocations.includes(location)
@@ -392,7 +410,7 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
             </TouchOptimizedButton>
           ))}
         </CognitiveLoadReducer>
-        <MemoryAid 
+        <MemoryAid
           text="Don't worry if you miss any - you can always update this later"
           type="tip"
         />
@@ -407,7 +425,7 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
           {commonSymptoms.map(symptom => (
             <TouchOptimizedButton
               key={symptom}
-              variant={(data.symptoms || []).includes(symptom) ? "primary" : "secondary"}
+              variant={(data.symptoms || []).includes(symptom) ? 'primary' : 'secondary'}
               onClick={() => {
                 const currentSymptoms = data.symptoms || [];
                 const newSymptoms = currentSymptoms.includes(symptom)
@@ -429,13 +447,23 @@ function PainLevelSection({ data, onChange, error }: PainLevelSectionProps) {
 // Additional section components would be implemented similarly...
 // For brevity, I'll create simplified versions
 
-function FunctionalImpactSection({ data, onChange }: { 
-  data: PainEntry['functionalImpact']; 
-  onChange: (data: Partial<PainEntry['functionalImpact']>) => void; 
+function FunctionalImpactSection({
+  data,
+  onChange,
+}: {
+  data: PainEntry['functionalImpact'];
+  onChange: (data: Partial<PainEntry['functionalImpact']>) => void;
 }) {
-  const activities = ["Walking", "Sitting", "Standing", "Sleeping", "Work tasks", "Household chores"];
+  const activities = [
+    'Walking',
+    'Sitting',
+    'Standing',
+    'Sleeping',
+    'Work tasks',
+    'Household chores',
+  ];
   const currentData = data || { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] };
-  
+
   return (
     <ProgressiveDisclosure
       title="Activities Affected by Pain"
@@ -446,7 +474,7 @@ function FunctionalImpactSection({ data, onChange }: {
         {activities.map(activity => (
           <TouchOptimizedButton
             key={activity}
-            variant={currentData.limitedActivities.includes(activity) ? "primary" : "secondary"}
+            variant={currentData.limitedActivities.includes(activity) ? 'primary' : 'secondary'}
             onClick={() => {
               const newActivities = currentData.limitedActivities.includes(activity)
                 ? currentData.limitedActivities.filter(a => a !== activity)
@@ -464,15 +492,15 @@ function FunctionalImpactSection({ data, onChange }: {
 }
 
 // Simplified implementations for other sections
-function MedicationSection({ 
-  medications, 
-  onMedicationsChange
-}: { 
-  medications: PainEntry['medications']; 
+function MedicationSection({
+  medications,
+  onMedicationsChange,
+}: {
+  medications: PainEntry['medications'];
   onMedicationsChange: (data: Partial<PainEntry['medications']>) => void;
 }) {
   const currentMedications = medications || { current: [], changes: '', effectiveness: '' };
-  
+
   return (
     <div className="space-y-6">
       <ProgressiveDisclosure
@@ -484,7 +512,7 @@ function MedicationSection({
           className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md"
           placeholder="List your current pain medications..."
           value={currentMedications.changes}
-          onChange={(e) => onMedicationsChange({ changes: e.target.value })}
+          onChange={e => onMedicationsChange({ changes: e.target.value })}
           rows={3}
         />
       </ProgressiveDisclosure>
@@ -492,12 +520,15 @@ function MedicationSection({
   );
 }
 
-function QualityOfLifeSection({ data, onChange }: { 
-  data: PainEntry['qualityOfLife']; 
-  onChange: (data: Partial<PainEntry['qualityOfLife']>) => void; 
+function QualityOfLifeSection({
+  data,
+  onChange,
+}: {
+  data: PainEntry['qualityOfLife'];
+  onChange: (data: Partial<PainEntry['qualityOfLife']>) => void;
 }) {
   const currentData = data || { sleepQuality: 5, moodImpact: 5, socialImpact: [] };
-  
+
   return (
     <ProgressiveDisclosure
       title="Sleep & Mood"
@@ -512,7 +543,7 @@ function QualityOfLifeSection({ data, onChange }: {
             min="1"
             max="10"
             value={currentData.sleepQuality}
-            onChange={(e) => onChange({ sleepQuality: parseInt(e.target.value) })}
+            onChange={e => onChange({ sleepQuality: parseInt(e.target.value) })}
             className="w-full"
           />
         </div>
@@ -521,12 +552,15 @@ function QualityOfLifeSection({ data, onChange }: {
   );
 }
 
-function WorkImpactSection({ data, onChange }: { 
-  data: PainEntry['workImpact']; 
-  onChange: (data: Partial<PainEntry['workImpact']>) => void; 
+function WorkImpactSection({
+  data,
+  onChange,
+}: {
+  data: PainEntry['workImpact'];
+  onChange: (data: Partial<PainEntry['workImpact']>) => void;
 }) {
   const currentData = data || { missedWork: 0, modifiedDuties: [], workLimitations: [] };
-  
+
   return (
     <ProgressiveDisclosure
       title="Work Impact"
@@ -539,7 +573,7 @@ function WorkImpactSection({ data, onChange }: {
           type="number"
           min="0"
           value={currentData.missedWork}
-          onChange={(e) => onChange({ missedWork: parseInt(e.target.value) || 0 })}
+          onChange={e => onChange({ missedWork: parseInt(e.target.value) || 0 })}
           className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md"
         />
       </div>
@@ -547,10 +581,10 @@ function WorkImpactSection({ data, onChange }: {
   );
 }
 
-function NotesSection({ 
-  notes, 
-  onNotesChange
-}: { 
+function NotesSection({
+  notes,
+  onNotesChange,
+}: {
   notes: string;
   onNotesChange: (notes: string) => void;
 }) {
@@ -565,7 +599,7 @@ function NotesSection({
           className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md"
           placeholder="Any other details about your pain, triggers, or what helped..."
           value={notes}
-          onChange={(e) => onNotesChange(e.target.value)}
+          onChange={e => onNotesChange(e.target.value)}
           rows={4}
         />
       </ProgressiveDisclosure>

@@ -30,7 +30,7 @@ export const PainEntryForm: React.FC = () => {
       <Input
         label="What hurts?"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={e => setTitle(e.target.value)}
         error={error}
         hint={!error ? "Short, simple descriptions help — e.g. 'lower back'" : undefined}
         id="pain-title"

@@ -37,7 +37,7 @@ import { saveAlert } from '../components/AlertsActivityLog';
 const SETTINGS_KEY = 'pain-tracker:alerts-settings';
 const CONSENT_KEY = 'pain-tracker:notification-consent';
 
-export function usePatternAlerts(entries: {time:string; pain:number}[]) {
+export function usePatternAlerts(entries: { time: string; pain: number }[]) {
   const seen = useRef<Set<number>>(new Set());
 
   useEffect(() => {
@@ -56,7 +56,10 @@ export function usePatternAlerts(entries: {time:string; pain:number}[]) {
       let idx = -1;
       for (const d of detectors) {
         const r = d(series);
-        if (r >= 0) { idx = r; break; }
+        if (r >= 0) {
+          idx = r;
+          break;
+        }
       }
 
       if (idx >= 0 && !seen.current.has(idx)) {
@@ -64,7 +67,11 @@ export function usePatternAlerts(entries: {time:string; pain:number}[]) {
         const message = `Sudden pain increase to ${series[idx]} (entry ${idx + 1})`;
         // Save to alerts log
         try {
-          saveAlert({ id: `${Date.now()}-${Math.random().toString(36).slice(2,7)}`, time: new Date().toISOString(), message });
+          saveAlert({
+            id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+            time: new Date().toISOString(),
+            message,
+          });
           window.dispatchEvent(new Event('alerts-log-updated'));
         } catch {
           // Alert logging failed, continue without saving

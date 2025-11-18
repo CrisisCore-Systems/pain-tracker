@@ -4,10 +4,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
-  ChevronDown, 
-  ChevronRight, 
-  Info, 
+import {
+  ChevronDown,
+  ChevronRight,
+  Info,
   Clock,
   Brain,
   Target,
@@ -19,7 +19,7 @@ import {
   AlertTriangle,
   CheckCircle,
   FileText,
-  Stethoscope
+  Stethoscope,
 } from 'lucide-react';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { useCognitiveFog } from './useCognitiveFog';
@@ -29,7 +29,13 @@ import { CognitiveLoadIndicator } from './CognitiveLoadIndicator';
 interface MedicalDisclosureProps {
   title: string;
   level: 'essential' | 'helpful' | 'advanced' | 'expert';
-  medicalContext: 'symptoms' | 'treatments' | 'medications' | 'procedures' | 'emergency' | 'daily-care';
+  medicalContext:
+    | 'symptoms'
+    | 'treatments'
+    | 'medications'
+    | 'procedures'
+    | 'emergency'
+    | 'daily-care';
   children: React.ReactNode;
   painRelevance?: 'high' | 'medium' | 'low';
   cognitiveLoad?: 'minimal' | 'moderate' | 'high' | 'overwhelming';
@@ -53,7 +59,13 @@ interface MedicalDisclosureSection {
   id: string;
   title: string;
   level: 'essential' | 'helpful' | 'advanced' | 'expert';
-  medicalContext: 'symptoms' | 'treatments' | 'medications' | 'procedures' | 'emergency' | 'daily-care';
+  medicalContext:
+    | 'symptoms'
+    | 'treatments'
+    | 'medications'
+    | 'procedures'
+    | 'emergency'
+    | 'daily-care';
   content: React.ReactNode;
   painRelevance?: 'high' | 'medium' | 'low';
   cognitiveLoad?: 'minimal' | 'moderate' | 'high' | 'overwhelming';
@@ -63,50 +75,50 @@ interface MedicalDisclosureSection {
 }
 
 const medicalContextConfig = {
-  'symptoms': {
+  symptoms: {
     icon: Activity,
     color: 'text-red-600',
     bgColor: 'bg-red-50',
     borderColor: 'border-red-200',
     label: 'Symptoms & Tracking',
     priority: 1,
-    description: 'Understanding and tracking your symptoms'
+    description: 'Understanding and tracking your symptoms',
   },
-  'emergency': {
+  emergency: {
     icon: AlertTriangle,
     color: 'text-red-700',
     bgColor: 'bg-red-100',
     borderColor: 'border-red-300',
     label: 'Emergency Information',
     priority: 1,
-    description: 'Critical emergency information and protocols'
+    description: 'Critical emergency information and protocols',
   },
-  'treatments': {
+  treatments: {
     icon: Heart,
     color: 'text-blue-600',
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-200',
     label: 'Treatments & Therapies',
     priority: 2,
-    description: 'Treatment options and therapeutic approaches'
+    description: 'Treatment options and therapeutic approaches',
   },
-  'medications': {
+  medications: {
     icon: Pill,
     color: 'text-purple-600',
     bgColor: 'bg-purple-50',
     borderColor: 'border-purple-200',
     label: 'Medications',
     priority: 2,
-    description: 'Medication information and management'
+    description: 'Medication information and management',
   },
-  'procedures': {
+  procedures: {
     icon: Stethoscope,
     color: 'text-orange-600',
     bgColor: 'bg-orange-50',
     borderColor: 'border-orange-200',
     label: 'Medical Procedures',
     priority: 3,
-    description: 'Procedures, tests, and interventions'
+    description: 'Procedures, tests, and interventions',
   },
   'daily-care': {
     icon: CheckCircle,
@@ -115,8 +127,8 @@ const medicalContextConfig = {
     borderColor: 'border-green-200',
     label: 'Daily Care',
     priority: 2,
-    description: 'Daily management and self-care strategies'
-  }
+    description: 'Daily management and self-care strategies',
+  },
 };
 
 const levelConfig = {
@@ -125,29 +137,29 @@ const levelConfig = {
     color: 'text-green-600',
     priority: 1,
     description: 'Essential information you need to know',
-    badge: 'Essential'
+    badge: 'Essential',
   },
   helpful: {
     icon: Info,
     color: 'text-blue-600',
     priority: 2,
     description: 'Additional helpful context',
-    badge: 'Helpful'
+    badge: 'Helpful',
   },
   advanced: {
     icon: Layers,
     color: 'text-purple-600',
     priority: 3,
     description: 'Advanced information for deeper understanding',
-    badge: 'Advanced'
+    badge: 'Advanced',
   },
   expert: {
     icon: Brain,
     color: 'text-gray-600',
     priority: 4,
     description: 'Comprehensive technical details',
-    badge: 'Expert'
-  }
+    badge: 'Expert',
+  },
 };
 
 export function MedicalProgressiveDisclosure({
@@ -161,7 +173,7 @@ export function MedicalProgressiveDisclosure({
   prerequisites = [],
   actionRequired = false,
   onInteraction,
-  defaultOpen = false
+  defaultOpen = false,
 }: MedicalDisclosureProps) {
   const { preferences } = useTraumaInformed();
   const { hasFog, isSevere } = useCognitiveFog();
@@ -175,10 +187,12 @@ export function MedicalProgressiveDisclosure({
   const LevelIcon = levelInfo.icon;
 
   // Auto-hide complex content in simplified mode or cognitive fog
-  const shouldShow = !preferences.simplifiedMode || 
-    level === 'essential' || 
+  const shouldShow =
+    !preferences.simplifiedMode ||
+    level === 'essential' ||
     (level === 'helpful' && painRelevance === 'high') ||
-    (!hasFog || !isSevere);
+    !hasFog ||
+    !isSevere;
 
   // Auto-expand essential emergency information
   useEffect(() => {
@@ -196,7 +210,7 @@ export function MedicalProgressiveDisclosure({
     const newState = !isOpen;
     setIsOpen(newState);
     setUserInteracted(true);
-    
+
     if (newState) {
       setHasBeenOpened(true);
       if (onInteraction) onInteraction();
@@ -204,18 +218,17 @@ export function MedicalProgressiveDisclosure({
   };
 
   // Calculate cognitive load if not provided
-  const calculatedCognitiveLoad = cognitiveLoad || calculateMedicalCognitiveLoad(
-    level, 
-    medicalContext, 
-    timeToRead || 3
-  );
+  const calculatedCognitiveLoad =
+    cognitiveLoad || calculateMedicalCognitiveLoad(level, medicalContext, timeToRead || 3);
 
   return (
-    <div className={`
+    <div
+      className={`
       medical-disclosure rounded-lg border transition-all duration-200
       ${contextConfig.bgColor} ${contextConfig.borderColor}
       ${actionRequired ? 'ring-2 ring-yellow-300' : ''}
-    `}>
+    `}
+    >
       <MedicalDisclosureHeader
         title={title}
         level={level}
@@ -230,7 +243,7 @@ export function MedicalProgressiveDisclosure({
         actionRequired={actionRequired}
         userInteracted={userInteracted}
       />
-      
+
       {isOpen && (
         <div className="p-4 pt-0">
           {/* Cognitive Load Warning */}
@@ -245,14 +258,10 @@ export function MedicalProgressiveDisclosure({
           )}
 
           {/* Prerequisites Check */}
-          {prerequisites.length > 0 && (
-            <MedicalPrerequisites prerequisites={prerequisites} />
-          )}
+          {prerequisites.length > 0 && <MedicalPrerequisites prerequisites={prerequisites} />}
 
           {/* Main Content */}
-          <div className="medical-disclosure-content">
-            {children}
-          </div>
+          <div className="medical-disclosure-content">{children}</div>
 
           {/* Action Required Indicator */}
           {actionRequired && (
@@ -284,7 +293,7 @@ function MedicalDisclosureHeader({
   timeToRead,
   prerequisites,
   actionRequired,
-  userInteracted
+  userInteracted,
 }: {
   title: string;
   level: string;
@@ -310,20 +319,18 @@ function MedicalDisclosureHeader({
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
           {contextIcon}
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-1">
-              <h3 className="font-medium text-gray-900 dark:text-gray-100 flex-1">
-                {title}
-              </h3>
-              
+              <h3 className="font-medium text-gray-900 dark:text-gray-100 flex-1">{title}</h3>
+
               <div className="flex items-center space-x-1">
                 {/* Pain Relevance Indicator */}
                 <PainRelevanceBadge relevance={painRelevance} />
-                
+
                 {/* Level Badge */}
                 <MedicalLevelBadge level={level} />
-                
+
                 {/* Action Required Badge */}
                 {actionRequired && (
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -332,19 +339,19 @@ function MedicalDisclosureHeader({
                 )}
               </div>
             </div>
-            
+
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
               {contextConfig.description}
             </p>
-            
-            <MedicalDisclosureMetadata 
+
+            <MedicalDisclosureMetadata
               timeToRead={timeToRead}
               prerequisites={prerequisites}
               userInteracted={userInteracted}
             />
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2 ml-3">
           {levelIcon}
           {isOpen ? (
@@ -363,14 +370,16 @@ function PainRelevanceBadge({ relevance }: { relevance: string }) {
   const colors = {
     high: 'bg-red-100 text-red-800',
     medium: 'bg-yellow-100 text-yellow-800',
-    low: 'bg-gray-100 text-gray-800'
+    low: 'bg-gray-100 text-gray-800',
   };
 
   return (
-    <span className={`
+    <span
+      className={`
       inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
       ${colors[relevance as keyof typeof colors]}
-    `}>
+    `}
+    >
       Pain: {relevance}
     </span>
   );
@@ -379,12 +388,14 @@ function PainRelevanceBadge({ relevance }: { relevance: string }) {
 // Medical level badge
 function MedicalLevelBadge({ level }: { level: string }) {
   const levelInfo = levelConfig[level as keyof typeof levelConfig];
-  
+
   return (
-    <span className={`
+    <span
+      className={`
       inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
       bg-white border ${levelInfo.color}
-    `}>
+    `}
+    >
       {levelInfo.badge}
     </span>
   );
@@ -394,7 +405,7 @@ function MedicalLevelBadge({ level }: { level: string }) {
 function MedicalDisclosureMetadata({
   timeToRead,
   prerequisites,
-  userInteracted
+  userInteracted,
 }: {
   timeToRead?: number;
   prerequisites: string[];
@@ -403,7 +414,7 @@ function MedicalDisclosureMetadata({
   if (!timeToRead && prerequisites.length === 0 && !userInteracted) {
     return null;
   }
-  
+
   return (
     <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
       {timeToRead && (
@@ -412,11 +423,13 @@ function MedicalDisclosureMetadata({
           <span>{timeToRead} min read</span>
         </div>
       )}
-      
+
       {prerequisites.length > 0 && (
         <div className="flex items-center space-x-1">
           <FileText className="w-3 h-3" />
-          <span>{prerequisites.length} prerequisite{prerequisites.length > 1 ? 's' : ''}</span>
+          <span>
+            {prerequisites.length} prerequisite{prerequisites.length > 1 ? 's' : ''}
+          </span>
         </div>
       )}
 
@@ -433,13 +446,11 @@ function MedicalDisclosureMetadata({
 // Prerequisites display
 function MedicalPrerequisites({ prerequisites }: { prerequisites: string[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  
+
   return (
     <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-blue-800">
-          📚 Before reading this section
-        </span>
+        <span className="text-sm font-medium text-blue-800">📚 Before reading this section</span>
         {prerequisites.length > 2 && (
           <TouchOptimizedButton
             variant="secondary"
@@ -450,7 +461,7 @@ function MedicalPrerequisites({ prerequisites }: { prerequisites: string[] }) {
           </TouchOptimizedButton>
         )}
       </div>
-      
+
       <div className="space-y-1 text-sm text-blue-700">
         {(isExpanded ? prerequisites : prerequisites.slice(0, 2)).map((prerequisite, index) => (
           <div key={index} className="flex items-start space-x-2">
@@ -458,7 +469,7 @@ function MedicalPrerequisites({ prerequisites }: { prerequisites: string[] }) {
             <span>{prerequisite}</span>
           </div>
         ))}
-        
+
         {!isExpanded && prerequisites.length > 2 && (
           <div className="text-xs text-blue-600">
             +{prerequisites.length - 2} more prerequisites
@@ -473,7 +484,7 @@ function MedicalPrerequisites({ prerequisites }: { prerequisites: string[] }) {
 export function OrganizedMedicalSections({
   groups,
   userType = 'patient',
-  currentPainLevel = 0
+  currentPainLevel = 0,
 }: {
   groups: MedicalSectionGroup[];
   userType?: 'patient' | 'caregiver' | 'provider' | 'all';
@@ -492,7 +503,7 @@ export function OrganizedMedicalSections({
         if (a.painRelevance === 'high' && b.painRelevance !== 'high') return -1;
         if (b.painRelevance === 'high' && a.painRelevance !== 'high') return 1;
       }
-      
+
       // Then by medical priority
       return a.medicalPriority - b.medicalPriority;
     });
@@ -527,7 +538,14 @@ export function OrganizedMedicalSections({
           <Shield className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           <div>
             <h3 className="font-medium text-gray-800 dark:text-gray-200">
-              Information organized for: {userType === 'patient' ? 'Patients' : userType === 'caregiver' ? 'Caregivers' : userType === 'provider' ? 'Healthcare Providers' : 'Everyone'}
+              Information organized for:{' '}
+              {userType === 'patient'
+                ? 'Patients'
+                : userType === 'caregiver'
+                  ? 'Caregivers'
+                  : userType === 'provider'
+                    ? 'Healthcare Providers'
+                    : 'Everyone'}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Sections prioritized by relevance and current pain level ({currentPainLevel}/10)
@@ -537,7 +555,7 @@ export function OrganizedMedicalSections({
       </div>
 
       {/* Medical Section Groups */}
-      {relevantGroups.map((group) => (
+      {relevantGroups.map(group => (
         <div key={group.id} className="medical-section-group">
           <MedicalGroupHeader
             group={group}
@@ -545,19 +563,21 @@ export function OrganizedMedicalSections({
             onToggle={() => toggleGroup(group.id)}
             currentPainLevel={currentPainLevel}
           />
-          
+
           {openGroups.has(group.id) && (
             <div className="mt-4 space-y-4">
               {group.sections
                 .filter(section => {
                   // Filter based on simplified mode
                   if (preferences.simplifiedMode) {
-                    return section.level === 'essential' || 
-                           (section.level === 'helpful' && section.painRelevance === 'high');
+                    return (
+                      section.level === 'essential' ||
+                      (section.level === 'helpful' && section.painRelevance === 'high')
+                    );
                   }
                   return true;
                 })
-                .map((section) => (
+                .map(section => (
                   <MedicalProgressiveDisclosure
                     key={section.id}
                     title={section.title}
@@ -585,15 +605,15 @@ function MedicalGroupHeader({
   group,
   isOpen,
   onToggle,
-  currentPainLevel
+  currentPainLevel,
 }: {
   group: MedicalSectionGroup;
   isOpen: boolean;
   onToggle: () => void;
   currentPainLevel: number;
 }) {
-  const isHighPriority = group.medicalPriority === 1 || 
-    (currentPainLevel >= 7 && group.painRelevance === 'high');
+  const isHighPriority =
+    group.medicalPriority === 1 || (currentPainLevel >= 7 && group.painRelevance === 'high');
 
   return (
     <TouchOptimizedButton
@@ -607,11 +627,13 @@ function MedicalGroupHeader({
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className={`
+          <div
+            className={`
             w-3 h-3 rounded-full
             ${isHighPriority ? 'bg-blue-500' : 'bg-gray-400'}
-          `} />
-          
+          `}
+          />
+
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
               {group.title}
@@ -619,14 +641,12 @@ function MedicalGroupHeader({
             <div className="flex items-center space-x-2 mt-1">
               <PainRelevanceBadge relevance={group.painRelevance} />
               {isHighPriority && (
-                <span className="text-xs text-blue-600 font-medium">
-                  High Priority
-                </span>
+                <span className="text-xs text-blue-600 font-medium">High Priority</span>
               )}
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <span className="text-sm text-gray-600 dark:text-gray-400">
             {group.sections.length} section{group.sections.length > 1 ? 's' : ''}
@@ -644,8 +664,8 @@ function MedicalGroupHeader({
 
 // Utility function to calculate cognitive load for medical content
 function calculateMedicalCognitiveLoad(
-  level: string, 
-  medicalContext: string, 
+  level: string,
+  medicalContext: string,
   timeToRead: number
 ): 'minimal' | 'moderate' | 'high' | 'overwhelming' {
   let score = 0;

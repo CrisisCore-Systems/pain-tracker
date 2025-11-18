@@ -7,7 +7,13 @@ import { localDayStart, isSameLocalDay } from '../../utils/dates';
 import { goalStorage } from '../goals/storage';
 
 export interface TriggerCondition {
-  type: 'pain_threshold' | 'pattern_recognition' | 'medication_due' | 'goal_progress' | 'time_since_last_entry' | 'streak_maintenance';
+  type:
+    | 'pain_threshold'
+    | 'pattern_recognition'
+    | 'medication_due'
+    | 'goal_progress'
+    | 'time_since_last_entry'
+    | 'streak_maintenance';
   threshold?: number;
   pattern?: string;
   medicationId?: string;
@@ -71,7 +77,7 @@ class IntelligentNotificationTrigger {
 
       // Check cooldown period
       const lastAnalysis = this.lastAnalysis.get(trigger.id);
-      if (lastAnalysis && (now.getTime() - lastAnalysis.getTime()) < this.analysisCooldown) {
+      if (lastAnalysis && now.getTime() - lastAnalysis.getTime() < this.analysisCooldown) {
         continue;
       }
 
@@ -91,7 +97,10 @@ class IntelligentNotificationTrigger {
   }
 
   // Analyze a specific trigger
-  private async analyzeTrigger(trigger: IntelligentTrigger, entries: PainEntry[]): Promise<TriggerAnalysisResult> {
+  private async analyzeTrigger(
+    trigger: IntelligentTrigger,
+    entries: PainEntry[]
+  ): Promise<TriggerAnalysisResult> {
     let totalConfidence = 0;
     let conditionCount = 0;
     const reasons: string[] = [];
@@ -113,12 +122,15 @@ class IntelligentNotificationTrigger {
       shouldTrigger,
       confidence: averageConfidence,
       reason: reasons.join('; '),
-      recommendedPriority: this.calculateRecommendedPriority(trigger, averageConfidence)
+      recommendedPriority: this.calculateRecommendedPriority(trigger, averageConfidence),
     };
   }
 
   // Evaluate a single condition
-  private async evaluateCondition(condition: TriggerCondition, entries: PainEntry[]): Promise<TriggerAnalysisResult> {
+  private async evaluateCondition(
+    condition: TriggerCondition,
+    entries: PainEntry[]
+  ): Promise<TriggerAnalysisResult> {
     switch (condition.type) {
       case 'pain_threshold':
         return this.evaluatePainThreshold(condition, entries);
@@ -138,7 +150,10 @@ class IntelligentNotificationTrigger {
   }
 
   // Execute a trigger
-  private async executeTrigger(trigger: IntelligentTrigger, analysis: TriggerAnalysisResult): Promise<void> {
+  private async executeTrigger(
+    trigger: IntelligentTrigger,
+    analysis: TriggerAnalysisResult
+  ): Promise<void> {
     try {
       // Create notification
       const notification: Omit<Notification, 'id'> = {
@@ -153,10 +168,10 @@ class IntelligentNotificationTrigger {
         metadata: {
           triggerId: trigger.id,
           confidence: analysis.confidence,
-          reason: analysis.reason
+          reason: analysis.reason,
         },
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       // Generate ID and save
@@ -169,19 +184,23 @@ class IntelligentNotificationTrigger {
       const updatedTrigger: IntelligentTrigger = {
         ...trigger,
         lastTriggered: new Date().toISOString(),
-        triggerCount: trigger.triggerCount + 1
+        triggerCount: trigger.triggerCount + 1,
       };
       this.activeTriggers.set(trigger.id, updatedTrigger);
 
       // Show browser notification if supported
-      if (browserNotificationManager.isSupported() &&
-          browserNotificationManager.getPermission() === 'granted') {
+      if (
+        browserNotificationManager.isSupported() &&
+        browserNotificationManager.getPermission() === 'granted'
+      ) {
         await browserNotificationManager.showFromNotification(fullNotification);
       }
 
       // Log successful trigger execution (in development only)
       if (process.env.NODE_ENV === 'development') {
-        console.log(`Intelligent trigger executed: ${trigger.name} (${formatNumber(analysis.confidence, 2)} confidence)`);
+        console.log(
+          `Intelligent trigger executed: ${trigger.name} (${formatNumber(analysis.confidence, 2)} confidence)`
+        );
       }
     } catch (error) {
       console.error('Failed to execute intelligent trigger:', error);
@@ -189,13 +208,21 @@ class IntelligentNotificationTrigger {
   }
 
   // Condition evaluators
-  private evaluatePainThreshold(condition: TriggerCondition, entries: PainEntry[]): TriggerAnalysisResult {
+  private evaluatePainThreshold(
+    condition: TriggerCondition,
+    entries: PainEntry[]
+  ): TriggerAnalysisResult {
     if (!condition.threshold || entries.length === 0) {
-      return { shouldTrigger: false, confidence: 0, reason: 'Insufficient data for pain threshold analysis' };
+      return {
+        shouldTrigger: false,
+        confidence: 0,
+        reason: 'Insufficient data for pain threshold analysis',
+      };
     }
 
     const recentEntries = entries.slice(-7); // Last 7 entries
-    const avgPain = recentEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / recentEntries.length;
+    const avgPain =
+      recentEntries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / recentEntries.length;
 
     const shouldTrigger = avgPain >= condition.threshold;
     const confidence = Math.min(avgPain / 10, 1); // Normalize to 0-1
@@ -203,13 +230,20 @@ class IntelligentNotificationTrigger {
     return {
       shouldTrigger,
       confidence,
-  reason: `Average pain level ${formatNumber(avgPain, 1)}/10 ${shouldTrigger ? 'exceeds' : 'below'} threshold ${condition.threshold}`
+      reason: `Average pain level ${formatNumber(avgPain, 1)}/10 ${shouldTrigger ? 'exceeds' : 'below'} threshold ${condition.threshold}`,
     };
   }
 
-  private evaluatePatternRecognition(condition: TriggerCondition, entries: PainEntry[]): TriggerAnalysisResult {
+  private evaluatePatternRecognition(
+    condition: TriggerCondition,
+    entries: PainEntry[]
+  ): TriggerAnalysisResult {
     if (entries.length < 5) {
-      return { shouldTrigger: false, confidence: 0, reason: 'Insufficient data for pattern recognition' };
+      return {
+        shouldTrigger: false,
+        confidence: 0,
+        reason: 'Insufficient data for pattern recognition',
+      };
     }
 
     // Simple pattern: increasing pain trend
@@ -223,34 +257,45 @@ class IntelligentNotificationTrigger {
     return {
       shouldTrigger,
       confidence,
-  reason: `Pain trend ${trend > 0 ? 'increasing' : 'decreasing'} with ${formatNumber(confidence, 2)} confidence`
+      reason: `Pain trend ${trend > 0 ? 'increasing' : 'decreasing'} with ${formatNumber(confidence, 2)} confidence`,
     };
   }
 
-  private evaluateMedicationDue(_condition: TriggerCondition, entries: PainEntry[]): TriggerAnalysisResult {
+  private evaluateMedicationDue(
+    _condition: TriggerCondition,
+    entries: PainEntry[]
+  ): TriggerAnalysisResult {
     // Check recent entries for medication data
     if (entries.length === 0) {
-      return { shouldTrigger: false, confidence: 0, reason: 'No entries available for medication analysis' };
+      return {
+        shouldTrigger: false,
+        confidence: 0,
+        reason: 'No entries available for medication analysis',
+      };
     }
 
     const recentEntries = entries.slice(-7); // Last 7 entries
-    const entriesWithMedications = recentEntries.filter(entry => 
-      entry.medications?.current && entry.medications.current.length > 0
+    const entriesWithMedications = recentEntries.filter(
+      entry => entry.medications?.current && entry.medications.current.length > 0
     );
 
     if (entriesWithMedications.length === 0) {
-      return { shouldTrigger: false, confidence: 0, reason: 'No medication data found in recent entries' };
+      return {
+        shouldTrigger: false,
+        confidence: 0,
+        reason: 'No medication data found in recent entries',
+      };
     }
 
     // Check if medications are being tracked consistently
-    // const totalMedications = entriesWithMedications.reduce((sum, entry) => 
+    // const totalMedications = entriesWithMedications.reduce((sum, entry) =>
     //   sum + (entry.medications?.current?.length || 0), 0
     // );
     // const avgMedicationsPerEntry = totalMedications / entriesWithMedications.length; // Not currently used but could be for future heuristics
 
     // Check for medications that might be due based on frequency
     const medicationFrequencyMap = new Map<string, { count: number; lastTaken?: Date }>();
-    
+
     entriesWithMedications.forEach(entry => {
       entry.medications?.current?.forEach(med => {
         const key = `${med.name}-${med.dosage}`;
@@ -268,10 +313,10 @@ class IntelligentNotificationTrigger {
 
     for (const [, data] of medicationFrequencyMap) {
       totalMedicationsChecked++;
-      
+
       if (data.lastTaken) {
         const hoursSinceLastTaken = (now.getTime() - data.lastTaken.getTime()) / (1000 * 60 * 60);
-        
+
         // Simple heuristic: if medication hasn't been taken in 24+ hours, might be due
         // This is a basic implementation - a full system would need proper scheduling
         if (hoursSinceLastTaken > 24) {
@@ -287,12 +332,15 @@ class IntelligentNotificationTrigger {
     return {
       shouldTrigger,
       confidence,
-      reason: `${overdueCount} of ${totalMedicationsChecked} medications may be due (${formatNumber(overdueRatio * 100, 1)}% potentially overdue)`
+      reason: `${overdueCount} of ${totalMedicationsChecked} medications may be due (${formatNumber(overdueRatio * 100, 1)}% potentially overdue)`,
     };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private async evaluateGoalProgress(_condition: TriggerCondition, _entries: PainEntry[]): Promise<TriggerAnalysisResult> {
+  private async evaluateGoalProgress(
+    _condition: TriggerCondition,
+    _entries: PainEntry[]
+  ): Promise<TriggerAnalysisResult> {
     try {
       const goals = await goalStorage.getAllGoals();
       const activeGoals = goals.filter(goal => goal.status === 'active');
@@ -308,7 +356,7 @@ class IntelligentNotificationTrigger {
         const now = new Date();
         const startDate = new Date(goal.startDate);
         const endDate = goal.endDate ? new Date(goal.endDate) : null;
-        
+
         // Check if goal is overdue
         if (endDate && now > endDate) {
           goalsNeedingAttention++;
@@ -320,7 +368,7 @@ class IntelligentNotificationTrigger {
         for (const target of goal.targets) {
           const progress = goal.progress || [];
           const recentProgress = progress.slice(-7); // Last 7 days of progress
-          
+
           if (recentProgress.length === 0) {
             goalsNeedingAttention++;
             reasons.push(`${goal.title} has no recent progress`);
@@ -328,20 +376,26 @@ class IntelligentNotificationTrigger {
           }
 
           // Calculate current progress towards target
-          const avgProgress = recentProgress.reduce((sum, p) => sum + p.value, 0) / recentProgress.length;
+          const avgProgress =
+            recentProgress.reduce((sum, p) => sum + p.value, 0) / recentProgress.length;
           const progressPercentage = (avgProgress / target.targetValue) * 100;
 
           // Check if goal is falling behind schedule
-          const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000));
-          const totalDays = endDate ? 
-            Math.floor((endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)) : 
-            30; // Default 30 days for goals without end date
-          
+          const daysElapsed = Math.floor(
+            (now.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000)
+          );
+          const totalDays = endDate
+            ? Math.floor((endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000))
+            : 30; // Default 30 days for goals without end date
+
           const expectedProgress = (daysElapsed / totalDays) * 100;
-          
-          if (progressPercentage < expectedProgress * 0.7) { // More than 30% behind schedule
+
+          if (progressPercentage < expectedProgress * 0.7) {
+            // More than 30% behind schedule
             goalsNeedingAttention++;
-            reasons.push(`${goal.title} is behind schedule (${formatNumber(progressPercentage, 1)}% vs expected ${formatNumber(expectedProgress, 1)}%)`);
+            reasons.push(
+              `${goal.title} is behind schedule (${formatNumber(progressPercentage, 1)}% vs expected ${formatNumber(expectedProgress, 1)}%)`
+            );
             break;
           }
         }
@@ -354,7 +408,7 @@ class IntelligentNotificationTrigger {
       return {
         shouldTrigger,
         confidence,
-        reason: `${goalsNeedingAttention} of ${activeGoals.length} active goals need attention: ${reasons.slice(0, 2).join(', ')}${reasons.length > 2 ? '...' : ''}`
+        reason: `${goalsNeedingAttention} of ${activeGoals.length} active goals need attention: ${reasons.slice(0, 2).join(', ')}${reasons.length > 2 ? '...' : ''}`,
       };
     } catch (error) {
       console.error('Error evaluating goal progress:', error);
@@ -362,13 +416,17 @@ class IntelligentNotificationTrigger {
     }
   }
 
-  private evaluateTimeSinceLastEntry(condition: TriggerCondition, entries: PainEntry[]): TriggerAnalysisResult {
+  private evaluateTimeSinceLastEntry(
+    condition: TriggerCondition,
+    entries: PainEntry[]
+  ): TriggerAnalysisResult {
     if (entries.length === 0) {
       return { shouldTrigger: true, confidence: 1, reason: 'No pain entries recorded yet' };
     }
 
     const lastEntry = entries[entries.length - 1];
-    const hoursSinceLastEntry = (Date.now() - new Date(lastEntry.timestamp).getTime()) / (1000 * 60 * 60);
+    const hoursSinceLastEntry =
+      (Date.now() - new Date(lastEntry.timestamp).getTime()) / (1000 * 60 * 60);
     const threshold = condition.timeWindow || 24; // Default 24 hours
 
     const shouldTrigger = hoursSinceLastEntry >= threshold;
@@ -377,16 +435,23 @@ class IntelligentNotificationTrigger {
     return {
       shouldTrigger,
       confidence,
-  reason: `${formatNumber(hoursSinceLastEntry, 1)} hours since last entry (${threshold}h threshold)`
+      reason: `${formatNumber(hoursSinceLastEntry, 1)} hours since last entry (${threshold}h threshold)`,
     };
   }
 
-  private evaluateStreakMaintenance(condition: TriggerCondition, entries: PainEntry[]): TriggerAnalysisResult {
+  private evaluateStreakMaintenance(
+    condition: TriggerCondition,
+    entries: PainEntry[]
+  ): TriggerAnalysisResult {
     const streakLength = condition.streakLength || 7; // Default 7 days
     const requiredEntries = streakLength;
 
     if (entries.length < requiredEntries) {
-      return { shouldTrigger: false, confidence: 0, reason: 'Insufficient entries for streak analysis' };
+      return {
+        shouldTrigger: false,
+        confidence: 0,
+        reason: 'Insufficient entries for streak analysis',
+      };
     }
 
     // Check if user has been consistent
@@ -402,7 +467,7 @@ class IntelligentNotificationTrigger {
     return {
       shouldTrigger,
       confidence,
-  reason: `${formatNumber(consistency * 100, 1)}% consistency over last ${streakLength} days`
+      reason: `${formatNumber(consistency * 100, 1)}% consistency over last ${streakLength} days`,
     };
   }
 
@@ -418,7 +483,10 @@ class IntelligentNotificationTrigger {
     return trend / (values.length - 1); // Average change
   }
 
-  private calculateRecommendedPriority(trigger: IntelligentTrigger, confidence: number): 'low' | 'medium' | 'high' | 'urgent' {
+  private calculateRecommendedPriority(
+    trigger: IntelligentTrigger,
+    confidence: number
+  ): 'low' | 'medium' | 'high' | 'urgent' {
     if (confidence >= 0.9) return 'urgent';
     if (confidence >= 0.7) return 'high';
     if (confidence >= 0.5) return 'medium';
@@ -440,16 +508,19 @@ class IntelligentNotificationTrigger {
     }
   }
 
-  private generateTriggerMessage(trigger: IntelligentTrigger, analysis: TriggerAnalysisResult): string {
+  private generateTriggerMessage(
+    trigger: IntelligentTrigger,
+    analysis: TriggerAnalysisResult
+  ): string {
     return `${trigger.description}. ${analysis.reason}`;
   }
 
   private hasExceededDailyLimit(trigger: IntelligentTrigger): boolean {
     if (!trigger.lastTriggered) return false;
 
-  const lastTrigger = new Date(trigger.lastTriggered);
-  const now = new Date();
-  const isSameDay = isSameLocalDay(lastTrigger, now);
+    const lastTrigger = new Date(trigger.lastTriggered);
+    const now = new Date();
+    const isSameDay = isSameLocalDay(lastTrigger, now);
 
     return isSameDay && trigger.triggerCount >= trigger.maxTriggersPerDay;
   }
@@ -465,7 +536,7 @@ class IntelligentNotificationTrigger {
 
     return {
       triggerCount: trigger.triggerCount,
-      lastTriggered: trigger.lastTriggered
+      lastTriggered: trigger.lastTriggered,
     };
   }
 
@@ -490,34 +561,34 @@ export const createDefaultIntelligentTriggers = (): IntelligentTrigger[] => [
     conditions: [
       {
         type: 'pain_threshold',
-        threshold: 7
+        threshold: 7,
       },
       {
-        type: 'pattern_recognition'
-      }
+        type: 'pattern_recognition',
+      },
     ],
     priority: 'high',
     cooldownPeriod: 120, // 2 hours
     maxTriggersPerDay: 2,
     isActive: true,
-    triggerCount: 0
+    triggerCount: 0,
   },
   {
     id: 'missed_entries',
     name: 'Missed Entries Reminder',
-    description: 'Remind when entries haven\'t been logged recently',
+    description: "Remind when entries haven't been logged recently",
     type: 'pain_reminder',
     conditions: [
       {
         type: 'time_since_last_entry',
-        timeWindow: 48 // 48 hours
-      }
+        timeWindow: 48, // 48 hours
+      },
     ],
     priority: 'medium',
     cooldownPeriod: 1440, // 24 hours
     maxTriggersPerDay: 1,
     isActive: true,
-    triggerCount: 0
+    triggerCount: 0,
   },
   {
     id: 'consistency_streak',
@@ -527,15 +598,15 @@ export const createDefaultIntelligentTriggers = (): IntelligentTrigger[] => [
     conditions: [
       {
         type: 'streak_maintenance',
-        streakLength: 5
-      }
+        streakLength: 5,
+      },
     ],
     priority: 'low',
     cooldownPeriod: 1440, // 24 hours
     maxTriggersPerDay: 1,
     isActive: true,
-    triggerCount: 0
-  }
+    triggerCount: 0,
+  },
 ];
 
 export const initializeIntelligentTriggers = (): void => {

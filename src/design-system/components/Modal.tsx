@@ -103,7 +103,12 @@ export function Modal({
       >
         <Card className="border-0 shadow-none">
           {(title || showCloseButton) && (
-            <CardHeader className={cn('flex flex-row items-center justify-between space-y-0 pb-4', headerClassName)}>
+            <CardHeader
+              className={cn(
+                'flex flex-row items-center justify-between space-y-0 pb-4',
+                headerClassName
+              )}
+            >
               {title && (
                 <CardTitle id="modal-title" className="text-lg font-semibold">
                   {title}
@@ -128,7 +133,9 @@ export function Modal({
           </CardContent>
 
           {footer && (
-            <div className={cn('flex justify-end space-x-2 pt-4 border-t px-6 pb-6', footerClassName)}>
+            <div
+              className={cn('flex justify-end space-x-2 pt-4 border-t px-6 pb-6', footerClassName)}
+            >
               {footer}
             </div>
           )}
@@ -200,9 +207,7 @@ export function AlertModal({
               {cancelText}
             </Button>
           )}
-          <Button onClick={handleConfirm}>
-            {confirmText}
-          </Button>
+          <Button onClick={handleConfirm}>{confirmText}</Button>
         </div>
       }
     >
@@ -211,14 +216,8 @@ export function AlertModal({
           <Icon className="h-6 w-6" />
         </div>
         <div className="flex-1">
-          <h3 className="text-lg font-medium text-foreground mb-2">
-            {message}
-          </h3>
-          {description && (
-            <p className="text-muted-foreground">
-              {description}
-            </p>
-          )}
+          <h3 className="text-lg font-medium text-foreground mb-2">{message}</h3>
+          {description && <p className="text-muted-foreground">{description}</p>}
         </div>
       </div>
     </Modal>
@@ -275,14 +274,8 @@ export function ConfirmModal({
       }
     >
       <div className="text-center">
-        <h3 className="text-lg font-medium text-foreground mb-2">
-          {message}
-        </h3>
-        {description && (
-          <p className="text-muted-foreground">
-            {description}
-          </p>
-        )}
+        <h3 className="text-lg font-medium text-foreground mb-2">{message}</h3>
+        {description && <p className="text-muted-foreground">{description}</p>}
       </div>
     </Modal>
   );

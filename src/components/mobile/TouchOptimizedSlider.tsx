@@ -22,7 +22,7 @@ export function TouchOptimizedSlider({
   label,
   showValue = true,
   hapticFeedback = true,
-  className = ''
+  className = '',
 }: TouchOptimizedSliderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [touchStartValue, setTouchStartValue] = useState(0);
@@ -36,60 +36,75 @@ export function TouchOptimizedSlider({
     }
   }, [hapticFeedback]);
 
-  const getValueFromPosition = useCallback((clientX: number): number => {
-    if (!trackRef.current) return value;
-    
-    const rect = trackRef.current.getBoundingClientRect();
-    const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    const rawValue = min + percentage * (max - min);
-    return Math.round(rawValue / step) * step;
-  }, [min, max, step, value]);
+  const getValueFromPosition = useCallback(
+    (clientX: number): number => {
+      if (!trackRef.current) return value;
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-    setTouchStartValue(value);
-    triggerHaptic();
-  }, [value, triggerHaptic]);
+      const rect = trackRef.current.getBoundingClientRect();
+      const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const rawValue = min + percentage * (max - min);
+      return Math.round(rawValue / step) * step;
+    },
+    [min, max, step, value]
+  );
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isDragging) return;
-    
-    e.preventDefault();
-    const newValue = getValueFromPosition(e.touches[0].clientX);
-    
-    if (newValue !== value) {
-      onChange(newValue);
-      if (Math.abs(newValue - touchStartValue) >= step) {
-        triggerHaptic();
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      e.preventDefault();
+      setIsDragging(true);
+      setTouchStartValue(value);
+      triggerHaptic();
+    },
+    [value, triggerHaptic]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isDragging) return;
+
+      e.preventDefault();
+      const newValue = getValueFromPosition(e.touches[0].clientX);
+
+      if (newValue !== value) {
+        onChange(newValue);
+        if (Math.abs(newValue - touchStartValue) >= step) {
+          triggerHaptic();
+        }
       }
-    }
-  }, [isDragging, value, onChange, getValueFromPosition, touchStartValue, step, triggerHaptic]);
+    },
+    [isDragging, value, onChange, getValueFromPosition, touchStartValue, step, triggerHaptic]
+  );
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
     e.preventDefault();
     setIsDragging(false);
   }, []);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    setIsDragging(true);
-    setTouchStartValue(value);
-    
-    const newValue = getValueFromPosition(e.clientX);
-    if (newValue !== value) {
-      onChange(newValue);
-      triggerHaptic();
-    }
-  }, [value, onChange, getValueFromPosition, triggerHaptic]);
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      setIsDragging(true);
+      setTouchStartValue(value);
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging) return;
-    
-    const newValue = getValueFromPosition(e.clientX);
-    if (newValue !== value) {
-      onChange(newValue);
-    }
-  }, [isDragging, value, onChange, getValueFromPosition]);
+      const newValue = getValueFromPosition(e.clientX);
+      if (newValue !== value) {
+        onChange(newValue);
+        triggerHaptic();
+      }
+    },
+    [value, onChange, getValueFromPosition, triggerHaptic]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDragging) return;
+
+      const newValue = getValueFromPosition(e.clientX);
+      if (newValue !== value) {
+        onChange(newValue);
+      }
+    },
+    [isDragging, value, onChange, getValueFromPosition]
+  );
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
@@ -100,7 +115,7 @@ export function TouchOptimizedSlider({
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       document.body.style.userSelect = 'none';
-      
+
       return () => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
@@ -132,14 +147,10 @@ export function TouchOptimizedSlider({
       {label && (
         <div className="flex justify-between items-center mb-3">
           <label className="text-sm font-medium text-foreground">{label}</label>
-          {showValue && (
-            <span className="text-lg font-bold text-primary">
-              {value}
-            </span>
-          )}
+          {showValue && <span className="text-lg font-bold text-primary">{value}</span>}
         </div>
       )}
-      
+
       <div className="flex items-center space-x-4">
         {/* Decrement Button */}
         <button
@@ -153,10 +164,7 @@ export function TouchOptimizedSlider({
         </button>
 
         {/* Slider Track */}
-        <div
-          ref={sliderRef}
-          className="flex-1 relative h-12 flex items-center touch-manipulation"
-        >
+        <div ref={sliderRef} className="flex-1 relative h-12 flex items-center touch-manipulation">
           <div
             ref={trackRef}
             className="w-full h-3 bg-muted rounded-full relative cursor-pointer"
@@ -170,7 +178,7 @@ export function TouchOptimizedSlider({
               className="absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-150"
               style={{ width: `${percentage}%` }}
             />
-            
+
             {/* Thumb */}
             <div
               className={`absolute top-1/2 transform -translate-y-1/2 w-6 h-6 bg-primary border-2 border-background rounded-full shadow-lg cursor-pointer transition-all duration-150 ${
@@ -178,17 +186,17 @@ export function TouchOptimizedSlider({
               }`}
               style={{ left: `calc(${percentage}% - 12px)` }}
             />
-            
+
             {/* Touch Target Enhancement */}
             <div
               className="absolute top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full opacity-0"
               style={{ left: `calc(${percentage}% - 24px)` }}
             />
           </div>
-          
+
           {/* Tick Marks */}
           <div className="absolute inset-0 flex justify-between items-center pointer-events-none">
-            {Array.from({ length: max - min + 1 }, (_, i) => i + min).map((tickValue) => (
+            {Array.from({ length: max - min + 1 }, (_, i) => i + min).map(tickValue => (
               <div
                 key={tickValue}
                 className={`w-0.5 h-2 ${
@@ -210,7 +218,7 @@ export function TouchOptimizedSlider({
           <Plus className="h-5 w-5" />
         </button>
       </div>
-      
+
       {/* Value Display on Mobile */}
       {showValue && (
         <div className="mt-2 text-center sm:hidden">

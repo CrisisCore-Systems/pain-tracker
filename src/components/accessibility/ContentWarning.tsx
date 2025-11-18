@@ -4,15 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { 
-  AlertTriangle, 
-  Eye, 
-  EyeOff, 
-  Shield, 
-  X,
-  ChevronDown,
-  ChevronRight
-} from 'lucide-react';
+import { AlertTriangle, Eye, EyeOff, Shield, X, ChevronDown, ChevronRight } from 'lucide-react';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -33,22 +25,22 @@ const warningConfig = {
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-50',
     borderColor: 'border-yellow-300',
-    message: 'This content contains topics that some may find difficult'
+    message: 'This content contains topics that some may find difficult',
   },
   moderate: {
     icon: AlertTriangle,
     color: 'text-orange-600',
     bgColor: 'bg-orange-50',
     borderColor: 'border-orange-300',
-    message: 'This content contains potentially distressing information'
+    message: 'This content contains potentially distressing information',
   },
   severe: {
     icon: Shield,
     color: 'text-red-600',
     bgColor: 'bg-red-50',
     borderColor: 'border-red-300',
-    message: 'This content contains sensitive material that may be triggering'
-  }
+    message: 'This content contains sensitive material that may be triggering',
+  },
 };
 
 export function ContentWarning({
@@ -59,12 +51,12 @@ export function ContentWarning({
   children,
   onProceed,
   onSkip,
-  showCustomization = true
+  showCustomization = true,
 }: ContentWarningProps) {
   const { preferences, updatePreferences } = useTraumaInformed();
   const [isVisible, setIsVisible] = useState(true);
   const [showContent, setShowContent] = useState(false);
-  
+
   const config = warningConfig[level];
   const Icon = config.icon;
 
@@ -82,10 +74,7 @@ export function ContentWarning({
   if (showContent) {
     return (
       <div className="space-y-4">
-        <ContentWarningBanner 
-          level={level}
-          onHide={() => setShowContent(false)}
-        />
+        <ContentWarningBanner level={level} onHide={() => setShowContent(false)} />
         {children}
       </div>
     );
@@ -111,19 +100,19 @@ export function ContentWarning({
   };
 
   return (
-    <div className={`
+    <div
+      className={`
       rounded-lg border-2 p-6 transition-all duration-200
       ${config.bgColor} ${config.borderColor}
-    `}>
+    `}
+    >
       <div className="flex items-start space-x-4">
         <Icon className={`w-6 h-6 mt-1 flex-shrink-0 ${config.color}`} />
-        
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-3">
-            <h3 className={`text-lg font-semibold ${config.color}`}>
-              {title}
-            </h3>
-            
+            <h3 className={`text-lg font-semibold ${config.color}`}>{title}</h3>
+
             <TouchOptimizedButton
               variant="secondary"
               onClick={() => setIsVisible(false)}
@@ -133,15 +122,11 @@ export function ContentWarning({
               <X className="w-4 h-4" />
             </TouchOptimizedButton>
           </div>
-          
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
-            {description || config.message}
-          </p>
-          
-          {triggerTypes.length > 0 && (
-            <TriggerTypesList types={triggerTypes} />
-          )}
-          
+
+          <p className="text-gray-700 dark:text-gray-300 mb-4">{description || config.message}</p>
+
+          {triggerTypes.length > 0 && <TriggerTypesList types={triggerTypes} />}
+
           <div className="mt-6 space-y-3">
             <div className="flex flex-wrap gap-3">
               <TouchOptimizedButton
@@ -149,19 +134,15 @@ export function ContentWarning({
                 onClick={handleProceed}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                <Eye className="w-4 h-4 mr-2" />
-                I Understand, Continue
+                <Eye className="w-4 h-4 mr-2" />I Understand, Continue
               </TouchOptimizedButton>
-              
-              <TouchOptimizedButton
-                variant="secondary"
-                onClick={handleSkip}
-              >
+
+              <TouchOptimizedButton variant="secondary" onClick={handleSkip}>
                 <EyeOff className="w-4 h-4 mr-2" />
                 Skip This Section
               </TouchOptimizedButton>
             </div>
-            
+
             {showCustomization && (
               <ContentWarningCustomization
                 onDisableWarnings={handleDisableWarnings}
@@ -179,7 +160,7 @@ export function ContentWarning({
 function TriggerTypesList({ types }: { types: string[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const displayTypes = isExpanded ? types : types.slice(0, 3);
-  
+
   return (
     <div className="mb-4">
       <div className="flex items-center mb-2">
@@ -201,7 +182,7 @@ function TriggerTypesList({ types }: { types: string[] }) {
           </TouchOptimizedButton>
         )}
       </div>
-      
+
       <div className="flex flex-wrap gap-2">
         {displayTypes.map((type, index) => (
           <span
@@ -219,13 +200,13 @@ function TriggerTypesList({ types }: { types: string[] }) {
 // Content warning customization options
 function ContentWarningCustomization({
   onDisableWarnings,
-  currentLevel
+  currentLevel,
 }: {
   onDisableWarnings: () => void;
   currentLevel: 'mild' | 'moderate' | 'severe';
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  
+
   if (!isExpanded) {
     return (
       <TouchOptimizedButton
@@ -238,7 +219,7 @@ function ContentWarningCustomization({
       </TouchOptimizedButton>
     );
   }
-  
+
   return (
     <div className="border-t pt-3 mt-3 space-y-2">
       <div className="flex items-center justify-between">
@@ -253,7 +234,7 @@ function ContentWarningCustomization({
           <ChevronDown className="w-3 h-3" />
         </TouchOptimizedButton>
       </div>
-      
+
       <div className="space-y-2 text-sm">
         {currentLevel === 'mild' && (
           <TouchOptimizedButton
@@ -264,7 +245,7 @@ function ContentWarningCustomization({
             Don't show warnings for mild content
           </TouchOptimizedButton>
         )}
-        
+
         <p className="text-xs text-gray-600 dark:text-gray-400">
           You can always adjust warning preferences in Settings
         </p>
@@ -276,30 +257,28 @@ function ContentWarningCustomization({
 // Minimal banner shown when content is displayed after warning
 function ContentWarningBanner({
   level,
-  onHide
+  onHide,
 }: {
   level: 'mild' | 'moderate' | 'severe';
   onHide: () => void;
 }) {
   const config = warningConfig[level];
-  
+
   return (
-    <div className={`
+    <div
+      className={`
       rounded-md border px-4 py-2 flex items-center justify-between
       ${config.bgColor} ${config.borderColor}
-    `}>
+    `}
+    >
       <div className="flex items-center space-x-2">
         <Shield className={`w-4 h-4 ${config.color}`} />
         <span className="text-sm text-gray-700 dark:text-gray-300">
           Content warning acknowledged
         </span>
       </div>
-      
-      <TouchOptimizedButton
-        variant="secondary"
-        onClick={onHide}
-        className="text-xs"
-      >
+
+      <TouchOptimizedButton variant="secondary" onClick={onHide} className="text-xs">
         <EyeOff className="w-3 h-3 mr-1" />
         Hide Content
       </TouchOptimizedButton>
@@ -310,17 +289,17 @@ function ContentWarningBanner({
 // Quick content warning for inline use
 export function InlineContentWarning({
   triggerType,
-  children
+  children,
 }: {
   triggerType: string;
   children: React.ReactNode;
 }) {
   const [showContent, setShowContent] = useState(false);
-  
+
   if (showContent) {
     return <>{children}</>;
   }
-  
+
   return (
     <span className="inline-flex items-center">
       <TouchOptimizedButton
@@ -340,21 +319,18 @@ export function InlineContentWarning({
 export function AutoContentWarning({
   children,
   analysisText = '',
-  customTriggers = []
+  customTriggers = [],
 }: {
   children: React.ReactNode;
   analysisText?: string;
   customTriggers?: string[];
 }) {
-  const { triggerTypes, level } = analyzeContentForTriggers(
-    analysisText, 
-    customTriggers
-  );
-  
+  const { triggerTypes, level } = analyzeContentForTriggers(analysisText, customTriggers);
+
   if (triggerTypes.length === 0) {
     return <>{children}</>;
   }
-  
+
   return (
     <ContentWarning
       level={level}
@@ -368,14 +344,14 @@ export function AutoContentWarning({
 
 // Simple content trigger analysis
 function analyzeContentForTriggers(
-  text: string, 
+  text: string,
   customTriggers: string[]
-): { triggerTypes: string[], level: 'mild' | 'moderate' | 'severe' } {
+): { triggerTypes: string[]; level: 'mild' | 'moderate' | 'severe' } {
   const triggers = [...customTriggers];
   let score = 0;
-  
+
   const textLower = text.toLowerCase();
-  
+
   // Pain-related triggers
   const painTriggers = ['severe pain', 'chronic pain', 'disability', 'injury'];
   painTriggers.forEach(trigger => {
@@ -384,7 +360,7 @@ function analyzeContentForTriggers(
       score += 1;
     }
   });
-  
+
   // Medical triggers
   const medicalTriggers = ['surgery', 'hospital', 'emergency', 'diagnosis'];
   medicalTriggers.forEach(trigger => {
@@ -393,7 +369,7 @@ function analyzeContentForTriggers(
       score += 1;
     }
   });
-  
+
   // Emotional triggers
   const emotionalTriggers = ['depression', 'anxiety', 'stress', 'trauma'];
   emotionalTriggers.forEach(trigger => {
@@ -402,14 +378,14 @@ function analyzeContentForTriggers(
       score += 2;
     }
   });
-  
+
   // Determine severity level
   let level: 'mild' | 'moderate' | 'severe' = 'mild';
   if (score >= 4) level = 'severe';
   else if (score >= 2) level = 'moderate';
-  
+
   return {
     triggerTypes: [...new Set(triggers)], // Remove duplicates
-    level
+    level,
   };
 }

@@ -6,7 +6,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { 
+import {
   CognitiveLoadWrapper,
   CognitiveLoadMonitor,
   CrisisStateAdaptation,
@@ -16,7 +16,7 @@ import {
   LayeredDisclosure,
   AdaptiveDisclosure,
   useCrisisDetection,
-  useTraumaInformed
+  useTraumaInformed,
 } from './index';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 import { Brain, AlertTriangle, Shield, Layers, Target } from 'lucide-react';
@@ -26,7 +26,8 @@ export function EnhancedTraumaInformedDemo() {
   const [currentDemo, setCurrentDemo] = useState<string>('overview');
 
   // Map crisis levels to component expectations
-  const mappedCrisisLevel = crisisLevel === 'critical' || crisisLevel === 'acute' ? 'emergency' : crisisLevel;
+  const mappedCrisisLevel =
+    crisisLevel === 'critical' || crisisLevel === 'acute' ? 'emergency' : crisisLevel;
 
   return (
     <CrisisStateAdaptation
@@ -41,10 +42,11 @@ export function EnhancedTraumaInformedDemo() {
             Enhanced Trauma-Informed Design
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Experience the enhanced trauma-informed design features including cognitive load indicators,
-            crisis-state adaptations, content warnings, and progressive disclosure patterns.
+            Experience the enhanced trauma-informed design features including cognitive load
+            indicators, crisis-state adaptations, content warnings, and progressive disclosure
+            patterns.
           </p>
-          
+
           {crisisLevel !== 'none' && (
             <div className="mt-4">
               <TouchOptimizedButton
@@ -58,10 +60,7 @@ export function EnhancedTraumaInformedDemo() {
           )}
         </div>
 
-        <DemoNavigation 
-          currentDemo={currentDemo}
-          onDemoChange={setCurrentDemo}
-        />
+        <DemoNavigation currentDemo={currentDemo} onDemoChange={setCurrentDemo} />
 
         <div className="mt-8">
           {currentDemo === 'overview' && <OverviewDemo />}
@@ -77,7 +76,7 @@ export function EnhancedTraumaInformedDemo() {
 
 function DemoNavigation({
   currentDemo,
-  onDemoChange
+  onDemoChange,
 }: {
   currentDemo: string;
   onDemoChange: (demo: string) => void;
@@ -87,7 +86,7 @@ function DemoNavigation({
     { id: 'cognitive-load', title: 'Cognitive Load', icon: Brain },
     { id: 'crisis-adaptation', title: 'Crisis Adaptation', icon: AlertTriangle },
     { id: 'content-warnings', title: 'Content Warnings', icon: Shield },
-    { id: 'progressive-disclosure', title: 'Progressive Disclosure', icon: Layers }
+    { id: 'progressive-disclosure', title: 'Progressive Disclosure', icon: Layers },
   ];
 
   return (
@@ -112,7 +111,7 @@ function DemoNavigation({
 
 function OverviewDemo() {
   const { preferences } = useTraumaInformed();
-  
+
   return (
     <div className="space-y-6">
       <Card>
@@ -124,36 +123,37 @@ function OverviewDemo() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-gray-600 dark:text-gray-400">
-            The enhanced trauma-informed design system now includes four major improvements
-            to better support users who may be experiencing trauma, cognitive challenges, or crisis states.
+            The enhanced trauma-informed design system now includes four major improvements to
+            better support users who may be experiencing trauma, cognitive challenges, or crisis
+            states.
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FeatureCard
               icon={<Brain className="w-6 h-6 text-purple-600" />}
               title="Cognitive Load Indicators"
               description="Visual indicators show complexity levels and provide suggestions for reducing cognitive burden"
             />
-            
+
             <FeatureCard
               icon={<AlertTriangle className="w-6 h-6 text-orange-600" />}
               title="Crisis-State Adaptations"
               description="Interface automatically adapts when crisis behaviors are detected, offering immediate support"
             />
-            
+
             <FeatureCard
               icon={<Shield className="w-6 h-6 text-red-600" />}
               title="Content Warnings"
               description="Trauma-aware warnings for potentially triggering content with progressive disclosure options"
             />
-            
+
             <FeatureCard
               icon={<Layers className="w-6 h-6 text-blue-600" />}
               title="Progressive Disclosure"
               description="Smart information layering that adapts to user preferences and cognitive capacity"
             />
           </div>
-          
+
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <h4 className="font-medium text-blue-900 mb-2">Your Current Settings</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
@@ -172,7 +172,7 @@ function OverviewDemo() {
 function FeatureCard({
   icon,
   title,
-  description
+  description,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -192,29 +192,33 @@ function FeatureCard({
 }
 
 function CognitiveLoadDemo() {
-  const [complexityLevel, setComplexityLevel] = useState<'simple' | 'moderate' | 'complex'>('simple');
+  const [complexityLevel, setComplexityLevel] = useState<'simple' | 'moderate' | 'complex'>(
+    'simple'
+  );
   const formRef = useRef<HTMLFormElement>(null);
-  const [loadLevel, setLoadLevel] = useState<'minimal' | 'moderate' | 'high' | 'overwhelming'>('minimal');
+  const [loadLevel, setLoadLevel] = useState<'minimal' | 'moderate' | 'high' | 'overwhelming'>(
+    'minimal'
+  );
 
   const complexityConfigs = {
     simple: {
       fields: 3,
       required: 1,
       complex: false,
-      description: 'A simple form with basic fields'
+      description: 'A simple form with basic fields',
     },
     moderate: {
       fields: 8,
       required: 3,
       complex: true,
-      description: 'A moderate form with multiple sections'
+      description: 'A moderate form with multiple sections',
     },
     complex: {
       fields: 15,
       required: 7,
       complex: true,
-      description: 'A complex form with many fields and interactions'
-    }
+      description: 'A complex form with many fields and interactions',
+    },
   };
 
   const config = complexityConfigs[complexityLevel];
@@ -273,10 +277,7 @@ function CognitiveLoadDemo() {
             </form>
           </CognitiveLoadWrapper>
 
-          <CognitiveLoadMonitor
-            formElement={formRef}
-            onLoadChange={setLoadLevel}
-          />
+          <CognitiveLoadMonitor formElement={formRef} onLoadChange={setLoadLevel} />
 
           <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded">
             <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -290,7 +291,9 @@ function CognitiveLoadDemo() {
 }
 
 function CrisisAdaptationDemo() {
-  const [simulatedCrisis, setSimulatedCrisis] = useState<'none' | 'mild' | 'moderate' | 'severe' | 'emergency'>('none');
+  const [simulatedCrisis, setSimulatedCrisis] = useState<
+    'none' | 'mild' | 'moderate' | 'severe' | 'emergency'
+  >('none');
 
   return (
     <div className="space-y-6">
@@ -303,8 +306,9 @@ function CrisisAdaptationDemo() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-gray-600 dark:text-gray-400">
-            The interface automatically detects crisis behaviors and adapts to provide appropriate support.
-            Crisis levels are detected through user behavior patterns like rapid clicking, frequent navigation, or errors.
+            The interface automatically detects crisis behaviors and adapts to provide appropriate
+            support. Crisis levels are detected through user behavior patterns like rapid clicking,
+            frequent navigation, or errors.
           </p>
 
           <div className="space-y-2">
@@ -334,10 +338,10 @@ function CrisisAdaptationDemo() {
             <div className="p-6 bg-white rounded-lg border">
               <h3 className="text-lg font-medium mb-4">Sample Content Area</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                This content area shows how the interface adapts based on crisis level.
-                Notice how the background, borders, and available actions change.
+                This content area shows how the interface adapts based on crisis level. Notice how
+                the background, borders, and available actions change.
               </p>
-              
+
               <div className="space-y-3">
                 <input
                   type="text"
@@ -348,9 +352,7 @@ function CrisisAdaptationDemo() {
                   placeholder="Sample text area"
                   className="w-full p-2 border rounded h-20"
                 />
-                <TouchOptimizedButton variant="primary">
-                  Sample Action Button
-                </TouchOptimizedButton>
+                <TouchOptimizedButton variant="primary">Sample Action Button</TouchOptimizedButton>
               </div>
             </div>
           </CrisisStateAdaptation>
@@ -366,7 +368,12 @@ function ContentWarningsDemo() {
   const sampleTriggers = {
     mild: ['Pain descriptions', 'Medical terminology'],
     moderate: ['Detailed pain descriptions', 'Medical procedures', 'Disability discussion'],
-    severe: ['Severe pain experiences', 'Trauma discussion', 'Mental health struggles', 'Medical emergencies']
+    severe: [
+      'Severe pain experiences',
+      'Trauma discussion',
+      'Mental health struggles',
+      'Medical emergencies',
+    ],
   };
 
   return (
@@ -413,11 +420,11 @@ function ContentWarningsDemo() {
             <div className="p-6 bg-white rounded-lg border">
               <h3 className="text-lg font-medium mb-4">Protected Content Area</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                This content would normally be hidden behind the warning. It might contain
-                sensitive information related to pain experiences, medical procedures, or
-                other potentially triggering topics.
+                This content would normally be hidden behind the warning. It might contain sensitive
+                information related to pain experiences, medical procedures, or other potentially
+                triggering topics.
               </p>
-              
+
               <div className="space-y-2">
                 <p>Sample potentially sensitive content...</p>
                 <InlineContentWarning triggerType="detailed medical information">
@@ -463,7 +470,7 @@ function ProgressiveDisclosureDemo() {
       ),
       memoryAid: 'Start here - this is the most important information',
       estimatedTime: 2,
-      cognitiveLoad: 'minimal' as const
+      cognitiveLoad: 'minimal' as const,
     },
     {
       id: 'detailed-symptoms',
@@ -472,20 +479,26 @@ function ProgressiveDisclosureDemo() {
       content: (
         <div className="space-y-3">
           <p>Additional details about your symptoms that can help with tracking patterns.</p>
-          <textarea 
-            placeholder="Describe your symptoms in detail..." 
+          <textarea
+            placeholder="Describe your symptoms in detail..."
             className="w-full p-2 border rounded h-24"
           />
           <div className="grid grid-cols-3 gap-2">
-            <select className="p-2 border rounded"><option>Pain Type</option></select>
-            <select className="p-2 border rounded"><option>Severity</option></select>
-            <select className="p-2 border rounded"><option>Duration</option></select>
+            <select className="p-2 border rounded">
+              <option>Pain Type</option>
+            </select>
+            <select className="p-2 border rounded">
+              <option>Severity</option>
+            </select>
+            <select className="p-2 border rounded">
+              <option>Duration</option>
+            </select>
           </div>
         </div>
       ),
       memoryAid: 'Details help identify patterns over time',
       estimatedTime: 5,
-      cognitiveLoad: 'moderate' as const
+      cognitiveLoad: 'moderate' as const,
     },
     {
       id: 'medications',
@@ -495,18 +508,24 @@ function ProgressiveDisclosureDemo() {
         <div className="space-y-3">
           <p>Comprehensive medication and treatment tracking.</p>
           <div className="space-y-2">
-            <input type="text" placeholder="Medication name" className="w-full p-2 border rounded" />
+            <input
+              type="text"
+              placeholder="Medication name"
+              className="w-full p-2 border rounded"
+            />
             <div className="grid grid-cols-3 gap-2">
               <input type="text" placeholder="Dosage" className="p-2 border rounded" />
               <input type="time" className="p-2 border rounded" />
-              <select className="p-2 border rounded"><option>Effectiveness</option></select>
+              <select className="p-2 border rounded">
+                <option>Effectiveness</option>
+              </select>
             </div>
           </div>
         </div>
       ),
       memoryAid: 'Important for healthcare provider discussions',
       estimatedTime: 8,
-      cognitiveLoad: 'high' as const
+      cognitiveLoad: 'high' as const,
     },
     {
       id: 'data-analysis',
@@ -537,8 +556,8 @@ function ProgressiveDisclosureDemo() {
       ),
       memoryAid: 'Advanced features for detailed health insights',
       estimatedTime: 15,
-      cognitiveLoad: 'overwhelming' as const
-    }
+      cognitiveLoad: 'overwhelming' as const,
+    },
   ];
 
   return (
@@ -552,8 +571,8 @@ function ProgressiveDisclosureDemo() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-gray-600 dark:text-gray-400">
-            Progressive disclosure organizes information by importance and complexity,
-            allowing users to access only what they need when they need it.
+            Progressive disclosure organizes information by importance and complexity, allowing
+            users to access only what they need when they need it.
           </p>
 
           <LayeredDisclosure
@@ -564,20 +583,19 @@ function ProgressiveDisclosureDemo() {
 
           <div className="mt-8">
             <h4 className="font-medium mb-4">Adaptive Disclosure Example</h4>
-            <AdaptiveDisclosure
-              title="Smart Content Section"
-              adaptToUserBehavior={true}
-            >
+            <AdaptiveDisclosure title="Smart Content Section" adaptToUserBehavior={true}>
               <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  This section adapts its complexity level based on your interaction patterns
-                  and current preferences. The more you interact with the interface, the more
-                  detailed options become available.
+                  This section adapts its complexity level based on your interaction patterns and
+                  current preferences. The more you interact with the interface, the more detailed
+                  options become available.
                 </p>
-                
+
                 <div className="space-y-2">
                   <TouchOptimizedButton variant="secondary">Basic Action</TouchOptimizedButton>
-                  <TouchOptimizedButton variant="secondary">Intermediate Option</TouchOptimizedButton>
+                  <TouchOptimizedButton variant="secondary">
+                    Intermediate Option
+                  </TouchOptimizedButton>
                   <TouchOptimizedButton variant="secondary">Advanced Feature</TouchOptimizedButton>
                 </div>
               </div>

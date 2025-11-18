@@ -11,34 +11,34 @@ export interface TraumaInformedPreferences {
   showProgress: boolean;
   showCognitiveLoadIndicators: boolean;
   adaptiveComplexity: boolean;
-  
+
   // Visual Preferences
   fontSize: 'small' | 'medium' | 'large' | 'xl';
   contrast: 'normal' | 'high' | 'extra-high';
   reduceMotion: boolean;
-  
+
   // Interaction Preferences
   touchTargetSize: 'normal' | 'large' | 'extra-large';
   confirmationLevel: 'minimal' | 'standard' | 'high';
   voiceInput: boolean;
-  
+
   // Emotional Safety
   gentleLanguage: boolean;
   hideDistressingContent: boolean;
   showComfortPrompts: boolean;
   enableContentWarnings: boolean;
   contentWarningLevel: 'minimal' | 'standard' | 'comprehensive';
-  
+
   // Crisis Support
   enableCrisisDetection: boolean;
   crisisDetectionSensitivity: 'low' | 'medium' | 'high';
   showCrisisResources: boolean;
-  
+
   // Progressive Disclosure
   enableProgressiveDisclosure: boolean;
   defaultDisclosureLevel: 'essential' | 'helpful' | 'advanced' | 'expert';
   adaptiveDisclosure: boolean;
-  
+
   // Validation Technology Features
   realTimeValidation: boolean;
   theme: 'light' | 'dark' | 'high-contrast' | 'auto';

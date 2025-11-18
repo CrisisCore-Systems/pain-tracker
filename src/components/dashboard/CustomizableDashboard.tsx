@@ -14,7 +14,11 @@ import { DashboardHeader } from './DashboardHeader';
 import { DashboardSectionNavigation } from './DashboardSectionNavigation';
 import { DashboardGridSection } from './DashboardGridSection';
 import { DashboardFiltersModal } from './DashboardFiltersModal';
-import { SECTION_WIDGETS, DASHBOARD_SECTIONS, type DashboardSection } from './dashboardSectionConfig';
+import {
+  SECTION_WIDGETS,
+  DASHBOARD_SECTIONS,
+  type DashboardSection,
+} from './dashboardSectionConfig';
 
 function getFilterSummary(criteria: FilterCriteria | null, activeCount: number): string | null {
   if (!criteria || activeCount === 0) {
@@ -23,30 +27,38 @@ function getFilterSummary(criteria: FilterCriteria | null, activeCount: number):
 
   const summaryCandidates: Array<() => string | null> = [
     () => (criteria.searchText ? `Search: "${criteria.searchText}"` : null),
-    () => ((criteria.painLevelRange.min !== 1 || criteria.painLevelRange.max !== 10)
-      ? `Pain ${criteria.painLevelRange.min}-${criteria.painLevelRange.max}`
-      : null),
-    () => (criteria.locations.length > 0
-      ? `${criteria.locations.length} location${criteria.locations.length === 1 ? '' : 's'}`
-      : null),
-    () => (criteria.symptoms.length > 0
-      ? `${criteria.symptoms.length} symptom${criteria.symptoms.length === 1 ? '' : 's'}`
-      : null),
-    () => ((criteria.workImpact.hasMissedWork || criteria.workImpact.hasModifiedDuties)
-      ? 'Work impact'
-      : null),
-    () => (criteria.medications.length > 0
-      ? `${criteria.medications.length} medication${criteria.medications.length === 1 ? '' : 's'}`
-      : null),
-    () => (criteria.treatments.length > 0
-      ? `${criteria.treatments.length} treatment${criteria.treatments.length === 1 ? '' : 's'}`
-      : null),
-    () => ((criteria.sleepQualityRange.min !== 1 || criteria.sleepQualityRange.max !== 10)
-      ? `Sleep ${criteria.sleepQualityRange.min}-${criteria.sleepQualityRange.max}`
-      : null),
-    () => ((criteria.moodImpactRange.min !== 1 || criteria.moodImpactRange.max !== 10)
-      ? `Mood ${criteria.moodImpactRange.min}-${criteria.moodImpactRange.max}`
-      : null)
+    () =>
+      criteria.painLevelRange.min !== 1 || criteria.painLevelRange.max !== 10
+        ? `Pain ${criteria.painLevelRange.min}-${criteria.painLevelRange.max}`
+        : null,
+    () =>
+      criteria.locations.length > 0
+        ? `${criteria.locations.length} location${criteria.locations.length === 1 ? '' : 's'}`
+        : null,
+    () =>
+      criteria.symptoms.length > 0
+        ? `${criteria.symptoms.length} symptom${criteria.symptoms.length === 1 ? '' : 's'}`
+        : null,
+    () =>
+      criteria.workImpact.hasMissedWork || criteria.workImpact.hasModifiedDuties
+        ? 'Work impact'
+        : null,
+    () =>
+      criteria.medications.length > 0
+        ? `${criteria.medications.length} medication${criteria.medications.length === 1 ? '' : 's'}`
+        : null,
+    () =>
+      criteria.treatments.length > 0
+        ? `${criteria.treatments.length} treatment${criteria.treatments.length === 1 ? '' : 's'}`
+        : null,
+    () =>
+      criteria.sleepQualityRange.min !== 1 || criteria.sleepQualityRange.max !== 10
+        ? `Sleep ${criteria.sleepQualityRange.min}-${criteria.sleepQualityRange.max}`
+        : null,
+    () =>
+      criteria.moodImpactRange.min !== 1 || criteria.moodImpactRange.max !== 10
+        ? `Mood ${criteria.moodImpactRange.min}-${criteria.moodImpactRange.max}`
+        : null,
   ];
 
   const summaryParts: string[] = [];
@@ -64,7 +76,7 @@ function getFilterSummary(criteria: FilterCriteria | null, activeCount: number):
 // Main Customizable Dashboard Component
 interface CustomizableDashboardProps {
   entries: PainEntry[];
-  onAddEntry: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
+  onAddEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
   onStartWalkthrough: () => void;
   onOpenGoalManager?: () => void;
   className?: string;
@@ -75,15 +87,10 @@ export function CustomizableDashboard({
   onAddEntry,
   onStartWalkthrough,
   onOpenGoalManager,
-  className
+  className,
 }: CustomizableDashboardProps) {
-  const {
-    layout,
-    isLoaded,
-    toggleWidget,
-    resetLayout,
-    updateLayoutSettings
-  } = useDashboardLayout();
+  const { layout, isLoaded, toggleWidget, resetLayout, updateLayoutSettings } =
+    useDashboardLayout();
 
   const [showWidgetManager, setShowWidgetManager] = useState(false);
   const [draggedWidget, setDraggedWidget] = useState<string | null>(null);
@@ -110,9 +117,10 @@ export function CustomizableDashboard({
     .sort((a, b) => a.position - b.position);
 
   const sectionWidgetTypes = SECTION_WIDGETS[activeSection] ?? [];
-  const sectionWidgets = sectionWidgetTypes.length > 0
-    ? visibleWidgets.filter(widget => sectionWidgetTypes.includes(widget.type))
-    : visibleWidgets;
+  const sectionWidgets =
+    sectionWidgetTypes.length > 0
+      ? visibleWidgets.filter(widget => sectionWidgetTypes.includes(widget.type))
+      : visibleWidgets;
 
   // Handle drag start
   const handleDragStart = (widgetId: string) => {
@@ -140,7 +148,7 @@ export function CustomizableDashboard({
       // Update positions
       const updatedWidgets = newWidgets.map((widget, index) => ({
         ...widget,
-        position: index
+        position: index,
       }));
 
       updateLayoutSettings({ widgets: updatedWidgets });
@@ -161,9 +169,12 @@ export function CustomizableDashboard({
   }, []);
 
   // Handle saving a filter
-  const handleSaveFilter = useCallback((name: string, criteria: FilterCriteria) => {
-    saveFilter(name, criteria);
-  }, [saveFilter]);
+  const handleSaveFilter = useCallback(
+    (name: string, criteria: FilterCriteria) => {
+      saveFilter(name, criteria);
+    },
+    [saveFilter]
+  );
 
   // Handle loading a filter
   const handleLoadFilter = useCallback((filter: SavedFilter) => {
@@ -175,9 +186,12 @@ export function CustomizableDashboard({
   }, []);
 
   // Handle deleting a filter
-  const handleDeleteFilter = useCallback((filterId: string) => {
-    deleteFilter(filterId);
-  }, [deleteFilter]);
+  const handleDeleteFilter = useCallback(
+    (filterId: string) => {
+      deleteFilter(filterId);
+    },
+    [deleteFilter]
+  );
 
   if (!isLoaded) {
     return (

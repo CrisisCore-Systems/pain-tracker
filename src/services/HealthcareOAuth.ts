@@ -97,7 +97,11 @@ export interface OAuthClient {
   grantTypes: ('authorization_code' | 'refresh_token' | 'client_credentials')[];
   responseTypes: ('code' | 'token')[];
   scopes: string[];
-  tokenEndpointAuthMethod: 'client_secret_basic' | 'client_secret_post' | 'private_key_jwt' | 'none';
+  tokenEndpointAuthMethod:
+    | 'client_secret_basic'
+    | 'client_secret_post'
+    | 'private_key_jwt'
+    | 'none';
   pkceRequired: boolean;
   status: 'active' | 'suspended' | 'revoked';
   createdAt: string;
@@ -158,18 +162,19 @@ export class HealthcareOAuthProvider {
   }
 
   // Client Registration and Management
-  async registerClient(clientInfo: Omit<OAuthClient, 'clientId' | 'clientSecret' | 'status' | 'createdAt' | 'lastUsed'>): Promise<OAuthClient> {
+  async registerClient(
+    clientInfo: Omit<OAuthClient, 'clientId' | 'clientSecret' | 'status' | 'createdAt' | 'lastUsed'>
+  ): Promise<OAuthClient> {
     const clientId = `client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    const clientSecret = clientInfo.tokenEndpointAuthMethod !== 'none' 
-      ? this.generateClientSecret() 
-      : undefined;
+    const clientSecret =
+      clientInfo.tokenEndpointAuthMethod !== 'none' ? this.generateClientSecret() : undefined;
 
     const client: OAuthClient = {
       ...clientInfo,
       clientId,
       clientSecret,
       status: 'active',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     this.clients.set(clientId, client);
@@ -216,7 +221,7 @@ export class HealthcareOAuthProvider {
       client_id: request.clientId,
       redirect_uri: request.redirectUri,
       scope: request.scope,
-      state: request.state
+      state: request.state,
     });
 
     if (request.codeChallenge) {
@@ -251,7 +256,7 @@ export class HealthcareOAuthProvider {
       codeChallengeMethod,
       nonce,
       expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes
-      used: false
+      used: false,
     };
 
     this.authorizationCodes.set(code, authCode);
@@ -318,7 +323,7 @@ export class HealthcareOAuthProvider {
       tokenType: 'Bearer',
       expiresAt: Date.now() + expiresIn * 1000,
       refreshToken,
-      revoked: false
+      revoked: false,
     };
 
     const refreshTokenRecord: RefreshToken = {
@@ -328,7 +333,7 @@ export class HealthcareOAuthProvider {
       userId: authCode.userId,
       scope: authCode.scope,
       expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
-      revoked: false
+      revoked: false,
     };
 
     this.accessTokens.set(accessToken, accessTokenRecord);
@@ -346,7 +351,7 @@ export class HealthcareOAuthProvider {
       expiresIn,
       refreshToken,
       scope: authCode.scope,
-      idToken
+      idToken,
     };
   }
 
@@ -392,7 +397,7 @@ export class HealthcareOAuthProvider {
       tokenType: 'Bearer',
       expiresAt: Date.now() + expiresIn * 1000,
       refreshToken: newRefreshToken,
-      revoked: false
+      revoked: false,
     };
 
     const newRefreshTokenRecord: RefreshToken = {
@@ -402,7 +407,7 @@ export class HealthcareOAuthProvider {
       userId: refreshTokenRecord.userId,
       scope: request.scope || refreshTokenRecord.scope,
       expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
-      revoked: false
+      revoked: false,
     };
 
     this.accessTokens.set(newAccessToken, accessTokenRecord);
@@ -417,7 +422,7 @@ export class HealthcareOAuthProvider {
       tokenType: 'Bearer',
       expiresIn,
       refreshToken: newRefreshToken,
-      scope: accessTokenRecord.scope
+      scope: accessTokenRecord.scope,
     };
   }
 
@@ -463,7 +468,7 @@ export class HealthcareOAuthProvider {
       userId: accessToken.userId,
       exp: Math.floor(accessToken.expiresAt / 1000),
       iat: Math.floor((accessToken.expiresAt - 3600000) / 1000), // Assuming 1 hour validity
-      tokenType: accessToken.tokenType
+      tokenType: accessToken.tokenType,
     };
   }
 
@@ -486,13 +491,16 @@ export class HealthcareOAuthProvider {
   }
 
   // Token Revocation
-  async revokeToken(token: string, _tokenTypeHint?: 'access_token' | 'refresh_token'): Promise<void> {
+  async revokeToken(
+    token: string,
+    _tokenTypeHint?: 'access_token' | 'refresh_token'
+  ): Promise<void> {
     // Try to revoke as access token
     const accessToken = this.accessTokens.get(token);
     if (accessToken) {
       accessToken.revoked = true;
       this.accessTokens.set(token, accessToken);
-      
+
       // Also revoke associated refresh token
       if (accessToken.refreshToken) {
         const refreshToken = this.refreshTokens.get(accessToken.refreshToken);
@@ -509,7 +517,7 @@ export class HealthcareOAuthProvider {
     if (refreshToken) {
       refreshToken.revoked = true;
       this.refreshTokens.set(token, refreshToken);
-      
+
       // Also revoke associated access token
       const relatedAccessToken = this.accessTokens.get(refreshToken.accessToken);
       if (relatedAccessToken) {
@@ -541,20 +549,20 @@ export class HealthcareOAuthProvider {
     if (method === 'plain') {
       return codeVerifier === codeChallenge;
     }
-    
+
     if (method === 'S256') {
       // Would use crypto.createHash('sha256').update(codeVerifier).digest('base64url')
       // Simplified for demo
       return true;
     }
-    
+
     return false;
   }
 
   private async generateIdToken(userId: string, clientId: string, nonce?: string): Promise<string> {
     const userInfo = this.userProfiles.get(userId);
     const now = Math.floor(Date.now() / 1000);
-    
+
     const payload: JWTPayload = {
       iss: this.issuer,
       sub: userId,
@@ -566,7 +574,7 @@ export class HealthcareOAuthProvider {
       fhirUser: userInfo?.npi ? `Practitioner/${userInfo.npi}` : undefined,
       organization: userInfo?.organizationId,
       role: userInfo?.role,
-      permissions: this.getPermissionsForUser(userId)
+      permissions: this.getPermissionsForUser(userId),
     };
 
     // In a real implementation, this would use proper JWT signing
@@ -579,15 +587,15 @@ export class HealthcareOAuthProvider {
     if (!userInfo) return [];
 
     const basePermissions = ['read:patient', 'read:observation'];
-    
+
     if (userInfo.role === 'physician') {
       return [...basePermissions, 'write:patient', 'write:observation', 'write:medication'];
     }
-    
+
     if (userInfo.role === 'nurse') {
       return [...basePermissions, 'write:observation'];
     }
-    
+
     return basePermissions;
   }
 
@@ -601,9 +609,9 @@ export class HealthcareOAuthProvider {
           use: 'sig',
           kid: 'healthcare-oauth-key-1',
           n: 'base64-encoded-modulus',
-          e: 'AQAB'
-        }
-      ]
+          e: 'AQAB',
+        },
+      ],
     };
   }
 }

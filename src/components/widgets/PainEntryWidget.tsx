@@ -1,10 +1,10 @@
-import type { PainEntry } from "../../types";
-import { ModernPainEntryForm } from "../pain-tracker/ModernPainEntryForm";
-import { MobilePainEntryForm } from "../mobile/MobilePainEntryForm";
-import { useResponsive } from "../../hooks/useMediaQuery";
+import type { PainEntry } from '../../types';
+import { ModernPainEntryForm } from '../pain-tracker/ModernPainEntryForm';
+import { MobilePainEntryForm } from '../mobile/MobilePainEntryForm';
+import { useResponsive } from '../../hooks/useMediaQuery';
 
 interface PainEntryWidgetProps {
-  onSubmit: (entry: Omit<PainEntry, "id" | "timestamp">) => void;
+  onSubmit: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
   onCancel?: () => void;
 }
 

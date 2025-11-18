@@ -19,5 +19,7 @@ export class InMemoryKeyManager implements KeyManager {
     }
     return this.keys.get(purpose)!;
   }
-  async rotateKey(purpose: string) { this.keys.delete(purpose); }
+  async rotateKey(purpose: string) {
+    this.keys.delete(purpose);
+  }
 }

@@ -8,7 +8,7 @@ const engine = new EmpathyIntelligenceEngine({
   personalizationDepth: 'surface',
   culturalSensitivity: 'standard',
   interventionStyle: 'gentle',
-  privacyLevel: 'standard'
+  privacyLevel: 'standard',
 });
 
 describe('EmpathyIntelligenceEngine empty inputs', () => {
@@ -17,6 +17,8 @@ describe('EmpathyIntelligenceEngine empty inputs', () => {
     // Baseline heuristics default around mid-range numbers
     expect(metrics.emotionalIntelligence.empathy).toBeGreaterThanOrEqual(0);
     expect(metrics.empathyKPIs.validationReceived).toBeGreaterThanOrEqual(0);
-    expect(metrics.humanizedMetrics.wisdomGained.wisdomCategories.practicalWisdom).toBeGreaterThanOrEqual(0);
+    expect(
+      metrics.humanizedMetrics.wisdomGained.wisdomCategories.practicalWisdom
+    ).toBeGreaterThanOrEqual(0);
   });
 });

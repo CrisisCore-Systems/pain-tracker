@@ -27,15 +27,8 @@ declare module 'libsodium-wrappers-sumo' {
       memLimit: number,
       algorithm: number
     ): Uint8Array;
-    crypto_pwhash_str(
-      password: string | Uint8Array,
-      opsLimit: number,
-      memLimit: number
-    ): string;
-    crypto_pwhash_str_verify(
-      hash: string,
-      password: string | Uint8Array
-    ): boolean;
+    crypto_pwhash_str(password: string | Uint8Array, opsLimit: number, memLimit: number): string;
+    crypto_pwhash_str_verify(hash: string, password: string | Uint8Array): boolean;
     crypto_pwhash_OPSLIMIT_INTERACTIVE: number;
     crypto_pwhash_MEMLIMIT_INTERACTIVE: number;
     crypto_pwhash_ALG_ARGON2ID13: number;
