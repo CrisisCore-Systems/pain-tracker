@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useToast } from './feedback';
 import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
+import { useStartupPrompts } from '../contexts/StartupPromptsContext';
 
 const STORAGE_KEY = 'pain-tracker:analytics-consent';
 
@@ -13,8 +14,9 @@ export default function BetaAnalyticsConsentPrompt() {
     }
   });
   const { bottomLeft } = useToast();
+  const { requestPrompt, dismissPrompt, canShowPrompt } = useStartupPrompts();
 
-  const grant = async () => {
+  const grant = useCallback(async () => {
     try {
       localStorage.setItem(STORAGE_KEY, 'granted');
       setConsent('granted');
@@ -28,38 +30,44 @@ export default function BetaAnalyticsConsentPrompt() {
           'Your anonymous usage data will help us improve Pain Tracker for everyone.'
         );
       }
+      
+      dismissPrompt('analytics-consent');
     } catch {
       localStorage.setItem(STORAGE_KEY, 'error');
       setConsent('error');
+      dismissPrompt('analytics-consent');
     }
-  };
+  }, [bottomLeft, dismissPrompt]);
 
   useEffect(() => {
     if (!consent) {
-      // Show analytics consent prompt as a bottom-left toast
-      // Delay slightly to avoid overlapping with other prompts
-      const timer = setTimeout(() => {
-        bottomLeft.info(
-          'Help improve Pain Tracker?',
-          "We'd like to collect anonymous usage data to improve the app. Your pain data stays private and local. No personal information is collected.",
-          {
-            label: 'Allow',
-            onClick: grant,
-          },
-          {
-            onDismiss: () => {
-              // When dismissed (X clicked), store 'declined'
-              localStorage.setItem(STORAGE_KEY, 'declined');
-              setConsent('declined');
-              privacyAnalytics.updatePrivacyConfig({ enableAnalytics: false });
-            },
-          }
-        );
-      }, 2000); // 2 second delay to avoid prompt collision
-
-      return () => clearTimeout(timer);
+      // Request to show this prompt with priority 3 (after notification consent)
+      requestPrompt('analytics-consent', 3);
     }
-  }, [consent, bottomLeft, grant]);
+  }, [consent, requestPrompt]);
+
+  useEffect(() => {
+    if (!consent && canShowPrompt('analytics-consent')) {
+      // Show analytics consent prompt as a bottom-left toast
+      bottomLeft.info(
+        'Help improve Pain Tracker?',
+        'We\'d like to collect anonymous usage data to improve the app. Your pain data stays private and local. No personal information is collected.',
+        {
+          label: 'Allow',
+          onClick: grant
+        },
+        {
+          onDismiss: () => {
+            // When dismissed (X clicked), store 'declined'
+            localStorage.setItem(STORAGE_KEY, 'declined');
+            setConsent('declined');
+            privacyAnalytics.updatePrivacyConfig({ enableAnalytics: false });
+            dismissPrompt('analytics-consent');
+          }
+        }
+      );
+    }
+  }, [consent, bottomLeft, canShowPrompt, dismissPrompt, grant]);
 
   // Don't render anything - the toast handles the UI
   return null;
