@@ -38,30 +38,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
   defaultMode = 'light',
 }) => {
-  const [mode, setModeState] = useState<ThemeMode>(() => {
-    // Check localStorage for saved theme preference
-    if (typeof window !== 'undefined') {
-      try {
-        const savedMode = secureStorage.get<string>('pain-tracker-theme');
-        if (savedMode === 'light' || savedMode === 'dark' || savedMode === 'high-contrast') {
-          return savedMode;
-        }
-
-        // Check system preference for high contrast
-        if (window.matchMedia && window.matchMedia('(prefers-contrast: high)').matches) {
-          return 'high-contrast';
-        }
-
-        // Check system preference for dark mode
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
-        }
-      } catch (error) {
-        console.warn('Failed to access localStorage for theme preference:', error);
-      }
-    }
-    return defaultMode;
-  });
+  // Force light mode only - disable dark theme detection
+  const [mode] = useState<ThemeMode>('light');
 
   const [hasReducedMotion, setHasReducedMotion] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -142,99 +120,48 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     );
 
     // Set data attribute for CSS targeting
-    root.setAttribute('data-theme', newMode);
+    root.setAttribute('data-theme', 'light');
 
-    // Add/remove 'dark' class for Tailwind dark mode
-    if (newMode === 'dark' || newMode === 'high-contrast') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    // Ensure 'dark' class is never added - force light mode
+    root.classList.remove('dark');
   }, []);
 
+  // No-op functions for theme switching - light mode only
   const setMode = useCallback(
     (newMode: ThemeMode) => {
-      setModeState(newMode);
-      try {
-        secureStorage.set('pain-tracker-theme', newMode);
-      } catch (error) {
-        console.warn('Failed to save theme preference to localStorage:', error);
-      }
-
-      // Update CSS custom properties
-      updateCSSVariables(newMode);
+      // Disabled - always stay in light mode
+      console.log('Theme switching disabled - light mode only');
     },
-    [updateCSSVariables]
+    []
   );
 
   const toggleMode = useCallback(() => {
-    const nextMode = mode === 'light' ? 'dark' : mode === 'dark' ? 'high-contrast' : 'light';
-    setMode(nextMode);
-  }, [mode, setMode]);
+    // Disabled - always stay in light mode
+    console.log('Theme switching disabled - light mode only');
+  }, []);
 
-  // Listen for system accessibility preferences
+  // Listen for system accessibility preferences (reduced motion only)
   useEffect(() => {
-    const mediaQueries = [
-      {
-        query: '(prefers-color-scheme: dark)',
-        handler: (e: MediaQueryListEvent) => {
-          try {
-            const savedMode = secureStorage.get<string>('pain-tracker-theme');
-            // Only update if user hasn't set a preference and not already in high contrast
-            if (!savedMode && mode !== 'high-contrast') {
-              setMode(e.matches ? 'dark' : 'light');
-            }
-          } catch (error) {
-            console.warn('Failed to access localStorage for system theme detection:', error);
-          }
-        },
-      },
-      {
-        query: '(prefers-contrast: high)',
-        handler: (e: MediaQueryListEvent) => {
-          try {
-            const savedMode = secureStorage.get<string>('pain-tracker-theme');
-            // Update to high contrast if system preference changes
-            if (!savedMode && e.matches) {
-              setMode('high-contrast');
-            }
-          } catch (error) {
-            console.warn('Failed to handle high contrast preference:', error);
-          }
-        },
-      },
-      {
-        query: '(prefers-reduced-motion: reduce)',
-        handler: (e: MediaQueryListEvent) => {
-          setHasReducedMotion(e.matches);
-        },
-      },
-    ];
-
-    const cleanupFunctions: (() => void)[] = [];
-
-    mediaQueries.forEach(({ query, handler }) => {
-      const mediaQuery = window.matchMedia(query);
-
-      if (mediaQuery.addEventListener) {
-        mediaQuery.addEventListener('change', handler);
-        cleanupFunctions.push(() => mediaQuery.removeEventListener('change', handler));
-      } else {
-        // Fallback for older browsers
-        mediaQuery.addListener(handler);
-        cleanupFunctions.push(() => mediaQuery.removeListener(handler));
-      }
-    });
-
-    return () => {
-      cleanupFunctions.forEach(cleanup => cleanup());
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    
+    const handler = (e: MediaQueryListEvent) => {
+      setHasReducedMotion(e.matches);
     };
-  }, [mode, setMode]);
 
-  // Initial CSS variables setup
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handler);
+      return () => mediaQuery.removeEventListener('change', handler);
+    } else {
+      // Fallback for older browsers
+      mediaQuery.addListener(handler);
+      return () => mediaQuery.removeListener(handler);
+    }
+  }, []);
+
+  // Initial CSS variables setup - force light mode
   useEffect(() => {
-    updateCSSVariables(mode);
-  }, [mode, updateCSSVariables]);
+    updateCSSVariables('light');
+  }, [updateCSSVariables]);
 
   const value: ThemeContextType = {
     mode,

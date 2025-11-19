@@ -14,6 +14,13 @@
   color-scheme: only light;
 }
 
+/* Force light mode globally - prevent browser auto-darkening */
+html,
+body {
+  background-color: #ffffff;
+  color: #0f172a; /* dark slate text for readability */
+}
+
 /* Default light theme colors - Pain Tracker Brand */
 [data-theme="light"], :root {
   --color-background: 248 250 252;
