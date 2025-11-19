@@ -4,7 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: ['class', '[data-theme="dark"]'],
+  darkMode: 'media', // Use media query but we override with color-scheme: only light
   theme: {
     extend: {
       colors: {
