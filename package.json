@@ -11,9 +11,6 @@
     "type": "git",
     "url": "https://github.com/CrisisCore-Systems/pain-tracker"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "dev": "vite",
     "dev:api": "tsx scripts/api-dev-server.js",
