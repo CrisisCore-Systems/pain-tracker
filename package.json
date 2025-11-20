@@ -45,7 +45,7 @@
     "badge:all": "vitest run --coverage --reporter=json --reporter=default && node scripts/generate-test-badge.mjs && node scripts/generate-coverage-badge.mjs && node scripts/generate-security-badge.mjs && node scripts/generate-loc-badge.mjs && node scripts/generate-bundle-badge.mjs && node scripts/generate-mutation-badge.mjs",
     "typecheck": "tsc --noEmit --incremental",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "prepare": "is-ci || husky install",
+    "prepare": "node -e \"try { require('is-ci') ? process.exit(0) : require('child_process').execSync('husky install', {stdio: 'inherit'}) } catch(e) { process.exit(0) }\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist --dotfiles",
     "prebuild": "node scripts/check-env.mjs",
