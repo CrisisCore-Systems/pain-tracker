@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { db } from '../lib/database.js';
+import { db } from '../../api-disabled/lib/database.js';
 
 /**
  * Simple DB health check
