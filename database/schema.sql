@@ -287,3 +287,27 @@ SELECT track_usage('user_sample_basic', 'export', 5);
 -- DROP FUNCTION IF EXISTS update_updated_at_column CASCADE;
 -- DROP FUNCTION IF EXISTS get_user_subscription CASCADE;
 -- DROP FUNCTION IF EXISTS track_usage CASCADE;
+
+-- ============================================================================
+-- TESTIMONIALS TABLE (For verified user stories)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS testimonials (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  role VARCHAR(255),
+  email VARCHAR(255),
+  quote TEXT NOT NULL,
+  anonymized BOOLEAN DEFAULT FALSE,
+  verified BOOLEAN DEFAULT FALSE,
+  metadata JSONB,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_testimonials_verified ON testimonials(verified);
+
+CREATE TRIGGER update_testimonials_updated_at
+  BEFORE UPDATE ON testimonials
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+

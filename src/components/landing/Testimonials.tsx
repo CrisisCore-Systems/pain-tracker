@@ -75,7 +75,7 @@ export const Testimonials: React.FC = () => {
           {/* Consent & verification note */}
           <p className="text-sm text-muted-foreground mt-3 max-w-xl mx-auto">
             We only publish verified testimonials with explicit consent. If you'd like to share your story with
-            us, <a href="mailto:share@paintracker.ca" className="text-primary hover:underline">submit a story →</a> and we will
+            us, <a href="/submit-story" className="text-primary hover:underline">submit a story →</a> and we will
             follow up for permission to publish or anonymize your contribution.
           </p>
         </div>
