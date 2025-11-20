@@ -36,9 +36,7 @@ export default async function handler(
 ): Promise<void> {
   // Re-initialize Stripe per-request so the latest env var is used and we can log a diagnostic
   const rawKey = process.env.STRIPE_SECRET_KEY || '';
-  const keyMode = rawKey.startsWith('sk_live_') ? 'live' : rawKey.startsWith('sk_test_') ? 'test' : 'unknown';
-  const keySuffix = rawKey ? rawKey.slice(-4) : 'NONE';
-  console.log(`[DIAG] STRIPE_KEY mode=${keyMode} suffix=****${keySuffix}`);
+  // Re-initialize Stripe with the current env var
   const stripe = new Stripe(rawKey, { apiVersion: '2025-10-29.clover' });
   // Only allow POST requests
   if (req.method !== 'POST') {
