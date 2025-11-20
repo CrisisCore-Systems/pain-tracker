@@ -71,9 +71,16 @@ export const Testimonials: React.FC = () => {
           <p className="text-lg text-muted-foreground">
             Real stories from people managing chronic pain and healthcare professionals providing care.
           </p>
+
+          {/* Consent & verification note */}
+          <p className="text-sm text-muted-foreground mt-3 max-w-xl mx-auto">
+            We only publish verified testimonials with explicit consent. If you'd like to share your story with
+            us, <a href="mailto:share@paintracker.ca" className="text-primary hover:underline">submit a story →</a> and we will
+            follow up for permission to publish or anonymize your contribution.
+          </p>
         </div>
 
-        {/* Testimonials Grid */}
+  {/* Testimonials Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
           {testimonials.map((testimonial, index) => (
             <Card
@@ -112,6 +119,8 @@ export const Testimonials: React.FC = () => {
                   <div className="min-w-0 flex-1">
                     <div className="font-semibold text-sm truncate">{testimonial.name}</div>
                     <div className="text-xs text-muted-foreground truncate">{testimonial.role}</div>
+                    {/* Verification Tag */}
+                    <div className="text-xs text-muted-foreground mt-1">Verified</div>
                   </div>
                 </div>
               </CardHeader>
