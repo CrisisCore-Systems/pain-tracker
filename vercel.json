@@ -10,16 +10,6 @@
       "destination": "/api/$1"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/stripe/create-checkout-session",
-      "dest": "/api/stripe/create-checkout-session.ts"
-    },
-    {
-      "src": "/api/stripe/webhook",
-      "dest": "/api/stripe/webhook.ts"
-    }
-  ],
   "functions": {
     "api/**/*.ts": {
       "runtime": "@vercel/node@3.2.18"
