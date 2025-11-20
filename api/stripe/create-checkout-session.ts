@@ -8,12 +8,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
 
-// Initialize Stripe with secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  // Use the newer Stripe API version for future-proofing; adjust if incompatible
-  apiVersion: '2025-10-29.clover',
-});
-
 // Price IDs from Stripe dashboard (set these in environment variables)
 const PRICE_IDS = {
   basic_monthly: process.env.STRIPE_PRICE_BASIC_MONTHLY || '',
@@ -40,6 +34,12 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> {
+  // Re-initialize Stripe per-request so the latest env var is used and we can log a diagnostic
+  const rawKey = process.env.STRIPE_SECRET_KEY || '';
+  const keyMode = rawKey.startsWith('sk_live_') ? 'live' : rawKey.startsWith('sk_test_') ? 'test' : 'unknown';
+  const keySuffix = rawKey ? rawKey.slice(-4) : 'NONE';
+  console.log(`[DIAG] STRIPE_KEY mode=${keyMode} suffix=****${keySuffix}`);
+  const stripe = new Stripe(rawKey, { apiVersion: '2025-10-29.clover' });
   // Only allow POST requests
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
