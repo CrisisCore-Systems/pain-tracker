@@ -11,7 +11,10 @@
     }
   ],
   "functions": {
-    "api/**/*.ts": {
+    "api/stripe/**/*.ts": {
+      "runtime": "@vercel/node@3.2.18"
+    },
+    "api/health/**/*.ts": {
       "runtime": "@vercel/node@3.2.18"
     }
   }
