@@ -17,7 +17,7 @@
     "dev:api:test": "tsx scripts/api-dev-server.js --test",
     "dev:webhook": "node scripts/webhook-dev-server.js",
     "dev:full": "concurrently --names \"VITE,WEBHOOK\" --prefix-colors \"cyan,magenta\" \"npm run dev\" \"npm run dev:webhook\"",
-    "build": "node_modules/.bin/vite build",
+    "build": "vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 500",
     "preview": "vite preview",
     "test": "vitest",
