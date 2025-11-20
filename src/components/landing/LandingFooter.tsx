@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Github, Heart, Shield, Activity, Stethoscope, Mail, ArrowRight } from 'lucide-react';
+import { Github, Heart, Shield, Activity, Mail, ArrowRight } from 'lucide-react';
 import { Button } from '../../design-system/components/Button';
 
 export const LandingFooter: React.FC = () => {
@@ -25,21 +25,20 @@ export const LandingFooter: React.FC = () => {
                 onClick={() => navigate('/start')}
                 className="gap-2 text-base sm:text-lg px-6 sm:px-8 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 w-full sm:w-auto whitespace-nowrap"
               >
-                <span>Start as Patient</span>
+                <span>Start Free Trial</span>
                 <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => navigate('/clinic')}
+                onClick={() => navigate('/pricing')}
                 className="gap-2 text-base sm:text-lg px-6 sm:px-8 border-2 w-full sm:w-auto whitespace-nowrap"
               >
-                <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                <span>Clinician Login</span>
+                <span>View Pricing</span>
               </Button>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground px-2 break-words">
-              No credit card • No account required • 100% free forever
+              Start with 50 free entries • Upgrade for unlimited tracking • No credit card required
             </p>
           </div>
         </div>
@@ -81,6 +80,14 @@ export const LandingFooter: React.FC = () => {
           <div className="space-y-4">
             <h3 className="font-semibold text-sm">Resources</h3>
             <ul className="space-y-3 text-sm">
+              <li>
+                <button
+                  onClick={() => navigate('/pricing')}
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Pricing Plans
+                </button>
+              </li>
               <li>
                 <a
                   href="https://github.com/CrisisCore-Systems/pain-tracker"

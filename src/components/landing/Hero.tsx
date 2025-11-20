@@ -20,6 +20,16 @@ export const Hero: React.FC = () => {
 
             {/* Navigation Actions */}
             <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-shrink-0">
+              {/* Pricing Link */}
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/pricing')}
+                className="hidden lg:flex gap-1.5 sm:gap-2 px-2 sm:px-3"
+                aria-label="View pricing plans"
+              >
+                <span className="text-sm">Pricing</span>
+              </Button>
+
               {/* Returning User */}
               <Button
                 variant="ghost"
@@ -105,29 +115,28 @@ export const Hero: React.FC = () => {
                 className="text-base sm:text-lg px-6 sm:px-8 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 w-full sm:w-auto whitespace-nowrap"
                 aria-label="Start tracking your pain as a patient"
               >
-                <span>Start as Patient</span>
+                <span>Start Free Trial</span>
                 <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               </Button>
 
-              {/* Clinician CTA */}
+              {/* Pricing CTA */}
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => navigate('/clinic')}
-                className="text-base sm:text-lg px-6 sm:px-8 border-2 hover:bg-blue-50 dark:hover:bg-blue-950 w-full sm:w-auto whitespace-nowrap"
+                onClick={() => navigate('/pricing')}
+                className="text-base sm:text-lg px-6 sm:px-8 border-2 hover:bg-primary/5 w-full sm:w-auto whitespace-nowrap"
               >
-                <Stethoscope className="mr-2 h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-                <span>Clinician Login</span>
+                <span>View Pricing</span>
               </Button>
             </div>
 
             {/* Trust Line */}
             <div className="space-y-1.5 text-xs sm:text-sm text-muted-foreground">
               <p className="break-words">
-                🏥 <strong className="font-semibold">For Patients:</strong> <span className="inline-flex flex-wrap gap-1">No account required • Works offline • Export to providers</span>
+                ✨ <strong className="font-semibold">Start Free:</strong> <span className="inline-flex flex-wrap gap-1">50 entries • Basic analytics • No credit card • Upgrade anytime</span>
               </p>
               <p className="break-words">
-                👨‍⚕️ <strong className="font-semibold">For Clinicians:</strong> <span className="inline-flex flex-wrap gap-1">AI insights • One-click WCB reports • Real-time monitoring</span>
+                👨‍⚕️ <strong className="font-semibold">For Clinicians:</strong> <span className="inline-flex flex-wrap gap-1">AI insights • WCB reports • Real-time monitoring • <button onClick={() => navigate('/pricing')} className="text-primary hover:underline">View plans →</button></span>
               </p>
             </div>
           </div>
