@@ -34,6 +34,8 @@ import { ToneStateTester } from './components/dev/ToneStateTester';
 import { ScreenshotShowcase } from './pages/ScreenshotShowcase';
 import { LandingPage } from './pages/LandingPage';
 import { ClinicPortal } from './pages/clinic/ClinicPortal';
+import { PricingPage } from './pages/PricingPage';
+import { SubscriptionManagementPage } from './pages/SubscriptionManagementPage';
 
 const ErrorFallback = () => {
   return (
@@ -133,15 +135,34 @@ function App() {
                     {/* Landing Page - Public */}
                     <Route path="/" element={<LandingPage />} />
 
+                    {/* Pricing Page - Public */}
+                    <Route path="/pricing" element={<PricingPage />} />
+
                     {/* Screenshot Showcase - Public */}
                     <Route path="/demo/*" element={<ScreenshotShowcase />} />
 
+                    {/* Clinic Portal - Protected (separate UI/UX) */}
+                    <Route path="/clinic/*" element={<ClinicPortal />} />
+
+                    {/* Subscription Management - Protected */}
+                    <Route
+                      path="/subscription"
+                      element={
+                        <VaultGate>
+                          <SubscriptionManagementPage />
+                        </VaultGate>
+                      }
+                    />
+
                     {/* Vault Setup/Login - Public */}
-                    <Route path="/start" element={
-                      <VaultGate>
-                        <Navigate to="/app" replace />
-                      </VaultGate>
-                    } />
+                    <Route
+                      path="/start"
+                      element={
+                        <VaultGate>
+                          <Navigate to="/app" replace />
+                        </VaultGate>
+                      }
+                    />
 
                     {/* Main Application - Protected */}
                     <Route path="/app" element={

@@ -99,38 +99,89 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
 
   const checkSession = async () => {
     try {
-      // Check for stored session token
-      const sessionToken = localStorage.getItem('clinic_session_token');
+      // Check for stored tokens
+      const accessToken = localStorage.getItem('clinic_access_token');
+      const userData = localStorage.getItem('clinic_user_data');
       
-      if (!sessionToken) {
+      if (!accessToken || !userData) {
         setAuthState(prev => ({ ...prev, isLoading: false }));
         return;
       }
 
-      // Validate session with backend
-      // For now, decode stored user data (in production, validate with API)
-      const userData = localStorage.getItem('clinic_user_data');
-      
-      if (userData) {
-        const user = JSON.parse(userData) as ClinicUser;
-        
-        // Log session restoration
+      // Verify token with backend
+      const response = await fetch('/api/clinic/auth/verify', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success && data.valid && data.user) {
+        // Session is still valid
         await hipaaComplianceService.logAuditEvent({
           actionType: 'read',
           resourceType: 'Session',
-          userId: user.id,
-          userRole: user.role,
+          userId: data.user.id,
+          userRole: data.user.role,
           outcome: 'success',
           details: { action: 'session_restored' }
         });
 
         setAuthState({
-          user,
+          user: data.user,
           isAuthenticated: true,
           isLoading: false,
           error: null
         });
       } else {
+        // Token invalid or expired, try refresh
+        const refreshToken = localStorage.getItem('clinic_refresh_token');
+        
+        if (refreshToken) {
+          try {
+            const refreshResponse = await fetch('/api/clinic/auth/refresh', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ refreshToken })
+            });
+
+            const refreshData = await refreshResponse.json();
+
+            if (refreshResponse.ok && refreshData.success && refreshData.accessToken) {
+              // Update access token
+              localStorage.setItem('clinic_access_token', refreshData.accessToken);
+              
+              // Try verification again
+              const retryResponse = await fetch('/api/clinic/auth/verify', {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${refreshData.accessToken}`
+                }
+              });
+
+              const retryData = await retryResponse.json();
+
+              if (retryResponse.ok && retryData.success && retryData.valid && retryData.user) {
+                setAuthState({
+                  user: retryData.user,
+                  isAuthenticated: true,
+                  isLoading: false,
+                  error: null
+                });
+                return;
+              }
+            }
+          } catch (refreshError) {
+            console.error('Token refresh failed:', refreshError);
+          }
+        }
+
+        // If we get here, session restoration failed
+        localStorage.removeItem('clinic_access_token');
+        localStorage.removeItem('clinic_refresh_token');
+        localStorage.removeItem('clinic_user_data');
         setAuthState(prev => ({ ...prev, isLoading: false }));
       }
     } catch (error) {
@@ -139,64 +190,48 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
     }
   };
 
-  const login = async (email: string, _password: string) => {
+  const login = async (email: string, password: string) => {
     setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      // In production, this would call your authentication API
-      // For now, we'll simulate authentication
-      
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/clinic/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password: _password })
-      // });
-      
-      // Simulated authentication (REMOVE IN PRODUCTION)
-      const mockUser: ClinicUser = {
-        id: `clinic-${Date.now()}`,
-        email,
-        name: email.split('@')[0].replace('.', ' ').split(' ')
-          .map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-        role: email.includes('admin') ? 'admin' : 
-              email.includes('nurse') ? 'nurse' :
-              email.includes('research') ? 'researcher' : 'physician',
-        licenseNumber: 'BC-12345',
-        specialty: 'Pain Medicine',
-        npiNumber: '1234567890',
-        organizationId: 'org-001',
-        organizationName: 'Pain Management Clinic',
-        permissions: ROLE_PERMISSIONS[
-          email.includes('admin') ? 'admin' : 
-          email.includes('nurse') ? 'nurse' :
-          email.includes('research') ? 'researcher' : 'physician'
-        ],
-        lastLogin: new Date().toISOString()
-      };
+      // Call backend authentication API
+      const response = await fetch('/api/clinic/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email, 
+          password,
+          deviceName: navigator.userAgent.includes('Mobile') ? 'Mobile Device' : 'Desktop'
+        })
+      });
 
-      // Store session (in production, use secure httpOnly cookies)
-      const sessionToken = `session_${Date.now()}_${Math.random().toString(36)}`;
-      localStorage.setItem('clinic_session_token', sessionToken);
-      localStorage.setItem('clinic_user_data', JSON.stringify(mockUser));
+      const data = await response.json();
 
-      // Log successful login
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Login failed');
+      }
+
+      // Store tokens
+      localStorage.setItem('clinic_access_token', data.accessToken);
+      localStorage.setItem('clinic_refresh_token', data.refreshToken);
+      localStorage.setItem('clinic_user_data', JSON.stringify(data.user));
+
+      // Log successful login (backend already logged this, but we log client-side too)
       await hipaaComplianceService.logAuditEvent({
         actionType: 'login',
         resourceType: 'Session',
-        userId: mockUser.id,
-        userRole: mockUser.role,
+        userId: data.user.id,
+        userRole: data.user.role,
         outcome: 'success',
         details: { 
-          action: 'login',
-          email: mockUser.email,
-          role: mockUser.role,
-          ip: 'client_ip' // In production, get from server
+          action: 'login_client',
+          email: data.user.email,
+          role: data.user.role,
         }
       });
 
       setAuthState({
-        user: mockUser,
+        user: data.user,
         isAuthenticated: true,
         isLoading: false,
         error: null
@@ -212,7 +247,7 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
         userRole: 'unknown',
         outcome: 'failure',
         details: { 
-          action: 'login_failed',
+          action: 'login_failed_client',
           email,
           error: errorMessage
         }
@@ -224,6 +259,8 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
         isLoading: false,
         error: errorMessage
       });
+      
+      throw error;
     }
   };
 
@@ -231,8 +268,23 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
     const currentUser = authState.user;
 
     try {
-      // Clear session
-      localStorage.removeItem('clinic_session_token');
+      // Call backend logout API
+      const accessToken = localStorage.getItem('clinic_access_token');
+      
+      if (accessToken) {
+        await fetch('/api/clinic/auth/logout', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+          },
+          body: JSON.stringify({ revokeAllSessions: false })
+        });
+      }
+
+      // Clear local session
+      localStorage.removeItem('clinic_access_token');
+      localStorage.removeItem('clinic_refresh_token');
       localStorage.removeItem('clinic_user_data');
 
       // Log logout
@@ -243,7 +295,7 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
           userId: currentUser.id,
           userRole: currentUser.role,
           outcome: 'success',
-          details: { action: 'logout' }
+          details: { action: 'logout_client' }
         });
       }
 
@@ -255,7 +307,11 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
       });
     } catch (error) {
       console.error('Logout error:', error);
-      // Force logout even if logging fails
+      // Force logout even if API call fails
+      localStorage.removeItem('clinic_access_token');
+      localStorage.removeItem('clinic_refresh_token');
+      localStorage.removeItem('clinic_user_data');
+      
       setAuthState({
         user: null,
         isAuthenticated: false,

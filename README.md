@@ -114,7 +114,16 @@ Pain Tracker offers **clinical-grade fibromyalgia support** built on ACR 2016 Re
 - ✅ **Evidence-Based Metrics**: Validated pain assessment scales integrated
 - ✅ **Treatment Correlation**: Comprehensive outcome tracking and intervention analysis
 
-### 🔒 **Security Architecture**
+### � **SaaS Subscription System**
+- ✅ **Four Pricing Tiers**: Free, Basic ($9.99/mo), Pro ($24.99/mo), Enterprise (Custom)
+- ✅ **Stripe Integration**: Complete checkout flow, webhooks, and subscription management
+- ✅ **Feature Gating**: Intelligent conditional rendering based on subscription tier
+- ✅ **Usage Tracking**: Real-time quota monitoring with warnings at 80% limits
+- ✅ **Trial Management**: 14-30 day free trials with automatic conversion
+- ✅ **Subscription Portal**: User-facing management interface for upgrades/downgrades/cancellations
+- 🎯 **[Complete SaaS Documentation](docs/SAAS_SETUP_GUIDE.md)**
+
+### �🔒 **Security Architecture**
 - ✅ **Local-First Data**: IndexedDB storage with selective encryption (AES-GCM helpers implemented)
 - ✅ **Enterprise Hardening**: Active CSP headers, SAST pipelines, and secret scanning
 - ✅ **Threat Modeling**: Continuous security assessment with automated scanning
