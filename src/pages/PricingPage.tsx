@@ -5,25 +5,66 @@
 
 import React, { useState } from 'react';
 import { Check, X, TrendingUp, Crown, Star, Users } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useSubscription } from '../contexts/SubscriptionContext';
 import { SUBSCRIPTION_PLANS, FEATURE_COMPARISON } from '../config/subscription-tiers';
 import type { SubscriptionTier } from '../types/subscription';
 import { TierBadge } from '../components/subscription/FeatureGates';
+import { useVaultStatus } from '../hooks/useVault';
+import { createCheckoutSession, getTierForCheckout } from '../utils/stripe-checkout';
 
 export const PricingPage: React.FC = () => {
-  const { currentTier, upgradeTier } = useSubscription();
+  const { currentTier } = useSubscription();
+  const vaultStatus = useVaultStatus();
+  const navigate = useNavigate();
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   const [isUpgrading, setIsUpgrading] = useState(false);
 
   const handleUpgrade = async (tier: SubscriptionTier) => {
     setIsUpgrading(true);
     try {
-      await upgradeTier(tier);
-      // In a real app, redirect to payment provider or confirmation page
-      alert(`Upgrading to ${tier} plan...`);
+      // Check if user is authenticated
+      if (vaultStatus.state !== 'unlocked') {
+        // Redirect to login/setup page
+        alert('Please sign in or create an account to subscribe.');
+        navigate('/start?redirect=/pricing');
+        return;
+      }
+
+      // Free tier doesn't need payment
+      if (tier === 'free') {
+        alert('You are already on the Free plan!');
+        return;
+      }
+
+      // Enterprise requires contacting sales
+      if (tier === 'enterprise') {
+        alert('Please contact sales@paintracker.ca for Enterprise plans.');
+        return;
+      }
+
+      // Get tier for checkout (basic or pro)
+      const checkoutTier = getTierForCheckout(tier);
+      if (!checkoutTier) {
+        throw new Error('Invalid tier for checkout');
+      }
+
+      // Get user ID - generate a unique ID based on vault creation time
+      // TODO: Replace with actual user ID from authentication system
+      const userId = vaultStatus.metadata?.createdAt 
+        ? `vault-${vaultStatus.metadata.createdAt.replace(/[^0-9]/g, '').substring(0, 13)}`
+        : `user-${Date.now()}`;
+
+      // Redirect to Stripe Checkout
+      await createCheckoutSession({
+        userId,
+        tier: checkoutTier,
+        interval: billingInterval,
+      });
+
     } catch (err) {
       console.error('Upgrade failed:', err);
-      alert('Upgrade failed. Please try again.');
+      alert('Failed to start checkout. Please try again.');
     } finally {
       setIsUpgrading(false);
     }
