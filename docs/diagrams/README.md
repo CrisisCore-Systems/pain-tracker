@@ -81,13 +81,32 @@ All diagrams follow these principles:
 
 ## Usage
 
+These diagrams are available in both **SVG** (vector) and **PNG** (raster) formats:
+
+- **SVG**: Scalable, lightweight, perfect for web and documentation (recommended)
+- **PNG**: High-resolution raster images for presentations, social media, and print
+
+### SVG vs PNG: When to Use Which
+
+**Use SVG when:**
+- Embedding in websites and GitHub markdown
+- Need perfect scaling at any size
+- Want smaller file sizes
+- Supporting modern browsers
+
+**Use PNG when:**
+- Creating presentations (PowerPoint, Keynote)
+- Posting on social media
+- Email newsletters or attachments
+- Need guaranteed compatibility across all platforms
+
 These SVG diagrams can be embedded in:
 - Markdown files (GitHub, documentation sites)
 - HTML pages
 - Presentations
 - Print materials
 
-**Example Markdown Embedding**:
+**Example Markdown Embedding (SVG)**:
 ```markdown
 <!-- Recommended: Architectural diagram -->
 ![Architectural Data Flow](docs/diagrams/architectural-data-flow.svg)
@@ -99,15 +118,36 @@ These SVG diagrams can be embedded in:
 ![Data Flow Comparison](docs/diagrams/data-flow-comparison.svg)
 ```
 
+**Example Markdown Embedding (PNG)**:
+```markdown
+<!-- PNG versions for better compatibility -->
+![Architectural Data Flow](docs/diagrams/architectural-data-flow.png)
+![Privacy-First Data Flow](docs/diagrams/privacy-first-flow.png)
+![Data Flow Comparison](docs/diagrams/data-flow-comparison.png)
+```
+
 **Example HTML Embedding**:
 ```html
-<!-- Recommended: Architectural diagram -->
+<!-- SVG (recommended for web) -->
 <img src="docs/diagrams/architectural-data-flow.svg" alt="Architectural Data Flow" width="1200" />
+
+<!-- PNG (for maximum compatibility) -->
+<img src="docs/diagrams/architectural-data-flow.png" alt="Architectural Data Flow" width="1400" />
 
 <!-- Alternative diagrams -->
 <img src="docs/diagrams/privacy-first-flow.svg" alt="Privacy-First Data Flow" width="800" />
 <img src="docs/diagrams/data-flow-comparison.svg" alt="Data Flow Comparison" width="1000" />
 ```
+
+## Regenerating PNG Files
+
+If you modify any SVG diagrams, regenerate the PNG versions:
+
+```bash
+npm run diagrams:svg-to-png
+```
+
+This will convert all SVG diagrams in `docs/diagrams/` to high-resolution PNG files.
 
 ## Editing
 
