@@ -278,6 +278,21 @@ async function captureScreenshot(page, screenshot, outputDir) {
         await page.waitForTimeout(1000);
       }
       
+      // SPECIAL HANDLING: Open settings panel for accessibility-settings-panel screenshot
+      if (screenshot.id === 'accessibility-settings-panel') {
+        console.log('   ⚙️  Opening accessibility settings panel...');
+        
+        // Try to find and click the settings button
+        const settingsButton = await page.$('button[aria-label="Settings"], button:has-text("Settings"), a[href*="settings"]');
+        if (settingsButton) {
+          await settingsButton.click();
+          await page.waitForTimeout(2000);
+          console.log('   ✓ Settings panel opened');
+        } else {
+          console.log('   ⚠️  Could not find settings button');
+        }
+      }
+      
       console.log('   ✓ App ready for screenshot');
       
     } else {
@@ -440,6 +455,53 @@ async function captureAccessibilityScreenshots() {
       } else {
         console.log('   ✓ Vault already unlocked\n');
       }
+    }
+    
+    // DISMISS WELCOME MODAL: Close any welcome/onboarding screens
+    console.log('👋 Dismissing welcome screens...\n');
+    await page.waitForTimeout(2000);
+    
+    // Try to click "Skip" button
+    const skipButton = await page.$('button:has-text("Skip")');
+    if (skipButton) {
+      console.log('   Clicking "Skip" button');
+      await skipButton.click();
+      await page.waitForTimeout(1000);
+    }
+    
+    // Try to click "Skip Tour" button
+    const skipTourButton = await page.$('button:has-text("Skip Tour")');
+    if (skipTourButton) {
+      console.log('   Clicking "Skip Tour" button');
+      await skipTourButton.click();
+      await page.waitForTimeout(1000);
+    }
+    
+    // Try to click "Get Started" button
+    const getStartedButton = await page.$('button:has-text("Get Started")');
+    if (getStartedButton) {
+      console.log('   Clicking "Get Started" button');
+      await getStartedButton.click();
+      await page.waitForTimeout(1000);
+    }
+    
+    // Close any remaining modals by clicking close buttons
+    const closeButtons = await page.$$('button[aria-label="Close"], button:has-text("×"), button:has-text("Close")');
+    for (const closeButton of closeButtons) {
+      try {
+        await closeButton.click();
+        await page.waitForTimeout(500);
+      } catch (e) {
+        // Ignore if button is not clickable
+      }
+    }
+    
+    // Verify we're now on the main app screen
+    try {
+      await page.waitForSelector('main, [role="main"], .pain-tracker-dashboard', { timeout: 5000 });
+      console.log('   ✓ Welcome screens dismissed, app ready\n');
+    } catch (e) {
+      console.log('   ⚠️  Could not verify app is ready\n');
     }
 
     // Get filtered screenshots
