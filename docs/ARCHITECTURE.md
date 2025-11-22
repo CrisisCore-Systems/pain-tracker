@@ -1,6 +1,6 @@
 # Pain Tracker – Architecture Overview
 
-_Last updated: 2025-11-13_
+_Last updated: 2025-11-22_
 
 ## 1. Purpose
 
@@ -10,6 +10,24 @@ All data stays on the user's device. No backend. No analytics. No dark patterns.
 ---
 
 ## 2. High-Level Architecture
+
+### Privacy-First Data Flow
+
+Our architecture ensures your health data never leaves your device without your explicit action:
+
+<p align="center">
+  <img src="diagrams/privacy-first-flow.svg" alt="Privacy-First Data Flow" width="600" />
+</p>
+
+**Key Principles:**
+- **Local-First**: All data storage happens exclusively in the browser's IndexedDB
+- **Zero-Knowledge**: Client-side encryption means we never have access to your data
+- **User-Controlled**: Only YOU decide when to export data for clinical or claims purposes
+- **No Third Parties**: No cloud servers, no analytics, no data sharing, no tracking
+
+[View detailed comparison with traditional health apps →](diagrams/data-flow-comparison.svg)
+
+### Technical Stack
 
 - **Client**: React 18 + TypeScript
 - **State Management**: Zustand (+ Immer)

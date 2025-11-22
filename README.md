@@ -98,6 +98,40 @@ Pain Tracker offers **clinical-grade fibromyalgia support** built on ACR 2016 Re
 
 ---
 
+## 🔒 **Privacy-First Architecture**
+
+Pain Tracker is designed with **your privacy as the foundation**, not an afterthought. Unlike traditional health apps that upload your data to corporate servers, we use a **local-first, zero-knowledge architecture**.
+
+<p align="center">
+  <img src="docs/diagrams/privacy-first-flow.svg" alt="Privacy-First Data Flow" style="max-width: 100%; height: auto;" />
+</p>
+
+### How Your Data Stays Private
+
+**Your Device → Local Encryption → User-Controlled Export**
+
+1. **🖥️ 100% Local Storage**: All your health data stays on YOUR device, encrypted in your browser's IndexedDB
+2. **🔐 Zero-Knowledge Encryption**: AES-GCM encryption with client-side keys—we can't access your data even if we wanted to
+3. **📤 You Control Exports**: Only YOU decide when to export reports for WorkSafe BC or healthcare providers
+4. **❌ No Corporate Servers**: No cloud upload, no third-party sharing, no data mining, no tracking
+
+<details>
+<summary><strong>📊 See How We Compare to Traditional Health Apps</strong></summary>
+
+<p align="center">
+  <img src="docs/diagrams/data-flow-comparison.svg" alt="Data Flow Comparison" style="max-width: 100%; height: auto;" />
+</p>
+
+**The Difference:**
+- **Traditional Apps**: Automatically upload your health data to corporate servers → Shared with advertisers, insurance companies, and data brokers → Used for AI training and sold without your explicit consent
+- **Pain Tracker**: Data never leaves your device → You manually export ONLY when needed → No third-party access, ever
+
+</details>
+
+**[Read More About Our Security →](docs/ARCHITECTURE.md)** | **[Security Policy →](.github/SECURITY.md)**
+
+---
+
 ## 🌟 **Core Features**
 
 ### 📊 **Advanced Pain Analytics**
