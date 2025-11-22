@@ -4,12 +4,37 @@ This directory contains visual diagrams illustrating Pain Tracker's privacy-firs
 
 ## Available Diagrams
 
-### 1. Privacy-First Flow (`privacy-first-flow.svg`)
+### 1. Architectural Data Flow (`architectural-data-flow.svg`) ⭐ **RECOMMENDED**
 
-**Purpose**: Illustrates how Pain Tracker keeps your data secure and private on your device.
+**Purpose**: Comprehensive architectural diagram showing Pain Tracker's complete privacy-first data flow contrasted with traditional health apps.
 
 **Use Cases**:
-- Marketing and landing pages
+- **Primary marketing diagram** for landing pages and presentations
+- Technical documentation and architecture reviews
+- Privacy policy and security communications
+- User education and onboarding materials
+
+**Top Flow (Pain Tracker - Privacy-First)**:
+- 📱 **Smartphone with Shield**: Your device with built-in security
+- 🔐 **Local Encryption Layer**: AES-GCM encryption, IndexedDB storage, zero-knowledge architecture
+- 📤 **User-Controlled Export**: Manual exports for WorkSafe BC, PDF clinical reports, CSV data
+- 🤝 **Explicit Sharing Choice**: You decide when and where to share (doctor, WorkSafe BC, or keep private)
+
+**Bottom Flow (Traditional Apps - Crossed Out)**:
+- ❌ Device auto-upload → Corporate servers → Data mining → Third-party sharing
+- Giant red X across entire flow emphasizing what we DON'T do
+
+**Visual Features**:
+- Side-by-side comparison in a single comprehensive view
+- Clear color coding (green=secure, purple=export, orange=choice, red=danger)
+- Professional layout suitable for technical and non-technical audiences
+
+### 2. Privacy-First Flow (`privacy-first-flow.svg`)
+
+**Purpose**: Vertical flow diagram illustrating how Pain Tracker keeps your data secure and private on your device.
+
+**Use Cases**:
+- Simplified privacy explanations
 - User documentation
 - Privacy policy illustrations
 - Educational content about data security
@@ -20,7 +45,7 @@ This directory contains visual diagrams illustrating Pain Tracker's privacy-firs
 - 📤 **User-Controlled Export**: Manual exports only for WorkSafe BC and clinical reports
 - ❌ **What We DON'T Do**: No corporate servers, third-party sharing, data mining, or tracking
 
-### 2. Data Flow Comparison (`data-flow-comparison.svg`)
+### 3. Data Flow Comparison (`data-flow-comparison.svg`)
 
 **Purpose**: Side-by-side comparison of Pain Tracker's privacy-first approach versus traditional health apps.
 
@@ -64,12 +89,24 @@ These SVG diagrams can be embedded in:
 
 **Example Markdown Embedding**:
 ```markdown
+<!-- Recommended: Architectural diagram -->
+![Architectural Data Flow](docs/diagrams/architectural-data-flow.svg)
+
+<!-- Alternative: Vertical flow -->
 ![Privacy-First Data Flow](docs/diagrams/privacy-first-flow.svg)
+
+<!-- Alternative: Side-by-side comparison -->
+![Data Flow Comparison](docs/diagrams/data-flow-comparison.svg)
 ```
 
 **Example HTML Embedding**:
 ```html
+<!-- Recommended: Architectural diagram -->
+<img src="docs/diagrams/architectural-data-flow.svg" alt="Architectural Data Flow" width="1200" />
+
+<!-- Alternative diagrams -->
 <img src="docs/diagrams/privacy-first-flow.svg" alt="Privacy-First Data Flow" width="800" />
+<img src="docs/diagrams/data-flow-comparison.svg" alt="Data Flow Comparison" width="1000" />
 ```
 
 ## Editing
