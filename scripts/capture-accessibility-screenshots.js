@@ -214,9 +214,16 @@ async function captureScreenshot(page, screenshot, outputDir) {
             if (createButton) {
               await createButton.click();
               
-              // Wait for vault to be created and unlocked
-              await page.waitForTimeout(3000);
-              console.log('   ✓ Testing account created and unlocked');
+              // Wait for vault to be created and unlocked, and for main app to load
+              await page.waitForTimeout(5000);
+              
+              // Wait for the main app content to appear
+              try {
+                await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 10000 });
+                console.log('   ✓ Testing account created and app loaded');
+              } catch (e) {
+                console.log('   ✓ Testing account created');
+              }
             }
           }
         } catch (error) {
@@ -225,44 +232,40 @@ async function captureScreenshot(page, screenshot, outputDir) {
         }
       } else {
         console.log('   ✓ Testing account already exists');
+        
+        // If vault exists but is locked, we might need to unlock it
+        // For now, we'll just wait and see if it auto-unlocks
+        await page.waitForTimeout(2000);
       }
       
       // Set accessibility preferences
       await applyAccessibilityPreferences(page, screenshot.preferences);
       console.log('   ✓ Accessibility preferences set');
       
-      // Reload to apply preferences
+      // Reload to apply preferences - stay on current page
       await page.reload({ waitUntil: 'networkidle' });
-      await page.waitForTimeout(2000);
-    }
-
-    // Navigate to URL
-    if (screenshot.url) {
-      const baseUrl = 'http://localhost:3000';
-      const fullUrl = screenshot.url.startsWith('http')
-        ? screenshot.url
-        : `${baseUrl}${screenshot.url}`;
-
-      console.log(`   Navigating to: ${fullUrl}`);
+      await page.waitForTimeout(3000);
       
-      await page.goto(fullUrl, {
-        waitUntil: 'networkidle',
-        timeout: 30000
-      });
+      // Don't navigate again since we're already on /app
+      console.log('   ✓ App ready for screenshot');
+      
+    } else {
+      // If no preferences, just navigate to the URL normally
+      if (screenshot.url) {
+        const baseUrl = 'http://localhost:3000';
+        const fullUrl = screenshot.url.startsWith('http')
+          ? screenshot.url
+          : `${baseUrl}${screenshot.url}`;
 
-      // Wait for the React app to load - try multiple selectors
-      try {
-        await page.waitForSelector('main, [role="main"], .pain-tracker-app, #root > div', {
-          timeout: 10000
+        console.log(`   Navigating to: ${fullUrl}`);
+        
+        await page.goto(fullUrl, {
+          waitUntil: 'networkidle',
+          timeout: 30000
         });
-        console.log('   ✓ App loaded');
-      } catch (e) {
-        console.log('   ⚠️  Main app selector not found, waiting for any content...');
+
         await page.waitForTimeout(2000);
       }
-
-      // Additional wait for React hydration and routing
-      await page.waitForTimeout(3000);
     }
 
     // Wait for any animations to complete
