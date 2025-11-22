@@ -214,15 +214,29 @@ async function captureScreenshot(page, screenshot, outputDir) {
             if (createButton) {
               await createButton.click();
               
-              // Wait for vault to be created and unlocked, and for main app to load
-              await page.waitForTimeout(5000);
+              // LONGER WAIT: Wait for vault to be created, encrypted, and unlocked
+              // This involves cryptographic operations that can take time
+              await page.waitForTimeout(8000);
               
               // Wait for the main app content to appear
               try {
-                await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 10000 });
+                await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 15000 });
                 console.log('   ✓ Testing account created and app loaded');
+                
+                // Verify vault is actually unlocked
+                const isUnlocked = await page.evaluate(() => {
+                  const vaultMeta = localStorage.getItem('vault:metadata');
+                  return vaultMeta !== null;
+                });
+                
+                if (isUnlocked) {
+                  console.log('   ✓ Vault confirmed unlocked');
+                } else {
+                  console.log('   ⚠️  Vault may not be fully initialized');
+                }
               } catch (e) {
-                console.log('   ✓ Testing account created');
+                console.log('   ⚠️  Timeout waiting for app to load after vault creation');
+                console.log('   ℹ️  Continuing anyway...');
               }
             }
           }
@@ -233,9 +247,49 @@ async function captureScreenshot(page, screenshot, outputDir) {
       } else {
         console.log('   ✓ Testing account already exists');
         
-        // If vault exists but is locked, we might need to unlock it
-        // For now, we'll just wait and see if it auto-unlocks
-        await page.waitForTimeout(2000);
+        // If vault exists but is locked, we need to unlock it
+        const isLocked = await page.evaluate(() => {
+          // Check if we see the unlock form
+          const unlockButton = document.querySelector('button:has-text("Unlock vault")');
+          return unlockButton !== null;
+        });
+        
+        if (isLocked) {
+          console.log('   🔓 Vault is locked, unlocking...');
+          const testPassphrase = 'ScreenshotTestingAccount2024!';
+          
+          try {
+            // Wait for the passphrase input
+            await page.waitForSelector('input[type="password"]', { timeout: 5000 });
+            
+            // Fill in the passphrase
+            const passphraseInput = await page.$('input[type="password"]');
+            if (passphraseInput) {
+              await passphraseInput.fill(testPassphrase);
+              
+              // Click unlock button
+              const unlockButton = await page.$('button:has-text("Unlock vault")');
+              if (unlockButton) {
+                await unlockButton.click();
+                
+                // Wait for unlock and app to load
+                await page.waitForTimeout(5000);
+                
+                try {
+                  await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 10000 });
+                  console.log('   ✓ Vault unlocked and app loaded');
+                } catch (e) {
+                  console.log('   ⚠️  Timeout waiting for app after unlock');
+                }
+              }
+            }
+          } catch (error) {
+            console.log(`   ⚠️  Could not auto-unlock vault: ${error.message}`);
+          }
+        } else {
+          console.log('   ✓ Vault already unlocked');
+          await page.waitForTimeout(2000);
+        }
       }
       
       // Set accessibility preferences
@@ -244,7 +298,55 @@ async function captureScreenshot(page, screenshot, outputDir) {
       
       // Reload to apply preferences - stay on current page
       await page.reload({ waitUntil: 'networkidle' });
-      await page.waitForTimeout(3000);
+      
+      // LONGER WAIT: Give React more time to apply preference changes
+      // This is critical for accessibility features to be visible
+      await page.waitForTimeout(5000);
+      
+      // Wait for React hydration and preference application
+      await page.waitForFunction(() => {
+        return document.readyState === 'complete' && 
+               document.querySelector('main, [role="main"]') !== null;
+      }, { timeout: 10000 }).catch(() => {
+        console.log('   ⚠️  Timeout waiting for app ready state');
+      });
+      
+      // Additional wait for CSS transitions and font loading
+      await page.waitForTimeout(2000);
+      
+      // VISUAL VERIFICATION: Check if accessibility preferences were actually applied
+      const verificationResult = await page.evaluate((prefs) => {
+        const root = document.documentElement;
+        const body = document.body;
+        
+        // Check font size
+        const fontSize = root.style.getPropertyValue('--ti-font-size');
+        const expectedFontSizes = { small: '14px', medium: '16px', large: '18px', xl: '20px' };
+        const fontSizeMatch = fontSize === expectedFontSizes[prefs.fontSize];
+        
+        // Check contrast class
+        const contrastClass = `ti-contrast-${prefs.contrast || 'normal'}`;
+        const hasContrastClass = body.classList.contains(contrastClass);
+        
+        // Check simplified mode
+        const hasSimplifiedClass = body.classList.contains('ti-simplified');
+        const simplifiedMatch = prefs.simplifiedMode === hasSimplifiedClass;
+        
+        return {
+          fontSize: fontSize || 'not set',
+          fontSizeMatch,
+          hasContrastClass,
+          hasSimplifiedClass,
+          simplifiedMatch,
+          bodyClasses: Array.from(body.classList).join(', ')
+        };
+      }, screenshot.preferences);
+      
+      console.log(`   🔍 Verification: fontSize=${verificationResult.fontSize}, contrast=${verificationResult.hasContrastClass}, simplified=${verificationResult.hasSimplifiedClass}`);
+      
+      if (!verificationResult.fontSizeMatch || !verificationResult.hasContrastClass) {
+        console.log('   ⚠️  Warning: Some accessibility preferences may not have applied correctly');
+      }
       
       // Don't navigate again since we're already on /app
       console.log('   ✓ App ready for screenshot');
