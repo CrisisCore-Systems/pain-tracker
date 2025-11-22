@@ -116,10 +116,6 @@ async function applyAccessibilityPreferences(page, preferences) {
 
     // Set in localStorage (the app will read this on load)
     localStorage.setItem('trauma-informed-preferences', JSON.stringify(preferencesWithDefaults));
-    
-    // Also disable the vault to bypass the passphrase screen
-    localStorage.setItem('vault-disabled', 'true');
-    localStorage.setItem('skip-vault', 'true');
 
     // Apply CSS custom properties directly
     const root = document.documentElement;
@@ -187,38 +183,57 @@ async function captureScreenshot(page, screenshot, outputDir) {
 
     // Apply accessibility preferences BEFORE navigation to ensure they're set when app loads
     if (screenshot.preferences) {
-      // First, navigate to any page to get a context
-      await page.goto('http://localhost:3000', { waitUntil: 'domcontentloaded' });
+      // Navigate to the app
+      await page.goto('http://localhost:3000/app', { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
       
-      // Set up a simple vault passphrase to bypass the vault gate
-      await page.evaluate(() => {
-        // Create a simple passphrase hash for testing
-        const testPassphrase = 'AccessibilityScreenshotTest2024!';
-        
-        // Set vault as initialized and unlocked
-        const vaultData = {
-          salt: 'test-salt-for-screenshots',
-          hash: 'test-hash-for-screenshots',
-          unlocked: true,
-          lastUnlock: Date.now()
-        };
-        
-        localStorage.setItem('vault-status', JSON.stringify({
-          initialized: true,
-          unlocked: true,
-          lastActivity: Date.now()
-        }));
-        
-        localStorage.setItem('vault-data', JSON.stringify(vaultData));
-        localStorage.setItem('vault-session', 'active');
-        
-        // Also set the skip flags
-        localStorage.setItem('vault-disabled', 'true');
-        localStorage.setItem('skip-vault', 'true');
+      // Check if we need to set up the vault
+      const needsSetup = await page.evaluate(() => {
+        const meta = localStorage.getItem('vault:metadata');
+        return !meta;
       });
       
+      if (needsSetup) {
+        console.log('   🔐 Creating testing user account...');
+        
+        // Fill out the vault setup form
+        const testPassphrase = 'ScreenshotTestingAccount2024!';
+        
+        try {
+          // Wait for the passphrase input to be visible
+          await page.waitForSelector('input[type="password"]', { timeout: 5000 });
+          
+          // Fill in the passphrase fields
+          const passphraseInputs = await page.$$('input[type="password"]');
+          if (passphraseInputs.length >= 2) {
+            await passphraseInputs[0].fill(testPassphrase);
+            await passphraseInputs[1].fill(testPassphrase);
+            
+            // Click the create vault button
+            const createButton = await page.$('button:has-text("Create secure vault")');
+            if (createButton) {
+              await createButton.click();
+              
+              // Wait for vault to be created and unlocked
+              await page.waitForTimeout(3000);
+              console.log('   ✓ Testing account created and unlocked');
+            }
+          }
+        } catch (error) {
+          console.log(`   ⚠️  Could not auto-create vault: ${error.message}`);
+          console.log('   ℹ️  Will attempt to use existing vault or continue anyway');
+        }
+      } else {
+        console.log('   ✓ Testing account already exists');
+      }
+      
+      // Set accessibility preferences
       await applyAccessibilityPreferences(page, screenshot.preferences);
-      console.log('   ✓ Preferences and vault bypass set before navigation');
+      console.log('   ✓ Accessibility preferences set');
+      
+      // Reload to apply preferences
+      await page.reload({ waitUntil: 'networkidle' });
+      await page.waitForTimeout(2000);
     }
 
     // Navigate to URL
