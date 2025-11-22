@@ -1,0 +1,238 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="deviceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="encryptionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="exportGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="dangerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Drop shadows -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="2" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#F9FAFB"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#1F2937">
+    Data Flow: Privacy-First vs. Traditional Apps
+  </text>
+  
+  <!-- Dividing Line -->
+  <line x1="600" y1="70" x2="600" y2="780" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="8,4"/>
+  
+  <!-- LEFT SIDE: Pain Tracker (Privacy-First) -->
+  <text x="300" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#10B981">
+    ✓ Pain Tracker (Privacy-First)
+  </text>
+  
+  <!-- User Device -->
+  <g transform="translate(200, 120)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="url(#deviceGradient)" filter="url(#shadow)"/>
+    <!-- Lock Icon -->
+    <g transform="translate(80, 20)">
+      <rect x="0" y="15" width="40" height="35" rx="5" fill="#FFF" opacity="0.9"/>
+      <path d="M 10,15 L 10,10 Q 10,0 20,0 Q 30,0 30,10 L 30,15" 
+            stroke="#FFF" stroke-width="3" fill="none" opacity="0.9"/>
+      <circle cx="20" cy="30" r="4" fill="#4F46E5"/>
+    </g>
+    <text x="100" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFF">
+      Your Device
+    </text>
+    <text x="100" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#E0E7FF">
+      100% Local Storage
+    </text>
+    <text x="100" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#E0E7FF">
+      No Cloud Upload
+    </text>
+  </g>
+  
+  <!-- Arrow down -->
+  <path d="M 300,270 L 300,310" stroke="#10B981" stroke-width="3" fill="none" marker-end="url(#arrowGreen)"/>
+  <text x="315" y="295" font-family="Arial, sans-serif" font-size="11" fill="#059669">Data flows</text>
+  
+  <!-- Encryption Layer -->
+  <g transform="translate(200, 320)">
+    <rect x="0" y="0" width="200" height="100" rx="10" fill="url(#encryptionGradient)" filter="url(#shadow)"/>
+    <text x="100" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFF">
+      🔐 Encryption Layer
+    </text>
+    <text x="100" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#D1FAE5">
+      IndexedDB + AES-GCM
+    </text>
+    <text x="100" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#D1FAE5">
+      Zero-Knowledge
+    </text>
+    <text x="100" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#D1FAE5">
+      Client-Side Only
+    </text>
+  </g>
+  
+  <!-- Arrow down -->
+  <path d="M 300,430 L 300,470" stroke="#10B981" stroke-width="3" fill="none" marker-end="url(#arrowGreen)"/>
+  <text x="315" y="455" font-family="Arial, sans-serif" font-size="11" fill="#059669">User initiates</text>
+  
+  <!-- User-Controlled Export -->
+  <g transform="translate(200, 480)">
+    <rect x="0" y="0" width="200" height="120" rx="10" fill="url(#exportGradient)" filter="url(#shadow)"/>
+    <text x="100" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFF">
+      📤 User-Controlled
+    </text>
+    <text x="100" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFF">
+      Export Only
+    </text>
+    <text x="100" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#EDE9FE">
+      • WorkSafe BC Reports
+    </text>
+    <text x="100" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#EDE9FE">
+      • Clinical PDF/CSV
+    </text>
+    <text x="100" y="99" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#EDE9FE">
+      • Manual Download
+    </text>
+  </g>
+  
+  <!-- No Corporate Servers -->
+  <g transform="translate(125, 630)">
+    <!-- Red X Circle -->
+    <circle cx="175" cy="50" r="50" fill="#FEE2E2" stroke="url(#dangerGradient)" stroke-width="3" filter="url(#shadow)"/>
+    <line x1="150" y1="25" x2="200" y2="75" stroke="#DC2626" stroke-width="6" stroke-linecap="round"/>
+    <line x1="200" y1="25" x2="150" y2="75" stroke="#DC2626" stroke-width="6" stroke-linecap="round"/>
+    
+    <text x="175" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#DC2626">
+      NO Corporate Servers
+    </text>
+    <text x="175" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#991B1B">
+      NO Third-Party Sharing
+    </text>
+    <text x="175" y="155" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#991B1B">
+      NO Data Mining
+    </text>
+  </g>
+  
+  <!-- RIGHT SIDE: Traditional Apps -->
+  <text x="900" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#EF4444">
+    ⚠ Traditional Health Apps
+  </text>
+  
+  <!-- User Device (Traditional) -->
+  <g transform="translate(800, 120)">
+    <rect x="0" y="0" width="200" height="120" rx="10" fill="#6B7280" filter="url(#shadow)"/>
+    <text x="100" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFF">
+      📱 Your Device
+    </text>
+    <text x="100" y="75" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#E5E7EB">
+      Temporary Storage Only
+    </text>
+    <text x="100" y="95" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#E5E7EB">
+      Data Synced to Cloud
+    </text>
+  </g>
+  
+  <!-- Arrow down -->
+  <path d="M 900,250 L 900,290" stroke="#EF4444" stroke-width="3" fill="none" marker-end="url(#arrowRed)"/>
+  <text x="915" y="275" font-family="Arial, sans-serif" font-size="11" fill="#B91C1C">Auto-upload</text>
+  
+  <!-- Corporate Servers -->
+  <g transform="translate(800, 300)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="url(#dangerGradient)" filter="url(#shadow)"/>
+    <text x="100" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FFF">
+      ☁️ Corporate Servers
+    </text>
+    <text x="100" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#FEE2E2">
+      • Your Health Data
+    </text>
+    <text x="100" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#FEE2E2">
+      • Location Tracking
+    </text>
+    <text x="100" y="88" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#FEE2E2">
+      • Usage Patterns
+    </text>
+    <text x="100" y="106" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#FEE2E2">
+      • Behavioral Analytics
+    </text>
+    <text x="100" y="124" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#FEE2E2">
+      • Device Information
+    </text>
+  </g>
+  
+  <!-- Multiple arrows showing data sharing -->
+  <g>
+    <!-- To Advertisers -->
+    <path d="M 900,450 L 900,490 L 950,520" stroke="#EF4444" stroke-width="2" fill="none" marker-end="url(#arrowRed)" stroke-dasharray="4,2"/>
+    <text x="960" y="525" font-family="Arial, sans-serif" font-size="10" fill="#B91C1C">To Advertisers</text>
+    
+    <!-- To Insurance -->
+    <path d="M 900,450 L 900,490 L 850,520" stroke="#EF4444" stroke-width="2" fill="none" marker-end="url(#arrowRed)" stroke-dasharray="4,2"/>
+    <text x="745" y="525" font-family="Arial, sans-serif" font-size="10" fill="#B91C1C">To Insurance Companies</text>
+    
+    <!-- To Third Parties -->
+    <path d="M 900,450 L 900,510" stroke="#EF4444" stroke-width="2" fill="none" marker-end="url(#arrowRed)" stroke-dasharray="4,2"/>
+    <text x="815" y="565" font-family="Arial, sans-serif" font-size="10" fill="#B91C1C">To Data Brokers &amp; Partners</text>
+  </g>
+  
+  <!-- Data Mining Illustration -->
+  <g transform="translate(800, 590)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#FCA5A5" stroke="#DC2626" stroke-width="2" filter="url(#shadow)"/>
+    <text x="100" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#7F1D1D">
+      📊 Data Mining
+    </text>
+    <text x="100" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7F1D1D">
+      ⚠ Sold to highest bidder
+    </text>
+    <text x="100" y="68" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7F1D1D">
+      ⚠ Used for AI training
+    </text>
+    <text x="100" y="84" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7F1D1D">
+      ⚠ Shared without consent
+    </text>
+    <text x="100" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7F1D1D">
+      ⚠ Privacy violations
+    </text>
+    <text x="100" y="116" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#7F1D1D">
+      ⚠ Security breaches
+    </text>
+  </g>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#10B981" />
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#EF4444" />
+    </marker>
+  </defs>
+  
+  <!-- Bottom Legend -->
+  <g transform="translate(50, 760)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="11" font-style="italic" fill="#6B7280">
+      Pain Tracker: Your health data belongs to YOU. We never see it, store it, or sell it.
+    </text>
+  </g>
+</svg>
