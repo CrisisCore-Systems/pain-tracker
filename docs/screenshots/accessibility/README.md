@@ -1,7 +1,7 @@
 # Accessibility Screenshots
 
 **Last Updated**: 2025-11-22
-**Total Screenshots**: 13
+**Total Screenshots**: 14
 
 This directory contains screenshots demonstrating the accessibility features of the Pain Tracker application, including:
 
@@ -109,6 +109,18 @@ This directory contains screenshots demonstrating the accessibility features of 
   "fontSize": "medium",
   "contrast": "extra-high",
   "simplifiedMode": false
+}
+
+---
+
+#### Mobile view with high contrast mode
+
+![Mobile view with high contrast mode](./contrast/mobile-high-contrast.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "extra-high",
+  "simplifiedMode": true
 }
 
 ---

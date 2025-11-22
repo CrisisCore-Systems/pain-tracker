@@ -181,126 +181,32 @@ async function captureScreenshot(page, screenshot, outputDir) {
       height: screenshot.height
     });
 
-    // Apply accessibility preferences BEFORE navigation to ensure they're set when app loads
+    // Apply accessibility preferences (vault is already unlocked from main function)
     if (screenshot.preferences) {
-      // Navigate to the app
-      await page.goto('http://localhost:3000/app', { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(2000);
+      // We're already on /app with vault unlocked - just update preferences
+      console.log('   🎨 Applying accessibility preferences:', JSON.stringify(screenshot.preferences, null, 2));
       
-      // Check if we need to set up the vault
-      const needsSetup = await page.evaluate(() => {
-        const meta = localStorage.getItem('vault:metadata');
-        return !meta;
-      });
-      
-      if (needsSetup) {
-        console.log('   🔐 Creating testing user account...');
-        
-        // Fill out the vault setup form
-        const testPassphrase = 'ScreenshotTestingAccount2024!';
-        
-        try {
-          // Wait for the passphrase input to be visible
-          await page.waitForSelector('input[type="password"]', { timeout: 5000 });
-          
-          // Fill in the passphrase fields
-          const passphraseInputs = await page.$$('input[type="password"]');
-          if (passphraseInputs.length >= 2) {
-            await passphraseInputs[0].fill(testPassphrase);
-            await passphraseInputs[1].fill(testPassphrase);
-            
-            // Click the create vault button
-            const createButton = await page.$('button:has-text("Create secure vault")');
-            if (createButton) {
-              await createButton.click();
-              
-              // LONGER WAIT: Wait for vault to be created, encrypted, and unlocked
-              // This involves cryptographic operations that can take time
-              await page.waitForTimeout(8000);
-              
-              // Wait for the main app content to appear
-              try {
-                await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 15000 });
-                console.log('   ✓ Testing account created and app loaded');
-                
-                // Verify vault is actually unlocked
-                const isUnlocked = await page.evaluate(() => {
-                  const vaultMeta = localStorage.getItem('vault:metadata');
-                  return vaultMeta !== null;
-                });
-                
-                if (isUnlocked) {
-                  console.log('   ✓ Vault confirmed unlocked');
-                } else {
-                  console.log('   ⚠️  Vault may not be fully initialized');
-                }
-              } catch (e) {
-                console.log('   ⚠️  Timeout waiting for app to load after vault creation');
-                console.log('   ℹ️  Continuing anyway...');
-              }
-            }
-          }
-        } catch (error) {
-          console.log(`   ⚠️  Could not auto-create vault: ${error.message}`);
-          console.log('   ℹ️  Will attempt to use existing vault or continue anyway');
-        }
-      } else {
-        console.log('   ✓ Testing account already exists');
-        
-        // If vault exists but is locked, we need to unlock it
-        const isLocked = await page.evaluate(() => {
-          // Check if we see the unlock form
-          const unlockButton = document.querySelector('button:has-text("Unlock vault")');
-          return unlockButton !== null;
-        });
-        
-        if (isLocked) {
-          console.log('   🔓 Vault is locked, unlocking...');
-          const testPassphrase = 'ScreenshotTestingAccount2024!';
-          
-          try {
-            // Wait for the passphrase input
-            await page.waitForSelector('input[type="password"]', { timeout: 5000 });
-            
-            // Fill in the passphrase
-            const passphraseInput = await page.$('input[type="password"]');
-            if (passphraseInput) {
-              await passphraseInput.fill(testPassphrase);
-              
-              // Click unlock button
-              const unlockButton = await page.$('button:has-text("Unlock vault")');
-              if (unlockButton) {
-                await unlockButton.click();
-                
-                // Wait for unlock and app to load
-                await page.waitForTimeout(5000);
-                
-                try {
-                  await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 10000 });
-                  console.log('   ✓ Vault unlocked and app loaded');
-                } catch (e) {
-                  console.log('   ⚠️  Timeout waiting for app after unlock');
-                }
-              }
-            }
-          } catch (error) {
-            console.log(`   ⚠️  Could not auto-unlock vault: ${error.message}`);
-          }
-        } else {
-          console.log('   ✓ Vault already unlocked');
-          await page.waitForTimeout(2000);
-        }
-      }
-      
-      // Set accessibility preferences
+      // Set accessibility preferences in localStorage
       await applyAccessibilityPreferences(page, screenshot.preferences);
       console.log('   ✓ Accessibility preferences set');
       
-      // Reload to apply preferences - stay on current page
-      await page.reload({ waitUntil: 'networkidle' });
+      // DON'T RELOAD - Apply preferences dynamically without page reload to keep vault session
+      console.log('   🔄 Applying preferences dynamically (no reload to preserve vault session)...');
       
-      // LONGER WAIT: Give React more time to apply preference changes
-      // This is critical for accessibility features to be visible
+      // Wait for React to pick up the preference changes
+      await page.waitForTimeout(3000);
+      
+      // Trigger a manual refresh of the trauma-informed context by dispatching a storage event
+      await page.evaluate(() => {
+        // Dispatch storage event to notify components of preference changes
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'trauma-informed-preferences',
+          newValue: localStorage.getItem('trauma-informed-preferences'),
+          url: window.location.href
+        }));
+      });
+      
+      // LONGER WAIT: Give React more time to apply preference changes WITHOUT reloading
       await page.waitForTimeout(5000);
       
       // Wait for React hydration and preference application
@@ -346,9 +252,32 @@ async function captureScreenshot(page, screenshot, outputDir) {
       
       if (!verificationResult.fontSizeMatch || !verificationResult.hasContrastClass) {
         console.log('   ⚠️  Warning: Some accessibility preferences may not have applied correctly');
+        console.log('   💡 Trying force reload of preferences...');
+        
+        // Force re-apply by directly manipulating the DOM
+        await page.evaluate((prefs) => {
+          const root = document.documentElement;
+          const body = document.body;
+          
+          // Force font size
+          const fontSizeMap = { small: '14px', medium: '16px', large: '18px', xl: '20px' };
+          root.style.setProperty('--ti-font-size', fontSizeMap[prefs.fontSize] || fontSizeMap.medium);
+          
+          // Force contrast class
+          body.className = body.className.replace(/ti-contrast-\w+/g, '');
+          body.classList.add(`ti-contrast-${prefs.contrast || 'normal'}`);
+          
+          // Force simplified mode
+          if (prefs.simplifiedMode) {
+            body.classList.add('ti-simplified');
+          } else {
+            body.classList.remove('ti-simplified');
+          }
+        }, screenshot.preferences);
+        
+        await page.waitForTimeout(1000);
       }
       
-      // Don't navigate again since we're already on /app
       console.log('   ✓ App ready for screenshot');
       
     } else {
@@ -438,6 +367,80 @@ async function captureAccessibilityScreenshots() {
     });
 
     const page = await context.newPage();
+
+    // ONE-TIME VAULT SETUP: Create vault once before all screenshots
+    console.log('🔐 Setting up testing vault account (one-time setup)...\n');
+    await page.goto('http://localhost:3000/app', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    
+    const needsSetup = await page.evaluate(() => {
+      const meta = localStorage.getItem('vault:metadata');
+      return !meta;
+    });
+    
+    if (needsSetup) {
+      console.log('   Creating testing user account...');
+      const testPassphrase = 'ScreenshotTestingAccount2024!';
+      
+      try {
+        await page.waitForSelector('input[type="password"]', { timeout: 5000 });
+        const passphraseInputs = await page.$$('input[type="password"]');
+        if (passphraseInputs.length >= 2) {
+          await passphraseInputs[0].fill(testPassphrase);
+          await passphraseInputs[1].fill(testPassphrase);
+          
+          const createButton = await page.$('button:has-text("Create secure vault")');
+          if (createButton) {
+            await createButton.click();
+            await page.waitForTimeout(8000);
+            
+            try {
+              await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 15000 });
+              console.log('   ✓ Testing account created and app loaded\n');
+            } catch (e) {
+              console.log('   ⚠️  Timeout waiting for app to load\n');
+            }
+          }
+        }
+      } catch (error) {
+        console.log(`   ⚠️  Could not auto-create vault: ${error.message}\n`);
+      }
+    } else {
+      // Vault exists, check if locked and unlock
+      const isLocked = await page.evaluate(() => {
+        const unlockButton = document.querySelector('button:has-text("Unlock vault")');
+        return unlockButton !== null;
+      });
+      
+      if (isLocked) {
+        console.log('   Unlocking existing vault...');
+        const testPassphrase = 'ScreenshotTestingAccount2024!';
+        
+        try {
+          await page.waitForSelector('input[type="password"]', { timeout: 5000 });
+          const passphraseInput = await page.$('input[type="password"]');
+          if (passphraseInput) {
+            await passphraseInput.fill(testPassphrase);
+            const unlockButton = await page.$('button:has-text("Unlock vault")');
+            if (unlockButton) {
+              await unlockButton.click();
+              await page.waitForTimeout(5000);
+              
+              try {
+                await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 10000 });
+                console.log('   ✓ Vault unlocked and app loaded\n');
+              } catch (e) {
+                console.log('   ⚠️  Timeout waiting for app after unlock\n');
+              }
+            }
+          }
+        } catch (error) {
+          console.log(`   ⚠️  Could not auto-unlock vault: ${error.message}\n`);
+        }
+      } else {
+        console.log('   ✓ Vault already unlocked\n');
+      }
+    }
 
     // Get filtered screenshots
     const screenshotsToCapture = filterScreenshots();
