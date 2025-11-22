@@ -1,7 +1,7 @@
 # Accessibility Screenshots
 
 **Last Updated**: 2025-11-22
-**Total Screenshots**: 5
+**Total Screenshots**: 13
 
 This directory contains screenshots demonstrating the accessibility features of the Pain Tracker application, including:
 
@@ -71,6 +71,116 @@ This directory contains screenshots demonstrating the accessibility features of 
   "contrast": "normal",
   "simplifiedMode": true,
   "touchTargetSize": "extra-large"
+}
+
+---
+
+### Contrast
+
+#### Normal contrast - Standard interface colors
+
+![Normal contrast - Standard interface colors](./contrast/contrast-normal.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "normal",
+  "simplifiedMode": false
+}
+
+---
+
+#### High contrast - Enhanced visibility
+
+![High contrast - Enhanced visibility](./contrast/contrast-high.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "high",
+  "simplifiedMode": false
+}
+
+---
+
+#### Extra high contrast - Maximum visibility
+
+![Extra high contrast - Maximum visibility](./contrast/contrast-extra-high.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "extra-high",
+  "simplifiedMode": false
+}
+
+---
+
+### Navigation
+
+#### Full navigation - All features visible
+
+![Full navigation - All features visible](./navigation/navigation-full.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "normal",
+  "simplifiedMode": false,
+  "showMemoryAids": true
+}
+
+---
+
+#### Simplified navigation - Essential features only
+
+![Simplified navigation - Essential features only](./navigation/navigation-simplified.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "normal",
+  "simplifiedMode": true,
+  "showMemoryAids": true
+}
+
+---
+
+#### Accessibility settings panel - Full customization options
+
+![Accessibility settings panel - Full customization options](./navigation/accessibility-settings-panel.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "normal",
+  "simplifiedMode": false
+}
+
+---
+
+### Cognitive Support
+
+#### Full cognitive support - All aids enabled
+
+![Full cognitive support - All aids enabled](./cognitive-support/cognitive-support-full.png)
+
+**Settings**: {
+  "fontSize": "large",
+  "contrast": "normal",
+  "simplifiedMode": true,
+  "showMemoryAids": true,
+  "showProgress": true,
+  "showCognitiveLoadIndicators": true,
+  "autoSave": true
+}
+
+---
+
+#### Cognitive load indicators - Visual feedback for mental effort
+
+![Cognitive load indicators - Visual feedback for mental effort](./cognitive-support/cognitive-load-indicators.png)
+
+**Settings**: {
+  "fontSize": "medium",
+  "contrast": "normal",
+  "simplifiedMode": true,
+  "showCognitiveLoadIndicators": true,
+  "adaptiveComplexity": true
 }
 
 ---
