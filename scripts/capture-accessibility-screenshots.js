@@ -116,6 +116,10 @@ async function applyAccessibilityPreferences(page, preferences) {
 
     // Set in localStorage (the app will read this on load)
     localStorage.setItem('trauma-informed-preferences', JSON.stringify(preferencesWithDefaults));
+    
+    // Also disable the vault to bypass the passphrase screen
+    localStorage.setItem('vault-disabled', 'true');
+    localStorage.setItem('skip-vault', 'true');
 
     // Apply CSS custom properties directly
     const root = document.documentElement;
@@ -181,6 +185,42 @@ async function captureScreenshot(page, screenshot, outputDir) {
       height: screenshot.height
     });
 
+    // Apply accessibility preferences BEFORE navigation to ensure they're set when app loads
+    if (screenshot.preferences) {
+      // First, navigate to any page to get a context
+      await page.goto('http://localhost:3000', { waitUntil: 'domcontentloaded' });
+      
+      // Set up a simple vault passphrase to bypass the vault gate
+      await page.evaluate(() => {
+        // Create a simple passphrase hash for testing
+        const testPassphrase = 'AccessibilityScreenshotTest2024!';
+        
+        // Set vault as initialized and unlocked
+        const vaultData = {
+          salt: 'test-salt-for-screenshots',
+          hash: 'test-hash-for-screenshots',
+          unlocked: true,
+          lastUnlock: Date.now()
+        };
+        
+        localStorage.setItem('vault-status', JSON.stringify({
+          initialized: true,
+          unlocked: true,
+          lastActivity: Date.now()
+        }));
+        
+        localStorage.setItem('vault-data', JSON.stringify(vaultData));
+        localStorage.setItem('vault-session', 'active');
+        
+        // Also set the skip flags
+        localStorage.setItem('vault-disabled', 'true');
+        localStorage.setItem('skip-vault', 'true');
+      });
+      
+      await applyAccessibilityPreferences(page, screenshot.preferences);
+      console.log('   ✓ Preferences and vault bypass set before navigation');
+    }
+
     // Navigate to URL
     if (screenshot.url) {
       const baseUrl = 'http://localhost:3000';
@@ -188,20 +228,26 @@ async function captureScreenshot(page, screenshot, outputDir) {
         ? screenshot.url
         : `${baseUrl}${screenshot.url}`;
 
+      console.log(`   Navigating to: ${fullUrl}`);
+      
       await page.goto(fullUrl, {
         waitUntil: 'networkidle',
         timeout: 30000
       });
 
-      // Wait for content to settle
-      await page.waitForTimeout(1000);
-    }
+      // Wait for the React app to load - try multiple selectors
+      try {
+        await page.waitForSelector('main, [role="main"], .pain-tracker-app, #root > div', {
+          timeout: 10000
+        });
+        console.log('   ✓ App loaded');
+      } catch (e) {
+        console.log('   ⚠️  Main app selector not found, waiting for any content...');
+        await page.waitForTimeout(2000);
+      }
 
-    // Apply accessibility preferences
-    if (screenshot.preferences) {
-      await applyAccessibilityPreferences(page, screenshot.preferences);
-      // Wait for preferences to take effect
-      await page.waitForTimeout(1000);
+      // Additional wait for React hydration and routing
+      await page.waitForTimeout(3000);
     }
 
     // Wait for any animations to complete
