@@ -103,21 +103,29 @@ Pain Tracker offers **clinical-grade fibromyalgia support** built on ACR 2016 Re
 Pain Tracker is designed with **your privacy as the foundation**, not an afterthought. Unlike traditional health apps that upload your data to corporate servers, we use a **local-first, zero-knowledge architecture**.
 
 <p align="center">
-  <img src="docs/diagrams/privacy-first-flow.svg" alt="Privacy-First Data Flow" style="max-width: 100%; height: auto;" />
+  <img src="docs/diagrams/architectural-data-flow.svg" alt="Architectural Data Flow" style="max-width: 100%; height: auto;" />
 </p>
 
 ### How Your Data Stays Private
 
-**Your Device → Local Encryption → User-Controlled Export**
+**Your Device → Local Encryption → User-Controlled Export → Your Explicit Choice**
 
-1. **🖥️ 100% Local Storage**: All your health data stays on YOUR device, encrypted in your browser's IndexedDB
-2. **🔐 Zero-Knowledge Encryption**: AES-GCM encryption with client-side keys—we can't access your data even if we wanted to
-3. **📤 You Control Exports**: Only YOU decide when to export reports for WorkSafe BC or healthcare providers
-4. **❌ No Corporate Servers**: No cloud upload, no third-party sharing, no data mining, no tracking
+1. **📱 Your Device with Shield**: All your health data stays on YOUR device with built-in security protection
+2. **🔐 Local Encryption Layer**: AES-GCM encryption in IndexedDB, zero-knowledge architecture, 100% client-side processing
+3. **📤 User-Controlled Export**: Manual exports only - WorkSafe BC forms, PDF clinical reports, CSV data downloads
+4. **🤝 Your Explicit Choice**: YOU decide when and where to share - with your doctor, WorkSafe BC, or keep it private locally
+
+**❌ What We DON'T Do**: No corporate servers, no automatic uploads, no data mining, no third-party sharing, no tracking
 
 <details>
-<summary><strong>📊 See How We Compare to Traditional Health Apps</strong></summary>
+<summary><strong>📊 See Additional Privacy Architecture Diagrams</strong></summary>
 
+**Vertical Privacy Flow:**
+<p align="center">
+  <img src="docs/diagrams/privacy-first-flow.svg" alt="Privacy-First Data Flow" style="max-width: 100%; height: auto;" />
+</p>
+
+**Side-by-Side Comparison:**
 <p align="center">
   <img src="docs/diagrams/data-flow-comparison.svg" alt="Data Flow Comparison" style="max-width: 100%; height: auto;" />
 </p>
@@ -128,7 +136,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 
 </details>
 
-**[Read More About Our Security →](docs/ARCHITECTURE.md)** | **[Security Policy →](.github/SECURITY.md)**
+**[Read More About Our Security →](docs/ARCHITECTURE.md)** | **[Security Policy →](.github/SECURITY.md)** | **[All Diagrams →](docs/diagrams/README.md)**
 
 ---
 
