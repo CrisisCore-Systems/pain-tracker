@@ -139,6 +139,11 @@ export const Hero: React.FC = () => {
                 👨‍⚕️ <strong className="font-semibold">For Clinicians:</strong> <span className="inline-flex flex-wrap gap-1">AI insights • WCB reports • Real-time monitoring • <button onClick={() => navigate('/pricing')} className="text-primary hover:underline">View plans →</button></span>
               </p>
             </div>
+
+            {/* Invite to submit story */}
+            <div className="mt-4">
+              <Button variant="ghost" onClick={() => navigate('/submit-story')} className="text-sm text-primary hover:underline">Share your story →</Button>
+            </div>
           </div>
 
           {/* Right Column: Visual */}

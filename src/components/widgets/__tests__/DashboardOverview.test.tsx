@@ -1,21 +1,49 @@
 import React from 'react';
 import { render, screen, within } from '../../../test/test-utils'; // Use custom render with providers
 import { vi } from 'vitest';
+import PredictivePanelMock from '../../PredictivePanel';
 // Mock PredictivePanel (lazy-loaded) so Suspense doesn't delay tests
 vi.mock('../../PredictivePanel', () => ({
   __esModule: true,
-  default: ({ entries }: any) => (
+  default: ({ entries }: { entries: unknown }) => (
     <div data-testid="predictive-panel-mock" data-entries={JSON.stringify(entries)}>
       Predictive
     </div>
   ),
 }));
+// Also mock by absolute path and alternate specifier to ensure both dynamic and static imports are intercepted
+vi.mock('src/components/PredictivePanel', () => ({
+  __esModule: true,
+  default: ({ entries }: { entries: unknown }) => (
+    <div data-testid="predictive-panel-mock" data-entries={JSON.stringify(entries)}>
+      Predictive
+    </div>
+  ),
+}));
+// Also mock wrapper specifier matching DashboardOverview's lazy import
+vi.mock('../PredictivePanelWrapper', () => ({
+  __esModule: true,
+  default: ({ entries }: { entries: unknown }) => (
+    <div data-testid="predictive-panel-mock" data-entries={JSON.stringify(entries)}>
+      Predictive
+    </div>
+  ),
+}));
+vi.mock('../../PredictivePanel.tsx', () => ({
+  __esModule: true,
+  default: ({ entries }: { entries: unknown }) => (
+    <div data-testid="predictive-panel-mock" data-entries={JSON.stringify(entries)}>
+      Predictive
+    </div>
+  ),
+}));
+// End predictive panel mocks
 // Mock Chart to avoid Chart.js rendering inside tests
 vi.mock('../../design-system/components/Chart', () => ({
-  default: (props: any) => <div data-testid="chart-mock">Chart</div>,
-  PainTrendChart: (props: any) => <div data-testid="chart-mock">Chart</div>,
-  SymptomFrequencyChart: (props: any) => <div data-testid="chart-mock">Chart</div>,
-  PainDistributionChart: (props: any) => <div data-testid="chart-mock">Chart</div>,
+  default: () => <div data-testid="chart-mock">Chart</div>,
+  PainTrendChart: () => <div data-testid="chart-mock">Chart</div>,
+  SymptomFrequencyChart: () => <div data-testid="chart-mock">Chart</div>,
+  PainDistributionChart: () => <div data-testid="chart-mock">Chart</div>,
 }));
 const mockGenerateDashboardAIInsights = vi.fn(() => [
   {
@@ -52,6 +80,11 @@ function makeEntry(id: string, iso: string, pain: number) {
 }
 
 describe('DashboardOverview', () => {
+  it('predictive panel mock mounts in isolation', async () => {
+    const Pre = (await import('../../PredictivePanel')).default;
+    render(<Pre entries={[]} />);
+    expect(await screen.findByTestId('predictive-panel-mock')).toBeTruthy();
+  });
   it('shows all-time total when allEntries provided', async () => {
     const today = new Date();
     const entries = [
@@ -67,6 +100,7 @@ describe('DashboardOverview', () => {
       <DashboardOverview
         entries={entries as unknown as PainEntry[]}
         allEntries={allEntries as unknown as PainEntry[]}
+        PredictivePanelOverride={PredictivePanelMock}
       />
     );
     await screen.findByTestId('predictive-panel-mock');
@@ -90,6 +124,7 @@ describe('DashboardOverview', () => {
       <DashboardOverview
         entries={entries as unknown as PainEntry[]}
         allEntries={entries as unknown as PainEntry[]}
+        PredictivePanelOverride={PredictivePanelMock}
       />
     );
     await screen.findByTestId('predictive-panel-mock');
@@ -115,6 +150,7 @@ describe('DashboardOverview', () => {
       <DashboardOverview
         entries={entries as unknown as PainEntry[]}
         allEntries={entries as unknown as PainEntry[]}
+        PredictivePanelOverride={PredictivePanelMock}
       />
     );
     await screen.findByTestId('predictive-panel-mock');
@@ -139,6 +175,7 @@ describe('DashboardOverview', () => {
       <DashboardOverview
         entries={entries as unknown as PainEntry[]}
         allEntries={entries as unknown as PainEntry[]}
+        PredictivePanelOverride={PredictivePanelMock}
       />
     );
     await screen.findByTestId('predictive-panel-mock');

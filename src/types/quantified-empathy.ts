@@ -35,7 +35,8 @@ export interface EmotionalStateMetrics {
 }
 
 export interface MoodEntry {
-  timestamp: Date;
+  id: number;
+  timestamp: string;
   mood: number; // 1-10 scale
   energy: number; // 1-10 scale
   anxiety: number; // 1-10 scale
@@ -91,7 +92,7 @@ export interface EmotionalTrigger {
   severity: 'mild' | 'moderate' | 'severe';
   frequency: number; // times per month
   emotionalImpact: number; // 1-10
-  lastOccurrence: Date;
+  lastOccurrence: string;
   description: string;
   warningSignsIdentified: string[];
   preventionStrategies: string[];
@@ -126,7 +127,7 @@ export interface RecoveryMetric {
   baseline: number; // emotional state before trigger
   lowest: number; // lowest point during trigger
   recovered: number; // state after recovery
-  timestamp: Date;
+  timestamp: string;
 }
 
 export interface CopingEffectiveness {

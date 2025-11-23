@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Wifi,
   WifiOff,
@@ -41,6 +41,61 @@ export function PWAStatusDashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
+  const loadPWAStatus = useCallback(async () => {
+    try {
+      const status = await pwaManager.getDiagnostics();
+      setPwaStatus(status as unknown as PWAStatusData);
+    } catch (error) {
+      console.error('Failed to load PWA status:', error);
+    }
+  }, []);
+
+  const loadSyncStatus = useCallback(async () => {
+    try {
+      const syncManager = await import('../../lib/background-sync').then(m => m.painTrackerSync);
+      const status = await syncManager.getSyncStatus();
+      const { isOnline, isSyncing } = backgroundSync.getSyncStatus();
+
+      setSyncStatus({
+        ...status,
+        isOnline,
+        isSyncing,
+      });
+    } catch (error) {
+      console.error('Failed to load sync status:', error);
+    }
+  }, []);
+
+  const handleOnlineStatusChange = useCallback(() => {
+    loadPWAStatus();
+    loadSyncStatus();
+  }, [loadPWAStatus, loadSyncStatus]);
+
+  const handleConnectionQualityChange = useCallback((event: Event) => {
+    const customEvent = event as CustomEvent<Record<string, unknown>>;
+    const detail = customEvent.detail || {};
+    const quality = typeof detail.quality === 'string' ? detail.quality : 'unknown';
+    setConnectionQuality(quality);
+  }, []);
+
+  const handleSyncCompleted = useCallback(() => {
+    loadSyncStatus();
+  }, [loadSyncStatus]);
+
+  const setupEventListeners = useCallback(() => {
+    window.addEventListener('pwa-online', handleOnlineStatusChange);
+    window.addEventListener('pwa-offline', handleOnlineStatusChange);
+    window.addEventListener('pwa-connection-test', handleConnectionQualityChange);
+    window.addEventListener('background-sync-sync-completed', handleSyncCompleted);
+  }, [handleOnlineStatusChange, handleConnectionQualityChange, handleSyncCompleted]);
+
+  const cleanupEventListeners = useCallback(() => {
+    window.removeEventListener('pwa-online', handleOnlineStatusChange);
+    window.removeEventListener('pwa-offline', handleOnlineStatusChange);
+    window.removeEventListener('pwa-connection-test', handleConnectionQualityChange);
+    window.removeEventListener('background-sync-sync-completed', handleSyncCompleted);
+  }, [handleOnlineStatusChange, handleConnectionQualityChange, handleSyncCompleted]);
+
   useEffect(() => {
     loadPWAStatus();
     loadSyncStatus();
@@ -57,65 +112,8 @@ export function PWAStatusDashboard() {
       clearInterval(interval);
       cleanupEventListeners();
     };
-  }, []);
+  }, [loadPWAStatus, loadSyncStatus, setupEventListeners, cleanupEventListeners]);
 
-  const loadPWAStatus = async () => {
-    try {
-      const status = await pwaManager.getDiagnostics();
-      // pwaManager.getDiagnostics() returns a typed PWACapabilities shape
-      // which may not exactly match our local PWAStatusData type. Narrow
-      // it here with a safe cast so the state updater accepts it.
-      setPwaStatus(status as unknown as PWAStatusData);
-    } catch (error) {
-      console.error('Failed to load PWA status:', error);
-    }
-  };
-
-  const loadSyncStatus = async () => {
-    try {
-      const syncManager = await import('../../lib/background-sync').then(m => m.painTrackerSync);
-      const status = await syncManager.getSyncStatus();
-      const { isOnline, isSyncing } = backgroundSync.getSyncStatus();
-
-      setSyncStatus({
-        ...status,
-        isOnline,
-        isSyncing,
-      });
-    } catch (error) {
-      console.error('Failed to load sync status:', error);
-    }
-  };
-
-  const setupEventListeners = () => {
-    window.addEventListener('pwa-online', handleOnlineStatusChange);
-    window.addEventListener('pwa-offline', handleOnlineStatusChange);
-    window.addEventListener('pwa-connection-test', handleConnectionQualityChange);
-    window.addEventListener('background-sync-sync-completed', handleSyncCompleted);
-  };
-
-  const cleanupEventListeners = () => {
-    window.removeEventListener('pwa-online', handleOnlineStatusChange);
-    window.removeEventListener('pwa-offline', handleOnlineStatusChange);
-    window.removeEventListener('pwa-connection-test', handleConnectionQualityChange);
-    window.removeEventListener('background-sync-sync-completed', handleSyncCompleted);
-  };
-
-  const handleOnlineStatusChange = () => {
-    loadPWAStatus();
-    loadSyncStatus();
-  };
-
-  const handleConnectionQualityChange = (event: Event) => {
-    const customEvent = event as CustomEvent<Record<string, unknown>>;
-    const detail = customEvent.detail || {};
-    const quality = typeof detail.quality === 'string' ? detail.quality : 'unknown';
-    setConnectionQuality(quality);
-  };
-
-  const handleSyncCompleted = () => {
-    loadSyncStatus();
-  };
 
   const handleForceSync = async () => {
     setIsRefreshing(true);

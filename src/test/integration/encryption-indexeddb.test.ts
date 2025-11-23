@@ -16,7 +16,7 @@ type StoredRow = {
 // the test. This keeps the test self-contained and avoids an external dev
 // dependency causing skips.
 // Allow `any` in this test shim file for flexible runtime shapes
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 let storageToUse:
   | typeof offlineStorage
   | {

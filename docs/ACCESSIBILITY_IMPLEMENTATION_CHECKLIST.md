@@ -9,6 +9,7 @@
 ## Week 1: Core Accessibility (Nov 13-19)
 
 ### Focus Management
+
 - [ ] **Focus rings**: Add 2px outline + 2px offset to all interactive elements
   - File: `src/design-system/tokens/fused-v2.css`
   - Add: `:focus { outline: 2px solid var(--accent); outline-offset: 2px; }`
@@ -22,6 +23,7 @@
   - Screens: Dashboard, Log Pain, Analytics, Calendar
 
 ### Screen Reader Support
+
 - [ ] **Pain slider ARIA**: Add proper roles and labels
   - File: `src/design-system/fused-v2/QuickLogStepper.tsx`
   - Update: Lines 80-120 (pain slider component)
@@ -37,6 +39,7 @@
   - Pattern: `<ChartWithTable data={entries} />`
 
 ### Keyboard Navigation
+
 - [ ] **QuickLogStepper keyboard**: Arrow keys for pain adjustment
   - File: `src/design-system/fused-v2/QuickLogStepper.tsx`
   - Add: `onKeyDown` handler (ArrowUp/Down for pain level)
@@ -49,6 +52,7 @@
   - Pattern: Fuzzy search for navigation
 
 ### Testing Checkpoints
+
 - [ ] **Keyboard-only**: Log pain entry without mouse
 - [ ] **VoiceOver**: Navigate dashboard → log → save (iOS Safari)
 - [ ] **TalkBack**: Same flow (Android Chrome)
@@ -59,6 +63,7 @@
 ## Week 2: Comfort Features (Nov 20-26)
 
 ### Panic Mode
+
 - [ ] **Create PanicMode component**
   - File: Create `src/components/comfort/PanicMode.tsx`
   - Features: Dim overlay, breathing guide, large exit button
@@ -75,6 +80,7 @@
   - Effect: Add `redacted` class to pain values, notes
 
 ### One-Handed Operation
+
 - [ ] **Pain slider steppers**: Add ± buttons
   - File: `src/design-system/fused-v2/QuickLogStepper.tsx`
   - Pattern: Button group with numeric input center
@@ -87,6 +93,7 @@
   - Check: Primary actions reachable with one thumb
 
 ### Dynamic Font Scaling
+
 - [ ] **Replace px with rem**: All font sizes
   - Files: Check all components for hardcoded `font-size: 16px`
   - Replace with: `clamp(14px, 1rem, 20px)` pattern
@@ -100,6 +107,7 @@
   - Check: All typography tokens
 
 ### Dark Mode Optimization
+
 - [ ] **Contrast audit**: All text ≥4.5:1 on surface-900
   - Tool: WebAIM Contrast Checker or browser extension
   - Tokens: `--fg`, `--fg-medium`, `--fg-subtle` on `--surface-900`
@@ -110,6 +118,7 @@
   - Test: Protanopia, Deuteranopia, Tritanopia
 
 ### Testing Checkpoints
+
 - [ ] **Panic Mode activation**: ≤2s from tap to breathing guide
 - [ ] **200% font scale**: Log pain successfully
 - [ ] **One-handed flow**: Complete entry with thumb only (video record)
@@ -120,6 +129,7 @@
 ## Ongoing: QA & Compliance
 
 ### Automated Testing
+
 - [ ] **Install axe-core**: Add to test suite
   - Command: `npm install --save-dev @axe-core/react`
   - File: `src/test/setup.ts`
@@ -132,6 +142,7 @@
   - Document: `docs/DESIGN_SYSTEM_AUDIT.md`
 
 ### Manual Testing (Repeated Weekly)
+
 - [ ] **VoiceOver (iOS)**: Full pain log flow
   - Device: iPhone (physical or simulator)
   - Flow: Open app → Log pain → Select locations → Save → Verify dashboard
@@ -146,6 +157,7 @@
   - Flows: Log, view calendar, export report
 
 ### Compliance Documentation
+
 - [ ] **VPAT**: Create Voluntary Product Accessibility Template
   - File: `docs/VPAT_WCAG_2.2.md`
   - Sections: Level A, AA, AAA compliance checklist
@@ -161,6 +173,7 @@
 ## Definition of Done
 
 ### Week 1 Complete
+
 - ✅ All interactive elements have visible focus rings
 - ✅ Pain slider fully keyboard-accessible with ARIA labels
 - ✅ Screen reader users can log pain without sighted help
@@ -168,6 +181,7 @@
 - ✅ Skip-to-content link implemented
 
 ### Week 2 Complete
+
 - ✅ Panic Mode functional with ≤2s activation
 - ✅ 200% font scale: no critical UI breaks
 - ✅ One-handed operation verified on large screen
@@ -175,6 +189,7 @@
 - ✅ Haptic feedback working on supported devices
 
 ### Phase 1.5 Complete
+
 - ✅ WCAG 2.2 AA compliance verified (automated + manual)
 - ✅ Lighthouse accessibility score ≥95
 - ✅ SR-only user can complete core tasks (95%+ success)
@@ -188,6 +203,7 @@
 ## Resources
 
 ### Tools
+
 - **Screen Readers**:
   - iOS: VoiceOver (Settings → Accessibility → VoiceOver)
   - Android: TalkBack (Settings → Accessibility → TalkBack)
@@ -203,12 +219,14 @@
   - Accessible Colors (https://accessible-colors.com/)
 
 ### Documentation
+
 - **WCAG 2.2**: https://www.w3.org/WAI/WCAG22/quickref/
 - **ARIA Authoring Practices**: https://www.w3.org/WAI/ARIA/apg/
 - **MDN Accessibility**: https://developer.mozilla.org/en-US/docs/Web/Accessibility
 - **Our Spec**: `docs/ACCESSIBILITY_COMFORT_SPEC.md`
 
 ### Testing Scripts
+
 - **Patient Flow (SR)**:
   1. Open app with screen reader
   2. Navigate to "Log Pain"
@@ -232,6 +250,7 @@
 ## Notes for Engineering
 
 ### Priority Order
+
 1. **Week 1, Day 1-2**: Focus management (biggest SR blocker)
 2. **Week 1, Day 3-4**: ARIA labels on pain slider (core feature)
 3. **Week 1, Day 5**: Chart table toggle (analytics accessibility)
@@ -240,6 +259,7 @@
 6. **Week 2, Day 5**: Color-blind testing and fixes
 
 ### Common Pitfalls
+
 - ❌ Don't rely on `outline: none` - always provide visible focus
 - ❌ Don't use `div` with `onClick` - use `button` or add `role="button"` + keyboard handler
 - ❌ Don't use color alone to convey state - add icon or text
@@ -247,6 +267,7 @@
 - ❌ Don't hardcode font sizes in px - use rem/clamp for scaling
 
 ### Code Review Checklist
+
 - [ ] All new interactive elements have `aria-label` or visible text
 - [ ] Forms have associated `<label>` elements
 - [ ] Buttons have descriptive text or `aria-label`

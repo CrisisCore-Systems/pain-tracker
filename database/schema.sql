@@ -300,11 +300,28 @@ CREATE TABLE IF NOT EXISTS testimonials (
   anonymized BOOLEAN DEFAULT FALSE,
   verified BOOLEAN DEFAULT FALSE,
   metadata JSONB,
+  verified_by VARCHAR(255),
+  verified_at TIMESTAMP,
+  publication_date TIMESTAMP,
+  -- IP address or other request metadata (for rate limiting and audit)
+  request_ip VARCHAR(64),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_testimonials_verified ON testimonials(verified);
+CREATE INDEX idx_testimonials_verified_at ON testimonials(verified_at);
+CREATE INDEX idx_testimonials_request_ip ON testimonials(request_ip);
+
+-- Audit log for testimonial actions
+CREATE TABLE IF NOT EXISTS testimonials_audit (
+  id SERIAL PRIMARY KEY,
+  testimonial_id INTEGER NOT NULL REFERENCES testimonials(id) ON DELETE CASCADE,
+  action VARCHAR(100) NOT NULL,
+  actor VARCHAR(255),
+  details JSONB,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TRIGGER update_testimonials_updated_at
   BEFORE UPDATE ON testimonials

@@ -6,7 +6,9 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ClinicDashboard } from './ClinicDashboard';
+import { TestimonialsAdmin } from './TestimonialsAdmin';
 import { EnhancedPatientView } from './EnhancedPatientView';
+import ClinicReports from './ClinicReports';
 import { ClinicSettings } from './ClinicSettings';
 import { ClinicLogin } from './ClinicLogin';
 import { ClinicSidebar } from '../../components/clinic/ClinicSidebar';
@@ -74,6 +76,13 @@ function ClinicPortalContent() {
       icon: Shield,
       path: '/clinic/compliance',
       description: 'HIPAA and audit logs',
+      requiresAdmin: true
+    },
+    {
+      label: 'Testimonials',
+      icon: FileText,
+      path: '/clinic/testimonials',
+      description: 'Review user-submitted stories',
       requiresAdmin: true
     },
     {
@@ -148,12 +157,17 @@ function ClinicPortalContent() {
             } />
             <Route path="reports" element={
               <ClinicProtectedRoute requiredPermission="view:reports">
-                <div className="p-6">Reports (Coming Soon)</div>
+                <ClinicReports />
               </ClinicProtectedRoute>
             } />
             <Route path="compliance" element={
               <ClinicProtectedRoute requiredRole="admin">
                 <div className="p-6">Compliance (Coming Soon)</div>
+              </ClinicProtectedRoute>
+            } />
+            <Route path="testimonials" element={
+              <ClinicProtectedRoute requiredRole="admin">
+                <TestimonialsAdmin />
               </ClinicProtectedRoute>
             } />
             <Route path="settings" element={

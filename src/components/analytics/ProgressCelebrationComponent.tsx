@@ -46,221 +46,220 @@ export const ProgressCelebrationComponent: React.FC<ProgressCelebrationProps> = 
   const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
+    const generateAchievements = () => {
+      const newAchievements: CelebrationAchievement[] = [];
+      const today = new Date();
+      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+      // Daily achievements - use local-day comparison
+      const todayEntries = entries.filter(entry => isSameLocalDay(entry.timestamp, today));
+
+      if (todayEntries.length > 0) {
+        newAchievements.push({
+          id: 'daily-check-in',
+          title: 'Daily Self-Care Check-in',
+          description: 'You showed up for yourself today by tracking your experience',
+          category: 'self_care',
+          icon: '💚',
+          celebrationMessage:
+            "Every time you check in with yourself, you're practicing self-compassion!",
+          achievedAt: today.toISOString(),
+          shareableText:
+            'I practiced self-care today by listening to my body and tracking my experience.',
+          significance: 'daily',
+        });
+      }
+
+      // Weekly achievements - use local-day start for comparison
+      const weekEntries = entries.filter(
+        entry => localDayStart(entry.timestamp) >= localDayStart(weekAgo)
+      );
+
+      if (weekEntries.length >= 5) {
+        newAchievements.push({
+          id: 'consistent-week',
+          title: 'Consistency Champion',
+          description: "You've tracked consistently this week",
+          category: 'growth',
+          icon: '⭐',
+          celebrationMessage: 'Your commitment to understanding yourself is truly admirable!',
+          achievedAt: today.toISOString(),
+          shareableText:
+            "I've been consistently tracking my health journey this week. Small steps, big progress!",
+          significance: 'weekly',
+        });
+      }
+
+      // Awareness achievements
+      const entriesWithNotes = entries.filter(entry => entry.notes && entry.notes.length > 20);
+      if (entriesWithNotes.length >= 3) {
+        newAchievements.push({
+          id: 'mindful-reflection',
+          title: 'Mindful Reflection Master',
+          description: "You've been thoughtfully documenting your experiences",
+          category: 'awareness',
+          icon: '🧠',
+          celebrationMessage:
+            'Your self-awareness and reflection show incredible emotional intelligence!',
+          achievedAt: today.toISOString(),
+          shareableText: "I've been practicing mindful reflection on my health journey.",
+          significance: 'weekly',
+        });
+      }
+
+      // Courage achievements
+      const challengingDays = entries.filter(entry => entry.baselineData.pain >= 7);
+      if (challengingDays.length > 0) {
+        newAchievements.push({
+          id: 'brave-tracking',
+          title: 'Courage in Difficulty',
+          description: 'You continued tracking even on challenging high-pain days',
+          category: 'courage',
+          icon: '🦁',
+          celebrationMessage:
+            'It takes real courage to face difficult days with awareness and care!',
+          achievedAt: today.toISOString(),
+          shareableText:
+            "I'm showing courage by staying present with my experience, even on tough days.",
+          significance: 'milestone',
+        });
+      }
+
+      // Growth achievements
+      const monthEntries = entries.filter(
+        entry => localDayStart(entry.timestamp) >= localDayStart(monthAgo)
+      );
+      if (monthEntries.length >= 20) {
+        newAchievements.push({
+          id: 'growth-journey',
+          title: 'Growth Journey Explorer',
+          description: 'A month of dedicated self-awareness and tracking',
+          category: 'growth',
+          icon: '🌱',
+          celebrationMessage: 'Your dedication to growth and self-understanding is inspiring!',
+          achievedAt: today.toISOString(),
+          shareableText: "I've been on a month-long journey of self-discovery and health awareness.",
+          significance: 'milestone',
+        });
+      }
+
+      // Connection achievements
+      const communicationEntries = entries.filter(
+        entry =>
+          entry.notes &&
+          (entry.notes.toLowerCase().includes('talk') ||
+            entry.notes.toLowerCase().includes('share') ||
+            entry.notes.toLowerCase().includes('support'))
+      );
+
+      if (communicationEntries.length >= 3) {
+        newAchievements.push({
+          id: 'connection-builder',
+          title: 'Connection Builder',
+          description: "You've been reaching out and connecting with others",
+          category: 'connection',
+          icon: '🤝',
+          celebrationMessage:
+            'Building connections and sharing your experience shows wisdom and strength!',
+          achievedAt: today.toISOString(),
+          shareableText: "I've been building meaningful connections around my health journey.",
+          significance: 'weekly',
+        });
+      }
+
+      // Resilience achievements
+      const recoveryDays = entries.filter((entry, index) => {
+        if (index === 0) return false;
+        const prevEntry = entries[index - 1];
+        return prevEntry.baselineData.pain >= 7 && entry.baselineData.pain < 6;
+      });
+
+      if (recoveryDays.length >= 2) {
+        newAchievements.push({
+          id: 'resilience-champion',
+          title: 'Resilience Champion',
+          description: "You've shown recovery and resilience after difficult days",
+          category: 'resilience',
+          icon: '💪',
+          celebrationMessage: 'Your ability to bounce back shows incredible inner strength!',
+          achievedAt: today.toISOString(),
+          shareableText:
+            "I'm celebrating my resilience and ability to recover from challenging times.",
+          significance: 'milestone',
+        });
+      }
+
+      setAchievements(newAchievements);
+    };
+
+    const calculateProgressMetrics = () => {
+      const metrics: ProgressMetric[] = [
+        {
+          name: 'Self-Awareness Days',
+          value: entries.length,
+          unit: 'days',
+          description: "Days you've practiced mindful self-awareness",
+          color: 'bg-purple-500',
+          icon: <Heart className="w-4 h-4" />, 
+          celebrationThreshold: 30,
+        },
+        {
+          name: 'Reflection Entries',
+          value: entries.filter(e => e.notes && e.notes.length > 10).length,
+          unit: 'entries',
+          description: "Times you've taken the time to reflect deeply",
+          color: 'bg-blue-500',
+          icon: <Star className="w-4 h-4" />,
+          celebrationThreshold: 15,
+        },
+        {
+          name: 'Courage Moments',
+          value: entries.filter(e => e.baselineData.pain >= 7).length,
+          unit: 'moments',
+          description: "Times you've shown courage during difficult experiences",
+          color: 'bg-orange-500',
+          icon: <Trophy className="w-4 h-4" />,
+          celebrationThreshold: 5,
+        },
+        {
+          name: 'Growth Insights',
+          value: entries.filter(
+            e =>
+              e.notes &&
+              (e.notes.toLowerCase().includes('learn') ||
+                e.notes.toLowerCase().includes('realize') ||
+                e.notes.toLowerCase().includes('understand'))
+          ).length,
+          unit: 'insights',
+          description: "Personal insights and learnings you've gained",
+          color: 'bg-green-500',
+          icon: <Sparkles className="w-4 h-4" />,
+          celebrationThreshold: 10,
+        },
+      ];
+
+      setProgressMetrics(metrics);
+    };
+
     generateAchievements();
     calculateProgressMetrics();
   }, [entries]);
 
-  const generateAchievements = () => {
-    const newAchievements: CelebrationAchievement[] = [];
-    const today = new Date();
-    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-    // Daily achievements - use local-day comparison
-    const todayEntries = entries.filter(entry => isSameLocalDay(entry.timestamp, today));
-
-    if (todayEntries.length > 0) {
-      newAchievements.push({
-        id: 'daily-check-in',
-        title: 'Daily Self-Care Check-in',
-        description: 'You showed up for yourself today by tracking your experience',
-        category: 'self_care',
-        icon: '💚',
-        celebrationMessage:
-          "Every time you check in with yourself, you're practicing self-compassion!",
-        achievedAt: today.toISOString(),
-        shareableText:
-          'I practiced self-care today by listening to my body and tracking my experience.',
-        significance: 'daily',
-      });
-    }
-
-    // Weekly achievements - use local-day start for comparison
-    const weekEntries = entries.filter(
-      entry => localDayStart(entry.timestamp) >= localDayStart(weekAgo)
-    );
-
-    if (weekEntries.length >= 5) {
-      newAchievements.push({
-        id: 'consistent-week',
-        title: 'Consistency Champion',
-        description: "You've tracked consistently this week",
-        category: 'growth',
-        icon: '⭐',
-        celebrationMessage: 'Your commitment to understanding yourself is truly admirable!',
-        achievedAt: today.toISOString(),
-        shareableText:
-          "I've been consistently tracking my health journey this week. Small steps, big progress!",
-        significance: 'weekly',
-      });
-    }
-
-    // Awareness achievements
-    const entriesWithNotes = entries.filter(entry => entry.notes && entry.notes.length > 20);
-    if (entriesWithNotes.length >= 3) {
-      newAchievements.push({
-        id: 'mindful-reflection',
-        title: 'Mindful Reflection Master',
-        description: "You've been thoughtfully documenting your experiences",
-        category: 'awareness',
-        icon: '🧠',
-        celebrationMessage:
-          'Your self-awareness and reflection show incredible emotional intelligence!',
-        achievedAt: today.toISOString(),
-        shareableText: "I've been practicing mindful reflection on my health journey.",
-        significance: 'weekly',
-      });
-    }
-
-    // Courage achievements
-    const challengingDays = entries.filter(entry => entry.baselineData.pain >= 7);
-    if (challengingDays.length > 0) {
-      newAchievements.push({
-        id: 'brave-tracking',
-        title: 'Courage in Difficulty',
-        description: 'You continued tracking even on challenging high-pain days',
-        category: 'courage',
-        icon: '🦁',
-        celebrationMessage: 'It takes real courage to face difficult days with awareness and care!',
-        achievedAt: today.toISOString(),
-        shareableText:
-          "I'm showing courage by staying present with my experience, even on tough days.",
-        significance: 'milestone',
-      });
-    }
-
-    // Growth achievements
-    const monthEntries = entries.filter(
-      entry => localDayStart(entry.timestamp) >= localDayStart(monthAgo)
-    );
-    if (monthEntries.length >= 20) {
-      newAchievements.push({
-        id: 'growth-journey',
-        title: 'Growth Journey Explorer',
-        description: 'A month of dedicated self-awareness and tracking',
-        category: 'growth',
-        icon: '🌱',
-        celebrationMessage: 'Your dedication to growth and self-understanding is inspiring!',
-        achievedAt: today.toISOString(),
-        shareableText: "I've been on a month-long journey of self-discovery and health awareness.",
-        significance: 'milestone',
-      });
-    }
-
-    // Connection achievements
-    const communicationEntries = entries.filter(
-      entry =>
-        entry.notes &&
-        (entry.notes.toLowerCase().includes('talk') ||
-          entry.notes.toLowerCase().includes('share') ||
-          entry.notes.toLowerCase().includes('support'))
-    );
-
-    if (communicationEntries.length >= 3) {
-      newAchievements.push({
-        id: 'connection-builder',
-        title: 'Connection Builder',
-        description: "You've been reaching out and connecting with others",
-        category: 'connection',
-        icon: '🤝',
-        celebrationMessage:
-          'Building connections and sharing your experience shows wisdom and strength!',
-        achievedAt: today.toISOString(),
-        shareableText: "I've been building meaningful connections around my health journey.",
-        significance: 'weekly',
-      });
-    }
-
-    // Resilience achievements
-    const recoveryDays = entries.filter((entry, index) => {
-      if (index === 0) return false;
-      const prevEntry = entries[index - 1];
-      return prevEntry.baselineData.pain >= 7 && entry.baselineData.pain < 6;
-    });
-
-    if (recoveryDays.length >= 2) {
-      newAchievements.push({
-        id: 'resilience-champion',
-        title: 'Resilience Champion',
-        description: "You've shown recovery and resilience after difficult days",
-        category: 'resilience',
-        icon: '💪',
-        celebrationMessage: 'Your ability to bounce back shows incredible inner strength!',
-        achievedAt: today.toISOString(),
-        shareableText:
-          "I'm celebrating my resilience and ability to recover from challenging times.",
-        significance: 'milestone',
-      });
-    }
-
-    setAchievements(newAchievements);
-  };
-
-  const calculateProgressMetrics = () => {
-    const metrics: ProgressMetric[] = [
-      {
-        name: 'Self-Awareness Days',
-        value: entries.length,
-        unit: 'days',
-        description: "Days you've practiced mindful self-awareness",
-        color: 'bg-purple-500',
-        icon: <Heart className="w-4 h-4" />,
-        celebrationThreshold: 30,
-      },
-      {
-        name: 'Reflection Entries',
-        value: entries.filter(e => e.notes && e.notes.length > 10).length,
-        unit: 'entries',
-        description: "Times you've taken the time to reflect deeply",
-        color: 'bg-blue-500',
-        icon: <Star className="w-4 h-4" />,
-        celebrationThreshold: 15,
-      },
-      {
-        name: 'Courage Moments',
-        value: entries.filter(e => e.baselineData.pain >= 7).length,
-        unit: 'moments',
-        description: "Times you've shown courage during difficult experiences",
-        color: 'bg-orange-500',
-        icon: <Trophy className="w-4 h-4" />,
-        celebrationThreshold: 5,
-      },
-      {
-        name: 'Growth Insights',
-        value: entries.filter(
-          e =>
-            e.notes &&
-            (e.notes.toLowerCase().includes('learn') ||
-              e.notes.toLowerCase().includes('realize') ||
-              e.notes.toLowerCase().includes('understand'))
-        ).length,
-        unit: 'insights',
-        description: "Personal insights and learnings you've gained",
-        color: 'bg-green-500',
-        icon: <Sparkles className="w-4 h-4" />,
-        celebrationThreshold: 10,
-      },
-    ];
-
-    setProgressMetrics(metrics);
-  };
-
   const handleCelebrate = (achievement: CelebrationAchievement) => {
     setSelectedCelebration(achievement.id);
     setShowConfetti(true);
-
-    setTimeout(() => {
-      setShowConfetti(false);
-      setSelectedCelebration(null);
-    }, 3000);
-
-    if (achievement.significance === 'milestone') {
-      onMilestoneReached?.(achievement.title);
+    setTimeout(() => setShowConfetti(false), 1500);
+    if (achievement.significance === 'milestone' && onMilestoneReached) {
+      onMilestoneReached(achievement.id);
     }
   };
 
   const handleShare = (achievement: CelebrationAchievement) => {
-    onCelebrationShared?.(achievement.shareableText);
+    setSelectedCelebration(achievement.id);
+    if (onCelebrationShared) {
+      onCelebrationShared(achievement.id);
+    }
   };
 
   const getCategoryColor = (category: string) => {

@@ -3,6 +3,7 @@
  * Comprehensive emotional intelligence and state monitoring system
  */
 
+import { makeMoodEntry } from '../utils/mood-entry-factory';
 import {
   EmotionalStateMetrics,
   MoodEntry,
@@ -22,11 +23,8 @@ export class EmotionalStateTracker {
   private copingStrategies: Map<string, CopingEffectiveness[]> = new Map();
 
   // Track a new mood entry
-  async addMoodEntry(userId: string, entry: Omit<MoodEntry, 'timestamp'>): Promise<MoodEntry> {
-    const moodEntry: MoodEntry = {
-      ...entry,
-      timestamp: new Date(),
-    };
+  async addMoodEntry(userId: string, entry: Omit<MoodEntry, 'id' | 'timestamp'>): Promise<MoodEntry> {
+    const moodEntry: MoodEntry = makeMoodEntry(entry as Partial<MoodEntry>);
 
     const userEntries = this.moodEntries.get(userId) || [];
     userEntries.push(moodEntry);
@@ -57,7 +55,7 @@ export class EmotionalStateTracker {
   private async analyzeMoodPatterns(userId: string, entries: MoodEntry[]) {
     const now = new Date();
     const recentEntries = entries.filter(
-      e => now.getTime() - e.timestamp.getTime() < 7 * 24 * 60 * 60 * 1000 // Last 7 days
+      e => now.getTime() - new Date(e.timestamp).getTime() < 7 * 24 * 60 * 60 * 1000 // Last 7 days
     );
 
     const current =
@@ -125,18 +123,18 @@ export class EmotionalStateTracker {
   // Helper methods for pattern analysis
   private calculateDailyTrends(entries: MoodEntry[]): MoodEntry[] {
     const last7Days = entries.filter(e => {
-      const daysDiff = (Date.now() - e.timestamp.getTime()) / (1000 * 60 * 60 * 24);
+      const daysDiff = (Date.now() - new Date(e.timestamp).getTime()) / (1000 * 60 * 60 * 24);
       return daysDiff <= 7;
     });
 
-    return last7Days.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  return last7Days.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
 
   private calculateWeeklyAverages(entries: MoodEntry[]): MoodSummary[] {
     const weeklyData: { [week: string]: MoodEntry[] } = {};
 
     entries.forEach(entry => {
-      const week = this.getWeekKey(entry.timestamp);
+      const week = this.getWeekKey(new Date(entry.timestamp));
       if (!weeklyData[week]) weeklyData[week] = [];
       weeklyData[week].push(entry);
     });
@@ -159,7 +157,7 @@ export class EmotionalStateTracker {
     const monthlyData: { [month: string]: MoodEntry[] } = {};
 
     entries.forEach(entry => {
-      const month = `${entry.timestamp.getFullYear()}-${entry.timestamp.getMonth()}`;
+      const month = `${new Date(entry.timestamp).getFullYear()}-${new Date(entry.timestamp).getMonth()}`;
       if (!monthlyData[month]) monthlyData[month] = [];
       monthlyData[month].push(entry);
     });
@@ -229,13 +227,13 @@ export class EmotionalStateTracker {
         // Look for corresponding pain entries
         const painEntry = painEntries.find(
           p =>
-            Math.abs(new Date(p.timestamp).getTime() - current.timestamp.getTime()) <
+            Math.abs(new Date(p.timestamp).getTime() - new Date(current.timestamp).getTime()) <
             2 * 60 * 60 * 1000 // Within 2 hours
         );
 
         if (painEntry && painEntry.baselineData.pain >= 6) {
           triggers.push({
-            id: `pain-trigger-${current.timestamp.getTime()}`,
+            id: `pain-trigger-${new Date(current.timestamp).getTime()}`,
             name: 'Pain Flare',
             type: 'pain_flare',
             severity: painEntry.baselineData.pain >= 8 ? 'severe' : 'moderate',
@@ -251,8 +249,8 @@ export class EmotionalStateTracker {
         // Analyze context for other triggers
         if (current.triggers.length > 0) {
           current.triggers.forEach(trigger => {
-            triggers.push({
-              id: `trigger-${current.timestamp.getTime()}-${trigger}`,
+              triggers.push({
+                id: `trigger-${new Date(current.timestamp).getTime()}-${trigger}`,
               name: trigger,
               type: this.categorizeTrigger(trigger),
               severity: moodDrop >= 3 ? 'severe' : 'moderate',
@@ -282,10 +280,10 @@ export class EmotionalStateTracker {
     triggerTypes.forEach(type => {
       const typeTriggers = triggers.filter(t => t.type === type);
       const relatedEntries = moodEntries.filter(e =>
-        typeTriggers.some(
-          t => Math.abs(t.lastOccurrence.getTime() - e.timestamp.getTime()) < 60 * 60 * 1000 // Within 1 hour
-        )
-      );
+          typeTriggers.some(
+            t => Math.abs(new Date(t.lastOccurrence).getTime() - new Date(e.timestamp).getTime()) < 60 * 60 * 1000 // Within 1 hour
+          )
+        );
 
       patterns.push({
         triggerType: type,
@@ -313,7 +311,7 @@ export class EmotionalStateTracker {
 
         if (moodDrop >= 1.5 && moodRecovery >= 1) {
           const recoveryTime =
-            (next.timestamp.getTime() - current.timestamp.getTime()) / (1000 * 60); // minutes
+            (new Date(next.timestamp).getTime() - new Date(current.timestamp).getTime()) / (1000 * 60); // minutes
 
           recoveryMetrics.push({
             triggerEvent: current.triggers.join(', ') || 'Unknown trigger',
@@ -477,7 +475,8 @@ export class EmotionalStateTracker {
   // Utility methods
   private getDefaultMoodEntry(): MoodEntry {
     return {
-      timestamp: new Date(),
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
       mood: 5,
       energy: 5,
       anxiety: 5,
@@ -558,7 +557,7 @@ export class EmotionalStateTracker {
   private groupBySeason(entries: MoodEntry[]): { [season: string]: MoodEntry[] } {
     return entries.reduce(
       (seasons, entry) => {
-        const month = entry.timestamp.getMonth();
+        const month = new Date(entry.timestamp).getMonth();
         let season: string;
 
         if (month >= 2 && month <= 4) season = 'Spring';
@@ -572,7 +571,7 @@ export class EmotionalStateTracker {
         return seasons;
       },
       {} as { [season: string]: MoodEntry[] }
-    );
+  );
   }
 
   private generateSeasonalRecommendations(season: string): string[] {
@@ -636,9 +635,9 @@ export class EmotionalStateTracker {
     const monthlyTrends: { [week: string]: number } = {};
 
     entries.forEach(entry => {
-      const hour = entry.timestamp.getHours().toString();
-      const day = entry.timestamp.toLocaleDateString('en-US', { weekday: 'long' });
-      const week = this.getWeekKey(entry.timestamp);
+      const hour = new Date(entry.timestamp).getHours().toString();
+      const day = new Date(entry.timestamp).toLocaleDateString('en-US', { weekday: 'long' });
+      const week = this.getWeekKey(new Date(entry.timestamp));
 
       timeOfDay[hour] = (timeOfDay[hour] || 0) + 1;
       dayOfWeek[day] = (dayOfWeek[day] || 0) + 1;

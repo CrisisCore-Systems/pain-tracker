@@ -83,7 +83,7 @@ export function ToastProvider({
 
       return id;
     },
-    [maxToasts]
+    [maxToasts, removeToast]
   );
 
   const removeToast = useCallback((id: string) => {

@@ -1,9 +1,6 @@
 /* eslint-env browser */
-// Provide a runtime declaration for IDBValidKey to satisfy ESLint no-undef in environments
-// where the DOM lib types are present for TypeScript but ESLint's environment config
-// doesn't include the IndexedDB globals. This does not alter runtime behavior.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare const IDBValidKey: any;
+// Use a concrete union type for IndexedDB keys to avoid linting against global DOM
+// types like IDBValidKey which can trigger ESLint 'no-undef' in some environments.
 import { vaultService } from '../../services/VaultService';
 import { getSodium } from '../crypto/sodium';
 
@@ -158,9 +155,9 @@ export async function migrateIndexedDBStore(
   let migrated = 0;
 
   try {
-    // Use a concrete union type instead of DOM global IDBValidKey to avoid lint no-undef
-    type IndexedKey = string | number | Date | ArrayBuffer;
-    const keys = await new Promise<IDBValidKey[]>((resolve, reject) => {
+      // Use a concrete union type rather than DOM global types that may not be defined
+      type IndexedKey = string | number | Date | ArrayBuffer;
+      const keys = await new Promise<IndexedKey[]>((resolve, reject) => {
       const tx = db.transaction(storeName, 'readonly');
       const store = tx.objectStore(storeName);
       const request = store.getAllKeys();
@@ -168,7 +165,7 @@ export async function migrateIndexedDBStore(
       request.onerror = () => reject(request.error);
     });
 
-    for (const key of keys as string[]) {
+  for (const key of (keys as string[])) {
       const raw = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>(
         (resolve, reject) => {
           const tx = db.transaction(storeName, 'readonly');

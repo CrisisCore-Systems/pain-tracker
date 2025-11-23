@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   LayoutDashboard,
   Plus,
@@ -50,7 +50,7 @@ export function NavigationDemo() {
     });
 
   // Navigation items
-  const navItems: NavItem[] = [
+  const navItems: NavItem[] = useMemo(() => [
     {
       id: 'dashboard',
       name: 'Dashboard',
@@ -96,7 +96,7 @@ export function NavigationDemo() {
       shortcut: '?',
       description: 'Get help and support',
     },
-  ];
+  ], []);
 
   // Breadcrumb items (dynamic based on current view)
   const breadcrumbItems: BreadcrumbItem[] = [
@@ -198,16 +198,19 @@ export function NavigationDemo() {
   ];
 
   // Handle navigation
-  const handleNavigate = (viewId: string) => {
-    const item = navItems.find(i => i.id === viewId);
-    if (item) {
-      setCurrentView(viewId);
-      pushHistory({
-        id: viewId,
-        label: item.name,
-      });
-    }
-  };
+  const handleNavigate = useCallback(
+    (viewId: string) => {
+      const item = navItems.find(i => i.id === viewId);
+      if (item) {
+        setCurrentView(viewId);
+        pushHistory({
+          id: viewId,
+          label: item.name,
+        });
+      }
+    },
+    [navItems, pushHistory]
+  );
 
   // Global keyboard shortcuts
   useEffect(() => {
@@ -227,7 +230,7 @@ export function NavigationDemo() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [handleNavigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

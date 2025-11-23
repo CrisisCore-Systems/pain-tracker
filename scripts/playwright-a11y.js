@@ -1,5 +1,4 @@
-/* eslint-env node */
-/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable */
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');
@@ -32,7 +31,7 @@ async function run() {
       await page.addScriptTag({ content: axeSource });
       // Run axe
       const raw = await page.evaluate(async () => {
-        // eslint-disable-next-line no-undef
+         
         return await axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa'] } });
       });
       results.push({ url, axe: raw });

@@ -31,6 +31,7 @@
     "db:migrate": "node scripts/db/migrate.cjs",
     "db:seed": "node scripts/db/seed.cjs",
     "db:setup-clinic-auth": "node scripts/setup-clinic-auth.js",
+  "db:migrate:prod": "node scripts/db/apply-schema-prod.js",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --reporter=json --reporter=default",
     "sbom": "cyclonedx-npm --output-file security/sbom-latest.json --json",
@@ -93,6 +94,7 @@
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
   "dependencies": {
+    "redis": "^4.3.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@heroicons/react": "^2.2.0",

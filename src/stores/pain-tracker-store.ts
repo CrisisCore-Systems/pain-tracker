@@ -2,10 +2,14 @@ import { create } from 'zustand';
 import { formatNumber } from '../utils/formatting';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import type { PainEntry, EmergencyPanelData, ActivityLogEntry } from '../types';
+import type { PainEntry, EmergencyPanelData, ActivityLogEntry, ReportTemplate } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
+import { makeMoodEntry } from '../utils/mood-entry-factory';
 import type { FibromyalgiaEntry } from '../types/fibromyalgia';
 import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
+import { hipaaComplianceService } from '../services/HIPAACompliance';
+import { generatePDFReport } from '../utils/pdfReportGenerator';
+import { migratePainTrackerState } from './pain-tracker-migrations';
 
 export interface UIState {
   showWCBReport: boolean;
@@ -40,9 +44,9 @@ export interface PainTrackerState {
   deleteEntry: (id: string | number) => void;
 
   // Mood Entry Actions
-  addMoodEntry: (entry: Omit<MoodEntry, 'timestamp'>) => void;
-  updateMoodEntry: (timestamp: string, updates: Partial<MoodEntry>) => void;
-  deleteMoodEntry: (timestamp: string) => void;
+  addMoodEntry: (entry: Omit<MoodEntry, 'id' | 'timestamp'>) => void;
+  updateMoodEntry: (idOrTimestamp: number | string, updates: Partial<MoodEntry>) => void;
+  deleteMoodEntry: (idOrTimestamp: number | string) => void;
 
   // Fibromyalgia Entry Actions
   addFibromyalgiaEntry: (entry: FibromyalgiaEntry) => void;
@@ -69,6 +73,12 @@ export interface PainTrackerState {
   setLoading: (loading: boolean) => void;
   clearAllData: () => void;
   loadSampleData: () => void;
+  // Reporting
+  scheduledReports: import('../types').ScheduledReport[];
+  addScheduledReport: (report: import('../types').ScheduledReport) => void;
+  deleteScheduledReport: (id: string) => void;
+  updateScheduledReport: (id: string, updates: Partial<import('../types').ScheduledReport>) => void;
+  runScheduledReport: (id: string) => Promise<void>;
 }
 
 export const usePainTrackerStore = create<PainTrackerState>()(
@@ -94,6 +104,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
           isLoading: false,
           error: null,
+          scheduledReports: [],
 
           // Entry Management
           addEntry: entryData => {
@@ -166,44 +177,34 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           // Mood Entry Management
           addMoodEntry: entryData => {
             set(state => {
-              const newMoodEntry: MoodEntry = {
-                timestamp: new Date(),
-                mood: entryData.mood || 5,
-                energy: entryData.energy || 5,
-                anxiety: entryData.anxiety || 5,
-                stress: entryData.stress || 5,
-                hopefulness: entryData.hopefulness || 5,
-                selfEfficacy: entryData.selfEfficacy || 5,
-                emotionalClarity: entryData.emotionalClarity || 5,
-                emotionalRegulation: entryData.emotionalRegulation || 5,
-                context: entryData.context || '',
-                triggers: entryData.triggers || [],
-                copingStrategies: entryData.copingStrategies || [],
-                socialSupport: entryData.socialSupport || 'none',
-                notes: entryData.notes || '',
-              };
+              const newMoodEntry: MoodEntry = makeMoodEntry(entryData as Partial<MoodEntry>);
 
               state.moodEntries.push(newMoodEntry);
               state.error = null;
             });
           },
 
-          updateMoodEntry: (timestamp, updates) => {
+          updateMoodEntry: (idOrTimestamp, updates) => {
             set(state => {
-              const index = state.moodEntries.findIndex(
-                entry => entry.timestamp.toISOString() === timestamp
-              );
+              const index = state.moodEntries.findIndex(entry => {
+                if (typeof idOrTimestamp === 'number') return entry.id === idOrTimestamp;
+                // Normalize timestamp strings
+                const incoming = idOrTimestamp;
+                return entry.timestamp === incoming || new Date(entry.timestamp).toISOString() === new Date(incoming).toISOString();
+              });
               if (index >= 0) {
                 state.moodEntries[index] = { ...state.moodEntries[index], ...updates };
               }
             });
           },
 
-          deleteMoodEntry: timestamp => {
+          deleteMoodEntry: idOrTimestamp => {
             set(state => {
-              state.moodEntries = state.moodEntries.filter(
-                entry => entry.timestamp.toISOString() !== timestamp
-              );
+              state.moodEntries = state.moodEntries.filter(entry => {
+                if (typeof idOrTimestamp === 'number') return entry.id !== idOrTimestamp;
+                const incoming = idOrTimestamp;
+                return !(entry.timestamp === incoming || new Date(entry.timestamp).toISOString() === new Date(incoming).toISOString());
+              });
             });
           },
 
@@ -329,15 +330,120 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               });
             });
           },
+
+          // Reporting
+          addScheduledReport: schedule => {
+            set(state => {
+              state.scheduledReports.push(schedule);
+            });
+            // Log audit event for creation
+            void hipaaComplianceService.logAuditEvent({
+              actionType: 'create',
+              userId: 'local-user',
+              userRole: 'patient',
+              resourceType: 'ScheduledReport',
+              resourceId: schedule.id,
+              outcome: 'success',
+              details: { name: schedule.name, frequency: schedule.frequency, recipients: schedule.recipients },
+            }).catch(() => {
+              // audit logging should not block user flow
+            });
+          },
+
+          deleteScheduledReport: id => {
+            set(state => {
+              state.scheduledReports = state.scheduledReports.filter(s => s.id !== id);
+            });
+            void hipaaComplianceService.logAuditEvent({
+              actionType: 'delete',
+              userId: 'local-user',
+              userRole: 'patient',
+              resourceType: 'ScheduledReport',
+              resourceId: id,
+              outcome: 'success',
+              details: { action: 'delete' },
+            }).catch(() => {});
+          },
+
+          updateScheduledReport: (id, updates) => {
+            set(state => {
+              const idx = state.scheduledReports.findIndex(s => s.id === id);
+              if (idx >= 0) {
+                state.scheduledReports[idx] = { ...state.scheduledReports[idx], ...updates };
+              }
+            });
+            void hipaaComplianceService.logAuditEvent({
+              actionType: 'update',
+              userId: 'local-user',
+              userRole: 'patient',
+              resourceType: 'ScheduledReport',
+              resourceId: id,
+              outcome: 'success',
+              details: { updates },
+            }).catch(() => {});
+          },
+
+          runScheduledReport: async id => {
+            const state = usePainTrackerStore.getState();
+            const schedule = state.scheduledReports.find(s => s.id === id);
+            if (!schedule) return;
+
+            try {
+              // Create PDF options using template placeholder and store entries for the period
+                // For now, create a simple date range of last 30 days
+              const end = new Date().toISOString().split('T')[0];
+              const start = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+              await generatePDFReport({
+                template: { id: schedule.templateId, name: schedule.name, description: schedule.name, type: 'summary', sections: [], createdAt: new Date().toISOString(), lastModified: new Date().toISOString() } as ReportTemplate,
+                entries: state.entries,
+                dateRange: { start, end },
+                includeCharts: true,
+                includeRawData: false,
+              });
+
+              // Update lastRun and audit
+              set(s => {
+                const idx = s.scheduledReports.findIndex(r => r.id === id);
+                if (idx >= 0) s.scheduledReports[idx].lastRun = new Date().toISOString();
+              });
+
+              void hipaaComplianceService.logAuditEvent({
+                actionType: 'export',
+                userId: 'local-user',
+                userRole: 'patient',
+                resourceType: 'ScheduledReport',
+                resourceId: schedule.id,
+                outcome: 'success',
+                details: { runNow: true, recipients: schedule.recipients },
+              }).catch(() => {});
+            } catch (err) {
+              void hipaaComplianceService.logAuditEvent({
+                actionType: 'export',
+                userId: 'local-user',
+                userRole: 'patient',
+                resourceType: 'ScheduledReport',
+                resourceId: id,
+                outcome: 'failure',
+                details: { error: (err as Error).message || 'unknown' },
+              }).catch(() => {});
+            }
+          },
         }))
       ),
       {
         name: 'pain-tracker-storage',
+        version: 2,
+        migrate: (persistedState: unknown, fromVersion: number) => {
+          const state = persistedState as Partial<PainTrackerState> | undefined;
+          return migratePainTrackerState(state, fromVersion);
+        },
         partialize: state => ({
           entries: state.entries,
           moodEntries: state.moodEntries,
           emergencyData: state.emergencyData,
           activityLogs: state.activityLogs,
+          scheduledReports: state.scheduledReports,
         }),
       }
     ),

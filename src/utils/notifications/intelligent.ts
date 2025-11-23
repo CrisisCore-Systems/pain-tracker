@@ -336,7 +336,7 @@ class IntelligentNotificationTrigger {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   private async evaluateGoalProgress(
     _condition: TriggerCondition,
     _entries: PainEntry[]

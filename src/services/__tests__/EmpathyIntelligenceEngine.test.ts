@@ -6,7 +6,8 @@ function buildMoodEntry(
   overrides: Partial<MoodEntry> & { notes: string; context: string }
 ): MoodEntry {
   const defaults: MoodEntry = {
-    timestamp: new Date(),
+    id: 1,
+    timestamp: new Date().toISOString(),
     mood: 6,
     energy: 6,
     anxiety: 4,

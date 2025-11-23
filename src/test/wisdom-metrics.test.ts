@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { EmpathyIntelligenceEngine } from '../services/EmpathyIntelligenceEngine';
 import type { MoodEntry } from '../types/quantified-empathy';
+import { toIsoString } from '../utils/date-utils';
 import type { PainEntry } from '../types';
 
 const engine = new EmpathyIntelligenceEngine({
@@ -12,9 +13,11 @@ const engine = new EmpathyIntelligenceEngine({
   privacyLevel: 'standard',
 });
 
-function mood(note: string, overrides: Partial<MoodEntry> = {}): MoodEntry {
+function mood(note: string, overrides: Partial<MoodEntry> & { timestamp?: string | Date } = {}): MoodEntry {
+  const ts = toIsoString(overrides.timestamp) ?? overrides.timestamp;
   const base: MoodEntry = {
-    timestamp: new Date(),
+    id: overrides.id ?? Date.now(),
+    timestamp: ts ?? new Date().toISOString(),
     mood: 6,
     energy: 6,
     anxiety: 4,
@@ -29,7 +32,7 @@ function mood(note: string, overrides: Partial<MoodEntry> = {}): MoodEntry {
     socialSupport: 'minimal',
     notes: note,
   };
-  return { ...base, ...overrides };
+  return { ...base, ...overrides, timestamp: ts ?? base.timestamp } as MoodEntry;
 }
 
 const pain: PainEntry = {
@@ -61,11 +64,11 @@ describe('Wisdom metric heuristics', () => {
 
   it('calculates wisdom growth rate based on increased insight density', async () => {
     const early = Array.from({ length: 3 }, (_, i) =>
-      mood('just a day', { timestamp: new Date(Date.now() - (10 - i) * 86400000) })
+  mood('just a day', { timestamp: new Date(Date.now() - (10 - i) * 86400000).toISOString() })
     );
     const later = Array.from({ length: 4 }, (_, i) =>
       mood('I learned an insight about growth', {
-        timestamp: new Date(Date.now() - (4 - i) * 86400000),
+  timestamp: new Date(Date.now() - (4 - i) * 86400000).toISOString(),
       })
     );
     const metrics = await engine.calculateAdvancedEmpathyMetrics(

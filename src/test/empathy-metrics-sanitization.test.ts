@@ -32,7 +32,8 @@ function makePain(notes: string): PainEntry {
 
 function makeMood(notes: string): MoodEntry {
   return {
-    timestamp: new Date(),
+    id: Math.random(),
+    timestamp: new Date().toISOString(),
     mood: 6,
     energy: 6,
     anxiety: 4,

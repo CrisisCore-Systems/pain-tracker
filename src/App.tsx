@@ -36,6 +36,7 @@ import { LandingPage } from './pages/LandingPage';
 import { ClinicPortal } from './pages/clinic/ClinicPortal';
 import { PricingPage } from './pages/PricingPage';
 import { SubscriptionManagementPage } from './pages/SubscriptionManagementPage';
+import { SubmitStoryPage } from './pages/SubmitStoryPage';
 
 const ErrorFallback = () => {
   return (
@@ -183,6 +184,9 @@ function App() {
                         </div>
                       </VaultGate>
                     } />
+
+                    {/* Submit testimonial/stories */}
+                    <Route path="/submit-story" element={<SubmitStoryPage />} />
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />

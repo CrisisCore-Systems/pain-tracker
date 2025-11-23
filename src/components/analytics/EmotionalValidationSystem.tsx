@@ -38,130 +38,132 @@ export const EmotionalValidationSystem: React.FC<EmotionalFeedbackProps> = ({
   const [insights, setInsights] = useState<EmotionalInsight[]>([]);
 
   useEffect(() => {
+    const generatePersonalizedValidations = () => {
+      const messages: ValidationMessage[] = [];
+      const painLevel = painEntry.baselineData.pain;
+      const hasNotes = painEntry.notes && painEntry.notes.length > 0;
+
+      // High pain validation
+      if (painLevel >= 7) {
+        messages.push({
+          id: 'high-pain-1',
+          type: 'acknowledgment',
+          message: 'High pain days are incredibly challenging. Your experience is real and valid.',
+          context: 'high_pain',
+        });
+        messages.push({
+          id: 'high-pain-2',
+          type: 'encouragement',
+          message:
+            "You're showing immense strength by continuing to track and care for yourself during difficult times.",
+          context: 'high_pain',
+        });
+      }
+
+      // Medium pain validation
+      if (painLevel >= 4 && painLevel < 7) {
+        messages.push({
+          id: 'med-pain-1',
+          type: 'affirmation',
+          message: 'Managing pain at this level while still functioning shows remarkable resilience.',
+          context: 'general',
+        });
+      }
+
+      // Progress acknowledgment
+      if (painLevel < 4) {
+        messages.push({
+          id: 'progress-1',
+          type: 'encouragement',
+          message: 'Having a lower pain day is worth celebrating. You deserve to feel good.',
+          context: 'progress',
+        });
+      }
+
+      // Notes appreciation
+      if (hasNotes) {
+        messages.push({
+          id: 'notes-1',
+          type: 'affirmation',
+          message:
+            'Taking time to reflect and document your experience shows incredible self-awareness.',
+          context: 'general',
+        });
+      }
+
+      // General validations
+      messages.push(
+        {
+          id: 'general-1',
+          type: 'wisdom',
+          message: "Your pain doesn't define you, but your courage in facing it shows who you are.",
+          context: 'general',
+        },
+        {
+          id: 'general-2',
+          type: 'affirmation',
+          message:
+            'Every day you live with pain and still choose to engage with life is an act of bravery.',
+          context: 'general',
+        }
+      );
+
+      setPersonalizedMessages(messages);
+    };
+
+    const generateInsights = () => {
+      const newInsights: EmotionalInsight[] = [];
+
+      // Pattern insights
+      newInsights.push({
+        id: 'pattern-1',
+        category: 'pattern',
+        insight:
+          "You've been consistently tracking your pain, which shows commitment to understanding your experience.",
+        actionable: 'Consider looking for patterns in what helps or hinders your pain management.',
+        affirmation: 'Your dedication to self-awareness is a powerful tool for healing.',
+      });
+
+      // Strength insights
+      if (painEntry.notes && painEntry.notes.toLowerCase().includes('cope')) {
+        newInsights.push({
+          id: 'strength-1',
+          category: 'strength',
+          insight:
+            "You're actively working on coping strategies, which demonstrates incredible resourcefulness.",
+          actionable:
+            "Keep exploring what works best for you - you're the expert on your own experience.",
+          affirmation: 'Your ability to adapt and find ways to cope is truly remarkable.',
+        });
+      }
+
+      // Coping insights
+      newInsights.push({
+        id: 'coping-1',
+        category: 'coping',
+        insight: "Each time you track your pain, you're practicing mindful awareness of your body.",
+        actionable:
+          'This awareness can become a foundation for developing personalized coping strategies.',
+        affirmation: 'Your mindful attention to your experience is a form of self-compassion.',
+      });
+
+      // Growth insights
+      newInsights.push({
+        id: 'growth-1',
+        category: 'growth',
+        insight: "By consistently engaging with pain tracking, you're building emotional resilience.",
+        actionable: 'Consider celebrating small wins and progress, even on difficult days.',
+        affirmation: 'Your journey of growth and self-discovery is inspiring and valid.',
+      });
+
+      setInsights(newInsights);
+    };
+
     generatePersonalizedValidations();
     generateInsights();
   }, [painEntry]);
 
-  const generatePersonalizedValidations = () => {
-    const messages: ValidationMessage[] = [];
-    const painLevel = painEntry.baselineData.pain;
-    const hasNotes = painEntry.notes && painEntry.notes.length > 0;
-
-    // High pain validation
-    if (painLevel >= 7) {
-      messages.push({
-        id: 'high-pain-1',
-        type: 'acknowledgment',
-        message: 'High pain days are incredibly challenging. Your experience is real and valid.',
-        context: 'high_pain',
-      });
-      messages.push({
-        id: 'high-pain-2',
-        type: 'encouragement',
-        message:
-          "You're showing immense strength by continuing to track and care for yourself during difficult times.",
-        context: 'high_pain',
-      });
-    }
-
-    // Medium pain validation
-    if (painLevel >= 4 && painLevel < 7) {
-      messages.push({
-        id: 'med-pain-1',
-        type: 'affirmation',
-        message: 'Managing pain at this level while still functioning shows remarkable resilience.',
-        context: 'general',
-      });
-    }
-
-    // Progress acknowledgment
-    if (painLevel < 4) {
-      messages.push({
-        id: 'progress-1',
-        type: 'encouragement',
-        message: 'Having a lower pain day is worth celebrating. You deserve to feel good.',
-        context: 'progress',
-      });
-    }
-
-    // Notes appreciation
-    if (hasNotes) {
-      messages.push({
-        id: 'notes-1',
-        type: 'affirmation',
-        message:
-          'Taking time to reflect and document your experience shows incredible self-awareness.',
-        context: 'general',
-      });
-    }
-
-    // General validations
-    messages.push(
-      {
-        id: 'general-1',
-        type: 'wisdom',
-        message: "Your pain doesn't define you, but your courage in facing it shows who you are.",
-        context: 'general',
-      },
-      {
-        id: 'general-2',
-        type: 'affirmation',
-        message:
-          'Every day you live with pain and still choose to engage with life is an act of bravery.',
-        context: 'general',
-      }
-    );
-
-    setPersonalizedMessages(messages);
-  };
-
-  const generateInsights = () => {
-    const newInsights: EmotionalInsight[] = [];
-
-    // Pattern insights
-    newInsights.push({
-      id: 'pattern-1',
-      category: 'pattern',
-      insight:
-        "You've been consistently tracking your pain, which shows commitment to understanding your experience.",
-      actionable: 'Consider looking for patterns in what helps or hinders your pain management.',
-      affirmation: 'Your dedication to self-awareness is a powerful tool for healing.',
-    });
-
-    // Strength insights
-    if (painEntry.notes && painEntry.notes.toLowerCase().includes('cope')) {
-      newInsights.push({
-        id: 'strength-1',
-        category: 'strength',
-        insight:
-          "You're actively working on coping strategies, which demonstrates incredible resourcefulness.",
-        actionable:
-          "Keep exploring what works best for you - you're the expert on your own experience.",
-        affirmation: 'Your ability to adapt and find ways to cope is truly remarkable.',
-      });
-    }
-
-    // Coping insights
-    newInsights.push({
-      id: 'coping-1',
-      category: 'coping',
-      insight: "Each time you track your pain, you're practicing mindful awareness of your body.",
-      actionable:
-        'This awareness can become a foundation for developing personalized coping strategies.',
-      affirmation: 'Your mindful attention to your experience is a form of self-compassion.',
-    });
-
-    // Growth insights
-    newInsights.push({
-      id: 'growth-1',
-      category: 'growth',
-      insight: "By consistently engaging with pain tracking, you're building emotional resilience.",
-      actionable: 'Consider celebrating small wins and progress, even on difficult days.',
-      affirmation: 'Your journey of growth and self-discovery is inspiring and valid.',
-    });
-
-    setInsights(newInsights);
-  };
+  
 
   const handleValidationSelect = (message: ValidationMessage) => {
     setSelectedValidation(message.id);

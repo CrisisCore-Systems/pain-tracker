@@ -138,8 +138,10 @@ export function PainTracker() {
 
   // Dynamic import of walkthrough steps
   useEffect(() => {
+    let mounted = true;
     import('../../data/sampleData')
       .then(({ walkthroughSteps: steps }) => {
+        if (!mounted) return;
         if (Array.isArray(steps)) {
           setWalkthroughSteps(steps as WalkthroughStep[]);
         } else {
@@ -147,9 +149,13 @@ export function PainTracker() {
         }
       })
       .catch(error => {
+        if (!mounted) return;
         console.warn('Failed to load walkthrough steps:', error);
         setWalkthroughSteps([]); // Fallback to empty array
       });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Check for first-time user

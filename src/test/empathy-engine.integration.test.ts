@@ -3,6 +3,7 @@ import { empathyIntelligenceEngine } from '../services/EmpathyIntelligenceEngine
 import { EmpathyIntelligenceEngine } from '../services/EmpathyIntelligenceEngine';
 import type { PainEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
+import { toIsoString } from '../utils/date-utils';
 
 // Helper builders
 function pain(id: number, painLevel: number, note: string): PainEntry {
@@ -20,9 +21,11 @@ function pain(id: number, painLevel: number, note: string): PainEntry {
   };
 }
 
-function mood(idx: number, note: string, overrides: Partial<MoodEntry> = {}): MoodEntry {
+function mood(idx: number, note: string, overrides: Partial<MoodEntry> & { timestamp?: string | Date } = {}): MoodEntry {
+  const ts = toIsoString(overrides.timestamp) ?? overrides.timestamp;
   const base: MoodEntry = {
-    timestamp: new Date(Date.now() - idx * 3600_000),
+    id: overrides.id ?? idx,
+    timestamp: ts ?? new Date(Date.now() - idx * 3600_000).toISOString(),
     mood: 5 + (idx % 3),
     energy: 5,
     anxiety: 3 + (idx % 2),
@@ -37,7 +40,7 @@ function mood(idx: number, note: string, overrides: Partial<MoodEntry> = {}): Mo
     socialSupport: idx % 2 === 0 ? 'moderate' : 'minimal',
     notes: note,
   };
-  return { ...base, ...overrides };
+  return { ...base, ...overrides, timestamp: ts ?? base.timestamp } as MoodEntry;
 }
 
 const engine = new EmpathyIntelligenceEngine({

@@ -71,7 +71,7 @@ export async function extractWisdomInsights(
         id: `wisdom_${userId}_${idx}`,
         category: categorizeWisdom(entry.notes),
         insight: entry.notes,
-        dateGained: entry.timestamp,
+  dateGained: new Date(entry.timestamp),
         contextualSource: entry.context,
         applicability: assessApplicability(entry.notes),
         transformativeLevel: assessTransformativeLevel(entry.notes),

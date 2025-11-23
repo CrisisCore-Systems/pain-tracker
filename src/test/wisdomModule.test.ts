@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import type { MoodEntry } from '../types/quantified-empathy';
 import {
   categorizeWisdom,
   assessApplicability,
@@ -7,7 +8,8 @@ import {
 
 interface TestMoodEntry {
   notes: string;
-  timestamp: Date;
+  id: number;
+  timestamp: string;
   emotionalClarity: number;
   emotionalRegulation: number;
   hopefulness: number;
@@ -23,7 +25,8 @@ interface TestMoodEntry {
 }
 const mkMood = (notes: string): TestMoodEntry => ({
   notes,
-  timestamp: new Date(),
+  id: 1,
+  timestamp: new Date().toISOString(),
   emotionalClarity: 6,
   emotionalRegulation: 6,
   hopefulness: 5,
@@ -49,11 +52,11 @@ describe('WisdomModule', () => {
     const insights = await extractWisdomInsights(
       'u',
       [],
-      [
+      ([
         mkMood(
           'I realized something important and learned a deep lesson about growth and purpose in life'
         ),
-      ]
+      ] as unknown) as MoodEntry[]
     );
     expect(insights.length).toBe(1);
   });

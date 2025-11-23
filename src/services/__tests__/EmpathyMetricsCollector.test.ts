@@ -70,7 +70,8 @@ const basePainEntry: PainEntry = {
 };
 
 const baseMoodEntry: MoodEntry = {
-  timestamp: new Date(),
+  id: 1,
+  timestamp: new Date().toISOString(),
   mood: 6,
   energy: 5,
   anxiety: 4,

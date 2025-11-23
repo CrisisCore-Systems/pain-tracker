@@ -22,7 +22,8 @@ function makePainEntry(id: number, pain: number, timestampOffsetDays: number): P
 
 function makeMoodEntry(_id: number, note: string, mood = 6): MoodEntry {
   return {
-    timestamp: new Date(),
+    id: _id,
+    timestamp: new Date().toISOString(),
     mood,
     energy: 5,
     anxiety: 3,

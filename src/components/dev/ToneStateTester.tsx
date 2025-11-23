@@ -21,12 +21,9 @@ import { useTone } from '../../contexts/useTone';
 import type { PatientState } from '../../types/tone';
 
 export function ToneStateTester() {
+  const isDev = import.meta.env.DEV;
   const { context, forceState, preferences, updatePreferences } = useTone();
   const [isVisible, setIsVisible] = useState(false); // Start minimized by default
-
-  if (!import.meta.env.DEV) {
-    return null; // Only show in development
-  }
 
   const toggleVisibility = useCallback(() => {
     setIsVisible(v => !v);
@@ -61,6 +58,8 @@ export function ToneStateTester() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isVisible, toggleVisibility, forceState]);
+
+  if (!isDev) return null; // Only show in development
 
   if (!isVisible) {
     return (

@@ -53,7 +53,7 @@ export const GoalList: React.FC<GoalListProps> = ({ onCreateGoal, onEditGoal, on
 
   useEffect(() => {
     filterAndSortGoals();
-  }, [goals, searchTerm, statusFilter, typeFilter, sortBy]);
+  }, [filterAndSortGoals]);
 
   const loadGoals = async () => {
     try {

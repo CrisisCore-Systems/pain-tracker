@@ -203,8 +203,8 @@ export class SubscriptionAwareActions {
    * Add mood entry with quota check
    */
   async addMoodEntry(
-    entry: Omit<MoodEntry, 'timestamp'>,
-    storeAction: (entry: Omit<MoodEntry, 'timestamp'>) => void
+    entry: Omit<MoodEntry, 'id' | 'timestamp'>,
+    storeAction: (entry: Omit<MoodEntry, 'id' | 'timestamp'>) => void
   ): Promise<SubscriptionActionResult<void>> {
     const quotaCheck = await checkMoodEntryQuota(this.userId);
     if (!quotaCheck.success) {
@@ -212,7 +212,7 @@ export class SubscriptionAwareActions {
     }
 
     try {
-      storeAction(entry);
+    storeAction(entry as Omit<MoodEntry, 'id' | 'timestamp'>);
       void trackMoodEntryUsage(this.userId);
       return { success: true };
     } catch (err) {

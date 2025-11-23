@@ -283,7 +283,7 @@ export class HolisticWellbeingService {
   private getRecentMoodEntries(entries: MoodEntry[], days: number): MoodEntry[] {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - days);
-    return entries.filter(e => e.timestamp >= cutoff);
+  return entries.filter(e => new Date(e.timestamp).getTime() >= cutoff.getTime());
   }
 
   private calculateLifeSatisfaction(avgPain: number, avgMood: number, avgSleep: number): number {

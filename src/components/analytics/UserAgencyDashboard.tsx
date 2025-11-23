@@ -69,6 +69,189 @@ export const UserAgencyDashboard: React.FC<UserAgencyDashboardProps> = ({
   const [newGoal, setNewGoal] = useState('');
 
   useEffect(() => {
+    const calculateAgencyMetrics = () => {
+      const totalEntries = entries.length;
+      const entriesWithNotes = entries.filter(e => e.notes && e.notes.length > 0).length;
+      const recentEntries = entries.filter(e => {
+        const entryDate = new Date(e.timestamp);
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        return entryDate >= weekAgo;
+      }).length;
+
+      const metrics: AgencyMetric[] = [
+        {
+          name: 'Self-Advocacy',
+          value: Math.min(100, (entriesWithNotes / Math.max(totalEntries, 1)) * 100),
+          maxValue: 100,
+          description: "How well you're documenting and expressing your experiences",
+          color: 'bg-blue-500',
+          improvements: [
+            'Add more detailed notes to your entries',
+            "Describe what helps and what doesn't",
+            'Share your insights with your healthcare team',
+          ],
+        },
+        {
+          name: 'Consistency Control',
+          value: Math.min(100, (recentEntries / 7) * 100),
+          maxValue: 100,
+          description: 'Your consistency in self-monitoring shows self-control',
+          color: 'bg-green-500',
+          improvements: [
+            'Set daily reminder times that work for you',
+            'Create a tracking routine that fits your lifestyle',
+            'Celebrate small wins in consistency',
+          ],
+        },
+        {
+          name: 'Information Gathering',
+          value: Math.min(100, totalEntries * 5), // 5 points per entry
+          maxValue: 100,
+          description: 'Knowledge about your patterns empowers better decisions',
+          color: 'bg-purple-500',
+          improvements: [
+            'Look for patterns in your data',
+            'Research topics that interest you',
+            'Ask questions during medical appointments',
+          ],
+        },
+        {
+          name: 'Choice Ownership',
+          value: 85, // This would be calculated based on user preferences set
+          maxValue: 100,
+          description: "How much you've customized your experience to fit your needs",
+          color: 'bg-orange-500',
+          improvements: [
+            'Customize your tracking preferences',
+            'Set personal goals that matter to you',
+            'Choose how and when to share your data',
+          ],
+        },
+      ];
+
+      setAgencyMetrics(metrics);
+    };
+
+    const generateChoiceOptions = () => {
+      const options: ChoiceOption[] = [
+        {
+          id: 'tracking-frequency',
+          title: 'Tracking Frequency',
+          description:
+            'Choose how often you want to track - daily, every few days, or when you feel like it',
+          category: 'tracking',
+          impact: 'high',
+        },
+        {
+          id: 'sharing-level',
+          title: 'Data Sharing Control',
+          description: 'Decide who can see your data and how much detail to share',
+          category: 'privacy',
+          impact: 'high',
+        },
+        {
+          id: 'goal-setting',
+          title: 'Personal Goal Setting',
+          description: 'Define what success looks like for you, beyond just pain scores',
+          category: 'goals',
+          impact: 'high',
+        },
+        {
+          id: 'reminder-style',
+          title: 'Reminder Preferences',
+          description: 'Choose gentle nudges, no reminders, or custom notification styles',
+          category: 'tracking',
+          impact: 'medium',
+        },
+        {
+          id: 'support-network',
+          title: 'Support Network',
+          description: 'Decide how to connect with healthcare providers, family, or peer support',
+          category: 'support',
+          impact: 'high',
+        },
+        {
+          id: 'data-export',
+          title: 'Data Ownership',
+          description: "Export your data anytime - it's yours to keep and use as you choose",
+          category: 'privacy',
+          impact: 'medium',
+        },
+      ];
+
+      setChoiceOptions(options);
+    };
+
+    const generateEmpowermentActions = () => {
+      const actions: EmpowermentAction[] = [
+        {
+          id: 'learn-patterns',
+          title: 'Discover Your Patterns',
+          description: 'Analyze your tracking data to identify personal patterns and triggers',
+          type: 'learn',
+          difficulty: 'easy',
+          timeRequired: '10-15 minutes',
+          benefits: ['Better self-understanding', 'Informed decision-making', 'Pattern recognition'],
+        },
+        {
+          id: 'customize-dashboard',
+          title: 'Customize Your Experience',
+          description: 'Modify the interface, metrics, and features to match your preferences',
+          type: 'customize',
+          difficulty: 'easy',
+          timeRequired: '5-10 minutes',
+          benefits: ['Personalized experience', 'Increased engagement', 'Better usability'],
+        },
+        {
+          id: 'set-boundaries',
+          title: 'Set Digital Boundaries',
+          description: 'Control notifications, sharing settings, and data privacy options',
+          type: 'advocate',
+          difficulty: 'moderate',
+          timeRequired: '15-20 minutes',
+          benefits: ['Privacy control', 'Reduced overwhelm', 'Intentional engagement'],
+        },
+        {
+          id: 'join-community',
+          title: 'Connect with Peers',
+          description: 'Join support groups or forums with others who share similar experiences',
+          type: 'connect',
+          difficulty: 'moderate',
+          timeRequired: '20-30 minutes',
+          benefits: ['Peer support', 'Shared wisdom', 'Reduced isolation'],
+        },
+        {
+          id: 'advocate-healthcare',
+          title: 'Healthcare Self-Advocacy',
+          description: 'Use your data to communicate more effectively with healthcare providers',
+          type: 'advocate',
+          difficulty: 'advanced',
+          timeRequired: '30+ minutes',
+          benefits: ['Better care coordination', 'Improved outcomes', 'Stronger voice'],
+        },
+        {
+          id: 'create-plan',
+          title: 'Personal Action Plan',
+          description: 'Develop a personalized plan for managing your health based on your insights',
+          type: 'plan',
+          difficulty: 'advanced',
+          timeRequired: '45+ minutes',
+          benefits: ['Clear direction', 'Proactive approach', 'Increased confidence'],
+        },
+      ];
+
+      setEmpowermentActions(actions);
+    };
+
+    const loadPersonalGoals = () => {
+      // In a real app, this would load from user preferences/storage
+      setPersonalGoals([
+        'Understand my pain patterns better',
+        'Communicate more effectively with my doctor',
+        'Build a sustainable self-care routine',
+      ]);
+    };
+
     calculateAgencyMetrics();
     generateChoiceOptions();
     generateEmpowermentActions();

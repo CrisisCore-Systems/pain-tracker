@@ -356,8 +356,8 @@ describe('PainTracker', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />, { wrapper: TestWrapper });
 
-      // Should show empty state with new message
-      expect(screen.getByText(/Start Your Pain Tracking Journey/i)).toBeInTheDocument();
+  // Should show empty state with new message
+  expect(screen.getByText(/Two days of logs unlock patterns\./i)).toBeInTheDocument();
 
       // Chart should still render with empty data
       const chart = screen.getByTestId('pain-chart');

@@ -87,9 +87,9 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       }
 
       // Add entry using store action
-      // Note: Need to ensure entry matches MoodEntry structure
-      const moodEntry = entry as unknown as Omit<MoodEntry, 'timestamp'>;
-      store.addMoodEntry(moodEntry);
+  // Note: Need to ensure entry matches MoodEntry structure (no id, timestamp)
+  const moodEntry = entry as unknown as Omit<MoodEntry, 'id' | 'timestamp'>;
+  store.addMoodEntry(moodEntry);
 
       // Track usage asynchronously
       void trackMoodEntryUsage(userId);

@@ -12,6 +12,8 @@ import { PremiumAnalyticsDashboard } from '../components/analytics/PremiumAnalyt
 import { CalendarView } from '../components/calendar/CalendarView';
 import { BodyMapPage } from '../components/body-mapping/BodyMapPage';
 import { FibromyalgiaTracker } from '../components/fibromyalgia/FibromyalgiaTracker';
+import SettingsPage from '../pages/SettingsPage';
+import HelpAndSupportPage from '../pages/HelpAndSupportPage';
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
 const OnboardingFlow = lazy(() =>
@@ -206,18 +208,9 @@ export function PainTrackerContainer() {
         );
 
       case 'settings':
+        return <SettingsPage />;
       case 'help':
-        return (
-          <div className="text-center py-20">
-            <div className="inline-flex p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl mb-4">
-              <span className="text-4xl">⚙️</span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              {currentView === 'settings' ? 'Settings' : 'Help & Support'}
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">Configuration options coming soon</p>
-          </div>
-        );
+        return <HelpAndSupportPage />;
 
       default:
         return entries.length > 0 ? (

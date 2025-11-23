@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface SwitchProps {
+export interface SwitchProps extends React.InputHTMLAttributes<HTMLInputElement> {
   checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   className?: string;
@@ -10,6 +10,7 @@ export const Switch: React.FC<SwitchProps> = ({
   checked = false,
   onCheckedChange,
   className = '',
+  ...rest
 }) => (
   <input
     type="checkbox"
@@ -17,6 +18,7 @@ export const Switch: React.FC<SwitchProps> = ({
     className={className}
     checked={checked}
     onChange={e => onCheckedChange?.(e.target.checked)}
+    {...rest}
   />
 );
 

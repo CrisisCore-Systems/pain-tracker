@@ -8,6 +8,7 @@ import { securityService } from './SecurityService';
 import { formatNumber } from '../utils/formatting';
 import { localDayStart } from '../utils/dates';
 import type { PainEntry } from '../types';
+import { parseDate } from '../utils/date-utils';
 
 // Privacy configuration
 export interface PrivacyPreservingConfig {
@@ -478,7 +479,8 @@ export class PrivacyPreservingAnalyticsService {
 
     const recent = painEvents.filter(e => {
       // Accept Date or string timestamps
-      const t = e.timestamp instanceof Date ? e.timestamp : new Date(String(e.timestamp));
+  // Normalize timestamp to Date using parseDate helper
+  const t = parseDate(e.timestamp) ?? new Date(String(e.timestamp));
       return t >= sevenDayWindowStart;
     });
 

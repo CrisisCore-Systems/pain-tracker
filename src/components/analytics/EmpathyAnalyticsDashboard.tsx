@@ -65,10 +65,7 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
   );
 
   useEffect(() => {
-    loadAnalytics();
-  }, [userId, entries, selectedTimeframe]);
-
-  const loadAnalytics = async () => {
+    const loadAnalytics = async () => {
     try {
       const [validation, celebration, agency, dignity] = await Promise.all([
         analyticsService.calculateEmotionalValidation(userId, entries, selectedTimeframe),
@@ -84,7 +81,10 @@ export const EmpathyAnalyticsDashboard: React.FC<EmpathyAnalyticsDashboardProps>
     } catch (error) {
       console.error('Failed to load empathy analytics:', error);
     }
-  };
+    };
+
+    loadAnalytics();
+  }, [userId, entries, selectedTimeframe, analyticsService]);
 
   const ValidationDashboard = () => (
     <div className="space-y-6">

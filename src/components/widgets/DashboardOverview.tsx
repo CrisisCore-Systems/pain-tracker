@@ -48,6 +48,7 @@ interface DashboardOverviewProps {
   entries: PainEntry[];
   allEntries?: PainEntry[];
   className?: string;
+  PredictivePanelOverride?: React.ComponentType<{ entries: PainEntry[] }> | undefined;
 }
 
 function MetricCard({
@@ -97,7 +98,7 @@ function MetricCard({
   );
 }
 
-export function DashboardOverview({ entries, allEntries, className }: DashboardOverviewProps) {
+export function DashboardOverview({ entries, allEntries, className, PredictivePanelOverride }: DashboardOverviewProps) {
   const [tab, setTab] = useState<'overview' | 'charts' | 'recent'>('overview');
   const [isExporting, setIsExporting] = useState(false);
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
@@ -260,6 +261,9 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
     if (hour < 18) return 'Good afternoon';
     return 'Good evening';
   }, []);
+
+  // Lazy-load PredictivePanel to keep initial bundle small; memoize to avoid recreating lazy wrapper
+  const PredictivePanelLazy = React.useMemo(() => React.lazy(() => import('./PredictivePanelWrapper')), []);
 
   const encouragement = useMemo(() => {
     if (entries.length === 0) {
@@ -479,14 +483,9 @@ export function DashboardOverview({ entries, allEntries, className }: DashboardO
       {entries.length > 0 && (
         <div>
           {/* Lazy-load PredictivePanel to keep initial bundle small */}
-          <React.Suspense fallback={<Loading text="Loading predictive insights..." />}>
-            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-            {/* @ts-ignore dynamic import typing */}
-            {React.createElement(
-              React.lazy(() => import('../PredictivePanel')),
-              { entries }
-            )}
-          </React.Suspense>
+              <React.Suspense fallback={<Loading text="Loading predictive insights..." />}>
+                {React.createElement(PredictivePanelOverride ?? PredictivePanelLazy, { entries })}
+              </React.Suspense>
         </div>
       )}
 
