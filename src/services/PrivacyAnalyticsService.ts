@@ -13,7 +13,6 @@ import {
   trackPainEntryLogged,
   trackValidationUsed as trackGA4Validation,
   trackProgressViewed as trackGA4Progress,
-  trackDataExported,
 } from '../analytics/ga4-events';
 
 // Privacy configuration
@@ -284,6 +283,7 @@ export class PrivacyPreservingAnalyticsService {
 
   /**
    * Track data export usage
+   * Note: GA4 tracking with entry_count is handled by export utilities directly
    */
   async trackDataExport(exportType: 'csv' | 'json' | 'pdf'): Promise<void> {
     if (!this.shouldTrack()) return;
@@ -300,9 +300,7 @@ export class PrivacyPreservingAnalyticsService {
     };
 
     this.addEvent(event);
-
-    // Also send to GA4 for external analytics
-    trackDataExported(exportType);
+    // GA4 tracking is done by callers (export utilities) with entry_count
   }
 
   /**
