@@ -42,7 +42,7 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 |---------|--------|-------------|
 | **Empathy Intelligence Engine** | ✅ Complete | Heuristic-based pain pattern analysis and personalized insights |
 | **Trauma-Informed UI** | ✅ Complete | Comprehensive accessibility with trauma-informed design patterns |
-| **7-Step Pain Assessment** | ✅ Complete | Multi-dimensional tracking across 25+ anatomical locations |
+| **7-Step Pain Assessment** | ✅ Complete | Multi-dimensional tracking across 44+ anatomical locations |
 | **Security Architecture** | ✅ Complete | Multi-layer protection with encryption, CSP, and audit trails |
 | **WorkSafe BC Export** | ✅ Complete | CSV/JSON exports for claims and clinical reporting |
 | **Customizable Dashboard** | ✅ Complete | Widget-based layout with user preferences |
@@ -59,10 +59,10 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 ### 📅 **Roadmap Highlights**
 
-- **Q4 2024**: Complete PWA testing, enhance offline capabilities
-- **Q1 2025**: Machine learning pain pattern recognition
-- **Q2 2025**: EMR/EHR integration capabilities
-- **Q3 2025**: Multi-platform native applications
+- **Q4 2025**: Complete PWA browser testing, enhanced validation integration
+- **Q1 2026**: Machine learning pain pattern recognition
+- **Q2 2026**: EMR/EHR integration capabilities
+- **Q3 2026**: Multi-platform native applications
 
 ---
 
@@ -136,7 +136,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 
 </details>
 
-**[Read More About Our Security →](docs/ARCHITECTURE.md)** | **[Security Policy →](.github/SECURITY.md)** | **[All Diagrams →](docs/diagrams/README.md)**
+**[Read More About Our Security →](docs/ARCHITECTURE.md)** | **[Security Policy →](SECURITY.md)** | **[All Diagrams →](docs/diagrams/README.md)**
 
 ---
 
@@ -147,7 +147,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - ✅ **Symptom Complexity**: Complete tracking of 19+ symptom types with severity gradients
 - ✅ **Pattern Recognition**: Heuristic-based trend analysis and correlation detection (working)
 - 🔄 **Visual Heatmaps**: Basic body mapping implemented; advanced temporal progression in development
-- 🔄 **Predictive Models**: Core analytics complete; ML-based prediction models planned for Q1 2025
+- 🔄 **Predictive Models**: Core analytics complete; ML-based prediction models planned for Q1 2026
 
 ### 🏥 **Clinical Integration**
 - ✅ **Clinic Portal**: Separate healthcare professional interface with patient management, analytics, and clinical workflows
@@ -156,7 +156,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - ✅ **Evidence-Based Metrics**: Validated pain assessment scales integrated
 - ✅ **Treatment Correlation**: Comprehensive outcome tracking and intervention analysis
 
-### � **SaaS Subscription System**
+### 💰 **SaaS Subscription System**
 - ✅ **Four Pricing Tiers**: Free, Basic ($9.99/mo), Pro ($24.99/mo), Enterprise (Custom)
 - ✅ **Stripe Integration**: Complete checkout flow, webhooks, and subscription management
 - ✅ **Feature Gating**: Intelligent conditional rendering based on subscription tier
@@ -165,7 +165,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - ✅ **Subscription Portal**: User-facing management interface for upgrades/downgrades/cancellations
 - 🎯 **[Complete SaaS Documentation](docs/SAAS_SETUP_GUIDE.md)**
 
-### �🔒 **Security Architecture**
+### 🔒 **Security Architecture**
 - ✅ **Local-First Data**: IndexedDB storage with selective encryption (AES-GCM helpers implemented)
 - ✅ **Enterprise Hardening**: Active CSP headers, SAST pipelines, and secret scanning
 - ✅ **Threat Modeling**: Continuous security assessment with automated scanning
@@ -261,12 +261,13 @@ src/
 
 ## 🚀 Getting Started
 
--### **Prerequisites**
-- Node.js 20 (LTS) is the standardized version for development and CI. Older LTS versions (18) may work, but CI and workflows are aligned to Node 20.
--
-- Note: an `.nvmrc` file has been added to the repository to pin the Node.js version for local development.
- - npm 9+
- - Modern browser with IndexedDB support
+### **Prerequisites**
+
+- **Node.js 20 (LTS)**: Standardized version for development and CI. An `.nvmrc` file is included to pin the version for local development.
+- **npm 9+**: Package manager required.
+- **Modern browser**: Must support IndexedDB for local storage.
+
+> **Note**: Older LTS versions (18) may work, but CI and workflows are aligned to Node 20.
 
 ### Canvas on Windows
 
@@ -443,7 +444,7 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 
 ## 📊 **Project Metrics**
 
-**Current Statistics (October 2024):**
+**Current Statistics (November 2025):**
 
 | Metric | Value | Status | Notes |
 |--------|-------|--------|-------|
@@ -457,17 +458,17 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 | **Dependencies** | Clean | ✅ Audited | Production deps clean, dev deps with minor issues |
 
 **Build Performance:**
-- Build Time: ~19s (production optimized)
+- Build Time: ~15s (production optimized)
 - Dev Server Start: <1s
 - Hot Module Reload: ~100ms
-- Main Bundle: 1,296 KB (down from 2,670 KB)
-- Lazy Chunks: 10+ separate chunks for on-demand loading
+- Main Bundle: 1,516 KB (gzipped: 448 KB)
+- Lazy Chunks: 15+ separate chunks for on-demand loading
 
 ---
 
 ## 🔮 **Roadmap**
 
-### **Phase 1: Foundation** *(Q3-Q4 2024)* - 90% Complete ✅
+### **Phase 1: Foundation** *(Q3-Q4 2024)* - ✅ Complete
 
 **Completed:**
 - ✅ Core pain tracking functionality (7-step assessment)
@@ -476,27 +477,26 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 - ✅ WorkSafe BC export capabilities
 - ✅ Empathy intelligence engine (heuristics)
 - ✅ Custom dashboard with widgets
+- ✅ SaaS subscription infrastructure
+- ✅ Clinic portal foundation
 
-**In Progress:**
+### **Phase 2: Intelligence** *(Q1-Q2 2026)* - In Progress
 - 🔄 PWA feature testing and optimization
 - 🔄 Advanced validation technology integration
-- 🔄 Development dependency security remediation
-
-### **Phase 2: Intelligence** *(Q1-Q2 2025)* - Planned
 - 🎯 Machine learning pain pattern recognition
 - 🎯 Predictive analytics for pain episodes
 - 🎯 Advanced treatment correlation analysis
 - 🎯 Enhanced body heatmap visualizations
 - 🎯 AI-powered insight generation
 
-### **Phase 3: Integration** *(Q2-Q3 2025)* - Planned
+### **Phase 3: Integration** *(Q2-Q3 2026)* - Planned
 - 🎯 EMR/EHR system integration (FHIR-compliant)
 - 🎯 Telehealth platform connectivity
 - 🎯 Wearable device data integration
 - 🎯 Healthcare provider portal
 - 🎯 Bi-directional data sync
 
-### **Phase 4: Ecosystem** *(Q3-Q4 2025)* - Planned
+### **Phase 4: Ecosystem** *(Q3-Q4 2026)* - Planned
 - 🎯 Multi-platform native applications (iOS, Android)
 - 🎯 Healthcare provider dashboard
 - 🎯 Research data anonymization platform
@@ -545,10 +545,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 *Pain Tracker - Where Technology Meets Compassion*
 
 </div>
-
-- Node.js 18, 20, 22 supported
-- npm 9+ required
-- Use --legacy-peer-deps during installation if needed
 
 ---
 
