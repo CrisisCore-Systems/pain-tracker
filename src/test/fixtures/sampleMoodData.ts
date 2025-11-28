@@ -5,6 +5,16 @@
 
 import type { MoodEntry } from '../../types/quantified-empathy';
 
+// Counter for deterministic test IDs (exported for test reset)
+let _moodEntryIdCounter = 10000;
+
+/**
+ * Reset the ID counter for test isolation
+ */
+export function resetMoodEntryIdCounter(): void {
+  _moodEntryIdCounter = 10000;
+}
+
 /**
  * Sample mood entries covering wide range of emotional states
  */
@@ -410,10 +420,11 @@ export const empathyRichMoodEntries: MoodEntry[] = [
 
 /**
  * Helper function to create mood entry with defaults
+ * Uses deterministic IDs for reliable tests
  */
 export function makeMoodEntry(overrides: Partial<MoodEntry> = {}): MoodEntry {
   return {
-    id: Math.floor(Math.random() * 100000),
+    id: overrides.id ?? _moodEntryIdCounter++,
     timestamp: new Date().toISOString(),
     mood: 5,
     energy: 5,

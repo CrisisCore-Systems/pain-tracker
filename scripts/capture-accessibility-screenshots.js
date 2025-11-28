@@ -26,6 +26,9 @@ const __dirname = dirname(__filename);
 const ROOT_DIR = join(__dirname, '..');
 const SCREENSHOTS_BASE_DIR = join(ROOT_DIR, 'docs', 'screenshots', 'accessibility');
 
+// Test passphrase for local screenshot automation (not a real secret)
+const TEST_PASSPHRASE = process.env.SCREENSHOT_TEST_PASSPHRASE || 'ScreenshotTestingAccount2024!';
+
 // Command line arguments
 const args = process.argv.slice(2);
 const categoryFilter = args.find(arg => arg.startsWith('--category='))?.split('=')[1];
@@ -395,14 +398,13 @@ async function captureAccessibilityScreenshots() {
     
     if (needsSetup) {
       console.log('   Creating testing user account...');
-      const testPassphrase = 'ScreenshotTestingAccount2024!';
       
       try {
         await page.waitForSelector('input[type="password"]', { timeout: 5000 });
         const passphraseInputs = await page.$$('input[type="password"]');
         if (passphraseInputs.length >= 2) {
-          await passphraseInputs[0].fill(testPassphrase);
-          await passphraseInputs[1].fill(testPassphrase);
+          await passphraseInputs[0].fill(TEST_PASSPHRASE);
+          await passphraseInputs[1].fill(TEST_PASSPHRASE);
           
           const createButton = await page.$('button:has-text("Create secure vault")');
           if (createButton) {
@@ -429,13 +431,12 @@ async function captureAccessibilityScreenshots() {
       
       if (isLocked) {
         console.log('   Unlocking existing vault...');
-        const testPassphrase = 'ScreenshotTestingAccount2024!';
         
         try {
           await page.waitForSelector('input[type="password"]', { timeout: 5000 });
           const passphraseInput = await page.$('input[type="password"]');
           if (passphraseInput) {
-            await passphraseInput.fill(testPassphrase);
+            await passphraseInput.fill(TEST_PASSPHRASE);
             const unlockButton = await page.$('button:has-text("Unlock vault")');
             if (unlockButton) {
               await unlockButton.click();

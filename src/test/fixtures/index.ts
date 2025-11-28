@@ -14,13 +14,17 @@ export {
   empathyRichMoodEntries,
   makeMoodEntry,
   generateMoodProgression,
+  resetMoodEntryIdCounter,
 } from './sampleMoodData';
+
+// Re-export all mood data
+import * as moodData from './sampleMoodData';
 
 /**
  * Helper function to get all sample data in one object
  */
 export function getAllSampleData() {
   return {
-    moods: require('./sampleMoodData'),
+    moods: moodData,
   };
 }
