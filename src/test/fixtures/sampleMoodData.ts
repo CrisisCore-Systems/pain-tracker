@@ -11,7 +11,8 @@ import type { MoodEntry } from '../../types/quantified-empathy';
 export const sampleMoodEntries: MoodEntry[] = [
   // Week 1 - High stress period
   {
-    timestamp: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000),
+    id: 1,
+    timestamp: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 3,
     energy: 2,
     anxiety: 8,
@@ -27,7 +28,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Overwhelmed by sudden pain onset. Anxious about work and recovery. Partner drove me to hospital. Feel scared and uncertain about what this means for my future.',
   },
   {
-    timestamp: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+    id: 2,
+    timestamp: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 4,
     energy: 2,
     anxiety: 7,
@@ -43,7 +45,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Feeling slightly better emotionally but still in significant pain. Family checking in regularly which helps. Grateful for support but feel guilty about needing help.',
   },
   {
-    timestamp: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
+    id: 3,
+    timestamp: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 4,
     energy: 3,
     anxiety: 7,
@@ -61,7 +64,8 @@ export const sampleMoodEntries: MoodEntry[] = [
 
   // Week 2 - Gradual improvement
   {
-    timestamp: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000),
+    id: 4,
+    timestamp: new Date(Date.now() - 16 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 5,
     energy: 4,
     anxiety: 6,
@@ -77,7 +81,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Feeling more hopeful as pain decreases slightly. Starting to understand my limitations better. Learning to accept help without feeling guilty. Practiced mindfulness and noticed some relief.',
   },
   {
-    timestamp: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+    id: 5,
+    timestamp: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 6,
     energy: 5,
     anxiety: 5,
@@ -90,10 +95,11 @@ export const sampleMoodEntries: MoodEntry[] = [
     triggers: ['fear of making pain worse', 'new treatment uncertainty'],
     copingStrategies: ['trusting healthcare professionals', 'positive self-talk', 'gradual exposure'],
     socialSupport: 'strong',
-    notes: 'Physiotherapist was excellent and reassuring. Feel empowered knowing I can do something active for my recovery. Learned exercises that don\'t aggravate pain. Feeling more in control.',
+    notes: "Physiotherapist was excellent and reassuring. Feel empowered knowing I can do something active for my recovery. Learned exercises that don't aggravate pain. Feeling more in control.",
   },
   {
-    timestamp: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+    id: 6,
+    timestamp: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 6,
     energy: 5,
     anxiety: 5,
@@ -106,12 +112,13 @@ export const sampleMoodEntries: MoodEntry[] = [
     triggers: ['minor pain flare after overdoing it'],
     copingStrategies: ['pacing activities', 'heat therapy', 'calling friend for support'],
     socialSupport: 'moderate',
-    notes: 'Learning my limits through experience. Had setback from doing too much but recovered quickly. Understanding that recovery isn\'t linear helps manage expectations. Friend listened and provided empathy.',
+    notes: "Learning my limits through experience. Had setback from doing too much but recovered quickly. Understanding that recovery isn't linear helps manage expectations. Friend listened and provided empathy.",
   },
 
   // Week 3 - Building resilience
   {
-    timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+    id: 7,
+    timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 7,
     energy: 6,
     anxiety: 4,
@@ -127,7 +134,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Feeling much better physically and emotionally. Started gratitude journaling which shifts perspective. Reconnected with hobbies. Empathy for others struggling with chronic conditions has deepened.',
   },
   {
-    timestamp: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
+    id: 8,
+    timestamp: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 7,
     energy: 7,
     anxiety: 4,
@@ -140,10 +148,11 @@ export const sampleMoodEntries: MoodEntry[] = [
     triggers: ['performance anxiety', 'fatigue from activity increase'],
     copingStrategies: ['pacing work tasks', 'regular breaks', 'boundary setting'],
     socialSupport: 'strong',
-    notes: 'Proud of returning to work. Colleagues supportive. Learning to communicate needs assertively. Feel strong sense of progress and capability. Understanding others\' struggles more deeply now.',
+    notes: "Proud of returning to work. Colleagues supportive. Learning to communicate needs assertively. Feel strong sense of progress and capability. Understanding others' struggles more deeply now.",
   },
   {
-    timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
+    id: 9,
+    timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 8,
     energy: 7,
     anxiety: 3,
@@ -156,12 +165,13 @@ export const sampleMoodEntries: MoodEntry[] = [
     triggers: ['minor work deadline pressure'],
     copingStrategies: ['time management', 'delegation', 'self-compassion', 'physical activity'],
     socialSupport: 'strong',
-    notes: 'Excellent emotional regulation today. Handled work pressure without significant stress. Recognized early signs of tension and took preventive action. Feeling connected and purposeful. Helped colleague understand their health challenge with deep empathy.',
+    notes: "Excellent emotional regulation today. Handled work pressure without significant stress. Recognized early signs of tension and took preventive action. Feeling connected and purposeful. Helped colleague understand their health challenge with deep empathy.",
   },
 
   // Week 4 - Sustained improvement
   {
-    timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    id: 10,
+    timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 8,
     energy: 8,
     anxiety: 3,
@@ -177,7 +187,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Feeling grateful for recovery progress. Maintaining healthy habits. Stronger sense of resilience. This experience has given me deeper understanding of suffering and compassion for others. Spiritual growth through acceptance and meaning-making.',
   },
   {
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    id: 11,
+    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 8,
     energy: 8,
     anxiety: 2,
@@ -193,7 +204,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Reflected on entire journey. Feel more emotionally intelligent and resilient. Better at recognizing and managing emotions. Improved empathy and understanding of others. Grateful for support received and eager to pay it forward.',
   },
   {
-    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+    id: 12,
+    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 9,
     energy: 8,
     anxiety: 2,
@@ -211,7 +223,8 @@ export const sampleMoodEntries: MoodEntry[] = [
 
   // Additional entries covering diverse emotional scenarios
   {
-    timestamp: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
+    id: 13,
+    timestamp: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 3,
     energy: 2,
     anxiety: 9,
@@ -227,7 +240,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Catastrophizing about worst-case scenarios. Felt alone and scared. Called crisis line which helped ground me. Need to reach out to support system more.',
   },
   {
-    timestamp: new Date(Date.now() - 23 * 24 * 60 * 60 * 1000),
+    id: 14,
+    timestamp: new Date(Date.now() - 23 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 4,
     energy: 3,
     anxiety: 7,
@@ -243,7 +257,8 @@ export const sampleMoodEntries: MoodEntry[] = [
     notes: 'Struggling with accepting need for help. Trying to practice self-compassion. Reminder that asking for help is strength, not weakness. Perspective shift: this is temporary.',
   },
   {
-    timestamp: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000),
+    id: 15,
+    timestamp: new Date(Date.now() - 19 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 5,
     energy: 4,
     anxiety: 6,
@@ -256,10 +271,11 @@ export const sampleMoodEntries: MoodEntry[] = [
     triggers: ['grief over lifestyle changes', 'frustration with pace'],
     copingStrategies: ['therapy session', 'expressive writing', 'support group'],
     socialSupport: 'strong',
-    notes: 'Therapy helped me process grief over temporary loss of activities. Realized I\'m mourning and that\'s okay. Writing helps express feelings. Support group connected me with others who understand.',
+    notes: "Therapy helped me process grief over temporary loss of activities. Realized I'm mourning and that's okay. Writing helps express feelings. Support group connected me with others who understand.",
   },
   {
-    timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+    id: 16,
+    timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 6,
     energy: 5,
     anxiety: 5,
@@ -272,7 +288,7 @@ export const sampleMoodEntries: MoodEntry[] = [
     triggers: ['setback from overexertion'],
     copingStrategies: ['mindfulness', 'creative expression', 'connecting with nature'],
     socialSupport: 'moderate',
-    notes: 'Setback was disappointing but handled it better emotionally. Used it as learning experience. Finding meaning through growth and helping others. Nature walks improve mood significantly.',
+    notes: "Setback was disappointing but handled it better emotionally. Used it as learning experience. Finding meaning through growth and helping others. Nature walks improve mood significantly.",
   },
 ];
 
@@ -282,7 +298,8 @@ export const sampleMoodEntries: MoodEntry[] = [
 export const extremeMoodEntries: MoodEntry[] = [
   // Crisis-level emotional state
   {
-    timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    id: 100,
+    timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 1,
     energy: 1,
     anxiety: 10,
@@ -299,7 +316,8 @@ export const extremeMoodEntries: MoodEntry[] = [
   },
   // Peak positive emotional state
   {
-    timestamp: new Date(),
+    id: 101,
+    timestamp: new Date().toISOString(),
     mood: 10,
     energy: 10,
     anxiety: 1,
@@ -321,7 +339,8 @@ export const extremeMoodEntries: MoodEntry[] = [
  */
 export const empathyRichMoodEntries: MoodEntry[] = [
   {
-    timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+    id: 200,
+    timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 7,
     energy: 6,
     anxiety: 4,
@@ -334,10 +353,11 @@ export const empathyRichMoodEntries: MoodEntry[] = [
     triggers: ['shared vulnerability'],
     copingStrategies: ['peer support', 'active listening', 'validation'],
     socialSupport: 'strong',
-    notes: 'Attended support group today. Felt strong empathy and understanding for others struggling. Shared my story and felt heard. The emotional connection and mutual understanding was powerful. I can feel their pain and hope.',
+    notes: "Attended support group today. Felt strong empathy and understanding for others struggling. Shared my story and felt heard. The emotional connection and mutual understanding was powerful. I can feel their pain and hope.",
   },
   {
-    timestamp: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
+    id: 201,
+    timestamp: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 8,
     energy: 7,
     anxiety: 3,
@@ -353,7 +373,8 @@ export const empathyRichMoodEntries: MoodEntry[] = [
     notes: 'Colleague confided about their health struggle. I listened deeply and understood their perspective from my own experience. Offered meaningful support without judgment. Feel grateful I can empathize and help others now.',
   },
   {
-    timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
+    id: 202,
+    timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 8,
     energy: 7,
     anxiety: 3,
@@ -369,7 +390,8 @@ export const empathyRichMoodEntries: MoodEntry[] = [
     notes: 'Practiced loving-kindness meditation today. Felt deep compassion for myself and others. Understanding that we all struggle helps me feel connected. Empathy has become a core value through this experience.',
   },
   {
-    timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    id: 203,
+    timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
     mood: 8,
     energy: 8,
     anxiety: 2,
@@ -382,7 +404,7 @@ export const empathyRichMoodEntries: MoodEntry[] = [
     triggers: ['none'],
     copingStrategies: ['journaling', 'meaning-making', 'gratitude'],
     socialSupport: 'strong',
-    notes: 'Reflected on this journey. I learned to understand and feel deeply for others. My empathy and emotional awareness have grown tremendously. I can now recognize others\' pain and offer genuine understanding. This experience gave me profound insight into human suffering and resilience.',
+    notes: "Reflected on this journey. I learned to understand and feel deeply for others. My empathy and emotional awareness have grown tremendously. I can now recognize others' pain and offer genuine understanding. This experience gave me profound insight into human suffering and resilience.",
   },
 ];
 
@@ -391,7 +413,8 @@ export const empathyRichMoodEntries: MoodEntry[] = [
  */
 export function makeMoodEntry(overrides: Partial<MoodEntry> = {}): MoodEntry {
   return {
-    timestamp: new Date(),
+    id: Math.floor(Math.random() * 100000),
+    timestamp: new Date().toISOString(),
     mood: 5,
     energy: 5,
     anxiety: 5,
@@ -426,7 +449,8 @@ export function generateMoodProgression(
     const mood = Math.round(startMood + (moodStep * i));
     
     entries.push({
-      timestamp,
+      id: 1000 + i,
+      timestamp: timestamp.toISOString(),
       mood,
       energy: Math.max(1, Math.min(10, mood - 1)),
       anxiety: Math.max(1, Math.min(10, 11 - mood)),
