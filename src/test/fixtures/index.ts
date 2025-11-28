@@ -16,33 +16,11 @@ export {
   generateMoodProgression,
 } from './sampleMoodData';
 
-// Activity data
-export {
-  sampleActivities,
-  sampleActivityLogs,
-  edgeCaseActivities,
-  makeActivity,
-  generateActivityPattern,
-} from './sampleActivityData';
-
-// Crisis and stress data
-export {
-  sampleCrisisStates,
-  sampleStressMetrics,
-  sampleCrisisSessions,
-  crisisBehavioralPatterns,
-  expectedCrisisResponses,
-  makeCrisisState,
-  makeStressIndicators,
-} from './sampleCrisisData';
-
 /**
  * Helper function to get all sample data in one object
  */
 export function getAllSampleData() {
   return {
     moods: require('./sampleMoodData'),
-    activities: require('./sampleActivityData'),
-    crisis: require('./sampleCrisisData'),
   };
 }
