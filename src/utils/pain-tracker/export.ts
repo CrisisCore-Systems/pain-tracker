@@ -2,12 +2,16 @@ import type { PainEntry } from '../../types';
 import jsPDF from 'jspdf';
 import { formatNumber } from '../formatting';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
+import { trackDataExported } from '../../analytics/ga4-events';
 
 export const exportToCSV = (entries: PainEntry[]): string => {
   // Track export analytics
   privacyAnalytics.trackDataExport('csv').catch(() => {
     // Silently fail - analytics should not affect user experience
   });
+
+  // Track GA4 custom event
+  trackDataExported('csv', entries.length);
 
   const headers = [
     'Date',
@@ -49,6 +53,9 @@ export const exportToJSON = (entries: PainEntry[]): string => {
     // Silently fail - analytics should not affect user experience
   });
 
+  // Track GA4 custom event
+  trackDataExported('json', entries.length);
+
   return JSON.stringify(entries, null, 2);
 };
 
@@ -83,6 +90,9 @@ export const exportToPDF = (entries: PainEntry[]): string => {
   privacyAnalytics.trackDataExport('pdf').catch(() => {
     // Silently fail - analytics should not affect user experience
   });
+
+  // Track GA4 custom event
+  trackDataExported('pdf', entries.length);
 
   const doc = new jsPDF();
 

@@ -9,6 +9,11 @@ import { formatNumber } from '../utils/formatting';
 import { localDayStart } from '../utils/dates';
 import type { PainEntry } from '../types';
 import { parseDate } from '../utils/date-utils';
+import {
+  trackPainEntryLogged,
+  trackValidationUsed as trackGA4Validation,
+  trackProgressViewed as trackGA4Progress,
+} from '../analytics/ga4-events';
 
 // Privacy configuration
 export interface PrivacyPreservingConfig {
@@ -212,6 +217,15 @@ export class PrivacyPreservingAnalyticsService {
 
     this.addEvent(event);
 
+    // Also send to GA4 for external analytics
+    trackPainEntryLogged({
+      painLevel: entry.baselineData.pain,
+      hasLocation: anonymizedMetadata.hasLocation,
+      hasNotes: anonymizedMetadata.hasDescription,
+      locationCount: entry.baselineData.locations?.length ?? 0,
+      symptomCount: entry.baselineData.symptoms?.length ?? 0,
+    });
+
     securityService.logSecurityEvent({
       type: 'analytics',
       level: 'info',
@@ -239,6 +253,9 @@ export class PrivacyPreservingAnalyticsService {
     };
 
     this.addEvent(event);
+
+    // Also send to GA4 for external analytics
+    trackGA4Validation(validationType);
   }
 
   /**
@@ -259,10 +276,14 @@ export class PrivacyPreservingAnalyticsService {
     };
 
     this.addEvent(event);
+
+    // Also send to GA4 for external analytics
+    trackGA4Progress(viewType);
   }
 
   /**
    * Track data export usage
+   * Note: GA4 tracking with entry_count is handled by export utilities directly
    */
   async trackDataExport(exportType: 'csv' | 'json' | 'pdf'): Promise<void> {
     if (!this.shouldTrack()) return;
@@ -279,6 +300,7 @@ export class PrivacyPreservingAnalyticsService {
     };
 
     this.addEvent(event);
+    // GA4 tracking is done by callers (export utilities) with entry_count
   }
 
   /**

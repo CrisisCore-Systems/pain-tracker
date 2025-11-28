@@ -10,6 +10,7 @@ import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
 import { hipaaComplianceService } from '../services/HIPAACompliance';
 import { generatePDFReport } from '../utils/pdfReportGenerator';
 import { migratePainTrackerState } from './pain-tracker-migrations';
+import { trackMoodEntryLogged } from '../analytics/ga4-events';
 
 export interface UIState {
   showWCBReport: boolean;
@@ -153,6 +154,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               state.error = null;
 
               // Track analytics (async, fire-and-forget)
+              // GA4 events are sent automatically from PrivacyAnalyticsService
               privacyAnalytics.trackPainEntry(newEntry).catch(() => {
                 // Silently fail - analytics should not affect user experience
               });
@@ -181,6 +183,9 @@ export const usePainTrackerStore = create<PainTrackerState>()(
 
               state.moodEntries.push(newMoodEntry);
               state.error = null;
+
+              // Track GA4 custom event for mood entry
+              trackMoodEntryLogged(newMoodEntry.mood);
             });
           },
 
