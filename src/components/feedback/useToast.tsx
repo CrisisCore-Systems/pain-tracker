@@ -2,7 +2,7 @@
  * useToast - Hook for using toast notifications
  */
 
-import { useToastContext } from './ToastProvider';
+import { useToastContext } from './toastContext';
 
 export function useToast() {
   const { addToast, removeToast, clearToasts, addBottomLeftToast } = useToastContext();

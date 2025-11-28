@@ -1,8 +1,10 @@
 name: Build and deploy to remote Ubuntu VM
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch: {}
+  # Schedule deploy verification once per day at 06:00 UTC (manual deploys still supported)
+  schedule:
+    - cron: '0 6 * * *'
 
 permissions:
   contents: read

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Zap, Clock } from 'lucide-react';
+import { Zap, Clock, TrendingUp } from 'lucide-react';
 import { MetricCard } from './MetricCard';
 import { InsightChip } from './InsightChip';
 import { RecommendedActions } from './RecommendedActions';
@@ -12,6 +12,8 @@ interface ClinicalDashboardProps {
   onViewCalendar: () => void;
   onViewAnalytics?: () => void;
   onExport: () => void;
+  onOpenSettings?: () => void;
+  onOpenHelp?: () => void;
 }
 
 export function ClinicalDashboard({
@@ -20,6 +22,8 @@ export function ClinicalDashboard({
   onViewCalendar,
   onViewAnalytics,
   onExport,
+  onOpenSettings,
+  onOpenHelp,
 }: ClinicalDashboardProps) {
   const analytics = useMemo(() => {
     if (entries.length === 0) {
@@ -129,7 +133,7 @@ export function ClinicalDashboard({
     <div className="min-h-screen bg-surface-900 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-display text-ink-50 mb-1">Today</h1>
             <p className="text-small text-ink-400">
@@ -140,9 +144,47 @@ export function ClinicalDashboard({
               })}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-ink-500" />
-            <span className="text-small text-ink-400">Last entry: {getTimeSinceLastEntry()}</span>
+          <div className="flex items-center gap-3 flex-wrap justify-end">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-ink-500" />
+              <span className="text-small text-ink-400">
+                Last entry: {getTimeSinceLastEntry()}
+              </span>
+            </div>
+
+            {onViewAnalytics && (
+              <button
+                type="button"
+                onClick={onViewAnalytics}
+                className="inline-flex items-center gap-1.5 rounded-full bg-surface-800 text-ink-100 px-3 py-1.5 text-xs font-medium border border-surface-700 hover:bg-surface-700 transition-colors"
+              >
+                <TrendingUp className="w-3 h-3" />
+                View analytics
+              </button>
+            )}
+
+            {(onOpenSettings || onOpenHelp) && (
+              <div className="flex items-center gap-2">
+                {onOpenHelp && (
+                  <button
+                    type="button"
+                    onClick={onOpenHelp}
+                    className="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-800 text-ink-100 border border-surface-700 hover:bg-surface-700 transition-colors"
+                  >
+                    Need help?
+                  </button>
+                )}
+                {onOpenSettings && (
+                  <button
+                    type="button"
+                    onClick={onOpenSettings}
+                    className="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-800 text-ink-100 border border-surface-700 hover:bg-surface-700 transition-colors"
+                  >
+                    Adjust settings
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

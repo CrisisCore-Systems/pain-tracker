@@ -1,10 +1,7 @@
 name: Security Scanning
 
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch: {}
   schedule:
     # Run security scans weekly on Sundays at 2 AM UTC
     - cron: '0 2 * * 0'

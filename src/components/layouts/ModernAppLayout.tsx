@@ -70,7 +70,7 @@ export function ModernAppLayout({
       </a>
 
       {/* Modern Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/50 dark:border-gray-700/50">
+      <header className="biophilic-flow fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo & Brand */}
@@ -117,6 +117,16 @@ export function ModernAppLayout({
 
             {/* Actions */}
             <div className="flex items-center gap-2">
+              <Button
+                variant="default"
+                size="sm"
+                className="rounded-xl hidden sm:inline-flex mr-2"
+                onClick={() => onNavigate?.('daily-checkin')}
+              >
+                <Heart className="h-4 w-4 mr-2 text-white" />
+                Check-in
+              </Button>
+
               <Button variant="ghost" size="sm" className="rounded-xl" onClick={() => {}}>
                 <Bell className="h-4 w-4" />
               </Button>

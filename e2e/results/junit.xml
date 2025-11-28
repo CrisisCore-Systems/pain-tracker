@@ -1,114 +1,32 @@
-<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="22.150731">
-<testsuite name="tests\testimonials.publish.spec.ts" timestamp="2025-11-20T23:40:59.203Z" hostname="chromium" tests="1" failures="1" skipped="0" time="16.352" errors="0">
-<testcase name="submit -&gt; admin verify -&gt; public publish flow" classname="tests\testimonials.publish.spec.ts" time="16.352">
-<failure message="testimonials.publish.spec.ts:3:1 submit -&gt; admin verify -&gt; public publish flow" type="FAILURE">
-<![CDATA[  [chromium] › tests\testimonials.publish.spec.ts:3:1 › submit -> admin verify -> public publish flow 
-
-    Error: expect(locator).toBeVisible() failed
-
-    Locator:  locator('text=Thank you for sharing your story')
-    Expected: visible
-    Received: <element(s) not found>
-    Timeout:  5000ms
-
-    Call log:
-      - Expect "toBeVisible" with timeout 5000ms
-      - waiting for locator('text=Thank you for sharing your story')
-
-
-      21 |   await checkboxes.nth(1).check();
-      22 |   await page.click('text=Submit');
-    > 23 |   await expect(page.locator('text=Thank you for sharing your story')).toBeVisible();
-         |                                                                       ^
-      24 |
-      25 |   // Now open admin portal and stub testimonials list and verify endpoint
-      26 |   await page.goto('/clinic/testimonials');
-        at C:\Users\kay\Documents\Projects\pain-tracker\e2e\tests\testimonials.publish.spec.ts:23:71
-
-    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
-    ..\test-results\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\test-failed-1.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
-    ..\test-results\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\video.webm
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: ..\test-results\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\error-context.md
-]]>
-</failure>
-<system-out>
-<![CDATA[
-[[ATTACHMENT|..\..\test-results\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\test-failed-1.png]]
-
-[[ATTACHMENT|..\..\test-results\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\video.webm]]
-
-[[ATTACHMENT|..\..\test-results\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\error-context.md]]
-]]>
-</system-out>
-<system-err>
-<![CDATA[  [38;5;45;1mpw:api [0m=> browserType.launch started [38;5;45m+0ms[0m
-  [38;5;45;1mpw:api [0m<= browserType.launch succeeded [38;5;45m+220ms[0m
-  [38;5;45;1mpw:api [0m=> browser.newContext started [38;5;45m+16ms[0m
-  [38;5;45;1mpw:api [0m<= browser.newContext succeeded [38;5;45m+24ms[0m
-  [38;5;45;1mpw:api [0m=> browserContext.newPage started [38;5;45m+10ms[0m
-  [38;5;45;1mpw:api [0m<= browserContext.newPage succeeded [38;5;45m+334ms[0m
-  [38;5;45;1mpw:api [0m=> page.route started [38;5;45m+12ms[0m
-  [38;5;45;1mpw:api [0m<= page.route succeeded [38;5;45m+6ms[0m
-  [38;5;45;1mpw:api [0m=> page.goto started [38;5;45m+7ms[0m
-  [38;5;45;1mpw:api [0mnavigating to "http://localhost:3000/submit-story", waiting until "load" [38;5;45m+12ms[0m
-  [38;5;45;1mpw:api [0m  "commit" event fired [38;5;45m+589ms[0m
-  [38;5;45;1mpw:api [0m  navigated to "http://localhost:3000/submit-story" [38;5;45m+1ms[0m
-  [38;5;45;1mpw:api [0m  "domcontentloaded" event fired [38;5;45m+9s[0m
-  [38;5;45;1mpw:api [0m  navigated to "http://localhost:3000/submit-story" [38;5;45m+69ms[0m
-  [38;5;45;1mpw:api [0m  "load" event fired [38;5;45m+331ms[0m
-  [38;5;45;1mpw:api [0m<= page.goto succeeded [38;5;45m+2ms[0m
-  [38;5;45;1mpw:api [0m=> page.fill started [38;5;45m+15ms[0m
-  [38;5;45;1mpw:api [0mwaiting for locator('[id=submit-story-text]') [38;5;45m+3ms[0m
-  [38;5;45;1mpw:api [0m  locator resolved to <textarea required="" id="submit-story-text" class="block w-full rounded-md border border-input bg-background px-3 py-2 text-sm "></textarea> [38;5;45m+121ms[0m
-  [38;5;45;1mpw:api [0m  fill("This is an e2e test story e2e-1763682061600") [38;5;45m+16ms[0m
-  [38;5;45;1mpw:api [0mattempting fill action [38;5;45m+1ms[0m
-  [38;5;45;1mpw:api [0m  waiting for element to be visible, enabled and editable [38;5;45m+1ms[0m
-  [38;5;45;1mpw:api [0m<= page.fill succeeded [38;5;45m+32ms[0m
-  [38;5;45;1mpw:api [0m=> locator.check started [38;5;45m+8ms[0m
-  [38;5;45;1mpw:api [0mwaiting for locator('input[type=checkbox]').nth(1) [38;5;45m+2ms[0m
-  [38;5;45;1mpw:api [0m  locator resolved to <input type="checkbox"/> [38;5;45m+11ms[0m
-  [38;5;45;1mpw:api [0mattempting click action [38;5;45m+15ms[0m
-  [38;5;45;1mpw:api [0m  waiting for element to be visible, enabled and stable [38;5;45m+2ms[0m
-  [38;5;45;1mpw:api [0m  element is visible, enabled and stable [38;5;45m+32ms[0m
-  [38;5;45;1mpw:api [0m  scrolling into view if needed [38;5;45m+0ms[0m
-  [38;5;45;1mpw:api [0m  done scrolling [38;5;45m+3ms[0m
-  [38;5;45;1mpw:api [0m  performing click action [38;5;45m+10ms[0m
-  [38;5;45;1mpw:api [0m  click action done [38;5;45m+29ms[0m
-  [38;5;45;1mpw:api [0m  waiting for scheduled navigations to finish [38;5;45m+0ms[0m
-  [38;5;45;1mpw:api [0m  navigations have finished [38;5;45m+1ms[0m
-  [38;5;45;1mpw:api [0m<= locator.check succeeded [38;5;45m+5ms[0m
-  [38;5;45;1mpw:api [0m=> page.click started [38;5;45m+9ms[0m
-  [38;5;45;1mpw:api [0mwaiting for locator('text=Submit') [38;5;45m+2ms[0m
-  [38;5;45;1mpw:api [0m  locator resolved to <span class="flex items-center justify-center">Submit</span> [38;5;45m+15ms[0m
-  [38;5;45;1mpw:api [0mattempting click action [38;5;45m+5ms[0m
-  [38;5;45;1mpw:api [0m  waiting for element to be visible, enabled and stable [38;5;45m+0ms[0m
-  [38;5;45;1mpw:api [0m  element is visible, enabled and stable [38;5;45m+10ms[0m
-  [38;5;45;1mpw:api [0m  scrolling into view if needed [38;5;45m+0ms[0m
-  [38;5;45;1mpw:api [0m  done scrolling [38;5;45m+2ms[0m
-  [38;5;45;1mpw:api [0m  performing click action [38;5;45m+9ms[0m
-  [38;5;45;1mpw:api [0m  click action done [38;5;45m+40ms[0m
-  [38;5;45;1mpw:api [0m  waiting for scheduled navigations to finish [38;5;45m+0ms[0m
-  [38;5;45;1mpw:api [0m  navigations have finished [38;5;45m+10ms[0m
-  [38;5;45;1mpw:api [0m<= page.click succeeded [38;5;45m+1ms[0m
-  [38;5;45;1mpw:api [0m=> expect.toBeVisible started [38;5;45m+20ms[0m
-  [38;5;45;1mpw:api [0mExpect "toBeVisible" with timeout 5000ms [38;5;45m+3ms[0m
-  [38;5;45;1mpw:api [0mwaiting for locator('text=Thank you for sharing your story') [38;5;45m+1ms[0m
-  [38;5;45;1mpw:api [0m  "networkidle" event fired [38;5;45m+468ms[0m
-  [38;5;45;1mpw:api [0m<= expect.toBeVisible succeeded [38;5;45m+5s[0m
-  [38;5;45;1mpw:api [0mtaking page screenshot [38;5;45m+7ms[0m
-  [38;5;45;1mpw:api [0mwaiting for fonts to load... [38;5;45m+3ms[0m
-  [38;5;45;1mpw:api [0mfonts loaded [38;5;45m+3ms[0m
-  [38;5;45;1mpw:api [0m=> browserContext.close started [38;5;45m+137ms[0m
-  [38;5;45;1mpw:api [0m<= browserContext.close succeeded [38;5;45m+378ms[0m
-  [38;5;45;1mpw:api [0m=> browser.close started [38;5;45m+93ms[0m
-  [38;5;45;1mpw:api [0m<= browser.close succeeded [38;5;45m+80ms[0m
-]]>
-</system-err>
+<testsuites id="" name="" tests="7" failures="0" skipped="7" errors="0" time="399.36188500000003">
+<testsuite name="tests\pwa-service-worker.spec.ts" timestamp="2025-11-26T20:09:04.439Z" hostname="webkit" tests="7" failures="0" skipped="7" time="386.546" errors="0">
+<testcase name="PWA Service Worker › should register service worker successfully" classname="tests\pwa-service-worker.spec.ts" time="386.546">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PWA Service Worker › should cache static assets on install" classname="tests\pwa-service-worker.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PWA Service Worker › should update service worker version" classname="tests\pwa-service-worker.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PWA Service Worker › should handle service worker errors gracefully" classname="tests\pwa-service-worker.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PWA Service Worker › should clean up old caches on activation" classname="tests\pwa-service-worker.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PWA Service Worker - Advanced Features › should support skipWaiting for immediate activation" classname="tests\pwa-service-worker.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="PWA Service Worker - Advanced Features › should claim clients immediately on activation" classname="tests\pwa-service-worker.spec.ts" time="0">
+<skipped>
+</skipped>
 </testcase>
 </testsuite>
 </testsuites>

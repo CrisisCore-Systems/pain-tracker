@@ -168,7 +168,7 @@ function App() {
                     {/* Main Application - Protected */}
                     <Route path="/app" element={
                       <VaultGate>
-                        <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                        <div className="min-h-screen biophilic-bg bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
                           <OfflineBanner />
                           <BetaWarning />
                           <NotificationConsentPrompt />
@@ -176,6 +176,26 @@ function App() {
                           <ErrorBoundary fallback={<ErrorFallback />}>
                             <Suspense fallback={<LoadingFallback />}>
                               <PainTrackerContainer />
+                            </Suspense>
+                          </ErrorBoundary>
+                          <PWAInstallPrompt />
+                          <PWAStatusIndicator />
+                          <ToneStateTester />
+                        </div>
+                      </VaultGate>
+                    } />
+
+                    {/* Route to open app and start daily check-in (used by notifications) */}
+                    <Route path="/app/checkin" element={
+                      <VaultGate>
+                        <div className="min-h-screen biophilic-bg bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                          <OfflineBanner />
+                          <BetaWarning />
+                          <NotificationConsentPrompt />
+                          <BetaAnalyticsConsentPrompt />
+                          <ErrorBoundary fallback={<ErrorFallback />}>
+                            <Suspense fallback={<LoadingFallback />}>
+                              <PainTrackerContainer initialView="daily-checkin" />
                             </Suspense>
                           </ErrorBoundary>
                           <PWAInstallPrompt />

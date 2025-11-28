@@ -1,4 +1,5 @@
-import { test, expect, type Page, type BrowserContext } from '@playwright/test';
+import { test, expect } from '../test-setup';
+import type { Page, BrowserContext } from '@playwright/test';
 
 test.describe('PWA Offline Functionality', () => {
   test.beforeEach(async ({ page }) => {

@@ -59,6 +59,14 @@ export function ToastProvider({
 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
+  const removeToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  }, []);
+
+  const clearAllToasts = useCallback(() => {
+    setToasts([]);
+  }, []);
+
   const addToast = useCallback(
     (toast: Omit<Toast, 'id'>) => {
       const id = `toast-${Date.now()}-${Math.random()}`;
@@ -85,14 +93,6 @@ export function ToastProvider({
     },
     [maxToasts, removeToast]
   );
-
-  const removeToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  }, []);
-
-  const clearAllToasts = useCallback(() => {
-    setToasts([]);
-  }, []);
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast, clearAllToasts }}>

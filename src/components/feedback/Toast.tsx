@@ -90,7 +90,7 @@ export function Toast({
   return (
     <div
       className={`
-        pointer-events-auto w-full max-w-sm rounded-lg border p-4 shadow-lg
+        w-full max-w-sm rounded-lg border p-4 shadow-lg
         transition-all duration-150 ease-in-out
         ${getBackgroundColor()}
         ${isExiting ? 'opacity-0 transform translate-x-full' : 'opacity-100 transform translate-x-0'}
@@ -108,7 +108,7 @@ export function Toast({
           {action && (
             <button
               onClick={action.onClick}
-              className="text-sm font-medium text-primary hover:text-primary/80 mt-2 block"
+              className="pointer-events-auto text-sm font-medium text-primary hover:text-primary/80 mt-2 block"
             >
               {action.label}
             </button>
@@ -117,7 +117,7 @@ export function Toast({
 
         <button
           onClick={handleDismiss}
-          className="flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors"
+          className="pointer-events-auto flex-shrink-0 text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Dismiss notification"
         >
           <X className="h-4 w-4" />

@@ -12,6 +12,7 @@ import { PremiumAnalyticsDashboard } from '../components/analytics/PremiumAnalyt
 import { CalendarView } from '../components/calendar/CalendarView';
 import { BodyMapPage } from '../components/body-mapping/BodyMapPage';
 import { FibromyalgiaTracker } from '../components/fibromyalgia/FibromyalgiaTracker';
+import DailyCheckin from '../components/checkin/DailyCheckin';
 import SettingsPage from '../pages/SettingsPage';
 import HelpAndSupportPage from '../pages/HelpAndSupportPage';
 
@@ -23,13 +24,13 @@ const Walkthrough = lazy(() =>
   import('../components/tutorials').then(m => ({ default: m.Walkthrough }))
 );
 
-export function PainTrackerContainer() {
+export function PainTrackerContainer({ initialView }: { initialView?: string } = {}) {
   const { entries, ui, addEntry, setShowOnboarding, setShowWalkthrough, setError, loadSampleData } =
     usePainTrackerStore();
 
   const toast = useToast();
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
-  const [currentView, setCurrentView] = useState<string>('dashboard');
+  const [currentView, setCurrentView] = useState<string>(initialView ?? 'dashboard');
 
   // Load walkthrough steps dynamically to avoid circular dependency
   useEffect(() => {
@@ -119,7 +120,10 @@ export function PainTrackerContainer() {
     return true;
   };
 
-  const handleAddEntry = (entryData: Omit<PainEntry, 'id' | 'timestamp'>) => {
+  const handleAddEntry = (
+    entryData: Omit<PainEntry, 'id' | 'timestamp'>,
+    options?: { stayOnSave?: boolean }
+  ) => {
     try {
       if (!validatePainEntry(entryData)) {
         setError('Invalid pain entry data. Please check your input values.');
@@ -129,8 +133,14 @@ export function PainTrackerContainer() {
 
       addEntry(entryData);
       setError(null);
-      toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
-      setCurrentView('dashboard'); // Navigate back to dashboard after saving
+      toast.success(
+        'Entry saved',
+        "Your update is safely stored. You can explore your dashboard or analytics whenever you're ready."
+      );
+      // Navigate back to dashboard after saving unless caller requested staying on the save view
+      if (!options?.stayOnSave) {
+        setCurrentView('dashboard');
+      }
     } catch (err) {
       setError('Failed to add pain entry. Please try again.');
       toast.error('Save Failed', 'Unable to add pain entry. Please try again.');
@@ -161,6 +171,8 @@ export function PainTrackerContainer() {
               // TODO: Implement PDF export
               toast.info('Export', 'PDF export coming soon');
             }}
+            onOpenSettings={() => setCurrentView('settings')}
+            onOpenHelp={() => setCurrentView('help')}
           />
         ) : (
           <EmptyStatePanel onStartWalkthrough={handleStartWalkthrough} />
@@ -181,6 +193,19 @@ export function PainTrackerContainer() {
               } as Omit<PainEntry, 'id' | 'timestamp'>);
             }}
             onCancel={() => setCurrentView('dashboard')}
+          />
+        );
+
+      case 'daily-checkin':
+        return (
+          <DailyCheckin
+            entries={entries}
+            onComplete={(entry: Omit<PainEntry, 'id' | 'timestamp'>) => {
+              // Save but stay on the check-in so the component can surface insights
+              handleAddEntry(entry, { stayOnSave: true });
+            }}
+            onCancel={() => setCurrentView('dashboard')}
+            onDone={() => setCurrentView('dashboard')}
           />
         );
 
@@ -222,6 +247,8 @@ export function PainTrackerContainer() {
             onExport={() => {
               toast.info('Export', 'PDF export coming soon');
             }}
+            onOpenSettings={() => setCurrentView('settings')}
+            onOpenHelp={() => setCurrentView('help')}
           />
         ) : (
           <EmptyStatePanel onStartWalkthrough={handleStartWalkthrough} />

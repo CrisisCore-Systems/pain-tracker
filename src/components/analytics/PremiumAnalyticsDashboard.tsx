@@ -2211,7 +2211,7 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
   const [quickExportError, setQuickExportError] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied' | 'error'>('idle');
   const [copyErrorMessage, setCopyErrorMessage] = useState<string>(
-    'Clipboard unavailable. Select the summary text and copy manually.'
+    'Clipboard unavailable. You can still select this summary and copy it whenever you feel ready to share.'
   );
   const [emailError, setEmailError] = useState<string | null>(null);
   const [showAdvancedModal, setShowAdvancedModal] = useState(false);
@@ -2438,7 +2438,7 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
       setCopyErrorMessage(
         error instanceof Error
           ? error.message
-          : 'Clipboard unavailable. Select the summary and copy manually.'
+          : 'Clipboard is unavailable. You can still highlight the summary above and copy it manually if and when you choose to share it.'
       );
       await logExportAudit({
         action: 'copy-clinical-summary',

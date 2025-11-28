@@ -51,9 +51,8 @@ export const GoalList: React.FC<GoalListProps> = ({ onCreateGoal, onEditGoal, on
     loadGoals();
   }, []);
 
-  useEffect(() => {
-    filterAndSortGoals();
-  }, [filterAndSortGoals]);
+  
+  
 
   const loadGoals = async () => {
     try {
@@ -102,6 +101,10 @@ export const GoalList: React.FC<GoalListProps> = ({ onCreateGoal, onEditGoal, on
 
     setFilteredGoals(filtered);
   }, [goals, searchTerm, statusFilter, typeFilter, sortBy]);
+
+    useEffect(() => {
+      filterAndSortGoals();
+    }, [filterAndSortGoals]);
 
   const handleStatusChange = async (goalId: string, newStatus: Goal['status']) => {
     try {

@@ -130,289 +130,239 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.55.1",
-    "workers": 4,
+    "workers": 1,
     "webServer": {
       "command": "npm run -s dev",
       "url": "http://localhost:3000/pain-tracker/",
       "reuseExistingServer": true,
-      "timeout": 120000
+      "timeout": 240000,
+      "env": {
+        "VITE_BASE": "/pain-tracker/",
+        "VITE_LANDING_SCREENSHOT": "/pain-tracker/assets/analytics-dashboard.png"
+      }
     }
   },
   "suites": [
     {
-      "title": "tests\\testimonials.publish.spec.ts",
-      "file": "tests/testimonials.publish.spec.ts",
+      "title": "tests\\pwa-service-worker.spec.ts",
+      "file": "tests/pwa-service-worker.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [
+      "specs": [],
+      "suites": [
         {
-          "title": "submit -> admin verify -> public publish flow",
-          "ok": false,
-          "tags": [],
-          "tests": [
+          "title": "PWA Service Worker",
+          "file": "tests/pwa-service-worker.spec.ts",
+          "line": 66,
+          "column": 6,
+          "specs": [
             {
-              "timeout": 120000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "chromium",
-              "projectName": "chromium",
-              "results": [
+              "title": "should register service worker successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 16352,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('text=Thank you for sharing your story')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Thank you for sharing your story')\u001b[22m\n",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('text=Thank you for sharing your story')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Thank you for sharing your story')\u001b[22m\n\n    at C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\testimonials.publish.spec.ts:23:71",
-                    "location": {
-                      "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\testimonials.publish.spec.ts",
-                      "column": 71,
-                      "line": 23
-                    },
-                    "snippet": "\u001b[0m \u001b[90m 21 |\u001b[39m   \u001b[36mawait\u001b[39m checkboxes\u001b[33m.\u001b[39mnth(\u001b[35m1\u001b[39m)\u001b[33m.\u001b[39mcheck()\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'text=Submit'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Thank you for sharing your story'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m\n \u001b[90m 25 |\u001b[39m   \u001b[90m// Now open admin portal and stub testimonials list and verify endpoint\u001b[39m\n \u001b[90m 26 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/clinic/testimonials'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\testimonials.publish.spec.ts",
-                        "column": 71,
-                        "line": 23
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m failed\n\nLocator:  locator('text=Thank you for sharing your story')\nExpected: visible\nReceived: <element(s) not found>\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=Thank you for sharing your story')\u001b[22m\n\n\n\u001b[0m \u001b[90m 21 |\u001b[39m   \u001b[36mawait\u001b[39m checkboxes\u001b[33m.\u001b[39mnth(\u001b[35m1\u001b[39m)\u001b[33m.\u001b[39mcheck()\u001b[33m;\u001b[39m\n \u001b[90m 22 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mclick(\u001b[32m'text=Submit'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=Thank you for sharing your story'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m\n \u001b[90m 25 |\u001b[39m   \u001b[90m// Now open admin portal and stub testimonials list and verify endpoint\u001b[39m\n \u001b[90m 26 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/clinic/testimonials'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\testimonials.publish.spec.ts:23:71\u001b[22m"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserType.launch started \u001b[38;5;45m+0ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserType.launch succeeded \u001b[38;5;45m+220ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.newContext started \u001b[38;5;45m+16ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.newContext succeeded \u001b[38;5;45m+24ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.newPage started \u001b[38;5;45m+10ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.newPage succeeded \u001b[38;5;45m+334ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.route started \u001b[38;5;45m+12ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.route succeeded \u001b[38;5;45m+6ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.goto started \u001b[38;5;45m+7ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mnavigating to \"http://localhost:3000/submit-story\", waiting until \"load\" \u001b[38;5;45m+12ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"commit\" event fired \u001b[38;5;45m+589ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:3000/submit-story\" \u001b[38;5;45m+1ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"domcontentloaded\" event fired \u001b[38;5;45m+9s\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigated to \"http://localhost:3000/submit-story\" \u001b[38;5;45m+69ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"load\" event fired \u001b[38;5;45m+331ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.goto succeeded \u001b[38;5;45m+2ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.fill started \u001b[38;5;45m+15ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('[id=submit-story-text]') \u001b[38;5;45m+3ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <textarea required=\"\" id=\"submit-story-text\" class=\"block w-full rounded-md border border-input bg-background px-3 py-2 text-sm \"></textarea> \u001b[38;5;45m+121ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  fill(\"This is an e2e test story e2e-1763682061600\") \u001b[38;5;45m+16ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting fill action \u001b[38;5;45m+1ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and editable \u001b[38;5;45m+1ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.fill succeeded \u001b[38;5;45m+32ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> locator.check started \u001b[38;5;45m+8ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('input[type=checkbox]').nth(1) \u001b[38;5;45m+2ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <input type=\"checkbox\"/> \u001b[38;5;45m+11ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+15ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+2ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+32ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+3ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+10ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+29ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+1ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= locator.check succeeded \u001b[38;5;45m+5ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> page.click started \u001b[38;5;45m+9ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('text=Submit') \u001b[38;5;45m+2ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  locator resolved to <span class=\"flex items-center justify-center\">Submit</span> \u001b[38;5;45m+15ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mattempting click action \u001b[38;5;45m+5ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for element to be visible, enabled and stable \u001b[38;5;45m+0ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  element is visible, enabled and stable \u001b[38;5;45m+10ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  scrolling into view if needed \u001b[38;5;45m+0ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  done scrolling \u001b[38;5;45m+2ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  performing click action \u001b[38;5;45m+9ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  click action done \u001b[38;5;45m+40ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  waiting for scheduled navigations to finish \u001b[38;5;45m+0ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  navigations have finished \u001b[38;5;45m+10ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= page.click succeeded \u001b[38;5;45m+1ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> expect.toBeVisible started \u001b[38;5;45m+20ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mExpect \"toBeVisible\" with timeout 5000ms \u001b[38;5;45m+3ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for locator('text=Thank you for sharing your story') \u001b[38;5;45m+1ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m  \"networkidle\" event fired \u001b[38;5;45m+468ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= expect.toBeVisible succeeded \u001b[38;5;45m+5s\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mtaking page screenshot \u001b[38;5;45m+7ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mwaiting for fonts to load... \u001b[38;5;45m+3ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0mfonts loaded \u001b[38;5;45m+3ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browserContext.close started \u001b[38;5;45m+137ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browserContext.close succeeded \u001b[38;5;45m+378ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m=> browser.close started \u001b[38;5;45m+93ms\u001b[0m\n"
-                    },
-                    {
-                      "text": "  \u001b[38;5;45;1mpw:api \u001b[0m<= browser.close succeeded \u001b[38;5;45m+80ms\u001b[0m\n"
-                    }
-                  ],
-                  "retry": 0,
-                  "startTime": "2025-11-20T23:41:00.918Z",
+                  "timeout": 120000,
                   "annotations": [],
-                  "attachments": [
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
                     {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\test-results\\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\\test-failed-1.png"
-                    },
-                    {
-                      "name": "video",
-                      "contentType": "video/webm",
-                      "path": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\test-results\\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\\video.webm"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\test-results\\tests-testimonials.publish-e7f86-erify---public-publish-flow-chromium\\error-context.md"
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "interrupted",
+                      "duration": 386546,
+                      "error": {
+                        "message": "Error: page.evaluate: Target page, context or browser has been closed",
+                        "stack": "Error: page.evaluate: Target page, context or browser has been closed\n    at waitForServiceWorker (C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\pwa-service-worker.spec.ts:32:30)\n    at C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\pwa-service-worker.spec.ts:84:5",
+                        "location": {
+                          "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\pwa-service-worker.spec.ts",
+                          "column": 30,
+                          "line": 32
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 30 |\u001b[39m           \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m(\u001b[32m'serviceWorker'\u001b[39m \u001b[36min\u001b[39m navigator)) \u001b[36mreturn\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 31 |\u001b[39m           \u001b[36mconst\u001b[39m registrations \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m navigator\u001b[33m.\u001b[39mserviceWorker\u001b[33m.\u001b[39mgetRegistrations()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 32 |\u001b[39m           \u001b[36mconst\u001b[39m reg \u001b[33m=\u001b[39m registrations[\u001b[35m0\u001b[39m]\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 33 |\u001b[39m           \u001b[36mif\u001b[39m (reg \u001b[33m&&\u001b[39m reg\u001b[33m.\u001b[39mactive) {\n \u001b[90m 34 |\u001b[39m             \u001b[36mreturn\u001b[39m {\n \u001b[90m 35 |\u001b[39m               scope\u001b[33m:\u001b[39m reg\u001b[33m.\u001b[39mscope\u001b[33m,\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\pwa-service-worker.spec.ts",
+                            "column": 30,
+                            "line": 32
+                          },
+                          "message": "Error: page.evaluate: Target page, context or browser has been closed\n\n\u001b[0m \u001b[90m 30 |\u001b[39m           \u001b[36mif\u001b[39m (\u001b[33m!\u001b[39m(\u001b[32m'serviceWorker'\u001b[39m \u001b[36min\u001b[39m navigator)) \u001b[36mreturn\u001b[39m \u001b[36mnull\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 31 |\u001b[39m           \u001b[36mconst\u001b[39m registrations \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m navigator\u001b[33m.\u001b[39mserviceWorker\u001b[33m.\u001b[39mgetRegistrations()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 32 |\u001b[39m           \u001b[36mconst\u001b[39m reg \u001b[33m=\u001b[39m registrations[\u001b[35m0\u001b[39m]\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 33 |\u001b[39m           \u001b[36mif\u001b[39m (reg \u001b[33m&&\u001b[39m reg\u001b[33m.\u001b[39mactive) {\n \u001b[90m 34 |\u001b[39m             \u001b[36mreturn\u001b[39m {\n \u001b[90m 35 |\u001b[39m               scope\u001b[33m:\u001b[39m reg\u001b[33m.\u001b[39mscope\u001b[33m,\u001b[39m\u001b[0m\n\u001b[2m    at waitForServiceWorker (C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\pwa-service-worker.spec.ts:32:30)\u001b[22m\n\u001b[2m    at C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\pwa-service-worker.spec.ts:84:5\u001b[22m"
+                        },
+                        {
+                          "message": "Error: apiRequestContext._wrapApiCall: Target page, context or browser has been closed"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-26T20:09:15.064Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\test-results\\tests-pwa-service-worker-P-01eb4-service-worker-successfully-webkit\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\pwa-service-worker.spec.ts",
+                        "column": 30,
+                        "line": 32
+                      }
                     }
                   ],
-                  "errorLocation": {
-                    "file": "C:\\Users\\kay\\Documents\\Projects\\pain-tracker\\e2e\\tests\\testimonials.publish.spec.ts",
-                    "column": 71,
-                    "line": 23
-                  }
+                  "status": "skipped"
                 }
               ],
-              "status": "unexpected"
+              "id": "3600654b4e4dcd54f8f8-7755ce93ec9dca924dc0",
+              "file": "tests/pwa-service-worker.spec.ts",
+              "line": 77,
+              "column": 3
+            },
+            {
+              "title": "should cache static assets on install",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3600654b4e4dcd54f8f8-1dc5a5e7192c9656cda6",
+              "file": "tests/pwa-service-worker.spec.ts",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "should update service worker version",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3600654b4e4dcd54f8f8-aa9e61c724ad5e854ba0",
+              "file": "tests/pwa-service-worker.spec.ts",
+              "line": 140,
+              "column": 3
+            },
+            {
+              "title": "should handle service worker errors gracefully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3600654b4e4dcd54f8f8-6663f919d9059773454b",
+              "file": "tests/pwa-service-worker.spec.ts",
+              "line": 193,
+              "column": 3
+            },
+            {
+              "title": "should clean up old caches on activation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3600654b4e4dcd54f8f8-e39b84791cce4c5bf69d",
+              "file": "tests/pwa-service-worker.spec.ts",
+              "line": 210,
+              "column": 3
             }
-          ],
-          "id": "f90da9d29d340a96bda6-3c7f94f188fa1d4412e0",
-          "file": "tests/testimonials.publish.spec.ts",
-          "line": 3,
-          "column": 1
+          ]
+        },
+        {
+          "title": "PWA Service Worker - Advanced Features",
+          "file": "tests/pwa-service-worker.spec.ts",
+          "line": 219,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should support skipWaiting for immediate activation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3600654b4e4dcd54f8f8-55ed8363738e964c7f35",
+              "file": "tests/pwa-service-worker.spec.ts",
+              "line": 229,
+              "column": 3
+            },
+            {
+              "title": "should claim clients immediately on activation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "3600654b4e4dcd54f8f8-86bb06e1dea3fa3916b6",
+              "file": "tests/pwa-service-worker.spec.ts",
+              "line": 243,
+              "column": 3
+            }
+          ]
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-11-20T23:40:55.808Z",
-    "duration": 22150.731,
+    "startTime": "2025-11-26T20:09:03.499Z",
+    "duration": 399361.885,
     "expected": 0,
-    "skipped": 0,
-    "unexpected": 1,
+    "skipped": 7,
+    "unexpected": 0,
     "flaky": 0
   }
 }

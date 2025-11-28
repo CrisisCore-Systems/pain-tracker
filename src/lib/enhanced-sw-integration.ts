@@ -62,7 +62,16 @@ export class EnhancedServiceWorkerIntegration {
   private async initializeServiceWorker(): Promise<void> {
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        // Compute SW path and scope from Vite env if present so E2E can override base
+        const _env = (import.meta.env ?? {}) as Record<string, string | undefined>;
+        const baseUrl = _env.VITE_BASE || import.meta.env.BASE_URL || '/';
+        const swPath = `${baseUrl}sw.js`;
+        console.log('[enhanced-sw] attempting register', { swPath, scope: baseUrl });
+        const registration = await navigator.serviceWorker.register(swPath);
+        console.log('[enhanced-sw] registration result', {
+          scope: registration.scope,
+          scriptURL: registration.active?.scriptURL || registration.installing?.scriptURL || registration.waiting?.scriptURL,
+        });
 
         if (registration.active) {
           this.sw = registration.active;
@@ -275,8 +284,11 @@ export class EnhancedServiceWorkerIntegration {
 export async function registerEnhancedServiceWorker(): Promise<void> {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js', {
-        scope: '/',
+      const _env = (import.meta.env ?? {}) as Record<string, string | undefined>;
+      const baseUrl = _env.VITE_BASE || import.meta.env.BASE_URL || '/';
+      const swPath = `${baseUrl}sw.js`;
+      const registration = await navigator.serviceWorker.register(swPath, {
+        scope: baseUrl,
       });
 
       // Request persistent storage for offline resources

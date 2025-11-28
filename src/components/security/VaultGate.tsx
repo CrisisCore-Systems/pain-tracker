@@ -307,6 +307,18 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
       </div>
     );
   };
+  // Allow tests to bypass the vault in DEV only when both the test-mode bootstrap
+  // flag and a persistent test-mode localStorage key are present. This guards
+  // against accidental bypass in interactive dev sessions.
+  try {
+    const isTestModeWindow = (window as unknown as { __pt_test_mode?: boolean }).__pt_test_mode;
+    const isTestModeLS = typeof localStorage !== 'undefined' && localStorage.getItem('pt:test_mode') === '1';
+    if (import.meta.env.DEV && isTestModeWindow && isTestModeLS) {
+      return <>{children}</>;
+    }
+  } catch {
+    // ignore storage errors in unusual environments
+  }
 
   return <>{status.state === 'unlocked' ? children : renderContent()}</>;
 };

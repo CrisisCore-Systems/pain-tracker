@@ -218,7 +218,7 @@ export const showPainReminderNotification = async (painLevel?: number): Promise<
       : 'Time for your regular pain check-in',
     tag: 'pain-reminder',
     requireInteraction: false,
-    data: { actionUrl: '/track' },
+    data: { actionUrl: '/app/checkin' },
   };
 
   await browserNotificationManager.show(options);

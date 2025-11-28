@@ -12,6 +12,15 @@
   --radius: 0.5rem;
   /* Prevent forced dark mode on browsers (Chrome Auto Dark Theme) */
   color-scheme: only light;
+
+  /* ===== BIOPHILIC DESIGN TOKENS ===== */
+  /* Nature-inspired palette for therapeutic, calming UI.
+     Enable with `.biophilic` class on <html> or <body>. */
+  --biophilia-bg-1: 246 251 247;         /* pale leaf  #f6fbf7 */
+  --biophilia-bg-2: 230 244 234;         /* soft green #e6f4ea */
+  --biophilia-accent: 59 122 87;         /* forest     #3b7a57 */
+  --biophilia-muted: 154 168 154;        /* neutral    #9aa89a */
+  --biophilia-radius: 12px;
 }
 
 /* Force light mode globally - prevent browser auto-darkening */
@@ -499,6 +508,71 @@ button:active {
   height: 8px;
 }
 
+/* ===== BIOPHILIC THEME UTILITIES ===== */
+/* Add `.biophilic` to <html> or <body> to enable nature-inspired styling.
+   Use `.biophilic-bg` on containers for the gradient backdrop. */
+
+.biophilic {
+  /* subtle green tint on background & card colors when enabled */
+  --color-background: var(--biophilia-bg-1);
+  --color-card: 255 255 255 / 0.85;
+}
+
+.biophilic-bg {
+  background-image: linear-gradient(
+    180deg,
+    hsl(var(--biophilia-bg-1)) 0%,
+    hsl(var(--biophilia-bg-2)) 100%
+  );
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+/* Flowing ambient animation — add to hero or header for subtle movement */
+.biophilic-flow {
+  position: relative;
+  overflow: hidden;
+}
+.biophilic-flow::after {
+  content: '';
+  position: absolute;
+  inset: -40% -30%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.12), transparent 15%),
+    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.06), transparent 12%);
+  transform: rotate(12deg);
+  animation: biophilia-drift 14s linear infinite;
+  pointer-events: none;
+}
+@keyframes biophilia-drift {
+  from { transform: translateY(0) rotate(12deg); }
+  to   { transform: translateY(-18%) rotate(12deg); }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .biophilic-flow::after {
+    animation: none;
+  }
+}
+
+/* Button accent using biophilic forest green */
+.btn-biophilic {
+  background-color: hsl(var(--biophilia-accent));
+  color: #fff;
+  border-radius: var(--biophilia-radius);
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.btn-biophilic:hover {
+  background-color: hsl(var(--biophilia-accent) / 0.9);
+  transform: translateY(-1px);
+}
+.btn-biophilic:active {
+  transform: translateY(0);
+}
+
+
+
 ::-webkit-scrollbar-track {
   background: hsl(var(--color-muted));
   border-radius: 4px;
@@ -892,61 +966,100 @@ button:active {
  * Using !important to override Tailwind utility classes.
  */
 
-/* Hero section - apply very dark background */
-.hero {
+/* Dark-mode hero contrast styles only (do not force dark hero in light mode) */
+[data-theme="dark"] .hero {
   background: #020617 !important;           /* very dark slate (bg-slate-950) */
   color: #f9fafb !important;                /* almost white for default text (text-slate-50) */
 }
 
-/* Hero main heading - bright white and bold */
-.hero h1,
-.hero-title {
+[data-theme="dark"] .hero h1,
+[data-theme="dark"] .hero-title {
   color: #f9fafb !important;                /* text-slate-50 */
   font-weight: 700 !important;
 }
 
-/* Hero paragraph text - light gray for readability */
-.hero p,
-.hero-subtitle {
+[data-theme="dark"] .hero p,
+[data-theme="dark"] .hero-subtitle {
   color: #e5e7eb !important;                /* text-slate-200 */
 }
 
-/* Override text-muted-foreground in hero to be light */
-.hero .text-muted-foreground {
+[data-theme="dark"] .hero .text-muted-foreground {
   color: #cbd5e1 !important;                /* text-slate-300 - lighter slate for secondary text */
 }
 
-/* Keep primary colored text visible but adjust for dark background */
-.hero .text-primary {
+[data-theme="dark"] .hero .text-primary {
   color: #0ea5e9 !important;                /* bright cyan - visible on dark */
 }
 
-/* Badge/pill elements should have light text and visible background */
-.hero .bg-primary\/10 {
+[data-theme="dark"] .hero .bg-primary\/10 {
   background-color: rgba(14, 165, 233, 0.2) !important;  /* slightly brighter badge bg */
 }
 
-/* Microcopy and small text elements */
-.hero-microcopy,
-.hero-badge,
-.hero-open-source {
+[data-theme="dark"] .hero-microcopy,
+[data-theme="dark"] .hero-badge,
+[data-theme="dark"] .hero-open-source {
   color: #cbd5e1 !important;                /* text-slate-300 */
 }
 
-/* All span elements in hero get light text */
-.hero span {
+[data-theme="dark"] .hero span {
   color: inherit;
 }
 
-/* Override any opacity effects that might dim the text */
-.hero *:not(img):not(svg):not(path):not(circle):not(line):not(rect):not(polygon) {
+[data-theme="dark"] .hero *:not(img):not(svg):not(path):not(circle):not(line):not(rect):not(polygon) {
   opacity: 1 !important;
 }
 
-/* Remove any overlay effects that could muddy the contrast */
-.hero::before,
-.hero::after {
+[data-theme="dark"] .hero::before,
+[data-theme="dark"] .hero::after {
   background: none !important;
   backdrop-filter: none !important;
   filter: none !important;
+}
+
+/* ===== LIGHT-MODE HEADER & BADGE CONTRAST FIXES (quick patch) ===== */
+/* These overrides are intentionally scoped to light mode to avoid
+   interfering with dark-theme color choices. They address low-contrast
+   issues found in automated a11y scans where translucent header
+   backgrounds and pale badge backgrounds caused insufficient contrast. */
+
+/* Badge/hero/header color fixes moved to Tailwind plugin (see `tailwind.config.cjs`).
+  Keeping this comment as a reference for why these rules exist and where they live.
+  This avoids duplicate overrides in CSS and centralizes theme-driven rules. */
+
+/* Combined-selector overrides: utilities can conflict when elements carry both
+   a pale background and a colored text utility (e.g. `bg-green-100 text-green-600`).
+   Inject targeted, theme-driven selectors here (loaded after Tailwind utilities)
+   to ensure badges meet WCAG 2.1 AA without using !important. */
+:root:not([data-theme="dark"]) .bg-green-100.text-green-600,
+:root:not([data-theme="dark"]) .bg-green-100.text-green-700,
+:root:not([data-theme="dark"]) .bg-green-100.text-green-800 {
+  color: hsl(var(--color-foreground));
+  font-weight: 700;
+}
+:root:not([data-theme="dark"]) .bg-blue-100.text-blue-600,
+:root:not([data-theme="dark"]) .bg-rose-100.text-rose-600,
+:root:not([data-theme="dark"]) .bg-amber-100.text-amber-600 {
+  color: hsl(var(--color-foreground));
+  font-weight: 700;
+}
+
+/* Target specific header/nav utility classes reported by axe for low contrast */
+:root:not([data-theme="dark"]) .lg\:text-xl.sm\:text-lg.truncate,
+:root:not([data-theme="dark"]) .lg\:flex > .justify-center > .text-sm,
+:root:not([data-theme="dark"]) .md\:flex > .justify-center > .text-sm,
+:root:not([data-theme="dark"]) .xs\:inline {
+  color: hsl(var(--color-foreground)) !important;
+}
+
+/* Ensure primary/accent buttons and chips have light text on colored backgrounds in light mode */
+:root:not([data-theme="dark"]) .bg-primary,
+:root:not([data-theme="dark"]) .bg-primary *,
+:root:not([data-theme="dark"]) .bg-accent,
+:root:not([data-theme="dark"]) .bg-accent * {
+  color: #ffffff !important;
+}
+
+/* Ensure CTA text is white when inside primary-colored buttons */
+:root:not([data-theme="dark"]) .bg-primary .whitespace-nowrap {
+  color: #ffffff !important;
 }

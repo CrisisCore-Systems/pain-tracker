@@ -31,13 +31,14 @@ export class ToneEngine {
   /**
    * Detect patient state from recent pain entries
    */
-  detectState(entries: PainEntry[], timeSinceFlare?: number): PatientState {
-    if (entries.length === 0) {
+  detectState(entries?: PainEntry[] | null, timeSinceFlare?: number): PatientState {
+    const safeEntries = Array.isArray(entries) ? entries : [];
+    if (safeEntries.length === 0) {
       return 'stable';
     }
 
     // Sort by timestamp (most recent first)
-    const sorted = [...entries].sort(
+    const sorted = [...safeEntries].sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
@@ -73,12 +74,13 @@ export class ToneEngine {
   /**
    * Calculate pain trend from entries
    */
-  calculatePainTrend(entries: PainEntry[]) {
-    if (entries.length < 2) {
+  calculatePainTrend(entries?: PainEntry[] | null) {
+    const safeEntries = Array.isArray(entries) ? entries : [];
+    if (safeEntries.length < 2) {
       return undefined;
     }
 
-    const sorted = [...entries].sort(
+    const sorted = [...safeEntries].sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 
@@ -98,7 +100,7 @@ export class ToneEngine {
    * Build tone context from patient data
    */
   buildContext(
-    entries: PainEntry[],
+    entries: PainEntry[] | null | undefined,
     preferences: TonePreferences,
     options?: {
       timeSinceFlare?: number;
@@ -143,15 +145,16 @@ export class ToneEngine {
   /**
    * Generate progress insight with confidence
    */
-  generateInsight(entries: PainEntry[], days: number = 14): ProgressInsight | null {
-    if (entries.length < 2) {
+  generateInsight(entries?: PainEntry[] | null, days: number = 14): ProgressInsight | null {
+    const safeEntries = Array.isArray(entries) ? entries : [];
+    if (safeEntries.length < 2) {
       return null;
     }
 
     // Filter to date range
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - days);
-    const recent = entries.filter(e => new Date(e.timestamp) >= cutoff);
+    const recent = safeEntries.filter(e => new Date(e.timestamp) >= cutoff);
 
     if (recent.length < 2) {
       return null;
@@ -165,7 +168,7 @@ export class ToneEngine {
     // Compare to previous period
     const previousCutoff = new Date(cutoff);
     previousCutoff.setDate(previousCutoff.getDate() - days);
-    const previous = entries.filter(
+    const previous = safeEntries.filter(
       e => new Date(e.timestamp) >= previousCutoff && new Date(e.timestamp) < cutoff
     );
 

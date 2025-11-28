@@ -27,3 +27,4 @@ export { usePWAStatus, useInstallPWA, useBackgroundSync } from './usePWASimple';
 export { usePainTrackerStorage } from './usePainTrackerStorage';
 export { usePatternAlerts } from './usePatternAlerts';
 export { useSavedFilters } from './useSavedFilters';
+export { useBiophilicTheme } from './useBiophilicTheme';

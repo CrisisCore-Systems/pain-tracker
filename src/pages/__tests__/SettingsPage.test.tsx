@@ -12,8 +12,8 @@ describe('SettingsPage', () => {
     // Notifications management
     expect(screen.getByText(/Manage notifications/i)).toBeInTheDocument();
 
-    // Backup & Export
-    expect(screen.getByText(/Backup & Export/i)).toBeInTheDocument();
+  // Backup & Export (section heading)
+  expect(screen.getByRole('heading', { level: 3, name: /Backup & Export/i })).toBeInTheDocument();
 
     // Alerts settings
     expect(screen.getByText(/Alerts settings/i)).toBeInTheDocument();

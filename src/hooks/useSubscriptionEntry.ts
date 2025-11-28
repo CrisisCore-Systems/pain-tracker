@@ -10,6 +10,10 @@ import {
 } from '../stores/subscription-actions';
 import type { PainEntry, ActivityLogEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
+// Attempt to enrich entries with local weather when available. This calls into
+// the packaged service which falls back to a safe stub in environments where
+// geolocation or network access is not available.
+import { fetchLocalWeather } from '../../packages/services/src/weather';
 
 interface UseSubscriptionEntryResult {
   addPainEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => Promise<void>;
@@ -58,6 +62,33 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
         setIsQuotaExceeded(true);
         setQuotaMessage(quotaCheck.error || 'Pain entry quota exceeded. Please upgrade your plan.');
         throw new Error(quotaCheck.error || 'Quota exceeded');
+      }
+
+      // Try to enrich the entry with local weather when possible. This is
+      // best-effort only and must never block the user from saving an entry.
+      try {
+        // Prefer to use browser geolocation when available to fetch local weather
+        let weatherInfo: any = null;
+        if (typeof navigator !== 'undefined' && 'geolocation' in navigator && navigator.geolocation) {
+          // Small timeout to avoid blocking UI
+          const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+          );
+          weatherInfo = await fetchLocalWeather({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+        } else {
+          weatherInfo = await fetchLocalWeather();
+        }
+
+        if (weatherInfo) {
+          // Normalise to a human-readable summary; don't modify the original type
+          const summary = typeof weatherInfo === 'string'
+            ? weatherInfo
+            : `${weatherInfo.temp ?? ''}${weatherInfo.temp != null ? '°C' : ''} ${weatherInfo.condition ?? ''}`.trim();
+          // Attach as a best-effort field - cast to any to avoid strict type errors
+          (entry as any).weather = summary;
+        }
+      } catch (err) {
+        // Ignore enrichment failures; entry save must not be blocked
       }
 
       // Add entry using store action

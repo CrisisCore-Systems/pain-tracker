@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../test-setup';
 
 test('submit -> admin verify -> public publish flow', async ({ page }) => {
   const uniq = `e2e-${Date.now()}`;

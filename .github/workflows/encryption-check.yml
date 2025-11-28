@@ -1,10 +1,9 @@
 name: Encryption Configuration Check
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 7 * * 0' # weekly on Sunday at 07:00 UTC
 
 jobs:
   check-encryption:

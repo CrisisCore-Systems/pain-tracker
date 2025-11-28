@@ -1,0 +1,437 @@
+{
+  "route": "dashboard",
+  "timestamp": "2025-11-26T00:30:48.798Z",
+  "violations": [
+    {
+      "id": "color-contrast",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2aa",
+        "wcag143",
+        "TTv5",
+        "TT13.c",
+        "EN-301-549",
+        "EN-9.1.4.3",
+        "ACT"
+      ],
+      "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/color-contrast?application=playwright",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#f9fafb",
+                "bgColor": "#cccdd1",
+                "contrastRatio": 1.51,
+                "fontSize": "15.0pt (20px)",
+                "fontWeight": "bold",
+                "messageKey": null,
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 shadow-sm\">",
+                  "target": [
+                    ".bg-white\\/80"
+                  ]
+                },
+                {
+                  "html": "<section class=\"hero relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background\">",
+                  "target": [
+                    ".hero"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 15.0pt (20px), font weight: bold). Expected contrast ratio of 3:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"font-bold text-base sm:text-lg lg:text-xl truncate text-gray-900 dark:text-white\">Pain Tracker Pro</span>",
+          "target": [
+            ".dark\\:text-white"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 15.0pt (20px), font weight: bold). Expected contrast ratio of 3:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#f9fafb",
+                "bgColor": "#cccdd1",
+                "contrastRatio": 1.51,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 shadow-sm\">",
+                  "target": [
+                    ".bg-white\\/80"
+                  ]
+                },
+                {
+                  "html": "<section class=\"hero relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background\">",
+                  "target": [
+                    ".hero"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"text-sm text-gray-900 dark:text-gray-100\">Pricing</span>",
+          "target": [
+            ".lg\\:flex > .justify-center > .dark\\:text-gray-100.text-gray-900.text-sm"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#f9fafb",
+                "bgColor": "#cccdd1",
+                "contrastRatio": 1.51,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 shadow-sm\">",
+                  "target": [
+                    ".bg-white\\/80"
+                  ]
+                },
+                {
+                  "html": "<section class=\"hero relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background\">",
+                  "target": [
+                    ".hero"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"text-sm text-gray-900 dark:text-gray-100\">Sign In</span>",
+          "target": [
+            ".md\\:flex > .justify-center > .dark\\:text-gray-100.text-gray-900.text-sm"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#f9fafb",
+                "bgColor": "#cccdd1",
+                "contrastRatio": 1.51,
+                "fontSize": "10.5pt (14px)",
+                "fontWeight": "normal",
+                "messageKey": null,
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 shadow-sm\">",
+                  "target": [
+                    ".bg-white\\/80"
+                  ]
+                },
+                {
+                  "html": "<section class=\"hero relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background\">",
+                  "target": [
+                    ".hero"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<span class=\"hidden xs:inline sm:hidden lg:inline text-gray-900 dark:text-gray-100\">Clinician</span>",
+          "target": [
+            ".xs\\:inline"
+          ],
+          "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 1.51 (foreground color: #f9fafb, background color: #cccdd1, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+        }
+      ]
+    }
+  ],
+  "colorData": [
+    {
+      "selector": "DIV.min-h-screen.bg-background",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.border-b.bg-white/80.dark:bg-gray-900/80.backdrop-blur-md.sticky.top-0.z-50.shadow-sm",
+      "textColor": "rgb(249, 250, 251)",
+      "backgroundColor": "rgba(255, 255, 255, 0.8)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "BUTTON.inline-flex.items-center.justify-center.rounded-lg.font-medium.transition-all.duration-200.focus-visible:outline-none.focus-visible:ring-2.focus-visible:ring-ring.focus-visible:ring-offset-2.disabled:opacity-50.disabled:pointer-events-none.ring-offset-background.active:scale-[0.98].bg-primary.text-primary-foreground.hover:bg-primary/90.shadow-sm.hover:shadow-md.active:bg-primary/80.h-12.py-2.min-h-[44px].min-w-[44px].gap-1.sm:gap-2.px-2.sm:px-3.text-xs.sm:text-sm.relative.overflow-hidden.touch-manipulation.select-none",
+      "textColor": "rgb(249, 250, 251)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.inline-flex.items-center.gap-2.rounded-full.border.border-primary/20.bg-primary/10.px-3.py-1.5.text-xs.sm:text-sm.font-medium.text-primary.flex-wrap.justify-center.lg:justify-start",
+      "textColor": "rgb(14, 165, 233)",
+      "backgroundColor": "rgba(14, 165, 233, 0.2)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.absolute.-top-4.-right-4.bg-primary.text-primary-foreground.rounded-full.px-4.py-2.text-sm.font-medium.shadow-lg",
+      "textColor": "rgb(249, 250, 251)",
+      "backgroundColor": "rgb(37, 99, 235)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.absolute.-bottom-4.-left-4.bg-accent.text-accent-foreground.rounded-full.px-4.py-2.text-sm.font-medium.shadow-lg",
+      "textColor": "rgb(249, 250, 251)",
+      "backgroundColor": "rgb(192, 38, 211)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.absolute.top-0.right-0.w-96.h-96.bg-primary/10.rounded-full.blur-3xl.-z-10",
+      "textColor": "rgb(249, 250, 251)",
+      "backgroundColor": "rgba(14, 165, 233, 0.2)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.inline-flex.items-center.gap-2.rounded-full.border.border-blue-200.bg-blue-50.dark:border-blue-900.dark:bg-blue-950.px-4.py-2.text-sm.font-medium.text-blue-700.dark:text-blue-300.mb-4",
+      "textColor": "rgb(29, 78, 216)",
+      "backgroundColor": "rgb(239, 246, 255)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.shadow-md.border-border.p-6.relative.overflow-hidden.border-2.hover:border-primary/50.transition-all.duration-300.hover:shadow-lg",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.w-12.h-12.rounded-lg.bg-blue-100.dark:bg-blue-900/20.flex.items-center.justify-center",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(219, 234, 254)",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.shadow-md.border-border.p-6.relative.overflow-hidden.border-2.hover:border-primary/50.transition-all.duration-300.hover:shadow-lg",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.w-12.h-12.rounded-lg.bg-blue-100.dark:bg-blue-900/20.flex.items-center.justify-center",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(219, 234, 254)",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.shadow-md.border-border.p-6.relative.overflow-hidden.border-2.hover:border-primary/50.transition-all.duration-300.hover:shadow-lg",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.w-12.h-12.rounded-lg.bg-blue-100.dark:bg-blue-900/20.flex.items-center.justify-center",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(219, 234, 254)",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "DIV.inline-flex.items-center.gap-2.rounded-full.border.border-green-200.bg-green-50.dark:border-green-900.dark:bg-green-950.px-4.py-2.text-sm.font-medium.text-green-700.dark:text-green-300.mb-4",
+      "textColor": "rgb(21, 128, 61)",
+      "backgroundColor": "rgb(240, 253, 244)",
+      "fontSize": "14px",
+      "fontWeight": "500"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.shadow-md.border-border.p-6.relative.overflow-hidden.border-2.hover:border-green-600/50.transition-all.duration-300.hover:shadow-lg",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.w-12.h-12.rounded-lg.bg-green-100.dark:bg-green-900/20.flex.items-center.justify-center",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(220, 252, 231)",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.shadow-md.border-border.p-6.relative.overflow-hidden.border-2.hover:border-green-600/50.transition-all.duration-300.hover:shadow-lg",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    },
+    {
+      "selector": "DIV.w-12.h-12.rounded-lg.bg-green-100.dark:bg-green-900/20.flex.items-center.justify-center",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(220, 252, 231)",
+      "fontSize": "16px",
+      "fontWeight": "600"
+    },
+    {
+      "selector": "DIV.rounded-lg.bg-card.text-card-foreground.shadow-md.border-border.p-6.relative.overflow-hidden.border-2.hover:border-green-600/50.transition-all.duration-300.hover:shadow-lg",
+      "textColor": "rgb(15, 23, 42)",
+      "backgroundColor": "rgb(250, 250, 250)",
+      "fontSize": "16px",
+      "fontWeight": "400"
+    }
+  ],
+  "focusResults": {
+    "totalFocusable": 30,
+    "visibleFocusable": 26,
+    "focusVisibleStyles": [
+      {
+        "element": "A#skip-to-main",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "BUTTON",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      },
+      {
+        "element": "A",
+        "hasFocusRing": true
+      }
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../test-setup';
 
 test.describe('PWA Install Prompt (Add to Home Screen)', () => {
   test.beforeEach(async ({ page }) => {

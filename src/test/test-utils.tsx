@@ -2,12 +2,15 @@ import { ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { ThemeProvider } from '../design-system/ThemeProvider';
 import { ToneProvider } from '../contexts/ToneContext';
+import { ToastProvider } from '../components/feedback';
 
 // Add all required providers for testing
 const AllTheProviders = ({ children }: { children: ReactNode }) => {
   return (
     <ThemeProvider defaultMode="light">
-      <ToneProvider>{children}</ToneProvider>
+      <ToneProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </ToneProvider>
     </ThemeProvider>
   );
 };

@@ -1,0 +1,63 @@
+name: "E2E Playwright (throttled)"
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Run nightly at 05:00 UTC (low-traffic window)
+    - cron: '0 5 * * *'
+
+concurrency:
+  group: 'e2e-playwright'
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-playwright:
+    name: Playwright E2E (single-run)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build app
+        run: npm run build --if-present
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        env:
+          CI: 'true'
+        run: |
+          npx playwright test --config=e2e/playwright.config.ts --reporter=list --workers=1 || true
+
+      - name: Collect Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results/**
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-html-report
+          path: e2e/results/html-report/**

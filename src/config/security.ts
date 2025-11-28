@@ -329,7 +329,10 @@ export function generateCSPHeader(environment: EnvironmentName = 'production'): 
   directives.push(`form-action ${csp.formAction.join(' ')}`);
   directives.push(`base-uri ${csp.baseUri.join(' ')}`);
 
-  if (csp.upgradeInsecureRequests) {
+  // Only force upgrade-insecure-requests in non-development environments.
+  // Dev servers typically run over HTTP; forcing HTTPS here breaks local testing
+  // (browsers will attempt to load resources over https://localhost and fail).
+  if (csp.upgradeInsecureRequests && environment !== 'development') {
     directives.push('upgrade-insecure-requests');
   }
 

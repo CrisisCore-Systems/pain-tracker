@@ -2,25 +2,12 @@
  * ToastProvider - Context provider for toast notifications
  */
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 import { Toast, ToastData } from './Toast';
+import { addToastToList, addBottomLeftToastToList, removeToastById } from './toastHelpers';
+import { ToastContext } from './toastContext';
 
-interface ToastContextType {
-  addToast: (toast: Omit<ToastData, 'id'>) => void;
-  removeToast: (id: string) => void;
-  clearToasts: () => void;
-  addBottomLeftToast: (toast: Omit<ToastData, 'id'>) => void;
-}
-
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
-
-export function useToastContext() {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error('useToastContext must be used within a ToastProvider');
-  }
-  return context;
-}
+// ToastContext and hook live in `toastContext.ts` to keep this file focused on the provider component.
 
 interface ToastProviderProps {
   children: ReactNode;
@@ -37,7 +24,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
       id,
     };
 
-    setToasts(prev => [...prev, newToast]);
+    setToasts(prev => addToastToList(prev, newToast));
   };
 
   const addBottomLeftToast = (toastData: Omit<ToastData, 'id'>) => {
@@ -47,12 +34,12 @@ export function ToastProvider({ children }: ToastProviderProps) {
       id,
     };
 
-    setBottomLeftToasts(prev => [...prev, newToast]);
+    setBottomLeftToasts(prev => addBottomLeftToastToList(prev, newToast));
   };
 
   const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-    setBottomLeftToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts(prev => removeToastById(prev, id));
+    setBottomLeftToasts(prev => removeToastById(prev, id));
   };
 
   const clearToasts = () => {

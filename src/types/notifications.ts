@@ -111,10 +111,10 @@ export const DEFAULT_NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
   {
     id: 'pain_reminder',
     type: 'pain_reminder',
-    title: 'Time for Pain Check-in',
+    title: 'Daily Check-in',
     message:
-      'How are you feeling right now? Taking a moment to track your pain can help you understand your patterns.',
-    actionLabel: 'Track Pain',
+      "How are you holding up today? Take a quick moment to log your pain and how you're coping — it helps the app give kinder, more useful insights.",
+    actionLabel: 'Check In',
     actionUrl: '/track',
     priority: 'medium',
     category: 'health',
@@ -159,10 +159,10 @@ export const DEFAULT_NOTIFICATION_TEMPLATES: NotificationTemplate[] = [
   {
     id: 'weekly_progress',
     type: 'progress_checkin',
-    title: 'Weekly Progress Check-in',
+    title: 'Weekly Check-in',
     message:
-      "It's been a week since your last check-in. How have you been feeling? Your consistency matters.",
-    actionLabel: 'Review Progress',
+      "It's been a week — a quick moment to reflect on your pain and wellbeing can surface useful patterns. How has this week been for you?",
+    actionLabel: 'Review Week',
     actionUrl: '/analytics',
     priority: 'low',
     category: 'progress',

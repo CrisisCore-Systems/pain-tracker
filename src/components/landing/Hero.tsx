@@ -5,9 +5,10 @@ import { Activity, Shield, Heart, Stethoscope, LogIn, ArrowRight } from 'lucide-
 
 export const Hero: React.FC = () => {
   const navigate = useNavigate();
+  const _env = (import.meta.env ?? {}) as Record<string, string | undefined>;
 
   return (
-    <section className="hero relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
+    <section className="hero biophilic-flow relative overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
       {/* Top Navigation Bar */}
       <div className="border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-3 sm:px-4">
@@ -15,7 +16,7 @@ export const Hero: React.FC = () => {
             {/* Logo */}
             <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-shrink">
               <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-primary flex-shrink-0" />
-              <span className="font-bold text-base sm:text-lg lg:text-xl truncate">Pain Tracker Pro</span>
+              <span className="font-bold text-base sm:text-lg lg:text-xl truncate text-gray-900 dark:text-white">Pain Tracker Pro</span>
             </div>
 
             {/* Navigation Actions */}
@@ -27,7 +28,7 @@ export const Hero: React.FC = () => {
                 className="hidden lg:flex gap-1.5 sm:gap-2 px-2 sm:px-3"
                 aria-label="View pricing plans"
               >
-                <span className="text-sm">Pricing</span>
+                <span className="text-sm text-gray-900 dark:text-gray-100">Pricing</span>
               </Button>
 
               {/* Returning User */}
@@ -38,7 +39,7 @@ export const Hero: React.FC = () => {
                 aria-label="Sign in to your account"
               >
                 <LogIn className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="text-sm">Sign In</span>
+                <span className="text-sm text-gray-900 dark:text-gray-100">Sign In</span>
               </Button>
 
               {/* Clinician Portal */}
@@ -49,7 +50,7 @@ export const Hero: React.FC = () => {
                 aria-label="Access clinician portal"
               >
                 <Stethoscope className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="hidden xs:inline sm:hidden lg:inline">Clinician</span>
+                <span className="hidden xs:inline sm:hidden lg:inline text-gray-900 dark:text-gray-100">Clinician</span>
                 <span className="xs:hidden sm:inline lg:hidden">Clinic</span>
               </Button>
 
@@ -150,14 +151,15 @@ export const Hero: React.FC = () => {
           <div className="relative">
             {/* Dashboard Screenshot */}
             <div className="relative rounded-lg border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5 p-8 shadow-2xl">
-              <div className="rounded-md overflow-hidden border border-border shadow-lg">
-                <img
-                  src="/main-dashboard.png"
-                  alt="Pain Tracker Pro Dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design"
-                  className="mx-auto max-h-[420px] w-auto max-w-full object-contain md:max-h-[480px]"
-                  loading="lazy"
-                />
-              </div>
+                <div className="rounded-md overflow-hidden border border-border shadow-lg">
+                  {/* Allow overriding the landing screenshot via Vite env (VITE_LANDING_SCREENSHOT) for easy changes */}
+                  <img
+                    src={_env.VITE_LANDING_SCREENSHOT || '/main-dashboard.png'}
+                    alt="Pain Tracker Pro Dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design"
+                    className="mx-auto max-h-[420px] w-auto max-w-full object-contain md:max-h-[480px]"
+                    loading="lazy"
+                  />
+                </div>
 
               {/* Floating badges for visual interest */}
               <div className="absolute -top-4 -right-4 bg-primary text-primary-foreground rounded-full px-4 py-2 text-sm font-medium shadow-lg">

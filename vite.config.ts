@@ -6,7 +6,15 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 // Development CSP - allows hot reload and dev tools
-const devCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
+// NOTE: Don't force 'upgrade-insecure-requests' in dev unless HTTPS is enabled
+// (Playwright/E2E may run the dev server on HTTP). Only include that directive
+// when VITE_DEV_HTTPS is truthy.
+const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'";
+// For dev server we avoid forcing 'upgrade-insecure-requests' because
+// Playwright/E2E runs commonly use an HTTP dev server. Always use the
+// base dev CSP during development; the production preview uses a stricter
+// CSP including upgrade-insecure-requests.
+const devCsp = baseDevCsp;
 
 // Production CSP - strict, but allows Google Analytics
 const prodCsp = "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self'; font-src 'self' data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://api.wcb.gov https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
@@ -73,8 +81,48 @@ export default defineConfig({
         });
       }
     }
+    ,
+    {
+      name: 'serve-public-under-base',
+      configureServer(server) {
+        // If VITE_BASE is set to a non-root base, ensure public assets are also
+        // served under that base in dev so service worker and manifest requests
+        // using the base path succeed during E2E runs.
+        const base = process.env.VITE_BASE || '/';
+        if (base && base !== '/') {
+          const prefix = base.endsWith('/') ? base : base + '/';
+          server.middlewares.use((req, res, next) => {
+            try {
+              if (!req.url || !req.url.startsWith(prefix)) return next();
+
+              const relPath = req.url.slice(prefix.length);
+              // only serve top-level public files (manifest.json, sw.js, icons)
+              const allowed = ['sw.js', 'manifest.json', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'];
+              if (!allowed.includes(relPath)) return next();
+
+              const publicFile = path.join(process.cwd(), 'public', relPath);
+              if (!fs.existsSync(publicFile)) return next();
+
+              // Set a minimal content-type mapping
+              const ext = path.extname(publicFile).toLowerCase();
+              const ct = ext === '.json' ? 'application/json' : ext === '.js' ? 'application/javascript' : ext === '.png' ? 'image/png' : ext === '.svg' ? 'image/svg+xml' : ext === '.ico' ? 'image/x-icon' : 'application/octet-stream';
+              res.setHeader('Content-Type', ct);
+              res.setHeader('Cache-Control', 'no-store');
+              const data = fs.readFileSync(publicFile);
+              res.end(data);
+              return;
+            } catch (e) {
+              // swallow and continue to next middleware
+            }
+            next();
+          });
+        }
+      }
+    }
   ],
-  base: '/',
+  // Allow overriding the base path for test runs (Playwright) or CI by setting VITE_BASE.
+  // This keeps production default as '/', but lets E2E run under '/pain-tracker/'.
+  base: process.env.VITE_BASE || '/',
   resolve: {
     alias: {
       '@pain-tracker/services': path.resolve(__dirname, 'packages/services/src'),
@@ -160,6 +208,8 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
+    // Enable HTTPS in dev when running E2E (controlled by env var VITE_DEV_HTTPS)
+    https: process.env.VITE_DEV_HTTPS === 'true' || false,
     headers: {
       'Content-Security-Policy': devCsp,
       'X-Frame-Options': 'DENY',

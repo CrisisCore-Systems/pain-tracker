@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../test-setup';
 
 test.describe('PWA Background Sync', () => {
   test.beforeEach(async ({ page }) => {

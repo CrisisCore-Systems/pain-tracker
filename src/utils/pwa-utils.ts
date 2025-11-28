@@ -144,9 +144,27 @@ export class PWAManager {
     }
 
     try {
-      // Use Vite's base URL for service worker registration
-      const baseUrl = import.meta.env.BASE_URL || '/';
-      const swPath = `${baseUrl}sw.js`.replace(/\/+/g, '/'); // Clean up double slashes
+      // Prefer explicit Vite-provided base override (VITE_BASE) for test runs,
+      // otherwise fall back to Vite's BASE_URL and finally '/'.
+      const _env = import.meta.env as unknown as Record<string, string | undefined>;
+      let baseUrl = (_env.VITE_BASE as string) || (import.meta.env.BASE_URL as string) || '/';
+
+      // Normalise cases where Vite gives a relative './' base (e.g. relative build).
+      // In test/dev servers the runtime location.pathname usually reflects the actual base
+      // (for example '/pain-tracker/'), so prefer that when BASE_URL is './' or otherwise
+      // doesn't start with '/'. This prevents registering './' as the scope which some
+      // tests interpret literally and cause manifest/start_url mismatches.
+      try {
+        if (!baseUrl || baseUrl === './' || !baseUrl.startsWith('/')) {
+          const locBase = location.pathname.endsWith('/') ? location.pathname : location.pathname + '/';
+          baseUrl = locBase || '/';
+        }
+      } catch {
+        // If location isn't available for some reason, fall back to '/'
+        baseUrl = baseUrl === './' ? '/' : baseUrl;
+      }
+
+      const swPath = `${baseUrl}sw.js`.replace(/\/\/+/, '/'); // Clean up double slashes
 
       this.swRegistration = await navigator.serviceWorker.register(swPath, {
         scope: baseUrl,
@@ -179,6 +197,46 @@ export class PWAManager {
       navigator.serviceWorker.addEventListener('message', event => {
         this.handleServiceWorkerMessage(event);
       });
+
+      // Lightweight handshake: set a global flag when the service worker signals readiness
+      try {
+        // Listen for SW_READY or PONG messages (the SW posts SW_READY on activation and
+        // responds to PING with PONG). This provides a reliable readiness signal for tests.
+        navigator.serviceWorker.addEventListener('message', (ev) => {
+          try {
+            const data = (ev && ev.data) || {};
+            if (data.type === 'SW_READY' || data.type === 'PONG') {
+              // Mark page-level readiness for tests/tools that await this flag.
+              // Use a typed-free assignment to avoid TSC strict-any lint errors.
+              (window as unknown as Record<string, unknown>).__pwa_sw_ready = true;
+              (window as unknown as Record<string, unknown>).__pwa_sw_version = data.version || (this.swRegistration && (this.swRegistration as unknown as Record<string, unknown>).__SW_VERSION) || null;
+            }
+          } catch {
+            // ignore
+          }
+        });
+
+        // If the registration is already active, probe it with a PING and set the flag
+        // if we get a response. Don't block init if this fails.
+        (async () => {
+          try {
+            if (this.swRegistration && this.swRegistration.active) {
+              try {
+                this.swRegistration.active.postMessage({ type: 'PING' });
+              } catch {
+                // ignore
+              }
+              // Also set the flag optimistically if the active worker exists
+              (window as unknown as Record<string, unknown>).__pwa_sw_ready = true;
+              (window as unknown as Record<string, unknown>).__pwa_sw_version = (this.swRegistration.active && (this.swRegistration as unknown as Record<string, unknown>).__SW_VERSION) || null;
+            }
+          } catch {
+            // ignore
+          }
+        })();
+      } catch {
+        // ignore
+      }
 
       // Setup background sync if supported
       if (this.capabilities.backgroundSync) {

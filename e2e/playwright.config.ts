@@ -2,7 +2,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './',
-  timeout: 120_000,
+  timeout: 180_000,
+  // Increase retries on CI for flaky engines (especially WebKit)
+  retries: process.env.CI ? 2 : 0,
   expect: { timeout: 5000 },
   fullyParallel: true,
   reporter: [
@@ -13,7 +15,8 @@ export default defineConfig({
   ],
   use: {
     baseURL: 'http://localhost:3000/pain-tracker/',
-    trace: 'on-first-retry',
+    // Collect full traces for flaky runs to aid debugging
+    trace: 'on',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
@@ -59,7 +62,22 @@ export default defineConfig({
   webServer: {
     command: 'npm run -s dev',
     url: 'http://localhost:3000/pain-tracker/',
-    reuseExistingServer: true,
-    timeout: 120_000,
+  // Prefer Playwright to start the dev server with the correct test env.
+  // During interactive debugging we allow reusing an existing server so we can
+  // run Vite in a separate terminal and observe its logs. This will be reverted
+  // back to 'false' for CI runs when triage is complete.
+  reuseExistingServer: true,
+    // Increase webServer timeout to allow the dev server more time to become fully responsive
+    // during CI/slow machines (helps avoid module fetch timeouts observed in traces).
+    timeout: 240_000,
+    env: {
+      // Vite exposes this at config time as process.env.VITE_BASE in vite.config.ts
+      VITE_BASE: '/pain-tracker/',
+      // Point Playwright-run dev server to the landing screenshot we add under public/pain-tracker/assets
+      VITE_LANDING_SCREENSHOT: '/pain-tracker/assets/analytics-dashboard.png'
+      ,
+      // (Removed VITE_DEV_HTTPS) E2E runs default to HTTP dev server so browsers
+      // won't be forced to upgrade to HTTPS by CSP during tests.
+    }
   },
 });

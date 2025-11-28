@@ -550,3 +550,33 @@ export class EncryptedVaultService {
 }
 
 export const vaultService = new EncryptedVaultService();
+
+// DEV-only: expose a small test hook on window so E2E tests can programmatically
+// initialize or unlock the vault in newly created pages. This avoids flaky UI
+// interactions in isolated pages used by tests. Only attach in development builds.
+try {
+  // Vite exposes import.meta.env.DEV; guard to ensure this stays absent in prod
+  if (import.meta.env && (import.meta as unknown as { DEV?: boolean }).DEV) {
+    (globalThis as unknown as { __test_vault?: unknown }).__test_vault = {
+      setup: async (passphrase: string) => {
+        try {
+          await vaultService.setupPassphrase(passphrase);
+          return { success: true };
+        } catch (err) {
+          return { success: false, error: String((err as Error)?.message || err) };
+        }
+      },
+      unlock: async (passphrase: string) => {
+        try {
+          await vaultService.unlock(passphrase);
+          return { success: true };
+        } catch (err) {
+          return { success: false, error: String((err as Error)?.message || err) };
+        }
+      },
+      isUnlocked: () => vaultService.isUnlocked(),
+    };
+  }
+} catch {
+  // ignore failures attaching test hook
+}

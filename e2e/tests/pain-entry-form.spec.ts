@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../test-setup';
 
 test.describe('PainEntryForm e2e', () => {
   test.beforeEach(async ({ page }) => {

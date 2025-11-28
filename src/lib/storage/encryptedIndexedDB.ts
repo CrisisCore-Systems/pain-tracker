@@ -156,35 +156,39 @@ export async function migrateIndexedDBStore(
 
   try {
       // Use a concrete union type rather than DOM global types that may not be defined
-      type IndexedKey = string | number | Date | ArrayBuffer;
-      const keys = await new Promise<IndexedKey[]>((resolve, reject) => {
+          type IndexedKey = string | number | Date | ArrayBuffer;
+          const keys = await new Promise<IndexedKey[]>((resolve, reject) => {
       const tx = db.transaction(storeName, 'readonly');
       const store = tx.objectStore(storeName);
       const request = store.getAllKeys();
-      request.onsuccess = () => resolve(request.result);
+          request.onsuccess = () => resolve(request.result as unknown as IndexedKey[]);
       request.onerror = () => reject(request.error);
     });
 
-  for (const key of (keys as string[])) {
-      const raw = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>(
-        (resolve, reject) => {
-          const tx = db.transaction(storeName, 'readonly');
-          const store = tx.objectStore(storeName);
-          const request = store.get(key);
-          request.onsuccess = () => resolve(request.result ?? null);
-          request.onerror = () => reject(request.error);
+        for (const key of keys) {
+          // Normalize key to a string for storage APIs that expect string keys for our usage.
+          const keyStr = typeof key === 'string' ? key : String(key);
+
+          const raw = await new Promise<VaultIndexedDBRecord | LegacyRecord | null>(
+            (resolve, reject) => {
+              const tx = db.transaction(storeName, 'readonly');
+              const store = tx.objectStore(storeName);
+              // IDB allows several key types; use the original key when querying the store
+              const request = store.get(key as unknown as string | number | Date | ArrayBuffer);
+              request.onsuccess = () => resolve(request.result ?? null);
+              request.onerror = () => reject(request.error);
+            }
+          );
+
+          if (!raw) continue;
+          if (isVaultRecord(raw)) continue;
+
+          const value = await retrieveAndDecrypt(dbName, storeName, keyStr);
+          if (value != null) {
+            await encryptAndStore(dbName, storeName, keyStr, value);
+            migrated += 1;
+          }
         }
-      );
-
-      if (!raw) continue;
-      if (isVaultRecord(raw)) continue;
-
-      const value = await retrieveAndDecrypt(dbName, storeName, key as string);
-      if (value != null) {
-        await encryptAndStore(dbName, storeName, key as string, value);
-        migrated += 1;
-      }
-    }
   } finally {
     db.close();
   }

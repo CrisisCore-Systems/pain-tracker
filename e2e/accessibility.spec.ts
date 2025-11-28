@@ -1,4 +1,5 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from './test-setup';
+import type { Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -187,6 +188,13 @@ async function navigateToView(page: Page, { navTarget, fallbackSelectors = [], d
   await page.waitForLoadState('domcontentloaded');
   await page.waitForSelector('body');
 
+  // Ensure navigation menu is open on narrow viewports
+  try {
+    await openNavigationMenu(page);
+  } catch {
+    // Ignore if nav toggle/opening is not applicable
+  }
+
   for (const selector of selectorsToTry) {
     try {
       console.log(`  Trying selector: ${selector}`);
@@ -211,6 +219,46 @@ async function navigateToView(page: Page, { navTarget, fallbackSelectors = [], d
       // Try next selector
       continue;
     }
+  }
+
+  // Try link anchors as a fallback (anchor tags or links)
+  try {
+  const label = navTarget ? (VIEW_LABELS[navTarget] ?? debugName ?? navTarget) : (debugName ?? '');
+    const anchorSelectors = [
+      `a:has-text("${label}")`,
+      `a[href*="${navTarget}"]`,
+      `button:has-text("${label}")`
+    ];
+
+    for (const s of anchorSelectors) {
+      try {
+        const loc = page.locator(s).first();
+        const cnt = await loc.count();
+        if (cnt > 0 && await loc.isVisible({ timeout: 500 }).catch(() => false)) {
+          await loc.click();
+          await page.waitForTimeout(600);
+          console.log(`    Clicked fallback anchor ${s}`);
+          return;
+        }
+      } catch {
+        // continue
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  // Final fallback: navigate directly by URL using the current origin + navTarget
+  try {
+    const current = new URL(page.url());
+    const targetPath = navTarget ? `/${navTarget.replace(/^\//, '')}` : '/';
+    const target = `${current.origin}${current.pathname.replace(/\/$/, '')}${targetPath}`;
+    console.log(`    Fallback navigating directly to ${target}`);
+    await page.goto(target, { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(800);
+    return;
+  } catch (err) {
+  console.log('    Direct navigation fallback failed:', String(err));
   }
 
   throw new Error(`Unable to navigate to view ${debugName ?? navTarget ?? 'unknown'}`);
