@@ -6,10 +6,33 @@ import { Switch } from '../ui/switch';
 
 const STORAGE_KEY = 'pain-tracker:notification-preferences';
 
+/** Deeply merge stored prefs with defaults to handle missing nested properties */
+function loadPrefs(): NotificationPreferences {
+  const stored = secureStorage.safeJSON<Partial<NotificationPreferences>>(STORAGE_KEY, {});
+  return {
+    ...DEFAULT_NOTIFICATION_PREFERENCES,
+    ...stored,
+    deliveryMethods: {
+      ...DEFAULT_NOTIFICATION_PREFERENCES.deliveryMethods,
+      ...(stored.deliveryMethods ?? {}),
+    },
+    categories: {
+      ...DEFAULT_NOTIFICATION_PREFERENCES.categories,
+      ...(stored.categories ?? {}),
+    },
+    quietHours: {
+      ...DEFAULT_NOTIFICATION_PREFERENCES.quietHours,
+      ...(stored.quietHours ?? {}),
+    },
+    frequencyLimits: {
+      ...DEFAULT_NOTIFICATION_PREFERENCES.frequencyLimits,
+      ...(stored.frequencyLimits ?? {}),
+    },
+  };
+}
+
 export default function NotificationPreferencesPanel() {
-  const [prefs, setPrefs] = useState<NotificationPreferences>(() =>
-    secureStorage.safeJSON(STORAGE_KEY, DEFAULT_NOTIFICATION_PREFERENCES)
-  );
+  const [prefs, setPrefs] = useState<NotificationPreferences>(loadPrefs);
 
   useEffect(() => {
     secureStorage.set(STORAGE_KEY, prefs);

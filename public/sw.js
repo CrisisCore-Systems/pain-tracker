@@ -2,7 +2,7 @@
 // Purpose: ensure Playwright E2E can reliably observe installation, activation,
 // client claiming and a predictable cache name + precached assets for tests.
 
-const CACHE_NAME = 'pain-tracker-static-v1.2';
+const CACHE_NAME = 'pain-tracker-static-v1.4';
 // Keep precache minimal to avoid dev server index fetch races — manifest is the critical asset the tests check for
 const PRECACHE_URLS = ['manifest.json'];
 

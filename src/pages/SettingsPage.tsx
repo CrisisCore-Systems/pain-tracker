@@ -39,28 +39,30 @@ export default function SettingsPage() {
             <Card className="mt-4">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Leaf className="h-4 w-4 text-biophilia-accent" aria-hidden="true" />
+                  <Leaf className="h-4 w-4 text-green-600" aria-hidden="true" />
                   Nature Theme
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between gap-4">
-                  <p className="text-sm text-muted-foreground">
-                    Apply a calming, nature-inspired color palette and subtle ambient motion for a more restful experience.
+                <div className="flex items-start justify-between gap-4">
+                  <p className="text-sm text-muted-foreground flex-1 min-w-0">
+                    Apply a calming, nature-inspired theme for a more restful experience.
                   </p>
                   <button
                     type="button"
                     role="switch"
                     aria-checked={biophilicEnabled}
                     onClick={toggleBiophilic}
-                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                      biophilicEnabled ? 'bg-biophilia-accent' : 'bg-gray-200 dark:bg-gray-700'
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+                      biophilicEnabled 
+                        ? 'bg-green-600 border-green-600' 
+                        : 'bg-gray-300 border-gray-300 dark:bg-gray-600 dark:border-gray-600'
                     }`}
                   >
                     <span className="sr-only">Enable nature theme</span>
                     <span
                       aria-hidden="true"
-                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
                         biophilicEnabled ? 'translate-x-5' : 'translate-x-0'
                       }`}
                     />

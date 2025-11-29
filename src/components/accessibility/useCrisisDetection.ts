@@ -14,6 +14,7 @@ import {
   EmergencyModeConfig,
   DEFAULT_CRISIS_CONFIG,
 } from './CrisisStateTypes';
+import { trackCrisisEvent, type CrisisAnalytics } from '../../services/AnalyticsTrackingService';
 
 interface CrisisDetectionConfig {
   enabled: boolean;
@@ -279,6 +280,14 @@ export function useCrisisDetection(config: Partial<CrisisDetectionConfig> = {}) 
         effectiveInterventions: [],
       };
       setCurrentSession(newSession);
+      
+      // Track crisis event in analytics (privacy-safe)
+      const crisisAnalytics: CrisisAnalytics = {
+        severity,
+        triggerTypes: triggers.map(t => t.type),
+        autoActivatedEmergencyMode: fullConfig.autoActivateEmergencyMode && emergencyModeConfig.autoActivate && severity === 'critical',
+      };
+      trackCrisisEvent(crisisAnalytics);
     }
 
     setCrisisState(prev => ({

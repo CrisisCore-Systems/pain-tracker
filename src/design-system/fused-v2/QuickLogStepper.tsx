@@ -277,17 +277,17 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                 aria-valuetext={`${pain} of 10, ${PAIN_LABELS[pain]}`}
                 aria-describedby="pain-slider-help"
                 className="w-full h-12 cursor-pointer appearance-none bg-transparent
-                  [&::-webkit-slider-track]:h-2 [&::-webkit-slider-track]:bg-surface-700 
+                  [&::-webkit-slider-track]:h-2 [&::-webkit-slider-track]:bg-gray-300 
                   [&::-webkit-slider-track]:rounded-full
                   [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 
                   [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full 
-                  [&::-webkit-slider-thumb]:bg-primary-500 [&::-webkit-slider-thumb]:shadow-lg
-                  [&::-moz-range-track]:h-2 [&::-moz-range-track]:bg-surface-700 
+                  [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:shadow-lg
+                  [&::-moz-range-track]:h-2 [&::-moz-range-track]:bg-gray-300 
                   [&::-moz-range-track]:rounded-full
                   [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 
-                  [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-primary-500 
+                  [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-blue-600 
                   [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-lg
-                  focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900"
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               />
               <div id="pain-slider-help" className="sr-only">
                 Use arrow keys to adjust pain level, or click the plus and minus buttons above for

@@ -87,7 +87,7 @@ export function MetricCard({
       )}
 
       {/* Sparkline (simple SVG) */}
-      {sparkline && sparkline.length > 0 && (
+      {sparkline && sparkline.length > 1 && (
         <div className="mt-3 h-8">
           <svg
             width="100%"

@@ -16,10 +16,10 @@
   /* ===== BIOPHILIC DESIGN TOKENS ===== */
   /* Nature-inspired palette for therapeutic, calming UI.
      Enable with `.biophilic` class on <html> or <body>. */
-  --biophilia-bg-1: 246 251 247;         /* pale leaf  #f6fbf7 */
-  --biophilia-bg-2: 230 244 234;         /* soft green #e6f4ea */
-  --biophilia-accent: 59 122 87;         /* forest     #3b7a57 */
-  --biophilia-muted: 154 168 154;        /* neutral    #9aa89a */
+  --biophilia-bg-1: 135 40% 97%;         /* pale leaf  #f6fbf7 */
+  --biophilia-bg-2: 135 35% 93%;         /* soft green #e6f4ea */
+  --biophilia-accent: 147 35% 35%;       /* forest     #3b7a57 */
+  --biophilia-muted: 120 6% 63%;         /* neutral    #9aa89a */
   --biophilia-radius: 12px;
 }
 
@@ -28,6 +28,50 @@ html,
 body {
   background-color: #ffffff;
   color: #0f172a; /* dark slate text for readability */
+}
+
+/* ===== TEXT OVERFLOW FIXES ===== */
+/* Prevent text from overflowing containers */
+.card,
+[class*="CardContent"],
+[class*="card-content"],
+.overflow-fix {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Ensure flex containers don't overflow */
+.flex {
+  min-width: 0;
+}
+
+/* Fix label/switch layouts */
+label.flex {
+  gap: 0.75rem;
+}
+
+label.flex > span:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+label.flex > span:last-child,
+label.flex > button:last-child {
+  flex-shrink: 0;
+}
+
+/* Ensure cards have proper overflow handling */
+[class*="Card"] {
+  overflow: hidden;
+}
+
+[class*="CardContent"] p,
+[class*="CardContent"] span {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 /* Default light theme colors - Pain Tracker Brand */
@@ -508,14 +552,322 @@ button:active {
   height: 8px;
 }
 
+/* ===== RANGE INPUT (SLIDER) STYLING ===== */
+/* Ensure sliders are visible in light mode - use !important to override inline styles */
+input[type="range"] {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  height: 20px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px !important;
+  background: #94a3b8 !important; /* slate-400 - darker for visibility */
+  border-radius: 9999px !important;
+  border: 1px solid #64748b !important; /* slate-500 border */
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 8px !important;
+  background: #94a3b8 !important; /* slate-400 */
+  border-radius: 9999px !important;
+  border: 1px solid #64748b !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 24px !important;
+  height: 24px !important;
+  background: #2563eb !important; /* blue-600 */
+  border-radius: 50% !important;
+  margin-top: -9px !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+  border: 2px solid #fff !important;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 8px !important;
+  background: #94a3b8 !important; /* slate-400 */
+  border-radius: 9999px !important;
+  border: 1px solid #64748b !important;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px !important;
+  height: 24px !important;
+  background: #2563eb !important; /* blue-600 */
+  border: 2px solid #fff !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.4) !important;
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.4) !important;
+}
+
 /* ===== BIOPHILIC THEME UTILITIES ===== */
-/* Add `.biophilic` to <html> or <body> to enable nature-inspired styling.
-   Use `.biophilic-bg` on containers for the gradient backdrop. */
+/* True biophilic design: natural patterns, organic shapes, warmth, texture */
 
 .biophilic {
-  /* subtle green tint on background & card colors when enabled */
-  --color-background: var(--biophilia-bg-1);
-  --color-card: 255 255 255 / 0.85;
+  /* Warm natural palette - earth tones, not just green */
+  --color-background: 250 248 245;
+  --color-card: 255 255 255;
+  --background: 250 248 245;
+  --color-primary: 101 78 60;
+  --color-primary-foreground: 255 255 255;
+}
+
+/* ===== NATURAL LIGHT GRADIENT ===== */
+/* Mimics morning-to-afternoon natural light */
+html.biophilic body {
+  background: 
+    radial-gradient(ellipse at top left, rgba(255, 248, 230, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(230, 242, 235, 0.4) 0%, transparent 50%),
+    linear-gradient(180deg, #fefdfb 0%, #f5f2ed 50%, #eae6df 100%) !important;
+  background-attachment: fixed !important;
+}
+
+html.biophilic .bg-background {
+  background-color: transparent;
+}
+
+/* ===== ORGANIC CARD SHAPES ===== */
+/* Softer corners, natural shadows like objects in diffused light */
+html.biophilic .card,
+html.biophilic [class*="rounded-lg"][class*="bg-white"],
+html.biophilic [class*="rounded-xl"][class*="bg-white"],
+html.biophilic [class*="shadow"][class*="bg-white"] {
+  background: linear-gradient(165deg, #ffffff 0%, #faf8f5 100%) !important;
+  border: 1px solid rgba(180, 160, 140, 0.15) !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 2px 4px rgba(120, 100, 80, 0.04),
+    0 8px 24px rgba(120, 100, 80, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ===== NATURAL TEXTURE OVERLAY ===== */
+/* Subtle paper/linen texture for tactile feel */
+html.biophilic::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  z-index: -1;
+}
+
+/* Ensure all interactive content stays above texture */
+html.biophilic #root,
+html.biophilic main,
+html.biophilic .card,
+html.biophilic button,
+html.biophilic input,
+html.biophilic select,
+html.biophilic textarea,
+html.biophilic a {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== WATER-INSPIRED BUTTONS ===== */
+/* Smooth, flowing appearance with subtle depth */
+html.biophilic .bg-primary,
+html.biophilic button[class*="bg-primary"],
+html.biophilic a[class*="bg-primary"] {
+  background: linear-gradient(135deg, #5a7a6a 0%, #4a6a5a 50%, #3d5c4d 100%) !important;
+  border-radius: 12px !important;
+  box-shadow: 
+    0 2px 8px rgba(60, 90, 75, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.3s ease !important;
+}
+
+html.biophilic .bg-primary:hover,
+html.biophilic button[class*="bg-primary"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 12px rgba(60, 90, 75, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+html.biophilic .text-primary {
+  color: #4a6a5a !important;
+}
+
+/* ===== TOGGLE SWITCH STYLING ===== */
+/* Ensure toggle switches are always visible */
+html.biophilic button[role="switch"] {
+  position: relative !important;
+  z-index: 10 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html.biophilic button[role="switch"][aria-checked="false"] {
+  background-color: #c4b8a8 !important;
+  border-color: #c4b8a8 !important;
+}
+
+html.biophilic button[role="switch"][aria-checked="true"] {
+  background-color: #5a7a6a !important;
+  border-color: #5a7a6a !important;
+}
+
+/* ===== ORGANIC FORM INPUTS ===== */
+/* Rounded, soft, inviting to touch */
+html.biophilic input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+html.biophilic textarea,
+html.biophilic select {
+  border: 1px solid rgba(160, 145, 130, 0.3) !important;
+  border-radius: 10px !important;
+  background: linear-gradient(180deg, #ffffff, #fdfcfa) !important;
+  transition: all 0.2s ease !important;
+}
+
+html.biophilic input:focus,
+html.biophilic textarea:focus,
+html.biophilic select:focus {
+  border-color: #7a9a8a !important;
+  box-shadow: 
+    0 0 0 3px rgba(100, 140, 120, 0.15),
+    0 2px 8px rgba(100, 140, 120, 0.1) !important;
+}
+
+/* ===== NATURE-INSPIRED SLIDERS ===== */
+/* Wood-grain track, stone-like thumb */
+html.biophilic input[type="range"]::-webkit-slider-runnable-track,
+html.biophilic input[type="range"]::-webkit-slider-track {
+  background: linear-gradient(90deg, #d4c4b0 0%, #c9b99a 50%, #bfaf8f 100%) !important;
+  border: 1px solid rgba(140, 120, 95, 0.3) !important;
+  border-radius: 6px !important;
+}
+
+html.biophilic input[type="range"]::-webkit-slider-thumb {
+  background: linear-gradient(145deg, #8a9a8a 0%, #6a7a6a 50%, #5a6a5a 100%) !important;
+  border: 2px solid #f5f2ed !important;
+  box-shadow: 0 2px 6px rgba(80, 90, 80, 0.3) !important;
+}
+
+html.biophilic input[type="range"]::-moz-range-track {
+  background: linear-gradient(90deg, #d4c4b0 0%, #c9b99a 50%, #bfaf8f 100%) !important;
+  border: 1px solid rgba(140, 120, 95, 0.3) !important;
+}
+
+html.biophilic input[type="range"]::-moz-range-thumb {
+  background: linear-gradient(145deg, #8a9a8a 0%, #6a7a6a 50%, #5a6a5a 100%) !important;
+  border: 2px solid #f5f2ed !important;
+}
+
+/* ===== DAPPLED LIGHT HEADER ===== */
+/* Like sunlight through leaves */
+html.biophilic header,
+html.biophilic nav,
+html.biophilic [class*="sticky"][class*="top-0"] {
+  background: 
+    radial-gradient(ellipse at 20% 0%, rgba(255, 250, 235, 0.8) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 0%, rgba(235, 245, 240, 0.6) 0%, transparent 35%),
+    linear-gradient(180deg, rgba(255, 253, 250, 0.98), rgba(250, 247, 242, 0.95)) !important;
+  border-bottom: 1px solid rgba(180, 160, 140, 0.15) !important;
+  backdrop-filter: blur(8px);
+}
+
+/* ===== FLOWING ANIMATIONS ===== */
+/* Gentle, organic movement like breeze or water */
+@keyframes biophilic-breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.02); }
+}
+
+@keyframes biophilic-sway {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(2px) rotate(0.5deg); }
+  75% { transform: translateX(-2px) rotate(-0.5deg); }
+}
+
+/* Ambient light spots that slowly shift */
+html.biophilic::after {
+  content: '';
+  position: fixed;
+  top: 10%;
+  right: 5%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 245, 220, 0.3) 0%, transparent 70%);
+  pointer-events: none;
+  animation: biophilic-breathe 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+/* ===== NATURAL SHADOWS ===== */
+/* Soft, diffused like overcast daylight */
+html.biophilic [class*="shadow-md"],
+html.biophilic [class*="shadow-lg"] {
+  box-shadow: 
+    0 4px 6px rgba(120, 100, 80, 0.05),
+    0 10px 30px rgba(120, 100, 80, 0.1) !important;
+}
+
+/* ===== EARTH-TONE LINKS ===== */
+html.biophilic a:not([class*="bg-"]) {
+  color: #5a7a6a;
+  text-decoration-color: rgba(90, 122, 106, 0.3);
+}
+
+html.biophilic a:not([class*="bg-"]):hover {
+  color: #4a6a5a;
+  text-decoration-color: rgba(74, 106, 90, 0.5);
+}
+
+/* ===== NATURAL SELECTION HIGHLIGHT ===== */
+html.biophilic ::selection {
+  background-color: rgba(200, 185, 160, 0.35);
+  color: #3d4a3d;
+}
+
+/* ===== ORGANIC SCROLLBAR ===== */
+html.biophilic ::-webkit-scrollbar {
+  width: 10px;
+}
+
+html.biophilic ::-webkit-scrollbar-track {
+  background: #f5f2ed;
+}
+
+html.biophilic ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c9b99a, #b5a585);
+  border-radius: 5px;
+  border: 2px solid #f5f2ed;
+}
+
+html.biophilic ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #b5a585, #a09070);
+}
+
+/* ===== RESPECT REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  html.biophilic::after {
+    animation: none;
+  }
+  html.biophilic .bg-primary:hover,
+  html.biophilic button[class*="bg-primary"]:hover {
+    transform: none;
+  }
 }
 
 .biophilic-bg {

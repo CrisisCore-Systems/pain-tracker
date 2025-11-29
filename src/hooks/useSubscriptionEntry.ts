@@ -14,6 +14,16 @@ import type { MoodEntry } from '../types/quantified-empathy';
 // the packaged service which falls back to a safe stub in environments where
 // geolocation or network access is not available.
 import { fetchLocalWeather } from '../../packages/services/src/weather';
+import { 
+  trackPainEntry, 
+  trackWeatherCorrelation, 
+  trackMoodEntry,
+  trackActivityLog,
+  type PainEntryAnalytics,
+  type WeatherAnalytics,
+  type MoodAnalytics,
+  type ActivityAnalytics,
+} from '../services/AnalyticsTrackingService';
 
 interface UseSubscriptionEntryResult {
   addPainEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => Promise<void>;
@@ -72,7 +82,7 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
         if (typeof navigator !== 'undefined' && 'geolocation' in navigator && navigator.geolocation) {
           // Small timeout to avoid blocking UI
           const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 }) 
           );
           weatherInfo = await fetchLocalWeather({ lat: pos.coords.latitude, lon: pos.coords.longitude });
         } else {
@@ -96,6 +106,27 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
 
       // Track usage asynchronously (don't await)
       void trackPainEntryUsage(userId);
+
+      // Track analytics for pain entry (privacy-safe)
+      const weatherData = (entry as Record<string, unknown>).weather as string | undefined;
+      const painLevel = entry.baselineData?.pain ?? 0;
+      const painAnalytics: PainEntryAnalytics = {
+        painLevel,
+        symptoms: entry.baselineData?.symptoms,
+        triggers: entry.triggers,
+        weather: weatherData,
+        severity: painLevel >= 7 ? 'severe' : painLevel >= 4 ? 'moderate' : 'mild',
+      };
+      trackPainEntry(painAnalytics);
+
+      // Track weather correlation if weather data is available
+      if (weatherData) {
+        const weatherAnalytics: WeatherAnalytics = {
+          condition: weatherData,
+          painLevel,
+        };
+        trackWeatherCorrelation(weatherAnalytics);
+      }
 
       // Reset quota exceeded state on success
       setIsQuotaExceeded(false);
@@ -125,6 +156,14 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       // Track usage asynchronously
       void trackMoodEntryUsage(userId);
 
+      // Track mood analytics (privacy-safe)
+      const moodAnalytics: MoodAnalytics = {
+        moodScore: (entry as Record<string, unknown>).moodScore as number ?? 5,
+        energyLevel: (entry as Record<string, unknown>).energyLevel as number,
+        stressLevel: (entry as Record<string, unknown>).stressLevel as number,
+      };
+      trackMoodEntry(moodAnalytics);
+
       setIsQuotaExceeded(false);
       setQuotaMessage('');
     } finally {
@@ -151,6 +190,13 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
 
       // Track usage asynchronously
       void trackActivityLogUsage(userId);
+
+      // Track activity analytics (privacy-safe)
+      const activityAnalytics: ActivityAnalytics = {
+        activityType: (entry as Record<string, unknown>).activityType as string ?? 'general',
+        durationMinutes: (entry as Record<string, unknown>).duration as number ?? 0,
+      };
+      trackActivityLog(activityAnalytics);
 
       setIsQuotaExceeded(false);
       setQuotaMessage('');

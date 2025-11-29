@@ -11,6 +11,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { trackBiophilicToggle } from '../services/AnalyticsTrackingService';
 
 const STORAGE_KEY = 'pain-tracker:biophilic-theme';
 
@@ -63,9 +64,23 @@ export function useBiophilicTheme(defaultEnabled = true): UseBiophilicThemeRetur
     }
   }, [enabled]);
 
-  const toggle = useCallback(() => setEnabled((prev) => !prev), []);
-  const enable = useCallback(() => setEnabled(true), []);
-  const disable = useCallback(() => setEnabled(false), []);
+  const toggle = useCallback(() => {
+    setEnabled((prev) => {
+      const newValue = !prev;
+      trackBiophilicToggle({ enabled: newValue });
+      return newValue;
+    });
+  }, []);
+  
+  const enable = useCallback(() => {
+    setEnabled(true);
+    trackBiophilicToggle({ enabled: true });
+  }, []);
+  
+  const disable = useCallback(() => {
+    setEnabled(false);
+    trackBiophilicToggle({ enabled: false });
+  }, []);
 
   return { enabled, toggle, enable, disable };
 }
