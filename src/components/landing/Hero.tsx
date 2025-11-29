@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../design-system/components/Button';
-import { Activity, Shield, Heart, Stethoscope, LogIn, ArrowRight } from 'lucide-react';
+import { Activity, Shield, Heart, Stethoscope, LogIn, ArrowRight, BookOpen } from 'lucide-react';
 
 export const Hero: React.FC = () => {
   const navigate = useNavigate();
@@ -30,6 +30,16 @@ export const Hero: React.FC = () => {
               >
                 <span className="text-sm text-gray-900 dark:text-gray-100">Pricing</span>
               </Button>
+
+              {/* Blog Link */}
+              <a
+                href="https://paintracker.hashnode.dev"
+                className="hidden lg:flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 h-9 text-sm text-gray-900 dark:text-gray-100 hover:bg-accent hover:text-accent-foreground rounded-md transition-colors"
+                aria-label="Read our development blog"
+              >
+                <BookOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>Blog</span>
+              </a>
 
               {/* Returning User */}
               <Button

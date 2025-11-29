@@ -7,6 +7,7 @@ import {
   FeatureShowcase,
   Testimonials,
   LandingFooter,
+  DevLogSection,
 } from '../components/landing';
 
 export const LandingPage: React.FC = () => {
@@ -48,6 +49,7 @@ export const LandingPage: React.FC = () => {
         <TrustIndicators />
         <FeatureShowcase />
         <Testimonials />
+        <DevLogSection />
       </main>
 
       {/* Footer */}
