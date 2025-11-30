@@ -31,7 +31,7 @@
     "db:migrate": "node scripts/db/migrate.cjs",
     "db:seed": "node scripts/db/seed.cjs",
     "db:setup-clinic-auth": "node scripts/setup-clinic-auth.js",
-  "db:migrate:prod": "node scripts/db/apply-schema-prod.js",
+    "db:migrate:prod": "node scripts/db/apply-schema-prod.js",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --reporter=json --reporter=default",
     "sbom": "cyclonedx-npm --output-file security/sbom-latest.json --json",
@@ -99,7 +99,6 @@
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
   },
   "dependencies": {
-    "redis": "^4.3.0",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@heroicons/react": "^2.2.0",
@@ -148,6 +147,7 @@
     "react-is": "^19.1.1",
     "react-router-dom": "^7.9.6",
     "recharts": "^3.4.1",
+    "redis": "^4.3.0",
     "sonner": "^2.0.7",
     "stripe": "^19.3.0",
     "tailwind-merge": "^3.3.1",
@@ -196,6 +196,7 @@
     "prettier": "^3.4.2",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.17",
+    "terser": "^5.44.1",
     "tsx": "^4.20.6",
     "typescript": "^5.7.2",
     "vite": "^7.1.9",
