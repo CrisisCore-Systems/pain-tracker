@@ -2,7 +2,7 @@
 // Purpose: ensure Playwright E2E can reliably observe installation, activation,
 // client claiming and a predictable cache name + precached assets for tests.
 
-const CACHE_NAME = 'pain-tracker-static-v1.4';
+const CACHE_NAME = 'pain-tracker-static-v1.5';
 // Keep precache minimal to avoid dev server index fetch races — manifest is the critical asset the tests check for
 const PRECACHE_URLS = ['manifest.json'];
 
@@ -26,6 +26,14 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  
+  // Skip external URLs - let the browser handle them directly
+  // This avoids CSP issues with cross-origin requests in the SW context
+  if (url.origin !== self.location.origin) {
+    return; // Don't call respondWith, let browser handle it natively
+  }
+  
   // Simple cache-first strategy for dev: serve from cache if available, else network
   event.respondWith(
     caches.match(event.request).then((cached) => {
@@ -63,4 +71,4 @@ self.addEventListener('message', (event) => {
 });
 
 // Expose version for introspection
-self.__SW_VERSION = '1.2';
+self.__SW_VERSION = '1.3';

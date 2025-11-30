@@ -9,15 +9,15 @@ import react from '@vitejs/plugin-react';
 // NOTE: Don't force 'upgrade-insecure-requests' in dev unless HTTPS is enabled
 // (Playwright/E2E may run the dev server on HTTP). Only include that directive
 // when VITE_DEV_HTTPS is truthy.
-const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'";
+const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'";
 // For dev server we avoid forcing 'upgrade-insecure-requests' because
 // Playwright/E2E runs commonly use an HTTP dev server. Always use the
 // base dev CSP during development; the production preview uses a stricter
 // CSP including upgrade-insecure-requests.
 const devCsp = baseDevCsp;
 
-// Production CSP - strict, but allows Google Analytics
-const prodCsp = "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self'; font-src 'self' data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://api.wcb.gov https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
+// Production CSP - strict, but allows Google Analytics, Google Fonts, and CDN
+const prodCsp = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -71,7 +71,9 @@ export default defineConfig({
           
           // Cross-Origin headers for enhanced security
           res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-          res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+          // Note: COEP 'require-corp' breaks Vite HMR WebSocket in dev
+          // Use 'credentialless' for dev to allow HMR while maintaining some isolation
+          res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
           res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
           
           // HSTS for HTTPS enforcement (dev server doesn't use HTTPS, so this is for documentation)
@@ -207,9 +209,16 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    strictPort: false, // Allow fallback to next available port
     host: true,
     // Enable HTTPS in dev when running E2E (controlled by env var VITE_DEV_HTTPS)
     https: process.env.VITE_DEV_HTTPS === 'true' || false,
+    // HMR configuration - use 'auto' to detect actual server port
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      // Don't specify port - let Vite auto-detect the actual server port
+    },
     headers: {
       'Content-Security-Policy': devCsp,
       'X-Frame-Options': 'DENY',
@@ -218,7 +227,9 @@ export default defineConfig({
       'Referrer-Policy': 'strict-origin-when-cross-origin',
       'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()',
       'Cross-Origin-Opener-Policy': 'same-origin',
-      'Cross-Origin-Embedder-Policy': 'require-corp',
+      // Note: COEP 'require-corp' breaks Vite HMR WebSocket in dev
+      // Use 'credentialless' for dev to allow HMR while maintaining some isolation
+      'Cross-Origin-Embedder-Policy': 'credentialless',
       'Cross-Origin-Resource-Policy': 'same-origin'
     },
     proxy: {

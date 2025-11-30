@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card, CardHeader, CardDescription } from '../../design-system/components/Card';
-import { Star, Quote } from 'lucide-react';
+import { Star, Quote, MessageCircle } from 'lucide-react';
 
 const testimonials = [
   {
@@ -8,8 +7,7 @@ const testimonials = [
     role: 'Chronic Pain Patient',
     avatar: '👩‍🦽',
     rating: 5,
-    quote:
-      'Finally, a pain tracker that actually understands what I\'m going through. The trauma-informed design makes it feel safe, and the AI insights helped me identify triggers I never noticed.',
+    quote: 'Finally, a pain tracker that actually understands what I\'m going through. The trauma-informed design makes it feel safe.',
     highlight: 'Identified hidden triggers',
   },
   {
@@ -17,8 +15,7 @@ const testimonials = [
     role: 'Pain Management Specialist',
     avatar: '👨‍⚕️',
     rating: 5,
-    quote:
-      'The clinician portal saves me hours every week. AI pattern detection and one-click WorkSafe BC reports are game-changers. My patients love how easy it is to share data.',
+    quote: 'The clinician portal saves me hours every week. AI pattern detection and one-click WorkSafe BC reports are game-changers.',
     highlight: 'Saves 25+ hours/week',
   },
   {
@@ -26,8 +23,7 @@ const testimonials = [
     role: 'WorkSafe BC Claimant',
     avatar: '🦾',
     rating: 5,
-    quote:
-      'The automated WCB reporting feature is incredible. What used to take me days of paperwork now takes one click. My lawyer was impressed with the quality of the data.',
+    quote: 'The automated WCB reporting feature is incredible. What used to take me days of paperwork now takes one click.',
     highlight: 'One-click WCB reports',
   },
   {
@@ -35,17 +31,15 @@ const testimonials = [
     role: 'Occupational Therapist',
     avatar: '👩‍⚕️',
     rating: 5,
-    quote:
-      'I recommend this to all my chronic pain patients. The offline capability means they can track anywhere, and the privacy-first approach gives them control.',
-    highlight: 'Recommended by professionals',
+    quote: 'I recommend this to all my chronic pain patients. The offline capability means they can track anywhere.',
+    highlight: 'Recommended by pros',
   },
   {
     name: 'David L.',
     role: 'Fibromyalgia Patient',
     avatar: '🧑‍🦯',
     rating: 5,
-    quote:
-      'The accessibility features are outstanding. High contrast mode, screen reader support, and panic mode have been essential during flare-ups. This app truly cares.',
+    quote: 'The accessibility features are outstanding. High contrast mode and panic mode have been essential during flare-ups.',
     highlight: 'Best accessibility',
   },
   {
@@ -53,100 +47,118 @@ const testimonials = [
     role: 'Migraine Sufferer',
     avatar: '👩',
     rating: 5,
-    quote:
-      'I\'ve tried every pain tracker out there. This is the only one with truly private local storage and AI that actually works. The pattern insights are spot on.',
+    quote: 'I\'ve tried every pain tracker out there. This is the only one with truly private local storage and AI that actually works.',
     highlight: 'Most accurate AI',
   },
 ];
 
+const stats = [
+  { value: '100%', label: 'Privacy Protected', color: '#34d399' },
+  { value: '25+', label: 'Hours Saved/Week', color: '#38bdf8' },
+  { value: '8', label: 'AI Algorithms', color: '#c084fc' },
+  { value: '95%', label: 'Time Reduction', color: '#fbbf24' },
+];
+
 export const Testimonials: React.FC = () => {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-12 max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">
-            Trusted by Patients & Clinicians
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Real stories from people managing chronic pain and healthcare professionals providing care.
-          </p>
+    <section className="relative py-24 overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800" />
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+      </div>
 
-          {/* Consent & verification note */}
-          <p className="text-sm text-muted-foreground mt-3 max-w-xl mx-auto">
-            We only publish verified testimonials with explicit consent. If you'd like to share your story with
-            us, <a href="/submit-story" className="text-primary hover:underline">submit a story →</a> and we will
-            follow up for permission to publish or anonymize your contribution.
+      <div className="relative container mx-auto px-4">
+        {/* Section Header */}
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+               style={{ background: 'rgba(168, 85, 247, 0.1)', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
+            <MessageCircle className="h-4 w-4 text-purple-400" />
+            <span className="text-sm font-medium text-purple-300">Testimonials</span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+            Trusted by <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Patients & Clinicians</span>
+          </h2>
+          <p className="text-lg text-slate-400">
+            Real stories from people managing chronic pain and healthcare professionals providing care.
           </p>
         </div>
 
-  {/* Testimonials Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+        {/* Testimonials Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto mb-20">
           {testimonials.map((testimonial, index) => (
-            <Card
+            <div
               key={index}
-              className="relative overflow-hidden border-2 hover:border-primary/30 transition-all duration-300 hover:shadow-lg"
+              className="group relative rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02]"
+              style={{
+                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+              }}
             >
-              <CardHeader className="space-y-4">
-                {/* Quote Icon */}
-                <div className="absolute top-4 right-4 opacity-10">
-                  <Quote className="h-16 w-16 text-primary" />
-                </div>
+              {/* Quote Icon */}
+              <div className="absolute top-4 right-4 opacity-10">
+                <Quote className="h-12 w-12 text-purple-400" />
+              </div>
 
+              <div className="relative space-y-4">
                 {/* Rating */}
                 <div className="flex items-center gap-1">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <Star
                       key={i}
-                      className="h-4 w-4 fill-amber-400 text-amber-400"
+                      className="h-4 w-4"
+                      style={{ color: '#fbbf24', fill: '#fbbf24', filter: 'drop-shadow(0 2px 4px rgba(251, 191, 36, 0.4))' }}
                     />
                   ))}
                 </div>
 
                 {/* Quote */}
-                <CardDescription className="text-sm sm:text-base leading-relaxed relative z-10 break-words">
+                <p className="text-slate-300 text-sm leading-relaxed">
                   "{testimonial.quote}"
-                </CardDescription>
+                </p>
 
                 {/* Highlight Badge */}
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary w-fit break-words">
+                <div 
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold"
+                  style={{ background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc' }}
+                >
                   {testimonial.highlight}
                 </div>
 
                 {/* Author */}
-                <div className="flex items-center gap-3 pt-2 border-t min-w-0">
-                  <div className="text-2xl sm:text-3xl flex-shrink-0">{testimonial.avatar}</div>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-semibold text-sm truncate">{testimonial.name}</div>
-                    <div className="text-xs text-muted-foreground truncate">{testimonial.role}</div>
-                    {/* Verification Tag */}
-                    <div className="text-xs text-muted-foreground mt-1">Verified</div>
+                <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+                  <div className="text-3xl">{testimonial.avatar}</div>
+                  <div>
+                    <div className="font-semibold text-white">{testimonial.name}</div>
+                    <div className="text-xs text-slate-500">{testimonial.role}</div>
                   </div>
                 </div>
-              </CardHeader>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
         {/* Stats Bar */}
-        <div className="mt-16 pt-12 border-t">
+        <div className="rounded-2xl p-8"
+             style={{
+               background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%)',
+               border: '1px solid rgba(255, 255, 255, 0.1)',
+               backdropFilter: 'blur(20px)',
+             }}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">
-            <div>
-              <div className="text-4xl font-bold text-primary mb-2">100%</div>
-              <div className="text-sm text-muted-foreground">Privacy Protected</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-primary mb-2">25+</div>
-              <div className="text-sm text-muted-foreground">Hours Saved/Week</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-primary mb-2">8</div>
-              <div className="text-sm text-muted-foreground">AI Algorithms</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-primary mb-2">95%</div>
-              <div className="text-sm text-muted-foreground">Time Reduction</div>
-            </div>
+            {stats.map((stat, index) => (
+              <div key={index} className="space-y-2">
+                <div 
+                  className="text-4xl sm:text-5xl font-extrabold"
+                  style={{ color: stat.color, textShadow: `0 4px 20px ${stat.color}40` }}
+                >
+                  {stat.value}
+                </div>
+                <div className="text-sm text-slate-400">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

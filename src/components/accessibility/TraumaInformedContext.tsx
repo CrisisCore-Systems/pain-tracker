@@ -11,6 +11,8 @@ import {
 } from './TraumaInformedTypes';
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { TraumaInformedContext } from './TraumaInformedHooks';
+import { trackAccessibilitySettingChanged } from '../../analytics/ga4-events';
+import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
 
 // Provider component
 interface TraumaInformedProviderProps {
@@ -43,6 +45,15 @@ export function TraumaInformedProvider({ children }: TraumaInformedProviderProps
     const newPreferences = { ...preferences, ...updates };
     setPreferences(newPreferences);
     secureStorage.set('trauma-informed-preferences', newPreferences, { encrypt: true });
+
+    // Track accessibility setting changes
+    Object.keys(updates).forEach(key => {
+      const settingName = key as keyof TraumaInformedPreferences;
+      const value = updates[settingName];
+      trackAccessibilitySettingChanged(settingName, String(value));
+      trackUsageEvent(`accessibility_${settingName}`, 'accessibility', { value });
+    });
+    incrementSessionAction();
   };
 
   // Apply CSS custom properties when preferences change

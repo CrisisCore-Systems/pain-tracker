@@ -3,7 +3,7 @@
  * Integrates existing pain tracker functionality with modern design patterns
  */
 
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect, useRef } from 'react';
 import {
   AlertCircle,
   HelpCircle,
@@ -35,6 +35,14 @@ import MedicationReminders from '../MedicationReminders';
 import AlertsSettings from '../AlertsSettings';
 import AlertsActivityLog from '../AlertsActivityLog';
 import { BrandedLoadingScreen } from '../branding/BrandedLoadingScreen';
+import {
+  trackUsageEvent,
+  trackNavigation,
+  trackSessionStart,
+  incrementSessionAction,
+} from '../../utils/usage-tracking';
+import { trackAnalyticsTabViewed, trackProgressViewed } from '../../analytics/ga4-events';
+import { trackFeatureUsed } from '../../services/AnalyticsTrackingService';
 
 // Lazy load large view components for code splitting (Phase 2 optimization)
 const PainHistoryPanel = lazy(() =>
@@ -79,6 +87,45 @@ export function TraumaInformedPainTrackerLayout({
   const [showGoalManager, setShowGoalManager] = React.useState(false);
   const [lastRefresh, setLastRefresh] = React.useState<Date>(new Date());
   const [showGestureHint, setShowGestureHint] = React.useState(true);
+  const previousView = useRef(activeView);
+
+  // Track session start on mount
+  useEffect(() => {
+    trackSessionStart();
+    trackUsageEvent('layout_mounted', 'session');
+  }, []);
+
+  // Track view changes
+  useEffect(() => {
+    if (previousView.current !== activeView) {
+      // Track navigation flow
+      trackNavigation(previousView.current, activeView);
+      trackUsageEvent(activeView, 'navigation');
+      incrementSessionAction();
+
+      // GA4 analytics events
+      if (activeView === 'analytics') {
+        trackAnalyticsTabViewed('main');
+        trackFeatureUsed('analytics_dashboard');
+      } else if (activeView === 'history') {
+        trackProgressViewed('history');
+        trackFeatureUsed('pain_history');
+      } else if (activeView === 'support') {
+        trackFeatureUsed('support_tools');
+      }
+
+      previousView.current = activeView;
+    }
+  }, [activeView]);
+
+  // Track settings panel
+  useEffect(() => {
+    if (showSettings) {
+      trackUsageEvent('settings_opened', 'settings');
+      trackFeatureUsed('settings_panel');
+      incrementSessionAction();
+    }
+  }, [showSettings]);
 
   // Pull to refresh handler
   const handlePullToRefresh = React.useCallback(async () => {

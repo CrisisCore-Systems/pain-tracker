@@ -446,8 +446,8 @@ export function AdvancedFilters({
                 variant="secondary"
                 className="ml-2 border-transparent"
                 style={{
-                  backgroundColor: 'hsl(var(--color-badge-bg))',
-                  color: 'hsl(var(--color-badge-foreground))',
+                  backgroundColor: 'rgb(var(--color-badge-bg))',
+                  color: 'rgb(var(--color-badge-foreground))',
                 }}
               >
                 {activeFiltersCount} active

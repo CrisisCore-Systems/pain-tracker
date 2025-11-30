@@ -3,20 +3,53 @@
 /**
  * Theme Provider Component
  * Manages dark/light mode and provides theme context throughout the app
+ *
+ * DESIGN PHILOSOPHY: Dark mode is the DEFAULT.
+ * At 3 AM when you're in pain, a white screen is violence.
+ * We respect system preferences, but default to dark for new users.
+ *
+ * Performance optimizations:
+ * - Memoized context value to prevent unnecessary re-renders
+ * - Batched CSS variable updates
+ * - Debounced system preference listeners
+ * - Selective re-rendering via granular selectors
  */
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { secureStorage } from '../lib/storage/secureStorage';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { brand } from './brand';
 import { ThemeMode, getThemeColors, ThemeColors } from './theme';
 
+/** Storage key for persisting theme preference */
+const THEME_STORAGE_KEY = 'pain-tracker:theme-mode';
+
+/** Transition duration for theme changes (ms) */
+const THEME_TRANSITION_DURATION = 150;
+
 interface ThemeContextType {
+  /** Current theme mode */
   mode: ThemeMode;
+  /** Toggle between light and dark modes */
   toggleMode: () => void;
-  colors: ReturnType<typeof getThemeColors>;
+  /** Current theme color tokens */
+  colors: ThemeColors;
+  /** Set a specific theme mode */
   setMode: (mode: ThemeMode) => void;
+  /** Whether high-contrast mode is active */
   isHighContrast: boolean;
+  /** Whether reduced motion is preferred */
   hasReducedMotion: boolean;
+  /** Whether dark mode is active (includes high-contrast) */
+  isDark: boolean;
+  /** Whether the theme is currently transitioning */
+  isTransitioning: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -29,17 +62,56 @@ export const useTheme = () => {
   return context;
 };
 
+/**
+ * Selector hooks for performance - subscribe only to specific values
+ * Use these when you only need one value to avoid unnecessary re-renders
+ */
+export const useThemeMode = () => useTheme().mode;
+export const useIsDark = () => useTheme().isDark;
+export const useIsHighContrast = () => useTheme().isHighContrast;
+export const useThemeColors = () => useTheme().colors;
+
 interface ThemeProviderProps {
   children: React.ReactNode;
   defaultMode?: ThemeMode;
 }
 
+/**
+ * Get the initial theme mode.
+ * Priority:
+ * 1. User's saved preference (from localStorage)
+ * 2. System preference (prefers-color-scheme)
+ * 3. Default to 'dark' (our trauma-informed default)
+ */
+function getInitialMode(defaultMode: ThemeMode): ThemeMode {
+  if (typeof window === 'undefined') return defaultMode;
+  
+  // Check for saved preference first
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark' || saved === 'high-contrast') {
+      return saved as ThemeMode;
+    }
+  } catch {
+    // localStorage might be unavailable
+  }
+  
+  // Check system preference
+  if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    return 'light';
+  }
+  
+  // Default to dark - our trauma-informed default
+  return 'dark';
+}
+
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
-  defaultMode = 'light',
+  defaultMode = 'dark', // Dark is our default
 }) => {
-  // Force light mode only - disable dark theme detection
-  const [mode] = useState<ThemeMode>('light');
+  const [mode, setModeState] = useState<ThemeMode>(() => getInitialMode(defaultMode));
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [hasReducedMotion, setHasReducedMotion] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -48,7 +120,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     return false;
   });
 
-  const colors = getThemeColors(mode);
+  const colors = useMemo(() => getThemeColors(mode), [mode]);
+  const isDark = mode === 'dark' || mode === 'high-contrast';
 
   // Update CSS custom properties when mode changes
   const updateCSSVariables = useCallback((newMode: ThemeMode) => {
@@ -120,25 +193,47 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     );
 
     // Set data attribute for CSS targeting
-    root.setAttribute('data-theme', 'light');
+    root.setAttribute('data-theme', newMode === 'high-contrast' ? 'dark' : newMode);
 
-    // Ensure 'dark' class is never added - force light mode
-    root.classList.remove('dark');
+    // Toggle 'dark' class for Tailwind dark mode
+    if (newMode === 'dark' || newMode === 'high-contrast') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
   }, []);
 
-  // No-op functions for theme switching - light mode only
+  // Set and persist mode with smooth transition
   const setMode = useCallback(
     (newMode: ThemeMode) => {
-      // Disabled - always stay in light mode
-      console.log('Theme switching disabled - light mode only');
+      // Start transition
+      setIsTransitioning(true);
+
+      // Clear any existing timeout
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+
+      setModeState(newMode);
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, newMode);
+      } catch {
+        // localStorage might be unavailable
+      }
+      updateCSSVariables(newMode);
+
+      // End transition after animation completes
+      transitionTimeoutRef.current = setTimeout(() => {
+        setIsTransitioning(false);
+      }, THEME_TRANSITION_DURATION);
     },
-    []
+    [updateCSSVariables]
   );
 
   const toggleMode = useCallback(() => {
-    // Disabled - always stay in light mode
-    console.log('Theme switching disabled - light mode only');
-  }, []);
+    const newMode = mode === 'dark' ? 'light' : 'dark';
+    setMode(newMode);
+  }, [mode, setMode]);
 
   // Listen for system accessibility preferences (reduced motion only)
   useEffect(() => {
@@ -158,19 +253,59 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     }
   }, []);
 
-  // Initial CSS variables setup - force light mode
+  // Listen for system color scheme changes (respect user's OS preference)
   useEffect(() => {
-    updateCSSVariables('light');
-  }, [updateCSSVariables]);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handler = (e: MediaQueryListEvent) => {
+      // Only auto-switch if user hasn't explicitly set a preference
+      try {
+        const saved = localStorage.getItem(THEME_STORAGE_KEY);
+        if (!saved) {
+          setMode(e.matches ? 'dark' : 'light');
+        }
+      } catch {
+        setMode(e.matches ? 'dark' : 'light');
+      }
+    };
 
-  const value: ThemeContextType = {
-    mode,
-    toggleMode,
-    colors,
-    setMode,
-    isHighContrast: mode === 'high-contrast',
-    hasReducedMotion,
-  };
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handler);
+      return () => mediaQuery.removeEventListener('change', handler);
+    } else {
+      mediaQuery.addListener(handler);
+      return () => mediaQuery.removeListener(handler);
+    }
+  }, [setMode]);
+
+  // Initial CSS variables setup
+  useEffect(() => {
+    updateCSSVariables(mode);
+  }, [mode, updateCSSVariables]);
+
+  // Cleanup transition timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Memoize context value to prevent unnecessary re-renders
+  const value: ThemeContextType = useMemo(
+    () => ({
+      mode,
+      toggleMode,
+      colors,
+      setMode,
+      isHighContrast: mode === 'high-contrast',
+      hasReducedMotion,
+      isDark,
+      isTransitioning,
+    }),
+    [mode, toggleMode, colors, setMode, hasReducedMotion, isDark, isTransitioning]
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

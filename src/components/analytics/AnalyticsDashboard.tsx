@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { AdvancedAnalyticsEngine } from '../../services/AdvancedAnalyticsEngine';
 import { CorrelationMatrixView } from './CorrelationMatrixView';
 import { InterventionScorecard } from './InterventionScorecard';
@@ -13,6 +13,13 @@ import type {
   PredictiveIndicator,
   WeeklyClinicalBrief,
 } from '../../services/AdvancedAnalyticsEngine';
+import { trackAnalyticsTabViewed } from '../../analytics/ga4-events';
+import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
+
+// Lazy load UsageAnalyticsDashboard to avoid circular dependencies
+const UsageAnalyticsDashboard = lazy(() =>
+  import('./UsageAnalyticsDashboard').then(m => ({ default: m.UsageAnalyticsDashboard }))
+);
 
 interface AnalyticsDashboardProps {
   className?: string;
@@ -45,8 +52,16 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ classNam
   });
 
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'correlations' | 'interventions' | 'triggers' | 'predictive'
+    'overview' | 'correlations' | 'interventions' | 'triggers' | 'predictive' | 'usage'
   >('overview');
+
+  // Track tab changes
+  const handleTabChange = (tabId: typeof activeTab) => {
+    setActiveTab(tabId);
+    trackAnalyticsTabViewed(tabId);
+    trackUsageEvent(`analytics_tab_${tabId}`, 'analytics');
+    incrementSessionAction();
+  };
 
   useEffect(() => {
     const processAnalytics = async () => {
@@ -105,6 +120,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ classNam
     { id: 'interventions' as const, label: 'Interventions', icon: '💊' },
     { id: 'triggers' as const, label: 'Triggers', icon: '⚠️' },
     { id: 'predictive' as const, label: 'Predictive', icon: '🔮' },
+    { id: 'usage' as const, label: 'Usage', icon: '📈' },
   ];
 
   if (analytics.loading) {
@@ -166,7 +182,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ classNam
               role="tab"
               aria-selected={activeTab === tab.id}
               aria-controls={`${tab.id}-panel`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`flex items-center gap-2 px-6 py-4 font-medium text-sm whitespace-nowrap transition-colors ${
                 activeTab === tab.id
                   ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400'
@@ -232,6 +248,21 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ classNam
         {activeTab === 'predictive' && (
           <div role="tabpanel" id="predictive-panel" aria-labelledby="predictive-tab">
             <PredictiveIndicatorPanel indicators={analytics.indicators} />
+          </div>
+        )}
+
+        {/* Usage Tab */}
+        {activeTab === 'usage' && (
+          <div role="tabpanel" id="usage-panel" aria-labelledby="usage-tab">
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center p-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                </div>
+              }
+            >
+              <UsageAnalyticsDashboard />
+            </Suspense>
           </div>
         )}
       </div>

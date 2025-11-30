@@ -8,6 +8,8 @@ import { Card, CardContent } from '../../design-system';
 import { WelcomeScreen } from './WelcomeScreen';
 import { FeatureHighlights } from './FeatureHighlights';
 import { SampleDataSetup } from './SampleDataSetup';
+import { trackOnboardingCompleted, trackOnboardingSkipped } from '../../analytics/ga4-events';
+import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
 
 interface OnboardingFlowProps {
   onComplete: (setupWithSampleData: boolean) => void;
@@ -24,8 +26,16 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
     { component: SampleDataSetup, title: 'Setup' },
   ];
 
+  // Track onboarding started on mount
+  useEffect(() => {
+    trackUsageEvent('onboarding_started', 'onboarding');
+  }, []);
+
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
+      const completedStep = steps[currentStep].title.toLowerCase();
+      trackUsageEvent(`onboarding_step_${completedStep}`, 'onboarding', { step: currentStep + 1 });
+      incrementSessionAction();
       setCurrentStep(currentStep + 1);
     }
   };
@@ -38,11 +48,16 @@ export function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
 
   const handleComplete = (setupWithSampleData: boolean) => {
     setIsVisible(false);
+    trackOnboardingCompleted();
+    trackUsageEvent('onboarding_completed', 'onboarding', { withSampleData: setupWithSampleData });
+    incrementSessionAction();
     onComplete(setupWithSampleData);
   };
 
   const handleSkip = () => {
     setIsVisible(false);
+    trackOnboardingSkipped();
+    trackUsageEvent('onboarding_skipped', 'onboarding', { atStep: currentStep });
     onSkip();
   };
 

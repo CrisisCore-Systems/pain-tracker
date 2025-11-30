@@ -5,3 +5,4 @@ export { FeatureShowcase } from './FeatureShowcase';
 export { LandingFooter } from './LandingFooter';
 export { UseCases } from './UseCases';
 export { Testimonials } from './Testimonials';
+export { FeaturedBlogPosts } from './FeaturedBlogPosts';

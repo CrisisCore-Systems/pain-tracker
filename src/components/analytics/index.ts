@@ -17,6 +17,19 @@ export { TriggerPatternTimeline } from './TriggerPatternTimeline';
 export { PredictiveIndicatorPanel } from './PredictiveIndicatorPanel';
 export { WeeklyClinicalBriefCard } from './WeeklyClinicalBriefCard';
 
+// Usage Analytics Dashboard
+export { default as UsageAnalyticsDashboard } from './UsageAnalyticsDashboard';
+
+// Re-export usage tracking utilities
+export {
+  trackUsageEvent,
+  trackNavigation,
+  trackExport,
+  trackSessionStart,
+  incrementSessionAction,
+  getSessionStats,
+} from '../../utils/usage-tracking';
+
 // Re-export enhanced analytics services
 export {
   EmpathyDrivenAnalyticsService,

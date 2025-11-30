@@ -1,6 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { formatNumber } from '../../../utils/formatting';
 import type { PainEntry } from '../../../types';
+import { InteractiveBodyMap } from '../../body-mapping/InteractiveBodyMap';
+import { User, LayoutGrid } from 'lucide-react';
 
 interface LocationHeatmapProps {
   entries: PainEntry[];
@@ -28,9 +30,21 @@ const BODY_LOCATIONS = [
   'Right Calf',
   'Left Foot',
   'Right Foot',
+  // Extended for nerve pain tracking
+  'Inner Left Knee',
+  'Inner Right Knee',
+  'Outer Left Knee',
+  'Outer Right Knee',
+  'Left Shin',
+  'Right Shin',
+  'Left Ankle',
+  'Right Ankle',
+  'Left Toes',
+  'Right Toes',
 ];
 
 export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => {
+  const [viewMode, setViewMode] = useState<'visual' | 'grid'>('visual');
   const locationData = useMemo(() => {
     if (!entries.length) return [];
 
@@ -86,51 +100,96 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-xl font-semibold mb-4">Pain Location Heatmap</h2>
+    <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold">Pain Location Heatmap</h2>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setViewMode('visual')}
+            className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors ${
+              viewMode === 'visual'
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            }`}
+            aria-pressed={viewMode === 'visual'}
+          >
+            <User className="w-4 h-4" />
+            Body Map
+          </button>
+          <button
+            onClick={() => setViewMode('grid')}
+            className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors ${
+              viewMode === 'grid'
+                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            }`}
+            aria-pressed={viewMode === 'grid'}
+          >
+            <LayoutGrid className="w-4 h-4" />
+            Grid View
+          </button>
+        </div>
+      </div>
 
       {entries.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400">No data available for location heatmap.</p>
       ) : (
         <div className="space-y-6">
-          {/* Legend */}
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium">Pain Intensity:</span>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-100 dark:bg-gray-800 rounded"></div>
-              <span className="text-xs">None</span>
-              <div className="w-4 h-4 bg-yellow-200 rounded"></div>
-              <span className="text-xs">Low</span>
-              <div className="w-4 h-4 bg-orange-300 rounded"></div>
-              <span className="text-xs">Medium</span>
-              <div className="w-4 h-4 bg-red-400 rounded"></div>
-              <span className="text-xs">High</span>
-              <div className="w-4 h-4 bg-red-600 rounded"></div>
-              <span className="text-xs">Severe</span>
+          {/* Visual Body Map View */}
+          {viewMode === 'visual' && (
+            <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+              <InteractiveBodyMap
+                entries={entries}
+                mode="heatmap"
+                showAccessibilityFeatures
+                height={500}
+              />
             </div>
-          </div>
+          )}
 
-          {/* Body Map Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {locationData.map(data => (
-              <div
-                key={data.location}
-                className={`
-                  p-3 rounded-lg border transition-all duration-200 hover:scale-105 cursor-pointer
-                  ${getHeatColor(data.intensity)} ${getTextColor(data.intensity)}
-                `}
-                title={`${data.location}: ${data.avgPain}/10 avg pain (${data.frequency} entries)`}
-              >
-                <div className="text-sm font-medium text-center">{data.location}</div>
-                {data.frequency > 0 && (
-                  <div className="text-xs text-center mt-1">
-                    <div>{data.avgPain}/10</div>
-                    <div>({data.frequency}x)</div>
-                  </div>
-                )}
+          {/* Grid View */}
+          {viewMode === 'grid' && (
+            <>
+              {/* Legend */}
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium">Pain Intensity:</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-gray-100 dark:bg-gray-800 rounded"></div>
+                  <span className="text-xs">None</span>
+                  <div className="w-4 h-4 bg-yellow-200 rounded"></div>
+                  <span className="text-xs">Low</span>
+                  <div className="w-4 h-4 bg-orange-300 rounded"></div>
+                  <span className="text-xs">Medium</span>
+                  <div className="w-4 h-4 bg-red-400 rounded"></div>
+                  <span className="text-xs">High</span>
+                  <div className="w-4 h-4 bg-red-600 rounded"></div>
+                  <span className="text-xs">Severe</span>
+                </div>
               </div>
-            ))}
-          </div>
+
+              {/* Body Map Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {locationData.map(data => (
+                  <div
+                    key={data.location}
+                    className={`
+                      p-3 rounded-lg border transition-all duration-200 hover:scale-105 cursor-pointer
+                      ${getHeatColor(data.intensity)} ${getTextColor(data.intensity)}
+                    `}
+                    title={`${data.location}: ${data.avgPain}/10 avg pain (${data.frequency} entries)`}
+                  >
+                    <div className="text-sm font-medium text-center">{data.location}</div>
+                    {data.frequency > 0 && (
+                      <div className="text-xs text-center mt-1">
+                        <div>{data.avgPain}/10</div>
+                        <div>({data.frequency}x)</div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           {/* Statistics */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">

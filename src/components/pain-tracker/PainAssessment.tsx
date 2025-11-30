@@ -1,8 +1,9 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useCallback } from 'react';
 import type { PainEntry } from '../../types';
 import { PAIN_LOCATIONS, SYMPTOMS, type PainLocation, type Symptom } from '../../utils/constants';
 import { savePainEntry, loadPainEntries } from '../../utils/pain-tracker/storage';
 import { PainAnalytics } from './PainAnalytics';
+import { InteractiveBodyMap, locationsToRegions, regionsToLocations } from '../body-mapping/InteractiveBodyMap';
 
 interface ValidationErrors {
   painLevel?: string;
@@ -26,6 +27,10 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [entries, setEntries] = useState<PainEntry[]>([]);
+  const [useBodyMap, setUseBodyMap] = useState(true);
+  const [selectedRegions, setSelectedRegions] = useState<string[]>(() => 
+    locationsToRegions(initialData?.locations as string[] ?? [])
+  );
 
   useEffect(() => {
     const loadEntries = async () => {
@@ -148,6 +153,15 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
     setTouched(prev => ({ ...prev, locations: true }));
   };
 
+  // Handle body map region selection
+  const handleRegionSelect = useCallback((regions: string[]) => {
+    setSelectedRegions(regions);
+    // Convert regions to location names and update locations state
+    const locationNames = regionsToLocations(regions);
+    setLocations(locationNames as PainLocation[]);
+    setTouched(prev => ({ ...prev, locations: true }));
+  }, []);
+
   const toggleSymptom = (symptom: Symptom) => {
     setSymptoms(prev =>
       prev.includes(symptom) ? prev.filter(s => s !== symptom) : [...prev, symptom]
@@ -182,23 +196,50 @@ export function PainAssessment({ onSave, initialData }: PainAssessmentProps) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Pain Locations
-          </label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {PAIN_LOCATIONS.map(location => (
-              <label key={location} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={locations.includes(location)}
-                  onChange={() => toggleLocation(location)}
-                  className="rounded text-blue-600"
-                  aria-label={`Pain location: ${location}`}
-                />
-                <span className="text-sm">{location}</span>
-              </label>
-            ))}
+          <div className="flex items-center justify-between mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Pain Locations
+            </label>
+            <button
+              type="button"
+              onClick={() => setUseBodyMap(!useBodyMap)}
+              className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            >
+              {useBodyMap ? 'Use checklist' : 'Use body map'}
+            </button>
           </div>
+          
+          {useBodyMap ? (
+            <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+              <InteractiveBodyMap
+                mode="selection"
+                selectedRegions={selectedRegions}
+                onRegionSelect={handleRegionSelect}
+                showAccessibilityFeatures={true}
+                compact={false}
+              />
+              {locations.length > 0 && (
+                <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+                  <strong>Selected:</strong> {locations.join(', ')}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-64 overflow-y-auto border rounded-lg p-3">
+              {PAIN_LOCATIONS.map(location => (
+                <label key={location} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={locations.includes(location)}
+                    onChange={() => toggleLocation(location)}
+                    className="rounded text-blue-600"
+                    aria-label={`Pain location: ${location}`}
+                  />
+                  <span className="text-sm capitalize">{location}</span>
+                </label>
+              ))}
+            </div>
+          )}
           {touched.locations && validationErrors.locations && (
             <p className="mt-1 text-sm text-red-600">{validationErrors.locations}</p>
           )}

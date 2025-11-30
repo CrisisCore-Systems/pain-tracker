@@ -29,3 +29,4 @@ export * from './components/AccessibilityAnnouncer';
 export * from './utils';
 export * from './utils/accessibility';
 export * from './utils/accessibility-testing';
+export * from './utils/css-utils';

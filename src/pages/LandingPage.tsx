@@ -6,6 +6,7 @@ import {
   TrustIndicators,
   FeatureShowcase,
   Testimonials,
+  FeaturedBlogPosts,
   LandingFooter,
 } from '../components/landing';
 
@@ -48,6 +49,7 @@ export const LandingPage: React.FC = () => {
         <TrustIndicators />
         <FeatureShowcase />
         <Testimonials />
+        <FeaturedBlogPosts />
       </main>
 
       {/* Footer */}

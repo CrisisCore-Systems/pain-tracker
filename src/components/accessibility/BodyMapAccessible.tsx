@@ -20,44 +20,68 @@ export const BODY_REGIONS: BodyRegion[] = [
   // Head & Neck
   { id: 'head', label: 'Head', category: 'head' },
   { id: 'neck', label: 'Neck', category: 'head' },
-  { id: 'jaw', label: 'Jaw', category: 'head' },
 
   // Upper Body
-  { id: 'shoulder-left', label: 'Left Shoulder', category: 'upper-body' },
-  { id: 'shoulder-right', label: 'Right Shoulder', category: 'upper-body' },
+  { id: 'left-shoulder', label: 'Left Shoulder', category: 'upper-body' },
+  { id: 'right-shoulder', label: 'Right Shoulder', category: 'upper-body' },
   { id: 'chest', label: 'Chest', category: 'upper-body' },
   { id: 'upper-back', label: 'Upper Back', category: 'upper-body' },
-  { id: 'mid-back', label: 'Mid Back', category: 'upper-body' },
 
-  // Lower Body
-  { id: 'lower-back', label: 'Lower Back', category: 'lower-body' },
+  // Core/Torso
   { id: 'abdomen', label: 'Abdomen', category: 'lower-body' },
-  { id: 'hip-left', label: 'Left Hip', category: 'lower-body' },
-  { id: 'hip-right', label: 'Right Hip', category: 'lower-body' },
+  { id: 'lower-back', label: 'Lower Back', category: 'lower-body' },
+  { id: 'left-hip', label: 'Left Hip', category: 'lower-body' },
+  { id: 'right-hip', label: 'Right Hip', category: 'lower-body' },
 
   // Upper Limbs
-  { id: 'arm-left-upper', label: 'Left Upper Arm', category: 'limbs' },
-  { id: 'arm-right-upper', label: 'Right Upper Arm', category: 'limbs' },
-  { id: 'elbow-left', label: 'Left Elbow', category: 'limbs' },
-  { id: 'elbow-right', label: 'Right Elbow', category: 'limbs' },
-  { id: 'forearm-left', label: 'Left Forearm', category: 'limbs' },
-  { id: 'forearm-right', label: 'Right Forearm', category: 'limbs' },
-  { id: 'wrist-left', label: 'Left Wrist', category: 'limbs' },
-  { id: 'wrist-right', label: 'Right Wrist', category: 'limbs' },
-  { id: 'hand-left', label: 'Left Hand', category: 'limbs' },
-  { id: 'hand-right', label: 'Right Hand', category: 'limbs' },
+  { id: 'left-upper-arm', label: 'Left Upper Arm', category: 'limbs' },
+  { id: 'right-upper-arm', label: 'Right Upper Arm', category: 'limbs' },
+  { id: 'left-elbow', label: 'Left Elbow', category: 'limbs' },
+  { id: 'right-elbow', label: 'Right Elbow', category: 'limbs' },
+  { id: 'left-forearm', label: 'Left Forearm', category: 'limbs' },
+  { id: 'right-forearm', label: 'Right Forearm', category: 'limbs' },
+  { id: 'left-hand', label: 'Left Hand', category: 'limbs' },
+  { id: 'right-hand', label: 'Right Hand', category: 'limbs' },
 
-  // Lower Limbs
-  { id: 'thigh-left', label: 'Left Thigh', category: 'limbs' },
-  { id: 'thigh-right', label: 'Right Thigh', category: 'limbs' },
-  { id: 'knee-left', label: 'Left Knee', category: 'limbs' },
-  { id: 'knee-right', label: 'Right Knee', category: 'limbs' },
-  { id: 'shin-left', label: 'Left Shin', category: 'limbs' },
-  { id: 'shin-right', label: 'Right Shin', category: 'limbs' },
-  { id: 'ankle-left', label: 'Left Ankle', category: 'limbs' },
-  { id: 'ankle-right', label: 'Right Ankle', category: 'limbs' },
-  { id: 'foot-left', label: 'Left Foot', category: 'limbs' },
-  { id: 'foot-right', label: 'Right Foot', category: 'limbs' },
+  // Lower Limbs - Thighs (detailed for nerve pain)
+  { id: 'left-thigh-outer', label: 'Left Outer Thigh', category: 'limbs' },
+  { id: 'left-thigh-inner', label: 'Left Inner Thigh', category: 'limbs' },
+  { id: 'right-thigh-outer', label: 'Right Outer Thigh', category: 'limbs' },
+  { id: 'right-thigh-inner', label: 'Right Inner Thigh', category: 'limbs' },
+
+  // Knees (detailed for nerve pain)
+  { id: 'left-knee-outer', label: 'Left Outer Knee', category: 'limbs' },
+  { id: 'left-knee-inner', label: 'Left Inner Knee', category: 'limbs' },
+  { id: 'right-knee-outer', label: 'Right Outer Knee', category: 'limbs' },
+  { id: 'right-knee-inner', label: 'Right Inner Knee', category: 'limbs' },
+
+  // Shins (front view)
+  { id: 'left-shin-outer', label: 'Left Outer Shin', category: 'limbs' },
+  { id: 'left-shin-inner', label: 'Left Inner Shin', category: 'limbs' },
+  { id: 'right-shin-outer', label: 'Right Outer Shin', category: 'limbs' },
+  { id: 'right-shin-inner', label: 'Right Inner Shin', category: 'limbs' },
+
+  // Calves (back view)
+  { id: 'left-calf-outer', label: 'Left Outer Calf', category: 'limbs' },
+  { id: 'left-calf-inner', label: 'Left Inner Calf', category: 'limbs' },
+  { id: 'right-calf-outer', label: 'Right Outer Calf', category: 'limbs' },
+  { id: 'right-calf-inner', label: 'Right Inner Calf', category: 'limbs' },
+
+  // Ankles
+  { id: 'left-ankle', label: 'Left Ankle', category: 'limbs' },
+  { id: 'right-ankle', label: 'Right Ankle', category: 'limbs' },
+
+  // Feet (medial/lateral for nerve pain)
+  { id: 'left-foot-lateral', label: 'Left Foot (Outer)', category: 'limbs' },
+  { id: 'left-foot-medial', label: 'Left Foot (Inner)', category: 'limbs' },
+  { id: 'right-foot-lateral', label: 'Right Foot (Outer)', category: 'limbs' },
+  { id: 'right-foot-medial', label: 'Right Foot (Inner)', category: 'limbs' },
+
+  // Toes (medial/lateral for nerve pain)
+  { id: 'left-toes-lateral', label: 'Left Toes (Outer)', category: 'limbs' },
+  { id: 'left-toes-medial', label: 'Left Toes (Inner)', category: 'limbs' },
+  { id: 'right-toes-lateral', label: 'Right Toes (Outer)', category: 'limbs' },
+  { id: 'right-toes-medial', label: 'Right Toes (Inner)', category: 'limbs' },
 ];
 
 interface BodyMapAccessibleProps {

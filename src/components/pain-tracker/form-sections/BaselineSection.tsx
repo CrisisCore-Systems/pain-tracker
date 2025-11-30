@@ -1,7 +1,8 @@
-﻿import React from 'react';
+﻿import React, { useState, useCallback } from 'react';
 import { PAIN_LOCATIONS, SYMPTOMS } from '../../../utils/constants';
 import { Button, Badge, Card, CardContent } from '../../../design-system';
-import { Activity, MapPin, AlertTriangle } from 'lucide-react';
+import { Activity, MapPin, AlertTriangle, Eye, EyeOff } from 'lucide-react';
+import { InteractiveBodyMap, locationsToRegions, regionsToLocations } from '../../body-mapping/InteractiveBodyMap';
 
 interface BaselineSectionProps {
   pain: number;
@@ -11,6 +12,18 @@ interface BaselineSectionProps {
 }
 
 export function BaselineSection({ pain, locations, symptoms, onChange }: BaselineSectionProps) {
+  const [viewMode, setViewMode] = useState<'visual' | 'list'>('visual');
+
+  // Convert stored location names to region IDs for the body map using centralized utility
+  const selectedRegions = locationsToRegions(locations);
+
+  // Handle body map region selection - use centralized utility for conversion
+  const handleRegionSelect = useCallback((regions: string[]) => {
+    // Convert regions to unique location names using centralized utility
+    const locationNames = regionsToLocations(regions);
+    onChange({ locations: locationNames });
+  }, [onChange]);
+
   const toggleLocation = (location: string) => {
     const newLocations = locations.includes(location)
       ? locations.filter(l => l !== location)
@@ -124,39 +137,79 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
       <Card variant="outlined" className="p-6">
         <CardContent className="p-0">
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <MapPin className="h-4 w-4 text-primary" />
-              <label id="locations-label" className="text-sm font-medium text-foreground">
-                Pain Locations
-              </label>
-              {locations.length > 0 && (
-                <Badge variant="secondary" className="text-xs">
-                  {locations.length} selected
-                </Badge>
-              )}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <label id="locations-label" className="text-sm font-medium text-foreground">
+                  Pain Locations
+                </label>
+                {locations.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">
+                    {locations.length} selected
+                  </Badge>
+                )}
+              </div>
+              <button
+                onClick={() => setViewMode(viewMode === 'visual' ? 'list' : 'visual')}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted"
+                aria-label={viewMode === 'visual' ? 'Switch to list view' : 'Switch to visual body map'}
+              >
+                {viewMode === 'visual' ? (
+                  <>
+                    <EyeOff className="w-4 h-4" />
+                    <span>List View</span>
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-4 h-4" />
+                    <span>Body Map</span>
+                  </>
+                )}
+              </button>
             </div>
 
             <p className="text-sm text-muted-foreground">
-              Select all areas where you're experiencing pain
+              {viewMode === 'visual' 
+                ? 'Click on the body map to select pain areas, or switch to list view'
+                : 'Select all areas where you\'re experiencing pain'}
             </p>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {PAIN_LOCATIONS.map((location: string) => (
-                <Button
-                  key={location}
-                  onClick={() => toggleLocation(location)}
-                  onKeyPress={e => handleKeyPress(e, () => toggleLocation(location))}
-                  variant={locations.includes(location) ? 'default' : 'outline'}
-                  size="sm"
-                  className="justify-start h-auto py-2 px-3 text-left"
-                  role="checkbox"
-                  aria-checked={locations.includes(location)}
-                  aria-label={`Pain location: ${location}`}
-                >
-                  {location}
-                </Button>
-              ))}
-            </div>
+            {/* Visual Body Map Mode */}
+            {viewMode === 'visual' && (
+              <div className="mt-4">
+                <InteractiveBodyMap
+                  selectedRegions={selectedRegions}
+                  onRegionSelect={handleRegionSelect}
+                  mode="selection"
+                  compact
+                  height={400}
+                  showAccessibilityFeatures
+                  onRequestListView={() => setViewMode('list')}
+                  aria-labelledby="locations-label"
+                />
+              </div>
+            )}
+
+            {/* List Mode */}
+            {viewMode === 'list' && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {PAIN_LOCATIONS.map((location: string) => (
+                  <Button
+                    key={location}
+                    onClick={() => toggleLocation(location)}
+                    onKeyPress={e => handleKeyPress(e, () => toggleLocation(location))}
+                    variant={locations.includes(location) ? 'default' : 'outline'}
+                    size="sm"
+                    className="justify-start h-auto py-2 px-3 text-left"
+                    role="checkbox"
+                    aria-checked={locations.includes(location)}
+                    aria-label={`Pain location: ${location}`}
+                  >
+                    {location}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

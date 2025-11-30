@@ -3,6 +3,7 @@ import jsPDF from 'jspdf';
 import { formatNumber } from '../formatting';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { trackDataExported } from '../../analytics/ga4-events';
+import { trackExport } from '../usage-tracking';
 
 export const exportToCSV = (entries: PainEntry[]): string => {
   // Track export analytics
@@ -12,6 +13,9 @@ export const exportToCSV = (entries: PainEntry[]): string => {
 
   // Track GA4 custom event
   trackDataExported('csv', entries.length);
+  
+  // Track local usage
+  trackExport('csv', entries.length);
 
   const headers = [
     'Date',
@@ -55,6 +59,9 @@ export const exportToJSON = (entries: PainEntry[]): string => {
 
   // Track GA4 custom event
   trackDataExported('json', entries.length);
+  
+  // Track local usage
+  trackExport('json', entries.length);
 
   return JSON.stringify(entries, null, 2);
 };
@@ -93,6 +100,9 @@ export const exportToPDF = (entries: PainEntry[]): string => {
 
   // Track GA4 custom event
   trackDataExported('pdf', entries.length);
+  
+  // Track local usage
+  trackExport('pdf', entries.length);
 
   const doc = new jsPDF();
 

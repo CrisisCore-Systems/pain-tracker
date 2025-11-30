@@ -41,6 +41,8 @@ import {
 } from 'lucide-react';
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 import type { ValidationResponse } from '../../services/EmotionalValidationService';
+import { trackPainEntryLogged } from '../../analytics/ga4-events';
+import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
 
 // Environment helper for browser (Vite) and Node fallbacks.
 // Use Vite's import.meta.env when available, otherwise fall back to process.env if present.
@@ -313,6 +315,23 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     setIsSubmitting(true);
     try {
       await onSubmit(formData);
+
+      // Track pain entry submission
+      const locationCount = formData.baselineData.locations?.length ?? 0;
+      const symptomCount = formData.baselineData.symptoms?.length ?? 0;
+      trackPainEntryLogged({
+        painLevel: formData.baselineData.pain,
+        hasLocation: locationCount > 0,
+        hasNotes: !!formData.notes,
+        locationCount,
+        symptomCount,
+      });
+      trackUsageEvent('pain_entry_logged', 'pain_tracking', {
+        painLevel: formData.baselineData.pain,
+        locationCount,
+        symptomCount,
+      });
+      incrementSessionAction();
 
       // Reset form
       setFormData({

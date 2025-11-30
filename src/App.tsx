@@ -37,6 +37,8 @@ import { ClinicPortal } from './pages/clinic/ClinicPortal';
 import { PricingPage } from './pages/PricingPage';
 import { SubscriptionManagementPage } from './pages/SubscriptionManagementPage';
 import { SubmitStoryPage } from './pages/SubmitStoryPage';
+import { trackSessionStart } from './utils/usage-tracking';
+import { trackSessionStart as trackGA4SessionStart } from './services/AnalyticsTrackingService';
 
 const ErrorFallback = () => {
   return (
@@ -75,6 +77,10 @@ function App() {
       console.error('Failed to initialize tone engine:', error);
       // Continue without tone engine - app still works
     });
+    
+    // Track session start for analytics
+    trackSessionStart();
+    trackGA4SessionStart();
   }, []);
 
   // Initialize PWA features
