@@ -341,12 +341,19 @@ describe('PainTracker', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
       render(<PainTracker />, { wrapper: TestWrapper });
 
+      // Clear any calls from initial render (usage tracking events)
+      mockLocalStorage.setItem.mockClear();
+
       // Try to submit invalid data
       const invalidSubmitButton = screen.getByTestId('invalid-submit');
       fireEvent.click(invalidSubmitButton);
 
-      // Should not save to localStorage with invalid data
-      expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
+      // Should not save pain entries to localStorage with invalid data
+      // (we check that no pain_tracker_entries key was set)
+      const painEntryCalls = mockLocalStorage.setItem.mock.calls.filter(
+        (call: [string, string]) => call[0].includes('pain_tracker_entries')
+      );
+      expect(painEntryCalls).toHaveLength(0);
 
       // Should show validation error message
       expect(screen.getByText(/Invalid pain entry data/i)).toBeInTheDocument();
