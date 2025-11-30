@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Github, Heart, Shield, Activity, Mail, ArrowRight } from 'lucide-react';
+import { Github, Heart, Shield, Activity, Mail, ArrowRight, BookOpen } from 'lucide-react';
 import { Button } from '../../design-system/components/Button';
 
 export const LandingFooter: React.FC = () => {
@@ -87,6 +87,15 @@ export const LandingFooter: React.FC = () => {
                 >
                   Pricing Plans
                 </button>
+              </li>
+              <li>
+                <a
+                  href="https://paintracker.hashnode.dev"
+                  className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+                >
+                  <BookOpen className="h-4 w-4" />
+                  Dev Blog
+                </a>
               </li>
               <li>
                 <a
