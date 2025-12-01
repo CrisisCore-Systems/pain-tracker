@@ -81,7 +81,7 @@ export const LandingFooter: React.FC = () => {
             </div>
             
             <p style={{ color: '#64748b' }} className="text-sm">
-              Start with 50 free entries • Upgrade for unlimited tracking • No credit card required
+              Free forever with unlimited entries • Upgrade for AI insights & clinical exports • No credit card required
             </p>
           </div>
         </div>

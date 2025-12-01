@@ -170,11 +170,11 @@ export const Hero: React.FC = () => {
             <div className="space-y-3 text-sm text-slate-500 pt-4">
               <p className="flex items-center gap-2 justify-center lg:justify-start">
                 <span className="text-emerald-400">✓</span>
-                <span><strong className="text-slate-300">Start Free:</strong> 50 entries • Basic analytics • No credit card</span>
+                <span><strong className="text-slate-300">Free Forever:</strong> Unlimited entries • Basic analytics • No credit card</span>
               </p>
               <p className="flex items-center gap-2 justify-center lg:justify-start">
                 <span className="text-emerald-400">✓</span>
-                <span><strong className="text-slate-300">For Clinicians:</strong> AI insights • WCB reports •{' '}
+                <span><strong className="text-slate-300">Pro Features:</strong> AI insights • WCB reports • Clinical exports •{' '}
                   <button onClick={() => navigate('/pricing')} className="text-sky-400 hover:text-sky-300 hover:underline">View plans →</button>
                 </span>
               </p>
