@@ -2,7 +2,8 @@
 import { PAIN_LOCATIONS, SYMPTOMS } from '../../../utils/constants';
 import { Button, Badge, Card, CardContent } from '../../../design-system';
 import { Activity, MapPin, AlertTriangle, Eye, EyeOff } from 'lucide-react';
-import { InteractiveBodyMap, locationsToRegions, regionsToLocations } from '../../body-mapping/InteractiveBodyMap';
+import { InteractiveBodyMap } from '../../body-mapping/InteractiveBodyMap';
+import { locationsToRegions, regionsToLocations } from '../../body-mapping/index';
 
 interface BaselineSectionProps {
   pain: number;

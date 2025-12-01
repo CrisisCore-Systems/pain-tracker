@@ -3,7 +3,8 @@ import type { PainEntry } from '../../types';
 import { PAIN_LOCATIONS, SYMPTOMS, type PainLocation, type Symptom } from '../../utils/constants';
 import { savePainEntry, loadPainEntries } from '../../utils/pain-tracker/storage';
 import { PainAnalytics } from './PainAnalytics';
-import { InteractiveBodyMap, locationsToRegions, regionsToLocations } from '../body-mapping/InteractiveBodyMap';
+import { InteractiveBodyMap } from '../body-mapping/InteractiveBodyMap';
+import { locationsToRegions, regionsToLocations } from '../body-mapping/index';
 
 interface ValidationErrors {
   painLevel?: string;
