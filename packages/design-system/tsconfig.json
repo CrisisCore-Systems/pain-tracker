@@ -3,8 +3,8 @@
   "compilerOptions": {
     "composite": true,
     "noEmit": false,
+    "allowImportingTsExtensions": false,
     "outDir": "dist",
-    "noEmit": false,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "include": ["src/**/*"]

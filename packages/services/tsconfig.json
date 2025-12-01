@@ -4,6 +4,7 @@
     "composite": true,
     "outDir": "dist",
     "noEmit": false,
+    "allowImportingTsExtensions": false,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
   "include": ["src/**/*"]
