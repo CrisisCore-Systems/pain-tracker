@@ -9,6 +9,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_ENVIRONMENT: 'development' | 'staging' | 'production';
   readonly VITE_APP_VERSION: string;
   readonly VITE_APP_BUILD_TIME: string;
+  readonly VITE_BUILD_HASH: string;
 
   // Feature Flags
   readonly VITE_ENABLE_ANALYTICS: string;

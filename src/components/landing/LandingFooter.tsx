@@ -436,6 +436,13 @@ export const LandingFooter: React.FC = () => {
             </a>
           </p>
         </div>
+
+        {/* Build ID - helps verify deployments */}
+        {import.meta.env.VITE_BUILD_HASH && (
+          <p className="mt-4 text-center text-[10px]" style={{ color: '#475569' }}>
+            Build: {import.meta.env.VITE_BUILD_HASH}
+          </p>
+        )}
         </div>
       </div>
     </footer>
