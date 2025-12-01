@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build packages (required for project references)
+        run: npx tsc -b packages/design-system packages/services packages/utils
+
       - name: Typecheck
         run: npm run typecheck
 
