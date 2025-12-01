@@ -13,14 +13,15 @@ import type {
 /**
  * Free Tier Features
  * Perfect for individuals trying out pain tracking
+ * Core tracking is unlimited - upgrade for advanced analytics and exports
  */
 const FREE_FEATURES: TierFeatures = {
-  // Storage Limits
-  maxPainEntries: 50,
-  maxMoodEntries: 50,
-  maxActivityLogs: 30,
-  maxStorageMB: 50,
-  dataRetentionDays: 90,
+  // Storage Limits - Unlimited core tracking
+  maxPainEntries: -1, // Unlimited
+  maxMoodEntries: -1, // Unlimited
+  maxActivityLogs: -1, // Unlimited
+  maxStorageMB: 100,
+  dataRetentionDays: -1, // Unlimited
 
   // Analytics & Insights
   basicAnalytics: true,
@@ -88,14 +89,15 @@ const FREE_FEATURES: TierFeatures = {
 /**
  * Basic Tier Features
  * For individuals committed to chronic pain management
+ * Includes advanced analytics and exports
  */
 const BASIC_FEATURES: TierFeatures = {
-  // Storage Limits
-  maxPainEntries: 500,
-  maxMoodEntries: 500,
-  maxActivityLogs: 300,
+  // Storage Limits - Unlimited entries, more storage
+  maxPainEntries: -1, // Unlimited
+  maxMoodEntries: -1, // Unlimited
+  maxActivityLogs: -1, // Unlimited
   maxStorageMB: 500,
-  dataRetentionDays: 365,
+  dataRetentionDays: -1, // Unlimited
 
   // Analytics & Insights
   basicAnalytics: true,
@@ -401,9 +403,9 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
   free: {
     tier: 'free',
     name: 'Free',
-    tagline: 'Start your pain tracking journey',
+    tagline: 'Unlimited pain tracking, forever free',
     description:
-      'Perfect for individuals exploring pain management tools. Track your pain, mood, and activities with basic analytics.',
+      'Complete pain, mood, and activity tracking with no entry limits. Upgrade for advanced analytics, AI insights, and clinical reports.',
     features: FREE_FEATURES,
     pricing: FREE_PRICING,
     limits: {
@@ -411,8 +413,8 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
       gracePeriodDays: 0,
     },
     targeting: {
-      userType: ['individual', 'trial_user'],
-      painLevel: 'mild',
+      userType: ['individual', 'patient', 'caregiver'],
+      painLevel: 'any',
     },
   },
 
@@ -482,21 +484,21 @@ export const FEATURE_COMPARISON = {
     items: [
       {
         name: 'Pain Entries',
-        free: '50 entries',
-        basic: '500 entries',
+        free: 'Unlimited',
+        basic: 'Unlimited',
         pro: 'Unlimited',
         enterprise: 'Unlimited',
       },
       {
         name: 'Data Retention',
-        free: '90 days',
-        basic: '1 year',
+        free: 'Unlimited',
+        basic: 'Unlimited',
         pro: 'Unlimited',
         enterprise: 'Unlimited + Custom',
       },
       {
         name: 'Storage Space',
-        free: '50 MB',
+        free: '100 MB',
         basic: '500 MB',
         pro: '5 GB',
         enterprise: 'Unlimited',
@@ -680,15 +682,16 @@ export const DOWNGRADE_PATHS: Record<SubscriptionTier, SubscriptionTier[]> = {
 /**
  * Feature Usage Limits by Tier
  * Used for soft limit warnings and usage tracking
+ * Note: Core tracking (entries) is unlimited for all tiers
  */
 export const USAGE_LIMITS = {
   free: {
-    painEntries: { limit: 50, warningAt: 40, unit: 'entries' },
-    storageMB: { limit: 50, warningAt: 40, unit: 'MB' },
+    // Entries are unlimited - no painEntries limit
+    storageMB: { limit: 100, warningAt: 80, unit: 'MB' },
     exportCount: { limit: 5, warningAt: 4, unit: 'exports/month', resetMonthly: true },
   },
   basic: {
-    painEntries: { limit: 500, warningAt: 450, unit: 'entries' },
+    // Entries are unlimited
     storageMB: { limit: 500, warningAt: 450, unit: 'MB' },
     exportCount: { limit: 50, warningAt: 45, unit: 'exports/month', resetMonthly: true },
   },
