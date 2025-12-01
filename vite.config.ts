@@ -147,62 +147,24 @@ export default defineConfig({
     rollupOptions: {
       output: {
         sourcemap: false, // Explicitly disable sourcemaps in rollup output
-        manualChunks: (id) => {
-          // Vendor chunking strategy for better code splitting
-          if (id.includes('node_modules')) {
-            // React ecosystem
-            if (id.includes('react') || id.includes('react-dom') || id.includes('react-is')) {
-              return 'react-vendor';
-            }
-            
-            // Charting libraries (large)
-            if (id.includes('recharts') || id.includes('chart.js') || id.includes('react-chartjs')) {
-              return 'chart-vendor';
-            }
-            
-            // Date utilities
-            if (id.includes('date-fns')) {
-              return 'date-vendor';
-            }
-            
-            // Form handling
-            if (id.includes('react-hook-form') || id.includes('hookform') || id.includes('zod')) {
-              return 'form-vendor';
-            }
-            
-            // State management
-            if (id.includes('zustand') || id.includes('immer')) {
-              return 'state-vendor';
-            }
-            
-            // PDF and export (large)
-            if (id.includes('jspdf') || id.includes('react-pdf') || id.includes('html2canvas')) {
-              return 'pdf-vendor';
-            }
-            
-            // i18n
-            if (id.includes('i18next') || id.includes('react-i18next')) {
-              return 'i18n-vendor';
-            }
-            
-            // Icons and UI components
-            if (id.includes('lucide-react') || id.includes('heroicons') || id.includes('radix-ui') || id.includes('focus-trap')) {
-              return 'ui-vendor';
-            }
-            
-            // Crypto
-            if (id.includes('crypto-js')) {
-              return 'crypto-vendor';
-            }
-            
-            // Utility libraries
-            if (id.includes('clsx') || id.includes('classnames') || id.includes('tailwind-merge') || id.includes('class-variance-authority') || id.includes('sonner')) {
-              return 'utils-vendor';
-            }
-            
-            // Everything else from node_modules
-            return 'vendor';
-          }
+        // Simplified chunking - avoid splitting React ecosystem to prevent initialization errors
+        // The "Cannot set properties of undefined (setting 'Children')" error occurs when
+        // react-is or scheduler loads before react core is fully initialized
+        manualChunks: {
+          // Keep ALL React packages together to ensure correct initialization order
+          'react-vendor': ['react', 'react-dom', 'react-is', 'scheduler'],
+          // Charting libraries (large, lazy-loaded)
+          'chart-vendor': ['recharts'],
+          // Date utilities
+          'date-vendor': ['date-fns'],
+          // Form handling
+          'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          // State management
+          'state-vendor': ['zustand', 'immer'],
+          // i18n
+          'i18n-vendor': ['i18next', 'react-i18next'],
+          // Crypto
+          'crypto-vendor': ['crypto-js'],
         }
       }
     }
