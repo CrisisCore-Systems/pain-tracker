@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npx tsc -b packages/design-system packages/services packages/utils && npm run build",
   "installCommand": "npm install --include=dev",
   "framework": null,
   "outputDirectory": "dist",
