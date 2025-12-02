@@ -273,7 +273,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
 
     return (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 dark:bg-slate-900/95 px-4"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 dark:bg-black/90 px-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="vault-dialog-title"
