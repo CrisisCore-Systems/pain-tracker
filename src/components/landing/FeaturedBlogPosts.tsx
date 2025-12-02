@@ -84,7 +84,7 @@ export const FeaturedBlogPosts: React.FC = () => {
           {featuredPosts.map((post, index) => (
             <a
               key={post.slug}
-              href={`https://paintracker.hashnode.dev/${post.slug}`}
+              href={`https://blog.paintracker.ca/blog/${post.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
@@ -186,7 +186,7 @@ export const FeaturedBlogPosts: React.FC = () => {
         {/* View All Link */}
         <div className="text-center mt-10">
           <a
-            href="https://paintracker.hashnode.dev"
+            href="https://blog.paintracker.ca"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105"
