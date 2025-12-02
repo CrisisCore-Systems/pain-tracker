@@ -330,12 +330,13 @@ export async function getPostsByTag(
 
 /**
  * Get all post slugs (for static generation)
+ * Note: Hashnode API limits first to max 50
  */
 export async function getAllPostSlugs(): Promise<string[]> {
   try {
     const data = await client.request<{ publication: Publication }>(
       GET_ALL_SLUGS,
-      { host, first: 100 }
+      { host, first: 50 }
     );
     return data.publication.posts.edges.map((edge) => edge.node.slug);
   } catch (error) {
