@@ -9,7 +9,7 @@ export const LandingFooter: React.FC = () => {
 
   const socialLinks = [
     { icon: Github, href: 'https://github.com/CrisisCore-Systems/pain-tracker', label: 'GitHub' },
-    { icon: BookOpen, href: 'https://paintracker.hashnode.dev', label: 'Blog' },
+    { icon: BookOpen, href: 'https://blog.paintracker.ca', label: 'Blog' },
     { icon: Mail, href: 'mailto:support@paintracker.ca', label: 'Email' },
   ];
 
@@ -222,7 +222,7 @@ export const LandingFooter: React.FC = () => {
             <ul className="space-y-2 text-sm">
               <li>
                 <a
-                  href="https://paintracker.hashnode.dev"
+                  href="https://blog.paintracker.ca"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block truncate transition-colors duration-200"
@@ -235,7 +235,7 @@ export const LandingFooter: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://paintracker.hashnode.dev/building-a-pain-tracker-that-actually-gets-it-no-market-research-required"
+                  href="https://blog.paintracker.ca/blog/building-a-pain-tracker-that-actually-gets-it-no-market-research-required"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block truncate transition-colors duration-200"
@@ -249,7 +249,7 @@ export const LandingFooter: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://paintracker.hashnode.dev/i-built-a-crisis-detection-engine-that-never-phones-home"
+                  href="https://blog.paintracker.ca/blog/i-built-a-crisis-detection-engine-that-never-phones-home"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block truncate transition-colors duration-200"
@@ -263,7 +263,7 @@ export const LandingFooter: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://paintracker.hashnode.dev/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design"
+                  href="https://blog.paintracker.ca/blog/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block truncate transition-colors duration-200"
@@ -277,7 +277,7 @@ export const LandingFooter: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://paintracker.hashnode.dev/building-a-healthcare-pwa-that-actually-works-when-it-matters"
+                  href="https://blog.paintracker.ca/blog/building-a-healthcare-pwa-that-actually-works-when-it-matters"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block truncate transition-colors duration-200"
@@ -291,7 +291,7 @@ export const LandingFooter: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://paintracker.hashnode.dev/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free"
+                  href="https://blog.paintracker.ca/blog/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block truncate transition-colors duration-200"

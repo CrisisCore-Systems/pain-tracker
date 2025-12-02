@@ -51,6 +51,15 @@ export const Hero: React.FC = () => {
                 Pricing
               </Button>
 
+              <a
+                href="https://blog.paintracker.ca"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden lg:flex items-center px-4 py-2 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 rounded-md transition-colors"
+              >
+                Blog
+              </a>
+
               <Button
                 variant="ghost"
                 onClick={() => navigate('/start')}
