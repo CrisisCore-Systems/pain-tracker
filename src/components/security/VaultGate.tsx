@@ -112,7 +112,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
             type={showPassphrase ? 'text' : 'password'}
             value={passphrase}
             onChange={e => setPassphrase(e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             minLength={MIN_PASSPHRASE_LENGTH}
             aria-describedby="vault-passphrase-help"
             autoComplete="new-password"
@@ -133,7 +133,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
             type={showPassphrase ? 'text' : 'password'}
             value={confirmPassphrase}
             onChange={e => setConfirmPassphrase(e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             autoComplete="new-password"
             required
           />
@@ -142,7 +142,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
         <button
           type="button"
           onClick={() => setShowPassphrase(prev => !prev)}
-          className="text-sm text-indigo-600 hover:text-indigo-500 focus:outline-none"
+          className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 focus:outline-none"
         >
           {showPassphrase ? 'Hide passphrase' : 'Show passphrase'}
         </button>
@@ -151,7 +151,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
       {error && (
         <div
           role="alert"
-          className="rounded-md bg-red-50 p-3 text-sm text-red-700 border border-red-100"
+          className="rounded-md bg-red-50 dark:bg-red-900/30 p-3 text-sm text-red-700 dark:text-red-300 border border-red-100 dark:border-red-800"
         >
           {error}
         </div>
@@ -168,7 +168,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
         <button
           type="button"
           onClick={resetForm}
-          className="inline-flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="inline-flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           Clear fields
         </button>
@@ -193,7 +193,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
         <button
           type="button"
           onClick={handleResetVault}
-          className="text-sm text-red-600 hover:text-red-500 focus:outline-none"
+          className="text-sm text-red-600 dark:text-red-400 hover:text-red-500 focus:outline-none"
         >
           Reset vault
         </button>
@@ -208,7 +208,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
             type={showPassphrase ? 'text' : 'password'}
             value={passphrase}
             onChange={e => setPassphrase(e.target.value)}
-            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             autoComplete="current-password"
             required
           />
@@ -216,7 +216,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
         <button
           type="button"
           onClick={() => setShowPassphrase(prev => !prev)}
-          className="text-sm text-indigo-600 hover:text-indigo-500 focus:outline-none"
+          className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 focus:outline-none"
         >
           {showPassphrase ? 'Hide passphrase' : 'Show passphrase'}
         </button>
@@ -225,7 +225,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
       {error && (
         <div
           role="alert"
-          className="rounded-md bg-yellow-50 p-3 text-sm text-yellow-800 border border-yellow-100"
+          className="rounded-md bg-yellow-50 dark:bg-yellow-900/30 p-3 text-sm text-yellow-800 dark:text-yellow-300 border border-yellow-100 dark:border-yellow-800"
         >
           {error}
         </div>
@@ -245,7 +245,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
             resetForm();
             setTimeout(() => passphraseInputRef.current?.focus(), 50);
           }}
-          className="inline-flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="inline-flex items-center justify-center rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
           Try again
         </button>
@@ -273,12 +273,12 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
 
     return (
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 dark:bg-slate-100/80 px-4"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/95 dark:bg-slate-900/95 px-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="vault-dialog-title"
       >
-        <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
+        <div className="w-full max-w-lg rounded-xl bg-white dark:bg-slate-800 p-6 shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1
