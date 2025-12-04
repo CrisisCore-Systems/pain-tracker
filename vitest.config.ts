@@ -18,6 +18,17 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['src/test/setup.ts'],
     globals: true,
+    // Isolate each test file in its own environment to prevent state leakage
+    isolate: true,
+    // Use forks pool for better isolation with heavy crypto initialization
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        // Limit concurrent forks to prevent memory pressure from sodium init
+        maxForks: 4,
+        minForks: 1,
+      },
+    },
     // Include tests across the repo, not just under src/test
     include: [
       'src/**/*.test.ts',
