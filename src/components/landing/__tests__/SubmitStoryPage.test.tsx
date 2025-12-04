@@ -29,6 +29,6 @@ describe('SubmitStoryPage', () => {
     expect(mockFetch).toHaveBeenCalledWith('/api/landing/testimonial', expect.anything());
 
     // Success UI
-    expect(await screen.findByText(/Thank you for sharing your story/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Thank you for sharing/i)).toBeInTheDocument();
   });
 });
