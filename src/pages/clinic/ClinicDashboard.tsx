@@ -13,7 +13,9 @@ import {
   Activity,
   Brain,
   Bell,
-  Download
+  Download,
+  Sparkles,
+  ArrowRight
 } from 'lucide-react';
 import { ClinicStatCard } from '../../components/clinic/ClinicStatCard';
 import { RecentPatientsTable } from '../../components/clinic/RecentPatientsTable';
@@ -38,26 +40,39 @@ export function ClinicDashboard() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 bg-slate-900 min-h-screen">
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/5 rounded-full blur-3xl" />
+      </div>
+
       {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-          Clinical Dashboard
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400 mt-1">
-          Welcome back! Here's an overview of your patients and activities.
-        </p>
+      <div className="relative">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-sky-500/20 to-cyan-500/20 border border-sky-500/30">
+            <Activity className="w-6 h-6 text-sky-400" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white">
+              Clinical Dashboard
+            </h1>
+            <p className="text-slate-400">
+              Welcome back! Here's an overview of your patients and activities.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ClinicStatCard
           title="Active Patients"
           value={stats.activePatients}
           change={stats.patientsChange}
           icon={Users}
           trend="up"
-          iconColor="bg-blue-500"
+          iconColor="bg-sky-500"
         />
         <ClinicStatCard
           title="Today's Appointments"
@@ -65,7 +80,7 @@ export function ClinicDashboard() {
           change={stats.appointmentsChange}
           icon={Calendar}
           trend="up"
-          iconColor="bg-green-500"
+          iconColor="bg-emerald-500"
         />
         <ClinicStatCard
           title="Critical Alerts"
@@ -73,7 +88,7 @@ export function ClinicDashboard() {
           change={stats.alertsChange}
           icon={AlertTriangle}
           trend="up"
-          iconColor="bg-red-500"
+          iconColor="bg-rose-500"
         />
         <ClinicStatCard
           title="AI Insights"
@@ -81,78 +96,96 @@ export function ClinicDashboard() {
           change={`${stats.medicationAdherence}% adherence`}
           icon={Brain}
           trend="up"
-          iconColor="bg-purple-500"
+          iconColor="bg-violet-500"
         />
       </div>
 
-      {/* Feature Highlights - New Enhanced Features */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Feature Highlights - Premium Cards */}
+      <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
         <button
           onClick={() => navigate('/clinic/monitoring')}
-          className="p-6 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 hover:from-red-100 hover:to-red-200 dark:hover:from-red-900/30 dark:hover:to-red-800/30 rounded-lg border-2 border-red-200 dark:border-red-800 transition-all text-left group"
+          className="group p-6 rounded-2xl border border-rose-500/20 transition-all text-left hover:-translate-y-1"
+          style={{
+            background: 'linear-gradient(135deg, rgba(244, 63, 94, 0.1) 0%, rgba(190, 18, 60, 0.1) 100%)',
+            boxShadow: '0 15px 40px -10px rgba(244, 63, 94, 0.2)'
+          }}
         >
           <div className="flex items-start justify-between mb-3">
-            <Bell className="w-8 h-8 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform" />
-            <span className="px-2 py-1 bg-red-600 text-white text-xs font-bold rounded-full">
+            <div className="p-2 rounded-xl bg-rose-500/20 border border-rose-500/30">
+              <Bell className="w-6 h-6 text-rose-400 group-hover:scale-110 transition-transform" />
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-500 text-white">
               {stats.criticalAlerts} Active
             </span>
           </div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+          <h3 className="text-lg font-bold text-white mb-2">
             Real-Time Monitoring
           </h3>
-          <p className="text-sm text-slate-700 dark:text-slate-300">
+          <p className="text-sm text-slate-400 mb-4">
             Live patient alerts for pain escalation, missed medications, and crisis detection
           </p>
-          <div className="mt-4 flex items-center gap-2 text-red-600 dark:text-red-400 font-medium text-sm">
-            View Dashboard →
+          <div className="flex items-center gap-2 text-rose-400 font-medium text-sm group-hover:gap-3 transition-all">
+            View Dashboard <ArrowRight className="w-4 h-4" />
           </div>
         </button>
 
         <button
           onClick={() => navigate('/clinic/patients/1')}
-          className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 hover:from-purple-100 hover:to-purple-200 dark:hover:from-purple-900/30 dark:hover:to-purple-800/30 rounded-lg border-2 border-purple-200 dark:border-purple-800 transition-all text-left group"
+          className="group p-6 rounded-2xl border border-violet-500/20 transition-all text-left hover:-translate-y-1"
+          style={{
+            background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(109, 40, 217, 0.1) 100%)',
+            boxShadow: '0 15px 40px -10px rgba(139, 92, 246, 0.2)'
+          }}
         >
           <div className="flex items-start justify-between mb-3">
-            <Brain className="w-8 h-8 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform" />
-            <span className="px-2 py-1 bg-purple-600 text-white text-xs font-bold rounded-full">
+            <div className="p-2 rounded-xl bg-violet-500/20 border border-violet-500/30">
+              <Brain className="w-6 h-6 text-violet-400 group-hover:scale-110 transition-transform" />
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-violet-500 text-white">
               {stats.aiPatternsDetected} Insights
             </span>
           </div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+          <h3 className="text-lg font-bold text-white mb-2">
             AI Pattern Detection
           </h3>
-          <p className="text-sm text-slate-700 dark:text-slate-300">
+          <p className="text-sm text-slate-400 mb-4">
             Automatic identification of pain triggers, medication efficacy, and treatment correlations
           </p>
-          <div className="mt-4 flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium text-sm">
-            See Patient Example →
+          <div className="flex items-center gap-2 text-violet-400 font-medium text-sm group-hover:gap-3 transition-all">
+            See Patient Example <ArrowRight className="w-4 h-4" />
           </div>
         </button>
 
         <button
           onClick={() => navigate('/clinic/patients/1')}
-          className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 hover:from-blue-100 hover:to-blue-200 dark:hover:from-blue-900/30 dark:hover:to-blue-800/30 rounded-lg border-2 border-blue-200 dark:border-blue-800 transition-all text-left group"
+          className="group p-6 rounded-2xl border border-sky-500/20 transition-all text-left hover:-translate-y-1"
+          style={{
+            background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(2, 132, 199, 0.1) 100%)',
+            boxShadow: '0 15px 40px -10px rgba(14, 165, 233, 0.2)'
+          }}
         >
           <div className="flex items-start justify-between mb-3">
-            <Download className="w-8 h-8 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform" />
-            <span className="px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
+            <div className="p-2 rounded-xl bg-sky-500/20 border border-sky-500/30">
+              <Download className="w-6 h-6 text-sky-400 group-hover:scale-110 transition-transform" />
+            </div>
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-sky-500 text-white">
               1-Click
             </span>
           </div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+          <h3 className="text-lg font-bold text-white mb-2">
             Automated Reports
           </h3>
-          <p className="text-sm text-slate-700 dark:text-slate-300">
+          <p className="text-sm text-slate-400 mb-4">
             Generate WorkSafe BC and insurance reports in seconds with pre-filled data
           </p>
-          <div className="mt-4 flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium text-sm">
-            Try Report Generator →
+          <div className="flex items-center gap-2 text-sky-400 font-medium text-sm group-hover:gap-3 transition-all">
+            Try Report Generator <ArrowRight className="w-4 h-4" />
           </div>
         </button>
       </div>
 
       {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Takes 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
           {/* Priority Alerts */}
@@ -168,44 +201,51 @@ export function ClinicDashboard() {
           <UpcomingAppointments />
 
           {/* Quick Actions */}
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+          <div 
+            className="rounded-2xl border border-slate-700/50 p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+              boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-amber-400" />
               Quick Actions
             </h3>
             <div className="space-y-3">
               <button 
                 onClick={() => navigate('/clinic/patients')}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/20 transition-colors text-left group"
               >
-                <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                <Users className="w-5 h-5 text-sky-400" />
+                <span className="text-sm font-medium text-sky-300 group-hover:text-sky-200">
                   View All Patients
                 </span>
               </button>
               <button 
                 onClick={() => navigate('/clinic/monitoring')}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 transition-colors text-left group"
               >
-                <Bell className="w-5 h-5 text-red-600 dark:text-red-400" />
-                <span className="text-sm font-medium text-red-900 dark:text-red-100">
+                <Bell className="w-5 h-5 text-rose-400" />
+                <span className="text-sm font-medium text-rose-300 group-hover:text-rose-200">
                   Check Alerts
                 </span>
               </button>
               <button 
                 onClick={() => navigate('/clinic/patients/1')}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-lg transition-colors text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:bg-violet-500/20 transition-colors text-left group"
               >
-                <Brain className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                <span className="text-sm font-medium text-purple-900 dark:text-purple-100">
+                <Brain className="w-5 h-5 text-violet-400" />
+                <span className="text-sm font-medium text-violet-300 group-hover:text-violet-200">
                   View AI Insights
                 </span>
               </button>
               <button 
                 onClick={() => navigate('/clinic/patients/1')}
-                className="w-full flex items-center gap-3 px-4 py-3 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-lg transition-colors text-left"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors text-left group"
               >
-                <FileText className="w-5 h-5 text-green-600 dark:text-green-400" />
-                <span className="text-sm font-medium text-green-900 dark:text-green-100">
+                <FileText className="w-5 h-5 text-emerald-400" />
+                <span className="text-sm font-medium text-emerald-300 group-hover:text-emerald-200">
                   Generate Report
                 </span>
               </button>
@@ -213,24 +253,30 @@ export function ClinicDashboard() {
           </div>
 
           {/* System Status */}
-          <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-4">
+          <div 
+            className="rounded-2xl border border-slate-700/50 p-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+              boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            <h3 className="text-lg font-semibold text-white mb-4">
               System Status
             </h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-green-500" />
-                  <span className="text-sm text-slate-700 dark:text-slate-300">API Status</span>
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-sm text-slate-400">API Status</span>
                 </div>
-                <span className="text-sm font-medium text-green-600">Operational</span>
+                <span className="text-sm font-medium text-emerald-400">Operational</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-blue-500" />
-                  <span className="text-sm text-slate-700 dark:text-slate-300">Last Sync</span>
+                  <Clock className="w-4 h-4 text-sky-400" />
+                  <span className="text-sm text-slate-400">Last Sync</span>
                 </div>
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400">2 min ago</span>
+                <span className="text-sm font-medium text-slate-300">2 min ago</span>
               </div>
             </div>
           </div>

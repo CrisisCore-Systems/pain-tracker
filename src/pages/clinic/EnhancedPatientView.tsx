@@ -8,6 +8,8 @@ import {
   TrendingUp,
   Activity,
   AlertCircle,
+  User,
+  Sparkles,
 } from 'lucide-react';
 import { PatientPainTimeline } from '../../components/clinic/PatientPainTimeline';
 import { PatternDetectionService, DetectedPattern } from '../../services/PatternDetectionService';
@@ -213,7 +215,6 @@ export const EnhancedPatientView: React.FC = () => {
   const [showPatterns, setShowPatterns] = useState(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
 
-  // Run pattern detection on mount
   useEffect(() => {
     const analyzePatterns = async () => {
       setIsAnalyzing(true);
@@ -243,10 +244,7 @@ export const EnhancedPatientView: React.FC = () => {
         mockMedications,
         'progress'
       );
-
-      // Download PDF
       pdf.save(`WorkSafeBC-Report-${mockPatientInfo.name}-${new Date().toISOString().split('T')[0]}.pdf`);
-
       console.log('Report summary:', summary);
     } catch (error) {
       console.error('Report generation error:', error);
@@ -264,7 +262,6 @@ export const EnhancedPatientView: React.FC = () => {
         mockClinicalNotes,
         mockMedications
       );
-
       pdf.save(`Insurance-Report-${mockPatientInfo.name}-${new Date().toISOString().split('T')[0]}.pdf`);
     } catch (error) {
       console.error('Report generation error:', error);
@@ -287,36 +284,58 @@ export const EnhancedPatientView: React.FC = () => {
   const actionablePatterns = patterns.filter((p) => p.actionable);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6 bg-slate-900 min-h-screen">
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/5 rounded-full blur-3xl" />
+      </div>
+
       {/* Header */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-        <div className="flex items-center justify-between mb-4">
+      <div 
+        className="relative rounded-2xl border border-slate-700/50 p-6 overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+          boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-violet-500 to-purple-500" />
+        
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate('/clinic')}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              className="p-2 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{mockPatientInfo.name}</h1>
-              <p className="text-slate-600 dark:text-slate-400 mt-1">
-                Claim #{mockPatientInfo.claimNumber} • {mockPatientInfo.occupation}
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-xl bg-gradient-to-br from-sky-500/20 to-cyan-500/20 border border-sky-500/30">
+                <User className="w-6 h-6 text-sky-400" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-white">{mockPatientInfo.name}</h1>
+                <p className="text-slate-400">
+                  Claim #{mockPatientInfo.claimNumber}  {mockPatientInfo.occupation}
+                </p>
+              </div>
             </div>
           </div>
 
           <div className="flex gap-3">
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 transition-all"
             >
               <Download className="w-4 h-4" />
               Export CSV
             </button>
             <button
               onClick={() => setShowPatterns(!showPatterns)}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-medium transition-all hover:-translate-y-0.5 shadow-lg shadow-violet-500/25"
+              style={{
+                background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)'
+              }}
             >
               <Brain className="w-4 h-4" />
               {showPatterns ? 'Hide' : 'Show'} AI Insights
@@ -325,100 +344,110 @@ export const EnhancedPatientView: React.FC = () => {
         </div>
 
         {/* Quick stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-blue-600" />
-              <span className="text-sm text-slate-600 dark:text-slate-400">Data Points</span>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="p-4 rounded-xl bg-sky-500/10 border border-sky-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <Activity className="w-5 h-5 text-sky-400" />
+              <span className="text-sm text-slate-400">Data Points</span>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{mockPainEntries.length}</p>
+            <p className="text-2xl font-bold text-white">{mockPainEntries.length}</p>
           </div>
 
-          <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-green-600" />
-              <span className="text-sm text-slate-600 dark:text-slate-400">Trend</span>
+          <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-5 h-5 text-emerald-400" />
+              <span className="text-sm text-slate-400">Trend</span>
             </div>
-            <p className="text-2xl font-bold text-green-600 mt-2">Improving</p>
+            <p className="text-2xl font-bold text-emerald-400">Improving</p>
           </div>
 
-          <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-            <div className="flex items-center gap-2">
-              <Brain className="w-5 h-5 text-purple-600" />
-              <span className="text-sm text-slate-600 dark:text-slate-400">AI Patterns</span>
+          <div className="p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <Brain className="w-5 h-5 text-violet-400" />
+              <span className="text-sm text-slate-400">AI Patterns</span>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{highConfidencePatterns.length}</p>
+            <p className="text-2xl font-bold text-white">{highConfidencePatterns.length}</p>
           </div>
 
-          <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-amber-600" />
-              <span className="text-sm text-slate-600 dark:text-slate-400">Action Items</span>
+          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="w-5 h-5 text-amber-400" />
+              <span className="text-sm text-slate-400">Action Items</span>
             </div>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white mt-2">{actionablePatterns.length}</p>
+            <p className="text-2xl font-bold text-white">{actionablePatterns.length}</p>
           </div>
         </div>
       </div>
 
       {/* AI-Detected Patterns */}
       {showPatterns && (
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Brain className="w-6 h-6 text-purple-600" />
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">AI-Detected Patterns</h2>
+        <div 
+          className="relative rounded-2xl border border-slate-700/50 p-6 overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+            boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
+          }}
+        >
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500" />
+          
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 rounded-xl bg-violet-500/20 border border-violet-500/30">
+              <Brain className="w-5 h-5 text-violet-400" />
+            </div>
+            <h2 className="text-xl font-bold text-white">AI-Detected Patterns</h2>
             {isAnalyzing && <span className="text-sm text-slate-500">Analyzing...</span>}
           </div>
 
           {patterns.length === 0 ? (
-            <p className="text-slate-600 dark:text-slate-400">No significant patterns detected yet. More data needed.</p>
+            <p className="text-slate-400">No significant patterns detected yet. More data needed.</p>
           ) : (
             <div className="space-y-4">
               {patterns.slice(0, 5).map((pattern) => (
                 <div
                   key={pattern.id}
-                  className={`p-4 rounded-lg border-l-4 ${
+                  className={`p-4 rounded-xl border-l-4 ${
                     pattern.confidence === 'high'
-                      ? 'bg-green-50 dark:bg-green-900/20 border-green-500'
+                      ? 'bg-emerald-500/10 border-emerald-500'
                       : pattern.confidence === 'medium'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-500'
-                        : 'bg-slate-50 dark:bg-slate-700/50 border-slate-500'
+                        ? 'bg-sky-500/10 border-sky-500'
+                        : 'bg-slate-800/50 border-slate-500'
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-slate-900 dark:text-white">{pattern.title}</h3>
+                        <h3 className="font-semibold text-white">{pattern.title}</h3>
                         <span
-                          className={`px-2 py-0.5 text-xs font-medium rounded ${
+                          className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                             pattern.confidence === 'high'
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                              ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                               : pattern.confidence === 'medium'
-                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                                : 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-400'
+                                ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
+                                : 'bg-slate-700 text-slate-400'
                           }`}
                         >
                           {pattern.confidence} confidence
                         </span>
                       </div>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">{pattern.description}</p>
+                      <p className="text-sm text-slate-400 mb-2">{pattern.description}</p>
                       {pattern.recommendation && (
-                        <div className="flex items-start gap-2 mt-2 p-3 bg-white dark:bg-slate-800 rounded">
-                          <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5" />
-                          <p className="text-sm text-slate-700 dark:text-slate-300">
-                            <strong>Recommendation:</strong> {pattern.recommendation}
+                        <div className="flex items-start gap-2 mt-3 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                          <Sparkles className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-slate-300">
+                            <span className="font-medium text-amber-400">Recommendation:</span> {pattern.recommendation}
                           </p>
                         </div>
                       )}
                     </div>
                     <div className="ml-4 text-right">
-                      <p className="text-sm text-slate-600 dark:text-slate-400">Impact</p>
+                      <p className="text-sm text-slate-500">Impact</p>
                       <p
                         className={`text-xl font-bold ${
                           pattern.impact > 0
-                            ? 'text-green-600'
+                            ? 'text-emerald-400'
                             : pattern.impact < 0
-                              ? 'text-red-600'
-                              : 'text-slate-600'
+                              ? 'text-rose-400'
+                              : 'text-slate-400'
                         }`}
                       >
                         {pattern.impact > 0 ? '+' : ''}
@@ -443,27 +472,37 @@ export const EnhancedPatientView: React.FC = () => {
       />
 
       {/* Report Generation */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <FileText className="w-6 h-6 text-blue-600" />
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Generate Reports</h2>
+      <div 
+        className="relative rounded-2xl border border-slate-700/50 p-6 overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+          boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-500" />
+        
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 rounded-xl bg-sky-500/20 border border-sky-500/30">
+            <FileText className="w-5 h-5 text-sky-400" />
+          </div>
+          <h2 className="text-xl font-bold text-white">Generate Reports</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button
             onClick={handleGenerateWorkSafeBCReport}
             disabled={isGeneratingReport}
-            className="p-6 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg border-2 border-blue-200 dark:border-blue-800 transition-colors text-left disabled:opacity-50"
+            className="group p-6 rounded-xl bg-sky-500/10 border border-sky-500/20 hover:bg-sky-500/20 transition-all text-left disabled:opacity-50 hover:-translate-y-1"
           >
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">WorkSafe BC Report</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
+                <h3 className="font-semibold text-white mb-2">WorkSafe BC Report</h3>
+                <p className="text-sm text-slate-400 mb-4">
                   Comprehensive medical report with functional assessment and work capacity evaluation
                 </p>
-                <div className="flex items-center gap-2 mt-4">
-                  <Download className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-600">Generate PDF</span>
+                <div className="flex items-center gap-2">
+                  <Download className="w-4 h-4 text-sky-400" />
+                  <span className="text-sm font-medium text-sky-400 group-hover:text-sky-300">Generate PDF</span>
                 </div>
               </div>
             </div>
@@ -472,17 +511,17 @@ export const EnhancedPatientView: React.FC = () => {
           <button
             onClick={handleGenerateInsuranceReport}
             disabled={isGeneratingReport}
-            className="p-6 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 rounded-lg border-2 border-purple-200 dark:border-purple-800 transition-colors text-left disabled:opacity-50"
+            className="group p-6 rounded-xl bg-violet-500/10 border border-violet-500/20 hover:bg-violet-500/20 transition-all text-left disabled:opacity-50 hover:-translate-y-1"
           >
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="font-semibold text-slate-900 dark:text-white mb-2">Insurance Claim Report</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
+                <h3 className="font-semibold text-white mb-2">Insurance Claim Report</h3>
+                <p className="text-sm text-slate-400 mb-4">
                   Detailed medical documentation for insurance claim processing and review
                 </p>
-                <div className="flex items-center gap-2 mt-4">
-                  <Download className="w-4 h-4 text-purple-600" />
-                  <span className="text-sm font-medium text-purple-600">Generate PDF</span>
+                <div className="flex items-center gap-2">
+                  <Download className="w-4 h-4 text-violet-400" />
+                  <span className="text-sm font-medium text-violet-400 group-hover:text-violet-300">Generate PDF</span>
                 </div>
               </div>
             </div>
@@ -490,8 +529,8 @@ export const EnhancedPatientView: React.FC = () => {
         </div>
 
         {isGeneratingReport && (
-          <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <p className="text-sm text-blue-800 dark:text-blue-400">Generating report...</p>
+          <div className="mt-4 p-4 rounded-xl bg-sky-500/10 border border-sky-500/20">
+            <p className="text-sm text-sky-400">Generating report...</p>
           </div>
         )}
       </div>
