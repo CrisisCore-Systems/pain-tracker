@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { PainEntry } from '../../types';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import {
@@ -10,15 +10,6 @@ import {
   TreatmentsSection,
   WorkImpactSection,
 } from './form-sections';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Badge,
-  Loading,
-} from '../../design-system';
 // Optional validation technology integration (feature-flagged)
 import {
   EmotionalValidation,
@@ -165,7 +156,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     {
       title: 'Pain Assessment',
       description: 'Rate your current pain and identify affected areas',
-      icon: '🎯',
+      icon: '??',
       component: (
         <BaselineSection
           {...formData.baselineData}
@@ -185,7 +176,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     {
       title: 'Functional Impact',
       description: 'How is pain affecting your daily activities?',
-      icon: '🏃',
+      icon: '??',
       component: (
         <FunctionalImpactSection
           limitedActivities={formData.functionalImpact?.limitedActivities || []}
@@ -207,7 +198,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     {
       title: 'Medications',
       description: 'Track your current medications and their effectiveness',
-      icon: '💊',
+      icon: '??',
       component: (
         <MedicationsSection
           {...(formData.medications as any)}
@@ -228,7 +219,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     {
       title: 'Treatments',
       description: 'Document recent treatments and their outcomes',
-      icon: '🏥',
+      icon: '??',
       component: (
         <TreatmentsSection
           {...(formData.treatments as any)}
@@ -249,7 +240,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     {
       title: 'Quality of Life',
       description: 'How is pain affecting your sleep, mood, and social life?',
-      icon: '😴',
+      icon: '??',
       component: (
         <QualityOfLifeSection
           {...(formData.qualityOfLife as any)}
@@ -270,7 +261,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     {
       title: 'Work Impact',
       description: 'How has pain affected your work and productivity?',
-      icon: '💼',
+      icon: '??',
       component: (
         <WorkImpactSection
           {...(formData.workImpact as any)}
@@ -291,7 +282,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     {
       title: 'Comparison',
       description: 'Compare your current condition to previous assessments',
-      icon: '📊',
+      icon: '??',
       component: (
         <ComparisonSection
           {...(formData.comparison as any)}
@@ -361,235 +352,69 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const canProceedToNext = isSectionValid(currentSection);
   const isLastSection = currentSection === sections.length - 1;
 
+  // Section color schemes for visual variety  
+  const sectionColors = [
+    { gradient: 'from-sky-500 to-cyan-500', bg: 'rgba(14, 165, 233, 0.15)', text: 'text-sky-400', border: 'rgba(14, 165, 233, 0.3)' },
+    { gradient: 'from-emerald-500 to-teal-500', bg: 'rgba(16, 185, 129, 0.15)', text: 'text-emerald-400', border: 'rgba(16, 185, 129, 0.3)' },
+    { gradient: 'from-violet-500 to-purple-500', bg: 'rgba(139, 92, 246, 0.15)', text: 'text-violet-400', border: 'rgba(139, 92, 246, 0.3)' },
+    { gradient: 'from-rose-500 to-pink-500', bg: 'rgba(244, 63, 94, 0.15)', text: 'text-rose-400', border: 'rgba(244, 63, 94, 0.3)' },
+    { gradient: 'from-amber-500 to-orange-500', bg: 'rgba(245, 158, 11, 0.15)', text: 'text-amber-400', border: 'rgba(245, 158, 11, 0.3)' },
+    { gradient: 'from-indigo-500 to-blue-500', bg: 'rgba(99, 102, 241, 0.15)', text: 'text-indigo-400', border: 'rgba(99, 102, 241, 0.3)' },
+    { gradient: 'from-cyan-500 to-teal-500', bg: 'rgba(6, 182, 212, 0.15)', text: 'text-cyan-400', border: 'rgba(6, 182, 212, 0.3)' },
+  ];
+  const currentColor = sectionColors[currentSection % sectionColors.length];
+
   return (
-    <Card className="max-w-4xl mx-auto">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center space-x-2">
-              <span className="text-2xl">{sections[currentSection].icon}</span>
-              <span>{sections[currentSection].title}</span>
-            </CardTitle>
-            <p className="text-muted-foreground mt-1">{sections[currentSection].description}</p>
+    <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
+      <div className={`h-1 w-full bg-gradient-to-r ${currentColor.gradient}`} style={{ boxShadow: `0 0 20px ${currentColor.bg}` }} />
+      <div className="p-6 pb-4">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-xl text-2xl" style={{ background: currentColor.bg, border: `1px solid ${currentColor.border}` }}>{sections[currentSection].icon}</div>
+            <div>
+              <h2 className="text-xl font-bold text-white">{sections[currentSection].title}</h2>
+              <p className="text-slate-400 mt-1">{sections[currentSection].description}</p>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge variant="outline" className="text-xs">
-              <Clock className="h-3 w-3 mr-1" />
-              {sections[currentSection].estimatedTime}
-            </Badge>
-            <Badge variant="secondary">
-              {currentSection + 1} of {sections.length}
-            </Badge>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(51, 65, 85, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#94a3b8' }}><Clock className="h-3 w-3 mr-1" />{sections[currentSection].estimatedTime}</span>
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${currentColor.text}`} style={{ background: currentColor.bg, border: `1px solid ${currentColor.border}` }}>{currentSection + 1} of {sections.length}</span>
           </div>
         </div>
-
-        {/* Progress Bar */}
-        <div className="mt-4">
-          <div className="flex justify-between text-xs text-muted-foreground mb-2">
-            <span>Progress</span>
-            <span>{Math.round(((currentSection + 1) / sections.length) * 100)}%</span>
+        <div className="mt-6">
+          <div className="flex justify-between text-xs mb-2">
+            <span className="text-slate-400">Progress</span>
+            <span className={currentColor.text}>{Math.round(((currentSection + 1) / sections.length) * 100)}%</span>
           </div>
-          <div className="w-full bg-muted rounded-full h-2">
-            <div
-              className="bg-primary h-2 rounded-full transition-all duration-300"
-              style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
-            />
+          <div className="w-full h-2 rounded-full" style={{ background: 'rgba(51, 65, 85, 0.5)' }}>
+            <div className={`h-2 rounded-full transition-all duration-500 bg-gradient-to-r ${currentColor.gradient}`} style={{ width: `${((currentSection + 1) / sections.length) * 100}%`, boxShadow: `0 0 10px ${currentColor.bg}` }} />
           </div>
         </div>
-
-        {/* Section Navigation Pills */}
-        <div className="flex flex-wrap gap-2 mt-4">
-          {sections.map((section, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentFormSection(index)}
-              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                index === currentSection
-                  ? 'bg-primary text-primary-foreground'
-                  : index < currentSection
-                    ? 'bg-success text-success-foreground'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
-              }`}
-              aria-label={`Go to ${section.title} section`}
-            >
-              {index < currentSection ? (
-                <Check className="h-3 w-3 inline mr-1" />
-              ) : (
-                <span className="mr-1">{section.icon}</span>
-              )}
-              <span className="hidden sm:inline">{section.title}</span>
-              <span className="sm:hidden">{index + 1}</span>
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-2 mt-5">
+          {sections.map((section, index) => {
+            const pillColor = sectionColors[index % sectionColors.length];
+            const isActive = index === currentSection;
+            const isCompleted = index < currentSection;
+            return (<button key={index} onClick={() => setCurrentFormSection(index)} className="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1" style={{ background: isActive ? `linear-gradient(135deg, ${pillColor.bg}, rgba(30, 41, 59, 0.9))` : isCompleted ? 'rgba(34, 197, 94, 0.15)' : 'rgba(51, 65, 85, 0.4)', border: isActive ? `1px solid ${pillColor.border}` : isCompleted ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid rgba(255, 255, 255, 0.05)', color: isActive ? 'white' : isCompleted ? '#4ade80' : '#64748b', boxShadow: isActive ? `0 0 15px ${pillColor.bg}` : 'none' }} aria-label={`Go to ${section.title} section`}>{isCompleted ? <Check className="h-3 w-3" /> : <span>{section.icon}</span>}<span className="hidden sm:inline">{section.title}</span><span className="sm:hidden">{index + 1}</span></button>);
+          })}
         </div>
-      </CardHeader>
-
-      <CardContent>
-        <form
-          role="form"
-          aria-label="Pain Entry Form"
-          onSubmit={e => {
-            e.preventDefault();
-            if (isLastSection && canProceedToNext) {
-              handleSubmit();
-            }
-          }}
-          className="space-y-6"
-        >
-          {/* Current Section Content */}
-          <div className="min-h-[400px]">{sections[currentSection].component}</div>
-
-          {/* Emotional validation panel (read-only, feature-flagged) */}
-          {validationIsActive && (
-            <div className="mt-4">
-              <EmotionalValidation
-                text={formData.notes || ''}
-                onValidationGenerated={handleValidationGenerated}
-                isActive
-              />
-            </div>
-          )}
-
-          {validationIsActive && validationHistory.length > 0 && showValidationHistory && (
-            <div className="mt-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2 text-sm font-medium text-muted-foreground">
-                  <History className="h-4 w-4" />
-                  <span>Recent validation moments</span>
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowValidationHistory(false)}
-                >
-                  Hide
-                </Button>
-              </div>
-              <ValidationHistory validations={validationHistory} onClear={clearHistory} />
-            </div>
-          )}
-
-          {validationIsActive && !showValidationHistory && validationHistory.length > 0 && (
-            <div className="mt-4">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => setShowValidationHistory(true)}
-                leftIcon={<History className="h-4 w-4" />}
-              >
-                Show recent validation messages
-              </Button>
-            </div>
-          )}
-
-          {/* Validation Message */}
-          {!canProceedToNext && (
-            <div className="flex items-center space-x-2 p-3 bg-warning/10 border border-warning/20 rounded-lg">
-              <AlertCircle className="h-4 w-4 text-warning" />
-              <span className="text-sm text-warning">
-                Please complete the required information in this section before proceeding.
-              </span>
-            </div>
-          )}
-
-          {/* Navigation Buttons */}
-          <div className="flex justify-between pt-6 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setCurrentFormSection(Math.max(0, currentSection - 1))}
-              disabled={currentSection === 0}
-              leftIcon={<ChevronLeft className="h-4 w-4" />}
-            >
-              Previous
-            </Button>
-
-            <div className="flex space-x-3">
-              {!isLastSection ? (
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))
-                  }
-                  disabled={!canProceedToNext}
-                  rightIcon={<ChevronRight className="h-4 w-4" />}
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  disabled={!canProceedToNext || isSubmitting}
-                  leftIcon={isSubmitting ? undefined : <Save className="h-4 w-4" />}
-                  className="min-w-[120px]"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loading size="sm" className="mr-2" />
-                      Saving...
-                    </>
-                  ) : (
-                    'Save Entry'
-                  )}
-                </Button>
-              )}
+      </div>
+      <div className="px-6 pb-6">
+        <form role="form" aria-label="Pain Entry Form" onSubmit={e => { e.preventDefault(); if (isLastSection && canProceedToNext) { handleSubmit(); } }} className="space-y-6">
+          <div className="min-h-[400px] p-5 rounded-xl" style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)' }}>{sections[currentSection].component}</div>
+          {validationIsActive && (<div className="mt-4 p-4 rounded-xl" style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)' }}><EmotionalValidation text={formData.notes || ''} onValidationGenerated={handleValidationGenerated} isActive /></div>)}
+          {validationIsActive && validationHistory.length > 0 && showValidationHistory && (<div className="mt-4 p-4 rounded-xl" style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)' }}><div className="flex items-center justify-between mb-3"><div className="flex items-center gap-2 text-sm font-medium text-slate-300"><History className="h-4 w-4 text-violet-400" /><span>Recent validation moments</span></div><button type="button" onClick={() => setShowValidationHistory(false)} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">Hide</button></div><ValidationHistory validations={validationHistory} onClear={clearHistory} /></div>)}
+          {validationIsActive && !showValidationHistory && validationHistory.length > 0 && (<div className="mt-4"><button type="button" onClick={() => setShowValidationHistory(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-violet-400" style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)' }}><History className="h-4 w-4" />Show recent validation messages</button></div>)}
+          {!canProceedToNext && (<div className="flex items-center gap-3 p-4 rounded-xl" style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.2)' }}><AlertCircle className="h-5 w-5 text-amber-400 flex-shrink-0" /><span className="text-sm text-amber-300">Please complete the required information in this section before proceeding.</span></div>)}
+          <div className="flex justify-between pt-6" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+            <button type="button" onClick={() => setCurrentFormSection(Math.max(0, currentSection - 1))} disabled={currentSection === 0} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed" style={{ background: 'rgba(51, 65, 85, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: currentSection === 0 ? '#475569' : '#e2e8f0' }}><ChevronLeft className="h-4 w-4" />Previous</button>
+            <div className="flex gap-3">
+              {!isLastSection ? (<button type="button" onClick={() => setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))} disabled={!canProceedToNext} className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-white bg-gradient-to-r ${currentColor.gradient}`} style={{ boxShadow: canProceedToNext ? `0 4px 15px ${currentColor.bg}` : 'none' }}>Next<ChevronRight className="h-4 w-4" /></button>) : (<button type="submit" disabled={!canProceedToNext || isSubmitting} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-white min-w-[140px] justify-center" style={{ background: 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)', boxShadow: canProceedToNext && !isSubmitting ? '0 4px 15px rgba(34, 197, 94, 0.3)' : 'none' }}>{isSubmitting ? (<><Loader2 className="h-4 w-4 animate-spin" />Saving...</>) : (<><Save className="h-4 w-4" />Save Entry</>)}</button>)}
             </div>
           </div>
         </form>
-
-        {preferences.showProgress && (
-          <div className="mt-8 border-t pt-6">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-2">
-                <BarChart3 className="h-4 w-4 text-primary" />
-                <p className="text-sm font-semibold text-muted-foreground">
-                  Whole-person progress tracking
-                </p>
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowProgressTracker(prev => !prev)}
-              >
-                {showProgressTracker ? 'Hide wellness tools' : 'Show wellness tools'}
-              </Button>
-            </div>
-
-            {showProgressTracker ? (
-              <div className="space-y-3">
-                <HolisticProgressTracker
-                  painEntries={entries}
-                  onProgressUpdate={handleProgressUpdate}
-                />
-                {progressStatus === 'saving' && (
-                  <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Saving wellness insights securely…</span>
-                  </div>
-                )}
-                {progressStatus === 'saved' && (
-                  <p className="text-xs text-success">
-                    Progress entry saved with validation technology.
-                  </p>
-                )}
-                {progressStatus === 'error' && (
-                  <p className="text-xs text-destructive">
-                    We couldn’t save your progress right now. Your notes stay on this device.
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="text-xs text-muted-foreground">
-                These tools celebrate growth beyond pain scores. You can open them whenever you’re
-                ready.
-              </p>
-            )}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+        {preferences.showProgress && (<div className="mt-8 pt-6" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}><div className="flex items-center justify-between mb-4"><div className="flex items-center gap-2"><div className="p-2 rounded-lg" style={{ background: 'rgba(139, 92, 246, 0.15)' }}><BarChart3 className="h-4 w-4 text-violet-400" /></div><p className="text-sm font-semibold text-slate-300">Whole-person progress tracking</p></div><button type="button" onClick={() => setShowProgressTracker(prev => !prev)} className="text-xs text-slate-500 hover:text-slate-300 transition-colors px-3 py-1 rounded-lg" style={{ background: 'rgba(51, 65, 85, 0.3)' }}>{showProgressTracker ? 'Hide wellness tools' : 'Show wellness tools'}</button></div>{showProgressTracker ? (<div className="space-y-3 p-4 rounded-xl" style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)' }}><HolisticProgressTracker painEntries={entries} onProgressUpdate={handleProgressUpdate} />{progressStatus === 'saving' && (<div className="flex items-center gap-2 text-xs text-slate-400"><Loader2 className="h-4 w-4 animate-spin text-violet-400" /><span>Saving wellness insights securely...</span></div>)}{progressStatus === 'saved' && (<p className="text-xs text-emerald-400">Progress entry saved with validation technology.</p>)}{progressStatus === 'error' && (<p className="text-xs text-rose-400">We could not save your progress right now. Your notes stay on this device.</p>)}</div>) : (<p className="text-xs text-slate-500">These tools celebrate growth beyond pain scores. You can open them whenever you are ready.</p>)}</div>)}
+      </div>
+    </div>
   );
 }

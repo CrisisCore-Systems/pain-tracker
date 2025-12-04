@@ -18,6 +18,8 @@ import {
   HelpCircle,
   Bell,
   Wind,
+  Zap,
+  ChevronRight,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge, useTheme } from '../../design-system';
@@ -45,13 +47,13 @@ export function ModernAppLayout({
   const { mode, setMode } = useTheme();
 
   const navigation = [
-    { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, badge: null },
-    { id: 'new-entry', name: 'New Entry', icon: Plus, badge: null },
-    { id: 'body-map', name: 'Body Map', icon: User, badge: null },
-    { id: 'fibromyalgia', name: 'Fibromyalgia Hub', icon: Heart, badge: 'New' },
-    { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Pro' },
-    { id: 'calendar', name: 'Calendar', icon: Calendar, badge: null },
-    { id: 'reports', name: 'Reports', icon: FileText, badge: null },
+    { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, badge: null, color: 'sky' },
+    { id: 'new-entry', name: 'New Entry', icon: Plus, badge: null, color: 'emerald' },
+    { id: 'body-map', name: 'Body Map', icon: User, badge: null, color: 'violet' },
+    { id: 'fibromyalgia', name: 'Fibromyalgia Hub', icon: Heart, badge: 'New', color: 'rose' },
+    { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Pro', color: 'amber' },
+    { id: 'calendar', name: 'Calendar', icon: Calendar, badge: null, color: 'cyan' },
+    { id: 'reports', name: 'Reports', icon: FileText, badge: null, color: 'indigo' },
   ];
 
   const bottomNavigation = [
@@ -60,24 +62,38 @@ export function ModernAppLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950">
+    <div className="min-h-screen bg-slate-900">
+      {/* Ambient background effects */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl" />
+      </div>
+
       {/* Skip to Main Content Link - Accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-6 focus:py-3 focus:bg-primary-600 focus:text-white focus:rounded-lg focus:shadow-lg focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:outline-none"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-6 focus:py-3 focus:bg-sky-500 focus:text-white focus:rounded-xl focus:shadow-lg focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900 focus:outline-none"
       >
         Skip to main content
       </a>
 
-      {/* Modern Header */}
-      <header className="biophilic-flow fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border-b border-gray-200/50 dark:border-gray-700/50">
+      {/* Premium Glass Header */}
+      <header 
+        className="fixed top-0 left-0 right-0 z-50"
+        style={{
+          background: 'rgba(15, 23, 42, 0.8)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        }}
+      >
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo & Brand */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-800 transition-colors"
+                className="lg:hidden p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
                 aria-label={sidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 data-testid="nav-toggle"
               >
@@ -85,31 +101,49 @@ export function ModernAppLayout({
               </button>
 
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg shadow-blue-500/30">
-                  <Heart className="h-6 w-6 text-white" />
+                <div 
+                  className="p-2.5 rounded-xl"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
+                    boxShadow: '0 8px 20px rgba(14, 165, 233, 0.3)',
+                  }}
+                >
+                  <Activity className="h-5 w-5 text-white" />
                 </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                  <h1 className="text-lg font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
                     Pain Tracker Pro
                   </h1>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Empathy-Driven Care</p>
+                  <p className="text-[11px] text-slate-500">Empathy-Driven Care</p>
                 </div>
               </div>
             </div>
 
-            {/* Quick Stats */}
+            {/* Quick Stats - Premium Glass Cards */}
             {stats && (
-              <div className="hidden md:flex items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
-                  <Activity className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    {stats.avgPain.toFixed(1)} avg
+              <div className="hidden md:flex items-center gap-3">
+                <div 
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl"
+                  style={{
+                    background: 'rgba(56, 189, 248, 0.1)',
+                    border: '1px solid rgba(56, 189, 248, 0.2)',
+                  }}
+                >
+                  <Activity className="h-4 w-4 text-sky-400" />
+                  <span className="text-sm font-semibold text-sky-300">
+                    {stats.avgPain.toFixed(1)} <span className="text-sky-400/70 font-normal">avg</span>
                   </span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
-                  <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                  <span className="text-sm font-medium text-purple-900 dark:text-purple-100">
-                    {stats.streak} day streak
+                <div 
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl"
+                  style={{
+                    background: 'rgba(168, 85, 247, 0.1)',
+                    border: '1px solid rgba(168, 85, 247, 0.2)',
+                  }}
+                >
+                  <Sparkles className="h-4 w-4 text-purple-400" />
+                  <span className="text-sm font-semibold text-purple-300">
+                    {stats.streak} <span className="text-purple-400/70 font-normal">day streak</span>
                   </span>
                 </div>
               </div>
@@ -118,29 +152,39 @@ export function ModernAppLayout({
             {/* Actions */}
             <div className="flex items-center gap-2">
               <Button
-                variant="default"
                 size="sm"
-                className="rounded-xl hidden sm:inline-flex mr-2"
+                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white font-medium transition-all duration-300 hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
+                  boxShadow: '0 4px 15px rgba(14, 165, 233, 0.3)',
+                }}
                 onClick={() => onNavigate?.('daily-checkin')}
               >
-                <Heart className="h-4 w-4 mr-2 text-white" />
+                <Heart className="h-4 w-4" />
                 Check-in
               </Button>
 
-              <Button variant="ghost" size="sm" className="rounded-xl" onClick={() => {}}>
+              <button 
+                className="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+                onClick={() => {}}
+              >
                 <Bell className="h-4 w-4" />
-              </Button>
+              </button>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                className="rounded-xl"
+              <button
+                className="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
                 onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
               >
                 {mode === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
+              </button>
 
-              <div className="p-2 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-green-500/30 transition-all">
+              <div 
+                className="p-2.5 rounded-xl cursor-pointer transition-all duration-300 hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                  boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)',
+                }}
+              >
                 <Shield className="h-4 w-4 text-white" />
               </div>
             </div>
@@ -148,13 +192,32 @@ export function ModernAppLayout({
         </div>
       </header>
 
-      {/* Sidebar - Desktop */}
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 lg:pt-16">
-        <div className="h-full px-4 py-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border-r border-gray-200/50 dark:border-gray-700/50">
-          <nav className="space-y-1">
+      {/* Sidebar - Desktop - Premium Dark Theme */}
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-72 lg:pt-16">
+        <div 
+          className="h-full px-4 py-6"
+          style={{
+            background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+            backdropFilter: 'blur(20px)',
+            borderRight: '1px solid rgba(255, 255, 255, 0.05)',
+          }}
+        >
+          <nav className="space-y-1.5">
             {navigation.map(item => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
+              
+              const colorMap: Record<string, { bg: string; border: string; text: string; glow: string }> = {
+                sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', text: '#38bdf8', glow: 'rgba(56, 189, 248, 0.2)' },
+                emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', text: '#34d399', glow: 'rgba(52, 211, 153, 0.2)' },
+                violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', text: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.2)' },
+                rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', text: '#f43f5e', glow: 'rgba(244, 63, 94, 0.2)' },
+                amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', text: '#f59e0b', glow: 'rgba(245, 158, 11, 0.2)' },
+                cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', text: '#22d3ee', glow: 'rgba(34, 211, 238, 0.2)' },
+                indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', text: '#6366f1', glow: 'rgba(99, 102, 241, 0.2)' },
+              };
+              
+              const colors = colorMap[item.color] || colorMap.sky;
 
               return (
                 <button
@@ -162,32 +225,71 @@ export function ModernAppLayout({
                   onClick={() => onNavigate?.(item.id)}
                   data-nav-target={item.id}
                   className={cn(
-                    'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
-                    isActive
-                      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/30'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300',
+                    isActive ? '' : 'text-slate-400 hover:text-white'
                   )}
+                  style={isActive ? {
+                    background: colors.bg,
+                    border: `1px solid ${colors.border}`,
+                    boxShadow: `0 4px 20px ${colors.glow}`,
+                    color: colors.text,
+                  } : {
+                    background: 'transparent',
+                    border: '1px solid transparent',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.borderColor = 'transparent';
+                    }
+                  }}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon
+                    <div 
                       className={cn(
-                        'h-5 w-5 transition-transform group-hover:scale-110',
-                        isActive ? 'text-white' : 'text-gray-500 dark:text-gray-400'
+                        'p-2 rounded-lg transition-all duration-300',
+                        isActive ? '' : 'group-hover:scale-110'
                       )}
-                    />
+                      style={isActive ? {
+                        background: colors.bg,
+                      } : {
+                        background: 'rgba(255, 255, 255, 0.05)',
+                      }}
+                    >
+                      <Icon
+                        className="h-4 w-4"
+                        style={{ color: isActive ? colors.text : 'currentColor' }}
+                      />
+                    </div>
                     <span>{item.name}</span>
                   </div>
-                  {item.badge && (
-                    <Badge variant="outline" className="rounded-full text-xs">
-                      {item.badge}
-                    </Badge>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {item.badge && (
+                      <span 
+                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                        style={{
+                          background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
+                          color: item.badge === 'New' ? '#34d399' : '#a855f7',
+                          border: item.badge === 'New' ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(168, 85, 247, 0.3)',
+                        }}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                    {isActive && <ChevronRight className="h-4 w-4 opacity-50" />}
+                  </div>
                 </button>
               );
             })}
           </nav>
 
-          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-8 pt-8" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
             <nav className="space-y-1">
               {bottomNavigation.map(item => {
                 const Icon = item.icon;
@@ -198,13 +300,13 @@ export function ModernAppLayout({
                     key={item.id}
                     onClick={() => onNavigate?.(item.id)}
                     className={cn(
-                      'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
+                      'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
                       isActive
-                        ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                        ? 'bg-white/10 text-white'
+                        : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'
                     )}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4" />
                     <span>{item.name}</span>
                   </button>
                 );
@@ -212,32 +314,74 @@ export function ModernAppLayout({
             </nav>
           </div>
 
-          {/* Quick Add Button */}
+          {/* Quick Add Button - Premium Gradient */}
           <div className="mt-8">
-            <Button
+            <button
               onClick={() => onNavigate?.('new-entry')}
-              className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-xl shadow-lg shadow-blue-500/30 transition-all hover:shadow-xl hover:shadow-blue-500/40"
+              className="group w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-white font-medium transition-all duration-300 hover:scale-[1.02]"
+              style={{
+                background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
+                boxShadow: '0 8px 25px rgba(14, 165, 233, 0.3)',
+              }}
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Zap className="h-4 w-4 transition-transform group-hover:scale-110" />
               Quick Entry
-            </Button>
+            </button>
+          </div>
+
+          {/* Pro Upgrade Banner */}
+          <div 
+            className="mt-6 p-4 rounded-xl"
+            style={{
+              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
+              border: '1px solid rgba(168, 85, 247, 0.2)',
+            }}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="h-4 w-4 text-purple-400" />
+              <span className="text-sm font-semibold text-purple-300">Upgrade to Pro</span>
+            </div>
+            <p className="text-xs text-slate-400 mb-3">Unlock AI insights, advanced analytics & more</p>
+            <button 
+              className="w-full py-2 rounded-lg text-xs font-medium text-purple-300 transition-colors hover:bg-purple-500/20"
+              style={{ border: '1px solid rgba(168, 85, 247, 0.3)' }}
+            >
+              Learn More
+            </button>
           </div>
         </div>
       </aside>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile Sidebar - Premium Dark */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           />
-          <aside className="fixed inset-y-0 left-0 w-64 bg-white dark:bg-gray-900 shadow-xl">
+          <aside 
+            className="fixed inset-y-0 left-0 w-72 shadow-2xl"
+            style={{
+              background: 'linear-gradient(180deg, #0f172a 0%, #020617 100%)',
+            }}
+          >
             <div className="h-full px-4 py-6 pt-20">
-              <nav className="space-y-1">
+              <nav className="space-y-1.5">
                 {navigation.map(item => {
                   const Icon = item.icon;
                   const isActive = currentView === item.id;
+                  
+                  const colorMap: Record<string, { bg: string; border: string; text: string }> = {
+                    sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', text: '#38bdf8' },
+                    emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', text: '#34d399' },
+                    violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', text: '#8b5cf6' },
+                    rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', text: '#f43f5e' },
+                    amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', text: '#f59e0b' },
+                    cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', text: '#22d3ee' },
+                    indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', text: '#6366f1' },
+                  };
+                  
+                  const colors = colorMap[item.color] || colorMap.sky;
 
                   return (
                     <button
@@ -249,19 +393,28 @@ export function ModernAppLayout({
                       data-nav-target={item.id}
                       className={cn(
                         'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all',
-                        isActive
-                          ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        isActive ? '' : 'text-slate-400'
                       )}
+                      style={isActive ? {
+                        background: colors.bg,
+                        border: `1px solid ${colors.border}`,
+                        color: colors.text,
+                      } : {}}
                     >
                       <div className="flex items-center gap-3">
                         <Icon className="h-5 w-5" />
                         <span>{item.name}</span>
                       </div>
                       {item.badge && (
-                        <Badge variant="outline" className="rounded-full text-xs">
+                        <span 
+                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                          style={{
+                            background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
+                            color: item.badge === 'New' ? '#34d399' : '#a855f7',
+                          }}
+                        >
                           {item.badge}
-                        </Badge>
+                        </span>
                       )}
                     </button>
                   );
@@ -273,14 +426,18 @@ export function ModernAppLayout({
       )}
 
       {/* Main Content */}
-      <main id="main-content" className="lg:pl-64 pt-16" tabIndex={-1}>
+      <main id="main-content" className="lg:pl-72 pt-16 relative" tabIndex={-1}>
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-8">{children}</div>
       </main>
 
-      {/* Floating Action Button - Mobile */}
+      {/* Floating Action Button - Mobile - Premium */}
       <button
         onClick={() => onNavigate?.('new-entry')}
-        className="lg:hidden fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full shadow-2xl shadow-blue-500/50 hover:shadow-blue-500/70 transition-all hover:scale-110"
+        className="lg:hidden fixed bottom-6 right-6 z-50 p-4 rounded-2xl transition-all duration-300 hover:scale-110"
+        style={{
+          background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
+          boxShadow: '0 8px 30px rgba(14, 165, 233, 0.4), 0 0 40px rgba(139, 92, 246, 0.2)',
+        }}
         aria-label="Quick pain entry"
       >
         <Plus className="h-6 w-6 text-white" />
@@ -290,17 +447,20 @@ export function ModernAppLayout({
       <button
         onClick={() => setPanicModeActive(true)}
         className={cn(
-          'fixed bottom-6 left-6 z-50',
+          'fixed bottom-24 right-6 z-50',
+          'lg:bottom-8 lg:right-8',
           'w-14 h-14 min-w-[56px] min-h-[56px]',
-          'bg-gradient-to-br from-purple-500 to-indigo-600',
-          'rounded-full shadow-2xl shadow-purple-500/50',
+          'rounded-2xl',
           'flex items-center justify-center',
           'text-white',
           'transition-all duration-300',
-          'hover:scale-110 hover:shadow-purple-500/70',
-          'focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2',
-          'lg:bottom-8 lg:left-8'
+          'hover:scale-110',
+          'focus:outline-none focus:ring-4 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-slate-900'
         )}
+        style={{
+          background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+          boxShadow: '0 8px 30px rgba(139, 92, 246, 0.4)',
+        }}
         aria-label="Activate calm breathing mode"
         title="Need a moment? Click for breathing guide"
       >

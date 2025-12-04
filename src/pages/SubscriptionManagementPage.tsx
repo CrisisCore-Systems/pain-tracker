@@ -16,6 +16,9 @@ import {
   Download,
   Settings,
   Shield,
+  Crown,
+  Sparkles,
+  ArrowLeft,
 } from 'lucide-react';
 import { useSubscription, useTierBadge } from '../contexts/SubscriptionContext';
 import { SUBSCRIPTION_PLANS, FEATURE_COMPARISON } from '../config/subscription-tiers';
@@ -108,72 +111,90 @@ export function SubscriptionManagementPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <RefreshCw className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-slate-600 dark:text-slate-400">Loading subscription...</p>
+          <RefreshCw className="w-12 h-12 animate-spin text-violet-500 mx-auto mb-4" />
+          <p className="text-slate-400">Loading subscription...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={() => navigate(-1)}
-            className="text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 mb-4"
+            className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-4 group"
           >
-            ← Back
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back
           </button>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-            Subscription Management
-          </h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-400">
-            Manage your Pain Tracker subscription and billing
-          </p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 border border-violet-500/30">
+              <Crown className="w-8 h-8 text-violet-400" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-white">
+                Subscription Management
+              </h1>
+              <p className="text-slate-400">
+                Manage your Pain Tracker subscription and billing
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Current Plan Card */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 mb-8">
+        <div 
+          className="rounded-2xl p-6 mb-8 border border-slate-700/50 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
+          }}
+        >
+          {/* Gradient accent line */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500" />
+          
           <div className="flex items-start justify-between mb-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Sparkles className="w-6 h-6 text-amber-400" />
                   {tierBadge.icon} {tierBadge.label} Plan
                 </h2>
                 {subscription?.status === 'trialing' && (
-                  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full text-sm font-medium border border-sky-500/30">
                     Trial
                   </span>
                 )}
                 {subscription?.cancelAtPeriodEnd && (
-                  <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                  <span className="px-3 py-1 bg-rose-500/20 text-rose-400 rounded-full text-sm font-medium border border-rose-500/30">
                     Canceling
                   </span>
                 )}
               </div>
-              <p className="text-slate-600 dark:text-slate-400">{currentPlan.tagline}</p>
+              <p className="text-slate-400">{currentPlan.tagline}</p>
             </div>
 
             <div className="text-right">
-              <div className="text-3xl font-bold text-slate-900 dark:text-white">
+              <div className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
                 {currentPlan.pricing.monthly.display}
               </div>
-              <div className="text-sm text-slate-500 dark:text-slate-400">per month</div>
+              <div className="text-sm text-slate-500">per month</div>
             </div>
           </div>
 
           {/* Subscription Details */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {subscription?.status === 'trialing' && subscription.trialEnd && (
-              <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <Calendar className="w-5 h-5 text-blue-600" />
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-sky-500/10 border border-sky-500/20">
+                <Calendar className="w-5 h-5 text-sky-400" />
                 <div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400">Trial Ends</div>
-                  <div className="font-semibold text-slate-900 dark:text-white">
+                  <div className="text-sm text-slate-400">Trial Ends</div>
+                  <div className="font-semibold text-white">
                     {getDaysRemaining(subscription.trialEnd)} days remaining
                   </div>
                 </div>
@@ -181,24 +202,24 @@ export function SubscriptionManagementPage() {
             )}
 
             {subscription?.currentPeriodEnd && (
-              <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                <Calendar className="w-5 h-5 text-slate-600" />
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+                <Calendar className="w-5 h-5 text-violet-400" />
                 <div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400">
+                  <div className="text-sm text-slate-400">
                     {subscription.cancelAtPeriodEnd ? 'Access Until' : 'Next Billing'}
                   </div>
-                  <div className="font-semibold text-slate-900 dark:text-white">
+                  <div className="font-semibold text-white">
                     {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-              <Shield className="w-5 h-5 text-slate-600" />
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+              <Shield className="w-5 h-5 text-emerald-400" />
               <div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">Encryption</div>
-                <div className="font-semibold text-slate-900 dark:text-white capitalize">
+                <div className="text-sm text-slate-400">Encryption</div>
+                <div className="font-semibold text-white capitalize">
                   {currentPlan.features.encryption}
                 </div>
               </div>
@@ -207,8 +228,9 @@ export function SubscriptionManagementPage() {
 
           {/* Usage Stats */}
           {subscription && (
-            <div className="border-t border-slate-200 dark:border-slate-700 pt-6">
-              <h3 className="font-semibold text-slate-900 dark:text-white mb-4">
+            <div className="border-t border-slate-700/50 pt-6">
+              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-cyan-400" />
                 Usage This Period
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -216,34 +238,41 @@ export function SubscriptionManagementPage() {
                   label="Pain Entries"
                   current={subscription.usage.painEntries}
                   limit={currentPlan.features.maxPainEntries}
+                  color="sky"
                 />
                 <UsageStat
                   label="Exports"
                   current={subscription.usage.exportCount}
                   limit={currentPlan.features.maxExportsPerMonth}
+                  color="violet"
                 />
                 <UsageStat
                   label="Storage"
                   current={subscription.usage.storageMB}
                   limit={currentPlan.features.maxStorageMB}
                   unit="MB"
+                  color="emerald"
                 />
                 <UsageStat
                   label="Shared Users"
                   current={0} // TODO: Implement shared user tracking
                   limit={currentPlan.features.maxSharedUsers}
+                  color="amber"
                 />
               </div>
             </div>
           )}
 
           {/* Actions */}
-          <div className="border-t border-slate-200 dark:border-slate-700 pt-6 mt-6">
+          <div className="border-t border-slate-700/50 pt-6 mt-6">
             <div className="flex flex-wrap gap-3">
               {currentTier !== 'enterprise' && (
                 <button
                   onClick={() => navigate('/pricing')}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40 hover:-translate-y-0.5"
+                  style={{
+                    background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)'
+                  }}
                 >
                   <TrendingUp className="w-4 h-4" />
                   Upgrade Plan
@@ -254,7 +283,10 @@ export function SubscriptionManagementPage() {
                 <button
                   onClick={handleReactivate}
                   disabled={processingAction === 'reactivate'}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-white disabled:opacity-50 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5"
+                  style={{
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                  }}
                 >
                   <RefreshCw className={`w-4 h-4 ${processingAction === 'reactivate' ? 'animate-spin' : ''}`} />
                   Reactivate Subscription
@@ -263,7 +295,7 @@ export function SubscriptionManagementPage() {
                 currentTier !== 'free' && (
                   <button
                     onClick={() => setShowCancelDialog(true)}
-                    className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-rose-400 border border-rose-500/30 hover:bg-rose-500/10 hover:-translate-y-0.5"
                   >
                     <X className="w-4 h-4" />
                     Cancel Subscription
@@ -273,7 +305,7 @@ export function SubscriptionManagementPage() {
 
               <button
                 onClick={() => navigate('/settings')}
-                className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-slate-300 border border-slate-600 hover:bg-slate-800 hover:-translate-y-0.5"
               >
                 <Settings className="w-4 h-4" />
                 Account Settings
@@ -283,15 +315,25 @@ export function SubscriptionManagementPage() {
         </div>
 
         {/* Feature Comparison */}
-        <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
+        <div 
+          className="rounded-2xl p-6 border border-slate-700/50 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
+          }}
+        >
+          {/* Gradient accent line */}
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-500" />
+          
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <Check className="w-6 h-6 text-emerald-400" />
             Your Plan Features
           </h2>
 
           <div className="space-y-6">
             {Object.entries(FEATURE_COMPARISON).map(([key, section]) => (
               <div key={key}>
-                <h3 className="font-semibold text-slate-900 dark:text-white mb-3">
+                <h3 className="font-semibold text-white mb-3 text-lg">
                   {section.category}
                 </h3>
                 <div className="space-y-2">
@@ -302,20 +344,20 @@ export function SubscriptionManagementPage() {
                     return (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50"
+                        className="flex items-center justify-between p-3 rounded-xl bg-slate-800/50 border border-slate-700/30 hover:border-slate-600/50 transition-colors"
                       >
-                        <span className="text-slate-700 dark:text-slate-300">{item.name}</span>
+                        <span className="text-slate-300">{item.name}</span>
                         <div className="flex items-center gap-2">
                           {hasFeature ? (
                             <>
-                              <Check className="w-5 h-5 text-green-600" />
-                              <span className="text-sm font-medium text-slate-900 dark:text-white">
+                              <Check className="w-5 h-5 text-emerald-400" />
+                              <span className="text-sm font-medium text-white">
                                 {typeof currentValue === 'boolean' ? 'Included' : currentValue}
                               </span>
                             </>
                           ) : (
                             <>
-                              <X className="w-5 h-5 text-slate-400" />
+                              <X className="w-5 h-5 text-slate-500" />
                               <span className="text-sm text-slate-500">Not Available</span>
                             </>
                           )}
@@ -332,15 +374,22 @@ export function SubscriptionManagementPage() {
 
       {/* Cancel Dialog */}
       {showCancelDialog && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div 
+            className="rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-700/50"
+            style={{
+              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 1) 100%)'
+            }}
+          >
             <div className="flex items-start gap-4 mb-4">
-              <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
+              <div className="p-2 rounded-lg bg-rose-500/20 border border-rose-500/30">
+                <AlertCircle className="w-6 h-6 text-rose-400" />
+              </div>
               <div>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-white mb-2">
                   Cancel Subscription?
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                <p className="text-slate-400 text-sm">
                   You will lose access to {tierBadge.label} features at the end of your billing period.
                   Your data will be retained according to the Free tier limits.
                 </p>
@@ -350,14 +399,17 @@ export function SubscriptionManagementPage() {
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowCancelDialog(false)}
-                className="px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="px-4 py-2 rounded-lg text-slate-300 border border-slate-600 hover:bg-slate-800 transition-colors"
               >
                 Keep Subscription
               </button>
               <button
                 onClick={handleCancel}
                 disabled={processingAction === 'cancel'}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                className="px-4 py-2 rounded-lg text-white disabled:opacity-50 transition-colors"
+                style={{
+                  background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
+                }}
               >
                 {processingAction === 'cancel' ? 'Canceling...' : 'Yes, Cancel'}
               </button>
@@ -375,25 +427,37 @@ interface UsageStatProps {
   current: number;
   limit: number;
   unit?: string;
+  color?: 'sky' | 'violet' | 'emerald' | 'amber';
 }
 
-function UsageStat({ label, current, limit, unit = '' }: UsageStatProps) {
+function UsageStat({ label, current, limit, unit = '', color = 'sky' }: UsageStatProps) {
   const percentage = limit === -1 ? 0 : Math.min(100, (current / limit) * 100);
   const isUnlimited = limit === -1;
 
+  const colorClasses = {
+    sky: { bar: 'from-sky-500 to-cyan-500', text: 'text-sky-400' },
+    violet: { bar: 'from-violet-500 to-purple-500', text: 'text-violet-400' },
+    emerald: { bar: 'from-emerald-500 to-green-500', text: 'text-emerald-400' },
+    amber: { bar: 'from-amber-500 to-yellow-500', text: 'text-amber-400' },
+  };
+
+  const getBarColor = () => {
+    if (percentage > 80) return 'from-rose-500 to-red-500';
+    if (percentage > 60) return 'from-amber-500 to-yellow-500';
+    return colorClasses[color].bar;
+  };
+
   return (
-    <div>
-      <div className="text-sm text-slate-600 dark:text-slate-400 mb-1">{label}</div>
-      <div className="font-semibold text-slate-900 dark:text-white">
-        {current} {unit} {!isUnlimited && `/ ${limit} ${unit}`}
-        {isUnlimited && <span className="text-green-600 ml-1">∞</span>}
+    <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/30">
+      <div className="text-sm text-slate-400 mb-1">{label}</div>
+      <div className="font-semibold text-white">
+        {current} {unit} {!isUnlimited && <span className="text-slate-500">/ {limit} {unit}</span>}
+        {isUnlimited && <span className={`ml-1 ${colorClasses[color].text}`}></span>}
       </div>
       {!isUnlimited && (
-        <div className="mt-2 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+        <div className="mt-2 h-2 bg-slate-700/50 rounded-full overflow-hidden">
           <div
-            className={`h-full transition-all ${
-              percentage > 80 ? 'bg-red-600' : percentage > 60 ? 'bg-yellow-600' : 'bg-green-600'
-            }`}
+            className={`h-full bg-gradient-to-r ${getBarColor()} transition-all rounded-full`}
             style={{ width: `${percentage}%` }}
           />
         </div>

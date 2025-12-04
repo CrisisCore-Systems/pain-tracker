@@ -7,8 +7,7 @@ import React from 'react';
 import { DataExportModal } from '../components/export/DataExportModal';
 import { InteractiveBodyMap } from '../components/body-mapping/InteractiveBodyMap';
 import { CrisisTestingDashboard } from '../components/accessibility/CrisisTestingDashboard';
-import { Card, CardHeader, CardTitle, CardContent } from '../design-system';
-import { Lock, Zap, DollarSign, Heart } from 'lucide-react';
+import { Lock, Zap, DollarSign, Heart, Shield, Sparkles, Check, X } from 'lucide-react';
 import type { PainEntry } from '../types';
 
 // Demo data for screenshots
@@ -30,7 +29,12 @@ const DEMO_PAIN_ENTRIES: PainEntry[] = [
  */
 export function ExportModalShowcase() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-8">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
+      </div>
       <DataExportModal
         isOpen={true}
         onClose={() => {}}
@@ -46,9 +50,14 @@ export function ExportModalShowcase() {
  */
 export function BodyMapShowcase() {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-8">
-      <div className="max-w-4xl w-full">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl" />
+      </div>
+      <div className="relative max-w-4xl w-full">
+        <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
           Pinpoint Your Pain Locations
         </h1>
         <InteractiveBodyMap
@@ -67,59 +76,86 @@ export function BodyMapShowcase() {
  */
 export function PrivacySettingsShowcase() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-8">
-      <Card className="max-w-2xl w-full shadow-2xl">
-        <CardHeader className="bg-gradient-to-r from-green-600 to-blue-600 text-white">
-          <CardTitle className="text-2xl">Privacy & Security</CardTitle>
-        </CardHeader>
-        <CardContent className="p-8 space-y-6">
-          <div className="flex items-start space-x-4 p-4 bg-green-50 rounded-lg border-2 border-green-200">
-            <Lock className="w-8 h-8 text-green-600 mt-1" />
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl" />
+      </div>
+      
+      <div 
+        className="relative max-w-2xl w-full rounded-2xl overflow-hidden border border-slate-700/50"
+        style={{
+          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+        }}
+      >
+        {/* Header */}
+        <div className="p-6 border-b border-slate-700/50">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30">
+              <Shield className="w-6 h-6 text-emerald-400" />
+            </div>
             <div>
-              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+              <h2 className="text-2xl font-bold text-white">Privacy & Security</h2>
+              <p className="text-slate-400">Your data is protected by design</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-6 space-y-4">
+          <div className="flex items-start gap-4 p-5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            <div className="p-2 rounded-lg bg-emerald-500/20">
+              <Lock className="w-6 h-6 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg text-white mb-1">
                 Local Storage Only
               </h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">
+              <p className="text-slate-400">
                 Your data is stored locally on your device using encrypted IndexedDB. We cannot
                 access your information even if we wanted to.
               </p>
             </div>
           </div>
 
-          <div className="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
-            <Lock className="w-8 h-8 text-blue-600 mt-1" />
+          <div className="flex items-start gap-4 p-5 rounded-xl bg-sky-500/10 border border-sky-500/20">
+            <div className="p-2 rounded-lg bg-sky-500/20">
+              <Lock className="w-6 h-6 text-sky-400" />
+            </div>
             <div>
-              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+              <h3 className="font-semibold text-lg text-white mb-1">
                 AES-256 Encryption
               </h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">
+              <p className="text-slate-400">
                 All sensitive pain data is encrypted using military-grade AES-256 encryption before
                 storage.
               </p>
             </div>
           </div>
 
-          <div className="flex items-start space-x-4 p-4 bg-purple-50 rounded-lg border-2 border-purple-200">
-            <Lock className="w-8 h-8 text-purple-600 mt-1" />
+          <div className="flex items-start gap-4 p-5 rounded-xl bg-violet-500/10 border border-violet-500/20">
+            <div className="p-2 rounded-lg bg-violet-500/20">
+              <Lock className="w-6 h-6 text-violet-400" />
+            </div>
             <div>
-              <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+              <h3 className="font-semibold text-lg text-white mb-1">
                 HIPAA Aligned
               </h3>
-              <p className="text-gray-700 dark:text-gray-300 mt-2">
+              <p className="text-slate-400">
                 Built with HIPAA compliance in mind, including audit trails and data protection
                 measures.
               </p>
             </div>
           </div>
 
-          <div className="text-center pt-4 border-t">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              <strong>Unlike cloud-based competitors,</strong> your medical data never leaves your
-              device.
+          <div className="text-center pt-4 mt-4 border-t border-slate-700/50">
+            <p className="text-slate-400">
+              <span className="text-emerald-400 font-medium">Unlike cloud-based competitors,</span> your medical data never leaves your device.
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
@@ -133,49 +169,79 @@ export function BenefitsGridShowcase() {
       icon: Lock,
       title: 'Privacy First',
       description: 'Local-only storage',
-      color: 'green',
+      gradient: 'from-emerald-500 to-green-500',
+      bgColor: 'bg-emerald-500/10',
+      borderColor: 'border-emerald-500/20',
+      iconColor: 'text-emerald-400',
     },
     {
       icon: Zap,
       title: 'One-Click Forms',
       description: 'WorkSafe BC ready',
-      color: 'blue',
+      gradient: 'from-sky-500 to-cyan-500',
+      bgColor: 'bg-sky-500/10',
+      borderColor: 'border-sky-500/20',
+      iconColor: 'text-sky-400',
     },
     {
       icon: DollarSign,
       title: 'Free Forever',
       description: 'No subscriptions',
-      color: 'purple',
+      gradient: 'from-violet-500 to-purple-500',
+      bgColor: 'bg-violet-500/10',
+      borderColor: 'border-violet-500/20',
+      iconColor: 'text-violet-400',
     },
     {
       icon: Heart,
       title: 'Clinical Grade',
       description: 'Evidence-based',
-      color: 'red',
+      gradient: 'from-rose-500 to-pink-500',
+      bgColor: 'bg-rose-500/10',
+      borderColor: 'border-rose-500/20',
+      iconColor: 'text-rose-400',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center p-8">
-      <div className="max-w-4xl w-full">
-        <h1 className="text-4xl font-bold text-center mb-12 text-white">Why Pain Tracker?</h1>
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/15 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-sky-500/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
+      </div>
+      
+      <div className="relative max-w-4xl w-full">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6">
+            <Sparkles className="w-4 h-4 text-violet-400" />
+            <span className="text-sm text-violet-300 font-medium">Why Choose Us</span>
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            Why Pain Tracker?
+          </h1>
+        </div>
+        
         <div className="grid grid-cols-2 gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
-              <Card key={index} className="bg-white shadow-xl">
-                <CardContent className="p-8 text-center">
-                  <div
-                    className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-${benefit.color}-100 mb-4`}
-                  >
-                    <Icon className={`w-8 h-8 text-${benefit.color}-600`} />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400">{benefit.description}</p>
-                </CardContent>
-              </Card>
+              <div 
+                key={index} 
+                className={`p-8 rounded-2xl ${benefit.bgColor} border ${benefit.borderColor} text-center transition-all hover:-translate-y-1`}
+                style={{
+                  boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
+                }}
+              >
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${benefit.gradient} mb-4 shadow-lg`}>
+                  <Icon className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-slate-400">{benefit.description}</p>
+              </div>
             );
           })}
         </div>
@@ -198,59 +264,97 @@ export function ComparisonGridShowcase() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 flex items-center justify-center p-8">
-      <Card className="max-w-4xl w-full shadow-2xl">
-        <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-          <CardTitle className="text-3xl text-center">Why Pay for Less?</CardTitle>
-        </CardHeader>
-        <CardContent className="p-8">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
+      </div>
+      
+      <div 
+        className="relative max-w-4xl w-full rounded-2xl overflow-hidden border border-slate-700/50"
+        style={{
+          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+        }}
+      >
+        {/* Header */}
+        <div 
+          className="p-6"
+          style={{
+            background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)',
+            borderBottom: '1px solid rgba(255,255,255,0.1)'
+          }}
+        >
+          <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+            Why Pay for Less?
+          </h2>
+        </div>
+        
+        <div className="p-8">
           <table className="w-full">
             <thead>
-              <tr className="border-b-2 border-gray-300 dark:border-gray-600">
-                <th className="text-left py-4 px-4 text-gray-900 dark:text-gray-100">Feature</th>
-                <th className="text-center py-4 px-4 text-blue-600 font-bold">Pain Tracker</th>
-                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">
+              <tr className="border-b border-slate-700/50">
+                <th className="text-left py-4 px-4 text-slate-300 font-medium">Feature</th>
+                <th className="text-center py-4 px-4">
+                  <span className="text-sky-400 font-bold">Pain Tracker</span>
+                </th>
+                <th className="text-center py-4 px-4 text-slate-500">
                   Competitor A
                 </th>
-                <th className="text-center py-4 px-4 text-gray-600 dark:text-gray-400">
+                <th className="text-center py-4 px-4 text-slate-500">
                   Competitor B
                 </th>
               </tr>
             </thead>
             <tbody>
               {features.map((item, index) => (
-                <tr key={index} className="border-b border-gray-200 dark:border-gray-700">
-                  <td className="py-4 px-4 text-gray-900 dark:text-gray-100">{item.feature}</td>
+                <tr key={index} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                  <td className="py-4 px-4 text-slate-300">{item.feature}</td>
                   <td className="text-center py-4 px-4">
                     {item.us ? (
-                      <span className="text-green-600 text-2xl">✓</span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20">
+                        <Check className="w-5 h-5 text-emerald-400" />
+                      </span>
                     ) : (
-                      <span className="text-red-400 text-2xl">✗</span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-700/50">
+                        <X className="w-5 h-5 text-slate-500" />
+                      </span>
                     )}
                   </td>
                   <td className="text-center py-4 px-4">
                     {item.competitor1 ? (
-                      <span className="text-green-600 text-2xl">✓</span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20">
+                        <Check className="w-5 h-5 text-emerald-400" />
+                      </span>
                     ) : (
-                      <span className="text-red-400 text-2xl">✗</span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-700/50">
+                        <X className="w-5 h-5 text-slate-500" />
+                      </span>
                     )}
                   </td>
                   <td className="text-center py-4 px-4">
                     {item.competitor2 ? (
-                      <span className="text-green-600 text-2xl">✓</span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20">
+                        <Check className="w-5 h-5 text-emerald-400" />
+                      </span>
                     ) : (
-                      <span className="text-red-400 text-2xl">✗</span>
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-slate-700/50">
+                        <X className="w-5 h-5 text-slate-500" />
+                      </span>
                     )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="text-center mt-8">
-            <p className="text-2xl font-bold text-blue-600">Get More for Free</p>
+          <div className="text-center mt-8 pt-6 border-t border-slate-700/50">
+            <p className="text-2xl font-bold bg-gradient-to-r from-sky-400 to-violet-400 bg-clip-text text-transparent">
+              Get More for Free
+            </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
@@ -260,7 +364,7 @@ export function ComparisonGridShowcase() {
  */
 export function CrisisSupportShowcase() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-slate-900">
       <CrisisTestingDashboard />
     </div>
   );
