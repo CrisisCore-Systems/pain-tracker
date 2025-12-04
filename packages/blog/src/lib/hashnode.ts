@@ -365,3 +365,102 @@ export async function getRelatedPosts(
     return [];
   }
 }
+
+// ============================================================================
+// Newsletter Subscription
+// ============================================================================
+
+const SUBSCRIBE_TO_NEWSLETTER = gql`
+  mutation SubscribeToNewsletter($input: SubscribeToNewsletterInput!) {
+    subscribeToNewsletter(input: $input) {
+      status
+    }
+  }
+`;
+
+const GET_PUBLICATION_ID = gql`
+  query GetPublicationId($host: String!) {
+    publication(host: $host) {
+      id
+    }
+  }
+`;
+
+export type NewsletterSubscribeStatus = 'PENDING' | 'CONFIRMED';
+
+export interface SubscribeResult {
+  success: boolean;
+  status?: NewsletterSubscribeStatus;
+  error?: string;
+}
+
+/**
+ * Get publication ID (needed for newsletter subscription)
+ */
+export async function getPublicationId(): Promise<string | null> {
+  try {
+    const data = await client.request<{ publication: { id: string } }>(
+      GET_PUBLICATION_ID,
+      { host }
+    );
+    return data.publication.id;
+  } catch (error) {
+    console.error('Failed to fetch publication ID:', error);
+    return null;
+  }
+}
+
+/**
+ * Subscribe email to newsletter
+ */
+export async function subscribeToNewsletter(
+  email: string
+): Promise<SubscribeResult> {
+  try {
+    const publicationId = await getPublicationId();
+    
+    if (!publicationId) {
+      return { 
+        success: false, 
+        error: 'Could not find publication. Please try again later.' 
+      };
+    }
+
+    const data = await client.request<{
+      subscribeToNewsletter: { status: NewsletterSubscribeStatus };
+    }>(SUBSCRIBE_TO_NEWSLETTER, {
+      input: {
+        publicationId,
+        email,
+      },
+    });
+
+    return {
+      success: true,
+      status: data.subscribeToNewsletter.status,
+    };
+  } catch (error: unknown) {
+    console.error('Failed to subscribe to newsletter:', error);
+    
+    // Handle specific GraphQL errors
+    if (error instanceof Error) {
+      if (error.message.includes('already subscribed')) {
+        return { 
+          success: false, 
+          error: "You're already subscribed! Check your inbox." 
+        };
+      }
+      if (error.message.includes('invalid email')) {
+        return { 
+          success: false, 
+          error: 'Please enter a valid email address.' 
+        };
+      }
+    }
+    
+    return { 
+      success: false, 
+      error: 'Something went wrong. Please try again.' 
+    };
+  }
+}

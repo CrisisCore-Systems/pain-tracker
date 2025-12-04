@@ -9,41 +9,168 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, featured = false }: PostCardProps) {
+  if (featured) {
+    return (
+      <article className="group relative">
+        <div className="card card-featured card-interactive overflow-hidden md:grid md:grid-cols-2">
+          {/* Cover Image */}
+          {post.coverImage && (
+            <Link
+              href={`/blog/${post.slug}`}
+              className="relative block overflow-hidden aspect-[4/3] md:aspect-auto md:min-h-[400px]"
+            >
+              <Image
+                src={post.coverImage.url}
+                alt={post.title}
+                fill
+                className="object-cover transition-all duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+              />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-black/10" />
+              
+              {/* Mobile title overlay */}
+              <div className="absolute inset-0 flex items-end p-6 md:hidden">
+                <h2 className="text-2xl font-bold text-white leading-tight drop-shadow-lg">
+                  {post.title}
+                </h2>
+              </div>
+            </Link>
+          )}
+
+          {/* Content */}
+          <div className="flex flex-col p-6 md:p-10 md:py-12">
+            {/* Tags */}
+            {post.tags && post.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-5">
+                {post.tags.slice(0, 3).map((tag) => (
+                  <Link
+                    key={tag.slug}
+                    href={`/tag/${tag.slug}`}
+                    className={`tag ${getTagColor(tag.name)}`}
+                  >
+                    {tag.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {/* Title - hidden on mobile since shown on image */}
+            <h2 className="hidden md:block text-2xl lg:text-3xl xl:text-4xl font-bold leading-tight mb-5">
+              <Link
+                href={`/blog/${post.slug}`}
+                className="hover:text-primary transition-colors duration-300"
+              >
+                {post.title}
+              </Link>
+            </h2>
+
+            {/* Brief */}
+            <p className="text-muted-foreground text-base md:text-lg mb-6 flex-1 line-clamp-3 md:line-clamp-4 leading-relaxed">
+              {post.brief}
+            </p>
+
+            {/* Author & Meta */}
+            <div className="flex items-center justify-between pt-6 border-t border-border/50">
+              <div className="flex items-center gap-4">
+                {post.author.profilePicture && (
+                  <div className="relative">
+                    <Image
+                      src={post.author.profilePicture}
+                      alt={post.author.name}
+                      width={48}
+                      height={48}
+                      className="rounded-full"
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-success border-2 border-card flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                <div>
+                  <p className="font-semibold text-foreground">{post.author.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatDate(post.publishedAt)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Read time badge */}
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-muted text-sm font-medium">
+                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {formatReadingTime(post.readTimeInMinutes)}
+              </div>
+            </div>
+
+            {/* Read More Link */}
+            <Link
+              href={`/blog/${post.slug}`}
+              className="mt-6 inline-flex items-center gap-2 text-primary font-semibold group/link"
+            >
+              Read full article
+              <svg 
+                className="w-5 h-5 transition-transform group-hover/link:translate-x-2" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </article>
+    );
+  }
+
+  // Regular card
   return (
-    <article
-      className={`card overflow-hidden ${
-        featured ? 'md:grid md:grid-cols-2 md:gap-6' : 'flex flex-col'
-      }`}
-    >
+    <article className="card card-interactive flex flex-col h-full group">
       {/* Cover Image */}
       {post.coverImage && (
         <Link
           href={`/blog/${post.slug}`}
-          className={`relative block overflow-hidden ${
-            featured ? 'aspect-[16/10] md:aspect-auto' : 'aspect-[16/9]'
-          }`}
+          className="relative block overflow-hidden aspect-[16/10] rounded-t-2xl"
         >
           <Image
             src={post.coverImage.url}
             alt={post.title}
             fill
-            className="object-cover transition-transform duration-300 hover:scale-105"
-            sizes={featured ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'}
-            priority={featured}
+            className="object-cover transition-all duration-700 group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
+          {/* Hover overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+          
+          {/* Read more on hover */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+            <span className="px-6 py-3 rounded-full bg-white/95 text-foreground font-semibold text-sm shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+              Read Article →
+            </span>
+          </div>
+
+          {/* Read time badge */}
+          <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm text-white text-xs font-medium">
+            {formatReadingTime(post.readTimeInMinutes)}
+          </div>
         </Link>
       )}
 
       {/* Content */}
-      <div className={`flex flex-col ${post.coverImage ? 'p-6' : 'p-6'}`}>
+      <div className="flex flex-col flex-1 p-6">
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-3">
-            {post.tags.slice(0, 3).map((tag) => (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {post.tags.slice(0, 2).map((tag) => (
               <Link
                 key={tag.slug}
                 href={`/tag/${tag.slug}`}
-                className={`tag ${getTagColor(tag.name)}`}
+                className={`tag text-[10px] ${getTagColor(tag.name)}`}
               >
                 {tag.name}
               </Link>
@@ -52,51 +179,32 @@ export function PostCard({ post, featured = false }: PostCardProps) {
         )}
 
         {/* Title */}
-        <h2
-          className={`font-bold leading-tight mb-2 ${
-            featured ? 'text-2xl md:text-3xl' : 'text-xl'
-          }`}
-        >
-          <Link
-            href={`/blog/${post.slug}`}
-            className="hover:text-primary transition-colors"
-          >
+        <h2 className="text-xl font-bold leading-snug mb-3 line-clamp-2 group-hover:text-primary transition-colors duration-300">
+          <Link href={`/blog/${post.slug}`}>
             {post.title}
           </Link>
         </h2>
 
         {/* Brief */}
-        <p className="text-muted-foreground mb-4 line-clamp-3 flex-1">
+        <p className="text-muted-foreground text-sm mb-5 flex-1 line-clamp-3 leading-relaxed">
           {post.brief}
         </p>
 
-        {/* Meta */}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          {/* Author */}
-          <div className="flex items-center gap-2">
-            {post.author.profilePicture && (
-              <Image
-                src={post.author.profilePicture}
-                alt={post.author.name}
-                width={24}
-                height={24}
-                className="rounded-full"
-              />
-            )}
-            <span>{post.author.name}</span>
+        {/* Author */}
+        <div className="flex items-center gap-3 pt-5 border-t border-border/50">
+          {post.author.profilePicture && (
+            <Image
+              src={post.author.profilePicture}
+              alt={post.author.name}
+              width={36}
+              height={36}
+              className="rounded-full ring-2 ring-background shadow-md"
+            />
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-sm text-foreground truncate">{post.author.name}</p>
+            <p className="text-xs text-muted-foreground">{formatDate(post.publishedAt)}</p>
           </div>
-
-          {/* Separator */}
-          <span aria-hidden="true">•</span>
-
-          {/* Date */}
-          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-
-          {/* Separator */}
-          <span aria-hidden="true">•</span>
-
-          {/* Read Time */}
-          <span>{formatReadingTime(post.readTimeInMinutes)}</span>
         </div>
       </div>
     </article>
@@ -109,43 +217,45 @@ export function PostCard({ post, featured = false }: PostCardProps) {
 export function PostCardSkeleton({ featured = false }: { featured?: boolean }) {
   return (
     <div
-      className={`card overflow-hidden animate-pulse ${
-        featured ? 'md:grid md:grid-cols-2 md:gap-6' : 'flex flex-col'
+      className={`card overflow-hidden ${
+        featured ? 'md:grid md:grid-cols-2' : 'flex flex-col'
       }`}
     >
       {/* Cover Image Skeleton */}
       <div
-        className={`bg-muted ${
-          featured ? 'aspect-[16/10] md:aspect-auto md:min-h-[300px]' : 'aspect-[16/9]'
+        className={`animate-shimmer ${
+          featured ? 'aspect-[4/3] md:aspect-auto md:min-h-[400px]' : 'aspect-[16/10]'
         }`}
       />
 
       {/* Content Skeleton */}
-      <div className="p-6 space-y-4">
+      <div className={`p-6 ${featured ? 'md:p-10' : ''} space-y-4`}>
         {/* Tags */}
         <div className="flex gap-2">
-          <div className="h-5 w-16 bg-muted rounded-full" />
-          <div className="h-5 w-20 bg-muted rounded-full" />
+          <div className="h-6 w-20 animate-shimmer rounded-full" />
+          <div className="h-6 w-24 animate-shimmer rounded-full" />
         </div>
 
         {/* Title */}
         <div className="space-y-2">
-          <div className="h-6 bg-muted rounded w-3/4" />
-          <div className="h-6 bg-muted rounded w-1/2" />
+          <div className={`h-7 animate-shimmer rounded-lg w-full ${featured ? 'md:h-9' : ''}`} />
+          <div className={`h-7 animate-shimmer rounded-lg w-3/4 ${featured ? 'md:h-9' : ''}`} />
         </div>
 
         {/* Brief */}
-        <div className="space-y-2">
-          <div className="h-4 bg-muted rounded w-full" />
-          <div className="h-4 bg-muted rounded w-full" />
-          <div className="h-4 bg-muted rounded w-2/3" />
+        <div className="space-y-2 pt-2">
+          <div className="h-4 animate-shimmer rounded w-full" />
+          <div className="h-4 animate-shimmer rounded w-full" />
+          <div className="h-4 animate-shimmer rounded w-2/3" />
         </div>
 
-        {/* Meta */}
-        <div className="flex items-center gap-4">
-          <div className="h-6 w-6 bg-muted rounded-full" />
-          <div className="h-4 w-24 bg-muted rounded" />
-          <div className="h-4 w-20 bg-muted rounded" />
+        {/* Author */}
+        <div className="flex items-center gap-4 pt-6 border-t border-border/50">
+          <div className="h-12 w-12 animate-shimmer rounded-full" />
+          <div className="space-y-2">
+            <div className="h-4 w-32 animate-shimmer rounded" />
+            <div className="h-3 w-24 animate-shimmer rounded" />
+          </div>
         </div>
       </div>
     </div>
