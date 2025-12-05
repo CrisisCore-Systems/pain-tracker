@@ -339,7 +339,7 @@ export const UseCases: React.FC = () => {
             </h2>
             
             <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Save <span className="text-emerald-400 font-semibold">25+ hours per week</span> with AI-powered insights and automated reporting.
+              Streamline documentation with <span className="text-emerald-400 font-semibold">pattern analysis</span> and one-click report generation.
             </p>
           </div>
 
@@ -355,15 +355,15 @@ export const UseCases: React.FC = () => {
               <div className="grid grid-cols-3 gap-8 text-center">
                 <div>
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
-                    <AnimatedCounter end={8} />
+                    <AnimatedCounter end={10} suffix="+" />
                   </div>
-                  <p className="text-slate-400 text-sm">AI Algorithms</p>
+                  <p className="text-slate-400 text-sm">Analysis Algorithms</p>
                 </div>
                 <div>
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
                     <AnimatedCounter end={25} suffix="+" />
                   </div>
-                  <p className="text-slate-400 text-sm">Hours Saved/Week</p>
+                  <p className="text-slate-400 text-sm">Body Locations</p>
                 </div>
                 <div>
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
