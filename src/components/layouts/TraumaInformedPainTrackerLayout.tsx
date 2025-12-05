@@ -233,12 +233,14 @@ export function TraumaInformedPainTrackerLayout({
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
             <div className="flex items-center space-x-2 sm:space-x-4">
-              <PainTrackerIcon size={32} className="sm:w-10 sm:h-10" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
+                <PainTrackerIcon className="w-full h-full" />
+              </div>
               <div>
                 <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">
                   Pain Tracker Pro
                 </h1>
-                <div className="text-xs leading-tight sm:text-xs sm:leading-normal text-muted-foreground font-medium tracking-wider uppercase hidden xs:block">
+                <div className="text-xs leading-tight sm:leading-normal text-muted-foreground font-medium tracking-wider uppercase hidden xs:block">
                   AI-Powered Pain Management
                 </div>
               </div>

@@ -380,6 +380,30 @@ const BODY_REGIONS: BodyRegion[] = [
   },
 ];
 
+// Color classes mapping for body region categories - defined outside component to avoid recreation
+const CATEGORY_COLOR_CLASSES: Record<string, { bg: string; border: string; text: string }> = {
+  purple: {
+    bg: 'bg-purple-50 dark:bg-purple-900/20',
+    border: 'border-purple-200 dark:border-purple-800',
+    text: 'text-purple-700 dark:text-purple-400',
+  },
+  blue: {
+    bg: 'bg-blue-50 dark:bg-blue-900/20',
+    border: 'border-blue-200 dark:border-blue-800',
+    text: 'text-blue-700 dark:text-blue-400',
+  },
+  green: {
+    bg: 'bg-green-50 dark:bg-green-900/20',
+    border: 'border-green-200 dark:border-green-800',
+    text: 'text-green-700 dark:text-green-400',
+  },
+  orange: {
+    bg: 'bg-orange-50 dark:bg-orange-900/20',
+    border: 'border-orange-200 dark:border-orange-800',
+    text: 'text-orange-700 dark:text-orange-400',
+  },
+};
+
 export function InteractiveBodyMap({
   entries = [],
   selectedRegions = [],
@@ -1047,31 +1071,7 @@ export function InteractiveBodyMap({
                       ([id]) => BODY_REGIONS.find(r => r.id === id)?.category === category
                     ).length;
 
-              // Use explicit class mapping to ensure Tailwind purging works correctly
-              const colorClasses: Record<string, { bg: string; border: string; text: string }> = {
-                purple: {
-                  bg: 'bg-purple-50 dark:bg-purple-900/20',
-                  border: 'border-purple-200 dark:border-purple-800',
-                  text: 'text-purple-700 dark:text-purple-400',
-                },
-                blue: {
-                  bg: 'bg-blue-50 dark:bg-blue-900/20',
-                  border: 'border-blue-200 dark:border-blue-800',
-                  text: 'text-blue-700 dark:text-blue-400',
-                },
-                green: {
-                  bg: 'bg-green-50 dark:bg-green-900/20',
-                  border: 'border-green-200 dark:border-green-800',
-                  text: 'text-green-700 dark:text-green-400',
-                },
-                orange: {
-                  bg: 'bg-orange-50 dark:bg-orange-900/20',
-                  border: 'border-orange-200 dark:border-orange-800',
-                  text: 'text-orange-700 dark:text-orange-400',
-                },
-              };
-
-              const classes = colorClasses[color] || colorClasses.blue;
+              const classes = CATEGORY_COLOR_CLASSES[color] || CATEGORY_COLOR_CLASSES.blue;
 
               return (
                 <div
