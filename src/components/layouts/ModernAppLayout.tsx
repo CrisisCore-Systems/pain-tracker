@@ -250,10 +250,10 @@ export function ModernAppLayout({
                     }
                   }}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <div 
                       className={cn(
-                        'p-2 rounded-lg transition-all duration-300',
+                        'p-2 rounded-lg transition-all duration-300 flex-shrink-0',
                         isActive ? '' : 'group-hover:scale-110'
                       )}
                       style={isActive ? {
@@ -267,12 +267,12 @@ export function ModernAppLayout({
                         style={{ color: isActive ? colors.text : 'currentColor' }}
                       />
                     </div>
-                    <span>{item.name}</span>
+                    <span className="truncate">{item.name}</span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-shrink-0">
                     {item.badge && (
                       <span 
-                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
                         style={{
                           background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
                           color: item.badge === 'New' ? '#34d399' : '#a855f7',
@@ -401,13 +401,13 @@ export function ModernAppLayout({
                         color: colors.text,
                       } : {}}
                     >
-                      <div className="flex items-center gap-3">
-                        <Icon className="h-5 w-5" />
-                        <span>{item.name}</span>
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
+                        <Icon className="h-5 w-5 flex-shrink-0" />
+                        <span className="truncate">{item.name}</span>
                       </div>
                       {item.badge && (
                         <span 
-                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0"
                           style={{
                             background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
                             color: item.badge === 'New' ? '#34d399' : '#a855f7',
