@@ -18,6 +18,12 @@ import {
   BarChart3,
   MessageCircle,
   Lightbulb,
+  Clock,
+  Sun,
+  Moon,
+  Sunrise,
+  Sunset,
+  AlertTriangle,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge } from '../../design-system';
@@ -37,6 +43,12 @@ import {
   describeImprovementRate,
   generateHumanizedSummary,
   getTimeBasedGreeting,
+  // New pattern analysis functions
+  analyzeTimeOfDayPatterns,
+  analyzeDayOfWeekPatterns,
+  analyzeTriggerPatterns,
+  generateComparativeInsight,
+  getEnhancedGreeting,
 } from '../../utils/humanize';
 
 // Premium stat card data for consistent styling
@@ -57,9 +69,6 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [showActions, setShowActions] = useState(false);
   const { clearAllData } = usePainTrackerStore();
-
-  // Time-based greeting
-  const greeting = useMemo(() => getTimeBasedGreeting(), []);
 
   // Calculate metrics with humanized descriptions
   const metrics = useMemo(() => {
@@ -130,6 +139,13 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
       activeEntries.length
     );
 
+    // NEW: Advanced pattern analysis
+    const timeOfDayPatterns = analyzeTimeOfDayPatterns(activeEntries);
+    const dayOfWeekPatterns = analyzeDayOfWeekPatterns(activeEntries);
+    const triggerPatterns = analyzeTriggerPatterns(activeEntries);
+    const weekComparison = generateComparativeInsight(recentEntries, olderEntries);
+    const enhancedGreeting = getEnhancedGreeting(activeEntries);
+
     return {
       avgPainRecent,
       avgPainOlder,
@@ -149,6 +165,12 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
       bestDayDescription,
       worstDayDescription,
       humanSummary,
+      // NEW: Pattern analysis
+      timeOfDayPatterns,
+      dayOfWeekPatterns,
+      triggerPatterns,
+      weekComparison,
+      enhancedGreeting,
     };
   }, [entries]);
 
@@ -259,9 +281,12 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
               </div>
               <div>
                 <h2 className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                  {greeting.greeting}
+                  {metrics.enhancedGreeting.greeting}
                 </h2>
-                <p className="text-sm text-slate-400">{greeting.suggestion}</p>
+                <p className="text-sm text-slate-400">{metrics.enhancedGreeting.personalizedMessage}</p>
+                {metrics.enhancedGreeting.dataInsight && (
+                  <p className="text-xs text-sky-400 mt-1">{metrics.enhancedGreeting.dataInsight}</p>
+                )}
               </div>
             </div>
 
@@ -447,6 +472,177 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
                 </div>
               </div>
             </div>
+
+            {/* NEW: Pattern Analysis Section */}
+            {(metrics.timeOfDayPatterns.hasEnoughData || metrics.dayOfWeekPatterns.hasEnoughData || metrics.triggerPatterns.hasEnoughData) && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <Clock className="h-5 w-5 text-purple-400" />
+                  <h3 className="text-lg font-semibold text-white">Pattern Insights</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Time of Day Patterns */}
+                  {metrics.timeOfDayPatterns.hasEnoughData && (
+                    <div className="glass-card-premium p-5 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-transparent" />
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-lg bg-gradient-to-br from-orange-400 to-amber-600 shadow-lg shadow-orange-500/30">
+                            {metrics.timeOfDayPatterns.worstTimeOfDay?.includes('Morning') ? <Sunrise className="h-4 w-4 text-white" /> :
+                             metrics.timeOfDayPatterns.worstTimeOfDay?.includes('Evening') ? <Sunset className="h-4 w-4 text-white" /> :
+                             metrics.timeOfDayPatterns.worstTimeOfDay?.includes('Night') ? <Moon className="h-4 w-4 text-white" /> :
+                             <Sun className="h-4 w-4 text-white" />}
+                          </div>
+                          <h4 className="text-sm font-semibold text-orange-300">Time of Day</h4>
+                        </div>
+                        <p className="text-slate-300 text-sm leading-relaxed mb-3">
+                          {metrics.timeOfDayPatterns.insight}
+                        </p>
+                        {metrics.timeOfDayPatterns.bestTimeOfDay && metrics.timeOfDayPatterns.worstTimeOfDay && (
+                          <div className="flex gap-4 text-xs">
+                            <div className="flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                              <span className="text-slate-400">Best: {metrics.timeOfDayPatterns.bestTimeOfDay.split(' ')[0]}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                              <span className="text-slate-400">Tough: {metrics.timeOfDayPatterns.worstTimeOfDay.split(' ')[0]}</span>
+                            </div>
+                          </div>
+                        )}
+                        <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-700/50">
+                          {metrics.timeOfDayPatterns.recommendation}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Day of Week Patterns */}
+                  {metrics.dayOfWeekPatterns.hasEnoughData && (
+                    <div className="glass-card-premium p-5 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent" />
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-600 shadow-lg shadow-blue-500/30">
+                            <Calendar className="h-4 w-4 text-white" />
+                          </div>
+                          <h4 className="text-sm font-semibold text-blue-300">Weekly Rhythm</h4>
+                        </div>
+                        <p className="text-slate-300 text-sm leading-relaxed mb-3">
+                          {metrics.dayOfWeekPatterns.insight}
+                        </p>
+                        {metrics.dayOfWeekPatterns.bestDay && metrics.dayOfWeekPatterns.worstDay && (
+                          <div className="flex gap-4 text-xs">
+                            <div className="flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                              <span className="text-slate-400">Best: {metrics.dayOfWeekPatterns.bestDay}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                              <span className="text-slate-400">Tough: {metrics.dayOfWeekPatterns.worstDay}</span>
+                            </div>
+                          </div>
+                        )}
+                        {metrics.dayOfWeekPatterns.weekdayAvg !== null && metrics.dayOfWeekPatterns.weekendAvg !== null && (
+                          <div className="flex gap-4 text-xs mt-2">
+                            <span className="text-slate-500">Weekday avg: {metrics.dayOfWeekPatterns.weekdayAvg.toFixed(1)}</span>
+                            <span className="text-slate-500">Weekend avg: {metrics.dayOfWeekPatterns.weekendAvg.toFixed(1)}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Trigger Patterns */}
+                  {metrics.triggerPatterns.hasEnoughData && (
+                    <div className="glass-card-premium p-5 relative overflow-hidden group">
+                      <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent" />
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2 rounded-lg bg-gradient-to-br from-red-400 to-rose-600 shadow-lg shadow-red-500/30">
+                            <AlertTriangle className="h-4 w-4 text-white" />
+                          </div>
+                          <h4 className="text-sm font-semibold text-red-300">Trigger Analysis</h4>
+                        </div>
+                        <p className="text-slate-300 text-sm leading-relaxed mb-3">
+                          {metrics.triggerPatterns.insight}
+                        </p>
+                        {metrics.triggerPatterns.correlations.length > 0 && (
+                          <div className="space-y-2">
+                            {metrics.triggerPatterns.correlations.slice(0, 3).map((corr) => (
+                              <div key={corr.trigger} className="flex items-center justify-between text-xs">
+                                <span className="text-slate-400 capitalize">{corr.trigger}</span>
+                                <Badge className={cn(
+                                  "text-xs px-2 py-0.5",
+                                  corr.impact === 'strong' ? "bg-red-500/20 text-red-300" :
+                                  corr.impact === 'moderate' ? "bg-amber-500/20 text-amber-300" :
+                                  "bg-slate-500/20 text-slate-300"
+                                )}>
+                                  {corr.impact}
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Week Comparison Card */}
+                {metrics.weekComparison && (
+                  <div className={cn(
+                    "glass-card-premium p-5 border-l-4",
+                    metrics.weekComparison.trend === 'better' ? "border-l-emerald-500" :
+                    metrics.weekComparison.trend === 'worse' ? "border-l-amber-500" :
+                    "border-l-slate-500"
+                  )}>
+                    <div className="flex items-start gap-4">
+                      <div className={cn(
+                        "p-2.5 rounded-xl shadow-lg shrink-0",
+                        metrics.weekComparison.trend === 'better' 
+                          ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-500/30"
+                          : metrics.weekComparison.trend === 'worse'
+                            ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-amber-500/30"
+                            : "bg-gradient-to-br from-slate-400 to-slate-600 shadow-slate-500/30"
+                      )}>
+                        {metrics.weekComparison.trend === 'better' ? (
+                          <TrendingDown className="h-5 w-5 text-white" />
+                        ) : metrics.weekComparison.trend === 'worse' ? (
+                          <TrendingUp className="h-5 w-5 text-white" />
+                        ) : (
+                          <Minus className="h-5 w-5 text-white" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className={cn(
+                          "text-sm font-semibold mb-1",
+                          metrics.weekComparison.trend === 'better' ? "text-emerald-300" :
+                          metrics.weekComparison.trend === 'worse' ? "text-amber-300" :
+                          "text-slate-300"
+                        )}>
+                          Week-over-Week Comparison
+                        </h4>
+                        <p className="text-slate-300 text-sm leading-relaxed">{metrics.weekComparison.humanized}</p>
+                        <p className="text-slate-400 text-xs mt-2">{metrics.weekComparison.encouragement}</p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <div className={cn(
+                          "text-2xl font-bold",
+                          metrics.weekComparison.trend === 'better' ? "text-emerald-400" :
+                          metrics.weekComparison.trend === 'worse' ? "text-amber-400" :
+                          "text-slate-400"
+                        )}>
+                          {metrics.weekComparison.changePercent > 0 ? '+' : ''}{metrics.weekComparison.changePercent.toFixed(0)}%
+                        </div>
+                        <div className="text-xs text-slate-500">vs last week</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Pain Trend Chart - Premium Glass */}
             <div className="glass-card-premium p-6 lg:p-8">
