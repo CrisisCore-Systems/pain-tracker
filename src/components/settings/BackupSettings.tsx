@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { Button } from '../../design-system';
 import { secureStorage } from '../../lib/storage/secureStorage';
+
+// Glassmorphism card styling
+const glassCardStyle = {
+  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+};
 
 function downloadJSON(filename: string, data: string) {
   try {
@@ -76,32 +81,51 @@ export default function BackupSettings() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Backup & Export</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Create a local backup of your data or import an existing backup JSON file. Be cautious
-            when importing backups; this may overwrite local data.
-          </p>
+    <div className="rounded-xl p-5" style={glassCardStyle}>
+      <h4 className="font-semibold text-white mb-4">Local Backup</h4>
+      <div className="space-y-4">
+        <p className="text-sm text-slate-400">
+          Create a local backup of your data or import an existing backup JSON file. Be cautious
+          when importing backups; this may overwrite local data.
+        </p>
 
-          <div className="flex items-center gap-3">
-            <Button onClick={handleExport} variant="secondary">
-              Export backup
-            </Button>
-            <label className="cursor-pointer">
-              <input type="file" accept="application/json" onChange={handleFileInput} className="hidden" />
-              <Button variant="ghost">Import backup</Button>
-            </label>
-          </div>
-
-          {lastExport && <div className="text-xs text-muted-foreground">Last export: {lastExport}</div>}
-          {importError && <div className="text-xs text-red-500">{importError}</div>}
-          {importResult && <div className="text-xs text-green-500">{importResult}</div>}
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={handleExport}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+            style={{
+              background: 'rgba(139, 92, 246, 0.15)',
+              border: '1px solid rgba(139, 92, 246, 0.3)',
+              color: '#a78bfa',
+            }}
+          >
+            Export backup
+          </button>
+          <label className="cursor-pointer">
+            <input type="file" accept="application/json" onChange={handleFileInput} className="hidden" />
+            <span
+              className="inline-block px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#94a3b8',
+              }}
+            >
+              Import backup
+            </span>
+          </label>
         </div>
-      </CardContent>
-    </Card>
+
+        {lastExport && (
+          <div className="text-xs text-slate-500">Last export: {new Date(lastExport).toLocaleString()}</div>
+        )}
+        {importError && (
+          <div className="text-xs text-red-400">{importError}</div>
+        )}
+        {importResult && (
+          <div className="text-xs text-emerald-400">{importResult}</div>
+        )}
+      </div>
+    </div>
   );
 }

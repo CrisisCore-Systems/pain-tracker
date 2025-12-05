@@ -6,7 +6,8 @@ describe('BackupSettings', () => {
   it('renders and performs export', async () => {
     render(<BackupSettings />);
 
-    expect(screen.getByText(/Backup & Export/i)).toBeInTheDocument();
+    // Look for the heading by role to be more specific
+    expect(screen.getByRole('heading', { level: 4, name: /Local Backup/i })).toBeInTheDocument();
 
     const exportButton = screen.getByRole('button', { name: /Export backup/i });
     fireEvent.click(exportButton);

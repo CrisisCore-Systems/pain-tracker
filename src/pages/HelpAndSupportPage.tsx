@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent, Button } from '../design-system';
 import { AlertTriangle, BookOpen, HelpCircle, LifeBuoy, HeartHandshake } from 'lucide-react';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 

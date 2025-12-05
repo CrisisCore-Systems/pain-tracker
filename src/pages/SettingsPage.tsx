@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../design-system';
 import { AccessibilitySettingsPanel } from '../components/accessibility/AccessibilitySettings';
 import AlertsSettings from '../components/AlertsSettings';
 import { NotificationManagement } from '../components/notifications/NotificationManagement';
@@ -9,7 +8,14 @@ import CloudBackupSettings from '../components/settings/CloudBackupSettings';
 import ExportSettings from '../components/settings/ExportSettings';
 import PrivacySettings from '../components/settings/PrivacySettings';
 import { useBiophilicTheme } from '../hooks';
-import { Leaf, Settings, Sparkles, Bell, Shield, Download, Eye, Palette } from 'lucide-react';
+import { Leaf, Settings, Bell, Shield, Download, Eye } from 'lucide-react';
+
+// Shared glassmorphism card styles for settings sections
+const glassCardStyle = {
+  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+};
 
 export default function SettingsPage() {
   const { enabled: biophilicEnabled, toggle: toggleBiophilic } = useBiophilicTheme();

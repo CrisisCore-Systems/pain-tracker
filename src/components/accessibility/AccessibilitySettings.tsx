@@ -4,9 +4,6 @@
  */
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
-import { TouchOptimizedButton } from './TraumaInformedUX';
-import { useTraumaInformed } from './TraumaInformedHooks';
 import {
   Settings,
   Eye,
@@ -22,6 +19,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { useMobileAccessibility } from './MobileAccessibility';
+import { useTraumaInformed } from './TraumaInformedHooks';
 import type { TraumaInformedPreferences } from './TraumaInformedTypes';
 
 export function AccessibilitySettingsPanel() {
@@ -88,54 +86,76 @@ export function AccessibilitySettingsPanel() {
   ];
 
   return (
-    <Card className="accessibility-settings w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Settings className="w-6 h-6 text-blue-600" />
-            <div>
-              <CardTitle>Accessibility & Comfort Settings</CardTitle>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                Customize the interface to work best for your needs
-              </p>
-            </div>
+    <div 
+      className="accessibility-settings w-full max-w-4xl mx-auto rounded-xl p-5"
+      style={{
+        background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+      }}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-3">
+          <div 
+            className="p-2 rounded-lg"
+            style={{ background: 'rgba(14, 165, 233, 0.15)' }}
+          >
+            <Settings className="w-6 h-6 text-sky-400" />
           </div>
-          <div className="flex space-x-2">
-            <TouchOptimizedButton variant="secondary" onClick={resetToDefaults} size="normal">
-              <RotateCcw className="w-4 h-4 mr-2" />
-              Reset
-            </TouchOptimizedButton>
+          <div>
+            <h4 className="text-lg font-semibold text-white">Accessibility & Comfort Settings</h4>
+            <p className="text-sm text-slate-400 mt-1">
+              Customize the interface to work best for your needs
+            </p>
           </div>
         </div>
-      </CardHeader>
+        <div className="flex space-x-2">
+          <button
+            onClick={resetToDefaults}
+            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all"
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              color: '#94a3b8',
+            }}
+          >
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Reset
+          </button>
+        </div>
+      </div>
 
-      <CardContent>
+      <div>
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
-          <nav className="flex space-x-4" aria-label="Settings categories">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`
-                  flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-t-lg
-                  transition-colors min-h-[var(--ti-touch-size)]
-                  ${
-                    activeTab === tab.id
-                      ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                  }
-                `}
-                aria-selected={activeTab === tab.id}
-                role="tab"
-              >
-                {tab.icon}
-                <div className="text-left">
-                  <div>{tab.label}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">{tab.description}</div>
-                </div>
-              </button>
-            ))}
+        <div className="mb-6" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+          <nav className="flex space-x-2 overflow-x-auto pb-2" aria-label="Settings categories">
+            {tabs.map(tab => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all min-h-[44px] whitespace-nowrap"
+                  style={isActive ? {
+                    background: 'rgba(14, 165, 233, 0.15)',
+                    border: '1px solid rgba(14, 165, 233, 0.3)',
+                    color: '#38bdf8',
+                  } : {
+                    background: 'transparent',
+                    border: '1px solid transparent',
+                    color: '#64748b',
+                  }}
+                  aria-selected={isActive}
+                  role="tab"
+                >
+                  {tab.icon}
+                  <div className="text-left">
+                    <div>{tab.label}</div>
+                    <div className="text-xs opacity-70">{tab.description}</div>
+                  </div>
+                </button>
+              );
+            })}
           </nav>
         </div>
 
@@ -161,8 +181,8 @@ export function AccessibilitySettingsPanel() {
             <EmotionalSafetySettings preferences={preferences} onChange={handlePreferenceChange} />
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 
@@ -486,12 +506,20 @@ function SettingGroup({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+    <div 
+      className="rounded-xl p-4"
+      style={{
+        background: 'rgba(15, 23, 42, 0.5)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+      }}
+    >
       <div className="flex items-start space-x-3 mb-4">
-        {icon}
+        <div className="p-1.5 rounded-lg" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+          {icon}
+        </div>
         <div>
-          <h3 className="font-medium text-gray-900 dark:text-gray-100">{title}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
+          <h3 className="font-medium text-slate-200">{title}</h3>
+          <p className="text-sm text-slate-400">{description}</p>
         </div>
       </div>
       <div className="space-y-4">{children}</div>
@@ -512,28 +540,32 @@ function ToggleSetting({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-start justify-between">
+    <div className="flex items-start justify-between gap-4">
       <div className="flex-1">
-        <label className="font-medium text-gray-900 dark:text-gray-100 text-sm">{label}</label>
-        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{description}</p>
+        <label className="font-medium text-slate-200 text-sm">{label}</label>
+        <p className="text-xs text-slate-400 mt-1">{description}</p>
       </div>
       <button
         onClick={() => onChange(!checked)}
-        className={`
-          relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent 
-          transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-          ${checked ? 'bg-blue-600' : 'bg-gray-200'}
-        `}
-        style={{ minHeight: 'var(--ti-touch-size)', minWidth: '44px' }}
+        className="relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+        style={{
+          minHeight: 'var(--ti-touch-size, 44px)',
+          minWidth: '48px',
+          background: checked 
+            ? 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)' 
+            : 'rgba(51, 65, 85, 0.8)',
+          boxShadow: checked ? '0 4px 15px rgba(14, 165, 233, 0.3)' : 'none',
+        }}
         role="switch"
         aria-checked={checked}
         aria-labelledby={`toggle-${label.replace(/\s+/g, '-').toLowerCase()}`}
       >
         <span
-          className={`
-            inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out
-            ${checked ? 'translate-x-5' : 'translate-x-0'}
-          `}
+          className="pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-300 ease-in-out"
+          style={{
+            transform: checked ? 'translateX(22px)' : 'translateX(2px)',
+            marginTop: '2px',
+          }}
         />
       </button>
     </div>
@@ -556,21 +588,20 @@ function SelectSetting({
 }) {
   return (
     <div>
-      <label className="block font-medium text-gray-900 dark:text-gray-100 text-sm mb-1">
+      <label className="block font-medium text-slate-200 text-sm mb-1">
         {label}
       </label>
-      <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">{description}</p>
+      <p className="text-xs text-slate-400 mb-3">{description}</p>
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="
-          block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm
-          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-          text-sm
-        "
+        className="block w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
         style={{
-          minHeight: 'var(--ti-touch-size)',
-          fontSize: 'var(--ti-font-size)',
+          minHeight: 'var(--ti-touch-size, 44px)',
+          fontSize: 'var(--ti-font-size, 14px)',
+          background: 'rgba(51, 65, 85, 0.8)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: '#e2e8f0',
         }}
       >
         {options.map(option => (

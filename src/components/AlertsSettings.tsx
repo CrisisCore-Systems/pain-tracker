@@ -75,27 +75,35 @@ export default function AlertsSettings({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Alerts settings</h3>
-          <p className="text-xs text-muted-foreground">Tune sensitivity for pattern alerts.</p>
+          <h3 className="text-lg font-semibold text-white">Alerts settings</h3>
+          <p className="text-xs text-slate-400">Tune sensitivity for pattern alerts.</p>
         </div>
         {showClose && (
-          <button className="btn btn-sm" onClick={handleClose}>
+          <button 
+            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              color: '#94a3b8',
+            }}
+            onClick={handleClose}
+          >
             Close
           </button>
         )}
       </div>
 
-      <label className="block text-sm font-medium">Sensitivity (pain increase threshold)</label>
+      <label className="block text-sm font-medium text-slate-200">Sensitivity (pain increase threshold)</label>
       <input
         type="range"
         min={1}
         max={6}
         value={settings.threshold}
         onChange={e => setSettings({ threshold: Number(e.target.value) })}
-        className="w-full"
+        className="w-full accent-amber-500"
       />
-      <div className="text-sm">Current threshold: {settings.threshold} points</div>
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-slate-300">Current threshold: {settings.threshold} points</div>
+      <div className="text-sm text-slate-400">
         Live preview: You&apos;ll be alerted when pain rises by {settings.threshold} points. For
         example, a baseline of 3/10 would flag entries of {Math.min(10, 3 + settings.threshold)}/10.
       </div>
@@ -104,7 +112,14 @@ export default function AlertsSettings({
 
   if (variant === 'inline') {
     return (
-      <div className={cn('rounded-lg border bg-muted/30 p-4 space-y-3 text-sm', className)}>
+      <div 
+        className={cn('rounded-xl p-5 space-y-3 text-sm', className)}
+        style={{
+          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+        }}
+      >
         {renderBody(false)}
       </div>
     );
@@ -115,7 +130,12 @@ export default function AlertsSettings({
       <div>
         <button
           onClick={() => setOpen(true)}
-          className="bg-white border rounded-md px-3 py-2 shadow-sm text-sm flex items-center gap-2"
+          className="rounded-lg px-3 py-2 text-sm flex items-center gap-2 transition-all"
+          style={{
+            background: 'rgba(245, 158, 11, 0.15)',
+            border: '1px solid rgba(245, 158, 11, 0.3)',
+            color: '#fbbf24',
+          }}
         >
           <svg
             width="16"
@@ -138,7 +158,7 @@ export default function AlertsSettings({
 
       {open && (
         <div className="fixed inset-0 z-[100]" role="presentation">
-          <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} />
           <FocusTrap
             active={true}
             focusTrapOptions={{
@@ -152,12 +172,14 @@ export default function AlertsSettings({
               role="dialog"
               aria-modal="true"
               tabIndex={-1}
-              className={`absolute right-0 top-0 h-full w-full md:w-96 bg-card shadow-xl border-l p-4 overflow-auto transform transition-all duration-200 ${slideIn ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'}`}
-              style={
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches
+              className={`absolute right-0 top-0 h-full w-full md:w-96 shadow-2xl p-5 overflow-auto transform transition-all duration-200 ${slideIn ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95'}`}
+              style={{
+                background: 'linear-gradient(180deg, #0f172a 0%, #020617 100%)',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+                ...(window.matchMedia('(prefers-reduced-motion: reduce)').matches
                   ? { transitionTimingFunction: 'linear' }
-                  : undefined
-              }
+                  : {}),
+              }}
             >
               {renderBody(true)}
             </div>
