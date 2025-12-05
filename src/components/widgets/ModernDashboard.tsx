@@ -15,6 +15,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Minus,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge } from '../../design-system';
@@ -24,6 +25,14 @@ import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import { isSameLocalDay, localDayStart } from '../../utils/dates';
 import Chart from '../../design-system/components/Chart';
 import { colorVar } from '../../design-system/utils/theme';
+
+// Premium stat card data for consistent styling
+const statCardConfigs = [
+  { id: 'avgPain', colorClass: 'stat-card-sky', orbColor: 'orb-glow-sky' },
+  { id: 'streak', colorClass: 'stat-card-purple', orbColor: 'orb-glow-purple' },
+  { id: 'entries', colorClass: 'stat-card-emerald', orbColor: 'orb-glow-emerald' },
+  { id: 'improvement', colorClass: 'stat-card-amber', orbColor: 'orb-glow-pink' },
+] as const;
 
 interface ModernDashboardProps {
   entries: PainEntry[];
@@ -168,19 +177,48 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
   return (
     <div
       className={cn(
-        'min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-slate-900 dark:to-indigo-950',
+        'relative min-h-screen overflow-hidden',
         className
       )}
     >
-      {/* Header with Actions */}
-      <div className="sticky top-4 z-50 mx-auto max-w-7xl px-4">
-        <div className="backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-xl shadow-black/5 p-4">
+      {/* Premium Dark Background - matches landing page */}
+      <div className="absolute inset-0 hero-bg-mesh" />
+      <div className="absolute inset-0 hero-grid-pattern" />
+      <div className="absolute inset-0 hero-noise-overlay" />
+      
+      {/* Animated Orbs */}
+      <div className="orb-container">
+        <div 
+          className="orb-glow orb-glow-sky" 
+          style={{ width: '400px', height: '400px', top: '-5%', left: '5%' }}
+        />
+        <div 
+          className="orb-glow orb-glow-purple" 
+          style={{ width: '500px', height: '500px', top: '30%', right: '-10%', animationDelay: '5s' }}
+        />
+        <div 
+          className="orb-glow orb-glow-emerald" 
+          style={{ width: '300px', height: '300px', bottom: '10%', left: '20%', animationDelay: '10s' }}
+        />
+      </div>
+
+      {/* Header with Glass Navigation */}
+      <div className="sticky top-4 z-50 mx-auto max-w-7xl px-4 relative">
+        <div className="glass-card-premium p-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Dashboard Overview
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Your pain tracking summary</p>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/30">
+                  <BarChart3 className="h-5 w-5 text-white" />
+                </div>
+                <div className="absolute inset-0 rounded-xl bg-sky-500 blur-xl opacity-40" />
+              </div>
+              <div>
+                <h2 className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                  Dashboard Overview
+                </h2>
+                <p className="text-sm text-slate-400">Your pain tracking insights</p>
+              </div>
             </div>
 
             {/* Action Buttons */}
@@ -190,10 +228,10 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
                 size="sm"
                 onClick={handleExport}
                 disabled={isExporting}
-                className="rounded-xl"
+                className="text-slate-400 hover:text-white hover:bg-white/5 rounded-xl"
               >
                 <Download className="h-4 w-4 mr-2" />
-                Export
+                <span className="hidden sm:inline">Export</span>
               </Button>
 
               <div className="relative">
@@ -201,19 +239,19 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowActions(!showActions)}
-                  className="rounded-xl"
+                  className="text-slate-400 hover:text-white hover:bg-white/5 rounded-xl"
                 >
                   <span className="flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-primary opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-sky-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
                   </span>
                 </Button>
 
                 {showActions && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-xl p-2">
+                  <div className="absolute right-0 mt-2 w-48 glass-card-premium p-2">
                     <button
                       onClick={handleClearData}
-                      className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-colors"
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
                       Clear All Data
@@ -227,105 +265,129 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
         <PageTransition type="fade" duration={300}>
           <div className="space-y-6">
-            {/* Hero Stats Grid */}
+            {/* Hero Stats Grid - Premium Glass Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Average Pain Card */}
-              <div className="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="glass-card-premium group p-6 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <Activity className="h-8 w-8 opacity-80" />
+                    <div className="p-2.5 rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/30">
+                      <Activity className="h-5 w-5 text-white" />
+                    </div>
                     {getTrendIcon(metrics.painTrend)}
                   </div>
-                  <div className="text-4xl font-bold mb-1">{metrics.avgPainRecent.toFixed(1)}</div>
-                  <div className="text-sm opacity-90">Avg Pain (7d)</div>
-                  <div className="text-xs opacity-75 mt-2">
-                    {metrics.painTrend < 0 ? '↓' : metrics.painTrend > 0 ? '↑' : '→'}{' '}
-                    {Math.abs(metrics.painTrend).toFixed(1)} vs last period
+                  <div className="stat-counter stat-counter-sky mb-1">{metrics.avgPainRecent.toFixed(1)}</div>
+                  <div className="text-sm text-slate-300 font-medium">Avg Pain (7d)</div>
+                  <div className="text-xs text-slate-500 mt-2 flex items-center gap-1">
+                    {metrics.painTrend < 0 ? (
+                      <ArrowDownRight className="h-3 w-3 text-emerald-400" />
+                    ) : metrics.painTrend > 0 ? (
+                      <ArrowUpRight className="h-3 w-3 text-red-400" />
+                    ) : (
+                      <Minus className="h-3 w-3 text-slate-400" />
+                    )}
+                    <span>{Math.abs(metrics.painTrend).toFixed(1)} vs last period</span>
                   </div>
                 </div>
               </div>
 
               {/* Streak Card */}
-              <div className="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="glass-card-premium group p-6 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <Zap className="h-8 w-8 opacity-80" />
-                    <Award className="h-6 w-6 opacity-60" />
+                    <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 shadow-lg shadow-purple-500/30">
+                      <Zap className="h-5 w-5 text-white" />
+                    </div>
+                    <Award className="h-5 w-5 text-purple-400/60" />
                   </div>
-                  <div className="text-4xl font-bold mb-1">{metrics.currentStreak}</div>
-                  <div className="text-sm opacity-90">Day Streak</div>
-                  <div className="text-xs opacity-75 mt-2">Keep tracking daily!</div>
+                  <div className="stat-counter stat-counter-purple mb-1">{metrics.currentStreak}</div>
+                  <div className="text-sm text-slate-300 font-medium">Day Streak</div>
+                  <div className="text-xs text-slate-500 mt-2">Keep tracking daily!</div>
                 </div>
               </div>
 
               {/* Total Entries Card */}
-              <div className="group relative overflow-hidden bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="glass-card-premium group p-6 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <Calendar className="h-8 w-8 opacity-80" />
-                    <CheckCircle2 className="h-6 w-6 opacity-60" />
+                    <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30">
+                      <Calendar className="h-5 w-5 text-white" />
+                    </div>
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400/60" />
                   </div>
-                  <div className="text-4xl font-bold mb-1">{metrics.totalEntries}</div>
-                  <div className="text-sm opacity-90">Total Entries</div>
-                  <div className="text-xs opacity-75 mt-2">{metrics.weeklyEntries} this week</div>
+                  <div className="stat-counter stat-counter-emerald mb-1">{metrics.totalEntries}</div>
+                  <div className="text-sm text-slate-300 font-medium">Total Entries</div>
+                  <div className="text-xs text-slate-500 mt-2">{metrics.weeklyEntries} this week</div>
                 </div>
               </div>
 
               {/* Improvement Card */}
-              <div
-                className={cn(
-                  'group relative overflow-hidden rounded-2xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105',
-                  metrics.improvementRate < 0
-                    ? 'bg-gradient-to-br from-green-500 to-emerald-600'
-                    : metrics.improvementRate > 0
-                      ? 'bg-gradient-to-br from-orange-500 to-red-600'
-                      : 'bg-gradient-to-br from-gray-500 to-slate-600'
-                )}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/0 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="glass-card-premium group p-6 relative overflow-hidden">
+                <div className={cn(
+                  "absolute inset-0 bg-gradient-to-br to-transparent opacity-0 group-hover:opacity-100 transition-opacity",
+                  metrics.improvementRate < 0 ? "from-emerald-500/10" : metrics.improvementRate > 0 ? "from-amber-500/10" : "from-slate-500/10"
+                )} />
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <Target className="h-8 w-8 opacity-80" />
+                    <div className={cn(
+                      "p-2.5 rounded-xl shadow-lg",
+                      metrics.improvementRate < 0 
+                        ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-500/30"
+                        : metrics.improvementRate > 0
+                          ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-amber-500/30"
+                          : "bg-gradient-to-br from-slate-400 to-slate-600 shadow-slate-500/30"
+                    )}>
+                      <Target className="h-5 w-5 text-white" />
+                    </div>
                     {metrics.improvementRate < 0 ? (
-                      <TrendingDown className="h-6 w-6" />
+                      <TrendingDown className="h-5 w-5 text-emerald-400" />
                     ) : metrics.improvementRate > 0 ? (
-                      <TrendingUp className="h-6 w-6" />
+                      <TrendingUp className="h-5 w-5 text-amber-400" />
                     ) : (
-                      <Minus className="h-6 w-6" />
+                      <Minus className="h-5 w-5 text-slate-400" />
                     )}
                   </div>
-                  <div className="text-4xl font-bold mb-1">
+                  <div className={cn(
+                    "stat-counter mb-1",
+                    metrics.improvementRate < 0 ? "stat-counter-emerald" : metrics.improvementRate > 0 ? "stat-counter-amber" : "text-slate-300"
+                  )}>
                     {Math.abs(metrics.improvementRate).toFixed(0)}%
                   </div>
-                  <div className="text-sm opacity-90">
+                  <div className="text-sm text-slate-300 font-medium">
                     {metrics.improvementRate < 0
                       ? 'Improving'
                       : metrics.improvementRate > 0
                         ? 'Needs Attention'
                         : 'Stable'}
                   </div>
-                  <div className="text-xs opacity-75 mt-2">vs previous period</div>
+                  <div className="text-xs text-slate-500 mt-2">vs previous period</div>
                 </div>
               </div>
             </div>
 
-            {/* Pain Trend Chart */}
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-lg">
+            {/* Pain Trend Chart - Premium Glass */}
+            <div className="glass-card-premium p-6 lg:p-8">
               <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">Pain Trend</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Your pain levels over time
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-lg shadow-indigo-500/30">
+                    <Sparkles className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Pain Trend</h3>
+                    <p className="text-sm text-slate-400">Your pain levels over time</p>
+                  </div>
                 </div>
-                <Badge variant="outline" className="rounded-full">
-                  <Sparkles className="h-3 w-3 mr-1" />
+                <Badge className="bg-sky-500/20 text-sky-300 border-sky-500/30 rounded-full px-3 py-1">
+                  <span className="flex h-2 w-2 mr-2">
+                    <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-sky-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                  </span>
                   Live Data
                 </Badge>
               </div>
@@ -334,23 +396,26 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
               </div>
             </div>
 
-            {/* Quick Insights */}
+            {/* Quick Insights - Premium Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {metrics.bestDay && (
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-2xl p-6 border border-green-200 dark:border-green-800">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-green-500 rounded-xl">
+                <div className="glass-card-premium p-6 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
+                  <div className="relative z-10 flex items-start gap-4">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30">
                       <CheckCircle2 className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-green-900 dark:text-green-100 mb-1">
-                        Best Day
-                      </h4>
-                      <p className="text-sm text-green-700 dark:text-green-300">
-                        Pain level: {metrics.bestDay.baselineData.pain}/10
+                      <h4 className="font-semibold text-emerald-300 mb-1">Best Day</h4>
+                      <p className="text-2xl font-bold text-white">
+                        {metrics.bestDay.baselineData.pain}/10
                       </p>
-                      <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                        {new Date(metrics.bestDay.timestamp).toLocaleDateString()}
+                      <p className="text-xs text-slate-400 mt-1">
+                        {new Date(metrics.bestDay.timestamp).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
                       </p>
                     </div>
                   </div>
@@ -358,20 +423,23 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
               )}
 
               {metrics.worstDay && (
-                <div className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20 rounded-2xl p-6 border border-red-200 dark:border-red-800">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-red-500 rounded-xl">
+                <div className="glass-card-premium p-6 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
+                  <div className="relative z-10 flex items-start gap-4">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/30">
                       <AlertCircle className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-semibold text-red-900 dark:text-red-100 mb-1">
-                        Challenging Day
-                      </h4>
-                      <p className="text-sm text-red-700 dark:text-red-300">
-                        Pain level: {metrics.worstDay.baselineData.pain}/10
+                      <h4 className="font-semibold text-amber-300 mb-1">Challenging Day</h4>
+                      <p className="text-2xl font-bold text-white">
+                        {metrics.worstDay.baselineData.pain}/10
                       </p>
-                      <p className="text-xs text-red-600 dark:text-red-400 mt-1">
-                        {new Date(metrics.worstDay.timestamp).toLocaleDateString()}
+                      <p className="text-xs text-slate-400 mt-1">
+                        {new Date(metrics.worstDay.timestamp).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
                       </p>
                     </div>
                   </div>

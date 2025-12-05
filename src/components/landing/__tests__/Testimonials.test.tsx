@@ -9,12 +9,15 @@ describe('Testimonials component', () => {
     // header
     expect(screen.getByRole('heading', { name: /Trusted by Patients & Clinicians/i })).toBeInTheDocument();
 
-    // Subheader text
+    // Subheader text (updated to match current copy)
     expect(
-      screen.getByText(/Real stories from people managing chronic pain/i)
+      screen.getByText(/How Pain Tracker Pro helps people manage chronic pain/i)
     ).toBeInTheDocument();
 
     // Should render testimonials badge
     expect(screen.getByText(/Testimonials/i)).toBeInTheDocument();
+    
+    // Disclaimer for illustrative examples
+    expect(screen.getByText(/\*Illustrative examples/i)).toBeInTheDocument();
   });
 });

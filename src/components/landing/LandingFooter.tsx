@@ -1,7 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Github, Heart, Shield, Activity, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap } from 'lucide-react';
+import { Github, Heart, Shield, Activity, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
 import { Button } from '../../design-system/components/Button';
+
+interface ResourceLink {
+  label: string;
+  onClick?: () => void;
+  href?: string;
+  icon?: LucideIcon;
+}
 
 export const LandingFooter: React.FC = () => {
   const navigate = useNavigate();
@@ -177,13 +184,13 @@ export const LandingFooter: React.FC = () => {
                 Resources
               </h3>
               <ul className="space-y-4 text-sm">
-                {[
+                {([
                   { label: 'Pricing Plans', onClick: () => navigate('/pricing') },
                   { label: 'Source Code', href: 'https://github.com/CrisisCore-Systems/pain-tracker', icon: Github },
                   { label: 'Documentation', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md' },
                   { label: 'Security Policy', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/SECURITY.md', icon: Shield },
                   { label: 'Contributing', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/CONTRIBUTING.md' },
-                ].map((item) => (
+                ] as ResourceLink[]).map((item) => (
                   <li key={item.label}>
                     {item.onClick ? (
                       <button
