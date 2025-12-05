@@ -59,6 +59,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
           <Toast
             key={toast.id}
             {...toast}
+            customOnDismiss={toast.onDismiss}
             onDismiss={(id?: string) => removeToast(id ?? toast.id)}
           />
         ))}
@@ -71,6 +72,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
           <Toast
             key={toast.id}
             {...toast}
+            customOnDismiss={toast.onDismiss}
             onDismiss={(id?: string) => removeToast(id ?? toast.id)}
           />
         ))}
