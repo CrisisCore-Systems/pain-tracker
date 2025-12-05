@@ -249,22 +249,22 @@ export function EnhancedNav({
             aria-label={item.description ? `${item.name} - ${item.description}` : item.name}
             title={item.description}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
               <Icon
                 className={cn(
-                  'transition-transform group-hover:scale-110',
+                  'transition-transform group-hover:scale-110 flex-shrink-0',
                   size === 'sm' ? 'h-3.5 w-3.5' : size === 'lg' ? 'h-5 w-5' : 'h-4 w-4'
                 )}
                 aria-hidden="true"
               />
-              <span>{item.name}</span>
+              <span className="truncate">{item.name}</span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               {item.badge && (
                 <Badge
                   variant="outline"
-                  className="rounded-full text-xs"
+                  className="rounded-full text-xs whitespace-nowrap"
                   aria-label={`${item.name} has ${item.badge} items`}
                 >
                   {item.badge}
