@@ -3228,18 +3228,18 @@ html.biophilic ::-webkit-scrollbar-thumb:hover {
     padding: 0.5rem 0;
   }
 
-  /* Grid adjustments for portrait */
-  .grid-cols-2,
-  .grid-cols-3,
-  .grid-cols-4 {
-    grid-template-columns: 1fr !important;
+  /* Grid adjustments for portrait - use specific class for portrait override */
+  .portrait-single-col.grid-cols-2,
+  .portrait-single-col.grid-cols-3,
+  .portrait-single-col.grid-cols-4 {
+    grid-template-columns: 1fr;
     gap: 0.75rem;
   }
 
   /* Allow 2-column grid on slightly larger portrait screens */
   @media (min-width: 375px) {
-    .grid-cols-2 {
-      grid-template-columns: repeat(2, 1fr) !important;
+    .portrait-grid-2.grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 

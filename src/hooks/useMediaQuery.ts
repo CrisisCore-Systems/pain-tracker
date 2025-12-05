@@ -135,7 +135,7 @@ export function useMobilePortrait() {
   const isMobile = useMediaQuery('(max-width: 767px)');
   const isPortrait = useMediaQuery('(orientation: portrait)');
   const isSmallPortrait = useMediaQuery('(max-width: 480px) and (orientation: portrait)');
-  const isTallPortrait = useMediaQuery('(max-width: 767px) and (min-height: 600px) and (orientation: portrait)');
+  const isTallPortrait = useMediaQuery('(max-width: 767px) and (min-height: 700px) and (orientation: portrait)');
 
   return {
     /** Device is mobile-sized (< 768px) */

@@ -1047,14 +1047,40 @@ export function InteractiveBodyMap({
                       ([id]) => BODY_REGIONS.find(r => r.id === id)?.category === category
                     ).length;
 
+              // Use explicit class mapping to ensure Tailwind purging works correctly
+              const colorClasses: Record<string, { bg: string; border: string; text: string }> = {
+                purple: {
+                  bg: 'bg-purple-50 dark:bg-purple-900/20',
+                  border: 'border-purple-200 dark:border-purple-800',
+                  text: 'text-purple-700 dark:text-purple-400',
+                },
+                blue: {
+                  bg: 'bg-blue-50 dark:bg-blue-900/20',
+                  border: 'border-blue-200 dark:border-blue-800',
+                  text: 'text-blue-700 dark:text-blue-400',
+                },
+                green: {
+                  bg: 'bg-green-50 dark:bg-green-900/20',
+                  border: 'border-green-200 dark:border-green-800',
+                  text: 'text-green-700 dark:text-green-400',
+                },
+                orange: {
+                  bg: 'bg-orange-50 dark:bg-orange-900/20',
+                  border: 'border-orange-200 dark:border-orange-800',
+                  text: 'text-orange-700 dark:text-orange-400',
+                },
+              };
+
+              const classes = colorClasses[color] || colorClasses.blue;
+
               return (
                 <div
                   key={category}
-                  className={`bg-${color}-50 dark:bg-${color}-900/20 border border-${color}-200 dark:border-${color}-800 rounded-md p-2 text-center`}
+                  className={`${classes.bg} border ${classes.border} rounded-md p-2 text-center`}
                 >
                   <div className="text-xl sm:text-2xl mb-1">{icon}</div>
                   <div className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">{name}</div>
-                  <div className={`text-sm font-bold text-${color}-700 dark:text-${color}-400 mt-1`}>{count}</div>
+                  <div className={`text-sm font-bold ${classes.text} mt-1`}>{count}</div>
                 </div>
               );
             })}

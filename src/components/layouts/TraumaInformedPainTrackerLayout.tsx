@@ -238,7 +238,7 @@ export function TraumaInformedPainTrackerLayout({
                 <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">
                   Pain Tracker Pro
                 </h1>
-                <div className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-wider uppercase hidden xs:block">
+                <div className="text-xs leading-tight sm:text-xs sm:leading-normal text-muted-foreground font-medium tracking-wider uppercase hidden xs:block">
                   AI-Powered Pain Management
                 </div>
               </div>
