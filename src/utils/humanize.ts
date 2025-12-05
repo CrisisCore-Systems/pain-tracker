@@ -436,3 +436,504 @@ export function generateHumanizedSummary(
   
   return summary;
 }
+
+// ============================================
+// Time-of-Day Pattern Analysis
+// ============================================
+
+export interface TimeOfDayPattern {
+  segment: 'morning' | 'afternoon' | 'evening' | 'night';
+  avgPain: number;
+  entryCount: number;
+  trend: 'better' | 'worse' | 'neutral';
+}
+
+export interface TimeOfDayAnalysis {
+  patterns: TimeOfDayPattern[];
+  bestTimeOfDay: string | null;
+  worstTimeOfDay: string | null;
+  insight: string;
+  recommendation: string;
+  hasEnoughData: boolean;
+}
+
+function getTimeSegment(hour: number): 'morning' | 'afternoon' | 'evening' | 'night' {
+  if (hour >= 5 && hour < 12) return 'morning';
+  if (hour >= 12 && hour < 17) return 'afternoon';
+  if (hour >= 17 && hour < 22) return 'evening';
+  return 'night';
+}
+
+const SEGMENT_LABELS: Record<string, string> = {
+  morning: 'Morning (5am-12pm)',
+  afternoon: 'Afternoon (12pm-5pm)',
+  evening: 'Evening (5pm-10pm)',
+  night: 'Night (10pm-5am)',
+};
+
+const SEGMENT_FRIENDLY: Record<string, string> = {
+  morning: 'mornings',
+  afternoon: 'afternoons',
+  evening: 'evenings',
+  night: 'nights',
+};
+
+export function analyzeTimeOfDayPatterns(entries: PainEntry[]): TimeOfDayAnalysis {
+  if (entries.length < 5) {
+    return {
+      patterns: [],
+      bestTimeOfDay: null,
+      worstTimeOfDay: null,
+      insight: 'We need more entries to analyze your time-of-day patterns.',
+      recommendation: 'Try logging at different times throughout the day.',
+      hasEnoughData: false,
+    };
+  }
+
+  // Group entries by time segment
+  const segmentData: Record<string, { totalPain: number; count: number }> = {
+    morning: { totalPain: 0, count: 0 },
+    afternoon: { totalPain: 0, count: 0 },
+    evening: { totalPain: 0, count: 0 },
+    night: { totalPain: 0, count: 0 },
+  };
+
+  for (const entry of entries) {
+    const hour = new Date(entry.timestamp).getHours();
+    const segment = getTimeSegment(hour);
+    segmentData[segment].totalPain += entry.baselineData.pain;
+    segmentData[segment].count++;
+  }
+
+  // Calculate averages and build patterns
+  const patterns: TimeOfDayPattern[] = [];
+  let bestSegment: { segment: string; avg: number } | null = null;
+  let worstSegment: { segment: string; avg: number } | null = null;
+
+  for (const [segment, data] of Object.entries(segmentData)) {
+    if (data.count >= 2) {
+      const avgPain = data.totalPain / data.count;
+      patterns.push({
+        segment: segment as TimeOfDayPattern['segment'],
+        avgPain,
+        entryCount: data.count,
+        trend: 'neutral', // Would need historical comparison for trend
+      });
+
+      if (!bestSegment || avgPain < bestSegment.avg) {
+        bestSegment = { segment, avg: avgPain };
+      }
+      if (!worstSegment || avgPain > worstSegment.avg) {
+        worstSegment = { segment, avg: avgPain };
+      }
+    }
+  }
+
+  // Only consider meaningful differences (> 1 point)
+  const hasMeaningfulDifference = bestSegment && worstSegment && 
+    (worstSegment.avg - bestSegment.avg) >= 1;
+
+  let insight: string;
+  let recommendation: string;
+
+  if (hasMeaningfulDifference && bestSegment && worstSegment) {
+    const diff = (worstSegment.avg - bestSegment.avg).toFixed(1);
+    insight = `Your pain tends to be ${diff} points higher in the ${SEGMENT_FRIENDLY[worstSegment.segment]} compared to ${SEGMENT_FRIENDLY[bestSegment.segment]}.`;
+    
+    if (worstSegment.segment === 'morning') {
+      recommendation = 'Morning stiffness is common. Gentle stretching before bed or upon waking might help.';
+    } else if (worstSegment.segment === 'evening') {
+      recommendation = 'Evening pain increases often relate to daily activities. Consider pacing strategies.';
+    } else if (worstSegment.segment === 'night') {
+      recommendation = 'Night pain can affect sleep quality. Discuss sleep positioning with your care team.';
+    } else {
+      recommendation = 'Afternoon spikes might relate to activity levels. Try scheduling rest breaks.';
+    }
+  } else {
+    insight = 'Your pain levels are relatively consistent throughout the day.';
+    recommendation = 'Consistent patterns suggest steady management. Keep noting any variations.';
+  }
+
+  return {
+    patterns,
+    bestTimeOfDay: bestSegment ? SEGMENT_LABELS[bestSegment.segment] : null,
+    worstTimeOfDay: worstSegment ? SEGMENT_LABELS[worstSegment.segment] : null,
+    insight,
+    recommendation,
+    hasEnoughData: patterns.length >= 2,
+  };
+}
+
+// ============================================
+// Day-of-Week Pattern Analysis
+// ============================================
+
+export interface DayOfWeekPattern {
+  day: string;
+  dayIndex: number;
+  avgPain: number;
+  entryCount: number;
+}
+
+export interface DayOfWeekAnalysis {
+  patterns: DayOfWeekPattern[];
+  bestDay: string | null;
+  worstDay: string | null;
+  weekdayAvg: number | null;
+  weekendAvg: number | null;
+  insight: string;
+  hasEnoughData: boolean;
+}
+
+const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export function analyzeDayOfWeekPatterns(entries: PainEntry[]): DayOfWeekAnalysis {
+  if (entries.length < 7) {
+    return {
+      patterns: [],
+      bestDay: null,
+      worstDay: null,
+      weekdayAvg: null,
+      weekendAvg: null,
+      insight: 'We need at least a week of entries to analyze daily patterns.',
+      hasEnoughData: false,
+    };
+  }
+
+  // Group by day of week
+  const dayData: Array<{ totalPain: number; count: number }> = 
+    Array.from({ length: 7 }, () => ({ totalPain: 0, count: 0 }));
+
+  for (const entry of entries) {
+    const dayIndex = new Date(entry.timestamp).getDay();
+    dayData[dayIndex].totalPain += entry.baselineData.pain;
+    dayData[dayIndex].count++;
+  }
+
+  // Build patterns
+  const patterns: DayOfWeekPattern[] = [];
+  let bestDay: { day: string; avg: number } | null = null;
+  let worstDay: { day: string; avg: number } | null = null;
+  let weekdayTotal = 0, weekdayCount = 0;
+  let weekendTotal = 0, weekendCount = 0;
+
+  for (let i = 0; i < 7; i++) {
+    const data = dayData[i];
+    if (data.count > 0) {
+      const avgPain = data.totalPain / data.count;
+      patterns.push({
+        day: DAY_NAMES[i],
+        dayIndex: i,
+        avgPain,
+        entryCount: data.count,
+      });
+
+      if (!bestDay || avgPain < bestDay.avg) {
+        bestDay = { day: DAY_NAMES[i], avg: avgPain };
+      }
+      if (!worstDay || avgPain > worstDay.avg) {
+        worstDay = { day: DAY_NAMES[i], avg: avgPain };
+      }
+
+      // Weekend vs weekday
+      if (i === 0 || i === 6) {
+        weekendTotal += data.totalPain;
+        weekendCount += data.count;
+      } else {
+        weekdayTotal += data.totalPain;
+        weekdayCount += data.count;
+      }
+    }
+  }
+
+  const weekdayAvg = weekdayCount > 0 ? weekdayTotal / weekdayCount : null;
+  const weekendAvg = weekendCount > 0 ? weekendTotal / weekendCount : null;
+
+  // Generate insight
+  let insight: string;
+  
+  if (weekdayAvg !== null && weekendAvg !== null) {
+    const diff = weekendAvg - weekdayAvg;
+    if (Math.abs(diff) >= 1) {
+      if (diff > 0) {
+        insight = `Interestingly, your pain averages ${Math.abs(diff).toFixed(1)} points higher on weekends. Activity changes or different routines might be a factor.`;
+      } else {
+        insight = `Good news: weekends tend to be ${Math.abs(diff).toFixed(1)} points better for you. The change in routine seems to help.`;
+      }
+    } else if (bestDay && worstDay && (worstDay.avg - bestDay.avg) >= 1.5) {
+      insight = `${worstDay.day}s tend to be your toughest (${worstDay.avg.toFixed(1)}/10), while ${bestDay.day}s are usually better (${bestDay.avg.toFixed(1)}/10).`;
+    } else {
+      insight = 'Your pain levels are fairly consistent across the week.';
+    }
+  } else {
+    insight = 'Keep tracking to reveal weekly patterns.';
+  }
+
+  return {
+    patterns,
+    bestDay: bestDay?.day ?? null,
+    worstDay: worstDay?.day ?? null,
+    weekdayAvg,
+    weekendAvg,
+    insight,
+    hasEnoughData: patterns.length >= 5,
+  };
+}
+
+// ============================================
+// Trigger Correlation Analysis
+// ============================================
+
+export interface TriggerCorrelation {
+  trigger: string;
+  avgPainWith: number;
+  avgPainWithout: number;
+  occurrences: number;
+  impact: 'strong' | 'moderate' | 'weak' | 'none';
+  humanized: string;
+}
+
+export interface TriggerAnalysis {
+  correlations: TriggerCorrelation[];
+  topTrigger: string | null;
+  insight: string;
+  hasEnoughData: boolean;
+}
+
+export function analyzeTriggerPatterns(entries: PainEntry[]): TriggerAnalysis {
+  if (entries.length < 10) {
+    return {
+      correlations: [],
+      topTrigger: null,
+      insight: 'More entries needed to identify trigger patterns.',
+      hasEnoughData: false,
+    };
+  }
+
+  // Collect all triggers and their associated pain levels
+  const triggerStats: Map<string, { totalPain: number; count: number }> = new Map();
+  let totalPainAll = 0;
+  let countAll = 0;
+
+  for (const entry of entries) {
+    const pain = entry.baselineData.pain;
+    totalPainAll += pain;
+    countAll++;
+
+    const triggers = entry.triggers ?? [];
+    for (const trigger of triggers) {
+      const existing = triggerStats.get(trigger) ?? { totalPain: 0, count: 0 };
+      existing.totalPain += pain;
+      existing.count++;
+      triggerStats.set(trigger, existing);
+    }
+  }
+
+  const overallAvg = countAll > 0 ? totalPainAll / countAll : 0;
+
+  // Build correlations
+  const correlations: TriggerCorrelation[] = [];
+  let strongestTrigger: { trigger: string; impact: number } | null = null;
+
+  for (const [trigger, stats] of triggerStats) {
+    if (stats.count >= 3) { // Need at least 3 occurrences
+      const avgWithTrigger = stats.totalPain / stats.count;
+      const entriesWithout = countAll - stats.count;
+      const totalPainWithout = totalPainAll - stats.totalPain;
+      const avgWithoutTrigger = entriesWithout > 0 ? totalPainWithout / entriesWithout : overallAvg;
+      
+      const impactScore = avgWithTrigger - avgWithoutTrigger;
+      
+      let impact: TriggerCorrelation['impact'];
+      let humanized: string;
+      
+      if (impactScore >= 2) {
+        impact = 'strong';
+        humanized = `When "${trigger}" is present, your pain averages ${impactScore.toFixed(1)} points higher. This is a significant pattern.`;
+      } else if (impactScore >= 1) {
+        impact = 'moderate';
+        humanized = `"${trigger}" tends to coincide with about ${impactScore.toFixed(1)} points more pain.`;
+      } else if (impactScore >= 0.5) {
+        impact = 'weak';
+        humanized = `"${trigger}" shows a slight association with higher pain levels.`;
+      } else {
+        impact = 'none';
+        humanized = `"${trigger}" doesn't appear to significantly affect your pain levels.`;
+      }
+
+      correlations.push({
+        trigger,
+        avgPainWith: avgWithTrigger,
+        avgPainWithout: avgWithoutTrigger,
+        occurrences: stats.count,
+        impact,
+        humanized,
+      });
+
+      if (impactScore > 0 && (!strongestTrigger || impactScore > strongestTrigger.impact)) {
+        strongestTrigger = { trigger, impact: impactScore };
+      }
+    }
+  }
+
+  // Sort by impact
+  correlations.sort((a, b) => (b.avgPainWith - b.avgPainWithout) - (a.avgPainWith - a.avgPainWithout));
+
+  // Generate insight
+  let insight: string;
+  const strongTriggers = correlations.filter(c => c.impact === 'strong' || c.impact === 'moderate');
+  
+  if (strongTriggers.length > 0) {
+    const topTriggerNames = strongTriggers.slice(0, 3).map(c => `"${c.trigger}"`).join(', ');
+    insight = `Your data suggests ${topTriggerNames} ${strongTriggers.length === 1 ? 'has' : 'have'} the strongest correlation with higher pain levels. Consider discussing trigger management strategies.`;
+  } else if (correlations.length > 0) {
+    insight = 'No strong trigger patterns detected yet. Keep logging triggers to build more data.';
+  } else {
+    insight = 'Try adding triggers to your entries to help identify patterns.';
+  }
+
+  return {
+    correlations: correlations.slice(0, 5), // Top 5
+    topTrigger: strongestTrigger?.trigger ?? null,
+    insight,
+    hasEnoughData: correlations.length >= 2,
+  };
+}
+
+// ============================================
+// Comparative Insights (Week-over-Week)
+// ============================================
+
+export interface ComparativeInsight {
+  metric: string;
+  currentValue: number;
+  previousValue: number;
+  changePercent: number;
+  humanized: string;
+  trend: 'better' | 'worse' | 'same';
+  encouragement: string;
+}
+
+export function generateComparativeInsight(
+  currentWeekEntries: PainEntry[],
+  previousWeekEntries: PainEntry[]
+): ComparativeInsight | null {
+  if (currentWeekEntries.length < 3 || previousWeekEntries.length < 3) {
+    return null;
+  }
+
+  const currentAvg = currentWeekEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / currentWeekEntries.length;
+  const previousAvg = previousWeekEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / previousWeekEntries.length;
+  
+  const change = currentAvg - previousAvg;
+  const changePercent = previousAvg !== 0 ? (change / previousAvg) * 100 : 0;
+
+  let trend: ComparativeInsight['trend'];
+  let humanized: string;
+  let encouragement: string;
+
+  if (change <= -1) {
+    trend = 'better';
+    humanized = `This week's average (${currentAvg.toFixed(1)}/10) is ${Math.abs(change).toFixed(1)} points lower than last week (${previousAvg.toFixed(1)}/10).`;
+    encouragement = 'Real progress! Your efforts are paying off. Keep noting what helps.';
+  } else if (change >= 1) {
+    trend = 'worse';
+    humanized = `This week has been tougher—averaging ${currentAvg.toFixed(1)}/10 compared to ${previousAvg.toFixed(1)}/10 last week.`;
+    encouragement = 'Setbacks happen. This data helps identify what to adjust.';
+  } else {
+    trend = 'same';
+    humanized = `Your average this week (${currentAvg.toFixed(1)}/10) is similar to last week (${previousAvg.toFixed(1)}/10).`;
+    encouragement = 'Consistency is valuable. Stable patterns help with treatment planning.';
+  }
+
+  return {
+    metric: 'Average Pain Level',
+    currentValue: currentAvg,
+    previousValue: previousAvg,
+    changePercent,
+    humanized,
+    trend,
+    encouragement,
+  };
+}
+
+// ============================================
+// Enhanced Data-Aware Greeting
+// ============================================
+
+export interface EnhancedGreeting {
+  greeting: string;
+  personalizedMessage: string;
+  dataInsight: string | null;
+  suggestion: string;
+}
+
+export function getEnhancedGreeting(
+  recentEntries: PainEntry[],
+  userName?: string
+): EnhancedGreeting {
+  const hour = new Date().getHours();
+  const baseGreeting = getTimeBasedGreeting();
+  
+  // Personalize with name if available
+  const greeting = userName 
+    ? `${baseGreeting.greeting}, ${userName}`
+    : baseGreeting.greeting;
+
+  // Default personalized message
+  let personalizedMessage = 'Ready to log how you\'re feeling?';
+  let dataInsight: string | null = null;
+  const suggestion = baseGreeting.suggestion;
+
+  if (recentEntries.length === 0) {
+    personalizedMessage = 'Start your tracking journey—your first entry awaits.';
+  } else if (recentEntries.length < 3) {
+    personalizedMessage = `You have ${recentEntries.length} ${recentEntries.length === 1 ? 'entry' : 'entries'} so far. A few more will help us spot patterns.`;
+  } else {
+    // Analyze recent data for personalized insight
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    
+    const todayEntries = recentEntries.filter(e => new Date(e.timestamp) >= todayStart);
+    const weekEntries = recentEntries.slice(0, Math.min(7, recentEntries.length));
+    
+    if (todayEntries.length > 0) {
+      const todayAvg = todayEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / todayEntries.length;
+      personalizedMessage = `You've logged ${todayEntries.length} ${todayEntries.length === 1 ? 'time' : 'times'} today.`;
+      
+      if (weekEntries.length >= 3) {
+        const weekAvg = weekEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / weekEntries.length;
+        const diff = todayAvg - weekAvg;
+        
+        if (diff <= -1) {
+          dataInsight = `Today is trending better than your weekly average by ${Math.abs(diff).toFixed(1)} points.`;
+        } else if (diff >= 1) {
+          dataInsight = `Today has been ${diff.toFixed(1)} points higher than usual. Hope it eases soon.`;
+        }
+      }
+    } else {
+      personalizedMessage = 'No entries yet today. How are you feeling?';
+      
+      // Check last entry
+      if (recentEntries.length > 0) {
+        const lastEntry = recentEntries[0];
+        const lastPain = lastEntry.baselineData.pain;
+        const lastDate = new Date(lastEntry.timestamp);
+        const daysSince = Math.floor((Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (daysSince === 1) {
+          dataInsight = `Yesterday you logged ${lastPain}/10. How does today compare?`;
+        } else if (daysSince > 1 && daysSince <= 7) {
+          dataInsight = `Your last entry was ${daysSince} days ago at ${lastPain}/10.`;
+        }
+      }
+    }
+  }
+
+  return {
+    greeting,
+    personalizedMessage,
+    dataInsight,
+    suggestion,
+  };
+}
