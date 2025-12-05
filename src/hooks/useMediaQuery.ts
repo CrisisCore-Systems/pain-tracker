@@ -116,3 +116,37 @@ export function useIsTouchDevice(): boolean {
 
   return isTouch;
 }
+
+/**
+ * Hook to detect portrait orientation
+ * @returns boolean indicating if device is in portrait mode
+ */
+export function useIsPortrait(): boolean {
+  const isPortrait = useMediaQuery('(orientation: portrait)');
+  return isPortrait;
+}
+
+/**
+ * Hook to detect mobile device in portrait mode
+ * Useful for applying specific mobile portrait optimizations
+ * @returns object with portrait mode detection
+ */
+export function useMobilePortrait() {
+  const isMobile = useMediaQuery('(max-width: 767px)');
+  const isPortrait = useMediaQuery('(orientation: portrait)');
+  const isSmallPortrait = useMediaQuery('(max-width: 480px) and (orientation: portrait)');
+  const isTallPortrait = useMediaQuery('(max-width: 767px) and (min-height: 600px) and (orientation: portrait)');
+
+  return {
+    /** Device is mobile-sized (< 768px) */
+    isMobile,
+    /** Device is in portrait orientation */
+    isPortrait,
+    /** Device is mobile and in portrait mode */
+    isMobilePortrait: isMobile && isPortrait,
+    /** Small mobile portrait (< 480px width) */
+    isSmallPortrait,
+    /** Tall portrait device (good for vertical scrolling) */
+    isTallPortrait,
+  };
+}

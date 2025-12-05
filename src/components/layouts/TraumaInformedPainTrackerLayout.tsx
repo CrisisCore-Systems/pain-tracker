@@ -229,16 +229,16 @@ export function TraumaInformedPainTrackerLayout({
       </a>
 
       {/* Modern Header with Navigation */}
-      <header className="border-b border-border/40 bg-gradient-to-r from-card/95 via-card/90 to-card/95 backdrop-blur-xl supports-[backdrop-filter]:bg-card/80 sticky top-0 z-40 shadow-lg shadow-black/5 transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <PainTrackerIcon size={40} />
+      <header className="border-b border-border/40 bg-gradient-to-r from-card/95 via-card/90 to-card/95 backdrop-blur-xl supports-[backdrop-filter]:bg-card/80 sticky top-0 z-40 shadow-lg shadow-black/5 transition-all duration-300 safe-top">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-14 sm:h-16">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <PainTrackerIcon size={32} className="sm:w-10 sm:h-10" />
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">
+                <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">
                   Pain Tracker Pro
                 </h1>
-                <div className="text-xs text-muted-foreground font-medium tracking-wider uppercase">
+                <div className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-wider uppercase hidden xs:block">
                   AI-Powered Pain Management
                 </div>
               </div>
@@ -262,7 +262,7 @@ export function TraumaInformedPainTrackerLayout({
               ))}
             </nav>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               {/* Quick Stats */}
               <div className="hidden lg:flex items-center space-x-4 text-sm text-muted-foreground">
                 <div className="flex items-center space-x-1">
@@ -321,9 +321,9 @@ export function TraumaInformedPainTrackerLayout({
             </div>
           </div>
 
-          {/* Mobile Navigation */}
-          <div className="md:hidden pb-2 px-2">
-            <nav className="flex space-x-1 overflow-x-auto">
+          {/* Mobile Navigation - Portrait optimized */}
+          <div className="md:hidden pb-2 px-1 sm:px-2">
+            <nav className="flex space-x-1 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-1 -mx-1 px-1" role="tablist">
               {navigationItems.map(item => (
                 <Button
                   key={item.id}
@@ -332,12 +332,14 @@ export function TraumaInformedPainTrackerLayout({
                   onClick={() =>
                     setActiveView(item.id as 'dashboard' | 'analytics' | 'history' | 'support')
                   }
-                  className="flex-1 flex items-center justify-center space-x-1 min-h-[44px] min-w-[44px]"
+                  className="flex-1 flex flex-col xs:flex-row items-center justify-center gap-0.5 xs:gap-1 min-h-[48px] min-w-[60px] xs:min-w-[70px] px-2 snap-start"
                   aria-label={item.description}
                   data-nav-target={item.id}
+                  role="tab"
+                  aria-selected={activeView === item.id}
                 >
-                  <item.icon className="h-5 w-5" />
-                  <span className="text-xs whitespace-nowrap">{item.label}</span>
+                  <item.icon className="h-4 w-4 xs:h-5 xs:w-5" />
+                  <span className="text-[10px] xs:text-xs whitespace-nowrap leading-tight">{item.label}</span>
                 </Button>
               ))}
             </nav>
@@ -348,7 +350,7 @@ export function TraumaInformedPainTrackerLayout({
       {/* Settings Overlay */}
       {showSettings && (
         <div className="fixed inset-0 z-[100] overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0 animate-[fadeIn_0.2s_ease-out]">
+          <div className="flex items-center justify-center min-h-screen px-2 sm:px-4 pt-4 pb-20 text-center sm:block sm:p-0 animate-[fadeIn_0.2s_ease-out]">
             {/* Background overlay */}
             <div
               className="fixed inset-0 transition-opacity duration-300 bg-background/90 backdrop-blur-md"
@@ -356,10 +358,10 @@ export function TraumaInformedPainTrackerLayout({
               aria-hidden="true"
             />
 
-            {/* Settings panel */}
-            <div className="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all duration-300 transform bg-gradient-to-br from-card via-card/95 to-card backdrop-blur-xl shadow-2xl shadow-black/20 rounded-2xl border border-border/50 animate-[scaleIn_0.3s_ease-out]">
+            {/* Settings panel - Portrait optimized */}
+            <div className="inline-block w-full max-w-4xl p-4 sm:p-6 my-4 sm:my-8 overflow-hidden text-left align-middle transition-all duration-300 transform bg-gradient-to-br from-card via-card/95 to-card backdrop-blur-xl shadow-2xl shadow-black/20 rounded-xl sm:rounded-2xl border border-border/50 animate-[scaleIn_0.3s_ease-out] max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium text-card-foreground">
+                <h2 className="text-base sm:text-lg font-medium text-card-foreground">
                   Accessibility & Comfort Settings
                 </h2>
                 <TouchOptimizedButton
@@ -379,7 +381,7 @@ export function TraumaInformedPainTrackerLayout({
 
       <main
         id="main-content"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 swipe-indicator relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/2 before:to-transparent before:pointer-events-none before:-z-10"
+        className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 swipe-indicator relative before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/2 before:to-transparent before:pointer-events-none before:-z-10 mobile-container safe-bottom"
         ref={swipeGesture.ref}
       >
         <DashboardPullToRefresh onRefresh={handlePullToRefresh} lastRefresh={lastRefresh}>
@@ -393,14 +395,14 @@ export function TraumaInformedPainTrackerLayout({
 
           {/* Comfort Prompt */}
           {preferences.showComfortPrompts && (
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <ComfortPrompt />
             </div>
           )}
 
           {/* Memory Aid for new users */}
           {preferences.showMemoryAids && entries.length === 0 && (
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <MemoryAid
                 text="Welcome! Start by recording your current pain level. Your information is automatically saved as you go, so you can take breaks anytime."
                 type="tip"
@@ -410,10 +412,10 @@ export function TraumaInformedPainTrackerLayout({
 
           {/* Error Display with Gentle Language */}
           {error && (
-            <Card className="mb-6 border-destructive/50 bg-destructive/5 animate-[fadeInDown_0.5s_ease-out] shadow-lg shadow-destructive/10">
-              <CardContent className="pt-6">
-                <div className="flex items-center space-x-2" role="alert" aria-live="polite">
-                  <AlertCircle className="h-5 w-5 text-destructive" />
+            <Card className="mb-4 sm:mb-6 border-destructive/50 bg-destructive/5 animate-[fadeInDown_0.5s_ease-out] shadow-lg shadow-destructive/10">
+              <CardContent className="pt-4 sm:pt-6">
+                <div className="flex items-start sm:items-center space-x-2" role="alert" aria-live="polite">
+                  <AlertCircle className="h-5 w-5 text-destructive flex-shrink-0 mt-0.5 sm:mt-0" />
                   <div>
                     {preferences.gentleLanguage ? (
                       <>
