@@ -15,15 +15,15 @@ const testimonials = [
     role: 'Pain Management Specialist',
     avatar: '👨‍⚕️',
     rating: 5,
-    quote: 'The clinician portal saves me hours every week. AI pattern detection and one-click WorkSafe BC reports are game-changers.',
-    highlight: 'Saves 25+ hours/week',
+    quote: 'The clinician portal saves me significant time. Pattern detection and one-click WorkSafe BC reports are useful features.',
+    highlight: 'Efficient workflows',
   },
   {
     name: 'Michael R.',
     role: 'WorkSafe BC Claimant',
     avatar: '🦾',
     rating: 5,
-    quote: 'The automated WCB reporting feature is incredible. What used to take me days of paperwork now takes one click.',
+    quote: 'The automated WCB reporting feature is helpful. What used to take me significant time now takes just a few clicks.',
     highlight: 'One-click WCB reports',
   },
   {
@@ -31,32 +31,32 @@ const testimonials = [
     role: 'Occupational Therapist',
     avatar: '👩‍⚕️',
     rating: 5,
-    quote: 'I recommend this to all my chronic pain patients. The offline capability means they can track anywhere.',
-    highlight: 'Recommended by pros',
+    quote: 'I recommend this to my chronic pain patients. The offline capability means they can track anywhere.',
+    highlight: 'Works offline',
   },
   {
     name: 'David L.',
     role: 'Fibromyalgia Patient',
     avatar: '🧑‍🦯',
     rating: 5,
-    quote: 'The accessibility features are outstanding. High contrast mode and panic mode have been essential during flare-ups.',
-    highlight: 'Best accessibility',
+    quote: 'The accessibility features are excellent. High contrast mode and panic mode have been essential during flare-ups.',
+    highlight: 'Great accessibility',
   },
   {
     name: 'Lisa K.',
     role: 'Migraine Sufferer',
     avatar: '👩',
     rating: 5,
-    quote: 'I\'ve tried every pain tracker out there. This is the only one with truly private local storage and AI that actually works.',
-    highlight: 'Most accurate AI',
+    quote: 'I\'ve tried other pain trackers. This is the only one with truly private local storage and pattern detection that works.',
+    highlight: 'Best privacy',
   },
 ];
 
 const stats = [
   { value: '100%', label: 'Privacy Protected', colorClass: 'stat-counter-emerald' },
-  { value: '25+', label: 'Hours Saved/Week', colorClass: 'stat-counter-sky' },
-  { value: '8', label: 'AI Algorithms', colorClass: 'stat-counter-purple' },
-  { value: '95%', label: 'Time Reduction', colorClass: 'stat-counter-amber' },
+  { value: '100%', label: 'Offline Capable', colorClass: 'stat-counter-sky' },
+  { value: '8', label: 'Pattern Algorithms', colorClass: 'stat-counter-purple' },
+  { value: 'Open', label: 'Source Code', colorClass: 'stat-counter-amber' },
 ];
 
 export const Testimonials: React.FC = () => {
@@ -82,15 +82,15 @@ export const Testimonials: React.FC = () => {
         <div className="text-center mb-16 lg:mb-20 max-w-3xl mx-auto stagger-fade-up">
           <div className="badge-glow-purple inline-flex items-center gap-2 mb-6">
             <MessageCircle className="h-4 w-4" />
-            <span>Testimonials</span>
+            <span>Use Cases</span>
           </div>
           
           <h2 className="landing-headline landing-headline-lg mb-6">
-            <span className="text-white">Trusted by </span>
+            <span className="text-white">Designed for </span>
             <span className="gradient-text-animated">Patients & Clinicians</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
-            Real stories from people managing chronic pain and healthcare professionals providing care.
+            Illustrative examples of how Pain Tracker Pro can help with chronic pain management.
           </p>
         </div>
 

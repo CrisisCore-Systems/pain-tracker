@@ -2,7 +2,7 @@ import React from 'react';
 import { Shield, Lock, Eye, Code, FileCheck, Users, ArrowRight } from 'lucide-react';
 
 const trustBadges = [
-  { icon: Shield, title: 'AES-256', description: 'Military-grade', colorClass: 'icon-emerald' },
+  { icon: Shield, title: 'AES-256', description: 'Encrypted', colorClass: 'icon-emerald' },
   { icon: Lock, title: 'HIPAA-Aligned', description: 'Healthcare compliant', colorClass: 'icon-sky' },
   { icon: Eye, title: 'Zero Tracking', description: 'No analytics', colorClass: 'icon-purple' },
   { icon: Code, title: 'Open Source', description: 'Transparent code', colorClass: 'icon-pink' },

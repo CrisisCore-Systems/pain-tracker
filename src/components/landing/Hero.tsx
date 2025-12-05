@@ -136,7 +136,7 @@ export const Hero: React.FC = () => {
               {/* Subheading */}
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
                 Clinical-grade pain tracking with{' '}
-                <span className="text-sky-400 font-semibold">AI-powered insights</span>,{' '}
+                <span className="text-sky-400 font-semibold">smart pattern detection</span>,{' '}
                 automated WorkSafe BC reporting, and{' '}
                 <span className="text-emerald-400 font-semibold">empathy-driven design</span>.{' '}
                 Your data stays on your device.
@@ -146,7 +146,7 @@ export const Hero: React.FC = () => {
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 <div className="badge-glow-sky flex items-center gap-2 text-sm">
                   <Zap className="h-3.5 w-3.5" />
-                  <span>AI Detection</span>
+                  <span>Pattern Detection</span>
                 </div>
                 <div className="badge-glow-emerald flex items-center gap-2 text-sm">
                   <Shield className="h-3.5 w-3.5" />
@@ -181,7 +181,7 @@ export const Hero: React.FC = () => {
                 <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-500">
                   <span className="flex items-center gap-1.5 text-emerald-400">
                     <Star className="h-3.5 w-3.5 fill-current" />
-                    Free Forever
+                    Free Plan Available
                   </span>
                   <span className="text-slate-700">•</span>
                   <span>Unlimited entries</span>
@@ -190,7 +190,7 @@ export const Hero: React.FC = () => {
                 </p>
                 <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-500">
                   <span className="text-sky-400 font-medium">Pro Features:</span>
-                  <span>AI insights • WCB reports • Clinical exports</span>
+                  <span>Advanced insights • WCB reports • Clinical exports</span>
                 </p>
               </div>
             </div>
