@@ -97,10 +97,10 @@ export function ClinicSidebar({
                   <Icon className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 ${isActive ? 'text-white' : ''}`} />
                   {!collapsed && (
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center justify-between">
                         <span className="font-medium truncate text-sm sm:text-base">{item.label}</span>
                         {item.badge && (
-                          <span className="px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs rounded-full bg-red-500 text-white flex-shrink-0">
+                          <span className="px-1.5 sm:px-2 py-0.5 text-[10px] sm:text-xs rounded-full bg-red-500 text-white flex-shrink-0 ml-2">
                             {item.badge}
                           </span>
                         )}

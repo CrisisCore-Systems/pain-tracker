@@ -407,7 +407,7 @@ export function ModernAppLayout({
                       </div>
                       {item.badge && (
                         <span 
-                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0 ml-2"
+                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0"
                           style={{
                             background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
                             color: item.badge === 'New' ? '#34d399' : '#a855f7',
