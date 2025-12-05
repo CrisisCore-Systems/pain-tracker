@@ -133,15 +133,23 @@ export const transforms = {
 
 /**
  * Creates a custom glow effect with specified color
+ * Returns a Tailwind-compatible shadow class
+ * 
+ * Note: For dynamic values, use inline styles instead of this function.
+ * Tailwind JIT cannot process dynamic class names at build time.
  */
 export function createGlow(color: string, intensity: 'sm' | 'md' | 'lg' = 'md'): string {
-  const sizes = {
-    sm: '15px',
-    md: '30px',
-    lg: '45px',
+  // Use predefined classes to avoid Tailwind JIT parsing issues
+  // For truly dynamic colors, use inline styles: style={{ boxShadow: `0 0 ${size} ${color}` }}
+  const glowClasses = {
+    sm: 'shadow-sm',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
   };
-
-  return `shadow-[0_0_${sizes[intensity]}_${color}]`;
+  
+  // Return the base class - for custom colors, callers should use inline styles
+  void color; // Acknowledge the parameter (use inline styles for custom colors)
+  return glowClasses[intensity];
 }
 
 /**
