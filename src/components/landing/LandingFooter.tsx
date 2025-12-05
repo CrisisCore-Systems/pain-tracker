@@ -54,7 +54,7 @@ export const LandingFooter: React.FC = () => {
             
             {/* Subheadline */}
             <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of patients and clinicians using Pain Tracker Pro to understand, track, and manage chronic pain effectively.
+              Join patients and clinicians using Pain Tracker Pro to understand, track, and manage chronic pain effectively.
             </p>
             
             {/* CTAs */}
@@ -245,11 +245,11 @@ export const LandingFooter: React.FC = () => {
               </h3>
               <ul className="space-y-3 text-sm">
                 {[
-                  '8 AI Algorithms',
+                  '10+ Analysis Algorithms',
                   'WorkSafe BC Reports',
                   'Real-Time Monitoring',
                   '100% Offline',
-                  'Military Encryption',
+                  'AES-256 Encryption',
                   'Trauma-Informed',
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-slate-400">

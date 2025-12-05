@@ -15,8 +15,8 @@ const testimonials = [
     role: 'Pain Management Specialist',
     avatar: '👨‍⚕️',
     rating: 5,
-    quote: 'The clinician portal saves me hours every week. AI pattern detection and one-click WorkSafe BC reports are game-changers.',
-    highlight: 'Saves 25+ hours/week',
+    quote: 'The clinician portal saves me time every week. Pattern detection and one-click WorkSafe BC reports streamline documentation.',
+    highlight: 'Streamlined workflow',
   },
   {
     name: 'Michael R.',
@@ -47,16 +47,16 @@ const testimonials = [
     role: 'Migraine Sufferer',
     avatar: '👩',
     rating: 5,
-    quote: 'I\'ve tried every pain tracker out there. This is the only one with truly private local storage and AI that actually works.',
-    highlight: 'Most accurate AI',
+    quote: 'I\'ve tried every pain tracker out there. This is the only one with truly private local storage and pattern analysis that works.',
+    highlight: 'True local privacy',
   },
 ];
 
 const stats = [
   { value: '100%', label: 'Privacy Protected', colorClass: 'stat-counter-emerald' },
-  { value: '25+', label: 'Hours Saved/Week', colorClass: 'stat-counter-sky' },
-  { value: '8', label: 'AI Algorithms', colorClass: 'stat-counter-purple' },
-  { value: '95%', label: 'Time Reduction', colorClass: 'stat-counter-amber' },
+  { value: '10+', label: 'Analysis Algorithms', colorClass: 'stat-counter-sky' },
+  { value: '25+', label: 'Body Locations', colorClass: 'stat-counter-purple' },
+  { value: '100%', label: 'Offline Capable', colorClass: 'stat-counter-amber' },
 ];
 
 export const Testimonials: React.FC = () => {
@@ -90,7 +90,10 @@ export const Testimonials: React.FC = () => {
             <span className="gradient-text-animated">Patients & Clinicians</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
-            Real stories from people managing chronic pain and healthcare professionals providing care.
+            How Pain Tracker Pro helps people manage chronic pain and improve healthcare outcomes.
+          </p>
+          <p className="text-sm text-slate-500 mt-2">
+            *Illustrative examples based on intended use cases
           </p>
         </div>
 

@@ -26,7 +26,7 @@ const patientUseCases = [
   {
     icon: TrendingUp,
     title: 'Understand Patterns',
-    description: 'AI-powered pattern detection identifies triggers, correlations, and trends in your pain.',
+    description: 'Heuristic pattern detection identifies triggers, correlations, and trends in your pain.',
     features: ['Trigger identification', 'Weather correlations', 'Time-of-day analysis'],
     gradient: 'from-violet-500 to-purple-500',
     glow: 'violet',
@@ -44,8 +44,8 @@ const patientUseCases = [
 const clinicianUseCases = [
   {
     icon: Brain,
-    title: 'AI-Powered Insights',
-    description: '8 sophisticated algorithms analyze patient data for medication efficacy, triggers, and correlations.',
+    title: 'Pattern Analysis',
+    description: '10+ heuristic algorithms analyze patient data for medication efficacy, triggers, and correlations.',
     features: ['Pearson correlation', 'Treatment efficacy', 'Confidence scoring'],
     gradient: 'from-emerald-500 to-teal-500',
     glow: 'emerald',

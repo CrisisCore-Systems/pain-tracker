@@ -136,7 +136,7 @@ export const Hero: React.FC = () => {
               {/* Subheading */}
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
                 Clinical-grade pain tracking with{' '}
-                <span className="text-sky-400 font-semibold">AI-powered insights</span>,{' '}
+                <span className="text-sky-400 font-semibold">advanced pattern analysis</span>,{' '}
                 automated WorkSafe BC reporting, and{' '}
                 <span className="text-emerald-400 font-semibold">empathy-driven design</span>.{' '}
                 Your data stays on your device.
@@ -146,7 +146,7 @@ export const Hero: React.FC = () => {
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 <div className="badge-glow-sky flex items-center gap-2 text-sm">
                   <Zap className="h-3.5 w-3.5" />
-                  <span>AI Detection</span>
+                  <span>Pattern Analysis</span>
                 </div>
                 <div className="badge-glow-emerald flex items-center gap-2 text-sm">
                   <Shield className="h-3.5 w-3.5" />

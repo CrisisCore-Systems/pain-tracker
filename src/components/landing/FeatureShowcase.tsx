@@ -12,7 +12,7 @@ const features = [
   {
     icon: TrendingUp,
     title: 'Pattern Recognition',
-    description: 'Advanced heuristic analysis detects pain trends, flares, and correlations.',
+    description: 'Advanced heuristic algorithms detect pain trends, flares, and correlations.',
     colorClass: 'icon-purple',
     glowColor: 'rgba(168, 85, 247, 0.3)',
   },
