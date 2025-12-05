@@ -26,7 +26,7 @@ const patientUseCases = [
   {
     icon: TrendingUp,
     title: 'Understand Patterns',
-    description: 'AI-powered pattern detection identifies triggers, correlations, and trends in your pain.',
+    description: 'Smart pattern detection identifies triggers, correlations, and trends in your pain data.',
     features: ['Trigger identification', 'Weather correlations', 'Time-of-day analysis'],
     gradient: 'from-violet-500 to-purple-500',
     glow: 'violet',
@@ -44,8 +44,8 @@ const patientUseCases = [
 const clinicianUseCases = [
   {
     icon: Brain,
-    title: 'AI-Powered Insights',
-    description: '8 sophisticated algorithms analyze patient data for medication efficacy, triggers, and correlations.',
+    title: 'Smart Pattern Insights',
+    description: '8 heuristic algorithms analyze patient data for medication efficacy, triggers, and correlations.',
     features: ['Pearson correlation', 'Treatment efficacy', 'Confidence scoring'],
     gradient: 'from-emerald-500 to-teal-500',
     glow: 'emerald',
@@ -53,7 +53,7 @@ const clinicianUseCases = [
   {
     icon: Bell,
     title: 'Real-Time Monitoring',
-    description: 'Live patient alerts for pain escalation, missed medications, and crisis detection.',
+    description: 'Patient alerts for pain escalation, missed medications, and crisis detection.',
     features: ['Pain escalation alerts', 'Medication adherence', 'Crisis warnings'],
     gradient: 'from-rose-500 to-pink-500',
     glow: 'rose',
@@ -339,7 +339,7 @@ export const UseCases: React.FC = () => {
             </h2>
             
             <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              Save <span className="text-emerald-400 font-semibold">25+ hours per week</span> with AI-powered insights and automated reporting.
+              Streamline workflows with <span className="text-emerald-400 font-semibold">smart pattern detection</span> and automated reporting.
             </p>
           </div>
 
@@ -357,13 +357,13 @@ export const UseCases: React.FC = () => {
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
                     <AnimatedCounter end={8} />
                   </div>
-                  <p className="text-slate-400 text-sm">AI Algorithms</p>
+                  <p className="text-slate-400 text-sm">Pattern Algorithms</p>
                 </div>
                 <div>
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
-                    <AnimatedCounter end={25} suffix="+" />
+                    <AnimatedCounter end={100} suffix="%" />
                   </div>
-                  <p className="text-slate-400 text-sm">Hours Saved/Week</p>
+                  <p className="text-slate-400 text-sm">Offline Capable</p>
                 </div>
                 <div>
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
@@ -499,7 +499,7 @@ export const UseCases: React.FC = () => {
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                AI insights
+                Smart insights
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />

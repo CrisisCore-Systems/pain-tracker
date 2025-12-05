@@ -134,7 +134,7 @@ export const LandingFooter: React.FC = () => {
                 </span>
               </div>
               <p className="text-slate-400 max-w-md leading-relaxed">
-                Professional-grade chronic pain tracking with AI-powered insights, automated reporting, and trauma-informed design—built with empathy for those who need it most.
+                Professional-grade chronic pain tracking with smart pattern detection, automated reporting, and trauma-informed design—built with empathy for those who need it most.
               </p>
               
               {/* Social links with premium styling */}
@@ -245,11 +245,11 @@ export const LandingFooter: React.FC = () => {
               </h3>
               <ul className="space-y-3 text-sm">
                 {[
-                  '8 AI Algorithms',
+                  '8 Pattern Algorithms',
                   'WorkSafe BC Reports',
                   'Real-Time Monitoring',
                   '100% Offline',
-                  'Military Encryption',
+                  'AES-256 Encryption',
                   'Trauma-Informed',
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-2 text-slate-400">
