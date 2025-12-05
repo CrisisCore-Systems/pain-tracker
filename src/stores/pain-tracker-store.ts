@@ -74,6 +74,7 @@ export interface PainTrackerState {
   setLoading: (loading: boolean) => void;
   clearAllData: () => void;
   loadSampleData: () => void;
+  loadChronicPainTestData: () => void;
   // Reporting
   scheduledReports: import('../types').ScheduledReport[];
   addScheduledReport: (report: import('../types').ScheduledReport) => void;
@@ -334,6 +335,19 @@ export const usePainTrackerStore = create<PainTrackerState>()(
                 state.entries = samplePainEntries;
               });
             });
+          },
+
+          loadChronicPainTestData: () => {
+            // Import and load 12-month chronic pain test data
+            import('../data/chronic-pain-12-month-seed').then(
+              ({ chronicPain12MonthPainEntries, chronicPain12MonthMoodEntries, chronicPainDataStats }) => {
+                console.log('[Store] Loading 12-month chronic pain test data:', chronicPainDataStats);
+                set(state => {
+                  state.entries = chronicPain12MonthPainEntries;
+                  state.moodEntries = chronicPain12MonthMoodEntries;
+                });
+              }
+            );
           },
 
           // Reporting

@@ -120,6 +120,23 @@ function App() {
           console.error('PWA Reset failed:', error);
         }
       };
+      
+      // Expose test data loaders for console access
+      (window as unknown as Record<string, unknown>).loadChronicPainTestData = () => {
+        import('./data/chronic-pain-12-month-seed').then(
+          ({ chronicPain12MonthPainEntries, chronicPain12MonthMoodEntries, chronicPainDataStats }) => {
+            console.log('[Dev] Loading 12-month chronic pain test data:', chronicPainDataStats);
+            usePainTrackerStore.getState().clearAllData();
+            usePainTrackerStore.setState({
+              entries: chronicPain12MonthPainEntries,
+              moodEntries: chronicPain12MonthMoodEntries,
+            });
+            console.log('[Dev] Loaded', chronicPainDataStats.totalPainEntries, 'pain entries and', chronicPainDataStats.totalMoodEntries, 'mood entries');
+          }
+        );
+      };
+      
+      console.log('[Dev] Available commands: window.resetPWA(), window.loadChronicPainTestData()');
     }
   }, []);
   // Subscribe to entries and wire pattern alerts
