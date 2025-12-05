@@ -16,6 +16,8 @@ import {
   ArrowDownRight,
   Minus,
   BarChart3,
+  MessageCircle,
+  Lightbulb,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge } from '../../design-system';
@@ -25,6 +27,17 @@ import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import { isSameLocalDay, localDayStart } from '../../utils/dates';
 import Chart from '../../design-system/components/Chart';
 import { colorVar } from '../../design-system/utils/theme';
+import {
+  describePainLevel,
+  describeTrend,
+  describeStreak,
+  describeEntryCount,
+  describeBestDay,
+  describeChallengingDay,
+  describeImprovementRate,
+  generateHumanizedSummary,
+  getTimeBasedGreeting,
+} from '../../utils/humanize';
 
 // Premium stat card data for consistent styling
 const statCardConfigs = [
@@ -45,7 +58,10 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
   const [showActions, setShowActions] = useState(false);
   const { clearAllData } = usePainTrackerStore();
 
-  // Calculate metrics
+  // Time-based greeting
+  const greeting = useMemo(() => getTimeBasedGreeting(), []);
+
+  // Calculate metrics with humanized descriptions
   const metrics = useMemo(() => {
     const activeEntries = entries ?? [];
     const todayStart = localDayStart(new Date());
@@ -95,6 +111,25 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
     const bestDay = sortedByPain[0];
     const worstDay = sortedByPain[sortedByPain.length - 1];
 
+    const improvementRate = painTrend !== 0 && avgPainOlder !== 0 
+      ? (painTrend / avgPainOlder) * 100 
+      : 0;
+
+    // Generate humanized descriptions
+    const painDescription = describePainLevel(avgPainRecent);
+    const trendDescription = describeTrend(avgPainRecent, avgPainOlder, recentEntries.length >= 3);
+    const streakDescription = describeStreak(currentStreak);
+    const entryDescription = describeEntryCount(activeEntries.length, recentEntries.length);
+    const improvementDescription = describeImprovementRate(improvementRate);
+    const bestDayDescription = describeBestDay(bestDay);
+    const worstDayDescription = describeChallengingDay(worstDay);
+    const humanSummary = generateHumanizedSummary(
+      avgPainRecent,
+      painTrend,
+      currentStreak,
+      activeEntries.length
+    );
+
     return {
       avgPainRecent,
       avgPainOlder,
@@ -104,7 +139,16 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
       currentStreak,
       bestDay,
       worstDay,
-      improvementRate: painTrend !== 0 ? (painTrend / avgPainOlder) * 100 : 0,
+      improvementRate,
+      // Humanized descriptions
+      painDescription,
+      trendDescription,
+      streakDescription,
+      entryDescription,
+      improvementDescription,
+      bestDayDescription,
+      worstDayDescription,
+      humanSummary,
     };
   }, [entries]);
 
@@ -215,9 +259,9 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
               </div>
               <div>
                 <h2 className="text-xl lg:text-2xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                  Dashboard Overview
+                  {greeting.greeting}
                 </h2>
-                <p className="text-sm text-slate-400">Your pain tracking insights</p>
+                <p className="text-sm text-slate-400">{greeting.suggestion}</p>
               </div>
             </div>
 
@@ -262,36 +306,55 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Main Content */}
+      </div>      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
         <PageTransition type="fade" duration={300}>
           <div className="space-y-6">
-            {/* Hero Stats Grid - Premium Glass Cards */}
+            {/* Humanized Summary Card */}
+            <div className="glass-card-premium p-6 lg:p-8">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-400 to-purple-600 shadow-lg shadow-indigo-500/30 shrink-0">
+                  <MessageCircle className="h-6 w-6 text-white" />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-lg font-semibold text-white">Your Week at a Glance</h3>
+                  <p className="text-slate-300 leading-relaxed">{metrics.humanSummary}</p>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <Badge className={cn(
+                      "rounded-full px-3 py-1 text-xs",
+                      metrics.trendDescription.direction === 'improving' 
+                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                        : metrics.trendDescription.direction === 'worsening'
+                          ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
+                          : "bg-slate-500/20 text-slate-300 border-slate-500/30"
+                    )}>
+                      {metrics.trendDescription.headline}
+                    </Badge>
+                    <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 rounded-full px-3 py-1 text-xs">
+                      {metrics.entryDescription.dataQuality === 'rich' ? '📊 Rich data' : 
+                       metrics.entryDescription.dataQuality === 'solid' ? '📈 Solid data' :
+                       metrics.entryDescription.dataQuality === 'growing' ? '🌱 Growing data' : '🌟 Just starting'}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Stats Grid - Premium Glass Cards with Humanized Labels */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Average Pain Card */}
               <div className="glass-card-premium group p-6 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-sky-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="p-2.5 rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/30">
                       <Activity className="h-5 w-5 text-white" />
                     </div>
-                    {getTrendIcon(metrics.painTrend)}
+                    <span className="text-lg">{metrics.painDescription.emoji}</span>
                   </div>
                   <div className="stat-counter stat-counter-sky mb-1">{metrics.avgPainRecent.toFixed(1)}</div>
-                  <div className="text-sm text-slate-300 font-medium">Avg Pain (7d)</div>
-                  <div className="text-xs text-slate-500 mt-2 flex items-center gap-1">
-                    {metrics.painTrend < 0 ? (
-                      <ArrowDownRight className="h-3 w-3 text-emerald-400" />
-                    ) : metrics.painTrend > 0 ? (
-                      <ArrowUpRight className="h-3 w-3 text-red-400" />
-                    ) : (
-                      <Minus className="h-3 w-3 text-slate-400" />
-                    )}
-                    <span>{Math.abs(metrics.painTrend).toFixed(1)} vs last period</span>
-                  </div>
+                  <div className="text-sm text-slate-300 font-medium">{metrics.painDescription.level} Pain</div>
+                  <p className="text-xs text-slate-500 mt-2 line-clamp-2">{metrics.painDescription.description}</p>
                 </div>
               </div>
 
@@ -299,15 +362,17 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
               <div className="glass-card-premium group p-6 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 shadow-lg shadow-purple-500/30">
                       <Zap className="h-5 w-5 text-white" />
                     </div>
-                    <Award className="h-5 w-5 text-purple-400/60" />
+                    {metrics.streakDescription.milestone && (
+                      <Award className="h-5 w-5 text-yellow-400" />
+                    )}
                   </div>
                   <div className="stat-counter stat-counter-purple mb-1">{metrics.currentStreak}</div>
                   <div className="text-sm text-slate-300 font-medium">Day Streak</div>
-                  <div className="text-xs text-slate-500 mt-2">Keep tracking daily!</div>
+                  <p className="text-xs text-slate-500 mt-2 line-clamp-2">{metrics.streakDescription.encouragement}</p>
                 </div>
               </div>
 
@@ -315,58 +380,70 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
               <div className="glass-card-premium group p-6 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30">
                       <Calendar className="h-5 w-5 text-white" />
                     </div>
                     <CheckCircle2 className="h-5 w-5 text-emerald-400/60" />
                   </div>
                   <div className="stat-counter stat-counter-emerald mb-1">{metrics.totalEntries}</div>
-                  <div className="text-sm text-slate-300 font-medium">Total Entries</div>
-                  <div className="text-xs text-slate-500 mt-2">{metrics.weeklyEntries} this week</div>
+                  <div className="text-sm text-slate-300 font-medium">{metrics.entryDescription.totalMessage}</div>
+                  <p className="text-xs text-slate-500 mt-2">{metrics.entryDescription.weeklyMessage}</p>
                 </div>
               </div>
 
-              {/* Improvement Card */}
+              {/* Trend/Improvement Card */}
               <div className="glass-card-premium group p-6 relative overflow-hidden">
                 <div className={cn(
                   "absolute inset-0 bg-gradient-to-br to-transparent opacity-0 group-hover:opacity-100 transition-opacity",
-                  metrics.improvementRate < 0 ? "from-emerald-500/10" : metrics.improvementRate > 0 ? "from-amber-500/10" : "from-slate-500/10"
+                  metrics.improvementDescription.tone === 'positive' ? "from-emerald-500/10" : 
+                  metrics.improvementDescription.tone === 'attention' ? "from-amber-500/10" : "from-slate-500/10"
                 )} />
                 <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <div className={cn(
                       "p-2.5 rounded-xl shadow-lg",
-                      metrics.improvementRate < 0 
+                      metrics.improvementDescription.tone === 'positive'
                         ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-500/30"
-                        : metrics.improvementRate > 0
+                        : metrics.improvementDescription.tone === 'attention'
                           ? "bg-gradient-to-br from-amber-400 to-amber-600 shadow-amber-500/30"
                           : "bg-gradient-to-br from-slate-400 to-slate-600 shadow-slate-500/30"
                     )}>
                       <Target className="h-5 w-5 text-white" />
                     </div>
-                    {metrics.improvementRate < 0 ? (
+                    {metrics.trendDescription.direction === 'improving' ? (
                       <TrendingDown className="h-5 w-5 text-emerald-400" />
-                    ) : metrics.improvementRate > 0 ? (
+                    ) : metrics.trendDescription.direction === 'worsening' ? (
                       <TrendingUp className="h-5 w-5 text-amber-400" />
                     ) : (
                       <Minus className="h-5 w-5 text-slate-400" />
                     )}
                   </div>
                   <div className={cn(
-                    "stat-counter mb-1",
-                    metrics.improvementRate < 0 ? "stat-counter-emerald" : metrics.improvementRate > 0 ? "stat-counter-amber" : "text-slate-300"
+                    "text-2xl font-bold mb-1",
+                    metrics.improvementDescription.tone === 'positive' ? "text-emerald-400" : 
+                    metrics.improvementDescription.tone === 'attention' ? "text-amber-400" : "text-slate-300"
                   )}>
-                    {Math.abs(metrics.improvementRate).toFixed(0)}%
+                    {metrics.improvementDescription.label}
                   </div>
-                  <div className="text-sm text-slate-300 font-medium">
-                    {metrics.improvementRate < 0
-                      ? 'Improving'
-                      : metrics.improvementRate > 0
-                        ? 'Needs Attention'
-                        : 'Stable'}
-                  </div>
-                  <div className="text-xs text-slate-500 mt-2">vs previous period</div>
+                  <div className="text-sm text-slate-300 font-medium">{metrics.improvementDescription.description}</div>
+                  <p className="text-xs text-slate-500 mt-2">{metrics.improvementDescription.suggestion}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Actionable Insight Card */}
+            <div className="glass-card-premium p-6 border-l-4 border-l-sky-500">
+              <div className="flex items-start gap-4">
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg shadow-sky-500/30 shrink-0">
+                  <Lightbulb className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-sky-300 mb-1">What This Means For You</h4>
+                  <p className="text-slate-300 text-sm leading-relaxed">{metrics.trendDescription.detail}</p>
+                  <p className="text-slate-400 text-sm mt-2">
+                    <span className="text-sky-400 font-medium">Suggested action:</span> {metrics.trendDescription.actionItem}
+                  </p>
                 </div>
               </div>
             </div>
@@ -380,7 +457,7 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-white">Pain Trend</h3>
-                    <p className="text-sm text-slate-400">Your pain levels over time</p>
+                    <p className="text-sm text-slate-400">{metrics.trendDescription.encouragement}</p>
                   </div>
                 </div>
                 <Badge className="bg-sky-500/20 text-sky-300 border-sky-500/30 rounded-full px-3 py-1">
@@ -396,55 +473,66 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
               </div>
             </div>
 
-            {/* Quick Insights - Premium Cards */}
+            {/* Quick Insights - Premium Cards with Humanized Context */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {metrics.bestDay && (
+              {metrics.bestDayDescription && (
                 <div className="glass-card-premium p-6 relative overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent" />
-                  <div className="relative z-10 flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30">
-                      <CheckCircle2 className="h-6 w-6 text-white" />
+                  <div className="relative z-10">
+                    <div className="flex items-start gap-4 mb-3">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-lg shadow-emerald-500/30">
+                        <CheckCircle2 className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-emerald-300 mb-1">Your Best Day</h4>
+                        <p className="text-2xl font-bold text-white">{metrics.bestDayDescription.headline}</p>
+                        <p className="text-xs text-slate-400 mt-1">{metrics.bestDayDescription.context}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-emerald-300 mb-1">Best Day</h4>
-                      <p className="text-2xl font-bold text-white">
-                        {metrics.bestDay.baselineData.pain}/10
-                      </p>
-                      <p className="text-xs text-slate-400 mt-1">
-                        {new Date(metrics.bestDay.timestamp).toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </p>
-                    </div>
+                    <p className="text-sm text-slate-300 border-t border-slate-700/50 pt-3 mt-3">
+                      {metrics.bestDayDescription.insight}
+                    </p>
                   </div>
                 </div>
               )}
 
-              {metrics.worstDay && (
+              {metrics.worstDayDescription && (
                 <div className="glass-card-premium p-6 relative overflow-hidden group">
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent" />
-                  <div className="relative z-10 flex items-start gap-4">
-                    <div className="p-3 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/30">
-                      <AlertCircle className="h-6 w-6 text-white" />
+                  <div className="relative z-10">
+                    <div className="flex items-start gap-4 mb-3">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg shadow-amber-500/30">
+                        <AlertCircle className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-amber-300 mb-1">Most Challenging Day</h4>
+                        <p className="text-2xl font-bold text-white">{metrics.worstDayDescription.headline}</p>
+                        <p className="text-xs text-slate-400 mt-1">{metrics.worstDayDescription.context}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-amber-300 mb-1">Challenging Day</h4>
-                      <p className="text-2xl font-bold text-white">
-                        {metrics.worstDay.baselineData.pain}/10
-                      </p>
-                      <p className="text-xs text-slate-400 mt-1">
-                        {new Date(metrics.worstDay.timestamp).toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </p>
-                    </div>
+                    <p className="text-sm text-slate-300 border-t border-slate-700/50 pt-3 mt-3">
+                      {metrics.worstDayDescription.insight}
+                    </p>
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Pain Level Legend */}
+            <div className="glass-card-premium p-6">
+              <h4 className="text-sm font-semibold text-slate-300 mb-4">Understanding Your Pain Scale</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                {[0, 2, 4, 6, 8, 10].map((level) => {
+                  const desc = describePainLevel(level);
+                  return (
+                    <div key={level} className="text-center p-3 rounded-lg bg-slate-800/50 hover:bg-slate-800 transition-colors">
+                      <span className="text-2xl mb-1 block">{desc.emoji}</span>
+                      <span className="text-xs font-medium text-slate-300">{desc.level}</span>
+                      <span className="text-xs text-slate-500 block">{level}/10</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </PageTransition>
