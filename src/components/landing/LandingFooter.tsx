@@ -225,11 +225,11 @@ export const LandingFooter: React.FC = () => {
               <ul className="space-y-4 text-sm">
                 {[
                   { label: 'All Posts', href: 'https://blog.paintracker.ca' },
-                  { label: 'Why We Built This', href: 'https://blog.paintracker.ca/blog/building-a-pain-tracker-that-actually-gets-it-no-market-research-required' },
-                  { label: 'Crisis Detection', href: 'https://blog.paintracker.ca/blog/i-built-a-crisis-detection-engine-that-never-phones-home' },
-                  { label: 'Trauma-Informed Design', href: 'https://blog.paintracker.ca/blog/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design' },
-                  { label: 'Healthcare PWA', href: 'https://blog.paintracker.ca/blog/building-a-healthcare-pwa-that-actually-works-when-it-matters' },
-                  { label: 'WorkSafe BC Auto-Fill', href: 'https://blog.paintracker.ca/blog/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free' },
+                  { label: 'Why We Built This', href: 'https://blog.paintracker.ca/building-a-pain-tracker-that-actually-gets-it-no-market-research-required' },
+                  { label: 'Crisis Detection', href: 'https://blog.paintracker.ca/i-built-a-crisis-detection-engine-that-never-phones-home' },
+                  { label: 'Trauma-Informed Design', href: 'https://blog.paintracker.ca/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design' },
+                  { label: 'Healthcare PWA', href: 'https://blog.paintracker.ca/building-a-healthcare-pwa-that-actually-works-when-it-matters' },
+                  { label: 'WorkSafe BC Auto-Fill', href: 'https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free' },
                 ].map((item) => (
                   <li key={item.label}>
                     <a

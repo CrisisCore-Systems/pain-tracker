@@ -84,7 +84,7 @@ export const FeaturedBlogPosts: React.FC = () => {
           {featuredPosts.map((post, index) => (
             <a
               key={post.slug}
-              href={`https://blog.paintracker.ca/blog/${post.slug}`}
+              href={`https://blog.paintracker.ca/${post.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="group relative rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
