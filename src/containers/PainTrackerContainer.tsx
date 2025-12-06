@@ -15,6 +15,7 @@ import { FibromyalgiaTracker } from '../components/fibromyalgia/FibromyalgiaTrac
 import DailyCheckin from '../components/checkin/DailyCheckin';
 import SettingsPage from '../pages/SettingsPage';
 import HelpAndSupportPage from '../pages/HelpAndSupportPage';
+import { ReportsPage } from '../components/reports';
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
 const OnboardingFlow = lazy(() =>
@@ -222,15 +223,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         return <CalendarView entries={entries} />;
 
       case 'reports':
-        return (
-          <div className="text-center py-20">
-            <div className="inline-flex p-6 bg-gray-100 dark:bg-gray-800 rounded-2xl mb-4">
-              <span className="text-4xl">🚧</span>
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Coming Soon</h3>
-            <p className="text-gray-600 dark:text-gray-400">This feature is under development</p>
-          </div>
-        );
+        return <ReportsPage entries={entries} />;
 
       case 'settings':
         return <SettingsPage />;
