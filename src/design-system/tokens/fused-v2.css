@@ -158,17 +158,11 @@
 }
 
 /* === Base Styles === */
-body {
-  font-family: var(--font-family);
-  font-size: var(--text-body-size);
-  line-height: var(--text-body-height);
-  font-weight: var(--text-body-weight);
-  color: var(--ink-50);
-  background-color: var(--surface-900);
-  font-feature-settings: 'tnum' 1; /* Tabular numbers */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* NOTE: Global body styles are defined in src/index.css to avoid cascade conflicts.
+   The following tokens are available for components that need fused-v2 design system:
+   - Font: var(--font-family), var(--text-body-size), etc.
+   - Colors: var(--ink-*), var(--surface-*)
+*/
 
 /* === Typography Classes === */
 .text-display {
