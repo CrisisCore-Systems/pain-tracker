@@ -1,0 +1,243 @@
+/**
+ * Animation Utilities
+ * Page transitions, micro-interactions, and loading states
+ * 
+ * USAGE STATUS (Branch 6 CSS Audit):
+ * ✅ ACTIVE: .spinner, .loading-shimmer, .stagger-fade-up, .float-animate
+ * ⏳ RESERVED: .page-enter/exit, .notification-enter/exit, .tooltip-enter/exit
+ *              .stagger-item, .success-animation, .error-shake
+ *              (Available for future React Transition Group or Framer Motion use)
+ */
+
+/* ===== PAGE TRANSITIONS ===== */
+/* Reserved for React Transition Group - not currently in use */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ===== LOADING STATES ===== */
+.loading-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ===== NOTIFICATION ANIMATIONS ===== */
+.notification-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.notification-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ===== STAGGER ANIMATIONS ===== */
+.stagger-item {
+  animation: staggerFadeIn 0.5s ease both;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.1s; }
+.stagger-item:nth-child(2) { animation-delay: 0.2s; }
+.stagger-item:nth-child(3) { animation-delay: 0.3s; }
+.stagger-item:nth-child(4) { animation-delay: 0.4s; }
+.stagger-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== SUCCESS/ERROR ANIMATIONS ===== */
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success-animation {
+  animation: successPulse 0.6s ease;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.error-shake {
+  animation: shake 0.5s ease;
+}
+
+/* ===== TOOLTIP ANIMATIONS ===== */
+.tooltip-enter {
+  opacity: 0;
+  transform: scale(0.9) translateY(5px);
+}
+
+.tooltip-enter-active {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tooltip-exit {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.tooltip-exit-active {
+  opacity: 0;
+  transform: scale(0.9) translateY(5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* ===== MODAL BACKDROP ===== */
+.modal-backdrop {
+  animation: fadeIn 0.2s ease;
+}
+
+/* ===== TAB CONTENT ===== */
+.tab-content {
+  animation: fadeInUp 0.3s ease;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-fill {
+  transition: width 0.5s ease;
+}
+
+/* ===== STAGGER FADE UP ===== */
+.stagger-fade-up > * {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: stagger-fade-up-item 0.6s ease-out forwards;
+}
+
+.stagger-fade-up > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-fade-up > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-fade-up > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-fade-up > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-fade-up > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-fade-up > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes stagger-fade-up-item {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== FLOATING ANIMATIONS ===== */
+.float-animate {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+.float-animate-delay-1 {
+  animation-delay: 0.5s;
+}
+
+.float-animate-delay-2 {
+  animation-delay: 1s;
+}
+
+.float-animate-delay-3 {
+  animation-delay: 1.5s;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ===== SCROLL INDICATOR ===== */
+.scroll-indicator-elegant {
+  width: 28px;
+  height: 48px;
+  border: 2px solid rgba(148, 163, 184, 0.4);
+  border-radius: 14px;
+  position: relative;
+}
+
+.scroll-indicator-elegant::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 4px;
+  height: 10px;
+  background: linear-gradient(180deg, #38bdf8 0%, rgba(56, 189, 248, 0.3) 100%);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  animation: scroll-bounce 2s ease-in-out infinite;
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  50% { transform: translateX(-50%) translateY(12px); opacity: 0.5; }
+}
+
+/* Note: fadeIn and fadeInUp keyframes are defined in design-system/theme/animations.css */

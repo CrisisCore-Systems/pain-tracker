@@ -4,11 +4,12 @@ import { formatNumber } from '../formatting';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { trackDataExported } from '../../analytics/ga4-events';
 import { trackExport } from '../usage-tracking';
+import { analyticsLogger } from '../../lib/debug-logger';
 
 export const exportToCSV = (entries: PainEntry[]): string => {
   // Track export analytics
-  privacyAnalytics.trackDataExport('csv').catch(() => {
-    // Silently fail - analytics should not affect user experience
+  privacyAnalytics.trackDataExport('csv').catch((error) => {
+    analyticsLogger.swallowed(error, { context: 'exportToCSV', exportType: 'csv' });
   });
 
   // Track GA4 custom event
@@ -53,8 +54,8 @@ export const exportToCSV = (entries: PainEntry[]): string => {
 
 export const exportToJSON = (entries: PainEntry[]): string => {
   // Track export analytics
-  privacyAnalytics.trackDataExport('json').catch(() => {
-    // Silently fail - analytics should not affect user experience
+  privacyAnalytics.trackDataExport('json').catch((error) => {
+    analyticsLogger.swallowed(error, { context: 'exportToJSON', exportType: 'json' });
   });
 
   // Track GA4 custom event
@@ -94,8 +95,8 @@ export const downloadData = (
 
 export const exportToPDF = (entries: PainEntry[]): string => {
   // Track export analytics
-  privacyAnalytics.trackDataExport('pdf').catch(() => {
-    // Silently fail - analytics should not affect user experience
+  privacyAnalytics.trackDataExport('pdf').catch((error) => {
+    analyticsLogger.swallowed(error, { context: 'exportToPDF', exportType: 'pdf' });
   });
 
   // Track GA4 custom event

@@ -1,6 +1,10 @@
 /* eslint-disable */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function linearize(c) {
   const s = c / 255;
@@ -24,7 +28,8 @@ function parseRgb(str) {
   return null;
 }
 
-const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'index.css'), 'utf8');
+// Read from the canonical tokens file (single source of truth)
+const css = fs.readFileSync(path.join(__dirname, '..', 'src', 'styles', 'base', 'tokens.css'), 'utf8');
 
 function extractBlock(selector) {
   const re = new RegExp(selector.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\s*\\{([\\s\\S]*?)\\}');

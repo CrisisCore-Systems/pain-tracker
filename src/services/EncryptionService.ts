@@ -467,6 +467,21 @@ export class EndToEndEncryptionService {
   }
 
   /**
+   * Clear all in-memory cached keys for security (e.g., on logout)
+   * Does not affect persisted keys in storage.
+   */
+  clearInMemoryKeyCache(): void {
+    const count = this.inMemoryKeyCache.size;
+    this.inMemoryKeyCache.clear();
+    this.logSecurityEvent({
+      type: 'encryption',
+      level: 'info',
+      message: `In-memory key cache cleared (${count} keys removed)`,
+      timestamp: new Date(),
+    });
+  }
+
+  /**
    * Encrypt any data object
    */
   async encrypt<T>(data: T, options: EncryptionOptions = {}): Promise<EncryptedData<T>> {
@@ -858,7 +873,7 @@ export class EndToEndEncryptionService {
         process.env &&
         (process.env.VITEST || process.env.NODE_ENV === 'test')
           ? 500
-          : 10000;
+          : 310000; // OWASP recommended minimum for PBKDF2-HMAC-SHA256
       const derivedRaw = await deriveKeyFromPassword(password, salt, iterationOverride);
       const derivedKeyBase64 = arrayBufferToBase64(derivedRaw);
       await this.keyManager.storeKey(keyId, derivedKeyBase64);
@@ -896,7 +911,7 @@ export class EndToEndEncryptionService {
           process.env &&
           (process.env.VITEST || process.env.NODE_ENV === 'test')
             ? 500
-            : 10000;
+            : 310000; // OWASP recommended minimum for PBKDF2-HMAC-SHA256
         const derivedRaw = await deriveKeyFromPassword(
           password,
           new Uint8Array(salt),

@@ -1,0 +1,111 @@
+/**
+ * Light Theme Styles
+ * Light mode opt-in overrides
+ * 
+ * SELECTOR: Uses :root:not(.dark) for light mode detection.
+ * This matches Tailwind's dark mode strategy and is simpler than data-theme.
+ * 
+ * NOTE ON !important: Some declarations use !important to override
+ * Tailwind utility classes for accessibility contrast fixes. This ensures
+ * WCAG AA compliance. See Branch 5 of CSS audit.
+ */
+
+/* ===== LIGHT-MODE HEADER & BADGE CONTRAST FIXES ===== */
+/* These selectors are specific enough to not need !important */
+:root:not(.dark) .bg-green-100.text-green-600,
+:root:not(.dark) .bg-green-100.text-green-700,
+:root:not(.dark) .bg-green-100.text-green-800 {
+  color: rgb(var(--color-foreground));
+  font-weight: 700;
+}
+
+:root:not(.dark) .bg-blue-100.text-blue-600,
+:root:not(.dark) .bg-rose-100.text-rose-600,
+:root:not(.dark) .bg-amber-100.text-amber-600 {
+  color: rgb(var(--color-foreground));
+  font-weight: 700;
+}
+
+/* Target specific header/nav utility classes for low contrast fixes */
+:root:not(.dark) .lg\:text-xl.sm\:text-lg.truncate,
+:root:not(.dark) .lg\:flex > .justify-center > .text-sm,
+:root:not(.dark) .md\:flex > .justify-center > .text-sm,
+:root:not(.dark) .xs\:inline {
+  color: rgb(var(--color-foreground)) !important;
+}
+
+/* Ensure primary/accent buttons have light text on colored backgrounds */
+:root:not(.dark) .bg-primary,
+:root:not(.dark) .bg-primary *,
+:root:not(.dark) .bg-accent,
+:root:not(.dark) .bg-accent * {
+  color: #ffffff !important;
+}
+
+/* Ensure CTA text is white inside primary-colored buttons */
+:root:not(.dark) .bg-primary .whitespace-nowrap {
+  color: #ffffff !important;
+}
+
+/* ===== LIGHT MODE SLIDER STYLING ===== */
+/* Uses semantic tokens for consistency with the design system */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  background: rgb(var(--color-muted));
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--color-border));
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: rgb(var(--color-primary));
+  border-radius: 50%;
+  margin-top: -9px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  border: 2px solid #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+input[type="range"]::-moz-range-track {
+  height: 8px;
+  background: rgb(var(--color-muted));
+  border-radius: 9999px;
+  border: 1px solid rgb(var(--color-border));
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: rgb(var(--color-primary));
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgb(var(--color-ring) / 0.4);
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgb(var(--color-ring) / 0.4);
+}

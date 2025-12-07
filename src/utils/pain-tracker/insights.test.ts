@@ -16,17 +16,40 @@ const makeEntry = (
     timestamp: timestamp.toISOString(),
     baselineData: {
       pain,
-      locations: rest.baselineData?.locations,
-      symptoms: rest.baselineData?.symptoms,
+      locations: rest.baselineData?.locations ?? [],
+      symptoms: rest.baselineData?.symptoms ?? [],
     },
-    notes: rest.notes,
+    notes: rest.notes ?? '',
     triggers: rest.triggers,
-    qualityOfLife: rest.qualityOfLife,
-    workImpact: rest.workImpact,
-    comparison: rest.comparison,
-    functionalImpact: rest.functionalImpact,
-    medications: rest.medications,
-    treatments: rest.treatments,
+    qualityOfLife: rest.qualityOfLife ?? {
+      sleepQuality: 5,
+      moodImpact: 5,
+      socialImpact: [],
+    },
+    workImpact: rest.workImpact ?? {
+      missedWork: 0,
+      modifiedDuties: [],
+      workLimitations: [],
+    },
+    comparison: rest.comparison ?? {
+      worseningSince: '',
+      newLimitations: [],
+    },
+    functionalImpact: rest.functionalImpact ?? {
+      limitedActivities: [],
+      assistanceNeeded: [],
+      mobilityAids: [],
+    },
+    medications: rest.medications ?? {
+      current: [],
+      changes: '',
+      effectiveness: '',
+    },
+    treatments: rest.treatments ?? {
+      recent: [],
+      effectiveness: '',
+      planned: [],
+    },
   };
 };
 

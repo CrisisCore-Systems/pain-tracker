@@ -92,7 +92,15 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
                 onChange={e => onChange({ pain: parseInt(e.target.value) })}
                 className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
                 aria-label={`Pain level: ${pain} out of 10 - ${getPainLevelDescription(pain)}`}
+                aria-describedby="pain-level-description"
+                aria-valuemin={0}
+                aria-valuemax={10}
+                aria-valuenow={pain}
+                aria-valuetext={`${pain} out of 10, ${getPainLevelDescription(pain)}`}
               />
+              <p id="pain-level-description" className="sr-only">
+                Use the slider or buttons below to indicate your current pain level from 0 (no pain) to 10 (worst possible pain)
+              </p>
 
               <div className="flex justify-between text-xs text-muted-foreground px-1">
                 <span>

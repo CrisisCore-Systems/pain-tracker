@@ -872,7 +872,6 @@ export function getEnhancedGreeting(
   recentEntries: PainEntry[],
   userName?: string
 ): EnhancedGreeting {
-  const hour = new Date().getHours();
   const baseGreeting = getTimeBasedGreeting();
   
   // Personalize with name if available

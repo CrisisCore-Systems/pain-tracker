@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react';
 import type { FilterCriteria, SavedFilter } from '../components/dashboard/AdvancedFilters';
+import { secureStorage } from '../lib/storage/secureStorage';
 
-const SAVED_FILTERS_KEY = 'pain-tracker-saved-filters';
+const SAVED_FILTERS_KEY = 'saved-filters';
 
 export function useSavedFilters() {
   const [savedFilters, setSavedFilters] = useState<SavedFilter[]>([]);
 
-  // Load saved filters from localStorage on mount
+  // Load saved filters from secureStorage on mount
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(SAVED_FILTERS_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setSavedFilters(parsed);
+      const stored = secureStorage.get<SavedFilter[]>(SAVED_FILTERS_KEY);
+      if (stored && Array.isArray(stored)) {
+        setSavedFilters(stored);
       }
     } catch (error) {
       console.error('Failed to load saved filters:', error);
     }
   }, []);
 
-  // Save filters to localStorage whenever they change
+  // Save filters to secureStorage whenever they change
   useEffect(() => {
     try {
-      localStorage.setItem(SAVED_FILTERS_KEY, JSON.stringify(savedFilters));
+      secureStorage.set(SAVED_FILTERS_KEY, savedFilters);
     } catch (error) {
       console.error('Failed to save filters:', error);
     }

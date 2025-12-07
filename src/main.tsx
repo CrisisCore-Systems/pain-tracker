@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
+import './styles/index.css';
 import './design-system/tokens/fused-v2.css';
 
 // Bootstrap test-mode flag when present in URL or localStorage.

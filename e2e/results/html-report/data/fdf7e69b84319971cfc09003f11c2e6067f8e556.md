@@ -1,0 +1,44 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - button "Back to Home" [ref=e5] [cursor=pointer]:
+    - img [ref=e6] [cursor=pointer]
+    - text: Back to Home
+  - generic [ref=e8]:
+    - img [ref=e10]
+    - heading "Share Your Story" [level=1] [ref=e12]
+    - paragraph [ref=e13]: Your experience matters. Help others understand they're not alone on their journey.
+  - generic [ref=e14]:
+    - generic [ref=e16]:
+      - img [ref=e17]
+      - generic [ref=e19]:
+        - paragraph [ref=e20]: Your privacy matters
+        - paragraph [ref=e21]: You can choose to anonymize your submission. We'll never share your contact information.
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - generic [ref=e25]: Name
+          - textbox "Your name" [ref=e26]
+        - generic [ref=e27]:
+          - generic [ref=e28]: Role
+          - textbox "e.g. Patient, Clinician" [ref=e29]
+      - generic [ref=e30]:
+        - generic [ref=e31]: Email (optional)
+        - textbox "your@email.com" [ref=e32]
+      - generic [ref=e33]:
+        - generic [ref=e34]: Your Story
+        - textbox "Your Story" [ref=e35]
+      - generic [ref=e36]:
+        - generic [ref=e37] [cursor=pointer]:
+          - checkbox "Input field" [ref=e39]
+          - generic [ref=e41] [cursor=pointer]: Publish anonymously
+        - generic [ref=e42] [cursor=pointer]:
+          - checkbox "I consent to my story being reviewed and published" [ref=e44]
+          - generic [ref=e46] [cursor=pointer]: I consent to my story being reviewed and published
+      - generic [ref=e47]:
+        - button "Submit Story" [ref=e48] [cursor=pointer]:
+          - img [ref=e49] [cursor=pointer]
+          - text: Submit Story
+        - button "Cancel" [ref=e52] [cursor=pointer]
+```

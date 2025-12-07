@@ -166,61 +166,64 @@ export default {
   plugins: [
     /* Accessibility helper plugin: inject light-mode base rules for pale badge backgrounds
        so text on those backgrounds uses the foreground color and a stronger weight.
-       This centralizes the fixes in Tailwind's theme system rather than ad-hoc overrides. */
+       This centralizes the fixes in Tailwind's theme system rather than ad-hoc overrides.
+       
+       SELECTOR: Uses :root:not(.dark) for light mode detection.
+       This matches Tailwind's darkMode: ['class'] strategy. */
     function ({ addBase, addUtilities, theme }) {
       addBase({
         // Pale badge backgrounds: make text use foreground color + heavier weight in light mode
-        ':root:not([data-theme="dark"]) .bg-green-100': {
+        ':root:not(.dark) .bg-green-100': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
-        ':root:not([data-theme="dark"]) .bg-blue-100': {
+        ':root:not(.dark) .bg-blue-100': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
-        ':root:not([data-theme="dark"]) .bg-rose-100': {
+        ':root:not(.dark) .bg-rose-100': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
-        ':root:not([data-theme="dark"]) .bg-amber-100': {
+        ':root:not(.dark) .bg-amber-100': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
         // Header with translucent bg (bordered sticky header)
-        ':root:not([data-theme="dark"]) .border-b.bg-white\\/80, :root:not([data-theme="dark"]) .border-b.bg-white\\/80 *': {
+        ':root:not(.dark) .border-b.bg-white\\/80, :root:not(.dark) .border-b.bg-white\\/80 *': {
           color: theme('colors.foreground'),
         },
         // Ensure primary/accent colored backgrounds display light text in light mode
-        ':root:not([data-theme="dark"]) .bg-primary, :root:not([data-theme="dark"]) .bg-primary *': {
+        ':root:not(.dark) .bg-primary, :root:not(.dark) .bg-primary *': {
           color: theme('colors.primary.foreground'),
         },
-        ':root:not([data-theme="dark"]) .bg-accent, :root:not([data-theme="dark"]) .bg-accent *': {
+        ':root:not(.dark) .bg-accent, :root:not(.dark) .bg-accent *': {
           color: theme('colors.accent.foreground'),
         },
         // Light-mode hero safeguard
-        ':root:not([data-theme="dark"]) .hero, :root:not([data-theme="dark"]) .hero *': {
+        ':root:not(.dark) .hero, :root:not(.dark) .hero *': {
           color: theme('colors.foreground'),
         },
       });
 
       addUtilities({
-        ':root:not([data-theme="dark"]) .bg-green-100.text-green-600': {
+        ':root:not(.dark) .bg-green-100.text-green-600': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
-        ':root:not([data-theme="dark"]) .bg-green-100.text-green-800': {
+        ':root:not(.dark) .bg-green-100.text-green-800': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
-        ':root:not([data-theme="dark"]) .bg-blue-100.text-blue-600': {
+        ':root:not(.dark) .bg-blue-100.text-blue-600': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
-        ':root:not([data-theme="dark"]) .bg-rose-100.text-rose-600': {
+        ':root:not(.dark) .bg-rose-100.text-rose-600': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },
-        ':root:not([data-theme="dark"]) .bg-amber-100.text-amber-600': {
+        ':root:not(.dark) .bg-amber-100.text-amber-600': {
           color: theme('colors.foreground'),
           fontWeight: '700',
         },

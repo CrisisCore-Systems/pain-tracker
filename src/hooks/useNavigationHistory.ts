@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { secureStorage } from '../lib/storage/secureStorage';
 
 export interface NavigationHistoryItem {
   id: string;
@@ -65,34 +66,30 @@ export function useNavigationHistory(options: UseNavigationHistoryOptions = {}) 
   const [isQuickSwitching, setIsQuickSwitching] = useState(false);
   const quickSwitchTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Load from localStorage on mount
+  // Load from secureStorage on mount
   useEffect(() => {
     if (!persistKey) return;
 
     try {
-      const stored = localStorage.getItem(persistKey);
+      const stored = secureStorage.get<{ history: NavigationHistoryItem[]; currentIndex: number }>(persistKey);
       if (stored) {
-        const parsed = JSON.parse(stored);
-        setHistory(parsed.history || []);
-        setCurrentIndex(parsed.currentIndex ?? -1);
+        setHistory(stored.history || []);
+        setCurrentIndex(stored.currentIndex ?? -1);
       }
     } catch (error) {
       console.error('Failed to load navigation history:', error);
     }
   }, [persistKey]);
 
-  // Save to localStorage when history changes
+  // Save to secureStorage when history changes
   useEffect(() => {
     if (!persistKey) return;
 
     try {
-      localStorage.setItem(
-        persistKey,
-        JSON.stringify({
-          history,
-          currentIndex,
-        })
-      );
+      secureStorage.set(persistKey, {
+        history,
+        currentIndex,
+      });
     } catch (error) {
       console.error('Failed to save navigation history:', error);
     }

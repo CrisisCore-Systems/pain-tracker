@@ -118,13 +118,14 @@ export const clearPainEntries = async (): Promise<void> => {
 
 /**
  * Type guard to validate PainEntry structure
+ * Accepts both number and string IDs as per PainEntry type definition
  */
 const isValidPainEntry = (entry: unknown): entry is PainEntry => {
   if (!entry || typeof entry !== 'object') return false;
 
   const e = entry as Partial<PainEntry>;
   return (
-    typeof e.id === 'number' &&
+    (typeof e.id === 'number' || typeof e.id === 'string') &&
     typeof e.timestamp === 'string' &&
     e.baselineData !== undefined &&
     typeof e.baselineData.pain === 'number' &&

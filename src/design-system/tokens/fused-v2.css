@@ -1,6 +1,14 @@
 /**
  * Fused Blueprint v2 Design Tokens
  * Truth before beauty. Calm clarity. Dark by default.
+ * 
+ * TOKEN SYSTEM:
+ * This is a SEPARATE token system from src/styles/base/tokens.css.
+ * - Used by: design-system components (QuickLogStepper, MetricCard, etc.)
+ * - Tokens: --ink-*, --surface-*, --severity-*, --primary-*, typography, spacing
+ * 
+ * The main app uses --color-* tokens from tokens.css (consumed by Tailwind).
+ * These two systems coexist and serve different purposes.
  */
 
 :root {
@@ -158,7 +166,7 @@
 }
 
 /* === Base Styles === */
-/* NOTE: Global body styles are defined in src/index.css to avoid cascade conflicts.
+/* NOTE: Global body styles are defined in src/styles/base/reset.css to avoid cascade conflicts.
    The following tokens are available for components that need fused-v2 design system:
    - Font: var(--font-family), var(--text-body-size), etc.
    - Colors: var(--ink-*), var(--surface-*)
@@ -267,24 +275,8 @@
   top: var(--space-4);
 }
 
-/* === Screen Reader Only === */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* === Touch Target Minimum Size === */
-.touch-target {
-  min-width: 44px;
-  min-height: 44px;
-}
+/* NOTE: .sr-only is provided by Tailwind's built-in utility */
+/* NOTE: .touch-target is defined in src/styles/utilities/mobile.css */
 
 /* === High Contrast Mode Support === */
 @media (prefers-contrast: more) {

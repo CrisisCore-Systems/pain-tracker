@@ -37,7 +37,7 @@ const variants: Record<Variant, string> = {
   gradient: '',
 };
 
-// Runtime color styles using CSS custom properties defined in src/index.css
+// Runtime color styles using CSS custom properties defined in src/styles/base/tokens.css
 const colorStyles: Record<Variant, React.CSSProperties> = {
   primary: {
     backgroundColor: 'rgb(var(--color-primary))',

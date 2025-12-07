@@ -1,13 +1,24 @@
-import { z } from 'zod';
+/**
+ * PainEntry Zod Schema
+ *
+ * @deprecated This file is maintained for backwards compatibility.
+ * Import schemas directly from '../types/pain-entry' or '../types'
+ */
 
-export const PainEntrySchema = z.object({
-  id: z.string().uuid().optional(),
-  intensity: z.number().min(0).max(10),
-  location: z.string().optional(),
-  description: z.string().optional(),
-  timestamp: z.string().datetime(),
-});
+// Re-export schemas from pain-entry module
+export {
+  PainEntrySchema,
+  CreatePainEntrySchema,
+  UpdatePainEntrySchema,
+  BaselineDataSchema,
+  TreatmentSchema,
+  MedicationSchema,
+  validatePainEntry,
+  safeParsePainEntry,
+} from '../types/pain-entry';
 
-export type PainEntry = z.infer<typeof PainEntrySchema>;
+// Re-export canonical PainEntry type from types/index
+export type { PainEntry } from '../types/index';
 
-export default PainEntrySchema;
+export default null; // Deprecated - use named exports
+

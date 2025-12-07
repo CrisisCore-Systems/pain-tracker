@@ -43,6 +43,35 @@ function createMockEntry(
       locations: [],
       symptoms: [],
     },
+    functionalImpact: {
+      limitedActivities: [],
+      assistanceNeeded: [],
+      mobilityAids: [],
+    },
+    medications: {
+      current: [],
+      changes: '',
+      effectiveness: '',
+    },
+    treatments: {
+      recent: [],
+      effectiveness: '',
+      planned: [],
+    },
+    qualityOfLife: {
+      sleepQuality: 5,
+      moodImpact: 5,
+      socialImpact: [],
+    },
+    workImpact: {
+      missedWork: 0,
+      modifiedDuties: [],
+      workLimitations: [],
+    },
+    comparison: {
+      worseningSince: '',
+      newLimitations: [],
+    },
     triggers,
     notes: '',
   };

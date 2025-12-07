@@ -1,0 +1,149 @@
+/**
+ * Form Component Styles
+ * Form field animations, focus states, and input styling
+ */
+
+/* Form field focus animations */
+.form-field {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.form-field:focus-within {
+  transform: translateY(-1px);
+}
+
+.form-field:focus-within::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, rgb(var(--color-primary)), rgb(var(--color-accent)));
+  border-radius: 8px;
+  z-index: -1;
+  opacity: 0.1;
+  animation: glow 0.3s ease;
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+}
+
+/* ===== RANGE INPUT (SLIDER) BASE STYLING ===== */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 20px;
+  width: 100%;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile form improvements */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Better spacing for mobile forms */
+  .mobile-form-spacing > * + * {
+    margin-top: 1rem;
+  }
+}
+
+/* ===== PAIN ENTRY FORM COMPONENTS ===== */
+/* Extracted inline styles for better maintainability and consistency */
+
+.pain-form-container {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.pain-form-section-inner {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pain-form-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pain-form-pill {
+  background: rgba(51, 65, 85, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #64748b;
+}
+
+.pain-form-pill-active {
+  border: 1px solid var(--pill-border-color);
+  box-shadow: 0 0 15px var(--pill-glow-color);
+}
+
+.pain-form-pill-completed {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+}
+
+.pain-form-time-badge {
+  background: rgba(51, 65, 85, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+.pain-form-validation-section {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.pain-form-history-section {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pain-form-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.pain-form-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.pain-form-nav-button {
+  background: rgba(51, 65, 85, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pain-form-submit-button {
+  background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.pain-form-submit-button:disabled {
+  box-shadow: none;
+}
+
+.pain-form-progress-section {
+  background: rgba(139, 92, 246, 0.15);
+}
+
+.pain-form-toggle-button {
+  background: rgba(51, 65, 85, 0.3);
+}

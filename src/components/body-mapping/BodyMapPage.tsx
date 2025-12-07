@@ -29,7 +29,36 @@ export function BodyMapPage() {
           locations: selectedRegions,
           symptoms: [],
         },
-        notes: notes || undefined,
+        functionalImpact: {
+          limitedActivities: [],
+          assistanceNeeded: [],
+          mobilityAids: [],
+        },
+        medications: {
+          current: [],
+          changes: '',
+          effectiveness: '',
+        },
+        treatments: {
+          recent: [],
+          effectiveness: '',
+          planned: [],
+        },
+        qualityOfLife: {
+          sleepQuality: 0,
+          moodImpact: 0,
+          socialImpact: [],
+        },
+        workImpact: {
+          missedWork: 0,
+          modifiedDuties: [],
+          workLimitations: [],
+        },
+        comparison: {
+          worseningSince: '',
+          newLimitations: [],
+        },
+        notes: notes || '',
       });
 
       // Reset form

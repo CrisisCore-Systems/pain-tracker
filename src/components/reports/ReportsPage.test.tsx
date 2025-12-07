@@ -28,9 +28,34 @@ const createMockEntry = (overrides: Partial<PainEntry> = {}): PainEntry => ({
     locations: ['lower-back'],
     symptoms: ['aching'],
   },
+  functionalImpact: {
+    limitedActivities: [],
+    assistanceNeeded: [],
+    mobilityAids: [],
+  },
+  medications: {
+    current: [],
+    changes: '',
+    effectiveness: '',
+  },
+  treatments: {
+    recent: [],
+    effectiveness: '',
+    planned: [],
+  },
   qualityOfLife: {
     sleepQuality: 6,
     moodImpact: 5,
+    socialImpact: [],
+  },
+  workImpact: {
+    missedWork: 0,
+    modifiedDuties: [],
+    workLimitations: [],
+  },
+  comparison: {
+    worseningSince: '',
+    newLimitations: [],
   },
   notes: 'Test entry',
   ...overrides,

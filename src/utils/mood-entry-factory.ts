@@ -5,7 +5,8 @@ export function makeMoodEntry(
   data: Partial<MoodEntry> & { timestamp?: string | Date; id?: number } = {}
 ): MoodEntry {
   const ts = toIsoString(data.timestamp) ?? data.timestamp;
-  const id = data.id ?? Date.now();
+  // Generate collision-resistant ID: timestamp * 1000 + random suffix (0-999)
+  const id = data.id ?? (Date.now() * 1000 + Math.floor(Math.random() * 1000));
   return {
     id,
     timestamp: ts ?? new Date().toISOString(),

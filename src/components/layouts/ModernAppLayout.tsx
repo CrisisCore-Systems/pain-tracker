@@ -95,6 +95,8 @@ export function ModernAppLayout({
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="lg:hidden p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
                 aria-label={sidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-expanded={sidebarOpen}
+                aria-controls="mobile-navigation-menu"
                 data-testid="nav-toggle"
               >
                 {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -358,12 +360,16 @@ export function ModernAppLayout({
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
           />
           <aside 
+            id="mobile-navigation-menu"
             className="fixed inset-y-0 left-0 w-72 shadow-2xl"
             style={{
               background: 'linear-gradient(180deg, #0f172a 0%, #020617 100%)',
             }}
+            role="navigation"
+            aria-label="Mobile navigation menu"
           >
             <div className="h-full px-4 py-6 pt-20">
               <nav className="space-y-1.5">

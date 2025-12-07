@@ -14,7 +14,12 @@ interface PatientInfo {
   email?: string;
 }
 
-interface PainEntry {
+/**
+ * Simplified pain entry format used by ReportGenerationService.
+ * This is a flattened format optimized for report generation.
+ * For canonical PainEntry type, see types/index.ts
+ */
+export interface ReportPainEntry {
   id: string;
   timestamp: string;
   painLevel: number;
@@ -65,7 +70,7 @@ export class ReportGenerationService {
    */
   static async generateWorkSafeBCReport(
     patient: PatientInfo,
-    entries: PainEntry[],
+    entries: ReportPainEntry[],
     notes: ClinicalNote[],
     medications: Medication[],
     reportType: 'initial' | 'progress' | 'final'
@@ -113,7 +118,7 @@ export class ReportGenerationService {
    */
   static async generateInsuranceReport(
     patient: PatientInfo,
-    entries: PainEntry[],
+    entries: ReportPainEntry[],
     notes: ClinicalNote[],
     medications: Medication[]
   ): Promise<jsPDF> {
@@ -134,7 +139,7 @@ export class ReportGenerationService {
    */
   static async generateProgressNote(
     patient: PatientInfo,
-    entries: PainEntry[],
+    entries: ReportPainEntry[],
     lastVisit: ClinicalNote,
     medications: Medication[]
   ): Promise<{ pdf: jsPDF; text: string }> {
@@ -155,7 +160,7 @@ export class ReportGenerationService {
   /**
    * Export data as CSV for spreadsheet analysis
    */
-  static exportToCSV(entries: PainEntry[]): string {
+  static exportToCSV(entries: ReportPainEntry[]): string {
     const headers = [
       'Date',
       'Time',
@@ -242,7 +247,7 @@ export class ReportGenerationService {
 
   private static addClinicalSummary(
     pdf: jsPDF,
-    entries: PainEntry[],
+    entries: ReportPainEntry[],
     notes: ClinicalNote[],
     medications: Medication[]
   ) {
@@ -278,7 +283,7 @@ export class ReportGenerationService {
 
   private static addPainAnalysis(
     pdf: jsPDF,
-    entries: PainEntry[],
+    entries: ReportPainEntry[],
     trend: 'improving' | 'stable' | 'worsening'
   ) {
     pdf.addPage();
@@ -390,7 +395,7 @@ export class ReportGenerationService {
 
   private static addTreatmentHistory(
     pdf: jsPDF,
-    entries: PainEntry[],
+    entries: ReportPainEntry[],
     medications: Medication[]
   ) {
     pdf.addPage();
@@ -414,7 +419,7 @@ export class ReportGenerationService {
     });
   }
 
-  private static addPrognosisSection(pdf: jsPDF, entries: PainEntry[]) {
+  private static addPrognosisSection(pdf: jsPDF, entries: ReportPainEntry[]) {
     const y = pdf.internal.pageSize.height / 2;
 
     pdf.setFontSize(12);
@@ -437,7 +442,7 @@ export class ReportGenerationService {
   }
 
   // Analysis helper methods
-  private static analyzePainTrend(entries: PainEntry[]): 'improving' | 'stable' | 'worsening' {
+  private static analyzePainTrend(entries: ReportPainEntry[]): 'improving' | 'stable' | 'worsening' {
     if (entries.length < 2) return 'stable';
 
     const firstHalf = entries.slice(0, Math.floor(entries.length / 2));
@@ -453,12 +458,12 @@ export class ReportGenerationService {
     return 'stable';
   }
 
-  private static calculateAveragePain(entries: PainEntry[]): number {
+  private static calculateAveragePain(entries: ReportPainEntry[]): number {
     if (entries.length === 0) return 0;
     return entries.reduce((sum, e) => sum + e.painLevel, 0) / entries.length;
   }
 
-  private static assessFunctionalImpact(entries: PainEntry[], avgPain: number): string {
+  private static assessFunctionalImpact(entries: ReportPainEntry[], avgPain: number): string {
     if (avgPain < 3) {
       return 'Patient reports minimal functional impact. Able to perform most activities of daily living with minor limitations.';
     } else if (avgPain < 6) {
@@ -518,7 +523,7 @@ export class ReportGenerationService {
     return format(nextDate, 'yyyy-MM-dd');
   }
 
-  private static generateClinicalSummary(entries: PainEntry[], notes: ClinicalNote[]): string {
+  private static generateClinicalSummary(entries: ReportPainEntry[], notes: ClinicalNote[]): string {
     const avgPain = this.calculateAveragePain(entries);
     const trend = this.analyzePainTrend(entries);
     const daySpan = this.calculateDaySpan(entries);
@@ -540,7 +545,7 @@ export class ReportGenerationService {
 
   private static formatProgressNote(
     patient: PatientInfo,
-    entries: PainEntry[],
+    entries: ReportPainEntry[],
     lastVisit: ClinicalNote,
     medications: Medication[]
   ): string {
@@ -572,10 +577,11 @@ ${trend === 'improving' ? 'Continue current treatment plan. Follow-up in 4 weeks
     `.trim();
   }
 
-  private static calculateDaySpan(entries: PainEntry[]): number {
+  private static calculateDaySpan(entries: ReportPainEntry[]): number {
     if (entries.length === 0) return 0;
     const first = new Date(entries[0].timestamp);
     const last = new Date(entries[entries.length - 1].timestamp);
     return Math.ceil((last.getTime() - first.getTime()) / (1000 * 60 * 60 * 24));
   }
 }
+

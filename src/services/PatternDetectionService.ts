@@ -1,9 +1,22 @@
 /**
  * AI-Powered Pattern Detection Service
  * Analyzes patient data to identify pain triggers, medication efficacy, and treatment correlations
+ *
+ * NOTE: This service uses a simplified PainEntry interface for pattern detection.
+ * It maps from the canonical PainEntry type (from types/index.ts) to this
+ * internal format. See convertToPatternEntry() for the mapping.
  */
 
-interface PainEntry {
+import type { PainEntry as CanonicalPainEntry } from '../types';
+
+// Alias for backward compatibility within this file
+type PainEntry = CanonicalPainEntry;
+
+/**
+ * Internal PainEntry format optimized for pattern detection.
+ * Use convertToPatternEntry() to convert from the canonical PainEntry type.
+ */
+interface PatternPainEntry {
   id: string;
   timestamp: string;
   painLevel: number;
@@ -16,6 +29,47 @@ interface PainEntry {
   weather?: string;
   stress?: number;
   notes?: string;
+}
+
+/**
+ * Convert canonical PainEntry to pattern detection format
+ */
+export function convertToPatternEntry(entry: CanonicalPainEntry): PatternPainEntry {
+  return {
+    id: String(entry.id ?? Date.now()),
+    timestamp: entry.timestamp,
+    painLevel: entry.baselineData.pain,
+    location: entry.baselineData.locations?.[0] ?? '',
+    triggers: entry.triggers,
+    medications: entry.medications?.current?.map(m => m.name),
+    activities: entry.functionalImpact?.limitedActivities,
+    mood: entry.qualityOfLife?.moodImpact,
+    sleep: entry.qualityOfLife?.sleepQuality,
+    notes: entry.notes,
+  };
+}
+
+/**
+ * Safe division that returns fallback for division by zero
+ */
+function safeDivide(numerator: number, denominator: number, fallback = 0): number {
+  if (denominator === 0 || !Number.isFinite(denominator)) return fallback;
+  const result = numerator / denominator;
+  return Number.isFinite(result) ? result : fallback;
+}
+
+/**
+ * Get pain level from a PainEntry (canonical type uses baselineData.pain)
+ */
+function getPainLevel(entry: CanonicalPainEntry): number {
+  return entry.intensity ?? entry.baselineData.pain;
+}
+
+/**
+ * Get medication names from a PainEntry
+ */
+function getMedicationNames(entry: CanonicalPainEntry): string[] {
+  return entry.medications?.current?.map(m => m.name) ?? [];
 }
 
 interface Intervention {
@@ -118,12 +172,12 @@ export class PatternDetectionService {
       // Find entries before and after medication started
       const beforeEntries = entries.filter((e) => new Date(e.timestamp) < medDate);
       const afterEntries = entries.filter(
-        (e) => new Date(e.timestamp) >= medDate && e.medications?.includes(medName)
+        (e) => new Date(e.timestamp) >= medDate && getMedicationNames(e).includes(medName)
       );
 
       if (beforeEntries.length >= this.MIN_SAMPLE_SIZE && afterEntries.length >= this.MIN_SAMPLE_SIZE) {
-        const avgPainBefore = this.calculateAverage(beforeEntries.map((e) => e.painLevel));
-        const avgPainAfter = this.calculateAverage(afterEntries.map((e) => e.painLevel));
+        const avgPainBefore = this.calculateAverage(beforeEntries.map((e) => getPainLevel(e)));
+        const avgPainAfter = this.calculateAverage(afterEntries.map((e) => getPainLevel(e)));
         const impact = avgPainBefore - avgPainAfter;
 
         if (Math.abs(impact) >= this.SIGNIFICANT_IMPACT_THRESHOLD) {
@@ -172,7 +226,7 @@ export class PatternDetectionService {
             triggerMap.set(trigger, { painLevels: [], dates: [] });
           }
           const data = triggerMap.get(trigger)!;
-          data.painLevels.push(entry.painLevel);
+          data.painLevels.push(getPainLevel(entry));
           data.dates.push(entry.timestamp);
         }
       }
@@ -188,7 +242,7 @@ export class PatternDetectionService {
         
         if (entriesWithoutTrigger.length >= this.MIN_SAMPLE_SIZE) {
           const avgPainWithoutTrigger = this.calculateAverage(
-            entriesWithoutTrigger.map((e) => e.painLevel)
+            entriesWithoutTrigger.map((e) => getPainLevel(e))
           );
           const impact = avgPainWithTrigger - avgPainWithoutTrigger;
 
@@ -247,7 +301,7 @@ export class PatternDetectionService {
     // Find worst time slot
     const avgPains = Object.entries(timeSlots).map(([name, slot]) => ({
       name,
-      avg: slot.entries.length > 0 ? this.calculateAverage(slot.entries.map((e) => e.painLevel)) : 0,
+      avg: slot.entries.length > 0 ? this.calculateAverage(slot.entries.map((e) => getPainLevel(e))) : 0,
       count: slot.entries.length,
     }));
 
@@ -293,7 +347,7 @@ export class PatternDetectionService {
             activityMap.set(activity, { painLevels: [], dates: [] });
           }
           const data = activityMap.get(activity)!;
-          data.painLevels.push(entry.painLevel);
+          data.painLevels.push(getPainLevel(entry));
           data.dates.push(entry.timestamp);
         }
       }
@@ -303,7 +357,7 @@ export class PatternDetectionService {
     for (const [activity, data] of activityMap.entries()) {
       if (data.painLevels.length >= this.MIN_SAMPLE_SIZE) {
         const avgPainWithActivity = this.calculateAverage(data.painLevels);
-        const avgPainOverall = this.calculateAverage(entries.map((e) => e.painLevel));
+        const avgPainOverall = this.calculateAverage(entries.map((e) => getPainLevel(e)));
         const impact = avgPainWithActivity - avgPainOverall;
 
         if (Math.abs(impact) >= this.SIGNIFICANT_IMPACT_THRESHOLD) {
@@ -351,7 +405,7 @@ export class PatternDetectionService {
           weatherMap.set(entry.weather, { painLevels: [], dates: [] });
         }
         const data = weatherMap.get(entry.weather)!;
-        data.painLevels.push(entry.painLevel);
+        data.painLevels.push(getPainLevel(entry));
         data.dates.push(entry.timestamp);
       }
     }
@@ -363,7 +417,7 @@ export class PatternDetectionService {
         const otherEntries = entries.filter((e) => e.weather && e.weather !== weather);
         
         if (otherEntries.length >= this.MIN_SAMPLE_SIZE) {
-          const avgPainOther = this.calculateAverage(otherEntries.map((e) => e.painLevel));
+          const avgPainOther = this.calculateAverage(otherEntries.map((e) => getPainLevel(e)));
           const impact = avgPainInWeather - avgPainOther;
 
           if (impact >= this.SIGNIFICANT_IMPACT_THRESHOLD) {
@@ -402,15 +456,15 @@ export class PatternDetectionService {
     if (entriesWithSleep.length >= this.MIN_SAMPLE_SIZE) {
       const correlation = this.calculateCorrelation(
         entriesWithSleep.map((e) => e.sleep!),
-        entriesWithSleep.map((e) => e.painLevel)
+        entriesWithSleep.map((e) => getPainLevel(e))
       );
 
       if (Math.abs(correlation) >= this.MEDIUM_CORRELATION_THRESHOLD) {
         const avgPainGoodSleep = this.calculateAverage(
-          entriesWithSleep.filter((e) => e.sleep! >= 7).map((e) => e.painLevel)
+          entriesWithSleep.filter((e) => e.sleep! >= 7).map((e) => getPainLevel(e))
         );
         const avgPainPoorSleep = this.calculateAverage(
-          entriesWithSleep.filter((e) => e.sleep! < 7).map((e) => e.painLevel)
+          entriesWithSleep.filter((e) => e.sleep! < 7).map((e) => getPainLevel(e))
         );
 
         patterns.push({
@@ -450,7 +504,7 @@ export class PatternDetectionService {
     if (entriesWithMood.length >= this.MIN_SAMPLE_SIZE) {
       const correlation = this.calculateCorrelation(
         entriesWithMood.map((e) => e.mood!),
-        entriesWithMood.map((e) => e.painLevel)
+        entriesWithMood.map((e) => getPainLevel(e))
       );
 
       if (Math.abs(correlation) >= this.MEDIUM_CORRELATION_THRESHOLD) {
@@ -491,15 +545,15 @@ export class PatternDetectionService {
     if (entriesWithStress.length >= this.MIN_SAMPLE_SIZE) {
       const correlation = this.calculateCorrelation(
         entriesWithStress.map((e) => e.stress!),
-        entriesWithStress.map((e) => e.painLevel)
+        entriesWithStress.map((e) => getPainLevel(e))
       );
 
       if (Math.abs(correlation) >= this.MEDIUM_CORRELATION_THRESHOLD) {
         const avgPainHighStress = this.calculateAverage(
-          entriesWithStress.filter((e) => e.stress! >= 7).map((e) => e.painLevel)
+          entriesWithStress.filter((e) => e.stress! >= 7).map((e) => getPainLevel(e))
         );
         const avgPainLowStress = this.calculateAverage(
-          entriesWithStress.filter((e) => e.stress! < 7).map((e) => e.painLevel)
+          entriesWithStress.filter((e) => e.stress! < 7).map((e) => getPainLevel(e))
         );
 
         patterns.push({
@@ -551,9 +605,19 @@ export class PatternDetectionService {
   }
 
   // Helper methods
+  
+  /**
+   * Safe division that returns fallback for division by zero or invalid inputs
+   */
+  private static safeDivide(numerator: number, denominator: number, fallback = 0): number {
+    if (denominator === 0 || !Number.isFinite(denominator)) return fallback;
+    const result = numerator / denominator;
+    return Number.isFinite(result) ? result : fallback;
+  }
+
   private static calculateAverage(numbers: number[]): number {
     if (numbers.length === 0) return 0;
-    return numbers.reduce((a, b) => a + b, 0) / numbers.length;
+    return this.safeDivide(numbers.reduce((a, b) => a + b, 0), numbers.length, 0);
   }
 
   private static calculateCorrelation(x: number[], y: number[]): number {
@@ -569,7 +633,7 @@ export class PatternDetectionService {
     const numerator = n * sumXY - sumX * sumY;
     const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
 
-    return denominator === 0 ? 0 : numerator / denominator;
+    return this.safeDivide(numerator, denominator, 0);
   }
 
   private static calculateConfidence(sampleSize: number): 'high' | 'medium' | 'low' {

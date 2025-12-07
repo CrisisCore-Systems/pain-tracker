@@ -1,5 +1,17 @@
 import type { PainEntry } from '../../types';
 
+/**
+ * Trend Analysis Module
+ *
+ * TIMEZONE HANDLING:
+ * This module uses LOCAL time for pattern analysis (getHours(), getDay()).
+ * This is intentional because users experience pain patterns relative to their
+ * local schedule (e.g., "mornings are worse" means their local morning).
+ *
+ * The underlying timestamp in PainEntry should be stored as UTC ISO string,
+ * but pattern analysis uses the user's local timezone for meaningful insights.
+ */
+
 export interface TrendAnalysis {
   timeOfDayPattern: { [key: string]: number };
   dayOfWeekPattern: { [key: string]: number };
@@ -20,6 +32,15 @@ export interface Statistics {
     duration: number;
     totalEntries: number;
   };
+}
+
+/**
+ * Safe division that returns 0 for division by zero or invalid inputs
+ */
+function safeDivide(numerator: number, denominator: number, fallback = 0): number {
+  if (denominator === 0 || !Number.isFinite(denominator)) return fallback;
+  const result = numerator / denominator;
+  return Number.isFinite(result) ? result : fallback;
 }
 
 export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
@@ -95,7 +116,12 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
   const changes = sortedEntries
     .slice(1)
     .map((entry, i) => entry.baselineData.pain - sortedEntries[i].baselineData.pain);
-  const averageChange = changes.reduce((sum, change) => sum + change, 0) / changes.length || 0;
+  // Safe division: use safeDivide to prevent NaN when changes is empty
+  const averageChange = safeDivide(
+    changes.reduce((sum, change) => sum + change, 0),
+    changes.length,
+    0
+  );
 
   return {
     timeOfDayPattern,

@@ -33,6 +33,35 @@ describe('AdvancedAnalyticsEngine', () => {
           locations: ['Lower Back'],
           symptoms: ['sharp', 'throbbing'],
         },
+        functionalImpact: {
+          limitedActivities: [],
+          assistanceNeeded: [],
+          mobilityAids: [],
+        },
+        medications: {
+          current: [],
+          changes: '',
+          effectiveness: '',
+        },
+        treatments: {
+          recent: [],
+          effectiveness: '',
+          planned: [],
+        },
+        qualityOfLife: {
+          sleepQuality: 5,
+          moodImpact: 5,
+          socialImpact: [],
+        },
+        workImpact: {
+          missedWork: 0,
+          modifiedDuties: [],
+          workLimitations: [],
+        },
+        comparison: {
+          worseningSince: '',
+          newLimitations: [],
+        },
       };
     });
 
@@ -270,6 +299,13 @@ describe('AdvancedAnalyticsEngine', () => {
             locations: ['Back'],
             symptoms: [],
           },
+          functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+          medications: { current: [], changes: '', effectiveness: '' },
+          treatments: { recent: [], effectiveness: '', planned: [] },
+          qualityOfLife: { sleepQuality: 5, moodImpact: 5, socialImpact: [] },
+          workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+          comparison: { worseningSince: '', newLimitations: [] },
+          notes: '',
         },
         {
           id: 2,
@@ -284,6 +320,13 @@ describe('AdvancedAnalyticsEngine', () => {
             locations: ['Back'],
             symptoms: [],
           },
+          functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+          medications: { current: [], changes: '', effectiveness: '' },
+          treatments: { recent: [], effectiveness: '', planned: [] },
+          qualityOfLife: { sleepQuality: 5, moodImpact: 5, socialImpact: [] },
+          workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+          comparison: { worseningSince: '', newLimitations: [] },
+          notes: '',
         },
         ...mockEntries, // Add more for sufficient data
       ];
@@ -426,6 +469,13 @@ describe('AdvancedAnalyticsEngine', () => {
             locations: ['Back'],
             symptoms: [],
           },
+          functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+          medications: { current: [], changes: '', effectiveness: '' },
+          treatments: { recent: [], effectiveness: '', planned: [] },
+          qualityOfLife: { sleepQuality: 5, moodImpact: 5, socialImpact: [] },
+          workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+          comparison: { worseningSince: '', newLimitations: [] },
+          notes: '',
         },
       ];
 

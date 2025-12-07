@@ -20,6 +20,35 @@ const DEMO_PAIN_ENTRIES: PainEntry[] = [
       locations: ['lower-back', 'right-knee'],
       symptoms: ['sharp', 'throbbing'],
     },
+    functionalImpact: {
+      limitedActivities: [],
+      assistanceNeeded: [],
+      mobilityAids: [],
+    },
+    medications: {
+      current: [],
+      changes: '',
+      effectiveness: '',
+    },
+    treatments: {
+      recent: [],
+      effectiveness: '',
+      planned: [],
+    },
+    qualityOfLife: {
+      sleepQuality: 5,
+      moodImpact: 5,
+      socialImpact: [],
+    },
+    workImpact: {
+      missedWork: 0,
+      modifiedDuties: [],
+      workLimitations: [],
+    },
+    comparison: {
+      worseningSince: '',
+      newLimitations: [],
+    },
     notes: 'Demo pain entry for screenshot purposes',
   },
 ];

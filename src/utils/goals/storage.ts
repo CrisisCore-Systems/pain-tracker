@@ -7,12 +7,13 @@ import type {
   GoalTarget,
   GoalMilestone,
 } from '../../types/goals';
+import { secureStorage } from '../../lib/storage/secureStorage';
 
 export class GoalStorage {
   private static instance: GoalStorage;
-  private readonly STORAGE_KEY = 'pain-tracker-goals';
-  private readonly PROGRESS_KEY = 'pain-tracker-goal-progress';
-  private readonly REMINDERS_KEY = 'pain-tracker-goal-reminders';
+  private readonly STORAGE_KEY = 'goals';
+  private readonly PROGRESS_KEY = 'goal-progress';
+  private readonly REMINDERS_KEY = 'goal-reminders';
 
   private constructor() {}
 
@@ -35,7 +36,10 @@ export class GoalStorage {
         goals.push(goal);
       }
 
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(goals));
+      const result = secureStorage.set(this.STORAGE_KEY, goals);
+      if (!result.success) {
+        throw new Error(result.error || 'Storage write failed');
+      }
     } catch (error) {
       console.error('Failed to save goal:', error);
       throw new Error('Failed to save goal');
@@ -54,10 +58,7 @@ export class GoalStorage {
 
   async getAllGoals(): Promise<Goal[]> {
     try {
-      const stored = localStorage.getItem(this.STORAGE_KEY);
-      if (!stored) return [];
-
-      const goals = JSON.parse(stored);
+      const goals = secureStorage.get<Goal[]>(this.STORAGE_KEY);
       return Array.isArray(goals) ? goals : [];
     } catch (error) {
       console.error('Failed to get goals:', error);
@@ -78,7 +79,7 @@ export class GoalStorage {
     try {
       const goals = await this.getAllGoals();
       const filteredGoals = goals.filter(g => g.id !== goalId);
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filteredGoals));
+      secureStorage.set(this.STORAGE_KEY, filteredGoals);
 
       // Also delete related progress and reminders
       await this.deleteGoalProgress(goalId);
@@ -103,7 +104,10 @@ export class GoalStorage {
         allProgress.push(progress);
       }
 
-      localStorage.setItem(this.PROGRESS_KEY, JSON.stringify(allProgress));
+      const result = secureStorage.set(this.PROGRESS_KEY, allProgress);
+      if (!result.success) {
+        throw new Error(result.error || 'Storage write failed');
+      }
     } catch (error) {
       console.error('Failed to save progress:', error);
       throw new Error('Failed to save progress');
@@ -133,10 +137,7 @@ export class GoalStorage {
 
   async getAllProgress(): Promise<GoalProgress[]> {
     try {
-      const stored = localStorage.getItem(this.PROGRESS_KEY);
-      if (!stored) return [];
-
-      const progress = JSON.parse(stored);
+      const progress = secureStorage.get<GoalProgress[]>(this.PROGRESS_KEY);
       return Array.isArray(progress) ? progress : [];
     } catch (error) {
       console.error('Failed to get progress:', error);
@@ -148,7 +149,7 @@ export class GoalStorage {
     try {
       const allProgress = await this.getAllProgress();
       const filteredProgress = allProgress.filter(p => p.goalId !== goalId);
-      localStorage.setItem(this.PROGRESS_KEY, JSON.stringify(filteredProgress));
+      secureStorage.set(this.PROGRESS_KEY, filteredProgress);
     } catch (error) {
       console.error('Failed to delete goal progress:', error);
     }
@@ -166,7 +167,10 @@ export class GoalStorage {
         reminders.push(reminder);
       }
 
-      localStorage.setItem(this.REMINDERS_KEY, JSON.stringify(reminders));
+      const result = secureStorage.set(this.REMINDERS_KEY, reminders);
+      if (!result.success) {
+        throw new Error(result.error || 'Storage write failed');
+      }
     } catch (error) {
       console.error('Failed to save reminder:', error);
       throw new Error('Failed to save reminder');
@@ -185,10 +189,7 @@ export class GoalStorage {
 
   async getAllReminders(): Promise<GoalReminder[]> {
     try {
-      const stored = localStorage.getItem(this.REMINDERS_KEY);
-      if (!stored) return [];
-
-      const reminders = JSON.parse(stored);
+      const reminders = secureStorage.get<GoalReminder[]>(this.REMINDERS_KEY);
       return Array.isArray(reminders) ? reminders : [];
     } catch (error) {
       console.error('Failed to get reminders:', error);
@@ -200,7 +201,7 @@ export class GoalStorage {
     try {
       const reminders = await this.getAllReminders();
       const filteredReminders = reminders.filter(r => r.goalId !== goalId);
-      localStorage.setItem(this.REMINDERS_KEY, JSON.stringify(filteredReminders));
+      secureStorage.set(this.REMINDERS_KEY, filteredReminders);
     } catch (error) {
       console.error('Failed to delete goal reminders:', error);
     }

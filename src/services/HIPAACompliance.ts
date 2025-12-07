@@ -252,6 +252,11 @@ export class HIPAAComplianceService {
   private auditTrails: AuditTrail[] = [];
   private accessRequests: Map<string, AccessRequest> = new Map();
   private breachAssessments: Map<string, BreachAssessment> = new Map();
+  
+  /** Maximum audit trail entries to retain (prevents unbounded memory growth) */
+  private static readonly MAX_AUDIT_TRAILS = 10000;
+  /** Number of entries to evict when limit is reached */
+  private static readonly AUDIT_EVICTION_COUNT = 2000;
 
   constructor(config: HIPAAComplianceConfig) {
     this.config = config;
@@ -506,6 +511,13 @@ export class HIPAAComplianceService {
     };
 
     this.auditTrails.push(auditEvent);
+
+    // Evict old entries to prevent unbounded memory growth
+    if (this.auditTrails.length > HIPAAComplianceService.MAX_AUDIT_TRAILS) {
+      this.auditTrails = this.auditTrails.slice(-(
+        HIPAAComplianceService.MAX_AUDIT_TRAILS - HIPAAComplianceService.AUDIT_EVICTION_COUNT
+      ));
+    }
 
     // Check for suspicious activity
     if (auditEvent.riskScore > 80) {

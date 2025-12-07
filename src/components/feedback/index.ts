@@ -6,4 +6,4 @@ export * from './Toast';
 export * from './ToastProvider';
 export * from './useToast';
 export * from './UndoToast';
-export * from './LoadingSpinner';
+export { LoadingSpinner, LoadingComplete } from './LoadingSpinner';

@@ -1,0 +1,177 @@
+/**
+ * Base Reset & Global Styles
+ * Foundational styles applied to all elements
+ */
+
+/* Updated global styles */
+* {
+  border-color: rgb(var(--color-border));
+}
+
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Default (dark mode) - uses tokens for consistency */
+html,
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+}
+
+/* Light mode body override - handled by tokens changing values */
+html:not(.dark) body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+}
+
+/* ===== TEXT OVERFLOW FIXES ===== */
+/* Prevent text from overflowing containers */
+.card,
+[class*="CardContent"],
+[class*="card-content"],
+.overflow-fix {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Ensure flex containers don't overflow */
+.flex {
+  min-width: 0;
+}
+
+/* Fix label/switch layouts */
+label.flex {
+  gap: 0.75rem;
+}
+
+label.flex > span:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+label.flex > span:last-child,
+label.flex > button:last-child {
+  flex-shrink: 0;
+}
+
+/* Ensure cards have proper overflow handling */
+[class*="Card"] {
+  overflow: hidden;
+}
+
+[class*="CardContent"] p,
+[class*="CardContent"] span {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Enhanced scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--color-muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-muted-foreground));
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-primary));
+}
+
+/* Focus styles for accessibility - uses ring token for consistency */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(var(--color-ring) / 0.3);
+  border-radius: 6px;
+}
+
+/* Utility class for components to explicitly opt-in to the shared focus ring
+ * Reserved: Not currently used but available for custom components */
+.focus-ring:focus-visible {
+  box-shadow: 0 0 0 3px rgb(var(--color-ring) / 0.3);
+  outline: none;
+}
+
+/* Ensure common interactive elements show the ring */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  box-shadow: 0 0 0 3px rgb(var(--color-ring) / 0.3);
+  outline: none;
+}
+
+/* Respect reduced motion preference - WCAG 2.1 Success Criterion 2.3.3
+ * !important is REQUIRED here to override all animations/transitions
+ * for users who have enabled reduced motion in their OS settings.
+ * This is a critical accessibility feature - DO NOT REMOVE !important */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Smooth transitions for theme changes */
+body,
+.card,
+[class*="Card"],
+[class*="bg-"],
+[class*="text-"],
+[class*="border-"],
+button,
+a,
+input,
+select,
+textarea,
+header,
+nav,
+footer {
+  transition-property: color, background-color, border-color;
+  transition-duration: 0.15s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* High contrast mode support - WCAG 2.1 SC 1.4.11 */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  :focus-visible {
+    outline: 3px solid currentColor !important;
+    outline-offset: 2px !important;
+    box-shadow: none !important;
+  }
+  
+  button,
+  [role="button"],
+  a {
+    border: 2px solid currentColor !important;
+  }
+  
+  /* Ensure sufficient contrast for text */
+  .text-muted,
+  .text-muted-foreground {
+    opacity: 1 !important;
+  }
+}

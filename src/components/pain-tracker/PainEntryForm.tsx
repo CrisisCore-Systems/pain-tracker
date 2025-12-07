@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { PainEntry } from '../../types';
+import type { PainEntry, CreatePainEntry } from '../../types';
+import { CreatePainEntrySchema, safeParsePainEntry } from '../../types';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import {
   BaselineSection,
@@ -29,11 +30,13 @@ import {
   BarChart3,
   History,
   Loader2,
+  X,
 } from 'lucide-react';
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 import type { ValidationResponse } from '../../services/EmotionalValidationService';
 import { trackPainEntryLogged } from '../../analytics/ga4-events';
 import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
+import { analyticsLogger } from '../../lib/debug-logger';
 
 // Environment helper for browser (Vite) and Node fallbacks.
 // Use Vite's import.meta.env when available, otherwise fall back to process.env if present.
@@ -302,21 +305,47 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
     },
   ];
 
+  const [validationError, setValidationError] = useState<string | null>(null);
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
+    setValidationError(null);
+
     try {
+      // Validate form data using Zod schema before submission
+      const validationResult = CreatePainEntrySchema.safeParse(formData);
+
+      if (!validationResult.success) {
+        // Extract first error message for user display
+        const firstError = validationResult.error.issues[0];
+        const errorPath = firstError.path.join('.');
+        const errorMessage = `${errorPath}: ${firstError.message}`;
+        setValidationError(errorMessage);
+        analyticsLogger.warn('Form validation failed', {
+          errors: validationResult.error.issues,
+          formData: { painLevel: formData.baselineData.pain },
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       await onSubmit(formData);
 
       // Track pain entry submission
       const locationCount = formData.baselineData.locations?.length ?? 0;
       const symptomCount = formData.baselineData.symptoms?.length ?? 0;
-      trackPainEntryLogged({
-        painLevel: formData.baselineData.pain,
-        hasLocation: locationCount > 0,
-        hasNotes: !!formData.notes,
-        locationCount,
-        symptomCount,
-      });
+      try {
+        trackPainEntryLogged({
+          painLevel: formData.baselineData.pain,
+          hasLocation: locationCount > 0,
+          hasNotes: !!formData.notes,
+          locationCount,
+          symptomCount,
+        });
+      } catch (err) {
+        analyticsLogger.swallowed('trackPainEntryLogged', err);
+      }
+
       trackUsageEvent('pain_entry_logged', 'pain_tracking', {
         painLevel: formData.baselineData.pain,
         locationCount,
@@ -365,55 +394,295 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const currentColor = sectionColors[currentSection % sectionColors.length];
 
   return (
-    <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)', border: '1px solid rgba(255, 255, 255, 0.1)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)' }}>
-      <div className={`h-1 w-full bg-gradient-to-r ${currentColor.gradient}`} style={{ boxShadow: `0 0 20px ${currentColor.bg}` }} />
+    <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden pain-form-container">
+      {/* Progress bar */}
+      <div 
+        className={`h-1 w-full bg-gradient-to-r ${currentColor.gradient}`} 
+        style={{ boxShadow: `0 0 20px ${currentColor.bg}` }} 
+        role="progressbar"
+        aria-valuenow={currentSection + 1}
+        aria-valuemin={1}
+        aria-valuemax={sections.length}
+        aria-label={`Step ${currentSection + 1} of ${sections.length}`}
+      />
+      
+      {/* Header section */}
       <div className="p-6 pb-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl text-2xl" style={{ background: currentColor.bg, border: `1px solid ${currentColor.border}` }}>{sections[currentSection].icon}</div>
+            <div 
+              className="p-3 rounded-xl text-2xl" 
+              style={{ background: currentColor.bg, border: `1px solid ${currentColor.border}` }}
+              aria-hidden="true"
+            >
+              {sections[currentSection].icon}
+            </div>
             <div>
-              <h2 className="text-xl font-bold text-white">{sections[currentSection].title}</h2>
-              <p className="text-slate-400 mt-1">{sections[currentSection].description}</p>
+              <h2 className="text-xl font-bold text-white" id="form-section-title">
+                {sections[currentSection].title}
+              </h2>
+              <p className="text-slate-400 mt-1" id="form-section-description">
+                {sections[currentSection].description}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(51, 65, 85, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#94a3b8' }}><Clock className="h-3 w-3 mr-1" />{sections[currentSection].estimatedTime}</span>
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${currentColor.text}`} style={{ background: currentColor.bg, border: `1px solid ${currentColor.border}` }}>{currentSection + 1} of {sections.length}</span>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium pain-form-time-badge">
+              <Clock className="h-3 w-3 mr-1" aria-hidden="true" />
+              <span aria-label={`Estimated time: ${sections[currentSection].estimatedTime}`}>
+                {sections[currentSection].estimatedTime}
+              </span>
+            </span>
+            <span 
+              className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${currentColor.text}`} 
+              style={{ background: currentColor.bg, border: `1px solid ${currentColor.border}` }}
+              aria-label={`Section ${currentSection + 1} of ${sections.length}`}
+            >
+              {currentSection + 1} of {sections.length}
+            </span>
           </div>
         </div>
+        
+        {/* Progress indicator */}
         <div className="mt-6">
           <div className="flex justify-between text-xs mb-2">
             <span className="text-slate-400">Progress</span>
             <span className={currentColor.text}>{Math.round(((currentSection + 1) / sections.length) * 100)}%</span>
           </div>
-          <div className="w-full h-2 rounded-full" style={{ background: 'rgba(51, 65, 85, 0.5)' }}>
-            <div className={`h-2 rounded-full transition-all duration-500 bg-gradient-to-r ${currentColor.gradient}`} style={{ width: `${((currentSection + 1) / sections.length) * 100}%`, boxShadow: `0 0 10px ${currentColor.bg}` }} />
+          <div className="w-full h-2 rounded-full bg-slate-700/50">
+            <div 
+              className={`h-2 rounded-full transition-all duration-500 bg-gradient-to-r ${currentColor.gradient}`} 
+              style={{ width: `${((currentSection + 1) / sections.length) * 100}%`, boxShadow: `0 0 10px ${currentColor.bg}` }} 
+            />
           </div>
-        </div>
-        <div className="flex flex-wrap gap-2 mt-5">
+          </div>
+        
+        {/* Section navigation pills */}
+        <nav className="flex flex-wrap gap-2 mt-5" aria-label="Form sections">
           {sections.map((section, index) => {
             const pillColor = sectionColors[index % sectionColors.length];
             const isActive = index === currentSection;
             const isCompleted = index < currentSection;
-            return (<button key={index} onClick={() => setCurrentFormSection(index)} className="px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1" style={{ background: isActive ? `linear-gradient(135deg, ${pillColor.bg}, rgba(30, 41, 59, 0.9))` : isCompleted ? 'rgba(34, 197, 94, 0.15)' : 'rgba(51, 65, 85, 0.4)', border: isActive ? `1px solid ${pillColor.border}` : isCompleted ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid rgba(255, 255, 255, 0.05)', color: isActive ? 'white' : isCompleted ? '#4ade80' : '#64748b', boxShadow: isActive ? `0 0 15px ${pillColor.bg}` : 'none' }} aria-label={`Go to ${section.title} section`}>{isCompleted ? <Check className="h-3 w-3" /> : <span>{section.icon}</span>}<span className="hidden sm:inline">{section.title}</span><span className="sm:hidden">{index + 1}</span></button>);
+            return (
+              <button 
+                key={index} 
+                onClick={() => setCurrentFormSection(index)} 
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1 min-h-[32px] ${
+                  isCompleted ? 'pain-form-pill-completed' : isActive ? '' : 'pain-form-pill'
+                }`}
+                style={isActive ? { 
+                  background: `linear-gradient(135deg, ${pillColor.bg}, rgba(30, 41, 59, 0.9))`,
+                  border: `1px solid ${pillColor.border}`,
+                  color: 'white',
+                  boxShadow: `0 0 15px ${pillColor.bg}`
+                } : undefined}
+                aria-label={`Go to ${section.title} section${isCompleted ? ' (completed)' : ''}`}
+                aria-current={isActive ? 'step' : undefined}
+              >
+                {isCompleted ? <Check className="h-3 w-3" aria-hidden="true" /> : <span aria-hidden="true">{section.icon}</span>}
+                <span className="hidden sm:inline">{section.title}</span>
+                <span className="sm:hidden">{index + 1}</span>
+              </button>
+            );
           })}
-        </div>
+        </nav>
       </div>
+      
+      {/* Form content */}
       <div className="px-6 pb-6">
-        <form role="form" aria-label="Pain Entry Form" onSubmit={e => { e.preventDefault(); if (isLastSection && canProceedToNext) { handleSubmit(); } }} className="space-y-6">
-          <div className="min-h-[400px] p-5 rounded-xl" style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)' }}>{sections[currentSection].component}</div>
-          {validationIsActive && (<div className="mt-4 p-4 rounded-xl" style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)' }}><EmotionalValidation text={formData.notes || ''} onValidationGenerated={handleValidationGenerated} isActive /></div>)}
-          {validationIsActive && validationHistory.length > 0 && showValidationHistory && (<div className="mt-4 p-4 rounded-xl" style={{ background: 'rgba(30, 41, 59, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)' }}><div className="flex items-center justify-between mb-3"><div className="flex items-center gap-2 text-sm font-medium text-slate-300"><History className="h-4 w-4 text-violet-400" /><span>Recent validation moments</span></div><button type="button" onClick={() => setShowValidationHistory(false)} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">Hide</button></div><ValidationHistory validations={validationHistory} onClear={clearHistory} /></div>)}
-          {validationIsActive && !showValidationHistory && validationHistory.length > 0 && (<div className="mt-4"><button type="button" onClick={() => setShowValidationHistory(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-violet-400" style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)' }}><History className="h-4 w-4" />Show recent validation messages</button></div>)}
-          {!canProceedToNext && (<div className="flex items-center gap-3 p-4 rounded-xl" style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.2)' }}><AlertCircle className="h-5 w-5 text-amber-400 flex-shrink-0" /><span className="text-sm text-amber-300">Please complete the required information in this section before proceeding.</span></div>)}
-          <div className="flex justify-between pt-6" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
-            <button type="button" onClick={() => setCurrentFormSection(Math.max(0, currentSection - 1))} disabled={currentSection === 0} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed" style={{ background: 'rgba(51, 65, 85, 0.5)', border: '1px solid rgba(255, 255, 255, 0.1)', color: currentSection === 0 ? '#475569' : '#e2e8f0' }}><ChevronLeft className="h-4 w-4" />Previous</button>
+        <form 
+          role="form" 
+          aria-label="Pain Entry Form"
+          aria-describedby="form-section-description"
+          onSubmit={e => { e.preventDefault(); if (isLastSection && canProceedToNext) { handleSubmit(); } }} 
+          className="space-y-6"
+        >
+          {/* Current section content */}
+          <div className="min-h-[400px] p-5 rounded-xl pain-form-section-inner">
+            {sections[currentSection].component}
+          </div>
+          
+          {/* Emotional validation section */}
+          {validationIsActive && (
+            <div className="mt-4 p-4 rounded-xl pain-form-validation-section">
+              <EmotionalValidation 
+                text={formData.notes || ''} 
+                onValidationGenerated={handleValidationGenerated} 
+                isActive 
+              />
+            </div>
+          )}
+          
+          {/* Validation history */}
+          {validationIsActive && validationHistory.length > 0 && showValidationHistory && (
+            <div className="mt-4 p-4 rounded-xl pain-form-history-section">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 text-sm font-medium text-slate-300">
+                  <History className="h-4 w-4 text-violet-400" aria-hidden="true" />
+                  <span>Recent validation moments</span>
+                </div>
+                <button 
+                  type="button" 
+                  onClick={() => setShowValidationHistory(false)} 
+                  className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  Hide
+                </button>
+              </div>
+              <ValidationHistory validations={validationHistory} onClear={clearHistory} />
+            </div>
+          )}
+          
+          {/* Show validation history toggle */}
+          {validationIsActive && !showValidationHistory && validationHistory.length > 0 && (
+            <div className="mt-4">
+              <button 
+                type="button" 
+                onClick={() => setShowValidationHistory(true)} 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-violet-400 pain-form-validation-section"
+              >
+                <History className="h-4 w-4" aria-hidden="true" />
+                Show recent validation messages
+              </button>
+            </div>
+          )}
+          
+          {/* Validation warning */}
+          {!canProceedToNext && (
+            <div 
+              className="flex items-center gap-3 p-4 rounded-xl pain-form-warning" 
+              role="alert"
+            >
+              <AlertCircle className="h-5 w-5 text-amber-400 flex-shrink-0" aria-hidden="true" />
+              <span className="text-sm text-amber-300">
+                Please complete the required information in this section before proceeding.
+              </span>
+            </div>
+          )}
+          
+          {/* Validation error */}
+          {validationError && (
+            <div 
+              className="flex items-center gap-3 p-4 rounded-xl pain-form-error" 
+              role="alert"
+              aria-live="assertive"
+            >
+              <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" aria-hidden="true" />
+              <div className="flex-1">
+                <span className="text-sm text-red-300 font-medium">Validation Error</span>
+                <p className="text-xs text-red-400 mt-1">{validationError}</p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setValidationError(null)} 
+                className="text-red-400 hover:text-red-300 transition-colors p-1 min-h-[44px] min-w-[44px] flex items-center justify-center" 
+                aria-label="Dismiss error"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+          
+          {/* Navigation buttons */}
+          <div className="flex justify-between pt-6 pain-form-divider">
+            <button 
+              type="button" 
+              onClick={() => setCurrentFormSection(Math.max(0, currentSection - 1))} 
+              disabled={currentSection === 0} 
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed pain-form-nav-button min-h-[44px]"
+              style={{ color: currentSection === 0 ? '#475569' : '#e2e8f0' }}
+            >
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+              Previous
+            </button>
+            
             <div className="flex gap-3">
-              {!isLastSection ? (<button type="button" onClick={() => setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))} disabled={!canProceedToNext} className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-white bg-gradient-to-r ${currentColor.gradient}`} style={{ boxShadow: canProceedToNext ? `0 4px 15px ${currentColor.bg}` : 'none' }}>Next<ChevronRight className="h-4 w-4" /></button>) : (<button type="submit" disabled={!canProceedToNext || isSubmitting} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-white min-w-[140px] justify-center" style={{ background: 'linear-gradient(135deg, #22c55e 0%, #10b981 100%)', boxShadow: canProceedToNext && !isSubmitting ? '0 4px 15px rgba(34, 197, 94, 0.3)' : 'none' }}>{isSubmitting ? (<><Loader2 className="h-4 w-4 animate-spin" />Saving...</>) : (<><Save className="h-4 w-4" />Save Entry</>)}</button>)}
+              {!isLastSection ? (
+                <button 
+                  type="button" 
+                  onClick={() => setCurrentFormSection(Math.min(sections.length - 1, currentSection + 1))} 
+                  disabled={!canProceedToNext} 
+                  className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-white bg-gradient-to-r ${currentColor.gradient} min-h-[44px]`}
+                  style={{ boxShadow: canProceedToNext ? `0 4px 15px ${currentColor.bg}` : 'none' }}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              ) : (
+                <button 
+                  type="submit" 
+                  disabled={!canProceedToNext || isSubmitting} 
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed text-white min-w-[140px] justify-center pain-form-submit-button min-h-[44px]"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" aria-hidden="true" />
+                      <span>Save Entry</span>
+                    </>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </form>
-        {preferences.showProgress && (<div className="mt-8 pt-6" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}><div className="flex items-center justify-between mb-4"><div className="flex items-center gap-2"><div className="p-2 rounded-lg" style={{ background: 'rgba(139, 92, 246, 0.15)' }}><BarChart3 className="h-4 w-4 text-violet-400" /></div><p className="text-sm font-semibold text-slate-300">Whole-person progress tracking</p></div><button type="button" onClick={() => setShowProgressTracker(prev => !prev)} className="text-xs text-slate-500 hover:text-slate-300 transition-colors px-3 py-1 rounded-lg" style={{ background: 'rgba(51, 65, 85, 0.3)' }}>{showProgressTracker ? 'Hide wellness tools' : 'Show wellness tools'}</button></div>{showProgressTracker ? (<div className="space-y-3 p-4 rounded-xl" style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid rgba(255, 255, 255, 0.05)' }}><HolisticProgressTracker painEntries={entries} onProgressUpdate={handleProgressUpdate} />{progressStatus === 'saving' && (<div className="flex items-center gap-2 text-xs text-slate-400"><Loader2 className="h-4 w-4 animate-spin text-violet-400" /><span>Saving wellness insights securely...</span></div>)}{progressStatus === 'saved' && (<p className="text-xs text-emerald-400">Progress entry saved with validation technology.</p>)}{progressStatus === 'error' && (<p className="text-xs text-rose-400">We could not save your progress right now. Your notes stay on this device.</p>)}</div>) : (<p className="text-xs text-slate-500">These tools celebrate growth beyond pain scores. You can open them whenever you are ready.</p>)}</div>)}
+        
+        {/* Progress tracker section */}
+        {preferences.showProgress && (
+          <div className="mt-8 pt-6 pain-form-divider">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-lg pain-form-progress-section">
+                  <BarChart3 className="h-4 w-4 text-violet-400" aria-hidden="true" />
+                </div>
+                <p className="text-sm font-semibold text-slate-300">
+                  Whole-person progress tracking
+                </p>
+              </div>
+              <button 
+                type="button" 
+                onClick={() => setShowProgressTracker(prev => !prev)} 
+                className="text-xs text-slate-500 hover:text-slate-300 transition-colors px-3 py-1 rounded-lg pain-form-toggle-button"
+                aria-expanded={showProgressTracker}
+              >
+                {showProgressTracker ? 'Hide wellness tools' : 'Show wellness tools'}
+              </button>
+            </div>
+            
+            {showProgressTracker ? (
+              <div className="space-y-3 p-4 rounded-xl pain-form-section-inner">
+                <HolisticProgressTracker 
+                  painEntries={entries} 
+                  onProgressUpdate={handleProgressUpdate} 
+                />
+                {progressStatus === 'saving' && (
+                  <div className="flex items-center gap-2 text-xs text-slate-400" role="status" aria-live="polite">
+                    <Loader2 className="h-4 w-4 animate-spin text-violet-400" aria-hidden="true" />
+                    <span>Saving wellness insights securely...</span>
+                  </div>
+                )}
+                {progressStatus === 'saved' && (
+                  <p className="text-xs text-emerald-400" role="status" aria-live="polite">
+                    Progress entry saved with validation technology.
+                  </p>
+                )}
+                {progressStatus === 'error' && (
+                  <p className="text-xs text-rose-400" role="alert">
+                    We could not save your progress right now. Your notes stay on this device.
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="text-xs text-slate-500">
+                These tools celebrate growth beyond pain scores. You can open them whenever you are ready.
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

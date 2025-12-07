@@ -198,6 +198,13 @@ describe('InteractiveBodyMap', () => {
           locations: ['head', 'neck'],
           symptoms: ['sharp'],
         },
+        functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+        medications: { current: [], changes: '', effectiveness: '' },
+        treatments: { recent: [], effectiveness: '', planned: [] },
+        qualityOfLife: { sleepQuality: 5, moodImpact: 5, socialImpact: [] },
+        workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+        comparison: { worseningSince: '', newLimitations: [] },
+        notes: '',
       },
       {
         id: '2',
@@ -207,6 +214,13 @@ describe('InteractiveBodyMap', () => {
           locations: ['lower back'],
           symptoms: ['aching'],
         },
+        functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+        medications: { current: [], changes: '', effectiveness: '' },
+        treatments: { recent: [], effectiveness: '', planned: [] },
+        qualityOfLife: { sleepQuality: 5, moodImpact: 5, socialImpact: [] },
+        workImpact: { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+        comparison: { worseningSince: '', newLimitations: [] },
+        notes: '',
       },
     ];
 

@@ -30,6 +30,7 @@ import {
   calculateVariance as extCalculateVariance,
   buildPredictiveModel,
 } from './empathy/PredictiveModule';
+import { getMemoryProfiler } from '../lib/memory-profiler';
 
 const MOTIVATION_KEYWORDS = [
   'help',
@@ -95,6 +96,15 @@ function clampScore(value: number, min = 0, max = 100): number {
   return Math.max(min, Math.min(max, value));
 }
 
+/**
+ * Safe division that returns fallback for division by zero or invalid inputs
+ */
+function safeDivide(numerator: number, denominator: number, fallback = 0): number {
+  if (denominator === 0 || !Number.isFinite(denominator)) return fallback;
+  const result = numerator / denominator;
+  return Number.isFinite(result) ? result : fallback;
+}
+
 function normalizeText(value?: string): string {
   return (value ?? '').toLowerCase();
 }
@@ -137,6 +147,8 @@ interface UserEmpathyPattern {
   patterns: unknown[];
   preferences: unknown[];
   responsiveness: number;
+  /** Timestamp of last access for cache eviction */
+  lastAccessed: number;
 }
 
 interface CulturalContext {
@@ -144,6 +156,8 @@ interface CulturalContext {
   values: string[];
   communicationStyle: string;
   empathyExpressions: string[];
+  /** Timestamp of last access for cache eviction */
+  lastAccessed?: number;
 }
 
 interface PredictionModel {
@@ -151,17 +165,296 @@ interface PredictionModel {
   accuracy: number;
   trainingData: unknown[];
   predictions: unknown[];
+  /** Timestamp of last access for cache eviction */
+  lastAccessed?: number;
+}
+
+/** Cache configuration for memory management */
+interface CacheConfig {
+  /** Maximum entries per cache map */
+  maxEntries: number;
+  /** Time-to-live in milliseconds (default: 1 hour) */
+  ttlMs: number;
+  /** Eviction check interval in milliseconds */
+  evictionIntervalMs: number;
+}
+
+const DEFAULT_CACHE_CONFIG: CacheConfig = {
+  maxEntries: 100,
+  ttlMs: 60 * 60 * 1000, // 1 hour
+  evictionIntervalMs: 5 * 60 * 1000, // 5 minutes
+};
+
+/**
+ * Session context object used as WeakMap key for session-scoped caching.
+ * When the session object is garbage collected, all associated cache entries
+ * are automatically cleaned up.
+ */
+export interface SessionContext {
+  sessionId: string;
+  userId: string;
+  startTime: number;
+}
+
+/**
+ * WeakMap-based cache for session-scoped data.
+ * Entries are automatically garbage collected when the session context
+ * is no longer referenced elsewhere in the application.
+ */
+class WeakSessionCache<T> {
+  private cache = new WeakMap<SessionContext, Map<string, T>>();
+
+  get(session: SessionContext, key: string): T | undefined {
+    const sessionMap = this.cache.get(session);
+    return sessionMap?.get(key);
+  }
+
+  set(session: SessionContext, key: string, value: T): void {
+    let sessionMap = this.cache.get(session);
+    if (!sessionMap) {
+      sessionMap = new Map();
+      this.cache.set(session, sessionMap);
+    }
+    sessionMap.set(key, value);
+  }
+
+  has(session: SessionContext, key: string): boolean {
+    const sessionMap = this.cache.get(session);
+    return sessionMap?.has(key) ?? false;
+  }
+
+  delete(session: SessionContext, key: string): boolean {
+    const sessionMap = this.cache.get(session);
+    return sessionMap?.delete(key) ?? false;
+  }
+
+  clearSession(session: SessionContext): void {
+    const sessionMap = this.cache.get(session);
+    sessionMap?.clear();
+  }
 }
 
 export class EmpathyIntelligenceEngine {
   private readonly _config: EmpathyIntelligenceConfig;
+  private readonly _cacheConfig: CacheConfig;
   private userPatterns: Map<string, UserEmpathyPattern> = new Map();
   private culturalContext: Map<string, CulturalContext> = new Map();
   private wisdomDatabase: Map<string, WisdomInsight[]> = new Map();
   private predictionModels: Map<string, PredictionModel> = new Map();
+  private evictionIntervalId: ReturnType<typeof setInterval> | null = null;
 
-  constructor(config: EmpathyIntelligenceConfig) {
+  // WeakMap-based caches for session-scoped data (auto GC when session dereferenced)
+  private sessionMetricsCache = new WeakSessionCache<QuantifiedEmpathyMetrics>();
+  private sessionInsightsCache = new WeakSessionCache<EmpathyInsight[]>();
+
+  // Current session context (if set)
+  private currentSession: SessionContext | null = null;
+
+  constructor(config: EmpathyIntelligenceConfig, cacheConfig?: Partial<CacheConfig>) {
     this._config = config;
+    this._cacheConfig = { ...DEFAULT_CACHE_CONFIG, ...cacheConfig };
+    this.startCacheEviction();
+    this.registerWithMemoryProfiler();
+  }
+
+  /**
+   * Register cache sizes with the memory profiler for monitoring
+   */
+  private registerWithMemoryProfiler(): void {
+    try {
+      const profiler = getMemoryProfiler();
+      profiler.trackCollection('EmpathyEngine.userPatterns', () => this.userPatterns.size);
+      profiler.trackCollection('EmpathyEngine.culturalContext', () => this.culturalContext.size);
+      profiler.trackCollection('EmpathyEngine.wisdomDatabase', () => this.wisdomDatabase.size);
+      profiler.trackCollection('EmpathyEngine.predictionModels', () => this.predictionModels.size);
+    } catch {
+      // Memory profiler not available (e.g., in tests)
+    }
+  }
+
+  /**
+   * Set the current session context for WeakMap-based caching.
+   * When the session context is dereferenced, associated cache entries
+   * are automatically garbage collected.
+   */
+  setSessionContext(session: SessionContext): void {
+    this.currentSession = session;
+  }
+
+  /**
+   * Get cached metrics for the current session (if available)
+   */
+  getCachedSessionMetrics(userId: string): QuantifiedEmpathyMetrics | undefined {
+    if (!this.currentSession) return undefined;
+    return this.sessionMetricsCache.get(this.currentSession, `metrics:${userId}`);
+  }
+
+  /**
+   * Cache metrics for the current session
+   */
+  cacheSessionMetrics(userId: string, metrics: QuantifiedEmpathyMetrics): void {
+    if (!this.currentSession) return;
+    this.sessionMetricsCache.set(this.currentSession, `metrics:${userId}`, metrics);
+  }
+
+  /**
+   * Get cached insights for the current session (if available)
+   */
+  getCachedSessionInsights(userId: string): EmpathyInsight[] | undefined {
+    if (!this.currentSession) return undefined;
+    return this.sessionInsightsCache.get(this.currentSession, `insights:${userId}`);
+  }
+
+  /**
+   * Cache insights for the current session
+   */
+  cacheSessionInsights(userId: string, insights: EmpathyInsight[]): void {
+    if (!this.currentSession) return;
+    this.sessionInsightsCache.set(this.currentSession, `insights:${userId}`, insights);
+  }
+
+  /**
+   * Clear session-specific caches (called when session ends)
+   */
+  clearSessionCaches(): void {
+    if (this.currentSession) {
+      this.sessionMetricsCache.clearSession(this.currentSession);
+      this.sessionInsightsCache.clearSession(this.currentSession);
+    }
+  }
+
+  /**
+   * Start automatic cache eviction based on TTL and max entries
+   */
+  private startCacheEviction(): void {
+    if (this.evictionIntervalId) return;
+
+    this.evictionIntervalId = setInterval(() => {
+      this.evictExpiredEntries();
+    }, this._cacheConfig.evictionIntervalMs);
+
+    // Ensure interval is cleaned up if running in Node.js
+    if (typeof this.evictionIntervalId === 'object' && 'unref' in this.evictionIntervalId) {
+      this.evictionIntervalId.unref();
+    }
+  }
+
+  /**
+   * Stop automatic cache eviction (call during cleanup/destroy)
+   */
+  stopCacheEviction(): void {
+    if (this.evictionIntervalId) {
+      clearInterval(this.evictionIntervalId);
+      this.evictionIntervalId = null;
+    }
+  }
+
+  /**
+   * Evict expired entries from all caches
+   */
+  private evictExpiredEntries(): void {
+    const now = Date.now();
+    const { maxEntries, ttlMs } = this._cacheConfig;
+
+    // Evict from userPatterns
+    this.evictFromMap(this.userPatterns, now, ttlMs, maxEntries, (v) => v.lastAccessed);
+
+    // Evict from culturalContext
+    this.evictFromMap(this.culturalContext, now, ttlMs, maxEntries, (v) => v.lastAccessed ?? 0);
+
+    // Evict from wisdomDatabase (use 0 as fallback since WisdomInsight[] has no timestamp)
+    if (this.wisdomDatabase.size > maxEntries) {
+      const entriesToRemove = this.wisdomDatabase.size - maxEntries;
+      const keys = Array.from(this.wisdomDatabase.keys()).slice(0, entriesToRemove);
+      keys.forEach((key) => this.wisdomDatabase.delete(key));
+    }
+
+    // Evict from predictionModels
+    this.evictFromMap(this.predictionModels, now, ttlMs, maxEntries, (v) => v.lastAccessed ?? 0);
+  }
+
+  /**
+   * Generic map eviction based on TTL and max entries
+   */
+  private evictFromMap<T>(
+    map: Map<string, T>,
+    now: number,
+    ttlMs: number,
+    maxEntries: number,
+    getLastAccessed: (value: T) => number
+  ): void {
+    // First, remove expired entries
+    const expiredKeys: string[] = [];
+    map.forEach((value, key) => {
+      if (now - getLastAccessed(value) > ttlMs) {
+        expiredKeys.push(key);
+      }
+    });
+    expiredKeys.forEach((key) => map.delete(key));
+
+    // If still over limit, remove oldest entries
+    if (map.size > maxEntries) {
+      const entries = Array.from(map.entries())
+        .sort((a, b) => getLastAccessed(a[1]) - getLastAccessed(b[1]));
+      const removeCount = map.size - maxEntries;
+      entries.slice(0, removeCount).forEach(([key]) => map.delete(key));
+    }
+  }
+
+  /**
+   * Clear all caches (useful for testing or memory pressure)
+   */
+  clearAllCaches(): void {
+    this.userPatterns.clear();
+    this.culturalContext.clear();
+    this.wisdomDatabase.clear();
+    this.predictionModels.clear();
+    this.clearSessionCaches();
+  }
+
+  /**
+   * Get cache statistics for monitoring
+   */
+  getCacheStats(): {
+    userPatterns: number;
+    culturalContext: number;
+    wisdomDatabase: number;
+    predictionModels: number;
+    totalEntries: number;
+    hasActiveSession: boolean;
+  } {
+    return {
+      userPatterns: this.userPatterns.size,
+      culturalContext: this.culturalContext.size,
+      wisdomDatabase: this.wisdomDatabase.size,
+      predictionModels: this.predictionModels.size,
+      totalEntries:
+        this.userPatterns.size +
+        this.culturalContext.size +
+        this.wisdomDatabase.size +
+        this.predictionModels.size,
+      hasActiveSession: this.currentSession !== null,
+    };
+  }
+
+  /**
+   * Destroy the engine and clean up all resources
+   */
+  destroy(): void {
+    this.stopCacheEviction();
+    this.clearAllCaches();
+    this.currentSession = null;
+
+    // Unregister from memory profiler
+    try {
+      const profiler = getMemoryProfiler();
+      profiler.untrack('EmpathyEngine.userPatterns');
+      profiler.untrack('EmpathyEngine.culturalContext');
+      profiler.untrack('EmpathyEngine.wisdomDatabase');
+      profiler.untrack('EmpathyEngine.predictionModels');
+    } catch {
+      // Memory profiler not available
+    }
   }
 
   /**
@@ -391,11 +684,13 @@ export class EmpathyIntelligenceEngine {
       return 50;
     }
 
-    const resonanceScore = (resonanceWeight / totalWeight) * 55;
-    const emotionalEnergy =
-      moodEntries.reduce((sum, e) => sum + (e.emotionalRegulation ?? 5), 0) / moodEntries.length;
-    const energyScore = (emotionalEnergy / 10) * 20;
-    const detachmentPenalty = (detachmentHits / moodEntries.length) * 35;
+    const resonanceScore = safeDivide(resonanceWeight, totalWeight) * 55;
+    const emotionalEnergy = safeDivide(
+      moodEntries.reduce((sum, e) => sum + (e.emotionalRegulation ?? 5), 0),
+      moodEntries.length
+    );
+    const energyScore = safeDivide(emotionalEnergy, 10) * 20;
+    const detachmentPenalty = safeDivide(detachmentHits, moodEntries.length) * 35;
 
     return clampScore(40 + resonanceScore + energyScore - detachmentPenalty);
   }
@@ -435,12 +730,13 @@ export class EmpathyIntelligenceEngine {
       return 50;
     }
 
-    const protectiveScore = (protectiveWeight / totalWeight) * 60;
-    const overwhelmPenalty = (overwhelmWeight / totalWeight) * 55;
-    const regulationAverage =
-      moodEntries.reduce((sum, entry) => sum + (entry.emotionalRegulation ?? 5), 0) /
-      moodEntries.length;
-    const regulationBonus = (regulationAverage / 10) * 20;
+    const protectiveScore = safeDivide(protectiveWeight, totalWeight) * 60;
+    const overwhelmPenalty = safeDivide(overwhelmWeight, totalWeight) * 55;
+    const regulationAverage = safeDivide(
+      moodEntries.reduce((sum, entry) => sum + (entry.emotionalRegulation ?? 5), 0),
+      moodEntries.length
+    );
+    const regulationBonus = safeDivide(regulationAverage, 10) * 20;
 
     return clampScore(35 + protectiveScore + regulationBonus - overwhelmPenalty, 10, 100);
   }
@@ -464,8 +760,8 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('took care of myself')
     );
 
-    const distressLevel = (distressEntries.length / moodEntries.length) * 40;
-    const managementLevel = (managementEntries.length / moodEntries.length) * 60;
+    const distressLevel = safeDivide(distressEntries.length, moodEntries.length) * 40;
+    const managementLevel = safeDivide(managementEntries.length, moodEntries.length) * 60;
 
     return Math.min(100, 50 + managementLevel - distressLevel);
   }
@@ -474,8 +770,10 @@ export class EmpathyIntelligenceEngine {
     if (moodEntries.length === 0) return 50;
 
     // Ability to distinguish between emotions
-    const avgEmotionalClarity =
-      moodEntries.reduce((sum, e) => sum + e.emotionalClarity, 0) / moodEntries.length;
+    const avgEmotionalClarity = safeDivide(
+      moodEntries.reduce((sum, e) => sum + e.emotionalClarity, 0),
+      moodEntries.length
+    );
 
     const complexEmotions = moodEntries.filter(
       e =>
@@ -484,7 +782,7 @@ export class EmpathyIntelligenceEngine {
     );
 
     const clarityScore = avgEmotionalClarity * 10;
-    const complexityBonus = (complexEmotions.length / moodEntries.length) * 30;
+    const complexityBonus = safeDivide(complexEmotions.length, moodEntries.length) * 30;
 
     return Math.min(100, clarityScore * 0.7 + complexityBonus);
   }
@@ -501,10 +799,12 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('observing my')
     );
 
-    const emotionalRegulation =
-      moodEntries.reduce((sum, e) => sum + e.emotionalRegulation, 0) / moodEntries.length;
+    const emotionalRegulation = safeDivide(
+      moodEntries.reduce((sum, e) => sum + e.emotionalRegulation, 0),
+      moodEntries.length
+    );
 
-    const metaAwarenessScore = (metaEmotionalEntries.length / moodEntries.length) * 60;
+    const metaAwarenessScore = safeDivide(metaEmotionalEntries.length, moodEntries.length) * 60;
     const regulationScore = emotionalRegulation * 4;
 
     return Math.min(100, metaAwarenessScore + regulationScore);
@@ -543,8 +843,8 @@ export class EmpathyIntelligenceEngine {
 
     const purposeEntries = moodEntries.filter(e => e.hopefulness >= 7 && e.notes.length > 30);
 
-    const meaningScore = (meaningEntries.length / moodEntries.length) * 60;
-    const purposeScore = (purposeEntries.length / moodEntries.length) * 40;
+    const meaningScore = safeDivide(meaningEntries.length, moodEntries.length) * 60;
+    const purposeScore = safeDivide(purposeEntries.length, moodEntries.length) * 40;
 
     return Math.min(100, meaningScore + purposeScore);
   }
@@ -580,7 +880,7 @@ export class EmpathyIntelligenceEngine {
   private calculatePracticalWisdom(moodEntries: MoodEntry[]): number {
     // Lightweight heuristic using available data
     const clarityAvg = moodEntries.length
-      ? moodEntries.reduce((s, e) => s + e.emotionalClarity, 0) / moodEntries.length
+      ? safeDivide(moodEntries.reduce((s, e) => s + e.emotionalClarity, 0), moodEntries.length)
       : 5;
     return Math.max(0, Math.min(100, clarityAvg * 10));
   }
@@ -588,8 +888,14 @@ export class EmpathyIntelligenceEngine {
   private calculateEmotionalWisdom(moodEntries: MoodEntry[]): number {
     // Use regulation and hopefulness as a proxy
     if (moodEntries.length === 0) return 50;
-    const regAvg = moodEntries.reduce((s, e) => s + e.emotionalRegulation, 0) / moodEntries.length;
-    const hopeAvg = moodEntries.reduce((s, e) => s + e.hopefulness, 0) / moodEntries.length;
+    const regAvg = safeDivide(
+      moodEntries.reduce((s, e) => s + e.emotionalRegulation, 0),
+      moodEntries.length
+    );
+    const hopeAvg = safeDivide(
+      moodEntries.reduce((s, e) => s + e.hopefulness, 0),
+      moodEntries.length
+    );
     return Math.max(0, Math.min(100, (regAvg + hopeAvg) * 5));
   }
 
@@ -615,6 +921,7 @@ export class EmpathyIntelligenceEngine {
       responsiveness: moodEntries.length
         ? moodEntries.reduce((s, e) => s + e.mood, 0) / (moodEntries.length * 10)
         : 0.5,
+      lastAccessed: Date.now(),
     };
     this.userPatterns.set(userId, pattern);
   }
@@ -664,7 +971,7 @@ export class EmpathyIntelligenceEngine {
       selfAwareness: this.calculateEmotionalAwareness(moodEntries),
       selfRegulation: this.calculateEmotionalRegulation(moodEntries),
       motivation: moodEntries.length
-        ? (moodEntries.reduce((s, e) => s + e.hopefulness, 0) / moodEntries.length) * 10
+        ? safeDivide(moodEntries.reduce((s, e) => s + e.hopefulness, 0), moodEntries.length) * 10
         : 50,
       empathy: this.calculateEmpathyQuotient(moodEntries),
       socialSkills: this.calculateRelationshipManagement(moodEntries),
@@ -700,7 +1007,7 @@ export class EmpathyIntelligenceEngine {
       ),
       setbackResilience: this.calculateResilienceGrowth(painEntries, moodEntries),
       hopefulness: moodEntries.length
-        ? (moodEntries.reduce((s, e) => s + e.hopefulness, 0) / moodEntries.length) * 10
+        ? safeDivide(moodEntries.reduce((s, e) => s + e.hopefulness, 0), moodEntries.length) * 10
         : 50,
     };
   }
@@ -713,7 +1020,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('reframe') ||
         e.notes.toLowerCase().includes('silver lining')
     ).length;
-    return Math.min((reframingIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(reframingIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateCompassionFatigue(moodEntries: MoodEntry[]): number {
@@ -724,7 +1031,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('exhausted') ||
         e.notes.toLowerCase().includes('burned out')
     ).length;
-    return Math.min((fatigueIndicators / moodEntries.length) * 100, 80);
+    return Math.min(safeDivide(fatigueIndicators, moodEntries.length) * 100, 80);
   }
 
   private async analyzeRecoveryPatterns(
@@ -780,7 +1087,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('accurate') ||
         e.notes.toLowerCase().includes('right')
     ).length;
-    return Math.min((accuracyIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(accuracyIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateEmpathicConcern(moodEntries: MoodEntry[]): number {
@@ -791,7 +1098,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('concerned') ||
         e.notes.toLowerCase().includes('care')
     ).length;
-    return Math.min((concernIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(concernIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculatePerspectiveTaking(moodEntries: MoodEntry[]): number {
@@ -802,7 +1109,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('see their side') ||
         e.notes.toLowerCase().includes('understand them')
     ).length;
-    return Math.min((perspectiveIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(perspectiveIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateEmpathicMotivation(moodEntries: MoodEntry[]): number {
@@ -846,9 +1153,9 @@ export class EmpathyIntelligenceEngine {
       return 50;
     }
 
-    const baseScore = (motivationWeight / totalWeight) * 55;
-    const actionScore = (actionBoost / moodEntries.length) * 25;
-    const fatigueScore = (fatiguePenalty / moodEntries.length) * 45;
+    const baseScore = safeDivide(motivationWeight, totalWeight) * 55;
+    const actionScore = safeDivide(actionBoost, moodEntries.length) * 25;
+    const fatigueScore = safeDivide(fatiguePenalty, moodEntries.length) * 45;
 
     return clampScore(45 + baseScore + actionScore - fatigueScore);
   }
@@ -896,9 +1203,9 @@ export class EmpathyIntelligenceEngine {
       return 50;
     }
 
-    const boundaryScore = (boundaryWeight / totalWeight) * 60;
-    const restorativeScore = (restorativeWeight / totalWeight) * 25;
-    const overloadPenalty = (overloadHits / moodEntries.length) * 55;
+    const boundaryScore = safeDivide(boundaryWeight, totalWeight) * 60;
+    const restorativeScore = safeDivide(restorativeWeight, totalWeight) * 25;
+    const overloadPenalty = safeDivide(overloadHits, moodEntries.length) * 55;
 
     return clampScore(40 + boundaryScore + restorativeScore - overloadPenalty);
   }
@@ -928,7 +1235,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('tradition') ||
         e.notes.toLowerCase().includes('background')
     ).length;
-    const base = Math.min((culturalIndicators / moodEntries.length) * 100, 100);
+    const base = Math.min(safeDivide(culturalIndicators, moodEntries.length) * 100, 100);
     const score = stored ? Math.min(100, base + 5) : base;
     return {
       culturalAwareness: score,
@@ -966,11 +1273,25 @@ export class EmpathyIntelligenceEngine {
   }
 
   private calculateInnerStrength(painEntries: PainEntry[], moodEntries: MoodEntry[]): number {
-    const recentPain =
-      painEntries.slice(-7).reduce((sum, e) => sum + e.baselineData.pain, 0) /
-      Math.max(1, Math.min(7, painEntries.length || 1));
-    const recentMood = moodEntries.slice(-7).reduce((sum, e) => sum + e.mood, 0) / 7;
-    return Math.max(0, Math.min(100, (recentMood / recentPain) * 50));
+    if (painEntries.length === 0 && moodEntries.length === 0) return 50;
+    
+    const recentPainEntries = painEntries.slice(-7);
+    const recentMoodEntries = moodEntries.slice(-7);
+    
+    const recentPain = recentPainEntries.length > 0
+      ? recentPainEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / recentPainEntries.length
+      : 0;
+    const recentMood = recentMoodEntries.length > 0
+      ? recentMoodEntries.reduce((sum, e) => sum + e.mood, 0) / recentMoodEntries.length
+      : 5; // Default neutral mood
+    
+    // Avoid division by zero: if pain is 0 or very low, inner strength is high
+    if (recentPain < 0.1) {
+      return clampScore(70 + recentMood * 3);
+    }
+    
+    // Higher mood relative to pain indicates greater inner strength
+    return clampScore((recentMood / Math.max(0.1, recentPain)) * 50);
   }
 
   private calculateDignityMaintenance(moodEntries: MoodEntry[]): number {
@@ -981,7 +1302,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('respect') ||
         e.notes.toLowerCase().includes('worthy')
     ).length;
-    return Math.min((dignityIndicators / moodEntries.length) * 100 + 50, 100);
+    return Math.min(safeDivide(dignityIndicators, moodEntries.length) * 100 + 50, 100);
   }
 
   private calculatePurposeClarity(moodEntries: MoodEntry[]): number {
@@ -992,7 +1313,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('meaning') ||
         e.notes.toLowerCase().includes('direction')
     ).length;
-    return Math.min((purposeIndicators / moodEntries.length) * 100 + 40, 100);
+    return Math.min(safeDivide(purposeIndicators, moodEntries.length) * 100 + 40, 100);
   }
 
   private calculateSpiritualWellbeing(moodEntries: MoodEntry[]): number {
@@ -1003,7 +1324,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('faith') ||
         e.notes.toLowerCase().includes('transcendent')
     ).length;
-    return Math.min((spiritualIndicators / moodEntries.length) * 100 + 40, 100);
+    return Math.min(safeDivide(spiritualIndicators, moodEntries.length) * 100 + 40, 100);
   }
 
   private calculateLifeNarrativeCoherence(moodEntries: MoodEntry[]): number {
@@ -1014,7 +1335,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('journey') ||
         e.notes.toLowerCase().includes('path')
     ).length;
-    return Math.min((narrativeIndicators / moodEntries.length) * 100 + 50, 100);
+    return Math.min(safeDivide(narrativeIndicators, moodEntries.length) * 100 + 50, 100);
   }
 
   private async calculateEmpathyIntelligenceProfile(
@@ -1394,7 +1715,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('felt with') ||
         e.notes.toLowerCase().includes('emotional connection')
     ).length;
-    return Math.min((affectiveIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(affectiveIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateEmpathyFlexibility(moodEntries: MoodEntry[]): number {
@@ -1402,7 +1723,7 @@ export class EmpathyIntelligenceEngine {
     const flexibilityIndicators = moodEntries.filter(
       e => e.notes.toLowerCase().includes('adapt') || e.notes.toLowerCase().includes('adjust')
     ).length;
-    return Math.min((flexibilityIndicators / moodEntries.length) * 100 + 40, 100);
+    return Math.min(safeDivide(flexibilityIndicators, moodEntries.length) * 100 + 40, 100);
   }
 
   private calculateEmpathyCalibration(moodEntries: MoodEntry[]): number {
@@ -1411,7 +1732,7 @@ export class EmpathyIntelligenceEngine {
       e =>
         e.notes.toLowerCase().includes('balance') || e.notes.toLowerCase().includes('appropriate')
     ).length;
-    return Math.min((calibrationIndicators / moodEntries.length) * 100 + 35, 100);
+    return Math.min(safeDivide(calibrationIndicators, moodEntries.length) * 100 + 35, 100);
   }
 
   private calculateEmpathicMemory(moodEntries: MoodEntry[]): number {
@@ -1419,7 +1740,7 @@ export class EmpathyIntelligenceEngine {
     const memoryIndicators = moodEntries.filter(
       e => e.notes.toLowerCase().includes('remember') || e.notes.toLowerCase().includes('recall')
     ).length;
-    return Math.min((memoryIndicators / moodEntries.length) * 100 + 45, 100);
+    return Math.min(safeDivide(memoryIndicators, moodEntries.length) * 100 + 45, 100);
   }
 
   // Helper methods
@@ -1446,7 +1767,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('people') ||
         e.notes.toLowerCase().includes('social')
     ).length;
-    return Math.min((socialIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(socialIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateRelationshipManagement(moodEntries: MoodEntry[]): number {
@@ -1457,7 +1778,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('friend') ||
         e.notes.toLowerCase().includes('family')
     ).length;
-    return Math.min((relationshipIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(relationshipIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateSelfCompassion(moodEntries: MoodEntry[]): number {
@@ -1468,7 +1789,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('self-compassion') ||
         e.notes.toLowerCase().includes('forgive myself')
     ).length;
-    return Math.min((compassionIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(compassionIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateCompassionForOthers(moodEntries: MoodEntry[]): number {
@@ -1479,7 +1800,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('empathy') ||
         e.notes.toLowerCase().includes('understanding')
     ).length;
-    return Math.min((compassionIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(compassionIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateResilienceGrowth(painEntries: PainEntry[], moodEntries: MoodEntry[]): number {
@@ -1507,7 +1828,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('integration')
     ).length;
 
-    return Math.min((integrationIndicators / moodEntries.length) * 100 + 30, 100);
+    return Math.min(safeDivide(integrationIndicators, moodEntries.length) * 100 + 30, 100);
   }
 
   private calculateEmpathyQuotient(moodEntries: MoodEntry[]): number {
@@ -1519,7 +1840,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('feel for')
     ).length;
     const othersCompassion = this.calculateCompassionForOthers(moodEntries);
-    return Math.min((empathyIndicators / moodEntries.length) * 70 + othersCompassion * 0.3, 100);
+    return Math.min(safeDivide(empathyIndicators, moodEntries.length) * 70 + othersCompassion * 0.3, 100);
   }
 
   private calculateEmotionalIntelligence(moodEntries: MoodEntry[]): number {
@@ -1552,7 +1873,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('bond') ||
         e.notes.toLowerCase().includes('close')
     ).length;
-    return Math.min((connectionIndicators / moodEntries.length) * 100, 100);
+    return Math.min(safeDivide(connectionIndicators, moodEntries.length) * 100, 100);
   }
 
   private calculateDignityPreservation(moodEntries: MoodEntry[]): number {
@@ -1567,7 +1888,7 @@ export class EmpathyIntelligenceEngine {
         e.notes.toLowerCase().includes('purpose') ||
         e.notes.toLowerCase().includes('significant')
     ).length;
-    const meaningScore = Math.min((meaningIndicators / moodEntries.length) * 100, 100);
+    const meaningScore = Math.min(safeDivide(meaningIndicators, moodEntries.length) * 100, 100);
 
     // Factor in pain acceptance
     const recentPain = painEntries.slice(-7).reduce((sum, e) => sum + e.baselineData.pain, 0) / 7;
@@ -1599,14 +1920,17 @@ export class EmpathyIntelligenceEngine {
 
   private calculateMicroMomentQuality(moodEntries: MoodEntry[]): number {
     if (moodEntries.length === 0) return 50;
-    const avgMood = moodEntries.reduce((sum, e) => sum + e.mood, 0) / moodEntries.length;
+    const avgMood = safeDivide(
+      moodEntries.reduce((sum, e) => sum + e.mood, 0),
+      moodEntries.length
+    );
     const qualityIndicators = moodEntries.filter(
       e =>
         e.notes.toLowerCase().includes('quality') ||
         e.notes.toLowerCase().includes('meaningful') ||
         e.notes.toLowerCase().includes('deep')
     ).length;
-    return Math.min(avgMood + (qualityIndicators / moodEntries.length) * 20, 100);
+    return Math.min(avgMood + safeDivide(qualityIndicators, moodEntries.length) * 20, 100);
   }
 
   private calculateSpiritualWisdom(_moodEntries: MoodEntry[]): number {

@@ -459,7 +459,7 @@ export function generateChronicPain12MonthData(
               {
                 type: 'Physiotherapy',
                 provider: 'City Physio Clinic',
-                frequency: 'Twice weekly',
+                date: formatDate(currentDay),
                 effectiveness:
                   entryPain <= 5
                     ? 'Helping with mobility'

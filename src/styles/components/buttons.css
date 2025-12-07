@@ -1,0 +1,39 @@
+/**
+ * Button Component Styles
+ * Micro-interactions and hover effects for buttons
+ */
+
+/* Enhanced button hover effects */
+button {
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+  transition-duration: 0.1s;
+}
+
+/* Button micro-interactions */
+.btn-pulse {
+  animation: pulse 2s infinite;
+}
+
+.btn-bounce:hover {
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
+}

@@ -114,15 +114,32 @@ export class SecurityService {
       ...privacyConfig,
     };
 
+    // Cache test environment detection at construction time to prevent manipulation
+    this._isTestEnvCached = SecurityService.detectTestEnv();
     this.sessionId = this.generateSessionId();
     this.initializeSecurity();
   }
 
+  // Test environment flag - cached at construction time to prevent runtime manipulation
+  private readonly _isTestEnvCached: boolean;
+  
   private isTestEnv(): boolean {
+    return this._isTestEnvCached;
+  }
+  
+  private static detectTestEnv(): boolean {
     try {
+      // Only check environment variables at module load time for security
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
-      return !!(env && (env.VITEST || env.NODE_ENV === 'test'));
+      const isTest = !!(env && (env.VITEST || env.NODE_ENV === 'test'));
+      if (isTest) {
+        // Log warning if test mode is detected in a suspicious context
+        if (typeof window !== 'undefined' && window.location?.hostname !== 'localhost') {
+          console.warn('[SECURITY] Test environment detected in non-localhost context');
+        }
+      }
+      return isTest;
     } catch {
       return false;
     }
@@ -465,9 +482,9 @@ export class SecurityService {
       sessionId: event.sessionId || this.sessionId,
     });
 
-    // Keep only recent events to prevent memory issues
-    if (this.events.length > 1000) {
-      this.events = this.events.slice(-500);
+    // Keep only recent events to prevent memory issues (more aggressive trimming)
+    if (this.events.length > 500) {
+      this.events = this.events.slice(-250);
     }
 
     // Log critical events to console unless running tests (tests inspect events in-memory)

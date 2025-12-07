@@ -1,0 +1,195 @@
+/**
+ * Pricing Page Premium Styles
+ * Modern pricing cards with glassmorphism and glow effects
+ */
+
+/* ===== PRICING CARD ===== */
+.pricing-card-premium {
+  @apply relative bg-slate-800/50 backdrop-blur-xl rounded-2xl p-8 border border-white/10 overflow-hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pricing-card-premium::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 50%,
+    transparent 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.pricing-card-premium:hover::before {
+  opacity: 1;
+}
+
+.pricing-card-premium:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(56, 189, 248, 0.1);
+}
+
+/* ===== POPULAR CARD VARIANT ===== */
+.pricing-card-popular {
+  @apply border-sky-500/50;
+  box-shadow: 
+    0 10px 40px -10px rgba(56, 189, 248, 0.3),
+    0 0 80px rgba(56, 189, 248, 0.1);
+}
+
+.pricing-card-popular::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(56, 189, 248, 0.1) 60deg,
+    transparent 120deg
+  );
+  animation: pricing-glow-rotate 6s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes pricing-glow-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== POPULAR BADGE ===== */
+.pricing-badge-popular {
+  @apply absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-sm font-semibold;
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 30px rgba(56, 189, 248, 0.6);
+  }
+}
+
+/* ===== CTA BUTTON ===== */
+.pricing-cta-gradient {
+  @apply relative px-8 py-4 rounded-xl font-semibold text-white overflow-hidden;
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #a855f7 100%);
+  background-size: 200% 200%;
+  animation: pricing-gradient-shift 3s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.pricing-cta-gradient:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    0 10px 30px rgba(56, 189, 248, 0.3),
+    0 0 40px rgba(168, 85, 247, 0.2);
+}
+
+@keyframes pricing-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ===== FEATURE LIST ===== */
+.pricing-feature-check {
+  @apply flex items-center gap-3 text-slate-300;
+}
+
+.pricing-feature-check svg {
+  @apply w-5 h-5 text-emerald-400 flex-shrink-0;
+  filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.5));
+}
+
+/* ===== TOGGLE SWITCH ===== */
+.pricing-toggle {
+  @apply relative flex items-center p-1 rounded-full bg-slate-800 border border-white/10;
+}
+
+.pricing-toggle-option {
+  @apply relative px-6 py-2 rounded-full text-sm font-medium transition-all duration-300;
+}
+
+.pricing-toggle-option.active {
+  @apply text-white;
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+}
+
+.pricing-toggle-option:not(.active) {
+  @apply text-slate-400 hover:text-slate-200;
+}
+
+/* ===== COMPARISON TABLE ===== */
+.pricing-table-glass {
+  @apply relative overflow-hidden rounded-2xl border border-white/10;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 41, 59, 0.9) 0%,
+    rgba(15, 23, 42, 0.9) 100%
+  );
+  backdrop-filter: blur(20px);
+}
+
+.pricing-table-header {
+  @apply px-6 py-4 text-left text-sm font-semibold text-slate-300 bg-slate-800/50 border-b border-white/10;
+}
+
+.pricing-table-cell {
+  @apply px-6 py-4 text-slate-300 border-b border-white/5;
+}
+
+.pricing-table-row:hover {
+  @apply bg-slate-800/30;
+}
+
+/* ===== FAQ ACCORDION ===== */
+.pricing-faq-item {
+  @apply border border-white/10 rounded-xl overflow-hidden transition-all duration-300;
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.pricing-faq-item:hover {
+  @apply border-white/20;
+  background: rgba(30, 41, 59, 0.7);
+}
+
+.pricing-faq-trigger {
+  @apply flex items-center justify-between w-full px-6 py-4 text-left font-medium text-white;
+}
+
+.pricing-faq-content {
+  @apply px-6 pb-4 text-slate-400 leading-relaxed;
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  .pricing-card-popular::after,
+  .pricing-badge-popular,
+  .pricing-cta-gradient {
+    animation: none !important;
+  }
+  
+  .pricing-card-premium:hover,
+  .pricing-cta-gradient:hover {
+    transform: none !important;
+  }
+}

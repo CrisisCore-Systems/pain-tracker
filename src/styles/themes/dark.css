@@ -1,0 +1,114 @@
+/**
+ * Dark Theme Styles
+ * Dark mode is the default for trauma-informed design
+ * "At 3 AM when you're in pain, a white screen is violence."
+ * 
+ * SELECTOR: Uses .dark class (Tailwind standard) for consistency.
+ * The app sets both .dark class and data-theme attribute simultaneously,
+ * but we standardize on .dark for simpler CSS.
+ * 
+ * NOTE ON !important: Some declarations use !important to override
+ * Tailwind utility classes that have high specificity. This is intentional
+ * for accessibility contrast fixes. See Branch 5 of CSS audit.
+ */
+
+/* ===== HERO SECTION CONTRAST FIX ===== */
+/* 
+ * !important is required here because:
+ * 1. Hero components use Tailwind utilities for base styling
+ * 2. These overrides ensure WCAG AA contrast in dark mode
+ * 3. Theme styles load before utilities in the cascade
+ */
+.dark .hero {
+  background: rgb(var(--color-background)) !important;
+  color: rgb(var(--color-foreground)) !important;
+}
+
+.dark .hero h1,
+.dark .hero-title {
+  color: rgb(var(--color-foreground)) !important;
+  font-weight: 700 !important;
+}
+
+.dark .hero p,
+.dark .hero-subtitle {
+  color: rgb(var(--color-card-foreground)) !important;
+}
+
+.dark .hero .text-muted-foreground {
+  color: rgb(var(--color-muted-foreground)) !important;
+}
+
+.dark .hero .text-primary {
+  color: rgb(var(--color-primary)) !important;
+}
+
+.dark .hero .bg-primary\/10 {
+  background-color: rgb(var(--color-primary) / 0.2) !important;
+}
+
+.dark .hero-microcopy,
+.dark .hero-badge,
+.dark .hero-open-source {
+  color: rgb(var(--color-muted-foreground)) !important;
+}
+
+.dark .hero span {
+  color: inherit;
+}
+
+/* Ensure hero content is visible - simplified selector for performance */
+.dark .hero > *,
+.dark .hero h1,
+.dark .hero h2,
+.dark .hero p,
+.dark .hero span,
+.dark .hero a,
+.dark .hero button,
+.dark .hero div {
+  opacity: 1 !important;
+}
+
+.dark .hero::before,
+.dark .hero::after {
+  background: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* ===== DARK MODE SLIDER STYLING ===== */
+/* Uses semantic tokens for consistency with the design system */
+.dark input[type="range"]::-webkit-slider-runnable-track {
+  background: rgb(var(--color-muted));
+  border: 1px solid rgb(var(--color-border));
+}
+
+.dark input[type="range"]::-webkit-slider-track {
+  background: rgb(var(--color-muted));
+  border: 1px solid rgb(var(--color-border));
+}
+
+.dark input[type="range"]::-webkit-slider-thumb {
+  background: rgb(var(--color-primary));
+  border: 2px solid rgb(var(--color-background));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.dark input[type="range"]::-moz-range-track {
+  background: rgb(var(--color-muted));
+  border: 1px solid rgb(var(--color-border));
+}
+
+.dark input[type="range"]::-moz-range-thumb {
+  background: rgb(var(--color-primary));
+  border: 2px solid rgb(var(--color-background));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.dark input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgb(var(--color-ring) / 0.5);
+}
+
+.dark input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgb(var(--color-ring) / 0.5);
+}

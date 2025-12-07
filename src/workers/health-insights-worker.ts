@@ -6,6 +6,15 @@
 import type { PainEntry } from '../types';
 import { formatNumber, formatPercent } from '../utils/formatting';
 
+/**
+ * Safe division that returns fallback for division by zero or invalid inputs
+ */
+function safeDivide(numerator: number, denominator: number, fallback = 0): number {
+  if (denominator === 0 || !Number.isFinite(denominator)) return fallback;
+  const result = numerator / denominator;
+  return Number.isFinite(result) ? result : fallback;
+}
+
 // Worker types
 interface HealthInsightTask {
   id: string;
@@ -186,7 +195,8 @@ function comprehensiveCorrelationAnalysis(entries: PainEntry[]): HealthInsight[]
             factor1: p.name,
             factor2: 'pain-level',
             strength: corr,
-            significance: p.x.length / entries.length,
+            // Safe division: guard against entries.length being 0
+            significance: safeDivide(p.x.length, entries.length, 0),
           },
         ],
       },

@@ -33,6 +33,16 @@ const sampleEntries: PainEntry[] = [
       moodImpact: 5,
       socialImpact: [],
     },
+    workImpact: {
+      missedWork: 0,
+      modifiedDuties: [],
+      workLimitations: [],
+    },
+    comparison: {
+      worseningSince: '',
+      newLimitations: [],
+    },
+    notes: '',
   },
 ];
 

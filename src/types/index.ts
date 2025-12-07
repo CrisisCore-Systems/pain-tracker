@@ -1,5 +1,5 @@
 ﻿export interface PainEntry {
-  id: number;
+  id: number | string;
   timestamp: string;
   baselineData: {
     pain: number;
@@ -46,6 +46,44 @@
     newLimitations: string[];
   };
   notes: string;
+
+  // ============================================================================
+  // Extended optional fields for analytics and pattern detection
+  // These fields provide alternative access patterns while maintaining compatibility
+  // ============================================================================
+
+  /** Identified pain triggers */
+  triggers?: string[];
+
+  /** Explicit numeric intensity (0-10). Falls back to baselineData.pain when not provided. */
+  intensity?: number;
+
+  /** Primary location descriptor for clinical summaries */
+  location?: string;
+
+  /** Pain quality descriptors (e.g., 'sharp', 'dull', 'burning') */
+  quality?: string[];
+
+  /** Relief methods attempted */
+  reliefMethods?: string[];
+
+  /** Activity level at time of entry (0-10) */
+  activityLevel?: number;
+
+  /** Weather conditions (for correlation analysis) */
+  weather?: string;
+
+  /** Sleep quality rating (alternative to qualityOfLife.sleepQuality) */
+  sleep?: number;
+
+  /** Mood rating (alternative to qualityOfLife.moodImpact) */
+  mood?: number;
+
+  /** Stress level (0-10) */
+  stress?: number;
+
+  /** Physical activities performed */
+  activities?: string[];
 }
 
 export interface WCBReport {

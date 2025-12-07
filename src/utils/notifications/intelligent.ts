@@ -139,7 +139,7 @@ class IntelligentNotificationTrigger {
       case 'medication_due':
         return this.evaluateMedicationDue(condition, entries);
       case 'goal_progress':
-        return this.evaluateGoalProgress(condition, entries);
+        return this.evaluateGoalProgress();
       case 'time_since_last_entry':
         return this.evaluateTimeSinceLastEntry(condition, entries);
       case 'streak_maintenance':
@@ -336,11 +336,7 @@ class IntelligentNotificationTrigger {
     };
   }
 
-   
-  private async evaluateGoalProgress(
-    _condition: TriggerCondition,
-    _entries: PainEntry[]
-  ): Promise<TriggerAnalysisResult> {
+  private async evaluateGoalProgress(): Promise<TriggerAnalysisResult> {
     try {
       const goals = await goalStorage.getAllGoals();
       const activeGoals = goals.filter(goal => goal.status === 'active');

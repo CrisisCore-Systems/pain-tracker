@@ -1,39 +1,16 @@
-import type { PainEntry as DetailedPainEntry } from '../types';
-
 /**
  * Pain tracker specific typings used by the advanced analytics and export
- * services. The types extend the broader application definitions with the
- * additional fields these modules expect while remaining compatible with the
- * data collected in the core tracker experience.
+ * services.
+ *
+ * NOTE: The canonical PainEntry type is defined in ./index.ts
+ * This file re-exports it for backwards compatibility and provides
+ * additional minimal types needed by analytics modules.
+ *
+ * @deprecated Import PainEntry directly from '../types' or './index'
  */
 
-export interface PainEntry extends DetailedPainEntry {
-  /**
-   * Explicit numeric intensity (0-10). Falls back to baselineData.pain when
-   * not provided so legacy entries remain compatible.
-   */
-  intensity?: number;
-  /**
-   * Primary location descriptor used for clinical summaries.
-   */
-  location?: string;
-  /**
-   * Descriptors describing the character/quality of the pain.
-   */
-  quality?: string[];
-  /**
-   * Recorded triggers that preceded the entry.
-   */
-  triggers?: string[];
-  /**
-   * Interventions or actions attempted for relief.
-   */
-  reliefMethods?: string[];
-  /**
-   * Optional activity level used by analytics modules.
-   */
-  activityLevel?: number;
-}
+// Re-export from canonical types/index.ts
+export type { PainEntry } from './index';
 
 /**
  * Minimal mood entry representation required by the clinical export and
@@ -46,3 +23,4 @@ export interface MoodEntry {
   mood: number;
   notes?: string;
 }
+

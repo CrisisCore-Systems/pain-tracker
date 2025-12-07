@@ -2,507 +2,674 @@
 
 ```yaml
 - generic [active] [ref=e1]:
-  - link "Skip to main content" [ref=e3] [cursor=pointer]:
+  - link "Skip to main content" [ref=e2] [cursor=pointer]:
     - /url: "#main-content"
-  - generic [ref=e5]:
-    - link "Skip to main content" [ref=e6] [cursor=pointer]:
+  - generic [ref=e4]:
+    - link "Skip to main content" [ref=e5] [cursor=pointer]:
       - /url: "#main-content"
-    - main [ref=e7]:
-      - generic [ref=e8]:
-        - generic [ref=e11]:
-          - generic [ref=e12]:
-            - img [ref=e13]
-            - generic [ref=e15]: Pain Tracker Pro
-          - generic [ref=e16]:
-            - button "View pricing plans" [ref=e17] [cursor=pointer]:
-              - generic [ref=e19] [cursor=pointer]: Pricing
-            - button "Sign in to your account" [ref=e20] [cursor=pointer]:
-              - generic [ref=e21] [cursor=pointer]:
-                - img [ref=e22] [cursor=pointer]
-                - generic [ref=e25] [cursor=pointer]: Sign In
-            - button "Access clinician portal" [ref=e26] [cursor=pointer]:
-              - generic [ref=e27] [cursor=pointer]:
-                - img [ref=e28] [cursor=pointer]
-                - generic [ref=e32] [cursor=pointer]: Clinician
-            - button "Start tracking your pain for free" [ref=e33] [cursor=pointer]:
-              - generic [ref=e34] [cursor=pointer]:
-                - generic [ref=e35] [cursor=pointer]: Get Started
-                - img [ref=e36] [cursor=pointer]
-        - generic [ref=e39]:
-          - generic [ref=e40]:
-            - generic [ref=e41]:
-              - img [ref=e42]
-              - generic [ref=e44]: 100% Local & Private
-              - generic [ref=e45]: •
-              - generic [ref=e46]: No Account Required
-            - heading "Professional Pain Management for Patients & Clinicians" [level=1] [ref=e47]:
-              - text: Professional Pain Management for
-              - generic [ref=e48]: Patients & Clinicians
-            - paragraph [ref=e49]: Clinical-grade pain tracking with AI-powered insights, automated WorkSafe BC reporting, and empathy-driven design. Your data stays on your device—secure, private, and always accessible.
-            - generic [ref=e50]:
-              - generic [ref=e51]:
-                - img [ref=e52]
-                - generic [ref=e54]: AI Pattern Detection
-              - generic [ref=e55]:
-                - img [ref=e56]
-                - generic [ref=e58]: Military-Grade Security
-              - generic [ref=e59]:
-                - img [ref=e60]
-                - generic [ref=e62]: Trauma-Informed
-            - generic [ref=e63]:
-              - button "Start tracking your pain as a patient" [ref=e64] [cursor=pointer]:
-                - generic [ref=e65] [cursor=pointer]:
-                  - generic [ref=e66] [cursor=pointer]: Start Free Trial
-                  - img [ref=e67] [cursor=pointer]
-              - button "View Pricing" [ref=e69] [cursor=pointer]:
-                - generic [ref=e71] [cursor=pointer]: View Pricing
-            - generic [ref=e72]:
-              - paragraph [ref=e73]:
-                - text: ✨
-                - strong [ref=e74]: "Start Free:"
-                - generic [ref=e75]: 50 entries • Basic analytics • No credit card • Upgrade anytime
-              - paragraph [ref=e76]:
-                - text: 👨‍⚕️
-                - strong [ref=e77]: "For Clinicians:"
-                - generic [ref=e78]:
-                  - text: AI insights • WCB reports • Real-time monitoring •
-                  - button "View plans →" [ref=e79] [cursor=pointer]
-            - button "Share your story →" [ref=e81] [cursor=pointer]:
-              - generic [ref=e82] [cursor=pointer]: Share your story →
-          - generic [ref=e84]:
-            - img "Pain Tracker Pro Dashboard featuring the 7-step pain assessment form, customizable widgets, analytics visualizations, and trauma-informed design" [ref=e86]
-            - generic [ref=e87]: Open Source
-            - generic [ref=e88]: WCAG 2.1 AA
-      - generic [ref=e92]:
-        - generic [ref=e93]:
-          - generic [ref=e94]:
-            - generic [ref=e95]:
-              - img [ref=e96]
-              - generic [ref=e99]: For Patients
-            - heading "Take Control of Your Pain Management" [level=2] [ref=e100]
-            - paragraph [ref=e101]: Comprehensive tools to track, understand, and communicate your pain effectively.
-          - generic [ref=e102]:
-            - generic [ref=e104]:
-              - img [ref=e106]
-              - heading "Track Your Journey" [level=2] [ref=e109]
-              - paragraph [ref=e110]: 7-step pain assessment with body mapping, medication tracking, and quality of life metrics.
-              - list [ref=e111]:
-                - listitem [ref=e112]:
-                  - generic [ref=e113]: ✓
-                  - generic [ref=e114]: Visual pain heatmaps
-                - listitem [ref=e115]:
-                  - generic [ref=e116]: ✓
-                  - generic [ref=e117]: Medication side effects
-                - listitem [ref=e118]:
-                  - generic [ref=e119]: ✓
-                  - generic [ref=e120]: Mood & sleep correlation
-            - generic [ref=e122]:
-              - img [ref=e124]
-              - heading "Understand Patterns" [level=2] [ref=e127]
-              - paragraph [ref=e128]: AI-powered pattern detection identifies triggers, correlations, and trends in your pain.
-              - list [ref=e129]:
-                - listitem [ref=e130]:
-                  - generic [ref=e131]: ✓
-                  - generic [ref=e132]: Trigger identification
-                - listitem [ref=e133]:
-                  - generic [ref=e134]: ✓
-                  - generic [ref=e135]: Weather correlations
-                - listitem [ref=e136]:
-                  - generic [ref=e137]: ✓
-                  - generic [ref=e138]: Time-of-day analysis
-            - generic [ref=e140]:
-              - img [ref=e142]
-              - heading "Export Reports" [level=2] [ref=e145]
-              - paragraph [ref=e146]: Generate professional reports for healthcare providers, WorkSafe BC, or insurance claims.
-              - list [ref=e147]:
-                - listitem [ref=e148]:
-                  - generic [ref=e149]: ✓
-                  - generic [ref=e150]: One-click WCB export
-                - listitem [ref=e151]:
-                  - generic [ref=e152]: ✓
-                  - generic [ref=e153]: Clinical summaries
-                - listitem [ref=e154]:
-                  - generic [ref=e155]: ✓
-                  - generic [ref=e156]: CSV data exports
-          - generic [ref=e157]:
-            - button "Start Tracking Free" [ref=e158] [cursor=pointer]:
-              - generic [ref=e159] [cursor=pointer]:
-                - generic [ref=e160] [cursor=pointer]: Start Tracking Free
-                - img [ref=e161] [cursor=pointer]
-            - paragraph [ref=e163]: No account required • 100% private • Works offline
-        - generic [ref=e164]:
-          - generic [ref=e165]:
-            - generic [ref=e166]:
-              - img [ref=e167]
-              - generic [ref=e171]: For Healthcare Professionals
-            - heading "Professional-Grade Clinical Tools" [level=2] [ref=e172]
-            - paragraph [ref=e173]: Save 25+ hours per week with AI-powered insights and automated reporting.
-          - generic [ref=e174]:
-            - generic [ref=e176]:
-              - img [ref=e178]
-              - heading "AI-Powered Insights" [level=2] [ref=e186]
-              - paragraph [ref=e187]: 8 sophisticated algorithms analyze patient data for medication efficacy, triggers, and correlations.
-              - list [ref=e188]:
-                - listitem [ref=e189]:
-                  - generic [ref=e190]: ✓
-                  - generic [ref=e191]: Pearson correlation
-                - listitem [ref=e192]:
-                  - generic [ref=e193]: ✓
-                  - generic [ref=e194]: Treatment efficacy
-                - listitem [ref=e195]:
-                  - generic [ref=e196]: ✓
-                  - generic [ref=e197]: Confidence scoring
-            - generic [ref=e199]:
-              - img [ref=e201]
-              - heading "Real-Time Monitoring" [level=2] [ref=e204]
-              - paragraph [ref=e205]: Live patient alerts for pain escalation, missed medications, and crisis detection.
-              - list [ref=e206]:
-                - listitem [ref=e207]:
-                  - generic [ref=e208]: ✓
-                  - generic [ref=e209]: Pain escalation alerts
-                - listitem [ref=e210]:
-                  - generic [ref=e211]: ✓
-                  - generic [ref=e212]: Medication adherence
-                - listitem [ref=e213]:
-                  - generic [ref=e214]: ✓
-                  - generic [ref=e215]: Crisis warnings
-            - generic [ref=e217]:
-              - img [ref=e219]
-              - heading "Automated Reports" [level=2] [ref=e222]
-              - paragraph [ref=e223]: One-click generation of WorkSafe BC, insurance, and progress reports with clinical summaries.
-              - list [ref=e224]:
-                - listitem [ref=e225]:
-                  - generic [ref=e226]: ✓
-                  - generic [ref=e227]: SOAP format notes
-                - listitem [ref=e228]:
-                  - generic [ref=e229]: ✓
-                  - generic [ref=e230]: Work capacity assessment
-                - listitem [ref=e231]:
-                  - generic [ref=e232]: ✓
-                  - generic [ref=e233]: Treatment timelines
-          - generic [ref=e234]:
-            - button "Access Clinician Portal" [ref=e235] [cursor=pointer]:
+    - main [ref=e6]:
+      - generic [ref=e7]:
+        - navigation [ref=e13]:
+          - generic [ref=e15]:
+            - generic [ref=e16]:
+              - img [ref=e19]
+              - generic [ref=e22]: Pain Tracker Pro
+            - generic [ref=e23]:
+              - link "Blog" [ref=e24] [cursor=pointer]:
+                - /url: https://blog.paintracker.ca
+              - button "Pricing" [ref=e25] [cursor=pointer]:
+                - generic [ref=e26] [cursor=pointer]: Pricing
+              - button "Sign In" [ref=e27] [cursor=pointer]:
+                - generic [ref=e28] [cursor=pointer]:
+                  - img [ref=e29] [cursor=pointer]
+                  - text: Sign In
+              - button "Clinician" [ref=e32] [cursor=pointer]:
+                - generic [ref=e33] [cursor=pointer]:
+                  - img [ref=e34] [cursor=pointer]
+                  - generic [ref=e38] [cursor=pointer]: Clinician
+              - button "Get Started" [ref=e39] [cursor=pointer]:
+                - text: Get Started
+                - img [ref=e40] [cursor=pointer]
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e46]:
+              - generic [ref=e47]:
+                - img [ref=e48]
+                - generic [ref=e51]: 100% Local & Private
+              - generic [ref=e52]: No Account Required
+            - heading "Professional Pain Management for Everyone" [level=1] [ref=e54]:
+              - generic [ref=e55]: Professional Pain
+              - generic [ref=e56]: Management for
+              - generic [ref=e57]: Everyone
+            - paragraph [ref=e58]:
+              - text: Clinical-grade pain tracking with
+              - generic [ref=e59]: advanced pattern analysis
+              - text: ", automated WorkSafe BC reporting, and"
+              - generic [ref=e60]: empathy-driven design
+              - text: . Your data stays on your device.
+            - generic [ref=e61]:
+              - generic [ref=e62]:
+                - img [ref=e63]
+                - generic [ref=e65]: Pattern Analysis
+              - generic [ref=e66]:
+                - img [ref=e67]
+                - generic [ref=e69]: Encrypted
+              - generic [ref=e70]:
+                - img [ref=e71]
+                - generic [ref=e73]: Trauma-Informed
+            - generic [ref=e74]:
+              - button "Start Free Trial" [ref=e75] [cursor=pointer]:
+                - generic [ref=e76] [cursor=pointer]: Start Free Trial
+                - img [ref=e77] [cursor=pointer]
+              - button "View Pricing" [ref=e79] [cursor=pointer]
+            - generic [ref=e80]:
+              - paragraph [ref=e81]:
+                - generic [ref=e82]:
+                  - img [ref=e83]
+                  - text: Free Forever
+                - generic [ref=e85]: •
+                - generic [ref=e86]: Unlimited entries
+                - generic [ref=e87]: •
+                - generic [ref=e88]: No credit card
+              - paragraph [ref=e89]:
+                - generic [ref=e90]: "Pro Features:"
+                - generic [ref=e91]: AI insights • WCB reports • Clinical exports
+          - generic [ref=e92]:
+            - generic [ref=e94]:
+              - generic [ref=e103]: paintracker.app/dashboard
+              - img "Pain Tracker Pro Dashboard" [ref=e105]
+            - generic [ref=e107]:
+              - img [ref=e108]
+              - text: Open Source
+            - generic [ref=e112]:
+              - img [ref=e113]
+              - text: WCAG 2.1 AA
+            - generic [ref=e116]:
+              - img [ref=e117]
+              - text: AES-256
+        - generic [ref=e120]: Scroll to explore
+      - generic [ref=e128]:
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - img [ref=e132]
+              - generic [ref=e135]: For Patients
+            - heading "Take Control of Your Pain Management" [level=2] [ref=e136]:
+              - text: Take Control of Your
+              - generic [ref=e137]:
+                - generic [ref=e138]: Pain Management
+                - img [ref=e139]
+            - paragraph [ref=e141]: Comprehensive tools to track, understand, and communicate your pain effectively—built with empathy for chronic pain survivors.
+          - generic [ref=e142]:
+            - generic [ref=e147]:
+              - img [ref=e149]
+              - heading "Track Your Journey" [level=3] [ref=e152]
+              - paragraph [ref=e153]: 7-step pain assessment with body mapping, medication tracking, and quality of life metrics.
+              - list [ref=e154]:
+                - listitem [ref=e155]:
+                  - img [ref=e157]
+                  - generic [ref=e160]: Visual pain heatmaps
+                - listitem [ref=e161]:
+                  - img [ref=e163]
+                  - generic [ref=e166]: Medication side effects
+                - listitem [ref=e167]:
+                  - img [ref=e169]
+                  - generic [ref=e172]: Mood & sleep correlation
+            - generic [ref=e177]:
+              - img [ref=e179]
+              - heading "Understand Patterns" [level=3] [ref=e182]
+              - paragraph [ref=e183]: Heuristic pattern detection identifies triggers, correlations, and trends in your pain.
+              - list [ref=e184]:
+                - listitem [ref=e185]:
+                  - img [ref=e187]
+                  - generic [ref=e190]: Trigger identification
+                - listitem [ref=e191]:
+                  - img [ref=e193]
+                  - generic [ref=e196]: Weather correlations
+                - listitem [ref=e197]:
+                  - img [ref=e199]
+                  - generic [ref=e202]: Time-of-day analysis
+            - generic [ref=e207]:
+              - img [ref=e209]
+              - heading "Export Reports" [level=3] [ref=e212]
+              - paragraph [ref=e213]: Generate professional reports for healthcare providers, WorkSafe BC, or insurance claims.
+              - list [ref=e214]:
+                - listitem [ref=e215]:
+                  - img [ref=e217]
+                  - generic [ref=e220]: One-click WCB export
+                - listitem [ref=e221]:
+                  - img [ref=e223]
+                  - generic [ref=e226]: Clinical summaries
+                - listitem [ref=e227]:
+                  - img [ref=e229]
+                  - generic [ref=e232]: CSV data exports
+          - generic [ref=e233]:
+            - button "Start Tracking Free" [ref=e234] [cursor=pointer]:
               - generic [ref=e236] [cursor=pointer]:
                 - img [ref=e237] [cursor=pointer]
-                - generic [ref=e241] [cursor=pointer]: Access Clinician Portal
-            - paragraph [ref=e242]: Role-based access • AI insights • HIPAA-aligned security
-      - generic [ref=e244]:
-        - generic [ref=e245]:
-          - heading "Why Choose Pain Tracker Pro?" [level=2] [ref=e246]
-          - paragraph [ref=e247]: Powerful features designed with your privacy, security, and well-being in mind.
-        - generic [ref=e248]:
-          - generic [ref=e250]:
-            - generic [ref=e251]:
-              - img [ref=e253]
-              - generic [ref=e256]: Zero data breaches
-            - heading "100% Local & Private" [level=2] [ref=e257]
-            - paragraph [ref=e258]: Your pain data never leaves your device. No cloud uploads, no tracking, no data collection. Military-grade AES-256 encryption keeps your health data completely private.
-          - generic [ref=e261]:
-            - generic [ref=e262]:
-              - img [ref=e264]
-              - generic [ref=e266]: 8 AI algorithms
-            - heading "AI-Powered Analytics" [level=2] [ref=e267]
-            - paragraph [ref=e268]: Advanced pattern recognition with 8 AI algorithms detects medication efficacy, triggers, correlations, and trends. Professional WorkSafe BC reporting included.
+                - text: Start Tracking Free
+                - img [ref=e240] [cursor=pointer]
+            - paragraph [ref=e242]:
+              - generic [ref=e243]: No account required
+              - generic [ref=e245]: 100% private
+              - generic [ref=e247]: Works offline
+        - generic [ref=e252]: OR
+        - generic [ref=e254]:
+          - generic [ref=e255]:
+            - generic [ref=e256]:
+              - img [ref=e257]
+              - generic [ref=e261]: For Healthcare Professionals
+            - heading "Professional-Grade Clinical Tools" [level=2] [ref=e262]:
+              - text: Professional-Grade
+              - generic [ref=e263]:
+                - generic [ref=e264]: Clinical Tools
+                - img [ref=e265]
+            - paragraph [ref=e267]:
+              - text: Streamline documentation with
+              - generic [ref=e268]: pattern analysis
+              - text: and one-click report generation.
           - generic [ref=e271]:
             - generic [ref=e272]:
-              - img [ref=e274]
-              - generic [ref=e276]: WCAG 2.1 AA certified
-            - heading "Trauma-Informed Design" [level=2] [ref=e277]
-            - paragraph [ref=e278]: Built with empathy for chronic pain sufferers. Gentle language, accessible interface, crisis detection, panic mode, and customizable sensitivity settings.
-          - generic [ref=e281]:
-            - generic [ref=e282]:
-              - img [ref=e284]
-              - generic [ref=e291]: 100% offline capable
-            - heading "Works Completely Offline" [level=2] [ref=e292]
-            - paragraph [ref=e293]: Full functionality without internet. Progressive Web App technology with background sync ensures you can track pain anytime, anywhere.
-          - generic [ref=e296]:
-            - generic [ref=e297]:
-              - img [ref=e299]
-              - generic [ref=e301]: 95% time savings
-            - heading "Instant Insights" [level=2] [ref=e302]
-            - paragraph [ref=e303]: Real-time pattern detection, automated alerts for pain escalation, and one-click report generation. Save 25+ hours per week on documentation.
-          - generic [ref=e306]:
-            - generic [ref=e307]:
-              - img [ref=e309]
-              - generic [ref=e314]: Community verified
-            - heading "Built with Patients" [level=2] [ref=e315]
-            - paragraph [ref=e316]: Community-driven development with input from chronic pain sufferers, healthcare providers, and accessibility experts. Open source and transparent.
-      - generic [ref=e319]:
-        - generic [ref=e320]:
-          - heading "Security & Trust You Can Verify" [level=2] [ref=e321]
-          - paragraph [ref=e322]: Your health data deserves the highest level of protection
-        - generic [ref=e323]:
-          - generic [ref=e324]:
-            - img [ref=e326]
-            - heading "AES-256 Encryption" [level=3] [ref=e328]
-            - paragraph [ref=e329]: Military-grade encryption
-          - generic [ref=e330]:
-            - img [ref=e332]
-            - heading "HIPAA-Aligned" [level=3] [ref=e335]
-            - paragraph [ref=e336]: Healthcare data standards
-          - generic [ref=e337]:
-            - img [ref=e339]
-            - heading "Zero Tracking" [level=3] [ref=e342]
-            - paragraph [ref=e343]: No analytics or cookies
-          - generic [ref=e344]:
-            - img [ref=e346]
-            - heading "Open Source" [level=3] [ref=e349]
-            - paragraph [ref=e350]: Auditable & transparent
-          - generic [ref=e351]:
-            - img [ref=e353]
-            - heading "WCAG 2.1 AA" [level=3] [ref=e357]
-            - paragraph [ref=e358]: Accessibility certified
-          - generic [ref=e359]:
-            - img [ref=e361]
-            - heading "Community-Driven" [level=3] [ref=e366]
-            - paragraph [ref=e367]: Built with patients
-        - paragraph [ref=e369]:
-          - strong [ref=e370]: Your data, your device.
+              - generic [ref=e274]: 0+
+              - paragraph [ref=e275]: Analysis Algorithms
+            - generic [ref=e276]:
+              - generic [ref=e278]: 0+
+              - paragraph [ref=e279]: Body Locations
+            - generic [ref=e280]:
+              - generic [ref=e282]: 0%
+              - paragraph [ref=e283]: HIPAA-Aligned
+          - generic [ref=e284]:
+            - generic [ref=e289]:
+              - img [ref=e291]
+              - heading "Pattern Analysis" [level=3] [ref=e299]
+              - paragraph [ref=e300]: 10+ heuristic algorithms analyze patient data for medication efficacy, triggers, and correlations.
+              - list [ref=e301]:
+                - listitem [ref=e302]:
+                  - img [ref=e304]
+                  - generic [ref=e307]: Pearson correlation
+                - listitem [ref=e308]:
+                  - img [ref=e310]
+                  - generic [ref=e313]: Treatment efficacy
+                - listitem [ref=e314]:
+                  - img [ref=e316]
+                  - generic [ref=e319]: Confidence scoring
+            - generic [ref=e324]:
+              - img [ref=e326]
+              - heading "Real-Time Monitoring" [level=3] [ref=e329]
+              - paragraph [ref=e330]: Live patient alerts for pain escalation, missed medications, and crisis detection.
+              - list [ref=e331]:
+                - listitem [ref=e332]:
+                  - img [ref=e334]
+                  - generic [ref=e337]: Pain escalation alerts
+                - listitem [ref=e338]:
+                  - img [ref=e340]
+                  - generic [ref=e343]: Medication adherence
+                - listitem [ref=e344]:
+                  - img [ref=e346]
+                  - generic [ref=e349]: Crisis warnings
+            - generic [ref=e354]:
+              - img [ref=e356]
+              - heading "Automated Reports" [level=3] [ref=e359]
+              - paragraph [ref=e360]: One-click generation of WorkSafe BC, insurance, and progress reports with clinical summaries.
+              - list [ref=e361]:
+                - listitem [ref=e362]:
+                  - img [ref=e364]
+                  - generic [ref=e367]: SOAP format notes
+                - listitem [ref=e368]:
+                  - img [ref=e370]
+                  - generic [ref=e373]: Work capacity assessment
+                - listitem [ref=e374]:
+                  - img [ref=e376]
+                  - generic [ref=e379]: Treatment timelines
+          - generic [ref=e380]:
+            - button "Access Clinician Portal" [ref=e381] [cursor=pointer]:
+              - generic [ref=e383] [cursor=pointer]:
+                - img [ref=e384] [cursor=pointer]
+                - text: Access Clinician Portal
+                - img [ref=e386] [cursor=pointer]
+            - paragraph [ref=e388]:
+              - generic [ref=e389]: Role-based access
+              - generic [ref=e391]: AI insights
+              - generic [ref=e393]: HIPAA-aligned
+      - generic [ref=e400]:
+        - generic [ref=e401]:
+          - generic [ref=e402]:
+            - img [ref=e403]
+            - generic [ref=e405]: Powerful Features
+          - heading "Why Choose Pain Tracker Pro?" [level=2] [ref=e406]:
+            - generic [ref=e407]: Why Choose
+            - generic [ref=e408]: Pain Tracker Pro?
+          - paragraph [ref=e409]: Powerful features designed with your privacy, security, and well-being in mind.
+        - generic [ref=e410]:
+          - generic [ref=e412]:
+            - generic [ref=e413]:
+              - img [ref=e415]
+              - generic [ref=e418]: Zero cloud storage
+            - heading "100% Local & Private" [level=3] [ref=e419]
+            - paragraph [ref=e420]: Your pain data never leaves your device. No cloud uploads, no tracking, no data collection. AES-256 encryption.
+          - generic [ref=e423]:
+            - generic [ref=e424]:
+              - img [ref=e426]
+              - generic [ref=e428]: 10+ algorithms
+            - heading "Pattern Analytics" [level=3] [ref=e429]
+            - paragraph [ref=e430]: Advanced pattern recognition with 10+ heuristic algorithms detects medication efficacy, triggers, correlations, and trends.
+          - generic [ref=e433]:
+            - generic [ref=e434]:
+              - img [ref=e436]
+              - generic [ref=e438]: WCAG 2.1 AA
+            - heading "Trauma-Informed Design" [level=3] [ref=e439]
+            - paragraph [ref=e440]: Built with empathy for chronic pain sufferers. Gentle language, accessible interface, crisis detection, and panic mode.
+          - generic [ref=e443]:
+            - generic [ref=e444]:
+              - img [ref=e446]
+              - generic [ref=e453]: 100% offline
+            - heading "Works Completely Offline" [level=3] [ref=e454]
+            - paragraph [ref=e455]: Full functionality without internet. Progressive Web App technology ensures you can track pain anytime, anywhere.
+          - generic [ref=e458]:
+            - generic [ref=e459]:
+              - img [ref=e461]
+              - generic [ref=e463]: One-click export
+            - heading "Instant Insights" [level=3] [ref=e464]
+            - paragraph [ref=e465]: Real-time pattern detection, automated alerts for pain escalation, and one-click report generation.
+          - generic [ref=e468]:
+            - generic [ref=e469]:
+              - img [ref=e471]
+              - generic [ref=e476]: Community driven
+            - heading "Built with Patients" [level=3] [ref=e477]
+            - paragraph [ref=e478]: Community-driven development with input from chronic pain sufferers, healthcare providers, and accessibility experts.
+      - generic [ref=e482]:
+        - generic [ref=e483]:
+          - heading "Security & Trust You Can Verify" [level=2] [ref=e484]:
+            - generic [ref=e485]: Security & Trust
+            - generic [ref=e486]: You Can Verify
+          - paragraph [ref=e487]: Your health data deserves the highest level of protection
+        - generic [ref=e488]:
+          - generic [ref=e489]:
+            - img [ref=e491]
+            - heading "AES-256" [level=3] [ref=e493]
+            - paragraph [ref=e494]: Military-grade
+          - generic [ref=e495]:
+            - img [ref=e497]
+            - heading "HIPAA-Aligned" [level=3] [ref=e500]
+            - paragraph [ref=e501]: Healthcare compliant
+          - generic [ref=e502]:
+            - img [ref=e504]
+            - heading "Zero Tracking" [level=3] [ref=e507]
+            - paragraph [ref=e508]: No analytics
+          - generic [ref=e509]:
+            - img [ref=e511]
+            - heading "Open Source" [level=3] [ref=e514]
+            - paragraph [ref=e515]: Transparent code
+          - generic [ref=e516]:
+            - img [ref=e518]
+            - heading "WCAG 2.1 AA" [level=3] [ref=e522]
+            - paragraph [ref=e523]: Accessible
+          - generic [ref=e524]:
+            - img [ref=e526]
+            - heading "Community" [level=3] [ref=e531]
+            - paragraph [ref=e532]: User-driven
+        - paragraph [ref=e535]:
+          - strong [ref=e536]: Your data, your device.
           - text: We use local-first architecture with IndexedDB storage. No servers, no cloud, no third parties.
-          - link "View source code →" [ref=e371] [cursor=pointer]:
+          - link "View source code" [ref=e537] [cursor=pointer]:
             - /url: https://github.com/CrisisCore-Systems/pain-tracker
-      - generic [ref=e373]:
-        - generic [ref=e374]:
-          - heading "Comprehensive Pain Management Tools" [level=2] [ref=e375]
-          - paragraph [ref=e376]: Everything you need to understand, track, and communicate your pain effectively.
-        - generic [ref=e377]:
-          - generic [ref=e378]:
-            - img [ref=e381]
-            - generic [ref=e383]:
-              - heading "7-Step Pain Assessment" [level=3] [ref=e384]
-              - paragraph [ref=e385]: Comprehensive tracking across 25+ anatomical locations with severity gradients.
-          - generic [ref=e386]:
-            - img [ref=e389]
-            - generic [ref=e392]:
-              - heading "Pattern Recognition" [level=3] [ref=e393]
-              - paragraph [ref=e394]: Advanced heuristic analysis detects pain trends, flares, and correlations.
-          - generic [ref=e395]:
-            - img [ref=e398]
-            - generic [ref=e401]:
-              - heading "WorkSafe BC Export" [level=3] [ref=e402]
-              - paragraph [ref=e403]: Generate clinical reports for claims, healthcare providers, and legal documentation.
-          - generic [ref=e404]:
-            - img [ref=e407]
-            - generic [ref=e410]:
-              - heading "Medication Tracking" [level=3] [ref=e411]
-              - paragraph [ref=e412]: Monitor dosages, side effects, and treatment effectiveness over time.
-          - generic [ref=e413]:
-            - img [ref=e416]
-            - generic [ref=e418]:
-              - heading "Quality of Life Metrics" [level=3] [ref=e419]
-              - paragraph [ref=e420]: Track mood, sleep, and activity impact with correlation analysis.
-          - generic [ref=e421]:
-            - img [ref=e424]
-            - generic [ref=e427]:
-              - heading "Body Mapping" [level=3] [ref=e428]
-              - paragraph [ref=e429]: Visual anatomical heatmaps show pain distribution and progression.
-        - generic [ref=e430]:
-          - paragraph [ref=e431]: Ready to take control of your pain management?
-          - link "Get Started Now →" [ref=e432] [cursor=pointer]:
+            - text: View source code
+            - img [ref=e538] [cursor=pointer]
+      - generic [ref=e545]:
+        - generic [ref=e546]:
+          - generic [ref=e547]:
+            - img [ref=e548]
+            - generic [ref=e551]: Powerful Features
+          - heading "Comprehensive Pain Management Tools" [level=2] [ref=e552]:
+            - generic [ref=e553]: Comprehensive Pain Management
+            - generic [ref=e554]: Tools
+          - paragraph [ref=e555]: Everything you need to understand, track, and communicate your pain effectively.
+        - generic [ref=e556]:
+          - generic [ref=e557]:
+            - img [ref=e560]
+            - generic [ref=e562]:
+              - heading "7-Step Pain Assessment" [level=3] [ref=e563]
+              - paragraph [ref=e564]: Comprehensive tracking across 25+ anatomical locations with severity gradients.
+          - generic [ref=e565]:
+            - img [ref=e568]
+            - generic [ref=e571]:
+              - heading "Pattern Recognition" [level=3] [ref=e572]
+              - paragraph [ref=e573]: Advanced heuristic algorithms detect pain trends, flares, and correlations.
+          - generic [ref=e574]:
+            - img [ref=e577]
+            - generic [ref=e580]:
+              - heading "WorkSafe BC Export" [level=3] [ref=e581]
+              - paragraph [ref=e582]: Generate clinical reports for claims, healthcare providers, and legal documentation.
+          - generic [ref=e583]:
+            - img [ref=e586]
+            - generic [ref=e589]:
+              - heading "Medication Tracking" [level=3] [ref=e590]
+              - paragraph [ref=e591]: Monitor dosages, side effects, and treatment effectiveness over time.
+          - generic [ref=e592]:
+            - img [ref=e595]
+            - generic [ref=e597]:
+              - heading "Quality of Life Metrics" [level=3] [ref=e598]
+              - paragraph [ref=e599]: Track mood, sleep, and activity impact with correlation analysis.
+          - generic [ref=e600]:
+            - img [ref=e603]
+            - generic [ref=e606]:
+              - heading "Body Mapping" [level=3] [ref=e607]
+              - paragraph [ref=e608]: Visual anatomical heatmaps show pain distribution and progression.
+        - generic [ref=e609]:
+          - paragraph [ref=e610]: Ready to take control of your pain management?
+          - link "Get Started Now" [ref=e611] [cursor=pointer]:
             - /url: /start
             - text: Get Started Now
-            - generic [ref=e433] [cursor=pointer]: →
-      - generic [ref=e435]:
-        - generic [ref=e436]:
-          - heading "Trusted by Patients & Clinicians" [level=2] [ref=e437]
-          - paragraph [ref=e438]: Real stories from people managing chronic pain and healthcare professionals providing care.
-          - paragraph [ref=e439]:
-            - text: We only publish verified testimonials with explicit consent. If you'd like to share your story with us,
-            - link "submit a story →" [ref=e440] [cursor=pointer]:
-              - /url: /submit-story
-            - text: and we will follow up for permission to publish or anonymize your contribution.
-        - generic [ref=e441]:
-          - generic [ref=e443]:
-            - img [ref=e445]
-            - generic [ref=e448]:
-              - img [ref=e449]
-              - img [ref=e451]
-              - img [ref=e453]
-              - img [ref=e455]
-              - img [ref=e457]
-            - paragraph [ref=e459]: "\"Finally, a pain tracker that actually understands what I'm going through. The trauma-informed design makes it feel safe, and the AI insights helped me identify triggers I never noticed.\""
-            - generic [ref=e460]: Identified hidden triggers
-            - generic [ref=e461]:
-              - generic [ref=e462]: 👩‍🦽
-              - generic:
-                - generic: Sarah M.
-                - generic: Chronic Pain Patient
-                - generic: Verified
-          - generic [ref=e464]:
-            - img [ref=e466]
-            - generic [ref=e469]:
-              - img [ref=e470]
-              - img [ref=e472]
-              - img [ref=e474]
-              - img [ref=e476]
-              - img [ref=e478]
-            - paragraph [ref=e480]: "\"The clinician portal saves me hours every week. AI pattern detection and one-click WorkSafe BC reports are game-changers. My patients love how easy it is to share data.\""
-            - generic [ref=e481]: Saves 25+ hours/week
-            - generic [ref=e482]:
-              - generic [ref=e483]: 👨‍⚕️
-              - generic:
-                - generic: Dr. James Chen
-                - generic: Pain Management Specialist
-                - generic: Verified
-          - generic [ref=e485]:
-            - img [ref=e487]
-            - generic [ref=e490]:
-              - img [ref=e491]
-              - img [ref=e493]
-              - img [ref=e495]
-              - img [ref=e497]
-              - img [ref=e499]
-            - paragraph [ref=e501]: "\"The automated WCB reporting feature is incredible. What used to take me days of paperwork now takes one click. My lawyer was impressed with the quality of the data.\""
-            - generic [ref=e502]: One-click WCB reports
-            - generic [ref=e503]:
-              - generic [ref=e504]: 🦾
-              - generic:
-                - generic: Michael R.
-                - generic: WorkSafe BC Claimant
-                - generic: Verified
-          - generic [ref=e506]:
-            - img [ref=e508]
-            - generic [ref=e511]:
-              - img [ref=e512]
-              - img [ref=e514]
-              - img [ref=e516]
-              - img [ref=e518]
-              - img [ref=e520]
-            - paragraph [ref=e522]: "\"I recommend this to all my chronic pain patients. The offline capability means they can track anywhere, and the privacy-first approach gives them control.\""
-            - generic [ref=e523]: Recommended by professionals
-            - generic [ref=e524]:
-              - generic [ref=e525]: 👩‍⚕️
-              - generic:
-                - generic: Dr. Emily Wong
-                - generic: Occupational Therapist
-                - generic: Verified
-          - generic [ref=e527]:
-            - img [ref=e529]
-            - generic [ref=e532]:
-              - img [ref=e533]
-              - img [ref=e535]
-              - img [ref=e537]
-              - img [ref=e539]
-              - img [ref=e541]
-            - paragraph [ref=e543]: "\"The accessibility features are outstanding. High contrast mode, screen reader support, and panic mode have been essential during flare-ups. This app truly cares.\""
-            - generic [ref=e544]: Best accessibility
-            - generic [ref=e545]:
-              - generic [ref=e546]: 🧑‍🦯
-              - generic:
-                - generic: David L.
-                - generic: Fibromyalgia Patient
-                - generic: Verified
-          - generic [ref=e548]:
-            - img [ref=e550]
-            - generic [ref=e553]:
-              - img [ref=e554]
-              - img [ref=e556]
-              - img [ref=e558]
-              - img [ref=e560]
-              - img [ref=e562]
-            - paragraph [ref=e564]: "\"I've tried every pain tracker out there. This is the only one with truly private local storage and AI that actually works. The pattern insights are spot on.\""
-            - generic [ref=e565]: Most accurate AI
-            - generic [ref=e566]:
-              - generic [ref=e567]: 👩
-              - generic:
-                - generic: Lisa K.
-                - generic: Migraine Sufferer
-                - generic: Verified
-        - generic [ref=e569]:
-          - generic [ref=e570]:
-            - generic [ref=e571]: 100%
-            - generic [ref=e572]: Privacy Protected
-          - generic [ref=e573]:
-            - generic [ref=e574]: 25+
-            - generic [ref=e575]: Hours Saved/Week
-          - generic [ref=e576]:
-            - generic [ref=e577]: "8"
-            - generic [ref=e578]: AI Algorithms
-          - generic [ref=e579]:
-            - generic [ref=e580]: 95%
-            - generic [ref=e581]: Time Reduction
-    - contentinfo [ref=e582]:
-      - generic [ref=e585]:
-        - heading "Ready to Transform Your Pain Management?" [level=2] [ref=e586]
-        - paragraph [ref=e587]: Join thousands of patients and clinicians using Pain Tracker Pro to understand, track, and manage chronic pain effectively.
-        - generic [ref=e588]:
-          - button "Start Free Trial" [ref=e589] [cursor=pointer]:
-            - generic [ref=e590] [cursor=pointer]:
-              - generic [ref=e591] [cursor=pointer]: Start Free Trial
-              - img [ref=e592] [cursor=pointer]
-          - button "View Pricing" [ref=e594] [cursor=pointer]:
-            - generic [ref=e596] [cursor=pointer]: View Pricing
-        - paragraph [ref=e597]: Start with 50 free entries • Upgrade for unlimited tracking • No credit card required
-      - generic [ref=e598]:
-        - generic [ref=e599]:
-          - generic [ref=e600]:
-            - generic [ref=e601]:
-              - img [ref=e602]
-              - generic [ref=e604]: Pain Tracker Pro
-            - paragraph [ref=e605]: Professional-grade chronic pain tracking with AI-powered insights, automated reporting, and trauma-informed design. Built with empathy for patients and clinicians.
-            - generic [ref=e606]:
-              - link "View source code on GitHub" [ref=e607] [cursor=pointer]:
+            - img [ref=e612] [cursor=pointer]
+      - generic [ref=e619]:
+        - generic [ref=e620]:
+          - generic [ref=e621]:
+            - img [ref=e622]
+            - generic [ref=e624]: Testimonials
+          - heading "Trusted by Patients & Clinicians" [level=2] [ref=e625]:
+            - generic [ref=e626]: Trusted by
+            - generic [ref=e627]: Patients & Clinicians
+          - paragraph [ref=e628]: How Pain Tracker Pro helps people manage chronic pain and improve healthcare outcomes.
+          - paragraph [ref=e629]: "*Illustrative examples based on intended use cases"
+        - generic [ref=e630]:
+          - generic [ref=e632]:
+            - generic [ref=e633]:
+              - img [ref=e634]
+              - img [ref=e636]
+              - img [ref=e638]
+              - img [ref=e640]
+              - img [ref=e642]
+            - paragraph [ref=e644]: "\"Finally, a pain tracker that actually understands what I'm going through. The trauma-informed design makes it feel safe.\""
+            - generic [ref=e645]:
+              - img [ref=e646]
+              - text: Identified hidden triggers
+            - generic [ref=e649]:
+              - generic [ref=e650]: 👩‍🦽
+              - generic [ref=e651]:
+                - generic [ref=e652]: Sarah M.
+                - generic [ref=e653]: Chronic Pain Patient
+          - generic [ref=e655]:
+            - generic [ref=e656]:
+              - img [ref=e657]
+              - img [ref=e659]
+              - img [ref=e661]
+              - img [ref=e663]
+              - img [ref=e665]
+            - paragraph [ref=e667]: "\"The clinician portal saves me time every week. Pattern detection and one-click WorkSafe BC reports streamline documentation.\""
+            - generic [ref=e668]:
+              - img [ref=e669]
+              - text: Streamlined workflow
+            - generic [ref=e672]:
+              - generic [ref=e673]: 👨‍⚕️
+              - generic [ref=e674]:
+                - generic [ref=e675]: Dr. James Chen
+                - generic [ref=e676]: Pain Management Specialist
+          - generic [ref=e678]:
+            - generic [ref=e679]:
+              - img [ref=e680]
+              - img [ref=e682]
+              - img [ref=e684]
+              - img [ref=e686]
+              - img [ref=e688]
+            - paragraph [ref=e690]: "\"The automated WCB reporting feature is incredible. What used to take me days of paperwork now takes one click.\""
+            - generic [ref=e691]:
+              - img [ref=e692]
+              - text: One-click WCB reports
+            - generic [ref=e695]:
+              - generic [ref=e696]: 🦾
+              - generic [ref=e697]:
+                - generic [ref=e698]: Michael R.
+                - generic [ref=e699]: WorkSafe BC Claimant
+          - generic [ref=e701]:
+            - generic [ref=e702]:
+              - img [ref=e703]
+              - img [ref=e705]
+              - img [ref=e707]
+              - img [ref=e709]
+              - img [ref=e711]
+            - paragraph [ref=e713]: "\"I recommend this to all my chronic pain patients. The offline capability means they can track anywhere.\""
+            - generic [ref=e714]:
+              - img [ref=e715]
+              - text: Recommended by pros
+            - generic [ref=e718]:
+              - generic [ref=e719]: 👩‍⚕️
+              - generic [ref=e720]:
+                - generic [ref=e721]: Dr. Emily Wong
+                - generic [ref=e722]: Occupational Therapist
+          - generic [ref=e724]:
+            - generic [ref=e725]:
+              - img [ref=e726]
+              - img [ref=e728]
+              - img [ref=e730]
+              - img [ref=e732]
+              - img [ref=e734]
+            - paragraph [ref=e736]: "\"The accessibility features are outstanding. High contrast mode and panic mode have been essential during flare-ups.\""
+            - generic [ref=e737]:
+              - img [ref=e738]
+              - text: Best accessibility
+            - generic [ref=e741]:
+              - generic [ref=e742]: 🧑‍🦯
+              - generic [ref=e743]:
+                - generic [ref=e744]: David L.
+                - generic [ref=e745]: Fibromyalgia Patient
+          - generic [ref=e747]:
+            - generic [ref=e748]:
+              - img [ref=e749]
+              - img [ref=e751]
+              - img [ref=e753]
+              - img [ref=e755]
+              - img [ref=e757]
+            - paragraph [ref=e759]: "\"I've tried every pain tracker out there. This is the only one with truly private local storage and pattern analysis that works.\""
+            - generic [ref=e760]:
+              - img [ref=e761]
+              - text: True local privacy
+            - generic [ref=e764]:
+              - generic [ref=e765]: 👩
+              - generic [ref=e766]:
+                - generic [ref=e767]: Lisa K.
+                - generic [ref=e768]: Migraine Sufferer
+        - generic [ref=e770]:
+          - generic [ref=e771]:
+            - generic [ref=e772]: 100%
+            - generic [ref=e773]: Privacy Protected
+          - generic [ref=e774]:
+            - generic [ref=e775]: 10+
+            - generic [ref=e776]: Analysis Algorithms
+          - generic [ref=e777]:
+            - generic [ref=e778]: 25+
+            - generic [ref=e779]: Body Locations
+          - generic [ref=e780]:
+            - generic [ref=e781]: 100%
+            - generic [ref=e782]: Offline Capable
+      - generic [ref=e784]:
+        - generic [ref=e785]:
+          - generic [ref=e786]:
+            - img [ref=e787]
+            - generic [ref=e790]: From Our Blog
+          - heading "Insights & Stories from the Frontlines" [level=2] [ref=e791]:
+            - text: Insights & Stories from the
+            - generic [ref=e792]: Frontlines
+          - paragraph [ref=e793]: Deep dives into privacy-first healthcare tech, trauma-informed design, and building software that actually helps.
+        - generic [ref=e794]:
+          - link "Origin Story 8 min Building a Pain Tracker That Actually Gets It Why lived experience beats market research when building health software. The story behind Pain Tracker Pro. Read Article" [ref=e795] [cursor=pointer]:
+            - /url: https://blog.paintracker.ca/building-a-pain-tracker-that-actually-gets-it-no-market-research-required
+            - generic [ref=e796] [cursor=pointer]:
+              - img [ref=e801] [cursor=pointer]
+              - generic [ref=e803] [cursor=pointer]: Origin Story
+              - generic [ref=e804] [cursor=pointer]:
+                - img [ref=e805] [cursor=pointer]
+                - text: 8 min
+            - generic [ref=e808] [cursor=pointer]:
+              - heading "Building a Pain Tracker That Actually Gets It" [level=3] [ref=e809] [cursor=pointer]
+              - paragraph [ref=e810] [cursor=pointer]: Why lived experience beats market research when building health software. The story behind Pain Tracker Pro.
+              - generic [ref=e811] [cursor=pointer]:
+                - generic [ref=e812] [cursor=pointer]: Read Article
+                - img [ref=e813] [cursor=pointer]
+          - link "Privacy Tech 12 min Crisis Detection Engine That Never Phones Home How we detect mental health crises using local AI without sending a single byte to external servers. Read Article" [ref=e815] [cursor=pointer]:
+            - /url: https://blog.paintracker.ca/i-built-a-crisis-detection-engine-that-never-phones-home
+            - generic [ref=e816] [cursor=pointer]:
+              - img [ref=e821] [cursor=pointer]
+              - generic [ref=e823] [cursor=pointer]: Privacy Tech
+              - generic [ref=e824] [cursor=pointer]:
+                - img [ref=e825] [cursor=pointer]
+                - text: 12 min
+            - generic [ref=e828] [cursor=pointer]:
+              - heading "Crisis Detection Engine That Never Phones Home" [level=3] [ref=e829] [cursor=pointer]
+              - paragraph [ref=e830] [cursor=pointer]: How we detect mental health crises using local AI without sending a single byte to external servers.
+              - generic [ref=e831] [cursor=pointer]:
+                - generic [ref=e832] [cursor=pointer]: Read Article
+                - img [ref=e833] [cursor=pointer]
+          - link "UX Design 10 min Trauma-Informed Design in Practice What trauma-informed design actually means and how it shapes every pixel of Pain Tracker Pro. Read Article" [ref=e835] [cursor=pointer]:
+            - /url: https://blog.paintracker.ca/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design
+            - generic [ref=e836] [cursor=pointer]:
+              - img [ref=e841] [cursor=pointer]
+              - generic [ref=e843] [cursor=pointer]: UX Design
+              - generic [ref=e844] [cursor=pointer]:
+                - img [ref=e845] [cursor=pointer]
+                - text: 10 min
+            - generic [ref=e848] [cursor=pointer]:
+              - heading "Trauma-Informed Design in Practice" [level=3] [ref=e849] [cursor=pointer]
+              - paragraph [ref=e850] [cursor=pointer]: What trauma-informed design actually means and how it shapes every pixel of Pain Tracker Pro.
+              - generic [ref=e851] [cursor=pointer]:
+                - generic [ref=e852] [cursor=pointer]: Read Article
+                - img [ref=e853] [cursor=pointer]
+        - link "View All Posts" [ref=e856] [cursor=pointer]:
+          - /url: https://blog.paintracker.ca
+          - img [ref=e857] [cursor=pointer]
+          - text: View All Posts
+          - img [ref=e859] [cursor=pointer]
+    - contentinfo [ref=e861]:
+      - generic [ref=e867]:
+        - generic [ref=e868]:
+          - img [ref=e869]
+          - generic [ref=e872]: Start Your Journey Today
+        - heading "Ready to Transform Your Pain Management?" [level=2] [ref=e873]:
+          - text: Ready to Transform Your
+          - generic [ref=e874]:
+            - generic [ref=e875]: Pain Management?
+            - img [ref=e876]
+        - paragraph [ref=e878]: Join patients and clinicians using Pain Tracker Pro to understand, track, and manage chronic pain effectively.
+        - generic [ref=e879]:
+          - button "Start Free Trial" [ref=e880] [cursor=pointer]:
+            - generic [ref=e882] [cursor=pointer]:
+              - img [ref=e883] [cursor=pointer]
+              - text: Start Free Trial
+              - img [ref=e885] [cursor=pointer]
+          - button "View Pricing" [ref=e887] [cursor=pointer]:
+            - generic [ref=e889] [cursor=pointer]:
+              - text: View Pricing
+              - img [ref=e890] [cursor=pointer]
+        - paragraph [ref=e894]:
+          - generic [ref=e895]: Free forever with unlimited entries
+          - generic [ref=e897]: No credit card required
+      - generic [ref=e901]:
+        - generic [ref=e902]:
+          - generic [ref=e903]:
+            - generic [ref=e904]:
+              - img [ref=e906]
+              - generic [ref=e908]: Pain Tracker Pro
+            - paragraph [ref=e909]: Professional-grade chronic pain tracking with AI-powered insights, automated reporting, and trauma-informed design—built with empathy for those who need it most.
+            - generic [ref=e910]:
+              - link "GitHub" [ref=e911] [cursor=pointer]:
                 - /url: https://github.com/CrisisCore-Systems/pain-tracker
-                - img [ref=e608] [cursor=pointer]
-              - link "Contact support" [ref=e611] [cursor=pointer]:
+                - img [ref=e912] [cursor=pointer]
+              - link "Blog" [ref=e915] [cursor=pointer]:
+                - /url: https://blog.paintracker.ca
+                - img [ref=e916] [cursor=pointer]
+              - link "Email" [ref=e918] [cursor=pointer]:
                 - /url: mailto:support@paintracker.ca
-                - img [ref=e612] [cursor=pointer]
-          - generic [ref=e615]:
-            - heading "Resources" [level=3] [ref=e616]
-            - list [ref=e617]:
-              - listitem [ref=e618]:
-                - button "Pricing Plans" [ref=e619] [cursor=pointer]
-              - listitem [ref=e620]:
-                - link "Source Code" [ref=e621] [cursor=pointer]:
+                - img [ref=e919] [cursor=pointer]
+          - generic [ref=e922]:
+            - heading "Resources" [level=3] [ref=e923]
+            - list [ref=e924]:
+              - listitem [ref=e925]:
+                - button "Pricing Plans" [ref=e926] [cursor=pointer]:
+                  - generic [ref=e927] [cursor=pointer]: Pricing Plans
+              - listitem [ref=e928]:
+                - link "Source Code" [ref=e929] [cursor=pointer]:
                   - /url: https://github.com/CrisisCore-Systems/pain-tracker
-                  - img [ref=e622] [cursor=pointer]
-                  - text: Source Code
-              - listitem [ref=e625]:
-                - link "Documentation" [ref=e626] [cursor=pointer]:
+                  - img [ref=e930] [cursor=pointer]
+                  - generic [ref=e933] [cursor=pointer]: Source Code
+              - listitem [ref=e934]:
+                - link "Documentation" [ref=e935] [cursor=pointer]:
                   - /url: https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md
-              - listitem [ref=e627]:
-                - link "Security Policy" [ref=e628] [cursor=pointer]:
+                  - generic [ref=e936] [cursor=pointer]: Documentation
+              - listitem [ref=e937]:
+                - link "Security Policy" [ref=e938] [cursor=pointer]:
                   - /url: https://github.com/CrisisCore-Systems/pain-tracker/blob/main/SECURITY.md
-                  - img [ref=e629] [cursor=pointer]
-                  - text: Security Policy
-              - listitem [ref=e631]:
-                - link "Contributing" [ref=e632] [cursor=pointer]:
+                  - img [ref=e939] [cursor=pointer]
+                  - generic [ref=e941] [cursor=pointer]: Security Policy
+              - listitem [ref=e942]:
+                - link "Contributing" [ref=e943] [cursor=pointer]:
                   - /url: https://github.com/CrisisCore-Systems/pain-tracker/blob/main/CONTRIBUTING.md
-          - generic [ref=e633]:
-            - heading "Key Features" [level=3] [ref=e634]
-            - list [ref=e635]:
-              - listitem [ref=e636]: ✓ 8 AI Algorithms
-              - listitem [ref=e637]: ✓ WorkSafe BC Reports
-              - listitem [ref=e638]: ✓ Real-Time Monitoring
-              - listitem [ref=e639]: ✓ 100% Offline
-              - listitem [ref=e640]: ✓ Military Encryption
-              - listitem [ref=e641]: ✓ Trauma-Informed
-        - generic [ref=e643]:
-          - generic [ref=e644]:
-            - img [ref=e645]
-            - generic [ref=e647]: AES-256 Encrypted
-          - generic [ref=e648]:
-            - img [ref=e649]
-            - generic [ref=e651]: WCAG 2.1 AA
-          - generic [ref=e652]:
-            - img [ref=e653]
-            - generic [ref=e655]: HIPAA-Aligned
-          - generic [ref=e656]:
-            - img [ref=e657]
-            - generic [ref=e660]: Open Source
-        - generic [ref=e661]:
-          - generic [ref=e662]:
-            - paragraph [ref=e663]: © 2025 CrisisCore Systems. Released under MIT License.
-            - link "View License" [ref=e664] [cursor=pointer]:
+                  - generic [ref=e944] [cursor=pointer]: Contributing
+          - generic [ref=e945]:
+            - heading "Blog" [level=3] [ref=e946]:
+              - img [ref=e947]
+              - text: Blog
+            - list [ref=e949]:
+              - listitem [ref=e950]:
+                - link "All Posts" [ref=e951] [cursor=pointer]:
+                  - /url: https://blog.paintracker.ca
+                  - generic [ref=e952] [cursor=pointer]: All Posts
+              - listitem [ref=e953]:
+                - link "Why We Built This" [ref=e954] [cursor=pointer]:
+                  - /url: https://blog.paintracker.ca/building-a-pain-tracker-that-actually-gets-it-no-market-research-required
+                  - generic [ref=e955] [cursor=pointer]: Why We Built This
+              - listitem [ref=e956]:
+                - link "Crisis Detection" [ref=e957] [cursor=pointer]:
+                  - /url: https://blog.paintracker.ca/i-built-a-crisis-detection-engine-that-never-phones-home
+                  - generic [ref=e958] [cursor=pointer]: Crisis Detection
+              - listitem [ref=e959]:
+                - link "Trauma-Informed Design" [ref=e960] [cursor=pointer]:
+                  - /url: https://blog.paintracker.ca/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design
+                  - generic [ref=e961] [cursor=pointer]: Trauma-Informed Design
+              - listitem [ref=e962]:
+                - link "Healthcare PWA" [ref=e963] [cursor=pointer]:
+                  - /url: https://blog.paintracker.ca/building-a-healthcare-pwa-that-actually-works-when-it-matters
+                  - generic [ref=e964] [cursor=pointer]: Healthcare PWA
+              - listitem [ref=e965]:
+                - link "WorkSafe BC Auto-Fill" [ref=e966] [cursor=pointer]:
+                  - /url: https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free
+                  - generic [ref=e967] [cursor=pointer]: WorkSafe BC Auto-Fill
+          - generic [ref=e968]:
+            - heading "Key Features" [level=3] [ref=e969]
+            - list [ref=e970]:
+              - listitem [ref=e971]: 10+ Analysis Algorithms
+              - listitem [ref=e973]: WorkSafe BC Reports
+              - listitem [ref=e975]: Real-Time Monitoring
+              - listitem [ref=e977]: 100% Offline
+              - listitem [ref=e979]: AES-256 Encryption
+              - listitem [ref=e981]: Trauma-Informed
+        - generic [ref=e984]:
+          - generic [ref=e985]:
+            - img [ref=e986]
+            - generic [ref=e988]: AES-256 Encrypted
+          - generic [ref=e989]:
+            - img [ref=e990]
+            - generic [ref=e992]: WCAG 2.1 AA
+          - generic [ref=e993]:
+            - img [ref=e994]
+            - generic [ref=e996]: HIPAA-Aligned
+          - generic [ref=e997]:
+            - img [ref=e998]
+            - generic [ref=e1001]: Open Source
+        - generic [ref=e1002]:
+          - generic [ref=e1003]:
+            - paragraph [ref=e1004]: © 2025 CrisisCore Systems
+            - link "View License" [ref=e1005] [cursor=pointer]:
               - /url: https://github.com/CrisisCore-Systems/pain-tracker/blob/main/LICENSE
-          - paragraph [ref=e665]:
+          - paragraph [ref=e1006]:
             - text: Made with
-            - img [ref=e666]
+            - img [ref=e1007]
             - text: for chronic pain survivors
-        - paragraph [ref=e669]:
-          - strong [ref=e670]: "Your Privacy is Guaranteed:"
-          - text: We don't collect any data, we don't use cookies, we don't track you. Your pain data stays on your device, encrypted with AES-256. No servers, no cloud, no third parties.
-          - link "Verify our code →" [ref=e671] [cursor=pointer]:
+        - paragraph [ref=e1010]:
+          - strong [ref=e1011]: "Your Privacy is Guaranteed:"
+          - generic [ref=e1012]: We don't collect any data, we don't use cookies, we don't track you.
+          - text: Your pain data stays on your device, encrypted with AES-256.
+          - link "Verify our code" [ref=e1013] [cursor=pointer]:
             - /url: https://github.com/CrisisCore-Systems/pain-tracker
-  - status [ref=e672]: Welcome to Pain Tracker Pro. A privacy-first chronic pain tracking application.
+            - text: Verify our code
+            - img [ref=e1014] [cursor=pointer]
+  - status [ref=e1016]: Welcome to Pain Tracker Pro. A privacy-first chronic pain tracking application.
 ```

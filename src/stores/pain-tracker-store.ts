@@ -12,6 +12,21 @@ import { generatePDFReport } from '../utils/pdfReportGenerator';
 import { migratePainTrackerState } from './pain-tracker-migrations';
 import { trackMoodEntryLogged } from '../analytics/ga4-events';
 
+// Error counters for silent failures (prevents data loss blindspots)
+let analyticsErrorCount = 0;
+let auditErrorCount = 0;
+
+/** Get current error counts for monitoring/debugging */
+export function getStoreErrorCounts() {
+  return { analyticsErrorCount, auditErrorCount };
+}
+
+/** Reset error counters (for testing) */
+export function resetStoreErrorCounts() {
+  analyticsErrorCount = 0;
+  auditErrorCount = 0;
+}
+
 export interface UIState {
   showWCBReport: boolean;
   showOnboarding: boolean;
@@ -111,8 +126,10 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           // Entry Management
           addEntry: entryData => {
             set(state => {
+              // Generate collision-resistant ID: timestamp + random suffix
+              const uniqueId = Date.now() * 1000 + Math.floor(Math.random() * 1000);
               const newEntry: PainEntry = {
-                id: Date.now(),
+                id: uniqueId,
                 timestamp: new Date().toISOString(),
                 baselineData: {
                   pain: entryData.baselineData?.pain || 0,
@@ -157,7 +174,8 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               // Track analytics (async, fire-and-forget)
               // GA4 events are sent automatically from PrivacyAnalyticsService
               privacyAnalytics.trackPainEntry(newEntry).catch(() => {
-                // Silently fail - analytics should not affect user experience
+                // Track failure but don't affect user experience
+                analyticsErrorCount++;
               });
             });
           },
@@ -329,25 +347,51 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           loadSampleData: () => {
-            // Import and load sample data
-            import('../data/sampleData').then(({ samplePainEntries }) => {
-              set(state => {
-                state.entries = samplePainEntries;
+            const state = usePainTrackerStore.getState();
+            // Prevent concurrent loads
+            if (state.isLoading) return;
+            
+            set(s => { s.isLoading = true; });
+            
+            import('../data/sampleData')
+              .then(({ samplePainEntries }) => {
+                set(s => {
+                  s.entries = samplePainEntries;
+                  s.isLoading = false;
+                });
+              })
+              .catch((error) => {
+                console.error('[Store] Failed to load sample data:', error);
+                set(s => {
+                  s.error = 'Failed to load sample data';
+                  s.isLoading = false;
+                });
               });
-            });
           },
 
           loadChronicPainTestData: () => {
-            // Import and load 12-month chronic pain test data
-            import('../data/chronic-pain-12-month-seed').then(
-              ({ chronicPain12MonthPainEntries, chronicPain12MonthMoodEntries, chronicPainDataStats }) => {
+            const state = usePainTrackerStore.getState();
+            // Prevent concurrent loads
+            if (state.isLoading) return;
+            
+            set(s => { s.isLoading = true; });
+            
+            import('../data/chronic-pain-12-month-seed')
+              .then(({ chronicPain12MonthPainEntries, chronicPain12MonthMoodEntries, chronicPainDataStats }) => {
                 console.log('[Store] Loading 12-month chronic pain test data:', chronicPainDataStats);
-                set(state => {
-                  state.entries = chronicPain12MonthPainEntries;
-                  state.moodEntries = chronicPain12MonthMoodEntries;
+                set(s => {
+                  s.entries = chronicPain12MonthPainEntries;
+                  s.moodEntries = chronicPain12MonthMoodEntries;
+                  s.isLoading = false;
                 });
-              }
-            );
+              })
+              .catch((error) => {
+                console.error('[Store] Failed to load chronic pain test data:', error);
+                set(s => {
+                  s.error = 'Failed to load test data';
+                  s.isLoading = false;
+                });
+              });
           },
 
           // Reporting
@@ -365,7 +409,8 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               outcome: 'success',
               details: { name: schedule.name, frequency: schedule.frequency, recipients: schedule.recipients },
             }).catch(() => {
-              // audit logging should not block user flow
+              // Track audit failure but don't block user flow
+              auditErrorCount++;
             });
           },
 
@@ -381,7 +426,9 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               resourceId: id,
               outcome: 'success',
               details: { action: 'delete' },
-            }).catch(() => {});
+            }).catch(() => {
+              auditErrorCount++;
+            });
           },
 
           updateScheduledReport: (id, updates) => {
@@ -399,7 +446,9 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               resourceId: id,
               outcome: 'success',
               details: { updates },
-            }).catch(() => {});
+            }).catch(() => {
+              auditErrorCount++;
+            });
           },
 
           runScheduledReport: async id => {
@@ -435,7 +484,9 @@ export const usePainTrackerStore = create<PainTrackerState>()(
                 resourceId: schedule.id,
                 outcome: 'success',
                 details: { runNow: true, recipients: schedule.recipients },
-              }).catch(() => {});
+              }).catch(() => {
+                auditErrorCount++;
+              });
             } catch (err) {
               void hipaaComplianceService.logAuditEvent({
                 actionType: 'export',
@@ -445,7 +496,9 @@ export const usePainTrackerStore = create<PainTrackerState>()(
                 resourceId: id,
                 outcome: 'failure',
                 details: { error: (err as Error).message || 'unknown' },
-              }).catch(() => {});
+              }).catch(() => {
+                auditErrorCount++;
+              });
             }
           },
         }))

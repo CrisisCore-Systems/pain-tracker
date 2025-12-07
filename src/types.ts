@@ -1,57 +1,45 @@
-export interface Treatment {
-  type: string;
-  provider?: string;
-  date?: string;
-  frequency?: string;
-  effectiveness?: string;
-}
+/**
+ * Core Application Types
+ *
+ * This file re-exports the PainEntry interface from types/index.ts
+ * and validation schemas from types/pain-entry.ts.
+ *
+ * IMPORTANT: The PainEntry interface in types/index.ts is the canonical type.
+ * Zod schemas in types/pain-entry.ts are for runtime validation only.
+ */
 
-export interface PainEntry {
-  id?: string | number;
-  timestamp: string;
-  baselineData: {
-    pain: number;
-    locations?: string[];
-    symptoms?: string[];
-  };
-  notes?: string;
-  triggers?: string[];
-  functionalImpact?: {
-    limitedActivities: string[];
-    assistanceNeeded: string[];
-    mobilityAids: string[];
-  };
-  qualityOfLife?: {
-    sleepQuality: number;
-    moodImpact: number;
-    socialImpact: string[];
-  };
-  workImpact?: {
-    missedWork: number;
-    modifiedDuties: string[];
-    workLimitations: string[];
-  };
-  medications?: {
-    current: Array<{
-      name: string;
-      dosage?: string;
-      frequency?: string;
-      effectiveness?: string;
-    }>;
-    changes: string;
-    effectiveness: string;
-  };
-  treatments?: {
-    recent: Treatment[];
-    effectiveness: string;
-    planned: string[];
-  };
-  comparison?: {
-    worseningSince: string;
-    newLimitations: string[];
-  };
-}
+// Re-export canonical PainEntry interface from types/index.ts
+export type {
+  PainEntry,
+} from './types/index';
 
+// Re-export validation schemas and helpers from pain-entry.ts
+export {
+  PainEntrySchema,
+  CreatePainEntrySchema,
+  UpdatePainEntrySchema,
+  BaselineDataSchema,
+  TreatmentSchema,
+  MedicationSchema,
+  FunctionalImpactSchema,
+  QualityOfLifeSchema,
+  WorkImpactSchema,
+  validatePainEntry,
+  safeParsePainEntry,
+  validateCreatePainEntry,
+  getEffectivePainLevel,
+  getAllLocations,
+} from './types/pain-entry';
+
+// Export type aliases for validation schema types
+export type {
+  Treatment,
+  Medication,
+  CreatePainEntry,
+  UpdatePainEntry,
+} from './types/pain-entry';
+
+// WCB-specific WorkImpact (different structure from PainEntry's workImpact)
 export interface WorkImpact {
   limitations: Array<[string, number]>;
   accommodationsNeeded: string[];
@@ -111,3 +99,4 @@ export type {
   ScheduledReport,
   ActivityLogEntry,
 } from './types/index';
+

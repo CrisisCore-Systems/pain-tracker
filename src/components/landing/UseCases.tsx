@@ -510,19 +510,8 @@ export const UseCases: React.FC = () => {
         </div>
       </div>
 
-      {/* CSS for animations */}
+      {/* CSS for animations - fadeInUp is provided by Tailwind (animate-fadeInUp) */}
       <style>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
         @keyframes gradient-shift {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }

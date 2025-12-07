@@ -13,10 +13,65 @@ import {
 } from 'lucide-react';
 import { PatientPainTimeline } from '../../components/clinic/PatientPainTimeline';
 import { PatternDetectionService, DetectedPattern } from '../../services/PatternDetectionService';
-import { ReportGenerationService } from '../../services/ReportGenerationService';
+import { ReportGenerationService, ReportPainEntry } from '../../services/ReportGenerationService';
+import type { PainEntry } from '../../types';
 
-// Mock data (replace with real API calls)
-const mockPainEntries = [
+/**
+ * Convert simplified demo data to canonical PainEntry format for pattern detection
+ */
+function createDemoPainEntry(data: ReportPainEntry): PainEntry {
+  return {
+    id: data.id,
+    timestamp: data.timestamp,
+    baselineData: {
+      pain: data.painLevel,
+      locations: [data.location],
+      symptoms: [],
+    },
+    functionalImpact: {
+      limitedActivities: [],
+      assistanceNeeded: [],
+      mobilityAids: [],
+    },
+    medications: {
+      current: (data.medications ?? []).map(m => ({
+        name: m,
+        dosage: '',
+        frequency: '',
+        effectiveness: '',
+      })),
+      changes: '',
+      effectiveness: '',
+    },
+    treatments: {
+      recent: [],
+      effectiveness: '',
+      planned: [],
+    },
+    qualityOfLife: {
+      sleepQuality: data.sleep ?? 0,
+      moodImpact: data.mood ?? 0,
+      socialImpact: [],
+    },
+    workImpact: {
+      missedWork: 0,
+      modifiedDuties: [],
+      workLimitations: [],
+    },
+    comparison: {
+      worseningSince: '',
+      newLimitations: [],
+    },
+    notes: data.notes ?? '',
+    triggers: data.triggers,
+    activities: data.activities,
+    mood: data.mood,
+    sleep: data.sleep,
+  };
+}
+
+// Mock data - simplified format for demo (replace with real API calls)
+const mockReportEntries: ReportPainEntry[] = [
   {
     id: '1',
     timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -140,6 +195,9 @@ const mockPainEntries = [
   },
 ];
 
+// Convert to canonical format for pattern detection
+const mockPainEntries: PainEntry[] = mockReportEntries.map(createDemoPainEntry);
+
 const mockInterventions = [
   {
     id: '1',
@@ -239,7 +297,7 @@ export const EnhancedPatientView: React.FC = () => {
     try {
       const { pdf, summary } = await ReportGenerationService.generateWorkSafeBCReport(
         mockPatientInfo,
-        mockPainEntries,
+        mockReportEntries,
         mockClinicalNotes,
         mockMedications,
         'progress'
@@ -258,7 +316,7 @@ export const EnhancedPatientView: React.FC = () => {
     try {
       const pdf = await ReportGenerationService.generateInsuranceReport(
         mockPatientInfo,
-        mockPainEntries,
+        mockReportEntries,
         mockClinicalNotes,
         mockMedications
       );
@@ -271,7 +329,7 @@ export const EnhancedPatientView: React.FC = () => {
   };
 
   const handleExportCSV = () => {
-    const csv = ReportGenerationService.exportToCSV(mockPainEntries);
+    const csv = ReportGenerationService.exportToCSV(mockReportEntries);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -350,7 +408,7 @@ export const EnhancedPatientView: React.FC = () => {
               <Activity className="w-5 h-5 text-sky-400" />
               <span className="text-sm text-slate-400">Data Points</span>
             </div>
-            <p className="text-2xl font-bold text-white">{mockPainEntries.length}</p>
+            <p className="text-2xl font-bold text-white">{mockReportEntries.length}</p>
           </div>
 
           <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
@@ -467,7 +525,7 @@ export const EnhancedPatientView: React.FC = () => {
       <PatientPainTimeline
         patientId={patientId || '1'}
         patientName={mockPatientInfo.name}
-        entries={mockPainEntries}
+        entries={mockReportEntries}
         interventions={mockInterventions}
       />
 

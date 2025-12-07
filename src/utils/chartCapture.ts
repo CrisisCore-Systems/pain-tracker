@@ -38,9 +38,6 @@ export const captureSVGChart = async (svgElement: SVGElement): Promise<string> =
     const serializer = new XMLSerializer();
     const svgString = serializer.serializeToString(clonedSvg);
 
-    // Create a blob and convert to data URL
-    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-
     // Convert to PNG via canvas for better PDF compatibility
     return await convertSVGToPNG(svgString, width, height);
   } catch (error) {

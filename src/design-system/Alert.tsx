@@ -7,7 +7,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-// Map tones to runtime CSS styles using tokens defined in src/index.css
+// Map tones to runtime CSS styles using tokens defined in src/styles/base/tokens.css
 const toneStyles: Record<Tone, React.CSSProperties> = {
   success: {
     backgroundColor: 'rgb(var(--color-pain-none))',
