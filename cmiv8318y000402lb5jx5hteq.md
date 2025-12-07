@@ -7,7 +7,6 @@ cuid: cmiv8318y000402lb5jx5hteq
 slug: spire-0033
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1765083125677/0502c1c4-7bb2-4117-bbb8-294b358e99ca.jpeg
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765083183447/96ecad38-ead5-4b67-a036-f0af109c1cb8.jpeg
-tags: privacy, offline-first, personal, chronic-pain, trauma, indie-dev, housing-instability
 
 ---
 
