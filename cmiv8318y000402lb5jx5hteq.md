@@ -10,8 +10,6 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765083183447/96eca
 
 ---
 
-That was the year my wife left and took what I thought was home with her.
-
 One day I had keys to a place, mail with my name on it, a bedroom that felt like mine. The next? I'm stuffing my life into a duffel bag, bouncing between weekly motels and friends who'd let me crash for a few nights before the welcome wore thin.
 
 The parole officer needed an address by Friday. The family court wanted proof of "stable housing" for custody visits. Meanwhile, I'm checking my phone at 2 AM to see if I've got enough for another night at the Sandman Inn.
