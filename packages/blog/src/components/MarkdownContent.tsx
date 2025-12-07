@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
@@ -30,7 +31,7 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
                 {children}
                 {isExternal && (
                   <svg
-                    className="inline-block ml-1 h-3 w-3"
+                    className="inline-block ml-1 h-3 w-3 opacity-60"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -58,21 +59,21 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
             );
           },
 
-          // Custom image handling
+          // Custom image handling with lightbox potential
           img: ({ src, alt, ...props }) => {
             if (!src) return null;
             return (
-              <figure className="my-8">
+              <figure className="my-10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
                   alt={alt || ''}
-                  className="rounded-lg shadow-md mx-auto"
+                  className="rounded-2xl shadow-xl mx-auto transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in"
                   loading="lazy"
                   {...props}
                 />
                 {alt && (
-                  <figcaption className="text-center text-sm text-muted-foreground mt-2">
+                  <figcaption className="text-center text-sm text-muted-foreground mt-4 italic">
                     {alt}
                   </figcaption>
                 )}
@@ -80,11 +81,11 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
             );
           },
 
-          // Custom blockquote styling
+          // Enhanced blockquote styling
           blockquote: ({ children, ...props }) => {
             return (
               <blockquote
-                className="border-l-4 border-primary bg-primary/5 py-2 px-4 my-6"
+                className="border-l-4 border-primary bg-gradient-to-r from-primary/8 to-transparent py-4 px-6 my-8 rounded-r-2xl"
                 {...props}
               >
                 {children}
@@ -92,14 +93,55 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
             );
           },
 
-          // Custom table styling
+          // Custom table styling with horizontal scroll
           table: ({ children, ...props }) => {
             return (
-              <div className="overflow-x-auto my-6">
+              <div className="overflow-x-auto my-8 rounded-xl border border-border shadow-sm">
                 <table className="min-w-full" {...props}>
                   {children}
                 </table>
               </div>
+            );
+          },
+
+          // Enhanced heading with anchor links
+          h2: ({ children, ...props }) => {
+            const id = typeof children === 'string' 
+              ? children.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+              : undefined;
+            return (
+              <h2 id={id} className="scroll-mt-24 group" {...props}>
+                {children}
+                {id && (
+                  <a 
+                    href={`#${id}`} 
+                    className="ml-2 opacity-0 group-hover:opacity-50 hover:!opacity-100 transition-opacity text-primary"
+                    aria-label={`Link to ${children}`}
+                  >
+                    #
+                  </a>
+                )}
+              </h2>
+            );
+          },
+
+          h3: ({ children, ...props }) => {
+            const id = typeof children === 'string' 
+              ? children.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
+              : undefined;
+            return (
+              <h3 id={id} className="scroll-mt-24 group" {...props}>
+                {children}
+                {id && (
+                  <a 
+                    href={`#${id}`} 
+                    className="ml-2 opacity-0 group-hover:opacity-50 hover:!opacity-100 transition-opacity text-primary"
+                    aria-label={`Link to ${children}`}
+                  >
+                    #
+                  </a>
+                )}
+              </h3>
             );
           },
         }}
@@ -111,32 +153,45 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
 }
 
 /**
- * Copy button for code blocks
+ * Copy button for code blocks with visual feedback
  */
 function CopyButton({ code }: { code: string }) {
-  const handleCopy = async () => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(code);
-      // Could add a toast notification here
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy code:', err);
     }
-  };
+  }, [code]);
 
   return (
     <button
       onClick={handleCopy}
-      className="absolute top-2 right-2 p-2 rounded-md bg-slate-700 hover:bg-slate-600 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity"
-      aria-label="Copy code to clipboard"
+      className={`absolute top-3 right-3 p-2.5 rounded-lg transition-all duration-200 ${
+        copied 
+          ? 'bg-success text-white' 
+          : 'bg-slate-700/80 hover:bg-slate-600 text-slate-300 opacity-0 group-hover:opacity-100'
+      }`}
+      aria-label={copied ? 'Copied!' : 'Copy code to clipboard'}
     >
-      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-        />
-      </svg>
+      {copied ? (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+      ) : (
+        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+          />
+        </svg>
+      )}
     </button>
   );
 }

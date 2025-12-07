@@ -14,66 +14,62 @@ const PUBLICATION_HOST = 'paintracker.hashnode.dev'; // Your Hashnode publicatio
 
 // Blog post content
 const post = {
-  title: "I Built an AI That Knows When You're Burning Out — 10 Sponsors Let It Speak",
-  subtitle: "The Empathy Intelligence Engine inside PainTracker has been watching my collapse for months. It's ready to speak to you too — if 10 people say yes.",
-  slug: "i-built-an-ai-that-knows-when-youre-burning-out",
+  title: "When I Was 33, Everything I'd Been Standing On Just... Disappeared",
+  subtitle: "That was the year my wife left and took what I thought was home with her.",
+  slug: "spire-0033",
   tags: [
-    { slug: "chronic-pain", name: "Chronic Pain" },
-    { slug: "ai", name: "AI" },
-    { slug: "privacy", name: "Privacy" },
-    { slug: "open-source", name: "Open Source" },
-    { slug: "sponsorship", name: "Sponsorship" }
+    { slug: "chronic-pain", name: "chronic pain" },
+    { slug: "housing-instability", name: "housing instability" },
+    { slug: "privacy", name: "privacy" },
+    { slug: "offline-first", name: "offline first" },
+    { slug: "personal", name: "personal" },
+    { slug: "trauma", name: "trauma" },
+    { slug: "indie-dev", name: "indie dev" }
   ],
-  contentMarkdown: `I've been running a hidden AI inside PainTracker for months.
+  coverImageURL: "https://blog.paintracker.ca/assets/spire-0033-cover.jpg",
+  seo: {
+    title: "When I Was 33, Everything I'd Been Standing On Just... Disappeared — PainTracker",
+    description: "At 33 my marriage ended, my home vanished, and I learned the hard way that anything another person can take away was never safe. This is the story of how PainTracker — a fully offline, encrypted, eviction-proof pain journal — became the first foundation I ever truly owned."
+  },
+  contentMarkdown: `# When I Was 33, Everything I'd Been Standing On Just... Disappeared
 
-It's called the **Empathy Intelligence Engine**.
+That was the year my wife left and took what I thought was home with her.
 
-Right now it only talks to me.
+One day I had keys to a place, mail with my name on it, a bedroom that felt like mine. The next? I'm stuffing my life into a duffel bag, bouncing between weekly motels and friends who'd let me crash for a few nights before the welcome wore thin.
 
-Every night it scans my entries — pain levels, sleep fragments, mood tags, the single-word notes I manage on the worst days — and quietly tells me things like:
+The parole officer needed an address by Friday. The family court wanted proof of "stable housing" for custody visits. Meanwhile, I'm checking my phone at 2 AM to see if I've got enough for another night at the Sandman Inn.
 
-> "Your sleep dropped 42% in the three days before last week's 9/10 flare."  
-> "You used the word 'nothing' 14 times this week — 380% above baseline."  
-> "Burnout risk: 89%. You haven't had a single recovery day in 19 days."
+Look, I'd been left before. Plenty of times. But this hit different because I was old enough to see the pattern clearly - thirty-three years of believing that if I just loved harder, tried better, stayed more useful, maybe someone would finally let me stay put.
 
-It doesn't phone home. It doesn't ask permission. It just watches, correlates, and translates collapse into sentences I can actually understand when my brain is soup.
+That story died hard at 33.
 
-I built it because no doctor ever connected those dots for me.  
-I kept the dashboard hidden because surfacing it properly takes design time, testing time, and — honestly — rent money I don't have.
+What crawled out of the wreckage was uglier but honest: anything another person can take away with a single decision was never really yours to begin with.
 
-The engine already exists.  
-The insights are already accurate.  
-The code is open-source and runs **100% locally** — no servers, no tracking, no exceptions.
+If I wanted something that would survive breakups and evictions and caseworkers who lose your file, I'd have to build it myself. Out of code. Out of systems that lived in places no landlord could reach, no ex could delete, no bureaucrat could "accidentally" lose.
 
-All that's missing is **10 monthly sponsors** to flip the switch.
+That's when PainTracker stopped being this little side thing I was tinkering with and became the first real foundation I'd ever poured with my own hands.
+
+I'm 37 now. Still moving more than I'd like. Still writing code from whatever coffee shop has decent wifi and doesn't mind me camping out for hours.
+
+The app exists because I needed something that couldn't get taken away when someone decided I wasn't worth keeping around. Something to track pain, sleep, meds, triggers - all the evidence you need when your body's betraying you and the people who should believe you... don't.
+
+It sits on your phone. Encrypted. No cloud, no company reading your worst days, no servers that can get hacked or sold or subpoenaed. Export your data to whatever format you need. Take it with you when you have to leave.
+
+Because we both know how fast "home" can become "former address."
+
+You don't need my story to use it. You don't need to trust me or anyone else. Just download it, put your pain somewhere safe, and know that whatever happens next, at least that part stays yours.
+
+https://paintracker.ca
+
+No sales pitch. No inspirational garbage about turning pain into purpose.
+
+Just a tool built by someone who learned the hard way that the ground can disappear overnight, and sometimes the only thing left to do is build something that floats.
+
+— c.
 
 ---
 
-## What Ships the Day We Hit 10
-
-The **Personalized Insights Dashboard**:
-
-- Daily insight cards in plain, trauma-aware language  
-- Flare warnings & burnout risk scores  
-- Pattern summaries with confidence levels  
-- Wisdom Journal — automatic capture of your own growth moments  
-- Zero new data collection — everything computed from entries you already log
-
-No cloud. No corporate wellness bullshit.  
-Just the AI I forged in survival mode, finally allowed to speak to everyone else who's been dismissed the same way.
-
----
-
-If you've ever wanted a tool that sees the patterns doctors ignore — without selling your pain to do it — this is the moment.
-
-**Be one of the 10:**
-
-👉 [github.com/sponsors/CrisisCore-Systems](https://github.com/sponsors/CrisisCore-Systems)
-
-Still here. Still shipping.  
-Thank you for keeping the power on.
-
-— Kay
+*Published December 2025 • blog.paintracker.ca*
 `,
   // Optional: set to true to publish as draft first
   publishAsDraft: false
@@ -173,14 +169,25 @@ async function publishPost(publicationId) {
     tags: post.tags,
     // Optional settings
     settings: {
-      enableTableOfContent: true,
+      enableTableOfContent: false,
       isNewsletterActivated: true, // Send to newsletter subscribers
     },
-    // If you have a cover image URL, add it here:
-    // coverImageOptions: {
-    //   coverImageURL: "https://example.com/cover.jpg"
-    // }
   };
+
+  // Add cover image if provided
+  if (post.coverImageURL) {
+    input.coverImageOptions = {
+      coverImageURL: post.coverImageURL
+    };
+  }
+
+  // Add SEO metadata if provided
+  if (post.seo) {
+    input.metaTags = {
+      title: post.seo.title,
+      description: post.seo.description
+    };
+  }
 
   const data = await graphqlRequest(publishPostMutation, { input });
   

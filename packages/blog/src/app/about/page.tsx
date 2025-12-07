@@ -104,6 +104,28 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* Origin Story */}
+      <section className="mb-16 border-l-4 border-primary pl-6">
+        <h2 className="text-2xl font-bold mb-4">Why This Exists</h2>
+        <blockquote className="text-lg text-muted-foreground mb-6 italic">
+          &ldquo;Anything another person can take away with a single decision was never really yours to begin with.&rdquo;
+        </blockquote>
+        <p className="text-muted-foreground mb-6">
+          Pain Tracker was born from necessity — built by someone who learned the hard way 
+          that the ground can disappear overnight, and sometimes the only thing left to do 
+          is build something that floats.
+        </p>
+        <Link
+          href="/spire-0033"
+          className="text-primary hover:underline inline-flex items-center gap-2 font-medium"
+        >
+          Read the full origin story
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </Link>
+      </section>
+
       {/* Open Source */}
       <section className="mb-16 bg-muted/50 rounded-lg p-8">
         <h2 className="text-2xl font-bold mb-4">Open Source</h2>

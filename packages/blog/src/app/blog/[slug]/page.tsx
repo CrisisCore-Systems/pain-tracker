@@ -6,6 +6,8 @@ import { getPostBySlug, getAllPostSlugs, getRelatedPosts } from '@/lib/hashnode'
 import { MarkdownContent } from '@/components/MarkdownContent';
 import { PostCard } from '@/components/PostCard';
 import { ShareButtons } from '@/components/ShareButtons';
+import { ReadingProgress } from '@/components/ReadingProgress';
+import { TableOfContents } from '@/components/TableOfContents';
 import { formatDate, formatReadingTime, getTagColor, siteConfig } from '@/lib/utils';
 
 interface BlogPostPageProps {
@@ -221,7 +223,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       )}
 
       {/* Content */}
-      <div className="container-blog py-12 md:py-16 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+      <div className="container-blog py-12 md:py-16 animate-fade-in-up relative" style={{ animationDelay: '200ms' }}>
+        {/* Reading progress indicator */}
+        <ReadingProgress />
+        
+        {/* Table of contents for longer articles */}
+        <TableOfContents content={post.content.markdown} />
+        
         <MarkdownContent content={post.content.markdown} />
       </div>
 
