@@ -1,16 +1,15 @@
 ---
 title: "When I Was 33, Everything I'd Been Standing On Just... Disappeared"
-seoTitle: "When I Was 33, Everything I'd Been Standing On Just... Disappeared — PainTracker"
-seoDescription: "At 33 my marriage ended, my home vanished, and I learned the hard way that anything another person can take away was never safe. This is the story of how PainTracker — a fully offline, encrypted, eviction-proof pain journal — became the first foundation I ever truly owned."
+seoTitle: "When My Home Vanished at 33, I Built PainTracker to Survive"
+seoDescription: "At 33 my marriage ended, my home vanished overnight, and I learned nothing another person controls is truly safe. This is how PainTracker—an encrypted, offl"
 datePublished: Sun Dec 07 2025 04:28:42 GMT+0000 (Coordinated Universal Time)
 cuid: cmiv8318y000402lb5jx5hteq
 slug: spire-0033
-cover: https://blog.paintracker.ca/assets/spire-0033-cover.jpg
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1765083125677/0502c1c4-7bb2-4117-bbb8-294b358e99ca.jpeg
+ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765083183447/96ecad38-ead5-4b67-a036-f0af109c1cb8.jpeg
 tags: privacy, offline-first, personal, chronic-pain, trauma, indie-dev, housing-instability
 
 ---
-
-# When I Was 33, Everything I'd Been Standing On Just... Disappeared
 
 That was the year my wife left and took what I thought was home with her.
 
@@ -44,7 +43,7 @@ No sales pitch. No inspirational garbage about turning pain into purpose.
 
 Just a tool built by someone who learned the hard way that the ground can disappear overnight, and sometimes the only thing left to do is build something that floats.
 
-— c.
+— K.
 
 ---
 
