@@ -6,7 +6,6 @@ datePublished: Tue Dec 09 2025 06:21:30 GMT+0000 (Coordinated Universal Time)
 cuid: cmiy6ztfx000402kyd3zw4id2
 slug: coding-through-collapse
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1765267858224/64500532-a513-445e-bdd5-e042dd53f222.png
-tags: privacy, healthcare, mental-health, open-source, developer-stories, personal-story
 
 ---
 
