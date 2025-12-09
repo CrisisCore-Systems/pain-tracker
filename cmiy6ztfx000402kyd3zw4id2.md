@@ -10,7 +10,7 @@ tags: privacy, healthcare, mental-health, open-source, developer-stories, person
 
 ---
 
-# Coding Through Collapse: Building From Rubble
+# Building From Rubble
 
 There’s a three-walled concrete space behind a gas station in Vernon, BC. If you build your fire in the corner and sit with your back to the wall, the wind can’t reach you.
 
