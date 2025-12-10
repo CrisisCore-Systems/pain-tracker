@@ -4,6 +4,18 @@
   "installCommand": "npm install --include=dev",
   "framework": null,
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/sponser",
+      "destination": "https://github.com/sponsors/CrisisCore-Systems",
+      "permanent": true
+    },
+    {
+      "source": "/sponsor",
+      "destination": "https://github.com/sponsors/CrisisCore-Systems",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/pain-tracker/api/(.*)",
