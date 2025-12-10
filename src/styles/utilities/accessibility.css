@@ -1,0 +1,170 @@
+/**
+ * Accessibility & Trauma-Informed Styles
+ * 
+ * Defines styles for trauma-informed preference classes applied to body:
+ * - ti-contrast-normal / ti-contrast-high / ti-contrast-extra-high
+ * - ti-simplified
+ * - ti-reduce-motion
+ * 
+ * CSS Custom Properties consumed:
+ * - --ti-font-size: Applied by TraumaInformedContext
+ * - --ti-touch-size: Applied by TraumaInformedContext
+ */
+
+/* ===== BASE TRAUMA-INFORMED DEFAULTS ===== */
+:root {
+  --ti-font-size: 1rem;
+  --ti-touch-size: 44px;
+}
+
+/* ===== FONT SIZE APPLICATION ===== */
+/* Apply the font size to body and form elements */
+body {
+  font-size: var(--ti-font-size, 1rem);
+}
+
+/* Ensure form elements inherit the font size */
+input,
+textarea,
+select,
+button {
+  font-size: inherit;
+}
+
+/* ===== TOUCH TARGET SIZE ===== */
+/* 
+ * Minimum touch target for interactive elements.
+ * Note: This is controlled by --ti-touch-size custom property.
+ * Only applied to primary interactive controls that benefit from larger targets.
+ * Inline links and small icons should be handled case-by-case in components.
+ */
+button:not(.btn-icon):not(.btn-sm),
+[role="button"]:not(.btn-icon):not(.btn-sm),
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+  min-height: var(--ti-touch-size, 44px);
+}
+
+/* ===== CONTRAST LEVELS ===== */
+
+/* Normal contrast - default, no changes needed */
+body.ti-contrast-normal {
+  /* Default styling, no overrides */
+}
+
+/* High contrast mode */
+body.ti-contrast-high {
+  --color-foreground: 255 255 255;
+  --color-muted-foreground: 226 232 240;
+  --color-border: 100 116 139;
+}
+
+body.ti-contrast-high .text-muted-foreground,
+body.ti-contrast-high .text-slate-400,
+body.ti-contrast-high .text-slate-500 {
+  color: rgb(226 232 240) !important;
+}
+
+body.ti-contrast-high button,
+body.ti-contrast-high input,
+body.ti-contrast-high select,
+body.ti-contrast-high textarea {
+  border-width: 2px;
+}
+
+/* Extra high contrast mode */
+body.ti-contrast-extra-high {
+  --color-background: 0 0 0;
+  --color-foreground: 255 255 255;
+  --color-card: 15 23 42;
+  --color-card-foreground: 255 255 255;
+  --color-muted-foreground: 248 250 252;
+  --color-border: 148 163 184;
+}
+
+body.ti-contrast-extra-high .text-muted-foreground,
+body.ti-contrast-extra-high .text-slate-400,
+body.ti-contrast-extra-high .text-slate-500,
+body.ti-contrast-extra-high .text-slate-600 {
+  color: rgb(248 250 252) !important;
+}
+
+body.ti-contrast-extra-high button,
+body.ti-contrast-extra-high input,
+body.ti-contrast-extra-high select,
+body.ti-contrast-extra-high textarea {
+  border-width: 3px;
+  border-color: rgb(148 163 184);
+}
+
+/* ===== REDUCED MOTION ===== */
+body.ti-reduce-motion,
+body.ti-reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ===== SIMPLIFIED MODE ===== */
+body.ti-simplified {
+  /* Increase base font size for readability */
+  font-size: calc(var(--ti-font-size, 1rem) * 1.05);
+}
+
+/* Hide purely decorative elements in simplified mode */
+body.ti-simplified .decorative,
+body.ti-simplified .decoration {
+  display: none !important;
+}
+
+/* Reduce distracting animations but keep essential styling */
+body.ti-simplified .animate-pulse,
+body.ti-simplified .animate-bounce,
+body.ti-simplified .animate-spin {
+  animation: none !important;
+}
+
+/* Ensure sufficient spacing for readability */
+body.ti-simplified .space-y-1 {
+  gap: 0.75rem;
+}
+
+body.ti-simplified .space-y-2 {
+  gap: 1rem;
+}
+
+/* ===== HIGH CONTRAST FOCUS INDICATORS ===== */
+body.ti-contrast-high :focus-visible,
+body.ti-contrast-extra-high :focus-visible {
+  outline: 3px solid rgb(var(--color-primary)) !important;
+  outline-offset: 2px !important;
+}
+
+/* ===== PREFERS CONTRAST MEDIA QUERY ===== */
+@media (prefers-contrast: high) {
+  :root {
+    --color-foreground: 255 255 255;
+    --color-muted-foreground: 226 232 240;
+    --color-border: 100 116 139;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    border-width: 2px;
+  }
+}
+
+/* ===== PREFERS REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

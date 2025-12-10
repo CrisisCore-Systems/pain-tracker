@@ -12,6 +12,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [0.1.1-beta] - 2025-12-08
+
+### Added
+
+#### Phase 1.5 Accessibility (WCAG 2.2 AA Compliance)
+- **AccessiblePainSlider** - Fully accessible pain rating component with:
+  - Keyboard navigation (Arrow keys ±1, Home/End 0/10, PageUp/PageDown ±2)
+  - ARIA labels and live region announcements for screen readers
+  - Optional haptic feedback for mobile devices
+  - Direct numeric input field for precise values
+  - Stepper buttons (±) for fine control
+  - High contrast visual indicators
+
+- **FocusTrap Component** - Modal focus management with:
+  - Automatic focus trapping within modal boundaries
+  - Escape key handling for dismissal
+  - Return focus to trigger element on close
+  - Scroll lock to prevent background interaction
+
+- **AccessibleModal Component** - Complete modal solution with:
+  - ARIA role="dialog" and aria-modal attributes
+  - Proper heading hierarchy (aria-labelledby)
+  - Backdrop click handling
+  - Keyboard accessibility throughout
+
+#### Enhanced WorkSafe BC PDF Export
+- **exportWorkSafeBCPDF** - Professional clinical report generation with:
+  - Executive summary with key pain metrics
+  - Pain trend analysis with severity classification
+  - Functional impact assessment section
+  - Work impact documentation (missed work, modified duties)
+  - Clinical recommendations based on patterns
+  - Legal disclaimer for WorkSafe BC compliance
+  - Multi-page support with professional headers/footers
+  - Patient and claim information fields
+  - Date range filtering for targeted reporting
+
+- **downloadWorkSafeBCPDF** - One-click PDF download utility
+
+#### Test Coverage
+- Added 22 comprehensive tests for WCB export functionality (98.8% coverage)
+- Tests cover edge cases: empty entries, special characters, large datasets
+
+### Verified
+- **Panic Mode** - Confirmed fully implemented and integrated in ModernAppLayout
+- **PWA Service Worker** - Verified sw.js exists with cache-first strategy
+- **Validation UI** - Confirmed enabled by default (VITE_REACT_APP_ENABLE_VALIDATION)
+
+### Changed
+- Updated accessibility component exports in `src/components/accessibility/index.ts`
+- Added VITE_REACT_APP_ENABLE_VALIDATION=true to `.env.example`
+
 ## [0.1.0-beta] - 2025-11-20
 
 ### Current State

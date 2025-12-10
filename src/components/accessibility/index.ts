@@ -99,6 +99,13 @@ export { InterfaceSimplifier } from './InterfaceSimplification';
 
 export { SmartFormSimplifier } from './SmartFormSimplifier';
 
+// WCAG 2.2 AA Accessibility Components (Phase 1.5)
+export { AccessiblePainSlider } from './AccessiblePainSlider';
+export { FocusTrap, AccessibleModal } from './FocusTrap';
+
+// Panic Mode for trauma-informed crisis support
+export { PanicMode } from './PanicMode';
+
 // Utility functions and hooks
 export * from './cognitiveLoadUtils';
 export { useCrisisDetection } from './useCrisisDetection';

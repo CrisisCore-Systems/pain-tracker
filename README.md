@@ -31,6 +31,20 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 ---
 
+## 📖 **Origin Story**
+
+> *"I wrote software from motel rooms while homeless. Checking if CI passed while warming hands over a fire behind a gas station."*
+
+Pain Tracker wasn't built in a comfortable office. It was built through housing instability, medical trauma, and systems that failed when they should have helped. Every architectural decision—offline-first, local-only storage, trauma-informed UI—comes from lived experience.
+
+When your data has been used against you, you build software that can't do that. Not by policy. By architecture.
+
+**📖 Read the full story:** [Coding Through Collapse—Why This App Forgets You Exist](https://blog.paintracker.ca/coding-through-collapse)
+
+⭐ **Star this repo if you've coded through your own collapse.**
+
+---
+
 ## 📊 **Current Implementation Status**
 
 **Version:** 0.1.0-beta (Active Development)  
@@ -52,14 +66,14 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 | Feature | Status | Next Steps |
 |---------|--------|------------|
-| **Validation Technology** | 🟡 Integration Pending | Connect validation UI to main forms |
-| **PWA Features** | 🟡 Testing Needed | Service worker present, needs browser testing |
+| **Validation Technology** | ✅ Integrated | Enabled by default via VITE_REACT_APP_ENABLE_VALIDATION |
+| **PWA Features** | ✅ Verified | Service worker working with cache-first strategy |
 | **Advanced Visualizations** | 🟡 In Progress | Body heatmaps and correlation graphs |
-| **PDF Export** | 🟡 Partial | Basic exports working, advanced formatting needed |
+| **WorkSafe BC PDF Export** | ✅ Complete | Professional clinical reports with full formatting |
 
 ### 📅 **Roadmap Highlights**
 
-- **Q4 2025**: Complete PWA browser testing, enhanced validation integration
+- **December 2025** ✅: Phase 1.5 Accessibility complete, Enhanced WCB PDF export
 - **Q1 2026**: Machine learning pain pattern recognition
 - **Q2 2026**: EMR/EHR integration capabilities
 - **Q3 2026**: Multi-platform native applications
@@ -179,10 +193,13 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - 🔄 **Emergency Protocols**: Core emergency UI and simulation dashboards complete; external escalation pending
 
 ### 🎨 **Trauma-Informed Design**
-- ✅ **Accessibility Features**: WCAG 2.1 AA compliant with comprehensive support for trauma survivors
+- ✅ **Accessibility Features**: WCAG 2.2 AA compliant with comprehensive support for trauma survivors
+- ✅ **AccessiblePainSlider**: Full keyboard navigation, ARIA labels, haptic feedback, numeric input
+- ✅ **FocusTrap & AccessibleModal**: Proper focus management for all modal dialogs
 - ✅ **Gentle Language**: Context-sensitive, empathetic UI copy throughout
 - ✅ **Progressive Disclosure**: Cognitive load management with step-by-step workflows
 - ✅ **Crisis Detection**: Working simulation and testing dashboard for emergency scenarios
+- ✅ **Panic Mode**: Integrated crisis support with breathing exercises and emergency resources
 - ✅ **Customization**: User preferences for font sizes, contrast, touch targets, and interaction patterns
 
 ---

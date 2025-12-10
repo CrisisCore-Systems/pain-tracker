@@ -67,9 +67,14 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 ### Accessibility
 - **[Accessibility Comfort Spec](ACCESSIBILITY_COMFORT_SPEC.md)** - Comfort-focused accessibility
 - **[Accessibility Implementation Complete](ACCESSIBILITY_IMPLEMENTATION_COMPLETE.md)** - Implementation status
-- **[Accessibility Implementation Checklist](ACCESSIBILITY_IMPLEMENTATION_CHECKLIST.md)** - Feature checklist
+- **[Accessibility Implementation Checklist](ACCESSIBILITY_IMPLEMENTATION_CHECKLIST.md)** - Feature checklist (Phase 1.5 complete Dec 2025)
 - **[Accessibility Deliverables Summary](ACCESSIBILITY_DELIVERABLES_SUMMARY.md)** - Delivered features
 - **[Accessibility Improvements](ACCESSIBILITY_IMPROVEMENTS.md)** - Ongoing improvements
+
+**Phase 1.5 Components (Dec 2025):**
+- `AccessiblePainSlider` - WCAG 2.2 AA pain rating with full keyboard support
+- `FocusTrap` / `AccessibleModal` - Modal focus management
+- `PanicMode` - Crisis support integration
 
 ### Security & Compliance
 - **[Security Policy](../SECURITY.md)** - Security practices and vulnerability reporting

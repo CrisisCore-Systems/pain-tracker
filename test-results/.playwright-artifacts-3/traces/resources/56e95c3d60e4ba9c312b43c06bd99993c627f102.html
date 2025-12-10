@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang='en' class='dark'>
+  <head>
+    <script type="module">import { injectIntoGlobalHook } from "/pain-tracker/@react-refresh";
+injectIntoGlobalHook(window);
+window.$RefreshReg$ = () => {};
+window.$RefreshSig$ = () => (type) => type;</script>
+
+    <script type="module" src="/pain-tracker/@vite/client"></script>
+
+    <!-- Analytics loader (module) - uses VITE_ENABLE_ANALYTICS to control whether external GTM is loaded -->
+    <script type="module" src="/pain-tracker/src/analytics/analytics-loader.ts"></script>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover' />
+    <meta name="description" content="Pain Tracker - A comprehensive tool for tracking and managing chronic pain and injuries" />
+    <meta name="keywords" content="pain tracker, pain management, injury tracking, health monitoring, medical records" />
+    <meta name="author" content="CrisisCore-Systems" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Pain Tracker Pro" />
+    <meta name="msapplication-TileColor" content="#0ea5e9" />
+    <meta name="msapplication-config" content="/pain-tracker/browserconfig.xml" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="theme-color" content="#0f172a" />
+    
+    <!-- Support both light and dark color schemes - dark is our default -->
+    <meta name="color-scheme" content="dark light" />
+    
+    <!-- Security Headers (Note: CSP frame-ancestors and X-Frame-Options are set via HTTP headers in server config) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()" />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pain Tracker" />
+    <meta property="og:description" content="Track and manage your pain and injuries with our comprehensive tracking system" />
+    <meta property="og:site_name" content="Pain Tracker" />
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/x-icon" href="/pain-tracker/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/pain-tracker/favicon.svg" />
+    <link rel="apple-touch-icon" href="/pain-tracker/apple-touch-icon.png" />
+    <link rel="manifest" href="/pain-tracker/manifest.json" />
+    
+    <!-- Font preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <title>Pain Tracker - Comprehensive Pain & Injury Management System</title>
+  </head>
+  <body class="bg-background">
+    <!-- Inline script to set theme before React loads - prevents flash of wrong theme -->
+    <script>
+      (function() {
+        var stored = null;
+        try { stored = localStorage.getItem('pain-tracker:theme-mode'); } catch(e) {}
+        
+        // Priority: 1) saved pref, 2) system pref, 3) dark (our default)
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark' || theme === 'high-contrast') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        
+        // Update theme-color meta tag for browser chrome
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f172a' : '#ffffff');
+      })();
+    </script>
+    <div id='root'></div>
+    
+    <!-- PWA Initialization -->
+    <script>
+      // Robust Service Worker registration for dev + E2E.
+      // Try multiple candidate paths (base-relative, module-relative and root) so dev server
+      // differences don't break automated tests. We also log errors for easier debug.
+      if ('serviceWorker' in navigator) {
+        // Listen for readiness message from the service worker and set a global
+        // flag that tests can observe (window.__pwa_sw_ready).
+        navigator.serviceWorker.addEventListener('message', (e) => {
+          try {
+            if (e && e.data && e.data.type === 'SW_READY') {
+              window.__pwa_sw_ready = true;
+              window.__pwa_sw_version = e.data.version || null;
+            }
+          } catch {
+            /* ignore */
+          }
+        });
+
+        window.addEventListener('load', async () => {
+          const tryRegister = async (url) => {
+            try {
+              const reg = await navigator.serviceWorker.register(url);
+              console.log('[SW] registered', url, reg);
+              return reg;
+            } catch (e) {
+              console.warn('[SW] registration failed for', url, e && e.message ? e.message : e);
+              return null;
+            }
+          };
+
+          // Compute a base candidate from current path (ensures /pain-tracker/ works)
+          const locBase = location.pathname.endsWith('/') ? location.pathname : location.pathname + '/';
+          // Prefer base-relative registration. When running under a non-root base,
+          // only attempt the base-relative path to avoid registering a root-scoped SW.
+          // Prefer base-relative registration, but also try a module-relative
+          // candidate if the base-relative registration fails in some dev setups.
+          // We try base first to avoid accidentally registering a root-scoped SW.
+          const candidates = locBase === '/' ? [locBase + 'sw.js', './sw.js', '/sw.js'] : [locBase + 'sw.js', './sw.js'];
+
+          for (const candidate of candidates) {
+            const reg = await tryRegister(candidate);
+            if (reg) break; // stop on first successful registration
+          }
+        });
+      }
+    </script>
+    <script type='module' src='/pain-tracker/src/main.tsx'></script>
+  </body>
+</html>

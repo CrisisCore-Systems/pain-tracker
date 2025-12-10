@@ -110,6 +110,23 @@ export const Hero: React.FC = () => {
       {/* Hero Content */}
       <div className="relative z-10 flex-1 flex items-center">
         <div className="container mx-auto px-4 py-16 lg:py-24">
+          {/* New Blog Announcement Banner */}
+          <a
+            href="https://blog.paintracker.ca/coding-through-collapse"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-8 mx-auto lg:mx-0 max-w-fit flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-red-500/20 border border-amber-500/30 hover:border-amber-400/50 transition-all group"
+          >
+            <span className="flex items-center gap-1.5 text-amber-300 font-semibold text-sm">
+              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+              NEW
+            </span>
+            <span className="text-slate-200 text-sm">
+              Coding Through Collapse—Why This App Forgets You Exist
+            </span>
+            <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-amber-300 group-hover:translate-x-1 transition-all" />
+          </a>
+
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-24 items-center">
             {/* Left Column: Content */}
             <div className="space-y-8 text-center lg:text-left stagger-fade-up">
