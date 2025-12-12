@@ -11,6 +11,8 @@ tags: ux, accessibility, typescript, healthcare, trauma-informed, user-experienc
 
 # Building Empathy into Algorithms: Lessons from Pain Tracker Development
 
+**Important:** This is not mental-health diagnosis; it's UX safety + reliability.
+
 "Your app feels like it actually understands what I'm going through."
 
 That single piece of user feedback made eighteen months of painstaking development worth it. Not because we had achieved some magical AI breakthrough—we hadn't. We'd simply done something most tech companies consider impossible: **we built software that treats humans like humans**.
