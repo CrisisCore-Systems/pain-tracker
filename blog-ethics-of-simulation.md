@@ -2,6 +2,8 @@
 
 *Part of the CrisisCore Build Log - when the testing strategy becomes a moral question*
 
+**Important:** This is not mental-health diagnosis; it's UX safety + reliability.
+
 ---
 
 Here's a question nobody asks in the testing literature:

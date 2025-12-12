@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { EmpathyMetricsCollector } from '../services/EmpathyMetricsCollector';
 import { SecurityService } from '../services/SecurityService';
 import { EmpathyDrivenAnalyticsService } from '../services/EmpathyDrivenAnalytics';
 import type { PainEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
+import { resetTestRandom, seededRandom } from './utils/seededRandom';
 
 const security = new SecurityService(undefined, { consentRequired: true });
 const analytics = new EmpathyDrivenAnalyticsService({
@@ -15,9 +16,12 @@ const analytics = new EmpathyDrivenAnalyticsService({
 });
 const collector = new EmpathyMetricsCollector(security, analytics);
 
+// Counter for deterministic IDs
+let idCounter = 0;
+
 function makePain(notes: string): PainEntry {
   return {
-    id: Math.random(),
+    id: `pain-${idCounter++}`,
     timestamp: new Date().toISOString(),
     baselineData: { pain: 5, locations: ['back'], symptoms: ['ache'] },
     functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
@@ -32,7 +36,7 @@ function makePain(notes: string): PainEntry {
 
 function makeMood(notes: string): MoodEntry {
   return {
-    id: Math.random(),
+    id: `mood-${idCounter++}`,
     timestamp: new Date().toISOString(),
     mood: 6,
     energy: 6,
@@ -51,6 +55,11 @@ function makeMood(notes: string): MoodEntry {
 }
 
 describe('EmpathyMetricsCollector sanitization & ranges', () => {
+  beforeEach(() => {
+    // Reset random seed and ID counter for deterministic tests
+    resetTestRandom();
+    idCounter = 0;
+  });
   it('clamps and/or noises values within 0-100', async () => {
     const res = await collector.collect(
       [makePain('Phone 123-456-7890')],

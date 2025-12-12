@@ -2,6 +2,8 @@
 
 *Part of the CrisisCore Build Log - trauma-informed systems engineering*
 
+**Important:** This is not mental-health diagnosis; it's UX safety + reliability.
+
 ---
 
 When I built crisis detection into Pain Tracker, I knew the stakes were high in both directions:

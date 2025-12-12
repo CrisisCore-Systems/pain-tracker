@@ -1,3 +1,5 @@
+import { seededRandom } from '../utils/seededRandom';
+
 export interface PainEntry {
   id: string;
   intensity: number;
@@ -16,8 +18,8 @@ function generateId(): string {
     // Crypto API not available, fall through to fallback
   }
 
-  // Fallback: timestamp + random
-  return `id-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+  // Fallback: timestamp + seeded random for deterministic tests
+  return `id-${Date.now().toString(36)}-${seededRandom().toString(36).slice(2, 10)}`;
 }
 
 export function makePainEntry(overrides: Partial<PainEntry> = {}): PainEntry {
