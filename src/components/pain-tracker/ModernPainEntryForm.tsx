@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   Sparkles,
   X,
+  Zap,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge } from '../../design-system';
@@ -26,6 +27,7 @@ import {
   MedicationsSection,
   QualityOfLifeSection,
   TreatmentsSection,
+  TriggersAndReliefSection,
   WorkImpactSection,
 } from './form-sections';
 
@@ -83,6 +85,16 @@ const sections = [
     color: 'from-indigo-500 to-purple-500',
     bgColor: 'bg-indigo-50 dark:bg-indigo-950/20',
     borderColor: 'border-indigo-200 dark:border-indigo-800',
+    required: false,
+  },
+  {
+    id: 'triggers',
+    title: 'Triggers & Relief',
+    subtitle: 'What affects your pain',
+    icon: Zap,
+    color: 'from-amber-500 to-yellow-500',
+    bgColor: 'bg-amber-50 dark:bg-amber-950/20',
+    borderColor: 'border-amber-200 dark:border-amber-800',
     required: false,
   },
   {
@@ -148,6 +160,13 @@ export function ModernPainEntryForm({ onSubmit, onCancel }: ModernPainEntryFormP
       newLimitations: [],
     },
     notes: '',
+    // Optional analytics fields
+    triggers: [],
+    reliefMethods: [],
+    activityLevel: 5,
+    stress: 5,
+    quality: [],
+    activities: [],
   });
 
   const currentSection = sections[currentStep];
@@ -242,6 +261,23 @@ export function ModernPainEntryForm({ onSubmit, onCancel }: ModernPainEntryFormP
               setFormData(prev => ({
                 ...prev,
                 qualityOfLife: { ...prev.qualityOfLife, ...data },
+              }))
+            }
+          />
+        );
+      case 'triggers':
+        return (
+          <TriggersAndReliefSection
+            triggers={formData.triggers ?? []}
+            reliefMethods={formData.reliefMethods ?? []}
+            activityLevel={formData.activityLevel ?? 5}
+            stress={formData.stress ?? 5}
+            quality={formData.quality ?? []}
+            activities={formData.activities ?? []}
+            onChange={data =>
+              setFormData(prev => ({
+                ...prev,
+                ...data,
               }))
             }
           />

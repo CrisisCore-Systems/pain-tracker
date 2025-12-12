@@ -144,27 +144,62 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
+    // Warn on large chunks but don't block build
+    chunkSizeWarningLimit: 300,
     rollupOptions: {
       output: {
         sourcemap: false, // Explicitly disable sourcemaps in rollup output
-        // Simplified chunking - avoid splitting React ecosystem to prevent initialization errors
-        // The "Cannot set properties of undefined (setting 'Children')" error occurs when
-        // react-is or scheduler loads before react core is fully initialized
-        manualChunks: {
+        // Optimized chunking for mobile performance
+        manualChunks: (id) => {
           // Keep ALL React packages together to ensure correct initialization order
-          'react-vendor': ['react', 'react-dom', 'react-is', 'scheduler'],
-          // Charting libraries (large, lazy-loaded)
-          'chart-vendor': ['recharts'],
-          // Date utilities
-          'date-vendor': ['date-fns'],
-          // Form handling
-          'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          // State management
-          'state-vendor': ['zustand', 'immer'],
-          // i18n
-          'i18n-vendor': ['i18next', 'react-i18next'],
-          // Crypto
-          'crypto-vendor': ['crypto-js'],
+          if (id.includes('node_modules/react') || 
+              id.includes('node_modules/react-dom') || 
+              id.includes('node_modules/react-is') || 
+              id.includes('node_modules/scheduler')) {
+            return 'react-vendor';
+          }
+          // Router in separate chunk (needed for initial load)
+          if (id.includes('node_modules/react-router')) {
+            return 'router-vendor';
+          }
+          // Charting libraries - lazy loaded, keep separate
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
+            return 'chart-vendor';
+          }
+          // Date utilities - frequently used
+          if (id.includes('node_modules/date-fns')) {
+            return 'date-vendor';
+          }
+          // Form handling - needed for main app
+          if (id.includes('node_modules/react-hook-form') || 
+              id.includes('node_modules/@hookform') || 
+              id.includes('node_modules/zod')) {
+            return 'form-vendor';
+          }
+          // State management - needed for main app
+          if (id.includes('node_modules/zustand') || id.includes('node_modules/immer')) {
+            return 'state-vendor';
+          }
+          // i18n - can be deferred
+          if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) {
+            return 'i18n-vendor';
+          }
+          // Heavy crypto library - lazy load only when vault is accessed
+          if (id.includes('node_modules/libsodium') || id.includes('node_modules/crypto-js')) {
+            return 'crypto-vendor';
+          }
+          // PDF generation - lazy load on export
+          if (id.includes('node_modules/jspdf') || id.includes('node_modules/html2canvas')) {
+            return 'pdf-vendor';
+          }
+          // Lucide icons - tree-shakeable but keep together
+          if (id.includes('node_modules/lucide-react')) {
+            return 'icons-vendor';
+          }
+          // DOMPurify - security library
+          if (id.includes('node_modules/dompurify')) {
+            return 'security-vendor';
+          }
         }
       }
     }

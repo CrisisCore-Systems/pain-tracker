@@ -4,6 +4,7 @@ import type { PainEntry } from '../../types';
 import { PainChart } from './PainChart';
 import { PainHistory } from './PainHistory';
 import { PainEntryForm } from './PainEntryForm';
+import { PainAssessment } from './PainAssessment';
 import { WCBReportGenerator } from './WCBReport';
 import {
   Card,
@@ -114,6 +115,7 @@ export function PainTracker() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
+  const [useBodyMapForm, setUseBodyMapForm] = useState(false);
   const [reportPeriod, setReportPeriod] = useState({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
     end: new Date().toISOString().split('T')[0],
@@ -484,15 +486,30 @@ export function PainTracker() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
           <Card className="xl:col-span-1" data-walkthrough="pain-entry-form">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Plus className="h-5 w-5" />
-                <span>Record Pain Entry</span>
-              </CardTitle>
-              <CardDescription>Track your pain levels, symptoms, and daily impact</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Plus className="h-5 w-5" />
+                    <span>Record Pain Entry</span>
+                  </CardTitle>
+                  <CardDescription>Track your pain levels, symptoms, and daily impact</CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setUseBodyMapForm(!useBodyMapForm)}
+                  className="text-xs"
+                  type="button"
+                >
+                  {useBodyMapForm ? 'Simple Form' : 'Body Map'}
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               {ValidationTechComponent ? (
                 <ValidationTechComponent painEntries={entries} onPainEntrySubmit={handleAddEntry} />
+              ) : useBodyMapForm ? (
+                <PainAssessment onSave={handleAddEntry} />
               ) : (
                 <PainEntryForm onSubmit={handleAddEntry} />
               )}

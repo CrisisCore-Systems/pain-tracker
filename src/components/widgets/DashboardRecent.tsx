@@ -5,12 +5,13 @@ import {
   EnhancedCardTitle,
   EnhancedCardContent,
 } from '../../design-system/components/EnhancedCard';
-import { Clock, CheckCircle, Activity, AlertTriangle, Zap } from 'lucide-react';
+import { Clock, CheckCircle, Activity, AlertTriangle, Zap, Cloud } from 'lucide-react';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
 import { Badge } from '../../design-system';
 import { StaggeredChildren } from '../../design-system/components/PageTransition';
 import { gradients } from '../../design-system/theme/gradients';
+import { ExtendedEntryDetails } from '../pain-tracker/EntryDetailsSections';
 function getSeverityMeta(pain: number) {
   if (pain <= 2) {
     return {
@@ -139,15 +140,11 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                 const absoluteLabel = Number.isNaN(entryDate.getTime())
                   ? 'Unknown time'
                   : absoluteFormatter.format(entryDate);
-                const symptoms = (
-                  (item as unknown as { symptoms?: string[] }).symptoms ?? []
-                ).filter(Boolean);
-                const quality =
-                  (
-                    item as unknown as {
-                      qualityOfLife?: { sleepQuality: number; moodImpact: number };
-                    }
-                  ).qualityOfLife ?? null;
+                // Access symptoms from the proper baselineData location
+                const symptoms = item.baselineData?.symptoms ?? [];
+                const locations = item.baselineData?.locations ?? [];
+                const quality = item.qualityOfLife ?? null;
+                const weather = item.weather;
 
                 return (
                   <div key={item.id} className="relative pl-6">
@@ -209,8 +206,39 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                             </Badge>
                           </div>
                         )}
+                        {weather && (
+                          <Badge
+                            variant="outline"
+                            className="rounded-full border-blue-300/40 bg-blue-300/15 text-blue-700 dark:text-blue-300 flex items-center gap-1"
+                          >
+                            <Cloud className="h-3 w-3" />
+                            {weather}
+                          </Badge>
+                        )}
                       </div>
 
+                      {/* Locations */}
+                      {locations.length > 0 && (
+                        <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                          <span className="text-muted-foreground">Pain locations:</span>
+                          {locations.slice(0, 3).map(location => (
+                            <Badge
+                              key={location}
+                              variant="outline"
+                              className="rounded-full border-violet-300/40 bg-violet-300/10 text-violet-700 dark:text-violet-300"
+                            >
+                              {location}
+                            </Badge>
+                          ))}
+                          {locations.length > 3 && (
+                            <span className="text-muted-foreground">
+                              +{locations.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Symptoms */}
                       <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
                         {symptoms.length > 0 ? (
                           <>
@@ -233,6 +261,9 @@ export function DashboardRecent({ entries }: { entries: PainEntry[] }) {
                           <span className="text-muted-foreground">No symptoms recorded</span>
                         )}
                       </div>
+
+                      {/* Extended details (functional impact, work impact, etc.) */}
+                      <ExtendedEntryDetails entry={item} compact className="mt-3 pt-3 border-t border-border/30" />
 
                       <p className={cn('mt-4 text-xs font-medium', severity.accent)}>
                         {severity.message}

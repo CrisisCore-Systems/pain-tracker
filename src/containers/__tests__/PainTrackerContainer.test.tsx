@@ -44,17 +44,17 @@ describe('PainTrackerContainer - entry success toast', () => {
 
     // Simulate the user logging a quick entry via the primary action -> quick log -> save
     // 1) Click the primary "Log pain now" action
-    const logNow = screen.getByRole('button', { name: /Log pain now/i });
+    const logNow = await screen.findByRole('button', { name: /Log pain now/i }, { timeout: 5000 });
     fireEvent.click(logNow);
 
     // 2) Advance through the quick-log steps (Continue twice), then Save
-    const continueBtn1 = screen.getByRole('button', { name: /Continue to step 2/i });
+    const continueBtn1 = await screen.findByRole('button', { name: /Continue to step 2/i }, { timeout: 5000 });
     fireEvent.click(continueBtn1);
 
-    const continueBtn2 = screen.getByRole('button', { name: /Continue to step 3/i });
+    const continueBtn2 = await screen.findByRole('button', { name: /Continue to step 3/i }, { timeout: 5000 });
     fireEvent.click(continueBtn2);
 
-    const saveBtn = screen.getByRole('button', { name: /Save pain entry/i });
+    const saveBtn = await screen.findByRole('button', { name: /Save pain entry/i }, { timeout: 5000 });
     fireEvent.click(saveBtn);
 
     // After saving, the container shows a gentle success toast with this copy
@@ -64,6 +64,6 @@ describe('PainTrackerContainer - entry success toast', () => {
           "Your update is safely stored. You can explore your dashboard or analytics whenever you're ready."
         )
       ).not.toBeNull();
-    });
-  });
+    }, { timeout: 5000 });
+  }, 30000); // Increase test timeout for lazy loading
 });

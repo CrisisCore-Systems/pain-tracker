@@ -2,17 +2,30 @@
 
 interface FunctionalImpactSectionProps {
   limitedActivities: string[];
+  assistanceNeeded: string[];
   mobilityAids: string[];
   onChange: (
     data: Partial<{
       limitedActivities: string[];
+      assistanceNeeded: string[];
       mobilityAids: string[];
     }>
   ) => void;
 }
 
+const ASSISTANCE_OPTIONS = [
+  'Personal care (bathing, dressing)',
+  'Meal preparation',
+  'Household chores',
+  'Transportation',
+  'Medication management',
+  'Mobility assistance',
+  'Other daily activities',
+];
+
 export function FunctionalImpactSection({
   limitedActivities,
+  assistanceNeeded,
   mobilityAids,
   onChange,
 }: FunctionalImpactSectionProps) {
@@ -49,6 +62,38 @@ export function FunctionalImpactSection({
           {allActivities.map((activity: string) => (
             <option key={activity} value={activity}>
               {activity}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label
+          htmlFor="assistance-needed"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+        >
+          Assistance Needed
+        </label>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          Select areas where you need help due to pain
+        </p>
+        <select
+          id="assistance-needed"
+          multiple
+          value={assistanceNeeded}
+          onChange={e => {
+            const selected = Array.from(
+              e.target.selectedOptions,
+              (option: HTMLOptionElement) => option.value
+            );
+            onChange({ assistanceNeeded: selected });
+          }}
+          className="w-full rounded-md border-orange-300 dark:border-orange-600 bg-orange-50 dark:bg-orange-950/20 shadow-sm focus:border-orange-500 focus:ring-orange-500"
+          size={4}
+        >
+          {ASSISTANCE_OPTIONS.map((option: string) => (
+            <option key={option} value={option}>
+              {option}
             </option>
           ))}
         </select>

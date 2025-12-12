@@ -1,12 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../design-system/components/Button';
 import { Activity, Shield, Heart, Stethoscope, LogIn, ArrowRight, Sparkles, Zap, Star, ChevronDown } from 'lucide-react';
+
+// Preload the main app chunks when user shows intent to navigate
+const preloadAppChunks = () => {
+  // Preload main app container and its dependencies
+  import('../../containers/PainTrackerContainer');
+  import('../../components/security/VaultGate');
+};
 
 export const Hero: React.FC = () => {
   const navigate = useNavigate();
   const _env = (import.meta.env ?? {}) as Record<string, string | undefined>;
   const [scrolled, setScrolled] = useState(false);
+  
+  // Preload on user intent (hover or focus)
+  const handlePreload = useCallback(() => {
+    preloadAppChunks();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -80,6 +92,8 @@ export const Hero: React.FC = () => {
               <Button
                 variant="ghost"
                 onClick={() => navigate('/start')}
+                onMouseEnter={handlePreload}
+                onFocus={handlePreload}
                 className="hidden md:flex text-slate-300 hover:text-white hover:bg-white/5"
               >
                 <LogIn className="h-4 w-4 mr-2" />
@@ -97,6 +111,8 @@ export const Hero: React.FC = () => {
 
               <button
                 onClick={() => navigate('/start')}
+                onMouseEnter={handlePreload}
+                onFocus={handlePreload}
                 className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
               >
                 Get Started

@@ -76,9 +76,9 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
 
       // Try to enrich the entry with local weather when possible. This is
       // best-effort only and must never block the user from saving an entry.
+      let weatherInfo: Awaited<ReturnType<typeof fetchLocalWeather>> | null = null;
       try {
         // Prefer to use browser geolocation when available to fetch local weather
-        let weatherInfo: any = null;
         if (typeof navigator !== 'undefined' && 'geolocation' in navigator && navigator.geolocation) {
           // Small timeout to avoid blocking UI
           const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
@@ -89,13 +89,19 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
           weatherInfo = await fetchLocalWeather();
         }
 
-        if (weatherInfo) {
-          // Normalise to a human-readable summary; don't modify the original type
-          const summary = typeof weatherInfo === 'string'
-            ? weatherInfo
-            : `${weatherInfo.temp ?? ''}${weatherInfo.temp != null ? '°C' : ''} ${weatherInfo.condition ?? ''}`.trim();
-          // Attach as a best-effort field - cast to any to avoid strict type errors
-          (entry as any).weather = summary;
+        if (weatherInfo && (weatherInfo.temp !== null || weatherInfo.condition !== null)) {
+          // Build a rich human-readable summary including rain status
+          const parts: string[] = [];
+          if (weatherInfo.temp !== null) parts.push(`${Math.round(weatherInfo.temp)}°C`);
+          if (weatherInfo.condition) parts.push(weatherInfo.condition);
+          if (weatherInfo.isRaining) parts.push('🌧️');
+          if (weatherInfo.humidity !== null) parts.push(`${weatherInfo.humidity}% humidity`);
+          
+          const summary = parts.join(', ') || undefined;
+          if (summary) {
+            // Attach as a best-effort field - cast to any to avoid strict type errors
+            (entry as any).weather = summary;
+          }
         }
       } catch (err) {
         // Ignore enrichment failures; entry save must not be blocked
@@ -108,21 +114,24 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       void trackPainEntryUsage(userId);
 
       // Track analytics for pain entry (privacy-safe)
-      const weatherData = (entry as Record<string, unknown>).weather as string | undefined;
+      const weatherSummary = (entry as Record<string, unknown>).weather as string | undefined;
       const painLevel = entry.baselineData?.pain ?? 0;
       const painAnalytics: PainEntryAnalytics = {
         painLevel,
         symptoms: entry.baselineData?.symptoms,
         triggers: entry.triggers,
-        weather: weatherData,
+        weather: weatherSummary,
         severity: painLevel >= 7 ? 'severe' : painLevel >= 4 ? 'moderate' : 'mild',
       };
       trackPainEntry(painAnalytics);
 
-      // Track weather correlation if weather data is available
-      if (weatherData) {
+      // Track weather correlation with full weather data if available
+      if (weatherInfo && (weatherInfo.temp !== null || weatherInfo.condition !== null)) {
         const weatherAnalytics: WeatherAnalytics = {
-          condition: weatherData,
+          temperature: weatherInfo.temp ?? undefined,
+          condition: weatherInfo.condition ?? undefined,
+          pressure: weatherInfo.pressure ?? undefined,
+          humidity: weatherInfo.humidity ?? undefined,
           painLevel,
         };
         trackWeatherCorrelation(weatherAnalytics);

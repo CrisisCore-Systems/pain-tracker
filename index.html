@@ -42,7 +42,36 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    
     <title>Pain Tracker - Comprehensive Pain & Injury Management System</title>
+    
+    <!-- Critical CSS for faster first paint -->
+    <style>
+      /* Minimal critical CSS for initial render */
+      :root { --bg-color: #0f172a; --text-color: #f1f5f9; }
+      .dark { background-color: var(--bg-color); color: var(--text-color); }
+      body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+      #root { min-height: 100vh; }
+      /* Loading state styles */
+      .initial-loading { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        min-height: 100vh;
+        background: var(--bg-color);
+      }
+      .loading-spinner {
+        width: 40px; height: 40px;
+        border: 3px solid rgba(255,255,255,0.1);
+        border-top-color: #0ea5e9;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
   </head>
   <body class="bg-background">
     <!-- Inline script to set theme before React loads - prevents flash of wrong theme -->
@@ -66,7 +95,12 @@
         if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f172a' : '#ffffff');
       })();
     </script>
-    <div id='root'></div>
+    <div id='root'>
+      <!-- Initial loading state before React hydrates -->
+      <div class="initial-loading" id="initial-loader">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
     
     <!-- PWA Initialization -->
     <script>

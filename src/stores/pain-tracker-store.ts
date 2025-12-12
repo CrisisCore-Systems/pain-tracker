@@ -8,7 +8,6 @@ import { makeMoodEntry } from '../utils/mood-entry-factory';
 import type { FibromyalgiaEntry } from '../types/fibromyalgia';
 import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
 import { hipaaComplianceService } from '../services/HIPAACompliance';
-import { generatePDFReport } from '../utils/pdfReportGenerator';
 import { migratePainTrackerState } from './pain-tracker-migrations';
 import { trackMoodEntryLogged } from '../analytics/ga4-events';
 
@@ -457,6 +456,9 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             if (!schedule) return;
 
             try {
+              // Lazy load PDF generator for better initial load performance
+              const { generatePDFReport } = await import('../utils/pdfReportGenerator');
+              
               // Create PDF options using template placeholder and store entries for the period
                 // For now, create a simple date range of last 30 days
               const end = new Date().toISOString().split('T')[0];

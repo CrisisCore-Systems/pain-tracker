@@ -39,6 +39,8 @@ import { hipaaComplianceService } from '../../services/HIPAACompliance';
 import type { AuditTrail } from '../../services/HIPAACompliance';
 import { analyzePatterns } from '../../utils/pain-tracker/pattern-engine';
 import type { PatternAnalysisResult } from '../../types/pattern-engine';
+import { NerveSymptoms } from '../pain-tracker/NerveSymptoms';
+import { FunctionalLimitations } from '../pain-tracker/FunctionalLimitations';
 
 type TimePeriod = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -741,7 +743,7 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {view === 'overview' && <OverviewView analytics={analytics} entries={filteredEntries} />}
-        {view === 'patterns' && <PatternsView analytics={analytics} />}
+        {view === 'patterns' && <PatternsView analytics={analytics} entries={filteredEntries} />}
         {view === 'predictions' && <PredictionsView analytics={analytics} />}
         {view === 'clinical' && (
           <ClinicalReportView analytics={analytics} entries={filteredEntries} />
@@ -1035,7 +1037,7 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
 };
 
 // Patterns View - Advanced Analytics
-const PatternsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics }) => {
+const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] }> = ({ analytics, entries }) => {
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const monthLabels = [
     'Jan',
@@ -1269,6 +1271,13 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics })
           </p>
         )}
       </div>
+
+      {/* Nerve Symptoms Analysis */}
+      {entries.length > 0 && (
+        <div className="bg-white dark:bg-gray-900/60 backdrop-blur rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+          <NerveSymptoms entries={entries} />
+        </div>
+      )}
     </div>
   );
 };
@@ -1780,6 +1789,13 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
           </div>
         </div>
       </div>
+
+      {/* Functional Limitations Analysis */}
+      {entries.length > 0 && (
+        <div className="bg-white dark:bg-gray-900/60 backdrop-blur rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+          <FunctionalLimitations entries={entries} />
+        </div>
+      )}
     </div>
   );
 };

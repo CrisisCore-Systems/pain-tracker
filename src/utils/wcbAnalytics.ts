@@ -67,17 +67,5 @@ export function calculateOverallTrend(progression: ProgressionPoint[]): string {
   return 'Improved';
 }
 
-export function generateRecommendations(progression: ProgressionPoint[]): string[] {
-  const latest = progression[progression.length - 1];
-  const recommendations: string[] = [];
-
-  if (latest.averagePain > 7) {
-    recommendations.push('Immediate medical reassessment recommended');
-  }
-
-  if (latest.locations.length > 0) {
-    recommendations.push('Document new pain locations with medical professional');
-  }
-
-  return recommendations;
-}
+// Note: generateRecommendations was removed as unused dead code on 2025-12-10.
+// Recommendations are now generated inline in WCBReportGenerator component.

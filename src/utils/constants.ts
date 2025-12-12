@@ -150,3 +150,138 @@ export const ACTIVITIES = {
 
 export type PainLocation = (typeof PAIN_LOCATIONS)[number];
 export type Symptom = (typeof SYMPTOMS)[number];
+
+export const PAIN_TRIGGERS = [
+  // Environmental
+  'weather change',
+  'cold weather',
+  'hot weather',
+  'humidity',
+  'barometric pressure',
+  // Physical
+  'physical activity',
+  'prolonged sitting',
+  'prolonged standing',
+  'lifting',
+  'repetitive motion',
+  'lack of sleep',
+  'poor sleep',
+  // Emotional/Mental
+  'stress',
+  'anxiety',
+  'emotional distress',
+  'overexertion',
+  // Dietary
+  'certain foods',
+  'alcohol',
+  'caffeine',
+  'dehydration',
+  // Other
+  'travel',
+  'work',
+  'menstrual cycle',
+  'illness',
+  'medication change',
+] as const;
+
+export const RELIEF_METHODS = [
+  // Medications
+  'over-the-counter pain relievers',
+  'prescription medication',
+  'topical creams',
+  // Physical
+  'rest',
+  'heat therapy',
+  'cold therapy',
+  'stretching',
+  'exercise',
+  'massage',
+  'physical therapy exercises',
+  // Relaxation
+  'deep breathing',
+  'meditation',
+  'relaxation techniques',
+  // Other
+  'position change',
+  'elevation',
+  'compression',
+  'distraction',
+  'sleep',
+] as const;
+
+export type PainTrigger = (typeof PAIN_TRIGGERS)[number];
+export type ReliefMethod = (typeof RELIEF_METHODS)[number];
+
+export const PAIN_QUALITIES = [
+  // Acute descriptors
+  'sharp',
+  'stabbing',
+  'shooting',
+  'piercing',
+  // Dull descriptors
+  'dull',
+  'aching',
+  'throbbing',
+  'pounding',
+  // Burning/Heat
+  'burning',
+  'hot',
+  'searing',
+  // Cold/Tingling
+  'cold',
+  'tingling',
+  'pins and needles',
+  'numbness',
+  // Pressure
+  'pressure',
+  'squeezing',
+  'crushing',
+  'tight',
+  // Other sensations
+  'radiating',
+  'constant',
+  'intermittent',
+  'cramping',
+  'stiff',
+  'sore',
+  'tender',
+  'raw',
+] as const;
+
+export type PainQuality = (typeof PAIN_QUALITIES)[number];
+
+// Flat array of physical activities for easy selection
+export const PHYSICAL_ACTIVITIES = [
+  // Basic movement
+  'walking',
+  'standing',
+  'sitting',
+  'lying down',
+  'bending',
+  'lifting',
+  'reaching',
+  'climbing stairs',
+  // Exercise
+  'stretching',
+  'light exercise',
+  'moderate exercise',
+  'intense exercise',
+  'swimming',
+  'cycling',
+  'yoga',
+  'physical therapy',
+  // Daily activities
+  'cooking',
+  'cleaning',
+  'shopping',
+  'driving',
+  'gardening',
+  'work tasks',
+  // Sedentary
+  'desk work',
+  'watching TV',
+  'reading',
+  'minimal activity',
+] as const;
+
+export type PhysicalActivity = (typeof PHYSICAL_ACTIVITIES)[number];

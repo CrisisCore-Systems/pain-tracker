@@ -8,14 +8,33 @@ import { ClinicalDashboard } from '../design-system/fused-v2';
 import { QuickLogStepper } from '../design-system/fused-v2';
 import { useToast } from '../components/feedback';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
-import { PremiumAnalyticsDashboard } from '../components/analytics/PremiumAnalyticsDashboard';
-import { CalendarView } from '../components/calendar/CalendarView';
-import { BodyMapPage } from '../components/body-mapping/BodyMapPage';
-import { FibromyalgiaTracker } from '../components/fibromyalgia/FibromyalgiaTracker';
-import DailyCheckin from '../components/checkin/DailyCheckin';
-import SettingsPage from '../pages/SettingsPage';
-import HelpAndSupportPage from '../pages/HelpAndSupportPage';
-import { ReportsPage } from '../components/reports';
+import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
+
+// Lazy load heavy components for faster initial load (mobile optimization)
+const PremiumAnalyticsDashboard = lazy(() =>
+  import('../components/analytics/PremiumAnalyticsDashboard').then(m => ({ default: m.PremiumAnalyticsDashboard }))
+);
+const CalendarView = lazy(() =>
+  import('../components/calendar/CalendarView').then(m => ({ default: m.CalendarView }))
+);
+const BodyMapPage = lazy(() =>
+  import('../components/body-mapping/BodyMapPage').then(m => ({ default: m.BodyMapPage }))
+);
+const FibromyalgiaTracker = lazy(() =>
+  import('../components/fibromyalgia/FibromyalgiaTracker').then(m => ({ default: m.FibromyalgiaTracker }))
+);
+const DailyCheckin = lazy(() =>
+  import('../components/checkin/DailyCheckin').then(m => ({ default: m.default }))
+);
+const SettingsPage = lazy(() =>
+  import('../pages/SettingsPage').then(m => ({ default: m.default }))
+);
+const HelpAndSupportPage = lazy(() =>
+  import('../pages/HelpAndSupportPage').then(m => ({ default: m.default }))
+);
+const ReportsPage = lazy(() =>
+  import('../components/reports').then(m => ({ default: m.ReportsPage }))
+);
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
 const OnboardingFlow = lazy(() =>
@@ -159,6 +178,11 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
     streak: entries.length > 0 ? Math.min(entries.length, 7) : 0, // Simplified streak calc
   };
 
+  // Loading component for lazy-loaded views
+  const ViewLoadingFallback = () => (
+    <BrandedLoadingScreen message="Loading..." size="sm" />
+  );
+
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
@@ -199,36 +223,66 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
       case 'daily-checkin':
         return (
-          <DailyCheckin
-            entries={entries}
-            onComplete={(entry: Omit<PainEntry, 'id' | 'timestamp'>) => {
-              // Save but stay on the check-in so the component can surface insights
-              handleAddEntry(entry, { stayOnSave: true });
-            }}
-            onCancel={() => setCurrentView('dashboard')}
-            onDone={() => setCurrentView('dashboard')}
-          />
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <DailyCheckin
+              entries={entries}
+              onComplete={(entry: Omit<PainEntry, 'id' | 'timestamp'>) => {
+                // Save but stay on the check-in so the component can surface insights
+                handleAddEntry(entry, { stayOnSave: true });
+              }}
+              onCancel={() => setCurrentView('dashboard')}
+              onDone={() => setCurrentView('dashboard')}
+            />
+          </Suspense>
         );
 
       case 'analytics':
-        return <PremiumAnalyticsDashboard entries={entries} />;
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <PremiumAnalyticsDashboard entries={entries} />
+          </Suspense>
+        );
 
       case 'body-map':
-        return <BodyMapPage />;
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <BodyMapPage />
+          </Suspense>
+        );
 
       case 'fibromyalgia':
-        return <FibromyalgiaTracker />;
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <FibromyalgiaTracker />
+          </Suspense>
+        );
 
       case 'calendar':
-        return <CalendarView entries={entries} />;
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <CalendarView entries={entries} />
+          </Suspense>
+        );
 
       case 'reports':
-        return <ReportsPage entries={entries} />;
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <ReportsPage entries={entries} />
+          </Suspense>
+        );
 
       case 'settings':
-        return <SettingsPage />;
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <SettingsPage />
+          </Suspense>
+        );
       case 'help':
-        return <HelpAndSupportPage />;
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <HelpAndSupportPage />
+          </Suspense>
+        );
 
       default:
         return entries.length > 0 ? (

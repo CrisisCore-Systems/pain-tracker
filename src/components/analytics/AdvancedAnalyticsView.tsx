@@ -18,6 +18,7 @@ import { colorVar } from '../../design-system/utils/theme';
 import type { PainEntry } from '../../types';
 import { useAdaptiveCopy } from '../../contexts/useTone';
 import { emptyStates } from '../../content/microcopy';
+import { WeatherCorrelationPanel } from './WeatherCorrelationPanel';
 import '../../design-system/tokens/fused-v2.css';
 
 interface AdvancedAnalyticsViewProps {
@@ -514,6 +515,9 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
           )}
         </div>
       </div>
+
+      {/* Weather Correlations */}
+      <WeatherCorrelationPanel entries={entries} />
     </div>
   );
 }

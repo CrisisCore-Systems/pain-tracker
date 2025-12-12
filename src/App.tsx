@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { PainTrackerContainer } from "./containers/PainTrackerContainer";
 import { ThemeProvider } from "./design-system";
 import { ToastProvider } from "./components/feedback";
 import { TraumaInformedProvider } from "./components/accessibility";
@@ -31,14 +30,15 @@ import { OfflineBanner } from './components/pwa/OfflineIndicator';
 import { BrandedLoadingScreen } from './components/branding/BrandedLoadingScreen';
 import { pwaManager } from './utils/pwa-utils';
 import { ToneStateTester } from './components/dev/ToneStateTester';
-import { ScreenshotShowcase } from './pages/ScreenshotShowcase';
-import { LandingPage } from './pages/LandingPage';
-import { ClinicPortal } from './pages/clinic/ClinicPortal';
-import { PricingPage } from './pages/PricingPage';
-import { SubscriptionManagementPage } from './pages/SubscriptionManagementPage';
-import { SubmitStoryPage } from './pages/SubmitStoryPage';
-import { trackSessionStart } from './utils/usage-tracking';
-import { trackSessionStart as trackGA4SessionStart } from './services/AnalyticsTrackingService';
+
+// Lazy-loaded route components for code splitting
+const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
+const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
+const PricingPage = lazy(() => import('./pages/PricingPage').then(m => ({ default: m.PricingPage })));
+const ScreenshotShowcase = lazy(() => import('./pages/ScreenshotShowcase').then(m => ({ default: m.ScreenshotShowcase })));
+const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => ({ default: m.ClinicPortal })));
+const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
+const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => ({ default: m.SubmitStoryPage })));
 
 const ErrorFallback = () => {
   return (
@@ -71,16 +71,31 @@ function App() {
     announceRouteChanges: true,
   });
 
-  // Initialize tone engine on app start
+  // Defer non-critical initialization for faster mobile load
   useEffect(() => {
-    initializeToneEngine().catch(error => {
-      console.error('Failed to initialize tone engine:', error);
-      // Continue without tone engine - app still works
-    });
-    
-    // Track session start for analytics
-    trackSessionStart();
-    trackGA4SessionStart();
+    // Use requestIdleCallback to defer analytics and tone engine
+    const initializeDeferred = () => {
+      // Initialize tone engine (non-blocking)
+      initializeToneEngine().catch(error => {
+        console.error('Failed to initialize tone engine:', error);
+        // Continue without tone engine - app still works
+      });
+      
+      // Defer analytics tracking to not block initial render
+      import('./utils/usage-tracking').then(({ trackSessionStart }) => {
+        trackSessionStart();
+      });
+      import('./services/AnalyticsTrackingService').then(({ trackSessionStart }) => {
+        trackSessionStart();
+      });
+    };
+
+    // Use requestIdleCallback if available, otherwise setTimeout
+    if ('requestIdleCallback' in window) {
+      (window as Window & { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(initializeDeferred);
+    } else {
+      setTimeout(initializeDeferred, 100);
+    }
   }, []);
 
   // Initialize PWA features
@@ -155,27 +170,28 @@ function App() {
             <TraumaInformedProvider>
               <ToastProvider>
                 <StartupPromptsProvider>
-                  <Routes>
-                    {/* Landing Page - Public */}
-                    <Route path="/" element={<LandingPage />} />
+                  <Suspense fallback={<LoadingFallback />}>
+                    <Routes>
+                      {/* Landing Page - Public */}
+                      <Route path="/" element={<LandingPage />} />
 
-                    {/* Pricing Page - Public */}
-                    <Route path="/pricing" element={<PricingPage />} />
+                      {/* Pricing Page - Public */}
+                      <Route path="/pricing" element={<PricingPage />} />
 
-                    {/* Screenshot Showcase - Public */}
-                    <Route path="/demo/*" element={<ScreenshotShowcase />} />
+                      {/* Screenshot Showcase - Public */}
+                      <Route path="/demo/*" element={<ScreenshotShowcase />} />
 
-                    {/* Clinic Portal - Protected (separate UI/UX) */}
-                    <Route path="/clinic/*" element={<ClinicPortal />} />
+                      {/* Clinic Portal - Protected (separate UI/UX) */}
+                      <Route path="/clinic/*" element={<ClinicPortal />} />
 
-                    {/* Subscription Management - Protected */}
-                    <Route
-                      path="/subscription"
-                      element={
-                        <VaultGate>
-                          <SubscriptionManagementPage />
-                        </VaultGate>
-                      }
+                      {/* Subscription Management - Protected */}
+                      <Route
+                        path="/subscription"
+                        element={
+                          <VaultGate>
+                            <SubscriptionManagementPage />
+                          </VaultGate>
+                        }
                     />
 
                     {/* Vault Setup/Login - Public */}
@@ -233,7 +249,8 @@ function App() {
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />
-                  </Routes>
+                    </Routes>
+                  </Suspense>
                 </StartupPromptsProvider>
               </ToastProvider>
             </TraumaInformedProvider>

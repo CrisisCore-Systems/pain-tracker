@@ -33,7 +33,28 @@
     "average": "Average Pain",
     "current": "Current Pain",
     "trend": "Pain Trend",
-    "assessment": "Pain Assessment"
+    "assessment": "Pain Assessment",
+    "triggers": "Pain Triggers",
+    "triggersDescription": "What makes your pain worse?",
+    "reliefMethods": "Relief Methods",
+    "reliefMethodsDescription": "What helps reduce your pain?",
+    "quality": "Pain Quality",
+    "qualityDescription": "How would you describe your pain?",
+    "activities": "Physical Activities",
+    "activitiesDescription": "Activities you've done today",
+    "activityLevel": "Activity Level",
+    "activityLevelDescription": "Your overall activity level (0-10)",
+    "stress": "Stress Level",
+    "stressDescription": "Your current stress level (0-10)"
+  },
+  "weather": {
+    "title": "Weather Conditions",
+    "temperature": "Temperature",
+    "pressure": "Barometric Pressure",
+    "humidity": "Humidity",
+    "condition": "Weather",
+    "correlation": "Weather Correlation",
+    "correlationDescription": "How weather affects your pain patterns"
   },
   "analytics": {
     "title": "Pain Analytics",

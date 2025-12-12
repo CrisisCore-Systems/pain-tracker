@@ -1,10 +1,13 @@
-import { useRef, useEffect } from 'react';
-import { FileText } from 'lucide-react';
+import { useRef, useEffect, useState, useMemo } from 'react';
+import { FileText, Eye, FileDown } from 'lucide-react';
 import type { PainEntry } from '../../types';
+import type { WCBReport } from '../../types';
 import { WCBReportGenerator } from '../pain-tracker/WCBReport';
+import { WCBReportPreview } from '../pain-tracker/WCBReportPreview';
 import { isFeatureEnabled } from '../../config/beta';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../design-system';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import { analyzeTreatmentChanges, analyzeWorkImpact } from '../../utils/wcbAnalytics';
 
 interface WCBReportPanelProps {
   entries: PainEntry[];
@@ -13,6 +16,7 @@ interface WCBReportPanelProps {
 export function WCBReportPanel({ entries }: WCBReportPanelProps) {
   const { ui, setReportPeriod } = usePainTrackerStore();
   const startDateRef = useRef<HTMLInputElement>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   // Focus management for WCB report
   useEffect(() => {
@@ -21,6 +25,65 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
     }
   }, []);
 
+  // Generate WCB report for preview
+  const wcbReport = useMemo((): WCBReport | null => {
+    if (!showPreview) return null;
+    
+    const periodStart = new Date(ui.reportPeriod.start);
+    const periodEnd = new Date(ui.reportPeriod.end);
+    
+    if (Number.isNaN(periodStart.getTime()) || Number.isNaN(periodEnd.getTime())) {
+      return null;
+    }
+
+    const filteredEntries = entries.filter(entry => {
+      const timestamp = new Date(entry.timestamp);
+      return timestamp >= periodStart && timestamp <= periodEnd;
+    });
+
+    if (filteredEntries.length === 0) return null;
+
+    const painLevels = filteredEntries.map(e => e.baselineData.pain);
+    const avgPain = painLevels.reduce((a, b) => a + b, 0) / painLevels.length;
+    
+    const locations = filteredEntries.reduce((acc, e) => {
+      e.baselineData.locations?.forEach(loc => {
+        acc[loc] = (acc[loc] || 0) + 1;
+      });
+      return acc;
+    }, {} as Record<string, number>);
+
+    const workImpact = analyzeWorkImpact(filteredEntries);
+    const treatments = analyzeTreatmentChanges(filteredEntries);
+
+    return {
+      period: ui.reportPeriod,
+      painTrends: {
+        average: Math.round(avgPain * 10) / 10,
+        progression: [],
+        locations,
+      },
+      workImpact: {
+        missedDays: workImpact.missedDays,
+        limitations: workImpact.limitations.map(l => [l, 1] as [string, number]),
+        accommodationsNeeded: workImpact.accommodationsNeeded,
+      },
+      functionalAnalysis: {
+        limitations: [],
+        deterioration: [],
+        improvements: [],
+      },
+      treatments: {
+        current: treatments.map(t => ({ treatment: t.name, frequency: t.sessions })),
+        effectiveness: 'See detailed treatment analysis.',
+      },
+      recommendations: [
+        'Continue monitoring pain levels',
+        'Follow up with healthcare provider',
+      ],
+    };
+  }, [showPreview, entries, ui.reportPeriod]);
+
   return (
     <Card className="mb-8" id="wcb-report-section">
       <CardHeader>
@@ -28,8 +91,18 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
           <FileText className="h-5 w-5" />
           <span>WCB Report</span>
         </CardTitle>
-        <CardDescription>
-          Generate a comprehensive report for WorkSafe BC submission
+        <CardDescription className="flex items-center justify-between">
+          <span>Generate a comprehensive report for WorkSafe BC submission</span>
+          {isFeatureEnabled('workSafeBCExport') && (
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="flex items-center gap-1 text-sm text-primary hover:underline"
+              aria-pressed={showPreview}
+            >
+              {showPreview ? <FileDown className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPreview ? 'Show Editor' : 'Show Preview'}
+            </button>
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -63,7 +136,11 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
           </div>
         </div>
         {isFeatureEnabled('workSafeBCExport') ? (
-          <WCBReportGenerator entries={entries} period={ui.reportPeriod} />
+          showPreview && wcbReport ? (
+            <WCBReportPreview report={wcbReport} />
+          ) : (
+            <WCBReportGenerator entries={entries} period={ui.reportPeriod} />
+          )
         ) : (
           <div className="text-sm text-muted-foreground p-4 bg-muted/5 rounded">
             WorkSafe BC report export is not available in this release.

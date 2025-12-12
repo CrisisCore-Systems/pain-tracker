@@ -11,10 +11,14 @@ import {
   AlertCircle,
   CheckCircle2,
   Info,
+  Cloud,
+  Moon,
+  Smile,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, Badge } from '../../design-system';
 import type { PainEntry } from '../../types';
+import { ExtendedEntryDetails } from '../pain-tracker/EntryDetailsSections';
 
 interface CalendarViewProps {
   entries: PainEntry[];
@@ -368,6 +372,19 @@ export function CalendarView({ entries }: CalendarViewProps) {
                       </div>
                     )}
 
+                    {entry.baselineData.symptoms && entry.baselineData.symptoms.length > 0 && (
+                      <div className="flex items-start gap-2">
+                        <AlertCircle className="h-4 w-4 text-amber-400 dark:text-amber-500 mt-0.5" />
+                        <div className="flex flex-wrap gap-1">
+                          {entry.baselineData.symptoms.map((symptom, i) => (
+                            <Badge key={i} variant="outline" className="text-xs rounded-full border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300">
+                              {symptom}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {entry.medications?.current && entry.medications.current.length > 0 && (
                       <div className="flex items-start gap-2">
                         <Pill className="h-4 w-4 text-gray-400 dark:text-gray-500 mt-0.5" />
@@ -381,11 +398,44 @@ export function CalendarView({ entries }: CalendarViewProps) {
                       </div>
                     )}
 
+                    {entry.qualityOfLife && (
+                      <div className="flex items-center gap-3">
+                        {entry.qualityOfLife.sleepQuality !== undefined && (
+                          <div className="flex items-center gap-1">
+                            <Moon className="h-4 w-4 text-indigo-400 dark:text-indigo-500" />
+                            <span className="text-xs text-indigo-600 dark:text-indigo-400">
+                              Sleep {entry.qualityOfLife.sleepQuality}/10
+                            </span>
+                          </div>
+                        )}
+                        {entry.qualityOfLife.moodImpact !== undefined && (
+                          <div className="flex items-center gap-1">
+                            <Smile className="h-4 w-4 text-emerald-400 dark:text-emerald-500" />
+                            <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                              Mood {entry.qualityOfLife.moodImpact}/10
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {entry.weather && (
+                      <div className="flex items-center gap-2">
+                        <Cloud className="h-4 w-4 text-blue-400 dark:text-blue-500" />
+                        <span className="text-sm text-blue-600 dark:text-blue-400">
+                          {entry.weather}
+                        </span>
+                      </div>
+                    )}
+
                     {entry.notes && (
                       <p className="text-sm text-gray-600 dark:text-gray-400 italic">
                         "{entry.notes}"
                       </p>
                     )}
+
+                    {/* Extended details: functional impact, work impact, treatments, etc. */}
+                    <ExtendedEntryDetails entry={entry} compact className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700" />
                   </div>
                 ))}
               </div>

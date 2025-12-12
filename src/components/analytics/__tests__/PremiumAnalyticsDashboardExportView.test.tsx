@@ -37,10 +37,14 @@ describe('PremiumAnalyticsDashboard Export & Share copy', () => {
       const copyBtn = await screen.findByRole('button', { name: /Copy summary/i });
       copyBtn.click();
 
-      // Wait for the alert element (role="alert") that contains the fallback message
-      const alert = await screen.findByRole('alert', {}, { timeout: 2000 });
-      expect(alert).toBeInTheDocument();
-      expect(alert.textContent).toMatch(/clipboard|copy|unavailable|select|highlight/i);
+      // Wait for the clipboard error alert specifically (contains clipboard-related messaging)
+      // Note: There may be other alerts from emotional validation, so we find all and filter
+      const alerts = await screen.findAllByRole('alert', {}, { timeout: 2000 });
+      const clipboardAlert = alerts.find((alert) =>
+        /clipboard|copy|unavailable|select|highlight/i.test(alert.textContent || '')
+      );
+      expect(clipboardAlert).toBeDefined();
+      expect(clipboardAlert).toBeInTheDocument();
     } finally {
       // restore navigator to avoid leaking test globals
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
