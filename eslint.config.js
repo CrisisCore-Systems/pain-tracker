@@ -16,7 +16,6 @@ export default [
     '**/*.config.cjs', 
     '**/*.min.js', 
     'coverage/**', 
-    'packages/*/dist/**', 
     'scripts/db/**',
     'e2e/results/**',
     'test-results/**',
