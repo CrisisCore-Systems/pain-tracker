@@ -77,7 +77,9 @@ interface SpeechRecognitionEventLike {
 }
 
 interface SpeechRecognitionErrorEventLike {
-  error?: string;
+  error: string;
+  message?: string;
+  type?: string;
 }
 
 interface SpeechRecognitionWindow extends Window {
@@ -107,9 +109,8 @@ function useQuickVoiceNotes() {
       recognition.interimResults = true;
       recognition.onresult = event => {
         const resultsArray = Array.from(event.results);
-        const relevantResults = resultsArray.some(result => result.isFinal)
-          ? resultsArray.filter(result => result.isFinal)
-          : resultsArray;
+        const finalResults = resultsArray.filter(result => result.isFinal);
+        const relevantResults = finalResults.length > 0 ? finalResults : resultsArray;
 
         const combinedTranscript = relevantResults
           .map(result => result[0])
@@ -245,7 +246,8 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
     return `hsl(220, ${20 + level * 5}%, ${95 - level * 6}%)`;
   };
 
-  const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+  const hasNavigator = typeof navigator !== 'undefined';
+  const isOffline = hasNavigator && navigator.onLine === false;
   const connectionStatus = isOffline
     ? 'Offline: works only if your browser provides local speech.'
     : 'Uses your device speech service. May rely on your browser/OS (not guaranteed offline).';
