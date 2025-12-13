@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, Check } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { ChevronLeft, Check, Mic, MicOff } from 'lucide-react';
 import { cn } from '../utils';
 import { useAdaptiveCopy } from '../../contexts/useTone';
 import { quickLogCopy } from '../../content/microcopy';
@@ -55,12 +55,91 @@ const SYMPTOM_TAGS = [
   'Weakness',
 ];
 
+type SpeechRecognitionConstructorLike = new () => SpeechRecognitionLike;
+
+interface SpeechRecognitionLike {
+  continuous: boolean;
+  interimResults: boolean;
+  start: () => void;
+  stop: () => void;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror?: (() => void) | null;
+  onend?: (() => void) | null;
+}
+
+interface SpeechRecognitionEventLike {
+  results: ArrayLike<{ 0: { transcript: string } }>;
+}
+
+interface SpeechRecognitionWindow extends Window {
+  webkitSpeechRecognition?: SpeechRecognitionConstructorLike;
+  SpeechRecognition?: SpeechRecognitionConstructorLike;
+}
+
+function useQuickVoiceNotes() {
+  const [isSupported, setIsSupported] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const speechWindow = window as unknown as SpeechRecognitionWindow;
+    const SpeechRecognitionCtor =
+      speechWindow.webkitSpeechRecognition || speechWindow.SpeechRecognition;
+
+    if (SpeechRecognitionCtor) {
+      setIsSupported(true);
+      const recognition = new SpeechRecognitionCtor();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.onresult = event => {
+        const combinedTranscript = Array.from(event.results)
+          .map(result => result[0])
+          .map(r => r.transcript)
+          .join('')
+          .trim();
+        setTranscript(combinedTranscript);
+      };
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
+      recognitionRef.current = recognition;
+    }
+
+    return () => {
+      recognitionRef.current?.stop();
+      recognitionRef.current = null;
+    };
+  }, []);
+
+  const startListening = useCallback(() => {
+    if (recognitionRef.current && !isListening) {
+      setTranscript('');
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  }, [isListening]);
+
+  const stopListening = useCallback(() => {
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  }, [isListening]);
+
+  const resetTranscript = useCallback(() => setTranscript(''), []);
+
+  return { isSupported, isListening, transcript, startListening, stopListening, resetTranscript };
+}
+
 export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) {
   const [step, setStep] = useState(1);
   const [pain, setPain] = useState(5);
   const [locations, setLocations] = useState<string[]>([]);
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
+  const [voiceMode, setVoiceMode] = useState(false);
 
   // Adaptive copy based on patient state
   const painLabel = useAdaptiveCopy(quickLogCopy.painSliderLabel);
@@ -73,6 +152,15 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
   const continueBtn = useAdaptiveCopy(quickLogCopy.continueButton);
   const saveBtn = useAdaptiveCopy(quickLogCopy.saveButton);
   const keyboardHintText = useAdaptiveCopy(quickLogCopy.keyboardHint);
+
+  const {
+    isSupported: voiceSupported,
+    isListening,
+    transcript,
+    startListening,
+    stopListening,
+    resetTranscript,
+  } = useQuickVoiceNotes();
 
   const handlePainChange = (value: number) => {
     setPain(value);
@@ -104,6 +192,23 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
 
   const getSeverityColor = (level: number) => {
     return `hsl(220, ${20 + level * 5}%, ${95 - level * 6}%)`;
+  };
+
+  const connectionStatus =
+    typeof navigator !== 'undefined' && navigator.onLine === false
+      ? 'Offline: works only if your browser provides local speech.'
+      : 'Uses your device speech service. May rely on your browser/OS (not guaranteed offline).';
+
+  useEffect(() => {
+    if (!voiceMode && isListening) {
+      stopListening();
+    }
+  }, [isListening, voiceMode, stopListening]);
+
+  const handleInsertTranscript = () => {
+    if (!transcript) return;
+    setNotes(prev => (prev ? `${prev}\n${transcript}` : transcript));
+    resetTranscript();
   };
 
   // Keyboard shortcuts for navigation
@@ -162,6 +267,48 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
         </div>
 
         <div className="text-small text-ink-400 text-mono w-16 text-right">{step}/3</div>
+      </div>
+
+      <div className="p-4 pb-0">
+        <div className="max-w-2xl mx-auto bg-surface-800 border border-surface-700 rounded-[var(--radius-lg)] p-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+          <div className="flex gap-3 items-start">
+            {voiceSupported ? (
+              <Mic className="w-5 h-5 text-primary-400 mt-0.5" aria-hidden="true" />
+            ) : (
+              <MicOff className="w-5 h-5 text-ink-500 mt-0.5" aria-hidden="true" />
+            )}
+            <div>
+              <div className="text-body-medium text-ink-100">Voice Mode</div>
+              <p className="text-small text-ink-400">
+                {voiceSupported
+                  ? connectionStatus
+                  : 'Voice mode uses your device microphone. Your browser does not expose speech recognition, but you can use your keyboard mic for dictation.'}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-tiny text-ink-500">
+              {voiceMode ? 'On' : 'Off'} ·{' '}
+              {voiceSupported ? 'Device speech engine' : 'Unavailable in this browser'}
+            </span>
+            <button
+              type="button"
+              onClick={() => setVoiceMode(prev => !prev)}
+              disabled={!voiceSupported}
+              aria-pressed={voiceMode}
+              className={cn(
+                'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                'border border-surface-600 transition-colors duration-[var(--duration-fast)]',
+                voiceMode
+                  ? 'bg-primary-500 text-ink-900 border-primary-500'
+                  : 'bg-surface-900 text-ink-200 hover:border-primary-500/60',
+                !voiceSupported && 'opacity-60 cursor-not-allowed'
+              )}
+            >
+              {voiceMode ? 'Disable voice mode' : 'Enable voice mode'}
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Content */}
@@ -417,6 +564,11 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                 value={notes}
                 onChange={e => setNotes(e.target.value)}
                 placeholder={notesPlaceholder}
+                inputMode="text"
+                autoComplete="on"
+                autoCorrect="on"
+                autoCapitalize="sentences"
+                enterKeyHint="done"
                 aria-label="Additional notes about pain"
                 aria-describedby="notes-hint notes-remaining"
                 maxLength={500}
@@ -445,6 +597,66 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                 </span>
               </div>
             </div>
+
+            {voiceMode && voiceSupported && (
+              <div className="surface-card border border-surface-700 bg-surface-800/70">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="text-body-medium text-ink-100">Voice note</div>
+                    <p className="text-small text-ink-400">
+                      Records with your device speech service. {connectionStatus}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={isListening ? stopListening : startListening}
+                    className={cn(
+                      'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                      'border border-surface-600 transition-colors duration-[var(--duration-fast)] flex items-center gap-2',
+                      isListening
+                        ? 'bg-danger-500 text-ink-900 border-danger-500'
+                        : 'bg-primary-500 text-ink-900 border-primary-500'
+                    )}
+                    aria-pressed={isListening}
+                    aria-label={isListening ? 'Stop voice note recording' : 'Start voice note recording'}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                    {isListening ? 'Stop voice note' : 'Start voice note'}
+                  </button>
+                </div>
+
+                {transcript && (
+                  <div className="mt-3 p-3 rounded-[var(--radius-md)] bg-surface-900 border border-surface-700">
+                    <div className="text-small text-ink-300 mb-1">Heard</div>
+                    <p className="text-body text-ink-100 mb-3" aria-live="polite">
+                      {transcript}
+                    </p>
+                    <div className="flex gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={handleInsertTranscript}
+                        className={cn(
+                          'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                          'bg-primary-500 text-ink-900 hover:bg-primary-400 transition-colors'
+                        )}
+                      >
+                        Insert into notes
+                      </button>
+                      <button
+                        type="button"
+                        onClick={resetTranscript}
+                        className={cn(
+                          'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                          'bg-surface-900 text-ink-200 border border-surface-600 hover:border-primary-500/60 transition-colors'
+                        )}
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Summary */}
             <div className="surface-card">
