@@ -67,8 +67,13 @@ interface SpeechRecognitionLike {
   onend?: (() => void) | null;
 }
 
+interface SpeechRecognitionResultLike {
+  0: { transcript: string };
+  isFinal?: boolean;
+}
+
 interface SpeechRecognitionEventLike {
-  results: ArrayLike<{ 0: { transcript: string } }>;
+  results: ArrayLike<SpeechRecognitionResultLike>;
 }
 
 interface SpeechRecognitionWindow extends Window {
@@ -80,6 +85,7 @@ function useQuickVoiceNotes() {
   const [isSupported, setIsSupported] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [voiceError, setVoiceError] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
 
   useEffect(() => {
@@ -95,14 +101,22 @@ function useQuickVoiceNotes() {
       recognition.continuous = true;
       recognition.interimResults = true;
       recognition.onresult = event => {
-        const combinedTranscript = Array.from(event.results)
+        const resultsArray = Array.from(event.results);
+        const relevantResults = resultsArray.some(result => result.isFinal)
+          ? resultsArray.filter(result => result.isFinal)
+          : resultsArray;
+
+        const combinedTranscript = relevantResults
           .map(result => result[0])
-          .map(r => r.transcript)
+          .map(r => r?.transcript ?? '')
           .join('')
           .trim();
         setTranscript(combinedTranscript);
       };
-      recognition.onerror = () => setIsListening(false);
+      recognition.onerror = () => {
+        setIsListening(false);
+        setVoiceError('Voice input stopped. Please verify microphone permissions.');
+      };
       recognition.onend = () => setIsListening(false);
       recognitionRef.current = recognition;
     }
@@ -116,8 +130,15 @@ function useQuickVoiceNotes() {
   const startListening = useCallback(() => {
     if (recognitionRef.current && !isListening) {
       setTranscript('');
-      recognitionRef.current.start();
-      setIsListening(true);
+      setVoiceError(null);
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (error) {
+        console.warn('Voice recognition failed to start', error);
+        setVoiceError('Unable to start voice input. Please check microphone permissions.');
+        setIsListening(false);
+      }
     }
   }, [isListening]);
 
@@ -129,8 +150,18 @@ function useQuickVoiceNotes() {
   }, [isListening]);
 
   const resetTranscript = useCallback(() => setTranscript(''), []);
+  const clearVoiceError = useCallback(() => setVoiceError(null), []);
 
-  return { isSupported, isListening, transcript, startListening, stopListening, resetTranscript };
+  return {
+    isSupported,
+    isListening,
+    transcript,
+    startListening,
+    stopListening,
+    resetTranscript,
+    voiceError,
+    clearVoiceError,
+  };
 }
 
 export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) {
@@ -160,6 +191,8 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
     startListening,
     stopListening,
     resetTranscript,
+    voiceError,
+    clearVoiceError,
   } = useQuickVoiceNotes();
 
   const handlePainChange = (value: number) => {
@@ -203,7 +236,10 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
     if (!voiceMode && isListening) {
       stopListening();
     }
-  }, [isListening, voiceMode, stopListening]);
+    if (!voiceMode) {
+      clearVoiceError();
+    }
+  }, [isListening, voiceMode, stopListening, clearVoiceError]);
 
   const handleInsertTranscript = () => {
     if (!transcript) return;
@@ -282,8 +318,13 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
               <p className="text-small text-ink-400">
                 {voiceSupported
                   ? connectionStatus
-                  : 'Voice mode uses your device microphone. Your browser does not expose speech recognition, but you can use your keyboard mic for dictation.'}
+                  : "Voice mode isn't available in this browser. You can still use your operating system's built-in dictation features."}
               </p>
+              {voiceError && (
+                <p className="text-small text-danger-400" role="alert">
+                  {voiceError}
+                </p>
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">
