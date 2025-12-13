@@ -10,13 +10,12 @@ export default [
   js.configs.recommended,
   {
   ignores: [
-    'dist/**', 
+    '**/dist/**',
     'node_modules/**', 
     '*.config.cjs', 
     '**/*.config.cjs', 
     '**/*.min.js', 
     'coverage/**', 
-    '**/dist/**', 
     'packages/*/dist/**', 
     'scripts/db/**',
     'e2e/results/**',
