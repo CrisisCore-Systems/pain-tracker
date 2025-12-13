@@ -63,7 +63,7 @@ interface SpeechRecognitionLike {
   start: () => void;
   stop: () => void;
   onresult: ((event: SpeechRecognitionEventLike) => void) | null;
-  onerror?: (() => void) | null;
+  onerror?: ((event: SpeechRecognitionErrorEventLike) => void) | null;
   onend?: (() => void) | null;
 }
 

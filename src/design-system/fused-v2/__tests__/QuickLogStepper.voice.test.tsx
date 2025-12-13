@@ -11,7 +11,7 @@ class MockRecognition {
   continuous = false;
   interimResults = false;
   onresult: ((event: any) => void) | null = null;
-  onerror: (() => void) | null = null;
+  onerror: ((event: any) => void) | null = null;
   onend: (() => void) | null = null;
   start = vi.fn();
   stop = vi.fn();
