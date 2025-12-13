@@ -76,6 +76,10 @@ interface SpeechRecognitionEventLike {
   results: ArrayLike<SpeechRecognitionResultLike>;
 }
 
+interface SpeechRecognitionErrorEventLike {
+  error?: string;
+}
+
 interface SpeechRecognitionWindow extends Window {
   webkitSpeechRecognition?: SpeechRecognitionConstructorLike;
   SpeechRecognition?: SpeechRecognitionConstructorLike;
@@ -87,6 +91,7 @@ function useQuickVoiceNotes() {
   const [transcript, setTranscript] = useState('');
   const [voiceError, setVoiceError] = useState<string | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const lastTranscriptRef = useRef('');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -111,11 +116,23 @@ function useQuickVoiceNotes() {
           .map(r => r?.transcript ?? '')
           .join('')
           .trim();
+
+        if (combinedTranscript === lastTranscriptRef.current) return;
+        lastTranscriptRef.current = combinedTranscript;
         setTranscript(combinedTranscript);
       };
-      recognition.onerror = () => {
+      recognition.onerror = (event?: SpeechRecognitionErrorEventLike) => {
         setIsListening(false);
-        setVoiceError('Voice input stopped. Please verify microphone permissions.');
+        const errorMap: Record<string, string> = {
+          'not-allowed': 'Microphone permissions were denied.',
+          network: 'Speech service not reachable right now.',
+          'no-speech': 'No speech detected. Try again when ready.',
+        };
+        const friendlyMessage =
+          (event?.error && errorMap[event.error]) ||
+          'Voice input stopped. Please verify microphone permissions.';
+        console.warn('Voice recognition error', event);
+        setVoiceError(friendlyMessage);
       };
       recognition.onend = () => setIsListening(false);
       recognitionRef.current = recognition;
@@ -131,6 +148,7 @@ function useQuickVoiceNotes() {
     if (recognitionRef.current && !isListening) {
       setTranscript('');
       setVoiceError(null);
+      lastTranscriptRef.current = '';
       try {
         recognitionRef.current.start();
         setIsListening(true);
@@ -227,10 +245,10 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
     return `hsl(220, ${20 + level * 5}%, ${95 - level * 6}%)`;
   };
 
-  const connectionStatus =
-    typeof navigator !== 'undefined' && navigator.onLine === false
-      ? 'Offline: works only if your browser provides local speech.'
-      : 'Uses your device speech service. May rely on your browser/OS (not guaranteed offline).';
+  const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+  const connectionStatus = isOffline
+    ? 'Offline: works only if your browser provides local speech.'
+    : 'Uses your device speech service. May rely on your browser/OS (not guaranteed offline).';
 
   useEffect(() => {
     if (!voiceMode && isListening) {
