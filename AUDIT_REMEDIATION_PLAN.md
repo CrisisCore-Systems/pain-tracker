@@ -35,23 +35,23 @@ This document provides an actionable remediation plan based on the comprehensive
 - Most errors are from generated Playwright HTML reports in `e2e/results/`
 
 **Action Items:**
-- [ ] Add `e2e/results/` to `.eslintignore`
-- [ ] Add `test-results/` to `.eslintignore`
-- [ ] Run `npm run lint` to verify reduction in errors
+- [x] Add ignore patterns for generated files to `eslint.config.js`
+- [x] Add ignores for `e2e/results/`, `test-results/`, `playwright-report/`
+- [x] Run `npm run lint` to verify reduction in errors (80.7% reduction achieved)
 - [ ] Fix remaining fixable errors with `npm run lint -- --fix`
+- [ ] Manually fix critical errors (reduce from 719 to <100)
 - [ ] Target: Reduce total errors to < 100
 
 **Commands:**
 ```bash
-# Add to .eslintignore
-echo "e2e/results/" >> .eslintignore
-echo "test-results/" >> .eslintignore
-
 # Auto-fix what's possible
 npm run lint -- --fix
 
-# Verify
-npm run lint
+# Verify current count
+npm run lint 2>&1 | tail -1
+
+# Expected: ~33 errors, ~686 warnings = 719 total
+# Target: <100 total
 ```
 
 **Success Criteria:**

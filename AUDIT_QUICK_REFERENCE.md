@@ -185,13 +185,16 @@ npm run deploy:validate
 
 ## Troubleshooting
 
-### ESLint not ignoring generated files
+### ESLint configuration
 ```bash
-# Check ESLint config
-cat eslint.config.js | grep ignores
+# Check ESLint flat config ignores
+cat eslint.config.js | grep -A 10 ignores
 
 # Verify ignores are working
 npm run lint -- --debug
+
+# Note: Project uses ESLint flat config (eslint.config.js)
+# Ignore patterns are in the config file, not .eslintignore
 ```
 
 ### Tests failing with "key material not available"
