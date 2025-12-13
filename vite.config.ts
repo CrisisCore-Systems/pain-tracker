@@ -16,8 +16,8 @@ const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsaf
 // CSP including upgrade-insecure-requests.
 const devCsp = baseDevCsp;
 
-// Production CSP - strict, but allows Google Analytics, Google Fonts, and CDN
-const prodCsp = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
+// Production CSP - allow inline theme/loader scripts/styles used by index.html
+const prodCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -148,59 +148,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 300,
     rollupOptions: {
       output: {
-        sourcemap: false, // Explicitly disable sourcemaps in rollup output
-        // Optimized chunking for mobile performance
-        manualChunks: (id) => {
-          // Keep ALL React packages together to ensure correct initialization order
-          if (id.includes('node_modules/react') || 
-              id.includes('node_modules/react-dom') || 
-              id.includes('node_modules/react-is') || 
-              id.includes('node_modules/scheduler')) {
-            return 'react-vendor';
-          }
-          // Router in separate chunk (needed for initial load)
-          if (id.includes('node_modules/react-router')) {
-            return 'router-vendor';
-          }
-          // Charting libraries - lazy loaded, keep separate
-          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
-            return 'chart-vendor';
-          }
-          // Date utilities - frequently used
-          if (id.includes('node_modules/date-fns')) {
-            return 'date-vendor';
-          }
-          // Form handling - needed for main app
-          if (id.includes('node_modules/react-hook-form') || 
-              id.includes('node_modules/@hookform') || 
-              id.includes('node_modules/zod')) {
-            return 'form-vendor';
-          }
-          // State management - needed for main app
-          if (id.includes('node_modules/zustand') || id.includes('node_modules/immer')) {
-            return 'state-vendor';
-          }
-          // i18n - can be deferred
-          if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) {
-            return 'i18n-vendor';
-          }
-          // Heavy crypto library - lazy load only when vault is accessed
-          if (id.includes('node_modules/libsodium') || id.includes('node_modules/crypto-js')) {
-            return 'crypto-vendor';
-          }
-          // PDF generation - lazy load on export
-          if (id.includes('node_modules/jspdf') || id.includes('node_modules/html2canvas')) {
-            return 'pdf-vendor';
-          }
-          // Lucide icons - tree-shakeable but keep together
-          if (id.includes('node_modules/lucide-react')) {
-            return 'icons-vendor';
-          }
-          // DOMPurify - security library
-          if (id.includes('node_modules/dompurify')) {
-            return 'security-vendor';
-          }
-        }
+        sourcemap: false // Explicitly disable sourcemaps in rollup output
       }
     }
   },
