@@ -1,0 +1,77 @@
+# ESLint ignore patterns
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Dependencies
+node_modules/
+
+# Test outputs
+coverage/
+.nyc_output/
+test-results/
+e2e/results/
+
+# Generated files
+*.min.js
+*.bundle.js
+
+# Cache
+.eslintcache
+.stylelintcache
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Documentation builds
+docs/.vitepress/dist/
+docs/.vitepress/cache/
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Archive (disabled/legacy code)
+archive/
+
+# Screenshots and assets
+public/screenshots/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Security reports
+security-reports/
+security-audit-report.json
+
+# Playwright generated files
+playwright-report/

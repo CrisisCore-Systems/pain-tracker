@@ -9,7 +9,22 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
-  ignores: ['dist/**', 'node_modules/**', '*.config.cjs', '**/*.config.cjs', '**/*.min.js', 'coverage/**', '**/dist/**', 'packages/*/dist/**', 'scripts/db/**'],
+  ignores: [
+    'dist/**', 
+    'node_modules/**', 
+    '*.config.cjs', 
+    '**/*.config.cjs', 
+    '**/*.min.js', 
+    'coverage/**', 
+    '**/dist/**', 
+    'packages/*/dist/**', 
+    'scripts/db/**',
+    'e2e/results/**',
+    'test-results/**',
+    'playwright-report/**',
+    'archive/**',
+    'security-reports/**',
+  ],
   },
   {
     files: ['**/*.{ts,tsx,js,jsx,mjs}'],
