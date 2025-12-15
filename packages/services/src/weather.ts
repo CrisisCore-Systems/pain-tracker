@@ -1,6 +1,11 @@
-// Re-export types and functions from main weather service for convenience
-export type { WeatherData } from '../../../src/services/weather';
-export { fetchWeatherData, fetchBarometricPressure, formatWeatherSummary } from '../../../src/services/weather';
+export interface WeatherData {
+  temperature: number | null; // Celsius
+  condition: string | null; // 'clear', 'cloudy', 'rain', 'snow', etc.
+  pressure: number | null; // hPa (barometric pressure)
+  humidity: number | null; // Percentage
+  isRaining: boolean;
+  weatherCode: number | null; // WMO weather code
+}
 
 export interface LocalWeatherResult {
   temp: number | null;
@@ -50,6 +55,68 @@ export async function fetchLocalWeather(coords?: { lat: number; lon: number }): 
     console.debug('fetchLocalWeather: fetch failed', e);
     return { temp: null, condition: null, pressure: null, humidity: null, isRaining: false };
   }
+}
+
+/**
+ * Fetch comprehensive weather data for a location
+ * Uses Open-Meteo's free API (no key required)
+ */
+export async function fetchWeatherData(lat: number, lon: number): Promise<WeatherData | null> {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,pressure_msl&timezone=auto`;
+    const resp = await fetch(url);
+    if (!resp.ok) return null;
+
+    const data = await resp.json();
+    const current = data?.current;
+
+    if (!current) return null;
+
+    const weatherCode = current.weather_code ?? null;
+    const { condition, isRaining } = interpretWeatherCode(weatherCode);
+
+    return {
+      temperature: current.temperature_2m ?? null,
+      condition,
+      pressure: current.pressure_msl ?? null,
+      humidity: current.relative_humidity_2m ?? null,
+      isRaining,
+      weatherCode,
+    };
+  } catch (e) {
+    console.debug('weather: fetch failed', e);
+    return null;
+  }
+}
+
+/**
+ * Legacy function - fetch only barometric pressure
+ * @deprecated Use fetchWeatherData instead for full weather info
+ */
+export async function fetchBarometricPressure(lat: number, lon: number): Promise<number | null> {
+  const weather = await fetchWeatherData(lat, lon);
+  return weather?.pressure ?? null;
+}
+
+/**
+ * Format weather data into a human-readable summary
+ */
+export function formatWeatherSummary(weather: WeatherData): string {
+  const parts: string[] = [];
+
+  if (weather.temperature !== null) {
+    parts.push(`${Math.round(weather.temperature)}°C`);
+  }
+
+  if (weather.condition) {
+    parts.push(weather.condition);
+  }
+
+  if (weather.humidity !== null) {
+    parts.push(`${weather.humidity}% humidity`);
+  }
+
+  return parts.join(', ') || 'Weather data unavailable';
 }
 
 // WMO Weather interpretation codes mapping
