@@ -169,13 +169,13 @@ export const usePainTrackerStore = create<PainTrackerState>()(
                 // dashboards and correlation panels (e.g., weather) stay populated
                 triggers: entryData.triggers ?? [],
                 intensity: entryData.intensity ?? entryData.baselineData?.pain ?? 0,
-                location: entryData.location ?? entryData.baselineData?.locations?.[0],
+                location: entryData.location ?? entryData.baselineData?.locations?.[0], // treat first logged location as primary when explicit value is missing
                 quality: entryData.quality ?? [],
                 reliefMethods: entryData.reliefMethods ?? [],
                 activityLevel: entryData.activityLevel ?? undefined,
                 weather: entryData.weather,
-                sleep: entryData.sleep ?? entryData.qualityOfLife?.sleepQuality,
-                mood: entryData.mood ?? entryData.qualityOfLife?.moodImpact,
+                sleep: entryData.sleep ?? entryData.qualityOfLife?.sleepQuality, // keep flat alias in sync with QoL field
+                mood: entryData.mood ?? entryData.qualityOfLife?.moodImpact, // map mood impact into flattened field for analytics
                 stress: entryData.stress ?? undefined,
                 activities: entryData.activities ?? [],
               };
