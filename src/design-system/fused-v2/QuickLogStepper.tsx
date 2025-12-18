@@ -3,6 +3,12 @@ import { ChevronLeft, Check, Mic, MicOff } from 'lucide-react';
 import { cn } from '../utils';
 import { useAdaptiveCopy } from '../../contexts/useTone';
 import { quickLogCopy } from '../../content/microcopy';
+import type {
+  SpeechRecognition,
+  SpeechRecognitionConstructor,
+  SpeechRecognitionErrorEvent,
+  SpeechRecognitionEvent,
+} from '../../types/speech';
 import '../tokens/fused-v2.css';
 
 interface QuickLogStepperProps {
@@ -55,44 +61,17 @@ const SYMPTOM_TAGS = [
   'Weakness',
 ];
 
-type SpeechRecognitionConstructorLike = new () => SpeechRecognitionLike;
-
-interface SpeechRecognitionLike {
-  continuous: boolean;
-  interimResults: boolean;
-  start: () => void;
-  stop: () => void;
-  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
-  onerror?: ((event: SpeechRecognitionErrorEventLike) => void) | null;
-  onend?: (() => void) | null;
-}
-
-interface SpeechRecognitionResultLike {
-  0: { transcript: string };
-  isFinal?: boolean;
-}
-
-interface SpeechRecognitionEventLike {
-  results: ArrayLike<SpeechRecognitionResultLike>;
-}
-
-interface SpeechRecognitionErrorEventLike {
-  error: string;
-  message?: string;
-  type?: string;
-}
-
-interface SpeechRecognitionWindow extends Window {
-  webkitSpeechRecognition?: SpeechRecognitionConstructorLike;
-  SpeechRecognition?: SpeechRecognitionConstructorLike;
-}
+type SpeechRecognitionWindow = Window & {
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
+  SpeechRecognition?: SpeechRecognitionConstructor;
+};
 
 function useQuickVoiceNotes() {
   const [isSupported, setIsSupported] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [voiceError, setVoiceError] = useState<string | null>(null);
-  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const lastTranscriptRef = useRef('');
 
   useEffect(() => {
@@ -107,7 +86,7 @@ function useQuickVoiceNotes() {
       const recognition = new SpeechRecognitionCtor();
       recognition.continuous = true;
       recognition.interimResults = true;
-      recognition.onresult = event => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         const resultsArray = Array.from(event.results);
         const finalResults = resultsArray.filter(result => result.isFinal);
         const relevantResults = finalResults.length > 0 ? finalResults : resultsArray;
@@ -122,7 +101,7 @@ function useQuickVoiceNotes() {
         lastTranscriptRef.current = combinedTranscript;
         setTranscript(combinedTranscript);
       };
-      recognition.onerror = (event?: SpeechRecognitionErrorEventLike) => {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         setIsListening(false);
         const errorMap: Record<string, string> = {
           'not-allowed': 'Microphone permissions were denied.',

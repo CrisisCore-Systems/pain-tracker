@@ -6,6 +6,17 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "paintracker.ca"
+        }
+      ],
+      "destination": "https://www.paintracker.ca/$1",
+      "permanent": true
+    },
+    {
       "source": "/sponser",
       "destination": "https://github.com/sponsors/CrisisCore-Systems",
       "permanent": true

@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useId, useMemo, useState } from 'react';
 import { Activity, Brain, Heart, Moon, Zap, TrendingUp, BookOpen, Users } from 'lucide-react';
 import type { FibromyalgiaEntry } from '../../types/fibromyalgia';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../design-system';
+import { useToast } from '../feedback';
 
 export const FibromyalgiaTracker: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'track' | 'patterns' | 'education' | 'community'>(
     'track'
   );
+
+  const tabsId = useId();
 
   const tabs = [
     { id: 'track', label: 'Daily Tracking', icon: Activity },
@@ -16,57 +20,74 @@ export const FibromyalgiaTracker: React.FC = () => {
   ] as const;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-gray-900">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-purple-100 dark:border-purple-900/30">
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl shadow-lg">
-              <Heart className="w-8 h-8 text-white" />
+            <div className="h-12 w-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+              <Heart className="w-7 h-7" aria-hidden />
             </div>
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Fibromyalgia Support Hub
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
+              <h1 className="text-3xl font-semibold text-foreground">Fibromyalgia Support Hub</h1>
+              <p className="text-muted-foreground mt-1">
                 Comprehensive tracking and support for living with fibromyalgia
               </p>
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="flex gap-2 mt-6 overflow-x-auto pb-2">
-            {tabs.map(tab => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all whitespace-nowrap
-                    ${
-                      activeTab === tab.id
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
-                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-600'
-                    }
-                  `}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              );
-            })}
+          <div className="mt-6" role="tablist" aria-label="Fibromyalgia hub sections">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {tabs.map(tab => {
+                const Icon = tab.icon;
+                const tabId = `${tabsId}-tab-${tab.id}`;
+                const panelId = `${tabsId}-panel-${tab.id}`;
+                const isActive = activeTab === tab.id;
+
+                return (
+                  <Button
+                    key={tab.id}
+                    id={tabId}
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-controls={panelId}
+                    variant={isActive ? 'secondary' : 'ghost'}
+                    size="sm"
+                    leftIcon={<Icon className="w-4 h-4" aria-hidden />}
+                    onClick={() => setActiveTab(tab.id)}
+                    className="whitespace-nowrap"
+                  >
+                    {tab.label}
+                  </Button>
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'track' && <DailyTracking />}
-        {activeTab === 'patterns' && <PatternsInsights />}
-        {activeTab === 'education' && <EducationResources />}
-        {activeTab === 'community' && <CommunitySupport />}
-      </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'track' && (
+          <div role="tabpanel" id={`${tabsId}-panel-track`} aria-labelledby={`${tabsId}-tab-track`}>
+            <DailyTracking />
+          </div>
+        )}
+        {activeTab === 'patterns' && (
+          <div role="tabpanel" id={`${tabsId}-panel-patterns`} aria-labelledby={`${tabsId}-tab-patterns`}>
+            <PatternsInsights />
+          </div>
+        )}
+        {activeTab === 'education' && (
+          <div role="tabpanel" id={`${tabsId}-panel-education`} aria-labelledby={`${tabsId}-tab-education`}>
+            <EducationResources />
+          </div>
+        )}
+        {activeTab === 'community' && (
+          <div role="tabpanel" id={`${tabsId}-panel-community`} aria-labelledby={`${tabsId}-tab-community`}>
+            <CommunitySupport />
+          </div>
+        )}
+      </main>
     </div>
   );
 };
@@ -74,6 +95,7 @@ export const FibromyalgiaTracker: React.FC = () => {
 // Daily Tracking Component
 const DailyTracking: React.FC = () => {
   const addFibromyalgiaEntry = usePainTrackerStore(state => state.addFibromyalgiaEntry);
+  const toast = useToast();
   const [wpiRegions, setWpiRegions] = useState<Record<string, boolean>>({});
   const [sssScores, setSssScores] = useState({
     fatigue: 0,
@@ -104,16 +126,11 @@ const DailyTracking: React.FC = () => {
     { id: 'neck', label: 'Neck', side: 'central' },
   ];
 
-  const calculateWPI = () => {
-    return Object.values(wpiRegions).filter(Boolean).length;
-  };
-
-  const calculateSSS = () => {
-    return Object.values(sssScores).reduce((sum, val) => sum + val, 0);
-  };
-
-  const wpiScore = calculateWPI();
-  const sssScore = calculateSSS();
+  const wpiScore = useMemo(() => Object.values(wpiRegions).filter(Boolean).length, [wpiRegions]);
+  const sssScore = useMemo(
+    () => Object.values(sssScores).reduce((sum, val) => sum + val, 0),
+    [sssScores]
+  );
   const meetsCriteria =
     (wpiScore >= 7 && sssScore >= 5) || (wpiScore >= 4 && wpiScore <= 6 && sssScore >= 9);
 
@@ -212,11 +229,10 @@ const DailyTracking: React.FC = () => {
         somatic_symptoms: 0,
       });
 
-      // Success feedback
-      alert('Fibromyalgia entry saved successfully!');
+      toast.success('Entry saved', "Your fibromyalgia check-in was saved locally.");
     } catch (error) {
       console.error('Failed to save fibromyalgia entry:', error);
-      alert('Failed to save entry. Please try again.');
+      toast.error('Could not save entry', 'Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -224,158 +240,138 @@ const DailyTracking: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Diagnostic Criteria Card */}
-      <div
-        className={`
-        p-6 rounded-xl shadow-lg border-2 transition-all
-        ${
-          meetsCriteria
-            ? 'bg-purple-50 dark:bg-purple-900/20 border-purple-300 dark:border-purple-700'
-            : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
-        }
-      `}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            ACR 2016 Diagnostic Criteria
-          </h2>
-          {meetsCriteria && (
-            <span className="px-3 py-1 bg-purple-500 text-white text-sm font-medium rounded-full">
-              Criteria Met
-            </span>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              Widespread Pain Index (WPI)
-            </div>
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-              {wpiScore} / 19
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Need ≥7 for primary criteria
-            </div>
+      <Card variant={meetsCriteria ? 'accented' : 'default'} className="relative">
+        <CardHeader>
+          <div>
+            <CardTitle className="text-xl">ACR 2016 Diagnostic Criteria</CardTitle>
+            <CardDescription>
+              WPI ≥7 and SSS ≥5, or WPI 4–6 and SSS ≥9
+            </CardDescription>
           </div>
-
-          <div className="p-4 bg-white dark:bg-gray-700 rounded-lg">
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              Symptom Severity Scale (SSS)
-            </div>
-            <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">
-              {sssScore} / 12
-            </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Need ≥5 for primary criteria
-            </div>
+          {meetsCriteria ? <Badge variant="success">Criteria met</Badge> : null}
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card variant="filled" padding="sm">
+              <div className="text-sm text-muted-foreground">Widespread Pain Index (WPI)</div>
+              <div className="text-3xl font-semibold text-foreground">{wpiScore} / 19</div>
+              <div className="text-xs text-muted-foreground mt-1">Need ≥7 for primary criteria</div>
+            </Card>
+            <Card variant="filled" padding="sm">
+              <div className="text-sm text-muted-foreground">Symptom Severity Scale (SSS)</div>
+              <div className="text-3xl font-semibold text-foreground">{sssScore} / 12</div>
+              <div className="text-xs text-muted-foreground mt-1">Need ≥5 for primary criteria</div>
+            </Card>
           </div>
-        </div>
-
-        <div className="text-sm text-gray-600 dark:text-gray-400 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-          <strong>Diagnosis requires:</strong> WPI ≥7 AND SSS ≥5, OR WPI 4-6 AND SSS ≥9
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Widespread Pain Index */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <Activity className="w-5 h-5 text-purple-500" />
-          Widespread Pain Index (WPI)
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Select all areas where you've had pain in the last week:
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {wpiBodyRegions.map(region => (
-            <button
-              key={region.id}
-              onClick={() => setWpiRegions(prev => ({ ...prev, [region.id]: !prev[region.id] }))}
-              className={`
-                p-3 rounded-lg border-2 text-left transition-all
-                ${
-                  wpiRegions[region.id]
-                    ? 'bg-purple-100 dark:bg-purple-900/30 border-purple-500 dark:border-purple-600'
-                    : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:border-purple-300'
-                }
-              `}
-            >
-              <div className="font-medium text-gray-900 dark:text-white">{region.label}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                {region.side}
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <div>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Activity className="w-5 h-5" aria-hidden />
+              Widespread Pain Index (WPI)
+            </CardTitle>
+            <CardDescription>Select all areas where you've had pain in the last week.</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {wpiBodyRegions.map(region => {
+              const selected = Boolean(wpiRegions[region.id]);
+              return (
+                <Button
+                  key={region.id}
+                  type="button"
+                  variant={selected ? 'secondary' : 'outline'}
+                  size="sm"
+                  fullWidth
+                  aria-pressed={selected}
+                  onClick={() => setWpiRegions(prev => ({ ...prev, [region.id]: !prev[region.id] }))}
+                  className="justify-start h-auto py-3"
+                >
+                  <div className="text-left">
+                    <div className="font-medium">{region.label}</div>
+                    <div className="text-xs text-muted-foreground capitalize">{region.side}</div>
+                  </div>
+                </Button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Symptom Severity Scale */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <Zap className="w-5 h-5 text-pink-500" />
-          Symptom Severity Scale (SSS)
-        </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Rate each symptom over the past week (0 = No problem, 3 = Severe):
-        </p>
-
-        <div className="space-y-4">
-          {[
-            { id: 'fatigue', label: 'Fatigue', icon: Moon },
-            { id: 'waking_unrefreshed', label: 'Waking Unrefreshed', icon: Moon },
-            { id: 'cognitive_symptoms', label: 'Cognitive Symptoms (Fibro Fog)', icon: Brain },
-            {
-              id: 'somatic_symptoms',
-              label: 'Somatic Symptoms (Headache, IBS, etc.)',
-              icon: Heart,
-            },
-          ].map(symptom => {
-            const Icon = symptom.icon;
-            return (
-              <div key={symptom.id} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div className="flex items-center gap-2 mb-3">
-                  <Icon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                  <span className="font-medium text-gray-900 dark:text-white">{symptom.label}</span>
-                </div>
-                <div className="flex gap-2">
-                  {[0, 1, 2, 3].map(score => (
-                    <button
-                      key={score}
-                      onClick={() =>
-                        setSssScores(prev => ({ ...prev, [symptom.id]: score as 0 | 1 | 2 | 3 }))
-                      }
-                      className={`
-                        flex-1 py-2 rounded-lg font-medium transition-all
-                        ${
-                          sssScores[symptom.id as keyof typeof sssScores] === score
-                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                            : 'bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-500'
+      <Card>
+        <CardHeader>
+          <div>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Zap className="w-5 h-5" aria-hidden />
+              Symptom Severity Scale (SSS)
+            </CardTitle>
+            <CardDescription>Rate each symptom over the past week (0 = none, 3 = severe).</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {[
+              { id: 'fatigue', label: 'Fatigue', icon: Moon },
+              { id: 'waking_unrefreshed', label: 'Waking Unrefreshed', icon: Moon },
+              { id: 'cognitive_symptoms', label: 'Cognitive Symptoms (Fibro Fog)', icon: Brain },
+              {
+                id: 'somatic_symptoms',
+                label: 'Somatic Symptoms (Headache, IBS, etc.)',
+                icon: Heart,
+              },
+            ].map(symptom => {
+              const Icon = symptom.icon;
+              const selectedScore = sssScores[symptom.id as keyof typeof sssScores];
+              return (
+                <Card key={symptom.id} variant="filled" padding="sm">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Icon className="w-4 h-4 text-muted-foreground" aria-hidden />
+                    <span className="font-medium text-foreground">{symptom.label}</span>
+                  </div>
+                  <div className="flex gap-2" role="group" aria-label={`${symptom.label} severity`}>
+                    {[0, 1, 2, 3].map(score => (
+                      <Button
+                        key={score}
+                        type="button"
+                        variant={selectedScore === score ? 'secondary' : 'outline'}
+                        size="sm"
+                        aria-pressed={selectedScore === score}
+                        onClick={() =>
+                          setSssScores(prev => ({ ...prev, [symptom.id]: score as 0 | 1 | 2 | 3 }))
                         }
-                      `}
-                    >
-                      {score}
-                    </button>
-                  ))}
-                </div>
-                <div className="flex justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
-                  <span>None</span>
-                  <span>Severe</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+                        className="flex-1"
+                      >
+                        {score}
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                    <span>None</span>
+                    <span>Severe</span>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Save Button */}
-      <button
+      <Button
         onClick={handleSave}
+        loading={isSaving}
         disabled={isSaving}
-        className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        fullWidth
+        size="lg"
       >
-        {isSaving ? 'Saving...' : "Save Today's Entry"}
-      </button>
+        Save today's entry
+      </Button>
     </div>
   );
 };
@@ -384,15 +380,14 @@ const DailyTracking: React.FC = () => {
 const PatternsInsights: React.FC = () => {
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-          Pattern Analysis Coming Soon
-        </h3>
-        <p className="text-gray-600 dark:text-gray-400">
-          Track your entries to see patterns in your fibromyalgia symptoms, triggers, and effective
-          interventions.
-        </p>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Pattern analysis coming soon</CardTitle>
+          <CardDescription>
+            Keep logging to unlock patterns in symptoms, triggers, and what helps.
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 };
@@ -425,20 +420,17 @@ const EducationResources: React.FC = () => {
   return (
     <div className="space-y-4">
       {resources.map((resource, index) => (
-        <div
-          key={index}
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-all"
-        >
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
-                {resource.title}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">{resource.description}</p>
+        <Card key={index} hover="scale">
+          <CardHeader>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <CardTitle className="text-lg">{resource.title}</CardTitle>
+                <CardDescription>{resource.description}</CardDescription>
+              </div>
+              <BookOpen className="w-5 h-5 text-muted-foreground flex-shrink-0" aria-hidden />
             </div>
-            <BookOpen className="w-5 h-5 text-purple-500 flex-shrink-0" />
-          </div>
-        </div>
+          </CardHeader>
+        </Card>
       ))}
     </div>
   );
@@ -467,25 +459,29 @@ const CommunitySupport: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg p-6 text-white">
-        <h3 className="text-xl font-bold mb-2">You Are Not Alone</h3>
-        <p className="text-purple-100">
-          Millions live with fibromyalgia. These community tips and validated strategies can help.
-        </p>
-      </div>
+      <Card variant="filled">
+        <CardHeader>
+          <CardTitle className="text-xl">You are not alone</CardTitle>
+          <CardDescription>
+            Many people live with fibromyalgia. Community tips and validated strategies can help.
+          </CardDescription>
+        </CardHeader>
+      </Card>
 
       <div className="space-y-4">
         {tips.map((tip, index) => (
-          <div key={index} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-            <div className="flex items-start gap-3">
-              <Users className="w-5 h-5 text-purple-500 flex-shrink-0 mt-1" />
-              <div>
-                <h4 className="font-bold text-gray-900 dark:text-white mb-2">{tip.title}</h4>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">{tip.content}</p>
-                <span className="text-xs text-purple-600 dark:text-purple-400">— {tip.author}</span>
+          <Card key={index}>
+            <CardContent>
+              <div className="flex items-start gap-3">
+                <Users className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-1" aria-hidden />
+                <div>
+                  <div className="font-semibold text-foreground mb-2">{tip.title}</div>
+                  <p className="text-sm text-muted-foreground mb-2">{tip.content}</p>
+                  <div className="text-xs text-muted-foreground">— {tip.author}</div>
+                </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

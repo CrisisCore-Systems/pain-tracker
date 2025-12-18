@@ -88,6 +88,7 @@ export function TraumaInformedPainTrackerLayout({
   const [lastRefresh, setLastRefresh] = React.useState<Date>(new Date());
   const [showGestureHint, setShowGestureHint] = React.useState(true);
   const previousView = useRef(activeView);
+  const originalBodyOverflowRef = useRef<string | null>(null);
 
   // Track session start on mount
   useEffect(() => {
@@ -125,6 +126,43 @@ export function TraumaInformedPainTrackerLayout({
       trackFeatureUsed('settings_panel');
       incrementSessionAction();
     }
+  }, [showSettings]);
+
+  // Lock body scroll while settings overlay is open
+  useEffect(() => {
+    if (!showSettings) {
+      if (originalBodyOverflowRef.current !== null) {
+        document.body.style.overflow = originalBodyOverflowRef.current;
+        originalBodyOverflowRef.current = null;
+      }
+      return;
+    }
+
+    if (originalBodyOverflowRef.current === null) {
+      originalBodyOverflowRef.current = document.body.style.overflow;
+    }
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      if (originalBodyOverflowRef.current !== null) {
+        document.body.style.overflow = originalBodyOverflowRef.current;
+        originalBodyOverflowRef.current = null;
+      }
+    };
+  }, [showSettings]);
+
+  // Escape closes settings overlay
+  useEffect(() => {
+    if (!showSettings) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowSettings(false);
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
   }, [showSettings]);
 
   // Pull to refresh handler

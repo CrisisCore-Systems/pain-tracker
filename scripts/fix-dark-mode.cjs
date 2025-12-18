@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable */
 /**
  * Automated Dark Mode Color Fix Script
  * This script adds dark mode variants to hardcoded Tailwind color classes

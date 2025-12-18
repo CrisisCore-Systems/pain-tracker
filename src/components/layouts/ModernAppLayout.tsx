@@ -62,7 +62,7 @@ export function ModernAppLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Ambient background effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />
@@ -73,27 +73,20 @@ export function ModernAppLayout({
       {/* Skip to Main Content Link - Accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-6 focus:py-3 focus:bg-sky-500 focus:text-white focus:rounded-xl focus:shadow-lg focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-slate-900 focus:outline-none"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-6 focus:py-3 focus:bg-sky-500 focus:text-white focus:rounded-xl focus:shadow-lg focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 focus:ring-offset-background focus:outline-none"
       >
         Skip to main content
       </a>
 
       {/* Premium Glass Header */}
-      <header 
-        className="fixed top-0 left-0 right-0 z-50"
-        style={{
-          background: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        }}
-      >
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/30">
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo & Brand */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+                className="lg:hidden p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-200"
                 aria-label={sidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 aria-expanded={sidebarOpen}
                 aria-controls="mobile-navigation-menu"
@@ -113,10 +106,10 @@ export function ModernAppLayout({
                   <Activity className="h-5 w-5 text-white" />
                 </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-lg font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                  <h1 className="text-lg font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
                     Pain Tracker Pro
                   </h1>
-                  <p className="text-[11px] text-slate-500">Empathy-Driven Care</p>
+                  <p className="text-[11px] text-muted-foreground">Empathy-Driven Care</p>
                 </div>
               </div>
             </div>
@@ -167,14 +160,14 @@ export function ModernAppLayout({
               </Button>
 
               <button 
-                className="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+                className="p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-200"
                 onClick={() => {}}
               >
                 <Bell className="h-4 w-4" />
               </button>
 
               <button
-                className="p-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+                className="p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-200"
                 onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
               >
                 {mode === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -196,14 +189,7 @@ export function ModernAppLayout({
 
       {/* Sidebar - Desktop - Premium Dark Theme */}
       <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-72 lg:pt-16">
-        <div 
-          className="h-full px-4 py-6"
-          style={{
-            background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
-            backdropFilter: 'blur(20px)',
-            borderRight: '1px solid rgba(255, 255, 255, 0.05)',
-          }}
-        >
+        <div className="h-full px-4 py-6 bg-background/95 backdrop-blur-xl border-r border-border/20">
           <nav className="space-y-1.5">
             {navigation.map(item => {
               const Icon = item.icon;
@@ -371,8 +357,8 @@ export function ModernAppLayout({
             role="navigation"
             aria-label="Mobile navigation menu"
           >
-            <div className="h-full px-4 py-6 pt-20">
-              <nav className="space-y-1.5">
+            <div className="h-full px-4 py-6 pt-20 flex flex-col">
+              <nav className="space-y-1.5 flex-1">
                 {navigation.map(item => {
                   const Icon = item.icon;
                   const isActive = currentView === item.id;
@@ -426,6 +412,36 @@ export function ModernAppLayout({
                   );
                 })}
               </nav>
+
+              {/* Bottom Navigation (Settings, Help) in Mobile Menu */}
+              <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                <nav className="space-y-1">
+                  {bottomNavigation.map(item => {
+                    const Icon = item.icon;
+                    const isActive = currentView === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          onNavigate?.(item.id);
+                          setSidebarOpen(false);
+                        }}
+                        data-nav-target={item.id}
+                        className={cn(
+                          'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
+                          isActive
+                            ? 'bg-white/10 text-white'
+                            : 'text-slate-400 hover:bg-white/5 hover:text-slate-300'
+                        )}
+                      >
+                        <Icon className="h-5 w-5 flex-shrink-0" />
+                        <span>{item.name}</span>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
             </div>
           </aside>
         </div>

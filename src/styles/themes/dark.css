@@ -19,41 +19,53 @@
  * 2. These overrides ensure WCAG AA contrast in dark mode
  * 3. Theme styles load before utilities in the cascade
  */
-.dark .hero {
+.dark .hero,
+[data-theme="dark"] .hero {
   background: rgb(var(--color-background)) !important;
   color: rgb(var(--color-foreground)) !important;
 }
 
 .dark .hero h1,
-.dark .hero-title {
+.dark .hero-title,
+[data-theme="dark"] .hero h1,
+[data-theme="dark"] .hero-title {
   color: rgb(var(--color-foreground)) !important;
   font-weight: 700 !important;
 }
 
 .dark .hero p,
-.dark .hero-subtitle {
+.dark .hero-subtitle,
+[data-theme="dark"] .hero p,
+[data-theme="dark"] .hero-subtitle {
   color: rgb(var(--color-card-foreground)) !important;
 }
 
-.dark .hero .text-muted-foreground {
+.dark .hero .text-muted-foreground,
+[data-theme="dark"] .hero .text-muted-foreground {
   color: rgb(var(--color-muted-foreground)) !important;
 }
 
-.dark .hero .text-primary {
-  color: rgb(var(--color-primary)) !important;
+.dark .hero .text-primary,
+[data-theme="dark"] .hero .text-primary {
+  color: rgb(var(--color-primary-text, var(--color-primary))) !important;
 }
 
-.dark .hero .bg-primary\/10 {
+.dark .hero .bg-primary\/10,
+[data-theme="dark"] .hero .bg-primary\/10 {
   background-color: rgb(var(--color-primary) / 0.2) !important;
 }
 
 .dark .hero-microcopy,
 .dark .hero-badge,
-.dark .hero-open-source {
+.dark .hero-open-source,
+[data-theme="dark"] .hero-microcopy,
+[data-theme="dark"] .hero-badge,
+[data-theme="dark"] .hero-open-source {
   color: rgb(var(--color-muted-foreground)) !important;
 }
 
-.dark .hero span {
+.dark .hero span,
+[data-theme="dark"] .hero span {
   color: inherit;
 }
 
@@ -65,12 +77,22 @@
 .dark .hero span,
 .dark .hero a,
 .dark .hero button,
-.dark .hero div {
+.dark .hero div,
+[data-theme="dark"] .hero > *,
+[data-theme="dark"] .hero h1,
+[data-theme="dark"] .hero h2,
+[data-theme="dark"] .hero p,
+[data-theme="dark"] .hero span,
+[data-theme="dark"] .hero a,
+[data-theme="dark"] .hero button,
+[data-theme="dark"] .hero div {
   opacity: 1 !important;
 }
 
 .dark .hero::before,
-.dark .hero::after {
+.dark .hero::after,
+[data-theme="dark"] .hero::before,
+[data-theme="dark"] .hero::after {
   background: none !important;
   backdrop-filter: none !important;
   filter: none !important;
@@ -78,37 +100,87 @@
 
 /* ===== DARK MODE SLIDER STYLING ===== */
 /* Uses semantic tokens for consistency with the design system */
-.dark input[type="range"]::-webkit-slider-runnable-track {
+.dark input[type="range"]::-webkit-slider-runnable-track,
+[data-theme="dark"] input[type="range"]::-webkit-slider-runnable-track {
   background: rgb(var(--color-muted));
   border: 1px solid rgb(var(--color-border));
 }
 
-.dark input[type="range"]::-webkit-slider-track {
+.dark input[type="range"]::-webkit-slider-track,
+[data-theme="dark"] input[type="range"]::-webkit-slider-track {
   background: rgb(var(--color-muted));
   border: 1px solid rgb(var(--color-border));
 }
 
-.dark input[type="range"]::-webkit-slider-thumb {
+.dark input[type="range"]::-webkit-slider-thumb,
+[data-theme="dark"] input[type="range"]::-webkit-slider-thumb {
   background: rgb(var(--color-primary));
   border: 2px solid rgb(var(--color-background));
   box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
-.dark input[type="range"]::-moz-range-track {
+.dark input[type="range"]::-moz-range-track,
+[data-theme="dark"] input[type="range"]::-moz-range-track {
   background: rgb(var(--color-muted));
   border: 1px solid rgb(var(--color-border));
 }
 
-.dark input[type="range"]::-moz-range-thumb {
+.dark input[type="range"]::-moz-range-thumb,
+[data-theme="dark"] input[type="range"]::-moz-range-thumb {
   background: rgb(var(--color-primary));
   border: 2px solid rgb(var(--color-background));
   box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
-.dark input[type="range"]:focus::-webkit-slider-thumb {
+.dark input[type="range"]:focus::-webkit-slider-thumb,
+[data-theme="dark"] input[type="range"]:focus::-webkit-slider-thumb {
   box-shadow: 0 0 0 4px rgb(var(--color-ring) / 0.5);
 }
 
-.dark input[type="range"]:focus::-moz-range-thumb {
+.dark input[type="range"]:focus::-moz-range-thumb,
+[data-theme="dark"] input[type="range"]:focus::-moz-range-thumb {
   box-shadow: 0 0 0 4px rgb(var(--color-ring) / 0.5);
+}
+
+/* ===== DARK MODE COLORED TEXT READABILITY =====
+ * We keep `--color-*` dark enough for white button text,
+ * but use `--color-*-text` for readable colored text on dark backgrounds. */
+.dark .text-primary,
+[data-theme="dark"] .text-primary {
+  color: rgb(var(--color-primary-text, var(--color-primary))) !important;
+}
+
+.dark .text-secondary,
+[data-theme="dark"] .text-secondary {
+  color: rgb(var(--color-secondary-text, var(--color-secondary))) !important;
+}
+
+.dark .text-accent,
+[data-theme="dark"] .text-accent {
+  color: rgb(var(--color-accent-text, var(--color-accent))) !important;
+}
+
+.dark .text-destructive,
+[data-theme="dark"] .text-destructive {
+  color: rgb(var(--color-destructive-text, var(--color-destructive))) !important;
+}
+
+.dark .text-success,
+[data-theme="dark"] .text-success {
+  color: rgb(var(--color-success-text, var(--color-success))) !important;
+}
+
+.dark .text-warning,
+[data-theme="dark"] .text-warning {
+  color: rgb(var(--color-warning-text, var(--color-warning))) !important;
+}
+
+.dark .text-info,
+[data-theme="dark"] .text-info {
+  color: rgb(var(--color-info-text, var(--color-info))) !important;
+}
+
+.dark .text-error,
+[data-theme="dark"] .text-error {
+  color: rgb(var(--color-error-text, var(--color-error))) !important;
 }

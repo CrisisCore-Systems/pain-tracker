@@ -41,6 +41,17 @@ import { analyzePatterns } from '../../utils/pain-tracker/pattern-engine';
 import type { PatternAnalysisResult } from '../../types/pattern-engine';
 import { NerveSymptoms } from '../pain-tracker/NerveSymptoms';
 import { FunctionalLimitations } from '../pain-tracker/FunctionalLimitations';
+import { WeatherCorrelationPanel } from './WeatherCorrelationPanel';
+import {
+  Badge,
+  type BadgeProps,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '../../design-system';
 
 type TimePeriod = 'morning' | 'afternoon' | 'evening' | 'night';
 
@@ -117,6 +128,13 @@ interface PersonalizedRecommendation {
   emphasis: 'high' | 'medium' | 'low';
 }
 
+interface NumericSignalStats {
+  count: number;
+  avg: number;
+  min: number;
+  max: number;
+}
+
 interface AnalyticsSnapshot {
   avgPain: number;
   trend: number;
@@ -125,6 +143,12 @@ interface AnalyticsSnapshot {
   badDays: number;
   topLocations: LocationStat[];
   topTriggers: TriggerStat[];
+  topReliefMethods: TriggerStat[];
+  topActivities: TriggerStat[];
+  topQualities: TriggerStat[];
+  stressStats: NumericSignalStats;
+  activityLevelStats: NumericSignalStats;
+  weatherCount: number;
   timePatterns: TimePatterns;
   dayOfWeekPatterns: DayOfWeekPattern[];
   monthlyTrend: MonthlyTrendPoint[];
@@ -177,6 +201,12 @@ const createEmptyAnalyticsSnapshot = (): AnalyticsSnapshot => ({
   badDays: 0,
   topLocations: [],
   topTriggers: [],
+  topReliefMethods: [],
+  topActivities: [],
+  topQualities: [],
+  stressStats: { count: 0, avg: 0, min: 0, max: 0 },
+  activityLevelStats: { count: 0, avg: 0, min: 0, max: 0 },
+  weatherCount: 0,
   timePatterns: createInitialTimePatterns(),
   dayOfWeekPatterns: [],
   monthlyTrend: [],
@@ -272,14 +302,22 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
       filteredEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) / filteredEntries.length;
 
     // Trend calculation (comparing first half to second half)
+    // Guard against tiny datasets where midpoint can be 0.
     const midpoint = Math.floor(filteredEntries.length / 2);
-    const firstHalfAvg =
-      filteredEntries.slice(0, midpoint).reduce((sum, e) => sum + e.baselineData.pain, 0) /
-      midpoint;
-    const secondHalfAvg =
-      filteredEntries.slice(midpoint).reduce((sum, e) => sum + e.baselineData.pain, 0) /
-      (filteredEntries.length - midpoint);
-    const trend = ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100;
+    const trend = (() => {
+      if (filteredEntries.length < 2 || midpoint === 0) return 0;
+
+      const firstHalf = filteredEntries.slice(0, midpoint);
+      const secondHalf = filteredEntries.slice(midpoint);
+
+      const firstHalfAvg =
+        firstHalf.reduce((sum, e) => sum + e.baselineData.pain, 0) / firstHalf.length;
+      const secondHalfAvg =
+        secondHalf.reduce((sum, e) => sum + e.baselineData.pain, 0) / secondHalf.length;
+
+      if (!Number.isFinite(firstHalfAvg) || firstHalfAvg === 0) return 0;
+      return ((secondHalfAvg - firstHalfAvg) / firstHalfAvg) * 100;
+    })();
 
     // Volatility (standard deviation)
     const variance =
@@ -322,6 +360,78 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
         count,
         percentage: (count / filteredEntries.length) * 100,
       }));
+
+    // Relief methods frequency analysis
+    const reliefCounts: Record<string, number> = {};
+    filteredEntries.forEach(entry => {
+      entry.reliefMethods?.forEach(method => {
+        reliefCounts[method] = (reliefCounts[method] || 0) + 1;
+      });
+    });
+    const topReliefMethods: TriggerStat[] = Object.entries(reliefCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([trigger, count]) => ({
+        trigger,
+        count,
+        percentage: (count / filteredEntries.length) * 100,
+      }));
+
+    // Activities frequency analysis
+    const activityCounts: Record<string, number> = {};
+    filteredEntries.forEach(entry => {
+      entry.activities?.forEach(activity => {
+        activityCounts[activity] = (activityCounts[activity] || 0) + 1;
+      });
+    });
+    const topActivities: TriggerStat[] = Object.entries(activityCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([trigger, count]) => ({
+        trigger,
+        count,
+        percentage: (count / filteredEntries.length) * 100,
+      }));
+
+    // Pain quality descriptors frequency analysis
+    const qualityCounts: Record<string, number> = {};
+    filteredEntries.forEach(entry => {
+      entry.quality?.forEach(q => {
+        qualityCounts[q] = (qualityCounts[q] || 0) + 1;
+      });
+    });
+    const topQualities: TriggerStat[] = Object.entries(qualityCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([trigger, count]) => ({
+        trigger,
+        count,
+        percentage: (count / filteredEntries.length) * 100,
+      }));
+
+    // Numeric signal coverage (stress/activityLevel)
+    const stressValues = filteredEntries
+      .map(e => e.stress)
+      .filter((v): v is number => typeof v === 'number' && Number.isFinite(v));
+    const activityLevelValues = filteredEntries
+      .map(e => e.activityLevel)
+      .filter((v): v is number => typeof v === 'number' && Number.isFinite(v));
+
+    const makeNumericStats = (values: number[]): NumericSignalStats => {
+      if (values.length === 0) return { count: 0, avg: 0, min: 0, max: 0 };
+      const sum = values.reduce((s, v) => s + v, 0);
+      return {
+        count: values.length,
+        avg: sum / values.length,
+        min: Math.min(...values),
+        max: Math.max(...values),
+      };
+    };
+
+    const stressStats = makeNumericStats(stressValues);
+    const activityLevelStats = makeNumericStats(activityLevelValues);
+
+    const weatherCount = filteredEntries.filter(e => !!e.weather && e.weather.trim() !== '').length;
 
     // Time-of-day patterns
     const timePatterns: TimePatterns = createInitialTimePatterns();
@@ -614,6 +724,12 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
       badDays,
       topLocations,
       topTriggers,
+      topReliefMethods,
+      topActivities,
+      topQualities,
+      stressStats,
+      activityLevelStats,
+      weatherCount,
       timePatterns,
       dayOfWeekPatterns: dayOfWeekSummary,
       monthlyTrend,
@@ -648,100 +764,98 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-blue-950 dark:to-indigo-950">
-      {/* Premium Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-2xl">
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-2xl">
-                <Sparkles className="w-8 h-8" />
+              <div className="h-12 w-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                <Sparkles className="w-7 h-7" aria-hidden />
               </div>
               <div>
-                <h1 className="text-3xl font-bold">Premium Analytics</h1>
-                <p className="text-blue-100 mt-1">
+                <h1 className="text-3xl font-semibold text-foreground">Premium Analytics</h1>
+                <p className="text-muted-foreground mt-1">
                   Advanced insights powered by clinical-grade algorithms
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button className="px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg transition-all flex items-center gap-2">
-                <Share2 className="w-4 h-4" />
+            <div className="flex flex-wrap items-center gap-3">
+              <Button
+                variant="secondary"
+                size="sm"
+                leftIcon={<Share2 className="w-4 h-4" aria-hidden />}
+                onClick={() => setView('export')}
+              >
                 Share
-              </button>
-              <button className="px-4 py-2 bg-white text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all flex items-center gap-2">
-                <Download className="w-4 h-4" />
-                Export Report
-              </button>
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                leftIcon={<Download className="w-4 h-4" aria-hidden />}
+                onClick={() => setView('export')}
+              >
+                Export
+              </Button>
             </div>
           </div>
 
-          {/* Time Range Selector */}
-          <div className="flex gap-2 mt-6">
+          <div className="mt-6 flex flex-wrap gap-2" aria-label="Time range">
             {[
-              { value: '7d', label: '7 Days' },
-              { value: '30d', label: '30 Days' },
-              { value: '90d', label: '90 Days' },
-              { value: '1y', label: '1 Year' },
-              { value: 'all', label: 'All Time' },
+              { value: '7d', label: '7 days' },
+              { value: '30d', label: '30 days' },
+              { value: '90d', label: '90 days' },
+              { value: '1y', label: '1 year' },
+              { value: 'all', label: 'All time' },
             ].map(option => (
-              <button
+              <Button
                 key={option.value}
+                type="button"
+                size="sm"
+                variant={timeRange === option.value ? 'secondary' : 'ghost'}
+                aria-pressed={timeRange === option.value}
                 onClick={() => setTimeRange(option.value as typeof timeRange)}
-                className={`
-                  px-4 py-2 rounded-lg font-medium transition-all
-                  ${
-                    timeRange === option.value
-                      ? 'bg-white text-blue-600 shadow-lg'
-                      : 'bg-white/10 hover:bg-white/20 text-white'
-                  }
-                `}
               >
                 {option.label}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* View Tabs */}
-      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 shadow-sm">
+      <nav className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-1 overflow-x-auto py-2">
+          <div className="flex gap-1 overflow-x-auto py-2" aria-label="Analytics sections">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'patterns', label: 'Pattern Analysis', icon: Waves },
+              { id: 'patterns', label: 'Pattern analysis', icon: Waves },
               { id: 'predictions', label: 'Predictions', icon: Brain },
-              { id: 'clinical', label: 'Clinical Report', icon: Heart },
-              { id: 'insights', label: 'AI Insights', icon: Sparkles },
-              { id: 'export', label: 'Export & Share', icon: Download },
+              { id: 'clinical', label: 'Clinical report', icon: Heart },
+              { id: 'insights', label: 'AI insights', icon: Sparkles },
+              { id: 'export', label: 'Export & share', icon: Download },
             ].map(tab => {
               const Icon = tab.icon;
+              const isActive = view === tab.id;
               return (
-                <button
+                <Button
                   key={tab.id}
+                  type="button"
+                  size="sm"
+                  variant={isActive ? 'secondary' : 'ghost'}
+                  aria-current={isActive ? 'page' : undefined}
+                  leftIcon={<Icon className="w-4 h-4" aria-hidden />}
                   onClick={() => setView(tab.id as typeof view)}
-                  className={`
-                    flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all whitespace-nowrap
-                    ${
-                      view === tab.id
-                        ? 'bg-blue-500 text-white shadow-lg'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }
-                  `}
+                  className="whitespace-nowrap"
                 >
-                  <Icon className="w-4 h-4" />
                   {tab.label}
-                </button>
+                </Button>
               );
             })}
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {view === 'overview' && <OverviewView analytics={analytics} entries={filteredEntries} />}
         {view === 'patterns' && <PatternsView analytics={analytics} entries={filteredEntries} />}
         {view === 'predictions' && <PredictionsView analytics={analytics} />}
@@ -757,7 +871,7 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
           />
         )}
         {view === 'export' && <ExportView analytics={analytics} entries={filteredEntries} />}
-      </div>
+      </main>
     </div>
   );
 };
@@ -767,6 +881,30 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
   analytics,
   entries,
 }) => {
+  const goodDaysSubtitle =
+    entries.length > 0
+      ? `${((analytics.goodDays / entries.length) * 100).toFixed(0)}% of total`
+      : 'No entries yet';
+
+  const getIntensityBadgeVariant = (intensity: number) => {
+    if (intensity >= 7) return 'destructive' as const;
+    if (intensity >= 5) return 'warning' as const;
+    if (intensity >= 3) return 'info' as const;
+    return 'success' as const;
+  };
+
+  const getEffectivenessBadgeVariant = (effectiveness: number) => {
+    if (effectiveness > 50) return 'success' as const;
+    if (effectiveness > 20) return 'warning' as const;
+    return 'destructive' as const;
+  };
+
+  const getEffectivenessBarClassName = (effectiveness: number) => {
+    if (effectiveness > 50) return 'bg-success';
+    if (effectiveness > 20) return 'bg-warning';
+    return 'bg-destructive';
+  };
+
   return (
     <div className="space-y-6">
       {/* Key Metrics Cards */}
@@ -791,7 +929,7 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
         <MetricCard
           title="Good Days"
           value={analytics.goodDays.toString()}
-          subtitle={`${((analytics.goodDays / entries.length) * 100).toFixed(0)}% of total`}
+          subtitle={goodDaysSubtitle}
           icon={CheckCircle}
           color="green"
         />
@@ -808,236 +946,228 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
 
       {/* Flare Prediction Alert */}
       {analytics.predictedFlare && (
-        <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-2xl p-6 shadow-2xl">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-white/20 rounded-xl">
-              <AlertTriangle className="w-6 h-6" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold mb-2">⚠️ Flare Risk Detected</h3>
-              <p className="text-red-100 mb-4">
-                Our predictive algorithm has identified a{' '}
-                <strong>{analytics.predictedFlare.probability}% probability</strong> of a pain flare
-                within the next <strong>{analytics.predictedFlare.timeframe}</strong>.
-              </p>
-              <div className="space-y-2">
-                <p className="font-semibold">Recommended Actions:</p>
-                <ul className="space-y-1 text-red-100">
-                  {analytics.predictedFlare.recommendations.map((rec: string, idx: number) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 flex-shrink-0" />
-                      {rec}
-                    </li>
-                  ))}
-                </ul>
+        <Card variant="outlined" className="border-destructive/30 bg-destructive/5">
+          <CardHeader className="pb-3">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div className="flex items-start gap-3">
+                <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-destructive/10 text-destructive">
+                  <AlertTriangle className="w-6 h-6" aria-hidden />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">Flare risk detected</CardTitle>
+                  <CardDescription>
+                    Predicted within the next {analytics.predictedFlare.timeframe}
+                  </CardDescription>
+                </div>
               </div>
+              <Badge variant="destructive" className="shrink-0">
+                {analytics.predictedFlare.probability}% probability
+              </Badge>
             </div>
-          </div>
-        </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Our predictive algorithm has identified an elevated flare likelihood based on your
+              recent patterns.
+            </p>
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-foreground">Recommended actions</p>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                {analytics.predictedFlare.recommendations.map((rec: string, idx: number) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-success" aria-hidden />
+                    <span>{rec}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* Top Locations & Triggers */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Pain Locations */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-blue-500" />
-            Most Affected Areas
-          </h3>
-          <div className="space-y-3">
-            {analytics.topLocations.map((loc, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-lg flex items-center justify-center font-bold">
-                  {idx + 1}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-gray-900 dark:text-white capitalize">
-                      {loc.location}
-                    </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {loc.count} times
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all"
-                      style={{ width: `${loc.percentage}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Top Triggers */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Zap className="w-5 h-5 text-orange-500" />
-            Common Triggers
-          </h3>
-          <div className="space-y-3">
-            {analytics.topTriggers.length > 0 ? (
-              analytics.topTriggers.map((trigger, idx) => (
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-primary" aria-hidden />
+              <CardTitle className="text-lg">Most affected areas</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analytics.topLocations.map((loc, idx) => (
                 <div key={idx} className="flex items-center gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-300 rounded-lg flex items-center justify-center font-bold">
+                  <Badge
+                    variant="secondary"
+                    className="h-8 w-8 justify-center rounded-lg flex-shrink-0"
+                  >
                     {idx + 1}
-                  </div>
+                  </Badge>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-gray-900 dark:text-white capitalize">
-                        {trigger.trigger}
-                      </span>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {trigger.count} times
-                      </span>
+                      <span className="font-medium text-foreground capitalize">{loc.location}</span>
+                      <span className="text-sm text-muted-foreground">{loc.count} times</span>
                     </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div
-                        className="bg-gradient-to-r from-orange-500 to-red-500 h-2 rounded-full transition-all"
-                        style={{ width: `${trigger.percentage}%` }}
+                        className="bg-primary h-2 rounded-full transition-all"
+                        style={{ width: `${loc.percentage}%` }}
                       />
                     </div>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                No triggers tracked yet. Start logging triggers to see patterns!
-              </p>
-            )}
-          </div>
-        </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top Triggers */}
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-warning" aria-hidden />
+              <CardTitle className="text-lg">Common triggers</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analytics.topTriggers.length > 0 ? (
+                analytics.topTriggers.map((trigger, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <Badge
+                      variant="secondary"
+                      className="h-8 w-8 justify-center rounded-lg flex-shrink-0"
+                    >
+                      {idx + 1}
+                    </Badge>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-medium text-foreground capitalize">
+                          {trigger.trigger}
+                        </span>
+                        <span className="text-sm text-muted-foreground">{trigger.count} times</span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2">
+                        <div
+                          className="bg-warning h-2 rounded-full transition-all"
+                          style={{ width: `${trigger.percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">
+                  No triggers tracked yet. Start logging triggers to see patterns.
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Time of Day Patterns */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <Clock className="w-5 h-5 text-purple-500" />
-          Pain Patterns by Time of Day
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {Object.entries(analytics.timePatterns).map(([period, data]) => {
-            const icons: Record<TimePeriod, typeof Sun> = {
-              morning: Sun,
-              afternoon: Sun,
-              evening: Moon,
-              night: Moon,
-            };
-            const typedPeriod = period as TimePeriod;
-            const Icon = icons[typedPeriod];
-            const intensity = data.avgIntensity;
-            const color =
-              intensity >= 7
-                ? 'red'
-                : intensity >= 5
-                  ? 'yellow'
-                  : intensity >= 3
-                    ? 'blue'
-                    : 'green';
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-2">
+            <Clock className="w-5 h-5 text-primary" aria-hidden />
+            <CardTitle className="text-lg">Pain patterns by time of day</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {Object.entries(analytics.timePatterns).map(([period, data]) => {
+              const icons: Record<TimePeriod, typeof Sun> = {
+                morning: Sun,
+                afternoon: Sun,
+                evening: Moon,
+                night: Moon,
+              };
+              const typedPeriod = period as TimePeriod;
+              const Icon = icons[typedPeriod];
+              const intensity = data.avgIntensity;
+              const badgeVariant = getIntensityBadgeVariant(intensity);
 
-            return (
-              <div
-                key={period}
-                className={`p-4 rounded-xl border-2 ${
-                  color === 'red'
-                    ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
-                    : color === 'yellow'
-                      ? 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
-                      : color === 'blue'
-                        ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
-                        : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <Icon
-                    className={`w-5 h-5 ${
-                      color === 'red'
-                        ? 'text-red-600'
-                        : color === 'yellow'
-                          ? 'text-yellow-600'
-                          : color === 'blue'
-                            ? 'text-blue-600'
-                            : 'text-green-600'
-                    }`}
-                  />
-                  <span className="font-semibold text-gray-900 dark:text-white capitalize">
-                    {period}
-                  </span>
-                </div>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                  {data.avgIntensity.toFixed(1)}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">{data.count} entries</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+              return (
+                <Card key={period} variant="filled" padding="sm" className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <Icon className="w-4 h-4 text-muted-foreground" aria-hidden />
+                      <span className="text-sm font-semibold text-foreground capitalize">{period}</span>
+                    </div>
+                    <div className="text-3xl font-semibold text-foreground">{data.avgIntensity.toFixed(1)}</div>
+                    <div className="text-xs text-muted-foreground">{data.count} entries</div>
+                  </div>
+                  <Badge variant={badgeVariant} className="shrink-0">
+                    {badgeVariant === 'destructive'
+                      ? 'High'
+                      : badgeVariant === 'warning'
+                        ? 'Moderate'
+                        : badgeVariant === 'info'
+                          ? 'Elevated'
+                          : 'Low'}
+                  </Badge>
+                </Card>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Medication Effectiveness */}
       {analytics.medicationEffectiveness.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Heart className="w-5 h-5 text-pink-500" />
-            Medication Effectiveness Analysis
-          </h3>
-          <div className="space-y-3">
-            {analytics.medicationEffectiveness.map((med, idx) => (
-              <div
-                key={idx}
-                className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-gray-900 dark:text-white">
-                      {med.medication}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {med.uses} uses
-                      </span>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-bold ${
-                          med.effectiveness > 50
-                            ? 'bg-green-100 text-green-700'
-                            : med.effectiveness > 20
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-red-100 text-red-700'
-                        }`}
-                      >
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <Heart className="w-5 h-5 text-primary" aria-hidden />
+              <CardTitle className="text-lg">Medication effectiveness</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {analytics.medicationEffectiveness.map((med, idx) => {
+                const badgeVariant = getEffectivenessBadgeVariant(med.effectiveness);
+                const barClassName = getEffectivenessBarClassName(med.effectiveness);
+                return (
+                  <Card key={idx} variant="filled" padding="sm">
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      <div className="min-w-0">
+                        <div className="font-medium text-foreground truncate">{med.medication}</div>
+                        <div className="text-xs text-muted-foreground">{med.uses} uses</div>
+                      </div>
+                      <Badge variant={badgeVariant} className="shrink-0">
                         {med.effectiveness.toFixed(0)}% effective
-                      </span>
+                      </Badge>
                     </div>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3">
-                    <div
-                      className={`h-3 rounded-full transition-all ${
-                        med.effectiveness > 50
-                          ? 'bg-gradient-to-r from-green-500 to-green-600'
-                          : med.effectiveness > 20
-                            ? 'bg-gradient-to-r from-yellow-500 to-yellow-600'
-                            : 'bg-gradient-to-r from-red-500 to-red-600'
-                      }`}
-                      style={{ width: `${Math.min(100, med.effectiveness)}%` }}
-                    />
-                  </div>
-                  <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    Avg reduction: {med.avgReduction.toFixed(1)} points
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
+                    <div className="w-full bg-muted rounded-full h-3">
+                      <div
+                        className={`h-3 rounded-full transition-all ${barClassName}`}
+                        style={{ width: `${Math.min(100, med.effectiveness)}%` }}
+                      />
+                    </div>
+
+                    <div className="mt-2 text-xs text-muted-foreground">
+                      Avg reduction: {med.avgReduction.toFixed(1)} points
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
 };
 
 // Patterns View - Advanced Analytics
-const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] }> = ({ analytics, entries }) => {
+const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] }> = ({
+  analytics,
+  entries,
+}) => {
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const monthLabels = [
     'Jan',
@@ -1066,113 +1196,112 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
     { key: 'night', label: 'Night', window: '9p - 5a', Icon: Moon },
   ];
 
-  const getSeverityColor = (value: number) => {
-    if (value >= 7) return 'text-rose-600 bg-rose-50 dark:bg-rose-900/30';
-    if (value >= 5) return 'text-amber-600 bg-amber-50 dark:bg-amber-900/30';
-    if (value >= 3) return 'text-sky-600 bg-sky-50 dark:bg-sky-900/30';
-    return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30';
+  const getSeverityBadgeVariant = (value: number) => {
+    if (value >= 7) return 'destructive' as const;
+    if (value >= 5) return 'warning' as const;
+    if (value >= 3) return 'info' as const;
+    return 'success' as const;
   };
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Time & Day Patterns */}
-        <div className="bg-white dark:bg-gray-900/60 backdrop-blur rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-800">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Waves className="w-5 h-5 text-indigo-500" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Time & Day Patterns
-              </h3>
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div className="flex items-center gap-2">
+                <Waves className="w-5 h-5 text-primary" aria-hidden />
+                <CardTitle className="text-lg">Time & day patterns</CardTitle>
+              </div>
+              <Badge variant="info" className="shrink-0">
+                Live
+              </Badge>
             </div>
-            <span className="text-xs uppercase tracking-wide text-indigo-500 font-semibold">
-              Live
-            </span>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">
-            Highlighting when pain is most likely to spike based on your historical entries.
-          </p>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="mb-5">
+              Highlighting when pain is most likely to spike based on your historical entries.
+            </CardDescription>
 
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
-                Time of Day
-              </h4>
-              <div className="grid grid-cols-2 gap-2">
-                {timeOfDayOrder.map(({ key, label, window, Icon }) => {
-                  const data = analytics.timePatterns[key];
-                  const avg = data && data.count > 0 ? data.avgIntensity : null;
-                  return (
-                    <div
-                      key={String(key)}
-                      className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-between gap-2"
-                    >
-                      <div>
-                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                          {label}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{window}</p>
-                      </div>
-                      <div
-                        className={`px-2 py-1 rounded-lg text-sm font-semibold ${avg === null ? 'text-gray-400 dark:text-gray-500' : getSeverityColor(avg)}`}
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">
+                  Time of day
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {timeOfDayOrder.map(({ key, label, window, Icon }) => {
+                    const data = analytics.timePatterns[key];
+                    const avg = data && data.count > 0 ? data.avgIntensity : null;
+                    const badgeVariant = avg === null ? 'secondary' : getSeverityBadgeVariant(avg);
+                    return (
+                      <Card
+                        key={String(key)}
+                        variant="filled"
+                        padding="sm"
+                        className="flex items-center justify-between gap-2"
                       >
-                        {avg === null ? '—' : avg.toFixed(1)}
-                      </div>
-                      <Icon className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                    </div>
-                  );
-                })}
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{label}</p>
+                          <p className="text-xs text-muted-foreground">{window}</p>
+                        </div>
+                        <Badge variant={badgeVariant}>
+                          {avg === null ? '—' : avg.toFixed(1)}
+                        </Badge>
+                        <Icon className="w-4 h-4 text-muted-foreground" aria-hidden />
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">
+                  Day of week
+                </h4>
+                <div className="grid grid-cols-7 gap-1">
+                  {dayLabels.map((label, idx) => {
+                    const data = analytics.dayOfWeekPatterns?.find(d => d.day === idx);
+                    const avg = data && data.count > 0 ? data.avgPain : null;
+                    const badgeVariant = avg === null ? 'secondary' : getSeverityBadgeVariant(avg);
+                    return (
+                      <Card
+                        key={`${label}-${idx}`}
+                        variant="filled"
+                        padding="sm"
+                        className="text-center"
+                      >
+                        <div className="text-xs font-semibold text-muted-foreground">{label}</div>
+                        <div className="mt-2 flex justify-center">
+                          <Badge variant={badgeVariant}>{avg === null ? '—' : avg.toFixed(1)}</Badge>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-
-            <div>
-              <h4 className="text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-2">
-                Day of Week
-              </h4>
-              <div className="grid grid-cols-7 gap-1">
-                {dayLabels.map((label, idx) => {
-                  const data = analytics.dayOfWeekPatterns?.find(d => d.day === idx);
-                  const avg = data && data.count > 0 ? data.avgPain : null;
-                  return (
-                    <div
-                      key={`${label}-${idx}`}
-                      className="p-2 rounded-lg text-center bg-gray-50 dark:bg-gray-800"
-                    >
-                      <div className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                        {label}
-                      </div>
-                      <div
-                        className={`mt-1 text-sm font-bold ${avg === null ? 'text-gray-400 dark:text-gray-500' : getSeverityColor(avg)}`}
-                      >
-                        {avg === null ? '—' : avg.toFixed(1)}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Trigger Impact Matrix */}
-        <div className="xl:col-span-2 bg-white dark:bg-gray-900/60 backdrop-blur rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-800">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-purple-500" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Trigger Impact Matrix
-              </h3>
+        <Card className="xl:col-span-2">
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-primary" aria-hidden />
+                <CardTitle className="text-lg">Trigger impact matrix</CardTitle>
+              </div>
+              <span className="text-xs text-muted-foreground">Δ Pain vs personal baseline</span>
             </div>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              Δ Pain vs personal baseline
-            </span>
-          </div>
+          </CardHeader>
+          <CardContent>
 
           {analytics.triggerPainCorrelation && analytics.triggerPainCorrelation.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-800/70">
+                  <tr className="text-left text-muted-foreground border-b border-border">
                     <th className="py-2 pr-4 font-medium">Trigger</th>
                     <th className="py-2 pr-4 font-medium">Observations</th>
                     <th className="py-2 pr-4 font-medium">Avg Δ Pain</th>
@@ -1191,21 +1320,19 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                     return (
                       <tr
                         key={row.trigger}
-                        className="border-b border-gray-100 dark:border-gray-800/60 last:border-0"
+                        className="border-b border-border/60 last:border-0"
                       >
-                        <td className="py-3 pr-4 text-gray-900 dark:text-gray-100 capitalize">
+                        <td className="py-3 pr-4 text-foreground capitalize">
                           {row.trigger}
                         </td>
-                        <td className="py-3 pr-4 text-gray-700 dark:text-gray-300">{row.count}</td>
+                        <td className="py-3 pr-4 text-muted-foreground">{row.count}</td>
                         <td className="py-3 pr-4">
-                          <span
-                            className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${positive ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200'}`}
-                          >
+                          <Badge variant={positive ? 'destructive' : 'success'}>
                             {positive ? '+' : ''}
                             {row.avgDelta.toFixed(1)}
-                          </span>
+                          </Badge>
                         </td>
-                        <td className="py-3 pr-4 text-xs text-gray-600 dark:text-gray-400">
+                        <td className="py-3 pr-4 text-xs text-muted-foreground">
                           {positive
                             ? `${severity} association with higher pain`
                             : `${severity} association with lower pain`}
@@ -1217,27 +1344,159 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
               </table>
             </div>
           ) : (
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-sm text-muted-foreground">
               Log triggers alongside your entries to quantify how each factor raises or lowers your
               average pain.
             </div>
           )}
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Seasonality Insight */}
-      <div className="bg-white dark:bg-gray-900/60 backdrop-blur rounded-2xl shadow-xl p-6 border border-gray-100 dark:border-gray-800">
-        <div className="flex items-center justify-between mb-4">
+      {/* Context signals (optional fields) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <Pill className="w-5 h-5 text-primary" aria-hidden />
+              <CardTitle className="text-lg">Relief methods</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {analytics.topReliefMethods.length > 0 ? (
+              <div className="space-y-3">
+                {analytics.topReliefMethods.map((item, idx) => (
+                  <div key={`${item.trigger}-${idx}`} className="flex items-center gap-3">
+                    <Badge variant="secondary" className="h-8 w-8 justify-center rounded-lg flex-shrink-0">
+                      {idx + 1}
+                    </Badge>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-medium text-foreground">{item.trigger}</span>
+                        <span className="text-sm text-muted-foreground">{item.count}</span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2">
+                        <div
+                          className="bg-primary h-2 rounded-full transition-all"
+                          style={{ width: `${Math.min(100, item.percentage)}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Add relief methods to entries to understand what consistently helps.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-primary" aria-hidden />
+              <CardTitle className="text-lg">Pain quality</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {analytics.topQualities.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {analytics.topQualities.map(item => (
+                  <Badge key={item.trigger} variant="outline" className="capitalize">
+                    {item.trigger} ({item.count})
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Log pain quality (e.g., sharp, burning) to spot patterns.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2">
+              <Activity className="w-5 h-5 text-primary" aria-hidden />
+              <CardTitle className="text-lg">Activities</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {analytics.topActivities.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {analytics.topActivities.map(item => (
+                  <Badge key={item.trigger} variant="outline" className="capitalize">
+                    {item.trigger} ({item.count})
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Log activities to see which ones correlate with flare-ups or relief.
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader className="pb-4">
           <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-blue-500" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-              Seasonality & Cyclical Patterns
-            </h3>
+            <Brain className="w-5 h-5 text-primary" aria-hidden />
+            <CardTitle className="text-lg">Stress & activity level</CardTitle>
           </div>
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            Based on monthly averages
-          </span>
-        </div>
+        </CardHeader>
+        <CardContent>
+          <CardDescription className="mb-4">
+            Optional signals that help explain why pain changes day-to-day.
+          </CardDescription>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Card variant="filled" padding="sm" className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-foreground">Activity level</p>
+                <p className="text-xs text-muted-foreground">
+                  {analytics.activityLevelStats.count > 0
+                    ? `${analytics.activityLevelStats.count} logs · min ${analytics.activityLevelStats.min} · max ${analytics.activityLevelStats.max}`
+                    : 'Not logged yet'}
+                </p>
+              </div>
+              <Badge variant={analytics.activityLevelStats.count > 0 ? getSeverityBadgeVariant(analytics.activityLevelStats.avg) : 'secondary'}>
+                {analytics.activityLevelStats.count > 0 ? analytics.activityLevelStats.avg.toFixed(1) : '—'}
+              </Badge>
+            </Card>
+
+            <Card variant="filled" padding="sm" className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-foreground">Stress</p>
+                <p className="text-xs text-muted-foreground">
+                  {analytics.stressStats.count > 0
+                    ? `${analytics.stressStats.count} logs · min ${analytics.stressStats.min} · max ${analytics.stressStats.max}`
+                    : 'Not logged yet'}
+                </p>
+              </div>
+              <Badge variant={analytics.stressStats.count > 0 ? getSeverityBadgeVariant(analytics.stressStats.avg) : 'secondary'}>
+                {analytics.stressStats.count > 0 ? analytics.stressStats.avg.toFixed(1) : '—'}
+              </Badge>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Seasonality Insight */}
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between gap-4 w-full">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-primary" aria-hidden />
+              <CardTitle className="text-lg">Seasonality & cyclical patterns</CardTitle>
+            </div>
+            <span className="text-xs text-muted-foreground">Based on monthly averages</span>
+          </div>
+        </CardHeader>
+        <CardContent>
 
         {analytics.monthlyTrend && analytics.monthlyTrend.length > 0 ? (
           <div className="flex flex-wrap gap-3">
@@ -1247,36 +1506,38 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                 return (
                   <div
                     key={label}
-                    className="px-4 py-2 rounded-full border border-dashed border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 text-sm"
+                    className="px-4 py-2 rounded-full border border-dashed border-border text-muted-foreground text-sm"
                   >
                     {label}
                   </div>
                 );
               }
               const value = monthData.avgPain;
+              const badgeVariant = getSeverityBadgeVariant(value);
               return (
-                <div
-                  key={label}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold ${getSeverityColor(value)} border border-transparent`}
-                >
+                <Badge key={label} variant={badgeVariant} className="px-4 py-2">
                   {label} · {value.toFixed(1)}
-                </div>
+                </Badge>
               );
             })}
           </div>
         ) : (
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-muted-foreground">
             Add entries across different months to spot seasonal pain cycles (e.g., winter
             flare-ups, summer relief).
           </p>
         )}
-      </div>
+        </CardContent>
+      </Card>
+
+      {/* Weather correlation */}
+      <WeatherCorrelationPanel entries={entries} />
 
       {/* Nerve Symptoms Analysis */}
       {entries.length > 0 && (
-        <div className="bg-white dark:bg-gray-900/60 backdrop-blur rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <Card padding="none" className="overflow-hidden">
           <NerveSymptoms entries={entries} />
-        </div>
+        </Card>
       )}
     </div>
   );
@@ -1299,208 +1560,242 @@ const PredictionsView: React.FC<{ analytics: AnalyticsSnapshot }> = ({ analytics
     ?.filter(d => d.count > 0)
     .sort((a, b) => b.avgPain - a.avgPain)[0];
 
+  const getSeverityBadgeVariant = (value: number) => {
+    if (value >= 7) return 'destructive' as const;
+    if (value >= 5) return 'warning' as const;
+    if (value >= 3) return 'info' as const;
+    return 'success' as const;
+  };
+
+  const getConfidenceBadgeVariant = (value?: 'high' | 'medium' | 'low') => {
+    if (value === 'high') return 'success' as const;
+    if (value === 'medium') return 'warning' as const;
+    if (value === 'low') return 'secondary' as const;
+    return 'secondary' as const;
+  };
+
+  const getEmphasisBadgeVariant = (value: 'high' | 'medium' | 'low') => {
+    if (value === 'high') return 'destructive' as const;
+    if (value === 'medium') return 'warning' as const;
+    return 'secondary' as const;
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-rose-500 to-orange-500 text-white rounded-2xl p-6 shadow-2xl">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm uppercase tracking-wide text-white/70">Flare Risk</p>
-              <h3 className="text-2xl font-bold">{flare ? `${flare.probability}%` : 'Stable'}</h3>
-            </div>
-            <div className="p-3 bg-white/20 rounded-xl">
-              <AlertTriangle className="w-6 h-6" />
-            </div>
-          </div>
-          <p className="text-sm text-white/80">
-            {flare
-              ? `Next ${flare.timeframe} · Severity ${flare.severity}`
-              : 'No immediate flare risk detected. Keep logging to maintain accuracy.'}
-          </p>
-          <div className="mt-4">
-            <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+        <Card
+          variant="outlined"
+          className={
+            flare ? 'border-destructive/30 bg-destructive/5' : 'border-success/30 bg-success/5'
+          }
+        >
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div>
+                <CardDescription className="uppercase tracking-wide">Flare risk</CardDescription>
+                <CardTitle className="text-2xl mt-1">
+                  {flare ? `${flare.probability}%` : 'Stable'}
+                </CardTitle>
+              </div>
               <div
-                className="h-full bg-white"
-                style={{ width: `${flare ? flare.probability : 20}%` }}
-              />
+                className={`h-12 w-12 rounded-lg flex items-center justify-center ${
+                  flare ? 'bg-destructive/10 text-destructive' : 'bg-success/10 text-success'
+                }`}
+              >
+                <AlertTriangle className="w-6 h-6" aria-hidden />
+              </div>
             </div>
-            {flare && (
-              <ul className="mt-3 text-sm space-y-1 text-white/80 list-disc list-inside">
-                {flare.recommendations.map((rec: string) => (
-                  <li key={rec}>{rec}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              {flare
+                ? `Next ${flare.timeframe} · Severity ${flare.severity}`
+                : 'No immediate flare risk detected. Keep logging to maintain accuracy.'}
+            </p>
+            <div className="mt-4">
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className={`h-full ${flare ? 'bg-destructive' : 'bg-success'}`}
+                  style={{ width: `${flare ? flare.probability : 20}%` }}
+                />
+              </div>
+              {flare && (
+                <ul className="mt-3 text-sm space-y-1 text-muted-foreground list-disc list-inside">
+                  {flare.recommendations.map((rec: string) => (
+                    <li key={rec}>{rec}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl border border-blue-100 dark:border-blue-900/40">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm uppercase tracking-wide text-blue-500">7-Day Outlook</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                {forecast?.projectedAverage?.toFixed(1) ?? '—'} / 10
-              </h3>
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div>
+                <CardDescription className="uppercase tracking-wide">7-day outlook</CardDescription>
+                <CardTitle className="text-2xl mt-1">
+                  {forecast?.projectedAverage?.toFixed(1) ?? '—'} / 10
+                </CardTitle>
+              </div>
+              <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+                <Brain className="w-6 h-6" aria-hidden />
+              </div>
             </div>
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-xl">
-              <Brain className="w-6 h-6 text-blue-600 dark:text-blue-300" />
-            </div>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {forecast
-              ? `${forecast.change >= 0 ? '+' : ''}${forecast.change.toFixed(1)} change vs current average · Confidence ${forecast.confidence}`
-              : 'Need more entries to project forward.'}
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-3">{forecast?.narrative}</p>
-        </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              {forecast ? (
+                <>
+                  {`${forecast.change >= 0 ? '+' : ''}${forecast.change.toFixed(1)} change vs current average · `}
+                  <Badge variant={getConfidenceBadgeVariant(forecast.confidence)}>
+                    {forecast.confidence} confidence
+                  </Badge>
+                </>
+              ) : (
+                'Need more entries to project forward.'
+              )}
+            </p>
+            {forecast?.narrative ? (
+              <p className="text-sm text-muted-foreground mt-3">{forecast.narrative}</p>
+            ) : null}
+          </CardContent>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl border border-purple-100 dark:border-purple-900/40">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm uppercase tracking-wide text-purple-500">
-                Optimal Medication Window
-              </p>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                {medicationWindow ? medicationWindow.label : 'Need more data'}
-              </h3>
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div>
+                <CardDescription className="uppercase tracking-wide">
+                  Optimal medication window
+                </CardDescription>
+                <CardTitle className="text-xl mt-1">
+                  {medicationWindow ? medicationWindow.label : 'Need more data'}
+                </CardTitle>
+              </div>
+              <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-warning/10 text-warning">
+                <Pill className="w-6 h-6" aria-hidden />
+              </div>
             </div>
-            <div className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
-              <Pill className="w-6 h-6 text-purple-600 dark:text-purple-300" />
-            </div>
-          </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            {medicationWindow
-              ? `Avg relief ${medicationWindow.avgReduction.toFixed(1)} points across ${medicationWindow.count} documented doses. Confidence ${(medicationWindow.confidence * 100).toFixed(0)}%.`
-              : 'Log medication usage alongside pain levels to unlock timing insights.'}
-          </p>
-        </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              {medicationWindow
+                ? `Avg relief ${medicationWindow.avgReduction.toFixed(1)} points across ${medicationWindow.count} documented doses. Confidence ${(medicationWindow.confidence * 100).toFixed(0)}%.`
+                : 'Log medication usage alongside pain levels to unlock timing insights.'}
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-800">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-sm uppercase tracking-wide text-indigo-500">
-                Personalized Recommendations
-              </p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Next Best Actions
-              </h3>
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <div>
+                <CardDescription className="uppercase tracking-wide">
+                  Personalized recommendations
+                </CardDescription>
+                <CardTitle className="text-2xl mt-1">Next best actions</CardTitle>
+              </div>
+              <Sparkles className="w-6 h-6 text-primary" aria-hidden />
             </div>
-            <Sparkles className="w-6 h-6 text-indigo-500" />
-          </div>
+          </CardHeader>
 
-          {recommendations.length === 0 ? (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Keep logging detailed entries (triggers, meds, sleep) to unlock personalized guidance.
-            </p>
-          ) : (
-            <div className="space-y-4">
-              {recommendations.map((rec, idx) => (
-                <div
-                  key={`${rec.title}-${idx}`}
-                  className="p-4 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-800/40"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {rec.title}
+          <CardContent>
+            {recommendations.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Keep logging detailed entries (triggers, meds, sleep) to unlock personalized
+                guidance.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {recommendations.map((rec, idx) => (
+                  <Card key={`${rec.title}-${idx}`} variant="filled" padding="sm">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="text-sm font-semibold text-foreground">{rec.title}</div>
+                      <Badge variant={getEmphasisBadgeVariant(rec.emphasis)} className="shrink-0">
+                        {rec.category}
+                      </Badge>
                     </div>
-                    <span
-                      className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                        rec.emphasis === 'high'
-                          ? 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200'
-                          : rec.emphasis === 'medium'
-                            ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-200'
-                            : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200'
-                      }`}
-                    >
-                      {rec.category}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {rec.detail}
+                    <p className="text-sm text-muted-foreground leading-relaxed">{rec.detail}</p>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-4">
+            <div>
+              <CardDescription className="uppercase tracking-wide">Supporting signals</CardDescription>
+              <CardTitle className="text-lg mt-1">What drives the model</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <div className="space-y-3">
+              <Card variant="filled" padding="sm" className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-xs text-muted-foreground">Most sensitive trigger</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {aggravatingTrigger ? aggravatingTrigger.trigger : 'Need more data'}
                   </p>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                {aggravatingTrigger ? (
+                  <Badge variant="destructive">+{aggravatingTrigger.avgDelta.toFixed(1)}</Badge>
+                ) : null}
+              </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-800 space-y-5">
-          <div>
-            <p className="text-sm uppercase tracking-wide text-gray-500 dark:text-gray-400">
-              Supporting Signals
-            </p>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              What drives the model
-            </h3>
-          </div>
-          <div className="space-y-3">
-            <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-between gap-2">
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Most sensitive trigger</p>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {aggravatingTrigger ? aggravatingTrigger.trigger : 'Need more data'}
-                </p>
-              </div>
-              {aggravatingTrigger && (
-                <span className="text-sm font-semibold text-rose-600 dark:text-rose-300">
-                  +{aggravatingTrigger.avgDelta.toFixed(1)}
-                </span>
-              )}
-            </div>
-            <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-between gap-2">
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Most stable trigger</p>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {stabilizingTrigger ? stabilizingTrigger.trigger : 'Logging needed'}
-                </p>
-              </div>
-              {stabilizingTrigger && (
-                <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-300">
-                  {stabilizingTrigger.avgDelta.toFixed(1)}
-                </span>
-              )}
-            </div>
-            <div className="p-3 rounded-xl bg-gray-50 dark:bg-gray-800 flex items-center justify-between gap-2">
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Peak pain day</p>
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {toughestDay ? DAY_LABELS[toughestDay.day] : 'Need weekly coverage'}
-                </p>
-              </div>
-              {toughestDay && (
-                <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-300">
-                  {toughestDay.avgPain.toFixed(1)}
-                </span>
-              )}
-            </div>
-          </div>
+              <Card variant="filled" padding="sm" className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-xs text-muted-foreground">Most stable trigger</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {stabilizingTrigger ? stabilizingTrigger.trigger : 'Logging needed'}
+                  </p>
+                </div>
+                {stabilizingTrigger ? (
+                  <Badge variant="success">{stabilizingTrigger.avgDelta.toFixed(1)}</Badge>
+                ) : null}
+              </Card>
 
-          <div>
-            <p className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">
-              Top relief sources
-            </p>
-            <div className="space-y-2">
-              {medicationLeaders.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Track medication usage to see which options your body responds to best.
-                </p>
-              ) : (
-                medicationLeaders.map(med => (
-                  <div key={med.medication} className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-gray-900 dark:text-white">
-                      {med.medication}
-                    </span>
-                    <span className="text-emerald-600 dark:text-emerald-300 font-semibold">
-                      -{med.avgReduction.toFixed(1)}
-                    </span>
-                  </div>
-                ))
-              )}
+              <Card variant="filled" padding="sm" className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-xs text-muted-foreground">Peak pain day</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {toughestDay ? DAY_LABELS[toughestDay.day] : 'Need weekly coverage'}
+                  </p>
+                </div>
+                {toughestDay ? (
+                  <Badge variant={getSeverityBadgeVariant(toughestDay.avgPain)}>
+                    {toughestDay.avgPain.toFixed(1)}
+                  </Badge>
+                ) : null}
+              </Card>
             </div>
-          </div>
-        </div>
+
+            <div>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground mb-2">
+                Top relief sources
+              </p>
+              <div className="space-y-2">
+                {medicationLeaders.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    Track medication usage to see which options your body responds to best.
+                  </p>
+                ) : (
+                  medicationLeaders.map(med => (
+                    <div key={med.medication} className="flex items-center justify-between text-sm">
+                      <span className="font-medium text-foreground">{med.medication}</span>
+                      <Badge variant="success">-{med.avgReduction.toFixed(1)}</Badge>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
@@ -1588,54 +1883,58 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
 
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-6">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
-              Clinical Summary
-            </p>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Pain Management Report
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              {totalEntries > 0
-                ? `${dateFormatter(rangeStart)} – ${dateFormatter(rangeEnd)} (${totalEntries} entries)`
-                : 'Awaiting entries to generate report.'}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <div className="px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800">
-              <p className="text-xs text-gray-500 dark:text-gray-400">Risk Level</p>
-              <p className="font-semibold text-gray-900 dark:text-white">{riskLevel}</p>
-            </div>
-            <div className="px-4 py-2 rounded-xl bg-gray-50 dark:bg-gray-800">
-              <p className="text-xs text-gray-500 dark:text-gray-400">Latest Entry</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
-                {dateFormatter(latestEntry?.timestamp)}
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 w-full">
+            <div>
+              <CardDescription className="text-xs uppercase tracking-[0.2em]">
+                Clinical summary
+              </CardDescription>
+              <CardTitle className="text-2xl mt-2">Pain management report</CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">
+                {totalEntries > 0
+                  ? `${dateFormatter(rangeStart)} – ${dateFormatter(rangeEnd)} (${totalEntries} entries)`
+                  : 'Awaiting entries to generate report.'}
               </p>
             </div>
+            <div className="flex flex-wrap gap-3">
+              <Card variant="filled" padding="sm" className="min-w-[140px]">
+                <p className="text-xs text-muted-foreground">Risk level</p>
+                <p className="font-semibold text-foreground">{riskLevel}</p>
+              </Card>
+              <Card variant="filled" padding="sm" className="min-w-[140px]">
+                <p className="text-xs text-muted-foreground">Latest entry</p>
+                <p className="font-semibold text-foreground">{dateFormatter(latestEntry?.timestamp)}</p>
+              </Card>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 space-y-3">
-          <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">
-            Pain Overview
-          </h3>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Pain overview
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
           {summaryBullets.map(bullet => (
             <div key={bullet} className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-blue-500 mt-2" />
-              <p className="text-sm text-gray-700 dark:text-gray-300">{bullet}</p>
+              <div className="w-2 h-2 rounded-full bg-primary mt-2" aria-hidden />
+              <p className="text-sm text-muted-foreground">{bullet}</p>
             </div>
           ))}
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-          <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-3">
-            Functional Impact
-          </h3>
-          <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Functional impact
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
             <p>
               <span className="font-semibold">Limited Activities:</span>{' '}
               {functionalSummary.limitedActivities.size > 0
@@ -1654,14 +1953,17 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
                 ? Array.from(functionalSummary.mobilityAids).join(', ')
                 : 'Not documented'}
             </p>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-          <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-3">
-            WorkSafe BC Readiness
-          </h3>
-          <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              WorkSafe BC readiness
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
               <span className="font-semibold">Missed days:</span> {workSummary.missedDays}
             </li>
@@ -1677,85 +1979,100 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
                 ? Array.from(workSummary.workLimitations).join(', ')
                 : 'None recorded'}
             </li>
-          </ul>
-        </div>
+            </ul>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">
-              Medication & Treatment Summary
-            </h3>
-            <span className="text-xs text-gray-400 dark:text-gray-500">
-              Last documented: {dateFormatter(latestEntry?.timestamp)}
-            </span>
-          </div>
+        <Card>
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-4 w-full">
+              <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                Medication & treatment summary
+              </CardTitle>
+              <span className="text-xs text-muted-foreground">
+                Last documented: {dateFormatter(latestEntry?.timestamp)}
+              </span>
+            </div>
+          </CardHeader>
+          <CardContent>
           {medicationHighlights.length === 0 ? (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               Document medication usage along with pain score changes to surface effectiveness
               insights.
             </p>
           ) : (
             <div className="space-y-3">
               {medicationHighlights.map(med => (
-                <div
-                  key={med.medication}
-                  className="flex items-center justify-between text-sm text-gray-700 dark:text-gray-200 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/70"
-                >
+                <Card key={med.medication} variant="filled" padding="sm">
+                  <div className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="font-semibold">{med.medication}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{med.uses} entries</p>
+                    <p className="font-semibold text-foreground">{med.medication}</p>
+                    <p className="text-xs text-muted-foreground">{med.uses} entries</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-emerald-600 dark:text-emerald-300">
-                      -{med.avgReduction.toFixed(1)}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Avg pain change</p>
+                    <Badge variant="success">-{med.avgReduction.toFixed(1)}</Badge>
+                    <p className="text-xs text-muted-foreground mt-1">Avg pain change</p>
                   </div>
-                </div>
+                  </div>
+                </Card>
               ))}
             </div>
           )}
           {analytics.optimalMedicationWindow && (
-            <div className="mt-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 p-4 text-sm text-indigo-900 dark:text-indigo-100">
-              Optimal timing:{' '}
-              <span className="font-semibold">{analytics.optimalMedicationWindow.label}</span> · Avg
-              relief {analytics.optimalMedicationWindow.avgReduction.toFixed(1)} · Confidence{' '}
-              {(analytics.optimalMedicationWindow.confidence * 100).toFixed(0)}%
-            </div>
+            <Card
+              variant="filled"
+              padding="sm"
+              className="mt-4 border-primary/20 bg-primary/5"
+            >
+              <p className="text-sm text-foreground">
+                Optimal timing:{' '}
+                <span className="font-semibold">{analytics.optimalMedicationWindow.label}</span> ·
+                Avg relief {analytics.optimalMedicationWindow.avgReduction.toFixed(1)} · Confidence{' '}
+                {(analytics.optimalMedicationWindow.confidence * 100).toFixed(0)}%
+              </p>
+            </Card>
           )}
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-          <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide mb-4">
-            Provider Notes & Next Steps
-          </h3>
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Provider notes & next steps
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
           {careTeamNotes.length === 0 ? (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               Log detailed context (triggers, interventions) to unlock provider-ready
               recommendations.
             </p>
           ) : (
-            <ol className="list-decimal list-inside space-y-3 text-sm text-gray-700 dark:text-gray-300">
+            <ol className="list-decimal list-inside space-y-3 text-sm text-muted-foreground">
               {careTeamNotes.map((note, idx) => (
                 <li key={`${note.title}-${idx}`}>
-                  <p className="font-semibold text-gray-900 dark:text-white">{note.title}</p>
-                  <p className="text-gray-600 dark:text-gray-400">{note.detail}</p>
+                  <p className="font-semibold text-foreground">{note.title}</p>
+                  <p className="text-muted-foreground">{note.detail}</p>
                 </li>
               ))}
             </ol>
           )}
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="bg-gray-50 dark:bg-gray-900/60 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-        <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400 mb-2">
-          Supporting Evidence
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
+      <Card variant="filled">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+            Supporting evidence
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Top Pain Locations</p>
+            <p className="text-xs uppercase">Top pain locations</p>
             <p>
               {analytics.topLocations.length > 0
                 ? analytics.topLocations.map(loc => `${loc.location} (${loc.count})`).join(', ')
@@ -1763,7 +2080,7 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
             </p>
           </div>
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">Primary Triggers</p>
+            <p className="text-xs uppercase">Primary triggers</p>
             <p>
               {analytics.topTriggers.length > 0
                 ? analytics.topTriggers
@@ -1773,9 +2090,7 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
             </p>
           </div>
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase">
-              Quality-of-Life Metrics
-            </p>
+            <p className="text-xs uppercase">Quality-of-life metrics</p>
             <p>
               Sleep avg:{' '}
               {functionalSummary.sleepCount > 0
@@ -1787,14 +2102,15 @@ const ClinicalReportView: React.FC<{ analytics: AnalyticsSnapshot; entries: Pain
                 : '—'}
             </p>
           </div>
-        </div>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Functional Limitations Analysis */}
       {entries.length > 0 && (
-        <div className="bg-white dark:bg-gray-900/60 backdrop-blur rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+        <Card padding="none" className="overflow-hidden">
           <FunctionalLimitations entries={entries} />
-        </div>
+        </Card>
       )}
     </div>
   );
@@ -1809,244 +2125,264 @@ const InsightsView: React.FC<{
 }> = ({ analytics, entries, reasoningTree, patternAnalysis }) => {
   const entryConfidence = entries.length >= 60 ? 'high' : entries.length >= 25 ? 'medium' : 'low';
   const latestRecommendation = analytics.personalizedRecommendations[0];
+  const confidenceBadgeVariant =
+    entryConfidence === 'high' ? 'success' : entryConfidence === 'medium' ? 'warning' : 'destructive';
 
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">
-              Tree-of-Thought Reasoning
-            </p>
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-              How the dashboard reached its conclusions
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-              Each branch represents a reasoning step that connects raw entries to clinical
-              guidance. Confidence is weighted by data coverage.
-            </p>
-          </div>
-          <div
-            className={`px-4 py-2 rounded-xl text-sm font-semibold ${
-              entryConfidence === 'high'
-                ? 'bg-emerald-100 text-emerald-700'
-                : entryConfidence === 'medium'
-                  ? 'bg-amber-100 text-amber-700'
-                  : 'bg-rose-100 text-rose-700'
-            }`}
-          >
-            Data confidence: {entryConfidence}
-          </div>
-        </div>
-
-        <div className="mt-6">
-          <ReasoningTree nodes={reasoningTree} depth={0} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="col-span-2 bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-2xl p-6 shadow-2xl">
-          <div className="flex items-start gap-3">
-            <Sparkles className="w-6 h-6" />
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between gap-4 w-full">
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-white/70">
-                Highlighted Thought
-              </p>
-              <h4 className="text-xl font-bold">
-                {latestRecommendation ? latestRecommendation.title : 'Keep logging insights'}
-              </h4>
-              <p className="text-sm text-white/80 mt-2">
-                {latestRecommendation
-                  ? latestRecommendation.detail
-                  : 'Log triggers, medications, and recovery context to unlock actionable insights.'}
+              <CardDescription className="text-xs uppercase tracking-[0.3em]">
+                Tree-of-thought reasoning
+              </CardDescription>
+              <CardTitle className="text-2xl mt-2">How conclusions are formed</CardTitle>
+              <p className="text-sm text-muted-foreground mt-2">
+                Each branch represents a reasoning step that connects raw entries to clinical
+                guidance. Confidence is weighted by data coverage.
               </p>
             </div>
+            <Badge variant={confidenceBadgeVariant} className="shrink-0">
+              Data confidence: {entryConfidence}
+            </Badge>
           </div>
-        </div>
+        </CardHeader>
+        <CardContent>
+          <ReasoningTree nodes={reasoningTree} depth={0} />
+        </CardContent>
+      </Card>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">
-            Coverage Snapshot
-          </p>
-          <div className="mt-4 space-y-3 text-sm text-gray-700 dark:text-gray-300">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="col-span-2" variant="accented">
+          <CardHeader className="pb-4">
+            <div className="flex items-start gap-3">
+              <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+                <Sparkles className="w-6 h-6" aria-hidden />
+              </div>
+              <div>
+                <CardDescription className="text-xs uppercase tracking-[0.4em]">
+                  Highlighted thought
+                </CardDescription>
+                <CardTitle className="text-xl mt-1">
+                  {latestRecommendation ? latestRecommendation.title : 'Keep logging insights'}
+                </CardTitle>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              {latestRecommendation
+                ? latestRecommendation.detail
+                : 'Log triggers, medications, and recovery context to unlock actionable insights.'}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
+              Coverage snapshot
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
             <div className="flex items-center justify-between">
               <span>Total entries analyzed</span>
-              <span className="font-semibold">{entries.length}</span>
+              <span className="font-semibold text-foreground">{entries.length}</span>
             </div>
             <div className="flex items-center justify-between">
               <span>Day-of-week coverage</span>
-              <span className="font-semibold">
+              <span className="font-semibold text-foreground">
                 {analytics.dayOfWeekPatterns.filter(d => d.count > 0).length}/7 days
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span>Trigger signals tracked</span>
-              <span className="font-semibold">{analytics.triggerPainCorrelation.length}</span>
+              <span className="font-semibold text-foreground">
+                {analytics.triggerPainCorrelation.length}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <span>Medication experiments</span>
-              <span className="font-semibold">{analytics.medicationEffectiveness.length}</span>
+              <span className="font-semibold text-foreground">
+                {analytics.medicationEffectiveness.length}
+              </span>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Advanced Pattern Recognition Results */}
       {patternAnalysis && (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl p-6 shadow-2xl">
-            <div className="flex items-center gap-3 mb-4">
-              <Brain className="w-6 h-6" />
-              <div>
-                <h3 className="text-xl font-bold">Heuristic Pattern Recognition</h3>
-                <p className="text-sm text-white/80">
-                  Advanced analysis powered by local algorithms
-                </p>
+          <Card variant="accented">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+                  <Brain className="w-6 h-6" aria-hidden />
+                </div>
+                <div>
+                  <CardTitle className="text-xl">Heuristic pattern recognition</CardTitle>
+                  <CardDescription>Advanced analysis powered by local algorithms</CardDescription>
+                </div>
               </div>
-            </div>
+            </CardHeader>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                <p className="text-xs uppercase tracking-wider text-white/70">Trend Slope</p>
-                <p className="text-2xl font-bold">
-                  {patternAnalysis.dailyTrend.length > 0
-                    ? (
-                        patternAnalysis.dailyTrend[patternAnalysis.dailyTrend.length - 1].value -
-                        patternAnalysis.dailyTrend[0].value
-                      ).toFixed(1)
-                    : '0.0'}
-                </p>
-                <p className="text-xs text-white/80">Recent trend direction</p>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card variant="filled" padding="sm">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Trend slope</p>
+                  <p className="text-2xl font-semibold text-foreground mt-1">
+                    {patternAnalysis.dailyTrend.length > 0
+                      ? (
+                          patternAnalysis.dailyTrend[patternAnalysis.dailyTrend.length - 1].value -
+                          patternAnalysis.dailyTrend[0].value
+                        ).toFixed(1)
+                      : '0.0'}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">Recent trend direction</p>
+                </Card>
+
+                <Card variant="filled" padding="sm">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Episodes detected
+                  </p>
+                  <p className="text-2xl font-semibold text-foreground mt-1">
+                    {patternAnalysis.episodes.length}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">Flare patterns identified</p>
+                </Card>
+
+                <Card variant="filled" padding="sm">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Data quality</p>
+                  <p className="text-2xl font-semibold text-foreground mt-1 capitalize">
+                    {patternAnalysis.meta.dataQuality}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {patternAnalysis.meta.entryCount} entries analyzed
+                  </p>
+                </Card>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                <p className="text-xs uppercase tracking-wider text-white/70">Episodes Detected</p>
-                <p className="text-2xl font-bold">{patternAnalysis.episodes.length}</p>
-                <p className="text-xs text-white/80">Flare patterns identified</p>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                <p className="text-xs uppercase tracking-wider text-white/70">Data Quality</p>
-                <p className="text-2xl font-bold capitalize">{patternAnalysis.meta.dataQuality}</p>
-                <p className="text-xs text-white/80">
-                  {patternAnalysis.meta.entryCount} entries analyzed
-                </p>
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
           {/* Episodes Timeline */}
           {patternAnalysis.episodes.length > 0 && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
-              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-500" />
-                Pain Episodes ({patternAnalysis.episodes.length})
-              </h4>
-              <div className="space-y-3">
-                {patternAnalysis.episodes.slice(0, 5).map((episode, idx) => (
-                  <div key={idx} className="border-l-4 border-red-500 pl-4 py-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-gray-900 dark:text-white capitalize">
-                          {episode.severity} Severity
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {episode.durationDays} days • Peak: {episode.peakPain.toFixed(1)}/10
-                        </p>
-                      </div>
-                      {episode.recoveryDays !== null && (
-                        <div className="text-sm text-gray-600 dark:text-gray-400">
-                          Recovery: {episode.recoveryDays}d
+            <Card>
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-destructive" aria-hidden />
+                  <CardTitle className="text-lg">
+                    Pain episodes ({patternAnalysis.episodes.length})
+                  </CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {patternAnalysis.episodes.slice(0, 5).map((episode, idx) => (
+                    <div key={idx} className="border-l-4 border-l-destructive pl-4 py-2">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-foreground capitalize">
+                            {episode.severity} severity
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {episode.durationDays} days • Peak: {episode.peakPain.toFixed(1)}/10
+                          </p>
                         </div>
-                      )}
+                        {episode.recoveryDays !== null && (
+                          <div className="text-sm text-muted-foreground">
+                            Recovery: {episode.recoveryDays}d
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {/* Trigger Correlations */}
           {patternAnalysis.triggerCorrelations.length > 0 && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
-              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Zap className="w-5 h-5 text-yellow-500" />
-                Trigger Correlations
-              </h4>
-              <div className="space-y-3">
-                {patternAnalysis.triggerCorrelations.slice(0, 5).map((corr, idx) => (
-                  <div key={idx} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900 dark:text-white">{corr.label}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {corr.support} occurrences • {corr.confidence.toFixed(0)}% confidence
-                      </p>
+            <Card>
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-warning" aria-hidden />
+                  <CardTitle className="text-lg">Trigger correlations</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {patternAnalysis.triggerCorrelations.slice(0, 5).map((corr, idx) => (
+                    <div key={idx} className="flex items-center justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-foreground truncate">{corr.label}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {corr.support} occurrences • {corr.confidence.toFixed(0)}% confidence
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={corr.deltaPain > 0 ? 'destructive' : 'success'}>
+                          {corr.deltaPain > 0 ? '+' : ''}
+                          {corr.deltaPain.toFixed(1)}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground capitalize">{corr.strength}</span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p
-                        className={`text-sm font-semibold ${corr.deltaPain > 0 ? 'text-red-600' : 'text-green-600'}`}
-                      >
-                        {corr.deltaPain > 0 ? '+' : ''}
-                        {corr.deltaPain.toFixed(1)}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">
-                        {corr.strength}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {/* QoL Patterns */}
           {patternAnalysis.qolPatterns.length > 0 && (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-xl">
-              <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Heart className="w-5 h-5 text-pink-500" />
-                Quality of Life Insights
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {patternAnalysis.qolPatterns.map((pattern, idx) => (
-                  <div
-                    key={idx}
-                    className="border border-gray-200 dark:border-gray-700 rounded-xl p-4"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      {pattern.metric === 'sleep' && <Moon className="w-4 h-4" />}
-                      {pattern.metric === 'mood' && <Sun className="w-4 h-4" />}
-                      {pattern.metric === 'activity' && <Activity className="w-4 h-4" />}
-                      <p className="font-semibold text-gray-900 dark:text-white capitalize">
-                        {pattern.metric}
+            <Card>
+              <CardHeader className="pb-4">
+                <div className="flex items-center gap-2">
+                  <Heart className="w-5 h-5 text-primary" aria-hidden />
+                  <CardTitle className="text-lg">Quality of life insights</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {patternAnalysis.qolPatterns.map((pattern, idx) => (
+                    <Card key={idx} variant="filled" padding="sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        {pattern.metric === 'sleep' && <Moon className="w-4 h-4" aria-hidden />}
+                        {pattern.metric === 'mood' && <Sun className="w-4 h-4" aria-hidden />}
+                        {pattern.metric === 'activity' && (
+                          <Activity className="w-4 h-4" aria-hidden />
+                        )}
+                        <p className="font-semibold text-foreground capitalize">{pattern.metric}</p>
+                      </div>
+                      <p className="text-sm text-muted-foreground">{pattern.description}</p>
+                      <p className="text-xs text-muted-foreground mt-2 capitalize">
+                        {pattern.correlation} correlation
                       </p>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {pattern.description}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 capitalize">
-                      {pattern.correlation} correlation
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {/* Cautions */}
           {patternAnalysis.meta.cautions.length > 0 && (
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-4">
+            <Card variant="outlined" className="border-warning/30 bg-warning/10" padding="sm">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" aria-hidden />
                 <div className="flex-1">
-                  <p className="font-semibold text-yellow-900 dark:text-yellow-100">
-                    Analysis Notes
-                  </p>
-                  <ul className="mt-2 space-y-1 text-sm text-yellow-800 dark:text-yellow-200">
+                  <p className="font-semibold text-foreground">Analysis notes</p>
+                  <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                     {patternAnalysis.meta.cautions.map((caution, idx) => (
                       <li key={idx}>• {caution}</li>
                     ))}
                   </ul>
                 </div>
               </div>
-            </div>
+            </Card>
           )}
         </div>
       )}
@@ -2057,7 +2393,7 @@ const InsightsView: React.FC<{
 const ReasoningTree: React.FC<{ nodes: ReasoningNode[]; depth: number }> = ({ nodes, depth }) => {
   if (!nodes.length) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-200 dark:border-gray-700 p-4 text-sm text-gray-500 dark:text-gray-400">
+      <div className="rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground">
         Not enough data yet. Add a few detailed entries to unlock automated reasoning.
       </div>
     );
@@ -2066,47 +2402,41 @@ const ReasoningTree: React.FC<{ nodes: ReasoningNode[]; depth: number }> = ({ no
   return (
     <div className="space-y-4">
       {nodes.map(node => (
-        <div
-          key={node.id}
-          className="rounded-2xl border border-gray-200 dark:border-gray-800 p-4 bg-white dark:bg-gray-900 shadow"
-        >
+        <Card key={node.id} variant="filled" padding="sm">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">
+              <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
                 Step {depth + 1}
               </p>
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">{node.title}</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{node.insight}</p>
+              <h4 className="text-lg font-semibold text-foreground mt-1">{node.title}</h4>
+              <p className="text-sm text-muted-foreground mt-1">{node.insight}</p>
               {node.evidence && (
-                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                  Evidence: {node.evidence}
-                </p>
+                <p className="mt-2 text-xs text-muted-foreground">Evidence: {node.evidence}</p>
               )}
               {node.action && (
-                <p className="mt-2 text-sm text-indigo-600 dark:text-indigo-300 font-medium">
-                  Next action: {node.action}
-                </p>
+                <p className="mt-2 text-sm text-primary font-medium">Next action: {node.action}</p>
               )}
             </div>
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            <Badge
+              variant={
                 node.confidence === 'high'
-                  ? 'bg-emerald-100 text-emerald-700'
+                  ? 'success'
                   : node.confidence === 'medium'
-                    ? 'bg-amber-100 text-amber-700'
-                    : 'bg-rose-100 text-rose-700'
-              }`}
+                    ? 'warning'
+                    : 'destructive'
+              }
+              className="shrink-0"
             >
               {node.confidence} confidence
-            </span>
+            </Badge>
           </div>
 
           {node.children && node.children.length > 0 && (
-            <div className="mt-4 pl-4 border-l-2 border-dashed border-gray-200 dark:border-gray-700 space-y-4">
+            <div className="mt-4 pl-4 border-l-2 border-dashed border-border space-y-4">
               <ReasoningTree nodes={node.children} depth={depth + 1} />
             </div>
           )}
-        </div>
+        </Card>
       ))}
     </div>
   );
@@ -2509,97 +2839,107 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
     <>
       <div className="space-y-6">
         {isOffline && (
-          <div
-            className="rounded-2xl border border-amber-200 bg-amber-50 dark:border-amber-500/40 dark:bg-amber-900/20 p-4 text-amber-900 dark:text-amber-100"
+          <Card
+            variant="outlined"
+            padding="sm"
+            className="border-warning/30 bg-warning/10"
             role="status"
             aria-live="polite"
           >
-            <p className="text-sm font-semibold">Offline mode detected</p>
-            <p className="text-sm opacity-90">
+            <p className="text-sm font-semibold text-foreground">Offline mode detected</p>
+            <p className="text-sm text-muted-foreground">
               Quick downloads stay fully local. Email sharing is paused until you're back online,
               and the advanced export workspace will reopen with cached data only.
             </p>
-          </div>
+          </Card>
         )}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-6">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
-                  Clinical-Grade Exports
-                </p>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Share securely with care teams
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                  Generate WorkSafe BC-ready PDFs or quickly download data snapshots without leaving
-                  the browser.
-                </p>
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex items-start justify-between gap-4 w-full">
+                <div>
+                  <CardDescription className="text-xs uppercase tracking-[0.2em]">
+                    Clinical-grade exports
+                  </CardDescription>
+                  <CardTitle className="text-2xl mt-2">Share securely with care teams</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Generate WorkSafe BC-ready PDFs or quickly download data snapshots without
+                    leaving the browser.
+                  </p>
+                </div>
+                <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+                  <FileText className="w-6 h-6" aria-hidden />
+                </div>
               </div>
-              <FileText className="w-8 h-8 text-blue-500" />
-            </div>
+            </CardHeader>
+            <CardContent>
 
             <React.Suspense
               fallback={
-                <div className="mt-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-800 text-sm text-gray-500 dark:text-gray-400">
-                  Preparing clinical export tools…
-                </div>
+                <Card variant="filled" padding="sm" className="mt-4">
+                  <p className="text-sm text-muted-foreground">Preparing clinical export tools…</p>
+                </Card>
               }
             >
               <ClinicalPDFExportButtonLazy entries={entries} className="mt-6" />
             </React.Suspense>
 
-            <button
+            <Button
               onClick={handleOpenAdvancedModal}
-              className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-dashed border-blue-300 text-blue-700 dark:text-blue-200 hover:bg-blue-50/60 dark:hover:bg-blue-900/20 transition-colors"
+              variant="outline"
+              fullWidth
+              className="mt-4 border-dashed"
+              leftIcon={<Filter className="w-4 h-4" aria-hidden />}
             >
-              <Filter className="w-4 h-4" />
               Open advanced export workspace
-            </button>
+            </Button>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
-              <button
+              <Button
                 onClick={() => handleQuickExport('csv')}
                 disabled={isQuickExporting !== null}
-                className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium shadow-lg disabled:opacity-60"
+                loading={isQuickExporting === 'csv'}
+                leftIcon={<FileSpreadsheet className="w-5 h-5" aria-hidden />}
               >
-                <FileSpreadsheet className="w-5 h-5" />
-                {isQuickExporting === 'csv' ? 'Preparing CSV…' : 'Quick CSV'}
-              </button>
-              <button
+                Quick CSV
+              </Button>
+              <Button
                 onClick={() => handleQuickExport('json')}
                 disabled={isQuickExporting !== null}
-                className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white font-medium shadow"
+                loading={isQuickExporting === 'json'}
+                variant="secondary"
+                leftIcon={<FileJson className="w-5 h-5" aria-hidden />}
               >
-                <FileJson className="w-5 h-5" />
-                {isQuickExporting === 'json' ? 'Preparing JSON…' : 'Quick JSON'}
-              </button>
+                Quick JSON
+              </Button>
             </div>
 
             {quickExportError && (
-              <p className="mt-3 text-sm text-red-600 dark:text-red-400" role="alert">
+              <p className="mt-3 text-sm text-destructive" role="alert">
                 {quickExportError}
               </p>
             )}
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">
-                  Provider Snapshot
-                </p>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Copy or email a clinical summary
-                </h3>
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex items-start justify-between gap-4 w-full">
+                <div>
+                  <CardDescription className="text-xs uppercase tracking-[0.3em]">
+                    Provider snapshot
+                  </CardDescription>
+                  <CardTitle className="text-2xl mt-2">Copy or email a clinical summary</CardTitle>
+                </div>
+                <Share2 className="w-6 h-6 text-primary" aria-hidden />
               </div>
-              <Share2 className="w-6 h-6 text-indigo-500" />
-            </div>
+            </CardHeader>
+            <CardContent>
 
             <textarea
               readOnly
               value={shareSummary}
-              className="mt-4 w-full min-h-[220px] rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 p-4 font-mono"
+              className="mt-4 w-full min-h-[220px] rounded-2xl border border-border bg-muted/50 text-sm text-foreground p-4 font-mono"
             />
 
             {validationIsActive && (
@@ -2611,26 +2951,23 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
                   onValidationGenerated={addValidation}
                 />
                 {validationHistory.length > 0 && (
-                  <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3">
+                  <Card variant="filled" padding="sm">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                      <span className="text-sm font-semibold text-foreground">
                         Recent validation messages
                       </span>
                       <div className="flex items-center gap-2">
-                        <button
+                        <Button
                           type="button"
-                          className="text-xs text-blue-600 dark:text-blue-300 hover:underline"
+                          variant="link"
+                          size="xs"
                           onClick={() => setShowValidationHistory(prev => !prev)}
                         >
                           {showValidationHistory ? 'Hide history' : 'Show history'}
-                        </button>
-                        <button
-                          type="button"
-                          className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                          onClick={clearHistory}
-                        >
+                        </Button>
+                        <Button type="button" variant="ghost" size="xs" onClick={clearHistory}>
                           Clear
-                        </button>
+                        </Button>
                       </div>
                     </div>
                     {showValidationHistory && (
@@ -2638,93 +2975,94 @@ const ExportView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] 
                         <ValidationHistory validations={validationHistory} onClear={clearHistory} />
                       </div>
                     )}
-                  </div>
+                  </Card>
                 )}
               </div>
             )}
 
             <div className="mt-4 flex flex-wrap gap-3">
-              <button
+              <Button
                 onClick={handleCopySummary}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white ${
-                  shareStatus === 'copied' ? 'bg-emerald-600' : 'bg-indigo-600 hover:bg-indigo-700'
-                }`}
+                variant={shareStatus === 'copied' ? 'success' : 'default'}
+                leftIcon={<ClipboardCheck className="w-4 h-4" aria-hidden />}
               >
-                <ClipboardCheck className="w-4 h-4" />
                 {shareStatus === 'copied' ? 'Copied summary' : 'Copy summary'}
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={handleEmailShare}
                 disabled={isOffline}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 ${
-                  isOffline ? 'opacity-60 cursor-not-allowed' : ''
-                }`}
+                variant="outline"
+                leftIcon={<Mail className="w-4 h-4" aria-hidden />}
               >
-                <Mail className="w-4 h-4" />
                 Compose secure email
-              </button>
+              </Button>
             </div>
 
             {shareStatus === 'error' && (
-              <p className="text-sm text-red-600 dark:text-red-400 mt-2" role="alert">
+              <p className="text-sm text-destructive mt-2" role="alert">
                 {copyErrorMessage ||
                   'Clipboard unavailable. Select the text above and copy manually instead.'}
               </p>
             )}
             {emailError && (
-              <p className="text-sm text-amber-700 dark:text-amber-300 mt-2" role="alert">
+              <p className="text-sm text-warning mt-2" role="alert">
                 {emailError}
               </p>
             )}
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-900 text-white rounded-2xl p-6 shadow-2xl">
-          <div className="flex items-start gap-4">
-            <div className="p-3 bg-white/20 rounded-xl">
-              <Shield className="w-6 h-6" />
+        <Card variant="accented">
+          <CardHeader className="pb-4">
+            <div className="flex items-start gap-3">
+              <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+                <Shield className="w-6 h-6" aria-hidden />
+              </div>
+              <div>
+                <CardTitle className="text-xl">Security-first export guarantees</CardTitle>
+                <CardDescription>
+                  Exports never leave your device unencrypted. You retain full control over every
+                  download and share event.
+                </CardDescription>
+              </div>
             </div>
-            <div>
-              <h3 className="text-xl font-bold">Security-first export guarantees</h3>
-              <p className="text-sm text-blue-100 mt-1">
-                Exports never leave your device unencrypted. You retain full control over every
-                download and share event.
-              </p>
-              <ul className="mt-4 space-y-2 text-sm text-blue-100">
-                <li className="flex items-start gap-2">
-                  <Lock className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>
-                    All exports are generated client-side with the same encryption posture as the
-                    rest of the app.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Download className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>
-                    Audit trails are available through the HIPAA compliance service for every export
-                    action.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>
-                    Use trauma-informed sharing prompts to maintain agency during clinical
-                    conversations.
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <Lock className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden />
+                <span>
+                  All exports are generated client-side with the same encryption posture as the
+                  rest of the app.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Download className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden />
+                <span>
+                  Audit trails are available through the HIPAA compliance service for every export
+                  action.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden />
+                <span>
+                  Use trauma-informed sharing prompts to maintain agency during clinical
+                  conversations.
+                </span>
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
       </div>
 
       {showAdvancedModal && (
         <React.Suspense
           fallback={
-            <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-2xl text-gray-700 dark:text-gray-200">
-                Loading export workspace…
-              </div>
+            <div className="fixed inset-0 flex items-center justify-center bg-foreground/40 z-50">
+              <Card padding="lg" className="max-w-sm w-full">
+                <p className="text-sm text-muted-foreground">Loading export workspace…</p>
+              </Card>
             </div>
           }
         >
@@ -2758,44 +3096,53 @@ const MetricCard: React.FC<MetricCardProps> = ({
   icon: Icon,
   color,
 }) => {
-  const colorClasses = {
-    blue: 'from-blue-500 to-blue-600 text-blue-600',
-    purple: 'from-purple-500 to-purple-600 text-purple-600',
-    green: 'from-green-500 to-green-600 text-green-600',
-    red: 'from-red-500 to-red-600 text-red-600',
-    yellow: 'from-yellow-500 to-yellow-600 text-yellow-600',
-  };
+  const iconToneClassName =
+    color === 'red'
+      ? 'bg-destructive/10 text-destructive'
+      : color === 'yellow'
+        ? 'bg-warning/10 text-warning'
+        : color === 'green'
+          ? 'bg-success/10 text-success'
+          : 'bg-primary/10 text-primary';
+
+  const hasTrend = typeof trend === 'number' && Number.isFinite(trend);
+  const trendValue = hasTrend ? trend : 0;
+
+  const trendBadgeVariant: BadgeProps['variant'] | null = !hasTrend
+    ? null
+    : trendValue > 0
+      ? 'destructive'
+      : trendValue < 0
+        ? 'success'
+        : 'secondary';
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-all">
-      <div className="flex items-start justify-between mb-4">
-        <div
-          className={`p-3 rounded-xl bg-gradient-to-br ${colorClasses[color].split(' ')[0]} ${colorClasses[color].split(' ')[1]}`}
-        >
-          <Icon className="w-6 h-6 text-white" />
+    <Card hover="scale">
+      <CardContent className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-muted-foreground">{title}</p>
+          <div className="text-3xl font-semibold text-foreground mt-1">{value}</div>
+          <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
         </div>
-        {trend !== undefined && (
-          <div
-            className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${
-              trend > 0
-                ? 'bg-red-100 text-red-700'
-                : trend < 0
-                  ? 'bg-green-100 text-green-700'
-                  : 'bg-gray-100 text-gray-700'
-            }`}
-          >
-            {trend > 0 ? (
-              <TrendingUp className="w-3 h-3" />
-            ) : trend < 0 ? (
-              <TrendingDown className="w-3 h-3" />
-            ) : null}
-            {Math.abs(trend).toFixed(1)}%
+
+        <div className="flex flex-col items-end gap-3">
+          <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${iconToneClassName}`}>
+            <Icon className="w-6 h-6" aria-hidden />
           </div>
-        )}
-      </div>
-      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{title}</h3>
-      <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{value}</div>
-      <p className="text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>
-    </div>
+          {trendBadgeVariant ? (
+            <Badge variant={trendBadgeVariant}>
+              <span className="inline-flex items-center gap-1">
+                {trendValue > 0 ? (
+                  <TrendingUp className="w-3 h-3" aria-hidden />
+                ) : trendValue < 0 ? (
+                  <TrendingDown className="w-3 h-3" aria-hidden />
+                ) : null}
+                {Math.abs(trendValue).toFixed(1)}%
+              </span>
+            </Badge>
+          ) : null}
+        </div>
+      </CardContent>
+    </Card>
   );
 };

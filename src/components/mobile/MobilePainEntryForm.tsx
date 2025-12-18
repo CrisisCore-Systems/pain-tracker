@@ -310,6 +310,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
       component: (
         <FunctionalImpactSection
           limitedActivities={formData.functionalImpact?.limitedActivities || []}
+          assistanceNeeded={formData.functionalImpact?.assistanceNeeded || []}
           mobilityAids={formData.functionalImpact?.mobilityAids || []}
           onChange={data =>
             setFormData(prev => ({

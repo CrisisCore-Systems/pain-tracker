@@ -18,6 +18,59 @@ export interface TrendAnalysis {
   locationFrequency: { [key: string]: number };
   symptomCorrelations: { [key: string]: number };
   painTrends: { increasing: boolean; averageChange: number };
+  advanced?: AdvancedTrendAnalysis;
+}
+
+export interface TrendAnalysisOptions {
+  /** When enabled, computes additional buckets, tag summaries, and numeric correlations. */
+  advanced?: boolean;
+  /** Defaults to local time (matches user's lived schedule). */
+  timezone?: 'local' | 'utc';
+  /** Minimum observations required before a bucket/tag is surfaced in advanced output. */
+  minCount?: number;
+  /** Maximum unique tag values retained per tag category (advanced only). */
+  maxTagItems?: number;
+}
+
+export interface BucketStat {
+  count: number;
+  totalPain: number;
+  avgPain: number;
+}
+
+export interface RankedBucket extends BucketStat {
+  key: string;
+}
+
+export interface TagStat {
+  count: number;
+  totalPain: number;
+  avgPain: number;
+}
+
+export interface AdvancedTrendAnalysis {
+  timeOfDayBuckets: Record<string, BucketStat>;
+  dayOfWeekBuckets: Record<string, BucketStat>;
+  bestTimeOfDay?: RankedBucket;
+  worstTimeOfDay?: RankedBucket;
+  bestDayOfWeek?: RankedBucket;
+  worstDayOfWeek?: RankedBucket;
+
+  tags: {
+    triggers: Record<string, TagStat>;
+    reliefMethods: Record<string, TagStat>;
+    activities: Record<string, TagStat>;
+    quality: Record<string, TagStat>;
+    weather: Record<string, TagStat>;
+  };
+
+  /** Pearson correlations in [-1, 1]. Null when insufficient data. */
+  correlations: {
+    sleepToPain: number | null;
+    moodToPain: number | null;
+    stressToPain: number | null;
+    activityLevelToPain: number | null;
+  };
 }
 
 export interface Statistics {
@@ -43,7 +96,43 @@ function safeDivide(numerator: number, denominator: number, fallback = 0): numbe
   return Number.isFinite(result) ? result : fallback;
 }
 
-export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
+function normalizeTag(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function pearsonCorrelation(pairs: Array<{ x: number; y: number }>): number | null {
+  if (pairs.length < 3) return null;
+  let sumX = 0;
+  let sumY = 0;
+  let sumXY = 0;
+  let sumX2 = 0;
+  let sumY2 = 0;
+
+  for (const pair of pairs) {
+    const x = pair.x;
+    const y = pair.y;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+    sumX += x;
+    sumY += y;
+    sumXY += x * y;
+    sumX2 += x * x;
+    sumY2 += y * y;
+  }
+
+  const n = pairs.length;
+  const numerator = n * sumXY - sumX * sumY;
+  const denomLeft = n * sumX2 - sumX * sumX;
+  const denomRight = n * sumY2 - sumY * sumY;
+  const denominator = Math.sqrt(Math.max(0, denomLeft) * Math.max(0, denomRight));
+  if (!Number.isFinite(denominator) || denominator === 0) return 0;
+  return safeDivide(numerator, denominator, 0);
+}
+
+export const analyzeTrends = (
+  entries: PainEntry[],
+  options: TrendAnalysisOptions = {}
+): TrendAnalysis => {
+  const timezone = options.timezone ?? 'local';
   if (!entries.length) {
     return {
       timeOfDayPattern: {},
@@ -54,11 +143,24 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
     };
   }
 
+  const minCount = Math.max(1, options.minCount ?? 2);
+  const maxTagItems = Math.max(1, options.maxTagItems ?? 50);
+
+  const getHour = (timestamp: string) => {
+    const d = new Date(timestamp);
+    return timezone === 'utc' ? d.getUTCHours() : d.getHours();
+  };
+
+  const getDayIndex = (timestamp: string) => {
+    const d = new Date(timestamp);
+    return timezone === 'utc' ? d.getUTCDay() : d.getDay();
+  };
+
   // Time of day patterns
   // Use local hours so analysis reflects user's local experience.
   const timeOfDayPattern = entries.reduce(
     (acc, entry) => {
-      const hour = new Date(entry.timestamp).getHours();
+      const hour = getHour(entry.timestamp);
       const timeBlock = `${hour.toString().padStart(2, '0')}:00`;
       acc[timeBlock] = (acc[timeBlock] || 0) + entry.baselineData.pain;
       return acc;
@@ -79,7 +181,7 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
         'Friday',
         'Saturday',
       ];
-      const dayIdx = new Date(entry.timestamp).getDay();
+      const dayIdx = getDayIndex(entry.timestamp);
       const dayName = weekdayNames[dayIdx];
       acc[dayName] = (acc[dayName] || 0) + entry.baselineData.pain;
       return acc;
@@ -123,6 +225,143 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
     0
   );
 
+  let advanced: AdvancedTrendAnalysis | undefined;
+  if (options.advanced) {
+    const timeOfDayBuckets: Record<string, BucketStat> = {};
+    const dayOfWeekBuckets: Record<string, BucketStat> = {};
+    const weekdayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+
+    const tagAccumulators = {
+      triggers: new Map<string, { count: number; totalPain: number }>(),
+      reliefMethods: new Map<string, { count: number; totalPain: number }>(),
+      activities: new Map<string, { count: number; totalPain: number }>(),
+      quality: new Map<string, { count: number; totalPain: number }>(),
+      weather: new Map<string, { count: number; totalPain: number }>(),
+    };
+
+    const sleepPairs: Array<{ x: number; y: number }> = [];
+    const moodPairs: Array<{ x: number; y: number }> = [];
+    const stressPairs: Array<{ x: number; y: number }> = [];
+    const activityLevelPairs: Array<{ x: number; y: number }> = [];
+
+    const upsertTag = (map: Map<string, { count: number; totalPain: number }>, raw: string, pain: number) => {
+      const key = normalizeTag(raw);
+      if (!key) return;
+      const existing = map.get(key);
+      if (existing) {
+        existing.count += 1;
+        existing.totalPain += pain;
+        return;
+      }
+      if (map.size >= maxTagItems) return;
+      map.set(key, { count: 1, totalPain: pain });
+    };
+
+    for (const entry of entries) {
+      const pain = entry.baselineData.pain;
+
+      const hour = getHour(entry.timestamp);
+      const hourKey = `${hour.toString().padStart(2, '0')}:00`;
+      const hourBucket = timeOfDayBuckets[hourKey] ?? { count: 0, totalPain: 0, avgPain: 0 };
+      hourBucket.count += 1;
+      hourBucket.totalPain += pain;
+      timeOfDayBuckets[hourKey] = hourBucket;
+
+      const dayKey = weekdayNames[getDayIndex(entry.timestamp)];
+      const dayBucket = dayOfWeekBuckets[dayKey] ?? { count: 0, totalPain: 0, avgPain: 0 };
+      dayBucket.count += 1;
+      dayBucket.totalPain += pain;
+      dayOfWeekBuckets[dayKey] = dayBucket;
+
+      entry.triggers?.forEach(trigger => upsertTag(tagAccumulators.triggers, trigger, pain));
+      entry.reliefMethods?.forEach(method => upsertTag(tagAccumulators.reliefMethods, method, pain));
+      entry.activities?.forEach(activity => upsertTag(tagAccumulators.activities, activity, pain));
+      entry.quality?.forEach(q => upsertTag(tagAccumulators.quality, q, pain));
+      if (typeof entry.weather === 'string' && entry.weather.trim()) {
+        upsertTag(tagAccumulators.weather, entry.weather, pain);
+      }
+
+      const sleep = entry.sleep ?? entry.qualityOfLife?.sleepQuality;
+      if (typeof sleep === 'number' && Number.isFinite(sleep)) sleepPairs.push({ x: sleep, y: pain });
+
+      const mood = entry.mood ?? entry.qualityOfLife?.moodImpact;
+      if (typeof mood === 'number' && Number.isFinite(mood)) moodPairs.push({ x: mood, y: pain });
+
+      if (typeof entry.stress === 'number' && Number.isFinite(entry.stress)) {
+        stressPairs.push({ x: entry.stress, y: pain });
+      }
+
+      if (typeof entry.activityLevel === 'number' && Number.isFinite(entry.activityLevel)) {
+        activityLevelPairs.push({ x: entry.activityLevel, y: pain });
+      }
+    }
+
+    const finalizeBuckets = (buckets: Record<string, BucketStat>) => {
+      Object.values(buckets).forEach(bucket => {
+        bucket.avgPain = safeDivide(bucket.totalPain, bucket.count, 0);
+      });
+    };
+
+    finalizeBuckets(timeOfDayBuckets);
+    finalizeBuckets(dayOfWeekBuckets);
+
+    const pickBestWorst = (buckets: Record<string, BucketStat>) => {
+      const ranked: RankedBucket[] = Object.entries(buckets)
+        .filter(([, stat]) => stat.count >= minCount)
+        .map(([key, stat]) => ({ key, ...stat }))
+        .sort((a, b) => a.avgPain - b.avgPain);
+
+      if (!ranked.length) return { best: undefined, worst: undefined };
+      return { best: ranked[0], worst: ranked[ranked.length - 1] };
+    };
+
+    const { best: bestTimeOfDay, worst: worstTimeOfDay } = pickBestWorst(timeOfDayBuckets);
+    const { best: bestDayOfWeek, worst: worstDayOfWeek } = pickBestWorst(dayOfWeekBuckets);
+
+    const finalizeTags = (map: Map<string, { count: number; totalPain: number }>) => {
+      const out: Record<string, TagStat> = {};
+      for (const [key, stat] of map.entries()) {
+        if (stat.count < minCount) continue;
+        out[key] = {
+          count: stat.count,
+          totalPain: stat.totalPain,
+          avgPain: safeDivide(stat.totalPain, stat.count, 0),
+        };
+      }
+      return out;
+    };
+
+    advanced = {
+      timeOfDayBuckets,
+      dayOfWeekBuckets,
+      bestTimeOfDay,
+      worstTimeOfDay,
+      bestDayOfWeek,
+      worstDayOfWeek,
+      tags: {
+        triggers: finalizeTags(tagAccumulators.triggers),
+        reliefMethods: finalizeTags(tagAccumulators.reliefMethods),
+        activities: finalizeTags(tagAccumulators.activities),
+        quality: finalizeTags(tagAccumulators.quality),
+        weather: finalizeTags(tagAccumulators.weather),
+      },
+      correlations: {
+        sleepToPain: pearsonCorrelation(sleepPairs),
+        moodToPain: pearsonCorrelation(moodPairs),
+        stressToPain: pearsonCorrelation(stressPairs),
+        activityLevelToPain: pearsonCorrelation(activityLevelPairs),
+      },
+    };
+  }
+
   return {
     timeOfDayPattern,
     dayOfWeekPattern,
@@ -132,6 +371,7 @@ export const analyzeTrends = (entries: PainEntry[]): TrendAnalysis => {
       increasing: averageChange > 0,
       averageChange,
     },
+    ...(advanced ? { advanced } : {}),
   };
 };
 

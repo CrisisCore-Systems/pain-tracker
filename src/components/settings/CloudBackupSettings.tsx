@@ -3,13 +3,6 @@ import { secureStorage } from '../../lib/storage/secureStorage';
 
 const STORAGE_KEY = 'pain-tracker:cloud-backup';
 
-// Glassmorphism card styling
-const glassCardStyle = {
-  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-};
-
 export default function CloudBackupSettings() {
   const [enabled, setEnabled] = useState<boolean>(() => secureStorage.safeJSON(STORAGE_KEY, { enabled: false }).enabled ?? false);
   const [lastSync, setLastSync] = useState<string | null>(() => secureStorage.safeJSON(STORAGE_KEY, { lastSync: null }).lastSync ?? null);
@@ -34,54 +27,45 @@ export default function CloudBackupSettings() {
   };
 
   return (
-    <div className="rounded-xl p-5" style={glassCardStyle}>
+    <div className="rounded-xl p-5 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h4 className="font-semibold text-white">Cloud Backup</h4>
-          <div className="text-sm text-slate-400">Optional cloud backup for cross-device sync</div>
+          <h4 className="font-semibold text-gray-900 dark:text-white">Cloud Backup</h4>
+          <div className="text-sm text-gray-600 dark:text-slate-400">Optional cloud backup for cross-device sync</div>
         </div>
         <label className="inline-flex items-center gap-2 cursor-pointer">
           <input 
             type="checkbox" 
             checked={enabled} 
             onChange={e => setEnabled(e.target.checked)}
-            className="h-5 w-5 rounded border-slate-600 bg-slate-700 text-sky-500 focus:ring-sky-500/50 focus:ring-offset-slate-900"
+            className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-sky-500 focus:ring-sky-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
           />
-          <span className="text-sm text-slate-300">Enable</span>
+          <span className="text-sm text-gray-600 dark:text-slate-300">Enable</span>
         </label>
       </div>
       
       <div className="space-y-4">
-        <p className="text-sm text-slate-400">When enabled, your data will be securely backed up to your account. Cloud backups are encrypted in transit and at rest.</p>
+        <p className="text-sm text-gray-600 dark:text-slate-400">When enabled, your data will be securely backed up to your account. Cloud backups are encrypted in transit and at rest.</p>
         
         <div className="flex items-center gap-3">
           <button 
             onClick={handleBackupNow} 
             disabled={!enabled || syncing}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              background: enabled ? 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)' : 'rgba(51, 65, 85, 0.8)',
-              boxShadow: enabled ? '0 4px 15px rgba(14, 165, 233, 0.3)' : 'none',
-            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${enabled ? 'bg-gradient-to-r from-cyan-500 to-sky-500 shadow-lg shadow-cyan-500/30' : 'bg-gray-400 dark:bg-slate-600'}`}
           >
             {syncing ? 'Backing up...' : 'Back up now'}
           </button>
           <button 
             onClick={() => setLastSync(null)} 
             disabled={!lastSync}
-            className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#94a3b8',
-            }}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
           >
             Clear last sync
           </button>
         </div>
         
         {lastSync && (
-          <div className="text-xs text-slate-500">Last backup: {new Date(lastSync).toLocaleString()}</div>
+          <div className="text-xs text-gray-500 dark:text-slate-500">Last backup: {new Date(lastSync).toLocaleString()}</div>
         )}
       </div>
     </div>

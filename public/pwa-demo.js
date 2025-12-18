@@ -232,13 +232,6 @@ window.addTestPainData = async function() {
     }
   ];
 
-      date: new Date(Date.now() - 2 * 86400000).toISOString(), // 2 days ago
-      painLevel: 6,
-      location: 'Neck',
-      description: 'Tension headache radiating from neck',
-      symptoms: ['Tension', 'Headache', 'Neck Stiffness']
-    }
-  ];
 
   let successCount = 0;
   for (const entry of testEntries) {

@@ -14,7 +14,8 @@ export default defineConfig({
     ['json', { outputFile: 'results/test-results.json' }],
   ],
   use: {
-    baseURL: 'http://localhost:3000/pain-tracker/',
+    // Dev server runs at root - no /pain-tracker/ prefix needed
+    baseURL: 'http://localhost:3000',
     // Collect full traces for flaky runs to aid debugging
     trace: 'on',
     screenshot: 'only-on-failure',
@@ -61,21 +62,16 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run -s dev',
-    url: 'http://localhost:3000/pain-tracker/',
-  // Prefer Playwright to start the dev server with the correct test env.
-  // During interactive debugging we allow reusing an existing server so we can
-  // run Vite in a separate terminal and observe its logs. This will be reverted
-  // back to 'false' for CI runs when triage is complete.
-  reuseExistingServer: true,
+    url: 'http://localhost:3000/',
+    // Reuse existing server if already running (common during development)
+    reuseExistingServer: true,
     // Increase webServer timeout to allow the dev server more time to become fully responsive
     // during CI/slow machines (helps avoid module fetch timeouts observed in traces).
     timeout: 240_000,
     env: {
-      // Vite exposes this at config time as process.env.VITE_BASE in vite.config.ts
-      VITE_BASE: '/pain-tracker/',
-      // Point Playwright-run dev server to the landing screenshot we add under public/pain-tracker/assets
-      VITE_LANDING_SCREENSHOT: '/pain-tracker/assets/analytics-dashboard.png'
-      ,
+      // Use default base path (/) for E2E tests - simpler routing without basename issues.
+      // The production deployment uses /pain-tracker/ via GitHub Pages config.
+      VITE_LANDING_SCREENSHOT: '/assets/analytics-dashboard.png',
       // (Removed VITE_DEV_HTTPS) E2E runs default to HTTP dev server so browsers
       // won't be forced to upgrade to HTTPS by CSP during tests.
     }

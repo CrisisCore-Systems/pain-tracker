@@ -207,7 +207,6 @@ export class EmotionalStateTracker {
 
   // Backward compatibility shim (legacy name kept for older callers)
   // Deprecated: use analyzeMoodPatterns instead
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private async analyzeEmotionalPatterns(userId: string, _latestEntry?: MoodEntry) {
     const entries = this.moodEntries.get(userId) || [];
     return this.analyzeMoodPatterns(userId, entries);

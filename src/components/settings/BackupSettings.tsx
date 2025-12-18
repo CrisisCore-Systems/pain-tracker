@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import { secureStorage } from '../../lib/storage/secureStorage';
 
-// Glassmorphism card styling
-const glassCardStyle = {
-  background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-};
-
 function downloadJSON(filename: string, data: string) {
   try {
     if (typeof URL !== 'undefined' && typeof URL.createObjectURL === 'function') {
@@ -81,10 +74,10 @@ export default function BackupSettings() {
   };
 
   return (
-    <div className="rounded-xl p-5" style={glassCardStyle}>
-      <h4 className="font-semibold text-white mb-4">Local Backup</h4>
+    <div className="rounded-xl p-5 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg">
+      <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Local Backup</h4>
       <div className="space-y-4">
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-gray-600 dark:text-slate-400">
           Create a local backup of your data or import an existing backup JSON file. Be cautious
           when importing backups; this may overwrite local data.
         </p>
@@ -92,38 +85,26 @@ export default function BackupSettings() {
         <div className="flex items-center gap-3">
           <button 
             onClick={handleExport}
-            className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
-            style={{
-              background: 'rgba(139, 92, 246, 0.15)',
-              border: '1px solid rgba(139, 92, 246, 0.3)',
-              color: '#a78bfa',
-            }}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-purple-100 dark:bg-purple-500/15 border border-purple-300 dark:border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-200 dark:hover:bg-purple-500/25"
           >
             Export backup
           </button>
           <label className="cursor-pointer">
             <input type="file" accept="application/json" onChange={handleFileInput} className="hidden" />
-            <span
-              className="inline-block px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer"
-              style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#94a3b8',
-              }}
-            >
+            <span className="inline-block px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10">
               Import backup
             </span>
           </label>
         </div>
 
         {lastExport && (
-          <div className="text-xs text-slate-500">Last export: {new Date(lastExport).toLocaleString()}</div>
+          <div className="text-xs text-gray-500 dark:text-slate-500">Last export: {new Date(lastExport).toLocaleString()}</div>
         )}
         {importError && (
-          <div className="text-xs text-red-400">{importError}</div>
+          <div className="text-xs text-red-600 dark:text-red-400">{importError}</div>
         )}
         {importResult && (
-          <div className="text-xs text-emerald-400">{importResult}</div>
+          <div className="text-xs text-emerald-600 dark:text-emerald-400">{importResult}</div>
         )}
       </div>
     </div>

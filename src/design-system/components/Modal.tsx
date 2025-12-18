@@ -48,6 +48,7 @@ export function Modal({
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const trapRef = useFocusTrap(isOpen);
+  const originalBodyOverflowRef = useRef<string | null>(null);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -58,12 +59,18 @@ export function Modal({
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
+      if (originalBodyOverflowRef.current === null) {
+        originalBodyOverflowRef.current = document.body.style.overflow;
+      }
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      if (originalBodyOverflowRef.current !== null) {
+        document.body.style.overflow = originalBodyOverflowRef.current;
+        originalBodyOverflowRef.current = null;
+      }
     };
   }, [isOpen, onClose, closeOnEscape]);
 

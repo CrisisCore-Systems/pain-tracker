@@ -1,5 +1,4 @@
 /* eslint-env node */
-/* global __dirname, process, console, URL */
 const { chromium } = require('playwright');
 const fs = require('fs');
 const path = require('path');

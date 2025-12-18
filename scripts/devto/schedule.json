@@ -1,0 +1,195 @@
+{
+  "meta": {
+    "timezoneNote": "All times are UTC. Schedule was planned for 9:00 AM PT (PST, UTC-8) => 17:00 UTC for these dates.",
+    "created": "2025-12-13"
+  },
+  "defaults": {
+    "series": "CrisisCore Build Log",
+    "organization_id": null,
+    "sponsor_url": "https://paintracker.ca/sponsor",
+    "repo_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+    "series_start_url": null
+  },
+  "posts": [
+    {
+      "key": "privacy-first-default-standard",
+      "enabled": false,
+      "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
+      "sourceFile": "article-privacy-first-trauma-informed-open-source-digital-health.md",
+      "publishAt": "2026-02-05T17:00:00Z",
+      "tags": [
+        "healthtech",
+        "privacy",
+        "ethics",
+        "pwa"
+      ],
+      "description": "Why local-first, trauma-informed, open-source design should be the baseline for pain diaries and digital health tools.",
+      "canonical_url": null,
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
+      "key": "privacy-preserving-analytics",
+      "enabled": true,
+      "title": "Privacy-Preserving Analytics: Proving You Can Measure Without Identity",
+      "sourceFile": "blog-testing-privacy-preserving-analytics.md",
+      "publishAt": "2025-12-16T17:00:00Z",
+      "tags": [
+        "testing",
+        "privacy",
+        "security",
+        "analytics"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093416,
+      "devtoUrl": "https://dev.to/crisiscoresystems/testing-privacy-preserving-analytics-verifying-that-insights-dont-leak-identity-e37",
+      "published": false
+    },
+    {
+      "key": "performance-under-pressure",
+      "enabled": true,
+      "title": "Performance Under Pressure: Crisis Detection Without UI Lag",
+      "sourceFile": "blog-performance-under-pressure.md",
+      "publishAt": "2025-12-18T17:00:00Z",
+      "tags": [
+        "testing",
+        "performance",
+        "webdev",
+        "healthtech"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093410,
+      "devtoUrl": "https://dev.to/crisiscoresystems/performance-under-pressure-ensuring-crisis-detection-doesnt-degrade-user-experience-h4m",
+      "published": false
+    },
+    {
+      "key": "testing-across-the-stack",
+      "enabled": true,
+      "title": "Testing Across the Stack: UI → Storage → Encryption → Offline Resilience",
+      "sourceFile": "blog-testing-across-the-stack.md",
+      "publishAt": "2025-12-23T17:00:00Z",
+      "tags": [
+        "testing",
+        "frontend",
+        "databases",
+        "webdev"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093417,
+      "devtoUrl": "https://dev.to/crisiscoresystems/testing-across-the-stack-from-frontend-ui-to-local-database-resilience-4c5i",
+      "published": false
+    },
+    {
+      "key": "testing-co-occurrence",
+      "enabled": true,
+      "title": "When Crises Stack: Testing Co-Occurrence Without Cascading Failures",
+      "sourceFile": "blog-testing-co-occurrence.md",
+      "publishAt": "2025-12-30T17:00:00Z",
+      "tags": [
+        "testing",
+        "reliability",
+        "systems",
+        "healthtech"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093415,
+      "devtoUrl": "https://dev.to/crisiscoresystems/testing-for-co-occurrence-when-multiple-crises-happen-simultaneously-4dj4",
+      "published": false
+    },
+    {
+      "key": "testing-recovery",
+      "enabled": true,
+      "title": "Testing Recovery: Proving Your App Helps People Stabilize",
+      "sourceFile": "blog-testing-recovery.md",
+      "publishAt": "2026-01-08T21:00:00Z",
+      "tags": [
+        "testing",
+        "healthtech",
+        "resilience",
+        "ux"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093412,
+      "devtoUrl": "https://dev.to/crisiscoresystems/testing-recovery-verifying-that-systems-actually-help-people-get-better-1o6o",
+      "published": false
+    },
+    {
+      "key": "cross-crisis-calibration",
+      "enabled": true,
+      "title": "Cross-Crisis Calibration: Panic, Dissociation, Sensory Overload",
+      "sourceFile": "blog-cross-crisis-calibration.md",
+      "publishAt": "2026-01-13T17:00:00Z",
+      "tags": [
+        "testing",
+        "accessibility",
+        "ux",
+        "healthtech"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093411,
+      "devtoUrl": "https://dev.to/crisiscoresystems/cross-crisis-calibration-testing-for-panic-attacks-dissociation-and-sensory-overload-2abi",
+      "published": false
+    },
+    {
+      "key": "ethics-of-simulation",
+      "enabled": false,
+      "title": "The Ethics of Simulation: How to Test Trauma-Informed Features Without Exploiting Real Pain",
+      "sourceFile": "blog-ethics-of-simulation.md",
+      "publishAt": "2026-01-20T17:00:00Z",
+      "tags": [
+        "ethics",
+        "testing",
+        "healthtech",
+        "ux"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
+      "key": "testing-the-testing",
+      "enabled": true,
+      "title": "Test Your Tests: Does Your Crisis Simulation Match Reality?",
+      "sourceFile": "blog-testing-the-testing.md",
+      "publishAt": "2026-01-07T17:00:00Z",
+      "tags": [
+        "testing",
+        "quality",
+        "simulation",
+        "webdev"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093414,
+      "devtoUrl": "https://dev.to/crisiscoresystems/testing-the-testing-validating-that-your-crisis-simulation-actually-matches-reality-6df",
+      "published": false
+    },
+    {
+      "key": "internationalization-of-trauma",
+      "enabled": true,
+      "title": "Internationalizing Trauma-Informed UX: Testing Across Cultures",
+      "sourceFile": "blog-internationalization-of-trauma.md",
+      "publishAt": "2026-01-15T17:00:00Z",
+      "tags": [
+        "i18n",
+        "testing",
+        "ux",
+        "healthtech"
+      ],
+      "description": null,
+      "canonical_url": null,
+      "articleId": 3093413,
+      "devtoUrl": "https://dev.to/crisiscoresystems/internationalization-of-trauma-testing-across-cultural-contexts-41fe",
+      "published": false
+    }
+  ]
+}

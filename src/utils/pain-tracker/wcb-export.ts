@@ -168,11 +168,11 @@ export function exportWorkSafeBCPDF(
   options: WCBExportOptions
 ): string {
   // Track analytics
-  privacyAnalytics.trackDataExport('wcb-pdf').catch((error) => {
+  privacyAnalytics.trackDataExport('pdf').catch((error) => {
     analyticsLogger.swallowed(error, { context: 'exportWorkSafeBCPDF', exportType: 'wcb-pdf' });
   });
-  trackDataExported('wcb-pdf', entries.length);
-  trackExport('wcb-pdf', entries.length);
+  trackDataExported('pdf', entries.length);
+  trackExport('pdf', entries.length);
 
   const { 
     startDate, 

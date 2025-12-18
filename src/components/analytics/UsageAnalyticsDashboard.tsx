@@ -29,14 +29,12 @@ import {
   Sun,
   Moon,
   Shield,
-  Leaf,
   Zap,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '../../design-system';
 import { cn } from '../../design-system/utils';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
-import { useBiophilicTheme } from '../../hooks/useBiophilicTheme';
 import {
   getStoredData,
   getSessionStats,
@@ -84,7 +82,6 @@ export function UsageAnalyticsDashboard({ className }: UsageAnalyticsDashboardPr
   const [refreshKey, setRefreshKey] = useState(0);
   const { entries, moodEntries } = usePainTrackerStore();
   const { preferences: traumaPrefs } = useTraumaInformed();
-  const { enabled: biophilicEnabled } = useBiophilicTheme();
 
   // Refresh stats periodically
   const handleRefresh = useCallback(() => {
@@ -145,7 +142,6 @@ export function UsageAnalyticsDashboard({ className }: UsageAnalyticsDashboardPr
         gentleLanguage: traumaPrefs.gentleLanguage,
         showMemoryAids: traumaPrefs.showMemoryAids,
         showComfortPrompts: traumaPrefs.showComfortPrompts,
-        biophilicTheme: biophilicEnabled,
         reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
         darkMode: document.documentElement.classList.contains('dark'),
       },
@@ -153,7 +149,7 @@ export function UsageAnalyticsDashboard({ className }: UsageAnalyticsDashboardPr
       lastActive: events.length > 0 ? events[events.length - 1].timestamp : Date.now(),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getTimeFilter, traumaPrefs, biophilicEnabled, refreshKey]);
+  }, [getTimeFilter, traumaPrefs, refreshKey]);
 
   // Feature usage breakdown
   const featureUsageList = useMemo<FeatureUsageItem[]>(() => {
@@ -208,13 +204,6 @@ export function UsageAnalyticsDashboard({ className }: UsageAnalyticsDashboardPr
         count: usageStats.featureUsage['theme:toggled'] || 0,
         percentage: 0,
         icon: <Sun className="h-4 w-4" />,
-        category: 'Personalization',
-      },
-      {
-        name: 'Biophilic Theme',
-        count: usageStats.featureUsage['biophilic:toggled'] || 0,
-        percentage: 0,
-        icon: <Leaf className="h-4 w-4" />,
         category: 'Personalization',
       },
     ].map(f => ({
@@ -479,7 +468,6 @@ export function UsageAnalyticsDashboard({ className }: UsageAnalyticsDashboardPr
                   gentleLanguage: { label: 'Gentle Language', icon: <Heart className="h-4 w-4" /> },
                   showMemoryAids: { label: 'Memory Aids', icon: <Eye className="h-4 w-4" /> },
                   showComfortPrompts: { label: 'Comfort Prompts', icon: <Shield className="h-4 w-4" /> },
-                  biophilicTheme: { label: 'Biophilic Theme', icon: <Leaf className="h-4 w-4" /> },
                   reducedMotion: { label: 'Reduced Motion', icon: <Activity className="h-4 w-4" /> },
                   darkMode: { label: 'Dark Mode', icon: <Moon className="h-4 w-4" /> },
                 };

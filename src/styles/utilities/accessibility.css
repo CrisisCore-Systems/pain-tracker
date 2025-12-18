@@ -62,7 +62,7 @@ body.ti-contrast-high {
 body.ti-contrast-high .text-muted-foreground,
 body.ti-contrast-high .text-slate-400,
 body.ti-contrast-high .text-slate-500 {
-  color: rgb(226 232 240) !important;
+  color: rgb(var(--color-muted-foreground)) !important;
 }
 
 body.ti-contrast-high button,
@@ -86,7 +86,7 @@ body.ti-contrast-extra-high .text-muted-foreground,
 body.ti-contrast-extra-high .text-slate-400,
 body.ti-contrast-extra-high .text-slate-500,
 body.ti-contrast-extra-high .text-slate-600 {
-  color: rgb(248 250 252) !important;
+  color: rgb(var(--color-muted-foreground)) !important;
 }
 
 body.ti-contrast-extra-high button,
@@ -94,7 +94,7 @@ body.ti-contrast-extra-high input,
 body.ti-contrast-extra-high select,
 body.ti-contrast-extra-high textarea {
   border-width: 3px;
-  border-color: rgb(148 163 184);
+  border-color: rgb(var(--color-border));
 }
 
 /* ===== REDUCED MOTION ===== */
@@ -127,11 +127,19 @@ body.ti-simplified .animate-spin {
 
 /* Ensure sufficient spacing for readability */
 body.ti-simplified .space-y-1 {
-  gap: 0.75rem;
+  /* Tailwind's space-y-* uses margins, not gap */
 }
 
 body.ti-simplified .space-y-2 {
-  gap: 1rem;
+  /* Tailwind's space-y-* uses margins, not gap */
+}
+
+body.ti-simplified .space-y-1 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.75rem;
+}
+
+body.ti-simplified .space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1rem;
 }
 
 /* ===== HIGH CONTRAST FOCUS INDICATORS ===== */

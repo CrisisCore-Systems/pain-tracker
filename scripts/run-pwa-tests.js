@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable */
 
 /**
  * PWA Cross-Browser Test Runner

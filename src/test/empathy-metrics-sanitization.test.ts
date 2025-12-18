@@ -36,7 +36,7 @@ function makePain(notes: string): PainEntry {
 
 function makeMood(notes: string): MoodEntry {
   return {
-    id: `mood-${idCounter++}`,
+    id: idCounter++,
     timestamp: new Date().toISOString(),
     mood: 6,
     energy: 6,

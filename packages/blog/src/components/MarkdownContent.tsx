@@ -64,7 +64,6 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
             if (!src) return null;
             return (
               <figure className="my-10">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
                   alt={alt || ''}

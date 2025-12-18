@@ -3,7 +3,7 @@
  * Main layout component that applies trauma-informed design patterns
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TraumaInformedProvider } from './TraumaInformedContext';
 import { useTraumaInformed } from './TraumaInformedHooks';
 import { AccessibilitySettingsPanel } from './AccessibilitySettings';
@@ -48,6 +48,31 @@ function TraumaInformedLayoutInner({
   const { preferences } = useTraumaInformed();
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+
+  // Lock body scroll while settings overlay is open
+  useEffect(() => {
+    if (!showSettings) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [showSettings]);
+
+  // Escape closes overlays
+  useEffect(() => {
+    if (!showSettings && !showHelp) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (showSettings) setShowSettings(false);
+      if (showHelp) setShowHelp(false);
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [showHelp, showSettings]);
 
   return (
     <div className="trauma-informed-layout min-h-screen bg-gray-50 dark:bg-gray-900">

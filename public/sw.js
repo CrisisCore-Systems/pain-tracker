@@ -1,11 +1,29 @@
-// Minimal deterministic development service worker
-// Purpose: ensure Playwright E2E can reliably observe installation, activation,
-// client claiming and a predictable cache name + precached assets for tests.
+// Minimal deterministic service worker.
+// Notes:
+// - In production, never cache navigations with cache-first (stale HTML can break module graphs).
+// - Only cache static assets; always fetch fresh HTML.
 
-const CACHE_VERSION = '1.6';
-const CACHE_NAME = `pain-tracker-static-v${CACHE_VERSION}`;
-// Keep precache minimal to avoid dev server index fetch races — manifest is the critical asset the tests check for
-const PRECACHE_URLS = ['manifest.json'];
+const SW_VERSION = '1.8';
+const CACHE_NAME = `pain-tracker-static-v${SW_VERSION}`;
+const PRECACHE_URLS = ['/manifest.json', '/offline.html'];
+
+const STATIC_PATH_PREFIXES = ['/assets/', '/icons/', '/logos/', '/screenshots/'];
+
+function isSameOrigin(requestUrl) {
+  return requestUrl.origin === self.location.origin;
+}
+
+function isNavigationRequest(request) {
+  return request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html');
+}
+
+function isCacheableStaticAsset(url) {
+  if (!isSameOrigin(url)) return false;
+  if (STATIC_PATH_PREFIXES.some((p) => url.pathname.startsWith(p))) return true;
+
+  // Allow common static extensions outside the prefixes (e.g., /favicon.ico, /apple-touch-icon.png)
+  return /\.(?:js|css|png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(url.pathname);
+}
 
 self.addEventListener('install', (event) => {
   // Activate as soon as installed
@@ -24,56 +42,62 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   // Clean up old caches and claim clients immediately
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all([
-        // Delete old cache versions
-        ...cacheNames
+    (async () => {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames
           .filter((name) => name.startsWith('pain-tracker-') && name !== CACHE_NAME)
           .map((name) => {
             console.log('[sw] Deleting old cache:', name);
             return caches.delete(name);
-          }),
-        // Claim clients so pages are controlled immediately
-        self.clients.claim()
-      ]);
-    })
+          })
+      );
+
+      await self.clients.claim();
+
+      // Notify clients that the service worker is active and ready.
+      const allClients = await self.clients.matchAll({ includeUncontrolled: true });
+      for (const client of allClients) {
+        client.postMessage({ type: 'SW_READY', version: SW_VERSION });
+      }
+    })()
   );
 });
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
-  
-  // Skip external URLs - let the browser handle them directly
-  // This avoids CSP issues with cross-origin requests in the SW context
-  if (url.origin !== self.location.origin) {
-    return; // Don't call respondWith, let browser handle it natively
+
+  // Skip external URLs - let the browser handle them directly.
+  if (!isSameOrigin(url)) return;
+
+  // Network-first for navigations to avoid stale HTML.
+  if (isNavigationRequest(event.request)) {
+    event.respondWith(
+      fetch(event.request).catch(async () => {
+        const cache = await caches.open(CACHE_NAME);
+        return (await cache.match('/offline.html')) || (await cache.match('/')) || new Response(null, { status: 504 });
+      })
+    );
+    return;
   }
-  
-  // Simple cache-first strategy for dev: serve from cache if available, else network
+
+  // Only cache GET static assets.
+  if (event.request.method !== 'GET' || !isCacheableStaticAsset(url)) return;
+
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    caches.open(CACHE_NAME).then(async (cache) => {
+      const cached = await cache.match(event.request);
       if (cached) return cached;
-      return fetch(event.request)
-        .then((response) => {
-          // Optionally cache successful GET requests for later
-          if (
-            event.request.method === 'GET' &&
-            response &&
-            response.status === 200 &&
-            response.type !== 'opaque'
-          ) {
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
-          }
-          return response;
-        })
-        .catch(() => {
-          // Fallbacks: if request is navigation then return cached root if present
-          if (event.request.mode === 'navigate') {
-            return caches.match('.');
-          }
-          return new Response(null, { status: 504, statusText: 'Gateway Timeout' });
-        });
+
+      try {
+        const response = await fetch(event.request);
+        if (response && response.status === 200 && response.type !== 'opaque') {
+          cache.put(event.request, response.clone());
+        }
+        return response;
+      } catch {
+        return cached || new Response(null, { status: 504, statusText: 'Gateway Timeout' });
+      }
     })
   );
 });
@@ -83,7 +107,18 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+
+  // Echo test ping messages
+  if (event.data && event.data.type === 'PING') {
+    try {
+      if (event.source && typeof event.source.postMessage === 'function') {
+        event.source.postMessage({ type: 'PONG' });
+      }
+    } catch {
+      // ignore
+    }
+  }
 });
 
 // Expose version for introspection
-self.__SW_VERSION = '1.3';
+self.__SW_VERSION = SW_VERSION;

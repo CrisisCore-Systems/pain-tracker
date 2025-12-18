@@ -148,7 +148,62 @@ export default defineConfig({
     chunkSizeWarningLimit: 300,
     rollupOptions: {
       output: {
-        sourcemap: false // Explicitly disable sourcemaps in rollup output
+        sourcemap: false, // Explicitly disable sourcemaps in rollup output
+        // Optimized chunking for mobile performance
+        manualChunks: (id) => {
+          // Keep React + router + charting together to avoid circular chunk imports.
+          // (Splitting charts into a separate chunk can create a cycle where
+          // chart-vendor imports react-vendor and react-vendor imports chart-vendor,
+          // which can surface as `Cannot read properties of undefined (reading 'forwardRef')`.)
+          if (
+            id.includes('node_modules/react') ||
+            id.includes('node_modules/react-dom') ||
+            id.includes('node_modules/react-is') ||
+            id.includes('node_modules/scheduler') ||
+            id.includes('node_modules/react-router') ||
+            id.includes('node_modules/react-router-dom') ||
+            id.includes('node_modules/recharts') ||
+            id.includes('node_modules/d3-')
+          ) {
+            return 'react-vendor';
+          }
+          // Date utilities - frequently used
+          if (id.includes('node_modules/date-fns')) {
+            return 'date-vendor';
+          }
+          // Form handling - needed for main app
+          if (
+            id.includes('node_modules/react-hook-form') ||
+            id.includes('node_modules/@hookform') ||
+            id.includes('node_modules/zod')
+          ) {
+            return 'form-vendor';
+          }
+          // State management - needed for main app
+          if (id.includes('node_modules/zustand') || id.includes('node_modules/immer')) {
+            return 'state-vendor';
+          }
+          // i18n - can be deferred
+          if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) {
+            return 'i18n-vendor';
+          }
+          // Heavy crypto library - lazy load only when vault is accessed
+          if (id.includes('node_modules/libsodium') || id.includes('node_modules/crypto-js')) {
+            return 'crypto-vendor';
+          }
+          // PDF generation - lazy load on export
+          if (id.includes('node_modules/jspdf') || id.includes('node_modules/html2canvas')) {
+            return 'pdf-vendor';
+          }
+          // Lucide icons - tree-shakeable but keep together
+          if (id.includes('node_modules/lucide-react')) {
+            return 'icons-vendor';
+          }
+          // DOMPurify - security library
+          if (id.includes('node_modules/dompurify')) {
+            return 'security-vendor';
+          }
+        },
       }
     }
   },

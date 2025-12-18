@@ -25,16 +25,16 @@
   ],
   "screenshots": [
     {
-      "src": "screenshots/dashboard-540x720.png",
+      "src": "/main-dashboard.png",
       "type": "image/png",
-      "sizes": "540x720",
+      "sizes": "1280x4869",
       "form_factor": "narrow",
       "label": "Pain tracking dashboard"
     },
     {
-      "src": "screenshots/analytics-1280x720.png",
+      "src": "/screenshots/marketing/analytics-dashboard.png",
       "type": "image/png",
-      "sizes": "1280x720",
+      "sizes": "2400x1260",
       "form_factor": "wide",
       "label": "Analytics overview"
     }

@@ -40,13 +40,11 @@ If it makes me feel worse when I'm already at my worst, it doesn't belong here.
 
 ## The First 5 Decisions That Came From That Rule
 
-### 1. Dark theme by default (with biophilic nature-inspired mode)
+### 1. Dark theme by default
 
 Not "dark mode available." Dark *first*. Because at 3 AM, a white screen is violence.
 
-But not just any dark theme—we built what we call "biophilic" styling. Soft greens and earth tones. Like you're in a quiet forest instead of a medical app. Because chronic pain makes everything feel clinical enough already.
-
-The preference persists to localStorage. If you turn it on once, it stays. No re-asking every session.
+The preference persists to localStorage. If you switch it once, it stays. No re-asking every session.
 
 ### 2. No account required. Ever.
 

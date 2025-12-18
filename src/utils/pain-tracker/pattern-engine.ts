@@ -745,7 +745,7 @@ function generateQoLDescription(
 export function detectQoLDissonances(
   entries: PainEntry[],
   dailyTrend: TrendPoint[],
-  _qolPatterns: QoLPattern[] // eslint-disable-line @typescript-eslint/no-unused-vars
+  _qolPatterns: QoLPattern[]
 ): QoLDissonance[] {
   const dissonances: QoLDissonance[] = [];
 

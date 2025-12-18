@@ -2,7 +2,7 @@
  * Toast - Individual toast notification component
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
 
 export interface ToastData {
@@ -35,13 +35,43 @@ export function Toast({
 }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
+  const isMountedRef = useRef(true);
+  const dismissTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Track mounted state to prevent state updates after unmount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      // Clear any pending timeouts on unmount
+      if (dismissTimeoutRef.current) {
+        clearTimeout(dismissTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleDismiss = useCallback(() => {
+    if (!isMountedRef.current) return;
+    
     setIsExiting(true);
-    setTimeout(() => {
+    
+    // Clear any existing timeout
+    if (dismissTimeoutRef.current) {
+      clearTimeout(dismissTimeoutRef.current);
+    }
+    
+    dismissTimeoutRef.current = setTimeout(() => {
+      // Check if still mounted before updating state
+      if (!isMountedRef.current) return;
+      
       setIsVisible(false);
-      onDismiss(id);
-      customOnDismiss?.();
+      try {
+        onDismiss(id);
+        customOnDismiss?.();
+      } catch (error) {
+        // Silently handle errors during dismiss - component may be unmounting
+        console.debug('Toast dismiss error (safe to ignore):', error);
+      }
     }, 150); // Animation duration
   }, [id, onDismiss, customOnDismiss]);
 

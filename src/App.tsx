@@ -162,6 +162,13 @@ function App() {
   }));
   usePatternAlerts(patternEntries);
 
+  // NOTE: Do NOT set basename when Vite handles the base path via VITE_BASE.
+  // Vite's dev server already serves from /pain-tracker/ and rewrites URLs correctly.
+  // Setting basename would cause React Router to strip the path from the URL bar,
+  // breaking bookmarks and page refreshes. Only set basename in production builds
+  // when deploying to a true subpath without server-side rewriting.
+  // For now, leave basename empty - Vite's base config handles asset paths.
+
   return (
     <BrowserRouter>
       <ThemeProvider>
@@ -207,7 +214,7 @@ function App() {
                     {/* Main Application - Protected */}
                     <Route path="/app" element={
                       <VaultGate>
-                        <div className="min-h-screen biophilic-bg bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                        <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
                           <OfflineBanner />
                           <BetaWarning />
                           <NotificationConsentPrompt />
@@ -227,7 +234,7 @@ function App() {
                     {/* Route to open app and start daily check-in (used by notifications) */}
                     <Route path="/app/checkin" element={
                       <VaultGate>
-                        <div className="min-h-screen biophilic-bg bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
+                        <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
                           <OfflineBanner />
                           <BetaWarning />
                           <NotificationConsentPrompt />

@@ -93,7 +93,7 @@ export default function BetaAnalyticsConsentPrompt() {
     // Note: bottomLeftRef.current is intentionally used instead of adding bottomLeft to deps.
     // useToast returns a new object on each render which would cause infinite re-renders.
     // We use refs and guard against re-execution with hasShownToast ref and localStorage check.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [consent, canShowPrompt]);
 
   // Don't render anything - the toast handles the UI

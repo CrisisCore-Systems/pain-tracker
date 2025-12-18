@@ -75,17 +75,12 @@ export default function AlertsSettings({
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-white">Alerts settings</h3>
-          <p className="text-xs text-slate-400">Tune sensitivity for pattern alerts.</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Alerts settings</h3>
+          <p className="text-xs text-gray-500 dark:text-slate-400">Tune sensitivity for pattern alerts.</p>
         </div>
         {showClose && (
           <button 
-            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#94a3b8',
-            }}
+            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
             onClick={handleClose}
           >
             Close
@@ -93,7 +88,7 @@ export default function AlertsSettings({
         )}
       </div>
 
-      <label className="block text-sm font-medium text-slate-200">Sensitivity (pain increase threshold)</label>
+      <label className="block text-sm font-medium text-gray-700 dark:text-slate-200">Sensitivity (pain increase threshold)</label>
       <input
         type="range"
         min={1}
@@ -102,8 +97,8 @@ export default function AlertsSettings({
         onChange={e => setSettings({ threshold: Number(e.target.value) })}
         className="w-full accent-amber-500"
       />
-      <div className="text-sm text-slate-300">Current threshold: {settings.threshold} points</div>
-      <div className="text-sm text-slate-400">
+      <div className="text-sm text-gray-600 dark:text-slate-300">Current threshold: {settings.threshold} points</div>
+      <div className="text-sm text-gray-500 dark:text-slate-400">
         Live preview: You&apos;ll be alerted when pain rises by {settings.threshold} points. For
         example, a baseline of 3/10 would flag entries of {Math.min(10, 3 + settings.threshold)}/10.
       </div>
@@ -113,12 +108,7 @@ export default function AlertsSettings({
   if (variant === 'inline') {
     return (
       <div 
-        className={cn('rounded-xl p-5 space-y-3 text-sm', className)}
-        style={{
-          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-        }}
+        className={cn('rounded-xl p-5 space-y-3 text-sm bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg', className)}
       >
         {renderBody(false)}
       </div>

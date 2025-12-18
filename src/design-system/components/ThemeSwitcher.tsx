@@ -194,7 +194,6 @@ export function ThemeSwitcher({ className, showPreview = false }: ThemeSwitcherP
                   'rounded-lg border-2 p-4 space-y-3 transition-all',
                   previewContainerClasses[previewTheme]
                 )}
-                data-theme={previewTheme}
               >
                 <div className={cn('font-semibold', previewTitleClasses[previewTheme])}>
                   Preview Title

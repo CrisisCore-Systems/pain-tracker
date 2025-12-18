@@ -26,7 +26,14 @@ export const LandingPage: React.FC = () => {
     document.body.appendChild(ariaLive);
 
     return () => {
-      document.body.removeChild(ariaLive);
+      // Safe cleanup - element may already be removed during fast navigation
+      try {
+        if (ariaLive && ariaLive.parentNode === document.body) {
+          document.body.removeChild(ariaLive);
+        }
+      } catch {
+        // Element already removed, ignore
+      }
       document.title = 'Pain Tracker Pro';
     };
   }, []);

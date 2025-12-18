@@ -98,7 +98,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const isDisabled = disabled || loading;
-    const longPressTimerRef = React.useRef<NodeJS.Timeout>();
+    const longPressTimerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>();
+    const rippleTimersRef = React.useRef<Array<ReturnType<typeof setTimeout>>>([]);
     const [isPressed, setIsPressed] = React.useState(false);
     const [isLongPressing, setIsLongPressing] = React.useState(false);
     const [ripples, setRipples] = React.useState<Array<{ x: number; y: number; id: number }>>([]);
@@ -188,9 +189,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           setRipples(prev => [...prev, { x, y, id }]);
 
           // Remove ripple after animation
-          setTimeout(() => {
+          const timerId = setTimeout(() => {
             setRipples(prev => prev.filter(r => r.id !== id));
+            rippleTimersRef.current = rippleTimersRef.current.filter(t => t !== timerId);
           }, 600);
+          rippleTimersRef.current.push(timerId);
         }
 
         triggerHapticFeedback();
@@ -205,6 +208,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         if (longPressTimerRef.current) {
           clearTimeout(longPressTimerRef.current);
         }
+        for (const timerId of rippleTimersRef.current) {
+          clearTimeout(timerId);
+        }
+        rippleTimersRef.current = [];
       };
     }, []);
 

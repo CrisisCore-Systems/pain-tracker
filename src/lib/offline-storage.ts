@@ -564,7 +564,6 @@ export class OfflineStorageService {
 
       data.forEach(item => {
         // Remove ID to let IndexedDB assign new ones
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id: _id, ...itemWithoutId } = item;
         const request = store.add(itemWithoutId);
         request.onsuccess = complete;

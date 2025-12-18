@@ -56,7 +56,13 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
     const workImpact = analyzeWorkImpact(filteredEntries);
     const treatments = analyzeTreatmentChanges(filteredEntries);
 
+    const accommodationsNeeded = Array.from(
+      new Set(filteredEntries.flatMap(entry => entry.workImpact?.modifiedDuties ?? []))
+    ).sort();
+
     return {
+      id: `wcb-${Date.now().toString(36)}`,
+      createdAt: new Date().toISOString(),
       period: ui.reportPeriod,
       painTrends: {
         average: Math.round(avgPain * 10) / 10,
@@ -65,8 +71,8 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
       },
       workImpact: {
         missedDays: workImpact.missedDays,
-        limitations: workImpact.limitations.map(l => [l, 1] as [string, number]),
-        accommodationsNeeded: workImpact.accommodationsNeeded,
+        limitations: workImpact.commonLimitations,
+        accommodationsNeeded,
       },
       functionalAnalysis: {
         limitations: [],
@@ -74,13 +80,10 @@ export function WCBReportPanel({ entries }: WCBReportPanelProps) {
         improvements: [],
       },
       treatments: {
-        current: treatments.map(t => ({ treatment: t.name, frequency: t.sessions })),
+        current: treatments,
         effectiveness: 'See detailed treatment analysis.',
       },
-      recommendations: [
-        'Continue monitoring pain levels',
-        'Follow up with healthcare provider',
-      ],
+      recommendations: ['Continue monitoring pain levels', 'Follow up with healthcare provider'],
     };
   }, [showPreview, entries, ui.reportPeriod]);
 

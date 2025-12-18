@@ -87,24 +87,18 @@ export function AccessibilitySettingsPanel() {
 
   return (
     <div 
-      className="accessibility-settings w-full max-w-4xl mx-auto rounded-xl p-5"
-      style={{
-        background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-      }}
+      className="accessibility-settings w-full max-w-4xl mx-auto rounded-xl p-5 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg"
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div 
-            className="p-2 rounded-lg"
-            style={{ background: 'rgba(14, 165, 233, 0.15)' }}
+            className="p-2 rounded-lg bg-sky-100 dark:bg-sky-500/15"
           >
-            <Settings className="w-6 h-6 text-sky-400" />
+            <Settings className="w-6 h-6 text-sky-600 dark:text-sky-400" />
           </div>
           <div>
-            <h4 className="text-lg font-semibold text-white">Accessibility & Comfort Settings</h4>
-            <p className="text-sm text-slate-400 mt-1">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Accessibility & Comfort Settings</h4>
+            <p className="text-sm text-gray-600 dark:text-slate-400 mt-1">
               Customize the interface to work best for your needs
             </p>
           </div>
@@ -112,12 +106,7 @@ export function AccessibilitySettingsPanel() {
         <div className="flex space-x-2">
           <button
             onClick={resetToDefaults}
-            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all"
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#94a3b8',
-            }}
+            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
             Reset
@@ -127,35 +116,32 @@ export function AccessibilitySettingsPanel() {
 
       <div>
         {/* Tab Navigation */}
-        <div className="mb-6" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-          <nav className="flex space-x-2 overflow-x-auto pb-2" aria-label="Settings categories">
-            {tabs.map(tab => {
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className="flex items-center space-x-2 px-4 py-3 text-sm font-medium rounded-lg transition-all min-h-[44px] whitespace-nowrap"
-                  style={isActive ? {
-                    background: 'rgba(14, 165, 233, 0.15)',
-                    border: '1px solid rgba(14, 165, 233, 0.3)',
-                    color: '#38bdf8',
-                  } : {
-                    background: 'transparent',
-                    border: '1px solid transparent',
-                    color: '#64748b',
-                  }}
-                  aria-selected={isActive}
-                  role="tab"
-                >
-                  {tab.icon}
-                  <div className="text-left">
-                    <div>{tab.label}</div>
-                    <div className="text-xs opacity-70">{tab.description}</div>
-                  </div>
-                </button>
-              );
-            })}
+        <div className="mb-6 border-b border-gray-200 dark:border-white/5">
+          <nav className="w-full overflow-x-auto pb-2" aria-label="Settings categories">
+            <div className="inline-flex flex-nowrap gap-2 whitespace-nowrap min-w-max">
+              {tabs.map(tab => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`shrink-0 flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-lg transition-all min-h-[44px] whitespace-nowrap overflow-hidden ${
+                      isActive
+                        ? 'bg-sky-100 dark:bg-sky-500/15 border border-sky-200 dark:border-sky-500/30 text-sky-700 dark:text-sky-400'
+                        : 'bg-transparent border border-transparent text-gray-500 dark:text-slate-500 hover:text-gray-700 dark:hover:text-slate-300'
+                    }`}
+                    aria-selected={isActive}
+                    role="tab"
+                  >
+                    {tab.icon}
+                    <div className="text-left min-w-0">
+                      <div className="truncate">{tab.label}</div>
+                      <div className="hidden sm:block text-xs opacity-70 truncate">{tab.description}</div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </nav>
         </div>
 
@@ -507,19 +493,15 @@ function SettingGroup({
 }) {
   return (
     <div 
-      className="rounded-xl p-4"
-      style={{
-        background: 'rgba(15, 23, 42, 0.5)',
-        border: '1px solid rgba(255, 255, 255, 0.05)',
-      }}
+      className="rounded-xl p-4 bg-gray-50 dark:bg-slate-900/50 border border-gray-100 dark:border-white/5"
     >
       <div className="flex items-start space-x-3 mb-4">
-        <div className="p-1.5 rounded-lg" style={{ background: 'rgba(255, 255, 255, 0.05)' }}>
+        <div className="p-1.5 rounded-lg bg-gray-100 dark:bg-white/5">
           {icon}
         </div>
         <div>
-          <h3 className="font-medium text-slate-200">{title}</h3>
-          <p className="text-sm text-slate-400">{description}</p>
+          <h3 className="font-medium text-gray-800 dark:text-slate-200">{title}</h3>
+          <p className="text-sm text-gray-600 dark:text-slate-400">{description}</p>
         </div>
       </div>
       <div className="space-y-4">{children}</div>
@@ -542,19 +524,19 @@ function ToggleSetting({
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex-1">
-        <label className="font-medium text-slate-200 text-sm">{label}</label>
-        <p className="text-xs text-slate-400 mt-1">{description}</p>
+        <label className="font-medium text-gray-800 dark:text-slate-200 text-sm">{label}</label>
+        <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">{description}</p>
       </div>
       <button
         onClick={() => onChange(!checked)}
-        className="relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+        className={`relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900 ${
+          checked 
+            ? 'bg-gradient-to-r from-sky-500 to-cyan-500 shadow-lg shadow-sky-500/30' 
+            : 'bg-gray-300 dark:bg-slate-600'
+        }`}
         style={{
           minHeight: 'var(--ti-touch-size, 44px)',
           minWidth: '48px',
-          background: checked 
-            ? 'linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)' 
-            : 'rgba(51, 65, 85, 0.8)',
-          boxShadow: checked ? '0 4px 15px rgba(14, 165, 233, 0.3)' : 'none',
         }}
         role="switch"
         aria-checked={checked}
@@ -588,20 +570,17 @@ function SelectSetting({
 }) {
   return (
     <div>
-      <label className="block font-medium text-slate-200 text-sm mb-1">
+      <label className="block font-medium text-gray-800 dark:text-slate-200 text-sm mb-1">
         {label}
       </label>
-      <p className="text-xs text-slate-400 mb-3">{description}</p>
+      <p className="text-xs text-gray-600 dark:text-slate-400 mb-3">{description}</p>
       <select
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="block w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+        className="block w-full px-3 py-2.5 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900 bg-white dark:bg-slate-700 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-slate-200"
         style={{
           minHeight: 'var(--ti-touch-size, 44px)',
           fontSize: 'var(--ti-font-size, 14px)',
-          background: 'rgba(51, 65, 85, 0.8)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          color: '#e2e8f0',
         }}
       >
         {options.map(option => (

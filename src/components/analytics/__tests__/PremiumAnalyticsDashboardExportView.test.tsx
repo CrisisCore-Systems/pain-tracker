@@ -1,6 +1,7 @@
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '../../../test/test-utils';
+import userEvent from '@testing-library/user-event';
 import { PremiumAnalyticsDashboard } from '../PremiumAnalyticsDashboard';
 import type { PainEntry } from '../../../types';
 
@@ -9,11 +10,12 @@ const sampleEntries: PainEntry[] = [];
 
 describe('PremiumAnalyticsDashboard Export & Share copy', () => {
   it('shows trauma-informed clipboard fallback messaging when copy fails', async () => {
+    const user = userEvent.setup();
     render(<PremiumAnalyticsDashboard entries={sampleEntries} />);
 
     // Navigate to Export & Share tab and wait for the export view to mount
     const exportTab = screen.getByRole('button', { name: /Export & Share/i });
-    exportTab.click();
+    await user.click(exportTab);
 
     // Wait for the export textarea to appear so the view is fully rendered
     await screen.findByRole('textbox');
@@ -35,7 +37,7 @@ describe('PremiumAnalyticsDashboard Export & Share copy', () => {
       // Trigger a copy attempt which will fail in the test environment and surface the
       // trauma-informed fallback messaging inside the export view.
       const copyBtn = await screen.findByRole('button', { name: /Copy summary/i });
-      copyBtn.click();
+      await user.click(copyBtn);
 
       // Wait for the clipboard error alert specifically (contains clipboard-related messaging)
       // Note: There may be other alerts from emotional validation, so we find all and filter

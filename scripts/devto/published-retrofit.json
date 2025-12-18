@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "created": "2025-12-13",
+    "note": "Config for retrofitting already-published DEV posts into funnels + a standardized conversion block."
+  },
+  "defaults": {
+    "start_here_url": "https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k",
+    "sponsor_url": "https://paintracker.ca/sponsor",
+    "trust_bullets": [
+      "Offline-first (works without a connection)",
+      "No backend + client-side encryption + open source"
+    ],
+    "default_hook": "For people living with chronic pain (and the devs supporting them): a privacy-first, offline-first pain tracker.",
+    "funnelA_series": "Foundations",
+    "funnelB_series": "CrisisCore Build Log",
+    "low_view_threshold": 25
+  },
+  "funnels": {
+    "foundations_titles": [
+      "Building a Healthcare PWA That Actually Works When It Matters",
+      "Building Software That Actually Gives a Damn…",
+      "Trauma-informed design left everyone asking…",
+      "Building a Pain Tracker That Actually Gets It…",
+      "Client-Side Encryption for Healthcare Apps",
+      "No Backend, No Excuses…",
+      "Trauma-Informed React Hooks",
+      "If Your Health App Can’t Explain Its Encryption…",
+      "Keeping Your Health Data Out of Court"
+    ],
+    "buildlog_titles": [
+      "Two People, Same Body…",
+      "The False Positive Problem…",
+      "How to Test “User Is in Crisis”…",
+      "The Ethics of Simulation…",
+      "Visual Regression…"
+    ]
+  },
+  "overrides": {
+    "hooks_by_title": {},
+    "description_by_title": {},
+    "cover_image_by_title": {}
+  }
+}

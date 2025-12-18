@@ -6,7 +6,7 @@
  * 
  * Architecture:
  * - base/       → Reset, tokens, typography
- * - themes/     → Dark, light, biophilic themes  
+ * - themes/     → Dark, light themes  
  * - components/ → Buttons, cards, forms
  * - pages/      → Landing, pricing page styles
  * - utilities/  → Animations, mobile optimizations
@@ -39,7 +39,6 @@
 /* ===== THEMES ===== */
 @import './themes/dark.css';
 @import './themes/light.css';
-@import './themes/biophilic.css';
 
 /* ===== COMPONENTS ===== */
 @import './components/buttons.css';

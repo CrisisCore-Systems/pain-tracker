@@ -1,5 +1,4 @@
 /* eslint-env node */
-/* global __dirname, process, console */
 // Node script: allow CommonJS require usage.
 const fs = require('fs');
 const path = require('path');

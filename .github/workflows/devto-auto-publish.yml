@@ -1,0 +1,71 @@
+name: DEV.to auto publish
+
+on:
+  schedule:
+    # Every 10 minutes (UTC). Publishes any posts whose publishAt has passed.
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "devto.mjs command (dry-run | create-drafts | publish-due)"
+        required: true
+        default: "dry-run"
+      yes:
+        description: "Required for publish-due"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: devto-auto-publish
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Run scheduled publish
+        if: github.event_name == 'schedule'
+        env:
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+          DEVTO_SPONSOR_URL: ${{ vars.DEVTO_SPONSOR_URL }}
+          DEVTO_REPO_URL: ${{ vars.DEVTO_REPO_URL }}
+          DEVTO_SERIES_START_URL: ${{ vars.DEVTO_SERIES_START_URL }}
+          DEVTO_SERIES: ${{ vars.DEVTO_SERIES }}
+          DEVTO_ORGANIZATION_ID: ${{ vars.DEVTO_ORGANIZATION_ID }}
+        run: npm run devto:publish-due
+
+      - name: Run manual command
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+          DEVTO_SPONSOR_URL: ${{ vars.DEVTO_SPONSOR_URL }}
+          DEVTO_REPO_URL: ${{ vars.DEVTO_REPO_URL }}
+          DEVTO_SERIES_START_URL: ${{ vars.DEVTO_SERIES_START_URL }}
+          DEVTO_SERIES: ${{ vars.DEVTO_SERIES }}
+          DEVTO_ORGANIZATION_ID: ${{ vars.DEVTO_ORGANIZATION_ID }}
+        run: |
+          if [ "${{ inputs.command }}" = "publish-due" ] && [ "${{ inputs.yes }}" != "true" ]; then
+            echo "Refusing to run publish-due without inputs.yes=true" >&2
+            exit 1
+          fi
+
+          if [ "${{ inputs.command }}" = "publish-due" ]; then
+            node scripts/devto/devto.mjs publish-due --yes
+          else
+            node scripts/devto/devto.mjs "${{ inputs.command }}" --write
+          fi

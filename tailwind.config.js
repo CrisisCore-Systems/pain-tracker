@@ -57,13 +57,6 @@ export default {
           DEFAULT: 'rgb(var(--color-info) / <alpha-value>)',
           foreground: 'rgb(var(--color-info-foreground) / <alpha-value>)',
         },
-        /* Biophilic palette – nature-inspired therapeutic colors */
-        biophilia: {
-          bg1: 'rgb(var(--color-biophilia-bg-1) / <alpha-value>)',
-          bg2: 'rgb(var(--color-biophilia-bg-2) / <alpha-value>)',
-          accent: 'rgb(var(--color-biophilia-accent) / <alpha-value>)',
-          muted: 'rgb(var(--color-biophilia-muted) / <alpha-value>)',
-        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -203,6 +196,136 @@ export default {
         // Light-mode hero safeguard
         ':root:not(.dark) .hero, :root:not(.dark) .hero *': {
           color: theme('colors.foreground'),
+        },
+
+        // Dark-mode compatibility layer: legacy Tailwind palette classes
+        // Many older pages were built with `bg-white`/`text-gray-900` style utilities.
+        // When the app runs in dark mode (default), those become unreadable.
+        // These rules remap common legacy utilities to semantic token colors.
+        '.dark .bg-white, [data-theme="dark"] .bg-white': {
+          backgroundColor: theme('colors.card.DEFAULT'),
+          color: theme('colors.foreground'),
+        },
+        '.dark .bg-gray-50, [data-theme="dark"] .bg-gray-50': {
+          backgroundColor: theme('colors.card.DEFAULT'),
+          color: theme('colors.foreground'),
+        },
+        '.dark .bg-gray-100, [data-theme="dark"] .bg-gray-100': {
+          backgroundColor: theme('colors.muted.DEFAULT'),
+          color: theme('colors.foreground'),
+        },
+        '.dark .bg-slate-50, [data-theme="dark"] .bg-slate-50': {
+          backgroundColor: theme('colors.card.DEFAULT'),
+          color: theme('colors.foreground'),
+        },
+        '.dark .bg-slate-100, [data-theme="dark"] .bg-slate-100': {
+          backgroundColor: theme('colors.muted.DEFAULT'),
+          color: theme('colors.foreground'),
+        },
+
+        '.dark .text-black, [data-theme="dark"] .text-black': {
+          color: theme('colors.foreground'),
+        },
+        '.dark .text-gray-900, [data-theme="dark"] .text-gray-900': {
+          color: theme('colors.foreground'),
+        },
+        '.dark .text-gray-800, [data-theme="dark"] .text-gray-800': {
+          color: theme('colors.foreground'),
+        },
+        '.dark .text-gray-700, [data-theme="dark"] .text-gray-700': {
+          color: theme('colors.muted.foreground'),
+        },
+        '.dark .text-gray-600, [data-theme="dark"] .text-gray-600': {
+          color: theme('colors.muted.foreground'),
+        },
+        '.dark .text-gray-500, [data-theme="dark"] .text-gray-500': {
+          color: theme('colors.muted.foreground'),
+        },
+        '.dark .text-slate-900, [data-theme="dark"] .text-slate-900': {
+          color: theme('colors.foreground'),
+        },
+        '.dark .text-slate-800, [data-theme="dark"] .text-slate-800': {
+          color: theme('colors.foreground'),
+        },
+        '.dark .text-slate-700, [data-theme="dark"] .text-slate-700': {
+          color: theme('colors.muted.foreground'),
+        },
+        '.dark .text-slate-600, [data-theme="dark"] .text-slate-600': {
+          color: theme('colors.muted.foreground'),
+        },
+        '.dark .text-slate-500, [data-theme="dark"] .text-slate-500': {
+          color: theme('colors.muted.foreground'),
+        },
+
+        '.dark .border-gray-200, [data-theme="dark"] .border-gray-200': {
+          borderColor: theme('colors.border'),
+        },
+        '.dark .border-gray-300, [data-theme="dark"] .border-gray-300': {
+          borderColor: theme('colors.border'),
+        },
+        '.dark .border-slate-200, [data-theme="dark"] .border-slate-200': {
+          borderColor: theme('colors.border'),
+        },
+        '.dark .border-slate-300, [data-theme="dark"] .border-slate-300': {
+          borderColor: theme('colors.border'),
+        },
+
+        // Light-mode compatibility layer: dark-only pages
+        // Some pages were authored assuming a permanently-dark surface (e.g. `bg-slate-900 text-white`).
+        // When switching to light mode, those look like "half dark / half light".
+        // Remap common dark palette utilities to semantic token colors in light mode.
+        ':root:not(.dark) .bg-slate-900, [data-theme="light"] .bg-slate-900': {
+          backgroundColor: theme('colors.background'),
+          color: theme('colors.foreground'),
+        },
+        ':root:not(.dark) .bg-slate-800, [data-theme="light"] .bg-slate-800': {
+          backgroundColor: theme('colors.card.DEFAULT'),
+          color: theme('colors.card.foreground'),
+        },
+        ':root:not(.dark) .bg-slate-800\\/50, [data-theme="light"] .bg-slate-800\\/50': {
+          backgroundColor: theme('colors.card.DEFAULT'),
+          color: theme('colors.card.foreground'),
+        },
+        ':root:not(.dark) .bg-slate-900\\/50, [data-theme="light"] .bg-slate-900\\/50': {
+          backgroundColor: theme('colors.muted.DEFAULT'),
+          color: theme('colors.foreground'),
+        },
+        ':root:not(.dark) .bg-slate-900\\/95, [data-theme="light"] .bg-slate-900\\/95': {
+          backgroundColor: theme('colors.background'),
+          color: theme('colors.foreground'),
+        },
+        ':root:not(.dark) .bg-gray-900, [data-theme="light"] .bg-gray-900': {
+          backgroundColor: theme('colors.background'),
+          color: theme('colors.foreground'),
+        },
+
+        ':root:not(.dark) .text-white, [data-theme="light"] .text-white': {
+          color: theme('colors.foreground'),
+        },
+        ':root:not(.dark) .text-slate-100, [data-theme="light"] .text-slate-100': {
+          color: theme('colors.foreground'),
+        },
+        ':root:not(.dark) .text-slate-200, [data-theme="light"] .text-slate-200': {
+          color: theme('colors.foreground'),
+        },
+        ':root:not(.dark) .text-slate-300, [data-theme="light"] .text-slate-300': {
+          color: theme('colors.muted.foreground'),
+        },
+        ':root:not(.dark) .text-slate-400, [data-theme="light"] .text-slate-400': {
+          color: theme('colors.muted.foreground'),
+        },
+        ':root:not(.dark) .text-slate-500, [data-theme="light"] .text-slate-500': {
+          color: theme('colors.muted.foreground'),
+        },
+
+        ':root:not(.dark) .border-slate-700, [data-theme="light"] .border-slate-700': {
+          borderColor: theme('colors.border'),
+        },
+        ':root:not(.dark) .border-slate-700\\/50, [data-theme="light"] .border-slate-700\\/50': {
+          borderColor: theme('colors.border'),
+        },
+        ':root:not(.dark) .border-slate-600, [data-theme="light"] .border-slate-600': {
+          borderColor: theme('colors.border'),
         },
       });
 

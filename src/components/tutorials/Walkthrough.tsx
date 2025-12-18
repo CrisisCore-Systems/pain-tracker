@@ -3,6 +3,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { Button } from '../../design-system';
 
@@ -106,7 +107,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: ReactKeyboardEvent) => {
     if (e.key === 'Escape') {
       onSkip();
     } else if (e.key === 'ArrowLeft' && currentStep > 0) {
@@ -117,19 +118,58 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
   };
 
   useEffect(() => {
+    if (!isActive) return;
+
+    const handleDocumentKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onSkip();
+        return;
+      }
+
+      if (e.key === 'ArrowLeft') {
+        setCurrentStep(prev => Math.max(0, prev - 1));
+        return;
+      }
+
+      if (e.key === 'ArrowRight') {
+        setCurrentStep(prev => {
+          if (prev < steps.length - 1) return prev + 1;
+          onComplete();
+          return prev;
+        });
+      }
+    };
+
+    document.addEventListener('keydown', handleDocumentKeyDown);
+    return () => document.removeEventListener('keydown', handleDocumentKeyDown);
+  }, [isActive, onComplete, onSkip, steps.length]);
+
+  useEffect(() => {
+    if (!isActive) return;
+    overlayRef.current?.focus();
+  }, [isActive, currentStep]);
+
+  useEffect(() => {
     const styleSheet = document.createElement('style');
     const styles = `
       .walkthrough-highlight {
         position: relative;
         z-index: 45;
-        box-shadow: 0 0 0 4px rgba(var(--primary), 0.5);
+        box-shadow: 0 0 0 4px rgb(var(--color-primary) / 0.5);
         border-radius: 4px;
       }
     `;
     styleSheet.appendChild(document.createTextNode(styles));
     document.head.appendChild(styleSheet);
     return () => {
-      document.head.removeChild(styleSheet);
+      // Safe cleanup - element may already be removed during fast navigation
+      try {
+        if (styleSheet && styleSheet.parentNode === document.head) {
+          document.head.removeChild(styleSheet);
+        }
+      } catch {
+        // Element already removed, ignore
+      }
     };
   }, []);
 
@@ -138,7 +178,7 @@ export function Walkthrough({ steps, isActive, onComplete, onSkip }: Walkthrough
   return (
     <>
       {/* Backdrop overlay */}
-      <div className="fixed inset-0 bg-black/50 z-40" />
+      <div className="fixed inset-0 bg-black/50 z-40" onClick={onSkip} />
 
       {/* Walkthrough overlay */}
       <div

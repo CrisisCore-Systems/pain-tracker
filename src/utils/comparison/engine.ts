@@ -326,7 +326,7 @@ export class DataComparisonEngine {
    */
   private static generateInsights(
     statistics: ComparisonStatistics,
-    _config: ComparisonConfig // eslint-disable-line @typescript-eslint/no-unused-vars
+    _config: ComparisonConfig
   ): ComparisonInsight[] {
     const insights: ComparisonInsight[] = [];
 
@@ -388,7 +388,7 @@ export class DataComparisonEngine {
    */
   private static generateCharts(
     datasets: ComparisonDataset[],
-    _config: ComparisonConfig // eslint-disable-line @typescript-eslint/no-unused-vars
+    _config: ComparisonConfig
   ): ComparisonChart[] {
     const charts: ComparisonChart[] = [];
 

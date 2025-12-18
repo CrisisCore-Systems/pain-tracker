@@ -74,9 +74,34 @@ describe('WCB Export', () => {
     },
     functionalImpact: {
       limitedActivities: ['walking'],
-      assistanceNeeded: false,
+      assistanceNeeded: [],
       mobilityAids: [],
     },
+    medications: {
+      current: [],
+      changes: '',
+      effectiveness: '',
+    },
+    treatments: {
+      recent: [],
+      effectiveness: '',
+      planned: [],
+    },
+    qualityOfLife: {
+      sleepQuality: 0,
+      moodImpact: 0,
+      socialImpact: [],
+    },
+    workImpact: {
+      missedWork: 0,
+      modifiedDuties: [],
+      workLimitations: [],
+    },
+    comparison: {
+      worseningSince: '',
+      newLimitations: [],
+    },
+    notes: '',
     ...overrides,
   });
 
@@ -148,15 +173,14 @@ describe('WCB Export', () => {
       const entries: PainEntry[] = [
         createMockEntry({
           workImpact: {
-            missedWork: true,
+            missedWork: 1,
             modifiedDuties: ['light duty', 'desk work only'],
             workLimitations: ['no lifting', 'limited standing'],
-            hoursMissed: 4,
           },
         }),
         createMockEntry({
           workImpact: {
-            missedWork: false,
+            missedWork: 0,
             modifiedDuties: ['modified schedule'],
             workLimitations: [],
           },
@@ -173,7 +197,7 @@ describe('WCB Export', () => {
         createMockEntry({
           functionalImpact: {
             limitedActivities: ['walking', 'sitting', 'standing', 'lifting'],
-            assistanceNeeded: true,
+            assistanceNeeded: ['Personal care (bathing, dressing)'],
             mobilityAids: ['cane', 'walker'],
           },
         }),
@@ -210,13 +234,13 @@ describe('WCB Export', () => {
     it('should handle entries with mood data', () => {
       const entries: PainEntry[] = [
         createMockEntry({
-          mood: 'anxious',
+          mood: 3,
         }),
         createMockEntry({
-          mood: 'depressed',
+          mood: 2,
         }),
         createMockEntry({
-          mood: 'calm',
+          mood: 8,
         }),
       ];
 
@@ -310,9 +334,8 @@ describe('WCB Export', () => {
   describe('Edge cases', () => {
     it('should handle entries with undefined optional fields', () => {
       const entries: PainEntry[] = [
-        {
+        createMockEntry({
           id: 'test-1',
-          timestamp: new Date('2024-01-15').toISOString(),
           baselineData: {
             pain: 5,
             locations: [],
@@ -320,11 +343,10 @@ describe('WCB Export', () => {
           },
           functionalImpact: {
             limitedActivities: [],
-            assistanceNeeded: false,
+            assistanceNeeded: [],
             mobilityAids: [],
           },
-          // No workImpact, notes, or mood
-        },
+        }),
       ];
 
       const result = exportWorkSafeBCPDF(entries, defaultOptions);

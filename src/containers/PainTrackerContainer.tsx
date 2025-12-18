@@ -5,7 +5,7 @@ import type { WalkthroughStep } from '../components/tutorials/Walkthrough';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { ModernAppLayout } from '../components/layouts/ModernAppLayout';
 import { ClinicalDashboard } from '../design-system/fused-v2';
-import { QuickLogStepper } from '../design-system/fused-v2';
+import QuickLogOneScreen from '../design-system/fused-v2/QuickLogOneScreen';
 import { useToast } from '../components/feedback';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
 import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
@@ -180,7 +180,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
   // Loading component for lazy-loaded views
   const ViewLoadingFallback = () => (
-    <BrandedLoadingScreen message="Loading..." size="sm" />
+    <BrandedLoadingScreen message="Loading..." />
   );
 
   const renderView = () => {
@@ -205,9 +205,8 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
       case 'new-entry':
         return (
-          <QuickLogStepper
+          <QuickLogOneScreen
             onComplete={data => {
-              // Convert QuickLogStepper data to PainEntry format
               handleAddEntry({
                 baselineData: {
                   pain: data.pain,

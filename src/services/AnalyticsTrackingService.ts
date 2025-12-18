@@ -340,17 +340,6 @@ function getRecordCountBucket(count: number): string {
   return 'very_large';
 }
 
-export function trackBiophilicThemeToggled(enabled: boolean): void {
-  trackEvent('biophilic_theme_toggled', {
-    enabled,
-  });
-}
-
-// Alias for easier import
-export const trackBiophilicToggle = (data: { enabled: boolean }): void => {
-  trackBiophilicThemeToggled(data.enabled);
-};
-
 // ============================================
 // CRISIS EVENT TRACKING
 // ============================================
@@ -457,8 +446,6 @@ export const AnalyticsTrackingService = {
   trackPatternDetected,
   trackFeatureUsed,
   trackExportGenerated,
-  trackBiophilicThemeToggled,
-  trackBiophilicToggle,
   trackCrisisDetected,
   trackCrisisEvent,
   trackAccessibilityFeatureEnabled,
