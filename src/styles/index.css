@@ -10,6 +10,7 @@
  * - components/ → Buttons, cards, forms
  * - pages/      → Landing, pricing page styles
  * - utilities/  → Animations, mobile optimizations
+ * - design-system/ → Shared fused-v2 tokens and advanced animations
  * 
  * Accessibility Features (WCAG 2.1 AA):
  * - prefers-reduced-motion: Disables animations
@@ -30,6 +31,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ===== DESIGN SYSTEM ===== */
+@import '../design-system/tokens/fused-v2.css';
 @import '../design-system/theme/animations.css';
 
 /* ===== BASE STYLES ===== */
