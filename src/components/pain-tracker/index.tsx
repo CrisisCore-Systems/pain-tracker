@@ -24,6 +24,7 @@ import { emptyStates } from '../../content/microcopy';
 // Dynamic imports: samplePainEntries and walkthroughSteps loaded on demand
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
+import { fetchWeatherData } from '../../services/weather';
 import { Walkthrough } from '../tutorials';
 import type { WalkthroughStep } from '../tutorials/Walkthrough';
 
@@ -336,6 +337,30 @@ export function PainTracker() {
 
       const updatedEntries = [...entries, newEntry];
       setEntries(updatedEntries);
+
+      // Best-effort: enrich with local weather without blocking save.
+      void (async () => {
+        try {
+          if (!('geolocation' in navigator) || !navigator.geolocation) return;
+          const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+          );
+          const weather = await fetchWeatherData(pos.coords.latitude, pos.coords.longitude);
+          if (!weather) return;
+          const parts: string[] = [];
+          if (weather.temperature !== null) parts.push(`${Math.round(weather.temperature)}°C`);
+          if (weather.condition) parts.push(weather.condition);
+          if (weather.isRaining) parts.push('🌧️');
+          if (weather.humidity !== null) parts.push(`${weather.humidity}% humidity`);
+          const summary = parts.join(', ');
+          if (!summary) return;
+
+          setEntries(prev => prev.map(e => (e.id === newEntry.id ? { ...e, weather: summary } : e)));
+          await savePainEntry({ ...newEntry, weather: summary });
+        } catch {
+          // Ignore enrichment failures
+        }
+      })();
       try {
         savePainEntry(newEntry)
           .then(() => {
@@ -352,6 +377,49 @@ export function PainTracker() {
         toast.warning('Save Warning', 'Entry added but may not persist after refresh.');
         console.error('Error saving entry:', err);
       }
+    } catch (err) {
+      setError('Failed to add pain entry. Please try again.');
+      toast.error('Save Failed', 'Unable to add pain entry. Please try again.');
+      console.error('Error adding pain entry:', err);
+    }
+  };
+
+  const handleAddEntryFromAssessment = (entry: PainEntry) => {
+    try {
+      if (!validatePainEntry(entry)) {
+        setError('Invalid pain entry data. Please check your input values.');
+        toast.error('Invalid Entry', 'Please check your input values and try again.');
+        return;
+      }
+
+      // PainAssessment already persists via savePainEntry; we only update UI state here.
+      setEntries(prev => [...prev, entry]);
+      setError(null);
+      toast.success('Entry Saved', 'Your pain entry has been recorded successfully.');
+
+      // Best-effort: add weather after the fact.
+      void (async () => {
+        try {
+          if (!('geolocation' in navigator) || !navigator.geolocation) return;
+          const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+          );
+          const weather = await fetchWeatherData(pos.coords.latitude, pos.coords.longitude);
+          if (!weather) return;
+          const parts: string[] = [];
+          if (weather.temperature !== null) parts.push(`${Math.round(weather.temperature)}°C`);
+          if (weather.condition) parts.push(weather.condition);
+          if (weather.isRaining) parts.push('🌧️');
+          if (weather.humidity !== null) parts.push(`${weather.humidity}% humidity`);
+          const summary = parts.join(', ');
+          if (!summary) return;
+
+          setEntries(prev => prev.map(e => (e.id === entry.id ? { ...e, weather: summary } : e)));
+          await savePainEntry({ ...entry, weather: summary });
+        } catch {
+          // Ignore enrichment failures
+        }
+      })();
     } catch (err) {
       setError('Failed to add pain entry. Please try again.');
       toast.error('Save Failed', 'Unable to add pain entry. Please try again.');
@@ -509,7 +577,7 @@ export function PainTracker() {
               {ValidationTechComponent ? (
                 <ValidationTechComponent painEntries={entries} onPainEntrySubmit={handleAddEntry} />
               ) : useBodyMapForm ? (
-                <PainAssessment onSave={handleAddEntry} />
+                <PainAssessment onSave={handleAddEntryFromAssessment} />
               ) : (
                 <PainEntryForm onSubmit={handleAddEntry} />
               )}

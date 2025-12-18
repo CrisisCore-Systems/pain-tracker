@@ -6,7 +6,7 @@
  * Updated: 2025-11-11 - Fixed database import path for Vercel
  */
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import Stripe from 'stripe';
 import { buffer } from 'micro';
 import { db } from '../lib/database.js';

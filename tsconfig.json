@@ -23,7 +23,12 @@
     "types": ["vite/client", "vitest/globals", "node"],
     "baseUrl": ".",
     "paths": {
-      "@pain-tracker/*": ["packages/*/src"]
+      "@pain-tracker/services": ["packages/services/src/index.ts"],
+      "@pain-tracker/services/*": ["packages/services/src/*"],
+      "@pain-tracker/design-system": ["packages/design-system/src/index.ts"],
+      "@pain-tracker/design-system/*": ["packages/design-system/src/*"],
+      "@pain-tracker/utils": ["packages/utils/src/index.ts"],
+      "@pain-tracker/utils/*": ["packages/utils/src/*"]
     }
   },
   "include": ["src/**/*"],

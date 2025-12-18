@@ -11,7 +11,9 @@ export type { WeatherData };
 export async function fetchWeatherData(lat: number, lon: number): Promise<WeatherData | null> {
   try {
     // Request current weather data including temperature, humidity, pressure, and weather code
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,pressure_msl&timezone=auto`;
+    // Use same-origin endpoint to comply with strict CSP (connect-src 'self').
+    // In dev, Vite proxies /api/weather to Open-Meteo. In production, Vercel rewrites it.
+    const url = `/api/weather?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,pressure_msl&timezone=auto`;
     const resp = await fetch(url);
     if (!resp.ok) return null;
     

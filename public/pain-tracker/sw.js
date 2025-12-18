@@ -3,7 +3,7 @@
 // - In production, never cache navigations with cache-first (stale HTML can break module graphs).
 // - Only cache static assets; always fetch fresh HTML.
 
-const SW_VERSION = '1.8';
+const SW_VERSION = '1.9';
 const CACHE_NAME = `pain-tracker-static-v${SW_VERSION}`;
 
 // Use absolute paths so different browsers/dev servers resolve the same URL regardless of scope.
@@ -40,9 +40,19 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  // Claim clients immediately so pages are controlled
+  // Clean up old caches and claim clients immediately
   event.waitUntil(
     (async () => {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames
+          .filter((name) => name.startsWith('pain-tracker-') && name !== CACHE_NAME)
+          .map((name) => {
+            console.log('[sw] Deleting old cache:', name);
+            return caches.delete(name);
+          })
+      );
+
       await self.clients.claim();
 
       // Notify clients that the service worker is active and ready. Tests can listen for this message.

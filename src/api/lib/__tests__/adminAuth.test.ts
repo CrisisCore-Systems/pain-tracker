@@ -1,6 +1,6 @@
 import { vi, expect, describe, it, beforeEach, afterEach } from 'vitest';
 import verifyAdmin from '../../../../api/lib/adminAuth';
-import type { VercelRequest } from '@vercel/node';
+import type { VercelRequest } from '../../../types/vercel';
 
 describe('adminAuth verifyAdmin helper', () => {
   const oldNodeEnv = process.env.NODE_ENV;

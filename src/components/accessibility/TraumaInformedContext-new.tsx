@@ -18,17 +18,29 @@ interface TraumaInformedProviderProps {
 }
 
 export function TraumaInformedProvider({ children }: TraumaInformedProviderProps) {
+  const sanitizePreferences = (raw: unknown): TraumaInformedPreferences => {
+    if (!raw || typeof raw !== 'object') return defaultPreferences;
+    const obj = raw as Record<string, unknown>;
+    const sanitized: TraumaInformedPreferences = { ...defaultPreferences };
+    (Object.keys(defaultPreferences) as (keyof TraumaInformedPreferences)[]).forEach(key => {
+      if (key in obj) {
+        (sanitized as unknown as Record<string, unknown>)[key as string] = obj[key as string];
+      }
+    });
+    return sanitized;
+  };
+
   const [preferences, setPreferences] = useState<TraumaInformedPreferences>(() => {
     const secure = secureStorage.get<TraumaInformedPreferences>('trauma-informed-preferences', {
       encrypt: true,
     });
-    if (secure) return { ...defaultPreferences, ...secure };
+    if (secure) return sanitizePreferences(secure);
     try {
       const legacy = localStorage.getItem('trauma-informed-preferences');
       if (legacy) {
         const parsed = JSON.parse(legacy);
         secureStorage.set('trauma-informed-preferences', parsed, { encrypt: true });
-        return { ...defaultPreferences, ...parsed };
+        return sanitizePreferences(parsed);
       }
     } catch {
       /* ignore */
@@ -37,7 +49,7 @@ export function TraumaInformedProvider({ children }: TraumaInformedProviderProps
   });
 
   const updatePreferences = (updates: Partial<TraumaInformedPreferences>) => {
-    const newPreferences = { ...preferences, ...updates };
+    const newPreferences = sanitizePreferences({ ...preferences, ...updates });
     setPreferences(newPreferences);
     secureStorage.set('trauma-informed-preferences', newPreferences, { encrypt: true });
   };

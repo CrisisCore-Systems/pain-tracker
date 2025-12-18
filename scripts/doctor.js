@@ -7,6 +7,7 @@
 import { execSync } from 'node:child_process';
 import { readFileSync, existsSync } from 'node:fs';
 import { exit } from 'node:process';
+import { pathToFileURL } from 'node:url';
 
 // ANSI color codes
 const colors = {
@@ -363,7 +364,17 @@ async function runDiagnostics() {
   return { healthy, issues: allIssues };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+const isDirectRun = (() => {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  try {
+    return import.meta.url === pathToFileURL(entry).href;
+  } catch {
+    return false;
+  }
+})();
+
+if (isDirectRun) {
   const result = await runDiagnostics();
   exit(result.healthy ? 0 : 1);
 }

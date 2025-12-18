@@ -48,3 +48,9 @@ badges/*.json
 !badges/*.svg
 
 test-screenshots/
+
+# Locally-generated artifacts (do not commit)
+accessibility-reports/
+e2e/results/
+test-results/
+mobile-test-output.txt

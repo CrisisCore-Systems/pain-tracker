@@ -5,7 +5,7 @@
  * Creates a Stripe checkout session for subscription purchases
  */
 
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import Stripe from 'stripe';
 
 // Price IDs from Stripe dashboard (set these in environment variables)

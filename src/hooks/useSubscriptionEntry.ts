@@ -10,10 +10,7 @@ import {
 } from '../stores/subscription-actions';
 import type { PainEntry, ActivityLogEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
-// Attempt to enrich entries with local weather when available. This calls into
-// the packaged service which falls back to a safe stub in environments where
-// geolocation or network access is not available.
-import { fetchLocalWeather } from '../../packages/services/src/weather';
+import { fetchWeatherData } from '../services/weather';
 import { 
   trackPainEntry, 
   trackWeatherCorrelation, 
@@ -76,32 +73,26 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
 
       // Try to enrich the entry with local weather when possible. This is
       // best-effort only and must never block the user from saving an entry.
-      let weatherInfo: Awaited<ReturnType<typeof fetchLocalWeather>> | null = null;
+      let weatherInfo: Awaited<ReturnType<typeof fetchWeatherData>> | null = null;
       try {
-        // Prefer to use browser geolocation when available to fetch local weather
+        // Geolocation is required for local weather; if unavailable/denied, skip.
         if (typeof navigator !== 'undefined' && 'geolocation' in navigator && navigator.geolocation) {
-          // Small timeout to avoid blocking UI
           const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 }) 
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
           );
-          weatherInfo = await fetchLocalWeather({ lat: pos.coords.latitude, lon: pos.coords.longitude });
-        } else {
-          weatherInfo = await fetchLocalWeather();
+          weatherInfo = await fetchWeatherData(pos.coords.latitude, pos.coords.longitude);
         }
 
-        if (weatherInfo && (weatherInfo.temp !== null || weatherInfo.condition !== null)) {
-          // Build a rich human-readable summary including rain status
+        if (weatherInfo) {
+          // Build a human-readable summary including rain status
           const parts: string[] = [];
-          if (weatherInfo.temp !== null) parts.push(`${Math.round(weatherInfo.temp)}°C`);
+          if (weatherInfo.temperature !== null) parts.push(`${Math.round(weatherInfo.temperature)}°C`);
           if (weatherInfo.condition) parts.push(weatherInfo.condition);
           if (weatherInfo.isRaining) parts.push('🌧️');
           if (weatherInfo.humidity !== null) parts.push(`${weatherInfo.humidity}% humidity`);
-          
-          const summary = parts.join(', ') || undefined;
-          if (summary) {
-            // Attach as a best-effort field - cast to any to avoid strict type errors
-            (entry as any).weather = summary;
-          }
+
+          const summary = parts.join(', ');
+          if (summary) entry.weather = summary;
         }
       } catch (err) {
         // Ignore enrichment failures; entry save must not be blocked
@@ -126,9 +117,9 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       trackPainEntry(painAnalytics);
 
       // Track weather correlation with full weather data if available
-      if (weatherInfo && (weatherInfo.temp !== null || weatherInfo.condition !== null)) {
+      if (weatherInfo) {
         const weatherAnalytics: WeatherAnalytics = {
-          temperature: weatherInfo.temp ?? undefined,
+          temperature: weatherInfo.temperature ?? undefined,
           condition: weatherInfo.condition ?? undefined,
           pressure: weatherInfo.pressure ?? undefined,
           humidity: weatherInfo.humidity ?? undefined,

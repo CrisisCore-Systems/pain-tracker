@@ -3,7 +3,7 @@
 // - In production, never cache navigations with cache-first (stale HTML can break module graphs).
 // - Only cache static assets; always fetch fresh HTML.
 
-const SW_VERSION = '1.8';
+const SW_VERSION = '1.9';
 const CACHE_NAME = `pain-tracker-static-v${SW_VERSION}`;
 const PRECACHE_URLS = ['/manifest.json', '/offline.html'];
 

@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../lib/database.js';
 
 /**
