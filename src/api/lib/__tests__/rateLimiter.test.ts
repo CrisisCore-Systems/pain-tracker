@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { MemoryRateLimiter } from '../../../../api/lib/rateLimiter';
+import { MemoryRateLimiter } from '../../../../api-lib/rateLimiter';
 
 describe('RateLimiter', () => {
   let limiter: MemoryRateLimiter;

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../../src/lib/database';
-import rateLimiter from '../lib/rateLimiter';
+import rateLimiter from '../../api-lib/rateLimiter';
 
 type TestimonialRequestBody = {
   name?: unknown;

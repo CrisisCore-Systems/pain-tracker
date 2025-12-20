@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest';
-import { checkRateLimit, resetRateLimit } from '../../../../api/lib/rateLimit';
+import { checkRateLimit, resetRateLimit } from '../../../../api-lib/rateLimit';
 
 describe('rateLimit helper', () => {
   it('allows up to the max events in a window and then blocks', async () => {

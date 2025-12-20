@@ -1,4 +1,4 @@
-import type { VercelRequest } from '../../src/types/vercel';
+import type { VercelRequest } from '../src/types/vercel';
 
 type VerifyAdminResult =
   | { ok: true; user?: unknown }
