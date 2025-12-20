@@ -24,7 +24,7 @@
     "typecheck:watch": "node ./node_modules/typescript/bin/tsc --noEmit --watch",
     "typecheck:ci": "node ./node_modules/typescript/bin/tsc --noEmit",
     "tsc-build": "node ./node_modules/typescript/bin/tsc -b",
-    "build:packages": "node ./node_modules/typescript/bin/tsc -b packages/design-system packages/services",
+    "build:packages": "node ./node_modules/typescript/bin/tsc -b packages/design-system packages/services packages/utils",
     "pretypecheck": "npm run build:packages",
     "typecheck:memory:ps": "powershell -Command \"$env:NODE_OPTIONS='--max-old-space-size=4096'; npm run typecheck\"",
     "test:ui": "vitest --ui",
