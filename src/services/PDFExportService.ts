@@ -142,9 +142,6 @@ export class PDFExportService {
         styles: { fontSize: 10 },
         headStyles: { fillColor: [41, 128, 185] },
       });
-
-      const finalY = this.doc!.lastAutoTable?.finalY;
-      yPosition = typeof finalY === 'number' ? finalY + 15 : yPosition + 15;
     } else {
       this.doc!.text('No pain location data recorded.', 20, yPosition);
       yPosition += 10;
@@ -200,8 +197,6 @@ export class PDFExportService {
         styles: { fontSize: 10 },
         headStyles: { fillColor: [46, 204, 113] },
       });
-
-      yPosition = this.doc!.lastAutoTable!.finalY! + 15;
     }
   }
 
@@ -265,8 +260,6 @@ export class PDFExportService {
         styles: { fontSize: 10 },
         headStyles: { fillColor: [230, 126, 34] },
       });
-
-      yPosition = this.doc!.lastAutoTable!.finalY! + 15;
     }
   }
 
