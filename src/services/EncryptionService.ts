@@ -36,6 +36,20 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
+function base64ToBytes(base64: string): Uint8Array<ArrayBuffer> {
+  // Ensure we always pass a BufferSource backed by a plain ArrayBuffer.
+  if (typeof Buffer !== 'undefined') {
+    const buf = Buffer.from(base64, 'base64');
+    const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+    return new Uint8Array(ab);
+  }
+  const binary = atob(base64);
+  const ab = new ArrayBuffer(binary.length);
+  const bytes = new Uint8Array(ab);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
 function bufferToHex(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
   return Array.from(bytes)
@@ -65,13 +79,9 @@ async function deriveKeyFromPassword(
     'deriveBits',
     'deriveKey',
   ]);
-  // Ensure we pass a plain ArrayBuffer (slice to the exact view range)
-  const saltBuf = salt.buffer.slice(
-    salt.byteOffset,
-    salt.byteOffset + salt.byteLength
-  ) as ArrayBuffer;
+  const saltBytes: Uint8Array<ArrayBuffer> = new Uint8Array(salt);
   const derived = await crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: saltBuf as ArrayBuffer, iterations, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: saltBytes, iterations, hash: 'SHA-256' },
     baseKey,
     { name: 'AES-GCM', length: 256 },
     true,
@@ -596,11 +606,11 @@ export class EndToEndEncryptionService {
       // Compute HMAC over ciphertext if hmac key present; store HMAC as base64
       let checksum = '';
       if (addIntegrityCheck && hmacCryptoKey) {
-        const sig = await crypto.subtle.sign('HMAC', hmacCryptoKey, base64ToArrayBuffer(encrypted));
+        const sig = await crypto.subtle.sign('HMAC', hmacCryptoKey, base64ToBytes(encrypted));
         checksum = arrayBufferToBase64(sig);
       } else if (addIntegrityCheck) {
         // fallback to SHA-256 digest (base64)
-        const digest = await crypto.subtle.digest('SHA-256', base64ToArrayBuffer(encrypted));
+        const digest = await crypto.subtle.digest('SHA-256', base64ToBytes(encrypted));
         checksum = arrayBufferToBase64(digest);
       }
 
@@ -780,13 +790,13 @@ export class EndToEndEncryptionService {
           const valid = await crypto.subtle.verify(
             'HMAC',
             hmacCryptoKey,
-            base64ToArrayBuffer(checksum),
-            base64ToArrayBuffer(data)
+            base64ToBytes(checksum),
+            base64ToBytes(data)
           );
           if (!valid) throw new Error('Data integrity check failed - HMAC mismatch');
         } else {
           // fallback to digest comparison
-          const digest = await crypto.subtle.digest('SHA-256', base64ToArrayBuffer(data));
+          const digest = await crypto.subtle.digest('SHA-256', base64ToBytes(data));
           const expected = arrayBufferToBase64(digest);
           if (expected !== checksum)
             throw new Error('Data integrity check failed - digest mismatch');

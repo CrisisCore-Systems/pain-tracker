@@ -185,6 +185,7 @@ export class SecurityService {
       if (password) {
         // Derive a base key from password
         const salt = crypto.getRandomValues(new Uint8Array(16));
+        const saltBytes: Uint8Array<ArrayBuffer> = new Uint8Array(salt);
         const pwUtf8 = new TextEncoder().encode(password);
         const baseKey = await subtle.importKey('raw', pwUtf8, 'PBKDF2', false, [
           'deriveBits',
@@ -193,7 +194,7 @@ export class SecurityService {
 
         // Derive AES-GCM key
         this.masterCryptoKey = await subtle.deriveKey(
-          { name: 'PBKDF2', salt: salt.buffer, iterations: iterationOverride, hash: 'SHA-256' },
+          { name: 'PBKDF2', salt: saltBytes, iterations: iterationOverride, hash: 'SHA-256' },
           baseKey,
           { name: 'AES-GCM', length: 256 },
           false,
@@ -202,7 +203,7 @@ export class SecurityService {
 
         // Derive HMAC key separately (deriveBits -> import)
         const hmacBits = await subtle.deriveBits(
-          { name: 'PBKDF2', salt: salt.buffer, iterations: iterationOverride, hash: 'SHA-256' },
+          { name: 'PBKDF2', salt: saltBytes, iterations: iterationOverride, hash: 'SHA-256' },
           baseKey,
           256
         );
