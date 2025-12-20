@@ -20,6 +20,8 @@ vi.mock('jspdf', () => {
 describe('PDF generator', () => {
   it('generates a WCB PDF without throwing', async () => {
     const report: WCBReport = {
+      id: 'test-report-1',
+      createdAt: new Date('2025-02-01').toISOString(),
       period: {
         start: new Date('2025-01-01').toISOString(),
         end: new Date('2025-01-31').toISOString(),

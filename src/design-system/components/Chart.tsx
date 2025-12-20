@@ -110,7 +110,10 @@ function getFillOption(ds: ChartDataset, chartType?: ChartType) {
   return chartType === 'line';
 }
 
-function resolvePointColor(color: string | string[] | undefined, fallback: string | undefined) {
+function resolvePointColor(
+  color: string | string[] | undefined,
+  fallback: string | string[] | undefined
+) {
   if (Array.isArray(color)) return color;
   return fallback;
 }

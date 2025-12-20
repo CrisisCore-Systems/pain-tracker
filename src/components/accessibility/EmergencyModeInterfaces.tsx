@@ -4,6 +4,7 @@ import {
   Phone,
   PhoneCall,
   Heart,
+  User,
   Zap,
   Pill,
   Thermometer,

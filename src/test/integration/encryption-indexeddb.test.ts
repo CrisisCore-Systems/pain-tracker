@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { offlineStorage } from '../../lib/offline-storage';
 import { encryptionService } from '../../services/EncryptionService';
+import type { EncryptedData } from '../../services/EncryptionService';
+import type { PainEntry } from '../../types';
 
 type StoredRow = {
   id?: number;
@@ -129,38 +131,73 @@ describe('Encryption + IndexedDB integration', () => {
   });
 
   it('writes an encrypted pain-entry to IndexedDB and reads back (version 2.0.0 with iv)', async () => {
-    // Use the current PainEntry shape (intensity) for tests
-    const sample = {
+    const sample: PainEntry = {
+      id: 1,
+      timestamp: new Date().toISOString(),
+      baselineData: {
+        pain: 5,
+        locations: ['lower-back'],
+        symptoms: [],
+      },
+      functionalImpact: {
+        limitedActivities: [],
+        assistanceNeeded: [],
+        mobilityAids: [],
+      },
+      medications: {
+        current: [],
+        changes: '',
+        effectiveness: '',
+      },
+      treatments: {
+        recent: [],
+        effectiveness: '',
+        planned: [],
+      },
+      qualityOfLife: {
+        sleepQuality: 5,
+        moodImpact: 5,
+        socialImpact: [],
+      },
+      workImpact: {
+        missedWork: 0,
+        modifiedDuties: [],
+        workLimitations: [],
+      },
+      comparison: {
+        worseningSince: '',
+        newLimitations: [],
+      },
+      notes: 'Testing integration',
       intensity: 5,
       location: 'lower-back',
-      description: 'Testing integration',
     };
 
     // Encrypt via service
     const encrypted = await encryptionService.encryptPainEntry(sample);
 
-    // Store in offline storage as a pain-entry record
-    const id = await storageToUse.storeData('pain-entry', encrypted);
+    // Store in offline storage using a type that allows arbitrary object payloads
+    const id = await storageToUse.storeData('settings', encrypted as unknown as Record<string, unknown>);
     expect(typeof id).toBe('number');
 
     // Read back
-    const rows = await storageToUse.getData('pain-entry');
+    const rows = await storageToUse.getData('settings');
     expect(rows.length).toBeGreaterThan(0);
     const row = rows.find(r => r.id === id);
     expect(row).toBeDefined();
-    const stored = row!.data as Record<string, unknown>;
+    const stored = row!.data as unknown as EncryptedData<PainEntry>;
 
     // Metadata checks
-    const metadata = (stored as { metadata?: { version?: unknown; iv?: unknown } }).metadata;
+    const metadata = stored.metadata;
     expect(metadata).toBeDefined();
     expect(metadata?.version).toBe('2.0.0');
     expect(typeof metadata?.iv).toBe('string');
 
     // Decrypt and verify payload
-    const decrypted = (await encryptionService.decryptPainEntry(stored)) as Record<string, unknown>;
+    const decrypted = await encryptionService.decryptPainEntry(stored);
     expect(decrypted.intensity).toBe(sample.intensity);
     expect(decrypted.location).toBe(sample.location);
-    // description maps to `description` in current schema
-    expect(decrypted.description).toBe(sample.description);
+    expect(decrypted.notes).toBe(sample.notes);
+    expect(decrypted.baselineData.pain).toBe(sample.baselineData.pain);
   });
 });

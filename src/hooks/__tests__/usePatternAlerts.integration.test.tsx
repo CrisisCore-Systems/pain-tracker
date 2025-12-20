@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { usePatternAlerts } from '../usePatternAlerts';
+import { vi } from 'vitest';
 
 type Entry = { time: string; pain: number };
 
@@ -10,18 +11,24 @@ function TestHarness({ entries }: { entries: Entry[] }) {
 }
 
 describe('usePatternAlerts integration', () => {
-  const globalWithNotification = globalThis as typeof globalThis & { Notification?: unknown };
+  const globalWithNotification = globalThis as unknown as { Notification?: unknown };
   const originalNotification = globalWithNotification.Notification;
   let notificationCalls: Array<unknown> = [];
 
   beforeEach(() => {
     notificationCalls = [];
-    globalWithNotification.Notification = vi
+    const MockNotification = vi
       .fn()
       .mockImplementation(function (title: string, opts: unknown) {
-      notificationCalls.push([title, opts]);
-      return { title, opts };
-    });
+        notificationCalls.push([title, opts]);
+        return {} as Notification;
+      }) as unknown as typeof Notification;
+
+    (MockNotification as unknown as { permission: NotificationPermission }).permission = 'granted';
+    (MockNotification as unknown as { requestPermission: () => Promise<NotificationPermission> }).requestPermission =
+      vi.fn().mockResolvedValue('granted');
+
+    globalWithNotification.Notification = MockNotification;
     localStorage.setItem('pain-tracker:alerts-settings', JSON.stringify({ threshold: 3 }));
   });
 

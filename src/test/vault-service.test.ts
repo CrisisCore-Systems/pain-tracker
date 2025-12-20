@@ -94,8 +94,10 @@ async function prederiveIfNeeded(passphrase: string) {
     throw new Error('Polyfill key preparation function not initialized');
   }
   const derived = await sodiumExt.__preparePolyfillKey(passphrase, salt, keyLength, opslimit);
-  sodiumExt.crypto_pwhash = function (outputLength: number) {
-    return derived.slice(0, outputLength);
+  (sodiumExt as unknown as Record<string, unknown>).crypto_pwhash = function (...args: unknown[]) {
+    const requested = args[0];
+    const outLen = typeof requested === 'number' ? requested : keyLength;
+    return derived.slice(0, outLen);
   };
 }
 

@@ -60,7 +60,7 @@ describe('EmpathyIntelligenceEngine (spike)', () => {
       emotionalRegulation: 8,
       hopefulness: 7,
       anxiety: 2,
-      socialSupport: 'some',
+      socialSupport: 'moderate',
       copingStrategies: [],
     });
 

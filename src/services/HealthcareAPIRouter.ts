@@ -2,6 +2,7 @@
 // Central API endpoints for healthcare provider integration
 
 import { healthcareProviderAPI } from './HealthcareProviderAPI';
+import type { DataSyncRequest } from './HealthcareProviderAPI';
 import { dataSharingProtocols } from './DataSharingProtocols';
 import { healthcareOAuthProvider } from './HealthcareOAuth';
 import { hipaaComplianceService } from './HIPAACompliance';
@@ -303,10 +304,43 @@ export class HealthcareAPIRouter {
           throw new Error('Invalid request body');
         }
 
-        const syncResponse = await healthcareProviderAPI.requestDataSync({
+        const candidate = body as Record<string, unknown>;
+        const format = candidate.format;
+        const includeTypes = candidate.includeTypes;
+
+        if (format !== 'fhir' && format !== 'hl7' && format !== 'ccda') {
+          throw new Error('Invalid sync format');
+        }
+        if (!Array.isArray(includeTypes)) {
+          throw new Error('Invalid includeTypes');
+        }
+
+        const allowedTypes: DataSyncRequest['includeTypes'][number][] = [
+          'observations',
+          'questionnaires',
+          'patient-data',
+        ];
+        if (!includeTypes.every(t => allowedTypes.includes(t as DataSyncRequest['includeTypes'][number]))) {
+          throw new Error('Invalid includeTypes values');
+        }
+
+        const patientIdsRaw = candidate.patientIds;
+        const patientIds = Array.isArray(patientIdsRaw) && patientIdsRaw.every(p => typeof p === 'string')
+          ? (patientIdsRaw as string[])
+          : undefined;
+
+        const sinceRaw = candidate.since;
+        const since = typeof sinceRaw === 'string' ? sinceRaw : undefined;
+
+        const syncRequest: DataSyncRequest = {
           providerId: request.user!.id,
-          ...(body as Record<string, unknown>),
-        });
+          format,
+          includeTypes: includeTypes as DataSyncRequest['includeTypes'],
+          patientIds,
+          since,
+        };
+
+        const syncResponse = await healthcareProviderAPI.requestDataSync(syncRequest);
 
         return {
           success: true,

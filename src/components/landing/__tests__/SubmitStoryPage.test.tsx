@@ -6,9 +6,8 @@ import { vi } from 'vitest';
 
 describe('SubmitStoryPage', () => {
   beforeEach(() => {
-    const globalWithFetch = globalThis as typeof globalThis & { fetch?: unknown };
-    // Reset fetch mock
-    globalWithFetch.fetch = undefined;
+    // Reset fetch mock (avoid assigning `undefined` to the DOM lib fetch signature)
+    (globalThis as unknown as Record<string, unknown>).fetch = undefined;
   });
 
   it('renders the submit story form and submits', async () => {

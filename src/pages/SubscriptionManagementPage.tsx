@@ -16,6 +16,7 @@ import {
   Crown,
   Sparkles,
   ArrowLeft,
+  TrendingUp,
 } from 'lucide-react';
 import { useSubscription, useTierBadge } from '../contexts/SubscriptionContext';
 import { SUBSCRIPTION_PLANS, FEATURE_COMPARISON } from '../config/subscription-tiers';

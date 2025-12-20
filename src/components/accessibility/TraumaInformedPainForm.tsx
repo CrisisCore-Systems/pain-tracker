@@ -125,10 +125,15 @@ export function TraumaInformedPainEntryForm({
     }
   };
 
-  type FormData = typeof formData;
-  type ObjectSectionKey = {
-    [K in keyof FormData]: FormData[K] extends object ? K : never;
-  }[keyof FormData];
+  type FormData = Omit<PainEntry, 'id' | 'timestamp'>;
+  type ObjectSectionKey =
+    | 'baselineData'
+    | 'functionalImpact'
+    | 'medications'
+    | 'treatments'
+    | 'qualityOfLife'
+    | 'workImpact'
+    | 'comparison';
 
   const updateFormData = <K extends ObjectSectionKey>(
     section: K,
