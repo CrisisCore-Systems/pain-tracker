@@ -6,7 +6,7 @@
 
 import { useContext, useCallback } from 'react';
 import type { AdaptiveCopy, CopyIntent } from '../types/tone';
-import { ToneContext, type ToneProviderValue } from './ToneContext';
+import { ToneContext } from './ToneContext';
 
 /**
  * Hook to access tone context

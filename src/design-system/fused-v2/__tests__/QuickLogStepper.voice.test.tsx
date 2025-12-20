@@ -3,15 +3,30 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { vi } from 'vitest';
 import { QuickLogStepper } from '../QuickLogStepper';
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
 vi.mock('../../../contexts/useTone', () => ({
-  useAdaptiveCopy: (copy: any) => copy?.base ?? copy?.stable ?? 'Copy',
+  useAdaptiveCopy: (copy: unknown) => {
+    if (!isRecord(copy)) return 'Copy';
+    const base = copy.base;
+    const stable = copy.stable;
+    return (typeof base === 'string' ? base : undefined) ??
+      (typeof stable === 'string' ? stable : undefined) ??
+      'Copy';
+  },
 }));
+
+type SpeechResultEvent = {
+  results: Array<{ 0: { transcript: string } }>;
+};
 
 class MockRecognition {
   continuous = false;
   interimResults = false;
-  onresult: ((event: any) => void) | null = null;
-  onerror: ((event: any) => void) | null = null;
+  onresult: ((event: SpeechResultEvent) => void) | null = null;
+  onerror: ((event: unknown) => void) | null = null;
   onend: (() => void) | null = null;
   start = vi.fn();
   stop = vi.fn();
@@ -25,17 +40,21 @@ class MockRecognition {
 
 describe('QuickLogStepper voice mode', () => {
   let onLineSpy: ReturnType<typeof vi.spyOn>;
+  const globalShim = globalThis as unknown as {
+    SpeechRecognition?: unknown;
+    webkitSpeechRecognition?: unknown;
+  };
 
   beforeEach(() => {
     MockRecognition.instance = null;
-    (global as any).SpeechRecognition = MockRecognition;
-    (global as any).webkitSpeechRecognition = MockRecognition;
+    globalShim.SpeechRecognition = MockRecognition;
+    globalShim.webkitSpeechRecognition = MockRecognition;
     onLineSpy = vi.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false);
   });
 
   afterEach(() => {
-    delete (global as any).SpeechRecognition;
-    delete (global as any).webkitSpeechRecognition;
+    delete globalShim.SpeechRecognition;
+    delete globalShim.webkitSpeechRecognition;
     onLineSpy.mockRestore();
   });
 
@@ -61,7 +80,7 @@ describe('QuickLogStepper voice mode', () => {
     await act(async () => {
       MockRecognition.instance?.onresult?.({
         results: [{ 0: { transcript: 'voice note captured' } }],
-      } as any);
+      });
     });
 
     expect(await screen.findByText(/voice note captured/i)).toBeInTheDocument();

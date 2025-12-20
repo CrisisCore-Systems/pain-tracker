@@ -33,45 +33,45 @@ export function useLiveRegion(politeness: 'polite' | 'assertive' = 'polite') {
 export function useFocusTrap() {
   const containerRef = useRef<HTMLElement>(null);
 
-  const focusableElements = [
-    'a[href]',
-    'button:not([disabled])',
-    'textarea:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-  ].join(', ');
-
-  const getFocusableElements = () => {
-    if (!containerRef.current) return [];
-    return Array.from(containerRef.current.querySelectorAll(focusableElements));
-  };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key !== 'Tab') return;
-
-    const focusableEls = getFocusableElements();
-    if (focusableEls.length === 0) return;
-
-    const firstElement = focusableEls[0] as HTMLElement;
-    const lastElement = focusableEls[focusableEls.length - 1] as HTMLElement;
-
-    if (event.shiftKey) {
-      if (document.activeElement === firstElement) {
-        lastElement.focus();
-        event.preventDefault();
-      }
-    } else {
-      if (document.activeElement === lastElement) {
-        firstElement.focus();
-        event.preventDefault();
-      }
-    }
-  };
-
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    const focusableElements = [
+      'a[href]',
+      'button:not([disabled])',
+      'textarea:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(', ');
+
+    const getFocusableElements = () => {
+      if (!containerRef.current) return [];
+      return Array.from(containerRef.current.querySelectorAll(focusableElements));
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+
+      const focusableEls = getFocusableElements();
+      if (focusableEls.length === 0) return;
+
+      const firstElement = focusableEls[0] as HTMLElement;
+      const lastElement = focusableEls[focusableEls.length - 1] as HTMLElement;
+
+      if (event.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          event.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          event.preventDefault();
+        }
+      }
+    };
 
     container.addEventListener('keydown', handleKeyDown);
     return () => container.removeEventListener('keydown', handleKeyDown);

@@ -14,21 +14,41 @@ vi.mock('jspdf', () => {
       splitTextToSize: vi.fn((text: string) => [text]),
       save: vi.fn(),
     })),
-  } as any;
+  };
 });
 
 describe('PDF generator', () => {
   it('generates a WCB PDF without throwing', async () => {
     const report: WCBReport = {
+      period: {
+        start: new Date('2025-01-01').toISOString(),
+        end: new Date('2025-01-31').toISOString(),
+      },
       claimInfo: { claimNumber: 'DRAFT-1', injuryDate: new Date().toISOString() },
-      painTrends: { average: 5, locations: { 'lower back': 3 } },
-      workImpact: { missedDays: 2, limitations: [['Lifting', 1]] as any, accommodationsNeeded: [] },
+      painTrends: {
+        average: 5,
+        progression: [
+          {
+            date: new Date().toISOString(),
+            pain: 5,
+            locations: ['lower back'],
+            symptoms: [],
+          },
+        ],
+        locations: { 'lower back': 3 },
+      },
+      workImpact: { missedDays: 2, limitations: [['Lifting', 1]], accommodationsNeeded: [] },
+      functionalAnalysis: {
+        limitations: [],
+        deterioration: [],
+        improvements: [],
+      },
       treatments: {
         current: [{ treatment: 'Physio', frequency: 4 }],
         effectiveness: 'moderate',
-      } as any,
+      },
       recommendations: ['Increase rest periods', 'Consider graded activity'],
-    } as unknown as WCBReport;
+    };
 
     await expect(generateWCBReportPDF(report)).resolves.not.toThrow();
   });

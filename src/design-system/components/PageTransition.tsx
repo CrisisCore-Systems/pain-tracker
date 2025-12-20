@@ -24,7 +24,6 @@ export function PageTransition({
   onTransitionEnd,
 }: PageTransitionProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     // Entrance animation
@@ -82,11 +81,7 @@ export function PageTransition({
   };
 
   const transitions = transitionClasses[type];
-  const currentClass = isExiting
-    ? transitions.exitActive
-    : isVisible
-      ? transitions.enterActive
-      : transitions.enter;
+  const currentClass = isVisible ? transitions.enterActive : transitions.enter;
 
   return (
     <div
@@ -117,14 +112,11 @@ export function ViewSwitcher<T extends string>({
   className,
 }: ViewSwitcherProps<T>) {
   const [currentView, setCurrentView] = useState(activeView);
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     if (activeView !== currentView) {
-      setIsTransitioning(true);
       const timer = setTimeout(() => {
         setCurrentView(activeView);
-        setIsTransitioning(false);
       }, duration / 2);
       return () => clearTimeout(timer);
     }

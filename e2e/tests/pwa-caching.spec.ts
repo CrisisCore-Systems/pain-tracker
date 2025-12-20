@@ -161,7 +161,7 @@ test.describe('PWA Caching Strategy', () => {
 });
 
 test.describe('PWA Caching - Advanced', () => {
-  test('should serve cached responses when available', async ({ page, context }) => {
+  test('should serve cached responses when available', async ({ page }) => {
     // Load a page to cache it
     await page.goto('/');
     await page.waitForLoadState('networkidle');

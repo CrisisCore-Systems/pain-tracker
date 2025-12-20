@@ -250,7 +250,7 @@ export class SecurityService {
   /**
    * Encrypt data using AES encryption
    */
-  async encryptData(data: string, customKey?: string): Promise<string> {
+  async encryptData(data: string, _customKey?: string): Promise<string> {
     try {
       // Use in-memory masterCryptoKey for encryption. customKey path is deprecated.
       if (!this.masterCryptoKey || !this.masterHmacKey) {
@@ -311,7 +311,7 @@ export class SecurityService {
   /**
    * Decrypt data using AES decryption
    */
-  async decryptData(encryptedData: string, customKey?: string): Promise<string> {
+  async decryptData(encryptedData: string, _customKey?: string): Promise<string> {
     try {
       if (!this.masterCryptoKey || !this.masterHmacKey) {
         if (this.isTestEnv()) {
@@ -330,7 +330,7 @@ export class SecurityService {
       let parsed: { v?: string; cipher?: string; iv?: string; hmac?: string; payload?: string };
       try {
         parsed = JSON.parse(encryptedData);
-      } catch (e) {
+      } catch {
         throw new Error('Malformed encrypted payload');
       }
 

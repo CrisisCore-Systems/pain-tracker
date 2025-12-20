@@ -21,6 +21,15 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 5. Make sure your code lints.
 6. Issue that pull request!
 
+## Security & Data Safety (Healthcare App)
+
+If your change touches encryption, storage (localStorage/IndexedDB), exports, audit logging, or migrations, please follow:
+
+- `docs/SECURITY_CHANGE_CHECKLIST.md`
+- `docs/LOCAL_DATA_AND_MIGRATIONS.md`
+
+For security-critical changes (crypto/key handling/audit semantics), request human review before merging.
+
 ## Any contributions you make will be under the MIT Software License
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
 

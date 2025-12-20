@@ -1,160 +1,221 @@
-# 🤖 Pain Tracker - AI Agent Instructions
+# 🤖 Pain Tracker — AI Agent Instructions
 
-> **Version 2.2** | Last Updated: 2025-12-10 | **Confidence Level**: High
-
-## 🎯 Executive Summary
-
-**What**: A security-first, offline-first chronic pain tracking application built with empathy-driven design for clinical integration and WorkSafe BC compliance.
-
-**Why**: Bridges the gap between patient experience and clinical understanding through secure, accessible pain tracking technology.
-
-**How**: React 18 + TypeScript + Zustand + IndexedDB with multi-layered security and trauma-informed UX.
-
-**Critical**: This is healthcare software - security, privacy, and accessibility are non-negotiable. Always prioritize user safety and data protection.
+> **Version 2.4** | Last Updated: **2025-12-18** | **Confidence Level**: High
+> **Primary dev environment**: **Windows + Visual Studio Code + PowerShell terminal**
 
 ---
 
-## 🚀 Quick Start for AI Agents
+## 🎯 Executive Summary
 
-### ⚡ Immediate Action Items
-1. **Read this entire document** before making any changes
-2. **Run `make doctor`** to validate your environment
-3. **Never modify security-critical code** without human review
-4. **Always run tests** after changes: `make test`
+**What**: A **security-first, offline-first** chronic pain tracking app designed for **clinical-grade exports** and **WorkSafeBC workflows**, with **trauma-informed** UX and accessibility as a first-class constraint.
 
-### 🔍 Decision Framework
+**Why**: Most pain apps optimize for extraction. PainTracker optimizes for **autonomy, privacy, and psychological safety** while still producing data clinicians can actually use.
+
+**How**: React 18 + TypeScript + Zustand + Immer + Zod + IndexedDB + encryption + CSP + robust exports, with local-only analytics/correlations.
+
+**Non-negotiables**:
+
+1. **Local-first** (no cloud dependency)
+2. **No telemetry by default**
+3. **Accessibility (WCAG 2.2 AA target)**
+4. **Data minimization + auditability**
+5. **No security-critical changes without human review**
+
+---
+
+## 🧭 Operating Rules (Read Once. Obey Always.)
+
+### 🖥️ Shell & Command Compatibility
+
+* **All commands must be PowerShell-compatible** (VS Code terminal).
+* Do **not** provide bash-only commands (`export FOO=`, `/dev/null`, `sed/grep` assumptions, etc.).
+* Prefer explicit PowerShell patterns:
+
+  * Env vars: `$env:VITE_ENABLE_VALIDATION="true"`
+  * Paths: `.\scripts\tool.ps1`, `.\src\...`
+
+### 🧨 Hard Stops (Ask Human Before Proceeding)
+
+Stop immediately and ask for review if your change touches **any** of the following:
+
+* Encryption, key handling, unlock flows, storage of secrets
+* Any code that reads/writes **Class A** data (defined below) in new ways
+* Export/report generation formats (PDF/CSV/JSON) or claim language
+* CSP, service worker, caching/security headers
+* Anything that introduces **network calls**, telemetry, 3rd-party SDKs, remote logging, or analytics services
+* Any changes to crisis logic, panic mode, or empathy heuristics
+
+### ✅ “Safe Work” Default
+
+If you’re not sure whether something is security-critical: **treat it as security-critical**.
+
+---
+
+## 🔍 Decision Framework
+
 ```
 New Feature/Task?
-├── Is it security-related? → STOP, require human review
-├── Affects user data? → Audit trail required
-├── Changes UI/UX? → Trauma-informed patterns required
-├── Modifies core logic? → Comprehensive testing required
-└── Everything else → Follow patterns below
+├── Security/crypto/auth/storage? → STOP (human review)
+├── Touches health data (Class A)? → Audit trail + minimization + tests
+├── UI/UX change? → Trauma-informed + a11y checks
+├── Core logic? → Add/adjust tests + regression checks
+└── Docs/visual refactors? → Allowed if no behavior changes
 ```
 
-### 🚨 Red Flags (Stop and Ask Human)
-- Any encryption/security modifications
-- Changes to empathy algorithms
-- HIPAA compliance alterations
-- User data handling changes
-- Breaking API changes
+---
+
+## 🧠 Data Classification & Handling Rules
+
+### Data Classes
+
+* **Class A (Highly sensitive / health data)**
+  Pain entries, symptoms, meds, mood, free-text notes, attachments, exports/reports, identifiers.
+* **Class B (Sensitive operational)**
+  Audit events, security events, error traces (when they may contain identifiers), feature flags.
+* **Class C (Non-sensitive)**
+  UI preferences, theme settings, layout settings (unless tied to identity).
+
+### Hard Rules
+
+* **Class A never leaves the device** by default. No remote logs. No third-party analytics.
+* Do not log raw notes, export content, or anything that reconstructs entries.
+* Store only what the feature strictly needs. If unsure: store less.
+
+---
+
+## 🛡️ Threat Model Snapshot
+
+### We actively defend against
+
+* Lost/stolen device (at-rest protection + locked sessions)
+* XSS within our origin (CSP + safe coding + minimizing secret exposure)
+* Malicious browser extensions (limit plaintext exposure; treat as elevated risk)
+* Shoulder-surfing + coercive dynamics (panic mode, user control, minimal friction)
+* Accidental oversharing via exports (clear controls + defaults + warnings)
+
+### We do **not** claim to solve
+
+* Compromised OS / malware / root-level compromise
+* User-installed spyware
+* Physical coercion beyond in-app safety controls
+
+**No security copy should imply otherwise.**
 
 ---
 
 ## 🏗️ Architecture & Mental Models
 
-### Core Architectural Principles
+### Core Principles
 
-**1. Security-First Design**
-- **Zero-Trust Model**: All data access requires explicit permission and audit trails
-- **Defense in Depth**: Multiple security layers (encryption, validation, CSP, etc.)
-- **Privacy by Design**: Local-first architecture, no cloud dependencies
+**1) Security-first**
 
-**2. Empathy-Driven Development**
-- **User-Centered**: Every decision considers trauma survivors and accessibility needs
-- **Progressive Enhancement**: Core functionality works without advanced features
-- **Emotional Safety**: Gentle language, crisis detection, user agency
+* Least privilege, defense-in-depth, minimize plaintext lifetime in memory.
+* Treat any new data surface as hostile until proven safe.
 
-**3. Clinical Integration**
-- **Evidence-Based**: Validated pain assessment scales and clinical workflows
-- **Regulatory Compliance**: WorkSafe BC, HIPAA-aligned, WCAG 2.1 AA
-- **Data Integrity**: Immutable updates, comprehensive validation, audit trails
+**2) Trauma-informed UX**
 
-### Technology Stack Deep Dive
+* Reduce cognitive load, offer control, avoid blame language.
+* Keep “panic mode” reliable, fast, and accessible.
 
-| Layer | Technology | Purpose | Critical Patterns |
-|-------|------------|---------|-------------------|
-| **UI/UX** | React 18 + TypeScript | Component architecture | Trauma-informed hooks, accessibility-first |
-| **State** | Zustand + Immer | Predictable state | Immutable updates, UI/data separation |
-| **Data** | IndexedDB + Encryption | Local persistence | AES-GCM encryption, selective storage |
-| **Validation** | Zod + Custom Validators | Data integrity | Multi-layer validation, emotional validation |
-| **Security** | CryptoJS + CSP | Data protection | Audit trails, key management |
-| **Testing** | Vitest + Playwright | Quality assurance | 90%+ coverage, accessibility testing |
-| **Build** | Vite + Makefile | Development workflow | Environment-specific builds, security headers |
+**3) Clinical usefulness without surveillance**
 
-### Data Flow Architecture
+* Exports should be clean, consistent, and defensible.
+* Correlation features must be **local-only** unless explicitly re-architected and approved.
+
+### Tech Stack
+
+| Layer      | Tech                | Purpose           | Critical Patterns                        |
+| ---------- | ------------------- | ----------------- | ---------------------------------------- |
+| UI         | React 18 + TS       | Components        | a11y-first, trauma-informed patterns     |
+| State      | Zustand + Immer     | Predictable state | immutable updates, UI/data separation    |
+| Validation | Zod                 | Integrity         | schema-first, defensive parsing          |
+| Storage    | IndexedDB           | Persistence       | versioned schema, migrations, resilience |
+| Security   | Encryption + CSP    | Protection        | audited boundaries, no secret leakage    |
+| Testing    | Vitest + Playwright | Confidence        | regression coverage + a11y checks        |
+| Build      | Vite + Makefile     | workflow          | consistent commands + security headers   |
+
+### Data Flow (Local-Only by Design)
 
 ```
-User Input
-    ↓ (Zod Validation)
-PainEntry Object
-    ↓ (Emotional Analysis)
-Empathy Metrics + Validation
-    ↓ (Zustand Store)
-Immutable State Update
-    ↓ (Encryption Layer)
-IndexedDB Persistence
-    ↓ (Background Workers)
-Analytics Processing
-    ↓ (Export Pipeline)
-WCB Reports / Clinical Data
+User input
+  ↓ (Zod validation)
+Normalized entry
+  ↓ (empathy heuristics / crisis checks)
+State update (Zustand/Immer)
+  ↓ (encryption boundary)
+IndexedDB persistence
+  ↓ (local workers)
+Local analytics + correlations (NO network)
+  ↓ (export boundary)
+WCB / clinical exports (user-controlled)
 ```
 
 ---
 
-## 🛠️ Development Workflows
+## 🧷 Security-Critical Code Boundary (Human Review Required)
+
+Treat these as **red zones**:
+
+* `src/services/EncryptionService.ts` (and any key derivation/key storage)
+* Any “vault”, “unlock”, “session key”, “passphrase” logic
+* Storage adapters that persist encrypted payloads
+* Export/report pipeline (PDF/CSV/JSON) and templates
+* CSP/security headers generation
+* Service worker caching rules
+* Anything introducing fetch/XHR/websocket, telemetry, or 3rd-party SDKs
+
+---
+
+## 🛠️ Development Workflows (PowerShell)
 
 ### Environment Setup
-```bash
-# First-time setup (use Makefile for consistency)
-make setup          # Complete environment setup
-make doctor         # Validate environment health
 
-# Development workflow
-make dev           # Start dev server (port 3000)
-make test          # Run test suite
-make check         # Full validation (lint + test + build)
+```powershell
+# First time
+make setup
+make doctor
+
+# Daily loop
+make dev
+make test
+make check
 ```
 
-### Code Quality Gates
-```bash
-# Pre-commit checks (automatic via husky)
-make check-pre-commit  # Runs before every commit
+### Feature Flags / Env Vars (Vite + PowerShell)
 
-# Manual quality checks
-make lint-fix         # Auto-fix linting issues
-make typecheck        # TypeScript validation
-npm run security-full # Security audit
+```powershell
+# Enable validation tech (session-only env var)
+$env:VITE_ENABLE_VALIDATION="true"; npm run dev
 ```
 
-### Testing Strategy
-```bash
-# Unit tests (core logic)
-make test                    # Run all tests
-npm run test:coverage       # With coverage report
+> Rule: If you introduce a new flag, it must be `VITE_*` and documented here.
 
-# Integration tests
-npm run e2e                 # End-to-end tests
-npm run accessibility:scan  # Accessibility validation
+### Quality Gates
 
-# Mutation testing (code quality)
-npm run mutate              # Stryker mutation testing
+```powershell
+make lint-fix
+make typecheck
+npm run security-full
 ```
 
-### Deployment Pipeline
-```bash
-# Build variants
-make build          # Production build with CSP
-make build-dev      # Development build
+### Tests
 
-# Deployment commands
-npm run deploy      # GitHub Pages deployment
-make deploy-status  # Check deployment status
-
-# Pre-deployment validation
-make deploy-validate # Configuration checks
-make deploy-healthcheck # Health validation
+```powershell
+make test
+npm run test:coverage
+npm run e2e
+npm run accessibility:scan
 ```
 
 ---
 
 ## 📋 Implementation Patterns
 
-### State Management (Zustand + Immer)
+### Zustand + Immer (Immutable Updates Only)
 
-**✅ DO Pattern:**
-```typescript
-// Correct: Use actions, never mutate state directly
+✅ DO:
+
+```ts
 export const usePainTrackerStore = create<PainTrackerState>()(
   immer((set) => ({
     addEntry: (entryData) => set((state) => {
@@ -166,92 +227,103 @@ export const usePainTrackerStore = create<PainTrackerState>()(
     })
   }))
 );
-
-// Usage in components
-const addEntry = usePainTrackerStore((state) => state.addEntry);
-await addEntry(formData);
 ```
 
-**❌ AVOID Pattern:**
-```typescript
-// Wrong: Direct state mutation
-const store = usePainTrackerStore.getState();
-store.entries.push(newEntry); // NEVER DO THIS
+❌ DON’T:
+
+```ts
+usePainTrackerStore.getState().entries.push(newEntry); // never
 ```
 
-### Security Implementation
+---
 
-**Audit Trail Required:**
-```typescript
-// Always log sensitive operations
-await hipaaService.logAuditEvent({
+## 🧾 Audit Logging Rules (Minimal + Non-Reconstructive)
+
+**Audit intent**: prove “what happened” without capturing sensitive content.
+
+✅ DO log:
+
+* action type, resource type, resource id (if safe), outcome, timestamp
+* counts/flags (e.g., “exported 12 entries”) — not the entries
+
+❌ NEVER log:
+
+* free text notes
+* export contents
+* identifiers unnecessarily
+* any key material / passphrases / derived secrets
+
+Example:
+
+```ts
+await complianceAuditService.logAuditEvent({
   actionType: 'create' | 'read' | 'update' | 'delete',
   resourceType: 'PainEntry' | 'UserData' | 'Report',
-  userId: currentUser.id,
   outcome: 'success' | 'failure',
-  details: { /* relevant context */ }
+  details: { entryCount: 1 } // keep coarse
 });
 ```
 
-**Encryption Pattern:**
-```typescript
-// All sensitive data must be encrypted
-const encrypted = await encryptionService.encrypt(sensitiveData);
-await secureStorage.save('key', encrypted);
+---
 
-// Retrieval requires decryption
-const encrypted = await secureStorage.retrieve('key');
-const data = await encryptionService.decrypt(encrypted);
+## 🔐 Encryption & Key Handling (Documentation Discipline)
+
+This project uses encryption to protect **Class A** at rest.
+Because crypto details are easy to misstate:
+
+* Never claim “secure localStorage for keys.” If keys touch storage, it must be **explicitly documented** and treated as high risk.
+* Any change to key derivation, key storage, rotation, or unlock flows is a **hard stop** requiring human review.
+* If you’re updating docs: describe what the code actually does, not what you wish it did.
+
+---
+
+## 🧩 UI/UX Standards (Trauma-Informed + Accessible)
+
+### Minimum bar for any UI change
+
+* Keyboard reachable controls
+* Visible focus state
+* Clear error messages (no blame language)
+* Touch targets remain usable
+* Motion/visual intensity respects preferences (where applicable)
+
+Example pattern:
+
+```ts
+const { preferences } = useTraumaInformed();
+<Button size={preferences.touchTargetSize}>
+  {preferences.gentleLanguage ? 'Save' : 'Save'}
+</Button>
 ```
 
-### Component Architecture
+---
 
-**Trauma-Informed Components:**
-```typescript
-// Always use trauma-informed patterns
-import { useTraumaInformed } from '../components/accessibility/TraumaInformedHooks';
+## 🚨 Error Handling Standard
 
-function MyComponent() {
-  const { preferences } = useTraumaInformed();
+* UI must reflect failure states cleanly.
+* Errors must be non-shaming.
+* Logs must never contain Class A content.
 
-  return (
-    <div>
-      {preferences.gentleLanguage && <ComfortPrompt />}
-      {preferences.simplifiedMode && <SimplifiedView />}
-      <Button size={preferences.touchTargetSize}>
-        {preferences.gentleLanguage ? 'Save Gently' : 'Save'}
-      </Button>
-    </div>
-  );
-}
-```
-
-### Error Handling
-
-**Comprehensive Error Pattern:**
-```typescript
+```ts
 try {
-  // Operation that might fail
   await sensitiveOperation(data);
-} catch (error) {
-  // Always update UI state
-  setError(error.message);
+} catch (err) {
+  const message = (err as Error).message;
+  setError(message);
 
-  // Log security events
   await securityService.logEvent({
     type: 'error',
     level: 'error',
-    message: error.message,
+    message,
     metadata: { operation: 'sensitiveOperation' }
   });
 
-  // Audit trail for data operations
   if (isDataOperation) {
-    await hipaaService.logAuditEvent({
+    await complianceAuditService.logAuditEvent({
       actionType: 'operation',
       resourceType: 'Data',
       outcome: 'failure',
-      details: { error: error.message }
+      details: { reason: 'operation_failed' }
     });
   }
 }
@@ -263,323 +335,94 @@ try {
 
 ### Empathy Intelligence Engine
 
-**Core Purpose**: Analyzes user input for emotional patterns and provides personalized insights.
-
-**Key Components**:
-- `EmpathyIntelligenceEngine.ts` - Main engine with heuristic algorithms
-- `EmpathyDrivenAnalytics.ts` - Orchestration service
-- `WisdomModule.ts` - Learning and insight accumulation
-
-**Usage Pattern**:
-```typescript
-const engine = new EmpathyIntelligenceEngine({
-  learningRate: 0.1,
-  predictionHorizon: 7, // days
-  personalizationDepth: 'deep'
-});
-
-const metrics = await engine.calculateAdvancedEmpathyMetrics(
-  userId,
-  painEntries,
-  moodEntries
-);
-```
-
-**⚠️ Critical Notes**:
-- Algorithms are heuristic-based, not AI/ML models
-- Requires extensive testing when modified
-- Performance-critical for user experience
+* Heuristic-based (not ML).
+* Treat modifications as high-risk UX changes: regressions here harm real people.
 
 ### Trauma-Informed Accessibility System
 
-**Core Components**:
-- `TraumaInformedProvider.tsx` - Global preference management
-- `CrisisTestingDashboard.tsx` - Emergency simulation
-- `ProgressiveDisclosure/` - Cognitive load management
-
-**Implementation Pattern**:
-```typescript
-// Provider wraps entire app
-<TraumaInformedProvider>
-  <App />
-</TraumaInformedProvider>
-
-// Components use preferences
-const { preferences, updatePreferences } = useTraumaInformed();
-
-// Crisis detection
-const { crisisState, triggerCrisisMode } = useCrisisDetection();
-```
+* Provider must wrap the app.
+* Preferences must reliably apply across routes and modals.
 
 ### Validation Technology Integration
 
-**Current Status**: Components exist but not fully integrated.
+**Enable (PowerShell + Vite):**
 
-**Enable Pattern**:
-```bash
-# Environment variable controls integration
-REACT_APP_ENABLE_VALIDATION=true npm run dev
+```powershell
+$env:VITE_ENABLE_VALIDATION="true"; npm run dev
 ```
 
-**Integration Points**:
-- `src/components/pain-tracker/PainEntryForm.tsx` - Conditionally renders validation
-- `src/validation-technology/index.ts` - Centralized exports
-- `docs/VALIDATION_TECHNOLOGY_COMPLETE.md` - Detailed documentation
-
-### Security Architecture
-
-**Three-Tier Model**:
-
-1. **Encryption Service** (`src/services/EncryptionService.ts`)
-   - AES-256 encryption with CryptoJS
-   - Key management and rotation
-   - Secure localStorage for keys
-
-2. **HIPAA Compliance Service** (`src/services/HIPAACompliance.ts`)
-   - Audit trails with risk scoring
-   - PHI detection and de-identification
-   - Breach assessment and reporting
-
-3. **Security Service** (`src/services/SecurityService.ts`)
-   - Event logging and monitoring
-   - CSP header generation
-   - Automated security auditing
+**Read in code**: `import.meta.env.VITE_ENABLE_VALIDATION`
 
 ---
 
-## 🚨 Troubleshooting & Gotchas
+## 🧰 Troubleshooting (High-Frequency Failures)
 
-### Common Issues
+**Tests failing due to crypto mocks**
+→ Verify `src/test/setup.ts` mocks and run `make test`
 
-**❌ Problem**: Tests failing due to encryption key mismatches
-**✅ Solution**: Run `npm run test` with proper setup, ensure `src/test/setup.ts` crypto mocks
+**Preferences not applying**
+→ Confirm `TraumaInformedProvider` wraps root
 
-**❌ Problem**: Trauma-informed preferences not applying
-**✅ Solution**: Ensure `TraumaInformedProvider` wraps component tree
+**Validation not showing**
+→ Confirm `$env:VITE_ENABLE_VALIDATION="true"` and code reads `import.meta.env`
 
-**❌ Problem**: Validation technology not showing
-**✅ Solution**: Set `REACT_APP_ENABLE_VALIDATION=true` in environment
-
-**❌ Problem**: Security audit failures
-**✅ Solution**: Check `npm run security-full` output, address high-priority issues
-
-### Performance Issues
-
-**Memory Leaks**: Always clean up Zustand subscriptions
-```typescript
-useEffect(() => {
-  const unsubscribe = useStore.subscribe(/* ... */);
-  return unsubscribe;
-}, []);
-```
-
-**Bundle Size**: Monitor with `npm run build` and check `meta.json`
-
-### Development Environment Issues
-
-**Canvas Dependencies (Windows)**: Follow `docs/CANVAS_WINDOWS_PREREQS.md`
-
-**Node Version**: Requires Node 20+, use `.nvmrc`
-
-**Legacy Peer Deps**: Use `--legacy-peer-deps` flag during npm install
+**Security audit failures**
+→ Run `npm run security-full` and fix high severity first
 
 ---
 
 ## 📊 Implementation Status & Roadmap
 
-### Current Implementation Snapshot (2025-12-10)
+### Snapshot (2025-12-10)
 
-| System | Status | Confidence | Notes |
-|--------|--------|------------|-------|
-| **Empathy Intelligence Engine** | ✅ Implemented | High | Core heuristics working, extensive test coverage |
-| **Trauma-Informed UI** | ✅ Implemented | High | Comprehensive accessibility system |
-| **Phase 1.5 Accessibility** | ✅ Implemented | High | WCAG 2.2 AA components: AccessiblePainSlider, FocusTrap, AccessibleModal |
-| **Panic Mode** | ✅ Implemented | High | Crisis support with resources, integrated in ModernAppLayout |
-| **Validation Technology** | ✅ Integrated | High | Enabled by default, connected to forms |
-| **Security Architecture** | ✅ Implemented | High | Multi-layer protection active |
-| **WorkSafe BC Export** | ✅ Implemented | High | CSV/JSON/PDF complete with professional formatting + WCBReportPreview |
-| **PWA Features** | ✅ Verified | High | Service worker working with cache-first strategy |
-| **Weather Integration** | ✅ Implemented | High | Open-Meteo API with WeatherCorrelationPanel |
-| **Analytics Visualizations** | ✅ Implemented | High | Full field coverage with EntryDetailsSections |
+| System                   | Status | Confidence | Notes                        |
+| ------------------------ | -----: | ---------: | ---------------------------- |
+| Empathy Engine           |      ✅ |       High | heuristic + tested           |
+| Trauma-Informed UI       |      ✅ |       High | preferences + crisis support |
+| Accessibility Phase 1.5  |      ✅ |       High | WCAG 2.2 AA components       |
+| Panic Mode               |      ✅ |       High | integrated + verified        |
+| Validation Tech          |      ✅ |       High | integrated                   |
+| Security Architecture    |      ✅ |       High | multi-layer                  |
+| WorkSafeBC Export        |      ✅ |       High | CSV/JSON/PDF + preview       |
+| PWA                      |      ✅ |       High | cache-first                  |
+| Weather Correlation      |      ✅ |       High | Open-Meteo                   |
+| Analytics Visualizations |      ✅ |       High | extended fields              |
 
-### Recent Changes (2025-12-10)
-- ✅ **Weather Integration** - Open-Meteo API for temperature, pressure, humidity correlation
-- ✅ **TriggersAndReliefSection** - New form section for triggers, relief methods, pain quality, activities
-- ✅ **EntryDetailsSections** - Reusable display components for all PainEntry fields
-- ✅ **WCBReportPreview Integration** - PDF download and WCB submission in WCBReportPanel
-- ✅ **Component Integration** - NerveSymptoms, FunctionalLimitations, PainAssessment now active
-- ✅ **Dead Code Cleanup** - Removed unused functions and PainVisualizationPanel
-- ✅ **i18n Updates** - Added translations for triggers, relief, quality, activities, weather
+### Next Priorities
 
-### New Form Sections
-```typescript
-// TriggersAndReliefSection - collects optional analytics fields
-import { TriggersAndReliefSection } from './form-sections/TriggersAndReliefSection';
-
-<TriggersAndReliefSection
-  triggers={triggers}
-  reliefMethods={reliefMethods}
-  quality={quality}
-  activities={activities}
-  activityLevel={activityLevel}
-  stress={stress}
-  onTriggersChange={setTriggers}
-  onReliefMethodsChange={setReliefMethods}
-  onQualityChange={setQuality}
-  onActivitiesChange={setActivities}
-  onActivityLevelChange={setActivityLevel}
-  onStressChange={setStress}
-/>
-
-// EntryDetailsSections - display components for extended entry data
-import { ExtendedEntryDetails } from './EntryDetailsSections';
-
-<ExtendedEntryDetails entry={entry} />
-```
-
-### Weather Integration
-```typescript
-// Weather service fetches from Open-Meteo (free, no API key)
-import { fetchWeatherData, fetchBarometricPressure } from '../services/weather';
-
-const weather = await fetchWeatherData(latitude, longitude);
-// Returns: { temperature, condition, isRaining, pressure, humidity }
-
-// WeatherCorrelationPanel displays pain-weather correlations
-import { WeatherCorrelationPanel } from './analytics/WeatherCorrelationPanel';
-
-<WeatherCorrelationPanel entries={entries} />
-```
-
-### Recent Changes (2025-12-08)
-- ✅ **AccessiblePainSlider** - WCAG 2.2 AA compliant pain rating component
-- ✅ **FocusTrap & AccessibleModal** - Modal focus management components
-- ✅ **Enhanced WCB PDF Export** - Professional clinical reports (98.8% test coverage)
-- ✅ **Panic Mode Verification** - Confirmed integrated with crisis resources
-- ✅ **PWA Service Worker** - Verified working with cache-first strategy
-- ✅ **Validation UI** - Confirmed enabled by default
-
-### New Accessibility Components
-```typescript
-// WCAG 2.2 AA Pain Slider with full keyboard support
-import { AccessiblePainSlider } from './components/accessibility';
-
-<AccessiblePainSlider
-  value={painLevel}
-  onChange={setPainLevel}
-  label="Current Pain Level"
-  showHapticFeedback={true}
-  showNumericInput={true}
-/>
-
-// Modal with focus trapping
-import { AccessibleModal, FocusTrap } from './components/accessibility';
-
-<AccessibleModal
-  isOpen={isOpen}
-  onClose={() => setIsOpen(false)}
-  title="Pain Entry Details"
->
-  <Content />
-</AccessibleModal>
-```
-
-### WorkSafe BC PDF Export
-```typescript
-import { exportWorkSafeBCPDF, downloadWorkSafeBCPDF } from './utils/pain-tracker/wcb-export';
-
-// Generate PDF data URI
-const pdfData = exportWorkSafeBCPDF(entries, {
-  startDate: new Date('2024-01-01'),
-  endDate: new Date('2024-01-31'),
-  patientName: 'John Doe',
-  claimNumber: 'WCB-123456',
-  includeDetailedEntries: true,
-});
-
-// One-click download
-downloadWorkSafeBCPDF(entries, options);
-```
-
-### Next Priority Items
-1. **Advanced Visualizations**: Body heatmaps and correlation graphs
-2. **ML Pattern Recognition**: Q1 2026 target
-3. **EMR/EHR Integration**: Q2 2026 target
+1. Advanced visualizations (heatmaps, correlations) — **local-only**
+2. Pattern recognition — heuristics-first; ML only if local-only + approved
+3. EMR/EHR integration — privacy architecture + explicit consent required
 
 ---
 
-## 🔧 Maintenance & Updates
+## 🧾 Change Tracking
 
-### Version Control
-- **Major Version**: Breaking changes to architecture or security model
-- **Minor Version**: New features or significant enhancements
-- **Patch Version**: Bug fixes, documentation updates, minor improvements
-
-### Change Tracking
 ```markdown
-## Version 2.2 (2025-12-10)
-- ✅ Weather integration with Open-Meteo API and WeatherCorrelationPanel
-- ✅ Full PainEntry field coverage (25+ fields) - collection AND display
-- ✅ TriggersAndReliefSection form component for optional analytics
-- ✅ EntryDetailsSections reusable display components
-- ✅ WCBReportPreview integrated into WCBReportPanel
-- ✅ Component integration: NerveSymptoms, FunctionalLimitations, PainAssessment
-- ✅ Dead code cleanup: removed 3 unused functions + PainVisualizationPanel
-- ✅ i18n translations for new fields (triggers, relief, quality, weather)
-- 📊 740 tests passing, 90%+ coverage maintained
-
-## Version 2.1 (2025-12-08)
-- ✅ Phase 1.5 Accessibility complete (AccessiblePainSlider, FocusTrap, AccessibleModal)
-- ✅ Enhanced WCB PDF Export with professional formatting
-- ✅ Panic Mode verified and integrated
-- ✅ PWA Service Worker verified working
-- ✅ Validation UI confirmed enabled by default
-- 📊 Updated implementation snapshot with current status
-
-## Version 2.0 (2025-09-24)
-- ✨ Structural reorganization for better AI agent experience
-- 📚 Added troubleshooting sections and decision frameworks
-- 🎯 Enhanced prescriptive guidance throughout
-- 🔍 Added confidence levels and red flags
-
-## Version 1.1 (2025-09-24)
-- 📊 Updated implementation snapshot
-- 🧪 Added recent development changes
-- 📖 Enhanced code examples
-
-## Version 1.0 (2025-09-22)
-- 🎯 Initial comprehensive documentation
-- 🏗️ Core architecture and patterns documented
+## Version 2.4 (2025-12-18)
+- ✅ Enforced PowerShell + VS Code terminal command compatibility
+- ✅ Hardened “hard stop” boundaries (network/telemetry/exports/crypto/CSP/SW)
+- ✅ Added explicit data classification (Class A/B/C) + hard rules
+- ✅ Added threat model snapshot + “no false security claims”
+- ✅ Standardized WCAG target: 2.2 AA
+- ✅ Reframed compliance wording to “HIPAA-aligned controls” (not legal compliance claim)
+- ✅ Clarified local-only analytics/correlations (no network)
+- ✅ Tightened audit logging rules (minimal, non-reconstructive)
 ```
 
-### Validation Checklist
-- [ ] All file paths verified and exist
-- [ ] Code examples tested and working
-- [ ] Commands validated in environment
-- [ ] Security patterns reviewed by human
-- [ ] Accessibility guidelines confirmed
+---
+
+## 🤝 Working With Humans (How to Communicate Changes)
+
+When you propose work:
+
+* Reference exact files + functions
+* Explain risks (privacy, safety, accessibility)
+* Provide test evidence
+* Provide rollback plan for risky UX changes
+
+**Before you present changes:** run `make check`.
 
 ---
 
-## 🤝 Working with Human Developers
-
-### When to Ask for Help
-- **High Confidence**: Implement and test thoroughly
-- **Medium Confidence**: Implement with extra testing, consider asking
-- **Low Confidence**: Stop and ask human immediately
-
-### Communication Guidelines
-- **Be Specific**: Reference exact files, functions, and line numbers
-- **Explain Reasoning**: Show your decision-making process
-- **Highlight Risks**: Flag any potential security or UX concerns
-- **Provide Options**: When uncertain, present multiple approaches
-
-### Code Review Preparation
-- Always run `make check` before presenting changes
-- Include test coverage for new code
-- Document any security implications
-- Explain complex algorithmic changes
-
----
-
-*This document is maintained by the development team. For questions or suggestions, please create an issue or PR.*
+*This document is maintained by the development team. For questions or suggestions, create an issue or PR.*

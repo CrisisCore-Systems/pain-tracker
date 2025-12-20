@@ -220,24 +220,43 @@ const createEmptyAnalyticsSnapshot = (): AnalyticsSnapshot => ({
   personalizedRecommendations: [],
 });
 
+type EnvRecord = Record<string, unknown>;
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
 const getEnv = () => {
   try {
-    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-      return (import.meta as any).env as Record<string, any>;
+    const meta = import.meta as unknown;
+    if (isRecord(meta) && 'env' in meta) {
+      const env = (meta as { env?: unknown }).env;
+      if (isRecord(env)) return env as EnvRecord;
     }
   } catch (_) {
     // ignore
   }
-  if (typeof process !== 'undefined' && (process as any).env) {
-    return (process as any).env as Record<string, any>;
+
+  const maybeProcess = (globalThis as unknown as { process?: unknown }).process;
+  if (isRecord(maybeProcess) && 'env' in maybeProcess) {
+    const env = (maybeProcess as { env?: unknown }).env;
+    if (isRecord(env)) return env as EnvRecord;
   }
-  return {} as Record<string, any>;
+
+  return {} as EnvRecord;
 };
 
 const ENABLE_VALIDATION_EXPORT = (() => {
   const env = getEnv();
+
+  const getEnvValue = (key: string): string | undefined => {
+    const value = env[key];
+    return typeof value === 'string' ? value : undefined;
+  };
+
   return (
-    env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false'
+    getEnvValue('VITE_REACT_APP_ENABLE_VALIDATION') !== 'false' &&
+    getEnvValue('REACT_APP_ENABLE_VALIDATION') !== 'false'
   );
 })();
 

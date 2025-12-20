@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { Button } from '../Button';
 import { Alert } from '../Alert';
-import { theme } from '../theme';
 
 // Simple contrast utilities (sRGB luminance and contrast ratio)
 const sRGBtoLinear = (v: number) => {

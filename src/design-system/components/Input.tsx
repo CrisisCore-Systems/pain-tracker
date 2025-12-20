@@ -68,7 +68,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const getMobileAttributes = () => {
       if (!mobileOptimized) return {};
 
-      const baseAttributes: Record<string, any> = {
+      const baseAttributes: Partial<React.InputHTMLAttributes<HTMLInputElement>> & {
+        style: React.CSSProperties;
+        'data-mobile-optimized': 'true';
+      } = {
         // Prevent zoom on iOS
         style: { fontSize: '16px' },
         // Better touch targets

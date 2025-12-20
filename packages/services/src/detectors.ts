@@ -1,8 +1,8 @@
-export function rollingAverageSpike(data: number[]) {
+export function rollingAverageSpike(_data: number[]) {
   // placeholder implementation
   return false;
 }
 
-export function simpleZScoreOutlier(data: number[]) {
+export function simpleZScoreOutlier(_data: number[]) {
   return false;
 }

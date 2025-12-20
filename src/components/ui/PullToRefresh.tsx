@@ -3,7 +3,7 @@
  * Provides pull-to-refresh functionality with visual feedback
  */
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { usePullToRefresh } from '../../hooks/useSwipeGesture';
@@ -24,7 +24,7 @@ export function PullToRefresh({
   children,
   className,
   threshold = 80,
-  disabled = false,
+  disabled: _disabled = false,
   pullText = 'Pull to refresh',
   refreshingText = 'Refreshing...',
   releaseText = 'Release to refresh',

@@ -44,6 +44,8 @@
     "badge:mutation": "node scripts/generate-mutation-badge.mjs",
     "badge:all": "vitest run --coverage --reporter=json --reporter=default && node scripts/generate-test-badge.mjs && node scripts/generate-coverage-badge.mjs && node scripts/generate-security-badge.mjs && node scripts/generate-loc-badge.mjs && node scripts/generate-bundle-badge.mjs && node scripts/generate-mutation-badge.mjs",
     "typecheck": "node ./node_modules/typescript/bin/tsc --noEmit --incremental",
+    "check": "npm run -s typecheck:ci && npm run -s lint && npm run -s test:ci && npm run -s build",
+    "check:quick": "npm run -s typecheck:ci && npm run -s lint && npm run -s test:ci",
     "pretypecheck:ci": "npm run build:packages",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prepare": "node -e \"if (!process.env.CI && !process.env.VERCEL) { try { require('child_process').execSync('husky install', {stdio: 'inherit'}) } catch (e) {} }\"",

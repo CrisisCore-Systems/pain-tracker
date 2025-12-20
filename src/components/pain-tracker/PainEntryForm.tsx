@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { PainEntry, CreatePainEntry } from '../../types';
-import { CreatePainEntrySchema, safeParsePainEntry } from '../../types';
+import { useCallback, useEffect, useState } from 'react';
+import type { PainEntry } from '../../types';
+import { CreatePainEntrySchema } from '../../types';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import {
   BaselineSection,
@@ -40,19 +40,35 @@ import { analyticsLogger } from '../../lib/debug-logger';
 
 // Environment helper for browser (Vite) and Node fallbacks.
 // Use Vite's import.meta.env when available, otherwise fall back to process.env if present.
-const getEnv = () => {
+type EnvRecord = Record<string, unknown>;
+
+const getEnv = (): EnvRecord => {
   try {
-    // import.meta is supported in browser bundles built by Vite; cast to any to access env at runtime
-    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-      return (import.meta as any).env as Record<string, any>;
+    const metaEnv = (import.meta as unknown as { env?: unknown }).env;
+    if (metaEnv && typeof metaEnv === 'object') {
+      return metaEnv as EnvRecord;
     }
-  } catch (_) {
+  } catch {
     // ignore
   }
-  if (typeof process !== 'undefined' && (process as any).env) {
-    return (process as any).env as Record<string, any>;
+
+  const processEnv = (globalThis as unknown as { process?: { env?: unknown } }).process?.env;
+  if (processEnv && typeof processEnv === 'object') {
+    return processEnv as EnvRecord;
   }
-  return {} as Record<string, any>;
+
+  return {};
+};
+
+const getEnvValue = (env: EnvRecord, key: string): string | undefined => {
+  const value = env[key];
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+  return undefined;
 };
 
 const ENABLE_VALIDATION = (() => {
@@ -60,7 +76,8 @@ const ENABLE_VALIDATION = (() => {
   // Enable by default unless explicitly disabled
   // Support both Vite-prefixed and legacy env keys
   return (
-    env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false'
+    getEnvValue(env, 'VITE_REACT_APP_ENABLE_VALIDATION') !== 'false' &&
+    getEnvValue(env, 'REACT_APP_ENABLE_VALIDATION') !== 'false'
   );
 })();
 
@@ -131,7 +148,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
         console.error('Failed to persist validation message', error);
       }
     },
-    [addValidation, validationIntegration]
+    [addValidation]
   );
 
   const handleProgressUpdate = useCallback(
@@ -147,13 +164,10 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
         setTimeout(() => setProgressStatus('idle'), 6000);
       }
     },
-    [validationIntegration]
+    []
   );
 
-  const validationIsActive = useMemo(
-    () => ENABLE_VALIDATION && preferences.realTimeValidation,
-    [preferences.realTimeValidation]
-  );
+  const validationIsActive = ENABLE_VALIDATION && preferences.realTimeValidation;
 
   const sections = [
     {
@@ -205,7 +219,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: '??',
       component: (
         <MedicationsSection
-          {...(formData.medications as any)}
+          {...formData.medications}
           onChange={data =>
             setFormData(
               prev =>
@@ -226,7 +240,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: '??',
       component: (
         <TreatmentsSection
-          {...(formData.treatments as any)}
+          {...formData.treatments}
           onChange={data =>
             setFormData(
               prev =>
@@ -247,7 +261,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: '??',
       component: (
         <QualityOfLifeSection
-          {...(formData.qualityOfLife as any)}
+          {...formData.qualityOfLife}
           onChange={data =>
             setFormData(
               prev =>
@@ -268,7 +282,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: '??',
       component: (
         <WorkImpactSection
-          {...(formData.workImpact as any)}
+          {...formData.workImpact}
           onChange={data =>
             setFormData(
               prev =>
@@ -289,7 +303,7 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       icon: '??',
       component: (
         <ComparisonSection
-          {...(formData.comparison as any)}
+          {...formData.comparison}
           onChange={data =>
             setFormData(
               prev =>

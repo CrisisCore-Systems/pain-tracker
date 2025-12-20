@@ -8,7 +8,6 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
 import {
-  ACCESSIBILITY_SCREENSHOTS,
   getNonCompositeScreenshots,
 } from './accessibility-screenshot-config.js';
 

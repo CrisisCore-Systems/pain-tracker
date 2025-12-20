@@ -8,21 +8,26 @@ function TestHarness({ entries }: { entries: { time: string; pain: number }[] })
 }
 
 describe('combined detectors', () => {
-  const origNotification = (global as any).Notification;
-  let calls: any[] = [];
+  const globalShim = globalThis as unknown as { Notification?: unknown };
+  const origNotification = globalShim.Notification;
+
+  type NotificationCall = [title: string, options: NotificationOptions | undefined];
+  let calls: NotificationCall[] = [];
 
   beforeEach(() => {
     calls = [];
-    (global as any).Notification = vi.fn().mockImplementation((title: string, opts: any) => {
-      calls.push([title, opts]);
-      return {};
-    });
+    globalShim.Notification = vi
+      .fn()
+      .mockImplementation((title: string, opts?: NotificationOptions) => {
+        calls.push([title, opts]);
+        return {} as Notification;
+      });
     localStorage.removeItem('pain-tracker:alerts-log');
     localStorage.setItem('pain-tracker:alerts-settings', JSON.stringify({ threshold: 3 }));
   });
 
   afterEach(() => {
-    (global as any).Notification = origNotification;
+    globalShim.Notification = origNotification;
     localStorage.removeItem('pain-tracker:alerts-settings');
     localStorage.removeItem('pain-tracker:notification-consent');
     localStorage.removeItem('pain-tracker:alerts-log');

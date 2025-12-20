@@ -28,12 +28,6 @@ interface PainEntry extends SyncableData {
   };
 }
 
-interface ActivityLog extends SyncableData {
-  timestamp: string;
-  activity: string;
-  data: Record<string, unknown>;
-}
-
 // Enhanced Data Structures
 interface ConflictResolutionStrategy {
   type: 'client-wins' | 'server-wins' | 'merge' | 'manual' | 'latest-timestamp';

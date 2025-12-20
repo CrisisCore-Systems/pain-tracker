@@ -11,7 +11,6 @@ test.setTimeout(300_000);
 const ONBOARDING_STORAGE_KEY = 'pain-tracker-onboarding-completed';
 const WALKTHROUGH_STORAGE_KEY = 'pain-tracker-walkthrough-completed';
 const STORE_STORAGE_KEY = 'pain-tracker-storage';
-const VAULT_GATE_KEY = 'vault-unlocked';
 const BETA_WARNING_KEY = 'beta-warning-dismissed';
 const NOTIFICATION_CONSENT_KEY = 'notification-consent-answered';
 const ANALYTICS_CONSENT_KEY = 'beta-analytics-consent';
@@ -46,7 +45,7 @@ async function dismissInitialModals(page: Page) {
       }
       await page.waitForTimeout(500);
     }
-  } catch (error) {
+  } catch {
     console.log('Notification dismiss completed or not found');
   }
   
@@ -215,7 +214,8 @@ async function navigateToView(page: Page, { navTarget, fallbackSelectors = [], d
         return;
       }
     } catch (error) {
-      console.log(`    Error: ${error.message}`);
+      const message = error instanceof Error ? error.message : String(error);
+      console.log(`    Error: ${message}`);
       // Try next selector
       continue;
     }
@@ -359,10 +359,18 @@ const ROUTES = [
 ];
 
 // Helper to get computed colors for contrast checking (optimized - sample only)
-async function getComputedColors(page: any) {
+type ColorDatum = {
+  selector: string;
+  textColor: string;
+  backgroundColor: string;
+  fontSize: string;
+  fontWeight: string;
+};
+
+async function getComputedColors(page: Page): Promise<ColorDatum[]> {
   return page.evaluate(() => {
     const elements = document.querySelectorAll('button, a, input, h1, h2, h3, p, span, div');
-    const colorData = [];
+    const colorData: ColorDatum[] = [];
     const maxSamples = 20; // Limit to 20 samples for performance
 
     for (const el of elements) {
@@ -390,13 +398,20 @@ async function getComputedColors(page: any) {
 }
 
 // Helper to test focus behavior (optimized - count only)
-async function testFocusBehavior(page: any) {
+type FocusVisibleStyle = { element: string; hasFocusRing: boolean };
+type FocusResults = {
+  totalFocusable: number;
+  visibleFocusable: number;
+  focusVisibleStyles: FocusVisibleStyle[];
+};
+
+async function testFocusBehavior(page: Page): Promise<FocusResults> {
   const focusResults = await page.evaluate(() => {
     const focusableElements = document.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
 
-    const results = {
+    const results: FocusResults = {
       totalFocusable: focusableElements.length,
       visibleFocusable: 0,
       focusVisibleStyles: []
@@ -436,7 +451,23 @@ async function testFocusBehavior(page: any) {
 }
 
 // Generate HTML report
-function generateHTMLReport(results: any, routeName: string) {
+type AxeNodeLike = unknown;
+type AxeViolationLike = {
+  id?: string;
+  impact?: string | null;
+  description?: string;
+  help?: string;
+  helpUrl?: string;
+  nodes?: AxeNodeLike[];
+};
+
+type AccessibilityReportInput = {
+  violations: AxeViolationLike[];
+  colorData: ColorDatum[];
+  focusResults: FocusResults;
+};
+
+function generateHTMLReport(results: AccessibilityReportInput, routeName: string) {
   const reportDir = path.join(process.cwd(), 'accessibility-reports');
   if (!fs.existsSync(reportDir)) {
     fs.mkdirSync(reportDir, { recursive: true });
@@ -472,9 +503,9 @@ function generateHTMLReport(results: any, routeName: string) {
     <div class="summary">
         <h2>Summary</h2>
         <div class="metric">Total Violations: ${results.violations?.length || 0}</div>
-        <div class="metric">Critical: ${results.violations?.filter((v: any) => v.impact === 'critical').length || 0}</div>
-        <div class="metric">Serious: ${results.violations?.filter((v: any) => v.impact === 'serious').length || 0}</div>
-        <div class="metric">Moderate: ${results.violations?.filter((v: any) => v.impact === 'moderate').length || 0}</div>
+        <div class="metric">Critical: ${results.violations?.filter((v) => v.impact === 'critical').length || 0}</div>
+        <div class="metric">Serious: ${results.violations?.filter((v) => v.impact === 'serious').length || 0}</div>
+        <div class="metric">Moderate: ${results.violations?.filter((v) => v.impact === 'moderate').length || 0}</div>
         <div class="metric">Focusable Elements: ${results.focusResults?.totalFocusable || 0}</div>
         <div class="metric">Visible Focusable: ${results.focusResults?.visibleFocusable || 0}</div>
     </div>
@@ -482,7 +513,7 @@ function generateHTMLReport(results: any, routeName: string) {
     ${results.violations?.length > 0 ? `
     <div class="violations">
         <h2>Violations</h2>
-        ${results.violations.map((violation: any) => `
+      ${results.violations.map((violation) => `
             <div class="violation ${violation.impact}">
                 <h3>${violation.id} (${violation.impact})</h3>
                 <p><strong>Description:</strong> ${violation.description}</p>
@@ -496,12 +527,12 @@ function generateHTMLReport(results: any, routeName: string) {
 
     <div class="focus-results">
         <h2>Focus Behavior</h2>
-        <p>Elements with focus-visible styles: ${results.focusResults?.focusVisibleStyles?.filter((f: any) => f.hasFocusRing).length || 0} / ${results.focusResults?.visibleFocusable || 0}</p>
+      <p>Elements with focus-visible styles: ${results.focusResults?.focusVisibleStyles?.filter((f) => f.hasFocusRing).length || 0} / ${results.focusResults?.visibleFocusable || 0}</p>
     </div>
 
     <div class="colors">
         <h2>Computed Colors (Sample)</h2>
-        ${results.colorData?.slice(0, 10).map((color: any) => `
+      ${results.colorData?.slice(0, 10).map((color) => `
             <div class="color-item">
                 <strong>${color.selector}</strong><br>
                 Text: ${color.textColor} | Background: ${color.backgroundColor}
@@ -540,7 +571,7 @@ test.describe('Accessibility - comprehensive a11y checks', () => {
       if (route.selector) {
         try {
           await page.waitForSelector(route.selector, { timeout: 5000 });
-        } catch (e) {
+        } catch {
           console.warn(`Selector ${route.selector} not found for route ${route.name}`);
         }
       }
@@ -583,19 +614,19 @@ test.describe('Accessibility - comprehensive a11y checks', () => {
       }, null, 2));
 
       // Fail test if there are critical or serious accessibility violations
-      const violations = accessibilityScanResults.violations || [];
-      const critical = violations.filter((v: any) => v.impact === 'critical' || v.impact === 'serious');
+      const violations = (accessibilityScanResults.violations || []) as unknown as AxeViolationLike[];
+      const critical = violations.filter((v) => v.impact === 'critical' || v.impact === 'serious');
 
       console.log(`Total scan time: ${Date.now() - startTime}ms`);
 
       if (critical.length > 0) {
         // Print summary for debugging
         console.error(`Accessibility violations for ${route.name}:`,
-          critical.map((c: any) => ({ id: c.id, impact: c.impact, nodes: c.nodes?.length })));
+          critical.map((c) => ({ id: c.id, impact: c.impact, nodes: c.nodes?.length })));
       }
 
       // Check focus-visible implementation
-      const focusVisibleCount = focusResults.focusVisibleStyles?.filter((f: any) => f.hasFocusRing).length || 0;
+      const focusVisibleCount = focusResults.focusVisibleStyles?.filter((f) => f.hasFocusRing).length || 0;
       const totalFocusable = focusResults.visibleFocusable || 0;
 
       // At least 80% of focusable elements should have visible focus indicators

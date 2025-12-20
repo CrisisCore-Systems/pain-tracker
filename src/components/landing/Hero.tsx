@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../design-system/components/Button';
-import { Activity, Shield, Heart, Stethoscope, LogIn, ArrowRight, Sparkles, Zap, Star, ChevronDown } from 'lucide-react';
+import { Activity, Shield, Heart, Stethoscope, LogIn, ArrowRight, Sparkles, Zap, Star } from 'lucide-react';
 
 // Preload the main app chunks when user shows intent to navigate
 const preloadAppChunks = () => {

@@ -6,6 +6,9 @@ import { dataSharingProtocols } from './DataSharingProtocols';
 import { healthcareOAuthProvider } from './HealthcareOAuth';
 import { hipaaComplianceService } from './HIPAACompliance';
 import { fhirService } from './FHIRService';
+import type { FHIRResource } from './FHIRService';
+import type { AuthenticationRequest, TokenRequest } from './HealthcareOAuth';
+import type { DataExchangeRequest, DataSharingAgreement } from './DataSharingProtocols';
 
 export interface APIResponse<T = unknown> {
   success: boolean;
@@ -144,13 +147,13 @@ export class HealthcareAPIRouter {
 
       if (method === 'POST' && pathParts.length === 1) {
         // Create resource: POST /Patient
-        const resourceType = pathParts[0];
+        const _resourceType = pathParts[0];
         if (!body || typeof body !== 'object') {
           throw new Error('Invalid request body');
         }
 
         // Validate HIPAA compliance
-        const validation = await hipaaComplianceService.validateFHIRResource(body as any);
+        const validation = await hipaaComplianceService.validateFHIRResource(body as unknown as FHIRResource);
         if (!validation.isValid) {
           return {
             success: false,
@@ -166,7 +169,7 @@ export class HealthcareAPIRouter {
           };
         }
 
-        const createdResource = await fhirService.createResource(body as any);
+        const createdResource = await fhirService.createResource(body as unknown as FHIRResource);
 
         return {
           success: true,
@@ -180,12 +183,12 @@ export class HealthcareAPIRouter {
 
       if (method === 'PUT' && pathParts.length === 2) {
         // Update resource: PUT /Patient/123
-        const [resourceType, id] = pathParts;
+        const [, id] = pathParts;
         if (!body || typeof body !== 'object') {
           throw new Error('Invalid request body');
         }
 
-        const resourceWithId = { ...(body as any), id };
+        const resourceWithId = { ...(body as Record<string, unknown>), id } as unknown as FHIRResource;
         const validation = await hipaaComplianceService.validateFHIRResource(resourceWithId);
         if (!validation.isValid) {
           return {
@@ -263,7 +266,10 @@ export class HealthcareAPIRouter {
       const pathParts = path.split('/').filter(p => p);
 
       if (method === 'GET' && pathParts[0] === 'patients') {
-        const patients = await healthcareProviderAPI.getPatients(request.user!.id, query as any);
+        const patients = await healthcareProviderAPI.getPatients(
+          request.user!.id,
+          query as unknown as { since?: string; riskLevel?: string; active?: boolean }
+        );
 
         return {
           success: true,
@@ -299,7 +305,7 @@ export class HealthcareAPIRouter {
 
         const syncResponse = await healthcareProviderAPI.requestDataSync({
           providerId: request.user!.id,
-          ...(body as any),
+          ...(body as Record<string, unknown>),
         });
 
         return {
@@ -355,7 +361,9 @@ export class HealthcareAPIRouter {
           throw new Error('Invalid request body');
         }
 
-        const agreementId = await dataSharingProtocols.createAgreement(body as any);
+        const agreementId = await dataSharingProtocols.createAgreement(
+          body as unknown as Omit<DataSharingAgreement, 'id' | 'status' | 'lastModified'>
+        );
 
         return {
           success: true,
@@ -372,7 +380,9 @@ export class HealthcareAPIRouter {
           throw new Error('Invalid request body');
         }
 
-        const requestId = await dataSharingProtocols.requestDataExchange(body as any);
+        const requestId = await dataSharingProtocols.requestDataExchange(
+          body as unknown as DataExchangeRequest
+        );
 
         return {
           success: true,
@@ -411,7 +421,9 @@ export class HealthcareAPIRouter {
           throw new Error('Invalid request body');
         }
 
-        const tokenResponse = await healthcareOAuthProvider.exchangeCodeForToken(body as any);
+        const tokenResponse = await healthcareOAuthProvider.exchangeCodeForToken(
+          body as unknown as TokenRequest
+        );
 
         return {
           success: true,
@@ -424,7 +436,9 @@ export class HealthcareAPIRouter {
       }
 
       if (method === 'GET' && pathParts[0] === 'authorize') {
-        const authUrl = await healthcareOAuthProvider.createAuthorizationUrl(query as any);
+        const authUrl = await healthcareOAuthProvider.createAuthorizationUrl(
+          query as unknown as AuthenticationRequest
+        );
 
         return {
           success: true,
@@ -441,7 +455,9 @@ export class HealthcareAPIRouter {
           throw new Error('Invalid request body');
         }
 
-        const tokenInfo = await healthcareOAuthProvider.introspectToken((body as any).token);
+        const tokenInfo = await healthcareOAuthProvider.introspectToken(
+          (body as Record<string, unknown>).token as string
+        );
 
         return {
           success: true,

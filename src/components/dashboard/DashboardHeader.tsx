@@ -1,6 +1,5 @@
 import React from 'react';
-import { ListFilter, Settings, Sparkles, TrendingUp, Calendar, Activity } from 'lucide-react';
-import { Button, Badge } from '../../design-system';
+import { ListFilter, Settings, Calendar, Activity } from 'lucide-react';
 
 interface DashboardHeaderProps {
   totalEntries: number;

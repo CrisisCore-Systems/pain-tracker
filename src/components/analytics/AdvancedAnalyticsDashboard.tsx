@@ -616,7 +616,7 @@ export function AdvancedAnalyticsDashboard({
                       ),
                       pointRadius: dailyAverages.map((_, i) => (anomalies.includes(i) ? 6 : 4)),
                       yAxisID: 'y',
-                    } as any,
+                    },
                     {
                       label: 'Entries',
                       data: dailyMeta.map(m => m.count),
@@ -626,7 +626,7 @@ export function AdvancedAnalyticsDashboard({
                       tension: 0.2,
                       type: 'bar',
                       yAxisID: 'y1',
-                    } as any,
+                    },
                     {
                       label: '7-day rolling avg',
                       data: rolling7,
@@ -637,7 +637,7 @@ export function AdvancedAnalyticsDashboard({
                       pointRadius: 0,
                       fill: false,
                       yAxisID: 'y',
-                    } as any,
+                    },
                   ],
                 }}
                 type="line"

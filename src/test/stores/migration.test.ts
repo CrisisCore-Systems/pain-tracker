@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { migratePainTrackerState } from '../../stores/pain-tracker-migrations';
+import type { PainTrackerState } from '../../stores/pain-tracker-store';
 
 describe('pain tracker persist migration', () => {
   it('migrates mood entries to include id and string timestamps', () => {
-    const legacyState: any = {
+    const legacyState = {
       moodEntries: [
         {
           // legacy had no id and timestamp as Date
@@ -23,7 +24,7 @@ describe('pain tracker persist migration', () => {
           notes: 'legacy entry',
         },
       ],
-    };
+    } as unknown as Partial<PainTrackerState>;
 
     const migrated = migratePainTrackerState(legacyState, 0);
     expect(migrated).toBeDefined();

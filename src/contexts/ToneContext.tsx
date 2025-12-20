@@ -54,7 +54,7 @@ interface ToneProviderProps {
  */
 export function ToneProvider({ children }: ToneProviderProps) {
   // Get pain entries from store
-  const entries = usePainTrackerStore((state: any) => state.entries || []);
+  const entries = usePainTrackerStore(state => state.entries || []);
 
   // Tone preferences (stored in localStorage)
   const [preferences, setPreferences] = useState<TonePreferences>(() => {

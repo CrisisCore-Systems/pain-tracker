@@ -409,7 +409,7 @@ export class EndToEndEncryptionService {
           const hmacWrapped = await securityService.wrapKey(hmacKey);
           payload = JSON.stringify({ encWrapped, hmacWrapped, created: new Date().toISOString() });
           await this.keyManager.storeKey(keyId, payload);
-        } catch (e) {
+        } catch {
           // Fallback: export raw key material and store via secure storage (encrypted at rest)
           const encRaw = await crypto.subtle.exportKey('raw', encKey);
           const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);

@@ -2,6 +2,16 @@ import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../../src/lib/database';
 import rateLimiter from '../lib/rateLimiter';
 
+type TestimonialRequestBody = {
+  name?: unknown;
+  role?: unknown;
+  email?: unknown;
+  quote?: unknown;
+  anonymized?: unknown;
+  consent?: unknown;
+  recaptchaToken?: unknown;
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -9,7 +19,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-  const { name, role, email, quote, anonymized, consent, recaptchaToken } = req.body || {};
+    const body = (req.body ?? {}) as TestimonialRequestBody;
+    const { name, role, email, quote, anonymized, consent, recaptchaToken } = body;
 
     // Basic validation
     if (!quote || typeof quote !== 'string') {
@@ -23,9 +34,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-  const sanitizedName = anonymized ? null : (name || null);
-    const sanitizedRole = role || null;
-    const sanitizedEmail = email || null;
+    const sanitizedName = anonymized ? null : ((typeof name === 'string' && name) ? name : null);
+    const sanitizedRole = typeof role === 'string' && role ? role : null;
+    const sanitizedEmail = typeof email === 'string' && email ? email : null;
     const isAnonymized = !!anonymized;
 
     // Rate limit using in-memory limiter with DB fallback for safety
@@ -59,10 +70,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Not provided and not required
       } else {
         try {
-        const verification = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+          const verification = await fetch('https://www.google.com/recaptcha/api/siteverify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ secret: process.env.RECAPTCHA_SECRET, response: recaptchaToken }),
+          body: new URLSearchParams({ secret: process.env.RECAPTCHA_SECRET, response: String(recaptchaToken) }),
         }).then(r => r.json());
         if (!verification.success) {
           res.status(400).json({ ok: false, error: 'reCAPTCHA verification failed' });
@@ -95,9 +106,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-  // increment rate limiter after successful insert (async-capable limiter)
-  await rateLimiter.increment(clientKey, rateLimitCount, rateLimitWindowMs);
-  res.status(201).json({ ok: true, created: result[0] });
+    // increment rate limiter after successful insert (async-capable limiter)
+    await rateLimiter.increment(clientKey, rateLimitCount, rateLimitWindowMs);
+    res.status(201).json({ ok: true, created: result[0] });
   } catch (err) {
     console.error('Testimonial submission error:', err);
       try {

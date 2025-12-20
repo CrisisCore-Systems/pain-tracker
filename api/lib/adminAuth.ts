@@ -1,5 +1,9 @@
 import type { VercelRequest } from '../../src/types/vercel';
 
+type VerifyAdminResult =
+  | { ok: true; user?: unknown }
+  | { ok: false; error: string };
+
 function getInternalApiHost(req: VercelRequest): string {
   const configured = process.env.INTERNAL_API_HOST;
   if (configured) return configured;
@@ -14,7 +18,7 @@ function getInternalApiHost(req: VercelRequest): string {
   return 'http://localhost:3000';
 }
 
-export async function verifyAdmin(req: VercelRequest): Promise<{ ok: true; user?: any } | { ok: false; error: string }> {
+export async function verifyAdmin(req: VercelRequest): Promise<VerifyAdminResult> {
   // Enforce bearer token validation via the internal clinic auth verify endpoint only.
   const authHeader = req.headers['authorization'];
   if (!authHeader || !String(authHeader).startsWith('Bearer ')) {
@@ -27,8 +31,15 @@ export async function verifyAdmin(req: VercelRequest): Promise<{ ok: true; user?
     const resp = await fetch(url, { method: 'GET', headers: { Authorization: `Bearer ${token}` } });
     if (!resp.ok) return { ok: false, error: 'Invalid auth token' };
     const data = await resp.json();
-    if (data && data.user && data.user.role === 'admin') {
-      return { ok: true, user: data.user };
+
+    const user = (data as { user?: unknown } | null | undefined)?.user;
+    const role =
+      typeof user === 'object' && user !== null && 'role' in user
+        ? (user as { role?: unknown }).role
+        : undefined;
+
+    if (role === 'admin') {
+      return { ok: true, user };
     }
     return { ok: false, error: 'Not authorized' };
   } catch (e) {

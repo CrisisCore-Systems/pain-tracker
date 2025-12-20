@@ -78,7 +78,7 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <div style={{ height: '400px' }}>
-        <Line options={options} data={chartData as unknown as any} />
+        <Line options={options} data={chartData as unknown as ChartJS.ChartData<'line'>} />
       </div>
     </div>
   );

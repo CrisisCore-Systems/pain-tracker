@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 
 import { EmpathyMetricsCollector } from '../EmpathyMetricsCollector';
+import type { QuantifiedEmpathyMetrics } from '../../types/quantified-empathy';
+import type { SecurityService } from '../SecurityService';
+import type { EmpathyDrivenAnalyticsService } from '../EmpathyDrivenAnalytics';
 
 // Import module to access and mutate the sensitivity map for testing
 import * as CollectorModule from '../EmpathyMetricsCollector';
@@ -15,11 +18,11 @@ class FakeAnalyticsService {
 describe('sensitivity-aware noise', () => {
   it('produces larger average absolute noise for higher sensitivity', () => {
     const collector = new EmpathyMetricsCollector(
-      new FakeSecurityService() as any,
-      new FakeAnalyticsService() as any
+      new FakeSecurityService() as unknown as SecurityService,
+      new FakeAnalyticsService() as unknown as EmpathyDrivenAnalyticsService
     );
 
-    const baseMetrics: any = {
+    const baseMetrics = {
       emotionalIntelligence: {
         selfAwareness: 50,
         selfRegulation: 50,
@@ -77,12 +80,21 @@ describe('sensitivity-aware noise', () => {
     // helper to sample mean absolute deviation for a given sensitivity for the 'motivation' metric
     const sampleMeanAbs = (sensitivity: number) => {
       // mutate sensitivity map in module
-      (CollectorModule as any).METRIC_SENSITIVITY['emotionalIntelligence.motivation'] = sensitivity;
+      (CollectorModule as unknown as { METRIC_SENSITIVITY: Record<string, number> }).
+        METRIC_SENSITIVITY['emotionalIntelligence.motivation'] = sensitivity;
 
       let sum = 0;
       for (let i = 0; i < trials; i++) {
-        const out = (collector as any).guardMetrics(baseMetrics, true, epsilon);
-        const diff = Math.abs(out.emotionalIntelligence.motivation - 50);
+        const out = (
+          collector as unknown as {
+            guardMetrics: (
+              metrics: QuantifiedEmpathyMetrics,
+              differentialPrivacy: boolean,
+              epsilon: number
+            ) => QuantifiedEmpathyMetrics;
+          }
+        ).guardMetrics(baseMetrics as unknown as QuantifiedEmpathyMetrics, true, epsilon);
+        const diff = Math.abs((out.emotionalIntelligence.motivation ?? 50) - 50);
         sum += diff;
       }
       return sum / trials;

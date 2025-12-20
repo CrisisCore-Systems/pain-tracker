@@ -4,7 +4,6 @@
  */
 
 // Import base types
-import type { PainEntry } from '../types';
 import type { SubscriptionTier } from './subscription';
 
 // Base types from offline-storage.ts

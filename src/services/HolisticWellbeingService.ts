@@ -27,7 +27,7 @@ import { MoodEntry } from '../types/quantified-empathy';
 export class HolisticWellbeingService {
   private wellbeingHistory: Map<string, HolisticWellbeingMetrics[]> = new Map();
   private energyData: Map<string, EnergyDataPoint[]> = new Map();
-  private pacingPreferences: Map<string, any> = new Map();
+  private pacingPreferences: Map<string, unknown> = new Map();
 
   // Calculate comprehensive wellbeing metrics
   async calculateWellbeingMetrics(
@@ -62,11 +62,6 @@ export class HolisticWellbeingService {
     const avgMood =
       recentMoodEntries.length > 0
         ? recentMoodEntries.reduce((sum, e) => sum + e.mood, 0) / recentMoodEntries.length
-        : 5;
-
-    const avgHopefulness =
-      recentMoodEntries.length > 0
-        ? recentMoodEntries.reduce((sum, e) => sum + e.hopefulness, 0) / recentMoodEntries.length
         : 5;
 
     const avgSelfEfficacy =
@@ -295,7 +290,7 @@ export class HolisticWellbeingService {
     return painImpact * 0.4 + moodImpact * 0.4 + sleepImpact * 0.2;
   }
 
-  private calculateMeaningAndPurpose(moodEntries: MoodEntry[], painEntries: PainEntry[]): number {
+  private calculateMeaningAndPurpose(moodEntries: MoodEntry[], _painEntries: PainEntry[]): number {
     // Based on hopefulness, goals, and meaningful activities
     const avgHopefulness =
       moodEntries.length > 0
@@ -545,7 +540,7 @@ export class HolisticWellbeingService {
     return (belongingContexts / moodEntries.length) * 50 + socialSupport * 0.5;
   }
 
-  private calculateCognitiveReserve(moodEntries: MoodEntry[], painEntries: PainEntry[]): number {
+  private calculateCognitiveReserve(moodEntries: MoodEntry[], _painEntries: PainEntry[]): number {
     // Based on adaptability, learning, and resilience
     const copingStrategies = new Set();
     moodEntries.forEach(e => {
@@ -603,7 +598,7 @@ export class HolisticWellbeingService {
     return Math.max(0, Math.min(100, current.energyLevel + trend * 0.5));
   }
 
-  private calculateEnergyBudget(currentEnergy: number, trends: EnergyDataPoint[]): EnergyBudget {
+  private calculateEnergyBudget(currentEnergy: number, _trends: EnergyDataPoint[]): EnergyBudget {
     const totalEnergy = Math.max(20, currentEnergy);
     const used = Math.max(0, 100 - currentEnergy);
     const reserved = totalEnergy * 0.3; // Reserve 30% for essential activities
@@ -806,7 +801,7 @@ export class HolisticWellbeingService {
   private generateRestReminders(
     currentPain: number,
     currentEnergy: number,
-    moodEntries: MoodEntry[]
+    _moodEntries: MoodEntry[]
   ): RestReminder[] {
     const reminders: RestReminder[] = [];
 
@@ -837,8 +832,8 @@ export class HolisticWellbeingService {
 
   // Recovery calculation methods
   private calculateRecoveryTimeMetrics(
-    painEntries: PainEntry[],
-    moodEntries: MoodEntry[]
+    _painEntries: PainEntry[],
+    _moodEntries: MoodEntry[]
   ): RecoveryTimeMetrics {
     return {
       afterActivity: {
@@ -871,7 +866,7 @@ export class HolisticWellbeingService {
 
   private calculateRestQualityMetrics(
     painEntries: PainEntry[],
-    moodEntries: MoodEntry[]
+    _moodEntries: MoodEntry[]
   ): RestQualityMetrics {
     const avgSleepQuality =
       painEntries.length > 0
@@ -1003,7 +998,7 @@ export class HolisticWellbeingService {
 
   private generateRecoveryPrompts(
     currentPain: number,
-    moodEntries: MoodEntry[]
+    _moodEntries: MoodEntry[]
   ): NotificationConfig[] {
     const prompts: NotificationConfig[] = [];
 
@@ -1028,7 +1023,7 @@ export class HolisticWellbeingService {
 
   private generateAchievementCelebrations(
     painEntries: PainEntry[],
-    moodEntries: MoodEntry[]
+    _moodEntries: MoodEntry[]
   ): NotificationConfig[] {
     const celebrations: NotificationConfig[] = [];
 

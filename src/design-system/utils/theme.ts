@@ -23,7 +23,7 @@ export const colorVar = (name: string) => {
     ) {
       return (cssVariables[':root'] as Record<string, string>)[`--${name}`];
     }
-  } catch (err) {
+  } catch {
     // ignore
   }
 
@@ -98,7 +98,7 @@ export const colorVarAlpha = (name: string, alpha: number | string) => {
         return `rgba(${r}, ${g}, ${b}, ${Number.isFinite(alphaNum) ? alphaNum : 1})`;
       }
     }
-  } catch (err) {
+  } catch {
     // ignore
   }
 

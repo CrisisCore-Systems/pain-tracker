@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
-import AlertsActivityLog, { saveAlert, clearAlerts, acknowledgeAlert } from '../AlertsActivityLog';
+import AlertsActivityLog, { saveAlert } from '../AlertsActivityLog';
 
 describe('AlertsActivityLog', () => {
   beforeEach(() => {
     localStorage.removeItem('pain-tracker:alerts-log');
     vi.useRealTimers();
     // mock confirm to always return true for acknowledge and clear
-    vi.stubGlobal('confirm', (msg: string) => true as any);
+    vi.stubGlobal('confirm', (_msg: string) => true);
   });
 
   afterEach(() => {

@@ -173,14 +173,29 @@ export const runAccessibilityTests = (
  */
 const getNodeEnv = () => {
   try {
-    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-      return (import.meta as any).env.MODE || (import.meta as any).env.NODE_ENV;
+    const meta = import.meta as unknown;
+    if (typeof meta === 'object' && meta !== null && 'env' in meta) {
+      const env = (meta as { env?: unknown }).env;
+      if (typeof env === 'object' && env !== null) {
+        const mode = (env as Record<string, unknown>).MODE;
+        const nodeEnv = (env as Record<string, unknown>).NODE_ENV;
+        if (typeof mode === 'string') return mode;
+        if (typeof nodeEnv === 'string') return nodeEnv;
+      }
     }
   } catch {
     // import.meta not available, fall through to process.env
   }
-  if (typeof process !== 'undefined' && (process as any).env) {
-    return (process as any).env.NODE_ENV || (process as any).env.MODE;
+
+  const maybeProcess = (globalThis as unknown as { process?: unknown }).process;
+  if (typeof maybeProcess === 'object' && maybeProcess !== null && 'env' in maybeProcess) {
+    const env = (maybeProcess as { env?: unknown }).env;
+    if (typeof env === 'object' && env !== null) {
+      const nodeEnv = (env as Record<string, unknown>).NODE_ENV;
+      const mode = (env as Record<string, unknown>).MODE;
+      if (typeof nodeEnv === 'string') return nodeEnv;
+      if (typeof mode === 'string') return mode;
+    }
   }
   return undefined;
 };

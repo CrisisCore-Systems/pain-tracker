@@ -32,7 +32,7 @@ export function DashboardContent({ entries, allEntries }: DashboardContentProps)
 
     const rolling = buildRolling7DayChartData(
       entries.map(e => ({ created_at: e.timestamp, pain_level: e.baselineData.pain }) as RawEntry),
-      {} as any
+      {}
     );
 
     // Calculate trend

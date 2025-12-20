@@ -43,7 +43,7 @@ function extractBlock(selector) {
 // - Dark can also be explicitly re-applied via `.dark, [data-theme="dark"]`
 const darkDefaultBlock = extractBlock(':root') || '';
 const lightBlock = extractBlock(':root:not(.dark)') || '';
-const darkExplicitBlock = extractBlock('.dark,\n\[data-theme="dark"\]') || extractBlock('.dark,\r\n\[data-theme="dark"\]') || '';
+const darkExplicitBlock = extractBlock('.dark,\n[data-theme="dark"]') || extractBlock('.dark,\r\n[data-theme="dark"]') || '';
 
 function extractVars(block) {
   const lines = block.split(/;\s*/);

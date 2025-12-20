@@ -17,9 +17,6 @@ import {
 import {
   gradients,
   textGradients,
-  glassmorphism,
-  shadows,
-  depth,
 } from '../design-system/theme/index';
 
 export function UIShowcase() {

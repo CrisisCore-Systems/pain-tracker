@@ -3,33 +3,17 @@ import {
   AlertTriangle,
   Phone,
   PhoneCall,
-  MessageSquare,
-  MapPin,
-  Clock,
   Heart,
   Zap,
-  Shield,
-  User,
-  UserCheck,
-  Calendar,
   Pill,
   Thermometer,
   Activity,
   Pause,
   Play,
-  RotateCcw,
   Save,
-  Volume2,
-  VolumeX,
-  Settings,
   Plus,
-  Minus,
   Check,
   X,
-  ChevronRight,
-  Home,
-  Hospital,
-  Ambulance,
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -141,7 +125,7 @@ export function EmergencyModeInterfaces({
     assistance: false,
   });
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
-  const [emergencyDescription, setEmergencyDescription] = useState('');
+  const [emergencyDescription, _setEmergencyDescription] = useState('');
   const [actionsTaken, setActionsTaken] = useState<string[]>([]);
   const [contactsCalled, setContactsCalled] = useState<string[]>([]);
 

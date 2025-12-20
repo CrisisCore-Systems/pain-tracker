@@ -61,7 +61,7 @@ async function send() {
     const text = await res.text();
     try {
       console.log('Response JSON:', JSON.parse(text));
-    } catch (e) {
+    } catch {
       console.log('Response text:', text);
     }
   } catch (err) {

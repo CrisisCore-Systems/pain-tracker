@@ -1,5 +1,12 @@
 import { test, expect } from '../test-setup';
 
+type ServiceWorkerRegistrationWithSync = ServiceWorkerRegistration & {
+  sync: {
+    register: (tag: string) => Promise<void>;
+    getTags: () => Promise<string[]>;
+  };
+};
+
 test.describe('PWA Background Sync', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -43,11 +50,12 @@ test.describe('PWA Background Sync', () => {
         
         // Check if sync is available
         if ('sync' in registration) {
+          const reg = registration as unknown as ServiceWorkerRegistrationWithSync;
           // Try to register a sync event
-          await (registration as any).sync.register('test-sync');
+          await reg.sync.register('test-sync');
           
           // Get sync tags
-          const tags = await (registration as any).sync.getTags();
+          const tags = await reg.sync.getTags();
           
           return {
             supported: true,
@@ -72,7 +80,7 @@ test.describe('PWA Background Sync', () => {
     }
   });
 
-  test('should queue failed requests for sync', async ({ page, context }) => {
+  test('should queue failed requests for sync', async ({ page, context: _context }) => {
     // This test verifies the offline queue mechanism
     const queueExists = await page.evaluate(async () => {
       // Check if there's an offline queue cache
@@ -84,7 +92,7 @@ test.describe('PWA Background Sync', () => {
     console.log('Offline queue cache exists:', queueExists);
   });
 
-  test('should handle sync event in service worker', async ({ page, browserName }) => {
+  test('should handle sync event in service worker', async ({ page }) => {
     // This test verifies the service worker has sync event listeners
     const hasSyncHandler = await page.evaluate(async () => {
       try {
@@ -121,7 +129,7 @@ test.describe('PWA Background Sync', () => {
           databases: dbs.map(db => db.name),
           hasPainDB: dbs.some(db => db.name?.toLowerCase().includes('pain')),
         };
-      } catch (e) {
+      } catch (_e) {
         return {
           supported: true,
           error: 'Cannot list databases',
@@ -138,9 +146,10 @@ test.describe('PWA Background Sync', () => {
     // For browsers without Background Sync API, check manual sync mechanisms
     const manualSync = await page.evaluate(() => {
       // Check if there's a manual sync function available
+      const w = window as unknown as { forcePWASync?: unknown };
       return {
         hasOnlineListener: true, // Apps typically listen to online event
-        canManualSync: typeof (window as any).forcePWASync === 'function',
+        canManualSync: typeof w.forcePWASync === 'function',
       };
     });
     
@@ -211,7 +220,7 @@ test.describe('PWA Background Sync - Data Flow', () => {
           hasData: dbs.length > 0,
           databases: dbs.map(db => db.name),
         };
-      } catch (e) {
+      } catch {
         return { hasData: false };
       }
     });

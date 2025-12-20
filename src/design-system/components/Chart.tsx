@@ -12,9 +12,10 @@ import { Line, Bar, Doughnut, Radar } from 'react-chartjs-2';
 
 import { Card, CardContent } from './Card';
 import { cn } from '../utils';
-import { colorVar, colorVarAlpha } from '../utils/theme';
-import { getChartColor, getChartColorAlpha, chartColors } from '../utils/chart-colors';
+import { colorVar } from '../utils/theme';
+import { getChartColor, getChartColorAlpha } from '../utils/chart-colors';
 import type { ChartPointMeta, ChartPointMetaArray } from '../types/chart';
+import type { TooltipItem } from 'chart.js';
 
 // Local typed dataset matching project usage
 export type ChartDataset = {
@@ -66,14 +67,15 @@ export type ChartProps = {
 };
 
 // Register Chart.js components only in browser/runtime to avoid SSR/test issues
-if (typeof window !== 'undefined' && (ChartJS as any)._registered !== true) {
+const chartJsWithMarker = ChartJS as typeof ChartJS & { _registered?: boolean };
+if (typeof window !== 'undefined' && chartJsWithMarker._registered !== true) {
   ChartJS.register(...registerables, zoomPlugin);
   // small marker to avoid double registration
-  (ChartJS as any)._registered = true;
+  chartJsWithMarker._registered = true;
 }
 
 function mapDataset(ds: ChartDataset, chartType?: ChartType, datasetIndex: number = 0) {
-  const mapped: any = {
+  const mapped: ChartDataset = {
     ...ds,
     ...getDefaultColors(ds, datasetIndex),
     borderWidth: ds.borderWidth ?? 2,
@@ -85,10 +87,10 @@ function mapDataset(ds: ChartDataset, chartType?: ChartType, datasetIndex: numbe
     applyLineChartStyles(mapped, ds);
   }
 
-  return mapped as any;
+  return mapped;
 }
 
-function applyLineChartStyles(mapped: any, ds: ChartDataset) {
+function applyLineChartStyles(mapped: ChartDataset, ds: ChartDataset) {
   mapped.pointBackgroundColor = resolvePointColor(ds.backgroundColor, mapped.backgroundColor);
   mapped.pointBorderColor = resolvePointColor(ds.borderColor, mapped.borderColor);
 }
@@ -136,11 +138,11 @@ export function Chart({
       ({
         labels: data.labels,
         datasets: data.datasets.map((ds, index) => mapDataset(ds, type, index)),
-      }) as ChartJSData<'line'>,
+      }) as ChartJSData<ChartType>,
     [data, type]
   );
 
-  const options: ChartOptions<any> = React.useMemo(
+  const options: ChartOptions<ChartType> = React.useMemo(
     () => ({
       responsive,
       maintainAspectRatio,
@@ -184,7 +186,7 @@ export function Chart({
           position: 'nearest' as const,
           yAlign: 'bottom' as const,
           callbacks: {
-            label: function (context: any) {
+            label: function (context: TooltipItem<ChartType>) {
               return generateTooltipLabel(context);
             },
           },
@@ -279,7 +281,7 @@ export function Chart({
             }
           : undefined,
     }),
-    [responsive, maintainAspectRatio, showLegend, showTitle, title, type, scales]
+    [responsive, maintainAspectRatio, showLegend, showTitle, title, type, scales, plugins]
   );
 
   const srSummary =
@@ -299,16 +301,32 @@ export function Chart({
           </p>
           <div aria-describedby="chart-summary">
             {type === 'bar' && (
-              <Bar data={chartData as any} options={options as any} height={height} />
+              <Bar
+                data={chartData as unknown as ChartJSData<'bar'>}
+                options={options as unknown as ChartOptions<'bar'>}
+                height={height}
+              />
             )}
             {type === 'doughnut' && (
-              <Doughnut data={chartData as any} options={options as any} height={height} />
+              <Doughnut
+                data={chartData as unknown as ChartJSData<'doughnut'>}
+                options={options as unknown as ChartOptions<'doughnut'>}
+                height={height}
+              />
             )}
             {type === 'radar' && (
-              <Radar data={chartData as any} options={options as any} height={height} />
+              <Radar
+                data={chartData as unknown as ChartJSData<'radar'>}
+                options={options as unknown as ChartOptions<'radar'>}
+                height={height}
+              />
             )}
             {type === 'line' && (
-              <Line data={chartData as any} options={options as any} height={height} />
+              <Line
+                data={chartData as unknown as ChartJSData<'line'>}
+                options={options as unknown as ChartOptions<'line'>}
+                height={height}
+              />
             )}
           </div>
         </figure>
@@ -317,12 +335,16 @@ export function Chart({
   );
 }
 
-function generateTooltipLabel(context: any) {
+function generateTooltipLabel(context: TooltipItem<ChartType>) {
   try {
     const ds = context.dataset as unknown as ChartDataset & { _meta?: ChartPointMetaArray };
     const idx = context.dataIndex;
-    const seriesLabel = context.dataset.label || '';
-    const value = context.parsed?.y ?? context.parsed ?? context.raw ?? '';
+    const seriesLabel = context.dataset.label ?? '';
+    const value =
+      (context.parsed as unknown as { y?: unknown } | undefined)?.y ??
+      (context.parsed as unknown) ??
+      (context.raw as unknown) ??
+      '';
     let line = `${seriesLabel}: ${value}`;
 
     if (ds._meta && ds._meta[idx]) {
@@ -330,10 +352,9 @@ function generateTooltipLabel(context: any) {
     }
 
     return line;
-  } catch (e) {
-    return context.dataset.label
-      ? `${context.dataset.label}: ${context.formattedValue}`
-      : `${context.formattedValue}`;
+  } catch {
+    const label = context.dataset.label;
+    return label ? `${label}: ${context.formattedValue}` : `${context.formattedValue}`;
   }
 }
 

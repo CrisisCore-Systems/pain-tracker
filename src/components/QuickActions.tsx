@@ -21,11 +21,14 @@ export default function QuickActions() {
   const [open, setOpen] = useState(false);
 
   const handleQuickNote = useCallback(() => {
-    const detail: any = { time: new Date().toISOString(), suggestedTags: [] };
+    const detail: { time: string; suggestedTags: string[] } = {
+      time: new Date().toISOString(),
+      suggestedTags: [],
+    };
     const sample = '';
     const tags = suggestTagsForText(sample);
     detail.suggestedTags = tags;
-    window.dispatchEvent(new CustomEvent('quick-note', { detail } as any));
+    window.dispatchEvent(new CustomEvent('quick-note', { detail }));
     setSuggestions(tags);
     setTimeout(() => setSuggestions([]), 6000);
   }, []);

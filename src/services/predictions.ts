@@ -47,7 +47,6 @@ export function suggestCopingStrategies(score: number) {
 export function riskTrendOverDays(entries: import('../types').PainEntry[], days = 7) {
   // Produce a simple daily risk score by running predictFlareUp on sliding windows
   const out: { label: string; score: number }[] = [];
-  const total = entries.length;
   for (let d = days - 1; d >= 0; d--) {
     const cutoff = Date.now() - d * 24 * 60 * 60 * 1000;
     const slice = entries.filter(

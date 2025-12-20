@@ -123,7 +123,7 @@ interface UpgradePromptProps {
 export const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   feature,
   requiredTier,
-  currentTier,
+  currentTier: _currentTier,
   reason,
   onUpgrade,
 }) => {

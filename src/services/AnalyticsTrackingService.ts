@@ -414,8 +414,16 @@ function getPlatform(): string {
 
 function isPWA(): boolean {
   if (typeof window === 'undefined') return false;
-  return window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as any).standalone === true;
+
+  const nav = window.navigator as unknown;
+  const standalone =
+    typeof nav === 'object' &&
+    nav !== null &&
+    'standalone' in (nav as Record<string, unknown>)
+      ? (nav as { standalone?: unknown }).standalone
+      : undefined;
+
+  return window.matchMedia('(display-mode: standalone)').matches || standalone === true;
 }
 
 function getSessionDurationBucket(seconds: number): string {

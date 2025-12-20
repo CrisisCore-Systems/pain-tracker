@@ -19,7 +19,7 @@ function readCssRgbVar(varName: string): string | null {
       return `rgb(${r} ${g} ${b})`;
     }
     return val || null;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -106,11 +106,13 @@ export const getChartColor = (
   index: number,
   palette: keyof typeof chartColors = 'series'
 ): string => {
-  const colorArray = chartColors[palette] as any;
+  const colorArray = chartColors[palette] as unknown;
   if (Array.isArray(colorArray)) return colorArray[index % colorArray.length];
-  // if palette is an object, return first value
-  if (typeof colorArray === 'object')
-    return Object.values(colorArray)[index % Object.values(colorArray).length] as string;
+  // if palette is an object, return a stable value
+  if (typeof colorArray === 'object' && colorArray !== null) {
+    const values = Object.values(colorArray as Record<string, unknown>);
+    return String(values[index % values.length]);
+  }
   return chartColors.series[index % chartColors.series.length];
 };
 

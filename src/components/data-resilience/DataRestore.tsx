@@ -67,7 +67,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
             data: PainEntry[];
           }>(fileContent, password);
           entries = restored.data || [];
-        } catch (e) {
+        } catch {
           setRestoreStatus('Failed to decrypt backup - check your password');
           setIsRestoring(false);
           return;

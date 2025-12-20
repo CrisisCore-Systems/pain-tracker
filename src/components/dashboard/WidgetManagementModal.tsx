@@ -10,7 +10,7 @@ import {
   Badge,
 } from '../../design-system';
 import { cn } from '../../design-system/utils';
-import type { DashboardLayout, WidgetType } from './constants';
+import type { DashboardLayout } from './constants';
 import { AVAILABLE_WIDGETS } from './constants';
 
 type WidgetCategory = 'all' | 'core' | 'analytics' | 'reports' | 'utilities';

@@ -58,14 +58,19 @@ try {
   // Try to wire node-canvas into jsdom for higher fidelity canvas support in tests.
   // This is optional at runtime; if `canvas` isn't installed (for contributors), we fall back to a minimal stub.
   // Use the dynamic ESM import for node packages to avoid require() calls
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { createCanvas } = (await import('canvas')) as any;
+  const { createCanvas } = (await import('canvas')) as unknown as {
+    createCanvas: (width: number, height: number) => {
+      getContext: (type: string) => unknown;
+    };
+  };
 
   // Attach a minimal implementation to document if not present
   if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
     // Replace getContext to return a real CanvasRenderingContext2D from node-canvas
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (HTMLCanvasElement.prototype as any).getContext = function (type?: string) {
+    const proto = HTMLCanvasElement.prototype as unknown as {
+      getContext?: (this: HTMLCanvasElement, type?: string) => unknown;
+    };
+    proto.getContext = function (this: HTMLCanvasElement, type?: string) {
       // create a small backing canvas for Chart.js to draw into
       const c = createCanvas(800, 600);
       return c.getContext(type || '2d');
@@ -74,8 +79,10 @@ try {
 } catch {
   // canvas not installed or failed to load — fall back to previous minimal stub
   if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (HTMLCanvasElement.prototype as any).getContext = function () {
+    const proto = HTMLCanvasElement.prototype as unknown as {
+      getContext?: (this: HTMLCanvasElement) => unknown;
+    };
+    proto.getContext = function (this: HTMLCanvasElement) {
       // return a minimal stub that Chart.js will accept for creation
       return {
         canvas: this,
@@ -237,9 +244,10 @@ beforeAll(async () => {
 // so accessibility tests based on min tap targets won't get NaN from parseInt.
 try {
   const realGetComputedStyle = window.getComputedStyle.bind(window);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).getComputedStyle = (el: Element) => {
-    const styles = realGetComputedStyle(el as any) as CSSStyleDeclaration;
+  (window as unknown as { getComputedStyle: (el: Element) => CSSStyleDeclaration }).getComputedStyle = (
+    el: Element
+  ) => {
+    const styles = realGetComputedStyle(el) as CSSStyleDeclaration;
     try {
       if (el && (el as HTMLElement).tagName && (el as HTMLElement).tagName.toUpperCase() === 'BUTTON') {
         try {
@@ -256,7 +264,7 @@ try {
     }
     return styles;
   };
-} catch (e) {
+} catch {
   // ignore if getComputedStyle is not available
 }
 
@@ -271,29 +279,33 @@ vi.mock('focus-trap-react', () => ({
 // Global test mocks: stub heavy or lazy-loaded modules used across components
 vi.mock('../components/PredictivePanel', () => ({
   __esModule: true,
-  default: (props: any) =>
-    React.createElement(
+  default: (props: unknown) => {
+    const p = props as Record<string, unknown> | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'predictive-panel-mock',
-        'data-entries': JSON.stringify(props?.entries || []),
+        'data-entries': JSON.stringify(p?.entries || []),
       },
       'PredictivePanelMock'
-    ),
+    );
+  },
 }));
 
 // Ensure local widget wrapper is also mocked so DashboardOverview's lazy import is intercepted
 vi.mock('../components/widgets/PredictivePanelWrapper', () => ({
   __esModule: true,
-  default: (props: any) =>
-    React.createElement(
+  default: (props: unknown) => {
+    const p = props as Record<string, unknown> | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'predictive-panel-mock',
-        'data-entries': JSON.stringify(props?.entries || []),
+        'data-entries': JSON.stringify(p?.entries || []),
       },
       'PredictivePanelMock'
-    ),
+    );
+  },
 }));
 
 // Preload wrapper import so that mocked module is loaded before components that lazy-load it
@@ -305,44 +317,52 @@ try {
 
 vi.mock('../design-system/components/Chart', () => ({
   __esModule: true,
-  default: (props: any) =>
-    React.createElement(
+  default: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
-  PainTrendChart: (props: any) =>
-    React.createElement(
+    );
+  },
+  PainTrendChart: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
-  SymptomFrequencyChart: (props: any) =>
-    React.createElement(
+    );
+  },
+  SymptomFrequencyChart: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
-  PainDistributionChart: (props: any) =>
-    React.createElement(
+    );
+  },
+  PainDistributionChart: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
+    );
+  },
 }));

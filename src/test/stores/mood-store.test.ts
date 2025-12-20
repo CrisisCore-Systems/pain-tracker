@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
-import type { MoodEntry } from '../../types/quantified-empathy';
 
 describe('PainTrackerStore MoodEntry operations', () => {
   beforeEach(() => {

@@ -6,6 +6,20 @@ describe('Persist rehydrate + migrate', () => {
     localStorage.clear();
   }, 30000);
 
+  it('does not brick startup when persisted JSON is corrupted', async () => {
+    // Simulate a user/device scenario where localStorage contains invalid JSON
+    localStorage.setItem('pain-tracker-storage', '{ this is not valid json');
+
+    const mod = await import('../../stores/pain-tracker-store');
+    const store = mod.usePainTrackerStore;
+
+    // Should initialize with default state rather than throwing.
+    const state = store.getState();
+    expect(state).toBeDefined();
+    expect(Array.isArray(state.entries)).toBe(true);
+    expect(Array.isArray(state.moodEntries)).toBe(true);
+  }, 30000);
+
   it('rehydrates store from legacy state and runs migration to add ids and timestamps', async () => {
     // Prepare a legacy persisted state (version 1) with moodEntries with no id
     const legacy = {

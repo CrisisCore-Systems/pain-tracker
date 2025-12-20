@@ -274,7 +274,7 @@ export type WorkImpact = z.infer<typeof WorkImpactSchema>;
  * 
  * @internal Use PainEntry from types/index.ts instead
  */
-type ZodPainEntry = z.infer<typeof PainEntrySchema>;
+type _ZodPainEntry = z.infer<typeof PainEntrySchema>;
 
 /** Type for creating new entries (omits auto-generated fields) */
 export type CreatePainEntry = z.infer<typeof CreatePainEntrySchema>;

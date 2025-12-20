@@ -61,7 +61,7 @@ async function testRateLimiting() {
         }),
       });
       
-      const data = await response.json();
+      await response.json();
       results.push({ attempt: i, status: response.status, rateLimited: response.status === 429 });
       
       console.log(`  Attempt ${i}: Status ${response.status}`);
@@ -104,7 +104,7 @@ async function testHttpOnlyCookies() {
       }),
     });
     
-    const data = await response.json();
+    await response.json();
     const setCookieHeader = response.headers.get('set-cookie');
     
     console.log(`  Response status: ${response.status}`);

@@ -1,24 +1,14 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import {
   AlertTriangle,
   Brain,
   Heart,
   Shield,
   Eye,
-  Volume2,
-  VolumeX,
   Palette,
   Zap,
   Target,
-  Minimize2,
-  Maximize2,
-  Pause,
-  Play,
-  RotateCcw,
   Check,
-  X,
-  Settings,
-  HelpCircle,
 } from 'lucide-react';
 import { TouchOptimizedButton } from './TraumaInformedUX';
 
@@ -696,7 +686,7 @@ function CalmFrameworkSection({
 function ControlFrameworkSection({
   config,
   onConfigChange,
-  crisisLevel,
+  crisisLevel: _crisisLevel,
 }: {
   config: ControlConfig;
   onConfigChange: (updates: Partial<ControlConfig>) => void;

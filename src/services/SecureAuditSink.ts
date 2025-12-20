@@ -6,7 +6,7 @@ export interface AuditEvent {
   timestamp: string;
   eventType: string;
   userIdHmac: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
   signature?: string;
 }
 
@@ -32,7 +32,7 @@ export class InMemoryAuditSink implements AuditSink {
   }
 
   // Helper for tests
-  getEvents() {
+  getEvents(): AuditEvent[] {
     return [...this.events];
   }
 }
@@ -43,8 +43,11 @@ export class FileAuditSink implements AuditSink {
   private path: string;
   private auditKey: string;
   // Lazy dynamic import keeps browser bundles clean; avoid CommonJS require
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private fs: any;
+  private fs?: {
+    existsSync(path: string): boolean;
+    writeFileSync(path: string, data: string): void;
+    appendFileSync(path: string, data: string): void;
+  };
 
   constructor(path: string, auditKey: string) {
     this.path = path;
@@ -52,7 +55,11 @@ export class FileAuditSink implements AuditSink {
     if (typeof window === 'undefined') {
       import('fs')
         .then(mod => {
-          this.fs = mod;
+          this.fs = mod as unknown as {
+            existsSync(path: string): boolean;
+            writeFileSync(path: string, data: string): void;
+            appendFileSync(path: string, data: string): void;
+          };
           try {
             if (!this.fs.existsSync(this.path)) this.fs.writeFileSync(this.path, '');
           } catch {

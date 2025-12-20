@@ -141,7 +141,7 @@ export class AutomatedSecurityTestSuite {
             });
           });
         }
-      } catch (parseErr) {
+      } catch {
         // If parsing fails, add a tool-error issue but continue
         issues.push({
           id: 'dependency-scan-error',
@@ -351,7 +351,7 @@ export class AutomatedSecurityTestSuite {
           });
         }
 
-      } catch (error) {
+      } catch {
         // Skip files that can't be read
       }
     }
@@ -410,9 +410,9 @@ export class AutomatedSecurityTestSuite {
       // ESLint may return non-zero exit code with errors
       if (error && 'stdout' in error) {
         try {
-          const eslintResults = JSON.parse(error.stdout);
+          JSON.parse(error.stdout);
           // Process results (same logic as above)
-        } catch (parseError) {
+        } catch {
           issues.push({
             id: 'eslint-error',
             severity: 'low',
@@ -464,7 +464,7 @@ export class AutomatedSecurityTestSuite {
           cwe: 'CWE-693'
         });
       }
-    } catch (error) {
+    } catch {
       // index.html might not exist
     }
 
@@ -485,7 +485,7 @@ export class AutomatedSecurityTestSuite {
             confidence: 'medium'
           });
         }
-      } catch (error) {
+      } catch {
         // File might not exist
       }
     }
@@ -509,7 +509,7 @@ export class AutomatedSecurityTestSuite {
             confidence: 'low'
           });
         }
-      } catch (error) {
+      } catch {
         // Skip files that can't be read
       }
     }
@@ -579,7 +579,7 @@ export class AutomatedSecurityTestSuite {
     for (const dir of scanDirs) {
       try {
         await this.scanDirectory(path.join(this.projectRoot, dir), extensions, files);
-      } catch (error) {
+      } catch {
         // Directory might not exist
       }
     }

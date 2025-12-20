@@ -399,9 +399,11 @@ npm run deploy
 
 **Option 3: Other Platforms**
 - Vercel, Netlify, Cloudflare Pages, AWS S3, etc.
-- See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for platform-specific instructions
+- See [DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) for platform-specific instructions
 
 ## 🧪 **Testing & Quality**
+
+Test suite: **129 tests** (Vitest + integration coverage; E2E in Playwright).
 
 ### **Testing Strategy**
 - **Unit Tests**: Component and utility function testing
@@ -524,11 +526,11 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 
 ## 📄 **Documentation**
 
-- **[Architecture Deep Dive](ARCHITECTURE_DEEP_DIVE.md)** - Technical implementation details
+- **[Architecture Deep Dive](docs/ARCHITECTURE_DEEP_DIVE.md)** - Technical implementation details
 - **[Contributing Guide](CONTRIBUTING.md)** - Development and contribution guidelines
 - **[Security Policy](security/)** - Security practices and vulnerability reporting
-- **[PWA Implementation](PWA-COMPLETE.md)** - Progressive Web App features
-- **[Empathy Framework](EMPATHY_ENHANCEMENT_SUMMARY.md)** - User experience philosophy
+- **[PWA Implementation](docs/PWA-COMPLETE.md)** - Progressive Web App features
+- **[Empathy Framework](docs/EMPATHY_ENHANCEMENT_SUMMARY.md)** - User experience philosophy
 
 ---
 

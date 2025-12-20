@@ -6,7 +6,6 @@
 import type {
   UserSubscription,
   SubscriptionTier,
-  SubscriptionStatus,
   BillingInterval,
   FeatureAccessResult,
   UsageQuota,
@@ -18,7 +17,6 @@ import {
   SUBSCRIPTION_PLANS,
   USAGE_LIMITS,
   UPGRADE_PATHS,
-  DOWNGRADE_PATHS,
 } from '../config/subscription-tiers';
 import { securityService } from './SecurityService';
 

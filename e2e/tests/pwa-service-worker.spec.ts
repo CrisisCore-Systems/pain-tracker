@@ -26,7 +26,10 @@ const waitForServiceWorker = async (page: Page, maxRetries = 3, baseTimeout = 30
 
       // Prefer explicit handshake if the app exposes one
       try {
-        await page.waitForFunction(() => (window as any).__pwa_sw_ready === true, { timeout: Math.min(timeout, 5000) });
+        await page.waitForFunction(() => {
+          const w = window as unknown as { __pwa_sw_ready?: boolean };
+          return w.__pwa_sw_ready === true;
+        }, { timeout: Math.min(timeout, 5000) });
         return await getRegistrationInfo(page);
       } catch {
         // No handshake, fall through
@@ -37,7 +40,7 @@ const waitForServiceWorker = async (page: Page, maxRetries = 3, baseTimeout = 30
         const swEvent = await Promise.race([
           page.context().waitForEvent('serviceworker', { timeout: Math.min(timeout, 10000) }),
           page.waitForEvent('close').then(() => { throw new Error('Page closed during service worker wait'); }),
-        ] as Promise<any>);
+        ] as Array<Promise<unknown>>);
 
         // If we received a service worker event, verify activation state
         if (swEvent) {
@@ -67,7 +70,7 @@ const waitForServiceWorker = async (page: Page, maxRetries = 3, baseTimeout = 30
               ready: true,
             };
           }
-        } catch (e) {
+        } catch {
           // swallow
         }
         return null;

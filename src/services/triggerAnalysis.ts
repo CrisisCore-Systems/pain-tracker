@@ -1,12 +1,20 @@
-import type { PainEntry } from '../types';
-
 type Trigger = { name: string; confidence: number; detail?: string };
+
+type EntryLike = { timestamp: string } & Record<string, unknown>;
+
+function asRecord(value: unknown): Record<string, unknown> | undefined {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : undefined;
+}
+
+function asNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
 
 /**
  * Very small trigger-analysis helper.
  * Looks for simple co-occurrence of high pain with common trigger fields if present on entries.
  */
-export function analyzeTriggers(entries: any[], lookbackDays = 30): Trigger[] {
+export function analyzeTriggers(entries: EntryLike[], lookbackDays = 30): Trigger[] {
   if (!entries || entries.length === 0) return [];
   const cutoff = Date.now() - lookbackDays * 24 * 60 * 60 * 1000;
   const recent = entries.filter(e => new Date(e.timestamp).getTime() >= cutoff);
@@ -18,17 +26,22 @@ export function analyzeTriggers(entries: any[], lookbackDays = 30): Trigger[] {
   let stressHits = 0;
   let weatherHits = 0;
   let totalHighPain = 0;
-  recent.forEach(e => {
-    const pain = (e as any).baselineData?.pain ?? (e as any).intensity ?? 0;
+  (recent as EntryLike[]).forEach(e => {
+    const baselineData = asRecord(e.baselineData);
+    const pain = asNumber(baselineData?.pain) ?? asNumber(e.intensity) ?? 0;
     const isHigh = pain >= 7;
     if (isHigh) totalHighPain++;
-    const qol = (e as any).qualityOfLife;
-    if (isHigh && qol && typeof qol.sleepQuality === 'number' && qol.sleepQuality <= 4)
-      poorSleepHits++;
-    if (isHigh && (e as any).activity && (e as any).activity.length === 0) lowActivityHits++;
-    if (isHigh && qol && typeof qol.moodImpact === 'number' && qol.moodImpact >= 7) stressHits++;
-    if (isHigh && (e as any).weather && /(storm|rain|pressure|cold)/i.test((e as any).weather))
-      weatherHits++;
+    const qol = asRecord(e.qualityOfLife);
+    const sleepQuality = asNumber(qol?.sleepQuality);
+    if (isHigh && sleepQuality !== undefined && sleepQuality <= 4) poorSleepHits++;
+
+    if (isHigh && Array.isArray(e.activity) && e.activity.length === 0) lowActivityHits++;
+
+    const moodImpact = asNumber(qol?.moodImpact);
+    if (isHigh && moodImpact !== undefined && moodImpact >= 7) stressHits++;
+
+    const weather = typeof e.weather === 'string' ? e.weather : undefined;
+    if (isHigh && weather && /(storm|rain|pressure|cold)/i.test(weather)) weatherHits++;
   });
 
   const score = (hits: number) => {

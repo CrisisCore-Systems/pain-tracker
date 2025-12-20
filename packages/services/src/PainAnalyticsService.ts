@@ -60,15 +60,15 @@ class PainAnalyticsService {
     return [];
   }
 
-  predictPain(entries: PainEntry[], timeframe: '24h' | '7d' | '30d' = '24h'): PainPrediction {
+  predictPain(_entries: PainEntry[], timeframe: '24h' | '7d' | '30d' = '24h'): PainPrediction {
     return { predictedPain: 0, confidence: 0, timeframe, factors: [] };
   }
 
-  analyzeCorrelations(entries: PainEntry[]): CorrelationAnalysis {
+  analyzeCorrelations(_entries: PainEntry[]): CorrelationAnalysis {
     return { symptomCorrelations: [], activityCorrelations: [], medicationEffectiveness: [] };
   }
 
-  analyzeTrends(entries: PainEntry[]): TrendAnalysis {
+  analyzeTrends(_entries: PainEntry[]): TrendAnalysis {
     return { overallTrend: 'stable', trendStrength: 0, periodicPatterns: [], seasonalFactors: [] };
   }
 }

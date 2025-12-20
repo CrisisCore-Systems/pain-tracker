@@ -1,7 +1,6 @@
 import type { PainEntry } from '../../../types';
 
-import { rollingAverage, movingStdDev, detectAnomalies } from '../../../utils/analytics';
-import { ChartPointMetaArray } from '../../../design-system/types/chart';
+import type { ChartPointMetaArray } from '../../../design-system/types/chart';
 
 export function generateTrendData(entries: PainEntry[], type: string) {
   const dataByDate: { [key: string]: number[] } = {};
@@ -193,8 +192,12 @@ export function buildDailyAggregates(entries: PainEntry[]) {
     if (!map[date]) map[date] = { values: [], count: 0, notes: 0, meds: 0 };
     map[date].values.push(e.baselineData.pain);
     map[date].count += 1;
-    if ((e as any).notes) map[date].notes += 1;
-    if ((e as any).medications && (e as any).medications.length > 0) map[date].meds += 1;
+
+    const notes = (e as unknown as { notes?: unknown }).notes;
+    if (notes) map[date].notes += 1;
+
+    const medications = (e as unknown as { medications?: unknown }).medications;
+    if (Array.isArray(medications) && medications.length > 0) map[date].meds += 1;
   });
   const sorted = Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
   const agg = sorted.map(([date, meta]) => ({

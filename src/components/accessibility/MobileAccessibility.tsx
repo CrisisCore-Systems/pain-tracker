@@ -7,11 +7,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Mic, MicOff, Volume2 } from 'lucide-react';
 import { Button } from '../../design-system';
 import { ScreenReaderAnnouncement } from './ScreenReaderUtils';
-import type {
-  SpeechRecognition,
-  SpeechRecognitionEvent,
-  SpeechRecognitionErrorEvent,
-} from '../../types/speech';
+import type { SpeechRecognition } from '../../types/speech';
 
 interface VoiceInputProps {
   onResult: (text: string) => void;
@@ -25,7 +21,7 @@ interface VoiceInputProps {
 export function VoiceInput({
   onResult,
   onError,
-  placeholder = 'Tap to speak...',
+  placeholder: _placeholder = 'Tap to speak...',
   disabled = false,
   language = 'en-US',
   continuous = false,
@@ -100,7 +96,7 @@ export function VoiceInput({
           navigator.vibrate(50);
         }
         recognitionRef.current.start();
-      } catch (error) {
+      } catch {
         setIsListening(false);
         onError?.('Failed to start speech recognition');
       }

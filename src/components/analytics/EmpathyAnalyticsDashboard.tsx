@@ -21,7 +21,6 @@ import {
   UserAgencyMetrics,
   DignityPreservingReport,
   Achievement,
-  Milestone,
 } from '../../services/EmpathyDrivenAnalytics';
 import type { PainEntry } from '../../types';
 

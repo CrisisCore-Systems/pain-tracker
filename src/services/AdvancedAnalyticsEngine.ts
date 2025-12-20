@@ -86,7 +86,6 @@ export class AdvancedAnalyticsEngine {
 
     // Extract time-series data
     const painLevels = entries.map(getPainIntensity);
-    const timestamps = entries.map(e => new Date(e.timestamp).getTime());
 
     // Time-based correlations
     const hoursOfDay = entries.map(e => new Date(e.timestamp).getHours());
@@ -431,7 +430,7 @@ export class AdvancedAnalyticsEngine {
    */
   generateWeeklyClinicalBrief(
     entries: PainEntry[],
-    moodEntries?: MoodEntry[]
+    _moodEntries?: MoodEntry[]
   ): WeeklyClinicalBrief {
     const now = new Date();
     const weekStart = new Date(now);

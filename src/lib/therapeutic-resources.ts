@@ -10,7 +10,6 @@ import type {
   ResourceRecommendation as BaseResourceRecommendation,
   TherapeuticResourceData,
   CopingSessionData,
-  ResourceAnalyticsData,
 } from '../types/extended-storage';
 
 // Extended UserContext for this service
@@ -207,7 +206,7 @@ export class OfflineTherapeuticResourcesService {
       ];
 
       // Crisis resources
-      const crisisResources: CrisisResource[] = [
+      const _crisisResources: CrisisResource[] = [
         {
           id: 'crisis-text-line',
           title: 'Crisis Text Line',

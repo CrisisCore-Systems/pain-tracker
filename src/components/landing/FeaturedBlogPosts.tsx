@@ -81,7 +81,7 @@ export const FeaturedBlogPosts: React.FC = () => {
 
         {/* Blog Cards Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-          {featuredPosts.map((post, index) => (
+          {featuredPosts.map(post => (
             <a
               key={post.slug}
               href={`https://blog.paintracker.ca/${post.slug}`}

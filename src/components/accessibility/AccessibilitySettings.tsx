@@ -411,8 +411,8 @@ function MobileSettings({
   preferences,
   onChange,
 }: {
-  preferences: any;
-  onChange: (updates: any) => void;
+  preferences: ReturnType<typeof useMobileAccessibility>['preferences'];
+  onChange: ReturnType<typeof useMobileAccessibility>['updatePreferences'];
 }) {
   return (
     <div className="space-y-6">

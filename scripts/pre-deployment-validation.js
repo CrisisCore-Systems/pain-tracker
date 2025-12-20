@@ -36,7 +36,7 @@ function runCommand(command, description) {
     execSync(command, { stdio: 'inherit', cwd: process.cwd() });
     log(`${icon.success} ${description} passed`, colors.green);
     return true;
-  } catch (error) {
+  } catch {
     log(`${icon.error} ${description} failed`, colors.red);
     return false;
   }

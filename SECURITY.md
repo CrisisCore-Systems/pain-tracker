@@ -2,6 +2,13 @@
 
 This repository follows a security-first, defense-in-depth approach. Below are actionable recommendations and troubleshooting steps for Content Security Policy (CSP), security scan triage, and temporary mitigations.
 
+## Security Change Checklist
+
+For PRs that touch encryption, key handling, local persistence (localStorage/IndexedDB), migrations, exports, audit logging, or PHI/PII handling:
+
+- Follow `docs/SECURITY_CHANGE_CHECKLIST.md`
+- Reference `docs/LOCAL_DATA_AND_MIGRATIONS.md` for persistence/versioning details
+
 ## Content-Security-Policy (CSP)
 
 - Production recommendation: avoid 'unsafe-inline' and 'unsafe-eval'. Use a restrictive policy that defaults to 'self' for scripts and styles and whitelists required CDNs.

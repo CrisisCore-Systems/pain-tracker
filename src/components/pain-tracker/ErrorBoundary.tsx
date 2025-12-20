@@ -16,6 +16,44 @@ export class ErrorBoundary extends Component<Props, State> {
     error: null,
   };
 
+  private static getRuntimeEnv(): Record<string, string | undefined> {
+    // Prefer Vite-style env, then Node-ish env, else empty.
+    // Guarded to avoid referencing globals that may not exist.
+    try {
+      const importMetaUnknown = import.meta as unknown;
+      if (
+        typeof importMetaUnknown === 'object' &&
+        importMetaUnknown !== null &&
+        'env' in importMetaUnknown
+      ) {
+        const env = (importMetaUnknown as { env?: unknown }).env;
+        if (typeof env === 'object' && env !== null) {
+          return env as Record<string, string | undefined>;
+        }
+      }
+    } catch {
+      // import.meta may not be available in some transpilation targets
+    }
+
+    try {
+      const processUnknown = process as unknown;
+      if (
+        typeof processUnknown === 'object' &&
+        processUnknown !== null &&
+        'env' in processUnknown
+      ) {
+        const env = (processUnknown as { env?: unknown }).env;
+        if (typeof env === 'object' && env !== null) {
+          return env as Record<string, string | undefined>;
+        }
+      }
+    } catch {
+      // process may not be available in the browser
+    }
+
+    return {};
+  }
+
   public static getDerivedStateFromError(error: Error): State {
     return {
       hasError: true,
@@ -38,25 +76,9 @@ export class ErrorBoundary extends Component<Props, State> {
       // and Node-ish environments (process.env). Keep this logic local and
       // guarded so referencing `process` in the browser won't throw.
       const isDev = (() => {
-        try {
-          if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-            return (
-              (import.meta as any).env.MODE === 'development' ||
-              (import.meta as any).env.NODE_ENV === 'development'
-            );
-          }
-        } catch (e) {
-          // import.meta may not be available in some transpilation targets
-        }
-
-        try {
-          if (typeof process !== 'undefined' && (process as any).env) {
-            return (process as any).env.NODE_ENV === 'development';
-          }
-        } catch (e) {
-          // process may not be available in the browser
-        }
-
+        const env = ErrorBoundary.getRuntimeEnv();
+        if (env.MODE === 'development') return true;
+        if (env.NODE_ENV === 'development') return true;
         return false;
       })();
 

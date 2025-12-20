@@ -1,6 +1,6 @@
 import { InteractiveBodyMap } from './InteractiveBodyMap';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../design-system';
-import { REGION_TO_LOCATION_MAP, regionsToLocations, locationsToRegions } from './index';
+import { regionsToLocations, locationsToRegions } from './index';
 
 interface BodyMappingSectionProps {
   selectedLocations: string[];

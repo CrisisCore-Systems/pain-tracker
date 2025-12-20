@@ -11,9 +11,8 @@ export interface PainEntry {
 function generateId(): string {
   // Prefer Web Crypto's randomUUID when available (Node 18+, modern browsers)
   try {
-    if (typeof (globalThis as any).crypto?.randomUUID === 'function') {
-      return (globalThis as any).crypto.randomUUID();
-    }
+    const cryptoObj = (globalThis as unknown as { crypto?: { randomUUID?: () => string } }).crypto;
+    if (typeof cryptoObj?.randomUUID === 'function') return cryptoObj.randomUUID();
   } catch {
     // Crypto API not available, fall through to fallback
   }
