@@ -22,7 +22,6 @@ concurrency:
 
 env:
   # Build environment
-  NODE_ENV: production
   VITE_APP_ENVIRONMENT: production
   VITE_WCB_API_ENDPOINT: /api/wcb
 
@@ -105,10 +104,14 @@ jobs:
       
       - name: Run tests
         run: npm run test
+        env:
+          NODE_ENV: test
       
       - name: Run test coverage (primary version only)
         if: matrix.is-primary
         run: npm run test:coverage
+        env:
+          NODE_ENV: test
       
       - name: Upload coverage to Codecov (primary version only)
         if: matrix.is-primary
@@ -119,6 +122,8 @@ jobs:
       
       - name: Build application
         run: npm run build
+        env:
+          NODE_ENV: production
       
       - name: Upload build artifacts (primary version only)
         if: matrix.is-primary

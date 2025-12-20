@@ -37,6 +37,8 @@ jobs:
 
       - name: Run unit tests (fast)
         run: npm run test:ci
+        env:
+          NODE_ENV: test
 
       - name: Build (quick)
         run: npm run build --if-present

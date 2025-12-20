@@ -48,8 +48,8 @@ describe('weekly edge cases', () => {
     const series = buildDailySeries(entries, period);
     // Expect two days present and that their pains correspond to the entries
     expect(series.length).toBeGreaterThanOrEqual(2);
-    const yesterdayKey = yesterdayLate.toISOString().split('T')[0];
-    const todayKey = todayEarly.toISOString().split('T')[0];
+    const yesterdayKey = localDayStart(beforeMidnight).toISOString().slice(0, 10);
+    const todayKey = localDayStart(afterMidnight).toISOString().slice(0, 10);
     const foundYesterday = series.find(s => s.date === yesterdayKey);
     const foundToday = series.find(s => s.date === todayKey);
     expect(foundYesterday).toBeDefined();
