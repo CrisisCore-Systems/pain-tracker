@@ -26,7 +26,7 @@ env:
   VITE_WCB_API_ENDPOINT: /api/wcb
 
   # Standardized Node version for CI
-  NODE_VERSION: '20'
+  NODE_VERSION: '20.19.0'
 
 jobs:
   # Changed files detection for optimization
@@ -70,9 +70,9 @@ jobs:
       fail-fast: false
       matrix:
         # Standardize on a single, supported LTS for CI to avoid mismatched toolchains
-        node-version: [20]
+        node-version: ['20.19.0']
         include:
-          - node-version: 20
+          - node-version: '20.19.0'
             is-primary: true
     
     steps:
