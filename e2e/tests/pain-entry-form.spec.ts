@@ -1,5 +1,9 @@
 import { test, expect } from '../test-setup';
 
+type IndexedDBWithDatabases = IDBFactory & {
+  databases?: () => Promise<Array<{ name?: string }>>;
+};
+
 test.describe('PainEntryForm e2e', () => {
   test.beforeEach(async ({ page }) => {
     // Ensure fresh app state by clearing local storage and IndexedDB
@@ -7,9 +11,14 @@ test.describe('PainEntryForm e2e', () => {
     await page.evaluate(async () => {
       localStorage.clear();
       // Clear all IndexedDB databases (works in modern browsers)
-      if ((window as any).indexedDB && (window as any).indexedDB.databases) {
-        const dbs = await (window as any).indexedDB.databases();
-        await Promise.all(dbs.map((d: any) => (window as any).indexedDB.deleteDatabase(d.name)));
+      const w = window as unknown as { indexedDB?: IndexedDBWithDatabases };
+      if (w.indexedDB && typeof w.indexedDB.databases === 'function') {
+        const dbs = await w.indexedDB.databases();
+        await Promise.all(
+          dbs.map(d =>
+            d.name ? Promise.resolve(w.indexedDB!.deleteDatabase(d.name)) : Promise.resolve(undefined)
+          )
+        );
       }
     });
   await page.reload();
@@ -23,7 +32,7 @@ test.describe('PainEntryForm e2e', () => {
     const timeout = 30_000;
     try {
       await expect(page.getByText(/Pain Tracker/)).toBeVisible({ timeout });
-    } catch (e) {
+    } catch {
       // If the app shows an error page, attempt to recover by clicking the Refresh button
       const errorHeading = page.getByRole('heading', { name: /Something went wrong/i }).first();
       if (await errorHeading.count()) {

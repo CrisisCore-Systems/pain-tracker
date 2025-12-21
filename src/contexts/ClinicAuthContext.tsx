@@ -39,7 +39,7 @@ interface ClinicAuthContextType extends ClinicAuthState {
 const ClinicAuthContext = createContext<ClinicAuthContextType | null>(null);
 
 // Role-based permissions
-const ROLE_PERMISSIONS: Record<ClinicUserRole, string[]> = {
+const _ROLE_PERMISSIONS: Record<ClinicUserRole, string[]> = {
   physician: [
     'view:patients',
     'edit:patients',

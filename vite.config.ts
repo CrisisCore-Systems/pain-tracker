@@ -113,7 +113,7 @@ export default defineConfig({
               const data = fs.readFileSync(publicFile);
               res.end(data);
               return;
-            } catch (e) {
+            } catch {
               // swallow and continue to next middleware
             }
             next();
@@ -125,18 +125,6 @@ export default defineConfig({
   // Allow overriding the base path for test runs (Playwright) or CI by setting VITE_BASE.
   // This keeps production default as '/', but lets E2E run under '/pain-tracker/'.
   base: process.env.VITE_BASE || '/',
-  server: {
-    proxy: {
-      // Weather proxy to keep browser requests same-origin under strict CSP.
-      // /api/weather?... -> https://api.open-meteo.com/v1/forecast?...
-      '/api/weather': {
-        target: 'https://api.open-meteo.com',
-        changeOrigin: true,
-        secure: true,
-        rewrite: p => p.replace(/^\/api\/weather/, '/v1/forecast'),
-      },
-    },
-  },
   resolve: {
     alias: {
       '@pain-tracker/services': path.resolve(__dirname, 'packages/services/src'),
@@ -245,6 +233,15 @@ export default defineConfig({
       'Cross-Origin-Resource-Policy': 'same-origin'
     },
     proxy: {
+      // Weather proxy to keep browser requests same-origin under strict CSP.
+      // /api/weather?... -> https://api.open-meteo.com/v1/forecast?...
+      // NOTE: Keep this entry before '/api' so it wins prefix matching.
+      '/api/weather': {
+        target: 'https://api.open-meteo.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: p => p.replace(/^\/api\/weather/, '/v1/forecast'),
+      },
       // Proxy API routes to development webhook server
       '/api': {
         target: 'http://localhost:3001',

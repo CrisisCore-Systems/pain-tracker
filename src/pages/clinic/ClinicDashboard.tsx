@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
   Calendar, 
-  TrendingUp, 
   AlertTriangle,
   Clock,
   FileText,

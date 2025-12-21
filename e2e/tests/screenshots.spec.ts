@@ -21,7 +21,7 @@ async function suppressToastErrors(page: Page) {
         }
         // Node already removed - return it without throwing
         return child;
-      } catch (error) {
+      } catch {
         // Silently ignore removeChild errors - they're usually race conditions
         console.debug('Safe removeChild: node already removed');
         return child;
@@ -347,13 +347,6 @@ async function waitForAppReady(page: Page) {
     page.getByRole('heading').first().waitFor({ state: 'visible', timeout: 45_000 }),
   ]);
   await page.waitForTimeout(500);
-}
-
-// NOTE: normalizeViteBaseURL is no longer needed since we run without VITE_BASE.
-// The dev server runs at / and React Router routes work directly.
-// Keeping this as a no-op for backward compatibility.
-async function normalizeViteBaseURL(_page: Page, _basePath = '') {
-  // No-op - we no longer use a base path prefix
 }
 
 async function openNavigationMenu(page: Page, isMobile: boolean) {

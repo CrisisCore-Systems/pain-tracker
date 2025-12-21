@@ -5,7 +5,7 @@ import { formatNumber } from './formatting';
 
 interface JSDocWithAutoTable extends jsPDF {
   // jspdf-autotable typings vary between versions; allow flexible access
-  autoTable: (options: any) => any;
+  autoTable: (options: unknown) => jsPDF;
   lastAutoTable?: { finalY: number };
 }
 

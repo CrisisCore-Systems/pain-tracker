@@ -6,7 +6,7 @@ describe('validation helpers', () => {
   });
 
   test('assertNumericRange rejects null/undefined', () => {
-    expect(() => assertNumericRange(null as any, 'score', 0, 10)).toThrow('score is required');
+    expect(() => assertNumericRange(null as unknown as number, 'score', 0, 10)).toThrow('score is required');
   });
 
   test('assertNumericRange rejects out of range', () => {

@@ -3,8 +3,6 @@ import {
   MemoryProfiler,
   getMemoryProfiler,
   resetMemoryProfiler,
-  type MemorySnapshot,
-  type MemoryTrend,
 } from './memory-profiler';
 
 describe('MemoryProfiler', () => {

@@ -1,6 +1,6 @@
 import type { WCBReport } from './types';
 
-export async function submitToWCB(_report: WCBReport, _options?: any) {
+export async function submitToWCB(_report: WCBReport, _options?: unknown) {
   return { success: false, error: 'API key required' };
 }
 

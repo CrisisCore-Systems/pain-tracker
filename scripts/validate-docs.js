@@ -101,18 +101,52 @@ function validateFeatureMatrix() {
     return;
   }
   const content = readFile(matrixPath);
-  const rowRegex = /\|([^|]+)\|([^|]+)\|([^|]+)\|/g;
-  let match;
+  const lines = content.split(/\r?\n/);
+
+  // Find the header row for the first markdown table and locate the Status column.
+  const headerIdx = lines.findIndex(l => l.trim().startsWith('|') && /\bStatus\b/i.test(l));
+  if (headerIdx === -1) {
+    fail('No feature matrix table header found (missing a "Status" column).');
+    return;
+  }
+
+  const headerCells = lines[headerIdx]
+    .split('|')
+    .map(c => c.trim())
+    .filter(Boolean);
+  const statusCol = headerCells.findIndex(c => c.toLowerCase() === 'status');
+  if (statusCol === -1) {
+    fail('Feature matrix header does not include a Status column.');
+    return;
+  }
+
   let checked = 0;
-  while ((match = rowRegex.exec(content)) !== null) {
-    const status = match[3].trim();
-    if (['Status', '--------'].includes(status)) continue;
-    if (status && !ALLOWED_STATUSES.has(status)) {
+  for (let i = headerIdx + 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line.startsWith('|')) {
+      // Stop after the first table once we hit a non-table line.
+      if (checked > 0) break;
+      continue;
+    }
+
+    // Skip the separator row (---) and any malformed rows.
+    if (/^\|\s*-{2,}\s*\|/.test(line)) continue;
+
+    const cells = line
+      .split('|')
+      .map(c => c.trim())
+      .filter(Boolean);
+
+    const status = cells[statusCol];
+    if (!status) continue;
+
+    if (!ALLOWED_STATUSES.has(status)) {
       fail(`Invalid status value in feature matrix: "${status}"`);
-    } else if (status) {
+    } else {
       checked++;
     }
   }
+
   if (checked === 0) {
     fail('No feature matrix rows validated (pattern mismatch).');
   } else {

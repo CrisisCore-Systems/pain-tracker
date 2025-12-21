@@ -11,7 +11,7 @@
  * 4. Plain language, precise edges
  */
 
-import type { AdaptiveCopy, EmptyStateCopy, ReflectionPrompt } from '../types/tone';
+import type { AdaptiveCopy, ReflectionPrompt } from '../types/tone';
 
 /**
  * HOME / DASHBOARD

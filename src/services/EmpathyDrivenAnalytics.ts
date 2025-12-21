@@ -343,7 +343,7 @@ export class EmpathyDrivenAnalyticsService {
   }
 
   // Compassionate Progress calculation methods
-  private calculateSelfCompassion(moodEntries: MoodEntry[], painEntries: PainEntry[]): number {
+  private calculateSelfCompassion(moodEntries: MoodEntry[], _painEntries: PainEntry[]): number {
     if (moodEntries.length === 0) return 50;
 
     // Self-compassion based on self-kindness and mindful acceptance
@@ -467,7 +467,7 @@ export class EmpathyDrivenAnalyticsService {
   // Empathy KPI calculation methods
   private calculateValidationReceived(
     moodEntries: MoodEntry[],
-    emotionalState?: EmotionalStateMetrics
+    _emotionalState?: EmotionalStateMetrics
   ): number {
     if (moodEntries.length === 0) return 40;
 
@@ -610,7 +610,7 @@ export class EmpathyDrivenAnalyticsService {
 
   private calculateGrowthMindset(
     moodEntries: MoodEntry[],
-    wellbeingMetrics?: HolisticWellbeingMetrics
+    _wellbeingMetrics?: HolisticWellbeingMetrics
   ): number {
     if (moodEntries.length === 0) return 50;
 

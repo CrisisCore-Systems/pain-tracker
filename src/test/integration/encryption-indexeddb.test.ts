@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { offlineStorage } from '../../lib/offline-storage';
 import { encryptionService } from '../../services/EncryptionService';
+import type { EncryptedData } from '../../services/EncryptionService';
+import type { PainEntry } from '../../types';
 
 type StoredRow = {
   id?: number;
@@ -26,7 +28,7 @@ let storageToUse:
       getData: (t: string) => Promise<StoredRow[]>;
       updateData?: (id: number, d: unknown) => Promise<void>;
       deleteData?: (id: number) => Promise<void>;
-    } = offlineStorage as any;
+    } = offlineStorage;
 
 // Attempt to initialize the real offlineStorage; fall back to an in-memory shim
 // if IndexedDB isn't available or initialization fails.
@@ -41,16 +43,14 @@ try {
 
 if (typeof indexedDB === 'undefined') {
   // Create a minimal in-memory shim
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows: Array<any> = [];
+  const rows: StoredRow[] = [];
   storageToUse = {
     async init() {},
     async clearAllData() {
       rows.length = 0;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async storeData(type: string, data: any) {
-      const id = rows.length ? Math.max(...rows.map(r => r.id)) + 1 : 1;
+    async storeData(type: string, data: unknown) {
+      const id = rows.length ? Math.max(...rows.map(r => r.id ?? 0)) + 1 : 1;
       const stored = {
         id,
         timestamp: new Date().toISOString(),
@@ -65,8 +65,7 @@ if (typeof indexedDB === 'undefined') {
     async getData(type: string) {
       return rows.filter(r => r.type === type);
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async updateData(id: number, data: any) {
+    async updateData(id: number, data: unknown) {
       const idx = rows.findIndex(r => r.id === id);
       if (idx === -1) throw new Error('Data not found');
       rows[idx].data = data;
@@ -76,7 +75,7 @@ if (typeof indexedDB === 'undefined') {
       const i = rows.findIndex(r => r.id === id);
       if (i !== -1) rows.splice(i, 1);
     },
-  } as any;
+  };
 }
 
 describe('Encryption + IndexedDB integration', () => {
@@ -87,7 +86,7 @@ describe('Encryption + IndexedDB integration', () => {
       await storageToUse.clearAllData();
       // Debug: report which storage is in use
       console.info('[test] storageToUse init succeeded; using real offlineStorage or polyfill');
-    } catch (e) {
+    } catch {
       // Replace storageToUse with an in-memory shim to keep the test running
       const rows: StoredRow[] = [];
       storageToUse = {
@@ -120,7 +119,7 @@ describe('Encryption + IndexedDB integration', () => {
           const i = rows.findIndex(r => r.id === id);
           if (i !== -1) rows.splice(i, 1);
         },
-      } as any;
+      };
       // Debug: report shim usage
       console.info('[test] storageToUse init failed; using in-memory shim');
     }
@@ -132,40 +131,73 @@ describe('Encryption + IndexedDB integration', () => {
   });
 
   it('writes an encrypted pain-entry to IndexedDB and reads back (version 2.0.0 with iv)', async () => {
-    // Use the current PainEntry shape (intensity) for tests
-    const sample = {
+    const sample: PainEntry = {
+      id: 1,
+      timestamp: new Date().toISOString(),
+      baselineData: {
+        pain: 5,
+        locations: ['lower-back'],
+        symptoms: [],
+      },
+      functionalImpact: {
+        limitedActivities: [],
+        assistanceNeeded: [],
+        mobilityAids: [],
+      },
+      medications: {
+        current: [],
+        changes: '',
+        effectiveness: '',
+      },
+      treatments: {
+        recent: [],
+        effectiveness: '',
+        planned: [],
+      },
+      qualityOfLife: {
+        sleepQuality: 5,
+        moodImpact: 5,
+        socialImpact: [],
+      },
+      workImpact: {
+        missedWork: 0,
+        modifiedDuties: [],
+        workLimitations: [],
+      },
+      comparison: {
+        worseningSince: '',
+        newLimitations: [],
+      },
+      notes: 'Testing integration',
       intensity: 5,
       location: 'lower-back',
-      description: 'Testing integration',
-    } as any;
+    };
 
     // Encrypt via service
     const encrypted = await encryptionService.encryptPainEntry(sample);
 
-    // Store in offline storage as a pain-entry record
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const id = await storageToUse.storeData('pain-entry', encrypted as unknown as any);
+    // Store in offline storage using a type that allows arbitrary object payloads
+    const id = await storageToUse.storeData('settings', encrypted as unknown as Record<string, unknown>);
     expect(typeof id).toBe('number');
 
     // Read back
-    const rows = await storageToUse.getData('pain-entry');
+    const rows = await storageToUse.getData('settings');
     expect(rows.length).toBeGreaterThan(0);
     const row = rows.find(r => r.id === id);
     expect(row).toBeDefined();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stored = row!.data as any;
+    const stored = row!.data as unknown as EncryptedData<PainEntry>;
 
     // Metadata checks
-    expect(stored.metadata).toBeDefined();
-    expect(stored.metadata.version).toBe('2.0.0');
-    expect(typeof stored.metadata.iv).toBe('string');
+    const metadata = stored.metadata;
+    expect(metadata).toBeDefined();
+    expect(metadata?.version).toBe('2.0.0');
+    expect(typeof metadata?.iv).toBe('string');
 
     // Decrypt and verify payload
-    // Cast to any for test assertions against the runtime payload
-    const decrypted = (await encryptionService.decryptPainEntry(stored)) as any;
+    const decrypted = await encryptionService.decryptPainEntry(stored);
     expect(decrypted.intensity).toBe(sample.intensity);
     expect(decrypted.location).toBe(sample.location);
-    // description maps to `description` in current schema
-    expect(decrypted.description).toBe(sample.description);
+    expect(decrypted.notes).toBe(sample.notes);
+    expect(decrypted.baselineData.pain).toBe(sample.baselineData.pain);
   });
 });

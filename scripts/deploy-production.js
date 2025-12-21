@@ -51,12 +51,12 @@ class DeploymentManager {
     try {
       execSync('vercel --version', { stdio: 'ignore' });
       this.log('Vercel CLI is installed', 'success');
-    } catch (error) {
+    } catch {
       this.log('Vercel CLI not found. Installing...', 'warning');
       try {
         execSync('npm install -g vercel', { stdio: 'inherit' });
         this.log('Vercel CLI installed successfully', 'success');
-      } catch (installError) {
+      } catch {
         this.log('Failed to install Vercel CLI. Please install manually: npm install -g vercel', 'error');
         process.exit(1);
       }
@@ -107,7 +107,7 @@ class DeploymentManager {
     try {
       execSync('npm run test -- --run', { stdio: 'inherit' });
       this.log('All tests passed', 'success');
-    } catch (error) {
+    } catch {
       this.log('Tests failed. Fix errors before deploying.', 'error');
       process.exit(1);
     }
@@ -119,7 +119,7 @@ class DeploymentManager {
     try {
       execSync('npm run typecheck', { stdio: 'inherit' });
       this.log('Type check passed', 'success');
-    } catch (error) {
+    } catch {
       this.log('Type check failed. Fix errors before deploying.', 'error');
       process.exit(1);
     }
@@ -131,7 +131,7 @@ class DeploymentManager {
     try {
       execSync('npm run build', { stdio: 'inherit' });
       this.log('Build successful', 'success');
-    } catch (error) {
+    } catch {
       this.log('Build failed. Check the errors above.', 'error');
       process.exit(1);
     }
@@ -145,7 +145,7 @@ class DeploymentManager {
     try {
       execSync(`vercel ${prodFlag}`, { stdio: 'inherit' });
       this.log('Deployment successful!', 'success');
-    } catch (error) {
+    } catch {
       this.log('Deployment failed. Check the errors above.', 'error');
       process.exit(1);
     }
@@ -183,7 +183,7 @@ class DeploymentManager {
     console.log('📖 Full guide: DEPLOYMENT_CHECKLIST.md\n');
   }
 
-  async run(skipTests = false) {
+  async run(skipTests = false, environment = 'production') {
     try {
       console.log('\n🚀 Starting Production Deployment\n');
 
@@ -198,7 +198,7 @@ class DeploymentManager {
       }
 
       await this.buildProject();
-      await this.deployToVercel('production');
+      await this.deployToVercel(environment);
 
       this.printNextSteps();
     } catch (error) {
@@ -232,4 +232,4 @@ Examples:
 
 // Run deployment
 const manager = new DeploymentManager();
-manager.run(skipTests);
+manager.run(skipTests, staging ? 'staging' : 'production');

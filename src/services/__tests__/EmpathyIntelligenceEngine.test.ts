@@ -42,7 +42,7 @@ describe('EmpathyIntelligenceEngine (spike)', () => {
     const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
       'user-1',
       [],
-      [] as any
+      []
     );
     expect(metrics).toBeTruthy();
     expect(metrics.emotionalIntelligence).toBeTruthy();
@@ -52,7 +52,7 @@ describe('EmpathyIntelligenceEngine (spike)', () => {
   });
 
   it('reflects mood in simple single-entry input', async () => {
-    const moodEntry = {
+    const moodEntry = buildMoodEntry({
       mood: 8,
       notes: 'I felt connected and empathetic towards others',
       context: 'social',
@@ -60,9 +60,9 @@ describe('EmpathyIntelligenceEngine (spike)', () => {
       emotionalRegulation: 8,
       hopefulness: 7,
       anxiety: 2,
-      socialSupport: 'some',
+      socialSupport: 'moderate',
       copingStrategies: [],
-    } as any;
+    });
 
     const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
       'user-2',

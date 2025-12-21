@@ -1,11 +1,12 @@
 import { encryptionService } from '../../src/services/EncryptionService';
+import type { EncryptedData } from '../../src/services/EncryptionService';
 
 describe('EncryptionService Web Crypto migration', () => {
   test('roundtrip encrypt/decrypt with AES-GCM', async () => {
     const payload = { hello: 'world', n: 42 };
     const encrypted = await encryptionService.encrypt(payload);
     expect(encrypted.metadata.version).toBe('2.0.0');
-    const decrypted = await encryptionService.decrypt(encrypted as any);
+    const decrypted = await encryptionService.decrypt(encrypted as EncryptedData<typeof payload>);
     expect(decrypted).toEqual(payload);
   });
 
@@ -13,10 +14,10 @@ describe('EncryptionService Web Crypto migration', () => {
     const payload = { sensitive: 'data' };
     const encrypted = await encryptionService.encrypt(payload);
     // mutate ciphertext
-    const tampered = {
+    const tampered: EncryptedData<typeof payload> = {
       ...encrypted,
       data: encrypted.data.slice(0, -2) + (encrypted.data.slice(-2) === 'AA' ? 'BB' : 'AA'),
     };
-    await expect(encryptionService.decrypt(tampered as any)).rejects.toThrow();
+    await expect(encryptionService.decrypt(tampered)).rejects.toThrow();
   });
 });

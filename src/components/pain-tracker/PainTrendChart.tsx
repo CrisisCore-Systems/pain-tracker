@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
   ChartOptions,
+  type ChartData,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import type { PainEntry } from '../../types';
@@ -78,7 +79,7 @@ export function PainTrendChart({ entries }: PainTrendChartProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm">
       <div style={{ height: '400px' }}>
-        <Line options={options} data={chartData as unknown as any} />
+        <Line options={options} data={chartData as unknown as ChartData<'line'>} />
       </div>
     </div>
   );

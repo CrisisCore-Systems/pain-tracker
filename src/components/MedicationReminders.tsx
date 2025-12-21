@@ -93,6 +93,16 @@ export default function MedicationReminders({
   const [frequency, setFrequency] = useState<
     'once' | 'daily' | 'twice-daily' | 'weekly' | 'custom'
   >('once');
+
+  const isFrequency = (value: string): value is typeof frequency =>
+    value === 'once' ||
+    value === 'daily' ||
+    value === 'twice-daily' ||
+    value === 'weekly' ||
+    value === 'custom';
+
+  const isRecurrence = (value: string): value is typeof recurrence =>
+    value === 'none' || value === 'daily' || value === 'weekly';
   const [notes, setNotes] = useState('');
   const [open, setOpen] = useState(false);
   const [slideIn, setSlideIn] = useState(false);
@@ -344,7 +354,12 @@ export default function MedicationReminders({
               />
               <select
                 value={frequency}
-                onChange={e => setFrequency(e.target.value as any)}
+                onChange={e => {
+                  const next = e.target.value;
+                  if (isFrequency(next)) {
+                    setFrequency(next);
+                  }
+                }}
                 className="input"
               >
                 <option value="once">Once</option>
@@ -398,7 +413,12 @@ export default function MedicationReminders({
             <div className="flex flex-col sm:flex-row gap-2">
               <select
                 value={recurrence}
-                onChange={e => setRecurrence(e.target.value as any)}
+                onChange={e => {
+                  const next = e.target.value;
+                  if (isRecurrence(next)) {
+                    setRecurrence(next);
+                  }
+                }}
                 className="input"
               >
                 <option value="none">No recurrence</option>

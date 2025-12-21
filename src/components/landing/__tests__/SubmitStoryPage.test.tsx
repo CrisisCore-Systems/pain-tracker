@@ -6,15 +6,16 @@ import { vi } from 'vitest';
 
 describe('SubmitStoryPage', () => {
   beforeEach(() => {
-    // Reset fetch mock
-    (global as any).fetch = undefined;
+    // Reset fetch mock (avoid assigning `undefined` to the DOM lib fetch signature)
+    (globalThis as unknown as Record<string, unknown>).fetch = undefined;
   });
 
   it('renders the submit story form and submits', async () => {
     const mockFetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true }) });
-    (global as any).fetch = mockFetch;
+    const globalWithFetch = globalThis as typeof globalThis & { fetch?: unknown };
+    globalWithFetch.fetch = mockFetch;
 
-  render(<SubmitStoryPage />, { wrapper: MemoryRouter });
+    render(<SubmitStoryPage />, { wrapper: MemoryRouter });
 
     const storyInput = screen.getByLabelText(/Your Story/i);
     const consentCheckbox = screen.getByLabelText(/I consent to my story/i);

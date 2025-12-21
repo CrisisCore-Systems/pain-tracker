@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, BarChart3, Heart, WifiOff, Zap, Users, Sparkles } from 'lucide-react';
+import { Lock, BarChart3, Heart, WifiOff, Zap, Users } from 'lucide-react';
 
 const benefits = [
   {

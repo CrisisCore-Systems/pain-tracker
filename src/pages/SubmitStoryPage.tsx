@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input } from '../design-system/components/Input';
-import Textarea from '../components/ui/textarea';
 import { Button } from '../design-system/components/Button';
 import { Heart, Send, ArrowLeft, Shield, CheckCircle2, Sparkles } from 'lucide-react';
 
@@ -29,9 +27,15 @@ export const SubmitStoryPage: React.FC = () => {
     try {
       let recaptchaToken: string | undefined = undefined;
       const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
-      if (siteKey && (window as any).grecaptcha && recaptchaReady) {
+
+      type Grecaptcha = {
+        execute: (siteKey: string, options: { action: string }) => Promise<string>;
+      };
+
+      const grecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
+      if (siteKey && grecaptcha && recaptchaReady) {
         try {
-          recaptchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'submit_testimonial' });
+          recaptchaToken = await grecaptcha.execute(siteKey, { action: 'submit_testimonial' });
         } catch (err) {
           console.warn('Failed to execute reCAPTCHA', err);
         }

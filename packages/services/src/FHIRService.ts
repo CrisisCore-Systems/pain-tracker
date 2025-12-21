@@ -3,7 +3,7 @@ import type { PainEntry } from './types';
 
 export interface FHIRResource { resourceType: string; id?: string; }
 export interface FHIRObservation extends FHIRResource { resourceType: 'Observation'; }
-export interface FHIRBundle extends FHIRResource { resourceType: 'Bundle'; type?: string; entry?: any[]; }
+export interface FHIRBundle extends FHIRResource { resourceType: 'Bundle'; type?: string; entry?: unknown[]; }
 
 export class FHIRService {
   painEntryToFHIRObservation(_entry: PainEntry, _patientId?: string): FHIRObservation {

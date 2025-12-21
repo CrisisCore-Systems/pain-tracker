@@ -63,13 +63,19 @@ export type UnwrapKeyJSON =
 
 // Utility type guard helpers
 export function isWrappedKeyPayload(v: unknown): v is WrappedKeyPayload {
-  return !!v && typeof v === 'object' && 'wrapped' in (v as any);
+  return !!v && typeof v === 'object' && 'wrapped' in (v as Record<string, unknown>);
 }
 export function isKeyBundleWrapped(v: unknown): v is KeyBundleWrappedPayload {
   return (
-    !!v && typeof v === 'object' && ('encWrapped' in (v as any) || 'hmacWrapped' in (v as any))
+    !!v &&
+    typeof v === 'object' &&
+    ('encWrapped' in (v as Record<string, unknown>) || 'hmacWrapped' in (v as Record<string, unknown>))
   );
 }
 export function isKeyBundleRaw(v: unknown): v is KeyBundleRawPayload {
-  return !!v && typeof v === 'object' && ('enc' in (v as any) || 'hmac' in (v as any));
+  return (
+    !!v &&
+    typeof v === 'object' &&
+    ('enc' in (v as Record<string, unknown>) || 'hmac' in (v as Record<string, unknown>))
+  );
 }

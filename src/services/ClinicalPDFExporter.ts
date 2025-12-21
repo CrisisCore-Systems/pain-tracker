@@ -415,8 +415,16 @@ export class ClinicalPDFExporter {
         fillColor: [249, 250, 251],
       },
       margin: { left: this.margin, right: this.margin },
-      didDrawPage: (data: any) => {
-        this.currentY = data.cursor?.y || this.currentY;
+      didDrawPage: (data: unknown) => {
+        const nextY = (() => {
+          if (typeof data !== 'object' || data === null) return undefined;
+          const cursor = (data as { cursor?: unknown }).cursor;
+          if (typeof cursor !== 'object' || cursor === null) return undefined;
+          const y = (cursor as { y?: unknown }).y;
+          return typeof y === 'number' ? y : undefined;
+        })();
+
+        this.currentY = nextY ?? this.currentY;
       },
     });
 
@@ -437,7 +445,7 @@ export class ClinicalPDFExporter {
   /**
    * Add narrative clinical timeline
    */
-  private addNarrativeTimeline(entries: PainEntry[], moodEntries?: MoodEntry[]): void {
+  private addNarrativeTimeline(entries: PainEntry[], _moodEntries?: MoodEntry[]): void {
     this.checkPageBreak(40);
 
     this.doc!.setFontSize(14);

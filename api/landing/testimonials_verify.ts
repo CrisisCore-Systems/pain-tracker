@@ -1,6 +1,13 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../../src/lib/database';
-import verifyAdmin from '../lib/adminAuth';
+import verifyAdmin from '../../api-lib/adminAuth';
+
+type TestimonialVerifyBody = {
+  id?: unknown;
+  verified?: unknown;
+  anonymized?: unknown;
+  publication_date?: unknown;
+};
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -15,7 +22,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const { id, verified, anonymized, publication_date } = req.body || {};
+    const body = (req.body ?? {}) as TestimonialVerifyBody;
+    const { id, verified, anonymized, publication_date } = body;
+
     if (!id) {
       res.status(400).json({ ok: false, error: 'Missing id' });
       return;
@@ -27,7 +36,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Build query
     const q = `UPDATE testimonials SET verified = $1, anonymized = COALESCE($2, anonymized), verified_by = $3, verified_at = ${verifiedAt || 'NULL'}, publication_date = $4 WHERE id = $5 RETURNING *`;
-    const params = [!!verified, anonymized === undefined ? null : anonymized, String(verifiedBy), publication_date || null, id];
+    const params = [
+      !!verified,
+      anonymized === undefined ? null : anonymized,
+      String(verifiedBy),
+      publication_date ?? null,
+      id,
+    ];
 
     const result = await db.query(q, params);
     if (!result || result.length === 0) {

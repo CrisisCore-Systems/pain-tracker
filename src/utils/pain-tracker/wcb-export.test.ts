@@ -311,23 +311,34 @@ describe('WCB Export', () => {
       const entries: PainEntry[] = [createMockEntry()];
 
       // Mock document methods
-      const mockLink = {
-        href: '',
-        download: '',
-        click: vi.fn(),
-      };
-      const appendChildSpy = vi.spyOn(document.body, 'appendChild').mockImplementation(() => mockLink as any);
-      const removeChildSpy = vi.spyOn(document.body, 'removeChild').mockImplementation(() => mockLink as any);
-      vi.spyOn(document, 'createElement').mockReturnValue(mockLink as any);
+      const originalCreateElement = document.createElement.bind(document);
+      const mockLink = originalCreateElement('a');
+      const clickSpy = vi.spyOn(mockLink, 'click').mockImplementation(() => {});
+
+      const appendChildSpy = vi
+        .spyOn(document.body, 'appendChild')
+        .mockImplementation((node: Node) => node);
+      const removeChildSpy = vi
+        .spyOn(document.body, 'removeChild')
+        .mockImplementation((node: Node) => node);
+
+      const createElementSpy = vi
+        .spyOn(document, 'createElement')
+        .mockImplementation((tagName: string, options?: ElementCreationOptions) => {
+          if (tagName.toLowerCase() === 'a') return mockLink;
+          return originalCreateElement(tagName, options);
+        });
 
       downloadWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(mockLink.click).toHaveBeenCalled();
+      expect(clickSpy).toHaveBeenCalled();
       expect(mockLink.download).toContain('PainTracker-WCB-Report');
       expect(mockLink.download).toContain('.pdf');
 
       appendChildSpy.mockRestore();
       removeChildSpy.mockRestore();
+      createElementSpy.mockRestore();
+      clickSpy.mockRestore();
     });
   });
 

@@ -1,5 +1,4 @@
 import { test, expect } from '../test-setup';
-import type { Page, BrowserContext } from '@playwright/test';
 
 test.describe('PWA Offline Functionality', () => {
   test.beforeEach(async ({ page }) => {
@@ -92,7 +91,7 @@ test.describe('PWA Offline Functionality', () => {
         // Check if data was saved to IndexedDB
         const dbs = await indexedDB.databases();
         return dbs.some(db => db.name?.includes('pain'));
-      } catch (e) {
+      } catch {
         return false;
       }
     });
@@ -159,7 +158,7 @@ test.describe('PWA Offline Functionality', () => {
 });
 
 test.describe('PWA Offline - Data Persistence', () => {
-  test('should persist data in IndexedDB when offline', async ({ page, context }) => {
+  test('should persist data in IndexedDB when offline', async ({ page }) => {
     // Check IndexedDB support
     const indexedDBSupported = await page.evaluate(() => {
       return 'indexedDB' in window;
@@ -172,7 +171,7 @@ test.describe('PWA Offline - Data Persistence', () => {
       try {
         const dbs = await indexedDB.databases();
         return dbs.some(db => db.name?.toLowerCase().includes('pain'));
-      } catch (e) {
+      } catch {
         return false;
       }
     });

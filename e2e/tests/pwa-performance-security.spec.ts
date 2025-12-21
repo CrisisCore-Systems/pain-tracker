@@ -13,7 +13,6 @@ test.describe('PWA Performance', () => {
       const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
       
       const fcp = paint.find(entry => entry.name === 'first-contentful-paint');
-      const lcp = paint.find(entry => entry.name === 'largest-contentful-paint');
       
       return {
         fcp: fcp ? fcp.startTime : 0,
@@ -138,7 +137,7 @@ test.describe('PWA Performance', () => {
           operationTime: endTime - startTime,
           dbCount: dbs.length,
         };
-      } catch (e) {
+      } catch {
         return {
           supported: true,
           error: 'Cannot measure',
@@ -170,20 +169,16 @@ test.describe('PWA Performance - Lighthouse Metrics', () => {
   test('should have minimal layout shifts', async ({ page }) => {
     // Collect layout shift metrics
     const cls = await page.evaluate(() => {
-      let clsValue = 0;
-      
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value;
-          }
+          void entry;
         }
       });
       
       try {
         observer.observe({ type: 'layout-shift', buffered: true });
         return { supported: true };
-      } catch (e) {
+      } catch {
         return { supported: false };
       }
     });
@@ -266,7 +261,7 @@ test.describe('PWA Data Security', () => {
                               db.name?.toLowerCase().includes('secret'),
           })),
         };
-      } catch (e) {
+      } catch {
         return { supported: true, error: 'Cannot inspect' };
       }
     });

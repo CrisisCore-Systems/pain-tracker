@@ -12,7 +12,6 @@ import { dirname, join } from 'path';
 import fs from 'fs';
 import { 
   SCREENSHOT_PORTFOLIO, 
-  SCREENSHOT_CATEGORIES,
   getScreenshotsByPhase,
   getInfographicScreenshots
 } from './screenshot-config.js';
@@ -44,7 +43,7 @@ async function waitForServer(url, maxAttempts = 30) {
         console.log('✅ Server is ready!\n');
         return true;
       }
-    } catch (error) {
+    } catch {
       // Server not ready yet
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -180,7 +179,7 @@ function generateMetadata(screenshots, results) {
 }
 
 // Generate README for screenshot portfolio
-function generateReadme(screenshots) {
+function generateReadme() {
   const readmeContent = `# Screenshot Portfolio
 
 This directory contains a comprehensive screenshot portfolio for the Pain Tracker application.
@@ -423,7 +422,7 @@ async function captureScreenshotPortfolio() {
     // Generate metadata
     if (!dryRun) {
       generateMetadata(screenshots, results);
-      generateReadme(SCREENSHOT_PORTFOLIO);
+      generateReadme();
     }
 
     // Summary

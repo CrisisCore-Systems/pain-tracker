@@ -19,7 +19,10 @@ describe('PrivacySettings', () => {
     fireEvent.click(saveButton);
 
     // Read persistence from secureStorage
-    const stored = secureStorage.safeJSON('pain-tracker:privacy-settings', {} as any);
+    const stored = secureStorage.safeJSON<{
+      dataSharing?: boolean;
+      retentionDays?: number | string;
+    }>('pain-tracker:privacy-settings', {});
     expect(stored.dataSharing === true || stored.dataSharing === false).toBe(true);
     expect([30, 90, 365, 0].includes(Number(stored.retentionDays))).toBe(true);
   });

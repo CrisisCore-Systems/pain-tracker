@@ -395,13 +395,32 @@ Neural Empathy Activity: ${metrics.emotionalIntelligence.neuralEmpathyPatterns?.
       </div>
 
       {/* Debug information */}
-      {((typeof (import.meta as any) !== 'undefined' &&
-        (import.meta as any).env &&
-        ((import.meta as any).env.MODE === 'development' ||
-          (import.meta as any).env.NODE_ENV === 'development')) ||
-        (typeof process !== 'undefined' &&
-          (process as any).env &&
-          (process as any).env.NODE_ENV === 'development')) && (
+      {(() => {
+        try {
+          const meta = import.meta as unknown;
+          if (typeof meta === 'object' && meta !== null && 'env' in meta) {
+            const env = (meta as { env?: unknown }).env;
+            if (typeof env === 'object' && env !== null) {
+              const mode = (env as Record<string, unknown>).MODE;
+              const nodeEnv = (env as Record<string, unknown>).NODE_ENV;
+              if (mode === 'development' || nodeEnv === 'development') return true;
+            }
+          }
+        } catch {
+          // ignore
+        }
+
+        const maybeProcess = (globalThis as unknown as { process?: unknown }).process;
+        if (typeof maybeProcess === 'object' && maybeProcess !== null && 'env' in maybeProcess) {
+          const env = (maybeProcess as { env?: unknown }).env;
+          if (typeof env === 'object' && env !== null) {
+            const nodeEnv = (env as Record<string, unknown>).NODE_ENV;
+            return nodeEnv === 'development';
+          }
+        }
+
+        return false;
+      })() && (
         <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
           <h3 className="font-semibold mb-2">Debug Information</h3>
           <div className="text-sm space-y-2">

@@ -65,7 +65,7 @@ const LoadingFallback = () => {
 
 function App() {
   // Initialize global accessibility features
-  const { announceMessage } = useGlobalAccessibility({
+  useGlobalAccessibility({
     enableValidation: import.meta.env.DEV,
     enableAutoLabeling: true,
     announceRouteChanges: true,

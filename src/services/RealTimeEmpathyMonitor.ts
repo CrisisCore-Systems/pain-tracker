@@ -3,14 +3,7 @@
  * Continuous empathy state tracking with micro-interactions and sentiment analysis
  */
 
-import {
-  MicroEmpathyMoment,
-  EmpathyInterruption,
-  EmpathyRecoveryMoment,
-  MoodEntry,
-  EmpathyInsight,
-  EmpathyRecommendation,
-} from '../types/quantified-empathy';
+import type { MicroEmpathyMoment } from '../types/quantified-empathy';
 
 export interface RealTimeEmpathyConfig {
   monitoringInterval: number; // milliseconds
@@ -469,7 +462,7 @@ export class RealTimeEmpathyMonitor {
 
   private async analyzeMicroMomentPatterns(
     userId: string,
-    moment: MicroEmpathyMoment
+    _moment: MicroEmpathyMoment
   ): Promise<void> {
     // Analyze patterns in micro-moments for insights
     const currentState = this.getCurrentEmpathyState(userId);
@@ -491,7 +484,7 @@ export class RealTimeEmpathyMonitor {
 class SentimentAnalyzer {
   async analyzeEmpathySignals(
     text: string,
-    context: string
+    _context: string
   ): Promise<{
     empathyLevel: number;
     sentiment: string;

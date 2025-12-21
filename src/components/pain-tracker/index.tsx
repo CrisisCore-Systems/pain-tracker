@@ -48,7 +48,7 @@ const ENABLE_VALIDATION_TECH = (() => {
 })();
 
 // Conditionally import validation technology components
-let ValidationTechnologyIntegration: React.ComponentType<any> | null = null;
+let _ValidationTechnologyIntegration: React.ComponentType<unknown> | null = null;
 if (ENABLE_VALIDATION_TECH) {
   try {
     // Dynamic import will be handled in useEffect

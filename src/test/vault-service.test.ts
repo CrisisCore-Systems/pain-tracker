@@ -3,12 +3,30 @@ import { vaultService } from '../services/VaultService';
 import { secureStorage } from '../lib/storage/secureStorage';
 import sodium from 'libsodium-wrappers-sumo';
 
+type SodiumWithPolyfills = typeof sodium & {
+  crypto_pwhash?: { (...args: unknown[]): unknown; toString?: () => string };
+  crypto_pwhash_str?: (passphrase: string) => string;
+  crypto_pwhash_str_verify?: (stored: string, passphrase: string) => boolean;
+  __preparePolyfillKey?: (
+    passphrase: string,
+    salt: Uint8Array,
+    outputLength: number,
+    opslimit: number
+  ) => Promise<Uint8Array>;
+  crypto_generichash?: (outLen: number, input: string) => Uint8Array;
+  to_base64?: (data: Uint8Array, variant: number) => string;
+  crypto_pwhash_OPSLIMIT_MODERATE?: number;
+  crypto_aead_xchacha20poly1305_ietf_KEYBYTES?: number;
+  crypto_pwhash_SALTBYTES?: number;
+};
+
+const sodiumExt = sodium as unknown as SodiumWithPolyfills;
+
 // Test-only sodium polyfill for environments missing crypto_pwhash
 async function ensurePolyfill() {
   await sodium.ready;
   const missing =
-    typeof (sodium as any).crypto_pwhash !== 'function' ||
-    typeof (sodium as any).crypto_pwhash_str !== 'function';
+    typeof sodiumExt.crypto_pwhash !== 'function' || typeof sodiumExt.crypto_pwhash_str !== 'function';
   if (!missing) return;
 
   console.warn('[vault-service.test] Applying sodium crypto_pwhash polyfill for test environment');
@@ -32,7 +50,7 @@ async function ensurePolyfill() {
     return new Uint8Array(bits);
   }
 
-  (sodium as any).__preparePolyfillKey = async function (
+  sodiumExt.__preparePolyfillKey = async function (
     passphrase: string,
     salt: Uint8Array,
     outputLength: number,
@@ -42,15 +60,21 @@ async function ensurePolyfill() {
     return pbkdf2(passphrase, salt, outputLength, iterations);
   };
 
-  (sodium as any).crypto_pwhash_str = function (passphrase: string) {
-    const digest = (sodium as any).crypto_generichash(32, passphrase);
-    return 'pbkdf2$' + (sodium as any).to_base64(digest, 1);
+  sodiumExt.crypto_pwhash_str = function (passphrase: string) {
+    const digest = sodiumExt.crypto_generichash?.(32, passphrase);
+    if (!digest) throw new Error('crypto_generichash not available in test environment');
+    const encoded = sodiumExt.to_base64?.(digest, 1);
+    if (!encoded) throw new Error('to_base64 not available in test environment');
+    return 'pbkdf2$' + encoded;
   };
 
-  (sodium as any).crypto_pwhash_str_verify = function (stored: string, passphrase: string) {
+  sodiumExt.crypto_pwhash_str_verify = function (stored: string, passphrase: string) {
     if (!stored.startsWith('pbkdf2$')) return false;
-    const digest = (sodium as any).crypto_generichash(32, passphrase);
-    const compare = 'pbkdf2$' + (sodium as any).to_base64(digest, 1);
+    const digest = sodiumExt.crypto_generichash?.(32, passphrase);
+    if (!digest) throw new Error('crypto_generichash not available in test environment');
+    const encoded = sodiumExt.to_base64?.(digest, 1);
+    if (!encoded) throw new Error('to_base64 not available in test environment');
+    const compare = 'pbkdf2$' + encoded;
     return compare === stored;
   };
 }
@@ -58,17 +82,22 @@ async function ensurePolyfill() {
 async function prederiveIfNeeded(passphrase: string) {
   await ensurePolyfill();
   const hasReal =
-    typeof (sodium as any).crypto_pwhash === 'function' &&
-    !(sodium as any).crypto_pwhash.toString().includes('Polyfill');
+    typeof sodiumExt.crypto_pwhash === 'function' &&
+    !String(sodiumExt.crypto_pwhash.toString?.() ?? sodiumExt.crypto_pwhash).includes('Polyfill');
   if (hasReal) return;
-  const opslimit = (sodium as any).crypto_pwhash_OPSLIMIT_MODERATE || 2;
-  const keyLength = (sodium as any).crypto_aead_xchacha20poly1305_ietf_KEYBYTES || 32;
+  const opslimit = sodiumExt.crypto_pwhash_OPSLIMIT_MODERATE || 2;
+  const keyLength = sodiumExt.crypto_aead_xchacha20poly1305_ietf_KEYBYTES || 32;
   const saltBytes =
-    (sodium as any).crypto_pwhash_SALTBYTES > 0 ? (sodium as any).crypto_pwhash_SALTBYTES : 16;
+    (sodiumExt.crypto_pwhash_SALTBYTES ?? 0) > 0 ? (sodiumExt.crypto_pwhash_SALTBYTES ?? 0) : 16;
   const salt = sodium.randombytes_buf(saltBytes);
-  const derived = await (sodium as any).__preparePolyfillKey(passphrase, salt, keyLength, opslimit);
-  (sodium as any).crypto_pwhash = function (outputLength: number) {
-    return derived.slice(0, outputLength);
+  if (!sodiumExt.__preparePolyfillKey) {
+    throw new Error('Polyfill key preparation function not initialized');
+  }
+  const derived = await sodiumExt.__preparePolyfillKey(passphrase, salt, keyLength, opslimit);
+  (sodiumExt as unknown as Record<string, unknown>).crypto_pwhash = function (...args: unknown[]) {
+    const requested = args[0];
+    const outLen = typeof requested === 'number' ? requested : keyLength;
+    return derived.slice(0, outLen);
   };
 }
 

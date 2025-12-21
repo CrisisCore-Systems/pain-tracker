@@ -27,13 +27,31 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
 
 function base64ToArrayBuffer(base64: string): ArrayBuffer {
   if (typeof Buffer !== 'undefined') {
-    return Uint8Array.from(Buffer.from(base64, 'base64')).buffer;
+    const buf = Buffer.from(base64, 'base64');
+    // IMPORTANT: return an ArrayBuffer that is backed by Node's realm.
+    // Under Vitest `jsdom`, ArrayBuffers created via `Uint8Array.from()` can be
+    // from the jsdom realm and rejected by Node 20 WebCrypto.
+    return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
   }
   const binary = atob(base64);
   const len = binary.length;
   const bytes = new Uint8Array(len);
   for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
   return bytes.buffer;
+}
+
+function base64ToBytes(base64: string): Uint8Array<ArrayBuffer> {
+  // Ensure we always pass a BufferSource backed by a plain ArrayBuffer.
+  if (typeof Buffer !== 'undefined') {
+    const buf = Buffer.from(base64, 'base64');
+    const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+    return new Uint8Array(ab);
+  }
+  const binary = atob(base64);
+  const ab = new ArrayBuffer(binary.length);
+  const bytes = new Uint8Array(ab);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
 }
 
 function bufferToHex(buffer: ArrayBuffer): string {
@@ -65,13 +83,9 @@ async function deriveKeyFromPassword(
     'deriveBits',
     'deriveKey',
   ]);
-  // Ensure we pass a plain ArrayBuffer (slice to the exact view range)
-  const saltBuf = salt.buffer.slice(
-    salt.byteOffset,
-    salt.byteOffset + salt.byteLength
-  ) as ArrayBuffer;
+  const saltBytes: Uint8Array<ArrayBuffer> = new Uint8Array(salt);
   const derived = await crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: saltBuf as ArrayBuffer, iterations, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: saltBytes, iterations, hash: 'SHA-256' },
     baseKey,
     { name: 'AES-GCM', length: 256 },
     true,
@@ -409,7 +423,7 @@ export class EndToEndEncryptionService {
           const hmacWrapped = await securityService.wrapKey(hmacKey);
           payload = JSON.stringify({ encWrapped, hmacWrapped, created: new Date().toISOString() });
           await this.keyManager.storeKey(keyId, payload);
-        } catch (e) {
+        } catch {
           // Fallback: export raw key material and store via secure storage (encrypted at rest)
           const encRaw = await crypto.subtle.exportKey('raw', encKey);
           const hmacRaw = await crypto.subtle.exportKey('raw', hmacKey);
@@ -596,11 +610,11 @@ export class EndToEndEncryptionService {
       // Compute HMAC over ciphertext if hmac key present; store HMAC as base64
       let checksum = '';
       if (addIntegrityCheck && hmacCryptoKey) {
-        const sig = await crypto.subtle.sign('HMAC', hmacCryptoKey, base64ToArrayBuffer(encrypted));
+        const sig = await crypto.subtle.sign('HMAC', hmacCryptoKey, base64ToBytes(encrypted));
         checksum = arrayBufferToBase64(sig);
       } else if (addIntegrityCheck) {
         // fallback to SHA-256 digest (base64)
-        const digest = await crypto.subtle.digest('SHA-256', base64ToArrayBuffer(encrypted));
+        const digest = await crypto.subtle.digest('SHA-256', base64ToBytes(encrypted));
         checksum = arrayBufferToBase64(digest);
       }
 
@@ -713,7 +727,7 @@ export class EndToEndEncryptionService {
           }
           if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
             try {
-              const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
+              const encRaw = base64ToBytes((parsed as KeyBundleRawPayload).enc!);
               encCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 encRaw,
@@ -727,7 +741,7 @@ export class EndToEndEncryptionService {
           }
           if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
             try {
-              const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
+              const hmacRaw = base64ToBytes((parsed as KeyBundleRawPayload).hmac!);
               hmacCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 hmacRaw,
@@ -743,7 +757,7 @@ export class EndToEndEncryptionService {
       } catch {
         // Not JSON -> try bare base64 AES key
         try {
-          const raw = base64ToArrayBuffer(key as string);
+          const raw = base64ToBytes(key as string);
           encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, [
             'decrypt',
           ]);
@@ -757,10 +771,10 @@ export class EndToEndEncryptionService {
       // Read IV from metadata
       const ivBase64 = metadata.iv;
       if (!ivBase64) throw new Error('Missing IV in metadata');
-      const iv = new Uint8Array(base64ToArrayBuffer(ivBase64));
+      const iv = base64ToBytes(ivBase64);
 
       // Decode ciphertext
-      const cipherBuffer = base64ToArrayBuffer(data);
+      const cipherBuffer = base64ToBytes(data);
       let decryptedBuffer: ArrayBuffer;
       try {
         decryptedBuffer = await crypto.subtle.decrypt(
@@ -780,13 +794,13 @@ export class EndToEndEncryptionService {
           const valid = await crypto.subtle.verify(
             'HMAC',
             hmacCryptoKey,
-            base64ToArrayBuffer(checksum),
-            base64ToArrayBuffer(data)
+            base64ToBytes(checksum),
+            base64ToBytes(data)
           );
           if (!valid) throw new Error('Data integrity check failed - HMAC mismatch');
         } else {
           // fallback to digest comparison
-          const digest = await crypto.subtle.digest('SHA-256', base64ToArrayBuffer(data));
+          const digest = await crypto.subtle.digest('SHA-256', base64ToBytes(data));
           const expected = arrayBufferToBase64(digest);
           if (expected !== checksum)
             throw new Error('Data integrity check failed - digest mismatch');

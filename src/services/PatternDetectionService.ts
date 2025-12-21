@@ -50,15 +50,6 @@ export function convertToPatternEntry(entry: CanonicalPainEntry): PatternPainEnt
 }
 
 /**
- * Safe division that returns fallback for division by zero
- */
-function safeDivide(numerator: number, denominator: number, fallback = 0): number {
-  if (denominator === 0 || !Number.isFinite(denominator)) return fallback;
-  const result = numerator / denominator;
-  return Number.isFinite(result) ? result : fallback;
-}
-
-/**
  * Get pain level from a PainEntry (canonical type uses baselineData.pain)
  */
 function getPainLevel(entry: CanonicalPainEntry): number {

@@ -1,5 +1,16 @@
 import { test, expect } from '../test-setup';
 
+type ManifestLike = {
+  name?: string;
+  short_name?: string;
+  start_url?: string;
+  scope?: string;
+  display?: string;
+  theme_color?: string;
+  background_color?: string;
+  icons?: Array<{ sizes?: string }>;
+};
+
 test.describe('PWA Install Prompt (Add to Home Screen)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -21,7 +32,7 @@ test.describe('PWA Install Prompt (Add to Home Screen)', () => {
     const response = await page.goto('/pain-tracker/manifest.json');
     expect(response?.status()).toBe(200);
     
-    const manifest = await response?.json();
+    const manifest = (await response?.json()) as ManifestLike;
     
     // Validate manifest structure
     expect(manifest.name).toBeTruthy();
@@ -35,7 +46,7 @@ test.describe('PWA Install Prompt (Add to Home Screen)', () => {
 
   test('should have correct manifest properties', async ({ page }) => {
     const response = await page.goto('/pain-tracker/manifest.json');
-    const manifest = await response?.json();
+    const manifest = (await response?.json()) as ManifestLike;
     
     // Check required fields
     expect(manifest.short_name).toBe('Pain Tracker');
@@ -49,9 +60,9 @@ test.describe('PWA Install Prompt (Add to Home Screen)', () => {
 
   test('should have proper icon sizes', async ({ page }) => {
     const response = await page.goto('/pain-tracker/manifest.json');
-    const manifest = await response?.json();
+    const manifest = (await response?.json()) as ManifestLike;
     
-    const iconSizes = manifest.icons.map((icon: any) => icon.sizes);
+    const iconSizes = (manifest.icons ?? []).map(icon => icon.sizes).filter(Boolean) as string[];
     
     // Should have at least one icon with 192x192 or larger
     const hasRequiredSize = iconSizes.some((size: string) => {
@@ -63,6 +74,7 @@ test.describe('PWA Install Prompt (Add to Home Screen)', () => {
   });
 
   test('should support PWA installability criteria', async ({ page, browserName }) => {
+    void browserName;
     // Check if the page meets PWA installability criteria
     const pwaChecks = await page.evaluate(() => {
       return {
@@ -82,12 +94,16 @@ test.describe('PWA Install Prompt (Add to Home Screen)', () => {
     
     // Set up listener for install prompt
     await page.evaluate(() => {
-      (window as any).__installPromptFired = false;
+      const w = window as unknown as {
+        __installPromptFired?: boolean;
+        __deferredPrompt?: unknown;
+      };
+      w.__installPromptFired = false;
       
       window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
-        (window as any).__installPromptFired = true;
-        (window as any).__deferredPrompt = e;
+        w.__installPromptFired = true;
+        w.__deferredPrompt = e;
       });
     });
     

@@ -1,5 +1,5 @@
 export class WisdomModule {
-  summarize(_entries: any[]) { return { insights: [] }; }
+  summarize(_entries: unknown[]) { return { insights: [] }; }
 }
 
 export const wisdomModule = new WisdomModule();

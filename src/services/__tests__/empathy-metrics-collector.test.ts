@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { EmpathyMetricsCollector } from '../EmpathyMetricsCollector';
+import type { QuantifiedEmpathyMetrics } from '../../types/quantified-empathy';
+import type { PainEntry } from '../../types';
+import type { MoodEntry } from '../../types/quantified-empathy';
+import type { SecurityService } from '../SecurityService';
+import type { EmpathyDrivenAnalyticsService } from '../EmpathyDrivenAnalytics';
 
 // Minimal fakes for dependencies
 class FakeSecurityService {
@@ -7,7 +12,7 @@ class FakeSecurityService {
 }
 
 class FakeAnalyticsService {
-  async calculateQuantifiedEmpathy(_userId: string, _pain: any[], _mood: any[]) {
+  async calculateQuantifiedEmpathy(_userId: string, _pain: unknown[], _mood: unknown[]) {
     // return a controlled metrics object with some out-of-range and exact values
     return {
       emotionalIntelligence: {
@@ -53,7 +58,7 @@ class FakeAnalyticsService {
         spiritualWellbeing: 50,
         lifeNarrativeCoherence: 50,
       },
-    } as any;
+    } as unknown as QuantifiedEmpathyMetrics;
   }
   async generateEmpathyInsights() {
     return [];
@@ -67,7 +72,10 @@ describe('EmpathyMetricsCollector', () => {
   it('throws when consent required but not granted', async () => {
     const security = new FakeSecurityService();
     const analytics = new FakeAnalyticsService();
-    const c = new EmpathyMetricsCollector(security as any, analytics as any);
+    const c = new EmpathyMetricsCollector(
+      security as unknown as SecurityService,
+      analytics as unknown as EmpathyDrivenAnalyticsService
+    );
 
     await expect(c.collect([], [], { userId: 'u1', consentGranted: false })).rejects.toThrow(
       /Consent required/
@@ -77,12 +85,15 @@ describe('EmpathyMetricsCollector', () => {
   it('sanitizes notes and counts redactions', async () => {
     const security = new FakeSecurityService();
     const analytics = new FakeAnalyticsService();
-    const c = new EmpathyMetricsCollector(security as any, analytics as any);
+    const c = new EmpathyMetricsCollector(
+      security as unknown as SecurityService,
+      analytics as unknown as EmpathyDrivenAnalyticsService
+    );
 
     const pain = [{ notes: 'Contact me at test@example.com or 123-456-7890' }];
     const mood = [{ notes: 'No PII here' }];
 
-    const res = await c.collect(pain as any, mood as any, {
+    const res = await c.collect(pain as unknown as PainEntry[], mood as unknown as MoodEntry[], {
       userId: 'u1',
       consentGranted: true,
       sanitize: true,
@@ -96,18 +107,21 @@ describe('EmpathyMetricsCollector', () => {
   it('injects noise when differentialPrivacy true', async () => {
     const security = new FakeSecurityService();
     const analytics = new FakeAnalyticsService();
-    const c = new EmpathyMetricsCollector(security as any, analytics as any);
+    const c = new EmpathyMetricsCollector(
+      security as unknown as SecurityService,
+      analytics as unknown as EmpathyDrivenAnalyticsService
+    );
 
     const pain = [{ notes: '' }];
     const mood = [{ notes: '' }];
 
-    const r1 = await c.collect(pain as any, mood as any, {
+    const r1 = await c.collect(pain as unknown as PainEntry[], mood as unknown as MoodEntry[], {
       userId: 'u1',
       consentGranted: true,
       differentialPrivacy: true,
       noiseEpsilon: 0.5,
     });
-    const r2 = await c.collect(pain as any, mood as any, {
+    const r2 = await c.collect(pain as unknown as PainEntry[], mood as unknown as MoodEntry[], {
       userId: 'u1',
       consentGranted: true,
       differentialPrivacy: true,

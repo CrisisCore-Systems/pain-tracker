@@ -4,7 +4,7 @@ import { SecurityService } from '../services/SecurityService';
 import { EmpathyDrivenAnalyticsService } from '../services/EmpathyDrivenAnalytics';
 import type { PainEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
-import { resetTestRandom, seededRandom } from './utils/seededRandom';
+import { resetTestRandom } from './utils/seededRandom';
 
 const security = new SecurityService(undefined, { consentRequired: true });
 const analytics = new EmpathyDrivenAnalyticsService({

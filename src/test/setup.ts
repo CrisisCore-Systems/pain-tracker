@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { expect, afterEach, vi, beforeAll } from 'vitest';
+import { expect, afterEach, vi } from 'vitest';
 import React from 'react';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
@@ -58,14 +58,19 @@ try {
   // Try to wire node-canvas into jsdom for higher fidelity canvas support in tests.
   // This is optional at runtime; if `canvas` isn't installed (for contributors), we fall back to a minimal stub.
   // Use the dynamic ESM import for node packages to avoid require() calls
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { createCanvas } = (await import('canvas')) as any;
+  const { createCanvas } = (await import('canvas')) as unknown as {
+    createCanvas: (width: number, height: number) => {
+      getContext: (type: string) => unknown;
+    };
+  };
 
   // Attach a minimal implementation to document if not present
   if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
     // Replace getContext to return a real CanvasRenderingContext2D from node-canvas
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (HTMLCanvasElement.prototype as any).getContext = function (type?: string) {
+    const proto = HTMLCanvasElement.prototype as unknown as {
+      getContext?: (this: HTMLCanvasElement, type?: string) => unknown;
+    };
+    proto.getContext = function (this: HTMLCanvasElement, type?: string) {
       // create a small backing canvas for Chart.js to draw into
       const c = createCanvas(800, 600);
       return c.getContext(type || '2d');
@@ -74,8 +79,10 @@ try {
 } catch {
   // canvas not installed or failed to load — fall back to previous minimal stub
   if (typeof HTMLCanvasElement !== 'undefined' && !HTMLCanvasElement.prototype.getContext) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (HTMLCanvasElement.prototype as any).getContext = function () {
+    const proto = HTMLCanvasElement.prototype as unknown as {
+      getContext?: (this: HTMLCanvasElement) => unknown;
+    };
+    proto.getContext = function (this: HTMLCanvasElement) {
       // return a minimal stub that Chart.js will accept for creation
       return {
         canvas: this,
@@ -124,122 +131,104 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
   } as Storage;
 }
 
-// Seed encryption master key if securityService storage relies on localStorage
-beforeAll(async () => {
-  // Skip heavy initialization in CI or when SKIP_HEAVY_SETUP is set
-  if (process.env.CI || process.env.SKIP_HEAVY_SETUP === 'true') {
-    console.log('Test setup: Skipping heavy initialization (CI or SKIP_HEAVY_SETUP=true)');
-    return;
-  }
-
-  // Make this initialization resilient: if securityService.initializeMasterKey
-  // takes too long in some environments, continue tests after a short timeout.
-  // Use test-only constants, not production secrets
+// --- Heavy async init (must run before test modules import) ---
+// Vitest runs `setupFiles` before importing test files, but `beforeAll` hooks run later.
+// Encryption-related singletons are created at import time, so crypto/vault init must happen here.
+if (process.env.SKIP_HEAVY_SETUP === 'true') {
+  console.log('Test setup: Skipping heavy initialization (SKIP_HEAVY_SETUP=true)');
+} else {
+  const timeoutMs = Number(process.env.TEST_SETUP_TIMEOUT_MS || 60000);
   const TEST_MASTER_PASSWORD = process.env.TEST_MASTER_PASSWORD || 'test-password';
   const TEST_MASTER_KEY = process.env.TEST_MASTER_KEY || 'test-key-2025';
+
   const initPromise = (async () => {
+    await securityService.initializeMasterKey(TEST_MASTER_PASSWORD);
+
+    // Seed a deterministic, valid 32-byte (AES-256) base64 key for the default key id.
+    // Avoid `btoa`/string-binary conversions (Node 20 + jsdom differences).
+    let seededKeyB64: string;
     try {
-      await securityService.initializeMasterKey(TEST_MASTER_PASSWORD);
-
-      // Create a seeded test key and store it via the secure storage API so tests don't write raw keys to localStorage
-      // Use SubtleCrypto (or Node crypto) to derive a stable bytestring from TEST_MASTER_KEY
-      let seededHashB64 = TEST_MASTER_KEY;
-      try {
-        const enc = new TextEncoder().encode(TEST_MASTER_KEY);
-        const digest = await crypto.subtle.digest('SHA-256', enc);
-        seededHashB64 = btoa(String.fromCharCode(...new Uint8Array(digest)));
-      } catch {
-        // Fallback: use the literal string (non-ideal but only for tests)
-        seededHashB64 = TEST_MASTER_KEY;
-      }
-
-      const storage = securityService.createSecureStorage();
-      await storage.store(
-        'key:pain-tracker-master',
-        JSON.stringify({ key: seededHashB64, created: new Date().toISOString() }),
-        true
-      );
-
-      // Test-only hooks: expose no-op passthroughs but only in test env
-    } catch (e) {
-      console.warn('Test setup: failed to initialize master key', e);
+      const enc = new TextEncoder().encode(TEST_MASTER_KEY);
+      const digest = await crypto.subtle.digest('SHA-256', enc);
+      seededKeyB64 = Buffer.from(digest).toString('base64');
+    } catch {
+      const seed = new TextEncoder().encode(TEST_MASTER_KEY);
+      const bytes = new Uint8Array(32);
+      bytes.set(seed.subarray(0, 32));
+      seededKeyB64 = Buffer.from(bytes).toString('base64');
     }
+
+    const storage = securityService.createSecureStorage();
+    await storage.store(
+      'key:pain-tracker-master',
+      { key: seededKeyB64, created: new Date().toISOString() },
+      true
+    );
   })();
 
-  const timeout = new Promise<void>(resolve =>
+  const initTimeout = new Promise<never>((_resolve, reject) =>
     setTimeout(() => {
-      console.warn('Test setup: security initialization timed out after 15s, continuing...');
-      resolve();
-    }, 15000)
+      reject(new Error(`Test setup: security initialization timed out after ${timeoutMs}ms`));
+    }, timeoutMs)
   );
 
-  // Wait for whichever finishes first: initialization or timeout
-  await Promise.race([initPromise, timeout]);
+  await Promise.race([initPromise, initTimeout]);
 
-  // Initialize vault with deterministic passphrase for tests
   const vaultPromise = (async () => {
-    try {
-      await getSodium();
-      const TEST_VAULT_PASSPHRASE =
-        process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
-      const vaultStatus = await vaultService.initialize();
-      if (vaultStatus.state === 'uninitialized') {
-        await vaultService.setupPassphrase(TEST_VAULT_PASSPHRASE);
-      } else if (vaultStatus.state !== 'unlocked') {
-        await vaultService.unlock(TEST_VAULT_PASSPHRASE);
-      }
-    } catch (error) {
-      console.warn('Test setup: failed to initialize vault service', error);
+    await getSodium();
+    const TEST_VAULT_PASSPHRASE = process.env.TEST_VAULT_PASSPHRASE || 'test-vault-passphrase-2025';
+    const vaultStatus = await vaultService.initialize();
+    if (vaultStatus.state === 'uninitialized') {
+      await vaultService.setupPassphrase(TEST_VAULT_PASSPHRASE);
+    } else if (vaultStatus.state !== 'unlocked') {
+      await vaultService.unlock(TEST_VAULT_PASSPHRASE);
     }
   })();
 
-  const vaultTimeout = new Promise<void>(resolve =>
+  const vaultTimeout = new Promise<never>((_resolve, reject) =>
     setTimeout(() => {
-      console.warn('Test setup: vault initialization timed out after 15s, continuing...');
-      resolve();
-    }, 15000)
+      reject(new Error(`Test setup: vault initialization timed out after ${timeoutMs}ms`));
+    }, timeoutMs)
   );
 
   await Promise.race([vaultPromise, vaultTimeout]);
+}
 
-  // Inject light theme colors into jsdom so axe and computed styles can evaluate contrast
-  try {
-    const light = getThemeColors('light');
-    // Apply basic page-level styles
-    if (typeof document !== 'undefined' && document.documentElement) {
-      document.body.style.backgroundColor = light.background;
-      document.body.style.color = light.foreground;
-      // Set CSS custom properties used by app styles where possible
-      Object.entries({
-        '--primary': light.primary,
-        '--primary-foreground': light.primaryForeground,
-        '--destructive': light.destructive,
-        '--destructive-foreground': light.destructiveForeground,
-        '--muted': light.muted,
-        '--muted-foreground': light.mutedForeground,
-        '--card': light.card,
-        '--card-foreground': light.cardForeground,
-      }).forEach(([k, v]) => {
-        try {
-          document.documentElement.style.setProperty(k, v as string);
-        } catch {
-          // Ignore errors setting CSS properties
-        }
-      });
-    }
-  } catch (e) {
-    // Non-fatal for test runs
-    console.warn('Test setup: failed to inject theme colors into jsdom', e);
+// Inject light theme colors into jsdom so axe and computed styles can evaluate contrast
+try {
+  const light = getThemeColors('light');
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document.body.style.backgroundColor = light.background;
+    document.body.style.color = light.foreground;
+    Object.entries({
+      '--primary': light.primary,
+      '--primary-foreground': light.primaryForeground,
+      '--destructive': light.destructive,
+      '--destructive-foreground': light.destructiveForeground,
+      '--muted': light.muted,
+      '--muted-foreground': light.mutedForeground,
+      '--card': light.card,
+      '--card-foreground': light.cardForeground,
+    }).forEach(([k, v]) => {
+      try {
+        document.documentElement.style.setProperty(k, v as string);
+      } catch {
+        // Ignore errors setting CSS properties
+      }
+    });
   }
-});
+} catch (e) {
+  console.warn('Test setup: failed to inject theme colors into jsdom', e);
+}
 
 // Small jsdom adjustment for getComputedStyle: make button min sizes available
 // so accessibility tests based on min tap targets won't get NaN from parseInt.
 try {
   const realGetComputedStyle = window.getComputedStyle.bind(window);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).getComputedStyle = (el: Element) => {
-    const styles = realGetComputedStyle(el as any) as CSSStyleDeclaration;
+  (window as unknown as { getComputedStyle: (el: Element) => CSSStyleDeclaration }).getComputedStyle = (
+    el: Element
+  ) => {
+    const styles = realGetComputedStyle(el) as CSSStyleDeclaration;
     try {
       if (el && (el as HTMLElement).tagName && (el as HTMLElement).tagName.toUpperCase() === 'BUTTON') {
         try {
@@ -256,7 +245,7 @@ try {
     }
     return styles;
   };
-} catch (e) {
+} catch {
   // ignore if getComputedStyle is not available
 }
 
@@ -271,29 +260,33 @@ vi.mock('focus-trap-react', () => ({
 // Global test mocks: stub heavy or lazy-loaded modules used across components
 vi.mock('../components/PredictivePanel', () => ({
   __esModule: true,
-  default: (props: any) =>
-    React.createElement(
+  default: (props: unknown) => {
+    const p = props as Record<string, unknown> | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'predictive-panel-mock',
-        'data-entries': JSON.stringify(props?.entries || []),
+        'data-entries': JSON.stringify(p?.entries || []),
       },
       'PredictivePanelMock'
-    ),
+    );
+  },
 }));
 
 // Ensure local widget wrapper is also mocked so DashboardOverview's lazy import is intercepted
 vi.mock('../components/widgets/PredictivePanelWrapper', () => ({
   __esModule: true,
-  default: (props: any) =>
-    React.createElement(
+  default: (props: unknown) => {
+    const p = props as Record<string, unknown> | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'predictive-panel-mock',
-        'data-entries': JSON.stringify(props?.entries || []),
+        'data-entries': JSON.stringify(p?.entries || []),
       },
       'PredictivePanelMock'
-    ),
+    );
+  },
 }));
 
 // Preload wrapper import so that mocked module is loaded before components that lazy-load it
@@ -305,44 +298,52 @@ try {
 
 vi.mock('../design-system/components/Chart', () => ({
   __esModule: true,
-  default: (props: any) =>
-    React.createElement(
+  default: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
-  PainTrendChart: (props: any) =>
-    React.createElement(
+    );
+  },
+  PainTrendChart: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
-  SymptomFrequencyChart: (props: any) =>
-    React.createElement(
+    );
+  },
+  SymptomFrequencyChart: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
-  PainDistributionChart: (props: any) =>
-    React.createElement(
+    );
+  },
+  PainDistributionChart: (props: unknown) => {
+    const p = props as { data?: { labels?: unknown }; height?: unknown } | null | undefined;
+    return React.createElement(
       'div',
       {
         'data-testid': 'chart-mock',
-        'data-labels': JSON.stringify(props?.data?.labels || []),
-        'data-height': props?.height,
+        'data-labels': JSON.stringify(p?.data?.labels || []),
+        'data-height': p?.height,
       },
       'ChartMock'
-    ),
+    );
+  },
 }));

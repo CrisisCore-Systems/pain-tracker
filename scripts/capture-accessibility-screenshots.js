@@ -15,10 +15,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
 import {
-  ACCESSIBILITY_SCREENSHOTS,
-  ACCESSIBILITY_SCREENSHOT_CATEGORIES,
   getNonCompositeScreenshots,
-  getCompositeScreenshots,
 } from './accessibility-screenshot-config.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -51,7 +48,7 @@ async function waitForServer(url, maxAttempts = 30) {
         console.log('✅ Server is ready!\n');
         return true;
       }
-    } catch (error) {
+    } catch {
       // Server not ready yet
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -414,7 +411,7 @@ async function captureAccessibilityScreenshots() {
             try {
               await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 15000 });
               console.log('   ✓ Testing account created and app loaded\n');
-            } catch (e) {
+            } catch {
               console.log('   ⚠️  Timeout waiting for app to load\n');
             }
           }
@@ -445,7 +442,7 @@ async function captureAccessibilityScreenshots() {
               try {
                 await page.waitForSelector('main, [role="main"], .pain-tracker-app', { timeout: 10000 });
                 console.log('   ✓ Vault unlocked and app loaded\n');
-              } catch (e) {
+              } catch {
                 console.log('   ⚠️  Timeout waiting for app after unlock\n');
               }
             }
@@ -492,7 +489,7 @@ async function captureAccessibilityScreenshots() {
       try {
         await closeButton.click();
         await page.waitForTimeout(500);
-      } catch (e) {
+      } catch {
         // Ignore if button is not clickable
       }
     }
@@ -501,7 +498,7 @@ async function captureAccessibilityScreenshots() {
     try {
       await page.waitForSelector('main, [role="main"], .pain-tracker-dashboard', { timeout: 5000 });
       console.log('   ✓ Welcome screens dismissed, app ready\n');
-    } catch (e) {
+    } catch {
       console.log('   ⚠️  Could not verify app is ready\n');
     }
 

@@ -22,12 +22,11 @@ concurrency:
 
 env:
   # Build environment
-  NODE_ENV: production
   VITE_APP_ENVIRONMENT: production
   VITE_WCB_API_ENDPOINT: /api/wcb
 
   # Standardized Node version for CI
-  NODE_VERSION: '20'
+  NODE_VERSION: '20.19.0'
 
 jobs:
   # Changed files detection for optimization
@@ -71,9 +70,9 @@ jobs:
       fail-fast: false
       matrix:
         # Standardize on a single, supported LTS for CI to avoid mismatched toolchains
-        node-version: [20]
+        node-version: ['20.19.0']
         include:
-          - node-version: 20
+          - node-version: '20.19.0'
             is-primary: true
     
     steps:
@@ -86,7 +85,7 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci --include=dev --legacy-peer-deps
       
       - name: Run environment diagnostics
         run: node scripts/doctor.js
@@ -105,10 +104,14 @@ jobs:
       
       - name: Run tests
         run: npm run test
+        env:
+          NODE_ENV: test
       
       - name: Run test coverage (primary version only)
         if: matrix.is-primary
         run: npm run test:coverage
+        env:
+          NODE_ENV: test
       
       - name: Upload coverage to Codecov (primary version only)
         if: matrix.is-primary
@@ -119,6 +122,8 @@ jobs:
       
       - name: Build application
         run: npm run build
+        env:
+          NODE_ENV: production
       
       - name: Upload build artifacts (primary version only)
         if: matrix.is-primary
@@ -149,7 +154,7 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci --include=dev --legacy-peer-deps
       
       - name: Run dependency audit
         run: |
@@ -206,8 +211,7 @@ jobs:
         with:
           languages: javascript-typescript
           queries: security-extended,security-and-quality
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@3599b3baa15b485a2e49ef411a7a4bb2452e7f93
+          build-mode: none
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@3599b3baa15b485a2e49ef411a7a4bb2452e7f93
         with:
@@ -274,7 +278,7 @@ jobs:
           cache: 'npm'
       
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci --include=dev --legacy-peer-deps
       
       - name: Build for production
         run: npm run build

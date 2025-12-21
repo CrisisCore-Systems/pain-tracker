@@ -6,7 +6,7 @@
  */
 
 import sharp from 'sharp';
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { resolve, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -75,7 +75,7 @@ async function main() {
   for (const diagram of diagrams) {
     try {
       await convertSvgToPng(diagram.svg, diagram.png, diagram.width);
-    } catch (error) {
+    } catch {
       console.error(`Failed to convert ${basename(diagram.svg)}`);
       // Continue with other diagrams even if one fails
     }

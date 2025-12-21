@@ -12,8 +12,6 @@ import {
   Award,
   AlertCircle,
   CheckCircle2,
-  ArrowUpRight,
-  ArrowDownRight,
   Minus,
   BarChart3,
   MessageCircle,
@@ -42,7 +40,6 @@ import {
   describeChallengingDay,
   describeImprovementRate,
   generateHumanizedSummary,
-  getTimeBasedGreeting,
   // New pattern analysis functions
   analyzeTimeOfDayPatterns,
   analyzeDayOfWeekPatterns,
@@ -50,14 +47,6 @@ import {
   generateComparativeInsight,
   getEnhancedGreeting,
 } from '../../utils/humanize';
-
-// Premium stat card data for consistent styling
-const statCardConfigs = [
-  { id: 'avgPain', colorClass: 'stat-card-sky', orbColor: 'orb-glow-sky' },
-  { id: 'streak', colorClass: 'stat-card-purple', orbColor: 'orb-glow-purple' },
-  { id: 'entries', colorClass: 'stat-card-emerald', orbColor: 'orb-glow-emerald' },
-  { id: 'improvement', colorClass: 'stat-card-amber', orbColor: 'orb-glow-pink' },
-] as const;
 
 interface ModernDashboardProps {
   entries: PainEntry[];
@@ -232,12 +221,6 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
       clearAllData();
       setShowActions(false);
     }
-  };
-
-  const getTrendIcon = (trend: number) => {
-    if (trend < -0.5) return <ArrowDownRight className="h-4 w-4 text-green-500" />;
-    if (trend > 0.5) return <ArrowUpRight className="h-4 w-4 text-red-500" />;
-    return <Minus className="h-4 w-4 text-gray-500 dark:text-gray-400" />;
   };
 
   return (

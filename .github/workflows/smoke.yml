@@ -15,10 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node.js 20
+      - name: Use Node.js 20.19.0
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.19.0'
 
       - name: Cache node modules
         uses: actions/cache@v4
@@ -27,16 +27,18 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Build packages (required for project references)
-        run: npx tsc -b packages/design-system packages/services packages/utils
+        run: npm run -s build:packages
 
       - name: Typecheck
         run: npm run typecheck
 
       - name: Run unit tests (fast)
         run: npm run test:ci
+        env:
+          NODE_ENV: test
 
       - name: Build (quick)
         run: npm run build --if-present

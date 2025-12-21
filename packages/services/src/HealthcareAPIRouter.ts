@@ -1,15 +1,9 @@
-import { healthcareProviderAPI } from './HealthcareProviderAPI';
-import { dataSharingProtocols } from './DataSharingProtocols';
-import { healthcareOAuthProvider } from './HealthcareOAuth';
-import { hipaaComplianceService } from './HIPAACompliance';
-import { fhirService } from './FHIRService';
-
 export class HealthcareAPIRouter {
-  async handleFHIRRequest(_req: any) { return { success: true }; }
-  async handleProviderRequest(_req: any) { return { success: true }; }
-  async handleDataSharingRequest(_req: any) { return { success: true }; }
-  async handleOAuthRequest(_req: any) { return { success: true }; }
-  async route(_req: any) { return { success: true }; }
+  async handleFHIRRequest(_req: unknown) { return { success: true }; }
+  async handleProviderRequest(_req: unknown) { return { success: true }; }
+  async handleDataSharingRequest(_req: unknown) { return { success: true }; }
+  async handleOAuthRequest(_req: unknown) { return { success: true }; }
+  async route(_req: unknown) { return { success: true }; }
 }
 
 export const healthcareAPIRouter = new HealthcareAPIRouter();

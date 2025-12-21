@@ -50,7 +50,6 @@ export function useSwipeGesture<T extends HTMLElement = HTMLElement>(
   });
 
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
-  const animationFrameRef = useRef<number>();
 
   const calculateDirection = useCallback(
     (deltaX: number, deltaY: number): SwipeState['direction'] => {

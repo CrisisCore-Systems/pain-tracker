@@ -2,7 +2,7 @@ export interface AuditEvent {
   timestamp: string;
   eventType: string;
   userId?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export interface AuditLogger {

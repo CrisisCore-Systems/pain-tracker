@@ -1,6 +1,14 @@
 import type { VercelRequest, VercelResponse } from '../../../src/types/vercel';
 import { db } from '../../../src/lib/database';
-import verifyAdmin from '../../lib/adminAuth';
+import verifyAdmin from '../../../api-lib/adminAuth';
+
+type TestimonialPatchBody = {
+  anonymized?: unknown;
+  name?: unknown;
+  role?: unknown;
+  quote?: unknown;
+  publication_date?: unknown;
+};
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
@@ -17,10 +25,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return;
       }
 
-      const { anonymized, name, role, quote, publication_date } = req.body || {};
+      const body = (req.body ?? {}) as TestimonialPatchBody;
+      const { anonymized, name, role, quote, publication_date } = body;
       // Build update dynamically
       const sets: string[] = [];
-  const params: unknown[] = [];
+      const params: unknown[] = [];
       let idx = 1;
       if (anonymized !== undefined) {
         sets.push(`anonymized = $${idx++}`);

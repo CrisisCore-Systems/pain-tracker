@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../../src/lib/database';
-import verifyAdmin from '../lib/adminAuth';
+import verifyAdmin from '../../api-lib/adminAuth';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {

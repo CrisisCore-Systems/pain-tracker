@@ -28,25 +28,43 @@ import type { ValidationResponse } from '../../services/EmotionalValidationServi
 import { BarChart3, History, Loader2 } from 'lucide-react';
 
 // Environment helper mirroring desktop form
-const getEnv = () => {
+type EnvRecord = Record<string, unknown>;
+
+const getEnv = (): EnvRecord => {
   try {
-    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-      return (import.meta as any).env as Record<string, unknown>;
+    const metaEnv = (import.meta as unknown as { env?: unknown }).env;
+    if (metaEnv && typeof metaEnv === 'object') {
+      return metaEnv as EnvRecord;
     }
-  } catch (_) {
+  } catch {
     // ignore runtime mismatches
   }
-  if (typeof process !== 'undefined' && (process as any).env) {
-    return (process as any).env as Record<string, unknown>;
+
+  const processEnv = (globalThis as unknown as { process?: { env?: unknown } }).process?.env;
+  if (processEnv && typeof processEnv === 'object') {
+    return processEnv as EnvRecord;
   }
-  return {} as Record<string, unknown>;
+
+  return {};
+};
+
+const getEnvValue = (env: EnvRecord, key: string): string | undefined => {
+  const value = env[key];
+  if (typeof value === 'string') {
+    return value;
+  }
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+  return undefined;
 };
 
 const ENABLE_VALIDATION = (() => {
   const env = getEnv();
   // Enable by default unless explicitly disabled
   return (
-    env.VITE_REACT_APP_ENABLE_VALIDATION !== 'false' && env.REACT_APP_ENABLE_VALIDATION !== 'false'
+    getEnvValue(env, 'VITE_REACT_APP_ENABLE_VALIDATION') !== 'false' &&
+    getEnvValue(env, 'REACT_APP_ENABLE_VALIDATION') !== 'false'
   );
 })();
 
@@ -117,7 +135,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
         console.error('Failed to persist validation message (mobile)', error);
       }
     },
-    [addValidation, validationIntegration]
+    [addValidation]
   );
 
   const handleProgressUpdate = useCallback(
@@ -133,7 +151,7 @@ export function MobilePainEntryForm({ onSubmit }: MobilePainEntryFormProps) {
         setTimeout(() => setProgressStatus('idle'), 6000);
       }
     },
-    [validationIntegration]
+    []
   );
 
   // Mobile-optimized sections with touch-friendly components

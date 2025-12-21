@@ -57,8 +57,15 @@ export default [
       ...typescript.configs.recommended.rules,
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      '@typescript-eslint/no-unused-vars': 'warn',
+      'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-undef': 'off',
     },
@@ -92,8 +99,15 @@ export default [
       ...js.configs.recommended.rules,
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-      'no-unused-vars': 'warn',
+      'react-refresh/only-export-components': 'off',
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
     },
     settings: {
       react: {
@@ -135,6 +149,24 @@ export default [
         jest: 'readonly',
         console: 'readonly',
       }
-    }
+    },
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    // Playwright specs are not part of Vite/React Fast Refresh.
+    files: ['e2e/**/*.{ts,tsx,js,jsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+  {
+    // Next.js App Router files commonly export non-component route metadata.
+    // React Refresh lint rule is not applicable here and creates noisy warnings.
+    files: ['packages/blog/src/app/**/*.{ts,tsx,js,jsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
   }
 ]; 

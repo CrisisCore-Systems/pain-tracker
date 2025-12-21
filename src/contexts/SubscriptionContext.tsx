@@ -346,7 +346,7 @@ export const useFeatureAccess = (
         if (mounted) {
           setResult(access);
         }
-      } catch (err) {
+      } catch {
         if (mounted) {
           setResult({
             hasAccess: false,

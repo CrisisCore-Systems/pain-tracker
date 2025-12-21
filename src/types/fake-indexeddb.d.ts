@@ -1,10 +1,10 @@
 declare module 'fake-indexeddb/auto' {
   // The polyfill augments globalThis.indexedDB — no exports are needed.
-  const x: any;
+  const x: unknown;
   export default x;
 }
 
 declare module 'fake-indexeddb' {
-  const x: any;
+  const x: unknown;
   export default x;
 }

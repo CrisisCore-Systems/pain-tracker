@@ -1,9 +1,9 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 export type VercelRequest = IncomingMessage & {
-  query: any;
-  body: any;
-  cookies: any;
+  query: Record<string, string | string[] | undefined>;
+  body: unknown;
+  cookies: Record<string, string>;
 };
 
 export type VercelResponse = ServerResponse & {

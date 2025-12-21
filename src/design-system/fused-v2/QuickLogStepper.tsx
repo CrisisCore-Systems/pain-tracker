@@ -175,7 +175,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
   const painHint = useAdaptiveCopy(quickLogCopy.painSliderHint);
   const locationsLabel = useAdaptiveCopy(quickLogCopy.locationsLabel);
   const locationsHint = useAdaptiveCopy(quickLogCopy.locationsHint);
-  const bodyMapToggle = useAdaptiveCopy(quickLogCopy.bodyMapToggle);
+  const _bodyMapToggle = useAdaptiveCopy(quickLogCopy.bodyMapToggle);
   const notesLabel = useAdaptiveCopy(quickLogCopy.notesLabel);
   const notesPlaceholder = useAdaptiveCopy(quickLogCopy.notesPlaceholder);
   const continueBtn = useAdaptiveCopy(quickLogCopy.continueButton);

@@ -43,7 +43,7 @@ async function waitForServer(url, maxAttempts = 30) {
         console.log('✅ Server is ready!');
         return true;
       }
-    } catch (error) {
+    } catch {
       // Server not ready yet
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -65,14 +65,6 @@ async function captureScreenshots() {
     cwd: ROOT_DIR,
     stdio: 'pipe',
     shell: true
-  });
-
-  let serverReady = false;
-  devServer.stdout.on('data', (data) => {
-    const output = data.toString();
-    if (output.includes('Local:') || output.includes('localhost:3000')) {
-      serverReady = true;
-    }
   });
 
   try {

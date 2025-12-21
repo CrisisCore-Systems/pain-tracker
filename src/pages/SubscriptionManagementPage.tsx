@@ -6,23 +6,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  CreditCard,
   Calendar,
-  TrendingUp,
   AlertCircle,
   Check,
   X,
   RefreshCw,
-  Download,
   Settings,
   Shield,
   Crown,
   Sparkles,
   ArrowLeft,
+  TrendingUp,
 } from 'lucide-react';
 import { useSubscription, useTierBadge } from '../contexts/SubscriptionContext';
 import { SUBSCRIPTION_PLANS, FEATURE_COMPARISON } from '../config/subscription-tiers';
-import type { SubscriptionTier } from '../types/subscription';
 
 export function SubscriptionManagementPage() {
   const navigate = useNavigate();
@@ -30,8 +27,6 @@ export function SubscriptionManagementPage() {
     subscription,
     currentTier,
     isLoading,
-    upgradeTier,
-    downgradeTier,
     cancelSubscription,
     reactivateSubscription,
   } = useSubscription();
@@ -50,37 +45,6 @@ export function SubscriptionManagementPage() {
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   };
 
-  const handleUpgrade = async (newTier: SubscriptionTier) => {
-    setProcessingAction('upgrade');
-    try {
-      // In production, this would redirect to Stripe checkout
-      await upgradeTier(newTier, true);
-      
-      // Redirect to success page
-      navigate('/subscription/success');
-    } catch (error) {
-      console.error('Upgrade failed:', error);
-      alert('Failed to upgrade subscription. Please try again.');
-    } finally {
-      setProcessingAction(null);
-    }
-  };
-
-  const handleDowngrade = async (newTier: SubscriptionTier) => {
-    setProcessingAction('downgrade');
-    try {
-      const changeOption = await downgradeTier(newTier);
-      alert(
-        `Downgrade scheduled for ${new Date(changeOption.effectiveDate || '').toLocaleDateString()}. ` +
-        `You will continue to have ${currentTier} features until then.`
-      );
-    } catch (error) {
-      console.error('Downgrade failed:', error);
-      alert('Failed to schedule downgrade. Please try again.');
-    } finally {
-      setProcessingAction(null);
-    }
-  };
 
   const handleCancel = async () => {
     setProcessingAction('cancel');

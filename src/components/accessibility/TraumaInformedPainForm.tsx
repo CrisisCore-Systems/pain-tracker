@@ -125,13 +125,23 @@ export function TraumaInformedPainEntryForm({
     }
   };
 
-  const updateFormData = <K extends keyof typeof formData>(
+  type FormData = Omit<PainEntry, 'id' | 'timestamp'>;
+  type ObjectSectionKey =
+    | 'baselineData'
+    | 'functionalImpact'
+    | 'medications'
+    | 'treatments'
+    | 'qualityOfLife'
+    | 'workImpact'
+    | 'comparison';
+
+  const updateFormData = <K extends ObjectSectionKey>(
     section: K,
-    data: Partial<(typeof formData)[K]>
+    data: Partial<FormData[K]>
   ) => {
     setFormData(prev => ({
       ...prev,
-      [section]: { ...(prev[section] as any), ...data },
+      [section]: { ...(prev[section] as FormData[K]), ...data },
     }));
   };
 

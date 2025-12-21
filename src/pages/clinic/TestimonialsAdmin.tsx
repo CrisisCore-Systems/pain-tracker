@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { ClinicProtectedRoute } from '../../components/clinic/ClinicProtectedRoute';
 import { useClinicAuth } from '../../contexts/ClinicAuthContext';
-import { Button } from '../../design-system/components/Button';
 import { MessageSquare, CheckCircle2, EyeOff, Eye, AlertCircle, Loader2 } from 'lucide-react';
 
 export const TestimonialsAdmin: React.FC = () => {

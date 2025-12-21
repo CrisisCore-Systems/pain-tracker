@@ -37,7 +37,7 @@ export const Input: React.FC<Props> = ({ label, error, hint, id, className = '',
         {...(error ? { 'aria-invalid': true } : {})}
         aria-describedby={error ? `${inputId}-error` : hint ? `${inputId}-hint` : undefined}
         className={`mt-1 block w-full rounded-md shadow-sm`}
-        style={{ ...(baseStyle as any), ...(errorStyle as any) }}
+        style={{ ...baseStyle, ...errorStyle }}
         onFocus={e => Object.assign((e.target as HTMLInputElement).style, focusStyle)}
         onBlur={e => Object.assign((e.target as HTMLInputElement).style, baseStyle, errorStyle)}
         {...rest}

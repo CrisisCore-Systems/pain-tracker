@@ -9,6 +9,13 @@ We take security vulnerabilities seriously. If you discover a security vulnerabi
 3. Include detailed information about the vulnerability
 4. Allow time for assessment and remediation before disclosure
 
+## Security-Sensitive Code Changes
+
+If you are proposing a change (PR) that touches encryption, key handling, local persistence (localStorage/IndexedDB), migrations, exports, audit logging, or PHI/PII handling, please follow:
+
+- `docs/SECURITY_CHANGE_CHECKLIST.md`
+- `docs/LOCAL_DATA_AND_MIGRATIONS.md`
+
 ## Environment Variables & Configuration
 
 ### Required Environment Variables for Production

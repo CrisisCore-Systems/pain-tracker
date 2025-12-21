@@ -94,7 +94,7 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
           const summary = parts.join(', ');
           if (summary) entry.weather = summary;
         }
-      } catch (err) {
+      } catch {
         // Ignore enrichment failures; entry save must not be blocked
       }
 

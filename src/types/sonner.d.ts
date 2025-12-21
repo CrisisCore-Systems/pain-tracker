@@ -11,5 +11,10 @@ declare module 'sonner' {
 
   export const toast: ToastAPI;
   export const Toaster: unknown;
-  export default { toast, Toaster } as any;
+
+  declare const sonner: {
+    toast: ToastAPI;
+    Toaster: unknown;
+  };
+  export default sonner;
 }

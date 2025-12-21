@@ -158,8 +158,9 @@ export const securityConfig = {
     cors: ((): CorsConfig => {
       const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
         try {
-          if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
-            return (import.meta as any).env as Record<string, string | undefined>;
+          const meta = import.meta as unknown as { env?: Record<string, string | undefined> };
+          if (meta.env) {
+            return meta.env;
           }
         } catch {
           // import.meta not available, fall through to process.env
@@ -205,8 +206,9 @@ export const securityConfig = {
     session: ((): SessionConfig => {
       const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
         try {
-          if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
-            return (import.meta as any).env as Record<string, string | undefined>;
+          const meta = import.meta as unknown as { env?: Record<string, string | undefined> };
+          if (meta.env) {
+            return meta.env;
           }
         } catch {
           // import.meta not available, fall through to process.env
@@ -259,18 +261,7 @@ export const securityConfig = {
       sanitizeErrors: boolean;
       logSecurityEvents: boolean;
     } => {
-      const _env: Record<string, string | undefined> = ((): Record<string, string | undefined> => {
-        try {
-          if (typeof import.meta !== 'undefined' && (import.meta as any).env) {
-            return (import.meta as any).env as Record<string, string | undefined>;
-          }
-        } catch {
-          // import.meta not available, fall through to process.env
-        }
-        if (typeof process !== 'undefined' && process.env)
-          return process.env as Record<string, string | undefined>;
-        return {} as Record<string, string | undefined>;
-      })();
+      const _env = getRuntimeEnv();
       const isProd = _env.NODE_ENV === 'production' || _env.MODE === 'production';
       return {
         enableStackTraces: !isProd,
@@ -288,6 +279,24 @@ export const securityConfig = {
     },
   },
 };
+
+type RuntimeEnv = Record<string, string | undefined>;
+
+function getRuntimeEnv(): RuntimeEnv {
+  try {
+    const meta = import.meta as unknown as { env?: RuntimeEnv };
+    if (meta.env) return meta.env;
+  } catch {
+    // import.meta not available
+  }
+
+  if (typeof process !== 'undefined') {
+    const nodeProcess = process as unknown as { env?: RuntimeEnv };
+    if (nodeProcess.env) return nodeProcess.env;
+  }
+
+  return {};
+}
 
 /**
  * Generate CSP header string
@@ -371,17 +380,7 @@ export function validateSecurityConfig(): {
   const recommendations: string[] = [];
 
   // Check environment variables
-  const _env = ((): any => {
-    try {
-      if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-        return (import.meta as any).env;
-      }
-    } catch {
-      // import.meta not available, fall through to process.env
-    }
-    if (typeof process !== 'undefined' && (process as any).env) return (process as any).env;
-    return {};
-  })();
+  const _env = getRuntimeEnv();
 
   if (_env.NODE_ENV === 'production' || _env.MODE === 'production') {
     if (!_env.VITE_WCB_API_ENDPOINT || _env.VITE_WCB_API_ENDPOINT.startsWith('http://')) {

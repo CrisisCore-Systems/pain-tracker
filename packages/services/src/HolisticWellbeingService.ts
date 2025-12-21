@@ -2,7 +2,7 @@
 import type { PainEntry } from './types';
 
 export class HolisticWellbeingService {
-  async calculateWellbeingMetrics(userId: string, painEntries: PainEntry[]) {
+  async calculateWellbeingMetrics(_userId: string, _painEntries: PainEntry[]) {
     return { qualityOfLife: 50 };
   }
 }

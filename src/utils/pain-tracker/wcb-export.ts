@@ -181,7 +181,7 @@ export function exportWorkSafeBCPDF(
     claimNumber,
     healthcareProvider,
     includeDetailedEntries = true,
-    includeTrendSummary = true,
+    includeTrendSummary: _includeTrendSummary = true,
   } = options;
 
   // Filter entries by date range
@@ -405,7 +405,7 @@ export function exportWorkSafeBCPDF(
     doc.text('Activities Limited by Pain:', leftMargin, yPosition);
     doc.setFont('helvetica', 'normal');
     yPosition += 6;
-    Array.from(allLimitations).slice(0, 8).forEach((lim, i) => {
+    Array.from(allLimitations).slice(0, 8).forEach(lim => {
       doc.text(`  • ${lim}`, leftMargin + 5, yPosition);
       yPosition += 5;
     });

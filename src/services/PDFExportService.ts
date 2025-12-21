@@ -4,7 +4,10 @@ import type { jsPDF as jsPDFType } from 'jspdf';
 // Extend jsPDF type to include autoTable
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF;
+    autoTable: (options: unknown) => jsPDF;
+    lastAutoTable?: {
+      finalY?: number;
+    };
   }
 }
 
@@ -131,7 +134,7 @@ export class PDFExportService {
         .sort(([, a], [, b]) => (Number(b) as unknown as number) - (Number(a) as unknown as number))
         .map(([location, count]) => [location, String(count)]);
 
-      (this.doc as any).autoTable({
+      this.doc!.autoTable({
         startY: yPosition,
         head: [['Location', 'Occurrences']],
         body: locationData,
@@ -139,10 +142,6 @@ export class PDFExportService {
         styles: { fontSize: 10 },
         headStyles: { fillColor: [41, 128, 185] },
       });
-
-      yPosition = ((this.doc as any).lastAutoTable as any)?.finalY
-        ? ((this.doc as any).lastAutoTable as any).finalY + 15
-        : yPosition + 15;
     } else {
       this.doc!.text('No pain location data recorded.', 20, yPosition);
       yPosition += 10;
@@ -180,7 +179,7 @@ export class PDFExportService {
         headStyles: { fillColor: [231, 76, 60] },
       });
 
-      yPosition = (this.doc as any).lastAutoTable.finalY + 15;
+      yPosition = this.doc!.lastAutoTable!.finalY! + 15;
     }
 
     // Accommodations
@@ -198,14 +197,12 @@ export class PDFExportService {
         styles: { fontSize: 10 },
         headStyles: { fillColor: [46, 204, 113] },
       });
-
-      yPosition = (this.doc as any).lastAutoTable.finalY + 15;
     }
   }
 
   private addFunctionalAnalysis(report: WCBReport): void {
     // Check if we need a new page
-    let yPosition = (this.doc as any).lastAutoTable?.finalY || 200;
+    let yPosition = this.doc!.lastAutoTable?.finalY || 200;
     if (yPosition > 250) {
       this.doc!.addPage();
       yPosition = 30;
@@ -236,7 +233,7 @@ export class PDFExportService {
         headStyles: { fillColor: [155, 89, 182] },
       });
 
-      yPosition = (this.doc as any).lastAutoTable.finalY + 15;
+      yPosition = this.doc!.lastAutoTable!.finalY! + 15;
     }
 
     // Changes over time
@@ -263,14 +260,12 @@ export class PDFExportService {
         styles: { fontSize: 10 },
         headStyles: { fillColor: [230, 126, 34] },
       });
-
-      yPosition = (this.doc as any).lastAutoTable.finalY + 15;
     }
   }
 
   private addTreatments(report: WCBReport): void {
     // Check if we need a new page
-    let yPosition = (this.doc as any).lastAutoTable?.finalY || 200;
+    let yPosition = this.doc!.lastAutoTable?.finalY || 200;
     if (yPosition > 220) {
       this.doc!.addPage();
       yPosition = 30;
@@ -306,7 +301,7 @@ export class PDFExportService {
         headStyles: { fillColor: [26, 188, 156] },
       });
 
-      yPosition = (this.doc as any).lastAutoTable.finalY + 10;
+      yPosition = this.doc!.lastAutoTable!.finalY! + 10;
     }
 
     // Effectiveness
@@ -315,7 +310,7 @@ export class PDFExportService {
 
   private addRecommendations(report: WCBReport): void {
     // Check if we need a new page
-    let yPosition = (this.doc as any).lastAutoTable?.finalY || 250;
+    let yPosition = this.doc!.lastAutoTable?.finalY || 250;
     if (yPosition > 200) {
       this.doc!.addPage();
       yPosition = 30;

@@ -9,7 +9,7 @@ const svc = new PrivacyPreservingAnalyticsService({
 describe('PrivacyAnalyticsService.calculateWeeklyAverage', () => {
   it('computes average pain over last 7 days and clamps to 0-10', () => {
     const now = new Date();
-    const events: any[] = [];
+    const events: unknown[] = [];
 
     // Create events: one 8.5 at now, one 9 at 1 day ago, one 0 at 10 days ago (should be excluded)
     events.push({
@@ -36,9 +36,9 @@ describe('PrivacyAnalyticsService.calculateWeeklyAverage', () => {
       isAnonymized: true,
     });
 
-    // Call private method via any cast to test computation
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = (svc as any).calculateWeeklyAverage(events as any[]);
+    // Call private method via a narrow shim to test computation
+    const result = (svc as unknown as { calculateWeeklyAverage: (events: unknown[]) => number })
+      .calculateWeeklyAverage(events);
     expect(result).toBeGreaterThan(8);
     expect(result).toBeLessThanOrEqual(10);
   });

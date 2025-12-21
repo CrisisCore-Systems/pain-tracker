@@ -22,7 +22,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
-import { Button, Badge, useTheme } from '../../design-system';
+import { Button, useTheme } from '../../design-system';
 import { PanicMode } from '../accessibility/PanicMode';
 
 interface ModernAppLayoutProps {

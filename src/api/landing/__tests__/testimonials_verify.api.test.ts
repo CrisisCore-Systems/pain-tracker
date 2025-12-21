@@ -2,46 +2,74 @@ import handler from '../../../../api/landing/testimonials_verify';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { db } from '../../../../src/lib/database';
 
-function createMockRes() {
-  const res: any = {
+type MockResBody = unknown;
+type MockRes = {
+  _status: number;
+  _body: MockResBody;
+  status: (code: number) => MockRes;
+  json: (payload: MockResBody) => MockRes;
+};
+
+type MockReq = {
+  method: string;
+  headers: Record<string, string | undefined>;
+  body?: unknown;
+};
+
+type Handler = typeof handler;
+
+function createMockRes(): MockRes {
+  const res: MockRes = {
     _status: 200,
     _body: null,
-    status: (code: number) => { res._status = code; return res; },
-    json: (payload: any) => { res._body = payload; return res; },
+    status: (code: number) => {
+      res._status = code;
+      return res;
+    },
+    json: (payload: MockResBody) => {
+      res._body = payload;
+      return res;
+    },
   };
-  return res as any;
+  return res;
 }
 
 describe('POST /api/landing/testimonials_verify', () => {
-  beforeEach(() => { vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false })); });
+  let fetchMock: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    fetchMock = vi.fn().mockResolvedValue({ ok: false });
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
+  });
   afterEach(() => { vi.resetAllMocks(); });
 
   it('returns 401 if unauthorized', async () => {
-    const req: any = { method: 'POST', headers: {}, body: {} };
+    const req: MockReq = { method: 'POST', headers: {}, body: {} };
     const res = createMockRes();
-    await handler(req, res);
-    expect((res as any)._status).toBe(401);
-    expect((res as any)._body).toMatchObject({ ok: false });
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    expect(res._status).toBe(401);
+    expect(res._body).toMatchObject({ ok: false });
   });
 
   it('returns 400 if id is missing', async () => {
-  const req: any = { method: 'POST', headers: { authorization: 'Bearer test-admin-key' }, body: {} };
+    const req: MockReq = { method: 'POST', headers: { authorization: 'Bearer test-admin-key' }, body: {} };
     const res = createMockRes();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (fetch as any).mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
-    await handler(req, res);
-    expect((res as any)._status).toBe(400);
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    expect(res._status).toBe(400);
   });
 
   it('updates testimonial and audits', async () => {
     const fakeResult = [{ id: '1', verified: true }];
-    const querySpy = vi.spyOn(db, 'query').mockResolvedValueOnce(fakeResult as any).mockResolvedValueOnce([] as any);
-  const req: any = { method: 'POST', headers: { authorization: 'Bearer test-admin-key', 'x-admin-user': 'unit@test' }, body: { id: '1', verified: true } };
+    const querySpy = vi.spyOn(db, 'query');
+    querySpy
+      .mockResolvedValueOnce(fakeResult as unknown as Awaited<ReturnType<typeof db.query>>)
+      .mockResolvedValueOnce([] as unknown as Awaited<ReturnType<typeof db.query>>);
+    const req: MockReq = { method: 'POST', headers: { authorization: 'Bearer test-admin-key', 'x-admin-user': 'unit@test' }, body: { id: '1', verified: true } };
     const res = createMockRes();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (fetch as any).mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
-    await handler(req, res);
-    expect((res as any)._status).toBe(200);
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+    expect(res._status).toBe(200);
     expect(querySpy).toHaveBeenCalled();
     // audit insert should be the second call and include testimonials_audit
     expect(querySpy.mock.calls[1][0]).toMatch(/testimonials_audit/);

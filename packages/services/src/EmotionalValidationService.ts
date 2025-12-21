@@ -5,7 +5,7 @@ export interface ValidationResponse {
 }
 
 export class EmotionalValidationService {
-  validateEmotionalInput(input: string): ValidationResponse {
+  validateEmotionalInput(_input: string): ValidationResponse {
     return { isValid: true, errors: [], warnings: [] };
   }
 }

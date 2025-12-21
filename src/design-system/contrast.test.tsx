@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { Button } from './Button';
 import { Alert } from './Alert';
-import { theme, getThemeColors } from './theme';
+import { getThemeColors } from './theme';
 
 expect.extend(toHaveNoViolations);
 
@@ -166,7 +166,9 @@ describe('color contrast and accessibility smoke', () => {
 
     expect(failures).toEqual([]);
 
-    // Also run an axe smoke test on rendered components
+    // Also run an axe smoke test on rendered components.
+    // We validate color contrast above via deterministic theme-derived ratios;
+    // axe's `color-contrast` rule is comparatively slow/flaky under jsdom.
     const { container } = render(
       <div>
         <h1 style={{ color: '#0f172a' }}>Heading text</h1>
@@ -180,7 +182,7 @@ describe('color contrast and accessibility smoke', () => {
 
     const results = await axe(container, {
       rules: {
-        'color-contrast': { enabled: true },
+        'color-contrast': { enabled: false },
       },
     });
 

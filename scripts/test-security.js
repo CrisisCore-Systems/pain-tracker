@@ -57,11 +57,11 @@ async function testRateLimiting() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: 'test@test.com',
-          password: 'wrongpassword' + i,
+          password: `invalid-${i}`,
         }),
       });
       
-      const data = await response.json();
+      await response.json();
       results.push({ attempt: i, status: response.status, rateLimited: response.status === 429 });
       
       console.log(`  Attempt ${i}: Status ${response.status}`);
@@ -93,6 +93,7 @@ async function testHttpOnlyCookies() {
   section('Test 2: HttpOnly Cookies');
   
   try {
+    const testPassword = process.env.CLINIC_TEST_PASSWORD || '';
     // Use test user with known password
     const response = await fetch(`${BASE_URL}/api/clinic/auth/login`, {
       method: 'POST',
@@ -100,11 +101,11 @@ async function testHttpOnlyCookies() {
       credentials: 'include',
       body: JSON.stringify({
         email: 'testuser@clinic.com',
-        password: 'password123',
+        password: testPassword,
       }),
     });
     
-    const data = await response.json();
+    await response.json();
     const setCookieHeader = response.headers.get('set-cookie');
     
     console.log(`  Response status: ${response.status}`);
@@ -131,6 +132,7 @@ async function testCSRFTokens() {
   section('Test 3: CSRF Token Generation');
   
   try {
+    const testPassword = process.env.CLINIC_TEST_PASSWORD || '';
     // Use test user with known password
     const loginResponse = await fetch(`${BASE_URL}/api/clinic/auth/login`, {
       method: 'POST',
@@ -138,7 +140,7 @@ async function testCSRFTokens() {
       credentials: 'include',
       body: JSON.stringify({
         email: 'testuser@clinic.com',
-        password: 'password123',
+        password: testPassword,
       }),
     });
     
@@ -238,6 +240,7 @@ async function testMFASetup() {
   section('Test 6: MFA Setup (Requires Authentication)');
   
   try {
+    const testPassword = process.env.CLINIC_TEST_PASSWORD || '';
     // Use test user with known password
     // First login
     const loginResponse = await fetch(`${BASE_URL}/api/clinic/auth/login`, {
@@ -246,7 +249,7 @@ async function testMFASetup() {
       credentials: 'include',
       body: JSON.stringify({
         email: 'testuser@clinic.com',
-        password: 'password123',
+        password: testPassword,
       }),
     });
     
@@ -309,6 +312,7 @@ async function testSessionRefresh() {
   section('Test 8: Session Refresh with HttpOnly Cookies');
   
   try {
+    const testPassword = process.env.CLINIC_TEST_PASSWORD || '';
     // Use test user with known password
     // First login
     const loginResponse = await fetch(`${BASE_URL}/api/clinic/auth/login`, {
@@ -317,7 +321,7 @@ async function testSessionRefresh() {
       credentials: 'include',
       body: JSON.stringify({
         email: 'testuser@clinic.com',
-        password: 'password123',
+        password: testPassword,
       }),
     });
     

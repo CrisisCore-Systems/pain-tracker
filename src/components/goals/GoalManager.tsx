@@ -6,8 +6,7 @@ import { GoalList } from './GoalList';
 import { GoalProgressTracker } from './GoalProgressTracker';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Target, BarChart3, Settings, ArrowLeft } from 'lucide-react';
+import { Target, Settings, ArrowLeft } from 'lucide-react';
 
 interface GoalManagerProps {
   onClose?: () => void;
