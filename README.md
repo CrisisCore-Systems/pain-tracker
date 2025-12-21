@@ -7,9 +7,9 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 <!-- CI / Coverage Badges -->
-[![CI](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/deploy.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/deploy.yml)
-[![E2E](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/e2e.yml/badge.svg)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/e2e.yml)
-[![Codecov](https://img.shields.io/badge/codecov-unknown-blue)](https://codecov.io/gh/CrisisCore-Systems/pain-tracker)
+[![CI](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml)
+[![Smoke](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml)
+[![Codecov](https://codecov.io/gh/CrisisCore-Systems/pain-tracker/branch/main/graph/badge.svg)](https://codecov.io/gh/CrisisCore-Systems/pain-tracker)
 
 > **A security-first, offline-capable chronic pain tracking application built with empathy and clinical-minded design.**
 
