@@ -27,7 +27,11 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
 
 function base64ToArrayBuffer(base64: string): ArrayBuffer {
   if (typeof Buffer !== 'undefined') {
-    return Uint8Array.from(Buffer.from(base64, 'base64')).buffer;
+    const buf = Buffer.from(base64, 'base64');
+    // IMPORTANT: return an ArrayBuffer that is backed by Node's realm.
+    // Under Vitest `jsdom`, ArrayBuffers created via `Uint8Array.from()` can be
+    // from the jsdom realm and rejected by Node 20 WebCrypto.
+    return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
   }
   const binary = atob(base64);
   const len = binary.length;
@@ -723,7 +727,7 @@ export class EndToEndEncryptionService {
           }
           if (!encCryptoKey && (parsed as KeyBundleRawPayload).enc) {
             try {
-              const encRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).enc!);
+              const encRaw = base64ToBytes((parsed as KeyBundleRawPayload).enc!);
               encCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 encRaw,
@@ -737,7 +741,7 @@ export class EndToEndEncryptionService {
           }
           if (!hmacCryptoKey && (parsed as KeyBundleRawPayload).hmac) {
             try {
-              const hmacRaw = base64ToArrayBuffer((parsed as KeyBundleRawPayload).hmac!);
+              const hmacRaw = base64ToBytes((parsed as KeyBundleRawPayload).hmac!);
               hmacCryptoKey = await crypto.subtle.importKey(
                 'raw',
                 hmacRaw,
@@ -753,7 +757,7 @@ export class EndToEndEncryptionService {
       } catch {
         // Not JSON -> try bare base64 AES key
         try {
-          const raw = base64ToArrayBuffer(key as string);
+          const raw = base64ToBytes(key as string);
           encCryptoKey = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, [
             'decrypt',
           ]);
@@ -767,10 +771,10 @@ export class EndToEndEncryptionService {
       // Read IV from metadata
       const ivBase64 = metadata.iv;
       if (!ivBase64) throw new Error('Missing IV in metadata');
-      const iv = new Uint8Array(base64ToArrayBuffer(ivBase64));
+      const iv = base64ToBytes(ivBase64);
 
       // Decode ciphertext
-      const cipherBuffer = base64ToArrayBuffer(data);
+      const cipherBuffer = base64ToBytes(data);
       let decryptedBuffer: ArrayBuffer;
       try {
         decryptedBuffer = await crypto.subtle.decrypt(

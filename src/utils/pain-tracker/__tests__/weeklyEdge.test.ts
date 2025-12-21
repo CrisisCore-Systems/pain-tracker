@@ -7,8 +7,8 @@ describe('weekly edge cases', () => {
     // Simulate two entries: one at 23:50 local yesterday, one at 00:10 local today
     const today = new Date();
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const yesterdayLate = new Date(todayStart.getTime() - 10 * 60 * 1000); // 23:50 yesterday
-    const todayEarly = new Date(todayStart.getTime() + 10 * 60 * 1000); // 00:10 today
+    const _yesterdayLate = new Date(todayStart.getTime() - 10 * 60 * 1000); // 23:50 yesterday
+    const _todayEarly = new Date(todayStart.getTime() + 10 * 60 * 1000); // 00:10 today
 
     const now = new Date();
     const beforeMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 30);

@@ -15,12 +15,17 @@ function arrayBufferToBase64(buffer: ArrayBuffer): string {
   return btoa(binary);
 }
 
-function base64ToArrayBuffer(base64: string): ArrayBuffer {
-  if (typeof Buffer !== 'undefined') return Uint8Array.from(Buffer.from(base64, 'base64')).buffer;
+function base64ToBytes(base64: string): Uint8Array<ArrayBuffer> {
+  if (typeof Buffer !== 'undefined') {
+    const buf = Buffer.from(base64, 'base64');
+    const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
+    return new Uint8Array(ab);
+  }
   const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
+  const ab = new ArrayBuffer(binary.length);
+  const bytes = new Uint8Array(ab);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes.buffer;
+  return bytes;
 }
 
 // Security Event Types
@@ -262,7 +267,8 @@ export class SecurityService {
         throw new Error('Encryption key not available');
       }
 
-      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const iv = new Uint8Array(12) as Uint8Array<ArrayBuffer>;
+      crypto.getRandomValues(iv);
       const enc = new TextEncoder().encode(data);
       const cipherBuffer = await crypto.subtle.encrypt(
         { name: 'AES-GCM', iv },
@@ -275,7 +281,7 @@ export class SecurityService {
       const hmacSig = await crypto.subtle.sign(
         'HMAC',
         this.masterHmacKey,
-        base64ToArrayBuffer(cipherB64)
+        base64ToBytes(cipherB64)
       );
       const hmacB64 = arrayBufferToBase64(hmacSig);
 
@@ -346,13 +352,13 @@ export class SecurityService {
       const expected = await crypto.subtle.verify(
         'HMAC',
         this.masterHmacKey,
-        base64ToArrayBuffer(parsed.hmac),
-        base64ToArrayBuffer(parsed.cipher)
+        base64ToBytes(parsed.hmac),
+        base64ToBytes(parsed.cipher)
       );
       if (!expected) throw new Error('Integrity check failed - HMAC mismatch');
 
-      const iv = new Uint8Array(base64ToArrayBuffer(parsed.iv));
-      const cipherBuf = base64ToArrayBuffer(parsed.cipher);
+      const iv = base64ToBytes(parsed.iv);
+      const cipherBuf = base64ToBytes(parsed.cipher);
       let decryptedBuf: ArrayBuffer;
       try {
         decryptedBuf = await crypto.subtle.decrypt(
@@ -603,7 +609,8 @@ export class SecurityService {
     }
 
     // Use AES-GCM wrapping with a random IV
-    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const iv = new Uint8Array(12) as Uint8Array<ArrayBuffer>;
+    crypto.getRandomValues(iv);
     const wrapped = await crypto.subtle.wrapKey('raw', key, this.masterCryptoKey, {
       name: 'AES-GCM',
       iv,
@@ -632,22 +639,22 @@ export class SecurityService {
       if (obj.format === 'raw' && (!obj.iv || !this.masterCryptoKey)) {
         if (this.isTestEnv()) {
           // In tests the wrapped field may actually be raw key material
-          const raw = base64ToArrayBuffer(obj.wrapped);
+          const raw = base64ToBytes(obj.wrapped);
           return await crypto.subtle.importKey('raw', raw, algorithm, false, usages);
         }
         // Cannot unwrap without master key
         throw new Error('Cannot unwrap key - master key missing');
       }
 
-      const iv = obj.iv ? base64ToArrayBuffer(obj.iv) : null;
-      const wrappedBuf = base64ToArrayBuffer(obj.wrapped);
+      const iv: Uint8Array<ArrayBuffer> | null = obj.iv ? base64ToBytes(obj.iv) : null;
+      const wrappedBuf = base64ToBytes(obj.wrapped);
       if (!this.masterCryptoKey) throw new Error('Master crypto key not initialized');
       // Unwrap key
       const key = await crypto.subtle.unwrapKey(
         'raw',
         wrappedBuf,
         this.masterCryptoKey,
-        { name: 'AES-GCM', iv: iv ? new Uint8Array(iv) : new Uint8Array(12) },
+        { name: 'AES-GCM', iv: iv ?? (new Uint8Array(12) as Uint8Array<ArrayBuffer>) },
         algorithm,
         false,
         usages
