@@ -130,61 +130,91 @@ export function ClinicalDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-surface-900 p-6">
+    <div className="w-full">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <h1 className="text-display text-ink-50 mb-1">Today</h1>
-            <p className="text-small text-ink-400">
-              {new Date().toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </p>
+        <div className="surface-card relative overflow-hidden">
+          <div
+            aria-hidden
+            className="absolute top-0 left-0 right-0 h-px"
+            style={{
+              backgroundImage:
+                'linear-gradient(90deg, transparent, var(--primary-500), transparent)',
+              opacity: 0.6,
+            }}
+          />
+          <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div
+              className="absolute -top-28 -right-28 h-64 w-64 rounded-full"
+              style={{
+                backgroundColor: 'var(--primary-500)',
+                opacity: 0.08,
+                filter: 'blur(48px)',
+              }}
+            />
+            <div
+              className="absolute -bottom-28 -left-28 h-64 w-64 rounded-full"
+              style={{
+                backgroundColor: 'var(--good-500)',
+                opacity: 0.06,
+                filter: 'blur(56px)',
+              }}
+            />
           </div>
-          <div className="flex items-center gap-3 flex-wrap justify-end">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-ink-500" />
-              <span className="text-small text-ink-400">
-                Last entry: {getTimeSinceLastEntry()}
-              </span>
+
+          <div className="relative flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-display text-ink-50 mb-1">Today</h1>
+              <p className="text-small text-ink-400">
+                {new Date().toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
             </div>
-
-            {onViewAnalytics && (
-              <button
-                type="button"
-                onClick={onViewAnalytics}
-                className="inline-flex items-center gap-1.5 rounded-full bg-surface-800 text-ink-100 px-3 py-1.5 text-xs font-medium border border-surface-700 hover:bg-surface-700 transition-colors"
-              >
-                <TrendingUp className="w-3 h-3" />
-                View analytics
-              </button>
-            )}
-
-            {(onOpenSettings || onOpenHelp) && (
+            <div className="flex items-center gap-3 flex-wrap justify-end">
               <div className="flex items-center gap-2">
-                {onOpenHelp && (
-                  <button
-                    type="button"
-                    onClick={onOpenHelp}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-800 text-ink-100 border border-surface-700 hover:bg-surface-700 transition-colors"
-                  >
-                    Need help?
-                  </button>
-                )}
-                {onOpenSettings && (
-                  <button
-                    type="button"
-                    onClick={onOpenSettings}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-800 text-ink-100 border border-surface-700 hover:bg-surface-700 transition-colors"
-                  >
-                    Adjust settings
-                  </button>
-                )}
+                <Clock className="w-4 h-4 text-ink-500" />
+                <span className="text-small text-ink-400">
+                  Last entry: {getTimeSinceLastEntry()}
+                </span>
               </div>
-            )}
+
+              {onViewAnalytics && (
+                <button
+                  type="button"
+                  onClick={onViewAnalytics}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-surface-700 text-ink-100 px-3 py-1.5 text-xs font-medium border border-surface-600 hover:bg-surface-600 transition-colors"
+                >
+                  <TrendingUp className="w-3 h-3" />
+                  View analytics
+                </button>
+              )}
+
+              {(onOpenSettings || onOpenHelp) && (
+                <div className="flex items-center gap-2">
+                  {onOpenHelp && (
+                    <button
+                      type="button"
+                      onClick={onOpenHelp}
+                      className="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-700 text-ink-100 border border-surface-600 hover:bg-surface-600 transition-colors"
+                    >
+                      Need help?
+                    </button>
+                  )}
+                  {onOpenSettings && (
+                    <button
+                      type="button"
+                      onClick={onOpenSettings}
+                      className="px-3 py-1.5 rounded-full text-xs font-medium bg-surface-700 text-ink-100 border border-surface-600 hover:bg-surface-600 transition-colors"
+                    >
+                      Adjust settings
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
