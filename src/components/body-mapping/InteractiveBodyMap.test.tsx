@@ -243,8 +243,9 @@ describe('InteractiveBodyMap', () => {
         />
       );
       
-      // The header shows "X regions with recorded pain"
-      expect(screen.getByText(/regions with recorded pain/)).toBeInTheDocument();
+      // The header shows "X regions with recorded pain" and should update immediately.
+      // mockEntries cover: head, neck, lower back => 3 regions.
+      expect(screen.getByText('3 regions with recorded pain')).toBeInTheDocument();
     });
   });
 });

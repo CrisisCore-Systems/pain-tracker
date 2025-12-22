@@ -309,7 +309,12 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                           {topBuckets(advanced?.timeOfDayBuckets, 'worst').map(bucket => (
                             <li key={bucket.key} className="flex justify-between gap-3">
                               <span className="text-gray-700 dark:text-gray-300">{bucket.key}</span>
-                              <span className="font-medium">{bucket.avgPain.toFixed(1)}</span>
+                              <span className="font-medium">
+                                {bucket.avgPain.toFixed(1)}
+                                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                                  (n={bucket.count})
+                                </span>
+                              </span>
                             </li>
                           ))}
                         </ul>
@@ -327,7 +332,12 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                           {topBuckets(advanced?.timeOfDayBuckets, 'best').map(bucket => (
                             <li key={bucket.key} className="flex justify-between gap-3">
                               <span className="text-gray-700 dark:text-gray-300">{bucket.key}</span>
-                              <span className="font-medium">{bucket.avgPain.toFixed(1)}</span>
+                              <span className="font-medium">
+                                {bucket.avgPain.toFixed(1)}
+                                <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                                  (n={bucket.count})
+                                </span>
+                              </span>
                             </li>
                           ))}
                         </ul>

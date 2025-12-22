@@ -109,7 +109,7 @@ export function ModernAppLayout({
                   <h1 className="text-lg font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
                     Pain Tracker Pro
                   </h1>
-                  <p className="text-[11px] text-muted-foreground">Empathy-Driven Care</p>
+                  <p className="text-[11px] text-muted-foreground">Pain management insights</p>
                 </div>
               </div>
             </div>
@@ -162,6 +162,8 @@ export function ModernAppLayout({
               <button 
                 className="p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-200"
                 onClick={() => {}}
+                aria-label="Notifications"
+                title="Notifications"
               >
                 <Bell className="h-4 w-4" />
               </button>
@@ -169,6 +171,8 @@ export function ModernAppLayout({
               <button
                 className="p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-200"
                 onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
+                aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
+                title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
               >
                 {mode === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </button>

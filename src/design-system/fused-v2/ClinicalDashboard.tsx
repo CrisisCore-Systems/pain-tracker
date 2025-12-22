@@ -34,6 +34,10 @@ export function ClinicalDashboard({
         daysTracked: 0,
         variability: 0,
         lastEntry: null,
+        entriesThisWeek: 0,
+        recentEntries: [] as Array<{ id: PainEntry['id']; timestamp: string; pain: number; locationCount: number; symptomCount: number }>,
+        topLocations: [] as Array<{ label: string; count: number }>,
+        topSymptoms: [] as Array<{ label: string; count: number }>,
         insights: [],
       };
     }
@@ -106,6 +110,40 @@ export function ClinicalDashboard({
       });
     }
 
+    // Recent entries (last 5) and lightweight 7-day highlights.
+    const recentEntries = [...sorted]
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 5)
+      .map(entry => ({
+        id: entry.id,
+        timestamp: entry.timestamp,
+        pain: entry.baselineData.pain,
+        locationCount: Array.isArray(entry.baselineData.locations) ? entry.baselineData.locations.length : 0,
+        symptomCount: Array.isArray(entry.baselineData.symptoms) ? entry.baselineData.symptoms.length : 0,
+      }));
+
+    const locationCounts = new Map<string, number>();
+    const symptomCounts = new Map<string, number>();
+
+    for (const entry of recent) {
+      for (const location of entry.baselineData.locations ?? []) {
+        locationCounts.set(location, (locationCounts.get(location) ?? 0) + 1);
+      }
+      for (const symptom of entry.baselineData.symptoms ?? []) {
+        symptomCounts.set(symptom, (symptomCounts.get(symptom) ?? 0) + 1);
+      }
+    }
+
+    const topLocations = [...locationCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([label, count]) => ({ label, count }));
+
+    const topSymptoms = [...symptomCounts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([label, count]) => ({ label, count }));
+
     return {
       avgPain,
       delta,
@@ -113,6 +151,10 @@ export function ClinicalDashboard({
       daysTracked: uniqueDays,
       variability,
       lastEntry: sorted[sorted.length - 1],
+      entriesThisWeek: recent.length,
+      recentEntries,
+      topLocations,
+      topSymptoms,
       insights: insights as Array<{ statement: string; confidence: 1 | 2 | 3; rationale: string }>,
     };
   }, [entries]);
@@ -246,6 +288,7 @@ export function ClinicalDashboard({
             title="Tracking Streak"
             value={analytics.daysTracked}
             unit="days"
+            tooltip="Tracking streak = the number of unique days you logged at least one entry in the last 7 days."
             delta={{
               value: analytics.daysTracked >= 5 ? 1 : -1,
               direction: analytics.daysTracked >= 5 ? 'up' : 'down',
@@ -256,12 +299,122 @@ export function ClinicalDashboard({
           <MetricCard
             title="Variability Index"
             value={analytics.variability.toFixed(1)}
+            tooltip="Variability measures how much your pain fluctuates over the last 7 days (rolling standard deviation). Lower = steadier pain; higher = more unpredictable flares."
             delta={{
               value: 0,
               direction: 'neutral',
               label: 'rolling SD',
             }}
           />
+        </div>
+
+        {/* Recent activity + 7-day highlights */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="surface-card lg:col-span-2">
+            <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+              <div>
+                <h2 className="text-body-medium text-ink-100">Recent entries</h2>
+                <p className="text-small text-ink-400">A quick glance at your latest check-ins.</p>
+              </div>
+              <button
+                type="button"
+                onClick={onViewCalendar}
+                className="inline-flex items-center gap-1.5 rounded-full bg-surface-700 text-ink-100 px-3 py-1.5 text-xs font-medium border border-surface-600 hover:bg-surface-600 transition-colors"
+              >
+                View calendar
+              </button>
+            </div>
+
+            {analytics.recentEntries.length === 0 ? (
+              <p className="text-small text-ink-400">No entries yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {analytics.recentEntries.map(entry => {
+                  const when = (() => {
+                    try {
+                      return new Date(entry.timestamp).toLocaleString(undefined, {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      });
+                    } catch {
+                      return 'Recently';
+                    }
+                  })();
+
+                  return (
+                    <div
+                      key={String(entry.id)}
+                      className="flex items-center justify-between gap-3 rounded-xl bg-surface-800/60 border border-surface-700 px-4 py-3"
+                    >
+                      <div className="min-w-0">
+                        <div className="text-small text-ink-200 truncate">{when}</div>
+                        <div className="text-xs text-ink-500">
+                          {entry.locationCount > 0 ? `${entry.locationCount} location${entry.locationCount === 1 ? '' : 's'}` : 'No locations'}
+                          {' • '}
+                          {entry.symptomCount > 0 ? `${entry.symptomCount} symptom${entry.symptomCount === 1 ? '' : 's'}` : 'No symptoms'}
+                        </div>
+                      </div>
+                      <div className="flex items-baseline gap-1 rounded-full bg-surface-700 px-3 py-1 border border-surface-600">
+                        <span className="text-body-medium text-ink-50">{entry.pain}</span>
+                        <span className="text-xs text-ink-500">/10</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="surface-card">
+            <h2 className="text-body-medium text-ink-200 mb-3">7-day highlights</h2>
+            <div className="text-small text-ink-300 space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-ink-400">Entries</span>
+                <span className="text-ink-100 font-medium">{analytics.entriesThisWeek}</span>
+              </div>
+
+              <div>
+                <p className="text-ink-400 mb-2">Top locations</p>
+                {analytics.topLocations.length === 0 ? (
+                  <p className="text-small text-ink-500">None tagged yet.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {analytics.topLocations.map(item => (
+                      <span
+                        key={item.label}
+                        className="inline-flex items-center gap-2 rounded-full bg-surface-700 border border-surface-600 px-3 py-1 text-xs text-ink-200"
+                      >
+                        <span className="truncate max-w-[10rem]">{item.label}</span>
+                        <span className="text-ink-500">{item.count}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <p className="text-ink-400 mb-2">Top symptoms</p>
+                {analytics.topSymptoms.length === 0 ? (
+                  <p className="text-small text-ink-500">None tagged yet.</p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {analytics.topSymptoms.map(item => (
+                      <span
+                        key={item.label}
+                        className="inline-flex items-center gap-2 rounded-full bg-surface-700 border border-surface-600 px-3 py-1 text-xs text-ink-200"
+                      >
+                        <span className="truncate max-w-[10rem]">{item.label}</span>
+                        <span className="text-ink-500">{item.count}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Insights */}

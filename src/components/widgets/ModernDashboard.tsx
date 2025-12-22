@@ -494,6 +494,16 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
                             </div>
                           </div>
                         )}
+                        {metrics.timeOfDayPatterns.patterns.length > 0 && (
+                          <p className="text-xs text-slate-500 mt-2">
+                            Based on{' '}
+                            {metrics.timeOfDayPatterns.patterns.reduce(
+                              (sum, p) => sum + (p.entryCount ?? 0),
+                              0
+                            )}{' '}
+                            entries across {metrics.timeOfDayPatterns.patterns.length} time windows.
+                          </p>
+                        )}
                         <p className="text-xs text-slate-500 mt-3 pt-3 border-t border-slate-700/50">
                           {metrics.timeOfDayPatterns.recommendation}
                         </p>

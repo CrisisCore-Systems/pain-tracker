@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { QuickLogStepper } from '../../design-system/fused-v2/QuickLogStepper';
 import type { PainEntry } from '../../types';
-import { empathyIntelligenceEngine } from '../../services/EmpathyIntelligenceEngine';
 import { useToast } from '../../components/feedback';
-import type { EmpathyInsight } from '../../types/quantified-empathy';
 import { FocusManager, announceToScreenReader } from '../../utils/accessibility';
+import type { CheckinInsight } from '../../utils/pain-tracker/checkinInsights';
+import { generateCheckinInsights } from '../../utils/pain-tracker/checkinInsights';
 
 interface DailyCheckinProps {
   onComplete: (data: Omit<PainEntry, 'id' | 'timestamp'>) => void;
@@ -15,10 +15,10 @@ interface DailyCheckinProps {
   onDone?: () => void;
 }
 
-export default function DailyCheckin({ onComplete, onCancel, entries, userId, onDone }: DailyCheckinProps) {
+export default function DailyCheckin({ onComplete, onCancel, entries, onDone }: DailyCheckinProps) {
   const [mood, setMood] = useState<number>(5);
   const [sleepQuality, setSleepQuality] = useState<number>(6);
-  const [insights, setInsights] = useState<EmpathyInsight[] | null>(null);
+  const [insights, setInsights] = useState<CheckinInsight[] | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const mountedRef = useRef(true);
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -66,17 +66,12 @@ export default function DailyCheckin({ onComplete, onCancel, entries, userId, on
     try {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('test_show_insights') === '1') {
-        const canned: EmpathyInsight[] = [
+        const canned: CheckinInsight[] = [
           {
             id: 'test-immediate-1',
-            type: 'improvement',
             title: 'Immediate test insight',
             description: 'Canned insight shown for E2E tests.',
             confidence: 80,
-            actionable: false,
-            personalized: false,
-            timestamp: new Date(),
-            dataPoints: [],
           },
         ];
         setInsights(canned.slice(0, 5));
@@ -126,43 +121,18 @@ export default function DailyCheckin({ onComplete, onCancel, entries, userId, on
       return;
     }
 
-  // Build a minimal mood entry for the empathy engine
-    const moodEntry = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      mood: Math.max(0, Math.min(10, mood)),
-      energy: 5,
-      anxiety: 5,
-      stress: 5,
-      hopefulness: 5,
-      selfEfficacy: 5,
-      emotionalClarity: 5,
-      emotionalRegulation: 5,
-      context: 'daily check-in',
-      triggers: [],
-      copingStrategies: [],
-      socialSupport: 'none' as const,
-      notes: data.notes ?? '',
-    };
-
-    // Fire-and-forget empathy engine to generate insights; show top insight via toast
+    // Generate pain-focused insights (no empathy framing) and show the top insight via toast
     (async () => {
       // Test hook: if test_insights query param is present, short-circuit with canned insights
       try {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('test_insights') === '1') {
-          console.log('[DailyCheckin] TEST HOOK: test_insights detected');
-          const canned: EmpathyInsight[] = [
+          const canned: CheckinInsight[] = [
             {
               id: 'test-1',
-              type: 'improvement',
               title: 'Test insight',
               description: 'This is a test insight.',
               confidence: 90,
-              actionable: true,
-              personalized: true,
-              timestamp: new Date(),
-              dataPoints: [],
             },
           ];
           if (!mountedRef.current) {
@@ -185,20 +155,17 @@ export default function DailyCheckin({ onComplete, onCancel, entries, userId, on
         // ignore test hook failures
       }
       try {
-        const user = userId ?? 'local';
-        // Ensure we pass full PainEntry objects (with id + timestamp) to the engine
-        const savedEntryForInsights = { ...entry, id: Date.now(), timestamp: new Date().toISOString() } as PainEntry;
+        // Ensure we pass full PainEntry objects (with id + timestamp) for consistent analysis
+        const savedEntryForInsights = {
+          ...entry,
+          id: Date.now(),
+          timestamp: new Date().toISOString(),
+        } as PainEntry;
         const combinedPainEntries = [...(entries || []), savedEntryForInsights];
 
-        const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
-          user,
-          combinedPainEntries,
-          [moodEntry]
-        );
-
-        const insightsResult = await empathyIntelligenceEngine.generateAdvancedInsights(user, metrics, {
-          painEntries: combinedPainEntries,
-          moodEntries: [moodEntry],
+        const insightsResult = generateCheckinInsights({
+          newEntry: savedEntryForInsights,
+          allEntries: combinedPainEntries,
         });
 
         if (!mountedRef.current) {
@@ -218,7 +185,7 @@ export default function DailyCheckin({ onComplete, onCancel, entries, userId, on
           toast.success(top.title, top.description ?? 'We found something you might find helpful.');
         }
       } catch (err) {
-        console.warn('Empathy engine failed', err);
+        console.warn('Check-in insights failed', err);
       }
     })();
   };

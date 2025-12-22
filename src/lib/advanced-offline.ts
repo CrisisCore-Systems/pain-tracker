@@ -714,7 +714,13 @@ export class HealthInsightsProcessor {
     this.processingQueue.add(insightId);
 
     try {
-      const effectiveness = this.calculateMedicationEffectiveness(medicationEntries);
+      const painValues = entries
+        .map(entry => entry.data.pain_level ?? entry.data.painLevel)
+        .filter((value): value is number => typeof value === 'number');
+      const overallAvgPain =
+        painValues.length > 0 ? painValues.reduce((sum, value) => sum + value, 0) / painValues.length : 0;
+
+      const effectiveness = this.calculateMedicationEffectiveness(medicationEntries, overallAvgPain);
 
       const insight: HealthInsight = {
         id: insightId,
@@ -860,7 +866,7 @@ export class HealthInsightsProcessor {
     return 'stable';
   }
 
-  private calculateMedicationEffectiveness(entries: PainEntry[]): Array<{
+  private calculateMedicationEffectiveness(entries: PainEntry[], overallAvgPain: number): Array<{
     medication: string;
     averagePainLevel: number;
     usageCount: number;
@@ -870,7 +876,8 @@ export class HealthInsightsProcessor {
 
     entries.forEach(entry => {
       const medications = entry.data.medications || [];
-      const painLevel = this.extractPainLevel(entry);
+      const painLevel = entry.data.pain_level ?? entry.data.painLevel;
+      if (typeof painLevel !== 'number') return;
 
       medications.forEach((med: string) => {
         if (!medicationStats.has(med)) {
@@ -882,13 +889,18 @@ export class HealthInsightsProcessor {
       });
     });
 
-    return Array.from(medicationStats.entries()).map(([medication, stats]) => ({
-      medication,
-      averagePainLevel:
-        stats.painLevels.reduce((a: number, b: number) => a + b, 0) / stats.painLevels.length,
-      usageCount: stats.count,
-      effectiveness: this.rateEffectiveness(stats.painLevels),
-    }));
+    return Array.from(medicationStats.entries()).map(([medication, stats]) => {
+      const averagePainLevel =
+        stats.painLevels.reduce((a: number, b: number) => a + b, 0) / stats.painLevels.length;
+      const delta = overallAvgPain - averagePainLevel; // positive means lower pain when med is present
+
+      return {
+        medication,
+        averagePainLevel,
+        usageCount: stats.count,
+        effectiveness: this.rateMedicationAssociation(delta, stats.count),
+      };
+    });
   }
 
   private identifyPainTriggers(painEntries: PainEntry[]): Array<{
@@ -964,13 +976,12 @@ export class HealthInsightsProcessor {
     return Math.round(baseConfidence * typeMultiplier * 100);
   }
 
-  private rateEffectiveness(painLevels: number[]): string {
-    const avgPain = painLevels.reduce((a, b) => a + b, 0) / painLevels.length;
-
-    if (avgPain <= 3) return 'highly-effective';
-    if (avgPain <= 5) return 'moderately-effective';
-    if (avgPain <= 7) return 'minimally-effective';
-    return 'ineffective';
+  private rateMedicationAssociation(delta: number, usageCount: number): string {
+    // Keep this conservative: this is observational association, not causation.
+    if (usageCount < 3) return 'insufficient-data';
+    if (delta >= 1) return 'associated-lower-pain';
+    if (delta <= -1) return 'associated-higher-pain';
+    return 'no-clear-signal';
   }
 
   private categorizeTriggerSeverity(painLevels: number[]): string {
@@ -1030,18 +1041,24 @@ export class HealthInsightsProcessor {
   ): string[] {
     const recommendations: string[] = [];
 
-    const effective = medications.filter(m => m.effectiveness === 'highly-effective');
-    const ineffective = medications.filter(m => m.effectiveness === 'ineffective');
+    const associatedLower = medications
+      .filter(m => m.effectiveness === 'associated-lower-pain')
+      .sort((a, b) => a.averagePainLevel - b.averagePainLevel)
+      .slice(0, 3);
+    const associatedHigher = medications
+      .filter(m => m.effectiveness === 'associated-higher-pain')
+      .sort((a, b) => b.averagePainLevel - a.averagePainLevel)
+      .slice(0, 3);
 
-    if (effective.length > 0) {
+    if (associatedLower.length > 0) {
       recommendations.push(
-        `${effective.map(m => m.medication).join(', ')} appear to be most effective for your pain.`
+        `${associatedLower.map(m => `${m.medication} (n=${m.usageCount})`).join(', ')} are associated with lower average pain in your logs.`
       );
     }
 
-    if (ineffective.length > 0) {
+    if (associatedHigher.length > 0) {
       recommendations.push(
-        `Consider discussing alternatives to ${ineffective.map(m => m.medication).join(', ')} with your healthcare provider.`
+        `${associatedHigher.map(m => `${m.medication} (n=${m.usageCount})`).join(', ')} are associated with higher average pain in your logs (often a sign they're taken during flares).`
       );
     }
 

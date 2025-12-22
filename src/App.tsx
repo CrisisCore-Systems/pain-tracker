@@ -30,6 +30,7 @@ import { OfflineBanner } from './components/pwa/OfflineIndicator';
 import { BrandedLoadingScreen } from './components/branding/BrandedLoadingScreen';
 import { pwaManager } from './utils/pwa-utils';
 import { ToneStateTester } from './components/dev/ToneStateTester';
+import { trackSessionStart as trackUsageSessionStart } from './utils/usage-tracking';
 
 // Lazy-loaded route components for code splitting
 const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
@@ -82,9 +83,7 @@ function App() {
       });
       
       // Defer analytics tracking to not block initial render
-      import('./utils/usage-tracking').then(({ trackSessionStart }) => {
-        trackSessionStart();
-      });
+      trackUsageSessionStart();
       import('./services/AnalyticsTrackingService').then(({ trackSessionStart }) => {
         trackSessionStart();
       });
