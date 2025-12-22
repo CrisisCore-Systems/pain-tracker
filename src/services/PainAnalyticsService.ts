@@ -263,30 +263,52 @@ class PainAnalyticsService {
   private analyzeMedicationEffectiveness(entries: PainEntry[]) {
     const medicationMap = new Map<
       string,
-      { effectiveness: number; painReduction: number; count: number }
+      { effectivenessSum: number; effectivenessCount: number; painSum: number; count: number }
     >();
+
+    const overallAvgPain =
+      entries.length > 0
+        ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
+        : 0;
 
     entries.forEach(entry => {
       (entry.medications?.current || []).forEach(med => {
         if (!medicationMap.has(med.name)) {
-          medicationMap.set(med.name, { effectiveness: 0, painReduction: 0, count: 0 });
+          medicationMap.set(med.name, {
+            effectivenessSum: 0,
+            effectivenessCount: 0,
+            painSum: 0,
+            count: 0,
+          });
         }
         const data = medicationMap.get(med.name)!;
 
-        // Simple effectiveness scoring
-        const effectScore = this.parseEffectiveness(med.effectiveness || 'moderate');
-        data.effectiveness += effectScore;
-        data.painReduction += Math.max(0, 10 - entry.baselineData.pain); // Inverse pain as reduction
+        data.painSum += entry.baselineData.pain;
         data.count += 1;
+
+        // Only score when the user recorded effectiveness (per-med or overall).
+        const recordedEffectiveness =
+          (med.effectiveness || '').trim() || (entry.medications?.effectiveness || '').trim();
+        if (recordedEffectiveness) {
+          const effectScore = this.parseEffectiveness(recordedEffectiveness);
+          data.effectivenessSum += effectScore;
+          data.effectivenessCount += 1;
+        }
       });
     });
 
     return Array.from(medicationMap.entries())
-      .map(([medication, data]) => ({
-        medication,
-        effectivenessScore: data.effectiveness / data.count,
-        painReduction: data.painReduction / data.count,
-      }))
+      .map(([medication, data]) => {
+        const avgPainWithMed = data.count > 0 ? data.painSum / data.count : overallAvgPain;
+        const painReduction = Math.max(0, overallAvgPain - avgPainWithMed);
+        const effectivenessScore =
+          data.effectivenessCount > 0 ? data.effectivenessSum / data.effectivenessCount : 0;
+        return {
+          medication,
+          effectivenessScore,
+          painReduction,
+        };
+      })
       .filter(item => item.effectivenessScore > 0)
       .sort((a, b) => b.effectivenessScore - a.effectivenessScore);
   }
@@ -440,6 +462,9 @@ class PainAnalyticsService {
 
   private parseEffectiveness(effectiveness: string): number {
     const lower = effectiveness.toLowerCase();
+    if (lower.includes('very effective') || lower.includes('excellent') || lower.includes('very good')) return 5;
+    if (lower.includes('somewhat effective') || lower.includes('mixed')) return 3;
+    if (lower.includes('not effective')) return 1;
     if (lower.includes('excellent') || lower.includes('very good')) return 5;
     if (lower.includes('good') || lower.includes('effective')) return 4;
     if (lower.includes('moderate') || lower.includes('fair')) return 3;

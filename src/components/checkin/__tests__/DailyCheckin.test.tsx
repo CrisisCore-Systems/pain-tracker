@@ -45,10 +45,11 @@ describe('DailyCheckin', () => {
       expect(onComplete).toHaveBeenCalled();
     });
 
-    // Dialog should appear with the top insight
+    // Dialog should appear with follow-up insights
     const dialog = await waitFor(() => screen.getByRole('dialog'));
     expect(dialog).toBeInTheDocument();
-    expect(within(dialog).getByText('Top insight')).toBeInTheDocument();
+    expect(within(dialog).getByRole('heading', { name: /thoughtful follow-up/i })).toBeInTheDocument();
+    expect(within(dialog).getAllByRole('listitem').length).toBeGreaterThan(0);
 
     // Click Done inside the dialog
     fireEvent.click(within(dialog).getByText('Done'));

@@ -6,6 +6,7 @@ import '../tokens/fused-v2.css';
 interface MetricCardProps {
   title: string;
   value: string | number;
+  tooltip?: string;
   delta?: {
     value: number;
     direction: 'up' | 'down' | 'neutral';
@@ -21,6 +22,7 @@ interface MetricCardProps {
 export function MetricCard({
   title,
   value,
+  tooltip,
   delta,
   sparkline,
   severity,
@@ -62,6 +64,7 @@ export function MetricCard({
         compact && 'p-4',
         className
       )}
+      title={tooltip}
     >
       {/* Title */}
       <div className="text-small text-ink-300 mb-2">{title}</div>

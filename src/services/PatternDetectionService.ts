@@ -176,19 +176,22 @@ export class PatternDetectionService {
             id: `med-${medication.id}`,
             type: 'medication_efficacy',
             confidence: this.calculateConfidence(beforeEntries.length + afterEntries.length),
-            title: impact > 0 ? `${medName} is Effective` : `${medName} May Not Be Working`,
+            title:
+              impact > 0
+                ? `${medName} is Associated with Lower Pain`
+                : `${medName} is Associated with Higher Pain`,
             description:
               impact > 0
-                ? `Pain reduced by ${impact.toFixed(1)} points on average after starting ${medName}`
-                : `Pain increased by ${Math.abs(impact).toFixed(1)} points after starting ${medName}`,
+                ? `Average pain was ${avgPainAfter.toFixed(1)} with ${medName} vs ${avgPainBefore.toFixed(1)} before (Δ ${impact.toFixed(1)}, n=${afterEntries.length} after / n=${beforeEntries.length} before). This is observational, not proof of cause and effect.`
+                : `Average pain was ${avgPainAfter.toFixed(1)} with ${medName} vs ${avgPainBefore.toFixed(1)} before (Δ -${Math.abs(impact).toFixed(1)}, n=${afterEntries.length} after / n=${beforeEntries.length} before). This often happens when medications are taken during flares.`,
             impact: impact,
             occurrences: afterEntries.length,
             lastSeen: afterEntries[afterEntries.length - 1]?.timestamp || medication.date,
             actionable: true,
             recommendation:
               impact > 0
-                ? 'Continue current medication regimen'
-                : 'Consider discussing alternative treatments with provider',
+                ? 'If this aligns with your goals, continue tracking and review with your clinician'
+                : 'Review timing and flare context; consider discussing options with your clinician',
             evidence: {
               avgPainWith: avgPainAfter,
               avgPainWithout: avgPainBefore,

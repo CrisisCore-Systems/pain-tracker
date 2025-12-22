@@ -145,7 +145,7 @@ export default defineConfig({
       },
     },
     // Warn on large chunks but don't block build
-    chunkSizeWarningLimit: 300,
+    chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
         sourcemap: false, // Explicitly disable sourcemaps in rollup output

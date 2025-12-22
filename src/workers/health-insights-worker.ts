@@ -753,27 +753,29 @@ function analyzeMedicationEffectiveness(entries: PainEntry[]): HealthInsight[] {
   });
 
   const overallAvgPain =
-    entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length;
+    entries.length > 0
+      ? entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length
+      : 0;
 
   Object.entries(medicationPainMap).forEach(([medication, painLevels]) => {
     if (painLevels.length >= 3) {
       const avgPainWithMed = painLevels.reduce((sum, pain) => sum + pain, 0) / painLevels.length;
-      const effectiveness = overallAvgPain - avgPainWithMed;
+      const delta = overallAvgPain - avgPainWithMed; // positive means lower pain when med is present
 
-      if (Math.abs(effectiveness) > 0.5) {
+      if (Math.abs(delta) > 0.5) {
         insights.push({
           id: `medication-effectiveness-${medication}-${Date.now()}`,
           type: 'correlation',
           title: `Medication Analysis: ${medication}`,
           description:
-            effectiveness > 0
-              ? `${medication} appears to be associated with lower pain levels (average pain: ${formatNumber(avgPainWithMed, 1)} vs ${formatNumber(overallAvgPain, 1)} overall).`
-              : `${medication} usage periods show higher pain levels (average pain: ${formatNumber(avgPainWithMed, 1)} vs ${formatNumber(overallAvgPain, 1)} overall). This might indicate you take it during flares.`,
-          confidence: Math.min(80, 30 + Math.abs(effectiveness) * 20),
+            delta > 0
+              ? `${medication} is associated with lower pain in your logs (avg ${formatNumber(avgPainWithMed, 1)} vs ${formatNumber(overallAvgPain, 1)} overall, n=${painLevels.length}). This is observational, not proof of cause and effect.`
+              : `${medication} is associated with higher pain in your logs (avg ${formatNumber(avgPainWithMed, 1)} vs ${formatNumber(overallAvgPain, 1)} overall, n=${painLevels.length}). This often happens when medications are taken during flares.`,
+          confidence: Math.min(80, 30 + Math.abs(delta) * 20),
           severity:
-            Math.abs(effectiveness) > 1.5
+            Math.abs(delta) > 1.5
               ? 'high'
-              : Math.abs(effectiveness) > 0.8
+              : Math.abs(delta) > 0.8
                 ? 'medium'
                 : 'low',
           data: {
@@ -781,23 +783,25 @@ function analyzeMedicationEffectiveness(entries: PainEntry[]): HealthInsight[] {
               {
                 factor1: medication,
                 factor2: 'pain-level',
-                strength: -effectiveness, // Negative because lower pain is better
+                strength: -delta, // Negative because lower pain is better
                 significance: painLevels.length / entries.length,
               },
             ],
             recommendations:
-              effectiveness > 0
+              delta > 0
                 ? [
                     {
-                      action: `Continue monitoring ${medication} effectiveness`,
-                      rationale: 'This medication appears to be helping with pain management',
+                      action: `Keep tracking pain when taking ${medication}`,
+                      rationale:
+                        'More entries will improve confidence in this association and help you and your clinician interpret the pattern.',
                       priority: 'medium',
                     },
                   ]
                 : [
                     {
-                      action: `Discuss ${medication} timing and effectiveness with your doctor`,
-                      rationale: 'Review whether this medication is optimally managing your pain',
+                      action: `Review ${medication} timing and flare context`,
+                      rationale:
+                        'Higher pain during use can reflect flare timing; consider discussing whether timing/dose/alternatives fit your goals.',
                       priority: 'medium',
                     },
                   ],

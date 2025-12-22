@@ -553,15 +553,19 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
       .slice(0, 8);
 
     // Medication effectiveness (if tracked)
+    const sortedForSequential = [...filteredEntries].sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    );
     const medicationData: Record<string, { uses: number; totalReduction: number }> = {};
-    filteredEntries.forEach((entry, idx) => {
+    sortedForSequential.forEach((entry, idx) => {
       if (
         entry.medications &&
         entry.medications.current.length > 0 &&
-        idx < filteredEntries.length - 1
+        idx < sortedForSequential.length - 1
       ) {
-        const nextEntry = filteredEntries[idx + 1];
+        const nextEntry = sortedForSequential[idx + 1];
         const reduction = entry.baselineData.pain - nextEntry.baselineData.pain;
+        if (!Number.isFinite(reduction) || reduction <= 0) return;
         const hour = new Date(entry.timestamp).getHours();
         const windowInfo = getWindowForHour(hour);
 
@@ -586,12 +590,16 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
     });
 
     const medicationEffectiveness: MedicationEffectStat[] = Object.entries(medicationData)
-      .map(([medication, data]) => ({
-        medication,
-        uses: data.uses,
-        avgReduction: data.totalReduction / data.uses,
-        effectiveness: (data.totalReduction / data.uses / 10) * 100, // as percentage
-      }))
+      .map(([medication, data]) => {
+        const avgReduction = data.totalReduction / data.uses;
+        const effectiveness = clamp((avgReduction / 10) * 100, 0, 100);
+        return {
+          medication,
+          uses: data.uses,
+          avgReduction,
+          effectiveness,
+        };
+      })
       .sort((a, b) => b.effectiveness - a.effectiveness);
 
     const medicationTimingInsights: MedicationWindowInsight[] = Object.entries(
@@ -1149,6 +1157,14 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
               {analytics.medicationEffectiveness.map((med, idx) => {
                 const badgeVariant = getEffectivenessBadgeVariant(med.effectiveness);
                 const barClassName = getEffectivenessBarClassName(med.effectiveness);
+                const effectivenessLabel =
+                  med.effectiveness > 0 && med.effectiveness < 1
+                    ? '<1'
+                    : med.effectiveness.toFixed(0);
+                const barWidth =
+                  med.effectiveness > 0 && med.effectiveness < 1
+                    ? 1
+                    : Math.min(100, med.effectiveness);
                 return (
                   <Card key={idx} variant="filled" padding="sm">
                     <div className="flex items-center justify-between gap-3 mb-2">
@@ -1157,14 +1173,14 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                         <div className="text-xs text-muted-foreground">{med.uses} uses</div>
                       </div>
                       <Badge variant={badgeVariant} className="shrink-0">
-                        {med.effectiveness.toFixed(0)}% effective
+                        {effectivenessLabel}% effective
                       </Badge>
                     </div>
 
                     <div className="w-full bg-muted rounded-full h-3">
                       <div
                         className={`h-3 rounded-full transition-all ${barClassName}`}
-                        style={{ width: `${Math.min(100, med.effectiveness)}%` }}
+                        style={{ width: `${barWidth}%` }}
                       />
                     </div>
 

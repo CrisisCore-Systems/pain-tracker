@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useMemo, useCallback } from 'react';
 import { RotateCcw, Info, Maximize2, ZoomIn, ZoomOut, Download, User, Eye, HelpCircle } from 'lucide-react';
 import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
 import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
 import { cn } from '../../design-system/utils';
+import { locationsToRegions } from './mapping';
 
 interface BodyRegion {
   id: string;
@@ -426,39 +427,43 @@ export function InteractiveBodyMap({
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Calculate pain intensity for each region based on entries
-  const regionPainMap = useRef(new Map<string, { avg: number; max: number; count: number }>());
-
-  useEffect(() => {
-    if (mode === 'heatmap' && entries.length > 0) {
-      const painMap = new Map<string, { total: number; max: number; count: number }>();
-
-      entries.forEach(entry => {
-        if (entry.baselineData?.locations) {
-          entry.baselineData.locations.forEach(location => {
-            const regionId = normalizeLocationToRegionId(location);
-            if (regionId && BODY_REGIONS.find(r => r.id === regionId)) {
-              if (!painMap.has(regionId)) {
-                painMap.set(regionId, { total: 0, max: 0, count: 0 });
-              }
-              const data = painMap.get(regionId)!;
-              data.total += entry.baselineData.pain;
-              data.max = Math.max(data.max, entry.baselineData.pain);
-              data.count += 1;
-            }
-          });
-        }
-      });
-
-      regionPainMap.current.clear();
-      painMap.forEach((data, regionId) => {
-        regionPainMap.current.set(regionId, {
-          avg: data.total / data.count,
-          max: data.max,
-          count: data.count,
-        });
-      });
+  // Calculate pain intensity for each region based on entries.
+  // Important: this must be computed synchronously so the UI updates immediately after a new entry.
+  const regionPainMap = useMemo(() => {
+    if (mode !== 'heatmap' || entries.length === 0) {
+      return new Map<string, { avg: number; max: number; count: number }>();
     }
+
+    const painMap = new Map<string, { total: number; max: number; count: number }>();
+
+    for (const entry of entries) {
+      const locations = entry.baselineData?.locations;
+      if (!locations || locations.length === 0) continue;
+
+      for (const location of locations) {
+        const regionIds = normalizeLocationToRegionIds(location);
+        for (const regionId of regionIds) {
+          if (!BODY_REGIONS.some(r => r.id === regionId)) continue;
+          if (!painMap.has(regionId)) {
+            painMap.set(regionId, { total: 0, max: 0, count: 0 });
+          }
+          const data = painMap.get(regionId)!;
+          data.total += entry.baselineData.pain;
+          data.max = Math.max(data.max, entry.baselineData.pain);
+          data.count += 1;
+        }
+      }
+    }
+
+    const result = new Map<string, { avg: number; max: number; count: number }>();
+    painMap.forEach((data, regionId) => {
+      result.set(regionId, {
+        avg: data.total / data.count,
+        max: data.max,
+        count: data.count,
+      });
+    });
+    return result;
   }, [entries, mode]);
 
   const handleRegionClick = useCallback((regionId: string) => {
@@ -489,7 +494,7 @@ export function InteractiveBodyMap({
         return '#e5e7eb'; // Gray for unselected
       }
     } else if (mode === 'heatmap') {
-      const painData = regionPainMap.current.get(regionId);
+      const painData = regionPainMap.get(regionId);
       if (!painData || painData.avg === 0) return '#f3f4f6';
 
       // Enhanced color gradient based on average pain
@@ -506,7 +511,7 @@ export function InteractiveBodyMap({
 
   const getRegionOpacity = (regionId: string): number => {
     if (mode === 'heatmap') {
-      const painData = regionPainMap.current.get(regionId);
+      const painData = regionPainMap.get(regionId);
       if (!painData) return 0.2;
       // Opacity based on frequency + intensity
       const frequencyFactor = Math.min(painData.count / 10, 1); // More entries = more opaque
@@ -517,7 +522,7 @@ export function InteractiveBodyMap({
   };
 
   const getPainDataForRegion = (regionId: string) => {
-    return regionPainMap.current.get(regionId) || { avg: 0, max: 0, count: 0 };
+    return regionPainMap.get(regionId) || { avg: 0, max: 0, count: 0 };
   };
 
   const toggleFullscreen = () => {
@@ -611,7 +616,7 @@ export function InteractiveBodyMap({
   }, [focusedRegion, visibleRegions, handleRegionClick]);
 
   const selectedCount = selectedRegions.length;
-  const affectedRegionsCount = mode === 'heatmap' ? regionPainMap.current.size : 0;
+  const affectedRegionsCount = mode === 'heatmap' ? regionPainMap.size : 0;
 
   // Generate live region announcement
   const getLiveAnnouncement = () => {
@@ -1031,7 +1036,7 @@ export function InteractiveBodyMap({
                 Highest Pain
               </div>
               <div className="text-xl sm:text-2xl font-bold text-red-600">
-                {Math.max(...Array.from(regionPainMap.current.values()).map(d => d.max), 0)}/10
+                {Math.max(...Array.from(regionPainMap.values()).map(d => d.max), 0)}/10
               </div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
@@ -1040,7 +1045,7 @@ export function InteractiveBodyMap({
               </div>
               <div className="text-xl sm:text-2xl font-bold text-orange-600">
                 {formatNumber(
-                  Array.from(regionPainMap.current.values()).reduce((sum, d) => sum + d.avg, 0) /
+                  Array.from(regionPainMap.values()).reduce((sum, d) => sum + d.avg, 0) /
                     (affectedRegionsCount || 1),
                   1
                 )}
@@ -1067,7 +1072,7 @@ export function InteractiveBodyMap({
                   ? selectedRegions.filter(
                       id => BODY_REGIONS.find(r => r.id === id)?.category === category
                     ).length
-                  : Array.from(regionPainMap.current.entries()).filter(
+                  : Array.from(regionPainMap.entries()).filter(
                       ([id]) => BODY_REGIONS.find(r => r.id === id)?.category === category
                     ).length;
 
@@ -1092,8 +1097,18 @@ export function InteractiveBodyMap({
 }
 
 // Helper function to normalize location strings to region IDs
-function normalizeLocationToRegionId(location: string): string | null {
-  const lower = location.toLowerCase();
+function normalizeLocationToRegionIds(location: string): string[] {
+  const lower = location.trim().toLowerCase().replace(/\s+/g, ' ');
+
+  // Handle QuickLogStepper-style tags like "Shoulder (L)"
+  const sideMatch = lower.match(/^(.*)\s*\((l|r)\)$/);
+  if (sideMatch) {
+    const base = sideMatch[1].trim();
+    const side = sideMatch[2];
+    if (base === 'shoulder') return [side === 'l' ? 'left-shoulder' : 'right-shoulder'];
+    if (base === 'hip') return [side === 'l' ? 'left-hip' : 'right-hip'];
+    if (base === 'knee') return [side === 'l' ? 'left-knee-outer' : 'right-knee-outer'];
+  }
 
   // Map common location names to region IDs
   const locationMap: Record<string, string> = {
@@ -1203,5 +1218,12 @@ function normalizeLocationToRegionId(location: string): string | null {
     'right pinky toe': 'right-toes-lateral',
   };
 
-  return locationMap[lower] || null;
+  const direct = locationMap[lower];
+  if (direct) return [direct];
+
+  // Fallback: map canonical stored categories (e.g., "shoulders", "hips") to all matching regions.
+  // This keeps heatmap rendering consistent with the selection/list view mapping utilities.
+  const categoryRegionIds = locationsToRegions([lower]);
+  return categoryRegionIds;
 }
+
