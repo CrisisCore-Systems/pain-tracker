@@ -14,9 +14,10 @@ import {
 import { format as formatDate } from 'date-fns';
 import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
+import {
   analyzeTrends,
   calculateStatistics,
-  buildDailySeries,
+  buildDailySeries
 } from '../../utils/pain-tracker/trending';
 import { predictPainAndFlares } from '../../utils/pain-tracker/predictionEngine';
 import { exportToCSV, exportToJSON, downloadData } from '../../utils/pain-tracker/export';

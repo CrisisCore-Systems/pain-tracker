@@ -11,13 +11,13 @@ describe('Testimonials component', () => {
 
     // Subheader text (updated to match current copy)
     expect(
-      screen.getByText(/How Pain Tracker Pro helps people manage chronic pain/i)
+      screen.getByText(/Representative scenarios showing how people use Pain Tracker Pro/i)
     ).toBeInTheDocument();
 
     // Should render testimonials badge
-    expect(screen.getByText(/Testimonials/i)).toBeInTheDocument();
-    
+    expect(screen.getByText(/Use-Case Snapshots/i)).toBeInTheDocument();
+
     // Disclaimer for illustrative examples
-    expect(screen.getByText(/\*Illustrative examples/i)).toBeInTheDocument();
+    expect(screen.getByText(/These are illustrative examples, not verified customer quotes/i)).toBeInTheDocument();
   });
 });

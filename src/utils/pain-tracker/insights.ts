@@ -234,38 +234,11 @@ function formatTrigger(trigger: string): string {
 }
 
 export function generateDashboardAIInsights(
-    // Mood-pain correlation insight
-    const moodPainEntries = sortedEntries.filter(e => typeof e.mood === 'number' && typeof e.baselineData?.pain === 'number');
-    let moodPainInsight: DashboardAIInsight | null = null;
-    if (moodPainEntries.length >= 5) {
-      const moods = moodPainEntries.map(e => e.mood!);
-      const pains = moodPainEntries.map(e => e.baselineData.pain);
-      const corr = pearsonCorrelation(moods, pains);
-      if (corr !== null) {
-        const absCorr = Math.abs(corr);
-        let summary = '';
-        if (absCorr < 0.2) {
-          summary = 'No strong relationship between mood and pain is visible yet.';
-        } else if (corr > 0) {
-          summary = `Lower mood tends to accompany higher pain (correlation r = ${corr.toFixed(2)}).`;
-        } else {
-          summary = `Higher mood tends to accompany lower pain (correlation r = ${corr.toFixed(2)}).`;
-        }
-        moodPainInsight = {
-          id: 'mood-pain-correlation',
-          title: 'Mood–Pain Correlation',
-          summary,
-          tone: absCorr >= 0.4 ? 'gentle-nudge' : 'observation',
-          confidence: clamp(moodPainEntries.length / sortedEntries.length, 0.2, 0.9),
-          metricLabel: 'Correlation (r)',
-          metricValue: corr.toFixed(2),
-        };
-      }
-    }
   entries: PainEntry[],
   options: GenerateInsightOptions = {}
 ): DashboardAIInsight[] {
-  if (!entries.length) {
+  // Onboarding: if no entries, return only onboarding insight
+  if (!entries || entries.length === 0) {
     return [
       {
         id: 'no-data',
@@ -277,10 +250,38 @@ export function generateDashboardAIInsights(
       },
     ];
   }
-
+  // Mood-pain correlation insight
   const sortedEntries = [...entries].sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
+  const moodPainEntries = sortedEntries.filter(e => typeof e.mood === 'number' && typeof e.baselineData?.pain === 'number');
+  let moodPainInsight: DashboardAIInsight | null = null;
+  if (moodPainEntries.length >= 5) {
+    const moods = moodPainEntries.map(e => e.mood!);
+    const pains = moodPainEntries.map(e => e.baselineData.pain);
+    const corr = pearsonCorrelation(moods, pains);
+    if (corr !== null) {
+      const absCorr = Math.abs(corr);
+      let summary = '';
+      if (absCorr < 0.2) {
+        summary = 'No strong relationship between mood and pain is visible yet.';
+      } else if (corr > 0) {
+        summary = `Lower mood tends to accompany higher pain (correlation r = ${corr.toFixed(2)}).`;
+      } else {
+        summary = `Higher mood tends to accompany lower pain (correlation r = ${corr.toFixed(2)}).`;
+      }
+      moodPainInsight = {
+        id: 'mood-pain-correlation',
+        title: 'MoodPain Correlation',
+        summary,
+        tone: absCorr >= 0.4 ? 'gentle-nudge' : 'observation',
+        confidence: clamp(moodPainEntries.length / sortedEntries.length, 0.2, 0.9),
+        metricLabel: 'Correlation (r)',
+        metricValue: corr.toFixed(2)
+      };
+    }
+  }
+  // ...existing code...
 
   const allEntries =
     options.allEntries && options.allEntries.length > entries.length

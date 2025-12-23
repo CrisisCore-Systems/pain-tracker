@@ -24,11 +24,11 @@ describe('PainTrackerContainer - entry success toast', () => {
     const setError = vi.fn();
     const loadSampleData = vi.fn();
 
-  (usePainTrackerStore as unknown as { mockReturnValue: (v: unknown) => void }).mockReturnValue({
+    // The store hook is called with a selector; mockImplementation should accept selector functions
+    const storeState = {
       entries: [
         {
           id: 'sample-1',
-          // Make the last entry 5 hours ago so the 'Log pain now' primary action appears
           timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
           baselineData: { pain: 5, locations: [], symptoms: [] },
           notes: '',
@@ -40,8 +40,12 @@ describe('PainTrackerContainer - entry success toast', () => {
       setShowWalkthrough,
       setError,
       loadSampleData,
-    });
+    };
 
+    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation((selector: any) => {
+      if (typeof selector === 'function') return selector(storeState);
+      return storeState;
+    });
     render(<PainTrackerContainer />);
 
     // Simulate the user logging a quick entry via the primary action -> quick log -> save

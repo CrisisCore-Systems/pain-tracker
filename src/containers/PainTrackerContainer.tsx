@@ -54,9 +54,13 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
 
   // Load walkthrough steps dynamically to avoid circular dependency
   useEffect(() => {
-    import('../data/sampleData').then(({ walkthroughSteps: steps }) => {
-      setWalkthroughSteps(steps);
-    });
+    let isMounted = true;
+    if (typeof window !== 'undefined') {
+      import('../data/sampleData').then(({ walkthroughSteps: steps }) => {
+        if (isMounted) setWalkthroughSteps(steps);
+      });
+    }
+    return () => { isMounted = false; };
   }, []);
 
   // Check for first-time user

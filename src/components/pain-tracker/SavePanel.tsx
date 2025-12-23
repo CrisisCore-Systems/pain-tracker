@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
+import { ErrorBoundary } from './ErrorBoundary';
 // For PDF export (simple, local)
 import jsPDF from 'jspdf';
 import type { PainEntry } from '../../types';
 import { format as formatDate } from 'date-fns';
-import { ErrorBoundary } from './ErrorBoundary';
 
+interface SavePanelProps {
   entries: PainEntry[];
   onClearData?: () => void;
   onExport?: (format: 'json' | 'csv' | 'pdf' | 'fhir') => void;
