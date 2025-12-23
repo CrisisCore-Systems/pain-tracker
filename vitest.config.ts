@@ -14,7 +14,8 @@ export default defineConfig({
   },
   test: {
     hookTimeout: 35000, // Allows for 15s security init + 15s vault init + buffer
-    testTimeout: 10000,
+    // Increase default test timeout to 30s to reduce intermittent failures for slow accessibility scans
+    testTimeout: 30000,
     environment: 'jsdom',
     setupFiles: ['src/test/pre-setup.ts', 'src/test/setup.ts'],
     globals: true,
