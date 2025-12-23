@@ -1,5 +1,7 @@
 # Pain Tracker - Product Roadmap
 
+See also: `docs/PAIN_TRACKER_PRO_ACTION_PLAN.md` (maps external requirements to repo reality + risk gates).
+
 _Last Updated: 2025-12-08_  
 _Current Version: v0.1.1-beta_  
 _Target: v0.2.0 by 2025-12-15_

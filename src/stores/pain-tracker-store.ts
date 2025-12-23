@@ -48,6 +48,8 @@ export interface PainTrackerState {
 
   // UI State
   ui: UIState;
+  // Preferences
+  crisisDetectionEnabled: boolean;
 
   // Loading/Error states
   isLoading: boolean;
@@ -75,6 +77,8 @@ export interface PainTrackerState {
   setShowEmpathyDashboard: (show: boolean) => void;
   setCurrentFormSection: (section: number) => void;
   setReportPeriod: (period: Partial<UIState['reportPeriod']>) => void;
+
+  setCrisisDetectionEnabled: (enabled: boolean) => void;
 
   // Emergency Actions
   updateEmergencyData: (data: EmergencyPanelData) => void;
@@ -120,6 +124,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
           isLoading: false,
           error: null,
+          crisisDetectionEnabled: true,
           scheduledReports: [],
 
           // Entry Management
@@ -308,6 +313,12 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             });
           },
 
+          setCrisisDetectionEnabled: enabled => {
+            set(state => {
+              (state as any).crisisDetectionEnabled = enabled;
+            });
+          },
+
           // Emergency Data
           updateEmergencyData: data => {
             set(state => {
@@ -352,8 +363,10 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             set(state => {
               state.entries = [];
               state.moodEntries = [];
+              state.fibromyalgiaEntries = [];
               state.activityLogs = [];
               state.emergencyData = null;
+              state.scheduledReports = [];
               state.error = null;
             });
           },

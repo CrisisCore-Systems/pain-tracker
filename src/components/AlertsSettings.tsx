@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import FocusTrap from 'focus-trap-react';
+import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { cn } from '../design-system/utils';
 
 const STORAGE_KEY = 'pain-tracker:alerts-settings';
@@ -26,6 +27,7 @@ export default function AlertsSettings({
     }
   });
   const [open, setOpen] = useState(false);
+  const [showPHQ, setShowPHQ] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const prevActiveRef = useRef<HTMLElement | null>(null);
   const [slideIn, setSlideIn] = useState(false);
@@ -74,6 +76,20 @@ export default function AlertsSettings({
   const renderBody = (showClose: boolean) => (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
+        <div className="text-sm">
+          <label className="font-medium block">Crisis detection</label>
+          <div className="text-xs text-gray-500 dark:text-slate-400">Enable local high-pain alerts</div>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            checked={usePainTrackerStore.getState().crisisDetectionEnabled ?? true}
+            onChange={(e) => usePainTrackerStore.getState().setCrisisDetectionEnabled(e.target.checked)}
+            aria-label="Enable crisis detection"
+          />
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Alerts settings</h3>
           <p className="text-xs text-gray-500 dark:text-slate-400">Tune sensitivity for pattern alerts.</p>
@@ -101,6 +117,17 @@ export default function AlertsSettings({
       <div className="text-sm text-gray-500 dark:text-slate-400">
         Live preview: You&apos;ll be alerted when pain rises by {settings.threshold} points. For
         example, a baseline of 3/10 would flag entries of {Math.min(10, 3 + settings.threshold)}/10.
+      </div>
+      <div className="pt-3 border-t border-gray-100 dark:border-white/5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h4 className="text-sm font-medium">Mental health screening</h4>
+            <div className="text-xs text-gray-500">Optional PHQ-9 screening stored locally</div>
+          </div>
+          <div>
+            <button className="px-3 py-2 rounded-lg text-sm" onClick={() => setShowPHQ(true)}>Take PHQ-9</button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -172,6 +199,20 @@ export default function AlertsSettings({
               }}
             >
               {renderBody(true)}
+              {showPHQ && (
+                <div className="fixed inset-0 z-[200]">
+                  <div className="absolute inset-0 bg-black/60" onClick={() => setShowPHQ(false)} />
+                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl p-4">
+                    <div className="bg-background rounded-xl shadow-2xl p-4">
+                      {/** Lazy import PHQ9 to keep bundle small */}
+                      <React.Suspense fallback={<div>Loading…</div>}>
+                        {/* @ts-ignore */}
+                        {React.createElement(require('../assessments/PHQ9').default, { onClose: () => setShowPHQ(false) })}
+                      </React.Suspense>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </FocusTrap>
         </div>

@@ -6,7 +6,6 @@ import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 export default function ExportSettings() {
   const entries = usePainTrackerStore(state => state.entries);
   const [format, setFormat] = useState<'json' | 'csv' | 'pdf'>('json');
-  const [includeCharts, setIncludeCharts] = useState(true);
 
   const handleExport = async () => {
     if (format === 'json') {
@@ -60,27 +59,12 @@ export default function ExportSettings() {
           </label>
         </div>
         
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input 
-            type="checkbox" 
-            checked={includeCharts} 
-            onChange={e => setIncludeCharts(e.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-cyan-500 focus:ring-cyan-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
-          />
-          <span className="text-sm text-gray-600 dark:text-slate-300">Include charts (may increase file size)</span>
-        </label>
-        
         <div className="flex items-center gap-3 pt-2">
           <button 
             onClick={handleExport}
             className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 bg-gradient-to-r from-cyan-500 to-sky-500 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50"
           >
             Export now
-          </button>
-          <button 
-            className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-cyan-100 dark:bg-cyan-500/15 border border-cyan-300 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-200 dark:hover:bg-cyan-500/25"
-          >
-            Schedule exports
           </button>
         </div>
       </div>

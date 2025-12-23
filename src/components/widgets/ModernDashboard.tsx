@@ -27,10 +27,11 @@ import { cn } from '../../design-system/utils';
 import { Button, Badge } from '../../design-system';
 import { PageTransition } from '../../design-system/components/PageTransition';
 import type { PainEntry } from '../../types';
-import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import { isSameLocalDay, localDayStart } from '../../utils/dates';
 import Chart from '../../design-system/components/Chart';
 import { colorVar } from '../../design-system/utils/theme';
+import { exportToCSV, downloadData } from '../../utils/pain-tracker/export';
+import { clearAllUserData } from '../../utils/clear-all-user-data';
 import {
   describePainLevel,
   describeTrend,
@@ -57,7 +58,6 @@ interface ModernDashboardProps {
 export function ModernDashboard({ entries, className }: ModernDashboardProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [showActions, setShowActions] = useState(false);
-  const { clearAllData } = usePainTrackerStore();
 
   // Calculate metrics with humanized descriptions
   const metrics = useMemo(() => {
@@ -199,16 +199,12 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
   const handleExport = async () => {
     try {
       setIsExporting(true);
-      const mod = await import('../../features/export/exportCsv');
-      const csv = mod.entriesToCsv(
-        entries.map(e => ({
-          id: e.id,
-          timestamp: e.timestamp,
-          pain: e.baselineData.pain,
-          notes: e.notes || '',
-        }))
+      const csv = exportToCSV(entries);
+      downloadData(
+        csv,
+        `pain-tracker-export-${new Date().toISOString().slice(0, 10)}.csv`,
+        'text/csv'
       );
-      mod.downloadCsv(`pain-tracker-${new Date().toISOString().slice(0, 10)}.csv`, csv);
     } catch (err) {
       console.error('Export failed', err);
     } finally {
@@ -216,9 +212,9 @@ export function ModernDashboard({ entries, className }: ModernDashboardProps) {
     }
   };
 
-  const handleClearData = () => {
+  const handleClearData = async () => {
     if (window.confirm('⚠️ Delete all entries? This cannot be undone.')) {
-      clearAllData();
+      await clearAllUserData();
       setShowActions(false);
     }
   };

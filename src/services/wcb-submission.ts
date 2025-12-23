@@ -12,17 +12,27 @@ interface SubmissionOptions {
   isDraft?: boolean;
 }
 
-const DEFAULT_ENDPOINT = import.meta.env.VITE_WCB_API_ENDPOINT || 'https://api.wcb.gov/submissions';
+const WCB_SUBMISSION_ENABLED = import.meta.env.VITE_ENABLE_WCB_SUBMISSION === 'true';
+// Intentionally no hard-coded remote default. Endpoint must be explicitly configured.
+const DEFAULT_ENDPOINT = import.meta.env.VITE_WCB_API_ENDPOINT;
 
 export async function submitToWCB(
   report: WCBReport,
   options: SubmissionOptions = {}
 ): Promise<SubmissionResponse> {
+  if (!WCB_SUBMISSION_ENABLED) {
+    throw new Error('WCB submission is disabled in this build.');
+  }
+
   const {
     endpoint = DEFAULT_ENDPOINT,
     apiKey = undefined /* proxy-auth */,
     isDraft = false,
   } = options;
+
+  if (!endpoint) {
+    throw new Error('WCB submission endpoint is not configured.');
+  }
 
   if (!apiKey) {
     throw new Error('WCB API key is required for submission');
@@ -72,7 +82,15 @@ export async function getSubmissionStatus(
   status: 'pending' | 'approved' | 'rejected' | 'requires_changes';
   message?: string;
 }> {
+  if (!WCB_SUBMISSION_ENABLED) {
+    throw new Error('WCB submission is disabled in this build.');
+  }
+
   const { endpoint = DEFAULT_ENDPOINT, apiKey = undefined /* proxy-auth */ } = options;
+
+  if (!endpoint) {
+    throw new Error('WCB submission endpoint is not configured.');
+  }
 
   if (!apiKey) {
     throw new Error('WCB API key is required to check submission status');
@@ -96,11 +114,19 @@ export async function updateSubmission(
   report: WCBReport,
   options: SubmissionOptions = {}
 ): Promise<SubmissionResponse> {
+  if (!WCB_SUBMISSION_ENABLED) {
+    throw new Error('WCB submission is disabled in this build.');
+  }
+
   const {
     endpoint = DEFAULT_ENDPOINT,
     apiKey = undefined /* proxy-auth */,
     isDraft = false,
   } = options;
+
+  if (!endpoint) {
+    throw new Error('WCB submission endpoint is not configured.');
+  }
 
   if (!apiKey) {
     throw new Error('WCB API key is required to update submission');

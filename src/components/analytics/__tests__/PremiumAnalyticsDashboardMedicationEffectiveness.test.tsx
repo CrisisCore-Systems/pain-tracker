@@ -1,70 +1,21 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '../../../test/test-utils';
 import { PremiumAnalyticsDashboard } from '../PremiumAnalyticsDashboard';
 import type { PainEntry } from '../../../types';
-
-function makeEntry(overrides: Partial<PainEntry> = {}): PainEntry {
-  const base: PainEntry = {
-    id: `test-${Math.random().toString(16).slice(2)}`,
-    timestamp: new Date().toISOString(),
-    baselineData: {
-      pain: 5,
-      locations: [],
-      symptoms: [],
-    },
-    functionalImpact: {
-      limitedActivities: [],
-      assistanceNeeded: [],
-      mobilityAids: [],
-    },
-    medications: {
-      current: [],
-      changes: '',
-      effectiveness: '',
-    },
-    treatments: {
-      recent: [],
-      effectiveness: '',
-      planned: [],
-    },
-    qualityOfLife: {
-      sleepQuality: 5,
-      moodImpact: 5,
-      socialImpact: [],
-    },
-    workImpact: {
-      missedWork: 0,
-      modifiedDuties: [],
-      workLimitations: [],
-    },
-    comparison: {
-      worseningSince: '',
-      newLimitations: [],
-    },
-    notes: '',
-    ...overrides,
-  };
-
-  return {
-    ...base,
-    baselineData: {
-      ...base.baselineData,
-      ...(overrides.baselineData ?? {}),
-    },
-    medications: {
-      ...base.medications,
-      ...(overrides.medications ?? {}),
-    },
-  };
-}
+import { makePainEntry } from '../../../utils/pain-entry-factory';
 
 describe('PremiumAnalyticsDashboard medication effectiveness display', () => {
-  it('shows <1% instead of 0% for small but non-zero reduction (and works with unsorted entries)', () => {
-    const now = Date.now();
+  it('shows <0.1 points instead of 0.0 for small but non-zero reduction (and works with unsorted entries)', () => {
+    const base = Date.UTC(2024, 1, 10, 12, 0, 0);
+    const iso = (hoursFromBase: number) => new Date(base + hoursFromBase * 60 * 60 * 1000).toISOString();
 
-    const medEntry = makeEntry({
-      timestamp: new Date(now - 60 * 60 * 1000).toISOString(),
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(base));
+
+    const medEntry = makePainEntry({
+      id: 'med-1',
+      timestamp: iso(0),
       baselineData: { pain: 5.0, locations: [], symptoms: [] },
       medications: {
         current: [{ name: 'Ibuprofen', dosage: '200mg', frequency: 'PRN', effectiveness: '' }],
@@ -73,8 +24,9 @@ describe('PremiumAnalyticsDashboard medication effectiveness display', () => {
       },
     });
 
-    const laterEntry = makeEntry({
-      timestamp: new Date(now).toISOString(),
+    const laterEntry = makePainEntry({
+      id: 'after-1',
+      timestamp: iso(1),
       baselineData: { pain: 4.96, locations: [], symptoms: [] },
       medications: {
         current: [],
@@ -83,11 +35,33 @@ describe('PremiumAnalyticsDashboard medication effectiveness display', () => {
       },
     });
 
-    // Deliberately unsorted: laterEntry first.
-    render(<PremiumAnalyticsDashboard entries={[laterEntry, medEntry]} />);
+    const earlierEntries: PainEntry[] = Array.from({ length: 12 }, (_, i) =>
+      makePainEntry({
+        id: `early-${i + 1}`,
+        timestamp: iso(-48 - i),
+        baselineData: { pain: 4 + (i % 4), locations: [], symptoms: [] },
+        medications: { current: [], changes: '', effectiveness: '' },
+      })
+    );
 
-    expect(screen.getByText(/Medication effectiveness/i)).toBeInTheDocument();
-    expect(screen.getByText(/<1% effective/i)).toBeInTheDocument();
-    expect(screen.queryByText(/0% effective/i)).not.toBeInTheDocument();
+    const laterEntries: PainEntry[] = Array.from({ length: 12 }, (_, i) =>
+      makePainEntry({
+        id: `late-${i + 1}`,
+        timestamp: iso(48 + i),
+        baselineData: { pain: 4 + ((i + 1) % 4), locations: [], symptoms: [] },
+        medications: { current: [], changes: '', effectiveness: '' },
+      })
+    );
+
+    try {
+      // Deliberately unsorted: laterEntry first.
+      render(<PremiumAnalyticsDashboard entries={[laterEntry, ...laterEntries, ...earlierEntries, medEntry]} />);
+
+      expect(screen.getByText(/Observed relief after medication/i)).toBeInTheDocument();
+      expect(screen.getByText(/Avg reduction:\s*<0\.1 points/i)).toBeInTheDocument();
+      expect(screen.queryByText(/Avg reduction:\s*0\.0 points/i)).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

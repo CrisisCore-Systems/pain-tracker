@@ -6,6 +6,8 @@ import { PainHistory } from './PainHistory';
 import { PainEntryForm } from './PainEntryForm';
 import { PainAssessment } from './PainAssessment';
 import { WCBReportGenerator } from './WCBReport';
+import { FibromyalgiaHub } from './FibromyalgiaHub';
+import { FibromyalgiaHub } from './FibromyalgiaHub';
 import {
   Card,
   CardContent,
@@ -82,12 +84,25 @@ const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
 };
 
 export function PainTracker() {
+  const [showFibroHub, setShowFibroHub] = useState(false);
   // Adaptive tone copy
   const noLogsHeadline = useAdaptiveCopy(emptyStates.noLogs.headline);
   const noLogsSubtext = useAdaptiveCopy(emptyStates.noLogs.subtext);
   const noLogsCTA = useAdaptiveCopy(emptyStates.noLogs.cta);
   const secondaryCTA = useAdaptiveCopy(emptyStates.noLogs.secondaryCta);
 
+    // Mental Health Resources Banner
+    <div className="w-full bg-blue-900 text-blue-100 py-2 px-4 flex items-center justify-center text-sm font-medium shadow-md" role="region" aria-label="Mental health resources">
+      <span className="mr-2" role="img" aria-label="lifeline">💙</span>
+      <span>
+        Need support?&nbsp;
+        <a href="https://988lifeline.org/" target="_blank" rel="noopener noreferrer" className="underline text-blue-200 hover:text-white">988 Suicide & Crisis Lifeline</a>
+        &nbsp;|&nbsp;
+        <a href="https://findahelpline.com/" target="_blank" rel="noopener noreferrer" className="underline text-blue-200 hover:text-white">Find a Helpline (global)</a>
+        &nbsp;|&nbsp;
+        <a href="https://www.psychologytoday.com/us/therapists" target="_blank" rel="noopener noreferrer" className="underline text-blue-200 hover:text-white">Find a Therapist</a>
+      </span>
+    </div>
   const [error, setError] = useState<string | null>(null);
   // Validation technology component state
   const [ValidationTechComponent, setValidationTechComponent] = useState<React.ComponentType<{
@@ -291,45 +306,56 @@ export function PainTracker() {
       const newEntry: PainEntry = {
         id: Date.now(),
         timestamp: new Date().toISOString(),
-        baselineData: {
-          pain: 0,
-          locations: [],
-          symptoms: [],
-          ...entryData.baselineData,
-        },
-        functionalImpact: {
-          limitedActivities: [],
-          assistanceNeeded: [],
-          mobilityAids: [],
-          ...entryData.functionalImpact,
-        },
-        medications: {
-          current: [],
-          changes: '',
-          effectiveness: '',
-          ...entryData.medications,
-        },
-        treatments: {
-          recent: [],
-          effectiveness: '',
-          planned: [],
-          ...entryData.treatments,
-        },
-        qualityOfLife: {
-          sleepQuality: 0,
-          moodImpact: 0,
-          socialImpact: [],
-          ...entryData.qualityOfLife,
-        },
-        workImpact: {
-          missedWork: 0,
-          modifiedDuties: [],
-          workLimitations: [],
-          ...entryData.workImpact,
-        },
-        comparison: {
-          worseningSince: '',
-          newLimitations: [],
+        return (
+          <div className="min-h-screen bg-background">
+            <header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center h-16">
+                  <div className="flex items-center space-x-3">
+                    <Activity className="h-8 w-8 text-primary" />
+                    <h1 className="text-2xl font-bold text-foreground">Pain Tracker</h1>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Button
+                      onClick={handleStartWalkthrough}
+                      variant="ghost"
+                      size="sm"
+                      className="hidden sm:flex"
+                      type="button"
+                      aria-label="Start interactive tutorial"
+                    >
+                      <HelpCircle className="h-4 w-4 mr-2" />
+                      Help
+                    </Button>
+                    <Button
+                      onClick={() => setShowFibroHub(v => !v)}
+                      variant="outline"
+                      className="hidden sm:flex"
+                      type="button"
+                      aria-pressed={showFibroHub}
+                      aria-label="Open Fibromyalgia Hub"
+                    >
+                      <span role="img" aria-label="fibromyalgia">🦋</span>
+                      <span className="ml-2">Fibromyalgia Hub</span>
+                    </Button>
+                    <Button
+                      ref={toggleButtonRef}
+                      onClick={handleToggleReport}
+                      onKeyDown={handleKeyDown}
+                      variant="outline"
+                      className="hidden sm:flex"
+                      type="button"
+                      aria-expanded={showWCBReport}
+                      aria-controls="wcb-report-section"
+                    >
+                      <FileText className="h-4 w-4 mr-2" />
+                      {showWCBReport ? 'Hide WCB Report' : 'Show WCB Report'}
+                    </Button>
+                    <ThemeToggle />
+                  </div>
+                </div>
+              </div>
+            </header>
           ...entryData.comparison,
         },
         notes: entryData.notes || '',
@@ -444,6 +470,9 @@ export function PainTracker() {
     }
   };
 
+
+  const [showFibroHub, setShowFibroHub] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
@@ -466,6 +495,17 @@ export function PainTracker() {
                 Help
               </Button>
               <Button
+                onClick={() => setShowFibroHub(v => !v)}
+                variant="outline"
+                className="hidden sm:flex"
+                type="button"
+                aria-pressed={showFibroHub}
+                aria-label="Open Fibromyalgia Hub"
+              >
+                <span role="img" aria-label="fibromyalgia">🦋</span>
+                <span className="ml-2">Fibromyalgia Hub</span>
+              </Button>
+              <Button
                 ref={toggleButtonRef}
                 onClick={handleToggleReport}
                 onKeyDown={handleKeyDown}
@@ -485,6 +525,26 @@ export function PainTracker() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {showFibroHub && (
+          <div className="mb-8">
+            <FibromyalgiaHub />
+            <div className="flex justify-end mt-4">
+              <Button variant="ghost" onClick={() => setShowFibroHub(false)} aria-label="Close Fibromyalgia Hub">
+                Close Fibromyalgia Hub
+              </Button>
+            </div>
+          </div>
+        )}
+        {showFibroHub && (
+          <div className="mb-8">
+            <FibromyalgiaHub />
+            <div className="flex justify-end mt-4">
+              <Button variant="ghost" onClick={() => setShowFibroHub(false)} aria-label="Close Fibromyalgia Hub">
+                Close Fibromyalgia Hub
+              </Button>
+            </div>
+          </div>
+        )}
         {error && (
           <Card className="mb-6 border-destructive/50 bg-destructive/5">
             <CardContent className="pt-6">

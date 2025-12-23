@@ -54,7 +54,7 @@ export function BrandedLoadingScreen({
             </span>
           </h1>
           <p className="text-slate-600 dark:text-slate-400 font-medium">
-            AI-Powered Pain Management
+            Privacy-First Pain Tracking
           </p>
         </div>
 

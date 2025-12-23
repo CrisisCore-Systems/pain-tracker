@@ -3,17 +3,19 @@ import {
   Hero,
   UseCases,
   BenefitsGrid,
+  PricingPreview,
   TrustIndicators,
   FeatureShowcase,
   Testimonials,
   FeaturedBlogPosts,
+  FAQ,
   LandingFooter,
 } from '../components/landing';
 
 export const LandingPage: React.FC = () => {
   useEffect(() => {
     // Set page title
-    document.title = 'Pain Tracker Pro - Clinical-Grade Pain Management';
+    document.title = 'Pain Tracker Pro - Privacy-First Pain Tracking';
 
     // Announce page to screen readers
     const announcement =
@@ -53,10 +55,12 @@ export const LandingPage: React.FC = () => {
         <Hero />
         <UseCases />
         <BenefitsGrid />
+        <PricingPreview />
         <TrustIndicators />
         <FeatureShowcase />
         <Testimonials />
         <FeaturedBlogPosts />
+        <FAQ />
       </main>
 
       {/* Footer */}

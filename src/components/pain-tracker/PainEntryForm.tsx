@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
+import { PHQ9Screen, PHQ9Response } from '../mental-health/PHQ9Screen';
+import { GAD7Screen, GAD7Response } from '../mental-health/GAD7Screen';
 import type { PainEntry } from '../../types';
 import { CreatePainEntrySchema } from '../../types';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
@@ -123,6 +125,56 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       moodImpact: 0,
       socialImpact: [],
     },
+    mood: 5, // Default to neutral mood (1-10 scale)
+    phq9: null, // Add PHQ-9 result to form data
+      // Mood scale section (direct mood rating, not mood impact)
+      const MoodSection = () => (
+        <div className="space-y-6" role="group" aria-labelledby="mood-section-title">
+          <div className="flex items-center space-x-3">
+            <span className="text-2xl" role="img" aria-label="mood">
+              🙂
+            </span>
+            <h3 id="mood-section-title" className="text-xl font-semibold text-foreground">
+              Mood (How are you feeling?)
+            </h3>
+          </div>
+          <div className="p-6 rounded-xl bg-slate-800/60">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label htmlFor="mood-scale" className="text-sm font-medium text-foreground">
+                  Mood
+                </label>
+                <span className="text-sm text-muted-foreground">
+                  {formData.mood}/10 - {formData.mood <= 3 ? 'Low' : formData.mood <= 7 ? 'Neutral' : 'Good'}
+                </span>
+              </div>
+              <div className="space-y-3">
+                <input
+                  id="mood-scale"
+                  type="range"
+                  min="1"
+                  max="10"
+                  value={formData.mood}
+                  onChange={e => setFormData(prev => ({ ...prev, mood: parseInt(e.target.value) }))}
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
+                  aria-label={`Mood: ${formData.mood} out of 10`}
+                />
+                <div className="flex justify-between text-xs text-muted-foreground px-1">
+                  <span>
+                    1<br />Very low
+                  </span>
+                  <span>
+                    5<br />Neutral
+                  </span>
+                  <span>
+                    10<br />Very good
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
     workImpact: {
       missedWork: 0,
       modifiedDuties: [],
@@ -189,6 +241,14 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       ),
       required: true,
       estimatedTime: '2 min',
+    },
+    {
+      title: 'Mood',
+      description: 'How is your mood right now? (1-10)',
+      icon: '🙂',
+      component: <MoodSection />,
+      required: false,
+      estimatedTime: '1 min',
     },
     {
       title: 'Functional Impact',
@@ -323,6 +383,19 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
   const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
+          const [showPHQ9, setShowPHQ9] = useState(false);
+            const [showGAD7, setShowGAD7] = useState(false);
+            const [gad7Result, setGAD7Result] = useState<GAD7Response | null>(null);
+          const [phq9Result, setPHQ9Result] = useState<PHQ9Response | null>(null);
+          // Show PHQ-9 if mood is low (<=3) and not already shown
+          useEffect(() => {
+            if (formData.mood !== undefined && formData.mood <= 3 && !showPHQ9) {
+              setShowPHQ9(true);
+            } else if (formData.mood > 3 && showPHQ9) {
+              setShowPHQ9(false);
+              setPHQ9Result(null);
+            }
+          }, [formData.mood, showPHQ9]);
     setIsSubmitting(true);
     setValidationError(null);
 
@@ -410,6 +483,39 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
 
   return (
     <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden pain-form-container">
+      {/* PHQ-9 Depression Screening Modal/Section */}
+            {/* GAD-7 Anxiety Screening Modal/Section */}
+            {showGAD7 && !gad7Result && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+                <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl p-6 max-w-lg w-full">
+                  <GAD7Screen onComplete={result => { setGAD7Result(result); setShowGAD7(false); }} />
+                  <button
+                    className="mt-4 px-4 py-2 rounded bg-slate-700 text-white font-semibold"
+                    onClick={() => setShowGAD7(false)}
+                    aria-label="Skip GAD-7"
+                  >
+                    Skip
+                  </button>
+                </div>
+              </div>
+            )}
+      {showPHQ9 && !phq9Result && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl p-6 max-w-lg w-full">
+            <PHQ9Screen onComplete={result => { setPHQ9Result(result); setShowPHQ9(false); }} />
+            <button
+              className="mt-4 px-4 py-2 rounded bg-slate-700 text-white font-semibold"
+              onClick={() => setShowPHQ9(false)}
+              aria-label="Skip PHQ-9"
+            >
+              Skip
+            </button>
+          </div>
+        </div>
+      )}
+        // Attach PHQ-9 result if present
+        const entryWithPHQ9 = phq9Result ? { ...formData, phq9: phq9Result.answers } : formData;
+        await onSubmit(entryWithPHQ9);
       {/* Progress bar */}
       <div 
         className={`h-1 w-full bg-gradient-to-r ${currentColor.gradient}`} 
@@ -514,6 +620,31 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
         >
           {/* Current section content */}
           <div className="min-h-[400px] p-5 rounded-xl pain-form-section-inner">
+                        {sections[currentSection].component}
+                        {/* GAD-7 trigger button (optional anxiety screening) */}
+                        {!showGAD7 && !gad7Result && (
+                          <div className="mt-6 flex flex-col items-start">
+                            <button
+                              type="button"
+                              className="px-4 py-2 rounded bg-cyan-700 text-white font-semibold"
+                              onClick={() => setShowGAD7(true)}
+                              aria-label="Open GAD-7 Anxiety Screening"
+                            >
+                              Take Anxiety (GAD-7) Screening
+                            </button>
+                            <span className="text-xs text-muted-foreground mt-2">
+                              Optional: Track anxiety symptoms for a more complete picture.
+                            </span>
+                          </div>
+                        )}
+                        {gad7Result && (
+                          <div className="mt-4 text-green-500 text-sm">GAD-7 completed and saved for this entry.</div>
+                        )}
+              // Attach PHQ-9 and GAD-7 results if present
+              let entryWithMentalHealth = { ...formData };
+              if (phq9Result) entryWithMentalHealth = { ...entryWithMentalHealth, phq9: phq9Result.answers };
+              if (gad7Result) entryWithMentalHealth = { ...entryWithMentalHealth, gad7: gad7Result.answers };
+              await onSubmit(entryWithMentalHealth);
             {sections[currentSection].component}
           </div>
           

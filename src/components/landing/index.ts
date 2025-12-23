@@ -6,3 +6,5 @@ export { LandingFooter } from './LandingFooter';
 export { UseCases } from './UseCases';
 export { Testimonials } from './Testimonials';
 export { FeaturedBlogPosts } from './FeaturedBlogPosts';
+export { PricingPreview } from './PricingPreview';
+export { FAQ } from './FAQ';

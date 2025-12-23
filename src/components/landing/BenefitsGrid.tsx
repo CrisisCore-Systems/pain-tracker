@@ -5,7 +5,7 @@ const benefits = [
   {
     icon: Lock,
     title: '100% Local & Private',
-    description: 'Your pain data never leaves your device. No cloud uploads, no tracking, no data collection. AES-256 encryption.',
+    description: 'Your pain data never leaves your device. No cloud uploads. No telemetry by default. Encrypted at rest.',
     stat: 'Zero cloud storage',
     iconClass: 'icon-emerald',
     statClass: 'stat-counter-emerald',
@@ -13,7 +13,7 @@ const benefits = [
   {
     icon: BarChart3,
     title: 'Pattern Analytics',
-    description: 'Advanced pattern recognition with 10+ heuristic algorithms detects medication efficacy, triggers, correlations, and trends.',
+    description: 'Local heuristic analytics help you explore triggers, correlations, and trends over time.',
     stat: '10+ algorithms',
     iconClass: 'icon-sky',
     statClass: 'stat-counter-sky',
@@ -21,8 +21,8 @@ const benefits = [
   {
     icon: Heart,
     title: 'Trauma-Informed Design',
-    description: 'Built with empathy for chronic pain sufferers. Gentle language, accessible interface, crisis detection, and panic mode.',
-    stat: 'WCAG 2.1 AA',
+    description: 'Built with empathy for chronic pain sufferers. Gentle language, accessible interface, crisis support, and panic mode.',
+    stat: 'WCAG 2.2 AA target',
     iconClass: 'icon-pink',
     statClass: 'stat-counter-pink',
   },
@@ -37,7 +37,7 @@ const benefits = [
   {
     icon: Zap,
     title: 'Instant Insights',
-    description: 'Real-time pattern detection, automated alerts for pain escalation, and one-click report generation.',
+    description: 'Pattern insights, optional alerts, and exportable reports when you need to share your data.',
     stat: 'One-click export',
     iconClass: 'icon-amber',
     statClass: 'stat-counter-amber',

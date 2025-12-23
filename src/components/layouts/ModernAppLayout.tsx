@@ -24,6 +24,7 @@ import {
 import { cn } from '../../design-system/utils';
 import { Button, useTheme } from '../../design-system';
 import { PanicMode } from '../accessibility/PanicMode';
+import CrisisBanner from '../crisis/CrisisBanner';
 
 interface ModernAppLayoutProps {
   children: React.ReactNode;
@@ -452,6 +453,7 @@ export function ModernAppLayout({
       )}
 
       {/* Main Content */}
+      <CrisisBanner />
       <main id="main-content" className="lg:pl-72 pt-16 relative" tabIndex={-1}>
         <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 py-8">{children}</div>
       </main>

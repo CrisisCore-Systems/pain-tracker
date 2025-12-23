@@ -43,7 +43,7 @@ export function PainTrackerLayout({
               <div>
                 <h1 className="text-2xl font-bold text-foreground">Pain Tracker</h1>
                 <div className="text-xs text-muted-foreground font-medium tracking-wide">
-                  AI-POWERED PAIN MANAGEMENT
+                  PRIVACY-FIRST PAIN TRACKING
                 </div>
               </div>
             </div>

@@ -40,7 +40,8 @@ import { emptyStates } from '../../content/microcopy';
 import DashboardContent from './DashboardContent';
 import DashboardRecent from './DashboardRecent';
 import { generateDashboardAIInsights, type InsightTone } from '../../utils/pain-tracker/insights';
-import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import { exportToCSV, downloadData } from '../../utils/pain-tracker/export';
+import { clearAllUserData } from '../../utils/clear-all-user-data';
 
 const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
@@ -102,7 +103,6 @@ export function DashboardOverview({ entries, allEntries, className, PredictivePa
   const [tab, setTab] = useState<'overview' | 'charts' | 'recent'>('overview');
   const [isExporting, setIsExporting] = useState(false);
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
-  const { clearAllData } = usePainTrackerStore();
 
   const metrics = useMemo(() => {
     const activeEntries = entries ?? [];
@@ -319,16 +319,12 @@ export function DashboardOverview({ entries, allEntries, className, PredictivePa
     try {
       setIsExporting(true);
       setLiveMessage('Preparing CSV export...');
-      const mod = await import('../../features/export/exportCsv');
-      const csv = mod.entriesToCsv(
-        entries.map(e => ({
-          id: e.id,
-          timestamp: e.timestamp,
-          pain: e.baselineData.pain,
-          notes: e.notes || '',
-        }))
+      const csv = exportToCSV(entries);
+      downloadData(
+        csv,
+        `pain-tracker-export-${new Date().toISOString().slice(0, 10)}.csv`,
+        'text/csv'
       );
-      mod.downloadCsv(`pain-entries-${new Date().toISOString().slice(0, 10)}.csv`, csv);
       setLiveMessage('CSV export ready. Download starting.');
     } catch (err) {
       setLiveMessage('CSV export failed.');
@@ -339,17 +335,22 @@ export function DashboardOverview({ entries, allEntries, className, PredictivePa
     }
   }, [entries]);
 
-  const handleClearData = React.useCallback(() => {
+  const handleClearData = React.useCallback(async () => {
     if (
       window.confirm(
         '⚠️ Are you sure you want to delete ALL pain entries? This action cannot be undone.'
       )
     ) {
-      clearAllData();
-      setLiveMessage('All data cleared successfully.');
+      try {
+        setLiveMessage('Clearing all data...');
+        await clearAllUserData();
+        setLiveMessage('All data cleared successfully.');
+      } catch {
+        setLiveMessage('Failed to clear all data.');
+      }
       setTimeout(() => setLiveMessage(null), 3000);
     }
-  }, [clearAllData]);
+  }, []);
 
   function getPainLevelColor(pain: number) {
     if (pain <= 2) return 'text-success bg-success-bg';

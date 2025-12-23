@@ -17,7 +17,9 @@ import {
   CheckCircle,
   Circle,
 } from 'lucide-react';
+import { useTheme } from '../../design-system';
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
+import { clearAllUserData } from '../../utils/clear-all-user-data';
 
 // Types for user agency features
 interface UserPreference {
@@ -37,6 +39,7 @@ interface UserPreference {
 // User Control Panel Component
 export function UserControlPanel() {
   const { preferences, updatePreferences } = useTraumaInformed();
+  const { setMode } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'preferences' | 'goals' | 'data' | 'privacy'>(
     'preferences'
@@ -103,8 +106,16 @@ export function UserControlPanel() {
   const updatePreference = useCallback(
     (id: string, value: unknown) => {
       updatePreferences({ [id]: value });
+
+      if (id === 'theme') {
+        if (value === 'light' || value === 'dark' || value === 'high-contrast' || value === 'colorblind') {
+          setMode(value);
+        } else if (value === 'auto') {
+          setMode(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        }
+      }
     },
-    [updatePreferences]
+    [setMode, updatePreferences]
   );
 
   return (
@@ -346,7 +357,14 @@ export function UserControlPanel() {
                 </div>
 
                 <div className="mt-6 pt-4 border-t">
-                  <button className="w-full p-2 text-red-600 border border-red-200 rounded hover:bg-red-50 transition-colors">
+                  <button
+                    className="w-full p-2 text-red-600 border border-red-200 rounded hover:bg-red-50 transition-colors"
+                    onClick={async () => {
+                      if (window.confirm('Delete all locally stored data? This cannot be undone.')) {
+                        await clearAllUserData();
+                      }
+                    }}
+                  >
                     Delete All My Data
                   </button>
                 </div>

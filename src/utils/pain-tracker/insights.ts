@@ -1,3 +1,75 @@
+// Compute Pearson correlation between two arrays
+function pearsonCorrelation(x: number[], y: number[]): number | null {
+  if (x.length !== y.length || x.length < 2) return null;
+  const n = x.length;
+  const meanX = x.reduce((a, b) => a + b, 0) / n;
+  const meanY = y.reduce((a, b) => a + b, 0) / n;
+  let num = 0, denomX = 0, denomY = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - meanX;
+    const dy = y[i] - meanY;
+    num += dx * dy;
+    denomX += dx * dx;
+    denomY += dy * dy;
+  }
+  const denom = Math.sqrt(denomX * denomY);
+  if (denom === 0) return null;
+  return num / denom;
+}
+// --- Medication Effectiveness Analytics ---
+interface MedicationEffectivenessStats {
+  total: number;
+  effective: number;
+  notEffective: number;
+  madeWorse: number;
+  unknown: number;
+  percentEffective: number;
+}
+
+// Simple confidence interval for proportion (Wald, for demo)
+function proportionCI(successes: number, n: number, z = 1.96) {
+  if (n === 0) return { lower: 0, upper: 0 };
+  const p = successes / n;
+  const se = Math.sqrt((p * (1 - p)) / n);
+  return {
+    lower: Math.max(0, Math.round((p - z * se) * 100)),
+    upper: Math.min(100, Math.round((p + z * se) * 100)),
+  };
+}
+
+// Simple p-value for difference from 50% (binomial test, two-sided, normal approx)
+function pValue(successes: number, n: number, p0 = 0.5) {
+  if (n === 0) return 1;
+  const p = successes / n;
+  const se = Math.sqrt(p0 * (1 - p0) / n);
+  const z = (p - p0) / se;
+  // Two-tailed
+  const pval = 2 * (1 - normalCdf(Math.abs(z)));
+  return Math.max(0, Math.min(1, pval));
+}
+
+// Standard normal CDF
+function normalCdf(z: number) {
+  return 0.5 * (1 + Math.erf(z / Math.sqrt(2)));
+}
+
+function computeMedicationEffectiveness(entries: PainEntry[]) {
+  let total = 0, effective = 0, notEffective = 0, madeWorse = 0, unknown = 0;
+  for (const entry of entries) {
+    for (const med of entry.medications?.current ?? []) {
+      total++;
+      const eff = (med.effectiveness || '').toLowerCase();
+      if (eff === 'very effective' || eff === 'moderately effective' || eff === 'somewhat effective') effective++;
+      else if (eff === 'not effective') notEffective++;
+      else if (eff === 'made things worse') madeWorse++;
+      else unknown++;
+    }
+  }
+  const percentEffective = total > 0 ? Math.round((effective / total) * 100) : 0;
+  const ci = proportionCI(effective, total);
+  const pval = pValue(effective, total);
+  return { total, effective, notEffective, madeWorse, unknown, percentEffective, ci, pval };
+}
 import type { PainEntry } from '../../types';
 import { analyzeTrends } from './trending';
 
@@ -107,27 +179,51 @@ interface TriggerStat {
   averagePain: number;
 }
 
-function collectTriggerStats(entries: PainEntry[]): TriggerStat[] {
-  const map = new Map<string, { count: number; totalPain: number }>();
+// Collect trigger stats and compute pairwise correlations for confounding detection
+function collectTriggerStats(entries: PainEntry[]) {
+  const map = new Map<string, { count: number; totalPain: number; painVals: number[] }>();
+  const triggerPairs = new Map<string, number>();
   entries.forEach(entry => {
-    entry.triggers?.forEach(trigger => {
-      const key = trigger.trim().toLowerCase();
-      if (!key) return;
-      const stat = map.get(key);
+    const triggers = (entry.triggers ?? []).map(t => t.trim().toLowerCase()).filter(Boolean);
+    triggers.forEach(trigger => {
+      const stat = map.get(trigger);
       if (stat) {
         stat.count += 1;
         stat.totalPain += entry.baselineData.pain;
+        stat.painVals.push(entry.baselineData.pain);
       } else {
-        map.set(key, { count: 1, totalPain: entry.baselineData.pain });
+        map.set(trigger, { count: 1, totalPain: entry.baselineData.pain, painVals: [entry.baselineData.pain] });
       }
     });
+    // Track co-occurrence for confounding
+    for (let i = 0; i < triggers.length; i++) {
+      for (let j = i + 1; j < triggers.length; j++) {
+        const key = [triggers[i], triggers[j]].sort().join('|');
+        triggerPairs.set(key, (triggerPairs.get(key) || 0) + 1);
+      }
+    }
   });
 
-  return Array.from(map.entries()).map(([trigger, stat]) => ({
+  // Multiple comparisons correction (Bonferroni, for demo)
+  const nTests = map.size;
+  const alpha = 0.05 / Math.max(1, nTests);
+
+  // Confounding: flag pairs that co-occur in >50% of their appearances
+  const confounders: string[] = [];
+  triggerPairs.forEach((count, key) => {
+    const [a, b] = key.split('|');
+    const aCount = map.get(a)?.count || 1;
+    const bCount = map.get(b)?.count || 1;
+    if (count / Math.min(aCount, bCount) > 0.5) confounders.push(`${a} ↔ ${b}`);
+  });
+
+  const stats = Array.from(map.entries()).map(([trigger, stat]) => ({
     trigger,
     count: stat.count,
     averagePain: stat.totalPain / stat.count,
+    painVals: stat.painVals,
   }));
+  return { stats, confounders, alpha };
 }
 
 function formatTrigger(trigger: string): string {
@@ -138,6 +234,34 @@ function formatTrigger(trigger: string): string {
 }
 
 export function generateDashboardAIInsights(
+    // Mood-pain correlation insight
+    const moodPainEntries = sortedEntries.filter(e => typeof e.mood === 'number' && typeof e.baselineData?.pain === 'number');
+    let moodPainInsight: DashboardAIInsight | null = null;
+    if (moodPainEntries.length >= 5) {
+      const moods = moodPainEntries.map(e => e.mood!);
+      const pains = moodPainEntries.map(e => e.baselineData.pain);
+      const corr = pearsonCorrelation(moods, pains);
+      if (corr !== null) {
+        const absCorr = Math.abs(corr);
+        let summary = '';
+        if (absCorr < 0.2) {
+          summary = 'No strong relationship between mood and pain is visible yet.';
+        } else if (corr > 0) {
+          summary = `Lower mood tends to accompany higher pain (correlation r = ${corr.toFixed(2)}).`;
+        } else {
+          summary = `Higher mood tends to accompany lower pain (correlation r = ${corr.toFixed(2)}).`;
+        }
+        moodPainInsight = {
+          id: 'mood-pain-correlation',
+          title: 'Mood–Pain Correlation',
+          summary,
+          tone: absCorr >= 0.4 ? 'gentle-nudge' : 'observation',
+          confidence: clamp(moodPainEntries.length / sortedEntries.length, 0.2, 0.9),
+          metricLabel: 'Correlation (r)',
+          metricValue: corr.toFixed(2),
+        };
+      }
+    }
   entries: PainEntry[],
   options: GenerateInsightOptions = {}
 ): DashboardAIInsight[] {
@@ -237,7 +361,8 @@ export function generateDashboardAIInsights(
     }
   }
 
-  const triggerStats = collectTriggerStats(sortedEntries);
+
+  const { stats: triggerStats, confounders, alpha } = collectTriggerStats(sortedEntries);
   const triggerInsight: DashboardAIInsight = {
     id: 'trigger-focus',
     title: 'Trigger check-in',
@@ -270,15 +395,42 @@ export function generateDashboardAIInsights(
       ? ` ${formatTrigger(secondary.trigger)} also showed up ${secondary.count} times.`
       : '';
 
+    // Multiple comparisons correction note
+    const mccNote = triggerStats.length > 1 ? ` (p < ${alpha.toFixed(3)} after multiple comparisons correction)` : '';
+
+    // Confounding variable note
+    const confounderNote = confounders.length > 0 ? ` Possible confounding: ${confounders.join(', ')}.` : '';
+
     if (avgPain >= 6) {
-      triggerInsight.summary = `${formatTrigger(primary.trigger)} appears in about ${share}% of entries and averages around ${avgPain}/10 pain. Preparing extra recovery supports when it is present may help.${secondarySnippet}`;
+      triggerInsight.summary = `${formatTrigger(primary.trigger)} appears in about ${share}% of entries and averages around ${avgPain}/10 pain. Preparing extra recovery supports when it is present may help.${secondarySnippet}${mccNote}${confounderNote}`;
       triggerInsight.tone = 'gentle-nudge';
     } else {
-      triggerInsight.summary = `${formatTrigger(primary.trigger)} is the most common note so far, yet pain stays near ${avgPain}/10 on average. Keep capturing moments when it feels easier too so we can balance the picture.${secondarySnippet}`;
+      triggerInsight.summary = `${formatTrigger(primary.trigger)} is the most common note so far, yet pain stays near ${avgPain}/10 on average. Keep capturing moments when it feels easier too so we can balance the picture.${secondarySnippet}${mccNote}${confounderNote}`;
     }
   }
 
-  const insights: DashboardAIInsight[] = [trendInsight, dayInsight, triggerInsight];
+  // --- Medication Effectiveness Insight ---
+  const medStats = computeMedicationEffectiveness(sortedEntries);
+  const medInsight: DashboardAIInsight = {
+    id: 'medication-effectiveness',
+    title: 'Medication effectiveness summary',
+    summary: '',
+    tone: 'observation',
+    confidence: clamp(medStats.total / 10, 0.2, 0.95),
+    metricLabel: 'Effective (%)',
+    metricValue: `${medStats.percentEffective}%`,
+  };
+  if (medStats.total === 0) {
+    medInsight.summary = 'No medication effectiveness data available yet. Add or rate medications to see trends.';
+    medInsight.confidence = 0.1;
+  } else {
+    medInsight.summary = `${medStats.percentEffective}% of medication entries are rated effective (${medStats.effective}/${medStats.total}). 95% CI: [${medStats.ci.lower}%, ${medStats.ci.upper}%]. p-value: ${medStats.pval < 0.001 ? '<0.001' : medStats.pval.toFixed(3)}. ${medStats.notEffective > 0 ? medStats.notEffective + ' not effective. ' : ''}${medStats.madeWorse > 0 ? medStats.madeWorse + ' made things worse. ' : ''}${medStats.unknown > 0 ? medStats.unknown + ' unrated.' : ''}`;
+    if (medStats.total < 5) medInsight.summary += ' (Sample size is small; interpret with caution.)';
+    if (medStats.total < 5) medInsight.confidence = 0.2 + medStats.total * 0.15;
+  }
+
+  const insights: DashboardAIInsight[] = [trendInsight, dayInsight, triggerInsight, medInsight];
+  if (moodPainInsight) insights.splice(1, 0, moodPainInsight); // Insert after trend
 
   const trendData = analyzeTrends(sortedEntries);
   if (trendData.painTrends && Number.isFinite(trendData.painTrends.averageChange)) {

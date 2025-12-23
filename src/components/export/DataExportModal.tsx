@@ -37,10 +37,6 @@ export interface ExportFilters {
   };
   symptoms: string[];
   locations: string[];
-  includeQualityOfLife: boolean;
-  includeWorkImpact: boolean;
-  includeMedications: boolean;
-  includeTreatments: boolean;
 }
 
 interface DataExportModalProps {
@@ -70,10 +66,6 @@ export function DataExportModal({
     },
     symptoms: [],
     locations: [],
-    includeQualityOfLife: true,
-    includeWorkImpact: true,
-    includeMedications: true,
-    includeTreatments: true,
   });
 
   // Get unique symptoms and locations for filtering
@@ -148,26 +140,30 @@ export function DataExportModal({
     try {
       let data: string;
       let filename: string;
+      let mimeType: string;
       const timestamp = new Date().toISOString().split('T')[0];
 
       switch (selectedFormat) {
         case 'csv':
           data = exportToCSV(filteredEntries);
           filename = `pain-data-${timestamp}.csv`;
+          mimeType = 'text/csv';
           break;
         case 'json':
           data = exportToJSON(filteredEntries);
           filename = `pain-data-${timestamp}.json`;
+          mimeType = 'application/json';
           break;
         case 'pdf':
           data = exportToPDF(filteredEntries);
           filename = `pain-report-${timestamp}.pdf`;
+          mimeType = 'application/pdf';
           break;
         default:
           throw new Error('Unsupported export format');
       }
 
-      downloadData(data, filename);
+      downloadData(data, filename, mimeType);
       setExportStatus('success');
 
       // Auto-close after successful export
@@ -401,29 +397,6 @@ export function DataExportModal({
                 </div>
               </div>
             )}
-
-            {/* Data Inclusion Options */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium">Include Data Types</label>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { key: 'includeQualityOfLife', label: 'Quality of Life' },
-                  { key: 'includeWorkImpact', label: 'Work Impact' },
-                  { key: 'includeMedications', label: 'Medications' },
-                  { key: 'includeTreatments', label: 'Treatments' },
-                ].map(({ key, label }) => (
-                  <label key={key} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={filters[key as keyof ExportFilters] as boolean}
-                      onChange={e => updateFilter(key as keyof ExportFilters, e.target.checked)}
-                      className="rounded border-border"
-                    />
-                    <span className="text-sm">{label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
           </CardContent>
         </Card>
 

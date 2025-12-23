@@ -592,7 +592,9 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
     const medicationEffectiveness: MedicationEffectStat[] = Object.entries(medicationData)
       .map(([medication, data]) => {
         const avgReduction = data.totalReduction / data.uses;
-        const effectiveness = clamp((avgReduction / 10) * 100, 0, 100);
+        // A lightweight, non-clinical visualization score derived from observed pain score changes.
+        // This is intentionally NOT a “% effective” claim.
+        const effectiveness = clamp((avgReduction / 3) * 100, 0, 100);
         return {
           medication,
           uses: data.uses,
@@ -1149,18 +1151,21 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-primary" aria-hidden />
-              <CardTitle className="text-lg">Medication effectiveness</CardTitle>
+              <CardTitle className="text-lg">Observed relief after medication</CardTitle>
             </div>
+            <CardDescription>
+              Estimated from pain score change in the next logged entry (observational).
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {analytics.medicationEffectiveness.map((med, idx) => {
                 const badgeVariant = getEffectivenessBadgeVariant(med.effectiveness);
                 const barClassName = getEffectivenessBarClassName(med.effectiveness);
-                const effectivenessLabel =
-                  med.effectiveness > 0 && med.effectiveness < 1
-                    ? '<1'
-                    : med.effectiveness.toFixed(0);
+                const reliefLabel =
+                  med.avgReduction > 0 && med.avgReduction < 0.1
+                    ? '<0.1'
+                    : med.avgReduction.toFixed(1);
                 const barWidth =
                   med.effectiveness > 0 && med.effectiveness < 1
                     ? 1
@@ -1173,7 +1178,7 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                         <div className="text-xs text-muted-foreground">{med.uses} uses</div>
                       </div>
                       <Badge variant={badgeVariant} className="shrink-0">
-                        {effectivenessLabel}% effective
+                        {reliefLabel} pts
                       </Badge>
                     </div>
 
@@ -1185,7 +1190,7 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                     </div>
 
                     <div className="mt-2 text-xs text-muted-foreground">
-                      Avg reduction: {med.avgReduction.toFixed(1)} points
+                      Avg reduction: {reliefLabel} points
                     </div>
                   </Card>
                 );

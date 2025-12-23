@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useMobileAccessibility } from './MobileAccessibility';
 import { useTraumaInformed } from './TraumaInformedHooks';
+import { useTheme } from '../../design-system';
 import type { TraumaInformedPreferences } from './TraumaInformedTypes';
 
 export function AccessibilitySettingsPanel() {
@@ -160,7 +161,11 @@ export function AccessibilitySettingsPanel() {
           )}
 
           {activeTab === 'mobile' && (
-            <MobileSettings preferences={mobilePrefs} onChange={updateMobilePrefs} />
+            <MobileSettings
+              preferences={mobilePrefs}
+              onChange={updateMobilePrefs}
+              onTraumaChange={handlePreferenceChange}
+            />
           )}
 
           {activeTab === 'emotional' && (
@@ -410,10 +415,17 @@ function EmotionalSafetySettings({
 function MobileSettings({
   preferences,
   onChange,
+  onTraumaChange,
 }: {
   preferences: ReturnType<typeof useMobileAccessibility>['preferences'];
   onChange: ReturnType<typeof useMobileAccessibility>['updatePreferences'];
+  onTraumaChange: (updates: Partial<TraumaInformedPreferences>) => void;
 }) {
+  const { mode, setMode, isHighContrast } = useTheme();
+
+  const resolveSystemTheme = () =>
+    window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+
   return (
     <div className="space-y-6">
       <SettingGroup
@@ -425,7 +437,10 @@ function MobileSettings({
           label="Voice Input"
           description="Enable voice commands for navigation and form input"
           checked={preferences.voiceInput}
-          onChange={checked => onChange({ voiceInput: checked })}
+          onChange={checked => {
+            onChange({ voiceInput: checked });
+            onTraumaChange({ voiceInput: checked });
+          }}
         />
 
         <ToggleSetting
@@ -458,21 +473,30 @@ function MobileSettings({
           label="Large Text"
           description="Increase text size for better mobile readability"
           checked={preferences.largeText}
-          onChange={checked => onChange({ largeText: checked })}
+          onChange={checked => {
+            onChange({ largeText: checked });
+            onTraumaChange({ fontSize: checked ? 'large' : 'medium' });
+          }}
         />
 
         <ToggleSetting
           label="High Contrast"
           description="Enhanced contrast for better visibility on mobile screens"
           checked={preferences.highContrast}
-          onChange={checked => onChange({ highContrast: checked })}
+          onChange={checked => {
+            onChange({ highContrast: checked });
+            setMode(checked ? 'high-contrast' : isHighContrast ? resolveSystemTheme() : mode);
+          }}
         />
 
         <ToggleSetting
           label="Reduced Motion"
           description="Minimize animations that may cause motion sickness"
           checked={preferences.reducedMotion}
-          onChange={checked => onChange({ reducedMotion: checked })}
+          onChange={checked => {
+            onChange({ reducedMotion: checked });
+            onTraumaChange({ reduceMotion: checked });
+          }}
         />
       </SettingGroup>
     </div>

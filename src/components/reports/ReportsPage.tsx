@@ -16,6 +16,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from '../../design-system';
 import type { PainEntry } from '../../types';
 import { exportToCSV, exportToJSON, exportToPDF, downloadData } from '../../utils/pain-tracker/export';
+import { downloadWorkSafeBCPDF } from '../../utils/pain-tracker/wcb-export';
 import { useToast } from '../feedback';
 
 interface ReportsPageProps {
@@ -100,6 +101,35 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     }
   };
 
+  const handleWorkSafeBCExport = async () => {
+    if (filteredEntries.length === 0) {
+      toast.error('No Data', 'There are no entries to include in the report.');
+      return;
+    }
+
+    setIsExporting('worksafe-bc');
+    try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const sorted = [...filteredEntries].sort(
+        (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+      );
+      const startDate = new Date(sorted[0].timestamp);
+      const endDate = new Date(sorted[sorted.length - 1].timestamp);
+
+      downloadWorkSafeBCPDF(filteredEntries, {
+        startDate,
+        endDate,
+        includeDetailedEntries: true,
+      });
+      toast.success('Export Complete', 'Your WorkSafe BC report has been downloaded.');
+    } catch (error) {
+      console.error('WCB export error:', error);
+      toast.error('Export Failed', 'Unable to generate the WorkSafe BC report. Please try again.');
+    } finally {
+      setIsExporting(null);
+    }
+  };
+
   const reportTypes: ReportType[] = [
     {
       id: 'csv',
@@ -132,7 +162,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     {
       id: 'pdf',
       name: 'PDF Report',
-      description: 'Generate a formatted PDF report with summary statistics and visualizations.',
+      description: 'Generate a formatted PDF report with summary statistics.',
       icon: FileType,
       format: 'PDF',
       color: 'rose',
@@ -309,6 +339,10 @@ export function ReportsPage({ entries }: ReportsPageProps) {
                     toast.error('No Data', 'There are no entries to include in the report.');
                     return;
                   }
+                  if (report.id === 'worksafe-bc') {
+                    void handleWorkSafeBCExport();
+                    return;
+                  }
                   toast.info('Coming Soon', `${report.name} generation is coming in a future update.`);
                 }}
                 disabled={filteredEntries.length === 0}
@@ -356,7 +390,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
             </div>
             <h3 className="font-medium text-gray-900 dark:text-white mb-2">No Scheduled Reports</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Set up automated reports to be generated and sent to your email on a schedule.
+              Set up automated reports to be generated on a schedule.
             </p>
             <Button
               variant="outline"

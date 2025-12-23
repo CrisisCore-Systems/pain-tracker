@@ -1,15 +1,19 @@
 import React, { useState, useRef } from 'react';
+// For PDF export (simple, local)
+import jsPDF from 'jspdf';
 import type { PainEntry } from '../../types';
 import { format as formatDate } from 'date-fns';
 import { ErrorBoundary } from './ErrorBoundary';
 
-interface SavePanelProps {
   entries: PainEntry[];
   onClearData?: () => void;
-  onExport?: (format: 'json' | 'csv') => void;
+  onExport?: (format: 'json' | 'csv' | 'pdf' | 'fhir') => void;
 }
 
 export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
+  const [showSchedule, setShowSchedule] = useState(false);
+  const [schedule, setSchedule] = useState<'none' | 'weekly' | 'monthly'>('none');
+  const [showDocs, setShowDocs] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [focusedButton, setFocusedButton] = useState<string | null>(null);
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
@@ -29,16 +33,17 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
         }
       : null;
 
-  const handleExport = (format: 'json' | 'csv') => {
+  const handleExport = (format: 'json' | 'csv' | 'pdf' | 'fhir') => {
     let data: string;
     let mimeType: string;
     let filename: string;
+
 
     if (format === 'json') {
       data = JSON.stringify(entries, null, 2);
       mimeType = 'application/json';
       filename = 'pain-tracker-export.json';
-    } else {
+    } else if (format === 'csv') {
       // CSV format
       const headers = [
         'Date',
@@ -49,12 +54,10 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
         'Medications',
         'Notes',
       ];
-
       const rows = entries.map(entry => {
         const medications = (entry.medications?.current ?? [])
           .map(med => `${med.name} ${med.dosage}`)
           .join(';');
-
         const rowData = [
           formatDate(new Date(entry.timestamp), 'yyyy-MM-dd HH:mm:ss'),
           entry.baselineData.pain.toString(),
@@ -66,10 +69,38 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
         ];
         return rowData;
       });
-
       data = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
       mimeType = 'text/csv';
       filename = 'pain-tracker-export.csv';
+    } else if (format === 'pdf') {
+      // PDF export (simple clinical summary)
+      const doc = new jsPDF();
+      doc.text('Pain Tracker Clinical Report', 10, 10);
+      entries.forEach((entry, i) => {
+        doc.text(`Entry #${i + 1} - ${formatDate(new Date(entry.timestamp), 'yyyy-MM-dd HH:mm')}`, 10, 20 + i * 10);
+        doc.text(`Pain: ${entry.baselineData.pain} | Locations: ${(entry.baselineData.locations ?? []).join(';')}`, 10, 25 + i * 10);
+      });
+      doc.save('pain-tracker-report.pdf');
+      return;
+    } else if (format === 'fhir') {
+      // FHIR JSON export (Observation resource, minimal demo)
+      const fhir = entries.map((entry, i) => ({
+        resourceType: 'Observation',
+        id: `pain-entry-${i + 1}`,
+        status: 'final',
+        code: { text: 'Pain Entry' },
+        subject: { reference: 'Patient/example' },
+        effectiveDateTime: entry.timestamp,
+        valueQuantity: { value: entry.baselineData.pain, unit: 'NRS' },
+        component: [
+          { code: { text: 'Locations' }, valueString: (entry.baselineData.locations ?? []).join(';') },
+          { code: { text: 'Symptoms' }, valueString: (entry.baselineData.symptoms ?? []).join(';') },
+        ],
+        note: [{ text: entry.notes || '' }],
+      }));
+      data = JSON.stringify(fhir, null, 2);
+      mimeType = 'application/fhir+json';
+      filename = 'pain-tracker-fhir.json';
     }
 
     if (onExport) {
@@ -126,21 +157,70 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
           </div>
 
           {/* Export Options */}
-          <div role="group" aria-label="Export Options" className="space-x-4">
+          <div role="group" aria-label="Export Options" className="space-x-4 mb-2">
             <button
               onClick={() => handleExport('json')}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Export as JSON"
-            >
-              Export JSON
-            </button>
+            >Export JSON</button>
             <button
               onClick={() => handleExport('csv')}
               className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               aria-label="Export as CSV"
-            >
-              Export CSV
-            </button>
+            >Export CSV</button>
+            <button
+              onClick={() => handleExport('pdf')}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label="Export as PDF"
+            >Export PDF</button>
+            <button
+              onClick={() => handleExport('fhir')}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              aria-label="Export as FHIR JSON"
+            >Export FHIR JSON</button>
+          </div>
+
+          {/* Export Scheduling */}
+          <div className="mb-2">
+            <button
+              onClick={() => setShowSchedule(v => !v)}
+              className="text-sm underline text-blue-600"
+            >{showSchedule ? 'Hide' : 'Show'} Export Scheduling</button>
+            {showSchedule && (
+              <div className="mt-2">
+                <label className="block text-sm mb-1">Schedule automatic export:</label>
+                <select
+                  value={schedule}
+                  onChange={e => setSchedule(e.target.value as any)}
+                  className="border rounded px-2 py-1 text-sm"
+                >
+                  <option value="none">None</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+                <span className="ml-2 text-xs text-muted-foreground">(Local-only, demo: no real automation)</span>
+              </div>
+            )}
+          </div>
+
+          {/* Data Portability Documentation */}
+          <div className="mb-2">
+            <button
+              onClick={() => setShowDocs(v => !v)}
+              className="text-sm underline text-blue-600"
+            >{showDocs ? 'Hide' : 'Show'} Data Portability Info</button>
+            {showDocs && (
+              <div className="mt-2 p-2 border rounded bg-blue-50 text-xs">
+                <b>How to export your data:</b>
+                <ul className="list-disc pl-5">
+                  <li>Choose a format: JSON, CSV, PDF, or FHIR JSON.</li>
+                  <li>Click the export button to download your data.</li>
+                  <li>To delete all data, use the "Clear Data" button below.</li>
+                  <li>Export scheduling is local-only and does not send data anywhere.</li>
+                  <li>For healthcare system import, use FHIR JSON or PDF.</li>
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Clear Data */}
@@ -151,9 +231,7 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
                   onClick={() => setShowConfirmation(true)}
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                   aria-label="Clear all data"
-                >
-                  Clear Data
-                </button>
+                >Clear Data</button>
               ) : (
                 <div
                   role="alertdialog"
@@ -162,12 +240,8 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
                   onKeyDown={handleKeyDown}
                   className="mt-4 p-4 border border-red-200 rounded-lg bg-red-50"
                 >
-                  <h4 id="confirm-dialog-title" className="text-red-700 font-medium mb-2">
-                    Confirm Clear Data
-                  </h4>
-                  <p id="confirm-dialog-desc" className="text-red-600 mb-4">
-                    Are you sure you want to clear all data? This action cannot be undone.
-                  </p>
+                  <h4 id="confirm-dialog-title" className="text-red-700 font-medium mb-2">Confirm Clear Data</h4>
+                  <p id="confirm-dialog-desc" className="text-red-600 mb-4">Are you sure you want to clear all data? This action cannot be undone.</p>
                   <div className="space-x-4">
                     <button
                       ref={confirmButtonRef}
@@ -178,17 +252,13 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
                       className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                       aria-label="Confirm clear data"
                       autoFocus
-                    >
-                      Yes, Clear Data
-                    </button>
+                    >Yes, Clear Data</button>
                     <button
                       ref={cancelButtonRef}
                       onClick={() => setShowConfirmation(false)}
                       className="bg-gray-500 dark:bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                       aria-label="Cancel clear data"
-                    >
-                      Cancel
-                    </button>
+                    >Cancel</button>
                   </div>
                 </div>
               )}

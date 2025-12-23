@@ -115,7 +115,7 @@ export function InlineBrandedLogo({
         fontWeight="500"
         fill="#64748b"
       >
-        AI-POWERED PAIN MANAGEMENT
+        PRIVACY-FIRST PAIN TRACKING
       </text>
 
       {/* Pro Badge */}

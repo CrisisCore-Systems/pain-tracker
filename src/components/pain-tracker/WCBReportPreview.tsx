@@ -16,6 +16,10 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
   }>({});
   const [error, setError] = useState<string | null>(null);
 
+  const isSubmissionEnabled =
+    import.meta.env.VITE_ENABLE_WCB_SUBMISSION === 'true' &&
+    Boolean(import.meta.env.VITE_WCB_API_ENDPOINT);
+
   const handleDownload = async () => {
     try {
       await generateWCBReportPDF(report);
@@ -26,6 +30,13 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
   };
 
   const handleSubmit = async () => {
+    if (!isSubmissionEnabled) {
+      setError(
+        'Submission is disabled in this build. Configure VITE_ENABLE_WCB_SUBMISSION="true" and VITE_WCB_API_ENDPOINT to enable.'
+      );
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
 
@@ -84,12 +95,20 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
           <button
             onClick={handleSubmit}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300"
-            disabled={isSubmitting || submissionStatus.status === 'approved'}
+            disabled={!isSubmissionEnabled || isSubmitting || submissionStatus.status === 'approved'}
           >
             {isSubmitting ? 'Submitting...' : 'Submit to WCB'}
           </button>
         </div>
       </div>
+
+      {!isSubmissionEnabled && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded text-amber-800">
+          Submission is disabled by default to keep this app local-first. Configure
+          <code className="px-1">VITE_ENABLE_WCB_SUBMISSION</code> and
+          <code className="px-1">VITE_WCB_API_ENDPOINT</code> to enable.
+        </div>
+      )}
 
       {/* Status Messages */}
       {error && (

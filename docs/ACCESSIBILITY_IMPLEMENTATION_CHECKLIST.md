@@ -5,6 +5,13 @@
 **Owner**: Engineering + Design  
 **Status**: ✅ Complete
 
+## Reality Check (2025-12-22)
+
+This document contains a mix of “completed” claims and unchecked items.
+
+- Verified accessibility preferences (Visual + Motor) are wired and in active use; see `docs/PAIN_TRACKER_PRO_ACTION_PLAN.md` → Tier 3.3.
+- Treat the remaining unchecked items below as an actionable backlog unless/until they are explicitly reclassified.
+
 ---
 
 ## December 2025 Updates - Phase 1.5 Complete ✅

@@ -106,7 +106,7 @@ export const Hero: React.FC = () => {
                 className="border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10 hover:border-emerald-300 transition-all"
               >
                 <Stethoscope className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Clinician</span>
+                <span className="hidden sm:inline">Clinic Tools</span>
               </Button>
 
               <button
@@ -168,9 +168,9 @@ export const Hero: React.FC = () => {
 
               {/* Subheading */}
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
-                Clinical-grade pain tracking with{' '}
-                <span className="text-sky-300 font-semibold">advanced pattern analysis</span>,{' '}
-                automated WorkSafe BC reporting, and{' '}
+                Privacy-first pain tracking with{' '}
+                <span className="text-sky-300 font-semibold">local pattern insights</span>,{' '}
+                WorkSafeBC reporting tools, and{' '}
                 <span className="text-emerald-300 font-semibold">empathy-driven design</span>.{' '}
                 Your data stays on your device.
               </p>
@@ -197,7 +197,7 @@ export const Hero: React.FC = () => {
                   onClick={() => navigate('/start')}
                   className="btn-cta-primary text-lg px-8 py-4 flex items-center justify-center gap-3"
                 >
-                  <span>Start Free Trial</span>
+                  <span>Start Free</span>
                   <ArrowRight className="h-5 w-5" />
                 </button>
 
@@ -223,7 +223,7 @@ export const Hero: React.FC = () => {
                 </p>
                 <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-400">
                   <span className="text-sky-300 font-medium">Pro Features:</span>
-                  <span>AI insights • WCB reports • Clinical exports</span>
+                  <span>Insights • WCB reports • Shareable exports</span>
                 </p>
               </div>
             </div>

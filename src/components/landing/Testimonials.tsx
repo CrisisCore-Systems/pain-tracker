@@ -3,48 +3,48 @@ import { Star, MessageCircle, Sparkles } from 'lucide-react';
 
 const testimonials = [
   {
-    name: 'Sarah M.',
-    role: 'Chronic Pain Patient',
+    name: 'Patient',
+    role: 'Chronic Pain',
     avatar: '👩‍🦽',
     rating: 5,
-    quote: 'Finally, a pain tracker that actually understands what I\'m going through. The trauma-informed design makes it feel safe.',
+    quote: 'The trauma-informed design makes it feel safer to use during flare-ups. I can track without feeling judged.',
     highlight: 'Identified hidden triggers',
   },
   {
-    name: 'Dr. James Chen',
-    role: 'Pain Management Specialist',
+    name: 'Clinician',
+    role: 'Pain Management',
     avatar: '👨‍⚕️',
     rating: 5,
-    quote: 'The clinician portal saves me time every week. Pattern detection and one-click WorkSafe BC reports streamline documentation.',
+    quote: 'The export workflow saves me time. Pattern insights and WorkSafeBC-ready reports streamline documentation.',
     highlight: 'Streamlined workflow',
   },
   {
-    name: 'Michael R.',
+    name: 'Patient',
     role: 'WorkSafe BC Claimant',
     avatar: '🦾',
     rating: 5,
-    quote: 'The automated WCB reporting feature is incredible. What used to take me days of paperwork now takes one click.',
+    quote: 'The WorkSafeBC reporting tools are a relief. What used to take me days of paperwork now takes minutes.',
     highlight: 'One-click WCB reports',
   },
   {
-    name: 'Dr. Emily Wong',
-    role: 'Occupational Therapist',
+    name: 'Clinician',
+    role: 'Occupational Therapy',
     avatar: '👩‍⚕️',
     rating: 5,
     quote: 'I recommend this to all my chronic pain patients. The offline capability means they can track anywhere.',
     highlight: 'Recommended by pros',
   },
   {
-    name: 'David L.',
-    role: 'Fibromyalgia Patient',
+    name: 'Patient',
+    role: 'Fibromyalgia',
     avatar: '🧑‍🦯',
     rating: 5,
     quote: 'The accessibility features are outstanding. High contrast mode and panic mode have been essential during flare-ups.',
     highlight: 'Best accessibility',
   },
   {
-    name: 'Lisa K.',
-    role: 'Migraine Sufferer',
+    name: 'Patient',
+    role: 'Migraine',
     avatar: '👩',
     rating: 5,
     quote: 'I\'ve tried every pain tracker out there. This is the only one with truly private local storage and pattern analysis that works.',
@@ -82,7 +82,7 @@ export const Testimonials: React.FC = () => {
         <div className="text-center mb-16 lg:mb-20 max-w-3xl mx-auto stagger-fade-up">
           <div className="badge-glow-purple inline-flex items-center gap-2 mb-6">
             <MessageCircle className="h-4 w-4" />
-            <span>Testimonials</span>
+            <span>Use-Case Snapshots</span>
           </div>
           
           <h2 className="landing-headline landing-headline-lg mb-6">
@@ -90,10 +90,10 @@ export const Testimonials: React.FC = () => {
             <span className="gradient-text-animated">Patients & Clinicians</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
-            How Pain Tracker Pro helps people manage chronic pain and improve healthcare outcomes.
+            Representative scenarios showing how people use Pain Tracker Pro.
           </p>
           <p className="text-sm text-slate-500 mt-2">
-            *Illustrative examples based on intended use cases
+            These are illustrative examples, not verified customer quotes.
           </p>
         </div>
 

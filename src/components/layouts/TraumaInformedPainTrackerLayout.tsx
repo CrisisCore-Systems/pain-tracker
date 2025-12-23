@@ -28,7 +28,6 @@ import { DashboardPullToRefresh } from '../ui/PullToRefresh';
 import {
   VoiceInput,
   GestureHint,
-  useMobileAccessibility,
   HighContrastToggle,
 } from '../accessibility/MobileAccessibility';
 import MedicationReminders from '../MedicationReminders';
@@ -78,7 +77,6 @@ export function TraumaInformedPainTrackerLayout({
   onStartWalkthrough,
 }: TraumaInformedPainTrackerLayoutProps) {
   const { preferences } = useTraumaInformed();
-  const { preferences: mobilePrefs } = useMobileAccessibility();
   const [showSettings, setShowSettings] = React.useState(false);
   const [activeView, setActiveView] = React.useState<
     'dashboard' | 'analytics' | 'history' | 'support'
@@ -279,7 +277,7 @@ export function TraumaInformedPainTrackerLayout({
                   Pain Tracker Pro
                 </h1>
                 <div className="text-xs leading-tight sm:leading-normal text-muted-foreground font-medium tracking-wider uppercase hidden xs:block">
-                  AI-Powered Pain Management
+                  Privacy-First Pain Tracking
                 </div>
               </div>
             </div>
@@ -321,7 +319,7 @@ export function TraumaInformedPainTrackerLayout({
               </div>
 
               {/* Voice Input for Mobile Accessibility */}
-              {mobilePrefs.voiceInput && (
+              {preferences.voiceInput && (
                 <VoiceInput
                   onResult={handleVoiceInput}
                   placeholder="Voice commands..."

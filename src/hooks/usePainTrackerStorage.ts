@@ -204,6 +204,14 @@ export function usePainTrackerStorage() {
       const { pwaManager } = await import('../utils/pwa-utils');
       await pwaManager.clearPWAData();
       store.clearAllData();
+
+      // Also clear Zustand persisted state (not managed by secureStorage)
+      try {
+        localStorage.removeItem('pain-tracker-storage');
+      } catch {
+        // ignore
+      }
+
       return true;
     } catch (err) {
       console.error('Failed to clear offline data:', err);

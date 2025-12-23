@@ -27,7 +27,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Brain className="h-5 w-5" />
-            <span>AI-Powered Insights</span>
+            <span>Pattern Insights</span>
           </CardTitle>
           <CardDescription>Advanced pain analytics require at least 3 entries</CardDescription>
         </CardHeader>
@@ -121,7 +121,7 @@ export function PainAnalyticsPanel({ entries }: PainAnalyticsPanelProps) {
             <Calendar className="h-5 w-5" />
             <span>7-Day Pain Forecast</span>
           </CardTitle>
-          <CardDescription>AI-powered prediction based on your patterns</CardDescription>
+          <CardDescription>Trend projection based on your patterns</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-4">

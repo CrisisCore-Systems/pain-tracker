@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Mic, MicOff, Volume2 } from 'lucide-react';
 import { Button } from '../../design-system';
+import { useTheme } from '../../design-system/ThemeProvider';
 import { ScreenReaderAnnouncement } from './ScreenReaderUtils';
 import type { SpeechRecognition } from '../../types/speech';
 
@@ -315,26 +316,11 @@ export function useMobileAccessibility() {
 
 // High Contrast Mode Toggle
 export function HighContrastToggle() {
-  const [isHighContrast, setIsHighContrast] = useState(false);
-
-  useEffect(() => {
-    const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
-    setIsHighContrast(prefersHighContrast);
-
-    const mediaQuery = window.matchMedia('(prefers-contrast: high)');
-    const handleChange = (e: MediaQueryListEvent) => setIsHighContrast(e.matches);
-    mediaQuery.addEventListener('change', handleChange);
-
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('high-contrast', isHighContrast);
-  }, [isHighContrast]);
+  const { mode, setMode, isHighContrast } = useTheme();
 
   return (
     <Button
-      onClick={() => setIsHighContrast(!isHighContrast)}
+      onClick={() => setMode(isHighContrast ? (mode === 'high-contrast' ? 'dark' : mode) : 'high-contrast')}
       variant="outline"
       size="sm"
       aria-label={`Toggle high contrast mode ${isHighContrast ? 'off' : 'on'}`}

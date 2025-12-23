@@ -14,8 +14,8 @@ const getAssetUrl = (path: string): string => {
 export const brand = {
   // Brand Identity
   name: 'Pain Tracker Pro',
-  tagline: 'AI-Powered Pain Management',
-  description: 'Advanced pain tracking with predictive analytics and clinical integration',
+  tagline: 'Privacy-First Pain Tracking',
+  description: 'Local-first pain tracking with insights and shareable exports',
 
   // Brand Colors - Medical/Healthcare Palette
   colors: {

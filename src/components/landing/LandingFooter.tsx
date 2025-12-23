@@ -141,7 +141,7 @@ export const LandingFooter: React.FC = () => {
                 </span>
               </div>
               <p className="text-slate-400 max-w-md leading-relaxed">
-                Professional-grade chronic pain tracking with AI-powered insights, automated reporting, and trauma-informed design—built with empathy for those who need it most.
+                Professional-grade chronic pain tracking with local insights, reporting tools, and trauma-informed design—built with empathy for those who need it most.
               </p>
               
               {/* Social links with premium styling */}
@@ -330,9 +330,9 @@ export const LandingFooter: React.FC = () => {
             }}
           >
             <p className="text-sm leading-relaxed text-slate-400">
-              <strong className="text-white">Your Privacy is Guaranteed:</strong>{' '}
-              <span className="hidden sm:inline">We don't collect any data, we don't use cookies, we don't track you. </span>
-              Your pain data stays on your device, encrypted with AES-256.{' '}
+              <strong className="text-white">Privacy-first by default:</strong>{' '}
+              Core tracking data is stored on your device. Exports and optional backup/sync are user-initiated.{' '}
+              Optional analytics can be enabled explicitly and is disabled by default.{' '}
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker"
                 target="_blank"
@@ -345,12 +345,13 @@ export const LandingFooter: React.FC = () => {
             </p>
           </div>
 
-          {/* Build ID */}
-          {import.meta.env.VITE_BUILD_HASH && (
-            <p className="mt-6 text-center text-[10px] text-slate-700">
-              Build: {import.meta.env.VITE_BUILD_HASH}
-            </p>
-          )}
+          {/* Build ID (dev-only unless explicitly enabled) */}
+          {(import.meta.env.DEV || import.meta.env.VITE_SHOW_BUILD_INFO === 'true') &&
+            import.meta.env.VITE_BUILD_HASH && (
+              <p className="mt-6 text-center text-[10px] text-slate-700">
+                Build: {import.meta.env.VITE_BUILD_HASH}
+              </p>
+            )}
         </div>
       </div>
 

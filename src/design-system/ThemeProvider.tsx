@@ -87,7 +87,7 @@ function getInitialMode(defaultMode: ThemeMode): ThemeMode {
   // Check for saved preference first
   try {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
-    if (saved === 'light' || saved === 'dark' || saved === 'high-contrast') {
+    if (saved === 'light' || saved === 'dark' || saved === 'high-contrast' || saved === 'colorblind') {
       return saved as ThemeMode;
     }
   } catch {
