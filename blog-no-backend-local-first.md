@@ -104,7 +104,7 @@ export class OfflineStorageService {
 }
 ```
 
-IndexedDB handles all structured data—pain entries, settings, and a sync queue for future optional cloud features. It's asynchronous, robust, and survives browser crashes.
+IndexedDB handles all structured data—pain entries, settings, and background queues. It's asynchronous, robust, and survives browser crashes.
 
 ### localStorage as a Write-Through Cache
 

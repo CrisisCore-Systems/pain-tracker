@@ -3,6 +3,7 @@ import { ChevronLeft, Check, Mic, MicOff } from 'lucide-react';
 import { cn } from '../utils';
 import { useAdaptiveCopy } from '../../contexts/useTone';
 import { quickLogCopy } from '../../content/microcopy';
+import { parseFreeformList } from '../../utils/parseFreeformList';
 import type {
   SpeechRecognition,
   SpeechRecognitionConstructor,
@@ -11,13 +12,24 @@ import type {
 } from '../../types/speech';
 import '../tokens/fused-v2.css';
 
+type MedicationAdherence = 'as_prescribed' | 'partial' | 'missed' | 'not_applicable';
+
+export type QuickLogOneScreenData = {
+  pain: number;
+  locations: string[];
+  symptoms: string[];
+  notes: string;
+  sleep?: number;
+  activityLevel?: number;
+  medicationAdherence?: MedicationAdherence;
+  activities?: string[];
+  triggers?: string[];
+};
+
 interface QuickLogOneScreenProps {
-  onComplete: (data: {
-    pain: number;
-    locations: string[];
-    symptoms: string[];
-    notes: string;
-  }) => void;
+  mode?: 'new' | 'edit';
+  initialData?: Partial<QuickLogOneScreenData>;
+  onComplete: (data: QuickLogOneScreenData) => void;
   onCancel: () => void;
 }
 
@@ -257,12 +269,61 @@ function useAudioNoteRecorder() {
   };
 }
 
-export function QuickLogOneScreen({ onComplete, onCancel }: QuickLogOneScreenProps) {
+export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLogOneScreenProps) {
   const [pain, setPain] = useState(5);
   const [locations, setLocations] = useState<string[]>([]);
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [voiceMode, setVoiceMode] = useState(false);
+
+  const [sleep, setSleep] = useState(5);
+  const [sleepSet, setSleepSet] = useState(false);
+  const [activityLevel, setActivityLevel] = useState(5);
+  const [activityLevelSet, setActivityLevelSet] = useState(false);
+  const [medicationAdherence, setMedicationAdherence] = useState<MedicationAdherence | null>(null);
+  const [activitiesText, setActivitiesText] = useState('');
+  const [dietTriggersText, setDietTriggersText] = useState('');
+
+  useEffect(() => {
+    if (!initialData) return;
+
+    if (typeof initialData.pain === 'number') setPain(initialData.pain);
+    if (Array.isArray(initialData.locations)) setLocations(initialData.locations);
+    if (Array.isArray(initialData.symptoms)) setSymptoms(initialData.symptoms);
+    if (typeof initialData.notes === 'string') setNotes(initialData.notes);
+
+    if (typeof initialData.sleep === 'number') {
+      setSleep(initialData.sleep);
+      setSleepSet(true);
+    } else {
+      setSleepSet(false);
+    }
+
+    if (typeof initialData.activityLevel === 'number') {
+      setActivityLevel(initialData.activityLevel);
+      setActivityLevelSet(true);
+    } else {
+      setActivityLevelSet(false);
+    }
+
+    if (typeof initialData.medicationAdherence === 'string') {
+      setMedicationAdherence(initialData.medicationAdherence);
+    } else {
+      setMedicationAdherence(null);
+    }
+
+    if (Array.isArray(initialData.activities) && initialData.activities.length > 0) {
+      setActivitiesText(initialData.activities.join(', '));
+    } else {
+      setActivitiesText('');
+    }
+
+    if (Array.isArray(initialData.triggers) && initialData.triggers.length > 0) {
+      setDietTriggersText(initialData.triggers.join(', '));
+    } else {
+      setDietTriggersText('');
+    }
+  }, [initialData]);
 
   // Adaptive copy based on patient state
   const painLabel = useAdaptiveCopy(quickLogCopy.painSliderLabel);
@@ -320,8 +381,21 @@ export function QuickLogOneScreen({ onComplete, onCancel }: QuickLogOneScreenPro
   }, []);
 
   const handleSave = useCallback(() => {
-    onComplete({ pain, locations, symptoms, notes });
-  }, [locations, notes, onComplete, pain, symptoms]);
+    const activities = parseFreeformList(activitiesText);
+    const triggers = parseFreeformList(dietTriggersText);
+
+    onComplete({
+      pain,
+      locations,
+      symptoms,
+      notes,
+      sleep: sleepSet ? sleep : undefined,
+      activityLevel: activityLevelSet ? activityLevel : undefined,
+      medicationAdherence: medicationAdherence ?? undefined,
+      activities: activities.length > 0 ? activities : undefined,
+      triggers: triggers.length > 0 ? triggers : undefined,
+    });
+  }, [activitiesText, activityLevel, activityLevelSet, dietTriggersText, locations, medicationAdherence, notes, onComplete, pain, sleep, sleepSet, symptoms]);
 
   return (
     <div className="min-h-screen bg-surface-900 text-ink-100 flex flex-col">
@@ -593,6 +667,132 @@ export function QuickLogOneScreen({ onComplete, onCancel }: QuickLogOneScreenPro
                   ))}
                 </div>
               </fieldset>
+            </div>
+          </section>
+
+          {/* Optional Signals */}
+          <section className="space-y-6">
+            <div>
+              <h2 className="text-h2 text-ink-50 mb-2">Optional signals</h2>
+              <p className="text-small text-ink-400">These help correlations (sleep, activity, food).</p>
+            </div>
+
+            <div className="surface-card border border-surface-700 bg-surface-800/70 space-y-4">
+              <div>
+                <label htmlFor="sleep-quality" className="block text-body-medium text-ink-200 mb-1">
+                  Sleep quality
+                </label>
+                <div className="flex items-center justify-between gap-3">
+                  <input
+                    id="sleep-quality"
+                    type="range"
+                    min={0}
+                    max={10}
+                    step={1}
+                    value={sleep}
+                    onChange={e => {
+                      setSleep(Number(e.target.value));
+                      setSleepSet(true);
+                    }}
+                    className="w-full"
+                    aria-label="Sleep quality from 0 to 10"
+                  />
+                  <span className="text-small text-ink-300 w-16 text-right" aria-live="polite">
+                    {sleepSet ? sleep : '—'}
+                  </span>
+                </div>
+                <p className="text-tiny text-ink-500 mt-1">0 = very poor, 10 = excellent</p>
+              </div>
+
+              <div>
+                <label htmlFor="activity-level" className="block text-body-medium text-ink-200 mb-1">
+                  Activity level
+                </label>
+                <div className="flex items-center justify-between gap-3">
+                  <input
+                    id="activity-level"
+                    type="range"
+                    min={0}
+                    max={10}
+                    step={1}
+                    value={activityLevel}
+                    onChange={e => {
+                      setActivityLevel(Number(e.target.value));
+                      setActivityLevelSet(true);
+                    }}
+                    className="w-full"
+                    aria-label="Activity level from 0 to 10"
+                  />
+                  <span className="text-small text-ink-300 w-16 text-right" aria-live="polite">
+                    {activityLevelSet ? activityLevel : '—'}
+                  </span>
+                </div>
+                <p className="text-tiny text-ink-500 mt-1">0 = none, 10 = very active</p>
+              </div>
+
+              <div>
+                <label htmlFor="med-adherence" className="block text-body-medium text-ink-200 mb-2">
+                  Medication adherence
+                </label>
+                <select
+                  id="med-adherence"
+                  value={medicationAdherence ?? ''}
+                  onChange={e =>
+                    setMedicationAdherence((e.target.value || null) as MedicationAdherence | null)
+                  }
+                  className={cn(
+                    'w-full p-3 rounded-[var(--radius-md)]',
+                    'bg-surface-900 border border-surface-600',
+                    'text-body text-ink-100',
+                    'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent'
+                  )}
+                >
+                  <option value="">Not logged</option>
+                  <option value="as_prescribed">Taken as prescribed</option>
+                  <option value="partial">Partially taken</option>
+                  <option value="missed">Missed</option>
+                  <option value="not_applicable">Not applicable</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="activities" className="block text-body-medium text-ink-200 mb-2">
+                  Activities/exercise (comma or new line)
+                </label>
+                <textarea
+                  id="activities"
+                  value={activitiesText}
+                  onChange={e => setActivitiesText(e.target.value)}
+                  placeholder="e.g., physio, walk, stretching"
+                  className={cn(
+                    'w-full h-24 p-3 rounded-[var(--radius-md)]',
+                    'bg-surface-900 border border-surface-600',
+                    'text-body text-ink-100 placeholder:text-ink-500',
+                    'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent',
+                    'transition-all duration-[var(--duration-fast)] resize-none'
+                  )}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="diet-triggers" className="block text-body-medium text-ink-200 mb-2">
+                  Food/diet triggers (comma or new line)
+                </label>
+                <textarea
+                  id="diet-triggers"
+                  value={dietTriggersText}
+                  onChange={e => setDietTriggersText(e.target.value)}
+                  placeholder="e.g., caffeine, spicy food, skipped meal"
+                  className={cn(
+                    'w-full h-24 p-3 rounded-[var(--radius-md)]',
+                    'bg-surface-900 border border-surface-600',
+                    'text-body text-ink-100 placeholder:text-ink-500',
+                    'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent',
+                    'transition-all duration-[var(--duration-fast)] resize-none'
+                  )}
+                />
+                <p className="text-tiny text-ink-500 mt-1">Saved as triggers for analytics.</p>
+              </div>
             </div>
           </section>
 

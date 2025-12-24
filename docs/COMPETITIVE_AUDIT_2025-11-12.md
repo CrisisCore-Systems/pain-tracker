@@ -948,13 +948,12 @@
 - `src/lib/offline-storage.ts` - Complete offline capability
 - Service worker caching (`public/sw.js`)
 - IndexedDB for data persistence
-- Background sync for future cloud sync
 
 **Competitive Advantage:**
 - ✅ **Fully functional offline** (competitors have limited offline)
 - ✅ **Data persistence** (IndexedDB)
 - ✅ **Service worker** (caches app for offline use)
-- ✅ **Sync ready** (background sync prepared)
+- ✅ **Background tasks ready** (offline queue prepared)
 
 **Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - true offline-first**
 
@@ -980,7 +979,7 @@
 - **Priority:** Medium (2026)
 - **Effort:** High (requires backend or P2P)
 - **Impact:** Medium-High (user convenience)
-- **Strategy:** Consider optional cloud sync with encryption, or P2P sync
+- **Strategy:** Improve export/import UX; consider device-to-device transfer
 
 **Note:** Privacy-first architecture makes auto-sync challenging
 
@@ -1204,7 +1203,6 @@ Creates a defensible market position that **no competitor can easily replicate**
 - ✅ **Return-to-Work Planner** - Track gradual RTW progress with functional assessments
 
 **Productivity Features:**
-- ✅ **Cloud Backup & Encrypted Sync** (Optional, E2E Encrypted)
 - ✅ **Custom Export Templates** (for specific lawyers/physiotherapists)
 - ✅ **Advanced Report Scheduling** - Automated weekly/monthly reports
 - ✅ **Priority Feature Requests** - Vote on roadmap priorities
@@ -1505,7 +1503,6 @@ export class EntitlementService {
 - ✅ Implement WorkSafeBC Form 8/11 pre-fill
 - ✅ Build Appeal Letter Assistant (AI-powered)
 - ✅ Develop Claim Timeline Generator
-- ✅ Add optional E2E encrypted cloud sync
 - ✅ Convert waitlist to paying customers (30-day free trial)
 
 **Success Metrics:**
@@ -1591,13 +1588,6 @@ export class EntitlementService {
 - Soft prompts based on user behavior (not spam)
 - Customer success outreach for trial users
 - Flexible pricing (monthly/annual, sliding scale for advocates)
-
-#### Risk 3: **Privacy Concerns with Cloud Sync**
-**Mitigation:**
-- Make cloud sync **optional** and **E2E encrypted**
-- Zero-knowledge architecture (you hold the keys)
-- Publish third-party security audit results
-- Offer local-only Professional Tier option
 
 #### Risk 4: **Competitive Response**
 **Mitigation:**

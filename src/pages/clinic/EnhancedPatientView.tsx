@@ -396,7 +396,7 @@ export const EnhancedPatientView: React.FC = () => {
               }}
             >
               <Brain className="w-4 h-4" />
-              {showPatterns ? 'Hide' : 'Show'} AI Insights
+              {showPatterns ? 'Hide' : 'Show'} Insights
             </button>
           </div>
         </div>

@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { secureStorage } from '../../lib/storage/secureStorage';
-
-const STORAGE_KEY = 'pain-tracker:privacy-settings';
+import {
+  PRIVACY_SETTINGS_STORAGE_KEY,
+  readPrivacySettings,
+  writePrivacySettings,
+} from '../../utils/privacySettings';
 
 export default function PrivacySettings() {
-  const [sharing, setSharing] = useState<boolean>(() => secureStorage.safeJSON(STORAGE_KEY, { dataSharing: false }).dataSharing ?? false);
-  const [analytics, setAnalytics] = useState<boolean>(() => secureStorage.safeJSON(STORAGE_KEY, { analyticsConsent: true }).analyticsConsent ?? true);
-  const [retention, setRetention] = useState<number>(() => secureStorage.safeJSON(STORAGE_KEY, { retentionDays: 365 }).retentionDays ?? 365);
+  const [sharing, setSharing] = useState<boolean>(() => readPrivacySettings().dataSharing);
+  const [analytics, setAnalytics] = useState<boolean>(() => readPrivacySettings().analyticsConsent);
+  const [retention, setRetention] = useState<number>(() => readPrivacySettings().retentionDays);
+  const [weatherAutoCapture, setWeatherAutoCapture] = useState<boolean>(() => readPrivacySettings().weatherAutoCapture);
 
   useEffect(() => {
-    secureStorage.set(STORAGE_KEY, { dataSharing: sharing, analyticsConsent: analytics, retentionDays: retention });
-  }, [sharing, analytics, retention]);
+    writePrivacySettings({
+      dataSharing: sharing,
+      analyticsConsent: analytics,
+      retentionDays: retention,
+      weatherAutoCapture,
+    });
+  }, [sharing, analytics, retention, weatherAutoCapture]);
 
   return (
     <div className="rounded-xl p-5 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg">
@@ -42,6 +51,22 @@ export default function PrivacySettings() {
           />
         </label>
 
+        <label className="flex items-center justify-between gap-4">
+          <div>
+            <div className="font-medium text-gray-700 dark:text-slate-200">Auto-capture local weather</div>
+            <div className="text-sm text-gray-500 dark:text-slate-400">
+              If enabled, the app may ask for location access to fetch current weather from Open‑Meteo. Only a short summary (e.g.,
+              “12°C, cloudy, 65% humidity”) is stored with the entry — coordinates are not saved.
+            </div>
+          </div>
+          <input
+            type="checkbox"
+            checked={weatherAutoCapture}
+            onChange={e => setWeatherAutoCapture(e.target.checked)}
+            className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
+          />
+        </label>
+
         <div>
           <div className="font-medium text-gray-700 dark:text-slate-200">Data retention (days)</div>
           <div className="text-sm text-gray-500 dark:text-slate-400 mb-2">Control how long your data is retained before automatic deletion</div>
@@ -59,13 +84,20 @@ export default function PrivacySettings() {
 
         <div className="flex items-center gap-3 pt-2">
           <button 
-            onClick={() => secureStorage.remove(STORAGE_KEY)}
+            onClick={() => secureStorage.remove(PRIVACY_SETTINGS_STORAGE_KEY)}
             className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-red-100 dark:bg-red-500/15 border border-red-300 dark:border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-500/25"
           >
             Reset preferences
           </button>
           <button 
-            onClick={() => secureStorage.set(STORAGE_KEY, { dataSharing: sharing, analyticsConsent: analytics, retentionDays: retention })}
+            onClick={() =>
+              writePrivacySettings({
+                dataSharing: sharing,
+                analyticsConsent: analytics,
+                retentionDays: retention,
+                weatherAutoCapture,
+              })
+            }
             className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-green-100 dark:bg-green-500/15 border border-green-300 dark:border-green-500/30 text-green-600 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-500/25"
           >
             Save

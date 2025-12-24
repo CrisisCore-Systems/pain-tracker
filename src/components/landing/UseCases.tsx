@@ -35,7 +35,7 @@ const patientUseCases = [
     icon: FileText,
     title: 'Export Reports',
     description: 'Generate professional reports for healthcare providers, WorkSafe BC, or insurance claims.',
-    features: ['One-click WCB export', 'Clinical summaries', 'CSV data exports'],
+    features: ['One-click WCB export', 'PDF & clinical summaries', 'CSV/JSON exports'],
     gradient: 'from-amber-500 to-orange-500',
     glow: 'amber',
   },
@@ -45,16 +45,16 @@ const clinicianUseCases = [
   {
     icon: Brain,
     title: 'Pattern Analysis',
-    description: '10+ heuristic algorithms analyze patient data for medication efficacy, triggers, and correlations.',
+    description: '10+ local pattern tools analyze trends, triggers, and correlations using evidence-informed heuristics (not machine learning).',
     features: ['Pearson correlation', 'Treatment efficacy', 'Confidence scoring'],
     gradient: 'from-emerald-500 to-teal-500',
     glow: 'emerald',
   },
   {
     icon: Bell,
-    title: 'Real-Time Monitoring',
-    description: 'Live patient alerts for pain escalation, missed medications, and crisis detection.',
-    features: ['Pain escalation alerts', 'Medication adherence', 'Crisis warnings'],
+    title: 'On-Device Alerts',
+    description: 'Optional, on-device alerts for worsening patterns and missed routines—no servers and no background clinician monitoring.',
+    features: ['Pattern-based alerts', 'Optional reminders', 'Private by design'],
     gradient: 'from-rose-500 to-pink-500',
     glow: 'rose',
   },
@@ -327,7 +327,7 @@ export const UseCases: React.FC = () => {
             </div>
             
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-8 leading-[1.1] tracking-tight">
-              Professional-Grade{' '}
+              Clinic-ready{' '}
               <span className="relative inline-block">
                 <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">
                   Clinical Tools
@@ -357,7 +357,7 @@ export const UseCases: React.FC = () => {
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
                     <AnimatedCounter end={10} suffix="+" />
                   </div>
-                  <p className="text-slate-400 text-sm">Analysis Algorithms</p>
+                  <p className="text-slate-400 text-sm">Pattern Tools</p>
                 </div>
                 <div>
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
@@ -369,7 +369,7 @@ export const UseCases: React.FC = () => {
                   <div className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
                     <AnimatedCounter end={100} suffix="%" />
                   </div>
-                  <p className="text-slate-400 text-sm">HIPAA-Aligned</p>
+                  <p className="text-slate-400 text-sm">Local-Only</p>
                 </div>
               </div>
             </div>
@@ -499,11 +499,11 @@ export const UseCases: React.FC = () => {
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                AI insights
+                Automated insights
               </span>
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                HIPAA-aligned
+                HIPAA-aligned controls
               </span>
             </p>
           </div>

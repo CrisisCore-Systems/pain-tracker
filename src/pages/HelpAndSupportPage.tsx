@@ -9,6 +9,10 @@ export default function HelpAndSupportPage() {
     setShowWalkthrough(true);
   };
 
+  const handleOpenVideoTutorials = () => {
+    window.open('https://paintracker.ca/docs', '_blank', 'noopener');
+  };
+
   const handleOpenFaq = () => {
     window.open('https://paintracker.ca/docs/faq', '_blank', 'noopener');
   };
@@ -57,12 +61,22 @@ export default function HelpAndSupportPage() {
           <p className="text-sm text-gray-600 dark:text-slate-400 mb-4 leading-relaxed">
             Walk through the core features step by step, at your own pace, inside the app.
           </p>
-          <button
-            onClick={handleViewTutorials}
-            className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-100 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-500/25"
-          >
-            View tutorials
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleViewTutorials}
+              className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-emerald-100 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-500/25"
+              title="In-app guided walkthrough"
+            >
+              View tutorials
+            </button>
+            <button
+              onClick={handleOpenVideoTutorials}
+              className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-slate-900/30 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-900/50"
+              title="Opens documentation in a new tab"
+            >
+              Video tutorials
+            </button>
+          </div>
         </div>
 
         {/* FAQs Card */}

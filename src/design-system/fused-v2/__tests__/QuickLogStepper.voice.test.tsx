@@ -63,11 +63,11 @@ describe('QuickLogStepper voice mode', () => {
 
     expect(screen.getByText(/^Voice Mode$/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/Offline: works only if your browser provides local speech/i)
+      screen.getByText(/Offline: only works if your browser\/OS provides local speech/i)
     ).toBeInTheDocument();
   });
 
-  it('records a voice note and inserts it into the notes field', async () => {
+  it('captures voice dictation and inserts it into the notes field', async () => {
     render(<QuickLogStepper onComplete={() => {}} onCancel={() => {}} />);
 
     fireEvent.click(screen.getByRole('button', { name: /Enable voice mode/i }));
@@ -75,19 +75,19 @@ describe('QuickLogStepper voice mode', () => {
     fireEvent.click(screen.getByRole('button', { name: /Continue to step 2/i }));
     fireEvent.click(screen.getByRole('button', { name: /Continue to step 3/i }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Start voice note/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Start voice dictation/i }));
 
     await act(async () => {
       MockRecognition.instance?.onresult?.({
-        results: [{ 0: { transcript: 'voice note captured' } }],
+        results: [{ 0: { transcript: 'voice dictation captured' } }],
       });
     });
 
-    expect(await screen.findByText(/voice note captured/i)).toBeInTheDocument();
+    expect(await screen.findByText(/voice dictation captured/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /Insert into notes/i }));
 
     const notesField = screen.getByLabelText(/Additional Notes/i) as HTMLTextAreaElement;
-    expect(notesField.value).toContain('voice note captured');
+    expect(notesField.value).toContain('voice dictation captured');
   });
 });

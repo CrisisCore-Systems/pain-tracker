@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Star, Zap, Crown, Users } from 'lucide-react';
+import { ArrowRight, Sparkles, Star, Zap, Crown, Users, Check } from 'lucide-react';
 import { SUBSCRIPTION_PLANS } from '../../config/subscription-tiers';
 import type { SubscriptionTier } from '../../types/subscription';
 
@@ -12,6 +12,13 @@ const tierIcons = {
   pro: Crown,
   enterprise: Users,
 } as const;
+
+const HIGHLIGHTS: Record<SubscriptionTier, string[]> = {
+  free: ['Unlimited tracking', 'Basic analytics', 'PDF + WorkSafeBC reports (5/mo)'],
+  basic: ['Advanced analytics', 'Higher export limit (50/mo)', 'Family sharing (2)'],
+  pro: ['Pattern-based alerts', 'Clinical PDF export', 'Audit logs'],
+  enterprise: ['White-label options', 'Dedicated support', 'Custom training'],
+};
 
 export const PricingPreview: React.FC = () => {
   const navigate = useNavigate();
@@ -88,6 +95,15 @@ export const PricingPreview: React.FC = () => {
 
                   <p className="text-sm text-slate-400 leading-relaxed line-clamp-4">{plan.description}</p>
 
+                  <ul className="space-y-2 text-sm">
+                    {HIGHLIGHTS[tier].map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-slate-300">
+                        <Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" />
+                        <span className="leading-snug">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+
                   <button
                     type="button"
                     onClick={() => navigate('/pricing')}
@@ -96,9 +112,9 @@ export const PricingPreview: React.FC = () => {
                         ? 'bg-gradient-to-r from-purple-500 to-violet-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30'
                         : 'bg-white/5 text-slate-200 border border-white/10 hover:bg-white/10'
                     }`}
-                    aria-label={`View full pricing for ${plan.name}`}
+                    aria-label={`See full plan comparison for ${plan.name}`}
                   >
-                    View full pricing
+                    See full comparison
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>

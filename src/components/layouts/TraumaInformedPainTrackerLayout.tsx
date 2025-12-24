@@ -268,11 +268,17 @@ export function TraumaInformedPainTrackerLayout({
       <header className="border-b border-border/40 bg-gradient-to-r from-card/95 via-card/90 to-card/95 backdrop-blur-xl supports-[backdrop-filter]:bg-card/80 sticky top-0 z-40 shadow-lg shadow-black/5 transition-all duration-300 safe-top">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            <button
+              type="button"
+              onClick={() => setActiveView('dashboard')}
+              className="flex items-center space-x-2 sm:space-x-4 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 focus:ring-offset-background"
+              aria-label="Go to dashboard"
+              title="Go to dashboard"
+            >
               <div className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
                 <PainTrackerIcon className="w-full h-full" />
               </div>
-              <div>
+              <div className="text-left">
                 <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">
                   Pain Tracker Pro
                 </h1>
@@ -280,7 +286,7 @@ export function TraumaInformedPainTrackerLayout({
                   Privacy-First Pain Tracking
                 </div>
               </div>
-            </div>
+            </button>
 
             <nav className="hidden md:flex items-center space-x-1">
               {navigationItems.map(item => (

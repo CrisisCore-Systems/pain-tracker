@@ -10,7 +10,7 @@ import {
 } from '../stores/subscription-actions';
 import type { PainEntry, ActivityLogEntry } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
-import { fetchWeatherData } from '../services/weather';
+import { maybeCaptureWeatherForNewEntry } from '../services/weatherAutoCapture';
 import { 
   trackPainEntry, 
   trackWeatherCorrelation, 
@@ -73,29 +73,9 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
 
       // Try to enrich the entry with local weather when possible. This is
       // best-effort only and must never block the user from saving an entry.
-      let weatherInfo: Awaited<ReturnType<typeof fetchWeatherData>> | null = null;
-      try {
-        // Geolocation is required for local weather; if unavailable/denied, skip.
-        if (typeof navigator !== 'undefined' && 'geolocation' in navigator && navigator.geolocation) {
-          const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
-          );
-          weatherInfo = await fetchWeatherData(pos.coords.latitude, pos.coords.longitude);
-        }
-
-        if (weatherInfo) {
-          // Build a human-readable summary including rain status
-          const parts: string[] = [];
-          if (weatherInfo.temperature !== null) parts.push(`${Math.round(weatherInfo.temperature)}°C`);
-          if (weatherInfo.condition) parts.push(weatherInfo.condition);
-          if (weatherInfo.isRaining) parts.push('🌧️');
-          if (weatherInfo.humidity !== null) parts.push(`${weatherInfo.humidity}% humidity`);
-
-          const summary = parts.join(', ');
-          if (summary) entry.weather = summary;
-        }
-      } catch {
-        // Ignore enrichment failures; entry save must not be blocked
+      const capturedWeather = await maybeCaptureWeatherForNewEntry();
+      if (capturedWeather) {
+        entry.weather = capturedWeather.summary;
       }
 
       // Add entry using store action
@@ -117,12 +97,12 @@ export function useSubscriptionEntry(userId: string): UseSubscriptionEntryResult
       trackPainEntry(painAnalytics);
 
       // Track weather correlation with full weather data if available
-      if (weatherInfo) {
+      if (capturedWeather) {
         const weatherAnalytics: WeatherAnalytics = {
-          temperature: weatherInfo.temperature ?? undefined,
-          condition: weatherInfo.condition ?? undefined,
-          pressure: weatherInfo.pressure ?? undefined,
-          humidity: weatherInfo.humidity ?? undefined,
+          temperature: capturedWeather.weather.temperature ?? undefined,
+          condition: capturedWeather.weather.condition ?? undefined,
+          pressure: capturedWeather.weather.pressure ?? undefined,
+          humidity: capturedWeather.weather.humidity ?? undefined,
           painLevel,
         };
         trackWeatherCorrelation(weatherAnalytics);

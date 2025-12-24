@@ -64,4 +64,42 @@ describe('PremiumAnalyticsDashboard medication effectiveness display', () => {
       vi.useRealTimers();
     }
   });
+
+  it('does not attribute next-entry relief to each medication when multiple meds are logged together', () => {
+    const base = Date.UTC(2024, 1, 10, 12, 0, 0);
+    const iso = (hoursFromBase: number) =>
+      new Date(base + hoursFromBase * 60 * 60 * 1000).toISOString();
+
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(base));
+
+    const comboMedEntry = makePainEntry({
+      id: 'med-combo-1',
+      timestamp: iso(0),
+      baselineData: { pain: 6.0, locations: [], symptoms: [] },
+      medications: {
+        current: [
+          { name: 'Ibuprofen', dosage: '200mg', frequency: 'PRN', effectiveness: '' },
+          { name: 'Acetaminophen', dosage: '500mg', frequency: 'PRN', effectiveness: '' },
+        ],
+        changes: '',
+        effectiveness: '',
+      },
+    });
+
+    const nextEntry = makePainEntry({
+      id: 'after-combo-1',
+      timestamp: iso(1),
+      baselineData: { pain: 5.0, locations: [], symptoms: [] },
+      medications: { current: [], changes: '', effectiveness: '' },
+    });
+
+    try {
+      render(<PremiumAnalyticsDashboard entries={[comboMedEntry, nextEntry]} />);
+
+      expect(screen.queryByText(/Observed relief after medication/i)).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });

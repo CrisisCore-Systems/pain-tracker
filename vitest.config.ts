@@ -2,7 +2,9 @@ import { defineConfig } from 'vitest/config';
 import path from 'node:path';
 
 const isCI = !!process.env.CI;
-const coverageEnabled = process.env.VITEST_COVERAGE !== 'false';
+const envCoverage = process.env.VITEST_COVERAGE;
+const coverageEnabled =
+  process.argv.includes('--coverage') || envCoverage === 'true' || envCoverage === '1';
 
 export default defineConfig({
   resolve: {

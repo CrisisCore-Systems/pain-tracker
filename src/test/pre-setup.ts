@@ -1,4 +1,6 @@
 import { webcrypto } from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
 
 // Ensure tests (jsdom + forks) use Node's WebCrypto implementation.
 // This prevents subtlecrypto BufferSource/realm mismatches under Node 20.
@@ -59,4 +61,17 @@ if (typeof g.btoa !== 'function') {
 }
 if (typeof g.atob !== 'function') {
   g.atob = (s: string) => Buffer.from(s, 'base64').toString('binary');
+}
+
+// Ensure Vitest coverage temp directory exists when coverage is enabled.
+// (Prevents occasional ENOENT when merging V8 coverage in forked mode.)
+try {
+  const envCoverage = process.env.VITEST_COVERAGE;
+  const coverageEnabled =
+    process.argv.includes('--coverage') || envCoverage === 'true' || envCoverage === '1';
+  if (coverageEnabled) {
+    fs.mkdirSync(path.resolve(process.cwd(), 'coverage', '.tmp'), { recursive: true });
+  }
+} catch {
+  // ignore
 }

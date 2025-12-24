@@ -43,7 +43,8 @@ interface QuickStat {
 export function ReportsPage({ entries }: ReportsPageProps) {
   const toast = useToast();
   const [isExporting, setIsExporting] = useState<string | null>(null);
-  const [dateRange, setDateRange] = useState<'all' | '7d' | '30d' | '90d'>('all');
+  const [dateRange, setDateRange] = useState<'all' | '7d' | '30d' | '90d'>('7d');
+  const [showExportPreview, setShowExportPreview] = useState(false);
 
   // Filter entries based on date range
   const filteredEntries = useMemo(() => {
@@ -55,6 +56,24 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     
     return entries.filter(entry => new Date(entry.timestamp) >= cutoff);
   }, [entries, dateRange]);
+
+  const csvHeaderPreview = useMemo(() => {
+    try {
+      return exportToCSV([] as unknown as PainEntry[]).split('\n')[0] ?? '';
+    } catch {
+      return '';
+    }
+  }, []);
+
+  const jsonPreview = useMemo(() => {
+    try {
+      const raw = exportToJSON([] as unknown as PainEntry[]);
+      const parsed = JSON.parse(raw);
+      return JSON.stringify(parsed, null, 2);
+    } catch {
+      return '[]';
+    }
+  }, []);
 
   // Calculate quick stats
   const quickStats: QuickStat[] = useMemo(() => {
@@ -179,7 +198,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     {
       id: 'worksafe-bc',
       name: 'WorkSafe BC Report',
-      description: 'Generate a report formatted for WorkSafe BC claims with clinical summaries and pain trend analysis.',
+      description: 'For WorkSafeBC claims in British Columbia (Canada). Includes a structured clinical summary and pain trends (not affiliated with WorkSafeBC).',
       icon: Shield,
       badge: 'WCB',
       available: true,
@@ -189,16 +208,16 @@ export function ReportsPage({ entries }: ReportsPageProps) {
       name: 'Insurance Report',
       description: 'Create a comprehensive report for insurance claims with medical documentation support.',
       icon: FileText,
-      badge: 'Pro',
-      available: true,
+      badge: 'Coming soon',
+      available: false,
     },
     {
       id: 'clinical',
       name: 'Clinical Summary',
-      description: 'Generate a clinical summary for healthcare providers with treatment recommendations.',
+      description: 'Generate a clinical summary for healthcare providers with a clear timeline and symptom overview.',
       icon: TrendingUp,
-      badge: 'Pro',
-      available: true,
+      badge: 'Coming soon',
+      available: false,
     },
   ];
 
@@ -235,6 +254,79 @@ export function ReportsPage({ entries }: ReportsPageProps) {
           </select>
         </div>
       </div>
+
+      {/* Export Preview / What's Included */}
+      <Card className="border-sky-200 dark:border-sky-900 bg-sky-50/60 dark:bg-sky-900/10">
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-sky-700 dark:text-sky-300" />
+              What exports include
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowExportPreview(v => !v)}
+              aria-expanded={showExportPreview}
+            >
+              {showExportPreview ? 'Hide preview' : 'Show preview'}
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-sm text-sky-900/80 dark:text-sky-100/80">
+            Exports are generated on your device. The preview below shows structure/field names only • it does not display your entries.
+          </p>
+
+          {showExportPreview && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="rounded-xl border border-sky-200/70 dark:border-sky-800 bg-white/70 dark:bg-gray-900/30 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileSpreadsheet className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                  <div className="font-medium text-sm">CSV Spreadsheet</div>
+                </div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Columns (header row)</div>
+                <pre className="text-xs whitespace-pre-wrap break-words rounded-lg bg-gray-100/80 dark:bg-gray-800/50 p-3 border border-gray-200 dark:border-gray-700">
+{csvHeaderPreview || '(preview unavailable)'}
+                </pre>
+              </div>
+
+              <div className="rounded-xl border border-sky-200/70 dark:border-sky-800 bg-white/70 dark:bg-gray-900/30 p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <FileJson className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <div className="font-medium text-sm">JSON Data</div>
+                </div>
+                <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                  Top-level structure (empty export)
+                </div>
+                <pre className="text-xs whitespace-pre-wrap break-words rounded-lg bg-gray-100/80 dark:bg-gray-800/50 p-3 border border-gray-200 dark:border-gray-700">
+{jsonPreview}
+                </pre>
+              </div>
+
+              <div className="rounded-xl border border-sky-200/70 dark:border-sky-800 bg-white/70 dark:bg-gray-900/30 p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <FileType className="h-4 w-4 text-rose-600 dark:text-rose-400" />
+                  <div className="font-medium text-sm">PDF Report</div>
+                </div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">
+                  A formatted summary (no preview shown here • PDFs include your selected date range and aggregate statistics).
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-sky-200/70 dark:border-sky-800 bg-white/70 dark:bg-gray-900/30 p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Shield className="h-4 w-4 text-sky-700 dark:text-sky-300" />
+                  <div className="font-medium text-sm">WorkSafeBC (WCB)</div>
+                </div>
+                <div className="text-xs text-gray-600 dark:text-gray-400">
+                  Built for WorkSafeBC documentation workflows (BC, Canada). Review the PDF before sharing.
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -343,6 +435,11 @@ export function ReportsPage({ entries }: ReportsPageProps) {
                     void handleWorkSafeBCExport();
                     return;
                   }
+                  if (!report.available) {
+                    toast.info('Coming Soon', `${report.name} generation is coming in a future update.`);
+                    return;
+                  }
+
                   toast.info('Coming Soon', `${report.name} generation is coming in a future update.`);
                 }}
                 disabled={filteredEntries.length === 0}

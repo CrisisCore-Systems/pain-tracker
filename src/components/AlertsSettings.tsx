@@ -78,7 +78,9 @@ export default function AlertsSettings({
       <div className="flex items-center justify-between">
         <div className="text-sm">
           <label className="font-medium block">Crisis detection</label>
-          <div className="text-xs text-gray-500 dark:text-slate-400">Enable local high-pain alerts</div>
+          <div className="text-xs text-gray-500 dark:text-slate-400">
+            Enable local high-pain alerts (device-only)
+          </div>
         </div>
         <div>
           <input
@@ -88,6 +90,13 @@ export default function AlertsSettings({
             aria-label="Enable crisis detection"
           />
         </div>
+      </div>
+
+      <div className="text-xs text-gray-500 dark:text-slate-400">
+        How it decides: compares your latest pain value to your baseline (average over the last 7 days).
+        It alerts when the latest value is at least <span className="font-medium">1.2× baseline</span>{' '}
+        <span className="font-medium">and</span> at least <span className="font-medium">2 points higher</span>.
+        If there isnt enough history to form a baseline, it uses the 2-point rule.
       </div>
       <div className="flex items-center justify-between">
         <div>
@@ -114,9 +123,26 @@ export default function AlertsSettings({
         className="w-full accent-amber-500"
       />
       <div className="text-sm text-gray-600 dark:text-slate-300">Current threshold: {settings.threshold} points</div>
-      <div className="text-sm text-gray-500 dark:text-slate-400">
-        Live preview: You&apos;ll be alerted when pain rises by {settings.threshold} points. For
-        example, a baseline of 3/10 would flag entries of {Math.min(10, 3 + settings.threshold)}/10.
+      <div className="text-sm text-gray-500 dark:text-slate-400 space-y-2">
+        <div>
+          This slider affects <span className="font-medium">sudden jumps</span>: you&apos;ll get an alert
+          when a new entry is at least {settings.threshold} points higher than the previous entry.
+        </div>
+        <div>
+          Example: if your last entry was 3/10, an entry of {Math.min(10, 3 + settings.threshold)}/10
+          or higher may alert.
+        </div>
+        <div>
+          Alerts also use a couple of <span className="font-medium">additional local checks</span>
+          (even if the jump is smaller):
+          <ul className="list-disc pl-5 mt-1 space-y-1">
+            <li>Higher than your recent rolling average</li>
+            <li>Unusual outliers compared to your recent pattern</li>
+          </ul>
+        </div>
+        <div>
+          These are device-only and meant to be a gentle heads-up, not a diagnosis.
+        </div>
       </div>
       <div className="pt-3 border-t border-gray-100 dark:border-white/5">
         <div className="flex items-center justify-between">

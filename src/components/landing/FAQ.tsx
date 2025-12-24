@@ -6,8 +6,7 @@ const faqs: Array<{ q: string; a: React.ReactNode }> = [
     q: 'Is my pain data stored in the cloud?',
     a: (
       <>
-        By default, Pain Tracker Pro stores your health data locally on your device. Some optional features (like backups or sharing)
-        may involve leaving the device only when you explicitly enable them.
+        No. Pain Tracker stores your health data locally on your device. Data only leaves the device when you export or share it.
       </>
     ),
   },
@@ -32,7 +31,7 @@ const faqs: Array<{ q: string; a: React.ReactNode }> = [
     q: 'Does it sync across devices?',
     a: (
       <>
-        Pain Tracker Pro is offline-first. Cross-device sync is available only through explicitly enabled features (for example, backups).
+        Not automatically. Pain Tracker is offline-first and local-only. To move data between devices, use export/import.
       </>
     ),
   },

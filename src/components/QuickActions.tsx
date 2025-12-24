@@ -72,7 +72,7 @@ export default function QuickActions() {
               aria-label="Quick note"
               onClick={handleQuickNote}
               className="flex items-center justify-center w-12 h-12 rounded-full bg-secondary text-secondary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-              title="Quick note"
+              title="Quick note (add a note only)"
             >
               📝
             </button>
@@ -80,7 +80,7 @@ export default function QuickActions() {
               aria-label="Quick log pain"
               onClick={handleQuickLog}
               className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-              title="Quick log pain"
+              title="Quick log pain (minimal)"
             >
               +
             </button>

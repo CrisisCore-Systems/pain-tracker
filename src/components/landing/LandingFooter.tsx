@@ -79,7 +79,7 @@ export const LandingFooter: React.FC = () => {
               >
                 <span className="relative z-10 flex items-center gap-2">
                   <Zap className="h-5 w-5" />
-                  Start Free Trial
+                  Start Tracking Free
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </span>
               </Button>
@@ -141,7 +141,7 @@ export const LandingFooter: React.FC = () => {
                 </span>
               </div>
               <p className="text-slate-400 max-w-md leading-relaxed">
-                Professional-grade chronic pain tracking with local insights, reporting tools, and trauma-informed design—built with empathy for those who need it most.
+                Privacy-first pain tracking with local insights, reporting tools, and trauma-informed design—built with empathy for those who need it most.
               </p>
               
               {/* Social links with premium styling */}
@@ -252,10 +252,10 @@ export const LandingFooter: React.FC = () => {
               </h3>
               <ul className="space-y-3 text-sm">
                 {[
-                  '10+ Analysis Algorithms',
+                  '10+ Pattern Tools',
                   'WorkSafe BC Reports',
-                  'Real-Time Monitoring',
-                  '100% Offline',
+                  'On-device alerts',
+                  'Installable PWA',
                   'AES-256 Encryption',
                   'Trauma-Informed',
                 ].map((feature) => (
@@ -273,8 +273,8 @@ export const LandingFooter: React.FC = () => {
             <div className="flex flex-wrap justify-center gap-4">
               {[
                 { icon: Shield, label: 'AES-256 Encrypted', color: 'sky' },
-                { icon: Heart, label: 'WCAG 2.1 AA', color: 'purple' },
-                { icon: Activity, label: 'HIPAA-Aligned', color: 'emerald' },
+                { icon: Heart, label: 'WCAG 2.2 AA target', color: 'purple' },
+                { icon: Activity, label: 'HIPAA-aligned controls', color: 'emerald' },
                 { icon: Github, label: 'Open Source', color: 'amber' },
               ].map((badge) => {
                 const colors: Record<string, { bg: string; border: string; text: string }> = {

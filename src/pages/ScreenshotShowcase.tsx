@@ -172,8 +172,8 @@ export function PrivacySettingsShowcase() {
                 HIPAA Aligned
               </h3>
               <p className="text-slate-400">
-                Built with HIPAA compliance in mind, including audit trails and data protection
-                measures.
+                Built with HIPAA-aligned controls in mind, including audit trails and data protection
+                measures (not a formal compliance certification).
               </p>
             </div>
           </div>

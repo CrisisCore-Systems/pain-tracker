@@ -25,7 +25,7 @@ import { emptyStates } from '../../content/microcopy';
 // Dynamic imports: samplePainEntries and walkthroughSteps loaded on demand
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage';
-import { fetchWeatherData } from '../../services/weather';
+import { maybeCaptureWeatherForNewEntry } from '../../services/weatherAutoCapture';
 import { Walkthrough } from '../tutorials';
 import type { WalkthroughStep } from '../tutorials/Walkthrough';
 
@@ -303,25 +303,15 @@ export function PainTracker() {
       const updatedEntries = [...entries, newEntry];
       setEntries(updatedEntries);
 
-      // Best-effort: enrich with local weather without blocking save.
+      // Best-effort: enrich with local weather without blocking save (opt-in).
       void (async () => {
         try {
-          if (!('geolocation' in navigator) || !navigator.geolocation) return;
-          const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+          const captured = await maybeCaptureWeatherForNewEntry();
+          if (!captured) return;
+          setEntries(prev =>
+            prev.map(e => (e.id === newEntry.id ? { ...e, weather: captured.summary } : e))
           );
-          const weather = await fetchWeatherData(pos.coords.latitude, pos.coords.longitude);
-          if (!weather) return;
-          const parts: string[] = [];
-          if (weather.temperature !== null) parts.push(`${Math.round(weather.temperature)}°C`);
-          if (weather.condition) parts.push(weather.condition);
-          if (weather.isRaining) parts.push('🌧️');
-          if (weather.humidity !== null) parts.push(`${weather.humidity}% humidity`);
-          const summary = parts.join(', ');
-          if (!summary) return;
-
-          setEntries(prev => prev.map(e => (e.id === newEntry.id ? { ...e, weather: summary } : e)));
-          await savePainEntry({ ...newEntry, weather: summary });
+          await savePainEntry({ ...newEntry, weather: captured.summary });
         } catch {
           // Ignore enrichment failures
         }
@@ -365,22 +355,13 @@ export function PainTracker() {
       // Best-effort: add weather after the fact.
       void (async () => {
         try {
-          if (!('geolocation' in navigator) || !navigator.geolocation) return;
-          const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
-          );
-          const weather = await fetchWeatherData(pos.coords.latitude, pos.coords.longitude);
-          if (!weather) return;
-          const parts: string[] = [];
-          if (weather.temperature !== null) parts.push(`${Math.round(weather.temperature)}°C`);
-          if (weather.condition) parts.push(weather.condition);
-          if (weather.isRaining) parts.push('🌧️');
-          if (weather.humidity !== null) parts.push(`${weather.humidity}% humidity`);
-          const summary = parts.join(', ');
-          if (!summary) return;
+          const captured = await maybeCaptureWeatherForNewEntry();
+          if (!captured) return;
 
-          setEntries(prev => prev.map(e => (e.id === entry.id ? { ...e, weather: summary } : e)));
-          await savePainEntry({ ...entry, weather: summary });
+          setEntries(prev =>
+            prev.map(e => (e.id === entry.id ? { ...e, weather: captured.summary } : e))
+          );
+          await savePainEntry({ ...entry, weather: captured.summary });
         } catch {
           // Ignore enrichment failures
         }

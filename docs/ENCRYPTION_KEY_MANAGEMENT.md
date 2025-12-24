@@ -229,7 +229,6 @@ All key operations are logged via `SecurityService`:
 
 1. **Regular Backups**: Export password-protected JSON/CSV regularly
 2. **Backup Reminders**: App prompts for periodic exports
-3. **Cloud Sync** (future): Optional encrypted cloud backup
 
 ---
 

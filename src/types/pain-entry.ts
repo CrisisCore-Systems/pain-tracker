@@ -228,6 +228,11 @@ export const PainEntrySchema = z.object({
    * Physical activities performed
    */
   activities: z.array(z.string()).optional(),
+  
+  /** Medication adherence for scheduled meds (optional) */
+  medicationAdherence: z
+    .enum(['as_prescribed', 'partial', 'missed', 'not_applicable'])
+    .optional(),
 });
 
 /**
@@ -236,6 +241,15 @@ export const PainEntrySchema = z.object({
 export const CreatePainEntrySchema = PainEntrySchema.omit({
   id: true,
   timestamp: true,
+}).superRefine((value, ctx) => {
+  const locationCount = value.baselineData?.locations?.length ?? 0;
+  if (locationCount === 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['baselineData', 'locations'],
+      message: 'Select at least one location.',
+    });
+  }
 });
 
 /**

@@ -90,7 +90,7 @@ export function ClinicDashboard() {
           iconColor="bg-rose-500"
         />
         <ClinicStatCard
-          title="AI Insights"
+          title="Automated Insights"
           value={stats.aiPatternsDetected}
           change={`${stats.medicationAdherence}% adherence`}
           icon={Brain}
@@ -118,10 +118,10 @@ export function ClinicDashboard() {
             </span>
           </div>
           <h3 className="text-lg font-bold text-white mb-2">
-            Real-Time Monitoring
+            On-Device Monitoring
           </h3>
           <p className="text-sm text-slate-400 mb-4">
-            Live patient alerts for pain escalation, missed medications, and crisis detection
+            Optional, on-device alerts for worsening patterns and missed routines (no server-side clinician monitoring)
           </p>
           <div className="flex items-center gap-2 text-rose-400 font-medium text-sm group-hover:gap-3 transition-all">
             View Dashboard <ArrowRight className="w-4 h-4" />
@@ -145,7 +145,7 @@ export function ClinicDashboard() {
             </span>
           </div>
           <h3 className="text-lg font-bold text-white mb-2">
-            AI Pattern Detection
+            Automated Pattern Detection
           </h3>
           <p className="text-sm text-slate-400 mb-4">
             Automatic identification of pain triggers, medication efficacy, and treatment correlations
@@ -236,7 +236,7 @@ export function ClinicDashboard() {
               >
                 <Brain className="w-5 h-5 text-violet-400" />
                 <span className="text-sm font-medium text-violet-300 group-hover:text-violet-200">
-                  View AI Insights
+                  View Insights
                 </span>
               </button>
               <button 

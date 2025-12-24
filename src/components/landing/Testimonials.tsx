@@ -54,7 +54,7 @@ const testimonials = [
 
 const stats = [
   { value: '100%', label: 'Privacy Protected', colorClass: 'stat-counter-emerald' },
-  { value: '10+', label: 'Analysis Algorithms', colorClass: 'stat-counter-sky' },
+  { value: '10+', label: 'Pattern Tools', colorClass: 'stat-counter-sky' },
   { value: '25+', label: 'Body Locations', colorClass: 'stat-counter-purple' },
   { value: '100%', label: 'Offline Capable', colorClass: 'stat-counter-amber' },
 ];

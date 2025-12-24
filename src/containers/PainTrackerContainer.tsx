@@ -7,6 +7,7 @@ import { ModernAppLayout } from '../components/layouts/ModernAppLayout';
 import { ClinicalDashboard } from '../design-system/fused-v2';
 import QuickLogOneScreen from '../design-system/fused-v2/QuickLogOneScreen';
 import { useToast } from '../components/feedback';
+import { maybeCaptureWeatherForNewEntry } from '../services/weatherAutoCapture';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
 import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
 
@@ -35,6 +36,9 @@ const HelpAndSupportPage = lazy(() =>
 const ReportsPage = lazy(() =>
   import('../components/reports').then(m => ({ default: m.ReportsPage }))
 );
+const HistoryPage = lazy(() =>
+  import('../components/history/HistoryPage').then(m => ({ default: m.HistoryPage }))
+);
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
 const OnboardingFlow = lazy(() =>
@@ -47,10 +51,12 @@ const Walkthrough = lazy(() =>
 export function PainTrackerContainer({ initialView }: { initialView?: string } = {}) {
   const { entries, ui, addEntry, setShowOnboarding, setShowWalkthrough, setError, loadSampleData } =
     usePainTrackerStore();
+  const updateEntry = usePainTrackerStore(s => s.updateEntry);
 
   const toast = useToast();
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
   const [currentView, setCurrentView] = useState<string>(initialView ?? 'dashboard');
+  const [editingEntryId, setEditingEntryId] = useState<PainEntry['id'] | null>(null);
 
   // Load walkthrough steps dynamically to avoid circular dependency
   useEffect(() => {
@@ -112,6 +118,38 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
     setShowWalkthrough(true);
   };
 
+  useEffect(() => {
+    const isEditableTarget = (target: EventTarget | null) => {
+      if (!target || !(target instanceof HTMLElement)) return false;
+      if (target.isContentEditable) return true;
+      const tag = target.tagName.toLowerCase();
+      return tag === 'input' || tag === 'textarea' || tag === 'select';
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (isEditableTarget(event.target)) return;
+
+      const key = event.key.toLowerCase();
+      if (key === 'n') {
+        event.preventDefault();
+        setCurrentView('new-entry');
+      }
+      if (key === 'c') {
+        event.preventDefault();
+        setCurrentView('calendar');
+      }
+      if (key === 'h') {
+        event.preventDefault();
+        setCurrentView('history');
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
+
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);
     toast.success('Tutorial completed!', "You're all set to start tracking your pain effectively.");
@@ -155,7 +193,23 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         return;
       }
 
+      const storeApi = usePainTrackerStore as unknown as {
+        getState?: () => { entries?: PainEntry[] };
+      };
+
+      const beforeCount = storeApi.getState?.()?.entries?.length ?? entries.length;
       addEntry(entryData);
+
+      // Best-effort: enrich the just-saved entry with local weather (opt-in).
+      // This must never block saving the entry.
+      const created = storeApi.getState?.()?.entries?.[beforeCount];
+      if (created) {
+        void (async () => {
+          const captured = await maybeCaptureWeatherForNewEntry();
+          if (!captured) return;
+          updateEntry(created.id, { weather: captured.summary });
+        })();
+      }
       setError(null);
       toast.success(
         'Entry saved',
@@ -197,8 +251,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
             onViewCalendar={() => setCurrentView('calendar')}
             onViewAnalytics={() => setCurrentView('analytics')}
             onExport={() => {
-              // TODO: Implement PDF export
-              toast.info('Export', 'PDF export coming soon');
+              setCurrentView('reports');
             }}
             onOpenSettings={() => setCurrentView('settings')}
             onOpenHelp={() => setCurrentView('help')}
@@ -211,18 +264,148 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         return (
           <QuickLogOneScreen
             onComplete={data => {
-              handleAddEntry({
+              const entryToAdd: Omit<PainEntry, 'id' | 'timestamp'> = {
                 baselineData: {
                   pain: data.pain,
                   locations: data.locations,
                   symptoms: data.symptoms,
                 },
                 notes: data.notes,
-              } as Omit<PainEntry, 'id' | 'timestamp'>);
+                functionalImpact: {
+                  limitedActivities: [],
+                  assistanceNeeded: [],
+                  mobilityAids: [],
+                },
+                medications: {
+                  current: [],
+                  changes: '',
+                  effectiveness: '',
+                },
+                treatments: {
+                  recent: [],
+                  effectiveness: '',
+                  planned: [],
+                },
+                qualityOfLife: {
+                  sleepQuality: typeof data.sleep === 'number' ? data.sleep : 0,
+                  moodImpact: 0,
+                  socialImpact: [],
+                },
+                workImpact: {
+                  missedWork: 0,
+                  modifiedDuties: [],
+                  workLimitations: [],
+                },
+                comparison: {
+                  worseningSince: '',
+                  newLimitations: [],
+                },
+
+                // Optional analytics-rich fields
+                intensity: data.pain,
+                location: data.locations?.[0],
+                activityLevel: data.activityLevel,
+                activities: data.activities,
+                triggers: data.triggers,
+                medicationAdherence: data.medicationAdherence,
+                sleep: data.sleep,
+              };
+
+              handleAddEntry(entryToAdd);
             }}
             onCancel={() => setCurrentView('dashboard')}
           />
         );
+
+      case 'history':
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <HistoryPage
+              entries={entries}
+              onEditEntry={id => {
+                setEditingEntryId(id);
+                setCurrentView('edit-entry');
+              }}
+            />
+          </Suspense>
+        );
+
+      case 'edit-entry': {
+        const entry = entries.find(e => e.id === editingEntryId);
+        if (!entry) {
+          toast.error('Entry not found', 'Unable to edit that entry right now.');
+          setEditingEntryId(null);
+          setCurrentView('history');
+          return null;
+        }
+
+        return (
+          <QuickLogOneScreen
+            mode="edit"
+            initialData={{
+              pain: entry.baselineData.pain,
+              locations: entry.baselineData.locations ?? [],
+              symptoms: entry.baselineData.symptoms ?? [],
+              notes: entry.notes ?? '',
+              sleep: entry.sleep,
+              activityLevel: entry.activityLevel,
+              medicationAdherence: entry.medicationAdherence,
+              activities: entry.activities,
+              triggers: entry.triggers,
+            }}
+            onComplete={data => {
+              try {
+                const updates: Partial<PainEntry> = {
+                  baselineData: {
+                    ...entry.baselineData,
+                    pain: data.pain,
+                    locations: data.locations,
+                    symptoms: data.symptoms,
+                  },
+                  notes: data.notes,
+                  intensity: data.pain,
+                  location: data.locations?.[0],
+                };
+
+                if (typeof data.sleep === 'number') {
+                  updates.sleep = data.sleep;
+                  updates.qualityOfLife = {
+                    ...entry.qualityOfLife,
+                    sleepQuality: data.sleep,
+                  };
+                }
+
+                if (typeof data.activityLevel === 'number') {
+                  updates.activityLevel = data.activityLevel;
+                }
+
+                if (data.medicationAdherence) {
+                  updates.medicationAdherence = data.medicationAdherence;
+                }
+
+                if (data.activities) {
+                  updates.activities = data.activities;
+                }
+
+                if (data.triggers) {
+                  updates.triggers = data.triggers;
+                }
+
+                updateEntry(entry.id, updates);
+                toast.success('Entry updated', 'Your changes are saved locally.');
+                setCurrentView('history');
+              } catch (err) {
+                console.error('Error updating pain entry:', err);
+                toast.error('Update failed', 'Unable to update that entry. Please try again.');
+              }
+            }}
+            onCancel={() => {
+              setEditingEntryId(null);
+              setCurrentView('history');
+            }}
+          />
+        );
+      }
 
       case 'daily-checkin':
         return (
@@ -295,7 +478,7 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
             onViewCalendar={() => setCurrentView('calendar')}
             onViewAnalytics={() => setCurrentView('analytics')}
             onExport={() => {
-              toast.info('Export', 'PDF export coming soon');
+              setCurrentView('reports');
             }}
             onOpenSettings={() => setCurrentView('settings')}
             onOpenHelp={() => setCurrentView('help')}

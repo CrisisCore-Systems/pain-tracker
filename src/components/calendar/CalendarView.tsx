@@ -286,24 +286,42 @@ export function CalendarView({ entries }: CalendarViewProps) {
 
             {/* Legend */}
             <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-gray-600 dark:text-gray-400 font-medium">Pain Level:</span>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-green-500" />
-                    <span className="text-gray-600 dark:text-gray-400">Low</span>
+              <div className="space-y-3 text-xs">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium shrink-0">Numbers:</span>
+                  <div className="text-gray-600 dark:text-gray-400">
+                    <span className="font-medium">Top</span>: day of month •
+                    <span className="font-medium">Small number</span>: entries logged (shown only when 2+)
                   </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-yellow-500" />
-                    <span className="text-gray-600 dark:text-gray-400">Mild</span>
+                </div>
+
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium shrink-0">Markers:</span>
+                  <div className="text-gray-600 dark:text-gray-400">
+                    <span className="font-medium">Dot</span>: at least one entry •
+                    <span className="font-medium">Cell color</span>: average pain for that day
                   </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-orange-500" />
-                    <span className="text-gray-600 dark:text-gray-400">Moderate</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded bg-red-500" />
-                    <span className="text-gray-600 dark:text-gray-400">Severe</span>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Pain Level:</span>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-green-500" />
+                      <span className="text-gray-600 dark:text-gray-400">Low</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-yellow-500" />
+                      <span className="text-gray-600 dark:text-gray-400">Mild</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-orange-500" />
+                      <span className="text-gray-600 dark:text-gray-400">Moderate</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="w-3 h-3 rounded bg-red-500" />
+                      <span className="text-gray-600 dark:text-gray-400">Severe</span>
+                    </div>
                   </div>
                 </div>
               </div>

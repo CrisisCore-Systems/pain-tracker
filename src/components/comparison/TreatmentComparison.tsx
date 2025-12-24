@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system/components/Card';
 import { Badge } from '../../design-system/components/Badge';
-import Chart from '../../design-system/components/Chart';
 import { colorVar } from '../../design-system/utils/theme';
 import type { PainEntry } from '../../types';
 import type {
@@ -23,6 +22,8 @@ import type {
 } from '../../types/comparison';
 import { DataComparisonEngine } from '../../utils/comparison/engine';
 import { cn } from '../../design-system/utils';
+import type { ChartDataPoint } from '../accessibility/ChartWithTableToggle';
+import { ChartWithTableToggle } from '../accessibility/ChartWithTableToggle';
 
 interface TreatmentComparisonProps {
   entries: PainEntry[];
@@ -393,17 +394,25 @@ export function TreatmentComparison({ entries, className }: TreatmentComparisonP
           </div>
 
           {/* Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <BarChart3 className="h-5 w-5" />
-                <span>Pain Level Comparison</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Chart data={comparisonResult.chartData} type="bar" height={300} />
-            </CardContent>
-          </Card>
+          <ChartWithTableToggle
+            title="Pain Level Comparison"
+            description="Average pain levels before and during the selected treatment period."
+            type="bar"
+            icon={BarChart3}
+            height={300}
+            chartData={comparisonResult.chartData}
+            tableData={((): ChartDataPoint[] => {
+              const dataset = comparisonResult.chartData.datasets[0];
+              return comparisonResult.chartData.labels.map((label, index) => ({
+                label,
+                value: typeof dataset?.data?.[index] === 'number' ? (dataset.data[index] as number) : 0,
+                additionalInfo:
+                  index === 0
+                    ? `${comparisonResult.baselineStats.entries} entries`
+                    : `${comparisonResult.treatmentStats.entries} entries`,
+              }));
+            })()}
+          />
 
           {/* Insights */}
           {comparisonResult.insights.length > 0 && (

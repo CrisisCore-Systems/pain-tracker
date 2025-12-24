@@ -20,6 +20,7 @@
     "build": "vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 1000",
     "preview": "vite preview",
+    "pretest": "node -e \"const fs=require('fs'); const path=require('path'); fs.mkdirSync(path.join(process.cwd(),'coverage','.tmp'),{recursive:true});\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck:watch": "node ./node_modules/typescript/bin/tsc --noEmit --watch",

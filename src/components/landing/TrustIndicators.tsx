@@ -3,10 +3,10 @@ import { Shield, Lock, Eye, Code, FileCheck, Users, ArrowRight } from 'lucide-re
 
 const trustBadges = [
   { icon: Shield, title: 'AES-256', description: 'Military-grade', colorClass: 'icon-emerald' },
-  { icon: Lock, title: 'HIPAA-Aligned', description: 'Healthcare compliant', colorClass: 'icon-sky' },
+  { icon: Lock, title: 'HIPAA-Aligned', description: 'Controls-focused', colorClass: 'icon-sky' },
   { icon: Eye, title: 'Zero Tracking', description: 'No analytics', colorClass: 'icon-purple' },
   { icon: Code, title: 'Open Source', description: 'Transparent code', colorClass: 'icon-pink' },
-  { icon: FileCheck, title: 'WCAG 2.1 AA', description: 'Accessible', colorClass: 'icon-amber' },
+  { icon: FileCheck, title: 'WCAG 2.2 AA', description: 'Target', colorClass: 'icon-amber' },
   { icon: Users, title: 'Community', description: 'User-driven', colorClass: 'icon-indigo' },
 ];
 
@@ -60,6 +60,7 @@ export const TrustIndicators: React.FC = () => {
             <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
               <strong className="text-white font-semibold">Your data, your device.</strong>{' '}
               We use local-first architecture with IndexedDB storage. No servers, no cloud, no third parties.{' '}
+              Install it like an app (PWA) on desktop or mobile—no app store required.{" "}
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker"
                 target="_blank"

@@ -133,15 +133,14 @@ export const GatedWCBReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
               return;
             }
 
-            // Generate WCB report logic here
-            alert('WCB report generation will be implemented here');
+            alert('WorkSafeBC report export is available in Reports & Export.');
 
             // Track usage
             await trackExportUsage(userId);
           }}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          Generate WCB Report
+          Open Reports & Export
         </button>
       </div>
     </FeatureGate>
@@ -169,15 +168,14 @@ export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
               return;
             }
 
-            // Generate PDF report logic here
-            alert('PDF report generation will be implemented here');
+            alert('PDF export is available in Reports & Export.');
 
             // Track usage
             await trackExportUsage(userId);
           }}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          Generate PDF Report
+          Open Reports & Export
         </button>
       </div>
     </FeatureGate>
@@ -194,10 +192,10 @@ export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h3 className="text-lg font-semibold mb-4">Clinical PDF Export</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Generate HIPAA-compliant clinical reports for healthcare providers.
+          Generate clinic-ready clinical reports for healthcare providers.
         </p>
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-          <p>✓ HIPAA Compliant</p>
+          <p>✓ HIPAA-aligned controls</p>
           <p>✓ Clinical Formatting</p>
           <p>✓ Standardized Templates</p>
         </div>
@@ -210,15 +208,14 @@ export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }
               return;
             }
 
-            // Generate clinical PDF logic here
-            alert('Clinical PDF export will be implemented here');
+            alert('Clinical PDF export is available in Reports & Export.');
 
             // Track usage
             await trackExportUsage(userId);
           }}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          Generate Clinical PDF
+          Open Reports & Export
         </button>
       </div>
     </FeatureGate>

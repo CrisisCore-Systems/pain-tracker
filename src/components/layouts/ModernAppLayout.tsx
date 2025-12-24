@@ -15,6 +15,7 @@ import {
   Activity,
   Calendar,
   FileText,
+  History,
   HelpCircle,
   Bell,
   Wind,
@@ -50,6 +51,7 @@ export function ModernAppLayout({
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, badge: null, color: 'sky' },
     { id: 'new-entry', name: 'New Entry', icon: Plus, badge: null, color: 'emerald' },
+    { id: 'history', name: 'History', icon: History, badge: null, color: 'sky' },
     { id: 'body-map', name: 'Body Map', icon: User, badge: null, color: 'violet' },
     { id: 'fibromyalgia', name: 'Fibromyalgia Hub', icon: Heart, badge: 'New', color: 'rose' },
     { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Pro', color: 'amber' },
@@ -96,23 +98,32 @@ export function ModernAppLayout({
                 {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </button>
 
-              <div className="flex items-center gap-3">
-                <div 
+              <button
+                type="button"
+                onClick={() => {
+                  setSidebarOpen(false);
+                  onNavigate?.('dashboard');
+                }}
+                className="flex items-center gap-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/50 focus:ring-offset-2 focus:ring-offset-background"
+                aria-label="Go to dashboard"
+                title="Go to dashboard"
+              >
+                <div
                   className="p-2.5 rounded-xl"
-                  style={{ 
+                  style={{
                     background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
                     boxShadow: '0 8px 20px rgba(14, 165, 233, 0.3)',
                   }}
                 >
                   <Activity className="h-5 w-5 text-white" />
                 </div>
-                <div className="hidden sm:block">
+                <div className="hidden sm:block text-left">
                   <h1 className="text-lg font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
                     Pain Tracker Pro
                   </h1>
                   <p className="text-[11px] text-muted-foreground">Pain management insights</p>
                 </div>
-              </div>
+              </button>
             </div>
 
             {/* Quick Stats - Premium Glass Cards */}
@@ -155,6 +166,8 @@ export function ModernAppLayout({
                   boxShadow: '0 4px 15px rgba(14, 165, 233, 0.3)',
                 }}
                 onClick={() => onNavigate?.('daily-checkin')}
+                aria-label="Daily check-in (guided)"
+                title="Daily check-in (guided)"
               >
                 <Heart className="h-4 w-4" />
                 Check-in
@@ -334,7 +347,7 @@ export function ModernAppLayout({
               <Sparkles className="h-4 w-4 text-purple-400" />
               <span className="text-sm font-semibold text-purple-300">Upgrade to Pro</span>
             </div>
-            <p className="text-xs text-slate-400 mb-3">Unlock AI insights, advanced analytics & more</p>
+            <p className="text-xs text-slate-400 mb-3">Unlock automated insights, advanced analytics & more</p>
             <button 
               className="w-full py-2 rounded-lg text-xs font-medium text-purple-300 transition-colors hover:bg-purple-500/20"
               style={{ border: '1px solid rgba(168, 85, 247, 0.3)' }}

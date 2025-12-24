@@ -36,7 +36,6 @@ Pain Tracker is a **privacy-first, local-only PWA** for chronic pain management 
 - Machine learning / AI predictions
 - FHIR integration
 - Multi-tenancy
-- Cloud sync
 - Enterprise features
 
 ---
@@ -229,7 +228,6 @@ These features are **explicitly deferred** to future versions:
 
 ### v1.0.0+ (Q3 2026)
 - Multi-tenancy for clinics/hospitals
-- Optional cloud sync (self-hosted)
 - Provider portal for patient monitoring
 - Clinical trial matching
 

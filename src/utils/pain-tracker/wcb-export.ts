@@ -35,8 +35,75 @@ interface WCBExportOptions {
   healthcareProvider?: string;
   /** Include detailed entries (may increase file size) */
   includeDetailedEntries?: boolean;
-  /** Include pain trend chart placeholder */
+  /** Include a brief pain trend summary section */
   includeTrendSummary?: boolean;
+}
+
+type TrendPoint = { label: string; value: number };
+
+function toDailyAveragePain(entries: PainEntry[], maxDays: number): TrendPoint[] {
+  if (entries.length === 0) return [];
+
+  const byDay = new Map<string, { sum: number; count: number; day: Date }>();
+  for (const entry of entries) {
+    const dt = new Date(entry.timestamp);
+    // Normalize to local day key (YYYY-MM-DD)
+    const key = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+    const existing = byDay.get(key);
+    if (existing) {
+      existing.sum += entry.baselineData.pain;
+      existing.count += 1;
+    } else {
+      const day = new Date(dt);
+      day.setHours(0, 0, 0, 0);
+      byDay.set(key, { sum: entry.baselineData.pain, count: 1, day });
+    }
+  }
+
+  const points = Array.from(byDay.values())
+    .sort((a, b) => a.day.getTime() - b.day.getTime())
+    .slice(-maxDays)
+    .map(({ day, sum, count }) => ({
+      label: day.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' }),
+      value: count > 0 ? sum / count : 0,
+    }));
+
+  return points;
+}
+
+function drawMiniTrendBars(
+  doc: jsPDF,
+  points: TrendPoint[],
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) {
+  if (points.length === 0) return;
+
+  const values = points.map(p => p.value);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = Math.max(0.1, max - min);
+
+  const barGap = 1;
+  const barWidth = Math.max(1, Math.floor((width - barGap * (points.length - 1)) / points.length));
+
+  // Light frame
+  doc.setDrawColor(226, 232, 240); // slate-200
+  doc.setLineWidth(0.2);
+  doc.rect(x, y, width, height);
+
+  // Bars
+  doc.setFillColor(14, 165, 233); // sky-500
+  for (let i = 0; i < points.length; i++) {
+    const v = points[i].value;
+    const normalized = (v - min) / span;
+    const barH = Math.max(1, Math.round(normalized * (height - 2)));
+    const bx = x + i * (barWidth + barGap);
+    const by = y + height - 1 - barH;
+    doc.rect(bx, by, barWidth, barH, 'F');
+  }
 }
 
 interface ReportMetrics {
@@ -181,7 +248,7 @@ export function exportWorkSafeBCPDF(
     claimNumber,
     healthcareProvider,
     includeDetailedEntries = true,
-    includeTrendSummary: _includeTrendSummary = true,
+    includeTrendSummary = true,
   } = options;
 
   // Filter entries by date range
@@ -315,6 +382,57 @@ export function exportWorkSafeBCPDF(
   const summaryLines = doc.splitTextToSize(summaryText, contentWidth);
   doc.text(summaryLines, leftMargin, yPosition);
   yPosition += summaryLines.length * 5 + 10;
+
+  // Optional pain trend summary (text + mini visualization)
+  if (includeTrendSummary) {
+    checkPageBreak(45);
+
+    doc.setTextColor(15, 23, 42);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('Pain Trend Summary', leftMargin, yPosition);
+    yPosition += 8;
+
+    const points = toDailyAveragePain(filteredEntries, 14);
+    const hasEnough = points.length >= 3;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(71, 85, 105);
+
+    if (!hasEnough) {
+      doc.text('Not enough data in this period to render a trend summary.', leftMargin, yPosition);
+      yPosition += 10;
+    } else {
+      const start = points[0].value;
+      const end = points[points.length - 1].value;
+      const delta = end - start;
+
+      const direction = Math.abs(delta) < 0.3 ? 'stable' : delta > 0 ? 'worsening' : 'improving';
+      const deltaText = `${delta > 0 ? '+' : ''}${formatNumber(delta, 1)}`;
+
+      doc.text(
+        `Daily average pain over the last ${points.length} days is ${direction} (${deltaText} change from start to end of period segment).`,
+        leftMargin,
+        yPosition
+      );
+      yPosition += 8;
+
+      // Mini bars
+      const chartH = 18;
+      const chartW = Math.min(90, contentWidth);
+      drawMiniTrendBars(doc, points, leftMargin, yPosition, chartW, chartH);
+
+      // Label endpoints
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139); // slate-500
+      doc.text(points[0].label, leftMargin, yPosition + chartH + 6);
+      const endLabel = points[points.length - 1].label;
+      doc.text(endLabel, leftMargin + chartW, yPosition + chartH + 6, { align: 'right' });
+
+      yPosition += chartH + 14;
+    }
+  }
 
   if (metrics.missedWorkDays > 0) {
     doc.setTextColor(185, 28, 28); // red-700

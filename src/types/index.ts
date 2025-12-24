@@ -84,6 +84,9 @@
 
   /** Physical activities performed */
   activities?: string[];
+
+  /** Medication adherence for scheduled meds (optional) */
+  medicationAdherence?: 'as_prescribed' | 'partial' | 'missed' | 'not_applicable';
 }
 
 export interface WCBReport {

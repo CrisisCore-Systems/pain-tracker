@@ -39,19 +39,31 @@ const LOCATION_TAGS = [
   'Lower back',
   'Upper back',
   'Neck',
+  'Wrist (L)',
+  'Wrist (R)',
   'Shoulder (L)',
   'Shoulder (R)',
   'Hip (L)',
   'Hip (R)',
   'Knee (L)',
   'Knee (R)',
+  'Ankle (L)',
+  'Ankle (R)',
+  'Foot (L)',
+  'Foot (R)',
+  'Hand (L)',
+  'Hand (R)',
   'Head',
   'Abdomen',
+  'Cervical spine',
+  'Thoracic spine',
+  'Lumbar spine',
 ];
 
 const SYMPTOM_TAGS = [
   'Aching',
   'Sharp',
+  'Dull ache',
   'Burning',
   'Throbbing',
   'Stabbing',
@@ -59,6 +71,8 @@ const SYMPTOM_TAGS = [
   'Numbness',
   'Stiffness',
   'Weakness',
+  'Cramping',
+  'Electric shock',
 ];
 
 type SpeechRecognitionWindow = Window & {
@@ -209,6 +223,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
     if (step < 3) {
       setStep(step + 1);
     } else {
+      if (locations.length === 0) return;
       onComplete({ pain, locations, symptoms, notes });
     }
   }, [step, pain, locations, symptoms, notes, onComplete]);
@@ -228,8 +243,16 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
   const hasNavigator = typeof navigator !== 'undefined';
   const isOffline = hasNavigator && navigator.onLine === false;
   const connectionStatus = isOffline
-    ? 'Offline: works only if your browser provides local speech.'
-    : 'Uses your device speech service. May rely on your browser/OS (not guaranteed offline).';
+    ? 'Offline: only works if your browser/OS provides local speech.'
+    : 'Uses your device speech service. Offline support varies by browser/OS.';
+
+  const voiceStatusTooltip = voiceSupported
+    ? 'Voice Mode requires a browser with Web Speech API support (SpeechRecognition). Offline capability varies by browser/OS.'
+    : 'Voice Mode requires a browser with Web Speech API support (SpeechRecognition).';
+
+  const isSaveStep = step === 3;
+  const saveDisabledReason = isSaveStep && locations.length === 0 ? 'Select at least one location to save.' : null;
+  const selectionSummary = `${locations.length} location${locations.length === 1 ? '' : 's'} selected · ${symptoms.length} symptom${symptoms.length === 1 ? '' : 's'} selected`;
 
   useEffect(() => {
     if (!voiceMode && isListening) {
@@ -313,7 +336,9 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
               <MicOff className="w-5 h-5 text-ink-500 mt-0.5" aria-hidden="true" />
             )}
             <div>
-              <div className="text-body-medium text-ink-100">Voice Mode</div>
+              <div className="text-body-medium text-ink-100" title={voiceStatusTooltip}>
+                Voice Mode
+              </div>
               <p className="text-small text-ink-400">
                 {voiceSupported
                   ? connectionStatus
@@ -327,9 +352,9 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-tiny text-ink-500">
+            <span className="text-tiny text-ink-500" title={voiceStatusTooltip}>
               {voiceMode ? 'On' : 'Off'} ·{' '}
-              {voiceSupported ? 'Device speech engine' : 'Unavailable in this browser'}
+              {voiceSupported ? 'Speech (browser-dependent)' : 'Unavailable in this browser'}
             </span>
             <button
               type="button"
@@ -355,6 +380,14 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
       <div className="flex-1 overflow-y-auto p-6">
         {step === 1 && (
           <div className="max-w-2xl mx-auto space-y-6">
+            <div className="surface-card">
+              <div className="text-small text-ink-300">Quick log</div>
+              <p className="text-small text-ink-400">
+                Captures pain level and at least one location. Symptoms and notes are optional.
+                This is the fastest way to log.
+              </p>
+            </div>
+
             <div>
               <h2 className="text-h2 text-ink-50 mb-2">{painLabel}</h2>
               <p className="text-small text-ink-400">{painHint}</p>
@@ -508,6 +541,11 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
             <div>
               <h2 className="text-h2 text-ink-50 mb-2">{locationsLabel}</h2>
               <p className="text-small text-ink-400">{locationsHint}</p>
+              {locations.length === 0 && (
+                <p className="text-small text-warn-400 mt-2" role="note">
+                  At least one location is required to save.
+                </p>
+              )}
             </div>
 
             {/* Screen Reader Summary */}
@@ -642,9 +680,9 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
               <div className="surface-card border border-surface-700 bg-surface-800/70">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <div className="text-body-medium text-ink-100">Voice note</div>
+                    <div className="text-body-medium text-ink-100">Voice dictation</div>
                     <p className="text-small text-ink-400">
-                      Records with your device speech service. {connectionStatus}
+                      Dictates using your device speech service. {connectionStatus}
                     </p>
                   </div>
                   <button
@@ -658,10 +696,10 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                         : 'bg-primary-500 text-ink-900 border-primary-500'
                     )}
                     aria-pressed={isListening}
-                    aria-label={isListening ? 'Stop voice note recording' : 'Start voice note recording'}
+                    aria-label={isListening ? 'Stop voice dictation' : 'Start voice dictation'}
                   >
                     {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                    {isListening ? 'Stop voice note' : 'Start voice note'}
+                    {isListening ? 'Stop dictation' : 'Start dictation'}
                   </button>
                 </div>
 
@@ -727,39 +765,59 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
 
       {/* Footer - Sticky for One-Handed Operation */}
       <div className="sticky bottom-0 left-0 right-0 p-4 border-t border-surface-700 bg-surface-900/95 backdrop-blur-sm z-10">
-        <div className="max-w-2xl mx-auto flex gap-3">
-          {step > 1 && (
-            <button
-              onClick={() => setStep(step - 1)}
-              className={cn(
-                'px-6 py-4 rounded-[var(--radius-xl)]',
-                'min-h-[56px] min-w-[56px]',
-                'bg-surface-800 hover:bg-surface-700',
-                'text-body-medium text-ink-200 font-medium',
-                'transition-colors duration-[var(--duration-fast)]',
-                'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900',
-                'flex-shrink-0'
+        <div className="max-w-2xl mx-auto">
+          {isSaveStep && (
+            <>
+              <div
+                className={cn('mb-2 text-small', locations.length > 0 ? 'text-ink-400' : 'text-warn-400')}
+                aria-live="polite"
+              >
+                {selectionSummary}
+              </div>
+              {saveDisabledReason && (
+                <p className="text-small text-warn-400 mb-3" role="alert">
+                  {saveDisabledReason}
+                </p>
               )}
-              aria-label="Go back to previous step"
-            >
-              Back
-            </button>
+            </>
           )}
-          <button
-            onClick={handleNext}
-            className={cn(
-              'flex-1 py-4 rounded-[var(--radius-xl)]',
-              'min-h-[56px]',
-              'bg-primary-500 hover:bg-primary-400',
-              'text-body-medium text-ink-900 font-medium',
-              'transition-colors duration-[var(--duration-fast)]',
-              'shadow-[var(--elevation-2)]',
-              'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900'
+
+          <div className="flex gap-3">
+            {step > 1 && (
+              <button
+                onClick={() => setStep(step - 1)}
+                className={cn(
+                  'px-6 py-4 rounded-[var(--radius-xl)]',
+                  'min-h-[56px] min-w-[56px]',
+                  'bg-surface-800 hover:bg-surface-700',
+                  'text-body-medium text-ink-200 font-medium',
+                  'transition-colors duration-[var(--duration-fast)]',
+                  'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900',
+                  'flex-shrink-0'
+                )}
+                aria-label="Go back to previous step"
+              >
+                Back
+              </button>
             )}
-            aria-label={step === 3 ? 'Save pain entry' : `Continue to step ${step + 1}`}
-          >
-            {step === 3 ? saveBtn : continueBtn}
-          </button>
+            <button
+              onClick={handleNext}
+              disabled={isSaveStep && !!saveDisabledReason}
+              className={cn(
+                'flex-1 py-4 rounded-[var(--radius-xl)]',
+                'min-h-[56px]',
+                'bg-primary-500 hover:bg-primary-400',
+                'text-body-medium text-ink-900 font-medium',
+                'transition-colors duration-[var(--duration-fast)]',
+                'shadow-[var(--elevation-2)]',
+                'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900',
+                isSaveStep && !!saveDisabledReason && 'opacity-60 cursor-not-allowed'
+              )}
+              aria-label={step === 3 ? 'Save pain entry' : `Continue to step ${step + 1}`}
+            >
+              {step === 3 ? saveBtn : continueBtn}
+            </button>
+          </div>
         </div>
         {/* Keyboard Hint */}
         <div className="max-w-2xl mx-auto mt-2 text-center">

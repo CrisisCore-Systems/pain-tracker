@@ -12,6 +12,9 @@ describe('PrivacySettings', () => {
     const sharingCheckbox = screen.getByRole('checkbox', { name: /Share de-identified data/i });
     fireEvent.click(sharingCheckbox);
 
+    const weatherCheckbox = screen.getByRole('checkbox', { name: /Auto-capture local weather/i });
+    fireEvent.click(weatherCheckbox);
+
     const select = screen.getByRole('combobox');
     fireEvent.change(select, { target: { value: '90' } });
 
@@ -22,8 +25,10 @@ describe('PrivacySettings', () => {
     const stored = secureStorage.safeJSON<{
       dataSharing?: boolean;
       retentionDays?: number | string;
+      weatherAutoCapture?: boolean;
     }>('pain-tracker:privacy-settings', {});
     expect(stored.dataSharing === true || stored.dataSharing === false).toBe(true);
     expect([30, 90, 365, 0].includes(Number(stored.retentionDays))).toBe(true);
+    expect(stored.weatherAutoCapture === true || stored.weatherAutoCapture === false).toBe(true);
   });
 });

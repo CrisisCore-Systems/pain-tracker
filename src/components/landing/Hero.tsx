@@ -115,7 +115,7 @@ export const Hero: React.FC = () => {
                 onFocus={handlePreload}
                 className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
               >
-                Get Started
+                Start Tracking Free
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -160,9 +160,9 @@ export const Hero: React.FC = () => {
 
               {/* Headline */}
               <h1 className="landing-headline landing-headline-xl">
-                <span className="text-white">Professional Pain</span>
+                <span className="text-white">Private Pain</span>
                 <br />
-                <span className="text-white">Management for </span>
+                <span className="text-white">Tracking for </span>
                 <span className="gradient-text-animated">Everyone</span>
               </h1>
 
@@ -170,7 +170,7 @@ export const Hero: React.FC = () => {
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
                 Privacy-first pain tracking with{' '}
                 <span className="text-sky-300 font-semibold">local pattern insights</span>,{' '}
-                WorkSafeBC reporting tools, and{' '}
+                <span className="text-sky-300 font-semibold">export to PDF, CSV, or WorkSafeBC format</span>, and{' '}
                 <span className="text-emerald-300 font-semibold">empathy-driven design</span>.{' '}
                 Your data stays on your device.
               </p>
@@ -197,7 +197,7 @@ export const Hero: React.FC = () => {
                   onClick={() => navigate('/start')}
                   className="btn-cta-primary text-lg px-8 py-4 flex items-center justify-center gap-3"
                 >
-                  <span>Start Free</span>
+                  <span>Start Tracking Free</span>
                   <ArrowRight className="h-5 w-5" />
                 </button>
 
@@ -222,8 +222,8 @@ export const Hero: React.FC = () => {
                   <span>No credit card</span>
                 </p>
                 <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-400">
-                  <span className="text-sky-300 font-medium">Pro Features:</span>
-                  <span>Insights • WCB reports • Shareable exports</span>
+                  <span className="text-sky-300 font-medium">Optional upgrades:</span>
+                  <span>Automated insights • Clinical PDF export • Audit logs</span>
                 </p>
               </div>
             </div>

@@ -183,6 +183,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
                 mood: entryData.mood ?? entryData.qualityOfLife?.moodImpact, // map mood impact into flattened field for analytics
                 stress: entryData.stress ?? undefined,
                 activities: entryData.activities ?? [],
+                medicationAdherence: entryData.medicationAdherence,
               };
 
               state.entries.push(newEntry);

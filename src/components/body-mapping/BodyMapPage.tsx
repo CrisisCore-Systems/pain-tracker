@@ -86,6 +86,9 @@ export function BodyMapPage() {
           <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-2">
             Recent Locations
           </h3>
+          <p className="text-xs text-blue-900/80 dark:text-blue-100/80 mb-3">
+            Tap a recent location to add it to your selection.
+          </p>
           <div className="flex flex-wrap gap-2">
             {recentLocations.map((location, idx) => (
               <button
@@ -95,7 +98,7 @@ export function BodyMapPage() {
                     setSelectedRegions([...selectedRegions, location]);
                   }
                 }}
-                className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-md text-sm text-blue-900 dark:text-blue-100 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                className="px-3 py-2 bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-700 rounded-md text-sm text-blue-900 dark:text-blue-100 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/50"
               >
                 {location}
               </button>
@@ -106,10 +109,14 @@ export function BodyMapPage() {
 
       {/* Interactive Body Map */}
       <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+        <div className="mb-3 text-sm text-gray-700 dark:text-gray-300">
+          Click or tap body regions to select them. Selected areas are highlighted.
+        </div>
         <InteractiveBodyMap
           selectedRegions={selectedRegions}
           onRegionSelect={setSelectedRegions}
           mode="selection"
+          height={720}
         />
       </div>
 

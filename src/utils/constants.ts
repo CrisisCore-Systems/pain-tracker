@@ -2,10 +2,13 @@ export const PAIN_LOCATIONS = [
   // Head & Neck
   'head',
   'neck',
+  'cervical spine',
   // Upper Body
   'shoulders',
   'upper back',
+  'thoracic spine',
   'lower back',
+  'lumbar spine',
   'chest',
   'abdomen',
   // Arms & Hands
@@ -82,6 +85,7 @@ export const PAIN_LOCATIONS = [
 export const SYMPTOMS = [
   'sharp',
   'dull',
+  'dull ache',
   'aching',
   'burning',
   'tingling',

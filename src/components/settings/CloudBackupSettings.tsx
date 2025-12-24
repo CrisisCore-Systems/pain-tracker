@@ -46,23 +46,31 @@ export default function CloudBackupSettings() {
       
       <div className="space-y-4">
         <p className="text-sm text-gray-600 dark:text-slate-400">When enabled, your data will be securely backed up to your account. Cloud backups are encrypted in transit and at rest.</p>
-        
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={handleBackupNow} 
-            disabled={!enabled || syncing}
-            className={`px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${enabled ? 'bg-gradient-to-r from-cyan-500 to-sky-500 shadow-lg shadow-cyan-500/30' : 'bg-gray-400 dark:bg-slate-600'}`}
-          >
-            {syncing ? 'Backing up...' : 'Back up now'}
-          </button>
-          <button 
-            onClick={() => setLastSync(null)} 
-            disabled={!lastSync}
-            className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
-          >
-            Clear last sync
-          </button>
-        </div>
+
+        {!enabled && (
+          <div className="rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-3 text-sm text-gray-700 dark:text-slate-300">
+            Turn on Cloud Backup to enable manual backup and sync controls.
+          </div>
+        )}
+
+        {enabled && (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleBackupNow}
+              disabled={syncing}
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-r from-cyan-500 to-sky-500 shadow-lg shadow-cyan-500/30"
+            >
+              {syncing ? 'Backing up...' : 'Back up now'}
+            </button>
+            <button
+              onClick={() => setLastSync(null)}
+              disabled={!lastSync}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/10"
+            >
+              Clear last sync
+            </button>
+          </div>
+        )}
         
         {lastSync && (
           <div className="text-xs text-gray-500 dark:text-slate-500">Last backup: {new Date(lastSync).toLocaleString()}</div>

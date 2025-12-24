@@ -152,11 +152,9 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
                 <label id="locations-label" className="text-sm font-medium text-foreground">
                   Pain Locations
                 </label>
-                {locations.length > 0 && (
-                  <Badge variant="secondary" className="text-xs">
-                    {locations.length} selected
-                  </Badge>
-                )}
+                <Badge variant={locations.length > 0 ? 'secondary' : 'outline'} className="text-xs">
+                  {locations.length} selected
+                </Badge>
               </div>
               <button
                 onClick={() => setViewMode(viewMode === 'visual' ? 'list' : 'visual')}
@@ -179,7 +177,7 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
 
             <p className="text-sm text-muted-foreground">
               {viewMode === 'visual' 
-                ? 'Click on the body map to select pain areas, or switch to list view'
+                ? 'Tap or click the body map to select pain areas, or switch to list view'
                 : 'Select all areas where you\'re experiencing pain'}
             </p>
 
@@ -190,7 +188,6 @@ export function BaselineSection({ pain, locations, symptoms, onChange }: Baselin
                   selectedRegions={selectedRegions}
                   onRegionSelect={handleRegionSelect}
                   mode="selection"
-                  compact
                   height={400}
                   showAccessibilityFeatures
                   onRequestListView={() => setViewMode('list')}

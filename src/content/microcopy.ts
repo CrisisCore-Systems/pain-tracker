@@ -19,14 +19,14 @@ import type { AdaptiveCopy, ReflectionPrompt } from '../types/tone';
 export const homeCopy = {
   /** Quick log CTA */
   quickLogCTA: {
-    base: 'Log pain (10s)',
+    base: 'Log pain (quick)',
     states: {
-      stable: 'Log today in 10 seconds',
-      rising: 'Check in (10s)',
+      stable: 'Log pain (quick)',
+      rising: 'Check in (quick)',
       flare: 'Log pain',
       recovery: 'Check in (quick)',
     },
-    mobile: 'Log (10s)',
+    mobile: 'Log pain',
   } as AdaptiveCopy,
 
   /** After log confirmation */

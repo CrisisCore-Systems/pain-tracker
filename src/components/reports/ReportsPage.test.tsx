@@ -129,11 +129,19 @@ describe('ReportsPage', () => {
     
     render(<ReportsPage entries={[oldEntry, recentEntry]} />);
     
-    // Initially shows all entries
-    expect(screen.getByText('2')).toBeInTheDocument();
+    // Default is last 7 days, so only the recent entry is included
+    expect(screen.getByText('1')).toBeInTheDocument();
     
-    // Change to last 30 days
     const dateFilter = screen.getByRole('combobox', { name: /date range/i });
+
+    // Change to all time
+    fireEvent.change(dateFilter, { target: { value: 'all' } });
+
+    await waitFor(() => {
+      expect(screen.getByText('2')).toBeInTheDocument();
+    });
+
+    // Change to last 30 days
     fireEvent.change(dateFilter, { target: { value: '30d' } });
     
     // Should now show only 1 entry

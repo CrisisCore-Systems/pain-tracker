@@ -13,7 +13,7 @@ import type {
 /**
  * Free Tier Features
  * Perfect for individuals trying out pain tracking
- * Core tracking is unlimited - upgrade for advanced analytics and exports
+ * Core tracking is unlimited - upgrade for advanced analytics and sharing
  */
 const FREE_FEATURES: TierFeatures = {
   // Storage Limits - Unlimited core tracking
@@ -32,9 +32,9 @@ const FREE_FEATURES: TierFeatures = {
 
   // Export Capabilities
   csvExport: true,
-  jsonExport: false,
-  pdfReports: false,
-  wcbReports: false,
+  jsonExport: true,
+  pdfReports: true,
+  wcbReports: true,
   clinicalPDFExport: false,
   scheduledReports: false,
   maxExportsPerMonth: 5,
@@ -282,7 +282,7 @@ const ENTERPRISE_FEATURES: TierFeatures = {
   twoFactorAuth: true,
   auditLogs: true,
   hipaaCompliance: true,
-  soc2Compliance: true,
+  soc2Compliance: false,
   customDataRetention: true,
 
   // Support
@@ -405,7 +405,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
     name: 'Free',
     tagline: 'Unlimited pain tracking, forever free',
     description:
-      'Complete pain, mood, and activity tracking with no entry limits. Upgrade for advanced analytics, AI insights, and clinical reports.',
+      'Complete pain, mood, and activity tracking with no entry limits. Upgrade for advanced analytics, automated insights, and clinical reports.',
     features: FREE_FEATURES,
     pricing: FREE_PRICING,
     limits: {
@@ -440,9 +440,9 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
   pro: {
     tier: 'pro',
     name: 'Pro',
-    tagline: 'Professional-grade pain tracking',
+    tagline: 'Clinic-ready exports & insights',
     description:
-      'Power users and healthcare coordination. Unlimited entries, predictive insights, clinical PDF exports, and HIPAA compliance.',
+      'Power users and healthcare coordination. Unlimited entries, pattern-based alerts, clinical PDF exports, and HIPAA-aligned controls.',
     features: PRO_FEATURES,
     pricing: PRO_PRICING,
     recommended: true,
@@ -461,7 +461,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
     name: 'Enterprise',
     tagline: 'Healthcare organization solution',
     description:
-      'For clinics, healthcare organizations, and large-scale deployments. Custom features, white-label options, SOC2 compliance, and dedicated support.',
+      'For clinics, healthcare organizations, and large-scale deployments. Custom features, white-label options, and dedicated support.',
     features: ENTERPRISE_FEATURES,
     pricing: ENTERPRISE_PRICING,
     limits: {
@@ -523,7 +523,7 @@ export const FEATURE_COMPARISON = {
         enterprise: true,
       },
       {
-        name: 'Predictive Insights',
+        name: 'Pattern-based alerts',
         free: false,
         basic: false,
         pro: true,
@@ -550,14 +550,14 @@ export const FEATURE_COMPARISON = {
       },
       {
         name: 'PDF Reports',
-        free: false,
+        free: true,
         basic: true,
         pro: true,
         enterprise: true,
       },
       {
         name: 'WorkSafe BC Reports',
-        free: false,
+        free: true,
         basic: true,
         pro: true,
         enterprise: true,
@@ -615,17 +615,10 @@ export const FEATURE_COMPARISON = {
         enterprise: true,
       },
       {
-        name: 'HIPAA Compliance',
+        name: 'HIPAA-aligned controls',
         free: false,
         basic: false,
         pro: true,
-        enterprise: true,
-      },
-      {
-        name: 'SOC2 Compliance',
-        free: false,
-        basic: false,
-        pro: false,
         enterprise: true,
       },
     ],

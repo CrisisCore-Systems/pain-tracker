@@ -13,13 +13,14 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../design-system/components/Card';
 import { Badge } from '../../design-system/components/Badge';
-import Chart from '../../design-system/components/Chart';
 import { colorVar } from '../../design-system/utils/theme';
 import type { PainEntry } from '../../types';
 import type { ComparisonInsight, ComparisonDataset } from '../../types/comparison';
 import type { ConditionComparison as ConditionCfg } from '../../types/comparison';
 import { DataComparisonEngine } from '../../utils/comparison/engine';
 import { cn } from '../../design-system/utils';
+import type { ChartDataPoint } from '../accessibility/ChartWithTableToggle';
+import { ChartWithTableToggle } from '../accessibility/ChartWithTableToggle';
 
 interface ConditionComparisonProps {
   entries: PainEntry[];
@@ -412,17 +413,26 @@ export function ConditionComparison({ entries, className }: ConditionComparisonP
           </div>
 
           {/* Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <BarChart3 className="h-5 w-5" />
-                <span>Pain Level Comparison</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Chart data={comparisonResult.chartData} type="bar" height={300} />
-            </CardContent>
-          </Card>
+          <ChartWithTableToggle
+            title="Pain Level Comparison"
+            description="Average pain levels for each selected condition/tag."
+            type="bar"
+            icon={BarChart3}
+            height={300}
+            chartData={comparisonResult.chartData}
+            tableData={([
+              {
+                label: comparisonResult.condition1,
+                value: comparisonResult.condition1Stats.averagePain,
+                additionalInfo: `${comparisonResult.condition1Stats.entries} entries`,
+              },
+              {
+                label: comparisonResult.condition2,
+                value: comparisonResult.condition2Stats.averagePain,
+                additionalInfo: `${comparisonResult.condition2Stats.entries} entries`,
+              },
+            ] satisfies ChartDataPoint[])}
+          />
 
           {/* Insights */}
           {comparisonResult.insights.length > 0 && (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, FileBarChart, Pill, Calendar, TrendingUp, MapPin, Sparkles, ArrowRight } from 'lucide-react';
+import { Activity, FileBarChart, Pill, Calendar, TrendingUp, MapPin, Sparkles } from 'lucide-react';
 
 const features = [
   {
@@ -12,7 +12,7 @@ const features = [
   {
     icon: TrendingUp,
     title: 'Pattern Recognition',
-    description: 'Advanced heuristic algorithms detect pain trends, flares, and correlations.',
+    description: 'Local pattern tools help you explore trends, flares, and correlations using evidence-informed heuristics (not machine learning).',
     colorClass: 'icon-purple',
     glowColor: 'rgba(168, 85, 247, 0.3)',
   },
@@ -69,7 +69,7 @@ export const FeatureShowcase: React.FC = () => {
         <div className="text-center mb-16 lg:mb-20 max-w-3xl mx-auto stagger-fade-up">
           <div className="badge-glow-emerald inline-flex items-center gap-2 mb-6">
             <Sparkles className="h-4 w-4" />
-            <span>Powerful Features</span>
+            <span>Core Features</span>
           </div>
           
           <h2 className="landing-headline landing-headline-lg mb-6">
@@ -110,20 +110,7 @@ export const FeatureShowcase: React.FC = () => {
             );
           })}
         </div>
-
-        {/* Bottom CTA */}
-        <div className="mt-16 text-center">
-          <p className="text-slate-500 mb-5">
-            Ready to take control of your pain management?
-          </p>
-          <a
-            href="/start"
-            className="inline-flex items-center gap-2 text-lg font-semibold text-emerald-400 hover:text-emerald-300 transition-all group"
-          >
-            Get Started Now
-            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </a>
-        </div>
+        {/* Bottom CTA intentionally omitted to reduce duplicate CTAs */}
       </div>
     </section>
   );

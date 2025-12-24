@@ -605,13 +605,13 @@ Mood tracking with strong privacy practices.
 
 | Criteria | Status |
 |----------|--------|
-| Data storage | ⚠️ Local by default, optional cloud backup |
-| Encryption | ⚠️ Cloud backup uses user-provided password |
+| Data storage | ⚠️ Local by default, optional account sync |
+| Encryption | ⚠️ Account sync uses user-provided password |
 | Open source | ❌ No |
 | Export | ✅ Free export (CSV) |
 | Business model | ✅ Clear premium tier, no ads |
 
-**Honest assessment:** Better than most, but not fully verifiable since closed source. The cloud backup option introduces risk if used.
+**Honest assessment:** Better than most, but not fully verifiable since closed source. Optional sync introduces risk if used.
 
 ---
 

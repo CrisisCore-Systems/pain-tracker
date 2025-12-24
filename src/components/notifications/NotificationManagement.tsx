@@ -241,6 +241,8 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
     });
   }, [notifications, filters]);
 
+  const hasAnyNotifications = notifications.length > 0;
+
   // Bulk actions
   const handleBulkMarkAsRead = async () => {
     try {
@@ -366,54 +368,66 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
-          <div className="flex-1 min-w-48">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
-              <Input
-                placeholder="Search notifications..."
-                value={filters.search}
-                onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
-                className="pl-10"
-              />
-            </div>
+        {/* Empty state (fresh account) */}
+        {!hasAnyNotifications ? (
+          <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+            <BellOff className="h-12 w-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+            <p className="font-medium text-gray-800 dark:text-gray-200">No notifications yet</p>
+            <p className="text-sm mt-1">
+              When this app creates reminders, achievements, or system updates, they’ll appear here.
+            </p>
+            <p className="text-xs mt-3">Tip: enable notifications above to allow browser alerts.</p>
           </div>
-          <Select>
-            <SelectTrigger
-              value={filters.status}
-              onValueChange={value =>
-                setFilters(prev => ({ ...prev, status: value as NotificationStatus | 'all' }))
-              }
-            >
-              <option value="all">All Status</option>
-              <option value="sent">Unread</option>
-              <option value="read">Read</option>
-              <option value="dismissed">Dismissed</option>
-              <option value="archived">Archived</option>
-            </SelectTrigger>
-          </Select>
-          <Select>
-            <SelectTrigger
-              value={filters.type}
-              onValueChange={value =>
-                setFilters(prev => ({ ...prev, type: value as NotificationType | 'all' }))
-              }
-            >
-              <option value="all">All Types</option>
-              <option value="pain_reminder">Pain Reminders</option>
-              <option value="medication_alert">Medication Alerts</option>
-              <option value="appointment_reminder">Appointment Reminders</option>
-              <option value="goal_achievement">Goal Achievements</option>
-              <option value="progress_checkin">Progress Check-ins</option>
-              <option value="system_update">System Updates</option>
-              <option value="custom">Custom</option>
-            </SelectTrigger>
-          </Select>
-        </div>
+        ) : (
+          <>
+            {/* Filters */}
+            <div className="flex flex-wrap gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+              <div className="flex-1 min-w-48">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                  <Input
+                    placeholder="Search notifications..."
+                    value={filters.search}
+                    onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <Select>
+                <SelectTrigger
+                  value={filters.status}
+                  onValueChange={value =>
+                    setFilters(prev => ({ ...prev, status: value as NotificationStatus | 'all' }))
+                  }
+                >
+                  <option value="all">All Status</option>
+                  <option value="sent">Unread</option>
+                  <option value="read">Read</option>
+                  <option value="dismissed">Dismissed</option>
+                  <option value="archived">Archived</option>
+                </SelectTrigger>
+              </Select>
+              <Select>
+                <SelectTrigger
+                  value={filters.type}
+                  onValueChange={value =>
+                    setFilters(prev => ({ ...prev, type: value as NotificationType | 'all' }))
+                  }
+                >
+                  <option value="all">All Types</option>
+                  <option value="pain_reminder">Pain Reminders</option>
+                  <option value="medication_alert">Medication Alerts</option>
+                  <option value="appointment_reminder">Appointment Reminders</option>
+                  <option value="goal_achievement">Goal Achievements</option>
+                  <option value="progress_checkin">Progress Check-ins</option>
+                  <option value="system_update">System Updates</option>
+                  <option value="custom">Custom</option>
+                </SelectTrigger>
+              </Select>
+            </div>
 
-        {/* Bulk Actions */}
-        {showBulkActions && (
+            {/* Bulk Actions */}
+            {showBulkActions && (
           <div className="flex items-center space-x-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <span className="text-sm text-blue-700">
               {selectedNotifications.size} notification{selectedNotifications.size !== 1 ? 's' : ''}{' '}
@@ -437,10 +451,10 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
               Delete
             </Button>
           </div>
-        )}
+            )}
 
-        {/* Select All */}
-        {filteredNotifications.length > 0 && (
+            {/* Select All */}
+            {filteredNotifications.length > 0 && (
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -452,39 +466,41 @@ export const NotificationManagement: React.FC<NotificationManagementProps> = ({ 
             />
             <span className="text-sm text-gray-600 dark:text-gray-400">Select all</span>
           </div>
-        )}
+            )}
 
-        {/* Notifications List */}
-        <div className="space-y-3">
-          {filteredNotifications.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-              <BellOff className="h-12 w-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-              <p>No notifications found</p>
-              <p className="text-sm">Try adjusting your filters or check back later</p>
-            </div>
-          ) : (
-            filteredNotifications.map(notification => (
-              <div key={notification.id} className="flex items-start space-x-3">
-                <input
-                  type="checkbox"
-                  checked={selectedNotifications.has(notification.id)}
-                  onChange={e => handleSelectNotification(notification.id, e.target.checked)}
-                  className="mt-4"
-                />
-                <div className="flex-1">
-                  <NotificationItem
-                    notification={notification}
-                    onMarkAsRead={handleMarkAsRead}
-                    onMarkAsUnread={handleMarkAsUnread}
-                    onDismiss={handleDismiss}
-                    onArchive={handleArchive}
-                    onDelete={handleDelete}
-                  />
+            {/* Notifications List */}
+            <div className="space-y-3">
+              {filteredNotifications.length === 0 ? (
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <BellOff className="h-12 w-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
+                  <p>No notifications found</p>
+                  <p className="text-sm">Try adjusting your filters or check back later</p>
                 </div>
-              </div>
-            ))
-          )}
-        </div>
+              ) : (
+                filteredNotifications.map(notification => (
+                  <div key={notification.id} className="flex items-start space-x-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedNotifications.has(notification.id)}
+                      onChange={e => handleSelectNotification(notification.id, e.target.checked)}
+                      className="mt-4"
+                    />
+                    <div className="flex-1">
+                      <NotificationItem
+                        notification={notification}
+                        onMarkAsRead={handleMarkAsRead}
+                        onMarkAsUnread={handleMarkAsUnread}
+                        onDismiss={handleDismiss}
+                        onArchive={handleArchive}
+                        onDelete={handleDelete}
+                      />
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

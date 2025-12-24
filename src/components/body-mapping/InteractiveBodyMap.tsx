@@ -491,7 +491,7 @@ export function InteractiveBodyMap({
       } else if (hoveredRegion === regionId) {
         return '#60a5fa'; // Blue for hover
       } else {
-        return '#e5e7eb'; // Gray for unselected
+        return '#d1d5db'; // Gray for unselected (higher contrast)
       }
     } else if (mode === 'heatmap') {
       const painData = regionPainMap.get(regionId);
@@ -518,7 +518,7 @@ export function InteractiveBodyMap({
       const intensityFactor = painData.avg / 10;
       return 0.3 + frequencyFactor * 0.3 + intensityFactor * 0.4;
     }
-    return hoveredRegion === regionId ? 0.9 : 0.7;
+    return hoveredRegion === regionId ? 0.95 : 0.85;
   };
 
   const getPainDataForRegion = (regionId: string) => {
@@ -696,6 +696,11 @@ export function InteractiveBodyMap({
                 ? `${selectedCount} region${selectedCount !== 1 ? 's' : ''} selected`
                 : `${affectedRegionsCount} region${affectedRegionsCount !== 1 ? 's' : ''} with recorded pain`}
             </p>
+            {mode === 'selection' && (
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                Tip: click/tap regions to toggle. Selected areas highlight in red.
+              </p>
+            )}
           </div>
         </div>
 
@@ -824,16 +829,16 @@ export function InteractiveBodyMap({
         <svg
           ref={svgRef}
           viewBox="0 0 300 530"
-          className="w-full mx-auto transition-transform duration-300 portrait:max-h-[55vh]"
+          className="w-full mx-auto transition-transform duration-300 portrait:max-h-[60vh]"
           style={{
             maxHeight: compact ? '400px' : `${height}px`,
-            maxWidth: '400px',
+            maxWidth: compact ? '420px' : '520px',
             transform: `scale(${zoomLevel})`,
             transformOrigin: 'center',
           }}
         >
           {/* Background */}
-          <rect x="0" y="0" width="300" height="530" fill="#ffffff" rx="15" />
+          <rect x="0" y="0" width="300" height="530" fill="transparent" rx="15" />
 
           {/* Body Outline Shadow */}
           <ellipse cx="150" cy="510" rx="40" ry="8" fill="#000000" opacity="0.1" />
@@ -866,8 +871,8 @@ export function InteractiveBodyMap({
                 <path
                   d={path}
                   fill={getRegionColor(region.id)}
-                  stroke={hoveredRegion === region.id ? '#1f2937' : '#6b7280'}
-                  strokeWidth={hoveredRegion === region.id ? '2' : '1'}
+                  stroke={hoveredRegion === region.id ? '#111827' : '#4b5563'}
+                  strokeWidth={hoveredRegion === region.id ? '2.25' : '1.25'}
                   opacity={getRegionOpacity(region.id)}
                   className="cursor-pointer transition-all duration-200 hover:brightness-110"
                   onClick={() => handleRegionClick(region.id)}

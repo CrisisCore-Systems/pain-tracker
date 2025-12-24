@@ -49,9 +49,13 @@ describe('PainTrackerContainer - entry success toast', () => {
     render(<PainTrackerContainer />);
 
     // Simulate the user logging a quick entry via the primary action -> quick log -> save
-    // 1) Click the primary "Log pain now" action
-    const logNow = await screen.findByRole('button', { name: /Log pain now/i }, { timeout: 5000 });
+    // 1) Click the primary "Quick log pain" action
+    const logNow = await screen.findByRole('button', { name: /Quick log pain/i }, { timeout: 5000 });
     await user.click(logNow);
+
+    // At least one location is required to save
+    const lowerBack = await screen.findByRole('checkbox', { name: /lower back location/i }, { timeout: 5000 });
+    await user.click(lowerBack);
 
     // 2) Quick Log is a single screen in the fused-v2 design; Save completes the entry.
     // Anchored on purpose: prevents accidentally matching unrelated "Save …" buttons.

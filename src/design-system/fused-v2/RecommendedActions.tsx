@@ -51,13 +51,13 @@ export function RecommendedActions({
         id: 'log-pain',
         priority: 'primary',
         icon: Activity,
-        title: 'Log pain now',
+        title: 'Quick log pain',
         subtitle: lastEntry
           ? `Last entry: ${Math.floor(hoursSinceLastEntry)}h ago`
-          : 'Start your tracking journey',
+          : 'Pain + location (fastest)',
         action: onLogNow,
-        badge: 'Quick',
-        estimatedTime: '~10s',
+        badge: 'Quick log',
+        estimatedTime: '~1 min',
       });
     }
 

@@ -88,8 +88,8 @@ The solution isn't to "handle offline gracefully" with error messages. It's to *
 │                      │               [When online: Background Sync] │
 │                      │                              │               │
 │                      ▼                              ▼               │
-│            User sees immediate                  Cloud backup        │
-│            success. Always.                     (if you want it)    │
+│            User sees immediate                  Backups via export  │
+│            success. Always.                     (user-controlled)   │
 │                                                                     │
 │  Benefit: Works 100% offline, syncs when it can                    │
 │                                                                     │
@@ -1307,7 +1307,7 @@ A: It varies by browser, but typically 50% of available disk space. In practice,
 A: They lose local data. This is why:
 1. Request persistent storage (prevents automatic eviction)
 2. Encourage data export/backup
-3. Optional: Offer encrypted cloud backup as a feature
+3. Encourage regular password-protected exports
 
 **Q: Does this work on iOS Safari?**
 

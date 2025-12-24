@@ -718,8 +718,7 @@ export function FeatureGate({
 
 1. **Never mix databases:** Health data MUST NOT be in same database as payment data
 2. **Minimal payment data:** Only store `customerId` and `subscriptionId` (tokens)
-3. **Zero-knowledge cloud sync:** If implemented, use E2E encryption with user-held keys
-4. **Audit trails:** Log all tier changes, feature access denials (for debugging)
+3. **Audit trails:** Log all tier changes, feature access denials (for debugging)
 
 ---
 

@@ -13,8 +13,8 @@ const benefits = [
   {
     icon: BarChart3,
     title: 'Pattern Analytics',
-    description: 'Local heuristic analytics help you explore triggers, correlations, and trends over time.',
-    stat: '10+ algorithms',
+    description: 'Local, rule-based analytics help you explore triggers, correlations, and trends over time (no ML/AI models).',
+    stat: '10+ pattern tools',
     iconClass: 'icon-sky',
     statClass: 'stat-counter-sky',
   },
@@ -30,7 +30,7 @@ const benefits = [
     icon: WifiOff,
     title: 'Works Completely Offline',
     description: 'Full functionality without internet. Progressive Web App technology ensures you can track pain anytime, anywhere.',
-    stat: '100% offline',
+    stat: 'Installable PWA',
     iconClass: 'icon-purple',
     statClass: 'stat-counter-purple',
   },
@@ -75,7 +75,7 @@ export const BenefitsGrid: React.FC = () => {
         <div className="text-center mb-16 lg:mb-20 max-w-3xl mx-auto stagger-fade-up">
           <div className="badge-glow-sky inline-flex items-center gap-2 mb-6">
             <Zap className="h-4 w-4" />
-            <span>Powerful Features</span>
+            <span>Privacy-first Features</span>
           </div>
           
           <h2 className="landing-headline landing-headline-lg mb-6">
@@ -83,7 +83,7 @@ export const BenefitsGrid: React.FC = () => {
             <span className="gradient-text-animated">Pain Tracker Pro?</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
-            Powerful features designed with your privacy, security, and well-being in mind.
+            Features designed with your privacy, security, and well-being in mind.
           </p>
         </div>
 

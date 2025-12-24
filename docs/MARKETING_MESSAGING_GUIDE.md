@@ -109,7 +109,6 @@
 > - **Appeal Letter Assistant:** AI-powered drafting that turns your pain journal into persuasive evidence
 > - **Claim Timeline Generator:** Create a visual, compelling story of your injury journey for hearings
 > - **Case Manager Reports:** Scheduled reports that keep your case manager informed without constant manual exports
-> - **Cloud Sync (Optional):** Securely sync across devices with end-to-end encryption
 > 
 > **$4.99/month or $49.99/year** (save $10)
 > 
@@ -138,7 +137,7 @@
 - "We understand. That's why our free tier has no limits. Upgrade only when your claim makes it worth it."
 
 **"Why should I pay when the free tier is so good?"**
-- "You shouldn't—unless you need Form 8/11, appeal letters, or cloud sync. Most users stay free forever."
+- "You shouldn't—unless you need Form 8/11 or appeal letters. Most users stay free forever."
 
 **"Is this a subscription trap?"**
 - "Nope. Cancel anytime. No questions asked. We're transparent or we're nothing."
@@ -329,7 +328,7 @@
 > 
 > We're building optional upgrades for power users, clinicians, and enterprises:
 > 
-> - **Professional Tier ($4.99/mo):** WorkSafeBC Form 8/11, appeal letters, cloud sync
+> - **Professional Tier ($4.99/mo):** WorkSafeBC Form 8/11, appeal letters
 > - **Clinical Tier ($19.99/mo):** Multi-patient dashboard, FHIR export, clinic branding
 > - **Enterprise Tier (custom):** Workplace safety analytics for employers
 > 
@@ -374,7 +373,6 @@
 > ✅ WorkSafeBC Form 8/11 pre-fill (save hours)
 > ✅ Appeal Letter Assistant (AI-powered drafting)
 > ✅ Claim Timeline Generator (visual evidence builder)
-> ✅ Cloud Sync (optional, E2E encrypted)
 > ✅ Custom Export Templates
 > 
 > **Your exclusive offer:**
@@ -504,7 +502,7 @@ Before any launch communication, verify:
 **Concern:** "I can't afford $5/month."
 
 **Response:**
-> "Totally understand. That's why our free tier has no limits. You never need to upgrade unless you specifically need Form 8/11, appeal letters, or cloud sync. We're not going anywhere."
+> "Totally understand. That's why our free tier has no limits. You never need to upgrade unless you specifically need Form 8/11 or appeal letters. We're not going anywhere."
 
 ---
 

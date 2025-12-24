@@ -441,11 +441,11 @@ export const PricingPage: React.FC = () => {
             />
             <FAQItem
               question="Is there a free trial?"
-              answer="Yes! Basic, Pro, and Enterprise plans all come with free trials (14, 30, and 60 days respectively). No credit card required to start."
+              answer="Yes. Paid plans include a free trial (14/30/60 days). You can also use the Free plan indefinitely—no credit card required."
             />
             <FAQItem
               question="Is my health data secure?"
-              answer="Absolutely. All plans include end-to-end encryption. Pro and Enterprise plans add HIPAA compliance and SOC2 certification for healthcare organizations."
+              answer="Absolutely. All plans use local-first storage and encryption at rest. Pro and Enterprise add audit logs and HIPAA-aligned controls; Enterprise customers can request security documentation for organizational review."
             />
             <FAQItem
               question="What payment methods do you accept?"
@@ -458,21 +458,20 @@ export const PricingPage: React.FC = () => {
         <div className="max-w-3xl mx-auto mt-20 text-center">
           <div className="glass-card-premium p-8 lg:p-12">
             <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-              Ready to transform your pain management?
+              Ready to start tracking?
             </h3>
             <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-              Join thousands of patients and clinicians using Pain Tracker Pro to understand, 
-              track, and communicate chronic pain effectively.
+              Join patients and clinicians using Pain Tracker Pro to understand, track, and communicate chronic pain effectively.
             </p>
             <button
               onClick={() => navigate('/start')}
               className="btn-cta-primary text-lg px-10 py-4 inline-flex items-center gap-3"
             >
-              Start Free Trial
+              Start Tracking Free
               <ArrowRight className="h-5 w-5" />
             </button>
             <p className="text-sm text-slate-500 mt-4">
-              No credit card required • Cancel anytime
+              Free plan available • No credit card required • Cancel anytime
             </p>
           </div>
         </div>
@@ -486,9 +485,9 @@ export const PricingPage: React.FC = () => {
  */
 export function getTopFeatures(tier: SubscriptionTier): string[] {
   const features: Record<SubscriptionTier, string[]> = {
-    free: ['50 pain entries', 'Basic analytics', 'CSV export', 'Offline mode', 'Mobile app access'],
+    free: ['Unlimited entries', 'Basic analytics', 'PDF & WCB reports (5/mo)', 'Offline mode', 'Mobile app access'],
     basic: [
-      '500 entries',
+      'Unlimited entries',
       'Advanced analytics',
       'PDF & WCB reports',
       'Family sharing (2 users)',
@@ -497,9 +496,9 @@ export function getTopFeatures(tier: SubscriptionTier): string[] {
     ],
     pro: [
       'Unlimited entries',
-      'Predictive insights',
+      'Pattern-based alerts',
       'Clinical PDF export',
-      'HIPAA compliance',
+      'HIPAA-aligned controls',
       'Healthcare API access',
       'Priority support (4h)',
     ],
@@ -507,7 +506,7 @@ export function getTopFeatures(tier: SubscriptionTier): string[] {
       'Unlimited everything',
       'Custom features',
       'White-label options',
-      'SOC2 compliance',
+      'Security documentation support',
       'Dedicated support (1h)',
       'Custom training',
     ],

@@ -198,6 +198,26 @@ function CognitiveSettings({
           checked={preferences.simplifiedMode}
           onChange={checked => onChange({ simplifiedMode: checked })}
         />
+
+        <div className="text-xs text-gray-600 dark:text-slate-400 rounded-lg border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-slate-950/30 p-3">
+          <div className="font-medium text-gray-800 dark:text-slate-200 mb-1">
+            What changes when this is {preferences.simplifiedMode ? 'on' : 'off'}
+          </div>
+          <ul className="space-y-1">
+            <li>
+              Forms show <span className="font-medium">essential sections</span> only (you can still
+              choose “Show All Sections” from within the form).
+            </li>
+            <li>
+              Advanced details are <span className="font-medium">collapsed/hidden by default</span>
+              using progressive disclosure.
+            </li>
+            <li>
+              The interface reduces <span className="font-medium">visual noise</span> (fewer
+              decorative elements and less distraction).
+            </li>
+          </ul>
+        </div>
       </SettingGroup>
 
       <SettingGroup

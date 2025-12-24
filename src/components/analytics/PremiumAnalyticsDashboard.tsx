@@ -39,9 +39,15 @@ import { hipaaComplianceService } from '../../services/HIPAACompliance';
 import type { AuditTrail } from '../../services/HIPAACompliance';
 import { analyzePatterns } from '../../utils/pain-tracker/pattern-engine';
 import type { PatternAnalysisResult } from '../../types/pattern-engine';
+import { localDayStart } from '../../utils/dates';
+import {
+  computePainProgressSinceStart,
+  buildDailyAveragePain,
+} from '../../utils/pain-tracker/progress';
 import { NerveSymptoms } from '../pain-tracker/NerveSymptoms';
 import { FunctionalLimitations } from '../pain-tracker/FunctionalLimitations';
 import { WeatherCorrelationPanel } from './WeatherCorrelationPanel';
+import { TimePeriodComparisonComponent } from '../comparison/TimePeriodComparison';
 import {
   Badge,
   type BadgeProps,
@@ -280,30 +286,46 @@ interface PremiumAnalyticsDashboardProps {
 export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps> = ({
   entries,
 }) => {
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y' | 'all'>('30d');
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y' | 'all'>('7d');
   const [view, setView] = useState<
     'overview' | 'patterns' | 'predictions' | 'clinical' | 'export' | 'insights'
   >('overview');
+
+  const timeRangeLabel = useMemo(() => {
+    switch (timeRange) {
+      case '7d':
+        return 'last 7 days';
+      case '30d':
+        return 'last 30 days';
+      case '90d':
+        return 'last 90 days';
+      case '1y':
+        return 'last year';
+      case 'all':
+        return 'all time';
+    }
+  }, [timeRange]);
 
   // Filter entries by time range
   const filteredEntries = useMemo(() => {
     if (timeRange === 'all') return entries;
 
+    // Use local calendar-day boundaries (matches dashboard cards) rather than a rolling window.
     const now = new Date();
-    const cutoff = new Date();
+    const cutoff = new Date(localDayStart(now));
 
     switch (timeRange) {
       case '7d':
-        cutoff.setDate(now.getDate() - 7);
+        cutoff.setDate(cutoff.getDate() - 7);
         break;
       case '30d':
-        cutoff.setDate(now.getDate() - 30);
+        cutoff.setDate(cutoff.getDate() - 30);
         break;
       case '90d':
-        cutoff.setDate(now.getDate() - 90);
+        cutoff.setDate(cutoff.getDate() - 90);
         break;
       case '1y':
-        cutoff.setFullYear(now.getFullYear() - 1);
+        cutoff.setFullYear(cutoff.getFullYear() - 1);
         break;
     }
 
@@ -315,6 +337,14 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
     if (filteredEntries.length === 0) {
       return createEmptyAnalyticsSnapshot();
     }
+
+    const toLocalDateKey = (timestamp: string) => {
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
 
     // Basic metrics
     const avgPain =
@@ -344,9 +374,21 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
       filteredEntries.length;
     const volatility = Math.sqrt(variance);
 
-    // Good vs Bad days
-    const goodDays = filteredEntries.filter(e => e.baselineData.pain <= 3).length;
-    const badDays = filteredEntries.filter(e => e.baselineData.pain >= 7).length;
+    // Good vs Bad days (counted by day using daily average pain)
+    const dailyBuckets: Record<string, { totalPain: number; count: number }> = {};
+    filteredEntries.forEach(entry => {
+      const key = toLocalDateKey(entry.timestamp);
+      if (!dailyBuckets[key]) {
+        dailyBuckets[key] = { totalPain: 0, count: 0 };
+      }
+      dailyBuckets[key].totalPain += entry.baselineData.pain;
+      dailyBuckets[key].count += 1;
+    });
+
+    const dailyAverages = Object.values(dailyBuckets).map(bucket => bucket.totalPain / bucket.count);
+    const daysWithEntries = dailyAverages.length;
+    const goodDays = dailyAverages.filter(avg => avg <= 3).length;
+    const badDays = dailyAverages.filter(avg => avg >= 7).length;
 
     // Location frequency analysis
     const locationCounts: Record<string, number> = {};
@@ -579,13 +621,18 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
         medicationTimingBuckets[windowInfo.id].count++;
         medicationTimingBuckets[windowInfo.id].totalReduction += reduction;
 
-        entry.medications.current.forEach(med => {
-          if (!medicationData[med.name]) {
-            medicationData[med.name] = { uses: 0, totalReduction: 0 };
+        // Only attribute reduction to a specific medication when it was logged alone.
+        // If multiple meds are taken together, a single next-entry change can't be attributed.
+        if (entry.medications.current.length === 1) {
+          const med = entry.medications.current[0];
+          if (med?.name) {
+            if (!medicationData[med.name]) {
+              medicationData[med.name] = { uses: 0, totalReduction: 0 };
+            }
+            medicationData[med.name].uses++;
+            medicationData[med.name].totalReduction += reduction;
           }
-          medicationData[med.name].uses++;
-          medicationData[med.name].totalReduction += reduction;
-        });
+        }
       }
     });
 
@@ -648,7 +695,7 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
       Math.round(
         avgPain * 10 +
           volatility * 5 +
-          (badDays / filteredEntries.length) * 30 +
+          (badDays / daysWithEntries) * 30 +
           (isIncreasing ? 20 : 0)
       )
     );
@@ -662,7 +709,7 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
           100 -
             avgPain * 10 -
             (trend > 0 ? trend : 0) +
-            (goodDays / filteredEntries.length) * 30 -
+            (goodDays / daysWithEntries) * 30 -
             volatility * 5
         )
       )
@@ -686,8 +733,8 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
 
     if (predictedFlare) {
       personalizedRecommendations.push({
-        title: 'Prepare for possible flare',
-        detail: `Probability ${predictedFlare.probability}% in the next ${predictedFlare.timeframe}. Emphasize pacing and preventive care now.`,
+        title: 'Flare alert (pattern-based)',
+        detail: `Heuristic estimate ${predictedFlare.probability}% within ${predictedFlare.timeframe}. Consider pacing and preventive care now.`,
         category: 'flare',
         emphasis: predictedFlare.severity === 'high' ? 'high' : 'medium',
       });
@@ -804,7 +851,7 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
               <div>
                 <h1 className="text-3xl font-semibold text-foreground">Premium Analytics</h1>
                 <p className="text-muted-foreground mt-1">
-                  Advanced insights powered by clinical-grade algorithms
+                  Advanced pattern recognition using statistical analysis
                 </p>
               </div>
             </div>
@@ -885,8 +932,20 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {view === 'overview' && <OverviewView analytics={analytics} entries={filteredEntries} />}
-        {view === 'patterns' && <PatternsView analytics={analytics} entries={filteredEntries} />}
+        {view === 'overview' && (
+          <OverviewView
+            analytics={analytics}
+            entries={filteredEntries}
+            timeRangeLabel={timeRangeLabel}
+          />
+        )}
+        {view === 'patterns' && (
+          <PatternsView
+            analytics={analytics}
+            entries={filteredEntries}
+            timeRangeLabel={timeRangeLabel}
+          />
+        )}
         {view === 'predictions' && <PredictionsView analytics={analytics} />}
         {view === 'clinical' && (
           <ClinicalReportView analytics={analytics} entries={filteredEntries} />
@@ -906,14 +965,41 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
 };
 
 // Overview View Component
-const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] }> = ({
-  analytics,
-  entries,
-}) => {
+const OverviewView: React.FC<{
+  analytics: AnalyticsSnapshot;
+  entries: PainEntry[];
+  timeRangeLabel: string;
+}> = ({ analytics, entries, timeRangeLabel }) => {
+  const [comparisonPreset, setComparisonPreset] = useState<'week-to-week' | 'month-to-month'>(
+    'week-to-week'
+  );
+
+  const progressSummary = useMemo(
+    () => computePainProgressSinceStart(entries, { windowDays: 14 }),
+    [entries]
+  );
+
+  const progressSparkline = useMemo(() => {
+    const daily = buildDailyAveragePain(entries);
+    return daily.map(point => point.avgPain).slice(-30);
+  }, [entries]);
+
+  const totalDaysWithEntries = useMemo(() => {
+    const keys = new Set<string>();
+    entries.forEach(entry => {
+      const date = new Date(entry.timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      keys.add(`${year}-${month}-${day}`);
+    });
+    return keys.size;
+  }, [entries]);
+
   const goodDaysSubtitle =
-    entries.length > 0
-      ? `${((analytics.goodDays / entries.length) * 100).toFixed(0)}% of total`
-      : 'No entries yet';
+    totalDaysWithEntries > 0
+      ? `pain ≤ 3 (daily avg) · ${((analytics.goodDays / totalDaysWithEntries) * 100).toFixed(0)}% of days`
+      : 'pain ≤ 3 (daily avg) · No days yet';
 
   const getIntensityBadgeVariant = (intensity: number) => {
     if (intensity >= 7) return 'destructive' as const;
@@ -941,7 +1027,7 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
         <MetricCard
           title="Average Pain Level"
           value={analytics.avgPain.toFixed(1)}
-          subtitle="out of 10"
+          subtitle={`out of 10 · ${timeRangeLabel}`}
           trend={analytics.trend}
           icon={Activity}
           color="blue"
@@ -964,14 +1050,163 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
         />
 
         <MetricCard
-          title="Risk Score"
+          title="Pain Burden Score"
           value={analytics.riskScore.toString()}
-          subtitle="out of 100"
-          trend={-analytics.improvementScore}
+          subtitle={`0–100 (heuristic; higher = more burden) · ${timeRangeLabel}`}
           icon={AlertTriangle}
           color={analytics.riskScore > 70 ? 'red' : analytics.riskScore > 40 ? 'yellow' : 'green'}
         />
       </div>
+
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between gap-4 w-full">
+            <div>
+              <div className="flex items-center gap-2">
+                <TrendingDown className="w-5 h-5 text-primary" aria-hidden />
+                <CardTitle className="text-lg">Progress since starting</CardTitle>
+              </div>
+              <CardDescription>
+                Compares your first 2 weeks of logs to your most recent 2 weeks.
+              </CardDescription>
+            </div>
+            {progressSummary ? (
+              <Badge
+                variant={
+                  progressSummary.direction === 'improving'
+                    ? 'success'
+                    : progressSummary.direction === 'worsening'
+                      ? 'destructive'
+                      : 'secondary'
+                }
+                title="This is a simple estimate based on daily averages. It may shift as you log more days."
+              >
+                {progressSummary.direction === 'improving'
+                  ? 'Improving'
+                  : progressSummary.direction === 'worsening'
+                    ? 'Worsening'
+                    : 'Stable'}
+              </Badge>
+            ) : null}
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {!progressSummary ? (
+            <p className="text-sm text-muted-foreground">
+              Keep logging for a bit longer to see a "since starting" progress estimate.
+            </p>
+          ) : (
+            <>
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+                <div>
+                  <p className="text-sm text-muted-foreground">Estimated change</p>
+                  <p className="text-2xl font-semibold text-foreground">
+                    {progressSummary.percentImproved >= 0 ? 'You\'ve improved ' : 'Pain has increased '}
+                    {Math.min(100, Math.abs(progressSummary.percentImproved)).toFixed(0)}%
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Baseline avg {progressSummary.baselineAvgPain.toFixed(1)} → Recent avg{' '}
+                    {progressSummary.recentAvgPain.toFixed(1)} (0–10)
+                  </p>
+                </div>
+
+                {progressSparkline.length > 1 ? (
+                  <div className="h-10 w-full sm:w-56" aria-hidden>
+                    <svg
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 100 40"
+                      preserveAspectRatio="none"
+                      className="overflow-visible"
+                    >
+                      <polyline
+                        fill="none"
+                        stroke="currentColor"
+                        className={
+                          progressSummary.direction === 'improving'
+                            ? 'text-success'
+                            : progressSummary.direction === 'worsening'
+                              ? 'text-destructive'
+                              : 'text-muted-foreground'
+                        }
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        points={(() => {
+                          const values = progressSparkline;
+                          const max = Math.max(...values);
+                          const min = Math.min(...values);
+                          const range = max - min || 1;
+                          return values
+                            .map((val, i) => {
+                              const x = (i / (values.length - 1)) * 100;
+                              const y = 40 - ((val - min) / range) * 34 - 3;
+                              return `${x},${y}`;
+                            })
+                            .join(' ');
+                        })()}
+                      />
+                    </svg>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="space-y-1 text-sm text-muted-foreground">
+                <p>
+                  Baseline window: {progressSummary.baselineDays} logged days · Recent window:{' '}
+                  {progressSummary.recentDays} logged days
+                </p>
+                <p>
+                  Tip: This view is meant to be gentle and directional, not a scorecard.
+                </p>
+              </div>
+            </>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between gap-4 w-full">
+            <div>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-primary" aria-hidden />
+                <CardTitle className="text-lg">Quick comparisons</CardTitle>
+              </div>
+              <CardDescription>
+                Compare this week vs last week, or this month vs last month.
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant={comparisonPreset === 'week-to-week' ? 'secondary' : 'ghost'}
+                aria-pressed={comparisonPreset === 'week-to-week'}
+                onClick={() => setComparisonPreset('week-to-week')}
+              >
+                Week
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={comparisonPreset === 'month-to-month' ? 'secondary' : 'ghost'}
+                aria-pressed={comparisonPreset === 'month-to-month'}
+                onClick={() => setComparisonPreset('month-to-month')}
+              >
+                Month
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <TimePeriodComparisonComponent
+            key={comparisonPreset}
+            entries={entries}
+            defaultComparisonType={comparisonPreset}
+          />
+        </CardContent>
+      </Card>
 
       {/* Flare Prediction Alert */}
       {analytics.predictedFlare && (
@@ -983,21 +1218,21 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                   <AlertTriangle className="w-6 h-6" aria-hidden />
                 </div>
                 <div>
-                  <CardTitle className="text-xl">Flare risk detected</CardTitle>
+                  <CardTitle className="text-xl">Flare alert (pattern-based)</CardTitle>
                   <CardDescription>
-                    Predicted within the next {analytics.predictedFlare.timeframe}
+                    Possible within the next {analytics.predictedFlare.timeframe}
                   </CardDescription>
                 </div>
               </div>
               <Badge variant="destructive" className="shrink-0">
-                {analytics.predictedFlare.probability}% probability
+                {analytics.predictedFlare.probability}% (heuristic)
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              Our predictive algorithm has identified an elevated flare likelihood based on your
-              recent patterns.
+              This alert reflects recent patterns in your logs. It is a heuristic estimate, not a
+              clinical diagnosis or medical advice.
             </p>
             <div className="space-y-2">
               <p className="text-sm font-semibold text-foreground">Recommended actions</p>
@@ -1154,7 +1389,8 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
               <CardTitle className="text-lg">Observed relief after medication</CardTitle>
             </div>
             <CardDescription>
-              Estimated from pain score change in the next logged entry (observational).
+              Estimated from entries where exactly one medication was logged, using pain score
+              change in the next entry (observational).
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -1204,10 +1440,11 @@ const OverviewView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
 };
 
 // Patterns View - Advanced Analytics
-const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[] }> = ({
-  analytics,
-  entries,
-}) => {
+const PatternsView: React.FC<{
+  analytics: AnalyticsSnapshot;
+  entries: PainEntry[];
+  timeRangeLabel: string;
+}> = ({ analytics, entries, timeRangeLabel }) => {
   const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const monthLabels = [
     'Jan',
@@ -1332,8 +1569,17 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                 <BarChart3 className="w-5 h-5 text-primary" aria-hidden />
                 <CardTitle className="text-lg">Trigger impact matrix</CardTitle>
               </div>
-              <span className="text-xs text-muted-foreground">Δ Pain vs personal baseline</span>
+              <span
+                className="text-xs text-muted-foreground"
+                title="Δ is computed as: (average pain when this trigger is logged) minus (overall average pain) within the selected time range. Negative values mean lower-than-average pain when the trigger appears. This is observational and may be confounded by when/how you log."
+              >
+                Δ Pain vs average · {timeRangeLabel}
+              </span>
             </div>
+            <CardDescription>
+              Negative Δ means lower-than-average pain when the trigger is logged (association, not
+              causation).
+            </CardDescription>
           </CardHeader>
           <CardContent>
 
@@ -1374,8 +1620,8 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
                         </td>
                         <td className="py-3 pr-4 text-xs text-muted-foreground">
                           {positive
-                            ? `${severity} association with higher pain`
-                            : `${severity} association with lower pain`}
+                            ? `${severity} association with higher-than-average pain`
+                            : `${severity} association with lower-than-average pain`}
                         </td>
                       </tr>
                     );
@@ -1386,7 +1632,7 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
           ) : (
             <div className="text-sm text-muted-foreground">
               Log triggers alongside your entries to quantify how each factor raises or lowers your
-              average pain.
+              average pain (within the selected time range).
             </div>
           )}
           </CardContent>
@@ -1497,7 +1743,13 @@ const PatternsView: React.FC<{ analytics: AnalyticsSnapshot; entries: PainEntry[
             <Card variant="filled" padding="sm" className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-semibold text-foreground">Activity level</p>
-                <p className="text-xs text-muted-foreground">
+                <p
+                  className={
+                    analytics.activityLevelStats.count > 0
+                      ? 'text-xs text-muted-foreground'
+                      : 'text-xs font-semibold text-foreground'
+                  }
+                >
                   {analytics.activityLevelStats.count > 0
                     ? `${analytics.activityLevelStats.count} logs · min ${analytics.activityLevelStats.min} · max ${analytics.activityLevelStats.max}`
                     : 'Not logged yet'}
@@ -3170,7 +3422,10 @@ const MetricCard: React.FC<MetricCardProps> = ({
             <Icon className="w-6 h-6" aria-hidden />
           </div>
           {trendBadgeVariant ? (
-            <Badge variant={trendBadgeVariant}>
+            <Badge
+              variant={trendBadgeVariant}
+              title="Trend compares the later half of the selected range to the earlier half. For pain: lower is better."
+            >
               <span className="inline-flex items-center gap-1">
                 {trendValue > 0 ? (
                   <TrendingUp className="w-3 h-3" aria-hidden />

@@ -12,22 +12,28 @@ import { Button } from '../../design-system/components/Button';
 import { Input } from '../../design-system/components/Input';
 import { Badge } from '../../design-system/components/Badge';
 import { Calendar, TrendingUp, BarChart3, Activity, RefreshCw } from 'lucide-react';
-import { PlannedFeatureNotice } from '../common/PlannedFeatureNotice';
+import {
+  ChartWithTableToggle,
+  type ChartDataPoint,
+} from '../accessibility/ChartWithTableToggle';
+import type { ComparisonChart } from '../../types/comparison';
 
 interface TimePeriodComparisonProps {
   entries: PainEntry[];
   onComparisonComplete?: (result: ComparisonResult) => void;
   className?: string;
+  defaultComparisonType?: 'day-to-day' | 'week-to-week' | 'month-to-month' | 'custom-range';
 }
 
 export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> = ({
   entries,
   onComparisonComplete,
   className = '',
+  defaultComparisonType = 'week-to-week',
 }) => {
   const [comparisonType, setComparisonType] = useState<
     'day-to-day' | 'week-to-week' | 'month-to-month' | 'custom-range'
-  >('week-to-week');
+  >(defaultComparisonType);
   const [baselineStart, setBaselineStart] = useState('');
   const [baselineEnd, setBaselineEnd] = useState('');
   const [comparisonStart, setComparisonStart] = useState('');
@@ -133,12 +139,18 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
       }
 
       // Create datasets
+      const sortByTimestampAsc = (a: PainEntry, b: PainEntry) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
+
+      const baselineEntriesSorted = [...baselineEntries].sort(sortByTimestampAsc);
+      const comparisonEntriesSorted = [...comparisonEntries].sort(sortByTimestampAsc);
+
       const datasets: ComparisonDataset[] = [
         {
           id: 'baseline',
           name: 'Baseline Period',
           description: `${baselineStart} to ${baselineEnd}`,
-          entries: baselineEntries,
+          entries: baselineEntriesSorted,
           color: '#3B82F6', // Blue
           metadata: {
             source: 'time-period-comparison',
@@ -152,7 +164,7 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
           id: 'comparison',
           name: 'Comparison Period',
           description: `${comparisonStart} to ${comparisonEnd}`,
-          entries: comparisonEntries,
+          entries: comparisonEntriesSorted,
           color: '#EF4444', // Red
           metadata: {
             source: 'time-period-comparison',
@@ -321,6 +333,132 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
 
     const { statistics } = result;
 
+    const buildLineTableData = (chart: ComparisonChart): ChartDataPoint[] => {
+      const labels = chart.data.labels ?? [];
+      const datasets = chart.data.datasets ?? [];
+      const first = datasets[0];
+      const rest = datasets.slice(1);
+
+      return labels.map((label, index) => {
+        const firstValue = Number(first?.data?.[index] ?? 0);
+        const additionalInfo = rest
+          .map(ds => {
+            const value = Number(ds?.data?.[index] ?? 0);
+            return `${ds.label ?? 'Series'}: ${value.toFixed(1)}`;
+          })
+          .join(' · ');
+
+        return {
+          label,
+          value: firstValue,
+          additionalInfo: additionalInfo || undefined,
+        };
+      });
+    };
+
+    const buildBarTableData = (chart: ComparisonChart): ChartDataPoint[] => {
+      const labels = chart.data.labels ?? [];
+      const dataset = chart.data.datasets?.[0];
+      const values = dataset?.data ?? [];
+
+      return labels.map((label, index) => ({
+        label,
+        value: Number(values[index] ?? 0),
+      }));
+    };
+
+    const boxPlotToBarChart = (
+      chart: ComparisonChart
+    ): { chartData: { labels: string[]; datasets: Array<{ label: string; data: number[]; [key: string]: unknown }> }; tableData: ChartDataPoint[] } => {
+      const periodLabels = chart.data.labels ?? [];
+      const payload = chart.data.datasets?.[0];
+      const flat = (payload?.data ?? []).map(n => Number(n ?? 0));
+      const borderColors = Array.isArray(payload?.borderColor) ? payload.borderColor : undefined;
+      const backgroundColors = Array.isArray(payload?.backgroundColor)
+        ? payload.backgroundColor
+        : undefined;
+
+      const labels = ['min', 'q1', 'median', 'q3', 'max'];
+      const datasets = periodLabels.map((period, idx) => {
+        const start = idx * 5;
+        const slice = flat.slice(start, start + 5);
+        const color = borderColors?.[idx] ?? undefined;
+        const bg = backgroundColors?.[idx] ?? undefined;
+        return {
+          label: period,
+          data: slice.length === 5 ? slice : [0, 0, 0, 0, 0],
+          borderColor: color,
+          backgroundColor: bg,
+        };
+      });
+
+      const tableData: ChartDataPoint[] = periodLabels.map((period, idx) => {
+        const start = idx * 5;
+        const [min, q1, median, q3, max] = flat.slice(start, start + 5);
+
+        return {
+          label: period,
+          value: Number(median ?? 0),
+          additionalInfo:
+            min === undefined
+              ? undefined
+              : `min ${Number(min).toFixed(1)} · q1 ${Number(q1).toFixed(1)} · q3 ${Number(q3).toFixed(1)} · max ${Number(max).toFixed(1)}`,
+        };
+      });
+
+      return { chartData: { labels, datasets }, tableData };
+    };
+
+    const renderChart = (chart: ComparisonChart) => {
+      if (chart.type === 'line') {
+        return (
+          <ChartWithTableToggle
+            key={chart.id}
+            title={chart.title}
+            description="Baseline vs comparison pain values over time."
+            type="line"
+            chartData={chart.data}
+            tableData={buildLineTableData(chart)}
+            height={300}
+            icon={BarChart3}
+          />
+        );
+      }
+
+      if (chart.type === 'bar') {
+        return (
+          <ChartWithTableToggle
+            key={chart.id}
+            title={chart.title}
+            description="Average pain levels for baseline and comparison periods."
+            type="bar"
+            chartData={chart.data}
+            tableData={buildBarTableData(chart)}
+            height={300}
+            icon={BarChart3}
+          />
+        );
+      }
+
+      if (chart.type === 'box-plot') {
+        const converted = boxPlotToBarChart(chart);
+        return (
+          <ChartWithTableToggle
+            key={chart.id}
+            title={chart.title}
+            description="Distribution summary (min, quartiles, max) for baseline and comparison periods."
+            type="bar"
+            chartData={converted.chartData}
+            tableData={converted.tableData}
+            height={300}
+            icon={BarChart3}
+          />
+        );
+      }
+
+      return null;
+    };
+
     return (
       <div className="space-y-6">
         {/* Overview Statistics */}
@@ -429,22 +567,12 @@ export const TimePeriodComparisonComponent: React.FC<TimePeriodComparisonProps> 
           </Card>
         )}
 
-        {/* Charts Placeholder */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5" />
-              Visual Comparison
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-              <BarChart3 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>Charts will be displayed here</p>
-              <PlannedFeatureNotice feature="visualComparison" />
-            </div>
-          </CardContent>
-        </Card>
+        {/* Visual Comparison */}
+        {result.charts.length > 0 && (
+          <div className="space-y-4">
+            {result.charts.map(chart => renderChart(chart)).filter(Boolean)}
+          </div>
+        )}
       </div>
     );
   };

@@ -4,7 +4,6 @@ import AlertsSettings from '../components/AlertsSettings';
 import { NotificationManagement } from '../components/notifications/NotificationManagement';
 import NotificationPreferencesPanel from '../components/settings/NotificationPreferencesPanel';
 import BackupSettings from '../components/settings/BackupSettings';
-import CloudBackupSettings from '../components/settings/CloudBackupSettings';
 import ExportSettings from '../components/settings/ExportSettings';
 import PrivacySettings from '../components/settings/PrivacySettings';
 import { Settings, Bell, Shield, Download, Eye } from 'lucide-react';
@@ -105,7 +104,6 @@ export default function SettingsPage() {
                 Backup &amp; Export
               </h3>
             </div>
-            <CloudBackupSettings />
             <ExportSettings />
             <BackupSettings />
           </div>
