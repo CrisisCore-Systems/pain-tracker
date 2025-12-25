@@ -5,9 +5,9 @@
 - [x] ✅ **Dependencies Installed** - Backend packages added (108 packages)
 - [ ] 🔧 **Stripe Products Created** - Basic & Pro tiers with pricing
 - [ ] 🗄️ **Database Setup** - PostgreSQL initialized with schema
-- [ ] 🔐 **Environment Variables** - Local and production configs
+- [x] 🔐 **Environment Variables** - Local and production configs
 - [ ] 🧪 **Local Testing** - Stripe CLI webhook testing
-- [ ] 🚀 **Vercel Deployment** - Production deployment
+- [x] 🚀 **Vercel Deployment** - Production deployment
 - [ ] 🔗 **Webhook Configuration** - Production webhook endpoint
 - [ ] ✅ **End-to-End Testing** - Full payment flow validation
 
