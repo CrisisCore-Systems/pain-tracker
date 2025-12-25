@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.1] - 2025-12-24
+
+### Added
+- **Black Box Splash Screen**: Added a "ritual" loading screen with a brutalist glitch effect to signal the secure, offline environment.
+- **Vercel Analytics**: Integrated privacy-preserving analytics to track usage patterns.
+
 ## [1.0.0] - 2025-12-24
 
 ### Changed

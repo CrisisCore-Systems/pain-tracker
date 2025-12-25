@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Suspense, useEffect, lazy } from "react";
+import { Suspense, useEffect, lazy, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ThemeProvider } from "./design-system";
@@ -26,10 +26,11 @@ import { VaultGate } from './components/security/VaultGate';
 import { usePatternAlerts } from './hooks/usePatternAlerts';
 import { usePainTrackerStore, selectEntries } from './stores/pain-tracker-store';
 import { OfflineBanner } from './components/pwa/OfflineIndicator';
-import { BrandedLoadingScreen } from './components/branding/BrandedLoadingScreen';
+import { BlackBoxSplashScreen } from './components/branding/BlackBoxSplashScreen';
 import { pwaManager } from './utils/pwa-utils';
 import { ToneStateTester } from './components/dev/ToneStateTester';
 import { trackSessionStart as trackUsageSessionStart } from './utils/usage-tracking';
+import { Analytics } from "@vercel/analytics/react";
 
 // Lazy-loaded route components for code splitting
 const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
@@ -60,10 +61,18 @@ const ErrorFallback = () => {
 };
 
 const LoadingFallback = () => {
-  return <BrandedLoadingScreen message="Loading Pain Tracker Pro..." />;
+  return <BlackBoxSplashScreen message="Loading..." />;
 };
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  // Ritual: Show splash screen for at least 2.5s on startup
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Initialize global accessibility features
   useGlobalAccessibility({
     enableValidation: import.meta.env.DEV,
@@ -167,8 +176,13 @@ function App() {
   // when deploying to a true subpath without server-side rewriting.
   // For now, leave basename empty - Vite's base config handles asset paths.
 
+  if (showSplash) {
+    return <BlackBoxSplashScreen />;
+  }
+
   return (
     <BrowserRouter>
+      <Analytics />
       <ThemeProvider>
         <SubscriptionProvider>
           <ToneProvider>

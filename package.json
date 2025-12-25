@@ -1,7 +1,7 @@
 {
   "name": "pain-tracker",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "A comprehensive tool for tracking and managing chronic pain and injuries",
   "author": "CrisisCore-Systems",
@@ -104,10 +104,8 @@
     "e2e:screenshots:mobile": "npx playwright test e2e/tests/screenshots.spec.ts --project=mobile-chrome --config=e2e/playwright.config.ts",
     "e2e:pwa:report": "node scripts/run-pwa-tests.js",
     "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
-    "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
-    ,
-    "wcb:sample-pdf": "tsx scripts/generate-wcb-sample-pdf.ts"
-    ,
+    "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1",
+    "wcb:sample-pdf": "tsx scripts/generate-wcb-sample-pdf.ts",
     "devto:dry-run": "node scripts/devto/devto.mjs dry-run",
     "devto:create-drafts": "node scripts/devto/devto.mjs create-drafts --write",
     "devto:publish-due": "node scripts/devto/devto.mjs publish-due --yes",
@@ -137,6 +135,7 @@
     "@types/crypto-js": "^4.2.2",
     "@types/pg": "^8.15.6",
     "@types/qrcode": "^1.5.6",
+    "@vercel/analytics": "^1.6.1",
     "baseline-browser-mapping": "^2.9.3",
     "bcrypt": "^6.0.0",
     "chart.js": "^4.4.7",
