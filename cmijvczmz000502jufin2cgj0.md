@@ -7,7 +7,6 @@ cuid: cmijvczmz000502jufin2cgj0
 slug: i-built-a-crisis-detection-engine-that-never-phones-home
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1764314379127/cf7d89c5-b846-415b-bdd7-992500592757.png
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764394821313/b090c279-d3b3-4a37-9197-f0fa5f172a2b.png
-tags: ux, opensource, accessibility, webdev, privacy, reactjs, pwa, mental-health, chronic-pain
 
 ---
 
@@ -233,11 +232,11 @@ When your pain spikes to 9/10, you don't get a sterile notification—you get ac
 
 * ❌ **No network calls** for crisis detection (seriously, search the codebase)
     
-* ❌ **No default transmission** of your mental-state or note content
+* ❌ **No telemetry** about your mental state
     
 * ❌ **No cloud storage** of health data
     
-* ❌ **No third-party analytics** receives your pain notes; optional anonymous usage analytics may be enabled by deployment
+* ❌ **No third-party analytics** tracking your pain patterns
     
 * ❌ **No device fingerprinting**
     
@@ -360,4 +359,18 @@ That's what trauma-informed technology actually looks like. That's privacy by ar
 
 ---
 
-[*Pain Tracker*](https://paintracker.ca) *is a privacy-first PWA for chronic pain tracking with offline functionality, clinical exports, and WorkSafe BC compliance. All health data stays on your device. MIT Licensed.*
+[*Pain Tracker*](https://paintracker.ca) *is a privacy-first PWA for chronic pain tracking with offline functionality, clinical exports, and WorkSafe BC compliance. All health data stays on your device. MIT Licensed. Currently in beta.*
+
+---
+
+### 🚀 Take Control of Your Pain Management
+
+**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+
+-   **Secure:** Your data never leaves your device.
+-   **Fast:** One-tap logging for crisis moments.
+-   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
+
+👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
+
+*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
