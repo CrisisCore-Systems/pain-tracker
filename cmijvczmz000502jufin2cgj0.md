@@ -10,6 +10,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764394821313/b090c
 
 ---
 
+> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+
 # **Trauma-informed design left everyone asking: "How does it actually know I'm struggling without spying?"**
 
 This answers it—with real code and real ethics.
@@ -363,14 +365,11 @@ That's what trauma-informed technology actually looks like. That's privacy by ar
 
 ---
 
-### 🚀 Take Control of Your Pain Management
+### 💬 Discussion
+**What health app has failed you in crisis? Share below.**
 
-**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+### 🛠️ Contribute
+See something to improve? [Open an issue →](https://github.com/CrisisCore-Systems/pain-tracker/issues)
 
--   **Secure:** Your data never leaves your device.
--   **Fast:** One-tap logging for crisis moments.
--   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
-
-👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
-
-*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
+### 📬 Stay Updated
+[Get notified when I publish technical deep-dives](https://blog.paintracker.ca/newsletter)
