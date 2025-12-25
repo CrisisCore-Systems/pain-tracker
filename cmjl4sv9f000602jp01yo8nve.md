@@ -6,7 +6,6 @@ datePublished: Thu Dec 25 2025 07:38:49 GMT+0000 (Coordinated Universal Time)
 cuid: cmjl4sv9f000602jp01yo8nve
 slug: how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1766648528086/043e6b0c-34a1-4dee-9460-9fce5989546b.jpeg
-tags: accessibility, privacy, typescript, pwa, healthcare
 
 ---
 
@@ -238,3 +237,17 @@ The export includes whatever data exists in the selected date range. More consis
 ---
 
 *Composite example based on aggregated usage patterns. Individual results vary. Pain Tracker Pro is not affiliated with, endorsed by, or connected to WorkSafeBC. This post is informational only and not medical or legal advice.*
+
+---
+
+### 🚀 Take Control of Your Pain Management
+
+**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+
+-   **Secure:** Your data never leaves your device.
+-   **Fast:** One-tap logging for crisis moments.
+-   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
+
+👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
+
+*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
