@@ -2,7 +2,7 @@
 title: "Comprehensive Article Review & Analysis Report"
 datePublished: Thu Dec 25 2025 10:17:11 GMT+0000 (Coordinated Universal Time)
 cuid: cmjlagirw000702jla2zvcyiy
-slug: comprehensive-article-review-and-analysis-report
+slug: comprehensive-article-review-and-analysis-report--deleted
 tags: audit, content-strategy, building-in-public, transparency
 
 ---
