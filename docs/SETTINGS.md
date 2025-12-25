@@ -11,14 +11,13 @@ This document explains each setting in Pain Tracker, its impact, and privacy imp
 
 ## Privacy Controls
 - **Share De-identified Data:** Allows sharing of aggregated, de-identified data for research. Disabled by default.
-- **Analytics & Telemetry:** Anonymous usage statistics to improve features. Disabled by default; no Class A data collected.
+- **Analytics & Telemetry:** Optional anonymous usage analytics. Remote analytics is enabled/disabled at build/deploy time via `VITE_ENABLE_ANALYTICS`.
 - **Data Retention:** Choose how long your data is kept before automatic deletion (30, 90, 365 days, or indefinitely).
 
 ## Notification Preferences
 - **Enable Notifications:** Master switch for all notifications.
-- **Delivery Methods:** Choose browser, in-app, email, or SMS notifications.
-- **Quiet Hours:** Set times when notifications are suppressed.
-- **Frequency Limits:** Control how often notifications are sent.
+- **Delivery Methods:** Browser + in-app toggles are available in the Settings UI. Email/SMS are stored as preferences but require additional delivery integrations.
+- **Quiet Hours / Frequency Limits:** Present in the notification-preferences model, but not currently exposed in the Settings UI.
 
 ## Backup & Restore
 - **Export Backup:** Download all settings and data as a JSON file for safekeeping.
@@ -28,15 +27,15 @@ This document explains each setting in Pain Tracker, its impact, and privacy imp
 - **Theme:** Choose dark, light, or auto (system) mode. No impact on data or privacy.
 
 ## Account Management
-- **Change Password:** Update your password securely.
-- **Two-Factor Authentication:** Add extra security to your account.
-- **Session Management:** View and manage active sessions/devices.
+- **Change Password / 2FA / Sessions:** Account Management UI exists, but is currently a placeholder and not wired to a production account system.
+- **No server account recovery:** There is no “forgot password” email flow because there is no backend account by default.
 
 ---
 
 ## Privacy Implications
 - By default, all data is stored locally and encrypted. No Class A health data leaves your device unless you explicitly export or share.
-- You control all optional data sharing and analytics.
+- Optional analytics behavior depends on deploy/build configuration (`VITE_ENABLE_ANALYTICS`) and the in-app consent prompt.
+- The Settings toggle stores your preference, but remote analytics script loading is currently controlled by `VITE_ENABLE_ANALYTICS`.
 
 ---
 

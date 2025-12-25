@@ -18,6 +18,7 @@ export default function PHQ9({ onClose }: { onClose?: () => void }) {
 
   function submit() {
     const score = answers.reduce((a, b) => a + b, 0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     addMoodEntry({ mood: 'phq9', notes: `PHQ-9 score: ${score}` } as any);
     onClose?.();
   }

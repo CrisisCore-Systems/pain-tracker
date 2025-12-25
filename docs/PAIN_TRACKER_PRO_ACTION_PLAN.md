@@ -10,7 +10,7 @@ This document converts the external “Pain Tracker Pro” requirements list int
 ## Non‑Negotiable Constraints (Project Rules)
 
 - **Local‑first** by default (Class A data stays on device)
-- **No telemetry by default**
+- **No Class A telemetry by default** (optional anonymous usage analytics may be enabled by deploy/build config such as `VITE_ENABLE_ANALYTICS`)
 - **WCAG 2.2 AA target**
 - **Security‑critical boundaries require human review**: exports/report formats, crypto/key handling, network calls/telemetry, crisis escalation logic.
 

@@ -233,11 +233,11 @@ When your pain spikes to 9/10, you don't get a sterile notification—you get ac
 
 * ❌ **No network calls** for crisis detection (seriously, search the codebase)
     
-* ❌ **No telemetry** about your mental state
+* ❌ **No default transmission** of your mental-state or note content
     
 * ❌ **No cloud storage** of health data
     
-* ❌ **No third-party analytics** tracking your pain patterns
+* ❌ **No third-party analytics** receives your pain notes; optional anonymous usage analytics may be enabled by deployment
     
 * ❌ **No device fingerprinting**
     

@@ -14,6 +14,13 @@ declare module 'jspdf' {
 export class PDFExportService {
   private doc: jsPDFType | null = null;
 
+  private readonly marginX = 20;
+  private readonly marginTop = 24;
+  private readonly marginBottom = 20;
+  private readonly contentFontSize = 11;
+  private readonly sectionFontSize = 14;
+  private readonly titleFontSize = 20;
+
   constructor() {
     // Lazy initialization - doc created when needed
   }
@@ -24,7 +31,18 @@ export class PDFExportService {
   private async initializePDF(): Promise<jsPDFType> {
     if (this.doc) return this.doc;
 
-    const [{ default: jsPDF }, _] = await Promise.all([import('jspdf'), import('jspdf-autotable')]);
+    const [{ default: jsPDF }, autoTableModule] = await Promise.all([
+      import('jspdf'),
+      import('jspdf-autotable'),
+    ]);
+
+    // In some runtimes (notably Node/tsx), importing jspdf-autotable does not
+    // automatically attach the plugin to jsPDF instances.
+    const applyPlugin = (autoTableModule as unknown as { applyPlugin?: (jspdf: unknown) => void })
+      .applyPlugin;
+    if (typeof applyPlugin === 'function') {
+      applyPlugin(jsPDF);
+    }
 
     this.doc = new jsPDF();
     return this.doc;
@@ -33,17 +51,56 @@ export class PDFExportService {
   /**
    * Generate a WCB report PDF
    */
-  async generateWCBReport(report: WCBReport): Promise<Blob> {
+  async generateWCBReport(
+    report: WCBReport,
+    options?: {
+      watermarkText?: string;
+    }
+  ): Promise<Blob> {
     // Dynamically load jsPDF libraries (allow errors to surface naturally for upstream handling)
     await this.initializePDF();
     this.setupDocument();
-    this.addHeader(report);
-    this.addPainTrends(report);
-    this.addWorkImpact(report);
-    this.addFunctionalAnalysis(report);
-    this.addTreatments(report);
-    this.addRecommendations(report);
+
+    let y = this.addHeader(report);
+    y = this.addPainTrends(report, y);
+    y = this.addWorkImpact(report, y);
+    y = this.addFunctionalAnalysis(report, y);
+    y = this.addTreatments(report, y);
+    this.addRecommendations(report, y);
+    this.addFooter();
+
+    if (options?.watermarkText) {
+      this.applyWatermark(options.watermarkText);
+    }
+
     return this.doc!.output('blob');
+  }
+
+  private applyWatermark(text: string): void {
+    if (!this.doc) return;
+
+    const pageCount = this.doc.getNumberOfPages();
+    const { width, height } = this.doc.internal.pageSize;
+
+    for (let page = 1; page <= pageCount; page++) {
+      this.doc.setPage(page);
+
+      this.doc.setFont('helvetica', 'bold');
+      this.doc.setFontSize(42);
+      this.doc.setTextColor(200, 200, 200);
+
+      // jsPDF typings for text options can lag behind runtime capabilities.
+      // Keep this narrowly-cast to avoid widening types across the app.
+      this.doc.text(text, width / 2, height / 2, {
+        align: 'center',
+        angle: 35,
+      } as unknown as Record<string, unknown>);
+    }
+
+    // Reset to sane defaults for any future operations on the same doc instance.
+    this.doc.setTextColor(0, 0, 0);
+    this.doc.setFontSize(11);
+    this.doc.setFont('helvetica', 'normal');
   }
 
   /**
@@ -84,265 +141,256 @@ export class PDFExportService {
     });
   }
 
-  private addHeader(report: WCBReport): void {
-    // Title
-    this.doc!.setFontSize(20);
-    this.doc!.setFont('helvetica', 'bold');
-    this.doc!.text('Workers Compensation Board', 20, 30);
-    this.doc!.text('Pain Tracking Report', 20, 40);
+  private getPageSize(): { width: number; height: number } {
+    const { width, height } = this.doc!.internal.pageSize;
+    return { width, height };
+  }
 
-    // Period
+  private getContentWidth(): number {
+    const { width } = this.getPageSize();
+    return width - this.marginX * 2;
+  }
+
+  private ensureSpace(y: number, needed: number): number {
+    const { height } = this.getPageSize();
+    if (y + needed <= height - this.marginBottom) return y;
+    this.doc!.addPage();
+    return this.marginTop;
+  }
+
+  private writeSectionTitle(title: string, y: number): number {
+    y = this.ensureSpace(y, 18);
+    this.doc!.setFontSize(this.sectionFontSize);
+    this.doc!.setFont('helvetica', 'bold');
+    this.doc!.text(title, this.marginX, y);
+    return y + 10;
+  }
+
+  private writeParagraph(text: string, y: number): number {
+    y = this.ensureSpace(y, 14);
+    this.doc!.setFontSize(this.contentFontSize);
+    this.doc!.setFont('helvetica', 'normal');
+    const lines = this.doc!.splitTextToSize(text, this.getContentWidth());
+    this.doc!.text(lines, this.marginX, y);
+    return y + lines.length * 5 + 4;
+  }
+
+  private addHeader(report: WCBReport): number {
+    let y = this.marginTop;
+
+    // Title
+    this.doc!.setFontSize(this.titleFontSize);
+    this.doc!.setFont('helvetica', 'bold');
+    this.doc!.text('Workers Compensation Board', this.marginX, y);
+    y += 10;
+    this.doc!.text('Pain Tracking Report', this.marginX, y);
+    y += 14;
+
+    // Meta
     this.doc!.setFontSize(12);
     this.doc!.setFont('helvetica', 'normal');
-    this.doc!.text(
-      `Report Period: ${new Date(report.period.start).toLocaleDateString()} - ${new Date(report.period.end).toLocaleDateString()}`,
-      20,
-      60
-    );
+    const period = `Report Period: ${new Date(report.period.start).toLocaleDateString()} - ${new Date(report.period.end).toLocaleDateString()}`;
+    y = this.writeParagraph(period, y);
 
-    // Generated date
-    this.doc!.text(
-      `Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`,
-      20,
-      70
-    );
+    const generated = `Generated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
+    y = this.writeParagraph(generated, y);
 
-    this.doc!.line(20, 80, 190, 80);
+    const { width } = this.getPageSize();
+    this.doc!.setDrawColor(180);
+    this.doc!.line(this.marginX, y, width - this.marginX, y);
+    this.doc!.setDrawColor(0);
+    return y + 12;
   }
 
-  private addPainTrends(report: WCBReport): void {
-    let yPosition = 90;
+  private addPainTrends(report: WCBReport, startY: number): number {
+    let y = this.writeSectionTitle('Pain Trends', startY);
 
-    // Section header
-    this.doc!.setFontSize(14);
-    this.doc!.setFont('helvetica', 'bold');
-    this.doc!.text('Pain Trends', 20, yPosition);
-    yPosition += 10;
+    y = this.writeParagraph(`Average Pain Level: ${report.painTrends.average.toFixed(1)}/10`, y);
 
-    // Average pain
-    this.doc!.setFontSize(11);
-    this.doc!.setFont('helvetica', 'normal');
-    this.doc!.text(`Average Pain Level: ${report.painTrends.average.toFixed(1)}/10`, 20, yPosition);
-    yPosition += 10;
-
-    // Pain locations
-    if (Object.keys(report.painTrends.locations).length > 0) {
-      this.doc!.text('Common Pain Locations:', 20, yPosition);
-      yPosition += 8;
-
-      const locationData = Object.entries(report.painTrends.locations)
-        .sort(([, a], [, b]) => (Number(b) as unknown as number) - (Number(a) as unknown as number))
-        .map(([location, count]) => [location, String(count)]);
-
-      this.doc!.autoTable({
-        startY: yPosition,
-        head: [['Location', 'Occurrences']],
-        body: locationData,
-        margin: { left: 20 },
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [41, 128, 185] },
-      });
-    } else {
-      this.doc!.text('No pain location data recorded.', 20, yPosition);
-      yPosition += 10;
+    if (Object.keys(report.painTrends.locations).length === 0) {
+      return this.writeParagraph('No pain location data recorded.', y);
     }
+
+    y = this.writeParagraph('Common Pain Locations:', y);
+
+    const locationData = Object.entries(report.painTrends.locations)
+      .sort(([, a], [, b]) => Number(b) - Number(a))
+      .map(([location, count]) => [location, String(count)]);
+
+    y = this.ensureSpace(y, 30);
+    this.doc!.autoTable({
+      startY: y,
+      head: [['Location', 'Occurrences']],
+      body: locationData,
+      margin: { left: this.marginX, right: this.marginX },
+      styles: { fontSize: 10, cellPadding: 2 },
+      headStyles: { fillColor: [41, 128, 185] },
+    });
+
+    return (this.doc!.lastAutoTable?.finalY ?? y) + 12;
   }
 
-  private addWorkImpact(report: WCBReport): void {
-    // Section header
-    this.doc!.setFontSize(14);
-    this.doc!.setFont('helvetica', 'bold');
-    this.doc!.text('Work Impact', 20, this.doc!.internal.pageSize.height > 150 ? 150 : 120);
-    let yPosition = this.doc!.internal.pageSize.height > 150 ? 160 : 130;
+  private addWorkImpact(report: WCBReport, startY: number): number {
+    let y = this.writeSectionTitle('Work Impact', startY);
 
-    // Missed days
-    this.doc!.setFontSize(11);
-    this.doc!.setFont('helvetica', 'normal');
-    this.doc!.text(`Missed Work Days: ${report.workImpact.missedDays}`, 20, yPosition);
-    yPosition += 10;
+    y = this.writeParagraph(`Missed Work Days: ${report.workImpact.missedDays}`, y);
 
-    // Limitations
     if (report.workImpact.limitations.length > 0) {
-      this.doc!.text('Work Limitations:', 20, yPosition);
-      yPosition += 8;
+      y = this.writeParagraph('Work Limitations:', y);
 
-      const limitationData = report.workImpact.limitations.map(
-        ([limitation, frequency]: [string, number]) => [limitation, frequency.toString()]
-      );
+      const limitationData = report.workImpact.limitations.map(([limitation, frequency]) => [
+        limitation,
+        frequency.toString(),
+      ]);
 
+      y = this.ensureSpace(y, 30);
       this.doc!.autoTable({
-        startY: yPosition,
+        startY: y,
         head: [['Limitation', 'Frequency']],
         body: limitationData,
-        margin: { left: 20 },
-        styles: { fontSize: 10 },
+        margin: { left: this.marginX, right: this.marginX },
+        styles: { fontSize: 10, cellPadding: 2 },
         headStyles: { fillColor: [231, 76, 60] },
       });
 
-      yPosition = this.doc!.lastAutoTable!.finalY! + 15;
+      y = (this.doc!.lastAutoTable?.finalY ?? y) + 12;
     }
 
-    // Accommodations
     if (report.workImpact.accommodationsNeeded.length > 0) {
-      this.doc!.text('Workplace Accommodations Needed:', 20, yPosition);
-      yPosition += 8;
+      y = this.writeParagraph('Workplace Accommodations Needed:', y);
 
-      const accommodationData = report.workImpact.accommodationsNeeded.map((acc: string) => [acc]);
+      const accommodationData = report.workImpact.accommodationsNeeded.map((acc) => [acc]);
 
+      y = this.ensureSpace(y, 30);
       this.doc!.autoTable({
-        startY: yPosition,
+        startY: y,
         head: [['Accommodation']],
         body: accommodationData,
-        margin: { left: 20 },
-        styles: { fontSize: 10 },
+        margin: { left: this.marginX, right: this.marginX },
+        styles: { fontSize: 10, cellPadding: 2 },
         headStyles: { fillColor: [46, 204, 113] },
       });
+
+      y = (this.doc!.lastAutoTable?.finalY ?? y) + 12;
     }
+
+    return y;
   }
 
-  private addFunctionalAnalysis(report: WCBReport): void {
-    // Check if we need a new page
-    let yPosition = this.doc!.lastAutoTable?.finalY || 200;
-    if (yPosition > 250) {
-      this.doc!.addPage();
-      yPosition = 30;
-    }
+  private addFunctionalAnalysis(report: WCBReport, startY: number): number {
+    let y = this.writeSectionTitle('Functional Analysis', startY);
 
-    // Section header
-    this.doc!.setFontSize(14);
-    this.doc!.setFont('helvetica', 'bold');
-    this.doc!.text('Functional Analysis', 20, yPosition);
-    yPosition += 10;
-
-    this.doc!.setFontSize(11);
-    this.doc!.setFont('helvetica', 'normal');
-
-    // Limitations
     if (report.functionalAnalysis.limitations.length > 0) {
-      this.doc!.text('Functional Limitations:', 20, yPosition);
-      yPosition += 8;
+      y = this.writeParagraph('Functional Limitations:', y);
 
-      const limitationData = report.functionalAnalysis.limitations.map((lim: string) => [lim]);
+      const limitationData = report.functionalAnalysis.limitations.map((lim) => [lim]);
 
+      y = this.ensureSpace(y, 30);
       this.doc!.autoTable({
-        startY: yPosition,
+        startY: y,
         head: [['Limitation']],
         body: limitationData,
-        margin: { left: 20 },
-        styles: { fontSize: 10 },
+        margin: { left: this.marginX, right: this.marginX },
+        styles: { fontSize: 10, cellPadding: 2 },
         headStyles: { fillColor: [155, 89, 182] },
       });
 
-      yPosition = this.doc!.lastAutoTable!.finalY! + 15;
+      y = (this.doc!.lastAutoTable?.finalY ?? y) + 12;
     }
 
-    // Changes over time
     if (
       report.functionalAnalysis.deterioration.length > 0 ||
       report.functionalAnalysis.improvements.length > 0
     ) {
-      this.doc!.text('Changes Over Time:', 20, yPosition);
-      yPosition += 8;
+      y = this.writeParagraph('Changes Over Time:', y);
 
       const changes = [
-        ...report.functionalAnalysis.deterioration.map((change: string) => [
-          'Deterioration',
-          change,
-        ]),
-        ...report.functionalAnalysis.improvements.map((change: string) => ['Improvement', change]),
+        ...report.functionalAnalysis.deterioration.map((change) => ['Deterioration', change]),
+        ...report.functionalAnalysis.improvements.map((change) => ['Improvement', change]),
       ];
 
+      y = this.ensureSpace(y, 30);
       this.doc!.autoTable({
-        startY: yPosition,
+        startY: y,
         head: [['Type', 'Description']],
         body: changes,
-        margin: { left: 20 },
-        styles: { fontSize: 10 },
+        margin: { left: this.marginX, right: this.marginX },
+        styles: { fontSize: 10, cellPadding: 2 },
         headStyles: { fillColor: [230, 126, 34] },
       });
+
+      y = (this.doc!.lastAutoTable?.finalY ?? y) + 12;
     }
+
+    return y;
   }
 
-  private addTreatments(report: WCBReport): void {
-    // Check if we need a new page
-    let yPosition = this.doc!.lastAutoTable?.finalY || 200;
-    if (yPosition > 220) {
-      this.doc!.addPage();
-      yPosition = 30;
-    }
+  private addTreatments(report: WCBReport, startY: number): number {
+    let y = this.writeSectionTitle('Treatments', startY);
 
-    // Section header
-    this.doc!.setFontSize(14);
-    this.doc!.setFont('helvetica', 'bold');
-    this.doc!.text('Treatments', 20, yPosition);
-    yPosition += 10;
-
-    this.doc!.setFontSize(11);
-    this.doc!.setFont('helvetica', 'normal');
-
-    // Current treatments
     if (report.treatments.current.length > 0) {
-      this.doc!.text('Current Treatments:', 20, yPosition);
-      yPosition += 8;
+      y = this.writeParagraph('Current Treatments:', y);
 
-      const treatmentData = report.treatments.current.map(
-        (treatment: { treatment: string; frequency: number }) => [
-          treatment.treatment,
-          treatment.frequency.toString(),
-        ]
-      );
+      const treatmentData = report.treatments.current.map((treatment) => [
+        treatment.treatment,
+        treatment.frequency.toString(),
+      ]);
 
+      y = this.ensureSpace(y, 30);
       this.doc!.autoTable({
-        startY: yPosition,
+        startY: y,
         head: [['Treatment', 'Frequency']],
         body: treatmentData,
-        margin: { left: 20 },
-        styles: { fontSize: 10 },
+        margin: { left: this.marginX, right: this.marginX },
+        styles: { fontSize: 10, cellPadding: 2 },
         headStyles: { fillColor: [26, 188, 156] },
       });
 
-      yPosition = this.doc!.lastAutoTable!.finalY! + 10;
+      y = (this.doc!.lastAutoTable?.finalY ?? y) + 12;
     }
 
-    // Effectiveness
-    this.doc!.text(`Treatment Effectiveness: ${report.treatments.effectiveness}`, 20, yPosition);
+    return this.writeParagraph(`Treatment Effectiveness: ${report.treatments.effectiveness}`, y);
   }
 
-  private addRecommendations(report: WCBReport): void {
-    // Check if we need a new page
-    let yPosition = this.doc!.lastAutoTable?.finalY || 250;
-    if (yPosition > 200) {
-      this.doc!.addPage();
-      yPosition = 30;
-    }
+  private addRecommendations(report: WCBReport, startY: number): number {
+    let y = this.writeSectionTitle('Recommendations', startY);
 
-    // Section header
-    this.doc!.setFontSize(14);
-    this.doc!.setFont('helvetica', 'bold');
-    this.doc!.text('Recommendations', 20, yPosition);
-    yPosition += 10;
-
-    this.doc!.setFontSize(11);
+    this.doc!.setFontSize(this.contentFontSize);
     this.doc!.setFont('helvetica', 'normal');
 
-    // Recommendations list
-    report.recommendations.forEach((recommendation: string, index: number) => {
-      const lines = this.doc!.splitTextToSize(recommendation, 160);
-      this.doc!.text(`${index + 1}.`, 20, yPosition);
-      this.doc!.text(lines, 30, yPosition);
-      yPosition += lines.length * 5 + 3;
+    const contentWidth = this.getContentWidth();
+    const bulletIndent = 8;
+    const textX = this.marginX + bulletIndent;
+    const maxTextWidth = contentWidth - bulletIndent;
+
+    report.recommendations.forEach((recommendation, index) => {
+      y = this.ensureSpace(y, 18);
+      const lines = this.doc!.splitTextToSize(recommendation, maxTextWidth);
+      this.doc!.text(`${index + 1}.`, this.marginX, y);
+      this.doc!.text(lines, textX, y);
+      y += lines.length * 5 + 4;
     });
 
-    // Footer
-    const pageHeight = this.doc!.internal.pageSize.height;
-    this.doc!.setFontSize(8);
-    this.doc!.setFont('helvetica', 'italic');
-    this.doc!.text(
-      'Generated by Pain Tracker Pro - Confidential Medical Information',
-      20,
-      pageHeight - 20
-    );
-    this.doc!.text(`Page ${this.doc!.getNumberOfPages()}`, 180, pageHeight - 20);
+    return y;
+  }
+
+  private addFooter(): void {
+    const pageCount = this.doc!.getNumberOfPages();
+    const { height, width } = this.getPageSize();
+
+    for (let page = 1; page <= pageCount; page++) {
+      this.doc!.setPage(page);
+      this.doc!.setFontSize(8);
+      this.doc!.setFont('helvetica', 'italic');
+      this.doc!.setTextColor(90);
+
+      this.doc!.text('Generated by Pain Tracker Pro', this.marginX, height - 12);
+      this.doc!.text(`Page ${page} of ${pageCount}`, width - this.marginX, height - 12, {
+        align: 'right',
+      } as unknown as Record<string, unknown>);
+    }
+
+    this.doc!.setTextColor(0);
   }
 }
 

@@ -17,14 +17,6 @@ function pearsonCorrelation(x: number[], y: number[]): number | null {
   return num / denom;
 }
 // --- Medication Effectiveness Analytics ---
-interface MedicationEffectivenessStats {
-  total: number;
-  effective: number;
-  notEffective: number;
-  madeWorse: number;
-  unknown: number;
-  percentEffective: number;
-}
 
 // Simple confidence interval for proportion (Wald, for demo)
 function proportionCI(successes: number, n: number, z = 1.96) {
@@ -50,7 +42,25 @@ function pValue(successes: number, n: number, p0 = 0.5) {
 
 // Standard normal CDF
 function normalCdf(z: number) {
-  return 0.5 * (1 + Math.erf(z / Math.sqrt(2)));
+  // Approximation of the error function (Abramowitz and Stegun 7.1.26)
+  const erf = (x: number) => {
+    const a1 = 0.254829592;
+    const a2 = -0.284496736;
+    const a3 = 1.421413741;
+    const a4 = -1.453152027;
+    const a5 = 1.061405429;
+    const p = 0.3275911;
+
+    const sign = x < 0 ? -1 : 1;
+    const absX = Math.abs(x);
+
+    const t = 1.0 / (1.0 + p * absX);
+    const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX);
+
+    return sign * y;
+  };
+
+  return 0.5 * (1 + erf(z / Math.sqrt(2)));
 }
 
 function computeMedicationEffectiveness(entries: PainEntry[]) {
@@ -171,12 +181,6 @@ function buildDaySegments(entries: PainEntry[]): DaySegment[] {
   });
 
   return Object.values(segments);
-}
-
-interface TriggerStat {
-  trigger: string;
-  count: number;
-  averagePain: number;
 }
 
 // Collect trigger stats and compute pairwise correlations for confounding detection

@@ -3,13 +3,13 @@
 ## 5-Minute Setup
 
 ### Step 1: Run Database Migration
-```bash
+```powershell
 psql -U postgres -d paintracker -f database/clinic-auth-schema.sql
 psql -U postgres -d paintracker -f database/migrations/001_security_enhancements.sql
 ```
 
 ### Step 2: Generate Secrets
-```bash
+```powershell
 node scripts/generate-jwt-secrets.js
 ```
 
@@ -39,16 +39,16 @@ APP_URL=http://localhost:3000
 ```
 
 ### Step 4: Update Frontend
-```bash
+```powershell
 # Use new auth context
-cp src/contexts/ClinicAuthContext.v2.tsx src/contexts/ClinicAuthContext.tsx
+Copy-Item -Force src/contexts/ClinicAuthContext.v2.tsx src/contexts/ClinicAuthContext.tsx
 
 # Install if needed
 npm install cookie
 ```
 
 ### Step 5: Test
-```bash
+```powershell
 # Start dev server
 npm run dev
 
@@ -72,15 +72,15 @@ Email: admin@clinic.com
 Password: password123
 ```
 
-### Manual Testing
+### Manual Testing (PowerShell)
 
-1. **Login**:
-   ```bash
-   curl -X POST http://localhost:3000/api/clinic/auth/login \
-     -H "Content-Type: application/json" \
-     -d '{"email":"doctor@clinic.com","password":"password123"}' \
-     -c cookies.txt -v
-   ```
+Tip: In Windows PowerShell, `curl` is an alias for `Invoke-WebRequest`. Use `Invoke-RestMethod`/`Invoke-WebRequest` as shown below (or call `curl.exe` explicitly).
+
+1. **Login** (captures cookies and returns JSON including `csrfToken`):
+  ```powershell
+  $login = Invoke-RestMethod -Method Post -Uri 'http://localhost:3000/api/clinic/auth/login' -ContentType 'application/json' -Body '{"email":"doctor@clinic.com","password":"password123"}' -SessionVariable clinicSession
+  $csrfToken = $login.csrfToken
+  ```
 
 2. **Check Cookies** (should see httpOnly cookies):
    ```
@@ -90,33 +90,34 @@ Password: password123
    ```
 
 3. **Verify Session**:
-   ```bash
-   curl http://localhost:3000/api/clinic/auth/verify \
-     -b cookies.txt
-   ```
+  ```powershell
+  Invoke-RestMethod -Method Get -Uri 'http://localhost:3000/api/clinic/auth/verify' -WebSession $clinicSession
+  ```
 
 4. **Test Rate Limiting** (try 6 times):
-   ```bash
-   for i in {1..6}; do
-     curl -X POST http://localhost:3000/api/clinic/auth/login \
-       -H "Content-Type: application/json" \
-       -d '{"email":"test@test.com","password":"wrong"}' -v
-   done
+   ```powershell
+   1..6 | ForEach-Object {
+     try {
+       Invoke-WebRequest -Method Post -Uri 'http://localhost:3000/api/clinic/auth/login' -ContentType 'application/json' -Body '{"email":"test@test.com","password":"wrong"}' | Out-Null
+       Write-Host "Attempt $_: 200"
+     } catch {
+       $status = $_.Exception.Response.StatusCode.value__
+       Write-Host "Attempt $_: $status"
+     }
+   }
    ```
 
 5. **Logout**:
-   ```bash
-   curl -X POST http://localhost:3000/api/clinic/auth/logout \
-     -b cookies.txt \
-     -H "X-CSRF-Token: $(cat cookies.txt | grep csrfToken | awk '{print $7}')"
-   ```
+  ```powershell
+  Invoke-RestMethod -Method Post -Uri 'http://localhost:3000/api/clinic/auth/logout' -Headers @{ 'X-CSRF-Token' = $csrfToken } -WebSession $clinicSession
+  ```
 
 ---
 
 ## Common Commands
 
 ### Development
-```bash
+```powershell
 npm run dev              # Start dev server
 npm run test            # Run tests
 npm run typecheck       # Check TypeScript
@@ -124,7 +125,7 @@ node scripts/test-security.js  # Security tests
 ```
 
 ### Database
-```bash
+```powershell
 # Connect to database
 psql -U postgres -d paintracker
 
@@ -139,7 +140,7 @@ SELECT id, metadata FROM clinician_sessions;
 ```
 
 ### Production Deployment
-```bash
+```powershell
 # Generate secrets
 node scripts/generate-jwt-secrets.js
 

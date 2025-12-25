@@ -114,39 +114,6 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
   ];
   // --- Predictions Tab Logic ---
   const prediction = predictPainAndFlares(entries);
-      {activeTab === 'predictions' && (
-        <div className="space-y-8 p-4">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-4">AI Predictions</h2>
-            <div className="mb-4">
-              <strong>Pain Level (next 24h):</strong> <span className="text-lg font-bold">{prediction.predictedPain}</span>
-              <span className="ml-2 text-xs text-muted-foreground">Confidence: {(prediction.confidence * 100).toFixed(0)}%</span>
-            </div>
-            <div className="mb-4">
-              <strong>Flare Prediction:</strong> {prediction.flareInDays !== null ? (
-                <span>
-                  High pain day likely in <span className="font-bold">{prediction.flareInDays} days</span>
-                  <span className="ml-2 text-xs text-muted-foreground">Confidence: {prediction.flareConfidence !== null ? (prediction.flareConfidence * 100).toFixed(0) : '--'}%</span>
-                </span>
-              ) : 'No flare predicted'}
-            </div>
-            <div className="mb-4">
-              <strong>Medication Effectiveness:</strong>
-              <ul className="list-disc pl-6 mt-2">
-                {prediction.medicationEffectiveness.length ? prediction.medicationEffectiveness.map(med => (
-                  <li key={med.medication}>
-                    {med.medication}: {med.effectiveness.toFixed(1)} / 5
-                    <span className="ml-2 text-xs text-muted-foreground">Confidence: {(med.confidence * 100).toFixed(0)}%</span>
-                  </li>
-                )) : <li>No medication data</li>}
-              </ul>
-            </div>
-            <div className="mb-2 text-xs text-muted-foreground">
-              <strong>Methodology:</strong> {prediction.methodology}
-            </div>
-          </div>
-        </div>
-      )}
 
   const timeOfDayData = Object.entries(trends.timeOfDayPattern).map(([hour, pain]) => ({
     hour,
@@ -535,6 +502,40 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'predictions' && (
+        <div className="space-y-8 p-4">
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-4">AI Predictions</h2>
+            <div className="mb-4">
+              <strong>Pain Level (next 24h):</strong> <span className="text-lg font-bold">{prediction.predictedPain}</span>
+              <span className="ml-2 text-xs text-muted-foreground">Confidence: {(prediction.confidence * 100).toFixed(0)}%</span>
+            </div>
+            <div className="mb-4">
+              <strong>Flare Prediction:</strong> {prediction.flareInDays !== null ? (
+                <span>
+                  High pain day likely in <span className="font-bold">{prediction.flareInDays} days</span>
+                  <span className="ml-2 text-xs text-muted-foreground">Confidence: {prediction.flareConfidence !== null ? (prediction.flareConfidence * 100).toFixed(0) : '--'}%</span>
+                </span>
+              ) : 'No flare predicted'}
+            </div>
+            <div className="mb-4">
+              <strong>Medication Effectiveness:</strong>
+              <ul className="list-disc pl-6 mt-2">
+                {prediction.medicationEffectiveness.length ? prediction.medicationEffectiveness.map(med => (
+                  <li key={med.medication}>
+                    {med.medication}: {med.effectiveness.toFixed(1)} / 5
+                    <span className="ml-2 text-xs text-muted-foreground">Confidence: {(med.confidence * 100).toFixed(0)}%</span>
+                  </li>
+                )) : <li>No medication data</li>}
+              </ul>
+            </div>
+            <div className="mb-2 text-xs text-muted-foreground">
+              <strong>Methodology:</strong> {prediction.methodology}
             </div>
           </div>
         </div>

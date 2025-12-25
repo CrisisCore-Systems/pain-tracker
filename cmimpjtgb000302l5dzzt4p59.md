@@ -216,6 +216,8 @@ Can't track user counts, feature usage, or where people get stuck without compro
 
 **How we handle it**: Right now I depend on GitHub issues and people reaching out directly. Eventually, I might add completely anonymous, opt-in telemetry.
 
+**Update**: The repo now includes optional anonymous usage analytics behind a build/deploy flag (for example, `VITE_ENABLE_ANALYTICS`).
+
 ### ❌ No Real-Time Sharing
 
 Your doctor can't peek at your pain logs in real-time. You gotta export and send files.

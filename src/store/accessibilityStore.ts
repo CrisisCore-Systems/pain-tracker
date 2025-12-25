@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { immer } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
 export type AccessibilityPreferences = {
   highContrast: boolean;
@@ -23,11 +23,18 @@ const defaultPreferences: AccessibilityPreferences = {
   singleHandedMode: false,
 };
 
-export const useAccessibilityStore = create<AccessibilityPreferences>()(
+interface AccessibilityState extends AccessibilityPreferences {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setPreference: (key: keyof AccessibilityPreferences, value: any) => void;
+  resetPreferences: () => void;
+}
+
+export const useAccessibilityStore = create<AccessibilityState>()(
   immer((set) => ({
     ...defaultPreferences,
-    setPreference: (key: keyof AccessibilityPreferences, value: any) =>
+    setPreference: (key, value) =>
       set((state) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (state as any)[key] = value;
       }),
     resetPreferences: () => set(() => ({ ...defaultPreferences })),

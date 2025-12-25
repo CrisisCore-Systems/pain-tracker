@@ -1,0 +1,37 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <text x="72" y="112" fill="#E2E8F0" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="44" font-weight="800">
+    WorkSafeBC Case Study Highlights
+  </text>
+  <text x="72" y="162" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="22" font-weight="500">
+    Composite example — illustrative metrics
+  </text>
+
+  <rect x="72" y="220" width="336" height="320" rx="24" fill="#0B1020" stroke="#1F2937"/>
+  <rect x="432" y="220" width="336" height="320" rx="24" fill="#0B1020" stroke="#1F2937"/>
+  <rect x="792" y="220" width="336" height="320" rx="24" fill="#0B1020" stroke="#1F2937"/>
+
+  <text x="108" y="280" fill="#FBBF24" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="18" font-weight="800">TIME SAVED</text>
+  <text x="108" y="340" fill="#E2E8F0" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="56" font-weight="900">15–20h</text>
+  <text x="108" y="382" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="18" font-weight="600">per claim window</text>
+
+  <text x="468" y="280" fill="#34D399" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="18" font-weight="800">CONSISTENCY</text>
+  <text x="468" y="340" fill="#E2E8F0" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="56" font-weight="900">90%+</text>
+  <text x="468" y="382" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="18" font-weight="600">days with entries</text>
+
+  <text x="828" y="280" fill="#38BDF8" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="18" font-weight="800">EXPORT TIME</text>
+  <text x="828" y="340" fill="#E2E8F0" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="56" font-weight="900">~5 min</text>
+  <text x="828" y="382" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="18" font-weight="600">generation + review</text>
+
+  <text x="72" y="596" fill="#64748B" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="16" font-weight="600">
+    Composite example • Not affiliated with or endorsed by WorkSafeBC
+  </text>
+</svg>

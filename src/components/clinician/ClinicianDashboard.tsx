@@ -13,17 +13,40 @@ const INITIAL_PATIENTS = [
   { id: 'p3', name: 'Alex Kim', consented: true },
 ];
 
+interface Patient {
+  id: string;
+  name: string;
+  consented: boolean;
+}
+
+interface AuditLogEntry {
+  action: string;
+  user?: string;
+  patient?: string;
+  by?: string;
+  ts: string;
+  from?: string;
+  to?: string;
+}
+
+interface Message {
+  from: string;
+  to: string;
+  text: string;
+  ts: string;
+}
+
 // Simple local audit log (in-memory for demo)
 const useAuditLog = () => {
-  const [log, setLog] = useState([]);
-  const addLog = (entry) => setLog(l => [...l, { ...entry, ts: new Date().toISOString() }]);
+  const [log, setLog] = useState<AuditLogEntry[]>([]);
+  const addLog = (entry: Omit<AuditLogEntry, 'ts'>) => setLog(l => [...l, { ...entry, ts: new Date().toISOString() }]);
   return { log, addLog };
 };
 
 // Simple local messaging (in-memory for demo)
 const useMessaging = () => {
-  const [messages, setMessages] = useState([]);
-  const sendMessage = (from, to, text) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const sendMessage = (from: string, to: string, text: string) => {
     setMessages(msgs => [...msgs, { from, to, text, ts: new Date().toISOString() }]);
   };
   return { messages, sendMessage };
@@ -32,8 +55,8 @@ const useMessaging = () => {
 export default function ClinicianDashboard() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(CLINICIAN_USERS[0]);
-  const [patients, setPatients] = useState(INITIAL_PATIENTS);
-  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [patients, setPatients] = useState<Patient[]>(INITIAL_PATIENTS);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const { log: auditLog, addLog } = useAuditLog();
   const { messages, sendMessage } = useMessaging();
   const [msgText, setMsgText] = useState('');

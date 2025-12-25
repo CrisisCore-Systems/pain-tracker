@@ -1,5 +1,4 @@
 import { PainEntry } from '../../types';
-import { rollingAverage } from '../../utils/analytics';
 
 export interface CrisisDetectionResult {
   detected: boolean;

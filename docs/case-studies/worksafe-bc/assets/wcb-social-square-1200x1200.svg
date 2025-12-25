@@ -1,0 +1,43 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="1200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="240" y1="160" x2="980" y2="980" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <circle cx="260" cy="260" r="220" fill="#38BDF8" fill-opacity="0.10"/>
+  <circle cx="980" cy="940" r="260" fill="#A78BFA" fill-opacity="0.10"/>
+
+  <text x="96" y="210" fill="#E2E8F0" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="40" font-weight="800">
+    WorkSafeBC claim documentation
+  </text>
+  <text x="96" y="264" fill="url(#accent)" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="56" font-weight="900">
+    15–20 hours → minutes
+  </text>
+
+  <rect x="96" y="352" width="1008" height="600" rx="28" fill="#0B1020" stroke="#1F2937"/>
+
+  <text x="148" y="430" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="20" font-weight="700">
+    Composite example (illustrative)
+  </text>
+  <text x="148" y="500" fill="#E2E8F0" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="34" font-weight="900">
+    Privacy-first workflow:
+  </text>
+
+  <text x="148" y="560" fill="#94A3B8" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="22" font-weight="600">
+    <tspan x="148" dy="0">• Local-only tracking (no cloud by default)</tspan>
+    <tspan x="148" dy="42">• Structured entries for consistent documentation</tspan>
+    <tspan x="148" dy="42">• WorkSafeBC-oriented export you control</tspan>
+    <tspan x="148" dy="42">• Not affiliated with or endorsed by WorkSafeBC</tspan>
+  </text>
+
+  <text x="96" y="1068" fill="#64748B" font-family="system-ui, -apple-system, Segoe UI, Roboto" font-size="18" font-weight="700">
+    Read the case study: blog.paintracker.ca
+  </text>
+</svg>

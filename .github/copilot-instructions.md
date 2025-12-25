@@ -16,7 +16,7 @@
 **Non-negotiables**:
 
 1. **Local-first** (no cloud dependency)
-2. **No telemetry by default**
+2. **No Class A telemetry by default** (any usage analytics must be explicit, minimized, and reviewed)
 3. **Accessibility (WCAG 2.2 AA target)**
 4. **Data minimization + auditability**
 5. **No security-critical changes without human review**
@@ -31,7 +31,7 @@
 * Do **not** provide bash-only commands (`export FOO=`, `/dev/null`, `sed/grep` assumptions, etc.).
 * Prefer explicit PowerShell patterns:
 
-  * Env vars: `$env:VITE_ENABLE_VALIDATION="true"`
+  * Env vars: `$env:VITE_REACT_APP_ENABLE_VALIDATION="true"`
   * Paths: `.\scripts\tool.ps1`, `.\src\...`
 
 ### 🧨 Hard Stops (Ask Human Before Proceeding)
@@ -77,7 +77,7 @@ New Feature/Task?
 
 ### Hard Rules
 
-* **Class A never leaves the device** by default. No remote logs. No third-party analytics.
+* **Class A never leaves the device** by default. No remote logs containing Class A. Third-party analytics must not receive Class A content by default.
 * Do not log raw notes, export content, or anything that reconstructs entries.
 * Store only what the feature strictly needs. If unsure: store less.
 
@@ -185,8 +185,12 @@ make check
 
 ```powershell
 # Enable validation tech (session-only env var)
-$env:VITE_ENABLE_VALIDATION="true"; npm run dev
+$env:VITE_REACT_APP_ENABLE_VALIDATION="true"; npm run dev
 ```
+
+Notes:
+- `VITE_REACT_APP_ENABLE_VALIDATION`: used by most validation UI integration points (default enabled unless set to `'false'`).
+- `VITE_ENABLE_VALIDATION_TECH`: used by the main `PainTracker` module (default enabled unless set to `'false'`).
 
 > Rule: If you introduce a new flag, it must be `VITE_*` and documented here.
 
@@ -348,10 +352,10 @@ try {
 **Enable (PowerShell + Vite):**
 
 ```powershell
-$env:VITE_ENABLE_VALIDATION="true"; npm run dev
+$env:VITE_REACT_APP_ENABLE_VALIDATION="true"; npm run dev
 ```
 
-**Read in code**: `import.meta.env.VITE_ENABLE_VALIDATION`
+**Read in code**: `import.meta.env.VITE_REACT_APP_ENABLE_VALIDATION` and `import.meta.env.VITE_ENABLE_VALIDATION_TECH`
 
 ---
 
@@ -364,7 +368,7 @@ $env:VITE_ENABLE_VALIDATION="true"; npm run dev
 → Confirm `TraumaInformedProvider` wraps root
 
 **Validation not showing**
-→ Confirm `$env:VITE_ENABLE_VALIDATION="true"` and code reads `import.meta.env`
+→ Confirm `$env:VITE_REACT_APP_ENABLE_VALIDATION="true"` (and/or `VITE_ENABLE_VALIDATION_TECH`) and code reads `import.meta.env`
 
 **Security audit failures**
 → Run `npm run security-full` and fix high severity first

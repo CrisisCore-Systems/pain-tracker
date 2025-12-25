@@ -7,6 +7,7 @@ import {
   TrustIndicators,
   FeatureShowcase,
   Testimonials,
+  WorkSafeBCCaseStudy,
   FeaturedBlogPosts,
   FAQ,
   LandingFooter,
@@ -54,6 +55,7 @@ export const LandingPage: React.FC = () => {
       <main id="main-content" role="main">
         <Hero />
         <UseCases />
+        <WorkSafeBCCaseStudy />
         <BenefitsGrid />
         <PricingPreview />
         <TrustIndicators />

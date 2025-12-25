@@ -217,14 +217,14 @@ NODE_ENV=development
 ```powershell
 # Terminal 1: Start dev server
 npm run dev
-# Server runs on http://localhost:5173
+# Server defaults to http://localhost:3000 (it may choose another port if 3000 is busy)
 ```
 
 ### Setup Webhook Forwarding
 
 ```powershell
 # Terminal 2: Start Stripe webhook listener
-stripe listen --forward-to http://localhost:5173/api/stripe/webhook
+stripe listen --forward-to http://localhost:3000/api/stripe/webhook
 
 # Copy the webhook signing secret from output:
 # > Ready! Your webhook signing secret is whsec_...
@@ -235,14 +235,14 @@ stripe listen --forward-to http://localhost:5173/api/stripe/webhook
 
 ```powershell
 # Terminal 3: Test checkout session creation
-curl -X POST http://localhost:5173/api/stripe/create-checkout-session `
+curl -X POST http://localhost:3000/api/stripe/create-checkout-session `
   -H "Content-Type: application/json" `
   -d '{
     \"userId\": \"user_test_123\",
     \"tier\": \"basic\",
     \"interval\": \"monthly\",
-    \"successUrl\": \"http://localhost:5173/success\",
-    \"cancelUrl\": \"http://localhost:5173/pricing\",
+    \"successUrl\": \"http://localhost:3000/success\",
+    \"cancelUrl\": \"http://localhost:3000/pricing\",
     \"email\": \"test@example.com\"
   }'
 ```

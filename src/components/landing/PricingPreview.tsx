@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles, Star, Zap, Crown, Users, Check } from 'lucide-react';
-import { SUBSCRIPTION_PLANS } from '../../config/subscription-tiers';
+import { FEATURE_COMPARISON, SUBSCRIPTION_PLANS } from '../../config/subscription-tiers';
 import type { SubscriptionTier } from '../../types/subscription';
 
 const TIERS: SubscriptionTier[] = ['free', 'basic', 'pro', 'enterprise'];
@@ -18,6 +18,70 @@ const HIGHLIGHTS: Record<SubscriptionTier, string[]> = {
   basic: ['Advanced analytics', 'Higher export limit (50/mo)', 'Family sharing (2)'],
   pro: ['Pattern-based alerts', 'Clinical PDF export', 'Audit logs'],
   enterprise: ['White-label options', 'Dedicated support', 'Custom training'],
+};
+
+type ComparisonCellValue = boolean | string | number;
+
+type ComparisonItem = {
+  name: string;
+  free: ComparisonCellValue;
+  basic: ComparisonCellValue;
+  pro: ComparisonCellValue;
+  enterprise: ComparisonCellValue;
+};
+
+const getComparisonItem = (categoryKey: keyof typeof FEATURE_COMPARISON, name: string) => {
+  const items = FEATURE_COMPARISON[categoryKey]?.items as ComparisonItem[] | undefined;
+  return items?.find((item) => item.name === name);
+};
+
+const QUICK_COMPARISON: Array<{ category: string; items: ComparisonItem[] }> = [
+  {
+    category: 'Analytics & Insights',
+    items: [
+      getComparisonItem('analytics', 'Advanced Analytics'),
+      getComparisonItem('analytics', 'Pattern-based alerts'),
+    ].filter(Boolean) as ComparisonItem[],
+  },
+  {
+    category: 'Reports & Export',
+    items: [
+      getComparisonItem('export', 'PDF Reports'),
+      getComparisonItem('export', 'WorkSafe BC Reports'),
+      getComparisonItem('export', 'Clinical PDF Export'),
+    ].filter(Boolean) as ComparisonItem[],
+  },
+  {
+    category: 'Sharing & Collaboration',
+    items: [
+      getComparisonItem('collaboration', 'Family Sharing'),
+      getComparisonItem('collaboration', 'Shared Users'),
+    ].filter(Boolean) as ComparisonItem[],
+  },
+  {
+    category: 'Security',
+    items: [
+      getComparisonItem('security', 'Encryption'),
+      getComparisonItem('security', 'Two-Factor Auth'),
+    ].filter(Boolean) as ComparisonItem[],
+  },
+].filter((group) => group.items.length > 0);
+
+const renderCell = (value: ComparisonCellValue) => {
+  if (typeof value === 'boolean') {
+    return value ? (
+      <span className="inline-flex items-center justify-center" aria-label="Included">
+        <Check className="h-4 w-4 text-emerald-400" aria-hidden="true" />
+        <span className="sr-only">Included</span>
+      </span>
+    ) : (
+      <span className="text-slate-600" aria-label="Not included">
+        —
+      </span>
+    );
+  }
+
+  return <span className="text-slate-300">{String(value)}</span>;
 };
 
 export const PricingPreview: React.FC = () => {
@@ -123,13 +187,78 @@ export const PricingPreview: React.FC = () => {
           })}
         </div>
 
+        {QUICK_COMPARISON.length > 0 && (
+          <div className="max-w-6xl mx-auto mb-10 stagger-fade-up">
+            <div className="rounded-2xl border border-white/10 bg-slate-900/40 overflow-hidden">
+              <div className="px-6 py-5 border-b border-white/10">
+                <h3 className="text-lg font-semibold text-white">Quick comparison</h3>
+                <p className="text-sm text-slate-400 mt-1">
+                  Key features at a glance. For full details, see the pricing page.
+                </p>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-[720px] w-full text-sm">
+                  <thead>
+                    <tr className="text-left">
+                      <th scope="col" className="px-6 py-4 font-semibold text-slate-300">
+                        Feature
+                      </th>
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                        Free
+                      </th>
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                        Basic
+                      </th>
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                        Pro
+                      </th>
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                        Enterprise
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {QUICK_COMPARISON.map((group) => (
+                      <React.Fragment key={group.category}>
+                        <tr>
+                          <th
+                            scope="rowgroup"
+                            colSpan={5}
+                            className="px-6 py-3 text-xs font-semibold text-slate-500 bg-slate-900/70 border-t border-white/10"
+                          >
+                            {group.category}
+                          </th>
+                        </tr>
+
+                        {group.items.map((item) => (
+                          <tr key={`${group.category}:${item.name}`} className="border-t border-white/5">
+                            <th scope="row" className="px-6 py-3 font-medium text-slate-200">
+                              {item.name}
+                            </th>
+                            <td className="px-4 py-3">{renderCell(item.free)}</td>
+                            <td className="px-4 py-3">{renderCell(item.basic)}</td>
+                            <td className="px-4 py-3">{renderCell(item.pro)}</td>
+                            <td className="px-4 py-3">{renderCell(item.enterprise)}</td>
+                          </tr>
+                        ))}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="text-center">
           <button
             type="button"
             onClick={() => navigate('/pricing')}
             className="inline-flex items-center gap-2 text-lg font-semibold text-sky-400 hover:text-sky-300 transition-all group"
           >
-            Compare plans
+            See full details
             <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

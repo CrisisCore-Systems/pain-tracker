@@ -112,7 +112,7 @@ PainTracker.ca answers a different design question: How do we build something th
 | Data location    | Centralized backend by default  | Local-only by default (on-device)                     | Centralization amplifies breach, misuse, and secondary harm risk; local-first reduces blast radius |
 | Connectivity     | Online-first; degraded offline  | Offline-first; identical offline                      | Crisis days and unstable housing often mean unstable connectivity; offline-first preserves access  |
 | Identity         | Accounts/login as gate          | No account required                                   | Credential friction can block use during flares; no-login lowers abandonment                       |
-| Data flow        | Telemetry/analytics SDKs common | No default telemetry; no third-party analytics        | Reduces “quiet extraction” and fear-driven self-censorship                                         |
+| Data flow        | Telemetry/analytics SDKs common | Optional anonymous usage analytics (deploy-configured) | Reduces “quiet extraction” when disabled; requires clear defaults and user control when enabled    |
 | Consent          | Broad, ongoing, hard to revoke  | Explicit, user-triggered export/share                 | Shifts control to user, but requires coercion-resilient workflows in clinical contexts             |
 | Crisis usability | Dense forms, streaks, nudges    | Low-cognitive-load flows; crisis-aware simplification | Respects capacity collapse; reduces shame cycles and drop-off                                      |
 | Trust model      | “Trust the vendor”              | Inspectable open-source code + minimal exposure       | Verifiability substitutes for trust; supports accountable adoption                                 |
@@ -122,7 +122,7 @@ PainTracker.ca answers a different design question: How do we build something th
 PainTracker.ca began with frustration and a simple threat to myself: if no existing app is livable, build one that is. Under the CrisisCore-Systems umbrella, I set hard constraints:
 
 * The app must function fully offline.
-* The app must never send data anywhere without explicit user action.
+* Network calls should be optional and user-controlled; avoid transmitting sensitive content by default.
 * The interface must be usable under low-capacity conditions.
 * The code must be open so claims are inspectable.
 
@@ -130,7 +130,7 @@ These constraints are documented in the build logs and essays (“Building a Hea
 
 ### B. Architectural choices: offline-first, local-only, no default telemetry
 
-The central move is straightforward: treat the device as the system. A service worker caches the app shell; local storage (eg, IndexedDB) holds user data; behavior is identical online or offline. There are no third-party analytics SDKs and no crash-reporting backend that quietly transmits event streams by default. The app does not “phone home” (CrisisCore Systems, “Trauma-Informed Design”).
+The central move is straightforward: treat the device as the system. A service worker caches the app shell; local storage (eg, IndexedDB) holds user data; behavior is identical online or offline. The repository includes optional analytics and other network-capable features that can be enabled/disabled; the privacy goal is to keep sensitive content local by default and make any sharing or telemetry explicit and minimal.
 
 This design removes entire risk classes:
 

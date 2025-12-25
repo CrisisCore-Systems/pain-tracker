@@ -1,7 +1,7 @@
 ---
 title: "No Backend, No Excuses: Building a Pain Tracker That Doesn't Sell You Out"
 published: true
-description: "Local-first architecture for chronic pain tracking. AES-256 encryption, zero telemetry, trauma-informed UX. Built from necessity."
+description: "Local-first architecture for chronic pain tracking. AES-256 encryption, optional (deploy-configured) usage analytics, trauma-informed UX. Built from necessity."
 tags: ["react", "typescript", "healthtech", "privacy"]
 cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/empathy-driven-healthcare-cover.png
 canonical_url: 
@@ -11,7 +11,7 @@ canonical_url:
 
 Started this project January 2025. Still housing-unstable. Still shipping.
 
-Pain Tracker is a chronic pain management app. No accounts. No cloud sync. No telemetry. Your health data stays on your device or it doesn't exist.
+Pain Tracker is a chronic pain management app. No accounts. No cloud sync. Optional anonymous usage analytics may be enabled by the deployment; your health data is designed to stay on your device unless you choose to export/share.
 
 ---
 
@@ -42,7 +42,7 @@ I know because I'm one of them. I've had my health data used against me in actua
 │                   └─────────────┘                           │
 └─────────────────────────────────────────────────────────────┘
 
-              NO CLOUD. NO SERVERS. NO TELEMETRY.
+              NO CLOUD. NO SERVERS. OPTIONAL ANALYTICS.
 ```
 
 Data stays on the device. If you want to share it with your doctor or WorkSafe BC, you export it manually. You decide. Every time.

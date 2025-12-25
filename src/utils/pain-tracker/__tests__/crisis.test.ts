@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { detectCrisis, computeBaseline } from '../crisis';
 
 function makeEntry(value: number, daysAgo = 0) {

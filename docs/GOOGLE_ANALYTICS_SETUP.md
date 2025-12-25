@@ -1,8 +1,8 @@
 # Google Analytics Setup Guide
 
-> **Status**: ✅ Fully Configured  
+> **Status**: ✅ Configured (build/deploy gated)  
 > **Tracking ID**: G-X25RTEWBYL  
-> **Last Updated**: 2025-11-17
+> **Last Updated**: 2025-12-24
 
 ## Overview
 
@@ -12,21 +12,14 @@ This document explains how Google Analytics is integrated into the Pain Tracker 
 
 ### 1. Google Analytics Tag (gtag.js)
 
-The Google Analytics tracking code is implemented in `index.html` immediately after the `<head>` element:
+Google Analytics is loaded *conditionally* at runtime by `src/analytics/analytics-loader.ts`.
 
-```html
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-X25RTEWBYL"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+- `index.html` includes the loader module.
+- The loader appends the remote `gtag.js` script only when `VITE_ENABLE_ANALYTICS === 'true'`.
 
-  gtag('config', 'G-X25RTEWBYL');
-</script>
-```
-
-**Location**: `index.html`, lines 4-12
+**Locations**:
+- Loader: `src/analytics/analytics-loader.ts`
+- Included by: `index.html`
 
 ### 2. Content Security Policy (CSP) Configuration
 
@@ -85,10 +78,13 @@ The following domains must be whitelisted in Content Security Policy for Google 
 
 ### Local Development
 
-1. Start the development server:
-   ```bash
+1. Start the development server with analytics enabled:
+   ```powershell
+   $env:VITE_ENABLE_ANALYTICS='true'
    npm run dev
    ```
+
+   If you do not set `VITE_ENABLE_ANALYTICS='true'`, the remote GA script will not be appended.
 
 2. Open browser DevTools (F12) and go to the Network tab
 
@@ -103,21 +99,21 @@ The following domains must be whitelisted in Content Security Policy for Google 
 ### Production Build
 
 1. Build the application:
-   ```bash
+   ```powershell
    npm run build
    ```
 
 2. Verify the built files:
-   ```bash
-   # Check that GA tag is in built HTML
-   grep -n "G-X25RTEWBYL" dist/index.html
-   
-   # Check that _headers has GA CSP
-   grep "googletagmanager" dist/_headers
+   ```powershell
+   # If GA is enabled at build time, the GA measurement ID should appear in the built output
+   Select-String -Path .\dist\**\* -Pattern 'G-X25RTEWBYL'
+
+   # Check that CSP allows GA domains (if your deployment uses the generated headers)
+   if (Test-Path .\dist\_headers) { Select-String -Path .\dist\_headers -Pattern 'googletagmanager|google-analytics' }
    ```
 
 3. Preview the production build:
-   ```bash
+   ```powershell
    npm run preview
    ```
 
@@ -205,11 +201,13 @@ The following domains must be whitelisted in Content Security Policy for Google 
 
 ### Current Implementation
 
-The current implementation uses Google Analytics in a basic configuration. For full GDPR compliance, consider:
+Google Analytics is **build/deploy gated** via `VITE_ENABLE_ANALYTICS`. When enabled, the app currently initializes GA at startup.
+
+For consent-first/GDPR-oriented behavior, consider:
 
 1. **Cookie Consent**
    - Implement cookie consent banner
-   - Only load GA after user consent
+   - Only load GA after user consent (or use Google Consent Mode)
    - Consider using Google's consent mode
 
 2. **IP Anonymization**
@@ -240,22 +238,20 @@ if (userConsent.analytics) {
 
 1. **Specific Domains**: We only whitelist specific Google Analytics domains, not all external scripts
 2. **HTTPS Only**: All GA domains use HTTPS, ensuring encrypted connections
-3. **No Inline Scripts**: The GA script is loaded from Google's CDN, not executed inline
-4. **Read-Only**: GA cannot modify your site's functionality or access sensitive data
+3. **No Inline Scripts**: GA is injected via the loader module, not inline HTML
+4. **Explicit Tradeoff**: Enabling GA introduces a third-party script and network calls; keep event payloads minimal and avoid Class A content
 
 ### What GA Can Access
 
-Google Analytics can collect:
+When enabled, GA can collect:
 - ✅ Page views and navigation patterns
 - ✅ User device information (browser, OS, screen size)
 - ✅ Geographic location (approximate, based on IP)
 - ✅ Referrer URLs
 
-Google Analytics CANNOT access:
-- ❌ Sensitive health data stored in IndexedDB
-- ❌ User passwords or authentication tokens
-- ❌ Form data (unless explicitly tracked)
-- ❌ localStorage or sessionStorage
+Important nuance:
+- A third-party script loaded into your page runs with normal page privileges, so it can **technically access** the DOM and web storage.
+- Pain Tracker mitigates this by **not intentionally sending Class A health data** to GA4 and keeping custom event payloads coarse/minimized.
 
 ## Support & Resources
 
@@ -271,6 +267,7 @@ Google Analytics CANNOT access:
 | 2025-11-17 | Initial GA tag installation | GitHub Copilot |
 | 2025-11-17 | Updated CSP in .htaccess, _headers, vite.config.ts | GitHub Copilot |
 | 2025-11-17 | Created documentation | GitHub Copilot |
+| 2025-12-24 | Updated doc for loader + build gating + PowerShell | GitHub Copilot |
 
 ---
 

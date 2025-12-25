@@ -11,12 +11,12 @@ export default function ClinicianPortal() {
   function handleConsent() {
     setConsented(true);
     void hipaaComplianceService.logAuditEvent({
-      actionType: 'consent',
+      actionType: 'update',
       userId: 'local',
       userRole: 'self',
       resourceType: 'clinician_portal',
       resourceId: 'local',
-      outcome: 'consented',
+      outcome: 'success',
       details: { consented: true },
     });
   }
@@ -25,12 +25,12 @@ export default function ClinicianPortal() {
     setConsented(false);
     setExportUrl(null);
     void hipaaComplianceService.logAuditEvent({
-      actionType: 'revoke',
+      actionType: 'update',
       userId: 'local',
       userRole: 'self',
       resourceType: 'clinician_portal',
       resourceId: 'local',
-      outcome: 'revoked',
+      outcome: 'success',
       details: { consented: false },
     });
   }

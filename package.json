@@ -106,6 +106,8 @@
     "accessibility:scan": "npx playwright test e2e/accessibility.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "bootstrap-windows": "powershell -File ./scripts/bootstrap-windows.ps1"
     ,
+    "wcb:sample-pdf": "tsx scripts/generate-wcb-sample-pdf.ts"
+    ,
     "devto:dry-run": "node scripts/devto/devto.mjs dry-run",
     "devto:create-drafts": "node scripts/devto/devto.mjs create-drafts --write",
     "devto:publish-due": "node scripts/devto/devto.mjs publish-due --yes",

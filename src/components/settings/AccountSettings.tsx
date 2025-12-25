@@ -3,6 +3,7 @@ import React, { useState } from "react";
 export default function AccountSettings() {
   const [password, setPassword] = useState("");
   const [twoFactor, setTwoFactor] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sessions, setSessions] = useState<string[]>(["Device 1 (current)", "Device 2"]);
 
   // TODO: Wire up real password change and session management logic

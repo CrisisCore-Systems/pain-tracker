@@ -319,8 +319,8 @@ interface FibromyalgiaEntry {
 #### 🛡️ **Zero-Trust Model**
 
 - No accounts or authentication required
-- No telemetry or usage tracking
-- No third-party analytics
+- No default transmission of Class A health data
+- Optional anonymous usage analytics may be enabled by deploy/build configuration (for example, `VITE_ENABLE_ANALYTICS`)
 - No advertisement or data monetization
 - Complete user data sovereignty
 

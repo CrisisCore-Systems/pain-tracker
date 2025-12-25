@@ -8,6 +8,7 @@ import CrisisModal from './CrisisModal';
 
 export function CrisisBanner() {
   const entries = usePainTrackerStore(state => state.entries);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const enabled = usePainTrackerStore((s) => (s as any).crisisDetectionEnabled ?? true);
   const [show, setShow] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -21,6 +22,7 @@ export function CrisisBanner() {
 
   useEffect(() => {
     if (!enabled) return;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = detectCrisis(entries as any, crisisConfig);
     if (res.detected) {
       setShow(true);
@@ -28,12 +30,12 @@ export function CrisisBanner() {
       // Analytics + coarse audit (no PHI)
       try { trackCrisisDetected('severe'); } catch (_) { /* noop */ }
       void hipaaComplianceService.logAuditEvent({
-        actionType: 'alert',
+        actionType: 'access',
         userId: 'local',
         userRole: 'self',
         resourceType: 'crisis_alert',
         resourceId: 'local',
-        outcome: 'detected',
+        outcome: 'warning',
         details: { baseline: res.baseline, lastValue: res.lastValue },
       }).catch(() => {});
     } else {

@@ -195,7 +195,7 @@ With 20% yearly adoption:
 
 2. **Local Testing** (30 min)
    - Start dev server: `npm run dev`
-   - Start webhook listener: `stripe listen --forward-to localhost:5173/api/stripe/webhook`
+   - Start webhook listener: `stripe listen --forward-to http://localhost:3000/api/stripe/webhook` (use the port Vite prints if different)
    - Test checkout flow with test card
 
 3. **Deploy to Vercel** (30 min)

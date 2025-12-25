@@ -96,14 +96,17 @@ NODE_ENV=development
 # Terminal 1: Start dev server
 npm run dev
 
+# Vite defaults to http://localhost:3000 (it may choose another port if 3000 is busy).
+# If your terminal shows a different port, replace the URLs below.
+
 # Terminal 2: Start webhook listener
-stripe listen --forward-to http://localhost:5173/api/stripe/webhook
+stripe listen --forward-to http://localhost:3000/api/stripe/webhook
 # Copy webhook secret → Add to .env.local as STRIPE_WEBHOOK_SECRET
 
 # Terminal 3: Test checkout
-curl -X POST http://localhost:5173/api/stripe/create-checkout-session `
+curl -X POST http://localhost:3000/api/stripe/create-checkout-session `
   -H "Content-Type: application/json" `
-  -d '{\"userId\":\"test_user\",\"tier\":\"basic\",\"interval\":\"monthly\",\"successUrl\":\"http://localhost:5173/success\",\"cancelUrl\":\"http://localhost:5173/cancel\"}'
+  -d '{\"userId\":\"test_user\",\"tier\":\"basic\",\"interval\":\"monthly\",\"successUrl\":\"http://localhost:3000/success\",\"cancelUrl\":\"http://localhost:3000/cancel\"}'
 
 # Open returned URL in browser, use test card: 4242 4242 4242 4242
 ```

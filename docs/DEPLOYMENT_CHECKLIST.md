@@ -201,7 +201,8 @@ npm run deploy:validate
 
 ### Error Tracking (Optional)
 - Set up Sentry: https://sentry.io
-- Add `VITE_SENTRY_DSN` to environment variables
+- `VITE_SENTRY_DSN` is reserved in env/templates and CI, but the current app runtime does not initialize Sentry automatically.
+- If you wire up Sentry, treat it as telemetry and review privacy/security implications.
 
 ## 🆘 Troubleshooting
 

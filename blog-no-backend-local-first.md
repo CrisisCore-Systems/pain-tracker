@@ -207,6 +207,8 @@ I can't tell you how many users I have, which features they use, or where they d
 
 **Mitigation**: Privacy-preserving analytics through optional, anonymized telemetry (not implemented yet). For now, I rely on GitHub issues and direct user feedback.
 
+**Update**: Optional anonymous usage analytics exists behind a build/deploy flag (for example, `VITE_ENABLE_ANALYTICS`).
+
 ### ❌ No Real-Time Collaboration
 
 A doctor can't see your pain journal in real-time. You have to export and share.

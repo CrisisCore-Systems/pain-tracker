@@ -19,14 +19,15 @@ export function computeFibroAnalytics(entries: FibromyalgiaEntry[]): Fibromyalgi
       flareFrequency: 0,
       averageFlareDuration: 0,
       flareIntensity: 'mild',
-      functionalCapacity: { current: 0, trend: 'stable', average: 0 },
+      functionalCapacity: { average: 0, goodDays: 0, badDays: 0, bedridden: 0 },
+      effectiveInterventions: [],
     };
   }
 
   // WPI/SSS
   const last = entries[entries.length - 1];
   const wpiScore = Object.values(last.wpi).filter(Boolean).length;
-  const sssScore = Object.values(last.sss).reduce((sum, v) => sum + v, 0);
+  const sssScore = Object.values(last.sss).reduce((sum: number, v) => sum + v, 0);
   const meetsDiagnosticCriteria = (wpiScore >= 7 && sssScore >= 5) || (wpiScore >= 4 && wpiScore <= 6 && sssScore >= 9);
 
   // Most affected regions
@@ -73,6 +74,10 @@ export function computeFibroAnalytics(entries: FibromyalgiaEntry[]): Fibromyalgi
   const averageFlareDuration = flareEntries.length ? 1 : 0; // Placeholder: 1 day per flare
   const flareIntensity = flareEntries.length ? (flareEntries.some(e => e.sss.fatigue === 3 || e.impact.functionalAbility === 5) ? 'severe' : 'moderate') : 'mild';
 
+  const goodDays = functionalArr.filter(v => v <= 2).length;
+  const badDays = functionalArr.filter(v => v >= 4).length;
+  const bedridden = functionalArr.filter(v => v === 5).length;
+
   return {
     wpiScore,
     sssScore,
@@ -80,13 +85,19 @@ export function computeFibroAnalytics(entries: FibromyalgiaEntry[]): Fibromyalgi
     mostAffectedRegions,
     commonTriggers,
     symptomTrends: {
-      fatigue: { current: fatigueArr[fatigueArr.length - 1], trend: trend(fatigueArr), average: fatigueArr.reduce((a, b) => a + b, 0) / fatigueArr.length },
-      cognition: { current: cognitionArr[cognitionArr.length - 1], trend: trend(cognitionArr), average: cognitionArr.reduce((a, b) => a + b, 0) / cognitionArr.length },
-      sleep: { current: sleepArr[sleepArr.length - 1], trend: trend(sleepArr), average: sleepArr.reduce((a, b) => a + b, 0) / sleepArr.length },
+      fatigue: { current: fatigueArr[fatigueArr.length - 1], trend: trend(fatigueArr), average: fatigueArr.reduce((a: number, b) => a + b, 0) / fatigueArr.length },
+      cognition: { current: cognitionArr[cognitionArr.length - 1], trend: trend(cognitionArr), average: cognitionArr.reduce((a: number, b) => a + b, 0) / cognitionArr.length },
+      sleep: { current: sleepArr[sleepArr.length - 1], trend: trend(sleepArr), average: sleepArr.reduce((a: number, b) => a + b, 0) / sleepArr.length },
     },
     flareFrequency,
     averageFlareDuration,
     flareIntensity,
-    functionalCapacity: { current: functionalArr[functionalArr.length - 1], trend: trend(functionalArr), average: functionalArr.reduce((a, b) => a + b, 0) / functionalArr.length },
+    functionalCapacity: {
+      average: functionalArr.reduce((a: number, b) => a + b, 0) / functionalArr.length,
+      goodDays,
+      badDays,
+      bedridden
+    },
+    effectiveInterventions: [],
   };
 }

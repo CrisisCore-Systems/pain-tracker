@@ -294,9 +294,16 @@ export function PainTracker() {
       const newEntry: PainEntry = {
         id: Date.now(),
         timestamp: new Date().toISOString(),
-        // ...other entryData fields as needed
+        baselineData: entryData.baselineData || { pain: 0, locations: [], symptoms: [] },
+        functionalImpact: entryData.functionalImpact || { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
+        medications: entryData.medications || { current: [], changes: '', effectiveness: '' },
+        treatments: entryData.treatments || { recent: [], effectiveness: '', planned: [] },
+        triggers: entryData.triggers || [],
+        mood: entryData.mood || 0,
+        qualityOfLife: entryData.qualityOfLife || { sleepQuality: 0, moodImpact: 0, socialImpact: [] },
+        workImpact: entryData.workImpact || { missedWork: 0, modifiedDuties: [], workLimitations: [] },
+        comparison: entryData.comparison || { worseningSince: '', newLimitations: [] },
         ...entryData,
-        ...entryData.comparison,
         notes: entryData.notes || '',
       };
 

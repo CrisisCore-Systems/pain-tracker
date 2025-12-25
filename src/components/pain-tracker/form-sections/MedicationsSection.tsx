@@ -3,7 +3,6 @@ import { Input } from '../../../design-system/Input';
 import { Alert } from '../../../design-system/Alert';
 import { Button } from '../../../design-system/Button';
 import { Card, CardContent } from '../../../design-system';
-import { Autocomplete } from '../../../design-system/Autocomplete';
 
 interface Medication {
   name: string;
@@ -26,6 +25,7 @@ interface MedicationsSectionProps {
 }
 
 // Local medication library (can be expanded)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LOCAL_MEDICATION_LIBRARY = [
   'Acetaminophen',
   'Ibuprofen',
@@ -130,9 +130,9 @@ export function MedicationsSection({
 
       {/* --- Reminders --- */}
       <div className="mb-4">
-        <label htmlFor="medication-reminder" className="block text-sm font-medium text-foreground mb-1">Medication Reminder</label>
         <div className="flex gap-2">
           <Input
+            label="Medication Reminder"
             id="medication-reminder"
             value={reminder}
             onChange={e => setReminder(e.target.value)}
@@ -140,9 +140,9 @@ export function MedicationsSection({
             disabled={reminderSet}
           />
           {!reminderSet ? (
-            <Button type="button" onClick={handleSetReminder} size="sm">Set</Button>
+            <Button type="button" onClick={handleSetReminder} size="sm" className="mt-6">Set</Button>
           ) : (
-            <Button type="button" onClick={handleClearReminder} size="sm" variant="outline">Clear</Button>
+            <Button type="button" onClick={handleClearReminder} size="sm" variant="outline" className="mt-6">Clear</Button>
           )}
         </div>
         {reminderSet && (
@@ -152,21 +152,21 @@ export function MedicationsSection({
 
       {/* --- Side Effect Tracking --- */}
       <div className="mb-4">
-        <label htmlFor="side-effect-input" className="block text-sm font-medium text-foreground mb-1">Side Effects</label>
         <div className="flex gap-2 mb-2">
           <Input
+            label="Side Effects"
             id="side-effect-input"
             value={newSideEffect}
             onChange={e => setNewSideEffect(e.target.value)}
             placeholder="e.g., Nausea, Drowsiness"
           />
-          <Button type="button" onClick={addSideEffect} size="sm">Add</Button>
+          <Button type="button" onClick={addSideEffect} size="sm" className="mt-6">Add</Button>
         </div>
         <ul className="list-disc pl-5 text-xs">
           {sideEffects.map((effect, idx) => (
             <li key={idx} className="flex items-center gap-2">
               {effect}
-              <Button type="button" size="xs" variant="ghost" onClick={() => removeSideEffect(idx)} aria-label="Remove side effect">Remove</Button>
+              <Button type="button" size="sm" variant="ghost" onClick={() => removeSideEffect(idx)} aria-label="Remove side effect">Remove</Button>
             </li>
           ))}
         </ul>
@@ -189,13 +189,11 @@ export function MedicationsSection({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Autocomplete
+                <Input
                   label="Name"
                   value={medication.name}
-                  options={LOCAL_MEDICATION_LIBRARY}
-                  onChange={value => handleMedicationChange(index, 'name', value)}
+                  onChange={e => handleMedicationChange(index, 'name', e.target.value)}
                   placeholder="e.g., Ibuprofen"
-                  allowCustomValue
                   aria-label={`Medication name ${index + 1}`}
                 />
 

@@ -35,9 +35,9 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
       : null;
 
   const handleExport = (format: 'json' | 'csv' | 'pdf' | 'fhir') => {
-    let data: string;
-    let mimeType: string;
-    let filename: string;
+    let data = '';
+    let mimeType = '';
+    let filename = '';
 
 
     if (format === 'json') {
@@ -192,6 +192,7 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
                 <label className="block text-sm mb-1">Schedule automatic export:</label>
                 <select
                   value={schedule}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   onChange={e => setSchedule(e.target.value as any)}
                   className="border rounded px-2 py-1 text-sm"
                 >

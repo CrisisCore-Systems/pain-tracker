@@ -312,9 +312,9 @@ const meetsCriteria =
    - Runtime security (CSP, input validation)
 
 **Privacy Architecture**:
-- Zero external data transmission
+- No external transmission of Class A health data by default (optional features may make network requests when enabled)
 - No user accounts required
-- No telemetry or tracking
+- No default transmission of Class A health data; optional anonymous usage analytics may be enabled by deploy/build configuration
 - Complete user data sovereignty
 
 **Conclusion**: Security is **enterprise-grade** with healthcare-specific compliance features.

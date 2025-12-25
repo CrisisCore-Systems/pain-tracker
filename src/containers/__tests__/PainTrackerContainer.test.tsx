@@ -42,6 +42,7 @@ describe('PainTrackerContainer - entry success toast', () => {
       loadSampleData,
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation((selector: any) => {
       if (typeof selector === 'function') return selector(storeState);
       return storeState;

@@ -47,8 +47,8 @@ When your data has been used against you, you build software that can't do that.
 
 ## 📊 **Current Implementation Status**
 
-**Version:** 0.1.0-beta (Active Development)  
-**Last Updated:** November 2025
+**Version:** 0.1.1-beta (Active Development)  
+**Last Updated:** December 2025
 
 ### ✅ **Fully Implemented Features**
 

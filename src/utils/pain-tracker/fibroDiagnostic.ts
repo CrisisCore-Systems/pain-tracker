@@ -1,4 +1,4 @@
-import type { FibromyalgiaEntry, FibromyalgiaAnalytics } from '../../types/fibromyalgia';
+import type { FibromyalgiaEntry } from '../../types/fibromyalgia';
 
 /**
  * Calculate WPI and SSS scores and diagnostic status for a set of fibromyalgia entries.
@@ -21,7 +21,7 @@ export function computeFibroDiagnosticHistory(entries: FibromyalgiaEntry[]): {
   if (!entries.length) return { latest: null, history: [] };
   const history = entries.map(e => {
     const wpi = Object.values(e.wpi).filter(Boolean).length;
-    const sss = Object.values(e.sss).reduce((sum, v) => sum + v, 0);
+    const sss = Object.values(e.sss).reduce((sum: number, v) => sum + v, 0);
     const meetsCriteria = (wpi >= 7 && sss >= 5) || (wpi >= 4 && wpi <= 6 && sss >= 9);
     return {
       wpi,

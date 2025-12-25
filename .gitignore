@@ -54,3 +54,6 @@ accessibility-reports/
 e2e/results/
 test-results/
 mobile-test-output.txt
+
+# Locally-generated sample exports (do not commit)
+docs/case-studies/worksafe-bc/generated/*.pdf

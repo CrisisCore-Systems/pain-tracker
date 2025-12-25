@@ -3,6 +3,8 @@ import FocusTrap from 'focus-trap-react';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import { cn } from '../design-system/utils';
 
+const PHQ9 = React.lazy(() => import('./assessments/PHQ9'));
+
 const STORAGE_KEY = 'pain-tracker:alerts-settings';
 
 type Settings = { threshold: number };
@@ -232,8 +234,7 @@ export default function AlertsSettings({
                     <div className="bg-background rounded-xl shadow-2xl p-4">
                       {/** Lazy import PHQ9 to keep bundle small */}
                       <React.Suspense fallback={<div>Loading…</div>}>
-                        {/* @ts-ignore */}
-                        {React.createElement(require('../assessments/PHQ9').default, { onClose: () => setShowPHQ(false) })}
+                        <PHQ9 onClose={() => setShowPHQ(false)} />
                       </React.Suspense>
                     </div>
                   </div>
