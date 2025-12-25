@@ -10,6 +10,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765083183447/96eca
 
 ---
 
+> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+
 One day I had keys to a place, mail with my name on it, a bedroom that felt like mine. The next? I'm stuffing my life into a duffel bag, bouncing between weekly motels and friends who'd let me crash for a few nights before the welcome wore thin.
 
 The parole officer needed an address by Friday. The family court wanted proof of "stable housing" for custody visits. Meanwhile, I'm checking my phone at 2 AM to see if I've got enough for another night at the Sandman Inn.
@@ -48,14 +50,11 @@ Just a tool built by someone who learned the hard way that the ground can disapp
 
 ---
 
-### 🚀 Take Control of Your Pain Management
+### 💬 Discussion
+**What health app has failed you in crisis? Share below.**
 
-**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+### 🛠️ Contribute
+See something to improve? [Open an issue →](https://github.com/CrisisCore-Systems/pain-tracker/issues)
 
--   **Secure:** Your data never leaves your device.
--   **Fast:** One-tap logging for crisis moments.
--   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
-
-👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
-
-*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
+### 📬 Stay Updated
+[Get notified when I publish technical deep-dives](https://blog.paintracker.ca/newsletter)
