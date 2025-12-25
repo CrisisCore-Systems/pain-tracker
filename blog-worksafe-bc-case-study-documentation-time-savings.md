@@ -1,4 +1,4 @@
-# How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study
+# WorkSafeBC Documentation: Saving 15+ Hours on Claims (Case Study)
 
 *This case study is a composite example based on common usage patterns of Pain Tracker Pro users preparing workers’ compensation documentation in British Columbia. It is illustrative, not a guarantee of outcomes. Individual results vary.*
 
@@ -47,11 +47,15 @@ Pain Tracker Pro is designed to keep health data **on your device** by default a
 3. Generate a WorkSafeBC-oriented report export
 4. Review the PDF, share only what’s needed
 
+![WorkSafeBC Documentation Workflow: Before vs After](https://raw.githubusercontent.com/CrisisCore-Systems/pain-tracker/main/docs/case-studies/worksafe-bc/assets/wcb-infographic-before-after-1200x630.svg)
+
 In a composite scenario, **report generation** can be **minutes**, with the remaining time spent on review and any additional context you choose to include.
 
 ## Composite Results (Illustrative)
 
 These are **illustrative** metrics that reflect the *direction* of improvement we see when people switch from ad-hoc notes to structured tracking:
+
+![WorkSafeBC Documentation Time Savings: Composite Metrics](https://raw.githubusercontent.com/CrisisCore-Systems/pain-tracker/main/docs/case-studies/worksafe-bc/assets/wcb-metrics-cards-1200x630.svg)
 
 - Tracking consistency: **~65% → ~90%+** of days with entries
 - Required fields: **partial → more complete**, because the entry is structured

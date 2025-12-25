@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowRight, FileText, Timer, CheckCircle2, Sparkles } from 'lucide-react';
 
 const CASE_STUDY_URL =
-  'https://blog.paintracker.ca/worksafe-bc-case-study-documentation-time-savings?utm_source=paintracker.app&utm_medium=landing&utm_campaign=wcb_case_study';
+  'https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study?utm_source=paintracker.app&utm_medium=landing&utm_campaign=wcb_case_study';
 
 export const WorkSafeBCCaseStudy: React.FC = () => {
   return (

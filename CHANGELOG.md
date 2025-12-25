@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.2] - 2025-12-25
+
+### Fixed
+- **Landing Page**: Fixed 404 link for the WorkSafeBC case study in the "Featured" section.
+- **SEO**: Optimized metadata and descriptions for blog post publishing scripts.
+
 ## [1.0.1] - 2025-12-24
 
 ### Added
