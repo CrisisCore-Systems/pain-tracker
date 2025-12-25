@@ -10,6 +10,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764566798340/922fb
 
 ---
 
+> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+
 # "So... where's your backend?"
 
 That's literally the first thing every developer asks when they peek under the hood of [Pain Tracker](https://paintracker.ca). Their confusion is genuine—and honestly, I get it.
@@ -365,14 +367,11 @@ Got questions? Hit me up on [GitHub](https://github.com/CrisisCore-Systems) or o
 
 ---
 
-### 🚀 Take Control of Your Pain Management
+### 💬 Discussion
+**What health app has failed you in crisis? Share below.**
 
-**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+### 🛠️ Contribute
+See something to improve? [Open an issue →](https://github.com/CrisisCore-Systems/pain-tracker/issues)
 
--   **Secure:** Your data never leaves your device.
--   **Fast:** One-tap logging for crisis moments.
--   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
-
-👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
-
-*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
+### 📬 Stay Updated
+[Get notified when I publish technical deep-dives](https://blog.paintracker.ca/newsletter)
