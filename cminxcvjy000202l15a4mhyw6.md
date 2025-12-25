@@ -7,7 +7,6 @@ cuid: cminxcvjy000202l15a4mhyw6
 slug: the-hidden-costs-of-data-driven-health-apps-what-youre-really-paying-when-healthcare-is-free
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1764639420322/0b20ef55-faa3-4938-be29-1e065a3328a3.png
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764639455567/55d5150b-29ed-4ef0-940f-a1a36543d609.png
-tags: opensource, security, privacy, healthcare, chronic-pain, health-apps, data-sovereignty
 
 ---
 
@@ -211,3 +210,17 @@ Questions about any of this? Find me on GitHub or open a discussion. I'm always 
 ---
 
 *And if you're building a health app? Please, for the sake of everyone's dignity, don't make your users the product. There are ways to make money without selling people's pain. Choose one of those.*
+
+---
+
+### 🚀 Take Control of Your Pain Management
+
+**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+
+-   **Secure:** Your data never leaves your device.
+-   **Fast:** One-tap logging for crisis moments.
+-   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
+
+👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
+
+*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
