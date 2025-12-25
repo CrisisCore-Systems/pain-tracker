@@ -10,6 +10,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764639455567/55d51
 
 ---
 
+> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+
 # She Hit “Accept” Smiling. Twenty Minutes Later Her Worst Days Belonged to a Corporation.
 
 Last Tuesday, I sat across from my friend Sarah as she excitedly downloaded yet another pain tracking app. Her face lit up as she scrolled through the features. "Look, it's completely free! And it connects to my Fitbit!"
@@ -213,14 +215,11 @@ Questions about any of this? Find me on GitHub or open a discussion. I'm always 
 
 ---
 
-### 🚀 Take Control of Your Pain Management
+### 💬 Discussion
+**What health app has failed you in crisis? Share below.**
 
-**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+### 🛠️ Contribute
+See something to improve? [Open an issue →](https://github.com/CrisisCore-Systems/pain-tracker/issues)
 
--   **Secure:** Your data never leaves your device.
--   **Fast:** One-tap logging for crisis moments.
--   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
-
-👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
-
-*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
+### 📬 Stay Updated
+[Get notified when I publish technical deep-dives](https://blog.paintracker.ca/newsletter)
