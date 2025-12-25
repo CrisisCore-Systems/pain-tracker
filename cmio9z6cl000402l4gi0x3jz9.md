@@ -7,7 +7,6 @@ cuid: cmio9z6cl000402l4gi0x3jz9
 slug: offline-first-pwas-why-they-matter-for-crisis-responsive-health-tech
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1764661131992/707e4a29-1b9f-4a60-b711-ce82be8c003e.jpeg
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764661443834/9394ba89-28a2-48e7-9023-224a86b4da2e.jpeg
-tags: javascript, webdev, offline-first, typescript, service-workers, progressive-web-apps, pwa, healthcare, indexeddb
 
 ---
 
@@ -682,3 +681,17 @@ The source code is available on [GitHub](https://github.com/CrisisCore-Systems/p
 *Building technology that works for real people in real situations isn't just good engineering—it's a moral choice. When healthcare apps fail, real people suffer. We can do better.*
 
 *Questions about offline-first development? Want to collaborate on health tech that doesn't suck? Find me on* [*GitHub*](https://github.com/CrisisCore-Systems) *or open an issue on the Pain Tracker repo. I'm always excited to talk with other developers who want to build technology that actually serves people.*
+
+---
+
+### 🚀 Take Control of Your Pain Management
+
+**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+
+-   **Secure:** Your data never leaves your device.
+-   **Fast:** One-tap logging for crisis moments.
+-   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
+
+👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
+
+*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
