@@ -10,6 +10,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764661443834/9394b
 
 ---
 
+> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+
 # When Healthcare Apps Fail You: Building Tech That Works When Everything Else Doesn't
 
 > **What I learned the hard way:** Last year, I watched someone in genuine crisis struggle with a health app that couldn't even load because the hospital WiFi was down. That moment changed everything about how I think about building healthcare technology. Here's what I discovered about creating apps that actually work when people need them most—no internet required.
@@ -684,14 +686,11 @@ The source code is available on [GitHub](https://github.com/CrisisCore-Systems/p
 
 ---
 
-### 🚀 Take Control of Your Pain Management
+### 💬 Discussion
+**What health app has failed you in crisis? Share below.**
 
-**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+### 🛠️ Contribute
+See something to improve? [Open an issue →](https://github.com/CrisisCore-Systems/pain-tracker/issues)
 
--   **Secure:** Your data never leaves your device.
--   **Fast:** One-tap logging for crisis moments.
--   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
-
-👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
-
-*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
+### 📬 Stay Updated
+[Get notified when I publish technical deep-dives](https://blog.paintracker.ca/newsletter)
