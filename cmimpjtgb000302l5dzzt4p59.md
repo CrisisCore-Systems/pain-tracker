@@ -7,7 +7,6 @@ cuid: cmimpjtgb000302l5dzzt4p59
 slug: the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1764559585167/f3481dac-567a-452d-a150-f392f4f1fedc.png
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764566798340/922fbc12-8c20-4272-934f-7888af34f89a.png
-tags: security, webdev, privacy, reactjs, pwa, healthcare, local-first
 
 ---
 
@@ -216,8 +215,6 @@ Can't track user counts, feature usage, or where people get stuck without compro
 
 **How we handle it**: Right now I depend on GitHub issues and people reaching out directly. Eventually, I might add completely anonymous, opt-in telemetry.
 
-**Update**: The repo now includes optional anonymous usage analytics behind a build/deploy flag (for example, `VITE_ENABLE_ANALYTICS`).
-
 ### ❌ No Real-Time Sharing
 
 Your doctor can't peek at your pain logs in real-time. You gotta export and send files.
@@ -365,3 +362,17 @@ Got questions? Hit me up on [GitHub](https://github.com/CrisisCore-Systems) or o
 ---
 
 *Building something for healthcare? Sometimes the most secure data is the data you never collect in the first place. And sometimes the best architecture is the one with the fewest ways to break.*
+
+---
+
+### 🚀 Take Control of Your Pain Management
+
+**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+
+-   **Secure:** Your data never leaves your device.
+-   **Fast:** One-tap logging for crisis moments.
+-   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
+
+👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
+
+*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
