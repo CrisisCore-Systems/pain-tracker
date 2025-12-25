@@ -4,7 +4,7 @@ import type { PainEntry } from '../../types';
 import type { WCBReport } from '../../types';
 import { WCBReportGenerator } from '../pain-tracker/WCBReport';
 import { WCBReportPreview } from '../pain-tracker/WCBReportPreview';
-import { isFeatureEnabled } from '../../config/beta';
+import { isFeatureEnabled } from '../../config/features';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../design-system';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import { analyzeTreatmentChanges, analyzeWorkImpact } from '../../utils/wcbAnalytics';

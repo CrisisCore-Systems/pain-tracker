@@ -20,9 +20,8 @@ import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
 import { PWAInstallPrompt } from './components/pwa/PWAInstallPrompt';
 import { PWAStatusIndicator } from './components/pwa/PWAStatusIndicator';
-import BetaWarning from './components/BetaWarning';
 import NotificationConsentPrompt from './components/NotificationConsentPrompt';
-import BetaAnalyticsConsentPrompt from './components/BetaAnalyticsConsentPrompt';
+import AnalyticsConsentPrompt from './components/AnalyticsConsentPrompt';
 import { VaultGate } from './components/security/VaultGate';
 import { usePatternAlerts } from './hooks/usePatternAlerts';
 import { usePainTrackerStore, selectEntries } from './stores/pain-tracker-store';
@@ -215,9 +214,8 @@ function App() {
                       <VaultGate>
                         <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
                           <OfflineBanner />
-                          <BetaWarning />
                           <NotificationConsentPrompt />
-                          <BetaAnalyticsConsentPrompt />
+                          <AnalyticsConsentPrompt />
                           <ErrorBoundary fallback={<ErrorFallback />}>
                             <Suspense fallback={<LoadingFallback />}>
                               <PainTrackerContainer />
@@ -235,9 +233,8 @@ function App() {
                       <VaultGate>
                         <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
                           <OfflineBanner />
-                          <BetaWarning />
                           <NotificationConsentPrompt />
-                          <BetaAnalyticsConsentPrompt />
+                          <AnalyticsConsentPrompt />
                           <ErrorBoundary fallback={<ErrorFallback />}>
                             <Suspense fallback={<LoadingFallback />}>
                               <PainTrackerContainer initialView="daily-checkin" />

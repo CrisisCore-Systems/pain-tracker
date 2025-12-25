@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { isFeatureEnabled } from '../../config/beta';
+import { isFeatureEnabled } from '../../config/features';
 import { formatNumber } from '../../utils/formatting';
 import {
   TrendingUp,

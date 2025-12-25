@@ -5,7 +5,7 @@ import { useStartupPrompts } from '../contexts/StartupPromptsContext';
 
 const STORAGE_KEY = 'pain-tracker:analytics-consent';
 
-export default function BetaAnalyticsConsentPrompt() {
+export default function AnalyticsConsentPrompt() {
   const [consent, setConsent] = useState<string | null>(() => {
     try {
       return localStorage.getItem(STORAGE_KEY);

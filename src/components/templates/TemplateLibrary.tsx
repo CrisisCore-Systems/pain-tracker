@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { isFeatureEnabled } from '../../config/beta';
+import { isFeatureEnabled } from '../../config/features';
 import type { PainEntry } from '../../types';
 
 interface TemplateLibraryProps {

@@ -360,4 +360,4 @@ That's what trauma-informed technology actually looks like. That's privacy by ar
 
 ---
 
-[*Pain Tracker*](https://paintracker.ca) *is a privacy-first PWA for chronic pain tracking with offline functionality, clinical exports, and WorkSafe BC compliance. All health data stays on your device. MIT Licensed. Currently in beta.*
+[*Pain Tracker*](https://paintracker.ca) *is a privacy-first PWA for chronic pain tracking with offline functionality, clinical exports, and WorkSafe BC compliance. All health data stays on your device. MIT Licensed.*
