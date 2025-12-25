@@ -45,3 +45,17 @@ Just a tool built by someone who learned the hard way that the ground can disapp
 ---
 
 *Published December 2025 • blog.paintracker.ca*
+
+---
+
+### 🚀 Take Control of Your Pain Management
+
+**Pain Tracker Pro** is built by a chronic pain survivor for survivors. No servers, no tracking, just privacy-first insights.
+
+-   **Secure:** Your data never leaves your device.
+-   **Fast:** One-tap logging for crisis moments.
+-   **Empowering:** Clinical-grade reports for your doctor or WorkSafeBC.
+
+👉 **[Start Tracking Now (Free & Private)](https://paintracker.ca)**
+
+*Have you experienced the issues mentioned in this article? Join the discussion in the comments below or [contribute on GitHub](https://github.com/CrisisCore-Systems/pain-tracker).*
