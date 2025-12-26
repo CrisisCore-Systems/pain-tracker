@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.4] - 2025-12-25
+
+### Security
+- **CSP Hardening**: Removed `unsafe-inline` from `script-src` and enforced `object-src 'none'` to address security scan failures.
+- **Script Extraction**: Extracted inline theme loader and service worker registration scripts to external files (`theme-loader.js`, `sw-register.js`) to comply with strict CSP.
+
 ## [1.0.3] - 2025-12-25
 
 ### Security
