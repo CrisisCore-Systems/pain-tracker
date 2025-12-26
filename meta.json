@@ -1,106 +1,298 @@
 {
   "outputs": {
-    "assets/background-sync-C0DUYxWS.js": {
-      "bytes": 7020
+    "assets/AnalyticsTrackingService-BBqrbLyx.js": {
+      "bytes": 1190
     },
-    "assets/background-sync-C0DUYxWS.js.map": {
+    "assets/AnalyticsTrackingService-BBqrbLyx.js.map": {
+      "bytes": 16958
+    },
+    "assets/background-sync-DE63Zv-V.js": {
+      "bytes": 5784
+    },
+    "assets/background-sync-DE63Zv-V.js.map": {
       "bytes": 21425
     },
-    "assets/chart-vendor-Cjsg3YbF.js": {
-      "bytes": 392975
+    "assets/BodyMapPage-BhOfRt5P.js": {
+      "bytes": 10594
     },
-    "assets/chart-vendor-Cjsg3YbF.js.map": {
-      "bytes": 1863753
+    "assets/BodyMapPage-BhOfRt5P.js.map": {
+      "bytes": 14205
     },
-    "assets/ClinicalPDFExportButton-NfYP_vuT.js": {
-      "bytes": 28056
+    "assets/CalendarView-PXCg--VW.js": {
+      "bytes": 55909
     },
-    "assets/ClinicalPDFExportButton-NfYP_vuT.js.map": {
-      "bytes": 38450
+    "assets/CalendarView-PXCg--VW.js.map": {
+      "bytes": 68410
     },
-    "assets/ClinicalPDFExporter-C8Zcgu44.js": {
-      "bytes": 44485
+    "assets/chart-vendor-C6dKBweC.js": {
+      "bytes": 611819
     },
-    "assets/ClinicalPDFExporter-C8Zcgu44.js.map": {
-      "bytes": 168310
+    "assets/chart-vendor-C6dKBweC.js.map": {
+      "bytes": 2773765
     },
-    "assets/date-vendor-Bjuqiw2y.js": {
-      "bytes": 22380
+    "assets/chronic-pain-12-month-seed-DhKl-9Ha.js": {
+      "bytes": 8503
     },
-    "assets/date-vendor-Bjuqiw2y.js.map": {
-      "bytes": 147322
+    "assets/chronic-pain-12-month-seed-DhKl-9Ha.js.map": {
+      "bytes": 36941
     },
-    "assets/html2canvas.esm-Ge7aVWlp.js": {
-      "bytes": 201454
+    "assets/ClinicalPDFExportButton-BKvQjSgB.js": {
+      "bytes": 27656
     },
-    "assets/html2canvas.esm-Ge7aVWlp.js.map": {
-      "bytes": 603097
+    "assets/ClinicalPDFExportButton-BKvQjSgB.js.map": {
+      "bytes": 41156
     },
-    "assets/index-B8evwRJL.js": {
-      "bytes": 18445
+    "assets/ClinicalPDFExporter-COWhgg-f.js": {
+      "bytes": 13036
     },
-    "assets/index-B8evwRJL.js.map": {
-      "bytes": 30369
+    "assets/ClinicalPDFExporter-COWhgg-f.js.map": {
+      "bytes": 39834
     },
-    "assets/index-B_OlMJtf.js": {
-      "bytes": 1709142
+    "assets/ClinicPortal-C_96PwO3.js": {
+      "bytes": 246519
     },
-    "assets/index-B_OlMJtf.js.map": {
-      "bytes": 4886475
+    "assets/ClinicPortal-C_96PwO3.js.map": {
+      "bytes": 354512
     },
-    "assets/index-D-5VeUnL.js": {
-      "bytes": 23397
+    "assets/crypto-vendor-BimNoyyQ.js": {
+      "bytes": 1062438
     },
-    "assets/index-D-5VeUnL.js.map": {
-      "bytes": 29218
+    "assets/crypto-vendor-BimNoyyQ.js.map": {
+      "bytes": 2454667
     },
-    "assets/index-XbuqgM6p.css": {
-      "bytes": 176706
+    "assets/DailyCheckin-Drnfapdc.js": {
+      "bytes": 47394
     },
-    "assets/index.es-DtVbe0lW.js": {
-      "bytes": 158675
+    "assets/DailyCheckin-Drnfapdc.js.map": {
+      "bytes": 81484
     },
-    "assets/index.es-DtVbe0lW.js.map": {
-      "bytes": 641349
+    "assets/DataExportModal-DbirBxpQ.js": {
+      "bytes": 17510
     },
-    "assets/libsodium-wrappers-DhqTdZPT.js": {
-      "bytes": 1075118
+    "assets/DataExportModal-DbirBxpQ.js.map": {
+      "bytes": 26942
     },
-    "assets/libsodium-wrappers-DhqTdZPT.js.map": {
-      "bytes": 2512294
+    "assets/date-vendor-Bi3xipBn.js": {
+      "bytes": 21544
     },
-    "assets/offline-storage-CQ7mII8k.js": {
-      "bytes": 7809
+    "assets/date-vendor-Bi3xipBn.js.map": {
+      "bytes": 144628
     },
-    "assets/offline-storage-CQ7mII8k.js.map": {
-      "bytes": 32718
+    "assets/export-Dpg4AlPP.js": {
+      "bytes": 5334
     },
-    "assets/purify.es-BkTlVNTa.js": {
-      "bytes": 22011
+    "assets/export-Dpg4AlPP.js.map": {
+      "bytes": 23175
     },
-    "assets/purify.es-BkTlVNTa.js.map": {
-      "bytes": 91236
+    "assets/FibromyalgiaTracker-BzxYovYa.js": {
+      "bytes": 26414
     },
-    "assets/react-vendor-Bn1aEwkj.js": {
-      "bytes": 313368
+    "assets/FibromyalgiaTracker-BzxYovYa.js.map": {
+      "bytes": 34992
     },
-    "assets/react-vendor-Bn1aEwkj.js.map": {
-      "bytes": 1623119
+    "assets/HelpAndSupportPage-2LZobigy.js": {
+      "bytes": 11290
     },
-    "assets/sampleData-CQjumYEi.js": {
-      "bytes": 22081
+    "assets/HelpAndSupportPage-2LZobigy.js.map": {
+      "bytes": 11952
     },
-    "assets/sampleData-CQjumYEi.js.map": {
-      "bytes": 50819
+    "assets/HistoryPage-vMq6_4bl.js": {
+      "bytes": 8009
+    },
+    "assets/HistoryPage-vMq6_4bl.js.map": {
+      "bytes": 11175
+    },
+    "assets/html2canvas.esm-C2s7aB6S.js": {
+      "bytes": 198613
+    },
+    "assets/html2canvas.esm-C2s7aB6S.js.map": {
+      "bytes": 600086
+    },
+    "assets/i18n-vendor-C-xkjauL.js": {
+      "bytes": 49036
+    },
+    "assets/i18n-vendor-C-xkjauL.js.map": {
+      "bytes": 162915
+    },
+    "assets/icons-vendor-DZ-9b690.js": {
+      "bytes": 26061
+    },
+    "assets/icons-vendor-DZ-9b690.js.map": {
+      "bytes": 108009
+    },
+    "assets/index-2j2YKfWv.js": {
+      "bytes": 40348
+    },
+    "assets/index-2j2YKfWv.js.map": {
+      "bytes": 77233
+    },
+    "assets/index-BhRMxcB0.js": {
+      "bytes": 23381
+    },
+    "assets/index-BhRMxcB0.js.map": {
+      "bytes": 27789
+    },
+    "assets/index-CMuG_LiM.js": {
+      "bytes": 262569
+    },
+    "assets/index-CMuG_LiM.js.map": {
+      "bytes": 924403
+    },
+    "assets/index-DbmPtQG-.js": {
+      "bytes": 18842
+    },
+    "assets/index-DbmPtQG-.js.map": {
+      "bytes": 31629
+    },
+    "assets/index-DoZZ2cid.css": {
+      "bytes": 251567
+    },
+    "assets/index.es-IFh0U97C.js": {
+      "bytes": 155767
+    },
+    "assets/index.es-IFh0U97C.js.map": {
+      "bytes": 638332
+    },
+    "assets/InteractiveBodyMap-CkiP8R44.js": {
+      "bytes": 50019
+    },
+    "assets/InteractiveBodyMap-CkiP8R44.js.map": {
+      "bytes": 81299
+    },
+    "assets/LandingPage-BWHASAWX.js": {
+      "bytes": 157983
+    },
+    "assets/LandingPage-BWHASAWX.js.map": {
+      "bytes": 174814
+    },
+    "assets/LandingPage-DAbqRr9M.css": {
+      "bytes": 13074
+    },
+    "assets/Modal-khbJLhfd.js": {
+      "bytes": 4353
+    },
+    "assets/Modal-khbJLhfd.js.map": {
+      "bytes": 17048
+    },
+    "assets/offline-storage-BNc7x0M7.js": {
+      "bytes": 7765
+    },
+    "assets/offline-storage-BNc7x0M7.js.map": {
+      "bytes": 34300
+    },
+    "assets/PainTrackerContainer-Cn0qrvwX.js": {
+      "bytes": 170392
+    },
+    "assets/PainTrackerContainer-Cn0qrvwX.js.map": {
+      "bytes": 282965
+    },
+    "assets/PainTrackerContainer-Cxe0IgvJ.css": {
+      "bytes": 5356
+    },
+    "assets/pdf-vendor-zZbfvrDE.js": {
+      "bytes": 413477
+    },
+    "assets/pdf-vendor-zZbfvrDE.js.map": {
+      "bytes": 1434506
+    },
+    "assets/pdfReportGenerator-C1H2bhKx.js": {
+      "bytes": 5702
+    },
+    "assets/pdfReportGenerator-C1H2bhKx.js.map": {
+      "bytes": 20541
+    },
+    "assets/PHQ9-tiEV8Feq.js": {
+      "bytes": 3635
+    },
+    "assets/PHQ9-tiEV8Feq.js.map": {
+      "bytes": 4540
+    },
+    "assets/PremiumAnalyticsDashboard-B3HJubqM.js": {
+      "bytes": 269893
+    },
+    "assets/PremiumAnalyticsDashboard-B3HJubqM.js.map": {
+      "bytes": 428726
+    },
+    "assets/PricingPage-B1JJfmCC.js": {
+      "bytes": 34549
+    },
+    "assets/PricingPage-B1JJfmCC.js.map": {
+      "bytes": 57320
+    },
+    "assets/PricingPage-WSFOMqp4.css": {
+      "bytes": 7813
+    },
+    "assets/react-vendor-CM2d6bHp.js": {
+      "bytes": 354555
+    },
+    "assets/react-vendor-CM2d6bHp.js.map": {
+      "bytes": 2128551
+    },
+    "assets/sampleData-D4UYskcb.js": {
+      "bytes": 22029
+    },
+    "assets/sampleData-D4UYskcb.js.map": {
+      "bytes": 49398
+    },
+    "assets/ScreenshotShowcase-BBlOiiU7.js": {
+      "bytes": 62716
+    },
+    "assets/ScreenshotShowcase-BBlOiiU7.js.map": {
+      "bytes": 124198
+    },
+    "assets/security-vendor-CufIpF-r.js": {
+      "bytes": 22087
+    },
+    "assets/security-vendor-CufIpF-r.js.map": {
+      "bytes": 90654
+    },
+    "assets/SettingsPage-BCfUVgfl.js": {
+      "bytes": 110066
+    },
+    "assets/SettingsPage-BCfUVgfl.js.map": {
+      "bytes": 166161
+    },
+    "assets/state-vendor-gOFTyJpA.js": {
+      "bytes": 14799
+    },
+    "assets/state-vendor-gOFTyJpA.js.map": {
+      "bytes": 80027
+    },
+    "assets/SubmitStoryPage-BSxHDwYQ.js": {
+      "bytes": 17884
+    },
+    "assets/SubmitStoryPage-BSxHDwYQ.js.map": {
+      "bytes": 22357
+    },
+    "assets/SubscriptionManagementPage-BrAOex_C.js": {
+      "bytes": 25423
+    },
+    "assets/SubscriptionManagementPage-BrAOex_C.js.map": {
+      "bytes": 31561
+    },
+    "assets/switch-b5sgs0gR.js": {
+      "bytes": 371
+    },
+    "assets/switch-b5sgs0gR.js.map": {
+      "bytes": 1096
+    },
+    "pain-tracker/sw.js": {
+      "bytes": 4007
     },
     "pwa-demo.js": {
-      "bytes": 8279
+      "bytes": 11081
     },
     "pwa-init.js": {
       "bytes": 11342
     },
+    "sw-register.js": {
+      "bytes": 1948
+    },
     "sw.js": {
-      "bytes": 12597
+      "bytes": 3981
+    },
+    "theme-loader.js": {
+      "bytes": 761
     }
   }
 }

@@ -5,9 +5,11 @@
 
 const SW_VERSION = '1.9';
 const CACHE_NAME = `pain-tracker-static-v${SW_VERSION}`;
-const PRECACHE_URLS = ['/manifest.json', '/offline.html'];
 
-const STATIC_PATH_PREFIXES = ['/assets/', '/icons/', '/logos/', '/screenshots/'];
+// Use absolute paths so different browsers/dev servers resolve the same URL regardless of scope.
+const PRECACHE_URLS = ['/pain-tracker/manifest.json', '/offline.html'];
+
+const STATIC_PATH_PREFIXES = ['/pain-tracker/assets/', '/assets/', '/icons/', '/logos/', '/screenshots/'];
 
 function isSameOrigin(requestUrl) {
   return requestUrl.origin === self.location.origin;
@@ -20,8 +22,6 @@ function isNavigationRequest(request) {
 function isCacheableStaticAsset(url) {
   if (!isSameOrigin(url)) return false;
   if (STATIC_PATH_PREFIXES.some((p) => url.pathname.startsWith(p))) return true;
-
-  // Allow common static extensions outside the prefixes (e.g., /favicon.ico, /apple-touch-icon.png)
   return /\.(?:js|css|png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(url.pathname);
 }
 
@@ -55,7 +55,7 @@ self.addEventListener('activate', (event) => {
 
       await self.clients.claim();
 
-      // Notify clients that the service worker is active and ready.
+      // Notify clients that the service worker is active and ready. Tests can listen for this message.
       const allClients = await self.clients.matchAll({ includeUncontrolled: true });
       for (const client of allClients) {
         client.postMessage({ type: 'SW_READY', version: SW_VERSION });
@@ -67,7 +67,6 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Skip external URLs - let the browser handle them directly.
   if (!isSameOrigin(url)) return;
 
   // Network-first for navigations to avoid stale HTML.
@@ -75,13 +74,16 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request).catch(async () => {
         const cache = await caches.open(CACHE_NAME);
-        return (await cache.match('/offline.html')) || (await cache.match('/')) || new Response(null, { status: 504 });
+        return (
+          (await cache.match('/offline.html')) ||
+          (await cache.match('/pain-tracker/')) ||
+          new Response(null, { status: 504 })
+        );
       })
     );
     return;
   }
 
-  // Only cache GET static assets.
   if (event.request.method !== 'GET' || !isCacheableStaticAsset(url)) return;
 
   event.respondWith(
@@ -107,7 +109,6 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-
   // Echo test ping messages
   if (event.data && event.data.type === 'PING') {
     try {

@@ -1,15 +1,7 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang='en' class='dark'>
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X25RTEWBYL"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-X25RTEWBYL');
-    </script>
+    <!-- Analytics loader (module) - uses VITE_ENABLE_ANALYTICS to control whether external GTM is loaded -->
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover' />
     <meta name="description" content="Pain Tracker - A comprehensive tool for tracking and managing chronic pain and injuries" />
@@ -22,10 +14,10 @@
     <meta name="msapplication-TileColor" content="#0ea5e9" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="theme-color" content="#3B82F6" />
+    <meta name="theme-color" content="#0f172a" />
     
-    <!-- Prevent forced dark mode on browsers (Chrome Auto Dark Theme) -->
-    <meta name="color-scheme" content="only light" />
+    <!-- Support both light and dark color schemes - dark is our default -->
+    <meta name="color-scheme" content="dark light" />
     
     <!-- Security Headers (Note: CSP frame-ancestors and X-Frame-Options are set via HTTP headers in server config) -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -45,30 +37,61 @@
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <link rel="manifest" href="./manifest.json" />
     
+    <!-- Font preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    
     <title>Pain Tracker - Comprehensive Pain & Injury Management System</title>
-    <script type="module" crossorigin src="/assets/index-B_OlMJtf.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-Bn1aEwkj.js">
-    <link rel="modulepreload" crossorigin href="/assets/chart-vendor-Cjsg3YbF.js">
-    <link rel="modulepreload" crossorigin href="/assets/date-vendor-Bjuqiw2y.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-XbuqgM6p.css">
+    
+    <!-- Critical CSS for faster first paint -->
+    <style>
+      /* Minimal critical CSS for initial render */
+      :root { --bg-color: #0f172a; --text-color: #f1f5f9; }
+      .dark { background-color: var(--bg-color); color: var(--text-color); }
+      body { margin: 0; font-family: system-ui, -apple-system, sans-serif; }
+      #root { min-height: 100vh; }
+      /* Loading state styles */
+      .initial-loading { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        min-height: 100vh;
+        background: var(--bg-color);
+      }
+      .loading-spinner {
+        width: 40px; height: 40px;
+        border: 3px solid rgba(255,255,255,0.1);
+        border-top-color: #0ea5e9;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+    <script type="module" crossorigin src="/assets/index-CMuG_LiM.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/state-vendor-gOFTyJpA.js">
+    <link rel="modulepreload" crossorigin href="/assets/chart-vendor-C6dKBweC.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-CM2d6bHp.js">
+    <link rel="modulepreload" crossorigin href="/assets/pdf-vendor-zZbfvrDE.js">
+    <link rel="modulepreload" crossorigin href="/assets/icons-vendor-DZ-9b690.js">
+    <link rel="modulepreload" crossorigin href="/assets/date-vendor-Bi3xipBn.js">
+    <link rel="modulepreload" crossorigin href="/assets/i18n-vendor-C-xkjauL.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-DoZZ2cid.css">
   </head>
-  <body>
-    <div id='root'></div>
+  <body class="bg-background">
+    <!-- Theme loader script - extracted for CSP compliance -->
+    <script src="/theme-loader.js"></script>
+    <div id='root'>
+      <!-- Initial loading state before React hydrates -->
+      <div class="initial-loading" id="initial-loader">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
     
     <!-- PWA Initialization -->
-    <script>
-      // Service Worker Registration
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js')
-            .then(registration => {
-              console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-              console.log('SW registration failed: ', registrationError);
-            });
-        });
-      }
-    </script>
+    <script defer src="/sw-register.js"></script>
   </body>
 </html>

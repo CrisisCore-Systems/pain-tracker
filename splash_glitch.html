@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PainTracker.ca | Terminal Entry</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --primary-cyan: #00F3FF;
+            --accent-red: #FF0055;
+            --ghost-grey: #1A1A1A;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* The Container */
+        .glitch-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        /* The Base Logo (Signal Sanctum) */
+        .logo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="40" y="40" width="432" height="432" rx="20" stroke="%231A1A1A" stroke-width="40"/><rect x="80" y="80" width="352" height="352" rx="10" fill="%23050505"/><path d="M256 140L330 256L256 372L182 256L256 140Z" fill="%2300F3FF"/><rect x="140" y="254" width="232" height="4" fill="%23FF0055" /><path d="M40 120V40H120" stroke="%2300F3FF" stroke-width="8"/><path d="M392 472H472V392" stroke="%2300F3FF" stroke-width="8"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        /* Glitch Layers */
+        .logo::before, .logo::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: inherit;
+            background-size: inherit;
+            opacity: 0.8;
+        }
+
+        .logo::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--accent-red);
+            clip-path: inset(45% 0 45% 0);
+            animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+        }
+
+        .logo::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--primary-cyan);
+            clip-path: inset(10% 0 80% 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+
+        /* Glitch Keyframes */
+        @keyframes glitch-anim-1 {
+            0% { clip-path: inset(20% 0 30% 0); transform: translate(-5px, -2px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(5px, 2px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-5px, 0); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(5px, -2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
+            100% { clip-path: inset(30% 0 20% 0); transform: translate(0, 0); }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% { clip-path: inset(15% 0 15% 0); transform: translate(2px, 5px); }
+            25% { clip-path: inset(10% 0 85% 0); transform: translate(-2px, -5px); }
+            50% { clip-path: inset(45% 0 45% 0); transform: translate(2px, 0); }
+            75% { clip-path: inset(80% 0 10% 0); transform: translate(-5px, 2px); }
+            100% { clip-path: inset(5% 0 75% 0); transform: translate(0, 0); }
+        }
+
+        /* Loading Text */
+        .status-text {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            color: var(--primary-cyan);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch-container">
+        <div class="logo"></div>
+        <div class="status-text">Localizing Database... Air-Gap Active</div>
+    </div>
+</body>
+</html>

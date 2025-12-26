@@ -137,34 +137,101 @@ window.testPWA = async function() {
 
 // Add test data function
 window.addTestPainData = async function() {
-  console.log('🩺 Adding test pain data...');
+  console.log('🩺 Adding comprehensive test pain data...');
   
   const testEntries = [
+    // Acute severe pain
     {
       id: Date.now() + 1,
-      date: new Date().toISOString(),
-      painLevel: 7,
+      date: new Date(Date.now() - 21 * 86400000).toISOString(), // 21 days ago
+      painLevel: 9,
       location: 'Lower Back',
-      description: 'Sharp pain after sitting for long periods',
-      symptoms: ['Sharp Pain', 'Muscle Tension', 'Limited Mobility']
+      description: 'Severe pain episode - lifting incident at work. Sharp shooting pain down right leg. Cannot find comfortable position.',
+      symptoms: ['Sharp Pain', 'Shooting Pain', 'Numbness', 'Tingling', 'Muscle Spasms']
     },
+    // Moderate pain with treatment
     {
       id: Date.now() + 2,
-      date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-      painLevel: 4,
-      location: 'Right Knee',
-      description: 'Dull ache, worse in the morning',
-      symptoms: ['Dull Ache', 'Stiffness', 'Swelling']
+      date: new Date(Date.now() - 14 * 86400000).toISOString(), // 14 days ago
+      painLevel: 7,
+      location: 'Lower Back',
+      description: 'Starting physiotherapy. Pain still significant but have treatment plan.',
+      symptoms: ['Dull Ache', 'Sharp Pain with Movement', 'Stiffness', 'Numbness']
     },
+    // Improvement phase
     {
       id: Date.now() + 3,
-      date: new Date(Date.now() - 2 * 86400000).toISOString(), // 2 days ago
-      painLevel: 6,
+      date: new Date(Date.now() - 7 * 86400000).toISOString(), // 7 days ago
+      painLevel: 5,
+      location: 'Lower Back',
+      description: 'Noticeable improvement with regular PT exercises and medication management.',
+      symptoms: ['Dull Ache', 'Stiffness', 'Tightness']
+    },
+    // Good progress
+    {
+      id: Date.now() + 4,
+      date: new Date(Date.now() - 3 * 86400000).toISOString(), // 3 days ago
+      painLevel: 3,
+      location: 'Lower Back',
+      description: 'Much better! Can walk 30 minutes without discomfort. Sleep quality improved.',
+      symptoms: ['Mild Stiffness']
+    },
+    // Near recovery
+    {
+      id: Date.now() + 5,
+      date: new Date(Date.now() - 1 * 86400000).toISOString(), // Yesterday
+      painLevel: 2,
+      location: 'Lower Back',
+      description: 'Feeling great! Back to normal activities. Continuing exercises to prevent recurrence.',
+      symptoms: ['Occasional Stiffness']
+    },
+    // Neck pain scenario
+    {
+      id: Date.now() + 6,
+      date: new Date(Date.now() - 30 * 86400000).toISOString(), // 30 days ago
+      painLevel: 7,
       location: 'Neck',
-      description: 'Tension headache radiating from neck',
-      symptoms: ['Tension', 'Headache', 'Neck Stiffness']
+      description: 'Neck pain from poor desk ergonomics. Tension headaches frequent.',
+      symptoms: ['Sharp Pain with Movement', 'Headaches', 'Stiffness', 'Muscle Tension']
+    },
+    // Knee pain scenario
+    {
+      id: Date.now() + 7,
+      date: new Date(Date.now() - 15 * 86400000).toISOString(), // 15 days ago
+      painLevel: 5,
+      location: 'Right Knee',
+      description: 'Bilateral knee pain from overuse. Strengthening exercises prescribed.',
+      symptoms: ['Swelling', 'Dull Ache', 'Stiffness', 'Clicking Sound']
+    },
+    // Shoulder pain
+    {
+      id: Date.now() + 8,
+      date: new Date(Date.now() - 10 * 86400000).toISOString(), // 10 days ago
+      painLevel: 6,
+      location: 'Right Shoulder',
+      description: 'Rotator cuff issue. Limited range of motion affecting daily activities.',
+      symptoms: ['Sharp Pain', 'Limited Mobility', 'Weakness', 'Night Pain']
+    },
+    // Hip pain
+    {
+      id: Date.now() + 9,
+      date: new Date(Date.now() - 5 * 86400000).toISOString(), // 5 days ago
+      painLevel: 4,
+      location: 'Right Hip',
+      description: 'Hip pain improving with targeted exercises and anti-inflammatory medication.',
+      symptoms: ['Dull Ache', 'Stiffness', 'Limited Range']
+    },
+    // Recovery entry
+    {
+      id: Date.now() + 10,
+      date: new Date().toISOString(), // Today
+      painLevel: 2,
+      location: 'General',
+      description: 'Overall feeling much better. Maintaining exercise routine and good sleep hygiene.',
+      symptoms: ['Mild Discomfort']
     }
   ];
+
 
   let successCount = 0;
   for (const entry of testEntries) {

@@ -1,0 +1,1 @@
+import{j as e}from"./react-vendor-CM2d6bHp.js";const c=({checked:c=!1,onCheckedChange:s,className:o="",...t})=>e.jsxDEV("input",{type:"checkbox",role:"switch",className:o,checked:c,onChange:e=>s?.(e.target.checked),...t},void 0,!1,{fileName:"C:/Users/kay/Documents/Projects/pain-tracker/src/components/ui/switch.tsx",lineNumber:15,columnNumber:3},void 0);export{c as S};

@@ -14,13 +14,13 @@
       "src": "icons/icon-192x192.png",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "apple-touch-icon.png",
       "type": "image/png",
-      "sizes": "180x180",
-      "purpose": "any"
+      "sizes": "192x192",
+      "purpose": "apple-touch-icon"
     }
   ],
   "screenshots": [
@@ -39,8 +39,8 @@
       "label": "Analytics overview"
     }
   ],
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/pain-tracker/",
+  "scope": "/pain-tracker/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait-primary",
@@ -50,4 +50,4 @@
   "lang": "en",
   "dir": "ltr",
   "prefer_related_applications": false
-} 
+}
