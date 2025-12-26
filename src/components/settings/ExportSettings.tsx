@@ -15,7 +15,7 @@ export default function ExportSettings() {
       const data = exportToCSV(entries as PainEntry[]);
       downloadData(data, `pain-tracker-export-${new Date().toISOString()}.csv`, 'text/csv');
     } else if (format === 'pdf') {
-      const dataUri = exportToPDF(entries as PainEntry[]);
+      const dataUri = await exportToPDF(entries as PainEntry[]);
       downloadData(dataUri, `pain-tracker-report-${new Date().toISOString()}.pdf`, 'application/pdf');
     }
   };

@@ -99,7 +99,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     ];
   }, [filteredEntries]);
 
-  const handleExport = async (type: string, exportFn: () => string, filename: string, mimeType: string) => {
+  const handleExport = async (type: string, exportFn: () => string | Promise<string>, filename: string, mimeType: string) => {
     if (filteredEntries.length === 0) {
       toast.error('No Data', 'There are no entries to export for the selected date range.');
       return;
@@ -109,7 +109,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
     try {
       // Small delay for UI feedback
       await new Promise(resolve => setTimeout(resolve, 300));
-      const data = exportFn();
+      const data = await exportFn();
       downloadData(data, filename, mimeType);
       toast.success('Export Complete', `Your ${type.toUpperCase()} report has been downloaded.`);
     } catch (error) {
@@ -135,7 +135,7 @@ export function ReportsPage({ entries }: ReportsPageProps) {
       const startDate = new Date(sorted[0].timestamp);
       const endDate = new Date(sorted[sorted.length - 1].timestamp);
 
-      downloadWorkSafeBCPDF(filteredEntries, {
+      await downloadWorkSafeBCPDF(filteredEntries, {
         startDate,
         endDate,
         includeDetailedEntries: true,

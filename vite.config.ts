@@ -133,8 +133,8 @@ export default defineConfig({
     },
   },
   build: {
-    // Never generate source maps (security best practice)
-    sourcemap: false,
+    // Generate source maps for production debugging (Lighthouse requirement)
+    sourcemap: true,
     outDir: 'dist',
     // Always use terser for production-grade minification
     minify: 'terser',

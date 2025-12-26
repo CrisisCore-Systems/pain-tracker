@@ -1,5 +1,5 @@
 import type { PainEntry } from '../../types';
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf'; // Moved to dynamic import
 import { formatNumber } from '../formatting';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { trackDataExported } from '../../analytics/ga4-events';
@@ -93,7 +93,7 @@ export const downloadData = (
   window.URL.revokeObjectURL(url);
 };
 
-export const exportToPDF = (entries: PainEntry[]): string => {
+export const exportToPDF = async (entries: PainEntry[]): Promise<string> => {
   // Track export analytics
   privacyAnalytics.trackDataExport('pdf').catch((error) => {
     analyticsLogger.swallowed(error, { context: 'exportToPDF', exportType: 'pdf' });
@@ -105,6 +105,7 @@ export const exportToPDF = (entries: PainEntry[]): string => {
   // Track local usage
   trackExport('pdf', entries.length);
 
+  const { default: jsPDF } = await import('jspdf');
   const doc = new jsPDF();
 
   // Title

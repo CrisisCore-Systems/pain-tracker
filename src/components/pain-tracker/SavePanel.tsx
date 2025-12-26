@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
 // For PDF export (simple, local)
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf'; // Moved to dynamic import
 import type { PainEntry } from '../../types';
 import { format as formatDate } from 'date-fns';
 
@@ -75,13 +75,18 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
       filename = 'pain-tracker-export.csv';
     } else if (format === 'pdf') {
       // PDF export (simple clinical summary)
-      const doc = new jsPDF();
-      doc.text('Pain Tracker Clinical Report', 10, 10);
-      entries.forEach((entry, i) => {
-        doc.text(`Entry #${i + 1} - ${formatDate(new Date(entry.timestamp), 'yyyy-MM-dd HH:mm')}`, 10, 20 + i * 10);
-        doc.text(`Pain: ${entry.baselineData.pain} | Locations: ${(entry.baselineData.locations ?? []).join(';')}`, 10, 25 + i * 10);
+      // Dynamic import for PDF generation to reduce initial bundle size
+      import('jspdf').then(({ default: jsPDF }) => {
+        const doc = new jsPDF();
+        doc.text('Pain Tracker Clinical Report', 10, 10);
+        entries.forEach((entry, i) => {
+          doc.text(`Entry #${i + 1} - ${formatDate(new Date(entry.timestamp), 'yyyy-MM-dd HH:mm')}`, 10, 20 + i * 10);
+          doc.text(`Pain: ${entry.baselineData.pain} | Locations: ${(entry.baselineData.locations ?? []).join(';')}`, 10, 25 + i * 10);
+        });
+        doc.save('pain-tracker-report.pdf');
+      }).catch(err => {
+        console.error('Failed to load PDF generator:', err);
       });
-      doc.save('pain-tracker-report.pdf');
       return;
     } else if (format === 'fhir') {
       // FHIR JSON export (Observation resource, minimal demo)

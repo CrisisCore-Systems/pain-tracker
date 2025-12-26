@@ -1,5 +1,5 @@
 import type { PainEntry } from '../../types';
-import jsPDF from 'jspdf';
+// import jsPDF from 'jspdf'; // Moved to dynamic import
 import { formatNumber } from '../formatting';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { trackDataExported } from '../../analytics/ga4-events';
@@ -230,10 +230,10 @@ function getPainTrend(entries: PainEntry[]): string {
 /**
  * Export enhanced WorkSafe BC PDF report
  */
-export function exportWorkSafeBCPDF(
+export async function exportWorkSafeBCPDF(
   entries: PainEntry[],
   options: WCBExportOptions
-): string {
+): Promise<string> {
   // Track analytics
   privacyAnalytics.trackDataExport('pdf').catch((error) => {
     analyticsLogger.swallowed(error, { context: 'exportWorkSafeBCPDF', exportType: 'wcb-pdf' });
@@ -260,6 +260,7 @@ export function exportWorkSafeBCPDF(
   const metrics = calculateMetrics(filteredEntries);
   const painTrend = getPainTrend(filteredEntries);
 
+  const { default: jsPDF } = await import('jspdf');
   const doc = new jsPDF();
   let yPosition = 20;
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -689,11 +690,11 @@ export function exportWorkSafeBCPDF(
 /**
  * Download the WorkSafe BC PDF report
  */
-export function downloadWorkSafeBCPDF(
+export async function downloadWorkSafeBCPDF(
   entries: PainEntry[],
   options: WCBExportOptions
-): void {
-  const pdfData = exportWorkSafeBCPDF(entries, options);
+): Promise<void> {
+  const pdfData = await exportWorkSafeBCPDF(entries, options);
   
   // Create filename with date range
   const startStr = options.startDate.toISOString().split('T')[0];

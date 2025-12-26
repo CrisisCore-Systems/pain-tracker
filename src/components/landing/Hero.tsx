@@ -104,6 +104,7 @@ export const Hero: React.FC = () => {
                 variant="outline"
                 onClick={() => navigate('/clinic')}
                 className="border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10 hover:border-emerald-300 transition-all"
+                aria-label="Clinic Tools"
               >
                 <Stethoscope className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">Clinic Tools</span>
@@ -255,6 +256,8 @@ export const Hero: React.FC = () => {
                   <img
                     src={_env.VITE_LANDING_SCREENSHOT || '/screenshots/marketing/analytics-dashboard.png'}
                     alt="Pain Tracker Pro Dashboard"
+                    width="1200"
+                    height="800"
                     className="rounded-xl w-full h-auto shadow-2xl"
                     loading="lazy"
                   />
