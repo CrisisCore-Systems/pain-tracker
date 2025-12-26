@@ -6,7 +6,7 @@ import https from 'node:https';
 const API_KEY = process.env.HASHNODE_API_KEY;
 const PUBLICATION_ID = process.env.HASHNODE_PUBLICATION_ID;
 const PUBLICATION_HOST = process.env.HASHNODE_HOST || 'blog.paintracker.ca';
-const FILE_PATH = path.join(process.cwd(), 'blog-worksafe-bc-case-study-documentation-time-savings.md');
+const FILE_PATH = path.join(process.cwd(), 'CONTENT_STRATEGY_AUDIT_2025.md');
 
 if (!API_KEY || !PUBLICATION_ID) {
   console.error('❌ Error: HASHNODE_API_KEY or HASHNODE_PUBLICATION_ID is missing in .env');
@@ -96,15 +96,14 @@ async function publish() {
     const contentMarkdown = lines.slice(1).join('\n').trim();
     
     // Generate slug from title
-    const slug = 'how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study';
-    const subtitle = "Save 15+ hours on WorkSafeBC claims. A case study on reducing paperwork and protecting privacy with local-first tracking.";
+    const slug = 'comprehensive-article-review-and-analysis-report';
+    const subtitle = "A systematic review of 12 published articles, performance metrics, and a strategic roadmap for 2025.";
     
     const tags = [
-      { slug: 'privacy', name: 'Privacy' },
-      { slug: 'healthcare', name: 'Healthcare' },
-      { slug: 'accessibility', name: 'Accessibility' },
-      { slug: 'pwa', name: 'PWA' },
-      { slug: 'typescript', name: 'TypeScript' }
+      { slug: 'content-strategy', name: 'Content Strategy' },
+      { slug: 'building-in-public', name: 'Building in Public' },
+      { slug: 'audit', name: 'Audit' },
+      { slug: 'transparency', name: 'Transparency' }
     ];
 
     // Check if post exists
@@ -132,7 +131,6 @@ async function publish() {
           subtitle: subtitle,
           contentMarkdown: contentMarkdown,
           tags: tags,
-          // We don't update slug to avoid breaking links, but we could if needed
         }
       };
 

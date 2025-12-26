@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.3] - 2025-12-25
+
+### Security
+- **Security Headers**: Implemented strict Content Security Policy (CSP), X-Frame-Options, and other security headers in `vercel.json` to improve security score (A+ target).
+
 ## [1.0.2] - 2025-12-25
 
 ### Fixed
