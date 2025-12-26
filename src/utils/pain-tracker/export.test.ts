@@ -163,26 +163,26 @@ describe('Pain Tracker Export', () => {
   });
 
   describe('exportToPDF', () => {
-    it('should generate a data URI string', () => {
-      const result = exportToPDF(mockEntries);
+    it('should generate a data URI string', async () => {
+      const result = await exportToPDF(mockEntries);
       expect(result).toMatch(/^data:application\/pdf;/);
     });
 
-    it('should handle empty entries', () => {
-      const result = exportToPDF([]);
+    it('should handle empty entries', async () => {
+      const result = await exportToPDF([]);
       expect(result).toMatch(/^data:application\/pdf;/);
     });
 
-    it('should handle entries without notes', () => {
+    it('should handle entries without notes', async () => {
       const entriesWithoutNotes = [{
         ...mockEntries[0],
         notes: '',
       }];
-      const result = exportToPDF(entriesWithoutNotes);
+      const result = await exportToPDF(entriesWithoutNotes);
       expect(result).toMatch(/^data:application\/pdf;/);
     });
 
-    it('should handle entries without symptoms or locations', () => {
+    it('should handle entries without symptoms or locations', async () => {
       const minimalEntry: PainEntry = {
         ...mockEntries[0],
         baselineData: {
@@ -191,40 +191,40 @@ describe('Pain Tracker Export', () => {
           symptoms: [],
         },
       };
-      const result = exportToPDF([minimalEntry]);
+      const result = await exportToPDF([minimalEntry]);
       expect(result).toMatch(/^data:application\/pdf;/);
     });
 
-    it('should handle more than 20 entries (pagination)', () => {
+    it('should handle more than 20 entries (pagination)', async () => {
       const manyEntries = createMockEntries(25);
-      const result = exportToPDF(manyEntries);
+      const result = await exportToPDF(manyEntries);
       expect(result).toMatch(/^data:application\/pdf;/);
       // PDF should still be generated successfully
       expect(result.length).toBeGreaterThan(1000);
     });
 
-    it('should handle entries with long notes', () => {
+    it('should handle entries with long notes', async () => {
       const longNote = 'A'.repeat(500);
       const entriesWithLongNotes = [{
         ...mockEntries[0],
         notes: longNote,
       }];
-      const result = exportToPDF(entriesWithLongNotes);
+      const result = await exportToPDF(entriesWithLongNotes);
       expect(result).toMatch(/^data:application\/pdf;/);
     });
 
-    it('should calculate average pain correctly', () => {
+    it('should calculate average pain correctly', async () => {
       const entriesWithVariedPain = [
         { ...mockEntries[0], baselineData: { ...mockEntries[0].baselineData, pain: 2 } },
         { ...mockEntries[0], id: 2, baselineData: { ...mockEntries[0].baselineData, pain: 4 } },
         { ...mockEntries[0], id: 3, baselineData: { ...mockEntries[0].baselineData, pain: 6 } },
       ];
       // Average should be 4
-      const result = exportToPDF(entriesWithVariedPain);
+      const result = await exportToPDF(entriesWithVariedPain);
       expect(result).toMatch(/^data:application\/pdf;/);
     });
 
-    it('should handle entries spanning multiple pages', () => {
+    it('should handle entries spanning multiple pages', async () => {
       // Create entries with lots of content that would span pages
       const verboseEntries = createMockEntries(15).map((entry, i) => ({
         ...entry,
@@ -235,7 +235,7 @@ describe('Pain Tracker Export', () => {
           locations: ['Location1', 'Location2', 'Location3'],
         },
       }));
-      const result = exportToPDF(verboseEntries);
+      const result = await exportToPDF(verboseEntries);
       expect(result).toMatch(/^data:application\/pdf;/);
     });
   });
@@ -345,9 +345,9 @@ describe('Pain Tracker Export', () => {
       });
     });
 
-    it('should export to PDF with valid structure', () => {
+    it('should export to PDF with valid structure', async () => {
       const entries = createMockEntries(5);
-      const pdfDataUri = exportToPDF(entries);
+      const pdfDataUri = await exportToPDF(entries);
       
       // Verify it's a valid PDF data URI
       expect(pdfDataUri).toMatch(/^data:application\/pdf;/);

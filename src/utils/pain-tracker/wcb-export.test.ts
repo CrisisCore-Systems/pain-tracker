@@ -106,39 +106,39 @@ describe('WCB Export', () => {
   });
 
   describe('exportWorkSafeBCPDF', () => {
-    it('should generate a PDF data URI string with basic entries', () => {
+    it('should generate a PDF data URI string with basic entries', async () => {
       const entries: PainEntry[] = [
         createMockEntry({ timestamp: '2024-01-15T10:00:00Z' }),
         createMockEntry({ timestamp: '2024-01-16T14:30:00Z' }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
       expect(result).toContain('data:application/pdf');
     });
 
-    it('should handle empty entries array', () => {
+    it('should handle empty entries array', async () => {
       const entries: PainEntry[] = [];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with various pain levels', () => {
+    it('should handle entries with various pain levels', async () => {
       const entries: PainEntry[] = [
         createMockEntry({ baselineData: { pain: 1, locations: [], symptoms: [] } }),
         createMockEntry({ baselineData: { pain: 5, locations: [], symptoms: [] } }),
         createMockEntry({ baselineData: { pain: 10, locations: [], symptoms: [] } }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with multiple locations and symptoms', () => {
+    it('should handle entries with multiple locations and symptoms', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           baselineData: {
@@ -149,19 +149,19 @@ describe('WCB Export', () => {
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries spanning multiple months', () => {
+    it('should handle entries spanning multiple months', async () => {
       const entries: PainEntry[] = [
         createMockEntry({ timestamp: '2024-01-01T10:00:00Z' }),
         createMockEntry({ timestamp: '2024-02-15T10:00:00Z' }),
         createMockEntry({ timestamp: '2024-03-30T10:00:00Z' }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, {
+      const result = await exportWorkSafeBCPDF(entries, {
         startDate: new Date('2024-01-01'),
         endDate: new Date('2024-03-31'),
       });
@@ -169,7 +169,7 @@ describe('WCB Export', () => {
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with work impact data', () => {
+    it('should handle entries with work impact data', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           workImpact: {
@@ -187,12 +187,12 @@ describe('WCB Export', () => {
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with functional impact data', () => {
+    it('should handle entries with functional impact data', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           functionalImpact: {
@@ -203,12 +203,12 @@ describe('WCB Export', () => {
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with notes', () => {
+    it('should handle entries with notes', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           notes: 'Pain was particularly severe after prolonged sitting during work meeting.',
@@ -218,20 +218,20 @@ describe('WCB Export', () => {
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle single entry', () => {
+    it('should handle single entry', async () => {
       const entries: PainEntry[] = [createMockEntry()];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with mood data', () => {
+    it('should handle entries with mood data', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           mood: 3,
@@ -244,15 +244,15 @@ describe('WCB Export', () => {
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should include patient name when provided', () => {
+    it('should include patient name when provided', async () => {
       const entries: PainEntry[] = [createMockEntry()];
 
-      const result = exportWorkSafeBCPDF(entries, {
+      const result = await exportWorkSafeBCPDF(entries, {
         ...defaultOptions,
         patientName: 'John Doe',
       });
@@ -261,10 +261,10 @@ describe('WCB Export', () => {
       expect(mockJsPDF.text).toHaveBeenCalled();
     });
 
-    it('should include claim number when provided', () => {
+    it('should include claim number when provided', async () => {
       const entries: PainEntry[] = [createMockEntry()];
 
-      const result = exportWorkSafeBCPDF(entries, {
+      const result = await exportWorkSafeBCPDF(entries, {
         ...defaultOptions,
         claimNumber: 'WCB-123456',
       });
@@ -272,10 +272,10 @@ describe('WCB Export', () => {
       expect(typeof result).toBe('string');
     });
 
-    it('should include healthcare provider when provided', () => {
+    it('should include healthcare provider when provided', async () => {
       const entries: PainEntry[] = [createMockEntry()];
 
-      const result = exportWorkSafeBCPDF(entries, {
+      const result = await exportWorkSafeBCPDF(entries, {
         ...defaultOptions,
         healthcareProvider: 'Dr. Smith',
       });
@@ -283,10 +283,10 @@ describe('WCB Export', () => {
       expect(typeof result).toBe('string');
     });
 
-    it('should include detailed entries when option is enabled', () => {
+    it('should include detailed entries when option is enabled', async () => {
       const entries: PainEntry[] = [createMockEntry(), createMockEntry()];
 
-      const result = exportWorkSafeBCPDF(entries, {
+      const result = await exportWorkSafeBCPDF(entries, {
         ...defaultOptions,
         includeDetailedEntries: true,
       });
@@ -294,10 +294,10 @@ describe('WCB Export', () => {
       expect(typeof result).toBe('string');
     });
 
-    it('should include trend summary when option is enabled', () => {
+    it('should include trend summary when option is enabled', async () => {
       const entries: PainEntry[] = [createMockEntry(), createMockEntry()];
 
-      const result = exportWorkSafeBCPDF(entries, {
+      const result = await exportWorkSafeBCPDF(entries, {
         ...defaultOptions,
         includeTrendSummary: true,
       });
@@ -307,7 +307,7 @@ describe('WCB Export', () => {
   });
 
   describe('downloadWorkSafeBCPDF', () => {
-    it('should create and trigger download link', () => {
+    it('should create and trigger download link', async () => {
       const entries: PainEntry[] = [createMockEntry()];
 
       // Mock document methods
@@ -329,7 +329,7 @@ describe('WCB Export', () => {
           return originalCreateElement(tagName, options);
         });
 
-      downloadWorkSafeBCPDF(entries, defaultOptions);
+      await downloadWorkSafeBCPDF(entries, defaultOptions);
 
       expect(clickSpy).toHaveBeenCalled();
       expect(mockLink.download).toContain('PainTracker-WCB-Report');
@@ -343,7 +343,7 @@ describe('WCB Export', () => {
   });
 
   describe('Edge cases', () => {
-    it('should handle entries with undefined optional fields', () => {
+    it('should handle entries with undefined optional fields', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           id: 'test-1',
@@ -360,24 +360,24 @@ describe('WCB Export', () => {
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with zero pain level', () => {
+    it('should handle entries with zero pain level', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           baselineData: { pain: 0, locations: [], symptoms: [] },
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle large number of entries', () => {
+    it('should handle large number of entries', async () => {
       const entries: PainEntry[] = Array.from({ length: 100 }, (_, i) =>
         createMockEntry({
           timestamp: new Date(Date.parse('2024-01-01') + i * 24 * 60 * 60 * 1000).toISOString(),
@@ -385,7 +385,7 @@ describe('WCB Export', () => {
         })
       );
 
-      const result = exportWorkSafeBCPDF(entries, {
+      const result = await exportWorkSafeBCPDF(entries, {
         startDate: new Date('2024-01-01'),
         endDate: new Date('2024-04-30'),
       });
@@ -393,7 +393,7 @@ describe('WCB Export', () => {
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with very long notes', () => {
+    it('should handle entries with very long notes', async () => {
       const longNote = 'A'.repeat(1000);
       const entries: PainEntry[] = [
         createMockEntry({
@@ -401,31 +401,31 @@ describe('WCB Export', () => {
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should handle entries with special characters in notes', () => {
+    it('should handle entries with special characters in notes', async () => {
       const entries: PainEntry[] = [
         createMockEntry({
           notes: 'Pain level: 8/10 & increasing. "Sharp" pain - very uncomfortable! <severe>',
         }),
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
 
-    it('should filter entries by date range', () => {
+    it('should filter entries by date range', async () => {
       const entries: PainEntry[] = [
         createMockEntry({ timestamp: '2023-12-15T10:00:00Z' }), // Before range
         createMockEntry({ timestamp: '2024-01-15T10:00:00Z' }), // In range
         createMockEntry({ timestamp: '2024-02-15T10:00:00Z' }), // After range
       ];
 
-      const result = exportWorkSafeBCPDF(entries, defaultOptions);
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
     });
