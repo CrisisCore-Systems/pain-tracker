@@ -9,7 +9,7 @@ import react from '@vitejs/plugin-react';
 // NOTE: Don't force 'upgrade-insecure-requests' in dev unless HTTPS is enabled
 // (Playwright/E2E may run the dev server on HTTP). Only include that directive
 // when VITE_DEV_HTTPS is truthy.
-const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'";
+const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'";
 // For dev server we avoid forcing 'upgrade-insecure-requests' because
 // Playwright/E2E runs commonly use an HTTP dev server. Always use the
 // base dev CSP during development; the production preview uses a stricter
@@ -17,7 +17,7 @@ const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsaf
 const devCsp = baseDevCsp;
 
 // Production CSP - allow inline theme/loader scripts/styles used by index.html
-const prodCsp = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
+const prodCsp = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests";
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -134,7 +134,8 @@ export default defineConfig({
   },
   build: {
     // Generate source maps for production debugging (Lighthouse requirement)
-    sourcemap: true,
+    // Use 'hidden' to generate .map files but not reference them in the bundle
+    sourcemap: 'hidden',
     outDir: 'dist',
     // Always use terser for production-grade minification
     minify: 'terser',
@@ -148,22 +149,28 @@ export default defineConfig({
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
-        sourcemap: false, // Explicitly disable sourcemaps in rollup output
+        // sourcemap: false, // Removed to allow 'hidden' sourcemaps to work
         // Optimized chunking for mobile performance
         manualChunks: (id) => {
-          // Keep React + router + charting together to avoid circular chunk imports.
-          // (Splitting charts into a separate chunk can create a cycle where
-          // chart-vendor imports react-vendor and react-vendor imports chart-vendor,
-          // which can surface as `Cannot read properties of undefined (reading 'forwardRef')`.)
+          // Charts - heavy, only needed for dashboard
+          if (
+            id.includes('node_modules/recharts') ||
+            id.includes('node_modules/d3-') ||
+            id.includes('node_modules/chart.js') ||
+            id.includes('node_modules/react-chartjs-2') ||
+            id.includes('node_modules/chartjs-plugin-zoom')
+          ) {
+            return 'chart-vendor';
+          }
+
+          // Core React - needed everywhere
           if (
             id.includes('node_modules/react') ||
             id.includes('node_modules/react-dom') ||
             id.includes('node_modules/react-is') ||
             id.includes('node_modules/scheduler') ||
             id.includes('node_modules/react-router') ||
-            id.includes('node_modules/react-router-dom') ||
-            id.includes('node_modules/recharts') ||
-            id.includes('node_modules/d3-')
+            id.includes('node_modules/react-router-dom')
           ) {
             return 'react-vendor';
           }
@@ -192,7 +199,7 @@ export default defineConfig({
             return 'crypto-vendor';
           }
           // PDF generation - lazy load on export
-          if (id.includes('node_modules/jspdf') || id.includes('node_modules/html2canvas')) {
+          if (id.includes('node_modules/jspdf') || id.includes('node_modules/jspdf-autotable')) {
             return 'pdf-vendor';
           }
           // Lucide icons - tree-shakeable but keep together

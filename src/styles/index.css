@@ -48,8 +48,9 @@
 @import './components/forms.css';
 
 /* ===== PAGES ===== */
-@import './pages/landing.css';
-@import './pages/pricing.css';
+/* Imported directly in page components for code splitting */
+/* @import './pages/landing.css'; */
+/* @import './pages/pricing.css'; */
 
 /* ===== UTILITIES ===== */
 @import './utilities/animations.css';

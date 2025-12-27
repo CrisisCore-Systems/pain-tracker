@@ -11,6 +11,7 @@ interface TooltipProps {
   placement?: 'top' | 'bottom' | 'left' | 'right';
   trigger?: 'hover' | 'click' | 'focus';
   className?: string;
+  ariaLabel?: string;
 }
 
 export function Tooltip({
@@ -19,6 +20,7 @@ export function Tooltip({
   placement = 'top',
   trigger = 'hover',
   className = '',
+  ariaLabel,
 }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
@@ -113,6 +115,7 @@ export function Tooltip({
         className="inline-flex items-center justify-center p-1 rounded-full hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         aria-describedby={isVisible ? 'tooltip' : undefined}
         aria-expanded={isVisible}
+        aria-label={ariaLabel || (!children ? 'Show help' : undefined)}
         {...triggerProps[trigger]}
       >
         {children || <HelpCircle className="h-4 w-4 text-muted-foreground" />}

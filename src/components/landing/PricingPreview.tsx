@@ -197,7 +197,7 @@ export const PricingPreview: React.FC = () => {
                 </p>
               </div>
 
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto" tabIndex={0}>
                 <table className="min-w-[720px] w-full text-sm">
                   <thead>
                     <tr className="text-left">

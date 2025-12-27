@@ -5,6 +5,7 @@
  */
 
 import React, { useState } from 'react';
+import '../styles/pages/pricing.css';
 import { Check, X, ChevronDown, Crown, Star, Users, Sparkles, Shield, Zap, ArrowRight, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useSubscription } from '../contexts/SubscriptionContext';
@@ -151,9 +152,10 @@ export const PricingPage: React.FC = () => {
           )}
 
           {/* Billing Interval Toggle */}
-          <div className="inline-flex items-center gap-1 p-1.5 rounded-full bg-slate-800/80 border border-white/10 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-1 p-1.5 rounded-full bg-slate-800/80 border border-white/10 backdrop-blur-sm" role="group" aria-label="Billing interval">
             <button
               onClick={() => setBillingInterval('monthly')}
+              aria-pressed={billingInterval === 'monthly'}
               className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all ${
                 billingInterval === 'monthly'
                   ? 'bg-gradient-to-r from-purple-500 to-violet-500 text-white shadow-lg shadow-purple-500/30'
@@ -164,6 +166,7 @@ export const PricingPage: React.FC = () => {
             </button>
             <button
               onClick={() => setBillingInterval('yearly')}
+              aria-pressed={billingInterval === 'yearly'}
               className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all flex items-center gap-2 ${
                 billingInterval === 'yearly'
                   ? 'bg-gradient-to-r from-purple-500 to-violet-500 text-white shadow-lg shadow-purple-500/30'
@@ -329,19 +332,19 @@ export const PricingPage: React.FC = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="px-6 py-5 text-left text-sm font-semibold text-slate-300">
+                    <th scope="col" className="px-6 py-5 text-left text-sm font-semibold text-slate-300">
                       Feature
                     </th>
-                    <th className="px-6 py-5 text-center text-sm font-semibold text-slate-400">
+                    <th scope="col" className="px-6 py-5 text-center text-sm font-semibold text-slate-400">
                       Free
                     </th>
-                    <th className="px-6 py-5 text-center text-sm font-semibold text-emerald-400">
+                    <th scope="col" className="px-6 py-5 text-center text-sm font-semibold text-emerald-400">
                       Basic
                     </th>
-                    <th className="px-6 py-5 text-center text-sm font-semibold text-purple-400 bg-purple-500/10">
+                    <th scope="col" className="px-6 py-5 text-center text-sm font-semibold text-purple-400 bg-purple-500/10">
                       Pro
                     </th>
-                    <th className="px-6 py-5 text-center text-sm font-semibold text-amber-400">
+                    <th scope="col" className="px-6 py-5 text-center text-sm font-semibold text-amber-400">
                       Enterprise
                     </th>
                   </tr>
@@ -362,12 +365,13 @@ export const PricingPage: React.FC = () => {
                       <React.Fragment key={categoryKey}>
                         {/* Category Header */}
                         <tr className="bg-slate-800/50">
-                          <td
+                          <th
+                            scope="rowgroup"
                             colSpan={5}
-                            className="px-6 py-3 text-sm font-bold text-white"
+                            className="px-6 py-3 text-sm font-bold text-white text-left"
                           >
                             {cat.category}
-                          </td>
+                          </th>
                         </tr>
 
                         {/* Category Items */}
@@ -376,9 +380,9 @@ export const PricingPage: React.FC = () => {
                             key={idx}
                             className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
                           >
-                            <td className="px-6 py-4 text-sm text-slate-400">
+                            <th scope="row" className="px-6 py-4 text-sm text-slate-400 text-left font-normal">
                               {item.name}
-                            </td>
+                            </th>
                             <td className="px-6 py-4 text-center">
                               <FeatureCell value={item.free} />
                             </td>
@@ -539,6 +543,7 @@ const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, ans
     <div className={`glass-card-premium overflow-hidden transition-all duration-300 ${isOpen ? 'ring-1 ring-purple-500/30' : ''}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
         className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-white/[0.02] transition-colors"
       >
         <span className="font-semibold text-white pr-4">{question}</span>

@@ -140,7 +140,7 @@ export const LandingFooter: React.FC = () => {
                   Pain Tracker Pro
                 </span>
               </div>
-              <p className="text-slate-400 max-w-md leading-relaxed">
+              <p className="text-slate-300 max-w-md leading-relaxed">
                 Privacy-first pain tracking with local insights, reporting tools, and trauma-informed design—built with empathy for those who need it most.
               </p>
               
@@ -171,7 +171,7 @@ export const LandingFooter: React.FC = () => {
                       }}
                       aria-label={link.label}
                     >
-                      <Icon className="h-5 w-5 text-slate-400 group-hover:text-sky-400 transition-colors" />
+                      <Icon className="h-5 w-5 text-slate-300 group-hover:text-sky-400 transition-colors" />
                     </a>
                   );
                 })}
@@ -195,7 +195,7 @@ export const LandingFooter: React.FC = () => {
                     {item.onClick ? (
                       <button
                         onClick={item.onClick}
-                        className="group flex items-center gap-2 text-slate-400 hover:text-sky-400 transition-all duration-200"
+                        className="group flex items-center gap-2 text-slate-300 hover:text-sky-400 transition-all duration-200"
                       >
                         {item.icon && <item.icon className="h-4 w-4" />}
                         <span className="group-hover:translate-x-1 transition-transform">{item.label}</span>
@@ -205,7 +205,7 @@ export const LandingFooter: React.FC = () => {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center gap-2 text-slate-400 hover:text-sky-400 transition-all duration-200"
+                        className="group flex items-center gap-2 text-slate-300 hover:text-sky-400 transition-all duration-200"
                       >
                         {item.icon && <item.icon className="h-4 w-4" />}
                         <span className="group-hover:translate-x-1 transition-transform">{item.label}</span>

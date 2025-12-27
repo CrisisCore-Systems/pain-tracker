@@ -212,7 +212,7 @@ export const Hero: React.FC = () => {
 
               {/* Trust Line */}
               <div className="space-y-3 text-sm pt-4">
-                <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-400">
+                <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-300">
                   <span className="flex items-center gap-1.5 text-emerald-300">
                     <Star className="h-3.5 w-3.5 fill-current" />
                     Free Forever
@@ -222,7 +222,7 @@ export const Hero: React.FC = () => {
                   <span className="text-slate-600">•</span>
                   <span>No credit card</span>
                 </p>
-                <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-400">
+                <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-300">
                   <span className="text-sky-300 font-medium">Optional upgrades:</span>
                   <span>Automated insights • Clinical PDF export • Audit logs</span>
                 </p>
@@ -246,7 +246,7 @@ export const Hero: React.FC = () => {
                   <div className="flex-1 text-center">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 rounded-full">
                       <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-xs text-slate-400 font-mono">paintracker.app/dashboard</span>
+                      <span className="text-xs text-slate-300 font-mono">paintracker.app/dashboard</span>
                     </div>
                   </div>
                 </div>
