@@ -65,7 +65,7 @@ export const Hero: React.FC = () => {
                 </div>
                 <div className="absolute inset-0 rounded-xl bg-sky-500 blur-xl opacity-40" />
               </div>
-              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
                 Pain Tracker Pro
               </span>
             </div>
@@ -76,7 +76,7 @@ export const Hero: React.FC = () => {
                 href="https://blog.paintracker.ca"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden lg:flex items-center px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                className="hidden lg:flex items-center px-4 py-2 text-sm font-medium text-slate-200 hover:text-white transition-colors rounded-lg hover:bg-white/5"
               >
                 Blog
               </a>
@@ -84,7 +84,7 @@ export const Hero: React.FC = () => {
               <Button
                 variant="ghost"
                 onClick={() => navigate('/pricing')}
-                className="hidden lg:flex text-slate-300 hover:text-white hover:bg-white/5"
+                className="hidden lg:flex text-slate-200 hover:text-white hover:bg-white/5"
               >
                 Pricing
               </Button>
@@ -94,7 +94,7 @@ export const Hero: React.FC = () => {
                 onClick={() => navigate('/start')}
                 onMouseEnter={handlePreload}
                 onFocus={handlePreload}
-                className="hidden md:flex text-slate-300 hover:text-white hover:bg-white/5"
+                className="hidden md:flex text-slate-200 hover:text-white hover:bg-white/5"
               >
                 <LogIn className="h-4 w-4 mr-2" />
                 Sign In
@@ -138,10 +138,10 @@ export const Hero: React.FC = () => {
               <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
               NEW
             </span>
-            <span className="text-slate-200 text-sm">
+            <span className="text-slate-100 text-sm">
               Coding Through Collapse—Why This App Forgets You Exist
             </span>
-            <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-amber-300 group-hover:translate-x-1 transition-all" />
+            <ArrowRight className="h-4 w-4 text-slate-300 group-hover:text-amber-300 group-hover:translate-x-1 transition-all" />
           </a>
 
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-24 items-center">
@@ -153,7 +153,7 @@ export const Hero: React.FC = () => {
                   <Sparkles className="h-4 w-4" />
                   <span>100% Local & Private</span>
                 </span>
-                <span className="hidden sm:flex items-center gap-2 text-sm text-slate-500">
+                <span className="hidden sm:flex items-center gap-2 text-sm text-slate-300">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   No Account Required
                 </span>
@@ -212,17 +212,17 @@ export const Hero: React.FC = () => {
 
               {/* Trust Line */}
               <div className="space-y-3 text-sm pt-4">
-                <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-300">
+                <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-200">
                   <span className="flex items-center gap-1.5 text-emerald-300">
                     <Star className="h-3.5 w-3.5 fill-current" />
                     Free Forever
                   </span>
-                  <span className="text-slate-600">•</span>
+                  <span className="text-slate-400">•</span>
                   <span>Unlimited entries</span>
-                  <span className="text-slate-600">•</span>
+                  <span className="text-slate-400">•</span>
                   <span>No credit card</span>
                 </p>
-                <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-300">
+                <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-200">
                   <span className="text-sky-300 font-medium">Optional upgrades:</span>
                   <span>Automated insights • Clinical PDF export • Audit logs</span>
                 </p>

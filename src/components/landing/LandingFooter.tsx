@@ -43,7 +43,7 @@ export const LandingFooter: React.FC = () => {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium bg-slate-800/80 border border-white/10 backdrop-blur-sm">
               <Sparkles className="h-4 w-4 text-amber-400" />
-              <span className="text-slate-300">Start Your Journey Today</span>
+              <span className="text-slate-200">Start Your Journey Today</span>
             </div>
             
             {/* Headline */}
@@ -60,7 +60,7 @@ export const LandingFooter: React.FC = () => {
             </h2>
             
             {/* Subheadline */}
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
               Join patients and clinicians using Pain Tracker Pro to understand, track, and manage chronic pain effectively.
             </p>
             

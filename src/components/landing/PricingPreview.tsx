@@ -75,13 +75,13 @@ const renderCell = (value: ComparisonCellValue) => {
         <span className="sr-only">Included</span>
       </span>
     ) : (
-      <span className="text-slate-600" aria-label="Not included">
+      <span className="text-slate-400" aria-label="Not included">
         —
       </span>
     );
   }
 
-  return <span className="text-slate-300">{String(value)}</span>;
+  return <span className="text-slate-200">{String(value)}</span>;
 };
 
 export const PricingPreview: React.FC = () => {
@@ -148,20 +148,20 @@ export const PricingPreview: React.FC = () => {
                   <div className="space-y-1">
                     <div className="text-3xl font-extrabold text-white tracking-tight">
                       {monthly}
-                      {tier !== 'enterprise' && <span className="text-base font-semibold text-slate-400">/mo</span>}
+                      {tier !== 'enterprise' && <span className="text-base font-semibold text-slate-300">/mo</span>}
                     </div>
                     {trialDays > 0 ? (
                       <div className="text-xs text-emerald-300">Includes a {trialDays}-day trial</div>
                     ) : (
-                      <div className="text-xs text-slate-500">No credit card required</div>
+                      <div className="text-xs text-slate-400">No credit card required</div>
                     )}
                   </div>
 
-                  <p className="text-sm text-slate-400 leading-relaxed line-clamp-4">{plan.description}</p>
+                  <p className="text-sm text-slate-300 leading-relaxed line-clamp-4">{plan.description}</p>
 
                   <ul className="space-y-2 text-sm">
                     {HIGHLIGHTS[tier].map((item) => (
-                      <li key={item} className="flex items-start gap-2 text-slate-300">
+                      <li key={item} className="flex items-start gap-2 text-slate-200">
                         <Check className="h-4 w-4 mt-0.5 text-emerald-400 flex-shrink-0" />
                         <span className="leading-snug">{item}</span>
                       </li>
@@ -192,28 +192,28 @@ export const PricingPreview: React.FC = () => {
             <div className="rounded-2xl border border-white/10 bg-slate-900/40 overflow-hidden">
               <div className="px-6 py-5 border-b border-white/10">
                 <h3 className="text-lg font-semibold text-white">Quick comparison</h3>
-                <p className="text-sm text-slate-400 mt-1">
+                <p className="text-sm text-slate-300 mt-1">
                   Key features at a glance. For full details, see the pricing page.
                 </p>
               </div>
 
-              <div className="overflow-x-auto" tabIndex={0}>
+              <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Pricing comparison table">
                 <table className="min-w-[720px] w-full text-sm">
                   <thead>
                     <tr className="text-left">
-                      <th scope="col" className="px-6 py-4 font-semibold text-slate-300">
+                      <th scope="col" className="px-6 py-4 font-semibold text-slate-200">
                         Feature
                       </th>
-                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-200">
                         Free
                       </th>
-                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-200">
                         Basic
                       </th>
-                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-200">
                         Pro
                       </th>
-                      <th scope="col" className="px-4 py-4 font-semibold text-slate-300">
+                      <th scope="col" className="px-4 py-4 font-semibold text-slate-200">
                         Enterprise
                       </th>
                     </tr>
@@ -226,7 +226,7 @@ export const PricingPreview: React.FC = () => {
                           <th
                             scope="rowgroup"
                             colSpan={5}
-                            className="px-6 py-3 text-xs font-semibold text-slate-500 bg-slate-900/70 border-t border-white/10"
+                            className="px-6 py-3 text-xs font-semibold text-slate-400 bg-slate-900/70 border-t border-white/10"
                           >
                             {group.category}
                           </th>
@@ -234,7 +234,7 @@ export const PricingPreview: React.FC = () => {
 
                         {group.items.map((item) => (
                           <tr key={`${group.category}:${item.name}`} className="border-t border-white/5">
-                            <th scope="row" className="px-6 py-3 font-medium text-slate-200">
+                            <th scope="row" className="px-6 py-3 font-medium text-slate-100">
                               {item.name}
                             </th>
                             <td className="px-4 py-3">{renderCell(item.free)}</td>
