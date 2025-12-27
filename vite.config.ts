@@ -153,15 +153,15 @@ export default defineConfig({
         // Optimized chunking for mobile performance
         manualChunks: (id) => {
           // Charts - heavy, only needed for dashboard
-          if (
-            id.includes('node_modules/recharts') ||
-            id.includes('node_modules/d3-') ||
-            id.includes('node_modules/chart.js') ||
-            id.includes('node_modules/react-chartjs-2') ||
-            id.includes('node_modules/chartjs-plugin-zoom')
-          ) {
-            return 'chart-vendor';
-          }
+          // if (
+          //   id.includes('node_modules/recharts') ||
+          //   id.includes('node_modules/d3-') ||
+          //   id.includes('node_modules/chart.js') ||
+          //   id.includes('node_modules/react-chartjs-2') ||
+          //   id.includes('node_modules/chartjs-plugin-zoom')
+          // ) {
+          //   return 'chart-vendor';
+          // }
 
           // Core React - needed everywhere
           if (
