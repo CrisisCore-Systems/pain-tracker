@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.8] - 2025-12-27
+
+### Fixed
+- **Bundling**: Disabled aggressive `chart-vendor` manual chunking that caused `forwardRef` runtime errors with chart libraries.
+
 ## [1.0.4] - 2025-12-25
 
 ### Security
