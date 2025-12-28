@@ -12,6 +12,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.9] - 2025-12-27
+
+### Added
+- **Tests**: Added a global Vitest setup that mocks `libsodium-wrappers-sumo` for deterministic, low-cost crypto primitives in unit tests.
+
+### Changed
+- **Tests**: Reduced vault KDF cost and silenced crypto init logs in test runs to keep unit tests fast and consistent.
+- **Vitest**: Kept `jsdom` as the default environment and limited `happy-dom` usage to opt-in tests.
+
+### Fixed
+- **Tests**: Added a `MutationObserver` polyfill to prevent teardown failures in non-browser environments.
+- **Zustand persist**: Hardened persisted state hydration against corrupted JSON by using a safe storage wrapper.
+- **Test stability**: Refactored persist/migrate coverage to rely on `usePainTrackerStore.persist.rehydrate()` rather than module reset/dynamic import behavior.
+
 ## [1.0.8] - 2025-12-27
 
 ### Fixed
