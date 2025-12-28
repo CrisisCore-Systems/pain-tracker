@@ -58,7 +58,7 @@ const DEMO_PAIN_ENTRIES: PainEntry[] = [
  */
 export function ExportModalShowcase() {
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
@@ -70,7 +70,7 @@ export function ExportModalShowcase() {
         entries={DEMO_PAIN_ENTRIES}
         title="Export to WorkSafe BC Forms"
       />
-    </div>
+    </main>
   );
 }
 
@@ -79,7 +79,7 @@ export function ExportModalShowcase() {
  */
 export function BodyMapShowcase() {
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
@@ -96,7 +96,7 @@ export function BodyMapShowcase() {
           mode="selection"
         />
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -105,7 +105,7 @@ export function BodyMapShowcase() {
  */
 export function PrivacySettingsShowcase() {
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
@@ -185,7 +185,7 @@ export function PrivacySettingsShowcase() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -233,7 +233,7 @@ export function BenefitsGridShowcase() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/15 rounded-full blur-3xl" />
@@ -275,7 +275,7 @@ export function BenefitsGridShowcase() {
           })}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -293,7 +293,7 @@ export function ComparisonGridShowcase() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
@@ -384,7 +384,7 @@ export function ComparisonGridShowcase() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -393,9 +393,9 @@ export function ComparisonGridShowcase() {
  */
 export function CrisisSupportShowcase() {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <main id="main-content" className="min-h-screen bg-slate-900">
       <CrisisTestingDashboard />
-    </div>
+    </main>
   );
 }
 

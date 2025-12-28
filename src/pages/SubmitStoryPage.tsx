@@ -81,7 +81,7 @@ export const SubmitStoryPage: React.FC = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
+      <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
         {/* Ambient background */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
@@ -116,12 +116,12 @@ export const SubmitStoryPage: React.FC = () => {
             Back to Home
           </Button>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 py-16 px-4">
+    <main id="main-content" className="min-h-screen bg-slate-900 py-16 px-4">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl" />
@@ -285,7 +285,7 @@ export const SubmitStoryPage: React.FC = () => {
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

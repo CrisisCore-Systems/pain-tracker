@@ -126,7 +126,7 @@ export const PricingPage: React.FC = () => {
         </div>
       </nav>
 
-      <div className="relative z-10 py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="relative z-10 py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center mb-16 stagger-fade-up">
           <div className="badge-glow-purple inline-flex items-center gap-2 mb-6">
@@ -479,7 +479,7 @@ export const PricingPage: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
