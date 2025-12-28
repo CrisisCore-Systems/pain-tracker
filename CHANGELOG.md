@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.10] - 2025-12-28
+
+### Fixed
+- **Accessibility**: Ensured public pages contain a `<main id="main-content">` landmark so primary content is consistently contained by landmarks.
+
+### Changed
+- **Tests**: Increased timeout for the `PainTrackerContainer` success toast test to reduce flakiness.
+
 ## [1.0.9] - 2025-12-27
 
 ### Added
