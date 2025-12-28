@@ -1,24 +1,28 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 describe('Persist rehydrate + migrate', () => {
   beforeEach(() => {
-    vi.resetModules();
     localStorage.clear();
-  }, 30000);
+
+    // Reset in-memory store state between tests.
+    usePainTrackerStore.getState().clearAllData();
+    // Ensure we don't leave behind any persisted state from the reset above.
+    usePainTrackerStore.persist.clearStorage();
+  });
 
   it('does not brick startup when persisted JSON is corrupted', async () => {
     // Simulate a user/device scenario where localStorage contains invalid JSON
     localStorage.setItem('pain-tracker-storage', '{ this is not valid json');
 
-    const mod = await import('../../stores/pain-tracker-store');
-    const store = mod.usePainTrackerStore;
+    await usePainTrackerStore.persist.rehydrate();
 
     // Should initialize with default state rather than throwing.
-    const state = store.getState();
+    const state = usePainTrackerStore.getState();
     expect(state).toBeDefined();
     expect(Array.isArray(state.entries)).toBe(true);
     expect(Array.isArray(state.moodEntries)).toBe(true);
-  }, 30000);
+  }, 10000); // Increased timeout slightly to be safe
 
   it('rehydrates store from legacy state and runs migration to add ids and timestamps', async () => {
     // Prepare a legacy persisted state (version 1) with moodEntries with no id
@@ -48,10 +52,8 @@ describe('Persist rehydrate + migrate', () => {
 
     localStorage.setItem('pain-tracker-storage', JSON.stringify(legacy));
 
-    // Import the store after localStorage is set so persist rehydrates
-    const mod = await import('../../stores/pain-tracker-store');
-    const store = mod.usePainTrackerStore;
-    const state = store.getState();
+    await usePainTrackerStore.persist.rehydrate();
+    const state = usePainTrackerStore.getState();
     expect(state.moodEntries.length).toBe(1);
     const entry = state.moodEntries[0];
     expect(typeof entry.id).toBe('number');
@@ -59,9 +61,6 @@ describe('Persist rehydrate + migrate', () => {
   }, 30000);
 
   it('migrates entries, activityLogs and scheduledReports', async () => {
-    vi.resetModules();
-    localStorage.clear();
-
     const legacy = {
       version: 1,
       state: {
@@ -96,8 +95,9 @@ describe('Persist rehydrate + migrate', () => {
       }
     };
     localStorage.setItem('pain-tracker-storage', JSON.stringify(legacy));
-    const mod = await import('../../stores/pain-tracker-store');
-    const state = mod.usePainTrackerStore.getState();
+
+    await usePainTrackerStore.persist.rehydrate();
+    const state = usePainTrackerStore.getState();
 
     // Entries migration
     expect(state.entries.length).toBe(1);

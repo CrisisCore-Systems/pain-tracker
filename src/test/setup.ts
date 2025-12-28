@@ -9,6 +9,25 @@ import { vaultService } from '../services/VaultService';
 import { getSodium } from '../lib/crypto/sodium';
 import { getThemeColors } from '../design-system/theme';
 
+// Mock Recharts to avoid DOM overhead
+vi.mock("recharts", () => ({
+  ResponsiveContainer: ({ children }: any) => children,
+  LineChart: () => null,
+  Line: () => null,
+  XAxis: () => null,
+  YAxis: () => null,
+  Tooltip: () => null,
+  BarChart: () => null,
+  Bar: () => null,
+  AreaChart: () => null,
+  Area: () => null,
+  PieChart: () => null,
+  Pie: () => null,
+  Cell: () => null,
+  Legend: () => null,
+  CartesianGrid: () => null,
+}));
+
 // Provide an IndexedDB polyfill for jsdom so integration tests that use
 // `offlineStorage` (which relies on IndexedDB) can run in the test env.
 // Use a dynamic ESM import so TypeScript/Eslint don't flag `require()` usage.
@@ -28,6 +47,16 @@ try {
 
 // Extend Vitest's expect method with methods from react-testing-library
 expect.extend(matchers);
+
+// Polyfill MutationObserver for environments that might miss it (like some jsdom versions or happy-dom edge cases)
+if (typeof MutationObserver === 'undefined') {
+  global.MutationObserver = class {
+    constructor(callback: MutationCallback) {}
+    disconnect() {}
+    observe(target: Node, options?: MutationObserverInit) {}
+    takeRecords(): MutationRecord[] { return []; }
+  };
+}
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

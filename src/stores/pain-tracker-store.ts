@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { formatNumber } from '../utils/formatting';
-import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
+import { devtools, persist, subscribeWithSelector, type PersistStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import type { PainEntry, EmergencyPanelData, ActivityLogEntry, ReportTemplate } from '../types';
 import type { MoodEntry } from '../types/quantified-empathy';
@@ -14,6 +14,52 @@ import { trackMoodEntryLogged } from '../analytics/ga4-events';
 // Error counters for silent failures (prevents data loss blindspots)
 let analyticsErrorCount = 0;
 let auditErrorCount = 0;
+
+type PersistedPainTrackerSlice = Pick<
+  PainTrackerState,
+  'entries' | 'moodEntries' | 'emergencyData' | 'activityLogs' | 'scheduledReports'
+>;
+
+function getSafeLocalStorage(): Storage | undefined {
+  try {
+    return typeof localStorage === 'undefined' ? undefined : localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+// Persist storage that never throws on corrupted JSON.
+// If data is corrupted, we clear it (best-effort) and start fresh.
+const safePersistStorage: PersistStorage<PersistedPainTrackerSlice> = {
+  getItem: (name: string) => {
+    const ls = getSafeLocalStorage();
+    if (!ls) return null;
+
+    const raw = ls.getItem(name);
+    if (!raw) return null;
+
+    try {
+      return JSON.parse(raw) as { state: PersistedPainTrackerSlice; version?: number };
+    } catch {
+      try {
+        ls.removeItem(name);
+      } catch {
+        // ignore
+      }
+      return null;
+    }
+  },
+  setItem: (name: string, value: { state: PersistedPainTrackerSlice; version?: number }) => {
+    const ls = getSafeLocalStorage();
+    if (!ls) return;
+    ls.setItem(name, JSON.stringify(value));
+  },
+  removeItem: (name: string) => {
+    const ls = getSafeLocalStorage();
+    if (!ls) return;
+    ls.removeItem(name);
+  },
+};
 
 /** Get current error counts for monitoring/debugging */
 export function getStoreErrorCounts() {
@@ -536,6 +582,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
       {
         name: 'pain-tracker-storage',
         version: 2,
+        storage: safePersistStorage,
         migrate: (persistedState: unknown, fromVersion: number) => {
           const state = persistedState as Partial<PainTrackerState> | undefined;
           return migratePainTrackerState(state, fromVersion);

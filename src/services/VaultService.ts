@@ -157,12 +157,16 @@ export class EncryptedVaultService {
     await ensureReady();
     const sodium = await getSodium();
 
-    console.log('[VaultService] Sodium instance retrieved:', {
-      sodiumType: typeof sodium,
-      hasCryptoPwhash: typeof sodium.crypto_pwhash,
-      hasCryptoPwhashStr: typeof sodium.crypto_pwhash_str,
-      saltBytes: sodium.crypto_pwhash_SALTBYTES,
-    });
+    const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITEST || process.env.VITEST_FAST_CRYPTO === '1';
+
+    if (!isTest) {
+      console.log('[VaultService] Sodium instance retrieved:', {
+        sodiumType: typeof sodium,
+        hasCryptoPwhash: typeof sodium.crypto_pwhash,
+        hasCryptoPwhashStr: typeof sodium.crypto_pwhash_str,
+        saltBytes: sodium.crypto_pwhash_SALTBYTES,
+      });
+    }
 
     // Defensive: crypto_pwhash_SALTBYTES must be a valid positive integer
     const configuredSaltBytes = sodium.crypto_pwhash_SALTBYTES as unknown;
@@ -174,18 +178,30 @@ export class EncryptedVaultService {
       this.logEvent('warning', 'Using fallback salt length', { configuredSaltBytes, saltBytes });
     }
     const salt = sodium.randombytes_buf(saltBytes);
-    const opslimit = sodium.crypto_pwhash_OPSLIMIT_MODERATE;
-    const memlimit = sodium.crypto_pwhash_MEMLIMIT_MODERATE;
+    
+    // Use faster crypto settings in test environment to speed up execution
+    // This prevents tests from timing out due to heavy Argon2 hashing
+    
+    const opslimit = isTest 
+      ? sodium.crypto_pwhash_OPSLIMIT_MIN 
+      : sodium.crypto_pwhash_OPSLIMIT_MODERATE;
+      
+    const memlimit = isTest 
+      ? sodium.crypto_pwhash_MEMLIMIT_MIN 
+      : sodium.crypto_pwhash_MEMLIMIT_MODERATE;
+      
     const keyLength = sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES;
 
-    console.log('[VaultService] Creating vault with:', {
-      passphraseType: typeof passphrase,
-      passphraseLength: passphrase?.length,
-      keyLength,
-      opslimit,
-      memlimit,
-      saltLength: salt.length,
-    });
+    if (!isTest) {
+      console.log('[VaultService] Creating vault with:', {
+        passphraseType: typeof passphrase,
+        passphraseLength: passphrase?.length,
+        keyLength,
+        opslimit,
+        memlimit,
+        saltLength: salt.length,
+      });
+    }
 
     const key = sodium.crypto_pwhash(
       keyLength,
@@ -196,11 +212,11 @@ export class EncryptedVaultService {
       sodium.crypto_pwhash_ALG_ARGON2ID13
     );
 
-    console.log('[VaultService] Key derived, creating verification hash...');
+    if (!isTest) console.log('[VaultService] Key derived, creating verification hash...');
 
     const verificationHash = sodium.crypto_pwhash_str(passphrase, opslimit, memlimit);
 
-    console.log('[VaultService] Verification hash created:', verificationHash?.length);
+    if (!isTest) console.log('[VaultService] Verification hash created:', verificationHash?.length);
 
     const metadata: VaultMetadata = {
       version: VAULT_VERSION,

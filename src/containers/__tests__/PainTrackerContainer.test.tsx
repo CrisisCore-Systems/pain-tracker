@@ -71,5 +71,5 @@ describe('PainTrackerContainer - entry success toast', () => {
     await waitFor(() => {
       expect(screen.queryByText(/safely stored/i)).not.toBeNull();
     }, { timeout: 5000 });
-  }, 30000); // Increase test timeout for lazy loading
+  }, 10000); // Reduced timeout
 });

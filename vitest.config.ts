@@ -19,17 +19,15 @@ export default defineConfig({
     // Increase default test timeout to 30s to reduce intermittent failures for slow accessibility scans
     testTimeout: 30000,
     environment: 'jsdom',
-    setupFiles: ['src/test/pre-setup.ts', 'src/test/setup.ts'],
+    setupFiles: ['src/test/pre-setup.ts', 'src/test/vitest.setup.ts', 'src/test/setup.ts'],
     globals: true,
     // Isolate each test file in its own environment to prevent state leakage
     isolate: true,
-    // Use forks pool for better isolation with heavy crypto initialization
-    pool: 'forks',
+    pool: 'threads',
     poolOptions: {
-      forks: {
-        // Limit concurrent forks to prevent memory pressure from sodium init
-        maxForks: 4,
-        minForks: 1,
+      threads: {
+        minThreads: 2,
+        maxThreads: 6, // tune to your CPU
       },
     },
     // Include tests across the repo, not just under src/test

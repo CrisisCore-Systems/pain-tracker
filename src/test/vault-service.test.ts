@@ -3,6 +3,8 @@ import { vaultService } from '../services/VaultService';
 import { secureStorage } from '../lib/storage/secureStorage';
 import sodium from 'libsodium-wrappers-sumo';
 
+// @vitest-environment happy-dom
+
 type SodiumWithPolyfills = typeof sodium & {
   crypto_pwhash?: { (...args: unknown[]): unknown; toString?: () => string };
   crypto_pwhash_str?: (passphrase: string) => string;
