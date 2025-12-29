@@ -12,6 +12,18 @@
 
 import { test, expect, Page } from '@playwright/test';
 
+/**
+ * Extended Window interface for speech API mocks.
+ * This is defined here because we inject these mocks into the browser context during E2E tests.
+ */
+declare global {
+  interface Window {
+    __mockSpeechRecognition?: {
+      simulateTranscript: (transcript: string, isFinal: boolean) => void;
+    };
+  }
+}
+
 // Helper to stub SpeechRecognition in the browser context
 async function stubSpeechRecognition(page: Page, options: {
   supported?: boolean;
