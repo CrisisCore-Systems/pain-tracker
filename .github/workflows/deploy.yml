@@ -59,6 +59,9 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Build
+        env:
+          VITE_ENABLE_ANALYTICS: 'true'
+          VITE_APP_ENVIRONMENT: production
         run: npm run build
 
       - name: Upload dist artifact

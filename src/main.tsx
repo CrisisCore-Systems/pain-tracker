@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
 
+// Import analytics loader to ensure GA4 is initialized when VITE_ENABLE_ANALYTICS is true
+import './analytics/analytics-loader';
+
 // Bootstrap test-mode flag when present in URL or localStorage.
 // This is intentionally limited to development builds (import.meta.env.DEV)
 // so it cannot be used in production to bypass security.
