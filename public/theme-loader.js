@@ -1,6 +1,6 @@
 (function() {
   var stored = null;
-  try { stored = localStorage.getItem('pain-tracker:theme-mode'); } catch(e) {}
+  try { stored = localStorage.getItem('pain-tracker:theme-mode'); } catch(_e) { /* ignore */ }
   
   // Priority: 1) saved pref, 2) system pref, 3) dark (our default)
   var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');

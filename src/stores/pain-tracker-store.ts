@@ -30,7 +30,7 @@ function getSafeLocalStorage(): Storage | undefined {
 
 // Persist storage that never throws on corrupted JSON.
 // If data is corrupted, we clear it (best-effort) and start fresh.
-const safePersistStorage: PersistStorage<PersistedPainTrackerSlice> = {
+const safePersistStorage: PersistStorage<PersistedPainTrackerSlice | undefined> = {
   getItem: (name: string) => {
     const ls = getSafeLocalStorage();
     if (!ls) return null;
@@ -39,7 +39,7 @@ const safePersistStorage: PersistStorage<PersistedPainTrackerSlice> = {
     if (!raw) return null;
 
     try {
-      return JSON.parse(raw) as { state: PersistedPainTrackerSlice; version?: number };
+      return JSON.parse(raw) as { state: PersistedPainTrackerSlice | undefined; version?: number };
     } catch {
       try {
         ls.removeItem(name);
@@ -49,7 +49,7 @@ const safePersistStorage: PersistStorage<PersistedPainTrackerSlice> = {
       return null;
     }
   },
-  setItem: (name: string, value: { state: PersistedPainTrackerSlice; version?: number }) => {
+  setItem: (name: string, value: { state: PersistedPainTrackerSlice | undefined; version?: number }) => {
     const ls = getSafeLocalStorage();
     if (!ls) return;
     ls.setItem(name, JSON.stringify(value));
@@ -584,8 +584,18 @@ export const usePainTrackerStore = create<PainTrackerState>()(
         version: 2,
         storage: safePersistStorage,
         migrate: (persistedState: unknown, fromVersion: number) => {
-          const state = persistedState as Partial<PainTrackerState> | undefined;
-          return migratePainTrackerState(state, fromVersion);
+          const migrated = migratePainTrackerState(
+            persistedState as Partial<PainTrackerState> | undefined,
+            fromVersion,
+          );
+          if (!migrated) return undefined;
+          return {
+            entries: Array.isArray(migrated.entries) ? migrated.entries : [],
+            moodEntries: Array.isArray(migrated.moodEntries) ? migrated.moodEntries : [],
+            emergencyData: migrated.emergencyData ?? null,
+            activityLogs: Array.isArray(migrated.activityLogs) ? migrated.activityLogs : [],
+            scheduledReports: Array.isArray(migrated.scheduledReports) ? migrated.scheduledReports : [],
+          };
         },
         partialize: state => ({
           entries: state.entries,

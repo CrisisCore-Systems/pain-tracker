@@ -1,4 +1,5 @@
 import type { PainEntry } from '../../types';
+import type { jsPDF } from 'jspdf';
 // import jsPDF from 'jspdf'; // Moved to dynamic import
 import { formatNumber } from '../formatting';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';

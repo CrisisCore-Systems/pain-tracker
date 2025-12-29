@@ -41,7 +41,7 @@ async function publish() {
         }
         // Handle tags array
         if (key.trim() === 'tags') {
-          article.tags = value.replace(/[\[\]"]/g, '').split(',').map(t => t.trim());
+          article.tags = value.replace(/[[\]"]/g, '').split(',').map(t => t.trim());
         } else {
           article[key.trim()] = value;
         }

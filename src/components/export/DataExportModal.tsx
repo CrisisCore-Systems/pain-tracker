@@ -155,7 +155,7 @@ export function DataExportModal({
           mimeType = 'application/json';
           break;
         case 'pdf':
-          data = exportToPDF(filteredEntries);
+          data = await exportToPDF(filteredEntries);
           filename = `pain-report-${timestamp}.pdf`;
           mimeType = 'application/pdf';
           break;
