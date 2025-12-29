@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.14] - 2025-12-29
+
+### Changed
+- **Git Hooks**: Updated the `pre-push` hook to never create commits; it regenerates badge JSONs and blocks the push if they changed, requiring an explicit commit.
+- **Docs**: Updated README badge documentation to match the new `pre-push` behavior.
+
 ## [1.0.13] - 2025-12-29
 
 ### Fixed
