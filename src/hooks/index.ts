@@ -12,6 +12,16 @@ export {
   type Breakpoint,
 } from './useMediaQuery';
 
+// Voice Commands Hook
+export {
+  useVoiceCommands,
+  parsePainLevel,
+  parseLocations,
+  parseSymptoms,
+  type UseVoiceCommandsOptions,
+  type UseVoiceCommandsReturn,
+} from './useVoiceCommands';
+
 // Other Hooks
 export { useAsyncRetry } from './useAsyncRetry';
 export { useAutomaticTriggerAnalysis } from './useAutomaticTriggerAnalysis';

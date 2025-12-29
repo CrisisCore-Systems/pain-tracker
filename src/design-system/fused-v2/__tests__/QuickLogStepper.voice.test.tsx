@@ -18,13 +18,41 @@ vi.mock('../../../contexts/useTone', () => ({
   },
 }));
 
+// Mock the voiceCommandService to avoid issues with audio feedback
+vi.mock('../../../services/VoiceCommandService', async () => {
+  const actual = await vi.importActual<typeof import('../../../services/VoiceCommandService')>('../../../services/VoiceCommandService');
+  return {
+    ...actual,
+    voiceCommandService: {
+      ...actual.voiceCommandService,
+      setVoiceFeedbackEnabled: vi.fn(),
+      setHandler: vi.fn(),
+      processTranscript: vi.fn(() => ({
+        success: false,
+        action: 'unknown',
+        feedback: undefined,
+      })),
+      getAvailableCommands: vi.fn(() => []),
+      getHelpText: vi.fn(() => 'Help text'),
+    },
+  };
+});
+
+type SpeechRecognitionResult = {
+  0: { transcript: string };
+  isFinal: boolean;
+  length: number;
+};
+
 type SpeechResultEvent = {
-  results: Array<{ 0: { transcript: string } }>;
+  results: SpeechRecognitionResult[];
+  resultIndex: number;
 };
 
 class MockRecognition {
   continuous = false;
   interimResults = false;
+  lang = 'en-US';
   onresult: ((event: SpeechResultEvent) => void) | null = null;
   onerror: ((event: unknown) => void) | null = null;
   onend: (() => void) | null = null;
@@ -75,11 +103,12 @@ describe('QuickLogStepper voice mode', () => {
     fireEvent.click(screen.getByRole('button', { name: /Continue to step 2/i }));
     fireEvent.click(screen.getByRole('button', { name: /Continue to step 3/i }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Start voice dictation/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Start voice commands/i }));
 
     await act(async () => {
       MockRecognition.instance?.onresult?.({
-        results: [{ 0: { transcript: 'voice dictation captured' } }],
+        results: [{ 0: { transcript: 'voice dictation captured' }, isFinal: true, length: 1 }],
+        resultIndex: 0,
       });
     });
 

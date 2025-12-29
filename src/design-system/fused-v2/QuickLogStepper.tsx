@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft, Check, Mic, MicOff } from 'lucide-react';
+import { ChevronLeft, Check, Mic, MicOff, HelpCircle } from 'lucide-react';
 import { cn } from '../utils';
 import { useAdaptiveCopy } from '../../contexts/useTone';
 import { quickLogCopy } from '../../content/microcopy';
+import { useVoiceCommands } from '../../hooks/useVoiceCommands';
 import type {
   SpeechRecognition,
   SpeechRecognitionConstructor,
@@ -183,6 +184,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
   const [symptoms, setSymptoms] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [voiceMode, setVoiceMode] = useState(false);
+  const [showVoiceHelp, setShowVoiceHelp] = useState(false);
 
   // Adaptive copy based on patient state
   const painLabel = useAdaptiveCopy(quickLogCopy.painSliderLabel);
@@ -196,16 +198,66 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
   const saveBtn = useAdaptiveCopy(quickLogCopy.saveButton);
   const keyboardHintText = useAdaptiveCopy(quickLogCopy.keyboardHint);
 
+  // Use the new voice commands hook with full command processing
   const {
     isSupported: voiceSupported,
     isListening,
     transcript,
+    interimTranscript,
+    lastCommand,
+    error: voiceError,
+    isOffline: voiceIsOffline,
     startListening,
     stopListening,
-    resetTranscript,
-    voiceError,
-    clearVoiceError,
-  } = useQuickVoiceNotes();
+    clearTranscript: resetTranscript,
+    clearError: clearVoiceError,
+    getAvailableCommands,
+  } = useVoiceCommands({
+    // Handle pain level voice commands
+    onPainLevel: (level) => {
+      setPain(level);
+    },
+    // Handle location voice commands
+    onLocations: (newLocations) => {
+      setLocations(prev => {
+        const combined = [...new Set([...prev, ...newLocations])];
+        return combined;
+      });
+    },
+    // Handle symptom voice commands
+    onSymptoms: (newSymptoms) => {
+      setSymptoms(prev => {
+        const combined = [...new Set([...prev, ...newSymptoms])];
+        return combined;
+      });
+    },
+    // Handle navigation voice commands
+    onNavigate: (direction) => {
+      if (direction === 'back') {
+        if (step > 1) {
+          setStep(step - 1);
+        } else {
+          onCancel();
+        }
+      } else if (direction === 'forward') {
+        if (step < 3) {
+          setStep(step + 1);
+        }
+      }
+    },
+    // Handle save voice command
+    onSave: () => {
+      if (locations.length > 0) {
+        onComplete({ pain, locations, symptoms, notes });
+      }
+    },
+    // Handle cancel voice command
+    onCancel: () => {
+      onCancel();
+    },
+    // Enable voice feedback
+    voiceFeedback: true,
+  });
 
   const handlePainChange = (value: number) => {
     setPain(value);
@@ -241,7 +293,7 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
   };
 
   const hasNavigator = typeof navigator !== 'undefined';
-  const isOffline = hasNavigator && navigator.onLine === false;
+  const isOffline = voiceIsOffline || (hasNavigator && navigator.onLine === false);
   const connectionStatus = isOffline
     ? 'Offline: only works if your browser/OS provides local speech.'
     : 'Uses your device speech service. Offline support varies by browser/OS.';
@@ -680,9 +732,19 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
               <div className="surface-card border border-surface-700 bg-surface-800/70">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <div className="text-body-medium text-ink-100">Voice dictation</div>
+                    <div className="text-body-medium text-ink-100 flex items-center gap-2">
+                      Voice Commands
+                      <button
+                        type="button"
+                        onClick={() => setShowVoiceHelp(!showVoiceHelp)}
+                        className="text-ink-400 hover:text-ink-200"
+                        aria-label="Show voice command help"
+                      >
+                        <HelpCircle className="w-4 h-4" />
+                      </button>
+                    </div>
                     <p className="text-small text-ink-400">
-                      Dictates using your device speech service. {connectionStatus}
+                      Say commands like "my pain is 7" or "save entry". {connectionStatus}
                     </p>
                   </div>
                   <button
@@ -696,18 +758,63 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
                         : 'bg-primary-500 text-ink-900 border-primary-500'
                     )}
                     aria-pressed={isListening}
-                    aria-label={isListening ? 'Stop voice dictation' : 'Start voice dictation'}
+                    aria-label={isListening ? 'Stop voice commands' : 'Start voice commands'}
                   >
                     {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                    {isListening ? 'Stop dictation' : 'Start dictation'}
+                    {isListening ? 'Stop listening' : 'Start listening'}
                   </button>
                 </div>
 
-                {transcript && (
+                {/* Voice Help Panel */}
+                {showVoiceHelp && (
                   <div className="mt-3 p-3 rounded-[var(--radius-md)] bg-surface-900 border border-surface-700">
-                    <div className="text-small text-ink-300 mb-1">Heard</div>
+                    <div className="text-small text-ink-300 mb-2 font-medium">Available Voice Commands:</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-small">
+                      <div className="text-ink-400">
+                        <span className="text-ink-200">"My pain is [0-10]"</span> - Set pain level
+                      </div>
+                      <div className="text-ink-400">
+                        <span className="text-ink-200">"Lower back"</span> - Add location
+                      </div>
+                      <div className="text-ink-400">
+                        <span className="text-ink-200">"Sharp" / "Aching"</span> - Add symptom
+                      </div>
+                      <div className="text-ink-400">
+                        <span className="text-ink-200">"Save" / "Done"</span> - Save entry
+                      </div>
+                      <div className="text-ink-400">
+                        <span className="text-ink-200">"Go back"</span> - Previous step
+                      </div>
+                      <div className="text-ink-400">
+                        <span className="text-ink-200">"Cancel"</span> - Discard entry
+                      </div>
+                      <div className="text-ink-400">
+                        <span className="text-ink-200">"Help"</span> - Hear all commands
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Last command feedback */}
+                {lastCommand && lastCommand.success && (
+                  <div className="mt-3 p-2 rounded-[var(--radius-md)] bg-good-500/20 border border-good-500/40">
+                    <p className="text-small text-good-300" aria-live="polite">
+                      ✓ {lastCommand.feedback}
+                    </p>
+                  </div>
+                )}
+
+                {/* Current transcript / interim results */}
+                {(transcript || interimTranscript) && (
+                  <div className="mt-3 p-3 rounded-[var(--radius-md)] bg-surface-900 border border-surface-700">
+                    <div className="text-small text-ink-300 mb-1">
+                      {isListening ? 'Listening...' : 'Heard'}
+                    </div>
                     <p className="text-body text-ink-100 mb-3" aria-live="polite">
-                      {transcript}
+                      {transcript || interimTranscript}
+                      {isListening && interimTranscript && (
+                        <span className="text-ink-400 animate-pulse">...</span>
+                      )}
                     </p>
                     <div className="flex gap-2 flex-wrap">
                       <button
