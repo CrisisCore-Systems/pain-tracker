@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.12] - 2025-12-29
+
+### Changed
+- **Version Update**: Routine version bump and changelog maintenance
+
 ## [1.0.11] - 2025-12-29
 
 ### Added
