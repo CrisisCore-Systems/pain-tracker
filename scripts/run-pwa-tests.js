@@ -2,14 +2,18 @@
 
 /**
  * PWA Cross-Browser Test Runner
- * 
+ *
  * This script runs all PWA tests across multiple browsers and generates
  * a comprehensive test execution report.
  */
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -29,6 +33,8 @@ function execCommand(command, options = {}) {
     const result = execSync(command, {
       encoding: 'utf8',
       stdio: options.silent ? 'pipe' : 'inherit',
+      // Some Playwright reporters can be verbose; increase buffer when piping.
+      maxBuffer: 20 * 1024 * 1024,
       ...options,
     });
     return { success: true, output: result };
@@ -85,7 +91,11 @@ async function main() {
   
   if (!checkInstall.success) {
     log('❌ Playwright not found. Installing...', 'red');
-    execCommand('npx playwright install --with-deps');
+    // On Windows, '--with-deps' is not applicable and can stall in some setups.
+    const installCmd = process.platform === 'win32'
+      ? 'npx playwright install'
+      : 'npx playwright install --with-deps';
+    execCommand(installCmd);
   } else {
     log(`✅ Playwright installed: ${checkInstall.output.trim()}`, 'green');
   }
@@ -110,8 +120,10 @@ async function main() {
     for (const testFile of testFiles) {
       log(`   📝 Running ${testFile}...`, 'yellow');
 
-      const command = `npx playwright test e2e/tests/${testFile} --project=${browser} --reporter=json`;
-      const result = execCommand(command, { silent: true });
+      // Use the repo Playwright config for webServer/baseURL and stable reporters.
+      // Run single-worker to reduce flake and avoid multi-worker server churn.
+      const command = `npx playwright test e2e/tests/${testFile} --project=${browser} --config=e2e/playwright.config.ts --workers=1`;
+      const result = execCommand(command);
 
       const testResult = {
         file: testFile,

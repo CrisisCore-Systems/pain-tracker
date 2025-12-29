@@ -297,11 +297,27 @@ test.describe('PWA Service Worker', () => {
     test.skip(browserName === 'webkit', 'Service worker tests flaky in WebKit');
     await waitForServiceWorker(page);
 
-    const cacheInfo = await page.evaluate(async () => {
-      const cacheNames = await caches.keys();
-      return { allCaches: cacheNames, hasOldCaches: cacheNames.some((name) => !name.includes('v1.2') && name.includes('pain-tracker')) };
-    });
-    expect(cacheInfo.hasOldCaches).toBe(false);
+    // Derive the expected cache name from the actual service worker script version.
+    // (Avoid hard-coding a version like 'v1.2' which will drift over time.)
+    const swResponse = await page.request.get('/sw.js');
+    const swText = swResponse.ok()
+      ? await swResponse.text()
+      : await (await page.request.get('/pain-tracker/sw.js')).text();
+    const versionMatch = swText.match(/const\s+SW_VERSION\s*=\s*'([^']+)'/);
+    expect(versionMatch, 'Expected SW_VERSION in service worker script').not.toBeNull();
+    const expectedCacheName = `pain-tracker-static-v${versionMatch![1]}`;
+
+    await expect
+      .poll(
+        async () => {
+          return await page.evaluate(async (expected) => {
+            const cacheNames = await caches.keys();
+            return cacheNames.filter((name) => name.startsWith('pain-tracker-') && name !== expected);
+          }, expectedCacheName);
+        },
+        { timeout: 15000 }
+      )
+      .toEqual([]);
   });
 });
 

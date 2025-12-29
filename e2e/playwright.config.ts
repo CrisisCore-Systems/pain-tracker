@@ -61,7 +61,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run -s dev',
+    // Force a stable port for E2E runs. Vite's default config allows fallback
+    // ports, which can cause Playwright to wait on the wrong baseURL.
+    command: 'npm run -s dev -- --port 3000 --strictPort',
     url: 'http://localhost:3000/',
     // Reuse existing server if already running (common during development)
     reuseExistingServer: true,
