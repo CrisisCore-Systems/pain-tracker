@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.13] - 2025-12-29
+
+### Fixed
+- **E2E Stability (PWA)**: Prevented Playwright hangs/timeouts by enforcing a stable Vite port and replacing indefinite waits with bounded service-worker readiness checks.
+
+### Changed
+- **PWA E2E Tests**: Aligned cache assertions to the actual service worker behavior by deriving the expected cache name from `SW_VERSION`.
+- **CI/Repo Hygiene**: Stopped tracking Playwright output artifacts so test runs no longer create massive diffs.
+
 ## [1.0.12] - 2025-12-29
 
 ### Changed
@@ -271,8 +280,8 @@ This version represents the culmination of extensive development through Novembe
 - [ ] Validation technology integration (components ready, not fully integrated)
 - [ ] Advanced PDF export formatting
 - [ ] Complete PWA browser testing
-- [ ] Git tag implementation for releases
-- [ ] Automated version bumping workflow
+- [x] Git tag implementation for releases
+- [x] Automated version bumping workflow
 
 ---
 

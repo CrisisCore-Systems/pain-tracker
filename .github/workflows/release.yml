@@ -3,24 +3,37 @@ name: Release Management
 on:
   workflow_dispatch:
     inputs:
-      run_release:
-        description: 'Trigger a release flow (true/false)'
+      release_type:
+        description: 'Release type (patch/minor/major/prerelease)'
         required: true
-        default: 'true'
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+          - prerelease
+      custom_version:
+        description: 'Optional explicit version (e.g., 1.2.3 or 1.2.3-rc.1)'
+        required: false
+        default: ''
+      skip_tests:
+        description: 'Skip checks (typecheck/lint/tests/build)'
+        required: false
+        default: 'false'
 
 permissions:
   contents: write
   pages: write
 
 jobs:
-  check-release:
-    name: Check Release Conditions
+  prepare:
+    name: Prepare Version
     runs-on: ubuntu-latest
     outputs:
-      should-release: ${{ steps.conventional.outputs.should-release }}
-      release-type: ${{ steps.conventional.outputs.release-type }}
       current-version: ${{ steps.version.outputs.current }}
-      next-version: ${{ steps.check.outputs.next }}
+      next-version: ${{ steps.next.outputs.next }}
+      tag-name: ${{ steps.next.outputs.tag_name }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,37 +50,18 @@ jobs:
         run: |
           current=$(node -p "require('./package.json').version")
           echo "current=$current" >> $GITHUB_OUTPUT
-
-      - name: Analyze commits (conventional-recommended-bump)
-        id: conventional
-        run: |
-          # Install recommended-bump and run it to determine release type
-          npm install --no-save conventional-recommended-bump
-          node -e "const recommended=require('conventional-recommended-bump'); recommended({preset:'angular'}, (err, result)=>{ if(err){console.error(err); process.exit(1);} const t=result && result.releaseType ? result.releaseType : 'none'; console.log(t); process.exit(0); })" > .bump_type || true
-          TYPE=$(cat .bump_type | tr -d '\n')
-          if [ "$TYPE" = "none" ] || [ -z "$TYPE" ]; then
-            echo "should-release=false" >> $GITHUB_OUTPUT
-            echo "release-type=none" >> $GITHUB_OUTPUT
-          else
-            echo "should-release=true" >> $GITHUB_OUTPUT
-            echo "release-type=$TYPE" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Determine release (semver-aware)
-        id: check
+      - name: Determine next version
+        id: next
         env:
-          RELEASE_TYPE: ${{ steps.conventional.outputs.release-type }}
-          SHOULD_RELEASE: ${{ steps.conventional.outputs.should-release }}
+          RELEASE_TYPE: ${{ inputs.release_type }}
+          CUSTOM_VERSION: ${{ inputs.custom_version }}
         run: |
-          if [ "${SHOULD_RELEASE}" != "true" ]; then
-            echo "should-release=false" >> $GITHUB_OUTPUT
-            exit 0
-          fi
           node - <<'NODE'
           const fs = require('fs');
           const pkg = JSON.parse(fs.readFileSync('package.json'));
           const current = pkg.version;
-          const releaseType = process.env.RELEASE_TYPE || 'patch';
+          const releaseType = (process.env.RELEASE_TYPE || 'patch').trim();
+          const custom = (process.env.CUSTOM_VERSION || '').trim();
 
           function bumpSemver(v, type) {
             const m = v.match(/^(\d+)\.(\d+)\.(\d+)(?:-(.+))?$/);
@@ -81,45 +75,85 @@ jobs:
             if (type === 'minor') { minor += 1; patch = 0; return `${major}.${minor}.${patch}`; }
             if (type === 'patch') { patch += 1; return `${major}.${minor}.${patch}`; }
 
-            if (type.startsWith('prerelease')) {
+            if (type === 'prerelease') {
+              // If already rc.N, bump N; otherwise start at rc.1
               if (!prerelease) return `${major}.${minor}.${patch}-rc.1`;
-              const prMatch = prerelease.match(/^(.*?)(?:\.(\d+))?$/);
-              if (prMatch && prMatch[2]) {
-                const n = parseInt(prMatch[2], 10) + 1;
-                return `${major}.${minor}.${patch}-${prMatch[1]}.${n}`;
-              }
+              const rcMatch = prerelease.match(/^rc\.(\d+)$/);
+              if (rcMatch) return `${major}.${minor}.${patch}-rc.${parseInt(rcMatch[1], 10) + 1}`;
               return `${major}.${minor}.${patch}-${prerelease}.1`;
             }
 
             throw new Error('Unsupported release type: ' + type);
           }
 
-          const next = bumpSemver(current, releaseType);
+          const semverRe = /^(\d+)\.(\d+)\.(\d+)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
+          const next = custom ? custom : bumpSemver(current, releaseType);
+          if (!semverRe.test(next)) {
+            throw new Error(`Invalid next version: ${next}`);
+          }
+
           const out = process.env.GITHUB_OUTPUT;
           if (!out) throw new Error('GITHUB_OUTPUT not defined');
           fs.appendFileSync(out, `next=${next}\n`);
+          fs.appendFileSync(out, `tag_name=v${next}\n`);
           NODE
 
-  create-release:
-    name: Create Release (placeholder)
+  release:
+    name: Bump, Tag, and Release
     runs-on: ubuntu-latest
-    needs: check-release
-    if: needs.check-release.outputs.should-release == 'true'
+    needs: prepare
+    if: github.ref_name == 'main'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Show release info
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run checks
+        if: ${{ inputs.skip_tests != 'true' }}
+        run: npm run -s check
+
+      - name: Configure git author
         run: |
-          echo "Current version: ${{ needs.check-release.outputs.current-version }}"
-          echo "Next version: ${{ needs.check-release.outputs.next-version }}"
-          echo "Release type: ${{ needs.check-release.outputs.release-type }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version (no git tag)
+        env:
+          NEXT_VERSION: ${{ needs.prepare.outputs.next-version }}
+        run: |
+          npm version "${NEXT_VERSION}" --no-git-tag-version
+
+      - name: Commit version bump
+        env:
+          TAG_NAME: ${{ needs.prepare.outputs.tag-name }}
+        run: |
+          git add package.json package-lock.json
+          git commit -m "chore(release): ${TAG_NAME}" || echo "No changes to commit"
+
+      - name: Create and push tag
+        env:
+          TAG_NAME: ${{ needs.prepare.outputs.tag-name }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/${TAG_NAME}" >/dev/null; then
+            echo "Tag already exists: ${TAG_NAME}" >&2
+            exit 1
+          fi
+          git tag "${TAG_NAME}"
+          git push origin HEAD:main
+          git push origin "${TAG_NAME}"
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ needs.check-release.outputs.next-version }}
-          release_name: Release ${{ needs.check-release.outputs.next-version }}
-          body: "Automated release (type: ${{ needs.check-release.outputs.release-type }})"
-          draft: false
-          prerelease: false
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ needs.prepare.outputs.tag-name }}
+        run: |
+          gh release create "${TAG_NAME}" --title "${TAG_NAME}" --generate-notes
