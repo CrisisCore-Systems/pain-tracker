@@ -21,25 +21,17 @@ fi
 echo "[pre-push] Generating dynamic badges..." >&2
 npm run -s badge:all || echo "[pre-push] badge:all failed (continuing, will not block push)." >&2
 
-# Also generate LOC badge if script exists
-if npm run | grep -q 'badge:loc'; then
-  npm run -s badge:loc || echo "[pre-push] badge:loc failed." >&2
+# IMPORTANT: pre-push hooks must never create commits.
+# If badge JSONs changed, block the push and ask the developer to commit explicitly.
+BADGE_CHANGES=$(git status --porcelain -- badges/*.json 2>/dev/null || true)
+if [ -n "$BADGE_CHANGES" ]; then
+  echo "[pre-push] Badge JSONs changed. This hook will not auto-commit." >&2
+  echo "[pre-push] Please review and commit them, then push again:" >&2
+  echo "  git add badges/*.json" >&2
+  echo "  git commit -m \"chore(badges): update dynamic badges\"" >&2
+  exit 1
 fi
 
-git add badges/*.json || true
-if ! git diff --cached --quiet; then
-  # Amend last commit if it is within last 5 minutes to avoid noise; else create new commit
-  LAST_COMMIT_TIME=$(git log -1 --format=%ct || echo 0)
-  NOW=$(date +%s)
-  if [ $((NOW - LAST_COMMIT_TIME)) -lt 300 ]; then
-    echo "[pre-push] Amending last commit with updated badges." >&2
-    git commit --amend --no-edit || true
-  else
-  echo "[pre-push] Creating new commit for badge updates." >&2
-  git commit -m "chore(badges): Auto-update dynamic badges" || true
-  fi
-else
-  echo "[pre-push] No badge changes detected." >&2
-fi
+echo "[pre-push] No badge changes detected." >&2
 
 exit 0

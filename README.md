@@ -308,8 +308,12 @@ npm run badge:loc
 node scripts/generate-security-badge.mjs
 ```
 
-The pre-push hook (`.husky/pre-push`) auto-regenerates and commits badge JSONs when
-pushing `main` to keep them current.
+The pre-push hook (`.husky/pre-push`) auto-regenerates badge JSONs when pushing
+`main` to keep them current.
+
+Note: the pre-push hook intentionally **never** creates commits. If badge JSONs
+change, the hook will block the push and ask you to commit the updated badge
+files explicitly.
 
 Color thresholds:
 
