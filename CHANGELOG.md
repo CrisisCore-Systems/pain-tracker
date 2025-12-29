@@ -12,6 +12,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.11] - 2025-12-29
+
+### Added
+- **Voice Commands**: Complete voice command functionality with full action execution
+  - Natural language parsing for pain levels ("my pain is 7", "moderate pain", "severe")
+  - Body location recognition from speech ("lower back", "neck", "left shoulder")
+  - Symptom recognition ("sharp pain", "throbbing", "aching")
+  - Navigation commands ("go back", "next", "continue")
+  - Action commands ("save", "done", "cancel", "help")
+  - Emergency commands ("help me", "call doctor", "emergency")
+  - Audio feedback using speech synthesis
+- **VoiceCommandService** (`src/services/VoiceCommandService.ts`): Central dispatcher with NL parsing
+- **useVoiceCommands hook** (`src/hooks/useVoiceCommands.ts`): React hook for component integration
+- **Voice Commands Tests**: 22 comprehensive test cases for voice command parsing and execution
+
+### Changed
+- **QuickLogStepper**: Integrated full voice commands with help panel and real-time command feedback
+
 ## [1.0.10] - 2025-12-28
 
 ### Fixed
