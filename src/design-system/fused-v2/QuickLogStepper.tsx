@@ -1,15 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, Check, Mic, MicOff, HelpCircle } from 'lucide-react';
 import { cn } from '../utils';
 import { useAdaptiveCopy } from '../../contexts/useTone';
 import { quickLogCopy } from '../../content/microcopy';
 import { useVoiceCommands } from '../../hooks/useVoiceCommands';
-import type {
-  SpeechRecognition,
-  SpeechRecognitionConstructor,
-  SpeechRecognitionErrorEvent,
-  SpeechRecognitionEvent,
-} from '../../types/speech';
 import '../tokens/fused-v2.css';
 
 interface QuickLogStepperProps {
@@ -76,107 +70,6 @@ const SYMPTOM_TAGS = [
   'Electric shock',
 ];
 
-type SpeechRecognitionWindow = Window & {
-  webkitSpeechRecognition?: SpeechRecognitionConstructor;
-  SpeechRecognition?: SpeechRecognitionConstructor;
-};
-
-function useQuickVoiceNotes() {
-  const [isSupported, setIsSupported] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState('');
-  const [voiceError, setVoiceError] = useState<string | null>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const lastTranscriptRef = useRef('');
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const speechWindow = window as unknown as SpeechRecognitionWindow;
-    const SpeechRecognitionCtor =
-      speechWindow.webkitSpeechRecognition || speechWindow.SpeechRecognition;
-
-    if (SpeechRecognitionCtor) {
-      setIsSupported(true);
-      const recognition = new SpeechRecognitionCtor();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.onresult = (event: SpeechRecognitionEvent) => {
-        const resultsArray = Array.from(event.results);
-        const finalResults = resultsArray.filter(result => result.isFinal);
-        const relevantResults = finalResults.length > 0 ? finalResults : resultsArray;
-
-        const combinedTranscript = relevantResults
-          .map(result => result[0])
-          .map(r => r?.transcript ?? '')
-          .join('')
-          .trim();
-
-        if (combinedTranscript === lastTranscriptRef.current) return;
-        lastTranscriptRef.current = combinedTranscript;
-        setTranscript(combinedTranscript);
-      };
-      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-        setIsListening(false);
-        const errorMap: Record<string, string> = {
-          'not-allowed': 'Microphone permissions were denied.',
-          network: 'Speech service not reachable right now.',
-          'no-speech': 'No speech detected. Try again when ready.',
-        };
-        const friendlyMessage =
-          (event?.error && errorMap[event.error]) ||
-          'Voice input stopped. Please verify microphone permissions.';
-        console.warn('Voice recognition error', event);
-        setVoiceError(friendlyMessage);
-      };
-      recognition.onend = () => setIsListening(false);
-      recognitionRef.current = recognition;
-    }
-
-    return () => {
-      recognitionRef.current?.stop();
-      recognitionRef.current = null;
-    };
-  }, []);
-
-  const startListening = useCallback(() => {
-    if (recognitionRef.current && !isListening) {
-      setTranscript('');
-      setVoiceError(null);
-      lastTranscriptRef.current = '';
-      try {
-        recognitionRef.current.start();
-        setIsListening(true);
-      } catch (error) {
-        console.warn('Voice recognition failed to start', error);
-        setVoiceError('Unable to start voice input. Please check microphone permissions.');
-        setIsListening(false);
-      }
-    }
-  }, [isListening]);
-
-  const stopListening = useCallback(() => {
-    if (recognitionRef.current && isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
-    }
-  }, [isListening]);
-
-  const resetTranscript = useCallback(() => setTranscript(''), []);
-  const clearVoiceError = useCallback(() => setVoiceError(null), []);
-
-  return {
-    isSupported,
-    isListening,
-    transcript,
-    startListening,
-    stopListening,
-    resetTranscript,
-    voiceError,
-    clearVoiceError,
-  };
-}
-
 export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) {
   const [step, setStep] = useState(1);
   const [pain, setPain] = useState(5);
@@ -211,7 +104,6 @@ export function QuickLogStepper({ onComplete, onCancel }: QuickLogStepperProps) 
     stopListening,
     clearTranscript: resetTranscript,
     clearError: clearVoiceError,
-    getAvailableCommands,
   } = useVoiceCommands({
     // Handle pain level voice commands
     onPainLevel: (level) => {

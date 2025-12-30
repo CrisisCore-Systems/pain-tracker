@@ -281,7 +281,8 @@ function checkScripts() {
         // Test basic commands
         try {
           if (name === 'typecheck') {
-            execSync('npm run typecheck', { stdio: 'ignore', timeout: 10000 });
+            // TypeScript on larger repos can take >10s on Windows; avoid false negatives.
+            execSync('npm run -s typecheck:ci', { stdio: 'ignore', timeout: 180000 });
             log(`    ${icon.success} Command works`, colors.green);
           }
         } catch {

@@ -1,5 +1,7 @@
 # 🩺 Pain Tracker | CrisisCore Systems
 
+<!-- markdownlint-disable MD013 MD033 MD036 MD060 MD022 MD032 -->
+
 [![Security Status](https://img.shields.io/badge/security-hardened-green)](./security/)
 [![Stable](https://img.shields.io/badge/status-stable-green)](https://github.com/CrisisCore-Systems/pain-tracker/releases)
 [![Test Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](./coverage/)
@@ -248,7 +250,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 | **Secret Protection** | Pre-commit scanning, .env validation | ✅ Active |
 | **Runtime Security** | CSP headers, input validation, XSS protection | ✅ Active |
 
-**Current Security Status:** 
+**Current Security Status:**
 - ✅ Production dependencies: Clean
 - ⚠️ Development dependencies: Minor tooling vulnerabilities (non-runtime impact)
 - 🔄 Ongoing remediation of dev-tool security advisories
@@ -257,7 +259,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 
 ## 📁 **Project Structure**
 
-```
+```text
 src/
 ├── components/          # Reusable UI components
 ├── containers/          # Page-level components and layouts
@@ -390,6 +392,7 @@ npm run deploy
 ### Deployment Options
 
 **Option 1: GitHub Pages** (Default - Static hosting)
+
 ```bash
 npm run deploy
 ```
@@ -416,6 +419,7 @@ Test suite: **129 tests** (Vitest + integration coverage; E2E in Playwright).
 - **Security Testing**: Automated vulnerability and penetration testing
 
 ### **Quality Metrics**
+
 ```bash
 # Run all tests with coverage
 npm run test:coverage
@@ -592,6 +596,7 @@ Skip tags: [skip lint], [skip build], [skip all]
 A comprehensive screenshot portfolio system is available for marketing, social media, and documentation purposes.
 
 ### Quick Start
+
 ```bash
 # Generate all screenshots
 npm run screenshots:portfolio
@@ -641,13 +646,23 @@ npm run dev
 <details>
 <summary>Expand for developer workflow and commands</summary>
 
-Key commands (Makefile):
+Key commands (npm — recommended, especially on Windows):
+
+```bash
+npm run dev          # Start Vite dev server
+npm run doctor       # Environment diagnostics
+npm run check:quick  # Typecheck + lint + test (fast gate)
+npm run check        # Typecheck + lint + test + build (CI gate)
+npm run lint -- --fix
+```
+
+Makefile shortcuts (requires a POSIX shell / GNU Make; on Windows use WSL or Git Bash):
 
 ```bash
 make help         # List commands
 make dev          # Start Vite dev server
 make test         # Run Vitest
-make check        # Lint, typecheck, security
+make check        # Typecheck, lint, test, build
 make lint-fix     # Auto-fix linting issues
 make badge:all    # Regenerate dynamic badges
 ```

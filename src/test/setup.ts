@@ -11,7 +11,11 @@ import { getThemeColors } from '../design-system/theme';
 
 // Mock Recharts to avoid DOM overhead
 vi.mock("recharts", () => ({
-  ResponsiveContainer: ({ children }: any) => children,
+  ResponsiveContainer: ({
+    children,
+  }: {
+    children?: React.ReactNode;
+  }) => children ?? null,
   LineChart: () => null,
   Line: () => null,
   XAxis: () => null,
@@ -51,9 +55,9 @@ expect.extend(matchers);
 // Polyfill MutationObserver for environments that might miss it (like some jsdom versions or happy-dom edge cases)
 if (typeof MutationObserver === 'undefined') {
   global.MutationObserver = class {
-    constructor(callback: MutationCallback) {}
+    constructor(_callback: MutationCallback) {}
     disconnect() {}
-    observe(target: Node, options?: MutationObserverInit) {}
+    observe(_target: Node, _options?: MutationObserverInit) {}
     takeRecords(): MutationRecord[] { return []; }
   };
 }

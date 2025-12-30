@@ -14,7 +14,7 @@ vi.mock('libsodium-wrappers-sumo', () => {
     crypto_aead_xchacha20poly1305_ietf_NPUBBYTES: 24,
     
     // Fast deterministic key derivation
-    crypto_pwhash: (keyLen: number, password: any, salt: any) => {
+    crypto_pwhash: (keyLen: number, _password: unknown, _salt: unknown) => {
       // Return a deterministic key based on inputs if needed, or just a fixed buffer
       // For tests, a fixed buffer of correct length is usually fine unless we test key uniqueness
       return new Uint8Array(keyLen).fill(1); 
@@ -30,7 +30,7 @@ vi.mock('libsodium-wrappers-sumo', () => {
     
     // Mock encryption/decryption to be pass-through or simple transformation
     crypto_aead_xchacha20poly1305_ietf_encrypt: (msg: Uint8Array) => msg,
-    crypto_aead_xchacha20poly1305_ietf_decrypt: (_: any, ciphertext: Uint8Array) => ciphertext,
+    crypto_aead_xchacha20poly1305_ietf_decrypt: (_: unknown, ciphertext: Uint8Array) => ciphertext,
     
     to_string: (b: Uint8Array) => Buffer.from(b).toString(),
     from_string: (s: string) => new Uint8Array(Buffer.from(s)),
