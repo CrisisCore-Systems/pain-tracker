@@ -19,7 +19,8 @@ export function computeFibroDiagnosticHistory(entries: FibromyalgiaEntry[]): {
   }>;
 } {
   if (!entries.length) return { latest: null, history: [] };
-  const history = entries.map(e => {
+  const sorted = [...entries].sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
+  const history = sorted.map(e => {
     const wpi = Object.values(e.wpi).filter(Boolean).length;
     const sss = Object.values(e.sss).reduce((sum: number, v) => sum + v, 0);
     const meetsCriteria = (wpi >= 7 && sss >= 5) || (wpi >= 4 && wpi <= 6 && sss >= 9);
