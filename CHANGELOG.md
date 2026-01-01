@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EMR/EHR integration capabilities (Q2 2026)
 - Multi-platform native applications (Q3 2026)
 
+## [1.0.15] - 2025-12-31
+
+### Added
+
+- **Fibromyalgia**: Replaced the placeholder “Patterns & Insights” tab with computed insights.
+- **Tests**: Added Vitest coverage for fibromyalgia analytics and diagnostic history.
+
+### Changed
+
+- **Analytics**: Made results deterministic by sorting entries by timestamp and improved flare episode detection and trigger bucketing.
+
 ## [1.0.14] - 2025-12-29
 
 ### Changed

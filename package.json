@@ -1,7 +1,7 @@
 {
   "name": "pain-tracker",
   "private": true,
-  "version": "1.0.14",
+  "version": "1.0.15",
   "type": "module",
   "description": "A comprehensive tool for tracking and managing chronic pain and injuries",
   "author": "CrisisCore-Systems",
