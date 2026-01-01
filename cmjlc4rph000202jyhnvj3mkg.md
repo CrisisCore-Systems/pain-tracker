@@ -3,6 +3,7 @@ title: "Why Pain Tracker?"
 datePublished: Thu Dec 25 2025 11:04:02 GMT+0000 (Coordinated Universal Time)
 cuid: cmjlc4rph000202jyhnvj3mkg
 slug: why-pain-tracker
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1767242165057/dbe7258c-7874-443f-af50-bcef1a13c765.jpeg
 
 ---
 
