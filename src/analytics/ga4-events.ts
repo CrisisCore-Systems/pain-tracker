@@ -7,6 +7,7 @@
  */
 
 // Window.gtag is declared in analytics-loader.ts - use that type
+import { isAnalyticsAllowed } from './analytics-gate';
 
 /**
  * GA4 Event Names - following GA4 recommended event naming conventions
@@ -117,7 +118,12 @@ export interface GA4EventParams {
  * Check if GA4 is available and enabled
  */
 function isGA4Available(): boolean {
-  return typeof window !== 'undefined' && typeof window.gtag === 'function';
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.gtag === 'function' &&
+    // Defense-in-depth: require env flag AND explicit user consent.
+    isAnalyticsAllowed()
+  );
 }
 
 /**

@@ -265,6 +265,15 @@ export class FHIRService {
     };
   }
 
+  private assertConfigured(operation: string): void {
+    if (!this.baseUrl) {
+      throw new Error(
+        `FHIRService is not configured for network calls (${operation}). ` +
+          'Provide a baseUrl when constructing FHIRService.'
+      );
+    }
+  }
+
   // Convert Pain Entry to FHIR Observation
   painEntryToFHIRObservation(entry: PainEntry, patientId?: string): FHIRObservation {
     const painObservation: FHIRObservation = {
@@ -533,6 +542,7 @@ export class FHIRService {
 
   // API Methods for FHIR Server Integration
   async createResource(resource: FHIRResource): Promise<FHIRResource> {
+    this.assertConfigured('createResource');
     const response = await fetch(`${this.baseUrl}/${resource.resourceType}`, {
       method: 'POST',
       headers: this.headers,
@@ -547,6 +557,7 @@ export class FHIRService {
   }
 
   async updateResource(resource: FHIRResource): Promise<FHIRResource> {
+    this.assertConfigured('updateResource');
     if (!resource.id) {
       throw new Error('Resource must have an ID for update operation');
     }
@@ -565,6 +576,7 @@ export class FHIRService {
   }
 
   async getResource(resourceType: string, id: string): Promise<FHIRResource> {
+    this.assertConfigured('getResource');
     const response = await fetch(`${this.baseUrl}/${resourceType}/${id}`, {
       method: 'GET',
       headers: this.headers,
@@ -578,6 +590,7 @@ export class FHIRService {
   }
 
   async searchResources(resourceType: string, params: Record<string, string>): Promise<FHIRBundle> {
+    this.assertConfigured('searchResources');
     const searchParams = new URLSearchParams(params);
     const response = await fetch(`${this.baseUrl}/${resourceType}?${searchParams}`, {
       method: 'GET',
@@ -592,6 +605,7 @@ export class FHIRService {
   }
 
   async deleteResource(resourceType: string, id: string): Promise<void> {
+    this.assertConfigured('deleteResource');
     const response = await fetch(`${this.baseUrl}/${resourceType}/${id}`, {
       method: 'DELETE',
       headers: this.headers,
@@ -604,6 +618,7 @@ export class FHIRService {
 
   // Bulk operations
   async submitBundle(bundle: FHIRBundle): Promise<FHIRBundle> {
+    this.assertConfigured('submitBundle');
     const response = await fetch(`${this.baseUrl}`, {
       method: 'POST',
       headers: this.headers,
@@ -619,6 +634,7 @@ export class FHIRService {
 
   // Validation
   async validateResource(resource: FHIRResource): Promise<FHIRValidationResult> {
+    this.assertConfigured('validateResource');
     const response = await fetch(`${this.baseUrl}/${resource.resourceType}/$validate`, {
       method: 'POST',
       headers: this.headers,

@@ -24,11 +24,21 @@ import {
   ga4Analytics,
 } from './ga4-events';
 
+const CONSENT_KEY = 'pain-tracker:analytics-consent';
+
 describe('GA4 Events Service', () => {
   let mockGtag: ReturnType<typeof vi.fn>;
   let originalGtag: typeof window.gtag;
+  let originalEnableAnalytics: string | undefined;
 
   beforeEach(() => {
+    // Ensure analytics env flag is enabled for these unit tests.
+    originalEnableAnalytics = process.env.VITE_ENABLE_ANALYTICS;
+    process.env.VITE_ENABLE_ANALYTICS = 'true';
+
+    // Ensure explicit user consent is granted for GA4 emission.
+    localStorage.setItem(CONSENT_KEY, 'granted');
+
     // Store original gtag
     originalGtag = window.gtag;
     
@@ -40,6 +50,9 @@ describe('GA4 Events Service', () => {
   afterEach(() => {
     // Restore original gtag
     window.gtag = originalGtag;
+    localStorage.removeItem(CONSENT_KEY);
+    if (originalEnableAnalytics === undefined) delete process.env.VITE_ENABLE_ANALYTICS;
+    else process.env.VITE_ENABLE_ANALYTICS = originalEnableAnalytics;
     vi.restoreAllMocks();
   });
 
@@ -59,6 +72,14 @@ describe('GA4 Events Service', () => {
       expect(() => {
         trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level: 5 });
       }).not.toThrow();
+    });
+
+    it('should not emit when consent is not granted', () => {
+      localStorage.setItem(CONSENT_KEY, 'declined');
+
+      trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level: 5 });
+
+      expect(mockGtag).not.toHaveBeenCalled();
     });
 
     it('should add time_of_day parameter automatically', () => {

@@ -47,6 +47,48 @@ export class BackgroundSyncService {
   private maxRetries: number = 3;
   private retryDelays: number[] = [1000, 5000, 15000]; // Progressive delays in ms
 
+  private getAllowedApiPathPrefixes(): string[] {
+    const prefixes = new Set<string>();
+    prefixes.add('/api');
+
+    const configured = import.meta.env.VITE_API_BASE_URL;
+    if (typeof configured === 'string' && configured.startsWith('/')) {
+      const normalized = configured.replace(/\/+$/, '');
+      if (normalized.length > 0) prefixes.add(normalized);
+    }
+
+    return Array.from(prefixes);
+  }
+
+  private isAllowedSyncUrl(url: string): boolean {
+    // Resolve relative URLs against current origin.
+    let parsed: URL;
+    try {
+      parsed = new URL(url, window.location.origin);
+    } catch {
+      return false;
+    }
+
+    // Only allow same-origin replays (prevents exfil to arbitrary origins).
+    if (parsed.origin !== window.location.origin) return false;
+
+    // Only allow API endpoints.
+    const path = parsed.pathname;
+    return this.getAllowedApiPathPrefixes().some(prefix => path === prefix || path.startsWith(`${prefix}/`));
+  }
+
+  private sanitizeReplayHeaders(headers: Record<string, string>): Record<string, string> {
+    // Defense-in-depth: only forward a small allowlist of headers.
+    // (Prevents queued items from smuggling unexpected headers on replay.)
+    const allowed = new Set(['authorization', 'content-type', 'accept']);
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(headers)) {
+      const key = k.toLowerCase();
+      if (allowed.has(key)) out[k] = v;
+    }
+    return out;
+  }
+
   private constructor() {
     this.setupEventListeners();
     this.startPeriodicSync();
@@ -105,6 +147,12 @@ export class BackgroundSyncService {
     priority: 'high' | 'medium' | 'low' = 'medium'
   ): Promise<void> {
     try {
+      // Defense-in-depth: never enqueue requests we would refuse to replay.
+      if (!this.isAllowedSyncUrl(url)) {
+        console.warn(`BackgroundSync: Refusing to queue disallowed URL: ${url}`);
+        return;
+      }
+
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
@@ -173,6 +221,18 @@ export class BackgroundSyncService {
       // Process each item
       for (const item of syncQueue) {
         try {
+          // Defense-in-depth: never replay queued requests to unexpected URLs.
+          if (!this.isAllowedSyncUrl(item.url)) {
+            stats.failureCount++;
+            stats.errors.push(`Blocked sync replay to disallowed URL: ${item.url}`);
+            try {
+              if (item.id != null) await offlineStorage.removeSyncQueueItem(item.id);
+            } catch {
+              // ignore removal errors; we still don't attempt replay
+            }
+            continue;
+          }
+
           const result = await this.syncItem(item);
 
           if (result.success) {
@@ -224,9 +284,15 @@ export class BackgroundSyncService {
         return { success: false, itemId: item.id!, error: 'Offline' };
       }
 
+      if (!this.isAllowedSyncUrl(item.url)) {
+        return { success: false, itemId: item.id!, error: 'Disallowed URL' };
+      }
+
+      const headers = this.sanitizeReplayHeaders(item.headers);
+
       const response = await fetch(item.url, {
         method: item.method,
-        headers: item.headers,
+        headers,
         body: item.body,
       });
 

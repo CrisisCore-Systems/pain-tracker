@@ -708,16 +708,11 @@ export class PWAManager {
   // Enhanced Data Management with Offline Support
   async exportOfflineData(): Promise<OfflineData> {
     try {
-      // Export from IndexedDB for complete offline data
-      const { offlineStorage } = await import('../lib/offline-storage');
-      const offlineDataExport = await offlineStorage.exportData();
-
       // Combine with localStorage data
       const localData = {
         entries: secureStorage.safeJSON('painEntries', []),
         settings: secureStorage.safeJSON('pain-tracker-settings', {}),
         timestamp: new Date().toISOString(),
-        syncQueue: offlineDataExport.syncQueue,
       };
 
       return localData;
@@ -733,34 +728,8 @@ export class PWAManager {
       if (data.entries) secureStorage.set('painEntries', data.entries);
       if (data.settings) secureStorage.set('pain-tracker-settings', data.settings);
 
-      // Import sync queue if available
-      if (data.syncQueue) {
-        // Import sync queue items to IndexedDB
-        const { offlineStorage } = await import('../lib/offline-storage');
-        for (const item of data.syncQueue) {
-          // Ensure item matches expected sync queue shape before adding
-          const queueItem = item as {
-            url: string;
-            method: string;
-            headers?: Record<string, string>;
-            body?: unknown;
-            priority?: 'high' | 'medium' | 'low';
-            type?: string;
-            metadata?: Record<string, unknown>;
-          };
-          await offlineStorage.addToSyncQueue({
-            url: queueItem.url,
-            method: queueItem.method,
-            headers: queueItem.headers || {},
-            body:
-              typeof queueItem.body === 'string'
-                ? queueItem.body
-                : JSON.stringify(queueItem.body || {}),
-            priority: queueItem.priority || 'medium',
-            type: queueItem.type || 'sync',
-          });
-        }
-      }
+      // Intentionally ignore data.syncQueue.
+      // Backups should not include pending network operations.
 
       if (process.env.NODE_ENV === 'development') {
         console.log('PWA: Data imported successfully');

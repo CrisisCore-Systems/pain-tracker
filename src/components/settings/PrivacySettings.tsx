@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { secureStorage } from '../../lib/storage/secureStorage';
+import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
+import { loadAnalyticsIfAllowed } from '../../analytics/analytics-loader';
 import {
   PRIVACY_SETTINGS_STORAGE_KEY,
   readPrivacySettings,
@@ -8,7 +10,13 @@ import {
 
 export default function PrivacySettings() {
   const [sharing, setSharing] = useState<boolean>(() => readPrivacySettings().dataSharing);
-  const [analytics, setAnalytics] = useState<boolean>(() => readPrivacySettings().analyticsConsent);
+  const [analytics, setAnalytics] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('pain-tracker:analytics-consent') === 'granted';
+    } catch {
+      return false;
+    }
+  });
   const [retention, setRetention] = useState<number>(() => readPrivacySettings().retentionDays);
   const [weatherAutoCapture, setWeatherAutoCapture] = useState<boolean>(() => readPrivacySettings().weatherAutoCapture);
 
@@ -20,6 +28,19 @@ export default function PrivacySettings() {
       weatherAutoCapture,
     });
   }, [sharing, analytics, retention, weatherAutoCapture]);
+
+  useEffect(() => {
+    // Keep the canonical analytics consent state in sync.
+    // This controls both local-only analytics and any outbound GA events/scripts.
+    if (analytics) {
+      void privacyAnalytics.requestConsent().finally(() => {
+        // Ensure GA4 loads only after opt-in.
+        loadAnalyticsIfAllowed();
+      });
+    } else {
+      privacyAnalytics.revokeConsent();
+    }
+  }, [analytics]);
 
   return (
     <div className="rounded-xl p-5 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg">

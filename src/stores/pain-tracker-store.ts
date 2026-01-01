@@ -10,6 +10,7 @@ import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
 import { hipaaComplianceService } from '../services/HIPAACompliance';
 import { migratePainTrackerState } from './pain-tracker-migrations';
 import { trackMoodEntryLogged } from '../analytics/ga4-events';
+import { createEncryptedOfflinePersistStorage } from './encrypted-idb-persist';
 
 // Error counters for silent failures (prevents data loss blindspots)
 let analyticsErrorCount = 0;
@@ -20,46 +21,22 @@ type PersistedPainTrackerSlice = Pick<
   'entries' | 'moodEntries' | 'emergencyData' | 'activityLogs' | 'scheduledReports'
 >;
 
-function getSafeLocalStorage(): Storage | undefined {
-  try {
-    return typeof localStorage === 'undefined' ? undefined : localStorage;
-  } catch {
-    return undefined;
-  }
-}
-
-// Persist storage that never throws on corrupted JSON.
-// If data is corrupted, we clear it (best-effort) and start fresh.
-const safePersistStorage: PersistStorage<PersistedPainTrackerSlice | undefined> = {
-  getItem: (name: string) => {
-    const ls = getSafeLocalStorage();
-    if (!ls) return null;
-
-    const raw = ls.getItem(name);
-    if (!raw) return null;
-
-    try {
-      return JSON.parse(raw) as { state: PersistedPainTrackerSlice | undefined; version?: number };
-    } catch {
-      try {
-        ls.removeItem(name);
-      } catch {
-        // ignore
-      }
-      return null;
-    }
-  },
-  setItem: (name: string, value: { state: PersistedPainTrackerSlice | undefined; version?: number }) => {
-    const ls = getSafeLocalStorage();
-    if (!ls) return;
-    ls.setItem(name, JSON.stringify(value));
-  },
-  removeItem: (name: string) => {
-    const ls = getSafeLocalStorage();
-    if (!ls) return;
-    ls.removeItem(name);
-  },
-};
+const encryptedPersistStorage: PersistStorage<PersistedPainTrackerSlice | undefined> =
+  createEncryptedOfflinePersistStorage<PersistedPainTrackerSlice | undefined>('pain-tracker-storage', {
+    buildMigratedState: legacyEntries => {
+      // Legacy keys store a raw array of pain entries. Migrate into the persisted slice.
+      return {
+        state: {
+          entries: legacyEntries as unknown as PainEntry[],
+          moodEntries: [],
+          emergencyData: null,
+          activityLogs: [],
+          scheduledReports: [],
+        },
+        version: 2,
+      };
+    },
+  });
 
 /** Get current error counts for monitoring/debugging */
 export function getStoreErrorCounts() {
@@ -582,7 +559,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
       {
         name: 'pain-tracker-storage',
         version: 2,
-        storage: safePersistStorage,
+        storage: encryptedPersistStorage,
         migrate: (persistedState: unknown, fromVersion: number) => {
           const migrated = migratePainTrackerState(
             persistedState as Partial<PainTrackerState> | undefined,

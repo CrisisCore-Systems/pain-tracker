@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { loadPainEntries } from '../utils/pain-tracker/storage';
+import { usePainTrackerStore } from '../stores/pain-tracker-store';
 
 // Helper to set raw localStorage value
 function setRaw(val: string) {
@@ -7,13 +8,20 @@ function setRaw(val: string) {
 }
 
 describe('storage parse & invalid structure errors', () => {
+  beforeEach(() => {
+    usePainTrackerStore.setState(s => ({ ...s, entries: [] }));
+    localStorage.removeItem('pain_tracker_entries');
+  });
+
   it('PARSE_ERROR on malformed JSON', async () => {
     setRaw('{ not valid');
-    await expect(loadPainEntries()).rejects.toMatchObject({ code: 'PARSE_ERROR' });
+    // Legacy localStorage content should not be parsed anymore.
+    await expect(loadPainEntries()).resolves.toEqual([]);
   });
 
   it('PARSE_ERROR on invalid structure array contents', async () => {
-    setRaw(JSON.stringify([{ bad: 'shape' }]));
+    // Exercise store-backed validation rather than localStorage parsing.
+    usePainTrackerStore.setState(s => ({ ...s, entries: [{ bad: 'shape' }] as never[] }));
     await expect(loadPainEntries()).rejects.toMatchObject({ code: 'PARSE_ERROR' });
   });
 });
