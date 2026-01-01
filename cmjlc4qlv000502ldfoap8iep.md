@@ -1,12 +1,15 @@
 ---
 title: "Contribute to Pain Tracker"
+seoTitle: "Contribute to Pain Tracker – Help Build Privacy‑First Pain Tech"
+seoDescription: "Contribute to Pain Tracker Pro, an open‑source, privacy‑first pain tracking app with trauma‑informed design for patients, clinicians, and developers"
 datePublished: Thu Dec 25 2025 11:04:00 GMT+0000 (Coordinated Universal Time)
 cuid: cmjlc4qlv000502ldfoap8iep
-slug: contribute
+slug: contribute-to-pain-tracker
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1767242962201/bee0b022-dd92-44a3-bf3e-499126420134.jpeg
+ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1767243244293/cca6d2c8-631b-474f-8ab8-e836d8cb8197.jpeg
+tags: privacy, opensource-inactive, pwa, healthtech, paintracker, traumainformed
 
 ---
-
-# Contribute to Pain Tracker
 
 Pain Tracker Pro is an open-source project built by survivors, for survivors. We are looking for contributors who care about privacy, accessibility, and trauma-informed design.
 
@@ -14,34 +17,52 @@ Pain Tracker Pro is an open-source project built by survivors, for survivors. We
 
 We use a modern, type-safe stack focused on performance and local persistence:
 
-*   **Framework:** React 18 + TypeScript + Vite
-*   **State Management:** Zustand + Immer
-*   **Database:** IndexedDB (via IDB wrapper)
-*   **Styling:** Tailwind CSS
-*   **Testing:** Vitest + Playwright
-*   **Validation:** Zod
+* **Framework:** React 18 + TypeScript + Vite
+    
+* **State Management:** Zustand + Immer
+    
+* **Database:** IndexedDB (via IDB wrapper)
+    
+* **Styling:** Tailwind CSS
+    
+* **Testing:** Vitest + Playwright
+    
+* **Validation:** Zod
+    
 
 ## 🤝 How You Can Help
 
 We welcome contributions of all kinds, not just code.
 
-### 1. Code Contributions
-*   **Accessibility Audits:** Help us reach WCAG 2.2 AA compliance.
-*   **Performance:** Optimize our Service Worker and IndexedDB queries.
-*   **Features:** Check our [GitHub Issues](https://github.com/CrisisCore-Systems/pain-tracker/issues) for "good first issue" tags.
+### 1\. Code Contributions
 
-### 2. Documentation
-*   Improve our README and setup guides.
-*   Write tutorials or use-cases.
+* **Accessibility Audits:** Help us reach WCAG 2.2 AA compliance.
+    
+* **Performance:** Optimize our Service Worker and IndexedDB queries.
+    
+* **Features:** Check our [GitHub Issues](https://github.com/CrisisCore-Systems/pain-tracker/issues) for "good first issue" tags.
+    
 
-### 3. Testing
-*   Test the app on different devices and report bugs.
-*   Help us write better end-to-end tests.
+### 2\. Documentation
+
+* Improve our README and setup guides.
+    
+* Write tutorials or use-cases.
+    
+
+### 3\. Testing
+
+* Test the app on different devices and report bugs.
+    
+* Help us write better end-to-end tests.
+    
 
 ## 🚫 What We Are NOT Looking For
 
-*   **Tracking/Analytics:** We will not accept PRs that add third-party tracking pixels, analytics SDKs (like Google Analytics), or any code that sends user data to a remote server without explicit, opt-in consent.
-*   **Growth Hacking:** We optimize for user trust, not "engagement" or "retention" metrics.
+* **Tracking/Analytics:** We will not accept PRs that add third-party tracking pixels, analytics SDKs (like Google Analytics), or any code that sends user data to a remote server without explicit, opt-in consent.
+    
+* **Growth Hacking:** We optimize for user trust, not "engagement" or "retention" metrics.
+    
 
 ## 📜 Code of Conduct
 
@@ -49,10 +70,14 @@ We are committed to providing a friendly, safe, and welcoming environment for al
 
 ## 🚀 Get Started
 
-1.  **Fork the Repository:** [https://github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
-2.  **Clone it:** `git clone https://github.com/YOUR_USERNAME/pain-tracker.git`
-3.  **Install Dependencies:** `npm install`
-4.  **Run it:** `npm run dev`
+1. **Fork the Repository:** [https://github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
+    
+2. **Clone it:** `git clone https://github.com/YOUR_USERNAME/pain-tracker.git`
+    
+3. **Install Dependencies:** `npm install`
+    
+4. **Run it:** `npm run dev`
+    
 
 If you have questions, feel free to open a discussion on GitHub!
 
