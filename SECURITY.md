@@ -38,6 +38,29 @@ For PRs that touch encryption, key handling, local persistence (localStorage/Ind
 
 - 'unsafe-inline' allows arbitrary inline execution and is the most common vector for XSS exploitation when combined with injection points. Nonces or hashes constrain inline execution to explicitly approved snippets.
 
+## Background Sync URL Allowlist
+
+The background sync service (`src/lib/background-sync.ts`) maintains a strict URL allowlist to prevent data exfiltration attacks.
+
+### Threat Mitigated
+
+When the application goes offline, pending API requests are serialized to IndexedDB for later replay. Without origin validation, a malicious or corrupted queue item could redirect sensitive health data to an attacker-controlled domain when connectivity is restored. This could occur through:
+
+- XSS injection that enqueues exfiltration requests
+- Corrupted/tampered queue data (if storage is compromised)
+- Malicious browser extensions modifying stored queue items
+
+### Controls Implemented
+
+1. **Same-origin enforcement**: Only URLs matching `window.location.origin` are replayed.
+2. **Path prefix allowlist**: Only requests to `/api` (or the configured `VITE_API_BASE_URL`) are permitted.
+3. **Header sanitization**: Replayed requests only forward an allowlist of headers (`authorization`, `content-type`, `accept`) to prevent header-smuggling attacks.
+4. **Enqueue-time validation**: Disallowed URLs are rejected at queue time, not just replay time (defense-in-depth).
+
+### Testing
+
+The guards are covered by unit tests in `src/test/background-sync-guard.test.ts`.
+
 ## Troubleshooting / Triage (CI & Security Scans)
 
 1. CodeQL SARIF outputs
