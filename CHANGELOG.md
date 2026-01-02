@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 - **PWA Backups**: Stopped exporting/restoring pending sync queue items to prevent backup files from reintroducing network operations.
-- **Background Sync**: Restricted sync-queue replays to same-origin API endpoints and sanitized replayed headers.
+- **Background Sync**: Restricted sync-queue replays to same-origin API endpoints (`/api` or `VITE_API_BASE_URL`) and sanitized replayed headers. Mitigates data exfiltration risk where a malicious or corrupted sync-queue item could redirect health data to an attacker-controlled origin when the queue is replayed.
 - **Analytics**: Prevented loading remote GA4 scripts until both build-time enablement and explicit user consent are present.
 
 ### Planned
