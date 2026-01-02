@@ -226,10 +226,30 @@ These features are **explicitly deferred** to future versions:
 - FHIR integration for EHR systems
 - Medication interaction warnings
 
-### v1.0.0+ (Q3 2026)
+### v1.0.0+ (Q3-Q4 2026) - Native Mobile Apps 📱
+- **Native iOS App** (App Store)
+  - Biometric authentication (Face ID, Touch ID)
+  - Native push notifications
+  - HealthKit integration
+  - iOS Human Interface Guidelines compliance
+- **Native Android App** (Google Play Store)
+  - Biometric authentication (Fingerprint, Face Unlock)
+  - Native push notifications
+  - Google Fit integration
+  - Material Design compliance
+- **Cross-Platform Features**
+  - Native secure storage (Keychain/Keystore)
+  - Background data sync
+  - Offline-first architecture maintained
+  - 80%+ code reuse via Capacitor
+- **📋 Full Details:** See [Mobile Apps Action Plan](./MOBILE_APPS_ACTION_PLAN.md) and [Quick Reference](./MOBILE_APPS_QUICK_REFERENCE.md)
+
+### v1.5.0+ (Q4 2026+)
 - Multi-tenancy for clinics/hospitals
 - Provider portal for patient monitoring
 - Clinical trial matching
+- Apple Watch companion app
+- Wear OS widget
 
 ---
 

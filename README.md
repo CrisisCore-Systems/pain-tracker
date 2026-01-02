@@ -524,7 +524,15 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 - 🎯 Bi-directional data sync
 
 ### **Phase 4: Ecosystem** *(Q3-Q4 2026)* - Planned
-- 🎯 Multi-platform native applications (iOS, Android)
+- 🎯 **Native Mobile Applications (iOS, Android)** 📱
+  - Biometric authentication (Face ID, Touch ID, Fingerprint)
+  - Native push notifications for pain reminders
+  - Health app integrations (HealthKit, Google Fit)
+  - Native secure storage (Keychain/Keystore)
+  - Background data sync
+  - Platform-specific UI polish
+  - **Timeline:** 20 weeks | **Technology:** Capacitor + React
+  - **[📋 Full Action Plan](docs/MOBILE_APPS_ACTION_PLAN.md)** | **[⚡ Quick Reference](docs/MOBILE_APPS_QUICK_REFERENCE.md)**
 - 🎯 Healthcare provider dashboard
 - 🎯 Research data anonymization platform
 - 🎯 Clinical study export tools
@@ -539,6 +547,8 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 - **[Security Policy](security/)** - Security practices and vulnerability reporting
 - **[PWA Implementation](docs/PWA-COMPLETE.md)** - Progressive Web App features
 - **[Empathy Framework](docs/EMPATHY_ENHANCEMENT_SUMMARY.md)** - User experience philosophy
+- **[Mobile Apps Action Plan](docs/MOBILE_APPS_ACTION_PLAN.md)** 📱 - iOS & Android native app implementation strategy
+- **[Mobile Apps Quick Reference](docs/MOBILE_APPS_QUICK_REFERENCE.md)** - Mobile development quick start guide
 
 ---
 
