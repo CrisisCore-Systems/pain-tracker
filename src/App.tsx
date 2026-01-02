@@ -123,9 +123,6 @@ function App() {
         } catch {
           // Background sync not available - this is expected in some environments
         }
-
-        // Setup health data sync if possible
-        await pwaManager.enableHealthDataSync();
       } catch {
         // Continue without PWA features - trauma-informed UX still works
       }

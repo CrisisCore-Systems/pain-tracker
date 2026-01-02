@@ -11,7 +11,7 @@ export type PrivacySettings = {
 
 const DEFAULT_PRIVACY_SETTINGS: PrivacySettings = {
   dataSharing: false,
-  analyticsConsent: true,
+  analyticsConsent: false,
   retentionDays: 365,
   weatherAutoCapture: false,
 };

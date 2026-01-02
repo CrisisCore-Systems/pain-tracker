@@ -14,6 +14,7 @@ import {
   trackValidationUsed as trackGA4Validation,
   trackProgressViewed as trackGA4Progress,
 } from '../analytics/ga4-events';
+import { ANALYTICS_CONSENT_STORAGE_KEY } from '../stores/encrypted-idb-persist';
 
 // Privacy configuration
 export interface PrivacyPreservingConfig {
@@ -145,6 +146,15 @@ export class PrivacyPreservingAnalyticsService {
 
     // Clean old events on initialization
     this.cleanOldEvents();
+
+    // Align in-memory consent with persisted consent flag (explicit user choice).
+    // This ensures all outbound analytics gates agree across modules.
+    try {
+      const stored = localStorage.getItem(ANALYTICS_CONSENT_STORAGE_KEY);
+      this.userConsent = stored === 'granted';
+    } catch {
+      this.userConsent = false;
+    }
   }
 
   /**
@@ -158,6 +168,13 @@ export class PrivacyPreservingAnalyticsService {
 
     // Grant consent when called
     this.userConsent = true;
+
+    // Persist explicit consent (best-effort)
+    try {
+      localStorage.setItem(ANALYTICS_CONSENT_STORAGE_KEY, 'granted');
+    } catch {
+      // ignore
+    }
 
     securityService.logSecurityEvent({
       type: 'analytics',
@@ -175,6 +192,13 @@ export class PrivacyPreservingAnalyticsService {
    */
   revokeConsent(): void {
     this.userConsent = false;
+
+    // Persist explicit revocation (best-effort)
+    try {
+      localStorage.setItem(ANALYTICS_CONSENT_STORAGE_KEY, 'declined');
+    } catch {
+      // ignore
+    }
 
     securityService.logSecurityEvent({
       type: 'analytics',

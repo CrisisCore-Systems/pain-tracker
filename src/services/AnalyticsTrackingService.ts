@@ -16,9 +16,16 @@ declare global {
   }
 }
 
+import { isAnalyticsAllowed } from '../analytics/analytics-gate';
+
 // Check if analytics is available
 function isAnalyticsEnabled(): boolean {
-  return typeof window !== 'undefined' && typeof window.gtag === 'function';
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.gtag === 'function' &&
+    // Defense-in-depth: require env flag AND explicit user consent.
+    isAnalyticsAllowed()
+  );
 }
 
 // Safe gtag wrapper

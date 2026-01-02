@@ -1,7 +1,5 @@
 import type { PainEntry } from '../../types';
-import { secureStorage } from '../../lib/storage/secureStorage';
-
-const STORAGE_KEY = 'pain_tracker_entries';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 interface StorageError extends Error {
   code: 'STORAGE_FULL' | 'PARSE_ERROR' | 'WRITE_ERROR' | 'NOT_FOUND';
@@ -17,41 +15,22 @@ const createStorageError = (code: StorageError['code'], message: string): Storag
 };
 
 /**
- * Saves a pain entry to local storage
- * @throws {StorageError} If storage is full or write fails
+ * Legacy compatibility API.
+ *
+ * NOTE: This module intentionally no longer persists to localStorage.
+ * It delegates to the canonical `usePainTrackerStore`, which persists
+ * via the app's encrypted IndexedDB-backed boundary.
  */
 export const savePainEntry = async (entry: PainEntry): Promise<void> => {
   try {
-    const existingEntries = await loadPainEntries();
-    const updatedEntries = [...existingEntries];
-
-    // Find and update existing entry or add new one
-    const existingIndex = updatedEntries.findIndex(e => e.id === entry.id);
+    const state = usePainTrackerStore.getState();
+    const existingIndex = state.entries.findIndex(e => e.id === entry.id);
     if (existingIndex !== -1) {
-      updatedEntries[existingIndex] = entry;
+      state.updateEntry(entry.id, entry);
     } else {
-      updatedEntries.push(entry);
-    }
-
-    // Prefer encrypted write when hooks are available; gracefully fall back to plain storage
-    const hasEncryptHook =
-      typeof (globalThis as { __secureStorageEncrypt?: (p: string) => string })
-        .__secureStorageEncrypt === 'function';
-    const tryWrite = (encrypt: boolean) =>
-      secureStorage.set(STORAGE_KEY, updatedEntries, encrypt ? { encrypt: true } : undefined);
-
-    const firstAttempt = tryWrite(hasEncryptHook);
-    const result = firstAttempt.success || !hasEncryptHook ? firstAttempt : tryWrite(false);
-
-    if (!result.success) {
-      const msg = result.error || '';
-      if (/quota/i.test(msg) || msg === 'QuotaExceededError') {
-        throw createStorageError('STORAGE_FULL', 'Local storage is full. Please clear some space.');
-      }
-      if (msg === 'VALUE_TOO_LARGE') {
-        throw createStorageError('STORAGE_FULL', 'Pain entry data exceeds storage limits.');
-      }
-      throw createStorageError('WRITE_ERROR', 'Failed to save pain entry.');
+      // Store's public addEntry API generates ids/timestamps; we preserve legacy ids
+      // by updating the store state directly through setState.
+      usePainTrackerStore.setState(s => ({ ...s, entries: [...s.entries, entry] }));
     }
   } catch (e) {
     if ((e as StorageError).code) {
@@ -67,31 +46,18 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
  */
 export const loadPainEntries = async (): Promise<PainEntry[]> => {
   try {
-    // Attempt encrypted read if hooks are available, otherwise plain
-    const hasDecryptHook =
-      typeof (globalThis as { __secureStorageDecrypt?: (c: string) => string })
-        .__secureStorageDecrypt === 'function';
-    let stored = hasDecryptHook
-      ? secureStorage.get<unknown>(STORAGE_KEY, { encrypt: true })
-      : secureStorage.get<unknown>(STORAGE_KEY);
-    if (!stored) {
-      // Backward compatibility / test injection path: look at raw localStorage
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
-      stored = raw; // attempt to parse raw
+    // Ensure persisted state has had a chance to hydrate.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const persistApi = (usePainTrackerStore as any).persist;
+    try {
+      await persistApi?.rehydrate?.();
+    } catch {
+      // ignore hydration issues; return whatever is in memory
     }
-    let entries: unknown;
-    if (typeof stored === 'string') {
-      entries = JSON.parse(stored);
-    } else {
-      entries = stored;
-    }
-
-    // Validate the data structure
+    const entries = usePainTrackerStore.getState().entries;
     if (!Array.isArray(entries) || !entries.every(isValidPainEntry)) {
       throw createStorageError('PARSE_ERROR', 'Stored data is corrupted.');
     }
-
     return entries;
   } catch (e) {
     if (e instanceof SyntaxError) {
@@ -110,7 +76,7 @@ export const loadPainEntries = async (): Promise<PainEntry[]> => {
  */
 export const clearPainEntries = async (): Promise<void> => {
   try {
-    secureStorage.remove(STORAGE_KEY, { encrypt: true });
+    usePainTrackerStore.setState(s => ({ ...s, entries: [] }));
   } catch {
     throw createStorageError('WRITE_ERROR', 'Failed to clear pain entries.');
   }

@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { savePainEntry, loadPainEntries, clearPainEntries } from '../utils/pain-tracker/storage';
 import type { PainEntry } from '../types';
+import { usePainTrackerStore } from '../stores/pain-tracker-store';
 
 const sampleEntry: PainEntry = {
   id: 999,
@@ -16,17 +17,15 @@ const sampleEntry: PainEntry = {
 };
 
 describe('storage util error paths', () => {
-  it('handles quota exceeded error', async () => {
-    const proto = Object.getPrototypeOf(window.localStorage);
-    const original = proto.setItem;
-    proto.setItem = function () {
-      const err = new Error('Quota exceeded');
-      (err as Error & { name: string }).name = 'QuotaExceededError';
-      throw err;
-    } as Storage['setItem'];
-    await expect(savePainEntry(sampleEntry)).rejects.toMatchObject({ code: 'STORAGE_FULL' });
-    // restore
-    proto.setItem = original;
+  it('wraps unexpected store write errors as WRITE_ERROR', async () => {
+    const originalSetState = usePainTrackerStore.setState;
+    usePainTrackerStore.setState = (() => {
+      throw new Error('Simulated store failure');
+    }) as unknown as typeof usePainTrackerStore.setState;
+
+    await expect(savePainEntry(sampleEntry)).rejects.toMatchObject({ code: 'WRITE_ERROR' });
+
+    usePainTrackerStore.setState = originalSetState;
   });
 
   it('loadPainEntries returns [] when nothing stored', async () => {

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **PWA Backups**: Stopped exporting/restoring pending sync queue items to prevent backup files from reintroducing network operations.
+- **Background Sync**: Restricted sync-queue replays to same-origin API endpoints and sanitized replayed headers.
+- **Analytics**: Prevented loading remote GA4 scripts until both build-time enablement and explicit user consent are present.
+
 ### Planned
 
 - Machine learning pain pattern recognition (Q1 2026)

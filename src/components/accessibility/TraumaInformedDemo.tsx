@@ -23,8 +23,7 @@ export function TraumaInformedDemo() {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <TraumaInformedPainEntryForm
             onSubmit={entry => {
-              console.log('Pain entry submitted:', entry);
-              // In demo mode, just log the submission
+              // Demo mode: intentionally no logging of submitted data
             }}
           />
         </div>

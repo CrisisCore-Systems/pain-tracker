@@ -4,8 +4,6 @@ import { pwaManager } from '../utils/pwa-utils';
 vi.mock('../lib/offline-storage', () => ({
   offlineStorage: {
     init: vi.fn().mockResolvedValue(undefined),
-    exportData: vi.fn().mockResolvedValue({ syncQueue: [] }),
-    addToSyncQueue: vi.fn().mockResolvedValue(undefined),
     getStorageUsage: vi.fn().mockResolvedValue({ used: 0, quota: 0 }),
     clearAllData: vi.fn().mockResolvedValue(undefined),
   },

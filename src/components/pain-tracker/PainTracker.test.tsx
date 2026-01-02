@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, beforeAll, afterEach, afterAll, vi } from 'vitest';
 import { render, screen, fireEvent } from '../../test/test-utils'; // Use custom render with providers
+import { waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { PainTracker } from './index';
 import { ToastProvider } from '../feedback';
@@ -330,8 +331,10 @@ describe('PainTracker', () => {
 
       render(<PainTracker />, { wrapper: TestWrapper });
 
-      // Should show an error message (async effect)
-      expect(await screen.findByText(/Unable to load pain entries/i)).toBeInTheDocument();
+      // Canonical storage is store-backed; localStorage failures should not break rendering.
+      await waitFor(() => {
+        expect(screen.queryByText(/Unable to load pain entries/i)).not.toBeInTheDocument();
+      });
 
       // Should still render the form for new entries
       expect(screen.getByText(/Record Pain Entry/i)).toBeInTheDocument();

@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useToast } from './feedback';
 import { privacyAnalytics } from '../services/PrivacyAnalyticsService';
 import { useStartupPrompts } from '../contexts/StartupPromptsContext';
+import { loadAnalyticsIfAllowed } from '../analytics/analytics-loader';
 
 const STORAGE_KEY = 'pain-tracker:analytics-consent';
 
@@ -54,6 +55,9 @@ export default function AnalyticsConsentPrompt() {
           // Enable analytics in the service
           const consentGranted = await privacyAnalytics.requestConsent();
 
+          // Load GA4 only after explicit opt-in.
+          loadAnalyticsIfAllowed();
+
           if (consentGranted) {
             bottomLeftRef.current.success(
               'Thank you!',
@@ -73,7 +77,7 @@ export default function AnalyticsConsentPrompt() {
         // When dismissed (X clicked), store 'declined'
         localStorage.setItem(STORAGE_KEY, 'declined');
         setConsent('declined');
-        privacyAnalytics.updatePrivacyConfig({ enableAnalytics: false });
+        privacyAnalytics.revokeConsent();
         dismissPromptRef.current('analytics-consent');
       };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../design-system/components/Button';
 import { Heart, Send, ArrowLeft, Shield, CheckCircle2, Sparkles } from 'lucide-react';
@@ -14,7 +14,58 @@ export const SubmitStoryPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [recaptchaReady, setRecaptchaReady] = useState(false);
+  const recaptchaScriptRef = useRef<HTMLScriptElement | null>(null);
+  const recaptchaLoadPromiseRef = useRef<Promise<boolean> | null>(null);
+
+  type Grecaptcha = {
+    execute: (siteKey: string, options: { action: string }) => Promise<string>;
+  };
+
+  const ensureRecaptchaLoaded = async (siteKey: string): Promise<boolean> => {
+    const existingGrecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
+    if (existingGrecaptcha?.execute) return true;
+
+    if (recaptchaLoadPromiseRef.current) return recaptchaLoadPromiseRef.current;
+
+    recaptchaLoadPromiseRef.current = new Promise<boolean>((resolve) => {
+      const existingScript = document.querySelector(
+        `script[data-recaptcha='${siteKey}']`
+      ) as HTMLScriptElement | null;
+
+      const waitForGrecaptcha = () => {
+        const start = Date.now();
+        const interval = window.setInterval(() => {
+          const grecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
+          if (grecaptcha?.execute) {
+            window.clearInterval(interval);
+            resolve(true);
+            return;
+          }
+          if (Date.now() - start > 3000) {
+            window.clearInterval(interval);
+            resolve(false);
+          }
+        }, 50);
+      };
+
+      if (existingScript) {
+        waitForGrecaptcha();
+        return;
+      }
+
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
+      s.setAttribute('data-recaptcha', siteKey);
+      s.onload = () => waitForGrecaptcha();
+      s.onerror = () => resolve(false);
+
+      recaptchaScriptRef.current = s;
+      document.head.appendChild(s);
+    });
+
+    return recaptchaLoadPromiseRef.current;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,14 +79,13 @@ export const SubmitStoryPage: React.FC = () => {
       let recaptchaToken: string | undefined = undefined;
       const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
 
-      type Grecaptcha = {
-        execute: (siteKey: string, options: { action: string }) => Promise<string>;
-      };
-
-      const grecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
-      if (siteKey && grecaptcha && recaptchaReady) {
+      if (siteKey) {
         try {
-          recaptchaToken = await grecaptcha.execute(siteKey, { action: 'submit_testimonial' });
+          await ensureRecaptchaLoaded(siteKey);
+          const grecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
+          if (grecaptcha?.execute) {
+            recaptchaToken = await grecaptcha.execute(siteKey, { action: 'submit_testimonial' });
+          }
         } catch (err) {
           console.warn('Failed to execute reCAPTCHA', err);
         }
@@ -56,25 +106,16 @@ export const SubmitStoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
-    if (!siteKey) return;
-    const existing = document.querySelector(`script[data-recaptcha='${siteKey}']`);
-    if (existing) {
-      setRecaptchaReady(true);
-      return;
-    }
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
-    s.setAttribute('data-recaptcha', siteKey);
-    s.onload = () => setRecaptchaReady(true);
-    s.onerror = () => setRecaptchaReady(false);
-    document.head.appendChild(s);
     return () => {
+      const s = recaptchaScriptRef.current;
+      if (!s) return;
       try {
         document.head.removeChild(s);
       } catch (e) {
         console.warn('Failed to remove reCAPTCHA script during cleanup', e);
+      } finally {
+        recaptchaScriptRef.current = null;
+        recaptchaLoadPromiseRef.current = null;
       }
     };
   }, []);

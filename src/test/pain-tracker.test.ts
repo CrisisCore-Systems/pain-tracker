@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { calculatePainScore, aggregatePainData } from '../utils/pain-tracker/calculations';
 import { savePainEntry, loadPainEntries, clearPainEntries } from '../utils/pain-tracker/storage';
 import type { PainEntry } from '../types';
+import { usePainTrackerStore } from '../stores/pain-tracker-store';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -148,8 +149,9 @@ describe('Pain Data Aggregation', () => {
 });
 
 describe('Pain Entry Storage', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     localStorageMock.clear();
+    await clearPainEntries();
   });
 
   it('should save and load pain entries', async () => {
@@ -193,13 +195,14 @@ describe('Pain Entry Storage', () => {
   it('should handle corrupted data', async () => {
     localStorageMock.setItem('pain_tracker_entries', 'invalid json');
 
-    await expect(loadPainEntries()).rejects.toThrow();
+    // Legacy localStorage is ignored; canonical store-backed storage should not fail.
+    await expect(loadPainEntries()).resolves.toEqual([]);
   });
 
   it('should validate entry structure', async () => {
     const invalidEntry = { id: 1 }; // Missing required fields
-    localStorageMock.setItem('pain_tracker_entries', JSON.stringify([invalidEntry]));
+    usePainTrackerStore.setState(s => ({ ...s, entries: [invalidEntry as unknown as PainEntry] }));
 
-    await expect(loadPainEntries()).rejects.toThrow();
+    await expect(loadPainEntries()).rejects.toMatchObject({ code: 'PARSE_ERROR' });
   });
 });

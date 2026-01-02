@@ -1,32 +1,96 @@
 /* src/analytics/analytics-loader.ts */
 
-// Vite exposes env vars as strings. Only enable real analytics when explicitly allowed.
-const enableAnalytics = import.meta.env.VITE_ENABLE_ANALYTICS === 'true';
+// NOTE: Do not load any remote analytics script until BOTH:
+// 1) Build-time env enables analytics, AND
+// 2) User has explicitly granted consent.
 
-if (enableAnalytics) {
-  // Load remote Google Tag Manager script from its host when enabled.
+const GA4_MEASUREMENT_ID = 'G-X25RTEWBYL';
+const CONSENT_KEY = 'pain-tracker:analytics-consent';
+const LOADED_FLAG = '__pt_ga4_loaded';
+
+function isEnvEnabled(): boolean {
+  try {
+    if (import.meta.env && typeof import.meta.env.VITE_ENABLE_ANALYTICS === 'string') {
+      return import.meta.env.VITE_ENABLE_ANALYTICS === 'true';
+    }
+  } catch {
+    // ignore
+  }
+
+  try {
+    // Vitest / Node fallback
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+    return env.VITE_ENABLE_ANALYTICS === 'true';
+  } catch {
+    return false;
+  }
+}
+
+function hasConsent(): boolean {
+  try {
+    return localStorage.getItem(CONSENT_KEY) === 'granted';
+  } catch {
+    return false;
+  }
+}
+
+function ensureNoopGtag(): void {
+  window.dataLayer = window.dataLayer || [];
+  if (!window.gtag) {
+    window.gtag = () => {
+      /* no-op */
+    };
+  }
+}
+
+function markLoaded(): void {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any)[LOADED_FLAG] = true;
+  } catch {
+    // ignore
+  }
+}
+
+function isLoaded(): boolean {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return Boolean((window as any)[LOADED_FLAG]);
+  } catch {
+    return false;
+  }
+}
+
+export function loadAnalyticsIfAllowed(): void {
+  ensureNoopGtag();
+
+  if (!isEnvEnabled()) return;
+  if (!hasConsent()) return;
+  if (isLoaded()) return;
+
+  // Load remote Google Tag Manager script only after explicit opt-in.
   const s = document.createElement('script');
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-X25RTEWBYL';
+  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`;
   s.async = true;
   document.head.appendChild(s);
 
-  window.dataLayer = window.dataLayer || [];
-  function gtag(...args: unknown[]) { window.dataLayer!.push(args); }
+  function gtag(...args: unknown[]) {
+    window.dataLayer!.push(args);
+  }
   window.gtag = gtag;
 
-  // Initialize gtag
   try {
     window.gtag('js', new Date());
-    window.gtag('config', 'G-X25RTEWBYL');
+    window.gtag('config', GA4_MEASUREMENT_ID);
   } catch {
     // swallow any runtime error during initialization
   }
-} else {
-  // Test / preview: provide a no-op implementation so callers won't throw
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = () => { /* no-op during tests/preview */ };
 
-  // Do not append the remote script when analytics disabled.
+  markLoaded();
 }
+
+// Initialize once on startup.
+loadAnalyticsIfAllowed();
 
 export {};

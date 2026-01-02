@@ -26,9 +26,8 @@
 @import 'tailwindcss/utilities';
 
 /* ===== FONTS ===== */
-/* PERFORMANCE: Font preconnect is in index.html for faster discovery.
- * display=swap ensures text is visible while font loads (FOUT over FOIT). */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* NOTE: Avoid remote font loading by default (no silent network egress).
+ * Font stacks should rely on local/system fonts unless explicitly approved. */
 
 /* ===== DESIGN SYSTEM ===== */
 @import '../design-system/tokens/fused-v2.css';

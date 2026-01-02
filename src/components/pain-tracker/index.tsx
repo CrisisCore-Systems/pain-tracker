@@ -214,15 +214,21 @@ export function PainTracker() {
 
   // Handle localStorage separately to catch errors
   useEffect(() => {
+    let cancelled = false;
     (async () => {
       try {
         const loaded = await loadPainEntries();
+        if (cancelled) return;
         setEntries(loaded);
       } catch (err) {
+        if (cancelled) return;
         setError('Unable to load pain entries. Please try refreshing the page.');
         console.error('Error loading pain entries:', err);
       }
     })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Focus management for WCB report
