@@ -234,5 +234,8 @@
   },
   "playwright": {
     "install": true
+  },
+  "overrides": {
+    "qs": "6.14.1"
   }
 }
