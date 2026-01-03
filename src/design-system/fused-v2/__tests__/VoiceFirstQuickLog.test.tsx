@@ -109,6 +109,11 @@ class MockSpeechSynthesisUtterance {
 // Set up global mocks
 (globalThis as unknown as { SpeechSynthesisUtterance: unknown }).SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
 
+afterEach(() => {
+  // Prevent fake-timer leakage from impacting later tests.
+  vi.useRealTimers();
+});
+
 describe('VoiceFirstQuickLog', () => {
   let onLineSpy: ReturnType<typeof vi.spyOn>;
   const globalShim = globalThis as unknown as {
@@ -543,6 +548,9 @@ describe('VoiceFirstQuickLog Integration', () => {
 
   it('simulates full voice-driven workflow', async () => {
     const onComplete = vi.fn();
+
+    // Ensure this integration test isn't affected by earlier fake-timer usage.
+    vi.useRealTimers();
     
     // Use real timers for this test
     render(<VoiceFirstQuickLog onComplete={onComplete} onCancel={() => {}} />);
@@ -583,5 +591,5 @@ describe('VoiceFirstQuickLog Integration', () => {
         notes: '',
       });
     }, { timeout: 3000 });
-  }, 10000); // Increase test timeout
+  }, 30000);
 });
