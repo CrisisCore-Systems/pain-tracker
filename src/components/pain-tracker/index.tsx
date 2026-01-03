@@ -48,17 +48,6 @@ const ENABLE_VALIDATION_TECH = (() => {
   return true; // Default enabled
 })();
 
-// Conditionally import validation technology components
-let _ValidationTechnologyIntegration: React.ComponentType<unknown> | null = null;
-if (ENABLE_VALIDATION_TECH) {
-  try {
-    // Dynamic import will be handled in useEffect
-    console.log('Validation technology enabled');
-  } catch (error) {
-    console.warn('Validation technology integration not available:', error);
-  }
-}
-
 const validatePainEntry = (entry: Partial<PainEntry>): boolean => {
   if (!entry.baselineData) return false;
 
@@ -96,6 +85,7 @@ export function PainTracker() {
   const [ValidationTechComponent, setValidationTechComponent] = useState<React.ComponentType<{
     painEntries: PainEntry[];
     onPainEntrySubmit: (entry: Partial<PainEntry>) => void;
+    showDashboard?: boolean;
   }> | null>(null);
   // Attempt a synchronous initial read from secureStorage/localStorage so tests that
   // mock localStorage can assert DOM that depends on initial entries synchronously.
@@ -557,10 +547,14 @@ export function PainTracker() {
               </div>
             </CardHeader>
             <CardContent>
-              {ValidationTechComponent ? (
-                <ValidationTechComponent painEntries={entries} onPainEntrySubmit={handleAddEntry} />
-              ) : useBodyMapForm ? (
+              {useBodyMapForm ? (
                 <PainAssessment onSave={handleAddEntryFromAssessment} />
+              ) : ValidationTechComponent ? (
+                <ValidationTechComponent
+                  painEntries={entries}
+                  onPainEntrySubmit={handleAddEntry}
+                  showDashboard={true}
+                />
               ) : (
                 <PainEntryForm onSubmit={handleAddEntry} />
               )}

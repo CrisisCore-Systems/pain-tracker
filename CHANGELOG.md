@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Validation Technology**: When enabled, it no longer blocks the Body Map entry form and exposes the insights view toggle.
+
 ### Security
 
 - **PWA Backups**: Stopped exporting/restoring pending sync queue items to prevent backup files from reintroducing network operations.
@@ -347,7 +351,7 @@ features and comprehensive SaaS infrastructure.
 
 ### Technical Debt
 
-- [ ] Validation technology integration (components ready, not fully integrated)
+- [x] Validation technology integration (components ready, not fully integrated)
 - [ ] Advanced PDF export formatting
 - [ ] Complete PWA browser testing
 - [x] Git tag implementation for releases
