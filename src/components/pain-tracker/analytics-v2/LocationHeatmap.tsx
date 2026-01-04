@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
+import { format as formatDate, startOfWeek } from 'date-fns';
 import { formatNumber } from '../../../utils/formatting';
-import type { PainEntry } from '../../../types';
+import { getAllLocations, getEffectivePainLevel, type PainEntry } from '../../../types';
 import { InteractiveBodyMap } from '../../body-mapping/InteractiveBodyMap';
 import { User, LayoutGrid } from 'lucide-react';
 
@@ -8,87 +9,162 @@ interface LocationHeatmapProps {
   entries: PainEntry[];
 }
 
-const BODY_LOCATIONS = [
-  'Head/Neck',
-  'Upper Back',
-  'Lower Back',
-  'Left Shoulder',
-  'Right Shoulder',
-  'Left Arm',
-  'Right Arm',
-  'Left Hand',
-  'Right Hand',
-  'Chest',
-  'Abdomen',
-  'Left Hip',
-  'Right Hip',
-  'Left Thigh',
-  'Right Thigh',
-  'Left Knee',
-  'Right Knee',
-  'Left Calf',
-  'Right Calf',
-  'Left Foot',
-  'Right Foot',
-  // Extended for nerve pain tracking
-  'Inner Left Knee',
-  'Inner Right Knee',
-  'Outer Left Knee',
-  'Outer Right Knee',
-  'Left Shin',
-  'Right Shin',
-  'Left Ankle',
-  'Right Ankle',
-  'Left Toes',
-  'Right Toes',
-];
+type LocationKey = string;
+
+type LocationStat = {
+  key: LocationKey;
+  label: string;
+  totalPain: number;
+  count: number;
+  byBucket: Record<string, { totalPain: number; count: number }>;
+};
+
+function normalizeLocationKey(location: string): string {
+  return location.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function getLocalDayKey(timestamp: string): string {
+  const d = new Date(timestamp);
+  const y = d.getFullYear();
+  const m = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function getBucketKey(timestamp: string, mode: 'day' | 'week'): string {
+  if (mode === 'day') return getLocalDayKey(timestamp);
+  const d = new Date(timestamp);
+  const start = startOfWeek(d, { weekStartsOn: 1 });
+  return formatDate(start, 'yyyy-MM-dd');
+}
+
+function enumerateLocalDaysInclusive(start: Date, end: Date): string[] {
+  const days: string[] = [];
+  const cursor = new Date(start);
+  cursor.setHours(12, 0, 0, 0);
+  const endLocal = new Date(end);
+  endLocal.setHours(12, 0, 0, 0);
+
+  while (cursor <= endLocal) {
+    const y = cursor.getFullYear();
+    const m = (cursor.getMonth() + 1).toString().padStart(2, '0');
+    const d = cursor.getDate().toString().padStart(2, '0');
+    days.push(`${y}-${m}-${d}`);
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return days;
+}
+
+function buildBucketKeys(entries: PainEntry[]): {
+  mode: 'day' | 'week';
+  keys: string[];
+  formatLabel: (key: string) => string;
+} {
+  const timestamps = entries
+    .map(e => new Date(e.timestamp).getTime())
+    .filter(n => Number.isFinite(n));
+  if (timestamps.length === 0) {
+    return {
+      mode: 'day',
+      keys: [],
+      formatLabel: key => key,
+    };
+  }
+
+  const start = new Date(Math.min(...timestamps));
+  const end = new Date(Math.max(...timestamps));
+  const allDays = enumerateLocalDaysInclusive(start, end);
+
+  // Keep the visualization readable while still “over time”:
+  // - show daily buckets for short ranges
+  // - auto-collapse to weekly buckets for longer ranges
+  const mode: 'day' | 'week' = allDays.length <= 31 ? 'day' : 'week';
+
+  if (mode === 'day') {
+    return {
+      mode,
+      keys: allDays,
+      formatLabel: key => {
+        const d = new Date(`${key}T12:00:00`);
+        return formatDate(d, 'MMM d');
+      },
+    };
+  }
+
+  const weekStarts = new Set<string>();
+  entries.forEach(entry => {
+    weekStarts.add(getBucketKey(entry.timestamp, 'week'));
+  });
+  const keys = Array.from(weekStarts).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  return {
+    mode,
+    keys,
+    formatLabel: key => {
+      const d = new Date(`${key}T12:00:00`);
+      return formatDate(d, 'MMM d');
+    },
+  };
+}
 
 export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => {
   const [viewMode, setViewMode] = useState<'visual' | 'grid'>('visual');
-  const locationData = useMemo(() => {
-    if (!entries.length) return [];
-
-    const locationStats = entries.reduce(
-      (acc, entry) => {
-        entry.baselineData.locations?.forEach(location => {
-          if (!acc[location]) {
-            acc[location] = { totalPain: 0, count: 0 };
-          }
-          acc[location].totalPain += entry.baselineData.pain;
-          acc[location].count += 1;
-        });
-        return acc;
-      },
-      {} as Record<string, { totalPain: number; count: number }>
-    );
-
-    const maxAvgPain = Math.max(
-      ...Object.values(locationStats).map(stat => stat.totalPain / stat.count)
-    );
-
-    return BODY_LOCATIONS.map(location => {
-      const stats = locationStats[location];
-      if (!stats) {
-        return {
-          location,
-          avgPain: 0,
-          frequency: 0,
-          intensity: 0,
-        };
-      }
-
-      const avgPain = stats.totalPain / stats.count;
+  const heatmap = useMemo(() => {
+    if (!entries.length) {
       return {
-        location,
-        avgPain: Number(formatNumber(avgPain, 1)),
-        frequency: stats.count,
-        intensity: avgPain / maxAvgPain,
+        locations: [] as LocationStat[],
+        bucket: { mode: 'day' as const, keys: [] as string[], formatLabel: (k: string) => k },
       };
-    });
+    }
+
+    const bucket = buildBucketKeys(entries);
+    const statsByKey: Record<LocationKey, LocationStat> = {};
+
+    for (const entry of entries) {
+      const pain = getEffectivePainLevel(entry);
+      const bucketKey = getBucketKey(entry.timestamp, bucket.mode);
+      const locations = getAllLocations(entry);
+
+      for (const rawLocation of locations) {
+        const trimmed = rawLocation.trim();
+        if (!trimmed) continue;
+        const key = normalizeLocationKey(trimmed);
+        if (!statsByKey[key]) {
+          statsByKey[key] = {
+            key,
+            label: trimmed,
+            totalPain: 0,
+            count: 0,
+            byBucket: {},
+          };
+        }
+        const stat = statsByKey[key];
+        stat.totalPain += pain;
+        stat.count += 1;
+
+        if (!stat.byBucket[bucketKey]) stat.byBucket[bucketKey] = { totalPain: 0, count: 0 };
+        stat.byBucket[bucketKey].totalPain += pain;
+        stat.byBucket[bucketKey].count += 1;
+      }
+    }
+
+    const locations = Object.values(statsByKey)
+      .map(stat => ({
+        ...stat,
+        // Prefer a consistently formatted label for display.
+        label:
+          stat.label
+            .split(' ')
+            .filter(Boolean)
+            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ') || stat.key,
+      }))
+      .sort((a, b) => b.count - a.count || b.totalPain / b.count - a.totalPain / a.count);
+
+    return { locations, bucket };
   }, [entries]);
 
   const getHeatColor = (intensity: number) => {
-    if (intensity === 0) return 'bg-gray-100';
+    if (intensity <= 0) return 'bg-gray-100';
     if (intensity < 0.3) return 'bg-yellow-200';
     if (intensity < 0.6) return 'bg-orange-300';
     if (intensity < 0.8) return 'bg-red-400';
@@ -167,26 +243,67 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
                 </div>
               </div>
 
-              {/* Body Map Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {locationData.map(data => (
-                  <div
-                    key={data.location}
-                    className={`
-                      p-3 rounded-lg border transition-all duration-200 hover:scale-105 cursor-pointer
-                      ${getHeatColor(data.intensity)} ${getTextColor(data.intensity)}
-                    `}
-                    title={`${data.location}: ${data.avgPain}/10 avg pain (${data.frequency} entries)`}
-                  >
-                    <div className="text-sm font-medium text-center">{data.location}</div>
-                    {data.frequency > 0 && (
-                      <div className="text-xs text-center mt-1">
-                        <div>{data.avgPain}/10</div>
-                        <div>({data.frequency}x)</div>
-                      </div>
-                    )}
-                  </div>
-                ))}
+              {/* Over-time Heatmap */}
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold">Over Time</h3>
+                <div className="overflow-auto border rounded-lg">
+                  <table className="min-w-full border-collapse" aria-label="Pain location heatmap over time">
+                    <thead className="bg-gray-50 dark:bg-gray-800">
+                      <tr>
+                        <th scope="col" className="text-left text-xs font-semibold p-2 whitespace-nowrap">
+                          Location
+                        </th>
+                        {heatmap.bucket.keys.map(key => (
+                          <th
+                            key={key}
+                            scope="col"
+                            className="text-center text-xs font-medium p-2 whitespace-nowrap"
+                            title={heatmap.bucket.mode === 'week' ? `Week of ${key}` : key}
+                          >
+                            {heatmap.bucket.formatLabel(key)}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {heatmap.locations.map(location => {
+                        const avgPain = location.count ? location.totalPain / location.count : 0;
+                        return (
+                          <tr key={location.key} className="border-t">
+                            <th
+                              scope="row"
+                              className="text-left text-xs font-medium p-2 whitespace-nowrap bg-white dark:bg-gray-900"
+                              title={`${location.label}: ${formatNumber(avgPain, 1)}/10 avg pain (${location.count} entries)`}
+                            >
+                              {location.label}
+                            </th>
+                            {heatmap.bucket.keys.map(bucketKey => {
+                              const bucketStat = location.byBucket[bucketKey];
+                              const count = bucketStat?.count ?? 0;
+                              const avg = count ? bucketStat!.totalPain / count : 0;
+                              const intensity = avg / 10;
+                              const label = `${location.label}, ${bucketKey}: ${formatNumber(avg, 1)}/10 (${count} ${count === 1 ? 'entry' : 'entries'})`;
+                              return (
+                                <td key={bucketKey} className="p-1">
+                                  <div
+                                    className={`w-8 h-8 md:w-9 md:h-9 rounded ${getHeatColor(intensity)} ${getTextColor(intensity)} flex items-center justify-center text-[10px] border`}
+                                    aria-label={label}
+                                    title={label}
+                                  >
+                                    {count > 0 ? count : ''}
+                                  </div>
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Color shows average intensity; numbers show frequency.
+                </p>
               </div>
             </>
           )}
@@ -196,18 +313,23 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
             <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
               <h3 className="font-semibold mb-2">Most Affected Area</h3>
               {(() => {
-                const topLocation = locationData.reduce((max, curr) =>
-                  curr.avgPain > max.avgPain ? curr : max
-                );
-                return topLocation.frequency > 0 ? (
+                const candidates = heatmap.locations.filter(l => l.count > 0);
+                if (candidates.length === 0) {
+                  return <div className="text-gray-600 dark:text-gray-400">No data</div>;
+                }
+                const topLocation = candidates.reduce((max, curr) => {
+                  const maxAvg = max.totalPain / max.count;
+                  const currAvg = curr.totalPain / curr.count;
+                  return currAvg > maxAvg ? curr : max;
+                });
+                const avgPain = topLocation.totalPain / topLocation.count;
+                return (
                   <div>
-                    <div className="text-lg font-bold">{topLocation.location}</div>
+                    <div className="text-lg font-bold">{topLocation.label}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      {topLocation.avgPain}/10 average pain
+                      {formatNumber(avgPain, 1)}/10 average pain
                     </div>
                   </div>
-                ) : (
-                  <div className="text-gray-600 dark:text-gray-400">No data</div>
                 );
               })()}
             </div>
@@ -215,18 +337,20 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
             <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
               <h3 className="font-semibold mb-2">Most Frequent Area</h3>
               {(() => {
-                const topFrequent = locationData.reduce((max, curr) =>
-                  curr.frequency > max.frequency ? curr : max
+                const candidates = heatmap.locations.filter(l => l.count > 0);
+                if (candidates.length === 0) {
+                  return <div className="text-gray-600 dark:text-gray-400">No data</div>;
+                }
+                const topFrequent = candidates.reduce((max, curr) =>
+                  curr.count > max.count ? curr : max
                 );
-                return topFrequent.frequency > 0 ? (
+                return (
                   <div>
-                    <div className="text-lg font-bold">{topFrequent.location}</div>
+                    <div className="text-lg font-bold">{topFrequent.label}</div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
-                      {topFrequent.frequency} entries
+                      {topFrequent.count} entries
                     </div>
                   </div>
-                ) : (
-                  <div className="text-gray-600 dark:text-gray-400">No data</div>
                 );
               })()}
             </div>
@@ -235,10 +359,10 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
               <h3 className="font-semibold mb-2">Areas Affected</h3>
               <div>
                 <div className="text-lg font-bold">
-                  {locationData.filter(d => d.frequency > 0).length}
+                  {heatmap.locations.filter(d => d.count > 0).length}
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
-                  out of {BODY_LOCATIONS.length} tracked
+                  unique locations recorded
                 </div>
               </div>
             </div>
