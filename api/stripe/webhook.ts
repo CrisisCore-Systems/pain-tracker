@@ -284,7 +284,7 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void
     );
   }
   
-  // TODO: Send payment failed email
+  // Planned follow-up: send payment failed email
   // await sendPaymentFailedEmail(customerId, invoice);
 }
 
@@ -307,7 +307,7 @@ async function handleTrialWillEnd(subscription: Stripe.Subscription): Promise<vo
     trialEndDate,
   });
 
-  // TODO: Send trial ending notification
+  // Planned follow-up: send trial ending notification
   // await sendTrialEndingEmail(userId, trialEndDate);
 }
 
