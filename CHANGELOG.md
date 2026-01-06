@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Planned
+
+- Machine learning pain pattern recognition (Q1 2026)
+- EMR/EHR integration capabilities (Q2 2026)
+- Multi-platform native applications (Q3 2026)
+
+## [1.0.16] - 2026-01-04
+
+### Added
+
+- **Analytics**: Enhanced the Body Heatmap with an over-time grid (location × time buckets) that visualizes average intensity (color) and frequency (counts).
+- **Tests**: Added unit coverage for the enhanced Location Heatmap.
+
 ### Fixed
 
 - **Validation Technology**: When enabled, it no longer blocks the Body Map entry form and exposes the insights view toggle.
@@ -16,12 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PWA Backups**: Stopped exporting/restoring pending sync queue items to prevent backup files from reintroducing network operations.
 - **Background Sync**: Restricted sync-queue replays to same-origin API endpoints (`/api` or `VITE_API_BASE_URL`) and sanitized replayed headers. Mitigates data exfiltration risk where a malicious or corrupted sync-queue item could redirect health data to an attacker-controlled origin when the queue is replayed.
 - **Analytics**: Prevented loading remote GA4 scripts until both build-time enablement and explicit user consent are present.
-
-### Planned
-
-- Machine learning pain pattern recognition (Q1 2026)
-- EMR/EHR integration capabilities (Q2 2026)
-- Multi-platform native applications (Q3 2026)
 
 ## [1.0.15] - 2025-12-31
 
