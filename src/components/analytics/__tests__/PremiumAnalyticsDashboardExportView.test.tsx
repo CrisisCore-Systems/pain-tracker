@@ -23,15 +23,17 @@ describe('PremiumAnalyticsDashboard Export & Share copy', () => {
     // Mock the clipboard to reject so the component path triggers the fallback
     // Use vi to stub navigator.clipboard.writeText
     // Override navigator.clipboard in the test environment.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const originalNavigator = (globalThis as any).navigator;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any).navigator = {
-      ...(originalNavigator || {}),
-      clipboard: {
-        writeText: vi.fn().mockRejectedValue(new Error('Clipboard not available')),
+    const originalNavigator = globalThis.navigator;
+    const originalNavigatorSpread = originalNavigator as unknown as Record<string, unknown>;
+    Object.defineProperty(globalThis, 'navigator', {
+      value: {
+        ...(originalNavigatorSpread || {}),
+        clipboard: {
+          writeText: vi.fn().mockRejectedValue(new Error('Clipboard not available')),
+        },
       },
-    };
+      configurable: true,
+    });
 
     try {
       // Trigger a copy attempt which will fail in the test environment and surface the
@@ -49,8 +51,10 @@ describe('PremiumAnalyticsDashboard Export & Share copy', () => {
       expect(clipboardAlert).toBeInTheDocument();
     } finally {
       // restore navigator to avoid leaking test globals
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (globalThis as any).navigator = originalNavigator;
+      Object.defineProperty(globalThis, 'navigator', {
+        value: originalNavigator,
+        configurable: true,
+      });
     }
   });
 });

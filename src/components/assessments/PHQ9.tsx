@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '../../design-system';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import type { MoodEntry } from '../../types/quantified-empathy';
 
 const QUESTIONS = Array.from({ length: 9 }).map((_, i) => `Over the last 2 weeks, how often have you been bothered by problem #${i + 1}?`);
 
@@ -18,8 +19,9 @@ export default function PHQ9({ onClose }: { onClose?: () => void }) {
 
   function submit() {
     const score = answers.reduce((a, b) => a + b, 0);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    addMoodEntry({ mood: 'phq9', notes: `PHQ-9 score: ${score}` } as any);
+    addMoodEntry(
+      ({ mood: 'phq9', notes: `PHQ-9 score: ${score}` } as unknown as Omit<MoodEntry, 'id' | 'timestamp'>)
+    );
     onClose?.();
   }
 

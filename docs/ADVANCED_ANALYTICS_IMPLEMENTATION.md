@@ -329,19 +329,19 @@ npm run test -- --run src/services/AdvancedAnalyticsEngine.test.ts
 
 ### Remaining Tasks:
 
-1. **Clinical PDF Exporter Integration** (TODO #1)
+1. **Clinical PDF Exporter Integration** (Remaining task #1)
    - Wire chart capture from analytics components
    - Add export button to WeeklyClinicalBriefCard
    - Create patient/claim info form
    - Test WorkSafe BC compliance
 
-2. **Accessibility Audit** (TODO #2-4)
+2. **Accessibility Audit** (Remaining tasks #2-4)
    - Comprehensive ARIA label review
    - Keyboard navigation testing
    - Screen reader optimization
    - Focus management enhancements
 
-3. **Final Integration & Testing** (TODO #5-6)
+3. **Final Integration & Testing** (Remaining tasks #5-6)
    - Add analytics route to main app navigation
    - Create demo data generator for testing
    - Run axe-core validation

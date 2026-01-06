@@ -24,8 +24,6 @@ export const test = baseTest.extend<{
 );
 
 // Run the harness before each test to reduce flakiness across suites that opt in.
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// NOTE: this file is test-only glue; using `any` here is acceptable for injected page scripts.
 test.beforeEach(async ({ page, seedCount, seedEncrypted, seedPassphrase }) => {
   await disableOnboarding(page);
   // Prevent external analytics from loading during E2E runs (stops CSP errors and flakiness)
@@ -47,20 +45,37 @@ test.beforeEach(async ({ page, seedCount, seedEncrypted, seedPassphrase }) => {
     // Provide a small init script that creates a no-op gtag and fakes persistent storage
     // so app code that requests persistent storage won't log or branch unexpectedly during tests.
     await page.context().addInitScript(() => {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).gtag = function () { (window as any).dataLayer.push(arguments); };
+      const w = window as unknown as {
+        dataLayer?: unknown[][];
+        gtag?: (...args: unknown[]) => void;
+      };
+
+      w.dataLayer = w.dataLayer ?? [];
+      w.gtag = (...args: unknown[]) => {
+        w.dataLayer = w.dataLayer ?? [];
+        w.dataLayer.push(args);
+      };
 
       try {
         // Mock navigator.storage.persist/persisted for tests (so app sees persistent storage as granted)
-        if ((navigator as any).storage) {
-          (navigator as any).storage.persist = () => Promise.resolve(true);
-          (navigator as any).storage.persisted = () => Promise.resolve(true);
-        } else {
-          (window as any).navigator = (window as any).navigator || {};
-          (window as any).navigator.storage = {
-            persist: () => Promise.resolve(true),
-            persisted: () => Promise.resolve(true),
+        const nav = navigator as unknown as {
+          storage?: {
+            persist?: () => Promise<boolean>;
+            persisted?: () => Promise<boolean>;
           };
+        };
+
+        if (nav.storage) {
+          nav.storage.persist = () => Promise.resolve(true);
+          nav.storage.persisted = () => Promise.resolve(true);
+        } else {
+          Object.defineProperty(navigator, 'storage', {
+            value: {
+              persist: () => Promise.resolve(true),
+              persisted: () => Promise.resolve(true),
+            },
+            configurable: true,
+          });
         }
       } catch {
         // ignore

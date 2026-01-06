@@ -1,8 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+type SyncQueueItem = {
+  id: number;
+  url: string;
+  method: string;
+  headers: Record<string, string>;
+  body: string;
+  priority: string;
+  type: string;
+  retryCount: number;
+  timestamp: string;
+};
+
+type BackgroundSyncTestShim = {
+  isOnline: boolean;
+  syncInProgress: boolean;
+};
+
 // Vitest hoists vi.mock() calls, so any referenced values must be created via vi.hoisted().
 const offlineStorageMocks = vi.hoisted(() => ({
-  getSyncQueue: vi.fn<() => Promise<Array<any>>>(),
+  getSyncQueue: vi.fn<() => Promise<Array<SyncQueueItem>>>(),
   addToSyncQueue: vi.fn().mockResolvedValue(1),
   removeSyncQueueItem: vi.fn<(id: number) => Promise<void>>(),
   updateSyncQueueItem: vi.fn().mockResolvedValue(undefined),
@@ -36,10 +53,12 @@ describe('background sync replay guard', () => {
     offlineStorageMocks.addToSyncQueue.mockResolvedValue(1);
 
     // Ensure the singleton considers us online.
-    (backgroundSync as any).isOnline = true;
-    (backgroundSync as any).syncInProgress = false;
+    const shim = backgroundSync as unknown as BackgroundSyncTestShim;
+    shim.isOnline = true;
+    shim.syncInProgress = false;
 
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(okResponse()));
+    const fetchMock = vi.fn().mockResolvedValue(okResponse());
+    vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
   });
 
   it('drops and never replays cross-origin queue items', async () => {
@@ -59,7 +78,7 @@ describe('background sync replay guard', () => {
 
     const stats = await backgroundSync.syncAllPendingData();
 
-    expect((globalThis.fetch as any)).not.toHaveBeenCalled();
+    expect(globalThis.fetch).not.toHaveBeenCalled();
     expect(offlineStorageMocks.removeSyncQueueItem).toHaveBeenCalledWith(1);
     expect(stats.failureCount).toBe(1);
   });
@@ -81,8 +100,8 @@ describe('background sync replay guard', () => {
 
     await backgroundSync.syncAllPendingData();
 
-    expect((globalThis.fetch as any)).toHaveBeenCalledTimes(1);
-    const call = (globalThis.fetch as any).mock.calls[0];
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
+    const call = (globalThis.fetch as unknown as { mock: { calls: Array<[string, RequestInit]> } }).mock.calls[0];
     expect(call[0]).toBe('/api/pain-entries');
 
     // Ensure header sanitization drops unexpected headers.

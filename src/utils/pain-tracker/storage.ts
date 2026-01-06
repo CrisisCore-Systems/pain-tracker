@@ -47,8 +47,8 @@ export const savePainEntry = async (entry: PainEntry): Promise<void> => {
 export const loadPainEntries = async (): Promise<PainEntry[]> => {
   try {
     // Ensure persisted state has had a chance to hydrate.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const persistApi = (usePainTrackerStore as any).persist;
+    const persistApi = (usePainTrackerStore as unknown as { persist?: { rehydrate?: () => Promise<void> | void } })
+      .persist;
     try {
       await persistApi?.rehydrate?.();
     } catch {

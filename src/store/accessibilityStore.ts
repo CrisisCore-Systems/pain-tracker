@@ -24,18 +24,21 @@ const defaultPreferences: AccessibilityPreferences = {
 };
 
 interface AccessibilityState extends AccessibilityPreferences {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setPreference: (key: keyof AccessibilityPreferences, value: any) => void;
+  setPreference: <K extends keyof AccessibilityPreferences>(
+    key: K,
+    value: AccessibilityPreferences[K]
+  ) => void;
   resetPreferences: () => void;
 }
+
+type AccessibilityPreferenceKey = keyof AccessibilityPreferences;
 
 export const useAccessibilityStore = create<AccessibilityState>()(
   immer((set) => ({
     ...defaultPreferences,
     setPreference: (key, value) =>
       set((state) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (state as any)[key] = value;
+        (state as Pick<AccessibilityState, AccessibilityPreferenceKey>)[key] = value;
       }),
     resetPreferences: () => set(() => ({ ...defaultPreferences })),
   }))

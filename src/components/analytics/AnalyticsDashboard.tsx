@@ -23,6 +23,7 @@ const UsageAnalyticsDashboard = lazy(() =>
 
 interface AnalyticsDashboardProps {
   className?: string;
+  onCreateFirstEntry?: () => void;
 }
 
 /**
@@ -31,7 +32,10 @@ interface AnalyticsDashboardProps {
  * Main container for all analytics visualizations.
  * Orchestrates data processing and component rendering.
  */
-export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ className = '' }) => {
+export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
+  className = '',
+  onCreateFirstEntry,
+}) => {
   const { entries, moodEntries } = usePainTrackerStore();
   const [analytics, setAnalytics] = useState<{
     correlations: CorrelationResult[];
@@ -156,8 +160,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ classNam
           <button
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             onClick={() => {
-              // TODO: Navigate to pain entry form
-              alert('Navigate to pain entry form');
+              onCreateFirstEntry?.();
             }}
           >
             Create First Entry

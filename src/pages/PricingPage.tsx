@@ -14,6 +14,7 @@ import type { SubscriptionTier } from '../types/subscription';
 import { TierBadge } from '../components/subscription/FeatureGates';
 import { useVaultStatus } from '../hooks/useVault';
 import { createCheckoutSession, getTierForCheckout } from '../utils/stripe-checkout';
+import { getLocalUserId } from '../utils/user-identity';
 
 export const PricingPage: React.FC = () => {
   const { currentTier } = useSubscription();
@@ -51,11 +52,9 @@ export const PricingPage: React.FC = () => {
         throw new Error('Invalid tier for checkout');
       }
 
-      // Get user ID - generate a unique ID based on vault creation time
-      // TODO: Replace with actual user ID from authentication system
-      const userId = vaultStatus.metadata?.createdAt 
-        ? `vault-${vaultStatus.metadata.createdAt.replace(/[^0-9]/g, '').substring(0, 13)}`
-        : `user-${Date.now()}`;
+      // Local-only stable identifier for subscription + checkout linking.
+      // This is not an authentication system.
+      const userId = getLocalUserId();
 
       // Redirect to Stripe Checkout
       await createCheckoutSession({

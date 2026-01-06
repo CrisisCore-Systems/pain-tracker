@@ -323,7 +323,7 @@ class EntitlementService {
    * For MVP, we'll use a simplified local-first approach
    */
   private async fetchSubscriptionFromStripe(): Promise<Subscription | null> {
-    // TODO: Implement Stripe integration
+    // Implementation note: replace with backend Stripe lookup when enabling server-backed entitlements
     // For now, return free tier
     return null;
   }
@@ -567,7 +567,7 @@ export function UpgradePrompt({
               type="button"
               className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
               onClick={() => {
-                // TODO: Navigate to upgrade page
+                // Next step: navigate to upgrade page
                 console.log('[Upgrade] Feature:', featureName, 'Tier:', requiredTier, 'Trigger:', trigger);
               }}
             >

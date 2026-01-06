@@ -23,12 +23,13 @@ describe('weatherAutoCapture', () => {
     if (originalGeolocationDescriptor) {
       Object.defineProperty(navigator, 'geolocation', originalGeolocationDescriptor);
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const nav = navigator as any;
       try {
-        delete nav.geolocation;
+        Object.defineProperty(navigator, 'geolocation', {
+          value: undefined,
+          configurable: true,
+        });
       } catch {
-        nav.geolocation = undefined;
+        // Some environments may prevent redefining navigator properties.
       }
     }
   });

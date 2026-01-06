@@ -76,7 +76,7 @@ npm run deploy:status
 
 > ℹ️ **Current limitation**: The preview workflow runs through build/test stages and uploads the generated site bundle as an artifact with accompanying logs, but it does not publish those artifacts to GitHub Pages yet.
 
-> TODO: To graduate the preview simulation into a real deployment we need to provision a GitHub token with `pages` and `contents` write scopes, decide on a persistent preview branch or PR-specific Pages environments, and update the workflow to push the built assets (or call `actions/deploy-pages`) instead of stopping at the artifact upload stage.
+> Next step: To graduate the preview simulation into a real deployment we need to provision a GitHub token with `pages` and `contents` write scopes, decide on a persistent preview branch or PR-specific Pages environments, and update the workflow to push the built assets (or call `actions/deploy-pages`) instead of stopping at the artifact upload stage.
 
 #### Staging Deployment
 

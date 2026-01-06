@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
+type RemovableStorage = { removeItem?: (name: string) => Promise<void> };
+
 describe('Persist rehydrate + migrate', () => {
   beforeEach(async () => {
     localStorage.clear();
@@ -8,8 +10,8 @@ describe('Persist rehydrate + migrate', () => {
     // Zustand v5 `persist.clearStorage()` is not awaitable. Because our persist
     // storage is async (encrypted IDB), we explicitly await storage cleanup and
     // temporarily disable persistence while resetting in-memory state.
-    const options = usePainTrackerStore.persist.getOptions() as { storage?: unknown };
-    const storage = options.storage as any;
+    const options = usePainTrackerStore.persist.getOptions();
+    const storage = options.storage;
 
     usePainTrackerStore.persist.setOptions({
       storage: {
@@ -21,7 +23,7 @@ describe('Persist rehydrate + migrate', () => {
     usePainTrackerStore.getState().clearAllData();
     usePainTrackerStore.persist.setOptions({ storage });
 
-    await storage?.removeItem?.('pain-tracker-storage');
+    await (storage as unknown as RemovableStorage | undefined)?.removeItem?.('pain-tracker-storage');
   });
 
   it('does not brick startup when persisted JSON is corrupted', async () => {

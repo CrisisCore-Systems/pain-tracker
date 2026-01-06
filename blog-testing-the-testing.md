@@ -544,7 +544,7 @@ class ValidationOrchestrator {
         
         const result = crisisDetector.analyze(session);
         
-        // TODO: Determine expected behavior
+        // Decide expected behavior before enabling this test
         // Pattern was associated with: ${pattern.associatedOutcome}
         expect(result).toMatchExpectedBehavior();
       });

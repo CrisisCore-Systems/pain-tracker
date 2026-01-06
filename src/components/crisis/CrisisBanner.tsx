@@ -8,8 +8,7 @@ import CrisisModal from './CrisisModal';
 
 export function CrisisBanner() {
   const entries = usePainTrackerStore(state => state.entries);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const enabled = usePainTrackerStore((s) => (s as any).crisisDetectionEnabled ?? true);
+  const enabled = usePainTrackerStore(s => s.crisisDetectionEnabled ?? true);
   const [show, setShow] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [showWhy, setShowWhy] = useState(false);
@@ -22,8 +21,7 @@ export function CrisisBanner() {
 
   useEffect(() => {
     if (!enabled) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const res = detectCrisis(entries as any, crisisConfig);
+    const res = detectCrisis(entries, crisisConfig);
     if (res.detected) {
       setShow(true);
       setLastResult(res);

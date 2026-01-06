@@ -152,8 +152,12 @@ export async function seedEncryptedPainEntries(
           // Use the test hook to set up/unlock. We call setup first (it will no-op if already set).
           await isolated.evaluate((pw: string) => {
             try {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              return (globalThis as any).__test_vault?.setup?.(pw);
+              const testVault = globalThis as unknown as {
+                __test_vault?: {
+                  setup?: (passphrase: string) => unknown;
+                };
+              };
+              return testVault.__test_vault?.setup?.(pw);
             } catch {
               return null;
             }

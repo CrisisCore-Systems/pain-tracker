@@ -522,7 +522,7 @@ export function TraumaInformedPainTrackerLayout({
               </div>
 
               <Suspense fallback={<BrandedLoadingScreen message="Loading Analytics..." />}>
-                <AnalyticsDashboard />
+                <AnalyticsDashboard onCreateFirstEntry={() => setActiveView('dashboard')} />
               </Suspense>
             </div>
           )}

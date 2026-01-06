@@ -197,6 +197,7 @@ export interface UserSubscription {
     storageMB: number;
     apiCalls: number;
     exportCount: number;
+    sharedUsers: number;
   };
 
   // Metadata

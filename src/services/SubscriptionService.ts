@@ -64,6 +64,7 @@ export class SubscriptionService {
         storageMB: 0,
         apiCalls: 0,
         exportCount: 0,
+        sharedUsers: 0,
       },
       createdAt: now,
       updatedAt: now,
@@ -236,6 +237,7 @@ export class SubscriptionService {
       storageMB: 'maxStorageMB',
       apiCalls: 'maxPainEntries', // Placeholder until dedicated apiCalls quota added
       exportCount: 'maxExportsPerMonth',
+      sharedUsers: 'maxSharedUsers',
     };
 
     const featureName = featureMap[usageType];

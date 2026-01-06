@@ -1,10 +1,6 @@
 import React from "react";
 import { useAccessibilityStore } from "../../store/accessibilityStore";
 
-// TODO: Connect to Zustand accessibility store
-// TODO: Apply global accessibility settings via context/provider
-
-
 const MotorInputTab: React.FC = () => {
   const {
     touchTargetSize,
@@ -23,7 +19,7 @@ const MotorInputTab: React.FC = () => {
           id="touch-target-size"
           className="ml-2"
           value={touchTargetSize}
-          onChange={(e) => setPreference("touchTargetSize", e.target.value)}
+          onChange={(e) => setPreference("touchTargetSize", e.target.value as "normal" | "large")}
           aria-label="Touch target size selector"
         >
           <option value="normal">Normal</option>
@@ -36,7 +32,7 @@ const MotorInputTab: React.FC = () => {
           id="interaction-speed"
           className="ml-2"
           value={interactionSpeed}
-          onChange={(e) => setPreference("interactionSpeed", e.target.value)}
+          onChange={(e) => setPreference("interactionSpeed", e.target.value as "normal" | "slow" | "fast")}
           aria-label="Interaction speed selector"
         >
           <option value="normal">Normal</option>
