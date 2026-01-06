@@ -154,8 +154,10 @@ export class EndToEndEncryptionService {
   private isTestEnv(): boolean {
     try {
       // process may not exist in some browser-like environments
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+      const env =
+        (typeof process !== 'undefined'
+          ? (process as unknown as { env?: Record<string, string | undefined> }).env
+          : undefined) || {};
       return !!(env && (env.VITEST || env.NODE_ENV === 'test'));
     } catch {
       return false;
@@ -673,8 +675,15 @@ export class EndToEndEncryptionService {
       // Support legacy CryptoJS ciphertexts for backward compatibility
       if (metadata.version && metadata.version.startsWith('1.')) {
         // Lazy-load CryptoJS only when handling legacy data using dynamic import (avoid CommonJS require in TS)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const CryptoJS: any = await import('crypto-js');
+        type CryptoJSLike = {
+          AES: {
+            decrypt: (ciphertext: string, key: string) => { toString: (encoder: unknown) => string };
+          };
+          enc: { Utf8: unknown };
+          SHA256: (message: string) => { toString: () => string };
+        };
+
+        const CryptoJS = (await import('crypto-js')) as unknown as CryptoJSLike;
         const decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
         if (!decrypted)
           throw new Error('Decryption failed - invalid key or corrupted data (legacy)');
