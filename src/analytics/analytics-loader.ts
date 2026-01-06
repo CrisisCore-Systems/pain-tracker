@@ -6,7 +6,6 @@
 
 const GA4_MEASUREMENT_ID = 'G-X25RTEWBYL';
 const CONSENT_KEY = 'pain-tracker:analytics-consent';
-const LOADED_FLAG = '__pt_ga4_loaded';
 
 function isEnvEnabled(): boolean {
   try {
@@ -19,8 +18,10 @@ function isEnvEnabled(): boolean {
 
   try {
     // Vitest / Node fallback
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+    const env =
+      (typeof process !== 'undefined'
+        ? (process as unknown as { env?: Record<string, string | undefined> }).env
+        : undefined) || {};
     return env.VITE_ENABLE_ANALYTICS === 'true';
   } catch {
     return false;
@@ -46,8 +47,8 @@ function ensureNoopGtag(): void {
 
 function markLoaded(): void {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any)[LOADED_FLAG] = true;
+    const w = window as Window & { __pt_ga4_loaded?: boolean };
+    w.__pt_ga4_loaded = true;
   } catch {
     // ignore
   }
@@ -55,8 +56,8 @@ function markLoaded(): void {
 
 function isLoaded(): boolean {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return Boolean((window as any)[LOADED_FLAG]);
+    const w = window as Window & { __pt_ga4_loaded?: boolean };
+    return Boolean(w.__pt_ga4_loaded);
   } catch {
     return false;
   }
