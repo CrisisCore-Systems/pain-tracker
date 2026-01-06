@@ -1,10 +1,6 @@
 import React from "react";
 import { useAccessibilityStore } from "../../store/accessibilityStore";
 
-// TODO: Connect to Zustand accessibility store
-// TODO: Apply global accessibility settings via context/provider
-
-
 const VisualPreferencesTab: React.FC = () => {
   const {
     highContrast,
@@ -61,7 +57,12 @@ const VisualPreferencesTab: React.FC = () => {
           id="color-blind-mode"
           className="ml-2"
           value={colorBlindMode}
-          onChange={(e) => setPreference("colorBlindMode", e.target.value)}
+          onChange={(e) =>
+            setPreference(
+              "colorBlindMode",
+              e.target.value as "none" | "deuteranopia" | "protanopia" | "tritanopia"
+            )
+          }
           aria-label="Color blind mode selector"
         >
           <option value="none">None</option>

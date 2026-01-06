@@ -85,7 +85,7 @@ interface WorkerMessage {
   progress?: number;
 }
 
-// --- Additional analytical helpers (replacing previous TODO placeholders) ---
+// --- Additional analytical helpers (replacing previous placeholders) ---
 function movingAverage(values: number[], window: number): number[] {
   const out: number[] = [];
   for (let i = 0; i < values.length; i++) {

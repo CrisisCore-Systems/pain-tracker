@@ -68,8 +68,7 @@ declare module '*.pdf' {
 // Browser API declarations - extend existing DOM types when needed
 interface Window {
   gtag?: (...args: unknown[]) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dataLayer?: any[];
+  dataLayer?: unknown[];
   pwaManager?: {
     showInstallPrompt: () => Promise<void>;
     resetServiceWorker: () => Promise<void>;

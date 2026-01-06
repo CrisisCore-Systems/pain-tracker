@@ -32,18 +32,23 @@ import type { WalkthroughStep } from '../tutorials/Walkthrough';
 // Validation Technology Integration (enabled by default)
 const ENABLE_VALIDATION_TECH = (() => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (typeof (import.meta as any) !== 'undefined' && (import.meta as any).env) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (import.meta as any).env.VITE_ENABLE_VALIDATION_TECH !== 'false';
+    const meta = import.meta as unknown as { env?: Record<string, string | undefined> };
+    if (meta.env && typeof meta.env.VITE_ENABLE_VALIDATION_TECH === 'string') {
+      return meta.env.VITE_ENABLE_VALIDATION_TECH !== 'false';
     }
   } catch {
     // ignore
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (typeof process !== 'undefined' && (process as any).env) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (process as any).env.ENABLE_VALIDATION_TECH !== 'false';
+  try {
+    const env =
+      (typeof process !== 'undefined'
+        ? (process as unknown as { env?: Record<string, string | undefined> }).env
+        : undefined) || {};
+    if (typeof env.ENABLE_VALIDATION_TECH === 'string') {
+      return env.ENABLE_VALIDATION_TECH !== 'false';
+    }
+  } catch {
+    // ignore
   }
   return true; // Default enabled
 })();

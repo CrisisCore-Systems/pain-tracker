@@ -349,8 +349,8 @@ SELECT * FROM current_usage WHERE user_id = 'user_test';
 - [x] Environment variables for sensitive keys
 - [x] SQL injection prevention (parameterized queries)
 - [x] Error handling doesn't expose sensitive data
-- [x] Rate limiting on API endpoints (TODO: implement)
-- [x] CORS configuration (TODO: configure)
+- [x] Rate limiting on public endpoints (expand coverage as needed)
+- [ ] CORS configuration (pending: restrict allowed origins)
 - [x] Audit logging for subscription changes
 
 ## Monitoring

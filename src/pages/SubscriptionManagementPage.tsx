@@ -219,7 +219,7 @@ export function SubscriptionManagementPage() {
                 />
                 <UsageStat
                   label="Shared Users"
-                  current={0} // TODO: Implement shared user tracking
+                  current={subscription.usage.sharedUsers}
                   limit={currentPlan.features.maxSharedUsers}
                   color="amber"
                 />

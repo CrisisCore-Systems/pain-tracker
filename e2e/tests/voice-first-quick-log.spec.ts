@@ -32,6 +32,14 @@ async function stubSpeechRecognition(page: Page, options: {
   const { supported = true, permissionDenied = false } = options;
 
   await page.addInitScript(({ supported, permissionDenied }) => {
+    const w = window as unknown as {
+      __mockSpeechRecognition?: unknown;
+      SpeechRecognition?: unknown;
+      webkitSpeechRecognition?: unknown;
+      speechSynthesis?: unknown;
+      SpeechSynthesisUtterance?: unknown;
+    };
+
     class MockSpeechRecognition extends EventTarget {
       continuous = false;
       interimResults = false;
@@ -63,8 +71,7 @@ async function stubSpeechRecognition(page: Page, options: {
           }, 100);
         }
         // Expose a way to simulate transcripts via window object
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).__mockSpeechRecognition = this;
+        w.__mockSpeechRecognition = this;
       }
       
       stop() {
@@ -93,15 +100,12 @@ async function stubSpeechRecognition(page: Page, options: {
     }
 
     if (supported) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).SpeechRecognition = MockSpeechRecognition;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).webkitSpeechRecognition = MockSpeechRecognition;
+      w.SpeechRecognition = MockSpeechRecognition;
+      w.webkitSpeechRecognition = MockSpeechRecognition;
     }
 
     // Mock speechSynthesis
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).speechSynthesis = {
+    w.speechSynthesis = {
       speak: () => {},
       cancel: () => {},
       speaking: false,
@@ -119,8 +123,7 @@ async function stubSpeechRecognition(page: Page, options: {
       pitch = 1;
       constructor(text?: string) { this.text = text || ''; }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
+    w.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
   }, { supported, permissionDenied });
 }
 
@@ -151,8 +154,11 @@ test.describe('Voice-First Quick Log E2E', () => {
     
     // Check that speech recognition is stubbed correctly
     const hasSpeechSupport = await page.evaluate(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return !!(window as any).SpeechRecognition || !!(window as any).webkitSpeechRecognition;
+      const w = window as unknown as {
+        SpeechRecognition?: unknown;
+        webkitSpeechRecognition?: unknown;
+      };
+      return !!w.SpeechRecognition || !!w.webkitSpeechRecognition;
     });
     
     expect(hasSpeechSupport).toBe(true);
@@ -190,10 +196,12 @@ test.describe('Voice-First Quick Log E2E', () => {
         abort() { this.onendHandler?.(); }
       }
       
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).SpeechRecognition = MockSpeechRecognitionDenied;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).webkitSpeechRecognition = MockSpeechRecognitionDenied;
+      const w = window as unknown as {
+        SpeechRecognition?: unknown;
+        webkitSpeechRecognition?: unknown;
+      };
+      w.SpeechRecognition = MockSpeechRecognitionDenied;
+      w.webkitSpeechRecognition = MockSpeechRecognitionDenied;
     });
     
     await page.goto('/');
@@ -206,8 +214,12 @@ test.describe('Voice-First Quick Log E2E', () => {
     await page.goto('/');
     
     const hasSpeechSynthesis = await page.evaluate(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return !!(window as any).speechSynthesis?.speak;
+      const w = window as unknown as {
+        speechSynthesis?: {
+          speak?: unknown;
+        };
+      };
+      return !!w.speechSynthesis?.speak;
     });
     
     expect(hasSpeechSynthesis).toBe(true);

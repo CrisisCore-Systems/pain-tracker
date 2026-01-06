@@ -337,8 +337,8 @@ stripe trigger checkout.session.completed
 - ✅ HTTPS enforcement
 - ✅ Audit logging (billing events table)
 - ✅ Error messages don't expose sensitive data
-- ⏳ Rate limiting (TODO)
-- ⏳ CORS configuration (TODO)
+- ⏳ Rate limiting (planned)
+- ⏳ CORS configuration (planned)
 
 ---
 

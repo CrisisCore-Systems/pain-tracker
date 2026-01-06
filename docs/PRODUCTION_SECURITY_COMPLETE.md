@@ -226,7 +226,7 @@ POST /api/clinic/auth/mfa/verify   # Enables MFA
 - QR code generation for easy setup
 - Compatible with Google Authenticator, Authy, 1Password, etc.
 - Automatic requirement for admin role
-- Backup codes (TODO: implement)
+- Backup codes (planned)
 
 ---
 

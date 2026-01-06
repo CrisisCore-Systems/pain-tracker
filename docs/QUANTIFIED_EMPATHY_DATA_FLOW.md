@@ -77,7 +77,7 @@ No raw phrase persisted beyond in-memory processing.
 
 ## Next Steps
 
-- Implement collector & guards (See tracking issue / TODO in code).
+- Implement collector & guards (See tracking issue / relevant code comments).
 - Wire RealTimeEmpathyMonitor micro moments into EmpathyIntelligenceEngine temporal patterns (optional phase 2).
 - Add configuration surface for retention of wisdom insights with user export/delete pathway.
 

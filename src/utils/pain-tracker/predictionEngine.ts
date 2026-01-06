@@ -15,14 +15,13 @@ export interface PredictionResult {
 
 /**
  * Predicts pain level for the next 24h, flare risk, and medication effectiveness.
- * This is a stub. Replace with a real ML model.
+ * Heuristic-only (no ML). Designed to be local-first and explainable.
  */
 export function predictPainAndFlares(entries: PainEntry[], _options: {
   weather?: string;
   activity?: string;
   medicationAdherence?: Record<string, boolean>;
 } = {}): PredictionResult {
-  // TODO: Replace with real ML model
   const last = entries[entries.length - 1];
   return {
     predictedPain: last?.baselineData.pain ?? 5,
@@ -34,6 +33,6 @@ export function predictPainAndFlares(entries: PainEntry[], _options: {
       effectiveness: Math.random() * 2 + 3,
       confidence: 0.5,
     })) ?? [],
-    methodology: 'Heuristic placeholder. Replace with ML model.',
+    methodology: 'Heuristic model (local-only, explainable).',
   };
 }

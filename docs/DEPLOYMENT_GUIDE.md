@@ -598,8 +598,8 @@ Before going live, verify:
 - [ ] ✅ **Environment Variables**: No secrets in code
 - [ ] ✅ **SQL Injection Prevention**: Parameterized queries used
 - [ ] ✅ **Error Handling**: No sensitive data in error messages
-- [ ] ⏳ **Rate Limiting**: Implement on API endpoints (TODO)
-- [ ] ⏳ **CORS Configuration**: Whitelist allowed origins (TODO)
+- [ ] ⏳ **Rate Limiting**: Implement on API endpoints (pending)
+- [ ] ⏳ **CORS Configuration**: Whitelist allowed origins (pending)
 - [ ] ✅ **Audit Logging**: Billing events table tracks all changes
 
 ---
@@ -626,7 +626,7 @@ Already configured in `src/lib/database.ts`:
 
 Monitor latency:
 ```sql
--- Average webhook processing time (TODO: add timestamp logging)
+-- Average webhook processing time (pending: add timestamp logging)
 SELECT AVG(EXTRACT(EPOCH FROM (occurred_at - created_at))) as avg_seconds
 FROM billing_events;
 ```
@@ -675,7 +675,7 @@ Target: < 200ms per webhook
 - ✅ API endpoints deployed and functional
 - ✅ Database schema deployed
 - ✅ Webhook signature validation active
-- ⏳ 90%+ test coverage (TODO)
+- ⏳ 90%+ test coverage (target)
 - ⏳ < 200ms webhook latency (measure)
 - ⏳ 99.9% uptime (monitor)
 

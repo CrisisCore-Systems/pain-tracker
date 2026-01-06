@@ -42,11 +42,14 @@ describe('PainTrackerContainer - entry success toast', () => {
       loadSampleData,
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation((selector: any) => {
-      if (typeof selector === 'function') return selector(storeState);
-      return storeState;
-    });
+    (usePainTrackerStore as unknown as { mockImplementation: (fn: unknown) => void }).mockImplementation(
+      (selector: unknown) => {
+        if (typeof selector === 'function') {
+          return (selector as (s: typeof storeState) => unknown)(storeState);
+        }
+        return storeState;
+      }
+    );
     render(<PainTrackerContainer />);
 
     // Simulate the user logging a quick entry via the primary action -> quick log -> save

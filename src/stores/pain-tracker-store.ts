@@ -339,8 +339,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
 
           setCrisisDetectionEnabled: enabled => {
             set(state => {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (state as any).crisisDetectionEnabled = enabled;
+              state.crisisDetectionEnabled = enabled;
             });
           },
 

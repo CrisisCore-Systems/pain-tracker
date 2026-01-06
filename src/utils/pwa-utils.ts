@@ -1,7 +1,9 @@
 // Enhanced PWA utility functions for Pain Tracker
-// Note: offlineStorage and backgroundSync loaded dynamically for code splitting
+// Note: backgroundSync remains dynamically loaded; offlineStorage is imported statically
+// to avoid dynamic/static import conflicts that prevent effective chunking.
 import { formatNumber } from './formatting';
 import { secureStorage } from '../lib/storage/secureStorage';
+import { offlineStorage } from '../lib/offline-storage';
 
 // Lightweight declaration for BeforeInstallPromptEvent for environments
 // where the DOM lib may not include it by default.
@@ -106,7 +108,6 @@ export class PWAManager {
   // Enhanced Storage Initialization
   private async initializeOfflineStorage(): Promise<void> {
     try {
-      const { offlineStorage } = await import('../lib/offline-storage');
       await offlineStorage.init();
       if (process.env.NODE_ENV === 'development') {
         console.log('PWA: Offline storage initialized');
@@ -826,7 +827,6 @@ export class PWAManager {
     pendingSyncItems: number;
     lastSync: string | null;
   }> {
-    const { offlineStorage } = await import('../lib/offline-storage');
     const { backgroundSync } = await import('../lib/background-sync');
     const storageUsage = await offlineStorage.getStorageUsage();
     const pendingSyncItems = await backgroundSync.getPendingItemsCount();
@@ -849,7 +849,6 @@ export class PWAManager {
       await this.clearCaches();
 
       // Clear IndexedDB
-      const { offlineStorage } = await import('../lib/offline-storage');
       await offlineStorage.clearAllData();
 
       // Clear all secureStorage-managed keys (namespaced)

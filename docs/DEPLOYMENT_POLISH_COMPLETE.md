@@ -122,7 +122,7 @@ Updated `public/manifest.json` with screenshots structure:
 {
   "screenshots": [
     {
-      "_comment": "TODO: Add actual screenshot files to public/screenshots/",
+      "_comment": "Add actual screenshot files to public/screenshots/",
       "src": "icons/icon-192x192.png",
       "type": "image/png",
       "sizes": "540x720",
@@ -130,7 +130,7 @@ Updated `public/manifest.json` with screenshots structure:
       "label": "Pain tracking dashboard"
     },
     {
-      "_comment": "TODO: Add actual screenshot files to public/screenshots/",
+      "_comment": "Add actual screenshot files to public/screenshots/",
       "src": "icons/icon-192x192.png",
       "type": "image/png", 
       "sizes": "1280x720",

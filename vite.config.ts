@@ -219,7 +219,7 @@ export default defineConfig({
     strictPort: false, // Allow fallback to next available port
     host: true,
     // Enable HTTPS in dev when running E2E (controlled by env var VITE_DEV_HTTPS)
-    https: process.env.VITE_DEV_HTTPS === 'true' || false,
+    https: process.env.VITE_DEV_HTTPS === 'true' ? {} : undefined,
     // HMR configuration - use 'auto' to detect actual server port
     hmr: {
       protocol: 'ws',

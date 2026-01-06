@@ -22,7 +22,7 @@ export function TraumaInformedDemo() {
         {/* Main pain entry form */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <TraumaInformedPainEntryForm
-            onSubmit={entry => {
+            onSubmit={_entry => {
               // Demo mode: intentionally no logging of submitted data
             }}
           />

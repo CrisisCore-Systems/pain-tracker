@@ -197,8 +197,7 @@ export function SavePanel({ entries, onClearData, onExport }: SavePanelProps) {
                 <label className="block text-sm mb-1">Schedule automatic export:</label>
                 <select
                   value={schedule}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onChange={e => setSchedule(e.target.value as any)}
+                  onChange={e => setSchedule(e.target.value as typeof schedule)}
                   className="border rounded px-2 py-1 text-sm"
                 >
                   <option value="none">None</option>
