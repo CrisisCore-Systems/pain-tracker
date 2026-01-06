@@ -32,7 +32,7 @@ For PRs that touch encryption, key handling, local persistence (localStorage/Ind
   - Hash approach (for known static inline scripts):
     - Compute the base64-encoded SHA256 of the script body and include it in the policy: script-src 'sha256-abc...'
 
-- If you must allow 'unsafe-inline' temporarily, document why and where in this repo and add a remediation TODO with a timeline. Prefer limiting that to non-production environments only (dev/preview) and ensure production builds use the stricter policy.
+- If you must allow 'unsafe-inline' temporarily, document why and where in this repo and add a remediation item with a timeline. Prefer limiting that to non-production environments only (dev/preview) and ensure production builds use the stricter policy.
 
 ## Why avoid 'unsafe-inline'
 
