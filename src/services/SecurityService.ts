@@ -135,8 +135,10 @@ export class SecurityService {
   private static detectTestEnv(): boolean {
     try {
       // Only check environment variables at module load time for security
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+      const env =
+        (typeof process !== 'undefined'
+          ? (process as unknown as { env?: Record<string, string | undefined> }).env
+          : undefined) || {};
       const isTest = !!(env && (env.VITEST || env.NODE_ENV === 'test'));
       if (isTest) {
         // Log warning if test mode is detected in a suspicious context

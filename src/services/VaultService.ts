@@ -538,7 +538,7 @@ export class EncryptedVaultService {
     ).__secureStorageDecrypt = (ciphertext: string) => this.decryptString(ciphertext);
   }
 
-  private assertSodium(): typeof import('libsodium-wrappers') {
+  private assertSodium(): Awaited<ReturnType<typeof getSodium>> {
     const sodium = getSodiumSync();
     if (!sodium) {
       throw new Error('libsodium not ready');

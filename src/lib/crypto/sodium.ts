@@ -1,16 +1,73 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-let sodiumInstance: any = null;
-let sodiumPromise: Promise<any> | null = null;
+export type SodiumApi = {
+  ready: Promise<unknown>;
+
+  crypto_pwhash: (
+    outLen: number,
+    passwd: string | Uint8Array,
+    salt: Uint8Array,
+    opslimit: number,
+    memlimit: number,
+    alg: number
+  ) => Uint8Array;
+  crypto_pwhash_str: (passwd: string, opslimit: number, memlimit: number) => string;
+  crypto_pwhash_str_verify: (hash: string, passwd: string) => boolean;
+
+  crypto_pwhash_SALTBYTES: number;
+  crypto_pwhash_OPSLIMIT_MIN: number;
+  crypto_pwhash_OPSLIMIT_MODERATE: number;
+  crypto_pwhash_MEMLIMIT_MIN: number;
+  crypto_pwhash_MEMLIMIT_MODERATE: number;
+  crypto_pwhash_ALG_ARGON2ID13: number;
+
+  crypto_aead_xchacha20poly1305_ietf_KEYBYTES: number;
+  crypto_aead_xchacha20poly1305_ietf_NPUBBYTES: number;
+  crypto_aead_xchacha20poly1305_ietf_encrypt: (
+    message: Uint8Array | string,
+    additionalData: Uint8Array | null,
+    nsec: unknown,
+    nonce: Uint8Array,
+    key: Uint8Array
+  ) => Uint8Array;
+  crypto_aead_xchacha20poly1305_ietf_decrypt: (
+    nsec: unknown,
+    cipher: Uint8Array,
+    additionalData: Uint8Array | null,
+    nonce: Uint8Array,
+    key: Uint8Array
+  ) => Uint8Array;
+
+  randombytes_buf: (length: number) => Uint8Array;
+
+  to_base64: (bin: Uint8Array, variant: number) => string;
+  from_base64: (b64: string, variant: number) => Uint8Array;
+  to_string: (bin: Uint8Array) => string;
+
+  memzero: (bin: Uint8Array) => void;
+} & Record<string, unknown>;
+
+let sodiumInstance: SodiumApi | null = null;
+let sodiumPromise: Promise<SodiumApi> | null = null;
 
 const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITEST;
 
-function log(message: string, ...args: any[]) {
+function log(message: string, ...args: unknown[]) {
   if (!isTest) {
     console.log(message, ...args);
   }
 }
 
-export async function getSodium(): Promise<any> {
+function isSodiumApi(value: unknown): value is SodiumApi {
+  if (!value || (typeof value !== 'object' && typeof value !== 'function')) return false;
+  const record = value as Record<string, unknown>;
+
+  const ready = record.ready as unknown;
+  const then = (ready as { then?: unknown } | undefined)?.then;
+  if (typeof then !== 'function') return false;
+
+  return typeof record.crypto_pwhash === 'function';
+}
+
+export async function getSodium(): Promise<SodiumApi> {
   // Validate cached instance has required functions
   if (sodiumInstance && typeof sodiumInstance.crypto_pwhash === 'function') {
     return sodiumInstance;
@@ -31,7 +88,14 @@ export async function getSodium(): Promise<any> {
       log('[sodium] Module.default type:', typeof sodiumModule.default);
 
       // Get the default export from the module
-      const sodium = sodiumModule.default || sodiumModule;
+      const sodiumCandidate =
+        (sodiumModule as unknown as { default?: unknown }).default ?? (sodiumModule as unknown);
+
+      if (!isSodiumApi(sodiumCandidate)) {
+        throw new Error('[sodium] Invalid module shape: required functions missing');
+      }
+
+      const sodium = sodiumCandidate;
 
       log('[sodium] Waiting for ready...');
       await sodium.ready;
@@ -53,6 +117,6 @@ export async function getSodium(): Promise<any> {
   return sodiumPromise;
 }
 
-export function getSodiumSync(): any {
+export function getSodiumSync(): SodiumApi | null {
   return sodiumInstance;
 }
