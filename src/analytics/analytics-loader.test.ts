@@ -10,8 +10,8 @@ describe('analytics-loader consent gating', () => {
     document.head.querySelectorAll('script').forEach(s => s.remove());
 
     // Reset loader state between tests.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (window as any).__pt_ga4_loaded;
+    const w = window as Window & { __pt_ga4_loaded?: boolean };
+    delete w.__pt_ga4_loaded;
 
     // Make sure loader can read env in tests.
     process.env.VITE_ENABLE_ANALYTICS = 'true';
@@ -28,8 +28,8 @@ describe('analytics-loader consent gating', () => {
     if (originalEnv === undefined) delete process.env.VITE_ENABLE_ANALYTICS;
     else process.env.VITE_ENABLE_ANALYTICS = originalEnv;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (window as any).__pt_ga4_loaded;
+    const w = window as Window & { __pt_ga4_loaded?: boolean };
+    delete w.__pt_ga4_loaded;
 
     document.head.querySelectorAll('script').forEach(s => s.remove());
   });

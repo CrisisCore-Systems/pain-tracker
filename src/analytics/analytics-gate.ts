@@ -16,8 +16,10 @@ function isEnvEnabled(): boolean {
 
   try {
     // Vitest / Node fallback
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const env = (typeof process !== 'undefined' ? (process as any).env : undefined) || {};
+    const env =
+      (typeof process !== 'undefined'
+        ? (process as unknown as { env?: Record<string, string | undefined> }).env
+        : undefined) || {};
     return env.VITE_ENABLE_ANALYTICS === 'true';
   } catch {
     return false;
