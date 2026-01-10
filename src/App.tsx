@@ -21,6 +21,7 @@ import { BlackBoxSplashScreen } from './components/branding/BlackBoxSplashScreen
 import { trackSessionStart as trackUsageSessionStart } from './utils/usage-tracking';
 import { Analytics } from "@vercel/analytics/react";
 import { getLocalUserId } from './utils/user-identity';
+import { isAnalyticsAllowed } from './analytics/analytics-gate';
 
 // Lazy-loaded route components for code splitting
 const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
@@ -92,7 +93,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Analytics />
+      {isAnalyticsAllowed() && <Analytics />}
       <ThemeProvider>
         <SubscriptionProvider userId={userId}>
           <ToneProvider>
@@ -141,23 +142,14 @@ function App() {
                     } />
 
                     {/* Route to open app and start daily check-in (used by notifications) */}
-                    <Route path="/app/checkin" element={
-                      <VaultGate>
-                        <div className="min-h-screen bg-background transition-colors" role="application" aria-label="Pain Tracker Pro Application">
-                          <OfflineBanner />
-                          <NotificationConsentPrompt />
-                          <AnalyticsConsentPrompt />
-                          <ErrorBoundary fallback={<ErrorFallback />}>
-                            <Suspense fallback={<LoadingFallback />}>
-                              <PainTrackerContainer initialView="daily-checkin" />
-                            </Suspense>
-                          </ErrorBoundary>
-                          <PWAInstallPrompt />
-                          <PWAStatusIndicator />
-                          <ToneStateTester />
-                        </div>
-                      </VaultGate>
-                    } />
+                    <Route
+                      path="/app/checkin"
+                      element={
+                        <VaultGate>
+                          <ProtectedAppShell initialView="daily-checkin" />
+                        </VaultGate>
+                      }
+                    />
 
                     {/* Submit testimonial/stories */}
                     <Route path="/submit-story" element={<SubmitStoryPage />} />

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
+import reportWebVitals from './reportWebVitals';
 
 // Import analytics loader to ensure GA4 is initialized when VITE_ENABLE_ANALYTICS is true
 import './analytics/analytics-loader';
@@ -28,3 +29,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>
 );
+
+reportWebVitals(metric => {
+  if (import.meta.env.DEV) {
+    console.log(metric);
+  }
+});

@@ -38,7 +38,7 @@ const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
 };
 
-export function ProtectedAppShell() {
+export function ProtectedAppShell({ initialView }: { initialView?: string } = {}) {
   // Initialize PWA features for the protected app experience.
   useEffect(() => {
     // Touch the singleton to ensure init has run.
@@ -99,7 +99,7 @@ export function ProtectedAppShell() {
 
       <ErrorBoundary fallback={<ErrorFallback />}>
         <Suspense fallback={<LoadingFallback />}>
-          <PainTrackerContainer />
+          <PainTrackerContainer initialView={initialView} />
         </Suspense>
       </ErrorBoundary>
 

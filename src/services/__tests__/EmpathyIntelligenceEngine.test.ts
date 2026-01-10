@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { empathyIntelligenceEngine } from '../EmpathyIntelligenceEngine';
 import type { MoodEntry } from '../../types/quantified-empathy';
 
@@ -38,6 +38,10 @@ function buildMoodEntry(
 }
 
 describe('EmpathyIntelligenceEngine (spike)', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('returns defaults for empty inputs', async () => {
     const metrics = await empathyIntelligenceEngine.calculateAdvancedEmpathyMetrics(
       'user-1',
@@ -161,5 +165,167 @@ describe('EmpathyIntelligenceEngine (spike)', () => {
     expect(
       metrics.emotionalIntelligence.neuralEmpathyPatterns.emotionalContagionResistance
     ).toBeLessThan(55);
+  });
+
+  it('supports session-scoped caching and clearing', async () => {
+    const { EmpathyIntelligenceEngine } = await import('../EmpathyIntelligenceEngine');
+    const engine = new EmpathyIntelligenceEngine({
+      learningRate: 0.1,
+      predictionHorizon: 30,
+      personalizationDepth: 'deep',
+      culturalSensitivity: 'enhanced',
+      interventionStyle: 'adaptive',
+      privacyLevel: 'enhanced',
+    });
+
+    try {
+      const session = {};
+      engine.setSessionContext(session as any);
+
+      const metrics = { any: 'metrics' } as any;
+      const insights = [{ kind: 'insight' }] as any;
+
+      engine.cacheSessionMetrics('user-3', metrics);
+      engine.cacheSessionInsights('user-3', insights);
+
+      expect(engine.getCachedSessionMetrics('user-3')).toBe(metrics);
+      expect(engine.getCachedSessionInsights('user-3')).toBe(insights);
+
+      engine.clearSessionCaches();
+      expect(engine.getCachedSessionMetrics('user-3')).toBeUndefined();
+      expect(engine.getCachedSessionInsights('user-3')).toBeUndefined();
+
+      const stats = engine.getCacheStats();
+      expect(stats.hasActiveSession).toBe(true);
+      expect(stats.totalEntries).toBeGreaterThanOrEqual(0);
+    } finally {
+      engine.destroy();
+    }
+  });
+
+  it('generates recommendations based on burnout/growth thresholds', async () => {
+    const { EmpathyIntelligenceEngine } = await import('../EmpathyIntelligenceEngine');
+    const engine = new EmpathyIntelligenceEngine({
+      learningRate: 0.1,
+      predictionHorizon: 30,
+      personalizationDepth: 'deep',
+      culturalSensitivity: 'enhanced',
+      interventionStyle: 'adaptive',
+      privacyLevel: 'enhanced',
+    });
+
+    const burnoutSpy = vi
+      .spyOn(engine as any, 'generateBurnoutPreventionRecommendations')
+      .mockResolvedValue([{ id: 'burnout' }] as any);
+    const growthSpy = vi
+      .spyOn(engine as any, 'generateGrowthAccelerationRecommendations')
+      .mockResolvedValue([{ id: 'growth' }] as any);
+    const microSpy = vi
+      .spyOn(engine as any, 'generateMicroInterventions')
+      .mockResolvedValue([{ id: 'micro' }] as any);
+    const wisdomSpy = vi
+      .spyOn(engine as any, 'generateWisdomApplicationRecommendations')
+      .mockResolvedValue([{ id: 'wisdom' }] as any);
+    const culturalSpy = vi
+      .spyOn(engine as any, 'generateCulturalEmpathyRecommendations')
+      .mockResolvedValue([{ id: 'cultural' }] as any);
+    vi.spyOn(engine as any, 'prioritizeRecommendations').mockReturnValue(0);
+
+    try {
+      const recommendations = await engine.generatePersonalizedRecommendations(
+        'recs-user',
+        {
+          predictiveMetrics: {
+            burnoutRisk: { currentRiskLevel: 80 },
+            growthPotential: { currentGrowthTrajectory: 70 },
+          },
+        } as any,
+        []
+      );
+
+      expect(burnoutSpy).toHaveBeenCalledTimes(1);
+      expect(growthSpy).toHaveBeenCalledTimes(1);
+      expect(microSpy).toHaveBeenCalledTimes(1);
+      expect(wisdomSpy).toHaveBeenCalledTimes(1);
+      expect(culturalSpy).toHaveBeenCalledTimes(1);
+      expect(recommendations.map((r: any) => r.id)).toEqual(
+        expect.arrayContaining(['burnout', 'growth', 'micro', 'wisdom', 'cultural'])
+      );
+    } finally {
+      engine.destroy();
+    }
+  });
+
+  it('skips burnout/growth generators when below thresholds', async () => {
+    const { EmpathyIntelligenceEngine } = await import('../EmpathyIntelligenceEngine');
+    const engine = new EmpathyIntelligenceEngine({
+      learningRate: 0.1,
+      predictionHorizon: 30,
+      personalizationDepth: 'deep',
+      culturalSensitivity: 'enhanced',
+      interventionStyle: 'adaptive',
+      privacyLevel: 'enhanced',
+    });
+
+    const burnoutSpy = vi
+      .spyOn(engine as any, 'generateBurnoutPreventionRecommendations')
+      .mockResolvedValue([{ id: 'burnout' }] as any);
+    const growthSpy = vi
+      .spyOn(engine as any, 'generateGrowthAccelerationRecommendations')
+      .mockResolvedValue([{ id: 'growth' }] as any);
+    const microSpy = vi
+      .spyOn(engine as any, 'generateMicroInterventions')
+      .mockResolvedValue([{ id: 'micro' }] as any);
+    const wisdomSpy = vi
+      .spyOn(engine as any, 'generateWisdomApplicationRecommendations')
+      .mockResolvedValue([{ id: 'wisdom' }] as any);
+    const culturalSpy = vi
+      .spyOn(engine as any, 'generateCulturalEmpathyRecommendations')
+      .mockResolvedValue([{ id: 'cultural' }] as any);
+    vi.spyOn(engine as any, 'prioritizeRecommendations').mockReturnValue(0);
+
+    try {
+      await engine.generatePersonalizedRecommendations(
+        'recs-user',
+        {
+          predictiveMetrics: {
+            burnoutRisk: { currentRiskLevel: 20 },
+            growthPotential: { currentGrowthTrajectory: 20 },
+          },
+        } as any,
+        []
+      );
+
+      expect(burnoutSpy).not.toHaveBeenCalled();
+      expect(growthSpy).not.toHaveBeenCalled();
+      expect(microSpy).toHaveBeenCalledTimes(1);
+      expect(wisdomSpy).toHaveBeenCalledTimes(1);
+      expect(culturalSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      engine.destroy();
+    }
+  });
+
+  it('destroy is resilient when memory profiler is unavailable', async () => {
+    vi.resetModules();
+    vi.doMock('../../lib/memory-profiler', () => ({
+      getMemoryProfiler: () => {
+        throw new Error('memory profiler unavailable');
+      },
+    }));
+
+    const mod = await import('../EmpathyIntelligenceEngine');
+    const engine = new mod.EmpathyIntelligenceEngine({
+      learningRate: 0.1,
+      predictionHorizon: 30,
+      personalizationDepth: 'deep',
+      culturalSensitivity: 'enhanced',
+      interventionStyle: 'adaptive',
+      privacyLevel: 'enhanced',
+    });
+
+    expect(() => engine.destroy()).not.toThrow();
+
+    vi.doUnmock('../../lib/memory-profiler');
   });
 });

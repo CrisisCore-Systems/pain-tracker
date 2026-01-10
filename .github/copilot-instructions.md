@@ -191,6 +191,7 @@ $env:VITE_REACT_APP_ENABLE_VALIDATION="true"; npm run dev
 Notes:
 - `VITE_REACT_APP_ENABLE_VALIDATION`: used by most validation UI integration points (default enabled unless set to `'false'`).
 - `VITE_ENABLE_VALIDATION_TECH`: used by the main `PainTracker` module (default enabled unless set to `'false'`).
+- `VITE_ENABLE_ANALYTICS`: enables the analytics subsystems (default disabled unless set to `'true'`).
 
 > Rule: If you introduce a new flag, it must be `VITE_*` and documented here.
 

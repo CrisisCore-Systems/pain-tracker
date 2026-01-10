@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { formatNumber } from '../../../utils/formatting';
 import { format } from 'date-fns';
 import type { PainEntry } from '../../../types';
-import { downloadData } from '../../../utils/pain-tracker/export';
+import { downloadData, exportToFHIR } from '../../../utils/pain-tracker/export';
 
 interface ClinicalExportsProps {
   entries: PainEntry[];
@@ -283,13 +283,16 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
     );
   };
 
-  const handleExport = (fileFormat: 'csv' | 'json') => {
+  const handleExport = (fileFormat: 'csv' | 'json' | 'fhir') => {
     const timestamp = format(new Date(), 'yyyy-MM-dd-HHmm');
     const formatSuffix = exportFormat === 'standard' ? '' : `-${exportFormat}`;
 
     if (fileFormat === 'csv') {
       const csvData = generateClinicalCSV(exportFormat);
       downloadData(csvData, `clinical-export${formatSuffix}-${timestamp}.csv`);
+    } else if (fileFormat === 'fhir') {
+       const fhirData = exportToFHIR(entries);
+       downloadData(fhirData, `clinical-fhir-bundle-${timestamp}.json`);
     } else {
       const jsonData = generateClinicalJSON(exportFormat);
       downloadData(jsonData, `clinical-export${formatSuffix}-${timestamp}.json`);
@@ -340,6 +343,14 @@ export const ClinicalExports: React.FC<ClinicalExportsProps> = ({ entries }) => 
             >
               <span>📋</span>
               Export JSON
+            </button>
+            <button
+              onClick={() => handleExport('fhir')}
+              className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center gap-2"
+              title="Export as HL7 FHIR Bundle for EHR integration"
+            >
+              <span>🏥</span>
+              Export FHIR
             </button>
           </div>
 

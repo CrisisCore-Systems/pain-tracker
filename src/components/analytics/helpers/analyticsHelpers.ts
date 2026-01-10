@@ -193,11 +193,13 @@ export function buildDailyAggregates(entries: PainEntry[]) {
     map[date].values.push(e.baselineData.pain);
     map[date].count += 1;
 
-    const notes = (e as unknown as { notes?: unknown }).notes;
-    if (notes) map[date].notes += 1;
+    const notes = e.notes;
+    if (notes && notes.trim().length > 0) map[date].notes += 1;
 
-    const medications = (e as unknown as { medications?: unknown }).medications;
-    if (Array.isArray(medications) && medications.length > 0) map[date].meds += 1;
+    // Check if medications.current array has entries
+    if (e.medications?.current && Array.isArray(e.medications.current) && e.medications.current.length > 0) {
+      map[date].meds += 1;
+    }
   });
   const sorted = Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
   const agg = sorted.map(([date, meta]) => ({

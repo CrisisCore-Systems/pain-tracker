@@ -5,7 +5,8 @@
  */
 
 import { execSync } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 
 // ANSI color codes
 const colors = {
@@ -375,19 +376,33 @@ function analyzeFileWithTreeReasoning(filepath, tree) {
   return issues;
 }
 
+
 // Enhanced directory scanner
-function scanDirectory(dir, extensions = ['.js', '.jsx', '.ts', '.tsx']) {
-  const files = [];
-  
+function scanDirectory(dir, extensions = ['.js', '.jsx', '.ts', '.tsx'], fileList = [], depth = 0) {
+  if (depth > 10 || fileList.length >= 100) return fileList; // simple limits
+
   try {
-    const result = execSync(`find "${dir}" -type f \\( ${extensions.map(ext => `-name "*${ext}"`).join(' -o ')} \\) | head -100`, 
-      { encoding: 'utf8' });
-    files.push(...result.trim().split('\n').filter(f => f && !f.includes('node_modules')));
-  } catch {
-    // Directory not found or no matching files
+    const files = readdirSync(dir);
+    for (const file of files) {
+      if (file === 'node_modules' || file.startsWith('.')) continue;
+      
+      const filePath = join(dir, file);
+      const stat = statSync(filePath);
+
+      if (stat.isDirectory()) {
+         scanDirectory(filePath, extensions, fileList, depth + 1);
+      } else {
+        if (extensions.some(ext => file.endsWith(ext))) {
+          fileList.push(filePath);
+        }
+      }
+      if (fileList.length >= 100) break;
+    }
+  } catch (e) {
+    // Directory access error or not found
   }
   
-  return files;
+  return fileList;
 }
 
 // Main tree-of-thought analysis function
@@ -469,8 +484,14 @@ export function analyzeWithTreeOfThought() {
   };
 }
 
+import { pathToFileURL } from 'url';
+
 // Command line interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Normalize paths for Windows/Unix compatibility
+const currentFileUrl = import.meta.url;
+const executedFileUrl = pathToFileURL(process.argv[1]).href;
+
+if (currentFileUrl === executedFileUrl) {
   const result = analyzeWithTreeOfThought();
   process.exit(result.success ? 0 : 1);
 }

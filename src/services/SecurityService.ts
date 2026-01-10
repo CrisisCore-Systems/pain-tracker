@@ -486,10 +486,11 @@ export class SecurityService {
    * Log security events for monitoring and auditing
    */
   logSecurityEvent(event: SecurityEvent): void {
-    this.events.push({
-      ...event,
-      sessionId: event.sessionId || this.sessionId,
-    });
+    const fullEvent = {
+        ...event,
+        sessionId: event.sessionId || this.sessionId,
+    };
+    this.events.push(fullEvent);
 
     // Keep only recent events to prevent memory issues (more aggressive trimming)
     if (this.events.length > 500) {
@@ -497,8 +498,23 @@ export class SecurityService {
     }
 
     // Log critical events to console unless running tests (tests inspect events in-memory)
-    if (!this.isTestEnv() && (event.level === 'critical' || event.level === 'error')) {
-      console.error(`[SECURITY ${event.level.toUpperCase()}]`, event.message, event.metadata);
+    if (!this.isTestEnv()) {
+        if (event.level === 'critical' || event.level === 'error') {
+            console.error(`[SECURITY ${event.level.toUpperCase()}]`, event.message, event.metadata);
+            
+            // Persist to secure audit sink (fire-and-forget to maintain void signature)
+            import('./AuditLogger').then(({ auditLogger }) => {
+                auditLogger.log({
+                    timestamp: event.timestamp.toISOString(),
+                    eventType: `security_${event.level}`,
+                    details: { 
+                        message: event.message, 
+                        category: event.type,
+                        metadata: event.metadata 
+                    }
+                }).catch(e => console.warn('Failed to persist critical security event', e));
+            }).catch(() => { /* ignore import failure */ });
+        }
     }
   }
 

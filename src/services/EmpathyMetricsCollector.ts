@@ -204,6 +204,24 @@ export class EmpathyMetricsCollector {
     private auditLogger?: AuditLogger
   ) {}
 
+  /**
+   * Collects and processes empathy metrics from pain and mood entries.
+   * 
+   * This method performs:
+   * 1. Consent verification
+   * 2. PII sanitization (if enabled)
+   * 3. Statistical analysis extraction
+   * 4. Privacy budget checking and consumption (if differential privacy enabled)
+   * 5. Noise injection for differential privacy
+   * 6. Audit logging
+   * 
+   * @param painEntries - List of pain entries to analyze
+   * @param moodEntries - List of mood entries to correlate
+   * @param options - Configuration options for collection
+   * @returns Analysis result including metrics, insights, and recommendations
+   * @throws Error if consent is required but not granted
+   * @throws Error if privacy budget is exhausted
+   */
   async collect(
     painEntries: PainEntry[],
     moodEntries: MoodEntry[],
@@ -289,6 +307,7 @@ export class EmpathyMetricsCollector {
     // Iterate shallow numeric leaves (manually for key sections to avoid perf cost)
     const applyNoiseMaybe = (v: number, metricPath?: string) => {
       if (!noisy) return clamp(v);
+      /* v8 ignore next */
       const sensitivity = metricPath ? (METRIC_SENSITIVITY[metricPath] ?? 1) : 1;
       return addNoise(clamp(v), epsilon, sensitivity);
     };

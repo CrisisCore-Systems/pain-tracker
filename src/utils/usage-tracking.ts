@@ -17,7 +17,7 @@ export interface UsageEvent {
 }
 
 export interface ExportActivity {
-  type: 'csv' | 'pdf' | 'json' | 'wcb';
+  type: 'csv' | 'pdf' | 'json' | 'wcb' | 'fhir';
   timestamp: number;
   recordCount: number;
 }
@@ -92,7 +92,7 @@ export function trackNavigation(from: string, to: string): void {
 }
 
 export function trackExport(
-  type: 'csv' | 'pdf' | 'json' | 'wcb',
+  type: 'csv' | 'pdf' | 'json' | 'wcb' | 'fhir',
   recordCount: number
 ): void {
   const exportHistory = getStoredData<ExportActivity[]>(STORAGE_KEYS.EXPORT_HISTORY, []);

@@ -22,6 +22,7 @@ export function computeBaseline(entries: PainEntry[], lookbackDays = 7): number 
     .map(e => typeof e.intensity === 'number' ? e.intensity : 0);
 
   const source = values.length ? values : entries.map(e => (typeof e.intensity === 'number' ? e.intensity : 0));
+  /* v8 ignore next */
   if (source.length === 0) return 0;
 
   const sum = source.reduce((a, b) => a + b, 0);

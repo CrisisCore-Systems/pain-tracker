@@ -498,7 +498,21 @@ export class EndToEndEncryptionService {
   }
 
   /**
-   * Encrypt any data object
+   * Encrypts any data object using the specified key and options.
+   * 
+   * This is the low-level primitive for encryption operations.
+   * 
+   * Process:
+   * 1. JSON serializes the data
+   * 2. (Optional) Compresses using RLE/delta encoding
+   * 3. Wraps in EncryptedData structure with metadata
+   * 4. Encrypts utilizing Web Crypto (AES-GCM)
+   * 5. (Optional) Adds HMAC integrity check
+   * 
+   * @template T The type of data being encrypted
+   * @param data The data to encrypt
+   * @param options Configuration for encryption (key ID, compression, etc.)
+   * @returns Promise resolving to the EncryptedData envelope
    */
   async encrypt<T>(data: T, options: EncryptionOptions = {}): Promise<EncryptedData<T>> {
     try {
@@ -848,7 +862,13 @@ export class EndToEndEncryptionService {
   }
 
   /**
-   * Encrypt pain entry data specifically
+   * Encrypts a single pain entry with domain-specific optimizations.
+   * 
+   * Enforces compression and data integrity checks.
+   * Used before persisting an entry to IndexedDB.
+   * 
+   * @param entry The pain entry to encrypt
+   * @returns Encrypted envelope ready for storage
    */
   async encryptPainEntry(entry: PainEntry): Promise<EncryptedData<PainEntry>> {
     return this.encrypt(entry, {

@@ -10,6 +10,10 @@ describe('analytics heuristics', () => {
   it('movingAverage computes windowed averages', () => {
     expect(movingAverage([1, 2, 3, 4], 2)).toEqual([1, 1.5, 2.5, 3.5]);
   });
+
+  it('movingAverage falls back to 0 when a window average is not finite', () => {
+    expect(movingAverage([Number.NaN], 3)).toEqual([0]);
+  });
   it('linearRegression slope positive for increasing series', () => {
     const r = linearRegression([1, 2, 3, 4, 5]);
     expect(r.slope).toBeGreaterThan(0);

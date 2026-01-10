@@ -618,4 +618,158 @@ describe('analyzePatterns (integration)', () => {
     expect(result.config.episodeMinLengthDays).toBe(10);
     expect(result.config.minSupportForCorrelation).toBe(20);
   });
+
+  it('should allow disabling QoL dissonance detection', () => {
+    const base = new Date('2026-01-01T12:00:00');
+    const entries = Array.from({ length: 20 }, (_, i) => ({
+      id: `entry-${i}`,
+      timestamp: new Date(base.getTime() + i * 24 * 60 * 60 * 1000).toISOString(),
+      baselineData: { pain: i % 2 === 0 ? 4 : 5 },
+      qualityOfLife: { sleepQuality: 8 },
+    })) as any;
+
+    const result = analyzePatterns(entries, { enableQoLDissonance: false });
+    expect(result.qolDissonances).toEqual([]);
+  });
+});
+
+describe('cleanEntries (edge cases)', () => {
+  it('should handle Date constructor throwing (defensive catch)', () => {
+    const entries = [
+      {
+        id: 'bad-date',
+        // `new Date(Symbol())` throws; this should be filtered out via the catch branch
+        timestamp: Symbol('bad') as any,
+        baselineData: { pain: 5 },
+      },
+    ] as any;
+
+    expect(cleanEntries(entries)).toEqual([]);
+  });
+});
+
+describe('computeQoLPatterns (branch coverage)', () => {
+  function makeEntry(
+    dayIndex: number,
+    pain: number,
+    opts: {
+      sleepQuality?: number;
+      moodImpact?: number;
+      activityLevel?: number;
+    } = {}
+  ) {
+    return {
+      id: `e-${dayIndex}`,
+      timestamp: new Date(Date.UTC(2026, 0, 1 + dayIndex, 12, 0, 0)).toISOString(),
+      baselineData: { pain },
+      qualityOfLife:
+        opts.sleepQuality !== undefined || opts.moodImpact !== undefined
+          ? {
+              sleepQuality: opts.sleepQuality,
+              moodImpact: opts.moodImpact,
+            }
+          : undefined,
+      activityLevel: opts.activityLevel,
+    };
+  }
+
+  it('should return no patterns when QoL support is below minSupportForCorrelation', () => {
+    const config = { ...DEFAULT_PATTERN_CONFIG };
+
+    const entries = [
+      // 7 QoL datapoints (< 8) => triggers totalCount < minSupport branch
+      ...Array.from({ length: 7 }, (_, i) => makeEntry(i, 5, { sleepQuality: 8 })),
+      // extra entries to keep baseline stable (but without QoL data)
+      ...Array.from({ length: 10 }, (_, i) => makeEntry(100 + i, 5)),
+    ] as any;
+
+    const baseline = calculateBaseline(cleanEntries(entries), config.baselineWindowDays);
+    const patterns = computeQoLPatterns(cleanEntries(entries), baseline, config);
+    expect(patterns).toEqual([]);
+  });
+
+  it('should return no patterns when QoL values are neutral (no good/poor buckets)', () => {
+    const config = { ...DEFAULT_PATTERN_CONFIG };
+
+    const entries = Array.from({ length: 8 }, (_, i) =>
+      makeEntry(i, 5, {
+        sleepQuality: 5, // between 3 and 7 (neutral)
+        moodImpact: 0, // between -2 and 3 (neutral)
+        activityLevel: 5, // between 3 and 7 (neutral)
+      })
+    ) as any;
+
+    const baseline = calculateBaseline(cleanEntries(entries), config.baselineWindowDays);
+    const patterns = computeQoLPatterns(cleanEntries(entries), baseline, config);
+    expect(patterns).toEqual([]);
+  });
+
+  it('should fall back to baseline when one QoL bucket is empty (meanGood fallback)', () => {
+    const config = { ...DEFAULT_PATTERN_CONFIG };
+
+    const entries = [
+      // Poor sleep, high pain (fills poorEntries; goodEntries remains empty)
+      ...Array.from({ length: 8 }, (_, i) => makeEntry(i, 8, { sleepQuality: 2 })),
+      // Many lower-pain entries without QoL data to pull baseline down
+      ...Array.from({ length: 22 }, (_, i) => makeEntry(100 + i, 3)),
+    ] as any;
+
+    const cleaned = cleanEntries(entries);
+    const baseline = calculateBaseline(cleaned, config.baselineWindowDays);
+    const patterns = computeQoLPatterns(cleaned, baseline, config);
+
+    const sleep = patterns.find(p => p.metric === 'sleep');
+    expect(sleep).toBeTruthy();
+    expect(sleep?.delta).toBeLessThan(0);
+  });
+});
+
+describe('detectQoLDissonances (pain trend branches)', () => {
+  function makeEntry(dayIndex: number, sleepQuality?: number) {
+    return {
+      id: `q-${dayIndex}`,
+      timestamp: new Date(Date.UTC(2026, 0, 1 + dayIndex, 12, 0, 0)).toISOString(),
+      baselineData: { pain: 5 },
+      qualityOfLife: sleepQuality !== undefined ? { sleepQuality } : undefined,
+    };
+  }
+
+  it('should classify pain as improving when recent avg drops enough', () => {
+    const entries = Array.from({ length: 14 }, (_, i) => makeEntry(i, i < 7 ? 6 : 6)) as any;
+    const dailyTrend = [
+      // previous (higher), recent (lower)
+      ...Array.from({ length: 7 }, (_, i) => ({ date: `d${i}`, value: 7, count: 1 })),
+      ...Array.from({ length: 7 }, (_, i) => ({ date: `d${7 + i}`, value: 5, count: 1 })),
+    ];
+
+    const dissonances = detectQoLDissonances(entries, dailyTrend as any, []);
+    expect(dissonances).toEqual([]);
+  });
+
+  it('should classify pain as worsening when recent avg rises enough', () => {
+    const entries = Array.from({ length: 14 }, (_, i) => makeEntry(i, i < 7 ? 6 : 6)) as any;
+    const dailyTrend = [
+      // previous (lower), recent (higher)
+      ...Array.from({ length: 7 }, (_, i) => ({ date: `d${i}`, value: 4, count: 1 })),
+      ...Array.from({ length: 7 }, (_, i) => ({ date: `d${7 + i}`, value: 6, count: 1 })),
+    ];
+
+    const dissonances = detectQoLDissonances(entries, dailyTrend as any, []);
+    expect(dissonances).toEqual([]);
+  });
+});
+
+describe('analyzePatterns cautions (QoL missing)', () => {
+  it('should warn when QoL data is missing entirely', () => {
+    const base = new Date('2026-01-01T12:00:00');
+    const entries = Array.from({ length: 7 }, (_, i) => ({
+      id: `c-${i}`,
+      timestamp: new Date(base.getTime() + i * 24 * 60 * 60 * 1000).toISOString(),
+      baselineData: { pain: 5 },
+      // no qualityOfLife + no activityLevel
+    })) as any;
+
+    const result = analyzePatterns(entries);
+    expect(result.meta.cautions.join('\n')).toContain('Quality of Life data missing');
+  });
 });

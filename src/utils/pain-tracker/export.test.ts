@@ -3,8 +3,37 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 import { exportToCSV, exportToJSON, downloadData, exportToPDF } from './export';
 import type { PainEntry } from '../../types';
+import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
+import { analyticsLogger } from '../../lib/debug-logger';
+
+// Mock dependencies
+vi.mock('../../services/PrivacyAnalyticsService', () => ({
+  privacyAnalytics: {
+    trackDataExport: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
+vi.mock('../../analytics/ga4-events', () => ({
+  trackDataExported: vi.fn(),
+}));
+
+vi.mock('../usage-tracking', () => ({
+  trackExport: vi.fn(),
+}));
+
+vi.mock('../../lib/debug-logger', () => ({
+  analyticsLogger: {
+    swallowed: vi.fn(),
+  },
+}));
 
 describe('Pain Tracker Export', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // Default success mock
+    vi.mocked(privacyAnalytics.trackDataExport).mockResolvedValue(undefined);
+  });
+
   const mockEntries: PainEntry[] = [
     {
       id: 1,
@@ -127,6 +156,18 @@ describe('Pain Tracker Export', () => {
       // Symptoms should be semicolon-separated and quoted
       expect(csv).toContain('"Stiffness; Burning"');
     });
+
+    it('should handle timestamps missing a time component (no "T")', () => {
+      const csv = exportToCSV([
+        {
+          ...mockEntries[0],
+          timestamp: '2024-01-01',
+        } as any,
+      ]);
+
+      // Date should be preserved; time column should be empty.
+      expect(csv).toContain('2024-01-01,,5');
+    });
   });
 
   describe('exportToJSON', () => {
@@ -192,6 +233,17 @@ describe('Pain Tracker Export', () => {
         },
       };
       const result = await exportToPDF([minimalEntry]);
+      expect(result).toMatch(/^data:application\/pdf;/);
+    });
+
+    it('should handle entries with undefined symptoms/locations fields', async () => {
+      const result = await exportToPDF([
+        {
+          ...mockEntries[0],
+          baselineData: { pain: 5 } as any,
+        } as any,
+      ]);
+
       expect(result).toMatch(/^data:application\/pdf;/);
     });
 
@@ -313,6 +365,18 @@ describe('Pain Tracker Export', () => {
       downloadData(dataUri, 'export.pdf');
       expect(window.URL.createObjectURL).toHaveBeenCalled();
     });
+
+    it('should return early when window is undefined', () => {
+      const createObjectURL = window.URL.createObjectURL;
+
+      try {
+        vi.stubGlobal('window', undefined as any);
+        expect(() => downloadData('test data', 'test.csv')).not.toThrow();
+        expect(createObjectURL).not.toHaveBeenCalled();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
   });
 
   describe('Integration: Full Export Flow', () => {
@@ -359,6 +423,41 @@ describe('Pain Tracker Export', () => {
       // Base64 should decode to PDF magic bytes
       const decoded = atob(base64Content.slice(0, 20));
       expect(decoded).toContain('%PDF');
+    });
+  });
+
+  describe('Error Handling - Analytics', () => {
+    it('should log swallowed error when CSV export tracking fails', async () => {
+      const error = new Error('Tracking failed');
+      vi.mocked(privacyAnalytics.trackDataExport).mockRejectedValueOnce(error);
+      exportToCSV([]);
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(analyticsLogger.swallowed).toHaveBeenCalledWith(error, expect.objectContaining({ 
+        context: 'exportToCSV',
+        exportType: 'csv'
+      }));
+    });
+
+    it('should log swallowed error when JSON export tracking fails', async () => {
+      const error = new Error('Tracking failed');
+      vi.mocked(privacyAnalytics.trackDataExport).mockRejectedValueOnce(error);
+      exportToJSON([]);
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(analyticsLogger.swallowed).toHaveBeenCalledWith(error, expect.objectContaining({ 
+        context: 'exportToJSON',
+        exportType: 'json'
+      }));
+    });
+
+    it('should log swallowed error when PDF export tracking fails', async () => {
+      const error = new Error('Tracking failed');
+      vi.mocked(privacyAnalytics.trackDataExport).mockRejectedValueOnce(error);
+      await exportToPDF([]);
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(analyticsLogger.swallowed).toHaveBeenCalledWith(error, expect.objectContaining({ 
+        context: 'exportToPDF',
+        exportType: 'pdf'
+      }));
     });
   });
 });

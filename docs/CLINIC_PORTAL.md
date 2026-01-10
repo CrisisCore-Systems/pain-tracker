@@ -66,9 +66,9 @@ src/
 | `/clinic/dashboard` | ClinicDashboard | Protected | Clinical overview and stats |
 | `/clinic/patients` | PatientView | Protected | Patient list |
 | `/clinic/patients/:id` | PatientView | Protected | Individual patient details |
-| `/clinic/appointments` | Coming Soon | Protected | Schedule management |
-| `/clinic/reports` | Coming Soon | Protected | Clinical reports |
-| `/clinic/compliance` | Coming Soon | Admin Only | HIPAA audit logs |
+| `/clinic/appointments` | ClinicAppointments | Protected | Schedule management |
+| `/clinic/reports` | ClinicReports | Protected | Clinical reports |
+| `/clinic/compliance` | ClinicCompliance | Admin Only | HIPAA audit logs |
 | `/clinic/settings` | ClinicSettings | Protected | Portal configuration |
 
 ---

@@ -1,6 +1,6 @@
 # Pain Tracker – Architecture Overview
 
-_Last updated: 2025-11-22_
+_Last updated: 2026-01-09_
 
 ## 1. Purpose
 
@@ -93,9 +93,21 @@ export interface EmotionalMetrics {
 
 ---
 
-## 4. State Management
+## 4. Empathy Intelligence Engine
 
-### 4.1 painStore
+The **Empathy Intelligence Engine** provides context-aware feedback without sending data to the cloud.
+
+- **Purpose**: Detect crisis patterns, validate user pain, and suggest local interventions.
+- **Mechanism**:
+  - **Local Heuristics**: Analyzes recent entry velocity, severity spikes, and emotional keywords.
+  - **Privacy**: Differential privacy noise is injected into aggregated metrics before they are displayed or stored in local analytical summaries.
+  - **Crisis Detection**: Identifies patterns matching clinical definitions of "flare-up" or "crisis" and triggers local UI adaptions (e.g., simplifying the interface).
+
+---
+
+## 5. State Management
+
+### 5.1 painStore
 
 ```typescript
 interface PainStore {
@@ -119,7 +131,7 @@ Implemented using Zustand with Immer:
 
 ---
 
-## 5. Persistence Layer
+## 6. Persistence Layer
 
 ### 5.1 IndexedDB
 
@@ -133,9 +145,9 @@ Batch operations are used where possible (e.g. bulk add/import).
 
 ---
 
-## 6. Security Design
+## 7. Security Design
 
-### 6.1 Threat Model
+### 7.1 Threat Model
 
 Single-user app on personal devices.
 
@@ -146,7 +158,7 @@ Main risks:
 - Shoulder-surfing / casual access.
 - Browser storage inspection.
 
-### 6.2 Encryption
+### 7.2 Encryption
 
 - **Algorithm**: AES-GCM (256-bit).
 - **Key derivation**: PBKDF2-HMAC-SHA256 with configurable iterations.
@@ -158,7 +170,7 @@ High-level flow:
 3. Pain entries are serialized and encrypted.
 4. Ciphertext + IV + salt are stored in IndexedDB.
 
-### 6.3 Content Security Policy (CSP)
+### 7.3 Content Security Policy (CSP)
 
 - `default-src 'self'`
 - `frame-ancestors 'none'` (no embedding)
@@ -167,7 +179,7 @@ High-level flow:
 
 ---
 
-## 7. PWA Architecture
+## 8. PWA Architecture
 
 - Service worker pre-caches the app shell.
 - Pain entries are stored in IndexedDB and remain available offline.
@@ -177,7 +189,7 @@ High-level flow:
 
 ---
 
-## 8. Reporting & WorkSafeBC Integration
+## 9. Reporting & WorkSafeBC Integration
 
 Pain Tracker generates a structured summary suitable for manual transcription into WorkSafeBC forms (6/7/8) and a PDF export with:
 
@@ -190,7 +202,7 @@ Pain Tracker generates a structured summary suitable for manual transcription in
 
 ---
 
-## 9. Testing Strategy
+## 10. Testing Strategy
 
 - **Unit tests**: Core utilities (encryption, validation, analytics).
 - **Integration tests**: Store + IndexedDB persistence.
@@ -203,7 +215,7 @@ Testing tools: Vitest + Playwright.
 
 ---
 
-## 10. Roadmap (High-Level)
+## 11. Roadmap (High-Level)
 
 - Emotional metrics with more nuanced scoring.
 - Advanced analytics (trigger correlations, flare prediction).

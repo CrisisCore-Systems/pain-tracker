@@ -3,16 +3,7 @@
  */
 
 import { Calendar, Clock, User } from 'lucide-react';
-
-interface Appointment {
-  id: string;
-  patientName: string;
-  patientId: string;
-  time: string;
-  duration: number;
-  type: 'follow-up' | 'initial' | 'urgent';
-  reason: string;
-}
+import type { Appointment } from '../../types/clinic';
 
 export function UpcomingAppointments() {
   // Mock data - in production, fetch from API
@@ -22,8 +13,10 @@ export function UpcomingAppointments() {
       patientName: 'John Smith',
       patientId: 'P001',
       time: '09:00 AM',
+      date: '2025-11-20',
       duration: 30,
       type: 'follow-up',
+      status: 'scheduled',
       reason: 'Pain reassessment'
     },
     {
@@ -31,8 +24,10 @@ export function UpcomingAppointments() {
       patientName: 'Maria Garcia',
       patientId: 'P002',
       time: '10:30 AM',
+      date: '2025-11-20',
       duration: 45,
       type: 'urgent',
+      status: 'scheduled',
       reason: 'Pain escalation'
     },
     {
@@ -40,8 +35,10 @@ export function UpcomingAppointments() {
       patientName: 'James Wilson',
       patientId: 'P003',
       time: '02:00 PM',
+      date: '2025-11-20',
       duration: 30,
       type: 'follow-up',
+      status: 'scheduled',
       reason: 'Treatment review'
     },
     {
@@ -49,8 +46,10 @@ export function UpcomingAppointments() {
       patientName: 'Emily Rodriguez',
       patientId: 'P006',
       time: '03:15 PM',
+      date: '2025-11-20',
       duration: 60,
       type: 'initial',
+      status: 'scheduled',
       reason: 'Initial consultation'
     }
   ];

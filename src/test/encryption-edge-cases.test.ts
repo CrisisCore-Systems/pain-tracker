@@ -11,6 +11,12 @@ function bigPayload(): Payload {
 }
 
 describe('EncryptionService edge cases', () => {
+  it('encrypts and decrypts arrays of pain entries', async () => {
+    const encrypted = await encryptionService.encryptPainEntries([]);
+    const decrypted = await encryptionService.decryptPainEntries(encrypted);
+    expect(decrypted).toEqual([]);
+  });
+
   it('rotates keys without throwing', async () => {
     await encryptionService.rotateEncryptionKeys();
     const status = encryptionService.getEncryptionStatus();

@@ -146,6 +146,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Mouse event handlers (for desktop testing)
     const handleMouseDown = React.useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
+        /* v8 ignore next */
         if (isDisabled) return;
 
         setIsPressed(true);

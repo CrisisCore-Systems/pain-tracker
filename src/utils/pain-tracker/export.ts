@@ -5,6 +5,8 @@ import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { trackDataExported } from '../../analytics/ga4-events';
 import { trackExport } from '../usage-tracking';
 import { analyticsLogger } from '../../lib/debug-logger';
+import { FhirMapper } from '../../services/clinical/FhirMapper';
+import type { Fhir } from '../../types/fhir';
 
 export const exportToCSV = (entries: PainEntry[]): string => {
   // Track export analytics
@@ -65,6 +67,33 @@ export const exportToJSON = (entries: PainEntry[]): string => {
   trackExport('json', entries.length);
 
   return JSON.stringify(entries, null, 2);
+};
+
+export const exportToFHIR = (entries: PainEntry[], patientId: string = 'patient-001'): string => {
+  // Track export analytics
+  privacyAnalytics.trackDataExport('fhir').catch((error) => {
+    analyticsLogger.swallowed(error, { context: 'exportToFHIR', exportType: 'fhir' });
+  });
+
+  // Track GA4 custom event
+  trackDataExported('fhir', entries.length);
+  
+  // Track local usage
+  trackExport('fhir', entries.length);
+
+  const bundles = entries.map(entry => FhirMapper.toGenericBundle(entry, patientId));
+  
+  // Flatten entries from all bundles into one collection bundle
+  const allResources = bundles.flatMap(b => b.entry || []);
+
+  const collectionBundle: Fhir.Bundle = {
+    resourceType: 'Bundle',
+    type: 'collection',
+    timestamp: new Date().toISOString(),
+    entry: allResources
+  };
+
+  return JSON.stringify(collectionBundle, null, 2);
 };
 
 export const downloadData = (

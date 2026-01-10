@@ -6,7 +6,8 @@ import NotificationPreferencesPanel from '../components/settings/NotificationPre
 import BackupSettings from '../components/settings/BackupSettings';
 import ExportSettings from '../components/settings/ExportSettings';
 import PrivacySettings from '../components/settings/PrivacySettings';
-import { Settings, Bell, Shield, Download, Eye } from 'lucide-react';
+import { ClinicalIntegrationSettings } from '../components/settings/ClinicalIntegrationSettings';
+import { Settings, Bell, Shield, Download, Eye, Stethoscope } from 'lucide-react';
 
 export default function SettingsPage() {
   return (
@@ -105,6 +106,17 @@ export default function SettingsPage() {
               </h3>
             </div>
             <ExportSettings />
+            
+            <div className="flex items-center gap-2 mt-8">
+              <Stethoscope className="h-4 w-4 text-pink-600 dark:text-pink-400" />
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 uppercase tracking-wider">
+                Clinical Connect
+              </h3>
+            </div>
+            <ClinicalIntegrationSettings />
+
+            <div className="border-t border-gray-200 dark:border-white/10 my-4" />
+
             <BackupSettings />
           </div>
         </section>

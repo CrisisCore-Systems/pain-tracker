@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { PainEntry } from '../../types';
+import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
+import { analyticsLogger } from '../../lib/debug-logger';
 
 // Mock jsPDF
 const mockJsPDF = {
@@ -25,6 +27,8 @@ const mockJsPDF = {
   setPage: vi.fn().mockReturnThis(),
 };
 
+const swallowed = vi.hoisted(() => vi.fn());
+
 vi.mock('jspdf', () => ({
   default: vi.fn(() => mockJsPDF),
 }));
@@ -49,6 +53,7 @@ vi.mock('../../lib/debug-logger', () => ({
   analyticsLogger: {
     log: vi.fn(),
     error: vi.fn(),
+    swallowed,
   },
 }));
 
@@ -304,6 +309,260 @@ describe('WCB Export', () => {
 
       expect(typeof result).toBe('string');
     });
+
+    it('covers pain trend branches: stable', async () => {
+      const entries: PainEntry[] = Array.from({ length: 14 }, (_, i) =>
+        createMockEntry({
+          timestamp: new Date(`2024-01-${String(i + 1).padStart(2, '0')}T10:00:00Z`).toISOString(),
+          baselineData: { pain: i < 7 ? 5 : 5.2, locations: [], symptoms: [] },
+        })
+      );
+
+      await exportWorkSafeBCPDF(entries, defaultOptions);
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('stable');
+    });
+
+    it('covers pain trend branches: slightly worsening', async () => {
+      const entries: PainEntry[] = Array.from({ length: 14 }, (_, i) =>
+        createMockEntry({
+          timestamp: new Date(`2024-01-${String(i + 1).padStart(2, '0')}T10:00:00Z`).toISOString(),
+          baselineData: { pain: i < 7 ? 4 : 4.8, locations: [], symptoms: [] },
+        })
+      );
+
+      await exportWorkSafeBCPDF(entries, defaultOptions);
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('slightly worsening');
+    });
+
+    it('covers pain trend branches: significantly worsening', async () => {
+      const entries: PainEntry[] = Array.from({ length: 14 }, (_, i) =>
+        createMockEntry({
+          timestamp: new Date(`2024-01-${String(i + 1).padStart(2, '0')}T10:00:00Z`).toISOString(),
+          baselineData: { pain: i < 7 ? 3 : 6, locations: [], symptoms: [] },
+        })
+      );
+
+      await exportWorkSafeBCPDF(entries, defaultOptions);
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('significantly worsening');
+    });
+
+    it('covers pain trend branches: slightly improving', async () => {
+      const entries: PainEntry[] = Array.from({ length: 14 }, (_, i) =>
+        createMockEntry({
+          timestamp: new Date(`2024-01-${String(i + 1).padStart(2, '0')}T10:00:00Z`).toISOString(),
+          baselineData: { pain: i < 7 ? 6 : 5.3, locations: [], symptoms: [] },
+        })
+      );
+
+      await exportWorkSafeBCPDF(entries, defaultOptions);
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('slightly improving');
+    });
+
+    it('covers pain trend branches: significantly improving', async () => {
+      const entries: PainEntry[] = Array.from({ length: 14 }, (_, i) =>
+        createMockEntry({
+          timestamp: new Date(`2024-01-${String(i + 1).padStart(2, '0')}T10:00:00Z`).toISOString(),
+          baselineData: { pain: i < 7 ? 8 : 5, locations: [], symptoms: [] },
+        })
+      );
+
+      await exportWorkSafeBCPDF(entries, defaultOptions);
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('significantly improving');
+    });
+
+    it('covers pain trend branch: requires at least 2 weeks of data', async () => {
+      const entries: PainEntry[] = Array.from({ length: 5 }, (_, i) =>
+        createMockEntry({
+          timestamp: new Date(`2024-01-${String(i + 1).padStart(2, '0')}T10:00:00Z`).toISOString(),
+          baselineData: { pain: 5, locations: [], symptoms: [] },
+        })
+      );
+
+      await exportWorkSafeBCPDF(entries, {
+        startDate: new Date('2024-01-01'),
+        endDate: new Date('2024-01-31'),
+      });
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('at least 2 weeks');
+    });
+
+    it('renders trend summary when enough points exist (including same-day aggregation)', async () => {
+      const entries: PainEntry[] = [
+        // Two entries on the same day to hit the aggregation path in toDailyAveragePain
+        createMockEntry({ timestamp: '2024-01-01T08:00:00Z', baselineData: { pain: 4, locations: [], symptoms: [] } }),
+        createMockEntry({ timestamp: '2024-01-01T18:00:00Z', baselineData: { pain: 6, locations: [], symptoms: [] } }),
+        createMockEntry({ timestamp: '2024-01-02T10:00:00Z', baselineData: { pain: 5, locations: [], symptoms: [] } }),
+        createMockEntry({ timestamp: '2024-01-03T10:00:00Z', baselineData: { pain: 5, locations: [], symptoms: [] } }),
+      ];
+
+      await exportWorkSafeBCPDF(entries, {
+        startDate: new Date('2024-01-01'),
+        endDate: new Date('2024-01-31'),
+        includeTrendSummary: true,
+      });
+
+      // If mini-bars rendered, rect() should be called for the frame and bars.
+      expect(mockJsPDF.rect).toHaveBeenCalled();
+    });
+
+    it('adds a truncation line when there are more than 25 detailed entries', async () => {
+      const entries: PainEntry[] = Array.from({ length: 30 }, (_, i) =>
+        createMockEntry({
+          timestamp: new Date(Date.parse('2024-01-01T10:00:00Z') + i * 24 * 60 * 60 * 1000).toISOString(),
+          baselineData: { pain: 5, locations: [], symptoms: [] },
+          notes: `note-${i}`,
+        })
+      );
+
+      await exportWorkSafeBCPDF(entries, {
+        startDate: new Date('2024-01-01'),
+        endDate: new Date('2024-02-15'),
+        includeDetailedEntries: true,
+      });
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('... and 5 more entries');
+    });
+
+    it('covers treatment effectiveness summary when reports exist', async () => {
+      const entries: PainEntry[] = [
+        createMockEntry({
+          treatments: { recent: [], effectiveness: 'helped', planned: [] },
+        }),
+      ];
+
+      const result = await exportWorkSafeBCPDF(entries, defaultOptions);
+      expect(typeof result).toBe('string');
+    });
+
+    it('covers pain severity branch: moderately severe (pain=6)', async () => {
+      const entries: PainEntry[] = [
+        createMockEntry({
+          baselineData: { pain: 6, locations: [], symptoms: [] },
+        }),
+      ];
+
+      await exportWorkSafeBCPDF(entries, defaultOptions);
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('Moderately Severe');
+    });
+
+    it('covers pain severity branch: moderate (pain=4)', async () => {
+      const entries: PainEntry[] = [
+        createMockEntry({
+          baselineData: { pain: 4, locations: [], symptoms: [] },
+        }),
+      ];
+
+      await exportWorkSafeBCPDF(entries, defaultOptions);
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('Moderate');
+    });
+
+    it('covers detailed entries notes fallback (notes undefined vs present)', async () => {
+      const entries: PainEntry[] = [
+        createMockEntry({
+          timestamp: '2024-01-10T10:00:00Z',
+          notes: undefined as any,
+        }),
+        createMockEntry({
+          timestamp: '2024-01-11T10:00:00Z',
+          notes: 'some notes',
+        }),
+      ];
+
+      await exportWorkSafeBCPDF(entries, {
+        ...defaultOptions,
+        includeDetailedEntries: true,
+      });
+
+      const calls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      expect(JSON.stringify(calls)).toContain('some notes');
+    });
+
+    it('covers detailed entries locations fallback (locations undefined)', async () => {
+      const entries: PainEntry[] = [
+        createMockEntry({
+          timestamp: '2024-01-10T10:00:00Z',
+          baselineData: { pain: 5 } as any,
+        }),
+      ];
+
+      await exportWorkSafeBCPDF(entries, {
+        ...defaultOptions,
+        includeDetailedEntries: true,
+      });
+
+      expect(mockJsPDF.output).toHaveBeenCalled();
+    });
+
+    it('swallows analytics tracking failures (trackDataExport catch)', async () => {
+      const mod = await import('../../services/PrivacyAnalyticsService');
+      (mod.privacyAnalytics.trackDataExport as any).mockRejectedValueOnce(new Error('down'));
+
+      await exportWorkSafeBCPDF([createMockEntry()], defaultOptions);
+
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(swallowed).toHaveBeenCalled();
+    });
+
+    it('covers pain severity labels: Severe and Extreme', async () => {
+      await exportWorkSafeBCPDF(
+        [
+          createMockEntry({ baselineData: { pain: 8, locations: [], symptoms: [] } }),
+          createMockEntry({ baselineData: { pain: 8, locations: [], symptoms: [] } }),
+        ],
+        defaultOptions
+      );
+
+      const severeCalls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      const severeText = JSON.stringify(severeCalls).toLowerCase();
+      expect(severeText).toContain('severe');
+
+      vi.clearAllMocks();
+
+      await exportWorkSafeBCPDF(
+        [
+          createMockEntry({ baselineData: { pain: 9, locations: [], symptoms: [] } }),
+          createMockEntry({ baselineData: { pain: 9, locations: [], symptoms: [] } }),
+        ],
+        defaultOptions
+      );
+
+      const extremeCalls = (mockJsPDF.text as unknown as { mock: { calls: unknown[][] } }).mock.calls;
+      const extremeText = JSON.stringify(extremeCalls).toLowerCase();
+      expect(extremeText).toContain('extreme');
+    });
+
+    it('covers detailed entries alternate-row shading', async () => {
+      const entries: PainEntry[] = [
+        createMockEntry({ timestamp: '2024-01-10T10:00:00Z' }),
+        createMockEntry({ timestamp: '2024-01-11T10:00:00Z' }),
+      ];
+
+      await exportWorkSafeBCPDF(entries, {
+        ...defaultOptions,
+        includeDetailedEntries: true,
+      });
+
+      expect(mockJsPDF.setFillColor).toHaveBeenCalledWith(248, 250, 252);
+      expect(mockJsPDF.rect).toHaveBeenCalled();
+    });
   });
 
   describe('downloadWorkSafeBCPDF', () => {
@@ -428,6 +687,102 @@ describe('WCB Export', () => {
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
       expect(typeof result).toBe('string');
+    });
+  });
+
+  describe('Trend Analysis Coverage', () => {
+    const createTrendEntries = (recentPain: number, oldPain: number): PainEntry[] => {
+        const entries: PainEntry[] = [];
+        // create 7 older entries
+        for (let i = 0; i < 7; i++) {
+            entries.push(createMockEntry({
+                timestamp: new Date(2024, 0, i + 1).toISOString(),
+                baselineData: { pain: oldPain, locations: [], symptoms: [] }
+            } as any));
+        }
+        // create 7 recent entries
+        for (let i = 0; i < 7; i++) {
+            entries.push(createMockEntry({
+                timestamp: new Date(2024, 0, i + 8).toISOString(),
+                baselineData: { pain: recentPain, locations: [], symptoms: [] }
+            } as any));
+        }
+        return entries;
+    };
+
+
+    const getAllText = () => (mockJsPDF.text as any).mock.calls.flat().map((arg: any) => {
+        if (typeof arg === 'string') return arg;
+        if (Array.isArray(arg)) return arg.join(' ');
+        return '';
+    }).join(' ');
+
+    it('should identify stable trend', async () => {
+        const entries = createTrendEntries(5, 5);
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+        expect(getAllText().toLowerCase()).toContain('stable');
+    });
+
+    it('should identify significantly worsening trend', async () => {
+        const entries = createTrendEntries(5, 2);
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+        expect(getAllText().toLowerCase()).toContain('significantly worsening');
+    });
+
+    it('should identify slightly worsening trend', async () => {
+        const entries = createTrendEntries(5, 4);
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+        expect(getAllText().toLowerCase()).toContain('slightly worsening');
+    });
+
+    it('should identify significantly improving trend', async () => {
+        const entries = createTrendEntries(2, 5);
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+        expect(getAllText().toLowerCase()).toContain('significantly improving');
+    });
+
+    it('should identify slightly improving trend', async () => {
+        const entries = createTrendEntries(4, 5);
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+        expect(getAllText().toLowerCase()).toContain('slightly improving');
+    });
+
+    it('should handle insufficient data for trend', async () => {
+        const entries = [createMockEntry()];
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+        expect(getAllText().toLowerCase()).toContain('insufficient data for trend analysis');
+    });
+
+    it('should handle missing older data for trend', async () => {
+        const entries = Array.from({length: 7}, () => createMockEntry());
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+        expect(getAllText().toLowerCase()).toContain('trend analysis requires at least 2 weeks of data');
+    });
+  });
+
+  describe('Treatment Effectiveness Coverage', () => {
+    it('should process entries with missing effectiveness (branch coverage)', async () => {
+        const entries = [createMockEntry({ treatments: undefined })];
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+    });
+
+    it('should process entries with effectiveness data (branch coverage)', async () => {
+        const entries = [createMockEntry({ treatments: { effectiveness: 'Good', recent: [], planned: [] } })];
+        await exportWorkSafeBCPDF(entries, defaultOptions);
+    });
+  });
+
+  describe('Analytics Error Handling', () => {
+    it('should swallow analytics errors', async () => {
+       const error = new Error('Analytics failed');
+       vi.mocked(privacyAnalytics.trackDataExport).mockRejectedValueOnce(error);
+       
+       await exportWorkSafeBCPDF([], defaultOptions);
+       await new Promise(resolve => setTimeout(resolve, 0));
+
+       expect(analyticsLogger.swallowed).toHaveBeenCalledWith(error, expect.objectContaining({
+         context: 'exportWorkSafeBCPDF'
+       }));
     });
   });
 });

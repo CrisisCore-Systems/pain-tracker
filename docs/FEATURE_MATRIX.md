@@ -32,6 +32,9 @@ Status Legend:
 | Rollback Procedure | @ops | High | v1.0 | 1d | Implemented | `docs/DEPLOYMENT.md` | Documented
 | Conventional Commits Enforcement | @ci | Medium | v1.0 | 1d | Implemented | Husky / lint tools | 
 | Dependency Vulnerability Remediation | @security | High | v1.0 | ongoing | Partial | root dependencies | Run `npm audit` and patch critical items before release
+| Clinic Portal: Appointments | @clinic | Medium | v2.0 | 2w | Implemented | `src/pages/clinic/ClinicAppointments.tsx` | Schedule management & check-in flow
+| Clinic Portal: Compliance | @privacy | High | v2.0 | 1w | Implemented | `src/pages/clinic/ClinicCompliance.tsx` | HIPAA audit logs and access tracking
+| Clinic Portal: Reports | @analytics | Medium | v2.0 | 2w | Implemented | `src/pages/clinic/ClinicReports.tsx` | Population health summaries and export
 
 ## Roadmap Deep Dives
 
@@ -68,6 +71,11 @@ The sections below expand on upcoming releases that currently surface as in-app 
 	- [Predictive empathy roadmap](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+predictive+empathy)
 	- [Cultural empathy focus](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+cultural+empathy)
 	- [Micro-moment tasks](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+micro+empathy)
+
+### Clinic Portal Expansion
+- **Goal:** Enable practitioners to manage appointments, view compliance logs, and generate population health reports.
+- **Why it matters:** Streamlines the clinical workflow and ensures regulatory compliance.
+- **Where to follow:** [Clinic portal roadmap](https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+clinic+portal)
 
 ## How to use
 - Update your feature row when ownership, priority, milestone, or estimate changes.

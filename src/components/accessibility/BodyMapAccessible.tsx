@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { cn } from '../../design-system/utils';
+import { PlannedFeatureNotice } from '../common/PlannedFeatureNotice';
 
 /**
  * Accessible body map component with dual-path interaction
@@ -162,11 +163,13 @@ export function BodyMapAccessible({
 
       {/* Visual Mode - Placeholder for SVG Body Map */}
       {viewMode === 'visual' && showVisualMap && (
-        <div className="bg-surface-800 border border-surface-600 rounded-xl p-8 text-center">
-          <div className="text-ink-400 mb-4">
-            <span className="text-4xl">🧍</span>
+        <div className="bg-surface-800 border border-surface-600 rounded-xl p-8 text-center flex flex-col items-center gap-3">
+          <div className="text-ink-400 mb-2">
+            <span className="text-4xl" role="img" aria-label="Body outline">🧍</span>
           </div>
-          <p className="text-small text-ink-500 mb-2">Interactive SVG body map coming soon</p>
+          <div className="max-w-sm">
+             <PlannedFeatureNotice feature="visualBodyMap" />
+          </div>
           <p className="text-small text-ink-600">Use list view below to select regions</p>
         </div>
       )}

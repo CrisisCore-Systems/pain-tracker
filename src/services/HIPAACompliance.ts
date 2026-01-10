@@ -512,6 +512,25 @@ export class HIPAAComplianceService {
 
     this.auditTrails.push(auditEvent);
 
+    // Persist securely to local audit sink
+    try {
+      // Dynamic import to avoid circular dependencies if any, though AuditLogger is safe
+      const { auditLogger } = await import('./AuditLogger');
+      await auditLogger.log({
+        timestamp: auditEvent.timestamp,
+        eventType: auditEvent.actionType,
+        userId: auditEvent.userId,
+        details: {
+           ...auditEvent.details,
+           resourceType: auditEvent.resourceType,
+           outcome: auditEvent.outcome,
+           riskScore: auditEvent.riskScore
+        }
+      });
+    } catch (e) {
+      console.warn('Failed to persist audit event to secure sink', e);
+    }
+
     // Evict old entries to prevent unbounded memory growth
     if (this.auditTrails.length > HIPAAComplianceService.MAX_AUDIT_TRAILS) {
       this.auditTrails = this.auditTrails.slice(-(

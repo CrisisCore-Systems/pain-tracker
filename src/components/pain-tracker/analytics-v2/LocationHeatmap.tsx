@@ -1,167 +1,28 @@
 import React, { useMemo, useState } from 'react';
-import { format as formatDate, startOfWeek } from 'date-fns';
+import { format as formatDate } from 'date-fns';
 import { formatNumber } from '../../../utils/formatting';
-import { getAllLocations, getEffectivePainLevel, type PainEntry } from '../../../types';
+import { type PainEntry } from '../../../types';
 import { InteractiveBodyMap } from '../../body-mapping/InteractiveBodyMap';
 import { User, LayoutGrid } from 'lucide-react';
+import { painAnalyticsService } from '../../../services/PainAnalyticsService';
+import type { LocationStat } from '../../../services/PainAnalyticsService';
 
 interface LocationHeatmapProps {
   entries: PainEntry[];
 }
 
-type LocationKey = string;
-
-type LocationStat = {
-  key: LocationKey;
-  label: string;
-  totalPain: number;
-  count: number;
-  byBucket: Record<string, { totalPain: number; count: number }>;
-};
-
-function normalizeLocationKey(location: string): string {
-  return location.trim().toLowerCase().replace(/\s+/g, ' ');
-}
-
-function getLocalDayKey(timestamp: string): string {
-  const d = new Date(timestamp);
-  const y = d.getFullYear();
-  const m = (d.getMonth() + 1).toString().padStart(2, '0');
-  const day = d.getDate().toString().padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-function getBucketKey(timestamp: string, mode: 'day' | 'week'): string {
-  if (mode === 'day') return getLocalDayKey(timestamp);
-  const d = new Date(timestamp);
-  const start = startOfWeek(d, { weekStartsOn: 1 });
-  return formatDate(start, 'yyyy-MM-dd');
-}
-
-function enumerateLocalDaysInclusive(start: Date, end: Date): string[] {
-  const days: string[] = [];
-  const cursor = new Date(start);
-  cursor.setHours(12, 0, 0, 0);
-  const endLocal = new Date(end);
-  endLocal.setHours(12, 0, 0, 0);
-
-  while (cursor <= endLocal) {
-    const y = cursor.getFullYear();
-    const m = (cursor.getMonth() + 1).toString().padStart(2, '0');
-    const d = cursor.getDate().toString().padStart(2, '0');
-    days.push(`${y}-${m}-${d}`);
-    cursor.setDate(cursor.getDate() + 1);
-  }
-  return days;
-}
-
-function buildBucketKeys(entries: PainEntry[]): {
-  mode: 'day' | 'week';
-  keys: string[];
-  formatLabel: (key: string) => string;
-} {
-  const timestamps = entries
-    .map(e => new Date(e.timestamp).getTime())
-    .filter(n => Number.isFinite(n));
-  if (timestamps.length === 0) {
-    return {
-      mode: 'day',
-      keys: [],
-      formatLabel: key => key,
-    };
-  }
-
-  const start = new Date(Math.min(...timestamps));
-  const end = new Date(Math.max(...timestamps));
-  const allDays = enumerateLocalDaysInclusive(start, end);
-
-  // Keep the visualization readable while still “over time”:
-  // - show daily buckets for short ranges
-  // - auto-collapse to weekly buckets for longer ranges
-  const mode: 'day' | 'week' = allDays.length <= 31 ? 'day' : 'week';
-
-  if (mode === 'day') {
-    return {
-      mode,
-      keys: allDays,
-      formatLabel: key => {
-        const d = new Date(`${key}T12:00:00`);
-        return formatDate(d, 'MMM d');
-      },
-    };
-  }
-
-  const weekStarts = new Set<string>();
-  entries.forEach(entry => {
-    weekStarts.add(getBucketKey(entry.timestamp, 'week'));
-  });
-  const keys = Array.from(weekStarts).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-  return {
-    mode,
-    keys,
-    formatLabel: key => {
-      const d = new Date(`${key}T12:00:00`);
-      return formatDate(d, 'MMM d');
-    },
-  };
-}
-
 export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => {
   const [viewMode, setViewMode] = useState<'visual' | 'grid'>('visual');
+  
   const heatmap = useMemo(() => {
-    if (!entries.length) {
-      return {
-        locations: [] as LocationStat[],
-        bucket: { mode: 'day' as const, keys: [] as string[], formatLabel: (k: string) => k },
-      };
-    }
-
-    const bucket = buildBucketKeys(entries);
-    const statsByKey: Record<LocationKey, LocationStat> = {};
-
-    for (const entry of entries) {
-      const pain = getEffectivePainLevel(entry);
-      const bucketKey = getBucketKey(entry.timestamp, bucket.mode);
-      const locations = getAllLocations(entry);
-
-      for (const rawLocation of locations) {
-        const trimmed = rawLocation.trim();
-        if (!trimmed) continue;
-        const key = normalizeLocationKey(trimmed);
-        if (!statsByKey[key]) {
-          statsByKey[key] = {
-            key,
-            label: trimmed,
-            totalPain: 0,
-            count: 0,
-            byBucket: {},
-          };
-        }
-        const stat = statsByKey[key];
-        stat.totalPain += pain;
-        stat.count += 1;
-
-        if (!stat.byBucket[bucketKey]) stat.byBucket[bucketKey] = { totalPain: 0, count: 0 };
-        stat.byBucket[bucketKey].totalPain += pain;
-        stat.byBucket[bucketKey].count += 1;
-      }
-    }
-
-    const locations = Object.values(statsByKey)
-      .map(stat => ({
-        ...stat,
-        // Prefer a consistently formatted label for display.
-        label:
-          stat.label
-            .split(' ')
-            .filter(Boolean)
-            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-            .join(' ') || stat.key,
-      }))
-      .sort((a, b) => b.count - a.count || b.totalPain / b.count - a.totalPain / a.count);
-
-    return { locations, bucket };
+    return painAnalyticsService.generateLocationHeatmap(entries);
   }, [entries]);
+
+  const formatLabel = (key: string) => {
+    // Both day and week keys are YYYY-MM-DD that can be parsed
+    const d = new Date(`${key}T12:00:00`);
+    return formatDate(d, 'MMM d');
+  };
 
   const getHeatColor = (intensity: number) => {
     if (intensity <= 0) return 'bg-gray-100';
@@ -180,6 +41,7 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">Pain Location Heatmap</h2>
         <div className="flex gap-2">
+
           <button
             onClick={() => setViewMode('visual')}
             className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md transition-colors ${
@@ -260,7 +122,7 @@ export const LocationHeatmap: React.FC<LocationHeatmapProps> = ({ entries }) => 
                             className="text-center text-xs font-medium p-2 whitespace-nowrap"
                             title={heatmap.bucket.mode === 'week' ? `Week of ${key}` : key}
                           >
-                            {heatmap.bucket.formatLabel(key)}
+                            {formatLabel(key)}
                           </th>
                         ))}
                       </tr>

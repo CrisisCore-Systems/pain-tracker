@@ -309,7 +309,7 @@ export class PrivacyPreservingAnalyticsService {
    * Track data export usage
    * Note: GA4 tracking with entry_count is handled by export utilities directly
    */
-  async trackDataExport(exportType: 'csv' | 'json' | 'pdf'): Promise<void> {
+  async trackDataExport(exportType: 'csv' | 'json' | 'pdf' | 'fhir'): Promise<void> {
     if (!this.shouldTrack()) return;
 
     const event: AnonymizedEvent = {

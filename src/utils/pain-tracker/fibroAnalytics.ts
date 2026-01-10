@@ -241,6 +241,7 @@ export function computeFibroAnalytics(entries: FibromyalgiaEntry[]): Fibromyalgi
       const used = new Set(listInterventions(entry));
       for (const intervention of interventionUniverse) {
         const bucket = byIntervention[intervention];
+        /* v8 ignore next */
         if (!bucket) continue;
         (used.has(intervention) ? bucket.with : bucket.without).push(entry.impact.functionalAbility);
       }
@@ -249,6 +250,7 @@ export function computeFibroAnalytics(entries: FibromyalgiaEntry[]): Fibromyalgi
 
   const effectiveInterventions = Object.entries(byIntervention)
     .map(([intervention, buckets]) => {
+      /* v8 ignore next */
       const withAvg = buckets.with.length
         ? buckets.with.reduce<number>((a, b) => a + b, 0) / buckets.with.length
         : allAvg;

@@ -63,19 +63,21 @@ if (typeof MutationObserver === 'undefined') {
 }
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+}
 
 // Mock ResizeObserver
 (globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = vi
@@ -169,6 +171,9 @@ if (typeof window !== 'undefined' && !('localStorage' in window)) {
 // Encryption-related singletons are created at import time, so crypto/vault init must happen here.
 if (process.env.SKIP_HEAVY_SETUP === 'true') {
   console.log('Test setup: Skipping heavy initialization (SKIP_HEAVY_SETUP=true)');
+} else if (typeof (globalThis as any).localStorage === 'undefined') {
+  // Node test environment: allow isolated tests to run without browser storage.
+  console.log('Test setup: Skipping heavy initialization (no localStorage in this environment)');
 } else {
   const timeoutMs = Number(process.env.TEST_SETUP_TIMEOUT_MS || 60000);
   const TEST_MASTER_PASSWORD = process.env.TEST_MASTER_PASSWORD || 'test-password';

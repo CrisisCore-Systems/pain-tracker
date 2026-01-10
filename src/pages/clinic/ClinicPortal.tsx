@@ -10,6 +10,9 @@ import { TestimonialsAdmin } from './TestimonialsAdmin';
 import { EnhancedPatientView } from './EnhancedPatientView';
 import ClinicReports from './ClinicReports';
 import { ClinicSettings } from './ClinicSettings';
+import { ClinicAppointments } from './ClinicAppointments';
+import { ClinicCompliance } from './ClinicCompliance';
+import { FeaturePlaceholderPage } from '../../components/common/FeaturePlaceholderPage';
 import { ClinicLogin } from './ClinicLogin';
 import { ClinicSidebar } from '../../components/clinic/ClinicSidebar';
 import { ClinicHeader } from '../../components/clinic/ClinicHeader';
@@ -152,7 +155,7 @@ function ClinicPortalContent() {
             } />
             <Route path="appointments" element={
               <ClinicProtectedRoute requiredPermission="schedule:appointments">
-                <div className="p-6">Appointments (Coming Soon)</div>
+                <ClinicAppointments />
               </ClinicProtectedRoute>
             } />
             <Route path="reports" element={
@@ -162,7 +165,7 @@ function ClinicPortalContent() {
             } />
             <Route path="compliance" element={
               <ClinicProtectedRoute requiredRole="admin">
-                <div className="p-6">Compliance (Coming Soon)</div>
+                <ClinicCompliance />
               </ClinicProtectedRoute>
             } />
             <Route path="testimonials" element={

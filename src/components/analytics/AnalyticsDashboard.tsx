@@ -115,7 +115,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       }
     };
 
-    processAnalytics();
+    void processAnalytics();
   }, [entries, moodEntries]);
 
   const tabs = [

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import type { PainEntry } from '../../types';
 import { format } from 'date-fns';
 import { formatNumber } from '../../utils/formatting';
@@ -17,20 +17,20 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const activityRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const filteredEntries = period
+  const filteredEntries = useMemo(() => period
     ? entries.filter(entry => {
         const date = new Date(entry.timestamp);
         return date >= new Date(period.start) && date <= new Date(period.end);
       })
-    : entries;
+    : entries, [entries, period]);
 
   // Get unique activities from all entries
-  const activities = Array.from(
+  const activities = useMemo(() => Array.from(
     new Set(filteredEntries.flatMap(entry => entry.functionalImpact?.limitedActivities || []))
-  );
+  ), [filteredEntries]);
 
   // Calculate impact score for each activity
-  const activityImpact = activities
+  const activityImpact = useMemo(() => activities
     .map(activity => {
       const entriesWithActivity = filteredEntries.filter(entry =>
         entry.functionalImpact?.limitedActivities?.includes(activity)
@@ -46,7 +46,7 @@ export function ActivityLog({ entries, period }: ActivityLogProps) {
         averagePain: averagePain || 0,
       };
     })
-    .sort((a, b) => b.frequency - a.frequency);
+    .sort((a, b) => b.frequency - a.frequency), [activities, filteredEntries]);
 
   // Handle keyboard navigation
   const handleKeyDown = (event: React.KeyboardEvent, index: number) => {

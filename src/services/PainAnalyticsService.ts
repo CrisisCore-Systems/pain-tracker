@@ -1,4 +1,6 @@
 import type { PainEntry } from '../types';
+import { format as formatDate, startOfWeek } from 'date-fns';
+import { getAllLocations, getEffectivePainLevel } from '../types/pain-entry';
 
 export interface PainPattern {
   id: string;
@@ -53,7 +55,30 @@ export interface TrendAnalysis {
   }>;
 }
 
-class PainAnalyticsService {
+export type LocationKey = string;
+
+export interface LocationStat {
+  key: LocationKey;
+  label: string;
+  totalPain: number;
+  count: number;
+  byBucket: Record<string, { totalPain: number; count: number }>;
+}
+
+export interface BucketInfo {
+  mode: 'day' | 'week';
+  keys: string[];
+}
+
+
+export interface TimeHeatmapPoint {
+  dayOfWeek: number; // 0 (Sunday) - 6 (Saturday)
+  hourOfDay: number; // 0-23
+  avgPain: number;
+  entryCount: number;
+}
+
+export class PainAnalyticsService {
   /**
    * Analyze pain patterns using basic machine learning techniques
    */
@@ -175,6 +200,131 @@ class PainAnalyticsService {
   /**
    * Perform correlation analysis between symptoms, activities, and pain
    */
+  generateLocationHeatmap(entries: PainEntry[]) {
+    if (!entries.length) {
+      return {
+        locations: [] as LocationStat[],
+        bucket: { mode: 'day' as const, keys: [] as string[] },
+      };
+    }
+
+    const bucket = this.buildBucketKeys(entries);
+    const statsByKey: Record<LocationKey, LocationStat> = {};
+
+    for (const entry of entries) {
+      const pain = getEffectivePainLevel(entry);
+      const bucketKey = this.getBucketKey(entry.timestamp, bucket.mode);
+      const locations = getAllLocations(entry);
+
+      for (const rawLocation of locations) {
+        const trimmed = rawLocation.trim();
+        if (!trimmed) continue;
+        const key = this.normalizeLocationKey(trimmed);
+        if (!statsByKey[key]) {
+          statsByKey[key] = {
+            key,
+            label: trimmed,
+            totalPain: 0,
+            count: 0,
+            byBucket: {},
+          };
+        }
+        const stat = statsByKey[key];
+        stat.totalPain += pain;
+        stat.count += 1;
+
+        if (!stat.byBucket[bucketKey]) stat.byBucket[bucketKey] = { totalPain: 0, count: 0 };
+        stat.byBucket[bucketKey].totalPain += pain;
+        stat.byBucket[bucketKey].count += 1;
+      }
+    }
+
+    const locations = Object.values(statsByKey)
+      .map(stat => ({
+        ...stat,
+        label:
+          stat.label
+            .split(' ')
+            .filter(Boolean)
+            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ') || stat.key,
+      }))
+      .sort((a, b) => b.count - a.count || b.totalPain / b.count - a.totalPain / a.count);
+
+    return { locations, bucket };
+  }
+
+  private normalizeLocationKey(location: string): string {
+    return location.trim().toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  private getLocalDayKey(timestamp: string): string {
+    const d = new Date(timestamp);
+    const y = d.getFullYear();
+    const m = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  private getBucketKey(timestamp: string, mode: 'day' | 'week'): string {
+    if (mode === 'day') return this.getLocalDayKey(timestamp);
+    const d = new Date(timestamp);
+    const start = startOfWeek(d, { weekStartsOn: 1 });
+    return formatDate(start, 'yyyy-MM-dd');
+  }
+
+  private enumerateLocalDaysInclusive(start: Date, end: Date): string[] {
+    const days: string[] = [];
+    const cursor = new Date(start);
+    cursor.setHours(12, 0, 0, 0);
+    const endLocal = new Date(end);
+    endLocal.setHours(12, 0, 0, 0);
+
+    while (cursor <= endLocal) {
+      const y = cursor.getFullYear();
+      const m = (cursor.getMonth() + 1).toString().padStart(2, '0');
+      const d = cursor.getDate().toString().padStart(2, '0');
+      days.push(`${y}-${m}-${d}`);
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return days;
+  }
+
+  private buildBucketKeys(entries: PainEntry[]): BucketInfo {
+    const timestamps = entries
+      .map(e => new Date(e.timestamp).getTime())
+      .filter(n => Number.isFinite(n));
+    if (timestamps.length === 0) {
+      return {
+        mode: 'day',
+        keys: [],
+      };
+    }
+
+    const start = new Date(Math.min(...timestamps));
+    const end = new Date(Math.max(...timestamps));
+    const allDays = this.enumerateLocalDaysInclusive(start, end);
+
+    const mode: 'day' | 'week' = allDays.length <= 31 ? 'day' : 'week';
+
+    if (mode === 'day') {
+      return {
+        mode,
+        keys: allDays,
+      };
+    }
+
+    const weekStarts = new Set<string>();
+    entries.forEach(entry => {
+      weekStarts.add(this.getBucketKey(entry.timestamp, 'week'));
+    });
+    const keys = Array.from(weekStarts).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    return {
+      mode,
+      keys,
+    };
+  }
+
   analyzeCorrelations(entries: PainEntry[]): CorrelationAnalysis {
     return {
       symptomCorrelations: this.analyzeSymptomPainCorrelation(entries),
@@ -350,6 +500,56 @@ class PainAnalyticsService {
         data: monthlyAvg,
       },
     };
+  }
+
+  public generateTimeHeatmap(
+    entries: PainEntry[],
+    days: number
+  ): Array<{ dayIndex: number; hour: number; avgPain: number; count: number }> {
+    const now = new Date();
+    const cutoff = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+
+    // Initialize grid
+    const grid: Record<number, Record<number, { sum: number; count: number }>> = {};
+    
+    // 0 = Sun, 6 = Sat
+    for (let d = 0; d < 7; d++) {
+      grid[d] = {};
+      for (let h = 0; h < 24; h++) {
+        grid[d][h] = { sum: 0, count: 0 };
+      }
+    }
+
+    entries
+      .filter(e => new Date(e.timestamp) >= cutoff)
+      .forEach(entry => {
+        const d = new Date(entry.timestamp);
+        const dayIdx = d.getDay();
+        const hour = d.getHours();
+
+        if (grid[dayIdx] && grid[dayIdx][hour]) {
+          grid[dayIdx][hour].sum += entry.baselineData.pain;
+          grid[dayIdx][hour].count += 1;
+        }
+      });
+
+    const result: Array<{ dayIndex: number; hour: number; avgPain: number; count: number }> = [];
+
+    for (let d = 0; d < 7; d++) {
+      for (let h = 0; h < 24; h++) {
+        const cell = grid[d][h];
+        if (cell.count > 0) {
+          result.push({
+            dayIndex: d,
+            hour: h,
+            avgPain: Number((cell.sum / cell.count).toFixed(1)),
+            count: cell.count
+          });
+        }
+      }
+    }
+
+    return result;
   }
 
   private calculateTrend(entries: PainEntry[]): number {

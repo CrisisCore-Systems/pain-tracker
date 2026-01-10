@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-01-10 - "The Assistant Update"
+
+### Added (Phase 4: Agency)
+- **Energy Budget**: New `EnergyStore` and `EnergyBudgetCard` to track daily exertion capacity ("Spoon Theory" support).
+- **Intervention Vault**: Offline-first media player (Breathing Pacer) for crisis management.
+- **Advocacy Cards**: High-contrast, large-text flash cards for non-verbal communication during episodes.
+
+### Added (Phase 5: Intelligence)
+- **Flare Forecast**: Bayesian probabilistic model (`BayesianInferenceService`) that predicts risk levels (Low/Moderate/High) based on sleep, activity load, and triggers.
+- **Trigger Detective**: Automated relative risk calculation for tags (e.g., "Stress increases risk by 2.1x").
+- **Dashboard Widget**: `FlareForecastWidget` added to the main view.
+
+### Added (Phase 6: Connectivity)
+- **Biometric Import**: Ability to parse and import Apple Health XML exports (`export.xml`) exclusively client-side.
+- **Encrypted Health Store**: Secure storage for biological data (`health-data-store.ts`).
+- **Correlated Charts**: Pain History chart now supports an optional heart rate overlay to visualize physiological stress alongside subjective pain.
+
 ### Planned
 
 - Machine learning pain pattern recognition (Q1 2026)

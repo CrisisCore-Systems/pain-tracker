@@ -103,6 +103,34 @@ export const roadmapLinks = {
     issueUrl: 'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+micro+empathy',
     issueLabel: 'follow micro-moment tasks',
   },
+  clinicAppointments: {
+    href: matrixAnchor('clinic-portal-expansion'),
+    label: 'Clinic Appointments',
+    summary: 'Integrated appointment scheduling and management for clinical practitioners.',
+    issueUrl: 'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+clinic+portal',
+    issueLabel: 'track portal work',
+  },
+  clinicCompliance: {
+    href: matrixAnchor('clinic-portal-expansion'),
+    label: 'Compliance Logs',
+    summary: 'HIPAA-aligned audit logging and access tracking for administrative oversight.',
+    issueUrl: 'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+clinic+portal',
+    issueLabel: 'track portal work',
+  },
+  clinicReports: {
+    href: matrixAnchor('clinic-portal-expansion'),
+    label: 'Clinical Reports',
+    summary: 'Population health summaries and advanced patient reporting tools.',
+    issueUrl: 'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+clinic+portal',
+    issueLabel: 'track portal work',
+  },
+  visualBodyMap: {
+    href: matrixAnchor('heatmaps'),
+    label: 'Interactive Body Maps',
+    summary: 'Visual selection and heatmap overlays for intuitive pain localization.',
+    issueUrl: 'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+body+map',
+    issueLabel: 'follow visualization work',
+  },
 } satisfies Record<string, RoadmapLink>;
 
 type RoadmapKey = keyof typeof roadmapLinks;

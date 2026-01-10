@@ -28,6 +28,11 @@ import { loadPainEntries, savePainEntry } from '../../utils/pain-tracker/storage
 import { maybeCaptureWeatherForNewEntry } from '../../services/weatherAutoCapture';
 import { Walkthrough } from '../tutorials';
 import type { WalkthroughStep } from '../tutorials/Walkthrough';
+import { EnergyBudgetCard } from '../pacing/EnergyBudgetCard';
+import { AdvocacyGallery } from '../advocacy/AdvocacyGallery';
+import { InterventionVault } from '../interventions/InterventionVault';
+import { FlareForecastWidget } from './FlareForecastWidget';
+import { DataImportWizard } from '../importers/DataImportWizard';
 
 // Validation Technology Integration (enabled by default)
 const ENABLE_VALIDATION_TECH = (() => {
@@ -111,6 +116,7 @@ export function PainTracker() {
 
   const [entries, setEntries] = useState<PainEntry[]>(readInitialEntries);
   const [showWCBReport, setShowWCBReport] = useState(false);
+  const [showImporter, setShowImporter] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [walkthroughSteps, setWalkthroughSteps] = useState<WalkthroughStep[]>([]);
@@ -434,6 +440,16 @@ export function PainTracker() {
                 <span className="ml-2">Fibromyalgia Hub</span>
               </Button>
               <Button
+                onClick={() => setShowImporter(v => !v)}
+                variant="outline"
+                className="hidden sm:flex"
+                type="button"
+                aria-label="Import Health Data"
+              >
+                <Activity className="h-4 w-4 mr-2" />
+                Import Data
+              </Button>
+              <Button
                 ref={toggleButtonRef}
                 onClick={handleToggleReport}
                 onKeyDown={handleKeyDown}
@@ -528,6 +544,38 @@ export function PainTracker() {
             </CardContent>
           </Card>
         )}
+
+        {showImporter && (
+           <div className="mb-8 relative z-10">
+              <div className="flex justify-end mb-2">
+                 <Button size="sm" variant="ghost" onClick={() => setShowImporter(false)}>Close Importer</Button>
+              </div>
+              <DataImportWizard />
+           </div>
+        )}
+
+        {/* Local Intelligence Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+          <div className="col-span-1">
+             <FlareForecastWidget />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div className="lg:col-span-1">
+             <EnergyBudgetCard />
+          </div>
+          <div className="lg:col-span-1">
+             <InterventionVault />
+          </div>
+          <div className="lg:col-span-1">
+             <Card className="h-full">
+                <CardContent className="pt-6">
+                    <AdvocacyGallery />
+                </CardContent>
+             </Card>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
           <Card className="xl:col-span-1" data-walkthrough="pain-entry-form">

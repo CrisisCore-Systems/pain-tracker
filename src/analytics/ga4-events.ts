@@ -88,8 +88,8 @@ export interface GA4EventParams {
   // Validation parameters
   validation_type?: string;
   
-  // Body map parameters
-  body_region?: string;
+  // Body map parameters - REMOVED for Class A Protection
+  // body_region?: string;
   
   // Template parameters
   template_id?: string;
@@ -107,8 +107,8 @@ export interface GA4EventParams {
   milestone_type?: string;
   milestone_value?: number;
   
-  // Mood parameters
-  mood_level?: number;
+  // Mood parameters - REMOVED for Class A Protection
+  // mood_level?: number;
   
   // Generic parameters
   [key: string]: unknown;
@@ -210,7 +210,7 @@ export function trackAnalyticsTabViewed(tabName: string): void {
 /**
  * Track data export
  */
-export function trackDataExported(format: 'csv' | 'json' | 'pdf', entryCount?: number): void {
+export function trackDataExported(format: 'csv' | 'json' | 'pdf' | 'fhir', entryCount?: number): void {
   trackGA4Event(GA4Events.EXPORT_DATA, {
     format,
     entry_count: entryCount,

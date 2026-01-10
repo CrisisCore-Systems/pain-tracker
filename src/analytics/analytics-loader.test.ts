@@ -9,6 +9,14 @@ describe('analytics-loader consent gating', () => {
     vi.resetModules();
     document.head.querySelectorAll('script').forEach(s => s.remove());
 
+    // Reset globals created by the loader.
+    try {
+      delete (window as unknown as { gtag?: unknown }).gtag;
+      delete (window as unknown as { dataLayer?: unknown }).dataLayer;
+    } catch {
+      // ignore
+    }
+
     // Reset loader state between tests.
     const w = window as Window & { __pt_ga4_loaded?: boolean };
     delete w.__pt_ga4_loaded;
@@ -31,6 +39,13 @@ describe('analytics-loader consent gating', () => {
     const w = window as Window & { __pt_ga4_loaded?: boolean };
     delete w.__pt_ga4_loaded;
 
+    try {
+      delete (window as unknown as { gtag?: unknown }).gtag;
+      delete (window as unknown as { dataLayer?: unknown }).dataLayer;
+    } catch {
+      // ignore
+    }
+
     document.head.querySelectorAll('script').forEach(s => s.remove());
   });
 
@@ -42,6 +57,66 @@ describe('analytics-loader consent gating', () => {
     expect(hasGtag).toBe(false);
   });
 
+  it('still installs a safe noop gtag when consent is missing', async () => {
+    await import('./analytics-loader');
+
+    expect(typeof window.gtag).toBe('function');
+    expect(() => window.gtag?.('event', 'test')).not.toThrow();
+  });
+
+  it('does not append GA script when env is disabled even with consent', async () => {
+    process.env.VITE_ENABLE_ANALYTICS = 'false';
+    localStorage.setItem('pain-tracker:analytics-consent', 'granted');
+
+    await import('./analytics-loader');
+
+    const scripts = Array.from(document.head.querySelectorAll('script'));
+    const hasGtag = scripts.some(s => (s.getAttribute('src') || '').includes('googletagmanager.com/gtag/js'));
+    expect(hasGtag).toBe(false);
+  });
+
+  it('does not overwrite an existing gtag function', async () => {
+    const existing = vi.fn();
+    window.gtag = existing;
+    process.env.VITE_ENABLE_ANALYTICS = 'false';
+
+    const mod = await import('./analytics-loader');
+    mod.loadAnalyticsIfAllowed();
+
+    expect(window.gtag).toBe(existing);
+  });
+
+  it('does not append GA script if localStorage throws', async () => {
+    const originalLocalStorage = window.localStorage;
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        getItem: () => {
+          throw new Error('storage blocked');
+        },
+        setItem: () => {
+          throw new Error('storage blocked');
+        },
+        removeItem: () => {
+          throw new Error('storage blocked');
+        }
+      },
+      configurable: true
+    });
+
+    try {
+      await import('./analytics-loader');
+
+      const scripts = Array.from(document.head.querySelectorAll('script'));
+      const hasGtag = scripts.some(s => (s.getAttribute('src') || '').includes('googletagmanager.com/gtag/js'));
+      expect(hasGtag).toBe(false);
+    } finally {
+      Object.defineProperty(window, 'localStorage', {
+        value: originalLocalStorage,
+        configurable: true
+      });
+    }
+  });
+
   it('appends GA script only when consent is granted', async () => {
     localStorage.setItem('pain-tracker:analytics-consent', 'granted');
 
@@ -50,6 +125,10 @@ describe('analytics-loader consent gating', () => {
     const scripts = Array.from(document.head.querySelectorAll('script'));
     const hasGtag = scripts.some(s => (s.getAttribute('src') || '').includes('googletagmanager.com/gtag/js'));
     expect(hasGtag).toBe(true);
+
+    // Basic sanity: loader initializes the dataLayer/config.
+    expect(Array.isArray(window.dataLayer)).toBe(true);
+    expect(window.dataLayer!.length).toBeGreaterThanOrEqual(1);
   });
 
   it('does not append duplicates when called multiple times', async () => {

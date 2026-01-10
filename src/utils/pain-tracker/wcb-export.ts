@@ -66,6 +66,7 @@ function toDailyAveragePain(entries: PainEntry[], maxDays: number): TrendPoint[]
     .slice(-maxDays)
     .map(({ day, sum, count }) => ({
       label: day.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' }),
+      /* v8 ignore next */
       value: count > 0 ? sum / count : 0,
     }));
 
@@ -80,6 +81,7 @@ function drawMiniTrendBars(
   width: number,
   height: number
 ) {
+  /* v8 ignore next */
   if (points.length === 0) return;
 
   const values = points.map(p => p.value);

@@ -28,6 +28,9 @@ import Chart from '../../design-system/components/Chart';
 import { colorVar, colorVarAlpha } from '../../design-system/utils/theme';
 import type { ChartPointMetaArray } from '../../design-system/types/chart';
 import { rollingAverage, movingStdDev, detectAnomalies } from '../../utils/analytics';
+import { TimeOfDayHeatmap } from './TimeOfDayHeatmap';
+import { MedicationEffectivenessChart } from './MedicationEffectivenessChart';
+import { ActivityCorrelationChart } from './ActivityCorrelationChart';
 import helpers from './helpers/analyticsHelpers';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
@@ -790,6 +793,20 @@ export function AdvancedAnalyticsDashboard({
             )}
           </CardContent>
         </Card>
+
+        {/* Medication Effectiveness */}
+        <MedicationEffectivenessChart entries={entries} />
+
+        {/* Activity Correlation */}
+        <ActivityCorrelationChart entries={entries} />
+      </div>
+
+      {/* Time of Day Patterns */}
+      <div className="mt-8">
+        <TimeOfDayHeatmap 
+          entries={entries} 
+          days={{ week: 7, month: 30, quarter: 90, year: 365 }[timeframe]} 
+        />
       </div>
 
       {/* Entry Frequency Pattern */}

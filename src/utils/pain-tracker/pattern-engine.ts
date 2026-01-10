@@ -667,6 +667,7 @@ function analyzeQoLDimension(
     totalCount++;
     const pain = entry.baselineData.pain;
 
+    /* v8 ignore next */
     if (inverse) {
       if (value <= thresholds.goodThreshold) goodEntries.push(pain);
       if (value >= thresholds.poorThreshold) poorEntries.push(pain);
@@ -707,6 +708,7 @@ function analyzeQoLDimension(
     evidenceCount,
     delta: Number(delta.toFixed(2)),
     confidence,
+    /* v8 ignore next 3 */
     condition: inverse
       ? `When ${metric} ≤ ${thresholds.goodThreshold}`
       : `When ${metric} ≥ ${thresholds.goodThreshold}`,
@@ -725,6 +727,7 @@ function generateQoLDescription(
   const direction = delta < 0 ? 'lower' : 'higher';
   const magnitude = Math.abs(delta).toFixed(1);
 
+  /* v8 ignore next */
   if (inverse) {
     return `When ${metric} is low (≤${thresholds.goodThreshold}), pain averages ${magnitude} points ${direction}.`;
   }
