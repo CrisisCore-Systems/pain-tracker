@@ -4,6 +4,34 @@
 
 ---
 
+## 📱 Mobile Apps (NEW)
+
+**For stakeholders, developers, and project managers planning native iOS and Android apps:**
+
+Complete documentation for implementing native mobile applications (Q3-Q4 2026):
+
+- **[Executive Summary](MOBILE_APPS_EXECUTIVE_SUMMARY.md)** - One-page stakeholder overview with ROI analysis
+- **[Full Action Plan](MOBILE_APPS_ACTION_PLAN.md)** - Comprehensive 48,000-word implementation guide
+- **[Quick Reference](MOBILE_APPS_QUICK_REFERENCE.md)** - Developer quick start and commands
+- **[Visual Summary](MOBILE_APPS_VISUAL_SUMMARY.md)** - Architecture diagrams and flowcharts
+
+**Key Details:**
+- 📅 **Timeline:** 20 weeks (5 phases)
+- 💰 **Budget:** $4,124-$10,724 (Year 1) + ~$200,000-$400,000 development
+- 👥 **Team:** 3.25 FTE for 20 weeks (65 person-weeks)
+- 🛠️ **Technology:** Capacitor (80%+ code reuse from React PWA)
+- 🎯 **Target:** iOS App Store + Google Play Store launch Q4 2026
+
+**Native Features:**
+- ✅ Biometric authentication (Face ID, Touch ID, Fingerprint)
+- ✅ Local push notifications (pain reminders)
+- ✅ Native secure storage (Keychain/Keystore)
+- ✅ Health app integration (HealthKit, Google Fit)
+- ✅ Background data sync
+- ✅ Platform-specific UI polish (iOS HIG, Material Design)
+
+---
+
 ## 📝 Blog Post Planning (NEW)
 
 **For content creators, marketers, and community advocates:**
