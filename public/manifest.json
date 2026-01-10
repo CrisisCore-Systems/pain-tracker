@@ -2,7 +2,7 @@
   "short_name": "Pain Tracker",
   "name": "Pain Tracker - Comprehensive Pain Management",
   "description": "Track and manage your chronic pain with comprehensive tracking and analytics",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "icons": [
     {
       "src": "logos/pain-tracker-icon.svg",
