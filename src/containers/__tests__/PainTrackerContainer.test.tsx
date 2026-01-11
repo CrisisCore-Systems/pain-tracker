@@ -12,6 +12,9 @@ vi.mock('../../lib/storage/secureStorage', () => ({
   secureStorage: {
     get: vi.fn(),
     set: vi.fn(),
+    safeJSON: vi.fn((key: string, fallback: unknown) => fallback),
+    remove: vi.fn(),
+    keys: vi.fn(() => []),
   },
 }));
 

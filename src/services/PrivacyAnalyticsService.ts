@@ -14,7 +14,10 @@ import {
   trackValidationUsed as trackGA4Validation,
   trackProgressViewed as trackGA4Progress,
 } from '../analytics/ga4-events';
-import { ANALYTICS_CONSENT_STORAGE_KEY } from '../stores/encrypted-idb-persist';
+
+// Keep this constant local to avoid importing heavy persistence/encryption modules
+// in environments that only need analytics gating (e.g. node-only unit tests).
+const ANALYTICS_CONSENT_STORAGE_KEY = 'pain-tracker:analytics-consent';
 
 // Privacy configuration
 export interface PrivacyPreservingConfig {
