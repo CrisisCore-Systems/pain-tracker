@@ -197,7 +197,7 @@ class IntelligentNotificationTrigger {
       }
 
       // Log successful trigger execution (in development only)
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console.log(
           `Intelligent trigger executed: ${trigger.name} (${formatNumber(analysis.confidence, 2)} confidence)`
         );

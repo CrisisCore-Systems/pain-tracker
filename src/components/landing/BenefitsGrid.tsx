@@ -54,7 +54,7 @@ const benefits = [
 
 export const BenefitsGrid: React.FC = () => {
   return (
-    <section id="features" className="relative py-24 lg:py-32 overflow-hidden">
+    <section id="features" className="landing-always-dark relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800/50 to-slate-900" />
       

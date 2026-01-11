@@ -86,6 +86,65 @@
   position: relative;
 }
 
+/* ===== USE CASES SECTION (ALWAYS DARK SURFACE) ===== */
+/*
+ * The UseCases marketing section is authored as a dark surface (e.g. bg-slate-900 + text-white).
+ * When the global theme switches to light mode, any cascade/theme quirks can make it render as
+ * a light surface with dark text, which destroys contrast (black text on dark cards).
+ *
+ * Keep this section visually consistent and readable by scoping dark-mode semantic tokens and
+ * setting a dark background at the section level.
+ */
+.landing-usecases {
+  background: #0f172a;
+  color: rgb(248 250 252);
+
+  --color-foreground: 248 250 252;
+  --color-card-foreground: 241 245 249;
+  --color-muted-foreground: 203 213 225;
+}
+
+.landing-usecases h2,
+.landing-usecases h3 {
+  color: rgb(248 250 252);
+}
+
+.landing-usecases p {
+  color: rgb(203 213 225);
+}
+
+/* ===== LANDING SECTIONS (ALWAYS DARK SURFACE) ===== */
+/*
+ * Many landing sections were authored with a permanently-dark marketing aesthetic
+ * (slate-900 backgrounds, white headings, muted slate body text).
+ * When the global app is in light mode, we still want these sections to remain
+ * readable and visually consistent.
+ */
+.landing-always-dark {
+  background-color: rgb(15 23 42);
+  color: rgb(248 250 252);
+
+  /* Scope dark semantic tokens to this section so any token-based utilities
+     or landing.css classes keep correct contrast even in light mode. */
+  --color-background: 15 23 42;
+  --color-foreground: 248 250 252;
+  --color-card: 30 41 59;
+  --color-card-foreground: 241 245 249;
+  --color-muted: 51 65 85;
+  --color-muted-foreground: 203 213 225;
+  --color-border: 100 116 139;
+}
+
+.landing-always-dark h1,
+.landing-always-dark h2,
+.landing-always-dark h3 {
+  color: rgb(248 250 252);
+}
+
+.landing-always-dark p {
+  color: rgb(203 213 225);
+}
+
 .landing-section-alt {
   background: linear-gradient(180deg,
     rgb(var(--color-muted) / 0.2) 0%,
@@ -526,6 +585,15 @@
   min-height: 100vh;
   overflow: hidden;
   background: linear-gradient(180deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+
+  /* This hero background is always dark.
+     In light mode, global semantic tokens switch to dark ink colors,
+     which breaks contrast for classes like .landing-subhead.
+     Scope dark-mode semantic token values to this section only. */
+  --color-foreground: 248 250 252;
+  --color-card-foreground: 241 245 249;
+  --color-muted-foreground: 203 213 225;
+  color: rgb(var(--color-foreground));
 }
 
 .hero-bg-mesh {

@@ -44,7 +44,7 @@ const featuredPosts: BlogPost[] = [
 export const FeaturedBlogPosts: React.FC = () => {
   return (
     <section 
-      className="relative py-20 overflow-hidden"
+      className="landing-always-dark relative py-20 overflow-hidden"
       style={{ background: '#0f172a' }}
     >
       {/* Background decoration */}

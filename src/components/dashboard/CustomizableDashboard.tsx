@@ -180,7 +180,7 @@ export function CustomizableDashboard({
   const handleLoadFilter = useCallback((filter: SavedFilter) => {
     // The filter criteria will be applied through the AdvancedFilters component
     // Log in development for debugging
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log('Loading filter:', filter.name);
     }
   }, []);

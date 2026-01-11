@@ -20,7 +20,7 @@ export const useGlobalAccessibility = (
   } = {}
 ) => {
   const {
-    enableValidation = process.env.NODE_ENV === 'development',
+    enableValidation = import.meta.env.DEV,
     enableAutoLabeling = true,
     announceRouteChanges = true,
   } = options;

@@ -21,7 +21,7 @@ export const LandingFooter: React.FC = () => {
   ];
 
   return (
-    <footer className="relative overflow-hidden">
+    <footer className="landing-always-dark relative overflow-hidden">
       {/* Final CTA Section - Premium Editorial Design */}
       <div className="relative py-24 overflow-hidden">
         {/* Background with gradient mesh */}

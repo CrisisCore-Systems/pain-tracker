@@ -15,7 +15,19 @@ export async function fetchWeatherData(lat: number, lon: number): Promise<Weathe
     // In dev, Vite proxies /api/weather to Open-Meteo. In production, Vercel rewrites it.
     const url = `/api/weather?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,pressure_msl&timezone=auto`;
     const resp = await fetch(url);
-    if (!resp.ok) return null;
+    if (!resp.ok) {
+      if (import.meta.env.DEV && !import.meta.env.VITEST) {
+        // Do not log query strings (contains coordinates). Keep diagnostics non-reconstructive.
+        const status = typeof resp.status === 'number' ? resp.status : undefined;
+        if (typeof status === 'number') {
+          console.debug('weather: /api/weather non-OK', {
+            status,
+            statusText: typeof resp.statusText === 'string' ? resp.statusText : undefined,
+          });
+        }
+      }
+      return null;
+    }
     
     const data = await resp.json();
     const current = data?.current;
@@ -34,7 +46,14 @@ export async function fetchWeatherData(lat: number, lon: number): Promise<Weathe
       weatherCode,
     };
   } catch (e) {
-    console.debug('weather: fetch failed', e);
+    if (import.meta.env.DEV && !import.meta.env.VITEST) {
+      // Avoid logging full error objects that may embed request URLs.
+      const err = e as Partial<Error>;
+      console.debug('weather: fetch failed', {
+        name: typeof err.name === 'string' ? err.name : undefined,
+        message: typeof err.message === 'string' ? err.message : undefined,
+      });
+    }
     return null;
   }
 }

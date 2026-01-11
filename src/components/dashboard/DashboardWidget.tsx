@@ -79,17 +79,17 @@ const renderEmpathyAnalytics: WidgetRenderer = ({ entries }) => (
       userId="current-user"
       painEntries={entries}
       onInsightSelect={insight => {
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
           console.log('Insight selected:', insight);
         }
       }}
       onRecommendationAccept={recommendation => {
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
           console.log('Recommendation accepted:', recommendation);
         }
       }}
       onShareMetrics={metrics => {
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.DEV) {
           console.log('Share metrics:', metrics);
         }
       }}

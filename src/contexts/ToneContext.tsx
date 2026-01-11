@@ -17,6 +17,7 @@ import type {
 import { DEFAULT_TONE_PREFERENCES } from '../types/tone';
 import { toneEngine } from '../services/ToneEngine';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
+import { readTonePreferences, writeTonePreferences } from '../utils/tonePreferences';
 
 export interface ToneProviderValue {
   /** Current tone context */
@@ -56,18 +57,8 @@ export function ToneProvider({ children }: ToneProviderProps) {
   // Get pain entries from store
   const entries = usePainTrackerStore(state => state.entries || []);
 
-  // Tone preferences (stored in localStorage)
-  const [preferences, setPreferences] = useState<TonePreferences>(() => {
-    const stored = localStorage.getItem('tone-preferences');
-    if (stored) {
-      try {
-        return JSON.parse(stored);
-      } catch {
-        return DEFAULT_TONE_PREFERENCES;
-      }
-    }
-    return DEFAULT_TONE_PREFERENCES;
-  });
+  // Tone preferences (Class C) persisted via secureStorage
+  const [preferences, setPreferences] = useState<TonePreferences>(() => readTonePreferences());
 
   // Build tone context
   const [context, setContext] = useState<ToneContextType>(() =>
@@ -85,9 +76,7 @@ export function ToneProvider({ children }: ToneProviderProps) {
   // Update preferences
   const updatePreferences = useCallback((updates: Partial<TonePreferences>) => {
     setPreferences(prev => {
-      const next = { ...prev, ...updates };
-      localStorage.setItem('tone-preferences', JSON.stringify(next));
-      return next;
+      return writeTonePreferences({ ...prev, ...updates });
     });
   }, []);
 

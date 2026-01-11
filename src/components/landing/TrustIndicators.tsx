@@ -12,7 +12,7 @@ const trustBadges = [
 
 export const TrustIndicators: React.FC = () => {
   return (
-    <section className="relative py-20 lg:py-28 overflow-hidden">
+    <section className="landing-always-dark relative py-20 lg:py-28 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
       

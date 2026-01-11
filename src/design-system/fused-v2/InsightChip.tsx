@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Info, X } from 'lucide-react';
 import { cn } from '../utils';
 import '../tokens/fused-v2.css';
@@ -19,6 +20,32 @@ export function InsightChip({
   className,
 }: InsightChipProps) {
   const [showPopover, setShowPopover] = useState(false);
+  const originalBodyOverflowRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!showPopover) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowPopover(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+
+    if (originalBodyOverflowRef.current === null) {
+      originalBodyOverflowRef.current = document.body.style.overflow;
+    }
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      if (originalBodyOverflowRef.current !== null) {
+        document.body.style.overflow = originalBodyOverflowRef.current;
+        originalBodyOverflowRef.current = null;
+      }
+    };
+  }, [showPopover]);
 
   const getConfidenceDots = () => {
     return Array.from({ length: 3 }, (_, i) => (
@@ -76,47 +103,55 @@ export function InsightChip({
         )}
       </div>
 
-      {/* Popover */}
-      {showPopover && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-[var(--z-popover)]"
-            onClick={() => setShowPopover(false)}
-          />
-
-          {/* Popover Content */}
-          <div
-            className={cn(
-              'absolute left-0 top-full mt-2 z-[calc(var(--z-popover)+1)]',
-              'w-80 max-w-[90vw]',
-              'bg-surface-700 border border-surface-500 rounded-[var(--radius-xl)]',
-              'shadow-[var(--elevation-3)] p-4',
-              'animate-in fade-in-0 slide-in-from-top-2 duration-[var(--duration-fast)]'
-            )}
-          >
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <h4 className="text-body-medium text-ink-50">Why this insight?</h4>
-              <button
+      {/* Details Modal (portal) */}
+      {showPopover && typeof document !== 'undefined'
+        ? createPortal(
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 z-[var(--z-modal)] bg-black/70"
                 onClick={() => setShowPopover(false)}
-                className="p-1 rounded hover:bg-surface-600 transition-colors"
-                aria-label="Close"
+                aria-hidden="true"
+              />
+
+              {/* Modal Content */}
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-label="Insight details"
+                className={cn(
+                  'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+                  'z-[calc(var(--z-modal)+1)]',
+                  'w-[min(28rem,calc(100vw-2rem))]',
+                  'bg-surface-800 border border-surface-500 rounded-[var(--radius-xl)]',
+                  'shadow-[var(--elevation-3)] p-4',
+                  'animate-in fade-in-0 zoom-in-95 duration-[var(--duration-fast)]'
+                )}
               >
-                <X className="w-4 h-4 text-ink-400" />
-              </button>
-            </div>
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <h4 className="text-body-medium text-ink-50">Why this insight?</h4>
+                  <button
+                    onClick={() => setShowPopover(false)}
+                    className="p-1 rounded hover:bg-surface-600 transition-colors"
+                    aria-label="Close"
+                  >
+                    <X className="w-4 h-4 text-ink-400" />
+                  </button>
+                </div>
 
-            <p className="text-small text-ink-200 leading-relaxed mb-3">{rationale}</p>
+                <p className="text-small text-ink-200 leading-relaxed mb-3">{rationale}</p>
 
-            {/* Confidence Explanation */}
-            <div className="flex items-center gap-2 text-tiny text-ink-400">
-              <span>Confidence:</span>
-              <div className="flex items-center gap-1">{getConfidenceDots()}</div>
-              <span>{confidence === 3 ? 'High' : confidence === 2 ? 'Medium' : 'Low'}</span>
-            </div>
-          </div>
-        </>
-      )}
+                {/* Confidence Explanation */}
+                <div className="flex items-center gap-2 text-tiny text-ink-400">
+                  <span>Confidence:</span>
+                  <div className="flex items-center gap-1">{getConfidenceDots()}</div>
+                  <span>{confidence === 3 ? 'High' : confidence === 2 ? 'Medium' : 'Low'}</span>
+                </div>
+              </div>
+            </>,
+            document.body
+          )
+        : null}
     </div>
   );
 }

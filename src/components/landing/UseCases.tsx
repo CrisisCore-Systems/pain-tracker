@@ -120,7 +120,7 @@ export const UseCases: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative py-32 overflow-hidden">
+    <section className="landing-usecases relative py-32 overflow-hidden">
       {/* Premium Background */}
       <div className="absolute inset-0 bg-slate-900" />
       

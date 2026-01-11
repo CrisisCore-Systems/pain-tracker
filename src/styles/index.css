@@ -1,57 +1,35 @@
-/**
- * Pain Tracker - Main Stylesheet
- * 
- * This is the entry point for all styles.
- * Imports are organized by category for maintainability.
- * 
- * Architecture:
- * - base/       → Reset, tokens, typography
- * - themes/     → Dark, light themes  
- * - components/ → Buttons, cards, forms
- * - pages/      → Landing, pricing page styles
- * - utilities/  → Animations, mobile optimizations
- * - design-system/ → Shared fused-v2 tokens and advanced animations
- * 
- * Accessibility Features (WCAG 2.1 AA):
- * - prefers-reduced-motion: Disables animations
- * - prefers-contrast: high: Enhanced borders and focus indicators
- * - Focus visible: 3px ring on all interactive elements
- * - Touch targets: 44-48px minimum on mobile
- * - Color contrast: All text meets 4.5:1 ratio
+@charset "UTF-8";
+
+/* NOTE:
+ * - Tailwind's preflight is in the `base` layer.
+ * - Our reset/theme must load *after* preflight to win in the cascade.
+ * - PostCSS has strict rules around @import ordering.
+ *
+ * Solution: define Tailwind layers first, then import our CSS inside
+ * @layer blocks so it composes correctly.
  */
 
-/* ===== TAILWIND ===== */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* ===== FONTS ===== */
-/* NOTE: Avoid remote font loading by default (no silent network egress).
- * Font stacks should rely on local/system fonts unless explicitly approved. */
+@layer base {
+	@import '../design-system/tokens/fused-v2.css';
+	@import './base/tokens.css';
+	@import './base/reset.css';
+	@import './themes/dark.css';
+	@import './themes/light.css';
+}
 
-/* ===== DESIGN SYSTEM ===== */
-@import '../design-system/tokens/fused-v2.css';
-@import '../design-system/theme/animations.css';
+@layer components {
+	@import './components/buttons.css';
+	@import './components/cards.css';
+	@import './components/forms.css';
+}
 
-/* ===== BASE STYLES ===== */
-@import './base/tokens.css';
-@import './base/reset.css';
-
-/* ===== THEMES ===== */
-@import './themes/dark.css';
-@import './themes/light.css';
-
-/* ===== COMPONENTS ===== */
-@import './components/buttons.css';
-@import './components/cards.css';
-@import './components/forms.css';
-
-/* ===== PAGES ===== */
-/* Imported directly in page components for code splitting */
-/* @import './pages/landing.css'; */
-/* @import './pages/pricing.css'; */
-
-/* ===== UTILITIES ===== */
-@import './utilities/animations.css';
-@import './utilities/mobile.css';
-@import './utilities/accessibility.css';
+@layer utilities {
+	@import '../design-system/theme/animations.css';
+	@import './utilities/animations.css';
+	@import './utilities/mobile.css';
+	@import './utilities/accessibility.css';
+}

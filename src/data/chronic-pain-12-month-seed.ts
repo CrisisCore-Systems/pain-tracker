@@ -154,6 +154,51 @@ function getWeatherFactor(dayOfYear: number, random: () => number): number {
   return seasonalBase + dailyVariation + badWeatherChance;
 }
 
+function buildSyntheticWeatherSummary(
+  dayOfYear: number,
+  hour: number,
+  entryPain: number,
+  weatherFactor: number,
+  random: () => number
+): string {
+  // Temperature follows a yearly cycle; then bias "worse" weather to align with higher pain.
+  // This makes the Weather Correlations panel meaningful without requiring network fetches.
+  const seasonalTemp = 13 + Math.sin((dayOfYear / 365) * 2 * Math.PI - Math.PI / 2) * 10; // ~3°C..23°C
+  const diurnalAdjustment = hour < 10 ? -2 : hour > 18 ? -1 : 0; // mornings coolest
+  const painTempBias = entryPain >= 7 ? -3 : entryPain <= 3 ? 1 : 0;
+  const temp = clamp(
+    Math.round(seasonalTemp + diurnalAdjustment + painTempBias + gaussianRandom(random, 0, 2)),
+    -15,
+    35
+  );
+
+  const baseHumidity = 55 + (random() - 0.5) * 20;
+  const humidityBias = entryPain >= 7 ? 18 : entryPain <= 3 ? -8 : 0;
+  const humidity = clamp(Math.round(baseHumidity + humidityBias + weatherFactor * 20), 20, 98);
+
+  const rainChance =
+    0.18 +
+    Math.max(0, weatherFactor) * 0.35 +
+    (temp <= 8 ? 0.12 : 0) +
+    (entryPain >= 7 ? 0.25 : 0);
+  const isRaining = random() < clamp(rainChance, 0, 0.9);
+
+  const condition = isRaining
+    ? pickRandom(['Light rain', 'Rain', 'Showers', 'Drizzle'], random)
+    : temp >= 25
+      ? pickRandom(['Clear', 'Sunny', 'Partly cloudy'], random)
+      : temp <= 5
+        ? pickRandom(['Overcast', 'Cloudy', 'Fog'], random)
+        : pickRandom(['Partly cloudy', 'Cloudy', 'Overcast'], random);
+
+  const parts: string[] = [];
+  parts.push(`${temp}°C`);
+  parts.push(condition);
+  if (isRaining) parts.push('🌧️');
+  parts.push(`${humidity}% humidity`);
+  return parts.join(', ');
+}
+
 function getDayOfYear(date: Date): number {
   const start = new Date(date.getFullYear(), 0, 0);
   const diff = date.getTime() - start.getTime();
@@ -319,6 +364,9 @@ export function generateChronicPain12MonthData(
       } else if (hour > 18) {
         entryPain += random() * 0.5; // Evening fatigue
       }
+
+      // Synthetic weather summary (string field used by WeatherCorrelationPanel)
+      const weather = buildSyntheticWeatherSummary(dayOfYear, hour, entryPain, weatherFactor, random);
       entryPain = clamp(Math.round(entryPain * 10) / 10, 1, 10);
 
       // Select locations based on pain level and frequency
@@ -538,6 +586,7 @@ export function generateChronicPain12MonthData(
           symptoms,
         },
         triggers,
+        weather,
         functionalImpact: {
           limitedActivities,
           assistanceNeeded,
@@ -700,8 +749,18 @@ const generatedData = generateChronicPain12MonthData({
   includeDetailedNotes: true,
 });
 
+// More comprehensive year dataset (higher density) for stress-testing UI/analytics
+const generatedComprehensiveYearData = generateChronicPain12MonthData({
+  seed: 20250110,
+  entriesPerDay: 2.0, // ~2 entries per day = ~700+ entries total
+  includeDetailedNotes: true,
+});
+
 export const chronicPain12MonthPainEntries: PainEntry[] = generatedData.painEntries;
 export const chronicPain12MonthMoodEntries: MoodEntry[] = generatedData.moodEntries;
+
+export const comprehensive365DayPainEntries: PainEntry[] = generatedComprehensiveYearData.painEntries;
+export const comprehensive365DayMoodEntries: MoodEntry[] = generatedComprehensiveYearData.moodEntries;
 
 // Summary stats for verification
 export const chronicPainDataStats = {
@@ -716,6 +775,20 @@ export const chronicPainDataStats = {
     generatedData.painEntries.length,
   highPainDays: generatedData.painEntries.filter((e) => e.baselineData.pain >= 7).length,
   flareDays: generatedData.painEntries.filter((e) => e.baselineData.pain >= 8).length,
+};
+
+export const comprehensive365DayDataStats = {
+  totalPainEntries: generatedComprehensiveYearData.painEntries.length,
+  totalMoodEntries: generatedComprehensiveYearData.moodEntries.length,
+  dateRange: {
+    start: generatedComprehensiveYearData.painEntries[0]?.timestamp,
+    end: generatedComprehensiveYearData.painEntries[generatedComprehensiveYearData.painEntries.length - 1]?.timestamp,
+  },
+  averagePain:
+    generatedComprehensiveYearData.painEntries.reduce((sum, e) => sum + e.baselineData.pain, 0) /
+    generatedComprehensiveYearData.painEntries.length,
+  highPainDays: generatedComprehensiveYearData.painEntries.filter((e) => e.baselineData.pain >= 7).length,
+  flareDays: generatedComprehensiveYearData.painEntries.filter((e) => e.baselineData.pain >= 8).length,
 };
 
 console.log('[Chronic Pain Seed Data] Generated:', chronicPainDataStats);

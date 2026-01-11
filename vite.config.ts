@@ -9,7 +9,7 @@ import react from '@vitejs/plugin-react';
 // NOTE: Don't force 'upgrade-insecure-requests' in dev unless HTTPS is enabled
 // (Playwright/E2E may run the dev server on HTTP). Only include that directive
 // when VITE_DEV_HTTPS is truthy.
-const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; worker-src 'self' blob:; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'";
+const baseDevCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' blob: https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://fonts.googleapis.com https://fonts.gstatic.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; worker-src 'self' blob:; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'";
 // For dev server we avoid forcing 'upgrade-insecure-requests' because
 // Playwright/E2E runs commonly use an HTTP dev server. Always use the
 // base dev CSP during development; the production preview uses a stricter
@@ -24,6 +24,19 @@ const isProd = process.env.NODE_ENV === 'production';
 export default defineConfig({
   plugins: [
     react(),
+    {
+      name: 'html-csp-transform',
+      transformIndexHtml(html) {
+        // Inject the correct CSP based on environment (dev vs prod)
+        // This ensures we don't force 'upgrade-insecure-requests' in dev (which breaks http://localhost)
+        // but strictly enforce it in production.
+        const csp = isProd ? prodCsp : devCsp;
+        return html.replace(
+          /<meta http-equiv="Content-Security-Policy"[\s\S]*?>/,
+          `<meta http-equiv="Content-Security-Policy" content="${csp}" />`
+        );
+      }
+    },
     // Write a simple meta.json with output sizes for bundle badge generation
     {
       name: 'write-bundle-meta',
@@ -67,7 +80,7 @@ export default defineConfig({
           res.setHeader('X-Content-Type-Options', 'nosniff');
           res.setHeader('X-XSS-Protection', '1; mode=block');
           res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-          res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()');
+          res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self), payment=(), usb=(), bluetooth=()');
           
           // Cross-Origin headers for enhanced security
           res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
@@ -130,6 +143,7 @@ export default defineConfig({
       '@pain-tracker/services': path.resolve(__dirname, 'packages/services/src'),
       '@pain-tracker/design-system': path.resolve(__dirname, 'packages/design-system/src'),
       '@pain-tracker/utils': path.resolve(__dirname, 'packages/utils/src'),
+      'libsodium-wrappers-sumo': path.resolve(__dirname, 'node_modules/libsodium-wrappers-sumo/dist/modules-sumo/libsodium-wrappers.js'),
     },
   },
   build: {
@@ -232,7 +246,7 @@ export default defineConfig({
       'X-Content-Type-Options': 'nosniff',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'strict-origin-when-cross-origin',
-      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self), payment=(), usb=(), bluetooth=()',
       'Cross-Origin-Opener-Policy': 'same-origin',
       // Note: COEP 'require-corp' breaks Vite HMR WebSocket in dev
       // Use 'credentialless' for dev to allow HMR while maintaining some isolation
@@ -269,7 +283,7 @@ export default defineConfig({
       'X-Content-Type-Options': 'nosniff',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'strict-origin-when-cross-origin',
-      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self), payment=(), usb=(), bluetooth=()',
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
       'Cross-Origin-Resource-Policy': 'same-origin',

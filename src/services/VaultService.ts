@@ -157,7 +157,17 @@ export class EncryptedVaultService {
     await ensureReady();
     const sodium = await getSodium();
 
-    const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITEST || process.env.VITEST_FAST_CRYPTO === '1';
+    const isTest = (() => {
+      try {
+        const env =
+          (typeof process !== 'undefined'
+            ? (process as unknown as { env?: Record<string, string | undefined> }).env
+            : undefined) || {};
+        return !!(env && (env.VITEST || env.NODE_ENV === 'test' || env.VITEST_FAST_CRYPTO === '1'));
+      } catch {
+        return false;
+      }
+    })();
 
     if (!isTest) {
       console.log('[VaultService] Sodium instance retrieved:', {

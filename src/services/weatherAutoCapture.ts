@@ -37,8 +37,14 @@ export async function maybeCaptureWeatherForNewEntry(): Promise<CapturedWeather 
   if (!('geolocation' in navigator) || !navigator.geolocation) return null;
 
   try {
+    // Note: permission prompts can easily exceed a short timeout; keep this generous.
+    // This is best-effort and runs asynchronously (never blocks saving).
     const pos = await new Promise<GeolocationPosition>((resolve, reject) =>
-      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 10 * 60 * 1000,
+      })
     );
 
     const weather = await fetchWeatherData(pos.coords.latitude, pos.coords.longitude);
@@ -48,8 +54,16 @@ export async function maybeCaptureWeatherForNewEntry(): Promise<CapturedWeather 
     if (!summary) return null;
 
     return { summary, weather };
-  } catch {
+  } catch (err) {
     // Best-effort only; never block entry creation
+    if (import.meta.env.DEV && !import.meta.env.VITEST) {
+      // Do not log coordinates/URLs; keep errors non-reconstructive.
+      const geoErr = err as Partial<GeolocationPositionError>;
+      console.debug('weatherAutoCapture: failed', {
+        code: typeof geoErr.code === 'number' ? geoErr.code : undefined,
+        name: typeof (err as Error)?.name === 'string' ? (err as Error).name : undefined,
+      });
+    }
     return null;
   }
 }

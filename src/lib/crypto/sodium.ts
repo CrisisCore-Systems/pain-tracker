@@ -48,7 +48,17 @@ export type SodiumApi = {
 let sodiumInstance: SodiumApi | null = null;
 let sodiumPromise: Promise<SodiumApi> | null = null;
 
-const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITEST;
+const isTest = (() => {
+  try {
+    const env =
+      (typeof process !== 'undefined'
+        ? (process as unknown as { env?: Record<string, string | undefined> }).env
+        : undefined) || {};
+    return !!(env && (env.VITEST || env.NODE_ENV === 'test'));
+  } catch {
+    return false;
+  }
+})();
 
 function log(message: string, ...args: unknown[]) {
   if (!isTest) {
@@ -56,15 +66,32 @@ function log(message: string, ...args: unknown[]) {
   }
 }
 
-function isSodiumApi(value: unknown): value is SodiumApi {
+function hasReadyPromise(value: unknown): value is { ready: Promise<unknown> } {
   if (!value || (typeof value !== 'object' && typeof value !== 'function')) return false;
   const record = value as Record<string, unknown>;
 
   const ready = record.ready as unknown;
   const then = (ready as { then?: unknown } | undefined)?.then;
-  if (typeof then !== 'function') return false;
+  return typeof then === 'function';
+}
 
-  return typeof record.crypto_pwhash === 'function';
+function unwrapDefaultChain(moduleCandidate: unknown, maxDepth = 4): unknown[] {
+  const results: unknown[] = [];
+  const seen = new Set<unknown>();
+
+  let current: unknown = moduleCandidate;
+  for (let depth = 0; depth < maxDepth; depth++) {
+    if (!current || (typeof current !== 'object' && typeof current !== 'function')) break;
+    if (seen.has(current)) break;
+    seen.add(current);
+    results.push(current);
+
+    const next = (current as { default?: unknown }).default;
+    if (next === undefined) break;
+    current = next;
+  }
+
+  return results;
 }
 
 export async function getSodium(): Promise<SodiumApi> {
@@ -87,28 +114,45 @@ export async function getSodium(): Promise<SodiumApi> {
       log('[sodium] Module type:', typeof sodiumModule);
       log('[sodium] Module.default type:', typeof sodiumModule.default);
 
-      // Get the default export from the module
-      const sodiumCandidate =
-        (sodiumModule as unknown as { default?: unknown }).default ?? (sodiumModule as unknown);
+      // libsodium-wrappers-sumo can present different shapes depending on CJS/ESM interop.
+      // We unwrap a few common patterns: module, module.default, module.default.default, ...
+      const candidates = unwrapDefaultChain(sodiumModule);
+      log('[sodium] Candidate count:', candidates.length);
 
-      if (!isSodiumApi(sodiumCandidate)) {
-        throw new Error('[sodium] Invalid module shape: required functions missing');
+      const readyCandidate = candidates.find(hasReadyPromise);
+      if (!readyCandidate) {
+        throw new Error('[sodium] Invalid module shape: missing ready Promise');
       }
 
-      const sodium = sodiumCandidate;
+      const sodium = readyCandidate as unknown as SodiumApi;
 
       log('[sodium] Waiting for ready...');
       await sodium.ready;
+
+      // Validate we have the required functions after initialization.
+      // Some builds populate crypto functions only after `ready` resolves.
+      if (typeof sodium.crypto_pwhash !== 'function') {
+        // As a last resort, re-check candidates post-ready in case a different object was populated.
+        const postReady = candidates.find((c) =>
+          typeof (c as Record<string, unknown> | undefined)?.crypto_pwhash === 'function'
+        );
+        if (postReady) {
+          const resolved = postReady as unknown as SodiumApi;
+          if (hasReadyPromise(resolved)) {
+            await resolved.ready;
+          }
+          if (typeof resolved.crypto_pwhash === 'function') {
+            sodiumInstance = resolved;
+            return resolved;
+          }
+        }
+        throw new Error('[sodium] Invalid module shape: required functions missing');
+      }
 
       log('[sodium] Library initialized successfully');
       log('[sodium] crypto_pwhash type:', typeof sodium.crypto_pwhash);
       log('[sodium] crypto_pwhash_str type:', typeof sodium.crypto_pwhash_str);
       log('[sodium] crypto_pwhash_SALTBYTES:', sodium.crypto_pwhash_SALTBYTES);
-
-      // Validate we have the required functions
-      if (typeof sodium.crypto_pwhash !== 'function') {
-        throw new Error('[sodium] crypto_pwhash function not available even in SUMO version!');
-      }
 
       sodiumInstance = sodium;
       return sodium;

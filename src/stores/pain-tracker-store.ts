@@ -116,6 +116,7 @@ export interface PainTrackerState {
   clearAllData: () => void;
   loadSampleData: () => void;
   loadChronicPainTestData: () => void;
+  loadComprehensive365DayTestData: () => void;
   // Reporting
   scheduledReports: import('../types').ScheduledReport[];
   addScheduledReport: (report: import('../types').ScheduledReport) => void;
@@ -436,6 +437,42 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               })
               .catch((error) => {
                 console.error('[Store] Failed to load chronic pain test data:', error);
+                set(s => {
+                  s.error = 'Failed to load test data';
+                  s.isLoading = false;
+                });
+              });
+          },
+
+          loadComprehensive365DayTestData: () => {
+            const state = usePainTrackerStore.getState();
+            // Prevent concurrent loads
+            if (state.isLoading) return;
+
+            set(s => {
+              s.isLoading = true;
+            });
+
+            import('../data/chronic-pain-12-month-seed')
+              .then(
+                ({
+                  comprehensive365DayPainEntries,
+                  comprehensive365DayMoodEntries,
+                  comprehensive365DayDataStats,
+                }) => {
+                  console.log(
+                    '[Store] Loading 365-day comprehensive test data:',
+                    comprehensive365DayDataStats
+                  );
+                  set(s => {
+                    s.entries = comprehensive365DayPainEntries;
+                    s.moodEntries = comprehensive365DayMoodEntries;
+                    s.isLoading = false;
+                  });
+                }
+              )
+              .catch((error) => {
+                console.error('[Store] Failed to load 365-day comprehensive test data:', error);
                 set(s => {
                   s.error = 'Failed to load test data';
                   s.isLoading = false;

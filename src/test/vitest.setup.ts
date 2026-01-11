@@ -10,6 +10,7 @@ vi.mock('libsodium-wrappers-sumo', () => {
     crypto_pwhash_MEMLIMIT_MIN: 1024,
     crypto_pwhash_MEMLIMIT_MODERATE: 2048,
     crypto_pwhash_ALG_DEFAULT: 1,
+    crypto_pwhash_ALG_ARGON2ID13: 1,
     crypto_aead_xchacha20poly1305_ietf_KEYBYTES: 32,
     crypto_aead_xchacha20poly1305_ietf_NPUBBYTES: 24,
     

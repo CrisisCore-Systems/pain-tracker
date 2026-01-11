@@ -61,7 +61,7 @@ const stats = [
 
 export const Testimonials: React.FC = () => {
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden">
+    <section className="landing-always-dark relative py-24 lg:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800/80 to-slate-900" />
       

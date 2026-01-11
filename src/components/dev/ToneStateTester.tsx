@@ -25,6 +25,9 @@ export function ToneStateTester() {
   const { context, forceState, preferences, updatePreferences } = useTone();
   const [isVisible, setIsVisible] = useState(false); // Start minimized by default
 
+  // Dev-only utility: require an explicit opt-in to avoid confusing it with user-facing settings.
+  const isEnabled = isDev && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('toneTester') === '1';
+
   const toggleVisibility = useCallback(() => {
     setIsVisible(v => !v);
   }, []);
@@ -59,7 +62,7 @@ export function ToneStateTester() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isVisible, toggleVisibility, forceState]);
 
-  if (!isDev) return null; // Only show in development
+  if (!isEnabled) return null;
 
   if (!isVisible) {
     return (

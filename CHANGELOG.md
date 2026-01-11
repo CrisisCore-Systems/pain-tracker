@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-01-10
+
+### Fixed
+
+- **Weather Auto-Capture**: Prevented CSP violations by ensuring weather fetches stay same-origin via `/api/weather` (Vite proxy / Vercel rewrites) and removing stray generated service artifacts that bypassed the proxy.
+- **Weather Reliability**: Increased geolocation timeout and allowed cached positions so permission prompts don’t cause silent timeouts during entry creation.
+- **Tone Selector**: Moved tone preferences to a real Settings panel and persisted them as Class C preferences via secure storage (with legacy migration), reducing confusion with the dev-only tester.
+
 ## [1.1.0] - 2026-01-10 - "The Assistant Update"
 
 ### Added (Phase 4: Agency)

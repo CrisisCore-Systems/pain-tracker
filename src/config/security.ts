@@ -102,7 +102,7 @@ export const securityConfig = {
     'Permissions-Policy': [
       'camera=()',
       'microphone=()',
-      'geolocation=()',
+      'geolocation=(self)',
       'payment=()',
       'usb=()',
       'bluetooth=()',

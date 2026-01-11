@@ -16,6 +16,9 @@ export default {
         primary: {
           DEFAULT: 'rgb(var(--color-primary) / <alpha-value>)',
           foreground: 'rgb(var(--color-primary-foreground) / <alpha-value>)',
+          400: 'rgb(from var(--primary-400) r g b / <alpha-value>)',
+          500: 'rgb(from var(--primary-500) r g b / <alpha-value>)',
+          600: 'rgb(from var(--primary-600) r g b / <alpha-value>)',
         },
         secondary: {
           DEFAULT: 'rgb(var(--color-secondary) / <alpha-value>)',
@@ -56,6 +59,46 @@ export default {
         info: {
           DEFAULT: 'rgb(var(--color-info) / <alpha-value>)',
           foreground: 'rgb(var(--color-info-foreground) / <alpha-value>)',
+        },
+
+        // Fused Blueprint v2 token colors (used by design-system/fused-v2 components)
+        // These map fused CSS variables (e.g. --surface-700) into Tailwind utilities
+        // so classes like `bg-surface-800/60` and `text-ink-200` render correctly.
+        ink: {
+          50: 'rgb(from var(--ink-50) r g b / <alpha-value>)',
+          100: 'rgb(from var(--ink-100) r g b / <alpha-value>)',
+          200: 'rgb(from var(--ink-200) r g b / <alpha-value>)',
+          300: 'rgb(from var(--ink-300) r g b / <alpha-value>)',
+          400: 'rgb(from var(--ink-400) r g b / <alpha-value>)',
+          500: 'rgb(from var(--ink-500) r g b / <alpha-value>)',
+          600: 'rgb(from var(--ink-600) r g b / <alpha-value>)',
+          700: 'rgb(from var(--ink-700) r g b / <alpha-value>)',
+          800: 'rgb(from var(--ink-800) r g b / <alpha-value>)',
+          900: 'rgb(from var(--ink-900) r g b / <alpha-value>)',
+        },
+        surface: {
+          300: 'rgb(from var(--surface-300) r g b / <alpha-value>)',
+          400: 'rgb(from var(--surface-400) r g b / <alpha-value>)',
+          500: 'rgb(from var(--surface-500) r g b / <alpha-value>)',
+          600: 'rgb(from var(--surface-600) r g b / <alpha-value>)',
+          700: 'rgb(from var(--surface-700) r g b / <alpha-value>)',
+          800: 'rgb(from var(--surface-800) r g b / <alpha-value>)',
+          900: 'rgb(from var(--surface-900) r g b / <alpha-value>)',
+        },
+        good: {
+          400: 'rgb(from var(--good-400) r g b / <alpha-value>)',
+          500: 'rgb(from var(--good-500) r g b / <alpha-value>)',
+          600: 'rgb(from var(--good-600) r g b / <alpha-value>)',
+        },
+        warn: {
+          400: 'rgb(from var(--warn-400) r g b / <alpha-value>)',
+          500: 'rgb(from var(--warn-500) r g b / <alpha-value>)',
+          600: 'rgb(from var(--warn-600) r g b / <alpha-value>)',
+        },
+        bad: {
+          400: 'rgb(from var(--bad-400) r g b / <alpha-value>)',
+          500: 'rgb(from var(--bad-500) r g b / <alpha-value>)',
+          600: 'rgb(from var(--bad-600) r g b / <alpha-value>)',
         },
       },
       borderRadius: {
@@ -202,71 +245,71 @@ export default {
         // Many older pages were built with `bg-white`/`text-gray-900` style utilities.
         // When the app runs in dark mode (default), those become unreadable.
         // These rules remap common legacy utilities to semantic token colors.
-        '.dark .bg-white, [data-theme="dark"] .bg-white': {
+        '.dark .pt-app-shell .bg-white, [data-theme="dark"] .pt-app-shell .bg-white': {
           backgroundColor: theme('colors.card.DEFAULT'),
           color: theme('colors.foreground'),
         },
-        '.dark .bg-gray-50, [data-theme="dark"] .bg-gray-50': {
+        '.dark .pt-app-shell .bg-gray-50, [data-theme="dark"] .pt-app-shell .bg-gray-50': {
           backgroundColor: theme('colors.card.DEFAULT'),
           color: theme('colors.foreground'),
         },
-        '.dark .bg-gray-100, [data-theme="dark"] .bg-gray-100': {
+        '.dark .pt-app-shell .bg-gray-100, [data-theme="dark"] .pt-app-shell .bg-gray-100': {
           backgroundColor: theme('colors.muted.DEFAULT'),
           color: theme('colors.foreground'),
         },
-        '.dark .bg-slate-50, [data-theme="dark"] .bg-slate-50': {
+        '.dark .pt-app-shell .bg-slate-50, [data-theme="dark"] .pt-app-shell .bg-slate-50': {
           backgroundColor: theme('colors.card.DEFAULT'),
           color: theme('colors.foreground'),
         },
-        '.dark .bg-slate-100, [data-theme="dark"] .bg-slate-100': {
+        '.dark .pt-app-shell .bg-slate-100, [data-theme="dark"] .pt-app-shell .bg-slate-100': {
           backgroundColor: theme('colors.muted.DEFAULT'),
           color: theme('colors.foreground'),
         },
 
-        '.dark .text-black, [data-theme="dark"] .text-black': {
+        '.dark .pt-app-shell .text-black, [data-theme="dark"] .pt-app-shell .text-black': {
           color: theme('colors.foreground'),
         },
-        '.dark .text-gray-900, [data-theme="dark"] .text-gray-900': {
+        '.dark .pt-app-shell .text-gray-900, [data-theme="dark"] .pt-app-shell .text-gray-900': {
           color: theme('colors.foreground'),
         },
-        '.dark .text-gray-800, [data-theme="dark"] .text-gray-800': {
+        '.dark .pt-app-shell .text-gray-800, [data-theme="dark"] .pt-app-shell .text-gray-800': {
           color: theme('colors.foreground'),
         },
-        '.dark .text-gray-700, [data-theme="dark"] .text-gray-700': {
+        '.dark .pt-app-shell .text-gray-700, [data-theme="dark"] .pt-app-shell .text-gray-700': {
           color: theme('colors.muted.foreground'),
         },
-        '.dark .text-gray-600, [data-theme="dark"] .text-gray-600': {
+        '.dark .pt-app-shell .text-gray-600, [data-theme="dark"] .pt-app-shell .text-gray-600': {
           color: theme('colors.muted.foreground'),
         },
-        '.dark .text-gray-500, [data-theme="dark"] .text-gray-500': {
+        '.dark .pt-app-shell .text-gray-500, [data-theme="dark"] .pt-app-shell .text-gray-500': {
           color: theme('colors.muted.foreground'),
         },
-        '.dark .text-slate-900, [data-theme="dark"] .text-slate-900': {
+        '.dark .pt-app-shell .text-slate-900, [data-theme="dark"] .pt-app-shell .text-slate-900': {
           color: theme('colors.foreground'),
         },
-        '.dark .text-slate-800, [data-theme="dark"] .text-slate-800': {
+        '.dark .pt-app-shell .text-slate-800, [data-theme="dark"] .pt-app-shell .text-slate-800': {
           color: theme('colors.foreground'),
         },
-        '.dark .text-slate-700, [data-theme="dark"] .text-slate-700': {
+        '.dark .pt-app-shell .text-slate-700, [data-theme="dark"] .pt-app-shell .text-slate-700': {
           color: theme('colors.muted.foreground'),
         },
-        '.dark .text-slate-600, [data-theme="dark"] .text-slate-600': {
+        '.dark .pt-app-shell .text-slate-600, [data-theme="dark"] .pt-app-shell .text-slate-600': {
           color: theme('colors.muted.foreground'),
         },
-        '.dark .text-slate-500, [data-theme="dark"] .text-slate-500': {
+        '.dark .pt-app-shell .text-slate-500, [data-theme="dark"] .pt-app-shell .text-slate-500': {
           color: theme('colors.muted.foreground'),
         },
 
-        '.dark .border-gray-200, [data-theme="dark"] .border-gray-200': {
+        '.dark .pt-app-shell .border-gray-200, [data-theme="dark"] .pt-app-shell .border-gray-200': {
           borderColor: theme('colors.border'),
         },
-        '.dark .border-gray-300, [data-theme="dark"] .border-gray-300': {
+        '.dark .pt-app-shell .border-gray-300, [data-theme="dark"] .pt-app-shell .border-gray-300': {
           borderColor: theme('colors.border'),
         },
-        '.dark .border-slate-200, [data-theme="dark"] .border-slate-200': {
+        '.dark .pt-app-shell .border-slate-200, [data-theme="dark"] .pt-app-shell .border-slate-200': {
           borderColor: theme('colors.border'),
         },
-        '.dark .border-slate-300, [data-theme="dark"] .border-slate-300': {
+        '.dark .pt-app-shell .border-slate-300, [data-theme="dark"] .pt-app-shell .border-slate-300': {
           borderColor: theme('colors.border'),
         },
 
@@ -274,47 +317,47 @@ export default {
         // Some pages were authored assuming a permanently-dark surface (e.g. `bg-slate-900 text-white`).
         // When switching to light mode, those look like "half dark / half light".
         // Remap common dark palette utilities to semantic token colors in light mode.
-        ':root:not(.dark) .bg-slate-900, [data-theme="light"] .bg-slate-900': {
+        ':root:not(.dark) .pt-app-shell .bg-slate-900, [data-theme="light"] .pt-app-shell .bg-slate-900': {
           backgroundColor: theme('colors.background'),
           color: theme('colors.foreground'),
         },
-        ':root:not(.dark) .bg-slate-800, [data-theme="light"] .bg-slate-800': {
+        ':root:not(.dark) .pt-app-shell .bg-slate-800, [data-theme="light"] .pt-app-shell .bg-slate-800': {
           backgroundColor: theme('colors.card.DEFAULT'),
           color: theme('colors.card.foreground'),
         },
-        ':root:not(.dark) .bg-slate-800\\/50, [data-theme="light"] .bg-slate-800\\/50': {
+        ':root:not(.dark) .pt-app-shell .bg-slate-800\\/50, [data-theme="light"] .pt-app-shell .bg-slate-800\\/50': {
           backgroundColor: theme('colors.card.DEFAULT'),
           color: theme('colors.card.foreground'),
         },
-        ':root:not(.dark) .bg-slate-900\\/50, [data-theme="light"] .bg-slate-900\\/50': {
+        ':root:not(.dark) .pt-app-shell .bg-slate-900\\/50, [data-theme="light"] .pt-app-shell .bg-slate-900\\/50': {
           backgroundColor: theme('colors.muted.DEFAULT'),
           color: theme('colors.foreground'),
         },
-        ':root:not(.dark) .bg-slate-900\\/95, [data-theme="light"] .bg-slate-900\\/95': {
+        ':root:not(.dark) .pt-app-shell .bg-slate-900\\/95, [data-theme="light"] .pt-app-shell .bg-slate-900\\/95': {
           backgroundColor: theme('colors.background'),
           color: theme('colors.foreground'),
         },
-        ':root:not(.dark) .bg-gray-900, [data-theme="light"] .bg-gray-900': {
+        ':root:not(.dark) .pt-app-shell .bg-gray-900, [data-theme="light"] .pt-app-shell .bg-gray-900': {
           backgroundColor: theme('colors.background'),
           color: theme('colors.foreground'),
         },
 
-        ':root:not(.dark) .text-white, [data-theme="light"] .text-white': {
+        ':root:not(.dark) .pt-app-shell .text-white, [data-theme="light"] .pt-app-shell .text-white': {
           color: theme('colors.foreground'),
         },
-        ':root:not(.dark) .text-slate-100, [data-theme="light"] .text-slate-100': {
+        ':root:not(.dark) .pt-app-shell .text-slate-100, [data-theme="light"] .pt-app-shell .text-slate-100': {
           color: theme('colors.foreground'),
         },
-        ':root:not(.dark) .text-slate-200, [data-theme="light"] .text-slate-200': {
+        ':root:not(.dark) .pt-app-shell .text-slate-200, [data-theme="light"] .pt-app-shell .text-slate-200': {
           color: theme('colors.foreground'),
         },
-        ':root:not(.dark) .text-slate-300, [data-theme="light"] .text-slate-300': {
+        ':root:not(.dark) .pt-app-shell .text-slate-300, [data-theme="light"] .pt-app-shell .text-slate-300': {
           color: theme('colors.muted.foreground'),
         },
-        ':root:not(.dark) .text-slate-400, [data-theme="light"] .text-slate-400': {
+        ':root:not(.dark) .pt-app-shell .text-slate-400, [data-theme="light"] .pt-app-shell .text-slate-400': {
           color: theme('colors.muted.foreground'),
         },
-        ':root:not(.dark) .text-slate-500, [data-theme="light"] .text-slate-500': {
+        ':root:not(.dark) .pt-app-shell .text-slate-500, [data-theme="light"] .pt-app-shell .text-slate-500': {
           color: theme('colors.muted.foreground'),
         },
 

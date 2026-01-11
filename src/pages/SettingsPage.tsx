@@ -6,10 +6,14 @@ import NotificationPreferencesPanel from '../components/settings/NotificationPre
 import BackupSettings from '../components/settings/BackupSettings';
 import ExportSettings from '../components/settings/ExportSettings';
 import PrivacySettings from '../components/settings/PrivacySettings';
+import TonePreferencesPanel from '../components/settings/TonePreferencesPanel';
 import { ClinicalIntegrationSettings } from '../components/settings/ClinicalIntegrationSettings';
-import { Settings, Bell, Shield, Download, Eye, Stethoscope } from 'lucide-react';
+import { Settings, Bell, Shield, Download, Eye, Stethoscope, Database } from 'lucide-react';
+import { usePainTrackerStore } from '../stores/pain-tracker-store';
 
 export default function SettingsPage() {
+  const { isLoading, loadComprehensive365DayTestData } = usePainTrackerStore();
+
   return (
     <div className="space-y-8">
       {/* Page Header */}
@@ -48,6 +52,7 @@ export default function SettingsPage() {
               </h3>
             </div>
             <AccessibilitySettingsPanel />
+            <TonePreferencesPanel />
           </div>
 
           {/* Notifications Section */}
@@ -118,6 +123,34 @@ export default function SettingsPage() {
             <div className="border-t border-gray-200 dark:border-white/10 my-4" />
 
             <BackupSettings />
+
+            <div className="flex items-center gap-2 mt-8">
+              <Database className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 uppercase tracking-wider">
+                Test Data
+              </h3>
+            </div>
+
+            <div className="rounded-xl p-5 bg-white dark:bg-slate-800/90 border border-gray-200 dark:border-white/10 shadow-sm dark:shadow-lg">
+              <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
+                Load 365-day comprehensive dataset
+              </h4>
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 dark:text-slate-400">
+                  Loads a full year of realistic, comprehensive test entries (pain + mood). This
+                  replaces your current logs.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={loadComprehensive365DayTestData}
+                  disabled={isLoading}
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-100 dark:bg-indigo-500/15 border border-indigo-300 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-500/25 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Loading…' : 'Load 365-day comprehensive test data'}
+                </button>
+              </div>
+            </div>
           </div>
         </section>
       </div>
