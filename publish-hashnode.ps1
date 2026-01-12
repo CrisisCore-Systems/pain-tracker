@@ -3,7 +3,7 @@ $pubId = "6914f549d535ac1991dcb8b2"
 $token = "Ln5Dn15EREw4dqW47rHLY4H5"
 
 # Read the markdown content
-$content = Get-Content -Path "c:\Users\kay\Documents\Projects\pain-tracker\blog-client-side-encryption-healthcare.md" -Raw
+$content = Get-Content -Path "c:\Users\kay\Documents\Projects\pain-tracker\docs\content\blog\blog-client-side-encryption-healthcare.md" -Raw
 
 # Remove the H1 title from content (first line) since we'll set it separately
 $contentLines = $content -split "`n"

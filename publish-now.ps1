@@ -1,5 +1,5 @@
 $apiKey = "Ln5Dn15EREw4dqW47rHLY4H5"
-$content = Get-Content -Path "blog-client-side-encryption-healthcare.md" -Raw
+$content = Get-Content -Path "docs/content/blog/blog-client-side-encryption-healthcare.md" -Raw
 
 $body = @{
     article = @{

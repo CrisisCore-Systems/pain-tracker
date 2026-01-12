@@ -2,7 +2,7 @@
 
 This folder contains **supporting assets and a checklist** for publishing the composite WorkSafeBC case study.
 
-**Source post (repo):** `blog-worksafe-bc-case-study-documentation-time-savings.md`
+**Source post (repo):** `docs/content/blog/blog-worksafe-bc-case-study-documentation-time-savings.md`
 
 ## Publish checklist (Hashnode)
 

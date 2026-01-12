@@ -6,7 +6,7 @@ const token = 'Ln5Dn15EREw4dqW47rHLY4H5';
 const publicationId = '6914f549d535ac1991dcb8b2';
 
 // Read the markdown file
-const content = fs.readFileSync('blog-client-side-encryption-healthcare.md', 'utf8');
+const content = fs.readFileSync('docs/content/blog/blog-client-side-encryption-healthcare.md', 'utf8');
 
 // Remove the H1 title from content (first line)
 const contentLines = content.split('\n');

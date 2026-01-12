@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-01-11
+
+### Changed
+
+- **Docs**: Consolidated and reorganized markdown documentation under `docs/` buckets (planning/engineering/product/ops/security/marketing/etc.) and repaired internal links and indexes.
+
 ## [1.1.1] - 2026-01-10
 
 ### Fixed

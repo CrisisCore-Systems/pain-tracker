@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $false)]
-  [string]$MarkdownPath = "c:\Users\kay\Documents\Projects\pain-tracker\blog-worksafe-bc-case-study-documentation-time-savings.md",
+  [string]$MarkdownPath = "c:\Users\kay\Documents\Projects\pain-tracker\docs\content\blog\blog-worksafe-bc-case-study-documentation-time-savings.md",
 
   [Parameter(Mandatory = $false)]
   [string]$Title = "How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study",

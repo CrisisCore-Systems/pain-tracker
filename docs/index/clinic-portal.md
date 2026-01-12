@@ -1,0 +1,11 @@
+# Clinic Portal
+
+- ../clinic/CLINIC_PORTAL.md
+- ../clinic/CLINIC_PORTAL_QUICKSTART.md
+- ../clinic/CLINIC_PORTAL_SUMMARY.md
+- ../clinic/CLINIC_PORTAL_VALUE_PROPOSITION.md
+- ../clinic/CLINIC_PORTAL_ENHANCEMENTS.md
+- ../clinic/CLINICIAN_PORTAL_SCOPING.md
+- ../clinic/CLINIC_AUTHENTICATION.md
+- ../clinic/CLINIC_AUTH_IMPLEMENTATION.md
+- ../clinic/CLINIC_BACKEND_AUTH_SETUP.md

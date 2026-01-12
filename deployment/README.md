@@ -18,8 +18,8 @@ deployment/
 ## 🚀 Quick Start
 
 See the comprehensive guides:
-- **Full Guide**: [docs/UBUNTU_VM_DEPLOYMENT.md](../docs/UBUNTU_VM_DEPLOYMENT.md)
-- **Quick Reference**: [docs/UBUNTU_VM_QUICKSTART.md](../docs/UBUNTU_VM_QUICKSTART.md)
+- **Full Guide**: [docs/ops/UBUNTU_VM_DEPLOYMENT.md](../docs/ops/UBUNTU_VM_DEPLOYMENT.md)
+- **Quick Reference**: [docs/ops/UBUNTU_VM_QUICKSTART.md](../docs/ops/UBUNTU_VM_QUICKSTART.md)
 
 Or run the bootstrap script:
 ```bash
@@ -163,15 +163,15 @@ crontab -e
 
 ## 📚 Related Documentation
 
-- [Ubuntu VM Deployment Guide](../docs/UBUNTU_VM_DEPLOYMENT.md) - Comprehensive setup guide
-- [Quick Reference](../docs/UBUNTU_VM_QUICKSTART.md) - One-page cheat sheet
+- [Ubuntu VM Deployment Guide](../docs/ops/UBUNTU_VM_DEPLOYMENT.md) - Comprehensive setup guide
+- [Quick Reference](../docs/ops/UBUNTU_VM_QUICKSTART.md) - One-page cheat sheet
 - [Main README](../README.md) - Project overview
-- [Deployment Guide](../DEPLOYMENT_GUIDE.md) - Vercel/other platform deployment
+- [Deployment Guide](../docs/ops/DEPLOYMENT_GUIDE.md) - Vercel/other platform deployment
 
 ## 🆘 Support
 
 Issues with deployment? Check:
-1. [Troubleshooting section](../docs/UBUNTU_VM_DEPLOYMENT.md#-troubleshooting) in the deployment guide
+1. [Troubleshooting section](../docs/ops/UBUNTU_VM_DEPLOYMENT.md#-troubleshooting) in the deployment guide
 2. Nginx logs: `sudo tail -f /var/log/nginx/pain-tracker-error.log`
 3. GitHub Actions logs in the repository
 4. [Open an issue](https://github.com/CrisisCore-Systems/pain-tracker/issues) if problems persist

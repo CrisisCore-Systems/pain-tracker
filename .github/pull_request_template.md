@@ -11,8 +11,8 @@ Describe what this PR changes and why.
 
 If this PR touches encryption, key handling, local persistence (localStorage/IndexedDB), migrations, exports, audit logging, or PHI/PII handling:
 
-- [ ] Followed `docs/SECURITY_CHANGE_CHECKLIST.md`
-- [ ] Verified persistence/migration implications in `docs/LOCAL_DATA_AND_MIGRATIONS.md`
+- [ ] Followed `docs/security/SECURITY_CHANGE_CHECKLIST.md`
+- [ ] Verified persistence/migration implications in `docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md`
 - [ ] Human review requested for security-critical changes
 
 ## Notes for reviewers

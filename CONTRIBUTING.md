@@ -25,8 +25,8 @@ Pull requests are the best way to propose changes to the codebase. We actively w
 
 If your change touches encryption, storage (localStorage/IndexedDB), exports, audit logging, or migrations, please follow:
 
-- `docs/SECURITY_CHANGE_CHECKLIST.md`
-- `docs/LOCAL_DATA_AND_MIGRATIONS.md`
+- `docs/security/SECURITY_CHANGE_CHECKLIST.md`
+- `docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md`
 
 For security-critical changes (crypto/key handling/audit semantics), request human review before merging.
 

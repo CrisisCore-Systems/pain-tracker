@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
   [Parameter(Mandatory = $false)]
-  [string]$InputPath = "article-privacy-first-trauma-informed-open-source-digital-health.md",
+  [string]$InputPath = "docs\\content\\articles\\article-privacy-first-trauma-informed-open-source-digital-health.md",
 
   [Parameter(Mandatory = $false)]
   [string]$OutputPath = "dist\\manuscript\\paintracker-jmir-submission.docx"

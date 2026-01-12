@@ -1,12 +1,12 @@
 # Publish blog post to DEV.to
-# Usage: .\scripts\publish-to-devto.ps1 -ApiKey "your_api_key" -FilePath "blog-client-side-encryption-healthcare.md"
+# Usage: .\scripts\publish-to-devto.ps1 -ApiKey "your_api_key" -FilePath "docs/content/blog/blog-client-side-encryption-healthcare.md"
 
 param(
     [Parameter(Mandatory=$true)]
     [string]$ApiKey,
     
     [Parameter(Mandatory=$false)]
-    [string]$FilePath = "blog-client-side-encryption-healthcare.md"
+    [string]$FilePath = "docs/content/blog/blog-client-side-encryption-healthcare.md"
 )
 
 $ErrorActionPreference = "Stop"

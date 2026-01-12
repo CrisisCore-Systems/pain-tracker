@@ -110,7 +110,7 @@ Pain Tracker offers **clinical-grade fibromyalgia support** built on ACR 2016 Re
 - ✅ **Rheumatology-Ready Reports**: WPI/SSS summaries for specialist appointments
 - ✅ **Treatment Effectiveness**: Intervention correlation analysis (medications, therapies, self-care)
 
-**📖 [Complete Fibromyalgia Features Guide](docs/FIBROMYALGIA_FEATURES.md)** | **✅ [Claims Verification Report](docs/FIBROMYALGIA_CLAIMS_VERIFICATION.md)**
+**📖 [Complete Fibromyalgia Features Guide](docs/product/FIBROMYALGIA_FEATURES.md)** | **✅ [Claims Verification Report](docs/product/FIBROMYALGIA_CLAIMS_VERIFICATION.md)**
 
 ---
 
@@ -152,7 +152,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 
 </details>
 
-**[Read More About Our Security →](docs/ARCHITECTURE.md)** | **[Security Policy →](SECURITY.md)** | **[All Diagrams →](docs/diagrams/README.md)**
+**[Read More About Our Security →](docs/engineering/ARCHITECTURE.md)** | **[Security Policy →](SECURITY.md)** | **[All Diagrams →](docs/diagrams/README.md)**
 
 ---
 
@@ -179,7 +179,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - ✅ **Usage Tracking**: Real-time quota monitoring with warnings at 80% limits
 - ✅ **Trial Management**: 14-30 day free trials with automatic conversion
 - ✅ **Subscription Portal**: User-facing management interface for upgrades/downgrades/cancellations
-- 🎯 **[Complete SaaS Documentation](docs/SAAS_SETUP_GUIDE.md)**
+- 🎯 **[Complete SaaS Documentation](docs/archive/saas/SAAS_SETUP_GUIDE.md)**
 
 ### 🔒 **Security Architecture**
 - ✅ **Local-First Data**: IndexedDB storage with selective encryption (AES-GCM helpers implemented)
@@ -290,7 +290,7 @@ src/
 
 ### Canvas on Windows
 
-If you are developing on Windows or running CI on Windows runners, follow the detailed instructions in `docs/CANVAS_WINDOWS_PREREQS.md` to install Visual Studio Build Tools or MSYS2 and the native `cairo` dependencies required by `canvas@3.x`.
+If you are developing on Windows or running CI on Windows runners, follow the detailed instructions in `docs/ops/CANVAS_WINDOWS_PREREQS.md` to install Visual Studio Build Tools or MSYS2 and the native `cairo` dependencies required by `canvas@3.x`.
 
 ### Badges
 Badges (tests, coverage, security, LOC, issues, PRs, commit activity) are generated
@@ -401,12 +401,12 @@ npm run deploy
 - ✅ Free tier available (Oracle Cloud)
 - ✅ Full control and customization
 - ✅ Automated CI/CD with GitHub Actions
-- 📚 [Complete Ubuntu VM Deployment Guide](docs/UBUNTU_VM_DEPLOYMENT.md)
-- 📚 [Quick Reference Guide](docs/UBUNTU_VM_QUICKSTART.md)
+- 📚 [Complete Ubuntu VM Deployment Guide](docs/ops/UBUNTU_VM_DEPLOYMENT.md)
+- 📚 [Quick Reference Guide](docs/ops/UBUNTU_VM_QUICKSTART.md)
 
 **Option 3: Other Platforms**
 - Vercel, Netlify, Cloudflare Pages, AWS S3, etc.
-- See [DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) for platform-specific instructions
+- See [DEPLOYMENT_GUIDE.md](docs/ops/DEPLOYMENT_GUIDE.md) for platform-specific instructions
 
 ## 🧪 **Testing & Quality**
 
@@ -534,11 +534,12 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 
 ## 📄 **Documentation**
 
-- **[Architecture Deep Dive](docs/ARCHITECTURE_DEEP_DIVE.md)** - Technical implementation details
+- **[Documentation Index](docs/README.md)** - Start here: consolidated docs hub
+- **[Architecture Deep Dive](docs/engineering/ARCHITECTURE_DEEP_DIVE.md)** - Technical implementation details
 - **[Contributing Guide](CONTRIBUTING.md)** - Development and contribution guidelines
 - **[Security Policy](security/)** - Security practices and vulnerability reporting
-- **[PWA Implementation](docs/PWA-COMPLETE.md)** - Progressive Web App features
-- **[Empathy Framework](docs/EMPATHY_ENHANCEMENT_SUMMARY.md)** - User experience philosophy
+- **[PWA Implementation](docs/ops/PWA-COMPLETE.md)** - Progressive Web App features
+- **[Empathy Framework](docs/product/EMPATHY_ENHANCEMENT_SUMMARY.md)** - User experience philosophy
 
 ---
 
@@ -634,9 +635,9 @@ npm run dev
 - Crisis support - Emergency features
 
 ### Documentation
-- **Quick Reference:** [`docs/SCREENSHOT_QUICK_REFERENCE.md`](docs/SCREENSHOT_QUICK_REFERENCE.md)
-- **Marketing Guide:** [`docs/SCREENSHOT_MARKETING_GUIDE.md`](docs/SCREENSHOT_MARKETING_GUIDE.md)
-- **Manual Templates:** [`docs/MANUAL_SCREENSHOT_TEMPLATES.md`](docs/MANUAL_SCREENSHOT_TEMPLATES.md)
+- **Quick Reference:** [`docs/marketing/SCREENSHOT_QUICK_REFERENCE.md`](docs/marketing/SCREENSHOT_QUICK_REFERENCE.md)
+- **Marketing Guide:** [`docs/marketing/SCREENSHOT_MARKETING_GUIDE.md`](docs/marketing/SCREENSHOT_MARKETING_GUIDE.md)
+- **Manual Templates:** [`docs/marketing/MANUAL_SCREENSHOT_TEMPLATES.md`](docs/marketing/MANUAL_SCREENSHOT_TEMPLATES.md)
 - **Full Details:** [`public/screenshots/README.md`](public/screenshots/README.md)
 
 ---

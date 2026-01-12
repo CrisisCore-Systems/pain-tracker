@@ -6,7 +6,7 @@ const token = '3bcede56-cf20-4ce5-885f-d7a3c4b599d0';
 const publicationId = '6914f549d535ac1991dcb8b2';
 
 // Read the markdown file
-let content = fs.readFileSync('blog-building-from-rubble.md', 'utf8');
+let content = fs.readFileSync('docs/content/blog/blog-building-from-rubble.md', 'utf8');
 
 // Remove the first line if it's just intro text (not the title)
 const lines = content.split('\n');

@@ -193,10 +193,10 @@ curl https://your-app.vercel.app/api/stripe/create-checkout-session -X POST -H "
 
 ## 📚 Full Documentation
 
-- **Complete Guide**: `DEPLOYMENT_GUIDE.md` (detailed step-by-step)
-- **Backend Technical**: `docs/BACKEND_INTEGRATION_COMPLETE.md`
-- **Implementation Summary**: `docs/SAAS_COMPLETE.md`
-- **Frontend Integration**: `docs/FEATURE_GATE_INTEGRATION.md`
+- **Complete Guide**: `docs/ops/DEPLOYMENT_GUIDE.md` (detailed step-by-step)
+- **Backend Technical**: `docs/engineering/BACKEND_INTEGRATION_COMPLETE.md`
+- **Implementation Summary**: `docs/archive/saas/SAAS_COMPLETE.md`
+- **Frontend Integration**: `docs/product/FEATURE_GATE_INTEGRATION.md`
 
 ---
 
@@ -213,4 +213,4 @@ curl https://your-app.vercel.app/api/stripe/create-checkout-session -X POST -H "
 
 **Next Step**: Run `stripe login` to begin setup
 
-**Support**: See `DEPLOYMENT_GUIDE.md` for detailed troubleshooting
+**Support**: See `docs/ops/DEPLOYMENT_GUIDE.md` for detailed troubleshooting

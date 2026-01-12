@@ -295,8 +295,8 @@ Results will be populated after test execution. See test output for current metr
 
 ## References
 
-- [PWA Implementation Guide](../docs/PWA-IMPLEMENTATION.md)
-- [PWA Browser Test Plan](../docs/PWA_BROWSER_TEST_PLAN.md)
+- [PWA Implementation Guide](../docs/ops/PWA-IMPLEMENTATION.md)
+- [PWA Browser Test Plan](../docs/ops/PWA_BROWSER_TEST_PLAN.md)
 - [Playwright Documentation](https://playwright.dev/)
 - [Service Worker Specification](https://w3c.github.io/ServiceWorker/)
 - [Web App Manifest](https://www.w3.org/TR/appmanifest/)

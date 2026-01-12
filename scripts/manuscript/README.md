@@ -23,5 +23,5 @@ Output:
 ## Custom paths
 
 ```powershell
-./scripts/manuscript/export-jmir-docx.ps1 -InputPath "article-privacy-first-trauma-informed-open-source-digital-health.md" -OutputPath "dist/manuscript/custom.docx"
+./scripts/manuscript/export-jmir-docx.ps1 -InputPath "docs/content/articles/article-privacy-first-trauma-informed-open-source-digital-health.md" -OutputPath "dist/manuscript/custom.docx"
 ```

@@ -13,8 +13,8 @@ We take security vulnerabilities seriously. If you discover a security vulnerabi
 
 If you are proposing a change (PR) that touches encryption, key handling, local persistence (localStorage/IndexedDB), migrations, exports, audit logging, or PHI/PII handling, please follow:
 
-- `docs/SECURITY_CHANGE_CHECKLIST.md`
-- `docs/LOCAL_DATA_AND_MIGRATIONS.md`
+- `docs/security/SECURITY_CHANGE_CHECKLIST.md`
+- `docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md`
 
 ## Environment Variables & Configuration
 

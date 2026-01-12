@@ -65,8 +65,8 @@ npm run e2e:debug
 ## Documentation
 
 - **📋 PWA Test Execution Report**: [PWA_TEST_EXECUTION_REPORT.md](./PWA_TEST_EXECUTION_REPORT.md)
-- **📖 PWA Implementation Guide**: [../docs/PWA-IMPLEMENTATION.md](../docs/PWA-IMPLEMENTATION.md)
-- **📊 PWA Browser Test Plan**: [../docs/PWA_BROWSER_TEST_PLAN.md](../docs/PWA_BROWSER_TEST_PLAN.md)
+- **📖 PWA Implementation Guide**: [../docs/ops/PWA-IMPLEMENTATION.md](../docs/ops/PWA-IMPLEMENTATION.md)
+- **📊 PWA Browser Test Plan**: [../docs/ops/PWA_BROWSER_TEST_PLAN.md](../docs/ops/PWA_BROWSER_TEST_PLAN.md)
 
 ## Viewing Results
 
@@ -89,7 +89,7 @@ If you're on Windows and encounter `canvas` build errors:
 npm run bootstrap-windows
 ```
 
-See `docs/CANVAS_WINDOWS_PREREQS.md` for details.
+See `docs/ops/CANVAS_WINDOWS_PREREQS.md` for details.
 
 ## CI/CD Integration
 

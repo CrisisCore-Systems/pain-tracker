@@ -6,8 +6,8 @@ This repository follows a security-first, defense-in-depth approach. Below are a
 
 For PRs that touch encryption, key handling, local persistence (localStorage/IndexedDB), migrations, exports, audit logging, or PHI/PII handling:
 
-- Follow `docs/SECURITY_CHANGE_CHECKLIST.md`
-- Reference `docs/LOCAL_DATA_AND_MIGRATIONS.md` for persistence/versioning details
+- Follow `docs/security/SECURITY_CHANGE_CHECKLIST.md`
+- Reference `docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md` for persistence/versioning details
 
 ## Content-Security-Policy (CSP)
 
