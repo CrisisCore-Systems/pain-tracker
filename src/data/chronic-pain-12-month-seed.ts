@@ -102,6 +102,26 @@ const RELIEF_METHODS = [
   'Gentle yoga',
 ];
 
+const PAIN_QUALITIES = {
+  mild: ['Aching', 'Stiff', 'Tight', 'Sore'],
+  moderate: ['Sharp', 'Burning', 'Throbbing', 'Cramping', 'Pinching'],
+  severe: ['Shooting', 'Stabbing', 'Radiating', 'Electric', 'Numbing', 'Pins and needles'],
+};
+
+const ACTIVITIES_DONE = {
+  low: ['Resting', 'Short walk', 'Gentle stretching', 'Heat/ice routine', 'Light meal prep'],
+  moderate: [
+    'Physio exercises',
+    'Household chores',
+    'Grocery run',
+    'Desk work',
+    'Driving/commute',
+    'Laundry',
+    'Cooking',
+  ],
+  high: ['Longer walk', 'Errands (multiple stops)', 'Gardening (light)', 'Cleaning (deeper)', 'Social outing'],
+};
+
 const SOCIAL_IMPACTS = [
   'Cancelled plans with friends',
   'Skipped family event',
@@ -147,11 +167,16 @@ function pickMultiple<T>(array: T[], count: number, random: () => number): T[] {
 
 function getWeatherFactor(dayOfYear: number, random: () => number): number {
   // Simulate weather patterns - worse in winter/rainy seasons
-  const seasonalBase = Math.sin((dayOfYear / 365) * 2 * Math.PI - Math.PI / 2) * 0.3;
-  const dailyVariation = (random() - 0.5) * 0.4;
+  const seasonalBase = Math.sin((dayOfYear / 365) * 2 * Math.PI - Math.PI / 2) * 0.45;
+  const winterBoost = dayOfYear < 60 || dayOfYear > 330 ? 0.15 : 0;
+  const dailyVariation = (random() - 0.5) * 0.35;
   // Occasional "bad weather" days
-  const badWeatherChance = random() < 0.1 ? 0.5 : 0;
-  return seasonalBase + dailyVariation + badWeatherChance;
+  const badWeatherChance = random() < 0.12 ? 0.5 : 0;
+  return seasonalBase + winterBoost + dailyVariation + badWeatherChance;
+}
+
+function uniqueStrings(values: string[]): string[] {
+  return [...new Set(values.map((v) => v.trim()).filter(Boolean))];
 }
 
 function buildSyntheticWeatherSummary(
@@ -461,6 +486,53 @@ export function generateChronicPain12MonthData(
         10
       );
 
+      // Extended analytics fields (optional in schema)
+      const activityBaseline =
+        (isWeekendDay ? 5.5 : 6.5) + (hour >= 12 && hour < 18 ? 0.5 : 0) - (hour < 10 ? 0.7 : 0);
+      const activityLevel = clamp(
+        Math.round(gaussianRandom(random, activityBaseline - entryPain * 0.45 + (random() - 0.5), 1.6)),
+        0,
+        10
+      );
+
+      const stressBaseline =
+        (isWeekendDay ? 4.5 : 6) + (entryPain >= 7 && !isWeekendDay ? 1.2 : 0) + (weatherFactor > 0.25 ? 0.8 : 0);
+      const stress = clamp(
+        Math.round(gaussianRandom(random, stressBaseline + entryPain * 0.35 + (random() - 0.5), 1.7)),
+        0,
+        10
+      );
+
+      const qualityPool = entryPain >= 7 ? PAIN_QUALITIES.severe : entryPain >= 5 ? PAIN_QUALITIES.moderate : PAIN_QUALITIES.mild;
+      const qualityCount = entryPain >= 8 ? 3 : entryPain >= 6 ? 2 : 1;
+      const quality = uniqueStrings([
+        ...pickMultiple(qualityPool, qualityCount, random),
+        ...(hour < 10 ? ['Stiff'] : []),
+        ...(symptoms.some(s => s.toLowerCase().includes('burn')) ? ['Burning'] : []),
+        ...(symptoms.some(s => s.toLowerCase().includes('shoot') || s.toLowerCase().includes('radiat')) ? ['Shooting', 'Radiating'] : []),
+      ]).slice(0, 4);
+
+      const reliefIntensity = entryPain >= 8 ? 3 : entryPain >= 6 ? 2 : entryPain >= 4 ? 1 : 0;
+      const reliefMethods =
+        reliefIntensity === 0
+          ? random() < 0.45
+            ? pickMultiple(RELIEF_METHODS, 1, random)
+            : []
+          : uniqueStrings([
+              'Rest',
+              ...(sleepQuality <= 5 ? ['Heat therapy'] : []),
+              ...pickMultiple(RELIEF_METHODS, reliefIntensity, random),
+            ]).slice(0, 4);
+
+      const activityCount = activityLevel >= 7 ? 3 : activityLevel >= 4 ? 2 : 1;
+      const activityPool =
+        activityLevel >= 7
+          ? [...ACTIVITIES_DONE.moderate, ...ACTIVITIES_DONE.high]
+          : activityLevel >= 4
+            ? [...ACTIVITIES_DONE.low, ...ACTIVITIES_DONE.moderate]
+            : ACTIVITIES_DONE.low;
+      const activities = uniqueStrings(pickMultiple(activityPool, activityCount, random)).slice(0, 4);
+
       // Social impact
       const socialImpact: string[] = [];
       if (entryPain >= 6 && random() < 0.4) {
@@ -587,6 +659,11 @@ export function generateChronicPain12MonthData(
         },
         triggers,
         weather,
+        quality,
+        reliefMethods,
+        activityLevel,
+        stress,
+        activities,
         functionalImpact: {
           limitedActivities,
           assistanceNeeded,
