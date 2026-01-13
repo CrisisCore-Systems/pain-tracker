@@ -3,20 +3,20 @@
 See also: `docs/planning/PAIN_TRACKER_PRO_ACTION_PLAN.md` (maps external requirements to repo reality + risk gates).
 
 _Last Updated: 2025-12-24_  
-_Current Version: v1.0.0 (Stable)_  
-_Target: v1.1.0 (Q1 2026)_
+_Current Version: v1.1.2_  
+_Target: TBD_
 
 ---
 
 ## 🎯 Vision
 
-Pain Tracker is a **privacy-first, local-only PWA** for chronic pain management with WorkSafeBC compliance. This roadmap focuses on **enhancing analytics and pattern recognition** while maintaining strict privacy.
+Pain Tracker is a **privacy-first, local-only PWA** for chronic pain management with WorkSafeBC workflows. This roadmap focuses on **enhancing analytics and pattern recognition** while maintaining strict privacy.
 
 ---
 
 ## 📊 Current State Assessment
 
-### ✅ What Exists (Verified v1.1.0)
+### ✅ What Exists (Verified v1.1.2)
 - Modern stack: React 18 + TypeScript + Vite
 - Zustand state management infrastructure
 - Component library (Tailwind CSS)
@@ -36,7 +36,7 @@ Pain Tracker is a **privacy-first, local-only PWA** for chronic pain management 
 - **Clinical Integration**: FHIR R4 mapping in `src/services/clinical/FhirMapper.ts`
 - **Analytics Service**: Centralized aggregation logic in `src/services/PainAnalyticsService.ts`
 
-### 🚫 What's NOT in v1.1.0
+### 🚫 What's NOT in v1.1.2
 - Machine learning / AI predictions (Scheduled for Q1 2026)
 - Multi-tenancy
 - Enterprise features
@@ -46,7 +46,7 @@ Pain Tracker is a **privacy-first, local-only PWA** for chronic pain management 
 ## 🗓️ Release Timeline
 
 ```
-v1.0.0 (Stable)  →  v1.1.0 (Current)
+v1.0.0  →  v1.1.2 (Current)
       ↓
 Phase 1: Stable Release ✅ COMPLETE
 Phase 2: Security Hardening & Testing ✅ COMPLETE
@@ -179,12 +179,12 @@ Phase 4: ML Pattern Recognition (In Planning)
 
 **Goal:** 80%+ coverage, critical flows validated.
 
-**Status:** 90.82% coverage achieved with 722 tests passing.
+**Status:** Coverage and unit test counts are tracked via repo badges and updated by hooks.
 
 ### Issues:
 - **✅ COMPLETE: Unit Test Coverage**
-  - Achieved: **90.82%** overall coverage (target was 80%+)
-  - 722 tests passing across 122 test files
+  - Target: 80%+ overall coverage (met/exceeded)
+  - Test counts vary as the suite evolves; see `badges/` for current counts
   - Key coverage: wcb-export.ts (98.8%), trending.ts (100%), calculations.ts (98.14%)
   - All encryption functions tested in multiple test files
   - Validation schemas tested via integration tests
