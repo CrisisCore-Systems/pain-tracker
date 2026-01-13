@@ -1,5 +1,11 @@
 # Contributing to Pain Tracker
 
+## Star this repo if...
+
+- You believe healthcare software should be privacy-first by default.
+- You want a local-first, offline-capable pain tracker that doesn’t rely on surveillance.
+- You’ve lived through medical trauma, housing instability, disability, or burnout — and you want tools built with dignity.
+
 We love your input! We want to make contributing to Pain Tracker as easy and transparent as possible, whether it's:
 
 - Reporting a bug

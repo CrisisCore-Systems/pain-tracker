@@ -3,7 +3,9 @@
 <!-- markdownlint-disable MD013 MD033 MD036 MD060 MD022 MD032 -->
 
 [![Security Status](https://img.shields.io/badge/security-hardened-green)](./security/)
+[![GitHub stars](https://img.shields.io/github/stars/CrisisCore-Systems/pain-tracker?style=social)](https://github.com/CrisisCore-Systems/pain-tracker/stargazers)
 [![Stable](https://img.shields.io/badge/status-stable-green)](https://github.com/CrisisCore-Systems/pain-tracker/releases)
+[![Built with ❤️ by trauma survivors](https://img.shields.io/badge/Built%20with-%E2%9D%A4%EF%B8%8F%20by%20trauma%20survivors-black)](#)
 [![Test Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](./coverage/)
 [![TypeScript](https://img.shields.io/badge/typescript-76.1%25-blue)](https://www.typescriptlang.org/)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
