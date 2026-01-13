@@ -364,7 +364,7 @@ Password: (any password)
 - [ ] 50%+ reduction in patient review time ✅ (80% achieved)
 - [ ] 90%+ clinician satisfaction score
 - [ ] 30%+ increase in patients seen per week
-- [ ] 100% HIPAA compliance ✅ (audit logging in place)
+- [ ] HIPAA-aligned controls ✅ (audit logging in place)
 
 ### Qualitative Goals
 

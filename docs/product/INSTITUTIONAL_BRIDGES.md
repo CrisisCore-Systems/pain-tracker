@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Institutional Bridges system provides comprehensive healthcare integration capabilities for the Pain Tracker application, enabling seamless data exchange with healthcare providers, EHR systems, and research institutions while maintaining HIPAA compliance and security standards.
+The Institutional Bridges system provides comprehensive healthcare integration capabilities for the Pain Tracker application, enabling seamless data exchange with healthcare providers, EHR systems, and research institutions while maintaining HIPAA-aligned controls and security standards.
 
 ## Architecture
 
@@ -28,7 +28,7 @@ The Institutional Bridges system provides comprehensive healthcare integration c
    - Token management and validation
    - SMART on FHIR compatibility
 
-5. **HIPAA Compliance Service** (`HIPAACompliance.ts`)
+5. **HIPAA-Aligned Controls Service** (`HIPAACompliance.ts`)
    - Data validation and sanitization
    - PHI detection and de-identification
    - Audit logging and compliance reporting
@@ -59,7 +59,7 @@ The Institutional Bridges system provides comprehensive healthcare integration c
 - **Audit Trail**: Complete activity logging
 
 ### Security & Compliance
-- **HIPAA Compliance**: Technical, administrative, and physical safeguards
+- **HIPAA-aligned controls**: Technical, administrative, and physical safeguards
 - **PHI Protection**: Automated detection and de-identification
 - **Encryption**: End-to-end data protection
 - **Access Controls**: Role-based permissions

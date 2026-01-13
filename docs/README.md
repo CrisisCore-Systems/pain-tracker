@@ -6,7 +6,7 @@
 
 ## 🧭 How This Repo’s Docs Are Organized
 
-This repository has a **lot** of documentation. To keep it usable without deleting or moving files, this index treats docs as a few distinct “lanes”:
+This repository has a **lot** of documentation. To keep it usable, this index treats docs as a few distinct “lanes”:
 
 - **Evergreen product/engineering docs**: design, architecture, security, accessibility, operations.
 - **Roadmaps & planning**: what’s next, what’s in progress, what’s backlog.
@@ -124,7 +124,7 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 ### Security & Compliance
 - **[Security Policy](../SECURITY.md)** - Security practices and vulnerability reporting
 - **[Security Audit](security/SECURITY_AUDIT.md)** - Latest security audit results
-- **[HIPAA Audit Implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)** - HIPAA compliance features
+- **[HIPAA Audit Implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)** - HIPAA-aligned controls
 
 ### Deployment & Operations
 - **[Deployment Guide](ops/DEPLOYMENT_GUIDE.md)** - Complete deployment instructions
@@ -220,7 +220,7 @@ Suggested reading stance:
 
 **For Healthcare Providers**:
 - [Fibromyalgia Features Guide](product/FIBROMYALGIA_FEATURES.md) (Clinical Integration section)
-- [HIPAA Compliance](security/AUDIT_HIPAA_IMPLEMENTATION.md)
+- [HIPAA-aligned controls](security/AUDIT_HIPAA_IMPLEMENTATION.md)
 - [WorkSafe BC Export](product/FIBROMYALGIA_FEATURES.md#clinical--export-features)
 
 **For DevOps**:

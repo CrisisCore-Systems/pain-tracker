@@ -62,7 +62,7 @@ The Pain Tracker application now has **full PWA capabilities** implemented with 
    ```bash
    npm run dev
    ```
-   Server is running at: http://localhost:3000/pain-tracker/
+   Server is running at: http://localhost:3000/ (or `http://localhost:3000/pain-tracker/` if you start dev with `VITE_BASE='/pain-tracker/'`)
 
 2. **Test PWA Features in Browser Console:**
    ```javascript
@@ -202,6 +202,6 @@ The Pain Tracker application now has **enterprise-grade PWA capabilities** with:
 - ✅ **Enhanced user experience**
 - ✅ **Production-ready implementation**
 
-**Test the PWA now at:** http://localhost:3000/pain-tracker/
+**Test the PWA now at:** http://localhost:3000/ (or `http://localhost:3000/pain-tracker/` if you start dev with `VITE_BASE='/pain-tracker/'`)
 
 **Run:** `window.testPWA()` **in browser console to verify all features!**

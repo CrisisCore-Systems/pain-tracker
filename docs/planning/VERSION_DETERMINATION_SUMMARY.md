@@ -105,7 +105,7 @@ Typical 0.1.0 implies:
 - Not production-ready
 
 What this project actually has:
-- ✅ Production-ready security (HIPAA compliant)
+- ✅ Production-ready security (HIPAA-aligned controls)
 - ✅ Full SaaS infrastructure
 - ✅ Comprehensive test coverage
 - ✅ 90%+ feature completeness

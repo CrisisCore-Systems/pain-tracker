@@ -71,7 +71,7 @@ stripe prices create `
 # Create Product
 stripe products create `
   --name="Pain Tracker Pro" `
-  --description="Professional pain tracking with HIPAA compliance and unlimited features"
+  --description="Professional pain tracking with HIPAA-aligned controls and unlimited features"
 
 # Note the product ID
 
@@ -215,16 +215,25 @@ NODE_ENV=development
 ### Start Local Development Server
 
 ```powershell
-# Terminal 1: Start dev server
+# Terminal 1: Start frontend dev server
 npm run dev
-# Server defaults to http://localhost:3000 (it may choose another port if 3000 is busy)
+# Vite is configured to use http://localhost:3000 (it may choose another port if 3000 is busy)
+
+# Terminal 2: Start local API server (runs a subset of Vercel-style functions locally)
+# This powers clinic auth endpoints via Vite's /api proxy.
+npm run dev:api
 ```
 
 ### Setup Webhook Forwarding
 
 ```powershell
-# Terminal 2: Start Stripe webhook listener
-stripe listen --forward-to http://localhost:3000/api/stripe/webhook
+# Terminal 3 (optional): Start the local webhook receiver
+# NOTE: Both `dev:api` and `dev:webhook` default to port 3001.
+# If you're running both at the same time, move the webhook server to another port.
+$env:WEBHOOK_DEV_PORT="3002"; npm run dev:webhook
+
+# Terminal 4: Start Stripe webhook listener (forward to the webhook dev server)
+stripe listen --forward-to http://localhost:3002/api/stripe/webhook
 
 # Copy the webhook signing secret from output:
 # > Ready! Your webhook signing secret is whsec_...
@@ -234,17 +243,9 @@ stripe listen --forward-to http://localhost:3000/api/stripe/webhook
 ### Test Checkout Flow
 
 ```powershell
-# Terminal 3: Test checkout session creation
-curl -X POST http://localhost:3000/api/stripe/create-checkout-session `
-  -H "Content-Type: application/json" `
-  -d '{
-    \"userId\": \"user_test_123\",
-    \"tier\": \"basic\",
-    \"interval\": \"monthly\",
-    \"successUrl\": \"http://localhost:3000/success\",
-    \"cancelUrl\": \"http://localhost:3000/pricing\",
-    \"email\": \"test@example.com\"
-  }'
+# Checkout session creation is implemented as a serverless endpoint (Vercel-style).
+# It is not currently served by the local API dev server (`npm run dev:api`).
+# For end-to-end checkout testing, use a Vercel deployment/preview (or a serverless dev runner).
 ```
 
 Expected response:

@@ -45,7 +45,7 @@ stripe prices create --product=prod_XXX --unit-amount=9590 --currency=usd --recu
 # Copy price ID → STRIPE_PRICE_BASIC_YEARLY
 
 # Pro Tier Product
-stripe products create --name="Pain Tracker Pro" --description="Professional pain tracking with HIPAA compliance"
+stripe products create --name="Pain Tracker Pro" --description="Professional pain tracking with HIPAA-aligned controls"
 # Copy product ID → prod_YYY
 
 # Pro Monthly ($24.99)
@@ -93,22 +93,28 @@ NODE_ENV=development
 ### 5. Test Locally
 
 ```powershell
-# Terminal 1: Start dev server
+# Terminal 1: Start frontend dev server
 npm run dev
 
-# Vite defaults to http://localhost:3000 (it may choose another port if 3000 is busy).
-# If your terminal shows a different port, replace the URLs below.
+# Vite is configured to use http://localhost:3000 (it may choose another port if 3000 is busy).
 
-# Terminal 2: Start webhook listener
-stripe listen --forward-to http://localhost:3000/api/stripe/webhook
+# Terminal 2: Start local API server (runs Vercel-style functions locally)
+# This powers clinic auth endpoints via Vite's /api proxy.
+npm run dev:api
+
+# Terminal 3 (optional): Start local Stripe webhook receiver (signature verification + logging)
+# NOTE: Both `dev:api` and `dev:webhook` default to port 3001.
+# If you're running both at the same time, move the webhook server to another port.
+$env:WEBHOOK_DEV_PORT="3002"; npm run dev:webhook
+
+# Forward Stripe events to the webhook dev server
+stripe listen --forward-to localhost:3002/api/stripe/webhook
 # Copy webhook secret → Add to .env.local as STRIPE_WEBHOOK_SECRET
 
-# Terminal 3: Test checkout
-curl -X POST http://localhost:3000/api/stripe/create-checkout-session `
-  -H "Content-Type: application/json" `
-  -d '{\"userId\":\"test_user\",\"tier\":\"basic\",\"interval\":\"monthly\",\"successUrl\":\"http://localhost:3000/success\",\"cancelUrl\":\"http://localhost:3000/cancel\"}'
-
-# Open returned URL in browser, use test card: 4242 4242 4242 4242
+# Optional: Full checkout flow
+# The Stripe serverless endpoints (e.g. /api/stripe/create-checkout-session) are implemented for Vercel,
+# but are not currently served by `npm run dev:api`.
+# For end-to-end checkout testing, use a Vercel deployment/preview or a serverless dev runner.
 ```
 
 ---

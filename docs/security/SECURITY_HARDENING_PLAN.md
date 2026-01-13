@@ -27,7 +27,7 @@
    - XChaCha20-Poly1305 for vault service
    - libsodium for cryptographic operations
    
-4. **HIPAA Compliance Features**
+4. **HIPAA-Aligned Controls**
    - Audit trail logging
    - Data de-identification
    - PHI detection

@@ -90,7 +90,7 @@
 | **Local-First Data Storage** | ✅ IndexedDB | ❌ Cloud | ❌ Cloud | ❌ Cloud | ⚠️ On-Premise |
 | **Offline-First Architecture** | ✅ Full | ⚠️ Limited | ⚠️ Limited | ❌ | ⚠️ Depends |
 | **AES-256 Encryption** | ✅ Free | ⚠️ Unknown | ⚠️ Unknown | ⚠️ Unknown | ✅ Paid |
-| **HIPAA Compliance** | ✅ Aligned | ✅ Compliant | ✅ Compliant | ✅ Compliant | ✅ Certified |
+| **HIPAA Posture (Claimed)** | ✅ Aligned | ✅ Claimed | ✅ Claimed | ✅ Claimed | ✅ Certified |
 | **Zero Cloud Dependency** | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No |
 | **Data Sovereignty** | ✅ User-Controlled | ❌ Vendor | ❌ Vendor | ❌ Vendor | ⚠️ Institution |
 | **Audit Trails** | ✅ Free | ⚠️ Unknown | ⚠️ Unknown | ⚠️ Unknown | ✅ Paid |

@@ -88,7 +88,7 @@ const syncItem = {
 #### 2.1 Screenshot #1: Service Worker Cache Strategy
 **Steps:**
 1. Run `npm run dev` in terminal
-2. Open http://localhost:3000/pain-tracker/ in Chrome
+2. Open http://localhost:3000/ in Chrome (or `http://localhost:3000/pain-tracker/` if you start dev with `VITE_BASE='/pain-tracker/'`)
 3. Open DevTools → Application → Service Workers
 4. Screenshot showing:
    - Service worker registered and running

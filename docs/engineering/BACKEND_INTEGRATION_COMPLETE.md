@@ -265,8 +265,13 @@ npx prisma studio  # Open database admin UI
 4. Copy webhook signing secret to `STRIPE_WEBHOOK_SECRET`
 
 **Local Testing with Stripe CLI**:
-```bash
-stripe listen --forward-to localhost:3000/api/stripe/webhook
+```powershell
+# Start the local webhook receiver (avoid port collision with `npm run dev:api`)
+$env:WEBHOOK_DEV_PORT="3002"; npm run dev:webhook
+
+# Forward Stripe events to the webhook dev server
+stripe listen --forward-to localhost:3002/api/stripe/webhook
+
 # Copy webhook secret from output
 ```
 

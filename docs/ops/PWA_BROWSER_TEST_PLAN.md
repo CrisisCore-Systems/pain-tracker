@@ -24,7 +24,7 @@
 
 #### Test Steps:
 1. Open DevTools → Application → Service Workers
-2. Navigate to `http://localhost:3000/pain-tracker/`
+2. Navigate to `http://localhost:3000/` (or `http://localhost:3000/pain-tracker/` if you start dev with `VITE_BASE='/pain-tracker/'`)
 3. Verify service worker registration
 4. Check console for: "Service Worker: Loaded successfully - v1.2"
 

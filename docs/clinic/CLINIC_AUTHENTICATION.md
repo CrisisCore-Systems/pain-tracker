@@ -8,7 +8,7 @@
 
 ## 🎯 Overview
 
-The clinic portal now includes a comprehensive authentication and authorization system with role-based access control (RBAC), HIPAA audit logging, and secure session management.
+The clinic portal now includes a comprehensive authentication and authorization system with role-based access control (RBAC), HIPAA-aligned audit logging, and secure session management.
 
 ### Key Features
 
@@ -24,7 +24,7 @@ The clinic portal now includes a comprehensive authentication and authorization 
 - Route-level protection
 - Feature-level authorization
 
-✅ **HIPAA Compliance**
+✅ **HIPAA-Aligned Controls**
 - Automatic audit logging for all authentication events
 - Session tracking with timestamps
 - Failed login attempt monitoring
@@ -180,9 +180,9 @@ await logout();
 
 ---
 
-## 📝 HIPAA Audit Logging
+## 📝 HIPAA-Aligned Audit Logging
 
-All authentication events are automatically logged for HIPAA compliance.
+All authentication events are automatically logged to support HIPAA-aligned auditability.
 
 ### Logged Events
 

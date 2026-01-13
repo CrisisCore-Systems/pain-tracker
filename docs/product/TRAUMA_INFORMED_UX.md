@@ -329,7 +329,7 @@ function CustomComponent() {
 
 This implementation follows:
 
-- **WCAG 2.1 AA** compliance
+- **WCAG 2.2 AA** target
 - **Trauma-Informed Care Principles**
 - **Inclusive Design Guidelines**
 - **Cognitive Accessibility Guidelines**
@@ -357,14 +357,14 @@ This implementation follows:
 ### Automated Testing
 
 ```bash
-# Run accessibility tests
-npm run test:accessibility
+# Unit tests
+npm run test
 
-# Check for WCAG compliance
-npm run test:wcag
+# Accessibility scan (Playwright)
+npm run accessibility:scan
 
-# Validate trauma-informed patterns
-npm run test:trauma-informed
+# Full end-to-end suite (Playwright)
+npm run e2e
 ```
 
 ## Performance Considerations

@@ -195,8 +195,11 @@ With 20% yearly adoption:
 
 2. **Local Testing** (30 min)
    - Start dev server: `npm run dev`
-   - Start webhook listener: `stripe listen --forward-to http://localhost:3000/api/stripe/webhook` (use the port Vite prints if different)
-   - Test checkout flow with test card
+   - Start local API server: `npm run dev:api`
+   - Optional webhook dev server (avoid port collision with `dev:api`):
+     - `$env:WEBHOOK_DEV_PORT="3002"; npm run dev:webhook`
+     - `stripe listen --forward-to http://localhost:3002/api/stripe/webhook`
+   - Note: Checkout session creation is deployed as a serverless endpoint; use a Vercel preview/prod URL for end-to-end checkout testing
 
 3. **Deploy to Vercel** (30 min)
    - Install Vercel CLI: `npm install -g vercel`

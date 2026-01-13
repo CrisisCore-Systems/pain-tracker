@@ -371,7 +371,7 @@ The authentication system integrates seamlessly with your existing code:
 
 - **ClinicAuthContext** - Already updated to use backend
 - **ClinicProtectedRoute** - Works with new auth system
-- **HIPAA Compliance Service** - Logs all authentication events
+- **HIPAA-aligned controls service** - Logs all authentication events
 - **Clinic Dashboard** - No changes needed
 - **Patient data** - Can now be properly associated with clinicians
 

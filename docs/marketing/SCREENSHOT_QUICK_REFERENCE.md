@@ -71,14 +71,20 @@ public/screenshots/
 
 ## 🎬 Demo Routes
 
-Test showcase pages locally:
+Test showcase pages locally.
+
+- Vite is configured to use `http://localhost:3000/` (it may choose another port if 3000 is busy).
+- If you need the GitHub Pages base path locally, start dev with `VITE_BASE`:
+  - PowerShell: `$env:VITE_BASE='/pain-tracker/'; npm run dev`
+
+Default base (`/`):
 ```
-http://localhost:3000/pain-tracker/#demo-export
-http://localhost:3000/pain-tracker/#demo-body-map
-http://localhost:3000/pain-tracker/#demo-settings
-http://localhost:3000/pain-tracker/#demo-comparison
-http://localhost:3000/pain-tracker/#demo-crisis
-http://localhost:3000/pain-tracker/#demo-benefits
+http://localhost:3000/#demo-export
+http://localhost:3000/#demo-body-map
+http://localhost:3000/#demo-settings
+http://localhost:3000/#demo-comparison
+http://localhost:3000/#demo-crisis
+http://localhost:3000/#demo-benefits
 ```
 
 ---

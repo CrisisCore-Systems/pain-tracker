@@ -410,7 +410,7 @@ npm run deploy
 
 ## 🧪 **Testing & Quality**
 
-Test suite: **148 tests** (Vitest + integration coverage; E2E in Playwright).
+Test suite: **170 tests** (Vitest + integration coverage; E2E in Playwright).
 
 ### **Testing Strategy**
 - **Unit Tests**: Component and utility function testing
