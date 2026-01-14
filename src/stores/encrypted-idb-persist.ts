@@ -1,6 +1,6 @@
 import type { PersistStorage } from 'zustand/middleware';
 import { offlineStorage } from '../lib/offline-storage';
-import { encryptionService } from '../services/EncryptionService';
+import { vaultService } from '../services/VaultService';
 import { secureStorage } from '../lib/storage/secureStorage';
 
 const LEGACY_PAIN_ENTRIES_KEYS = {
@@ -170,21 +170,20 @@ export function createEncryptedOfflinePersistStorage<TState>(
       if (raw) {
         const parsed = safeJsonParse<{ state: TState; version?: number }>(raw);
         if (parsed) {
-          // Best-effort: store encrypted and then remove plaintext
-          try {
-            const encrypted = await encryptionService.encrypt(parsed, {
-              useCompression: true,
-              addIntegrityCheck: true,
-            });
-            await writeEncryptedValue(encrypted);
+          // Best-effort: store encrypted and then remove plaintext.
+          // If the vault isn't unlocked yet, do NOT delete plaintext; we'll retry after unlock.
+          if (vaultService.isUnlocked()) {
             try {
-              ls.removeItem(name);
+              const encrypted = vaultService.encryptString(JSON.stringify(parsed));
+              await writeEncryptedValue(encrypted);
+              try {
+                ls.removeItem(name);
+              } catch {
+                // ignore
+              }
             } catch {
               // ignore
             }
-          } catch {
-            // If encryption fails, fall through; returning parsed would keep app working but would
-            // re-persist and retry encryption later.
           }
           return parsed;
         }
@@ -202,15 +201,15 @@ export function createEncryptedOfflinePersistStorage<TState>(
     const legacyEntries = readLegacyPainEntries();
     if (legacyEntries && options?.buildMigratedState) {
       const migrated = options.buildMigratedState(legacyEntries);
-      try {
-        const encrypted = await encryptionService.encrypt(migrated, {
-          useCompression: true,
-          addIntegrityCheck: true,
-        });
-        await writeEncryptedValue(encrypted);
-        clearLegacyPainEntriesKeys();
-      } catch {
-        // ignore encryption failures; we'll still return migrated to keep UX alive
+      // Only clear legacy keys after successfully writing an encrypted payload.
+      if (vaultService.isUnlocked()) {
+        try {
+          const encrypted = vaultService.encryptString(JSON.stringify(migrated));
+          await writeEncryptedValue(encrypted);
+          clearLegacyPainEntriesKeys();
+        } catch {
+          // ignore
+        }
       }
       return migrated;
     }
@@ -224,17 +223,19 @@ export function createEncryptedOfflinePersistStorage<TState>(
       // First: try encrypted IDB.
       try {
         const storedEncrypted = await readEncryptedValue();
-        if (storedEncrypted) {
-          const decrypted = await encryptionService.decrypt(storedEncrypted as never);
-          return decrypted as { state: TState; version?: number };
+        if (typeof storedEncrypted === 'string') {
+          // Vault-gated: we can only decrypt after unlock.
+          if (!vaultService.isUnlocked()) {
+            return null;
+          }
+          const decrypted = vaultService.decryptString(storedEncrypted);
+          return safeJsonParse<{ state: TState; version?: number }>(decrypted);
         }
       } catch {
-        // If decrypt fails, clear and fall back to migration (best-effort)
-        try {
-          await removeEncryptedValue();
-        } catch {
-          // ignore
-        }
+        // If decrypt fails, do NOT delete the encrypted payload.
+        // Decrypt can fail legitimately when crypto material isn't available yet
+        // (e.g. vault not unlocked / master keys not initialized). Deleting here
+        // would cause irreversible data loss.
       }
 
       // Second: try migration from legacy sources.
@@ -243,22 +244,28 @@ export function createEncryptedOfflinePersistStorage<TState>(
     }),
 
     setItem: async (_storageName: string, value: { state: TState; version?: number }) => runExclusive(async () => {
-      const encrypted = await encryptionService.encrypt(value, {
-        useCompression: true,
-        addIntegrityCheck: true,
-      });
-      await writeEncryptedValue(encrypted);
-
-      // Best-effort: remove any plaintext legacy copies.
-      const ls = getSafeLocalStorage();
-      if (ls) {
-        try {
-          ls.removeItem(name);
-        } catch {
-          // ignore
-        }
+      // Persistence is best-effort; if the vault is not unlocked yet,
+      // skip writing rather than throwing (which can surface as app errors).
+      if (!vaultService.isUnlocked()) {
+        return;
       }
-      clearLegacyPainEntriesKeys();
+      try {
+        const encrypted = vaultService.encryptString(JSON.stringify(value));
+        await writeEncryptedValue(encrypted);
+
+        // Best-effort: remove any plaintext legacy copies.
+        const ls = getSafeLocalStorage();
+        if (ls) {
+          try {
+            ls.removeItem(name);
+          } catch {
+            // ignore
+          }
+        }
+        clearLegacyPainEntriesKeys();
+      } catch {
+        // ignore
+      }
     }),
 
     removeItem: async (_storageName: string) => runExclusive(async () => {

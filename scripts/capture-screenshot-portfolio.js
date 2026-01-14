@@ -26,6 +26,23 @@ const args = process.argv.slice(2);
 const phase = args.find(arg => arg.startsWith('--phase='))?.split('=')[1] || 'all';
 const categoryFilter = args.find(arg => arg.startsWith('--category='))?.split('=')[1];
 const dryRun = args.includes('--dry-run');
+const debug = args.includes('--debug');
+
+if (debug) {
+  process.on('unhandledRejection', (reason) => {
+    console.error('[debug] unhandledRejection:', reason);
+  });
+  process.on('uncaughtException', (err) => {
+    console.error('[debug] uncaughtException:', err);
+  });
+  process.on('beforeExit', (code) => {
+    console.log(`[debug] beforeExit code=${code} exitCode=${process.exitCode ?? 'unset'}`);
+  });
+  process.on('exit', (code) => {
+    // eslint-disable-next-line no-console
+    console.log(`[debug] exit code=${code} exitCode=${process.exitCode ?? 'unset'}`);
+  });
+}
 
 console.log('📸 Screenshot Portfolio Capture');
 console.log('================================\n');
@@ -49,6 +66,186 @@ async function waitForServer(url, maxAttempts = 30) {
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
   throw new Error(`Server did not start after ${maxAttempts} attempts`);
+}
+
+function normalizeBaseUrl(url) {
+  return url.endsWith('/') ? url.slice(0, -1) : url;
+}
+
+async function waitForAppContent(page) {
+  const main = page.locator('#main-content, main#main-content, [role="application"]').first();
+  await main.waitFor({ state: 'visible', timeout: 30_000 }).catch(() => {});
+  await page.waitForTimeout(400);
+}
+
+async function waitForProtectedAppShell(page, timeout = 60_000) {
+  const appShell = page
+    .locator('[role="application"][aria-label="Pain Tracker Pro Application"], .pt-app-shell[role="application"]')
+    .first();
+  return appShell
+    .waitFor({ state: 'visible', timeout })
+    .then(() => true)
+    .catch(() => false);
+}
+
+async function ensureProtectedAppMounted(page, baseUrl, passphrase, { debug, debugDir } = {}) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const mounted = await waitForProtectedAppShell(page, 60_000);
+    if (mounted) return;
+
+    if (debug && debugDir) {
+      await page
+        .screenshot({ path: join(debugDir, `protected-app-not-mounted-attempt-${attempt}.png`) })
+        .catch(() => {});
+    }
+
+    // Important: do not force a full reload after unlock; some vault implementations
+    // intentionally keep unlock state in-memory only.
+    await page.goto(`${baseUrl}/app`, { waitUntil: 'networkidle' }).catch(() => {});
+    await waitForAppContent(page);
+    await ensureVaultUnlocked(page, passphrase);
+  }
+
+  throw new Error('Protected app shell did not mount in time after vault unlock/retries');
+}
+
+async function ensureDarkMode(page) {
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem('pain-tracker:theme-mode', 'dark');
+    } catch {
+      // ignore
+    }
+  });
+}
+
+async function dismissOnboardingIfPresent(page) {
+  const onboardingDialog = page.locator('[role="dialog"][aria-labelledby="onboarding-title"]').first();
+
+  // Give onboarding a moment to appear (it can mount after initial paint).
+  const visible = await onboardingDialog.isVisible({ timeout: 5_000 }).catch(() => false);
+  if (!visible) return;
+
+  // Click the Skip button *inside* the dialog so we don't hit an off-screen element.
+  const skipButton = onboardingDialog
+    .getByRole('button', { name: /skip/i })
+    .first();
+
+  // Retry a couple times; Playwright can race with animations.
+  for (let i = 0; i < 3; i++) {
+    const clicked = await skipButton
+      .click({ timeout: 5_000 })
+      .then(() => true)
+      .catch(() => false);
+    if (clicked) break;
+    await page.waitForTimeout(250);
+  }
+
+  await onboardingDialog.waitFor({ state: 'hidden', timeout: 20_000 }).catch(() => {});
+}
+
+async function ensureChronicPainTestDataLoaded(page, minEntries = 10) {
+  // Ensure the protected app is actually mounted (the loader is installed by ProtectedAppShell).
+  const isMounted = await waitForProtectedAppShell(page, 45_000);
+  if (!isMounted) {
+    console.log('   ⚠️  Protected app not mounted; cannot load seeded test data');
+    return;
+  }
+
+  // Wait for the dev helper to be installed by ProtectedAppShell.
+  const hasLoader = await page
+    .waitForFunction(() => typeof window.loadChronicPainTestData === 'function', null, {
+      timeout: 30_000,
+    })
+    .then(() => true)
+    .catch(() => false);
+
+  if (!hasLoader) {
+    console.log('   ⚠️  Test data loader not available; continuing without seeded data');
+    return;
+  }
+
+  await page.evaluate(() => {
+    try {
+      window.loadChronicPainTestData();
+    } catch {
+      // ignore
+    }
+  });
+
+  // Wait for the UI to reflect a non-trivial entry count.
+  await page
+    .waitForFunction(
+      (min) => {
+        const text = document.body?.innerText || '';
+        const match = text.match(/(\d+)\s+entries\b/i);
+        if (!match) return false;
+        const n = Number(match[1]);
+        const minNum = typeof min === 'number' ? min : Number(min);
+        return Number.isFinite(n) && Number.isFinite(minNum) && n >= minNum;
+      },
+      minEntries,
+      { timeout: 60_000 }
+    )
+    .catch(() => {
+      console.log('   ⚠️  Timed out waiting for entries count; continuing');
+    });
+}
+
+async function ensureVaultUnlocked(page, passphrase) {
+  // Be very specific here: the vault screen can also have #main-content.
+  // The protected app shell renders a stable role+label.
+  const appRoot = page
+    .locator('[role="application"][aria-label="Pain Tracker Pro Application"], .pt-app-shell[role="application"]')
+    .first();
+  const vaultTitle = page.locator('h1:has-text("Secure vault"), #vault-dialog-title').first();
+  const preparingVault = page.getByText(/Preparing secure vault/i).first();
+
+  const appeared = await Promise.race([
+    appRoot.waitFor({ state: 'visible', timeout: 60_000 }).then(() => 'app'),
+    vaultTitle.waitFor({ state: 'visible', timeout: 60_000 }).then(() => 'vault'),
+    preparingVault.waitFor({ state: 'visible', timeout: 60_000 }).then(() => 'preparing'),
+  ]).catch(() => null);
+
+  if (appeared === 'app') return;
+  if (!appeared) throw new Error(`Neither app shell nor vault UI appeared in time. URL: ${page.url()}`);
+
+  if (appeared === 'preparing') {
+    await vaultTitle.waitFor({ state: 'visible', timeout: 45_000 });
+  }
+
+  const setupSelector = 'form[aria-labelledby="vault-setup-title"]';
+  const unlockSelector = 'form[aria-labelledby="vault-unlock-title"]';
+  const isSetup = (await page.locator(setupSelector).count()) > 0;
+  const isUnlock = (await page.locator(unlockSelector).count()) > 0;
+
+  if (!isSetup && !isUnlock) {
+    // Vault dialog may not be present even if title flickers.
+    return;
+  }
+
+  if (isSetup) {
+    await page.fill('#vault-passphrase', passphrase);
+    await page.fill('#vault-passphrase-confirm', passphrase);
+    await page.click(`${setupSelector} button[type="submit"]`);
+  } else {
+    await page.fill('#vault-passphrase-unlock', passphrase);
+    await page.click(`${unlockSelector} button[type="submit"]`);
+  }
+
+  // Vault init/unlock can be slow on some machines.
+  await Promise.race([
+    page.locator('[role="dialog"][aria-modal="true"]').first().waitFor({ state: 'hidden', timeout: 90_000 }),
+    appRoot.waitFor({ state: 'visible', timeout: 90_000 }),
+  ]).catch(() => {});
+
+  const stillLocked = await vaultTitle.isVisible({ timeout: 1000 }).catch(() => false);
+  if (stillLocked) {
+    const alertText = await page.getByRole('alert').first().textContent().catch(() => null);
+    throw new Error(
+      `Vault setup/unlock did not complete in time${alertText ? ` (alert: ${alertText.trim()})` : ''}`
+    );
+  }
 }
 
 // Ensure directory exists
@@ -117,7 +314,7 @@ async function captureScreenshot(page, screenshot, outputDir) {
 
     // Navigate to URL if specified
     if (screenshot.url) {
-      const baseUrl = 'http://localhost:3000';
+      const baseUrl = normalizeBaseUrl(process.env.SCREENSHOT_BASE_URL || 'http://localhost:3000');
       const fullUrl = screenshot.url.startsWith('http') 
         ? screenshot.url 
         : `${baseUrl}${screenshot.url}`;
@@ -126,9 +323,34 @@ async function captureScreenshot(page, screenshot, outputDir) {
         waitUntil: 'networkidle',
         timeout: 30000 
       });
-      
-      // Wait for content to settle
-      await page.waitForTimeout(2000);
+
+      await waitForAppContent(page);
+    }
+
+    // For protected-app shots: unlock and ensure the real app is mounted.
+    if (screenshot.url && screenshot.url.startsWith('/app')) {
+      const baseUrl = normalizeBaseUrl(process.env.SCREENSHOT_BASE_URL || 'http://localhost:3000');
+      const testPassphrase = process.env.SCREENSHOT_VAULT_PASSPHRASE || 'screenshot-test-passphrase-2025';
+
+      await ensureVaultUnlocked(page, testPassphrase);
+
+      const mounted = await waitForProtectedAppShell(page, 60_000);
+      if (!mounted) {
+        if (debug) {
+          const debugDir = join(outputDir, 'debug');
+          ensureDir(debugDir);
+          await page
+            .screenshot({ path: join(debugDir, `protected-app-missing-${screenshot.id}.png`) })
+            .catch(() => {});
+        }
+        throw new Error('Protected app shell not visible after vault unlock');
+      }
+
+      // Ensure overlays don't block interactions or pollute screenshots.
+      await dismissOnboardingIfPresent(page);
+
+      // Ensure stable seeded dataset before capturing /app views.
+      await ensureChronicPainTestDataLoaded(page, 10);
     }
 
     // Handle offline mode screenshots
@@ -136,6 +358,34 @@ async function captureScreenshot(page, screenshot, outputDir) {
       await page.context().setOffline(true);
       console.log('   🔌 Offline mode enabled');
       await page.waitForTimeout(1000);
+    }
+
+    // Ensure overlays don't pollute screenshots or block interactions.
+    await dismissOnboardingIfPresent(page);
+
+    // Optional navigation inside the protected app
+    if (screenshot.navTarget) {
+      await dismissOnboardingIfPresent(page);
+      const navButton = page.locator(`[data-nav-target="${screenshot.navTarget}"]`).first();
+      const isVisible = await navButton
+        .waitFor({ state: 'visible', timeout: 30_000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!isVisible) {
+        console.log(`   ⚠️  navTarget '${screenshot.navTarget}' not found/visible; capturing current view`);
+        if (debug) {
+          const existingTargets = await page.evaluate(() =>
+            Array.from(document.querySelectorAll('[data-nav-target]')).map((el) =>
+              el.getAttribute('data-nav-target')
+            )
+          ).catch(() => null);
+          console.log(`   [debug] data-nav-targets: ${existingTargets ? JSON.stringify(existingTargets) : 'unavailable'}`);
+        }
+      } else {
+        await navButton.scrollIntoViewIfNeeded().catch(() => {});
+        await navButton.click();
+        await page.waitForTimeout(1000);
+      }
     }
 
     if (!dryRun) {
@@ -281,10 +531,31 @@ async function captureScreenshotPortfolio() {
 
   // Start dev server
   console.log('🚀 Starting dev server...');
-  const devServer = spawn('npm', ['run', 'dev'], {
+  const devServer = spawn('npm', ['run', '-s', 'dev', '--', '--port', '3000'], {
     cwd: ROOT_DIR,
     stdio: 'pipe',
     shell: true
+  });
+
+  const devServerExit = new Promise((resolve) => {
+    devServer.once('exit', (code, signal) => resolve({ code, signal }));
+    devServer.once('close', (code, signal) => resolve({ code, signal }));
+  });
+
+  devServer.once('error', (err) => {
+    if (debug) console.warn('[debug] dev server process error:', err);
+  });
+
+  // Try to detect the actual Vite URL (in case port 3000 is taken and it falls back).
+  let detectedBaseUrl = null;
+  const localUrlRegex = /(https?:\/\/localhost:\d+)(?:\/)?/;
+  devServer.stdout.on('data', (data) => {
+    const output = data.toString();
+    const match = output.match(localUrlRegex);
+    if (match && !detectedBaseUrl) {
+      detectedBaseUrl = match[1];
+      if (debug) console.log(`   🔎 Detected dev server URL: ${detectedBaseUrl}`);
+    }
   });
 
   devServer.stdout.on('data', (data) => {
@@ -295,8 +566,11 @@ async function captureScreenshotPortfolio() {
   });
 
   try {
+    const baseUrl = normalizeBaseUrl(detectedBaseUrl || 'http://localhost:3000');
+    process.env.SCREENSHOT_BASE_URL = baseUrl;
+
     // Wait for server to start
-    await waitForServer('http://localhost:3000/pain-tracker/');
+    await waitForServer(`${baseUrl}/`);
 
     // Launch browser
     console.log('🌐 Launching browser...');
@@ -306,85 +580,35 @@ async function captureScreenshotPortfolio() {
     });
     
     const context = await browser.newContext({
-      deviceScaleFactor: 2, // Retina display
+      deviceScaleFactor: 2, // default; per-shot overrides via page.screenshot still use this context
       locale: 'en-US'
+    });
+
+    // Apply stable screenshot preferences before any app code runs.
+    await context.addInitScript(() => {
+      try {
+        localStorage.setItem('pain-tracker:theme-mode', 'dark');
+        // Set both legacy and secureStorage (pt: namespace) flags so onboarding never mounts.
+        localStorage.setItem('pain-tracker-onboarding-completed', 'true');
+        localStorage.setItem('pt:pain-tracker-onboarding-completed', 'true');
+        localStorage.setItem('pain-tracker:notification-consent', 'dismissed');
+        localStorage.setItem('pain-tracker:analytics-consent', 'declined');
+      } catch {
+        // ignore
+      }
     });
 
     const page = await context.newPage();
 
-    // Handle authentication - set up vault with test passphrase
-    console.log('🔐 Setting up authentication...');
-    const baseUrl = 'http://localhost:3000';
-    await page.goto(`${baseUrl}/pain-tracker/`, { waitUntil: 'networkidle' });
-    await page.waitForTimeout(1000);
-    
-    // DEBUG: Take screenshot of current page
-    const debugDir = join(SCREENSHOTS_BASE_DIR, 'debug');
-    ensureDir(debugDir);
-    await page.screenshot({ path: join(debugDir, 'auth-screen.png') });
-    console.log('   📸 Debug screenshot saved to debug/auth-screen.png');
-    
-    // Check if we need to set up or unlock the vault
-    const setupHeading = await page.locator('text=/Create a secure passphrase|Create Your Vault/i').count();
-    const unlockHeading = await page.locator('text=/Unlock Your Vault|Enter your passphrase/i').count();
-    
-    console.log(`   Setup screen detected: ${setupHeading > 0}`);
-    console.log(`   Unlock screen detected: ${unlockHeading > 0}`);
-    
-    const testPassphrase = 'screenshot-test-passphrase-2025';
-    
-    if (setupHeading > 0) {
-      console.log('   Setting up vault with test passphrase...');
-      
-      // Wait for password inputs to be visible
-      await page.waitForSelector('input[type="password"]', { state: 'visible', timeout: 5000 });
-      
-      // Get all password fields
-      const passwordFields = await page.locator('input[type="password"]').all();
-      console.log(`   Found ${passwordFields.length} password fields`);
-      
-      // Fill passphrase field (first one)
-      await passwordFields[0].fill(testPassphrase);
-      
-      // Fill confirm passphrase field (second one)
-      if (passwordFields.length > 1) {
-        await passwordFields[1].fill(testPassphrase);
-      }
-      
-      // Wait a bit for validation
-      await page.waitForTimeout(500);
-      
-      // Click submit button
-      const submitButton = await page.locator('button[type="submit"]');
-      await submitButton.click();
-      
-      // Wait for authentication to complete
-      await page.waitForTimeout(3000);
-      
-      // DEBUG: Screenshot after auth
-      await page.screenshot({ path: join(debugDir, 'after-auth.png') });
-      console.log('   📸 After auth screenshot saved');
-      console.log('   ✅ Vault created and unlocked');
-      
-    } else if (unlockHeading > 0) {
-      console.log('   Unlocking vault...');
-      
-      await page.waitForSelector('input[type="password"]', { state: 'visible', timeout: 5000 });
-      await page.fill('input[type="password"]', testPassphrase);
-      await page.waitForTimeout(500);
-      
-      const submitButton = await page.locator('button[type="submit"]');
-      await submitButton.click();
-      
-      await page.waitForTimeout(3000);
-      
-      // DEBUG: Screenshot after auth
-      await page.screenshot({ path: join(debugDir, 'after-auth.png') });
-      console.log('   📸 After auth screenshot saved');
-      console.log('   ✅ Vault unlocked');
-      
-    } else {
-      console.log('   ✅ Already authenticated');
+    // Optional auth debug: hit /app once so we can capture the vault state.
+    if (debug) {
+      console.log('🔐 Debugging vault/app entry...');
+      const debugDir = join(SCREENSHOTS_BASE_DIR, 'debug');
+      ensureDir(debugDir);
+      await page.goto(`${baseUrl}/app`, { waitUntil: 'networkidle' }).catch(() => {});
+      await waitForAppContent(page);
+      await page.screenshot({ path: join(debugDir, 'auth-screen.png') }).catch(() => {});
+      console.log('   📸 Debug screenshot saved to debug/auth-screen.png');
     }
 
     // Capture each screenshot
@@ -402,7 +626,7 @@ async function captureScreenshotPortfolio() {
     const cleanupContext = await cleanupBrowser.newContext();
     const cleanupPage = await cleanupContext.newPage();
     
-    await cleanupPage.goto(`${baseUrl}/pain-tracker/`);
+    await cleanupPage.goto(`${baseUrl}/app`);
     await cleanupPage.evaluate(() => {
       // Clear all localStorage (vault keys)
       localStorage.clear();
@@ -450,21 +674,78 @@ async function captureScreenshotPortfolio() {
 
     console.log('\n✅ Screenshot portfolio capture complete!\n');
 
+    // Ensure a stable exit code for CI/automation.
+    process.exitCode = failed > 0 ? 1 : 0;
+    if (debug) console.log(`[debug] set process.exitCode=${process.exitCode}`);
+
   } catch (error) {
     console.error('❌ Error:', error);
-    throw error;
+    // Do not rethrow here: we want the script to keep its own exitCode logic
+    // and not force a non-zero exit on non-fatal cleanup/shutdown errors.
+    process.exitCode = 1;
   } finally {
-    // Stop dev server
+    // Stop dev server (best-effort). On Windows, killing an already-exited process
+    // can throw; don't let that flip an otherwise successful run to exit code 1.
     console.log('🛑 Stopping dev server...');
-    devServer.kill('SIGTERM');
-    
-    // Give it a moment to clean up
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (debug) console.log(`[debug] shutdown start exitCode=${process.exitCode ?? 'unset'}`);
+    try {
+      if (devServer && !devServer.killed) {
+        devServer.kill();
+      }
+    } catch (err) {
+      if (debug) console.warn('[debug] dev server stop failed:', err);
+    }
+
+    // Wait for the dev server to actually exit; otherwise this script can hang and
+    // the terminal wrapper may force-kill it (showing exit code 1 even when our
+    // process.exitCode is 0).
+    const stopTimeoutMs = 10_000;
+    const stopResult = await Promise.race([
+      devServerExit.then((result) => ({ done: true, result })),
+      new Promise((resolve) => setTimeout(() => resolve({ done: false }), stopTimeoutMs)),
+    ]);
+
+    if (debug) {
+      if (stopResult.done) {
+        console.log(`[debug] dev server exited code=${stopResult.result.code} signal=${stopResult.result.signal}`);
+      } else {
+        console.log('[debug] dev server did not exit in time; forcing taskkill');
+      }
+    }
+
+    if (!stopResult.done) {
+      const pid = devServer?.pid;
+      if (pid) {
+        await new Promise((resolve) => {
+          const killer = spawn('taskkill', ['/PID', String(pid), '/T', '/F'], {
+            stdio: 'ignore',
+            shell: true,
+          });
+          killer.once('exit', () => resolve());
+          killer.once('error', () => resolve());
+        });
+      }
+
+      // Give it a brief moment after the forced kill.
+      await Promise.race([
+        devServerExit,
+        new Promise((resolve) => setTimeout(resolve, 2_000)),
+      ]);
+    }
+
+    if (debug) console.log(`[debug] shutdown complete exitCode=${process.exitCode ?? 'unset'}`);
   }
 }
 
 // Run the script
-captureScreenshotPortfolio().catch(error => {
-  console.error('Fatal error:', error);
-  process.exit(1);
-});
+captureScreenshotPortfolio()
+  .then(() => {
+    // Some environments will force-kill long-running Node processes that still have
+    // stray handles (e.g. lingering HTTP keep-alives). Explicitly exit with our
+    // computed exit code so successful runs consistently return 0.
+    process.exit(process.exitCode ?? 0);
+  })
+  .catch((error) => {
+    console.error('Fatal error:', error);
+    process.exit(process.exitCode ?? 1);
+  });

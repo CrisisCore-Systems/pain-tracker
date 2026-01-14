@@ -91,8 +91,6 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 The following screenshots require manual creation as infographics or composites:
 
-- **comparison-grid.png** - Comparison Grid (App vs Competitors)
-- **benefit-icons-grid.png** - Benefit Icons Grid
 - **process-flow.png** - Process Flow Infographic
 - **architecture-diagram.png** - Architecture Diagram
 
@@ -143,4 +141,4 @@ When adding new screenshots:
 
 ---
 
-*Last updated: 11/12/2025*
+*Last updated: 1/13/2026*

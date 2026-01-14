@@ -79,6 +79,21 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
     }
   }, []);
 
+  // Rehydrate persisted store state after the vault has allowed the protected app to mount.
+  // The encrypted persist storage is vault-gated, so hydration must occur post-unlock.
+  useEffect(() => {
+    const persistApi = (usePainTrackerStore as unknown as { persist?: { rehydrate?: () => Promise<void> | void } })
+      .persist;
+    if (!persistApi?.rehydrate) return;
+    void (async () => {
+      try {
+        await persistApi.rehydrate();
+      } catch {
+        // ignore
+      }
+    })();
+  }, []);
+
   // Subscribe to entries and wire pattern alerts (app-only)
   const storeEntries = usePainTrackerStore(selectEntries);
   const patternEntries = storeEntries.map((e) => ({

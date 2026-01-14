@@ -49,6 +49,12 @@ badges/*.json
 
 test-screenshots/
 
+# Screenshot script debug artifacts (do not commit)
+public/screenshots/debug/
+
+# Screenshot run snapshots (local workflow output; do not commit)
+public/screenshots/runs/
+
 # Locally-generated artifacts (do not commit)
 accessibility-reports/
 e2e/results/

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-01-13
+
+### Fixed
+
+- **Persistence**: Persisted PainTracker store data now survives reloads by encrypting Zustand persisted state with the vault (libsodium) and rehydrating after unlock.
+
+### Changed
+
+- **Screenshots**: Refined screenshot showcase routes and refreshed portfolio assets/metadata for marketing and launch workflows.
+
 ## [1.1.2] - 2026-01-11
 
 ### Changed

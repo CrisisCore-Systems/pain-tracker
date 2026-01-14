@@ -1,19 +1,19 @@
 {
-  "generated": "2025-11-13T06:08:49.491Z",
-  "phase": "phase1",
+  "generated": "2026-01-14T05:50:03.509Z",
+  "phase": "phase3",
   "category": "all",
   "screenshots": [
     {
-      "id": "blank-wcb-form",
-      "name": "blank-wcb-form-6.png",
-      "category": "marketing",
-      "description": "Blank WorkSafeBC Form 6 - The Pain Point",
-      "caption": "This is what claimants face - hours of manual form filling",
-      "url": "/pain-tracker/#demo-blank-form",
+      "id": "trauma-informed-comparison",
+      "name": "trauma-informed-mode.png",
+      "category": "social",
+      "description": "Trauma-Informed Mode Comparison",
+      "caption": "Switch between clinical and gentle language based on your needs",
+      "url": "/demo/#demo-trauma-mode",
       "width": 1200,
       "height": 630,
-      "priority": "phase1",
-      "useCase": "Social media posts, blog introductions",
+      "priority": "phase3",
+      "useCase": "Mental health communities, trauma-sensitive outreach",
       "deviceScaleFactor": 2,
       "result": {
         "success": true,
@@ -21,101 +21,69 @@
       }
     },
     {
-      "id": "export-modal",
-      "name": "export-modal-solution.png",
-      "category": "marketing",
-      "description": "Export Modal - The Solution",
-      "caption": "This is the alternative - one click to generate perfect forms",
-      "url": "/pain-tracker/#demo-export",
+      "id": "process-flow-infographic",
+      "name": "process-flow.png",
+      "category": "social",
+      "description": "Process Flow Infographic",
+      "caption": "From pain tracking to submitted forms in under 2 minutes",
       "width": 1200,
       "height": 630,
-      "priority": "phase1",
-      "useCase": "Hero image, landing page above the fold",
+      "priority": "phase3",
+      "useCase": "Explainer content, onboarding sequences",
       "deviceScaleFactor": 2,
+      "isInfographic": true,
       "result": {
         "success": true,
-        "skipped": false
+        "skipped": true,
+        "reason": "infographic"
       }
     },
     {
-      "id": "pain-entry-interface",
-      "name": "pain-entry-interface.png",
-      "category": "marketing",
-      "description": "Pain Entry Interface",
-      "caption": "Track your pain in 30 seconds - no complex interfaces",
-      "url": "/pain-tracker/",
-      "width": 1200,
-      "height": 630,
-      "priority": "phase1",
-      "useCase": "Demo sequences, feature explanations",
-      "deviceScaleFactor": 2,
-      "result": {
-        "success": true,
-        "skipped": false
-      }
-    },
-    {
-      "id": "export-process",
-      "name": "export-process.png",
-      "category": "marketing",
-      "description": "Export Process with Form 6/7 Options",
-      "caption": "One click exports your data to WorkSafeBC-ready formats",
-      "url": "/pain-tracker/#demo-export-modal",
-      "width": 1200,
-      "height": 630,
-      "priority": "phase1",
-      "useCase": "Conversion-focused content",
-      "deviceScaleFactor": 2,
-      "result": {
-        "success": true,
-        "skipped": false
-      }
-    },
-    {
-      "id": "form-6-preview",
-      "name": "generated-form-6-preview.png",
-      "category": "wcb-forms",
-      "description": "Generated Form 6 Preview",
-      "caption": "Perfectly formatted Form 6, generated automatically from your entries",
-      "url": "/pain-tracker/#demo-form-6",
-      "width": 1200,
-      "height": 630,
-      "priority": "phase1",
-      "useCase": "Trust-building, result demonstrations",
-      "deviceScaleFactor": 2,
-      "result": {
-        "success": true,
-        "skipped": false
-      }
-    },
-    {
-      "id": "form-7-preview",
-      "name": "generated-form-7-preview.png",
-      "category": "wcb-forms",
-      "description": "Generated Form 7 Preview",
-      "caption": "Employer reports generated with the same accuracy",
-      "url": "/pain-tracker/#demo-form-7",
-      "width": 1200,
-      "height": 630,
-      "priority": "phase1",
-      "useCase": "Comprehensive solution showcasing",
-      "deviceScaleFactor": 2,
-      "result": {
-        "success": true,
-        "skipped": false
-      }
-    },
-    {
-      "id": "privacy-settings",
-      "name": "privacy-security-settings.png",
+      "id": "architecture-diagram",
+      "name": "architecture-diagram.png",
       "category": "technical",
-      "description": "Privacy/Security Settings",
-      "caption": "Your data never leaves your device - unlike cloud-based competitors",
-      "url": "/pain-tracker/#demo-settings",
+      "description": "Architecture Diagram",
+      "caption": "Local-first architecture means we can't access your data even if we wanted to",
       "width": 1200,
       "height": 630,
-      "priority": "phase1",
-      "useCase": "Privacy-focused marketing, addressing concerns",
+      "priority": "phase3",
+      "useCase": "Developer communities, privacy forums",
+      "deviceScaleFactor": 2,
+      "isInfographic": true,
+      "result": {
+        "success": true,
+        "skipped": true,
+        "reason": "infographic"
+      }
+    },
+    {
+      "id": "built-in-bc",
+      "name": "built-in-bc.png",
+      "category": "social",
+      "description": "Built in BC Element",
+      "caption": "Built by BC developers for BC workers",
+      "url": "/demo/#demo-bc-branding",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase3",
+      "useCase": "Local marketing, community outreach",
+      "deviceScaleFactor": 2,
+      "result": {
+        "success": true,
+        "skipped": false
+      }
+    },
+    {
+      "id": "crisis-support",
+      "name": "crisis-support-feature.png",
+      "category": "social",
+      "description": "Crisis Support Feature",
+      "caption": "Built-in crisis detection and support for when pain becomes overwhelming",
+      "url": "/demo/#demo-crisis",
+      "width": 1200,
+      "height": 630,
+      "priority": "phase3",
+      "useCase": "Mental health advocacy groups",
       "deviceScaleFactor": 2,
       "result": {
         "success": true,
