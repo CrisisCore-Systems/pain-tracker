@@ -7,9 +7,12 @@ cuid: cmkbgy2is000002jpc12d6x2u
 slug: part-03-modeling-pain-not-just-numbers
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1767503976091/35914a3b-931d-47b4-842b-f2b376c3ef2b.png
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1767504111955/243f0aa7-13e2-4a18-aeed-01a26fa1ca34.png
-tags: accessibility, pwa, data-modeling, ux-design, healthtech, chronic-pain, trauma-informed-design
 
 ---
+
+<!-- pain-tracker:product-hunt-badge:start -->
+<a href="https://www.producthunt.com/products/pain-tracker?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker" target="_blank" rel="noopener noreferrer"><img alt="Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=dark" /></a>
+<!-- pain-tracker:product-hunt-badge:end -->
 
 If you’ve ever looked at a chart and thought, “I know this mattered, but I can’t remember why,” you already understand the problem: numbers alone don’t carry context.
 
