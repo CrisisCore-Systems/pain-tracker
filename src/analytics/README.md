@@ -121,7 +121,7 @@ img-src 'self' https://www.google-analytics.com https://www.googletagmanager.com
 The service worker is configured to:
 - Use network-first strategy for HTML (ensures fresh content)
 - Cache static assets only (JS, CSS, images)
-- Version: `1.10` (bumped to ensure cache refresh after analytics changes)
+- Service-worker cache version: `1.10` (bumped to force a cache refresh after analytics changes; not the app release version)
 
 ## Testing
 

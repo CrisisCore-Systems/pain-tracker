@@ -84,10 +84,11 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
   useEffect(() => {
     const persistApi = (usePainTrackerStore as unknown as { persist?: { rehydrate?: () => Promise<void> | void } })
       .persist;
-    if (!persistApi?.rehydrate) return;
+    const rehydrate = persistApi?.rehydrate;
+    if (!rehydrate) return;
     void (async () => {
       try {
-        await persistApi.rehydrate();
+        await rehydrate();
       } catch {
         // ignore
       }

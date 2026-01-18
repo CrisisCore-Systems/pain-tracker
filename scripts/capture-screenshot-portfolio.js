@@ -39,7 +39,6 @@ if (debug) {
     console.log(`[debug] beforeExit code=${code} exitCode=${process.exitCode ?? 'unset'}`);
   });
   process.on('exit', (code) => {
-    // eslint-disable-next-line no-console
     console.log(`[debug] exit code=${code} exitCode=${process.exitCode ?? 'unset'}`);
   });
 }
