@@ -2,18 +2,18 @@
 
 <!-- markdownlint-disable MD013 MD033 MD036 MD060 MD022 MD032 -->
 
-![Tests](./badges/test-badge.svg)
-![Coverage](./badges/coverage-badge.svg)
-![Vulns](./badges/security-badge.svg)
-![Bundle](./badges/bundle-badge.svg)
-![LOC](./badges/loc-badge.svg)
-[![GitHub stars](https://img.shields.io/github/stars/CrisisCore-Systems/pain-tracker?style=social)](https://github.com/CrisisCore-Systems/pain-tracker/stargazers)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Test Suite Status - Latest Results](./badges/test-badge.svg)
+![Code Coverage Percentage](./badges/coverage-badge.svg)
+![Security Vulnerabilities Count](./badges/security-badge.svg)
+![Bundle Size in Kilobytes](./badges/bundle-badge.svg)
+![Lines of Code Count](./badges/loc-badge.svg)
+[![GitHub Stars Count](https://img.shields.io/github/stars/CrisisCore-Systems/pain-tracker?style=social)](https://github.com/CrisisCore-Systems/pain-tracker/stargazers)
+[![MIT License Badge](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 <!-- CI / Coverage Badges -->
-[![CI](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml)
-[![Smoke](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml)
-[![Codecov](https://codecov.io/gh/CrisisCore-Systems/pain-tracker/branch/main/graph/badge.svg)](https://codecov.io/gh/CrisisCore-Systems/pain-tracker)
+[![Continuous Integration Workflow Status](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml)
+[![Smoke Tests Workflow Status](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml)
+[![Codecov Code Coverage Report](https://codecov.io/gh/CrisisCore-Systems/pain-tracker/branch/main/graph/badge.svg)](https://codecov.io/gh/CrisisCore-Systems/pain-tracker)
 
 > **A security-first, offline-capable chronic pain tracking application built with empathy and clinical-minded design.**
 

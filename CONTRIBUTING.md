@@ -14,6 +14,115 @@ We love your input! We want to make contributing to Pain Tracker as easy and tra
 - Proposing new features
 - Becoming a maintainer
 
+## 🚀 Local Development in 5 Minutes
+
+Get up and running quickly with these steps:
+
+### Prerequisites
+
+- **Node.js 20 (LTS)** - Check with `node --version` ([Download here](https://nodejs.org/))
+- **npm 9+** - Usually comes with Node.js, check with `npm --version`
+- **Git** - Check with `git --version`
+
+> 💡 **Tip**: Use [nvm](https://github.com/nvm-sh/nvm) to manage Node.js versions. This repo includes `.nvmrc` for automatic version switching.
+
+### Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/CrisisCore-Systems/pain-tracker.git
+cd pain-tracker
+
+# 2. Install dependencies
+npm install
+
+# 3. Start the development server
+npm run dev
+
+# 4. Open your browser
+# Visit http://localhost:3000 (or the URL shown in the terminal)
+```
+
+That's it! The app should now be running locally. 🎉
+
+### Verify Your Setup
+
+Run these commands to ensure everything works:
+
+```bash
+# Check environment
+npm run doctor
+
+# Run tests
+npm run test
+
+# Run linter
+npm run lint
+
+# Build for production (optional)
+npm run build
+```
+
+### Common Commands
+
+```bash
+npm run dev          # Start dev server with hot reload
+npm run test         # Run test suite
+npm run test:watch   # Run tests in watch mode
+npm run test:coverage # Run tests with coverage report
+npm run lint         # Check code style
+npm run typecheck    # Check TypeScript types
+npm run build        # Build for production
+npm run preview      # Preview production build
+```
+
+### Using Make (Optional)
+
+If you have `make` installed (Linux/Mac/WSL):
+
+```bash
+make setup    # First-time setup
+make dev      # Start dev server
+make test     # Run tests
+make check    # Run all checks (typecheck, lint, test, build)
+make lint-fix # Auto-fix linting issues
+```
+
+### Troubleshooting
+
+**Port already in use?**
+```bash
+# Kill the process using port 3000 (adjust for your port)
+# Linux/Mac:
+lsof -ti:3000 | xargs kill -9
+# Windows PowerShell:
+Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process
+```
+
+**Dependencies won't install?**
+```bash
+# Clear npm cache and try again
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**Tests failing?**
+```bash
+# Ensure you're on Node.js 20
+node --version  # Should show v20.x.x
+
+# Try running tests with more memory
+export NODE_OPTIONS="--max-old-space-size=4096"
+npm run test
+```
+
+**Need help?**
+- Check the [README.md](README.md) for detailed documentation
+- Review existing [GitHub Issues](https://github.com/CrisisCore-Systems/pain-tracker/issues)
+- Look at [GitHub Discussions](https://github.com/CrisisCore-Systems/pain-tracker/discussions)
+- Run `npm run doctor` for environment diagnostics
+
 ## We Develop with Github
 We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
 
