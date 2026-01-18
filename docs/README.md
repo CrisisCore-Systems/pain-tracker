@@ -1,6 +1,6 @@
 # Pain Tracker Documentation Index
 
-> **Comprehensive documentation for users, developers, and healthcare providers**
+> **Documentation index for users, developers, and healthcare providers**
 
 ---
 
@@ -59,10 +59,8 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 1. 🌐 **Building a Healthcare PWA with Offline-First Architecture** (12-15 min) - Full-stack developers
 2. 💜 **Trauma-Informed Design: Software That Heals, Not Harms** (10-12 min) - UX/UI designers
 3. 🧠 **The Empathy Intelligence Engine: Heuristic Algorithms** (15-18 min) - Data scientists
-4. 🩺 **Building for Fibromyalgia: Clinical-Grade Tracking** (10-12 min) - Healthcare developers
-5. 🔒 **Zero-Trust Security in Healthcare: HIPAA-Aligned Architecture** (14-16 min) - Security engineers
-
-**Expected Impact**: 5,000-10,000 views, +50-100 GitHub stars, thought leadership in healthcare tech
+4. 🩺 **Building for Fibromyalgia: Clinically Useful Tracking** (10-12 min) - Healthcare developers
+5. 🔒 **Zero-Trust Security in Healthcare: HIPAA-Aligned Controls** (14-16 min) - Security engineers
 
 ---
 
@@ -70,17 +68,17 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 
 **For users with fibromyalgia seeking specialized tracking and support:**
 
-- **[Fibromyalgia Features Guide](product/FIBROMYALGIA_FEATURES.md)** - Complete guide to fibromyalgia-specific features
+- **[Fibromyalgia Features Guide](product/FIBROMYALGIA_FEATURES.md)** - Guide to fibromyalgia-specific features
 - **[Fibromyalgia Claims Verification](product/FIBROMYALGIA_CLAIMS_VERIFICATION.md)** - Evidence-based verification of all claims
 - **[Fibromyalgia Quick Reference](product/FIBROMYALGIA_QUICK_REFERENCE.md)** - Quick reference for users and developers
 
 **Key Features**:
-- ✅ ACR 2016 diagnostic criteria (WPI, SSS)
-- ✅ 44+ anatomical locations
+- ✅ WPI/SSS scoring support
+- ✅ Anatomical location tracking
 - ✅ Fibro fog tracking
 - ✅ Flare pattern recognition
 - ✅ Trauma-informed design
-- ✅ WorkSafe BC export integration
+- ✅ WorkSafeBC-oriented exports
 
 ---
 
@@ -117,7 +115,7 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 - **[Accessibility Improvements](accessibility/ACCESSIBILITY_IMPROVEMENTS.md)** - Ongoing improvements
 
 **Phase 1.5 Components (Dec 2025):**
-- `AccessiblePainSlider` - WCAG 2.2 AA pain rating with full keyboard support
+- `AccessiblePainSlider` - Built toward a WCAG 2.2 AA target with full keyboard support
 - `FocusTrap` / `AccessibleModal` - Modal focus management
 - `PanicMode` - Crisis support integration
 
@@ -127,7 +125,7 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 - **[HIPAA Audit Implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)** - HIPAA-aligned controls
 
 ### Deployment & Operations
-- **[Deployment Guide](ops/DEPLOYMENT_GUIDE.md)** - Complete deployment instructions
+- **[Deployment Guide](ops/DEPLOYMENT_GUIDE.md)** - Deployment instructions
 - **[Deployment Status](ops/DEPLOYMENT_STATUS.md)** - Current deployment status
 - **[Deployment Polish Complete](ops/DEPLOYMENT_POLISH_COMPLETE.md)** - Deployment polish summary
 - **[Deployment Polish Summary](ops/DEPLOYMENT_POLISH_SUMMARY.md)** - Polish checklist
@@ -199,11 +197,11 @@ Suggested reading stance:
 - **Audit snapshots**: `docs/audit/`
 - **Longform writing**: `docs/content/`
 - **Website pages (content)**: `pages/` (e.g., [../pages/start-here.md](../pages/start-here.md))
-- **Marketing materials**: `marketing/`
+- **Marketing materials**: `docs/marketing/` (guides) and `docs/marketing/launch/` (launch copy); market analysis lives under `docs/market/`
 - **E2E docs/reports**: `e2e/`
 - **Deployment docs**: `docs/ops/`
 - **Publishing scripts and guides**: `scripts/` (including PowerShell publish helpers)
-- **Archive (historical/drafts/outputs)**: `docs/archive/` and `archive/` (blog drafts, audit reports, test outputs)
+- **Archive (historical/drafts/outputs)**: `docs/archive/` (drafts, including blog drafts) and repo-root `archive/` (historical artifacts like audit reports and test outputs)
 
 ### By User Type
 
@@ -269,11 +267,11 @@ Suggested reading stance:
 ## 🔍 Search by Feature
 
 **Pain Tracking**:
-- 44+ anatomical locations → [Fibromyalgia Features](product/FIBROMYALGIA_FEATURES.md#multi-dimensional-symptom-tracking)
+- Anatomical location tracking → [Fibromyalgia Features](product/FIBROMYALGIA_FEATURES.md#multi-dimensional-symptom-tracking)
 - 19 symptom types → [Claims Verification](product/FIBROMYALGIA_CLAIMS_VERIFICATION.md#claim-2-19-symptom-types)
 
 **Fibromyalgia Specific**:
-- ACR 2016 criteria → [Features Guide](product/FIBROMYALGIA_FEATURES.md#acr-compliant-assessment)
+- Diagnostic threshold helpers → [Features Guide](product/FIBROMYALGIA_FEATURES.md#acr-compliant-assessment)
 - WPI/SSS tracking → [Quick Reference](product/FIBROMYALGIA_QUICK_REFERENCE.md#technical-specifications)
 - Flare tracking → [Features Guide](product/FIBROMYALGIA_FEATURES.md#fibro-specific-analytics)
 
@@ -283,7 +281,7 @@ Suggested reading stance:
 - Empathy metrics → [Empathy Enhancement](product/EMPATHY_ENHANCEMENT_SUMMARY.md)
 
 **Export & Reporting**:
-- WorkSafe BC → [Fibromyalgia Features](product/FIBROMYALGIA_FEATURES.md#clinical--export-features)
+- WorkSafeBC → [Fibromyalgia Features](product/FIBROMYALGIA_FEATURES.md#clinical--export-features)
 - Clinical reports → [Backend Integration](engineering/BACKEND_INTEGRATION_COMPLETE.md)
 
 **Security & Privacy**:

@@ -13,7 +13,7 @@ I've had my data used against me in court.
 
 Not hypothetically. Actual court. Actual lawyers. Actual judge reading things I wrote during a pain flare, reframed as evidence of instability.
 
-That's why 150,000 PBKDF2 iterations. That's why AES-256-GCM. That's why the key never leaves the device and I will burn it before I make brute-force cheap.
+That's why I use a strong KDF configuration and authenticated encryption (for example, PBKDF2 + AES-GCM via Web Crypto). That's why key material is kept client-side in normal use, and why I treat offline attacks as a first-class threat.
 
 This isn't a tutorial. This is the architecture that keeps my health data out of discovery motions, custody disputes, and insurance fraud investigations. If you're building for people whose data could be weaponized—disability claimants, chronic pain patients, anyone the system has already decided to disbelieve—this is how you protect them.
 
@@ -25,15 +25,15 @@ Traditional model: User → Server → Database.
 
 The server decrypts to process. Your health data passes through corporate infrastructure. Employees access it. Subpoenas demand it. Breaches expose it. Business models monetize it. Custody lawyers subpoena it. Disability reviewers "request" it.
 
-Zero-knowledge means the server only sees ciphertext. Even I can't read your data.
+In a user-held-keys model, a server (if present) only sees ciphertext; the operator can’t read user content without the key.
 
-Local-first means it never leaves the device. Encryption protects against theft, malware, shared computers, forensic analysis. And if someone seizes the hardware, they get noise.
+Local-first means your data can stay on-device by default, with sharing happening via explicit exports/imports. Encryption helps with lost/stolen device risk and casual inspection; it’s not a guarantee against a fully compromised OS or a determined forensic adversary.
 
 ---
 
 ## Web Crypto API
 
-`crypto-js` is a dependency. Dependencies get audited. Dependencies get subpoenaed. Dependencies get compromised.
+Third-party crypto libraries add supply-chain risk.
 
 Web Crypto API is built into the browser. Hardware-accelerated. No supply chain. Nothing to install. Nothing to explain to a forensic analyst.
 

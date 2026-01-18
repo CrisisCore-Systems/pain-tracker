@@ -21,7 +21,7 @@ Pain Tracker is the only **free, privacy-first** pain tracking app with **native
 ## 🏆 Competitive Advantages (vs. Key Competitors)
 
 ### vs. ManageMyPain ($3.99-4.99/month)
-✅ **Free forever** (saves users $47.88/year)  
+✅ **Free core** (no subscription required)  
 ✅ **WorkSafeBC Forms 6/7/8/11** (not available in ManageMyPain)  
 ✅ **Privacy-first** (local storage vs. cloud)  
 ✅ **No subscription fatigue**
@@ -35,7 +35,7 @@ Pain Tracker is the only **free, privacy-first** pain tracking app with **native
 ### vs. Curable ($14.99/month or $69.99/year)
 ✅ **Pain tracking included** (Curable has exercises only)  
 ✅ **Free tier** (Curable is pay-only)  
-✅ **WorkSafeBC compliance** (regulatory advantage)  
+✅ **WorkSafeBC-oriented exports/workflows** (workflow advantage)  
 ✅ **Offline-first** (works without internet)
 
 ### vs. Epic EHR ($500-700/user/month)
@@ -64,23 +64,23 @@ Pain Tracker is the only **free, privacy-first** pain tracking app with **native
 ## 📊 Key Differentiators
 
 ### 1. WorkSafeBC Integration (Unique to Pain Tracker)
-- Auto-generate Forms 6 (Worker), 7 (Employer), 8/11 (Physician)
+- WorkSafeBC-oriented exports and reports (workflow-oriented templates; not a compliance claim)
 - Export 30/60/90-day trend reports
-- Digital claims filing in 3 clicks vs. 3 hours manual
+- Reduced manual documentation effort (varies by workflow)
 
 ### 2. Privacy-First Architecture
-- **Local IndexedDB storage** - data never leaves device
-- **AES-256 encryption** - military-grade protection
-- **Zero cloud dependency** - works completely offline
+- **Local-first by default** - data is stored locally and shared via user-controlled exports
+- **Encryption support** - encryption controls are implemented on-device
+- **Offline-capable core** - core tracking works without internet; optional features may use network
 - **Open-source auditable** - community trust
 
 ### 3. Trauma-Informed UX
 - **Crisis detection** - integrated emergency hotlines
 - **Gentle language mode** - emotionally safe interactions
 - **Progressive disclosure** - reduces cognitive overload
-- **WCAG 2.1 AA** - comprehensive accessibility
+- **WCAG 2.x AA target** - accessibility is a first-class goal
 
-### 4. Free Forever Model
+### 4. Free Core Model
 - **No paywalls** for core pain tracking
 - **No subscriptions** for patients
 - **No ads** - clean, respectful UX
@@ -104,7 +104,7 @@ Pain Tracker is the only **free, privacy-first** pain tracking app with **native
 ### 2. Privacy-Conscious Patients (Secondary)
 **Size:** 1M+ chronic pain patients in Canada  
 **Pain Point:** Distrust of cloud health apps, HIPAA concerns  
-**Message:** "Your data never leaves your device"  
+**Message:** "Your data stays local by default"  
 **Channels:** Privacy forums (r/privacy, Hacker News), health advocacy groups
 
 ### 3. Trauma Survivors (Tertiary)

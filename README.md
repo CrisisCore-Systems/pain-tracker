@@ -2,12 +2,12 @@
 
 <!-- markdownlint-disable MD013 MD033 MD036 MD060 MD022 MD032 -->
 
-[![Security Status](https://img.shields.io/badge/security-hardened-green)](./security/)
+![Tests](./badges/test-badge.svg)
+![Coverage](./badges/coverage-badge.svg)
+![Vulns](./badges/security-badge.svg)
+![Bundle](./badges/bundle-badge.svg)
+![LOC](./badges/loc-badge.svg)
 [![GitHub stars](https://img.shields.io/github/stars/CrisisCore-Systems/pain-tracker?style=social)](https://github.com/CrisisCore-Systems/pain-tracker/stargazers)
-[![Stable](https://img.shields.io/badge/status-stable-green)](https://github.com/CrisisCore-Systems/pain-tracker/releases)
-[![Built with ❤️ by trauma survivors](https://img.shields.io/badge/Built%20with-%E2%9D%A4%EF%B8%8F%20by%20trauma%20survivors-black)](#)
-[![Test Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](./coverage/)
-[![TypeScript](https://img.shields.io/badge/typescript-76.1%25-blue)](https://www.typescriptlang.org/)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 <!-- CI / Coverage Badges -->
@@ -17,7 +17,9 @@
 
 > **A security-first, offline-capable chronic pain tracking application built with empathy and clinical-minded design.**
 
-Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinical-focused exports and tooling for WorkSafe BC reporting. Some advanced analytics and integrations are in active development; see the implementation snapshot in `.github/copilot-instructions.md` for current status.
+Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinician-focused exports and WorkSafeBC-oriented reporting utilities.
+
+Some integrations (for example weather correlation, clinic auth, and payments) rely on network calls and must be explicitly configured/enabled; see the implementation snapshot in `.github/copilot-instructions.md` for current status.
 
 <p align="center">
   <img src="docs/screenshots/main-dashboard.png" alt="Pain Tracker Dashboard" style="max-height: 420px; width: auto; max-width: 100%; object-fit: contain; display: block; margin: 0 auto;" />
@@ -29,9 +31,9 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 ## 🎯 **Vision & Mission**
 
-**Vision:** Transform chronic pain management through technology that respects patient privacy while delivering clinical-grade insights.
+**Vision:** Transform chronic pain management through technology that respects patient privacy while delivering clinically useful insights.
 
-**Mission:** Bridge the gap between patient experience and clinical understanding through comprehensive, secure, and accessible pain tracking technology.
+**Mission:** Bridge the gap between patient experience and clinical understanding through secure, accessible, and clinically useful pain tracking.
 
 ---
 
@@ -39,9 +41,9 @@ Pain Tracker provides high-resolution, multidimensional pain tracking with a sec
 
 > *"I wrote software from motel rooms while homeless. Checking if CI passed while warming hands over a fire behind a gas station."*
 
-Pain Tracker wasn't built in a comfortable office. It was built through housing instability, medical trauma, and systems that failed when they should have helped. Every architectural decision—offline-first, local-only storage, trauma-informed UI—comes from lived experience.
+Pain Tracker wasn't built in a comfortable office. It was built through housing instability, medical trauma, and systems that failed when they should have helped. Every architectural decision—offline-first, local-first-by-default storage, trauma-informed UI—comes from lived experience.
 
-When your data has been used against you, you build software that can't do that. Not by policy. By architecture.
+When your data has been used against you, you build software that minimizes unnecessary exposure. Not by policy alone—by architecture and defaults.
 
 **📖 Read the full story:** [Coding Through Collapse—Why This App Forgets You Exist](https://blog.paintracker.ca/coding-through-collapse)
 
@@ -51,48 +53,43 @@ When your data has been used against you, you build software that can't do that.
 
 ## 📊 **Current Implementation Status**
 
-**Version:** 1.0.0 (Stable Release)  
-**Last Updated:** December 2025
+**Version:** 1.1.3 (from `package.json`)
 
-### ✅ **Fully Implemented Features**
+### ✅ **Implemented (In-Repo)**
 
 | Feature | Status | Description |
 |---------|--------|-------------|
-| **Empathy Intelligence Engine** | ✅ Complete | Heuristic-based pain pattern analysis and personalized insights |
-| **Trauma-Informed UI** | ✅ Complete | Comprehensive accessibility with trauma-informed design patterns |
-| **7-Step Pain Assessment** | ✅ Complete | Multi-dimensional tracking across 44+ anatomical locations |
-| **Security Architecture** | ✅ Complete | Multi-layer protection with encryption, CSP, and audit trails |
-| **WorkSafe BC Export** | ✅ Complete | CSV/JSON exports for claims and clinical reporting |
-| **Customizable Dashboard** | ✅ Complete | Widget-based layout with user preferences |
-| **Trend Visualizations** | ✅ Complete | Interactive charts for pain history and patterns |
+| **Empathy Intelligence Engine** | ✅ Implemented | Heuristic-based pain pattern analysis and personalized insights |
+| **Trauma-Informed UI** | ✅ Implemented | Accessibility-focused, trauma-informed design patterns |
+| **7-Step Pain Assessment** | ✅ Implemented | Multi-dimensional tracking across anatomical locations |
+| **Security Architecture** | ✅ Implemented | Encryption helpers, CSP, and audit/event logging primitives |
+| **WorkSafe BC Export** | ✅ Implemented | CSV/JSON exports for claims and clinician reporting |
+| **Customizable Dashboard** | ✅ Implemented | Widget-based layout with user preferences |
+| **Trend Visualizations** | ✅ Implemented | Charts for pain history and patterns |
 
 ### 🔄 **Partially Implemented**
 
 | Feature | Status | Next Steps |
 |---------|--------|------------|
 | **Validation Technology** | ✅ Integrated | Enabled by default via VITE_REACT_APP_ENABLE_VALIDATION |
-| **PWA Features** | ✅ Verified | Service worker working with cache-first strategy |
+| **PWA Features** | ✅ Verified | Service worker registration + cache-first utilities |
 | **Advanced Visualizations** | 🟡 In Progress | Body heatmaps and correlation graphs |
-| **WorkSafe BC PDF Export** | ✅ Complete | Professional clinical reports with full formatting |
+| **WorkSafe BC PDF Export** | ✅ Implemented | PDF generation utilities and templates |
 
 ### 📅 **Roadmap Highlights**
 
-- **December 2025** ✅: Phase 1.5 Accessibility complete, Enhanced WCB PDF export
-- **Q1 2026**: Machine learning pain pattern recognition
-- **Q2 2026**: EMR/EHR integration capabilities
-- **Q3 2026**: Multi-platform native applications
+- Roadmap items are directional and may change; see `docs/` and issues/PRs for the most current plan.
 
 ---
 
 ## 💜 **Fibromyalgia-Specialized Features**
 
-Pain Tracker offers **clinical-grade fibromyalgia support** built on ACR 2016 Revised Diagnostic Criteria—going beyond generic pain tracking to provide specialized tools for the fibromyalgia community.
+Pain Tracker includes fibromyalgia-specific tracking and analytics, including WPI/SSS scoring and diagnostic-threshold helpers.
 
-### 🎯 **ACR-Compliant Assessment**
-- ✅ **Widespread Pain Index (WPI)**: 0-19 scale tracking across 18 ACR-defined body regions
-- ✅ **Symptom Severity Scale (SSS)**: 0-12 scale covering fatigue, sleep, cognition, and somatic symptoms
-- ✅ **Diagnostic Criteria Calculator**: Real-time feedback on ACR 2016 diagnostic thresholds
-- ✅ **44+ Anatomical Locations**: 26 general + 18 fibro-specific WPI regions for comprehensive pain mapping
+### 🎯 **ACR-Informed Assessment**
+- ✅ **Widespread Pain Index (WPI)**: WPI-style region scoring support
+- ✅ **Symptom Severity Scale (SSS)**: SSS-style symptom scoring support
+- ✅ **Diagnostic Threshold Helpers**: Real-time feedback based on scoring thresholds
 
 ### 🧠 **Fibro-Specific Analytics**
 - ✅ **Fibro Fog Tracking**: Dedicated cognitive symptom assessment (memory, concentration)
@@ -104,21 +101,21 @@ Pain Tracker offers **clinical-grade fibromyalgia support** built on ACR 2016 Re
 ### 🤝 **Trauma-Informed Fibro Care**
 - ✅ **Medical Trauma Awareness**: Designed for those who've faced diagnostic delays and invalidation
 - ✅ **Gentle Workflows**: Progressive disclosure to reduce cognitive load during "fibro fog"
-- ✅ **Privacy Protection**: 100% local storage—no insurance or employer access concerns
+- ✅ **Privacy Protection**: Local-first storage; sharing is user-controlled via exports
 - ✅ **Empathy-Driven Analytics**: Validates patient experience through biopsychosocial tracking
 
 ### 📋 **Clinical & Claims Support**
-- ✅ **WorkSafe BC Integration**: Auto-populated Forms 6/7 for fibromyalgia workplace injury claims
+- ✅ **WorkSafeBC-Oriented Exports**: Templates and exports to support claims/report workflows
 - ✅ **Rheumatology-Ready Reports**: WPI/SSS summaries for specialist appointments
 - ✅ **Treatment Effectiveness**: Intervention correlation analysis (medications, therapies, self-care)
 
-**📖 [Complete Fibromyalgia Features Guide](docs/product/FIBROMYALGIA_FEATURES.md)** | **✅ [Claims Verification Report](docs/product/FIBROMYALGIA_CLAIMS_VERIFICATION.md)**
+**📖 [Fibromyalgia Features Guide](docs/product/FIBROMYALGIA_FEATURES.md)** | **✅ [Claims Verification Report](docs/product/FIBROMYALGIA_CLAIMS_VERIFICATION.md)**
 
 ---
 
 ## 🔒 **Privacy-First Architecture**
 
-Pain Tracker is designed with **your privacy as the foundation**, not an afterthought. Unlike traditional health apps that upload your data to corporate servers, we use a **local-first, zero-knowledge architecture**.
+Pain Tracker is designed with **your privacy as the foundation**, not an afterthought. The default workflow is local-first with user-controlled exports.
 
 <p align="center">
   <img src="docs/diagrams/architectural-data-flow.svg" alt="Architectural Data Flow" style="max-width: 100%; height: auto;" />
@@ -128,12 +125,12 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 
 **Your Device → Local Encryption → User-Controlled Export → Your Explicit Choice**
 
-1. **📱 Your Device with Shield**: All your health data stays on YOUR device with built-in security protection
-2. **🔐 Local Encryption Layer**: AES-GCM encryption in IndexedDB, zero-knowledge architecture, 100% client-side processing
-3. **📤 User-Controlled Export**: Manual exports only - WorkSafe BC forms, PDF clinical reports, CSV data downloads
+1. **📱 Your Device with Shield**: By default, your entries are stored on your device; sharing happens through explicit export/import flows
+2. **🔐 Local Encryption Layer**: AES-GCM helpers for encrypting sensitive data stored locally (IndexedDB)
+3. **📤 User-Controlled Export**: Manual exports (WorkSafeBC-oriented reports, PDF clinical reports, CSV/JSON downloads)
 4. **🤝 Your Explicit Choice**: YOU decide when and where to share - with your doctor, WorkSafe BC, or keep it private locally
 
-**❌ What We DON'T Do**: No corporate servers, no automatic uploads, no data mining, no third-party sharing, no tracking
+**Note on integrations**: Some optional features require network calls (for example weather correlation, payments, or clinic workflows). These require configuration and should be treated as separate trust boundaries.
 
 <details>
 <summary><strong>📊 See Additional Privacy Architecture Diagrams</strong></summary>
@@ -148,9 +145,9 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
   <img src="docs/diagrams/data-flow-comparison.svg" alt="Data Flow Comparison" style="max-width: 100%; height: auto;" />
 </p>
 
-**The Difference:**
-- **Traditional Apps**: Automatically upload your health data to corporate servers → Shared with advertisers, insurance companies, and data brokers → Used for AI training and sold without your explicit consent
-- **Pain Tracker**: Data never leaves your device → You manually export ONLY when needed → No third-party access, ever
+**The Difference (high level):**
+- **Many traditional apps**: Use accounts and server-side storage by default
+- **Pain Tracker (default workflow)**: Local-first storage with user-controlled export/sharing
 
 </details>
 
@@ -161,43 +158,40 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 ## 🌟 **Core Features**
 
 ### 📊 **Advanced Pain Analytics**
-- ✅ **Multidimensional Tracking**: Fully implemented 7-step assessment across 44+ anatomical locations
-- ✅ **Symptom Complexity**: Complete tracking of 19+ symptom types with severity gradients
+- ✅ **Multidimensional Tracking**: 7-step assessment across anatomical locations
+- ✅ **Symptom Complexity**: Symptom tracking with severity gradients
 - ✅ **Pattern Recognition**: Heuristic-based trend analysis and correlation detection (working)
 - 🔄 **Visual Heatmaps**: Basic body mapping implemented; advanced temporal progression in development
-- 🔄 **Predictive Models**: Core analytics complete; ML-based prediction models planned for Q1 2026
+- 🔄 **Predictive Models**: ML-based prediction models are planned (see roadmap)
 
 ### 🏥 **Clinical Integration**
-- ✅ **Clinic Portal**: Separate healthcare professional interface with patient management, analytics, and clinical workflows
-- ✅ **WorkSafe BC Compliance**: Fully functional automated claims generation and CSV/JSON reporting
-- ✅ **Healthcare Exports**: Production-ready clinician-formatted data exports
-- ✅ **Evidence-Based Metrics**: Validated pain assessment scales integrated
-- ✅ **Treatment Correlation**: Comprehensive outcome tracking and intervention analysis
+- ✅ **Clinic Portal (In-Repo)**: Healthcare professional interface components and workflows (availability varies by deployment/config)
+- ✅ **WorkSafeBC-Oriented Exports**: Claims/report exports (CSV/JSON/PDF) implemented in-repo
+- ✅ **Healthcare Exports**: Clinician-formatted exports (PDF/CSV/JSON) implemented
+- ✅ **Evidence-Based Metrics**: Evidence-based scales integrated where implemented
+- ✅ **Treatment Correlation**: Outcome tracking and intervention correlation analysis
 
 ### 💰 **SaaS Subscription System**
-- ✅ **Four Pricing Tiers**: Free, Basic ($9.99/mo), Pro ($24.99/mo), Enterprise (Custom)
-- ✅ **Stripe Integration**: Complete checkout flow, webhooks, and subscription management
-- ✅ **Feature Gating**: Intelligent conditional rendering based on subscription tier
-- ✅ **Usage Tracking**: Real-time quota monitoring with warnings at 80% limits
-- ✅ **Trial Management**: 14-30 day free trials with automatic conversion
-- ✅ **Subscription Portal**: User-facing management interface for upgrades/downgrades/cancellations
+- ✅ **Stripe Integration (In-Repo)**: Checkout session + webhook endpoints and client helpers
+- ✅ **Feature Gating (In-Repo)**: Conditional rendering utilities/components for tiering
+- 🔄 **Subscription Ops**: Billing workflows vary by deployment and require configuration
 - 🎯 **[Complete SaaS Documentation](docs/archive/saas/SAAS_SETUP_GUIDE.md)**
 
 ### 🔒 **Security Architecture**
 - ✅ **Local-First Data**: IndexedDB storage with selective encryption (AES-GCM helpers implemented)
-- ✅ **Enterprise Hardening**: Active CSP headers, SAST pipelines, and secret scanning
-- ✅ **Threat Modeling**: Continuous security assessment with automated scanning
-- ✅ **Compliance Ready**: HIPAA-aligned data handling practices and audit trails
+- ✅ **Hardening Tooling**: CSP configuration + security scans/scripts (CodeQL/SAST/secret scanning)
+- ✅ **Audit/Event Logging**: Minimal, non-reconstructive audit/event logging patterns
+- ✅ **Compliance-Oriented Controls**: HIPAA-aligned controls (not a compliance claim)
 - 🔄 **Full Encryption**: Enterprise-grade encrypted IndexedDB layer in progress
 
-### 💊 **Comprehensive Tracking**
-- ✅ **Medication Management**: Complete dosage tracking and side effect monitoring
+### 💊 **Tracking**
+- ✅ **Medication Management**: Dosage tracking and side effect monitoring
 - ✅ **Treatment Protocols**: Full therapy session logging and effectiveness analysis
 - ✅ **Quality of Life**: Working mood, sleep, and activity impact correlation
-- 🔄 **Emergency Protocols**: Core emergency UI and simulation dashboards complete; external escalation pending
+- 🔄 **Emergency Protocols**: Core emergency UI and simulation dashboards implemented; external escalation pending
 
 ### 🎨 **Trauma-Informed Design**
-- ✅ **Accessibility Features**: WCAG 2.2 AA compliant with comprehensive support for trauma survivors
+- ✅ **Accessibility Features**: Built toward a WCAG 2.2 AA target with trauma-informed patterns and accessibility features
 - ✅ **AccessiblePainSlider**: Full keyboard navigation, ARIA labels, haptic feedback, numeric input
 - ✅ **FocusTrap & AccessibleModal**: Proper focus management for all modal dialogs
 - ✅ **Gentle Language**: Context-sensitive, empathetic UI copy throughout
@@ -246,16 +240,14 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 
 | Security Layer | Implementation | Status |
 |----------------|----------------|--------|
-| **Data Storage** | Local IndexedDB only, no external transmission | ✅ Active |
+| **Data Storage** | Local-first IndexedDB storage; optional network integrations exist | ✅ Active |
 | **Code Analysis** | CodeQL, ESLint security rules, SAST pipeline | ✅ Active |
 | **Dependency Management** | Automated scanning, SBOM generation | ✅ Active |
 | **Secret Protection** | Pre-commit scanning, .env validation | ✅ Active |
 | **Runtime Security** | CSP headers, input validation, XSS protection | ✅ Active |
 
 **Current Security Status:**
-- ✅ Production dependencies: Clean
-- ⚠️ Development dependencies: Minor tooling vulnerabilities (non-runtime impact)
-- 🔄 Ongoing remediation of dev-tool security advisories
+- See the repo-generated npm-audit badge (`badges/security-badge.json`) for current vulnerability counts.
 
 ---
 
@@ -412,7 +404,7 @@ npm run deploy
 
 ## 🧪 **Testing & Quality**
 
-Test suite: **170 tests** (Vitest + integration coverage; E2E in Playwright).
+Test suite size and coverage are tracked via repo-generated badges in `badges/`.
 
 ### **Testing Strategy**
 - **Unit Tests**: Component and utility function testing
@@ -438,17 +430,15 @@ npm run doctor
 
 ---
 
-## 📋 **Compliance & Standards**
+## 📋 **Standards & Alignment**
 
 ### **Healthcare Standards**
-- **FHIR Compatibility**: Structured data export capabilities
-- **HL7 Alignment**: Healthcare data interchange standards
-- **Clinical Validation**: Evidence-based assessment methodologies
+- **FHIR Export Support**: Structured export utilities (FHIR mapping/types in-repo)
+- **Evidence-Based Instruments**: Includes validated-style scales where implemented in code
 
-### **Regional Compliance**
-- **WorkSafe BC**: Automated claims and reporting integration
-- **Privacy Legislation**: PIPEDA and provincial privacy law alignment
-- **Accessibility**: WCAG 2.1 AA compliance target
+### **Regional Workflows**
+- **WorkSafeBC Workflows**: WorkSafeBC-oriented exports and reporting utilities
+- **Accessibility**: WCAG 2.2 AA target
 
 ---
 
@@ -460,38 +450,26 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
 3. **Commit** with conventional commits (`git commit -m 'feat: add amazing feature'`)
-4. **Test** comprehensively (`npm run test:coverage && npm run security-full`)
+4. **Test** with the repo quality gates (`npm run test:coverage; npm run security-full`)
 5. **Submit** a pull request
 
 ### **Code Standards**
 - TypeScript strict mode required
-- 90%+ test coverage for new features
+- Aim for high test coverage for new features (target: 90%+ where practical)
 - Security review for all data-handling code
-- Accessibility compliance for UI components
+- Accessibility requirements for UI components (WCAG target)
 
 ---
 
 ## 📊 **Project Metrics**
 
-**Current Statistics (November 2025):**
+Project metrics are generated by scripts and stored under `badges/`.
 
-| Metric | Value | Status | Notes |
-|--------|-------|--------|-------|
-| **Test Coverage** | 90%+ | ✅ Excellent | Comprehensive test suite with unit, integration, and E2E tests |
-| **Security Score** | A+ | ✅ Hardened | Multi-layer security with active scanning and SAST |
-| **Lines of Code** | 31,700+ | 📈 Growing | TypeScript-first codebase with strong typing |
-| **Bundle Size** | **1.3 MB** | ✅ **Optimized** | **51% reduction** - Route-based splitting + lazy loading |
-| **Gzipped Size** | **420 KB** | ✅ **Excellent** | Production-ready compression (~3:1 ratio) |
-| **Components** | 150+ | 📦 Modular | Reusable design system components |
-| **Build Status** | ✅ Passing | 🟢 Stable | All CI/CD pipelines green |
-| **Dependencies** | Clean | ✅ Audited | Production deps clean, dev deps with minor issues |
-
-**Build Performance:**
-- Build Time: ~15s (production optimized)
-- Dev Server Start: <1s
-- Hot Module Reload: ~100ms
-- Main Bundle: 1,516 KB (gzipped: 448 KB)
-- Lazy Chunks: 15+ separate chunks for on-demand loading
+- Tests: ![Tests](./badges/test-badge.svg)
+- Coverage: ![Coverage](./badges/coverage-badge.svg)
+- Security (npm audit): ![Vulns](./badges/security-badge.svg)
+- Bundle: ![Bundle](./badges/bundle-badge.svg)
+- LOC: ![LOC](./badges/loc-badge.svg)
 
 ---
 
@@ -519,7 +497,7 @@ We welcome contributions that advance the mission of empathetic, secure healthca
 - 🎯 AI-powered insight generation
 
 ### **Phase 3: Integration** *(Q2-Q3 2026)* - Planned
-- 🎯 EMR/EHR system integration (FHIR-compliant)
+- 🎯 EMR/EHR system integration (FHIR-based; planned)
 - 🎯 Telehealth platform connectivity
 - 🎯 Wearable device data integration
 - 🎯 Healthcare provider portal
@@ -680,16 +658,16 @@ Commit convention:
 Dynamic badges are generated by scripts in /scripts and kept fresh
 via the pre-push hook on main.
 
-Version: 0.1.0-dev (early development)
-Build: passing
-Security: dev dependency vulnerabilities present
-Deployment: GitHub Pages configured
+Version: 1.1.3 (from package.json)
+Build: see CI badge at top of this README
+Security: see npm-audit-derived badge in badges/security-badge.json
+Deployment: GitHub Pages configured (see npm run deploy)
 
 Current core features (implemented or partially implemented):
 
 - Multi-step assessment (7 steps) — implemented
 - Interactive analytics and charts — implemented (trend charts)
-- WorkSafe BC report generation (CSV/JSON) — implemented; PDF export partial
+- WorkSafeBC-oriented report generation (CSV/JSON/PDF) — implemented
 - Emergency response panel — partial (core UI implemented)
 - Local storage import/export — implemented (selective encryption wrappers)
 - Comprehensive test suite — implemented for core services; coverage targets ongoing
@@ -710,16 +688,16 @@ In active development:
 <details>
 <summary>📋 Full feature list</summary>
 
-- Multi-dimensional pain assessment: intensity, 25+ locations,
-  19+ symptom types
-- Advanced analytics: trend charts, heat maps, progression analysis
-- WorkSafe BC report generation
+- Multi-dimensional pain assessment: intensity, anatomical locations,
+  symptom tracking
+- Analytics: trend charts, heat maps, progression analysis
+- WorkSafeBC-oriented report generation
 - Emergency response panel
 - Clinical data export: CSV and JSON outputs
 - Work impact assessment: missed days, modified duties, limitations
 - Medication and treatment logging
 - Quality-of-life metrics: sleep, mood, activity
-- Secure local-first storage: data stays on device
+- Secure local-first storage: designed to keep sensitive data local by default
 - Data portability: import, export, backups
 
 </details>

@@ -5,12 +5,14 @@
 
 ---
 
-## 📊 Overall Rating: 9.1/10
+## 📊 Draft Scorecard (Subjective)
+
+This dashboard is a qualitative snapshot, not a certification of compliance, accessibility, or production readiness.
 
 ```
 ⭐⭐⭐⭐⭐⭐⭐⭐⭐☆  (9.1/10)
 
-Production Ready: ✅ YES (Beta Deployment)
+Production Candidate: Beta (validate before deployment)
 ```
 
 ---
@@ -38,13 +40,13 @@ Production Readiness     ⭐⭐⭐⭐☆  (4.5/5.0)  Very Good
 ┌─────────────────────────────────┬──────────┬────────────┐
 │ Feature Area                    │ Progress │ Status     │
 ├─────────────────────────────────┼──────────┼────────────┤
-│ Core Pain Tracking              │ ████████ │ 100% ✅    │
+│ Core Pain Tracking              │ ████████ │ High ✅    │
 │ Security Architecture           │ ███████▒ │  95% ✅    │
 │ Analytics & Insights            │ ███████▒ │  90% ✅    │
 │ Clinical Integration            │ ███████▒ │  90% ✅    │
-│ Trauma-Informed UX              │ ████████ │ 100% ✅    │
+│ Trauma-Informed UX              │ ████████ │ High ✅    │
 │ PWA Features                    │ ██████▒▒ │  80% 🔄    │
-│ WorkSafe BC Integration         │ ███████▒ │  90% ✅    │
+│ WorkSafeBC Workflows            │ ███████▒ │  90% ✅    │
 │ Validation Technology           │ ██████▒▒ │  75% 🔄    │
 │ Advanced Visualizations         │ █████▒▒▒ │  60% 🔄    │
 │ Machine Learning (Roadmap)      │ ▒▒▒▒▒▒▒▒ │   0% 📅    │
@@ -66,7 +68,7 @@ Legend: ████ Complete  ▒▒▒▒ Planned  🔄 In Progress  📅 Road
 │ Local-First Architecture     │ ✅ PASS │ 5.0/5.0  │
 │ Encryption Services          │ ✅ PASS │ 5.0/5.0  │
 │ CSP Headers                  │ ✅ PASS │ 5.0/5.0  │
-│ HIPAA Alignment              │ ✅ PASS │ 5.0/5.0  │
+│ HIPAA-Aligned Controls       │ ✅ PASS │ 5.0/5.0  │
 │ Audit Trails                 │ ✅ PASS │ 5.0/5.0  │
 │ Input Validation             │ ✅ PASS │ 4.5/5.0  │
 │ Secret Scanning              │ ✅ PASS │ 5.0/5.0  │
@@ -90,14 +92,14 @@ Vulnerabilities: 5 (all dev dependencies, no production impact)
 ├──────────────────────────────┼────────────────┤
 │ Total Lines of Code          │ ~127,601       │
 │ TypeScript Coverage          │ 76.1%          │
-│ Test Coverage                │ 90%+           │
+│ Test Coverage                │ See `badges/coverage-badge.json` │
 │ Test Files                   │ 451            │
 │ Components                   │ 150+           │
 │ Build Time                   │ ~12 seconds    │
 │ Bundle Size                  │ 1.3 MB         │
 │ Gzipped Size                 │ 420 KB         │
 │ Lighthouse Performance       │ Not measured   │
-│ Accessibility Score          │ WCAG 2.1 AA    │
+│ Accessibility Target         │ WCAG 2.x AA    │
 └──────────────────────────────┴────────────────┘
 
 Quality Grade: A+ (Excellent)
@@ -108,7 +110,7 @@ Quality Grade: A+ (Excellent)
 ## 📚 Documentation Coverage
 
 ```
-Documentation Completeness: ████████████████████ 100%
+Documentation Completeness: High (estimate)
 
 Areas Covered:
 ✅ Project Overview (README.md)
@@ -135,7 +137,7 @@ Quality: Outstanding
 │ UX Category                  │ Status  │ Rating   │
 ├──────────────────────────────┼─────────┼──────────┤
 │ Trauma-Informed Design       │ ✅ DONE │ ⭐⭐⭐⭐⭐ │
-│ WCAG 2.1 AA Compliance       │ ✅ DONE │ ⭐⭐⭐⭐⭐ │
+│ WCAG 2.x AA Target           │ ✅ DONE │ ⭐⭐⭐⭐⭐ │
 │ Progressive Disclosure       │ ✅ DONE │ ⭐⭐⭐⭐⭐ │
 │ Mobile Responsiveness        │ ✅ DONE │ ⭐⭐⭐⭐⭐ │
 │ Dark Mode                    │ ✅ DONE │ ⭐⭐⭐⭐⭐ │
@@ -157,8 +159,8 @@ Overall UX Score: 4.8/5.0 (Excellent)
 ┌──────────────────────────────────┬─────────┬──────────┐
 │ Clinical Feature                 │ Status  │ Value    │
 ├──────────────────────────────────┼─────────┼──────────┤
-│ WorkSafe BC Form 6/7 Gen         │ ✅ DONE │ Critical │
-│ ACR 2016 Fibro Criteria          │ ✅ DONE │ High     │
+│ WorkSafeBC-Oriented Exports      │ ✅ DONE │ Critical │
+│ ACR 2016-Aligned Criteria Support│ ✅ DONE │ High     │
 │ Widespread Pain Index (WPI)      │ ✅ DONE │ High     │
 │ Symptom Severity Scale (SSS)     │ ✅ DONE │ High     │
 │ CSV/JSON Exports                 │ ✅ DONE │ Critical │
@@ -187,7 +189,7 @@ Clinical Readiness: 90% (Ready for Beta)
 │ Validation Integration       │ LOW      │ 🔄 WIP    │
 │ Advanced Viz Completion      │ LOW      │ 📅 Planned│
 │ ML Model Validation          │ LOW      │ 📅 Future │
-│ HIPAA Compliance Audit       │ MEDIUM   │ 📅 Before │
+│ HIPAA-Aligned Deployment Review│ MEDIUM   │ 📅 Before │
 │ Clinical Validation Study    │ MEDIUM   │ 📅 Before │
 └──────────────────────────────┴──────────┴───────────┘
 
@@ -201,17 +203,17 @@ Overall Risk: LOW to MEDIUM (manageable with roadmap)
 ```
 Production Deployment Checklist:
 
-Core Features:              ████████ 100% ✅
+Core Features:              ████████ High ✅
 Security Hardening:         ███████▒  95% ✅
-Documentation:              ████████ 100% ✅
+Documentation:              ████████ High ✅
 Testing Coverage:           ███████▒  90% ✅
 Performance Optimization:   ██████▒▒  80% 🔄
 Browser Compatibility:      ██████▒▒  75% 🔄
-Accessibility Compliance:   ████████ 100% ✅
+Accessibility Target:       WCAG 2.x AA (verify)
 Error Handling:             ███████▒  90% ✅
 Monitoring/Analytics:       █████▒▒▒  60% 🔄
 
-OVERALL READINESS: 87% - Beta Deployment Ready ✅
+OVERALL READINESS: Draft estimate - beta candidate (validate before deployment)
 ```
 
 ---
@@ -231,10 +233,10 @@ User Base:                ██▒▒▒▒▒▒  Competitors Win (new project
 Market Presence:          ██▒▒▒▒▒▒  Competitors Win (new project)
 
 Unique Differentiators:
-✅ Only open-source pain tracker with security-first design
-✅ Only app with ACR 2016 fibromyalgia compliance
-✅ Only app with WorkSafe BC automated form generation
-✅ Only app built trauma-informed from ground up
+✅ Open source + security-first design (positioning)
+✅ ACR 2016-aligned criteria support (not a diagnostic claim)
+✅ WorkSafeBC-oriented export formats (verify requirements)
+✅ Trauma-informed UX emphasis
 ```
 
 ---
@@ -268,7 +270,7 @@ LOW PRIORITY (Nice to Have):
 │                                                         │
 │  RECOMMENDATION: DEPLOY TO BETA                         │
 │                                                         │
-│  This project is production-ready for early adopter     │
+│  This project is suitable for early-adopter beta        │
 │  beta testing. Core features are complete, security     │
 │  is robust, and code quality is excellent.              │
 │                                                         │

@@ -323,3 +323,7 @@ Personal Health Information Protection Act, 2004 (PHIPA). CanLII,
 PainTracker.ca. CrisisCore Systems, [https://paintracker.ca/](https://paintracker.ca/). Accessed 1 Dec. 2025.
 
 CrisisCore-Systems / pain-tracker. GitHub, [https://github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker). Accessed 1 Dec. 2025.
+
+---
+
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)

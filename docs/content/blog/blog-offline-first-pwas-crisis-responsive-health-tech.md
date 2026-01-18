@@ -1323,13 +1323,13 @@ A: Common strategies:
 - **Merge**: Combine server and local changes
 - **User resolution**: Show conflicts and let user choose
 
-**Q: What about HIPAA compliance?**
+**Q: What about HIPAA and similar regulatory requirements?**
 
-A: Offline-first can actually help with HIPAA:
-- Data at rest is on the user's device (their responsibility)
-- You're not storing PHI on your servers
-- Encryption at rest protects against device theft
-- But: consult a compliance expert for your specific situation
+A: Offline-first can reduce server-side handling of sensitive data:
+- More data can stay on the user’s device by default
+- You may avoid routinely storing sensitive health data on your servers
+- Encryption at rest helps with lost/stolen device risk
+- But: consult a compliance expert for your specific situation and role
 
 ---
 
@@ -1362,7 +1362,7 @@ The traveling patient? They can:
 
 Want to see offline-first health tech in action? [Pain Tracker](https://paintracker.ca) implements everything in this article:
 
-- 100% local storage with IndexedDB
+- Local-first storage with IndexedDB
 - Full offline functionality
 - Background sync when available
 - Crisis detection that works offline

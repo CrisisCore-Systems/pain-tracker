@@ -8,7 +8,7 @@
 
 ## 📊 Market Position Statement
 
-**For** chronic pain sufferers and WorkSafeBC claimants in British Columbia **who need** secure, comprehensive pain tracking with clinical integration, **Pain Tracker is a** free, privacy-first pain management platform **that** combines offline-first architecture, trauma-informed UX, and native WorkSafeBC reporting—**unlike** ManageMyPain, PainScale, or Curable **which** either charge subscriptions, compromise privacy, or lack regulatory compliance.
+**For** chronic pain sufferers and WorkSafeBC claimants in British Columbia **who need** secure, comprehensive pain tracking with clinical integration, **Pain Tracker is a** free, privacy-first pain management platform **that** combines offline-first architecture, trauma-informed UX, and WorkSafeBC-oriented exports—**unlike** ManageMyPain, PainScale, or Curable **which** either charge subscriptions, depend on cloud services/ads, or don’t focus on WorkSafeBC workflows.
 
 ---
 
@@ -16,30 +16,30 @@
 
 ### Core Brand Promise
 
-> **"Your pain, your data, your privacy. Free forever."**
+> **"Your pain, your data, your privacy. Free core."**
 
 We empower chronic pain survivors with clinical-grade tracking tools while respecting their autonomy, privacy, and financial constraints.
 
 ### Brand Pillars
 
 1. **Privacy First** 🔒
-   - "Your health data stays on your device. Always."
-   - Local-first architecture, zero cloud dependency
+   - Local-first by default; user-controlled exports/sharing
+   - Core functionality is offline-capable; some optional features may use network
    - User-controlled data sovereignty
 
 2. **Clinical Excellence** 🩺
    - "Built by healthcare professionals, for patients."
    - Evidence-based pain assessment scales
-   - WorkSafeBC compliance built-in
+   - WorkSafeBC-oriented exports/workflows
 
 3. **Trauma-Informed** 💚
    - "Technology that understands your journey."
    - Gentle language, crisis detection
    - Accessibility-first design
 
-4. **Free Forever** 🎁
+4. **Free Core** 🎁
    - "No subscriptions. No paywalls. No compromises."
-   - Core features never behind paywall
+   - Core features intended to remain free (avoid guarantees)
    - Monetize clinical tier only
 
 ---
@@ -88,7 +88,7 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 - Subscription fatigue ($5-15/month adds up)
 
 **Messaging:**
-- "Your data never leaves your device"
+- "Your data stays local by default"
 - "Open-source, auditable, trustworthy"
 - "Privacy-first pain tracking—no compromises"
 
@@ -197,12 +197,12 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 
 **Headline:** "Your Health Data Belongs to You. Not the Cloud."
 
-**Subheadline:** "Local-first architecture with AES-256 encryption. Zero cloud, zero compromises."
+**Subheadline:** "Local-first architecture with client-side encryption. No cloud required for core tracking."
 
 **Body Copy:**
-> Tired of health apps storing your sensitive data on distant servers? Pain Tracker stores everything locally on your device using IndexedDB with AES-256 encryption.
+> Tired of health apps storing your sensitive data on distant servers? Pain Tracker is designed to store entries locally by default, using encrypted storage.
 >
-> 🔒 No cloud uploads (ever)  
+> 🔒 No cloud uploads required for core tracking  
 > 🔒 Offline-first functionality  
 > 🔒 Open-source and auditable  
 > 🔒 HIPAA-aligned security
@@ -225,7 +225,7 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 > 💚 Gentle, non-clinical language  
 > 💚 Progressive disclosure (no overwhelm)  
 > 💚 Crisis hotline integration  
-> 💚 WCAG 2.1 AA accessibility
+> 💚 WCAG 2.2 AA accessibility target
 >
 > Track your pain without re-traumatization. You deserve tools that respect your journey.
 
@@ -393,7 +393,7 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 4. Email to waitlist (1-2-3 punch: personal, value, CTA)
 
 **Content:**
-- Launch blog post: "Pain Tracker is Live—Free Forever"
+- Launch blog post: "Pain Tracker is Live—Free Core"
 - Video demo (2 minutes, WorkSafeBC export walkthrough)
 - Founder story (why we built this)
 
@@ -480,10 +480,10 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 
 ### vs. ManageMyPain
 
-**Our Advantage:** Free forever, WorkSafeBC integration, privacy-first
+**Our Advantage:** Free core, WorkSafeBC exports, privacy-first
 
 **Messaging:**
-> "Why pay $4.99/month when Pain Tracker is free forever? Plus, we're the only app with native WorkSafeBC export—built in BC, for BC workers."
+> "Why pay $4.99/month when Pain Tracker has a free core? Plus, we focus on WorkSafeBC-oriented exports—built in BC, for BC workers."
 
 ---
 

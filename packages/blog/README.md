@@ -10,7 +10,7 @@ A custom Next.js frontend for the Pain Tracker blog, using Hashnode as a headles
 - 🖼️ **Image optimization** via Next.js Image component
 - 🔍 **SEO optimized** with dynamic metadata
 - 📱 **Responsive design** for all devices
-- ♿ **Accessible** with WCAG 2.1 AA compliance
+- ♿ **Accessible** (built toward a WCAG 2.1 AA target)
 - 🌙 **Dark mode ready** with CSS variables
 
 ## Quick Start

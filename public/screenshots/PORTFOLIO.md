@@ -19,7 +19,7 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **export-modal-solution.png** - Export Modal - The Solution
   - Use Case: Hero image, landing page above the fold
-  - Caption: "This is the alternative - one click to generate perfect forms"
+  - Caption: "This is the alternative - generate forms from your entries"
 
 - **pain-entry-interface.png** - Pain Entry Interface
   - Use Case: Demo sequences, feature explanations
@@ -31,15 +31,15 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **generated-form-6-preview.png** - Generated Form 6 Preview
   - Use Case: Trust-building, result demonstrations
-  - Caption: "Perfectly formatted Form 6, generated automatically from your entries"
+  - Caption: "Formatted Form 6 preview generated from your entries"
 
 - **generated-form-7-preview.png** - Generated Form 7 Preview
   - Use Case: Comprehensive solution showcasing
-  - Caption: "Employer reports generated with the same accuracy"
+  - Caption: "Employer reports generated using the same export pipeline"
 
 - **privacy-security-settings.png** - Privacy/Security Settings
   - Use Case: Privacy-focused marketing, addressing concerns
-  - Caption: "Your data never leaves your device - unlike cloud-based competitors"
+  - Caption: "Local-first by default; exports are user-controlled"
 
 ### Phase 2 (Growth - Weeks 2-3)
 - **body-map-interaction.png** - Body Map Interaction
@@ -52,19 +52,19 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **analytics-dashboard.png** - Analytics Dashboard
   - Use Case: Upsell to power users, feature comparisons
-  - Caption: "Advanced analytics competitors charge for - included free"
+  - Caption: "Advanced analytics to explore patterns over time"
 
 - **comparison-grid.png** - Comparison Grid (App vs Competitors)
   - Use Case: Twitter, Instagram, Facebook posts
-  - Caption: "Why pay for less when you can get more for free?"
+  - Caption: "Compare features and privacy approaches"
 
 - **benefit-icons-grid.png** - Benefit Icons Grid
   - Use Case: Quick social media posts, email headers
-  - Caption: "🔒 Privacy First ⚡ One-Click Forms 💸 Free Forever 🏥 Clinical Grade"
+  - Caption: "🔒 Privacy-first ⚡ One-click forms 💾 Local-first by default 🧾 Clinically useful exports"
 
 - **mobile-responsiveness.png** - Mobile Responsiveness (Phone, Tablet, Desktop)
   - Use Case: PWA promotion, mobile optimization claims
-  - Caption: "Works perfectly on every device - no app store required"
+  - Caption: "Works across phone, tablet, and desktop - no app store required"
 
 ### Phase 3 (Advanced - Month 1)
 - **trauma-informed-mode.png** - Trauma-Informed Mode Comparison
@@ -77,7 +77,7 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **architecture-diagram.png** - Architecture Diagram
   - Use Case: Developer communities, privacy forums
-  - Caption: "Local-first architecture means we can't access your data even if we wanted to"
+  - Caption: "Local-first architecture minimizes data leaving the device (deployment and optional features matter)"
 
 - **built-in-bc.png** - Built in BC Element
   - Use Case: Local marketing, community outreach

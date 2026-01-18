@@ -2,7 +2,7 @@
 
 ## What Was Built
 
-A complete, production-ready backend authentication system for the clinic portal with multi-device support, JWT tokens, and HIPAA-compliant audit logging.
+A reference implementation and documentation for clinic portal authentication (multi-device sessions, JWT tokens, and audit logging). This document does not make HIPAA/compliance claims.
 
 ---
 
@@ -40,7 +40,7 @@ A complete, production-ready backend authentication system for the clinic portal
 - **Account lockout** after 5 failed login attempts (30-minute lock)
 - **Multi-device session management** - Track and revoke sessions per device
 - **IP address tracking** and user agent logging
-- **HIPAA-compliant audit logging** for all authentication events
+- **Audit logging** for authentication events (compliance-oriented; not a compliance claim)
 
 ### 🏥 Healthcare-Specific
 - **Role-based access control**: physician, nurse, admin, researcher
@@ -57,7 +57,7 @@ A complete, production-ready backend authentication system for the clinic portal
 
 ### 📊 Audit & Compliance
 - **Complete audit trail** - Every login, logout, and authentication event
-- **HIPAA-compliant logging** - Includes IP, user agent, outcome, details
+- **Compliance-oriented logging** - Includes IP, user agent, outcome, details (not a compliance claim)
 - **Failed attempt tracking** - Monitor for security threats
 - **Account status management** - Active, suspended, deactivated
 
@@ -78,10 +78,10 @@ This creates all tables and inserts sample data.
 
 Add to `.env.local`:
 
-```bash
-DATABASE_URL=postgresql://postgres:password@localhost:5432/paintracker
-JWT_SECRET=your-super-secret-jwt-key-change-this
-JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this
+```powershell
+$env:DATABASE_URL = "postgresql://postgres:password@localhost:5432/paintracker"
+$env:JWT_SECRET = "your-super-secret-jwt-key-change-this"
+$env:JWT_REFRESH_SECRET = "your-super-secret-refresh-key-change-this"
 ```
 
 ### 3. Start Dev Server
@@ -150,7 +150,7 @@ Navigate to `http://localhost:3000/clinic` and log in with:
 - Password hashing with PBKDF2
 - Account lockout on failed attempts
 - Session tracking and revocation
-- HIPAA-compliant audit logging
+- Audit logging (compliance-oriented; not a compliance claim)
 - IP address tracking
 - Email format validation
 - Password strength requirements (8+ chars)
@@ -318,17 +318,17 @@ WHERE email = 'user@example.com';
 
 ## 🎊 Summary
 
-You now have a **complete, production-ready authentication system** for your clinic portal that:
+You now have a **documented clinic authentication reference implementation** for your clinic portal that:
 
 ✅ Supports **multi-device access** for clinicians  
 ✅ Uses **JWT tokens** with automatic refresh  
-✅ Includes **HIPAA-compliant audit logging**  
+✅ Includes **compliance-oriented audit logging**  
 ✅ Implements **role-based access control**  
 ✅ Tracks **sessions per device** with revocation  
 ✅ Provides **security features** like account lockout  
-✅ Is **ready for production** with documented security checklist  
+✅ Includes a **production hardening checklist** (requires verification in your deployment)  
 
-The system integrates seamlessly with your existing clinic portal UI and requires minimal configuration to get started.
+The system can integrate with your existing clinic portal UI; production readiness depends on backend integration, configuration, and a dedicated security review.
 
 ---
 

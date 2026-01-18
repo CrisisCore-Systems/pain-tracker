@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Institutional Bridges system provides comprehensive healthcare integration capabilities for the Pain Tracker application, enabling seamless data exchange with healthcare providers, EHR systems, and research institutions while maintaining HIPAA-aligned controls and security standards.
+This document describes a proposed/roadmap healthcare integration layer for Pain Tracker. It is not a statement that the listed services/endpoints are currently shipped or deployed.
+
+If implemented, this area is security- and privacy-critical (network + health data) and should be reviewed with an explicit threat model, audit logging minimization, and deployment controls.
 
 ## Architecture
 
@@ -28,10 +30,10 @@ The Institutional Bridges system provides comprehensive healthcare integration c
    - Token management and validation
    - SMART on FHIR compatibility
 
-5. **HIPAA-Aligned Controls Service** (`HIPAACompliance.ts`)
-   - Data validation and sanitization
-   - PHI detection and de-identification
-   - Audit logging and compliance reporting
+5. **Compliance-Oriented Controls Service** (`HIPAACompliance.ts`)
+  - Data validation and sanitization
+  - PHI detection and de-identification (if enabled/implemented)
+  - Audit logging (minimal, non-reconstructive)
 
 6. **API Router** (`HealthcareAPIRouter.ts`)
    - Centralized API endpoint management
@@ -40,7 +42,7 @@ The Institutional Bridges system provides comprehensive healthcare integration c
 
 ## Features
 
-### FHIR Compliance
+### FHIR Alignment (Planned)
 - **Resource Types**: Patient, Observation, Medication, Encounter, Practitioner
 - **Operations**: Create, Read, Update, Delete, Search
 - **Bundle Support**: Collection, Transaction, Message bundles
@@ -255,10 +257,10 @@ const client = await healthcareOAuthProvider.registerClient({
 ## Security Considerations
 
 ### Data Protection
-- All data transmission uses TLS 1.3 encryption
-- PHI is automatically detected and protected
-- Database encryption at rest using AES-256
-- Regular security audits and penetration testing
+- Data transmission should use modern TLS configurations (validate per deployment)
+- PHI detection/de-identification may be implemented when enabled (validate behavior)
+- Encrypt data at rest with deployment-appropriate controls
+- Plan regular security reviews and penetration testing
 
 ### Access Controls
 - Role-based access control (RBAC)
@@ -267,7 +269,7 @@ const client = await healthcareOAuthProvider.registerClient({
 - Audit logging for all data access
 
 ### Compliance Monitoring
-- Automated HIPAA compliance checking
+- Automated HIPAA-aligned control checks (deployment-dependent)
 - Real-time security monitoring
 - Breach detection and notification
 - Regular compliance reporting

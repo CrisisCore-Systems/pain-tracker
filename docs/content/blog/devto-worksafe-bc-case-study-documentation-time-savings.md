@@ -18,3 +18,7 @@ Dev.to version: keep canonical_url pointed to Hashnode.
 Turn published: true when ready.
 -->
 
+---
+
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
+

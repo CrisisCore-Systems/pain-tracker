@@ -166,7 +166,7 @@ Archive the old key if you need recovery. Burn it if you don't. Depends what you
 
 ## Audit Everything
 
-Every crypto operation gets logged. Locally. Never leaves the device.
+Security-relevant crypto events can be logged locally by default. Logs stay on-device unless you explicitly export/share them.
 
 ```typescript
 function trackSecurityEvent(event: SecurityEvent): void {

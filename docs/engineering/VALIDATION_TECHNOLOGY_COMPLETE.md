@@ -121,7 +121,7 @@ src/
 
 #### With Trauma-Informed UX
 - **Preference system extension** adding validation-specific options
-- **Accessibility compliance** maintaining trauma-informed design principles
+- **Accessibility targets** maintaining trauma-informed design principles
 - **User control emphasis** aligning with existing agency patterns
 
 #### With PWA Architecture

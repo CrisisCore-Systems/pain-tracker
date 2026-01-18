@@ -59,7 +59,7 @@
 ### 2. Accessibility & Comfort Specification
 **File**: `ACCESSIBILITY_COMFORT_SPEC.md`  
 **Size**: ~28,000 words  
-**Purpose**: Production-ready WCAG 2.2 AA/AAA compliance guide
+**Purpose**: WCAG 2.2 AA/AAA target guide
 
 **Sections**:
 1. **Standards Hierarchy** (WCAG 2.2 AA baseline, AAA critical UI)
@@ -149,7 +149,7 @@
 **Definition of Done**:
 - Week 1: Focus rings, SR pain log, chart table toggle
 - Week 2: Panic Mode ≤2s, 200% font working, one-handed verified
-- Phase 1.5: WCAG 2.2 AA verified, Lighthouse ≥95, VPAT complete
+- Phase 1.5: WCAG 2.2 AA target validation, Lighthouse ≥95, VPAT drafted (as applicable)
 
 **Resources**:
 - Tools (screen readers, testing, contrast checkers)
@@ -166,7 +166,7 @@
 **Sections**:
 1. **What Was Delivered** (3 docs overview)
 2. **Key Innovations** (vs. 4 competitors)
-3. **Accessibility Compliance Matrix**
+3. **Accessibility Target Matrix**
 4. **Testing Strategy** (automated, manual, real-user)
 5. **KPIs & Success Metrics**
 6. **Implementation Timeline** (2-week breakdown)
@@ -244,7 +244,7 @@
 → `UX_COMPETITIVE_ANALYSIS.md` - Full analysis  
 → `ACCESSIBILITY_DELIVERABLES_SUMMARY.md` - Key Innovations section
 
-**WCAG compliance?**
+**WCAG targets/alignment?**
 → `ACCESSIBILITY_COMFORT_SPEC.md` - Standards Hierarchy + all patterns  
 → `ACCESSIBILITY_DELIVERABLES_SUMMARY.md` - Compliance Matrix
 

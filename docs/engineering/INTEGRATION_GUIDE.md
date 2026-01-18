@@ -137,13 +137,13 @@ const customValidationMessages = {
 };
 ```
 
-## ✅ Step 4: WCAG 2.1 AA Compliance <!-- cspell:disable-line -->
+## ✅ Step 4: WCAG 2.x AA Target <!-- cspell:disable-line -->
 
-### Automated Compliance Checks
+### Automated Accessibility Checks (Not Certification)
 
-The implementation includes built-in compliance checking:
+The implementation includes built-in accessibility checks:
 
-1. **Color Contrast**: Automatically passes AA standards with high contrast modes
+1. **Color Contrast**: Designed to meet AA thresholds with high contrast modes (verify)
 2. **Touch Target Size**: Configurable sizes meet mobile accessibility guidelines
 3. **Keyboard Navigation**: Full keyboard support for all interactive elements
 4. **Screen Reader Support**: Proper ARIA labels and semantic markup
@@ -331,7 +331,7 @@ Based on user feedback, consider adding:
 
 Your Pain Tracker application now includes comprehensive trauma-informed UX features that:
 
-✅ **Meet WCAG 2.1 AA standards** for accessibility compliance <!-- cspell:disable-line -->
+✅ **Work toward a WCAG 2.1 AA target** for accessibility <!-- cspell:disable-line -->
 ✅ **Support users with cognitive fog** through progressive disclosure and memory aids
 ✅ **Accommodate physical limitations** with voice input and large touch targets
 ✅ **Provide emotional safety** through gentle language and comfort prompts

@@ -387,7 +387,7 @@ When adding new trauma-informed features:
 1. **Follow Design Principles**: Safety, choice, empowerment
 2. **Test with Users**: Include people with lived trauma experience
 3. **Document Changes**: Update this README and component docs
-4. **Accessibility Review**: Ensure WCAG compliance
+4. **Accessibility Review**: Ensure WCAG alignment/targets are met (validate in your environment)
 
 ## Resources
 

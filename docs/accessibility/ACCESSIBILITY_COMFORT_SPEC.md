@@ -1,9 +1,9 @@
-# Accessibility & Comfort — Production Specification
+# Accessibility & Comfort — Implementation Specification
 
 **Version**: 1.0  
 **Date**: 2025-11-12  
-**Status**: Production-Ready  
-**Compliance**: WCAG 2.2 AA (AAA for critical UI)
+**Status**: Ready for review  
+**Target**: WCAG 2.2 AA baseline (AAA for critical UI)
 
 ---
 
@@ -1589,11 +1589,11 @@ useFocusTrap(dialogRef, isOpen);
 
 ## Conclusion
 
-This specification provides **production-ready accessibility and comfort standards** that transform Pain Tracker into a truly inclusive, trauma-informed pain management platform. Every pattern is:
+This specification provides accessibility and comfort standards intended for implementation and review. Every pattern is:
 
 - ✅ **Testable**: Clear QA checkpoints with pass/fail criteria
 - ✅ **Measurable**: KPIs for time-to-log, SR success, keyboard efficiency
-- ✅ **Compliant**: WCAG 2.2 AA baseline, AAA for critical UI
+- ✅ **Targets**: WCAG 2.2 AA baseline, AAA for critical UI
 - ✅ **Empathetic**: Copy that reduces cognitive load, Panic Mode for crises
 - ✅ **Universal**: i18n, RTL, voice, keyboard, screen reader support
 

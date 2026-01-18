@@ -234,4 +234,4 @@ If hotlines aren't your thing, that's okay too. Sometimes just naming what's hap
 
 ---
 
-*Written by the same hands that built the panic mode button, the gentle error messages, and the "this data never leaves your device" architecture. Because sometimes the code and the cracks come from the same place.*
+*Written by the same hands that built the panic mode button, the gentle error messages, and the local-first-by-default architecture. Because sometimes the code and the cracks come from the same place.*

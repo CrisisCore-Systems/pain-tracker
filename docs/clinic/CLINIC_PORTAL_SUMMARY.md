@@ -154,7 +154,7 @@ Displays:
 
 3. **Audit Trails**
    - All data access logged
-   - HIPAA-compliant audit levels
+   - Compliance-oriented audit levels (not a compliance claim)
    - 7-year data retention default
 
 ---
@@ -162,7 +162,7 @@ Displays:
 ## 🚀 Access the Portal
 
 ### Development
-```bash
+```powershell
 npm run dev
 # Navigate to http://localhost:3000/clinic
 ```
@@ -325,7 +325,7 @@ Currently using mock data:
 4. Scalable component architecture
 5. Type-safe TypeScript implementation
 6. Accessibility maintained (ARIA labels)
-7. Production-ready code structure
+7. Deployable frontend code structure
 
 ### 🚧 In Progress
 1. Real data integration
@@ -366,7 +366,7 @@ await hipaaService.logAuditEvent({
 
 ## 🎉 Conclusion
 
-The clinic portal is **production-ready** for frontend deployment with mock data. It provides a solid foundation for healthcare professional workflows and can be rapidly integrated with backend services.
+The clinic portal is deployable for frontend use with mock data. It provides a solid foundation for healthcare professional workflows and can be integrated with backend services.
 
 **Key Achievements**:
 - ✅ Distinct professional UI/UX

@@ -124,8 +124,8 @@ Pain Tracker is designed from the ground up to serve a **diverse user base** wit
 
 #### Indigenous Users (BC-Focused)
 - **Local Context**: Built by BC developers for BC workers
-- **Privacy Protection**: 100% local storage, no cloud tracking
-- **Rural Support**: Full offline functionality for remote areas
+- **Privacy Protection**: Local-first by default; no third-party tracking enabled by default
+- **Rural Support**: Core functionality works offline for remote areas
 - **WorkSafe BC Integration**: Culturally relevant for BC injury claims
 
 ### 6. Neurodiversity 🌈
@@ -146,7 +146,7 @@ Pain Tracker is designed from the ground up to serve a **diverse user base** wit
 ### 7. Socioeconomic Diversity 💰
 
 #### Low-Income Users
-- **Free Forever**: No subscription or credit card required
+- **Low Barrier to Entry**: Open source; can be self-hosted (hosted pricing/terms depend on deployment)
 - **Offline-First**: Works without mobile data
 - **Low Bandwidth**: Minimal data usage
 - **No App Store Required**: PWA works on any device
@@ -160,7 +160,7 @@ Pain Tracker is designed from the ground up to serve a **diverse user base** wit
 #### Unhoused Users
 - **Mobile-Optimized**: Works on phones at libraries, shelters
 - **No Account Required**: Can use without email/phone
-- **Data Privacy**: No tracking or data sharing
+- **Data Privacy**: No third-party tracking enabled by default
 - **Screenshots**: `mobile-large-text.png`, `mobile-high-contrast.png`
 
 ### 8. Medical Diversity 🏥
@@ -215,7 +215,7 @@ Our comprehensive screenshot portfolio demonstrates these accessibility features
 - **3 Contrast Modes**: Normal, high, extra-high
 - **2 Complexity Modes**: Full and simplified navigation
 - **2 Mobile Views**: Showing touch-optimized interfaces
-- **100% WCAG 2.2 AA Compliance**: All features meet or exceed standards
+- **WCAG 2.2 AA target**: Features are built toward WCAG 2.2 AA (validate in your environment)
 
 ## Implementation Highlights
 
@@ -230,7 +230,7 @@ Our comprehensive screenshot portfolio demonstrates these accessibility features
 ### Trauma-Informed Design
 - **User Agency**: All preferences user-controlled
 - **Gentle Language**: Emotionally safe wording
-- **Privacy Protection**: Data never leaves device
+- **Privacy Protection**: Data stays local by default
 - **Crisis Support**: Optional monitoring and resources
 - **Content Warnings**: Optional medical content warnings
 

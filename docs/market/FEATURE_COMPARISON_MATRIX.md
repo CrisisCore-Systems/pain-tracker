@@ -89,9 +89,9 @@
 |---------|--------------|--------------|-----------|---------|----------|
 | **Local-First Data Storage** | ✅ IndexedDB | ❌ Cloud | ❌ Cloud | ❌ Cloud | ⚠️ On-Premise |
 | **Offline-First Architecture** | ✅ Full | ⚠️ Limited | ⚠️ Limited | ❌ | ⚠️ Depends |
-| **AES-256 Encryption** | ✅ Free | ⚠️ Unknown | ⚠️ Unknown | ⚠️ Unknown | ✅ Paid |
+| **Encrypted Storage (At Rest)** | ✅ Client-Side | ⚠️ Unknown | ⚠️ Unknown | ⚠️ Unknown | ⚠️ Varies |
 | **HIPAA Posture (Claimed)** | ✅ Aligned | ✅ Claimed | ✅ Claimed | ✅ Claimed | ✅ Certified |
-| **Zero Cloud Dependency** | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No |
+| **No Required Cloud Backend** | ✅ Yes | ❌ No | ❌ No | ❌ No | ❌ No |
 | **Data Sovereignty** | ✅ User-Controlled | ❌ Vendor | ❌ Vendor | ❌ Vendor | ⚠️ Institution |
 | **Audit Trails** | ✅ Free | ⚠️ Unknown | ⚠️ Unknown | ⚠️ Unknown | ✅ Paid |
 
@@ -101,7 +101,7 @@
 
 | Feature | Pain Tracker | ManageMyPain | PainScale | Curable | Epic EHR |
 |---------|--------------|--------------|-----------|---------|----------|
-| **WCAG 2.1 AA Compliance** | ✅ Target | ⚠️ Partial | ⚠️ Partial | ⚠️ Partial | ✅ Required |
+| **WCAG 2.x AA Target** | ✅ Target | ⚠️ Partial | ⚠️ Partial | ⚠️ Partial | ✅ Required |
 | **Trauma-Informed Design** | ✅ Full System | ⚠️ Limited | ❌ | ⚠️ Partial | ❌ |
 | **Gentle Language Mode** | ✅ Free | ❌ | ❌ | ✅ Default | ❌ |
 | **Crisis Detection** | ✅ Free | ❌ | ❌ | ⚠️ Support Access | ❌ |
@@ -141,7 +141,7 @@
 | Tier | Pain Tracker | ManageMyPain | PainScale | Curable | Epic EHR (Small Clinic) |
 |------|--------------|--------------|-----------|---------|------------------------|
 | **Free Tier** | ✅ Unlimited | ✅ 30-day history | ✅ Full (ad-supported) | ⚠️ Limited | ❌ |
-| **Individual Subscription** | ❌ Free Forever | $3.99-$4.99/mo | ❌ Free | $14.99/mo or $69.99/yr | N/A |
+| **Individual Subscription** | N/A (core is $0) | $3.99-$4.99/mo | ❌ Free | $14.99/mo or $69.99/yr | N/A |
 | **Clinical/Pro Tier** | $19.99/mo (planned) | ❌ | ❌ | ❌ | $500-$700/user/mo |
 | **Enterprise** | Custom (planned) | ❌ | ❌ | ❌ | $100K-$1M+ setup |
 | **One-Time Purchase** | ❌ | ✅ Available | ❌ | ❌ | ❌ |
@@ -152,22 +152,22 @@
 
 ### Pain Tracker's Competitive Advantages
 
-1. **✅ Only Free, Unlimited WorkSafeBC Integration**
+1. **✅ WorkSafeBC-Oriented Exports (Core)**
    - No competitor offers WorkSafeBC Form 6/7/8/11 export
-   - Free tier includes full compliance features
+   - Core tier includes WorkSafeBC-oriented exports/reports (validate for your workflow)
 
 2. **✅ True Privacy-First Architecture**
    - Only app with zero cloud dependency
-   - All data stays on user's device (IndexedDB)
-   - AES-256 encryption at rest
+   - Local-first by default (IndexedDB)
+   - Encryption support is implemented; validate in your environment
 
 3. **✅ Comprehensive Trauma-Informed UX**
    - Only app built from ground-up for trauma survivors
    - Crisis detection, gentle language, progressive disclosure
-   - WCAG 2.1 AA accessibility compliance
+   - WCAG 2.x AA accessibility target
 
-4. **✅ Free Forever Model**
-   - No paywalls for core features
+4. **✅ Free Core Model**
+   - No subscription required for core features
    - No ads, no subscriptions for patients
    - Clinical tier for providers only
 

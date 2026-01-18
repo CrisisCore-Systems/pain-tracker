@@ -4,7 +4,7 @@
 
 ---
 
-**Subject: ACR 2016-Compliant Fibromyalgia Tracking Tool – Built for the Community**
+**Subject: Fibromyalgia Tracking Tool (ACR 2016-Informed) – Built for the Community**
 
 ---
 
@@ -27,7 +27,7 @@ I wanted to share something we've built specifically for people with fibromyalgi
 - Progressive disclosure to reduce cognitive load during fibro fog
 
 🔒 **Your Data Stays Yours**
-- 100% local storage – no cloud, no accounts, no insurance/employer access
+- Local-first by default – no required cloud account for core tracking
 - Built for those of us who've learned to protect our health information
 - No data monetization, no corporate access
 
@@ -64,7 +64,8 @@ Hi [Name],
 
 Love your fibromyalgia advocacy work, especially [specific recent content].
 
-Quick share: We built an open-source pain tracker with ACR 2016 diagnostic criteria (WPI/SSS), fibro fog tracking, and trauma-informed design. Offline-first, 100% local storage – no cloud, no accounts, your data stays yours.
+Quick share: We built an open-source pain tracker with ACR 2016 diagnostic criteria (WPI/SSS), fibro fog tracking, and trauma-informed design. Offline-first, local-first by default – no required cloud account for core tracking.
+
 
 Key difference: Built for complex chronic illness, not just "rate your pain 1-10." Pattern recognition, flare tracking, energy pacing tools, and WorkSafe BC exports for claims.
 
@@ -108,7 +109,7 @@ Thanks for validating our community's experiences.
 → This one's built on ACR diagnostic criteria, not generic pain tracking. Open source, no corporate ownership.
 
 **"Is my data safe?"**
-→ 100% local storage. No servers, no cloud, no external access. Your device only.
+→ Local-first by default. Your data is stored on-device unless you explicitly export/share it.
 
 **"Will my insurance see this?"**
 → No. Local-only architecture means no one has access unless you explicitly export and share.

@@ -1,7 +1,7 @@
 ---
 title: "No Backend, No Excuses: Building a Pain Tracker That Doesn't Sell You Out"
 published: true
-description: "Local-first architecture for chronic pain tracking. AES-256 encryption, optional (deploy-configured) usage analytics, trauma-informed UX. Built from necessity."
+description: "Local-first architecture for chronic pain tracking. Client-side encryption, optional (deploy-configured) usage analytics, trauma-informed UX. Built from necessity."
 tags: ["react", "typescript", "healthtech", "privacy"]
 cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/empathy-driven-healthcare-cover.png
 canonical_url: 

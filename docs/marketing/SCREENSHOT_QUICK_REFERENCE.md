@@ -112,17 +112,17 @@ Pain tracking that respects privacy. Built for BC workers.
 ### Medium (Facebook/Instagram)
 ```
 Stop wasting hours on WorkSafe BC paperwork. 
-Pain Tracker generates perfect forms in one click.
-Track naturally. Export instantly. 100% free.
+Pain Tracker supports workflow-oriented exports and reports.
+Track naturally. Export instantly. Free core tracking.
 ```
 
 ### Long (LinkedIn/Blog)
 ```
 Privacy-first architecture meets clinical-grade pain tracking.
-Pain Tracker uses local-first IndexedDB with AES-256 encryption,
-ensuring your medical data never leaves your device. 
+Pain Tracker uses local-first IndexedDB with client-side encryption,
+designed to keep data local by default — you control if/when you export or share. 
 
-WorkSafe BC integration included. Forever free.
+WorkSafe BC workflows supported. Open source; pricing depends on deployment.
 Built in BC, for BC workers.
 ```
 

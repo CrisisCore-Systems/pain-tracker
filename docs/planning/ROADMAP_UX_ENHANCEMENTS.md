@@ -17,7 +17,7 @@ This roadmap outlines a **3-phase UX transformation** to position Pain Tracker a
 ## Phase 1: Navigation & Quick Access + Accessibility Foundation ✅ COMPLETE
 
 **Duration**: 1 week (Nov 5-12, 2025)  
-**Goal**: Reduce cognitive load, improve feature discoverability, establish WCAG 2.2 AA compliance  
+**Goal**: Reduce cognitive load, improve feature discoverability, and work toward a WCAG 2.2 AA target  
 **Inspiration**: Epic MyChart (front-and-center actions) + PainScale (minimal decisions) + Curable (empathy)
 
 ### Delivered Features
@@ -32,10 +32,10 @@ This roadmap outlines a **3-phase UX transformation** to position Pain Tracker a
   - Dynamic based on entry count and variability
 
 **Success Criteria**:
-- [x] Feature discovery rate >80% (calendar/analytics within 7 days)
+- [ ] Feature discovery rate >80% (goal)
 - [ ] Action click-through rate >60%
 - [ ] Time to second entry <12 hours
-- [x] WCAG 2.2 AA compliance specification documented
+- [x] WCAG 2.2 AA target specification documented
 - [x] Accessibility & Comfort standards defined
 
 ---
@@ -360,7 +360,7 @@ interface DashboardLayout {
 **Goal**: Enable seamless patient-provider data sharing and EHR integration  
 **Result**: Pivot to **FHIR R4 Exports** (Local File) instead of Cloud Portal.
 
-> **Scope Change**: To maintain "Class A" data privacy (Data never leaves device), the "Provider Portal" concept was replaced with "Clinical-Grade Exports". Providers receive standard FHIR JSON or PDF reports directly from the patient, rather than logging into a third-party cloud.
+> **Scope Change**: To maintain "Class A" data privacy (local-first by default), the "Provider Portal" concept was replaced with "Clinical-Grade Exports". Providers receive standard FHIR JSON or PDF reports directly from the patient, rather than logging into a third-party cloud.
 
 ### 3.1 FHIR R4 Export Integration (Replacing Provider Portal)
 
@@ -389,7 +389,7 @@ interface DashboardLayout {
 - Zero network latency (Local-only)
 
 **Security**:
-- **Zero-Knowledge Architecture**: Provider never accesses the app database directly.
+- Providers do not access the app database directly; sharing is via patient-controlled exports.
 - Patient controls exactly what data is exported.
 
 **Timeline**: Dec 11 - Jan 8 (Completed)
@@ -491,12 +491,12 @@ interface DashboardLayout {
 - Offer free training/onboarding
 - Highlight time savings (3-5 min/patient review)
 
-**Risk**: HIPAA compliance audit failures  
+**Risk**: HIPAA-aligned deployment review failures  
 **Mitigation**:
 - Third-party security audit before launch
 - Full audit trail implementation
 - Breach notification protocol
-- BAA (Business Associate Agreement) templates
+- Clarify BAA/legal requirements early (if operating in a HIPAA-regulated context)
 
 ---
 

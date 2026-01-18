@@ -45,7 +45,8 @@ Nginx configuration for serving the Pain Tracker React SPA with:
 sudo cp deployment/nginx/pain-tracker /etc/nginx/sites-available/
 sudo nano /etc/nginx/sites-available/pain-tracker  # Edit domain name
 sudo ln -s /etc/nginx/sites-available/pain-tracker /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
+sudo nginx -t
+sudo systemctl reload nginx
 ```
 
 ### health/healthz.json

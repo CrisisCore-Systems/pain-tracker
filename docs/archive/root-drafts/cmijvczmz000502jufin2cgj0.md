@@ -74,7 +74,7 @@ export async function encryptAndStore(
 }
 ```
 
-Every pain entry gets encrypted with XChaCha20-Poly1305 before it even touches storage. Your encryption key never leaves your device. There's no "sync to cloud" toggle that could accidentally leak your most vulnerable moments.
+Pain entries are encrypted before they touch storage (current implementation uses XChaCha20-Poly1305; verify in code). Encryption keys are handled client-side, and the default configuration avoids server-side storage or sync.
 
 ---
 
@@ -313,15 +313,15 @@ Hitting back repeatedly? Spam-clicking the help button? These aren't data points
 
 Most health tech treats privacy like a marketing feature. "Your data is secure" usually translates to "secure on our servers, where we can mine it for insights."
 
-Pain Tracker takes a fundamentally different approach: **We can't spy on you because we literally have no way to access your data.**
+Pain Tracker takes a fundamentally different approach: the default architecture keeps data local, without a central backend storing your entries.
 
 * Encryption keys are generated and stored locally
     
-* Health data never leaves your device
+* Health data is stored locally by default
     
 * Crisis detection runs entirely in your browser
     
-* There's no backend database to breach or subpoena
+* There is no central backend database in the default configuration, reducing backend breach exposure
     
 
 For trauma survivors—people who've had their autonomy violated, their pain dismissed, their data weaponized against them—this isn't just a nice feature. It's non-negotiable.

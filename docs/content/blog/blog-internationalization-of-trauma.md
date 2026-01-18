@@ -816,6 +816,8 @@ The goal isn't cultural perfection—it's cultural awareness. Every test we writ
 
 **Coming Next**: "Testing the Testing: Validating That Your Crisis Simulation Actually Matches Reality"
 
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
+
 ---
 
 **Tags**: #internationalization #i18n #cultural-testing #healthcare #trauma-informed #accessibility #localization #testing

@@ -28,13 +28,13 @@
 
 ---
 
-## 🛡️ The "Free Forever Guarantee"
+## 🛡️ Free Core Positioning (Avoid Guarantees)
 
 ### Master Message
 
-> **"Our Promise to You: The Core Pain Tracker Will Always Be Free"**
+> **"Our Commitment: The Core Pain Tracker Stays Free"**
 > 
-> Everything you use today—unlimited pain tracking, advanced analytics, WorkSafeBC Form 6/7 export, and our empathy-driven features—will always be free. Forever.
+> The core experience is intended to stay free. Avoid absolute guarantees; communicate scope, timelines, and change management clearly.
 > 
 > We're adding optional paid tiers for professionals, clinicians, and enterprises who need advanced tools. But we will never paywall a feature that's currently free.
 > 
@@ -51,7 +51,7 @@
 
 ### Key Phrases
 
-- "Free Forever Guarantee"
+- "Free core"
 - "No paywalls, no tricks, no limits"
 - "Your data, your choice, always free"
 - "We earn your trust through value, not lock-in"
@@ -65,20 +65,20 @@
 #### Headline Options
 
 1. **"The Most Powerful Free Pain Journal. Period."**
-2. **"Unlimited Pain Tracking. Zero Cost. Forever."**
+2. **"Unlimited Pain Tracking. Zero Cost (Core)."**
 3. **"Track Your Pain. Own Your Data. Stay Free."**
 
 #### Body Copy (Short)
 
-> Pain Tracker is the only free pain management app that gives you everything: unlimited tracking, advanced analytics, WorkSafeBC integration, and military-grade privacy. No trial. No limits. No catch.
+> Pain Tracker is a privacy-first pain management app with core tracking, advanced analytics, and WorkSafeBC workflows. Local-first by default, with encrypted storage and user-controlled exports.
 
 #### Body Copy (Long - for homepage)
 
-> **Why settle for limited free trials when you can have it all, free, forever?**
+> **Why settle for limited free trials when you can have powerful core tracking without lock-in?**
 > 
 > Pain Tracker gives you unlimited pain entries, interactive body heatmaps, pattern recognition, empathy-driven insights, and full WorkSafeBC Form 6/7 export—all without a paywall.
 > 
-> While competitors limit you to 30 days or lock analytics behind subscriptions, we believe your health data is too important to hold hostage. That's why our core app is free forever, with optional upgrades for power users and clinics.
+> While competitors limit you to 30 days or lock analytics behind subscriptions, we believe your health data is too important to hold hostage. That's why the core app is free today, with optional upgrades for power users and clinics.
 
 #### Call to Action
 
@@ -137,7 +137,7 @@
 - "We understand. That's why our free tier has no limits. Upgrade only when your claim makes it worth it."
 
 **"Why should I pay when the free tier is so good?"**
-- "You shouldn't—unless you need Form 8/11 or appeal letters. Most users stay free forever."
+- "You shouldn't—unless you need Form 8/11 or appeal letters. Most users can stay on the free core tier."
 
 **"Is this a subscription trap?"**
 - "Nope. Cancel anytime. No questions asked. We're transparent or we're nothing."
@@ -163,12 +163,12 @@
 > Your patients are already tracking their pain. Now bring that data directly into your practice:
 > 
 > - **Multi-Patient Dashboard:** View all your patients' pain trends in one place
-> - **FHIR/HL7 Export:** Direct integration with Epic, Cerner, and other EHR systems
+> - **FHIR/HL7 Export (planned):** Integration support for EHR systems (e.g., Epic, Cerner)
 > - **Treatment Outcome Tracking:** Correlate your interventions with patient-reported pain changes
 > - **Clinical Note Templating:** Speed up documentation with pre-built templates
 > - **WorkSafeBC Form 8/11:** Generate physician reports in seconds, not hours
 > - **Clinic Branding:** White-labeled reports with your logo and letterhead
-> - **HIPAA BAAs:** Signed Business Associate Agreements for US practices
+> - **BAA support (where applicable):** Requires legal review and customer-specific terms
 > 
 > **$19.99/month per clinician** (volume discounts available)
 > 
@@ -214,7 +214,7 @@
 
 #### Body Copy (Short)
 
-> Reduce claim costs, improve return-to-work outcomes, and demonstrate duty-of-care compliance with real-time workplace injury analytics. Trusted by BC's leading employers.
+> Reduce claim costs, improve return-to-work outcomes, and support duty-of-care reporting with real-time workplace injury analytics.
 
 #### Body Copy (Long - for B2B landing page)
 
@@ -222,7 +222,7 @@
 > 
 > You're responsible for hundreds of employees and millions in claim costs. Pain Tracker Enterprise gives you the insights to reduce both:
 > 
-> - **WorkSafeBC Compliance Dashboard:** Monitor claim trends and identify early intervention opportunities
+> - **WorkSafeBC Workflow Dashboard:** Monitor claim trends and identify early intervention opportunities
 > - **Predictive Risk Modeling:** Identify high-risk departments and roles before injuries escalate
 > - **Return-to-Work Analytics:** Track success rates and optimize your RTW programs
 > - **De-identified Aggregate Data:** Understand workplace injury patterns without compromising privacy
@@ -298,9 +298,9 @@
 **Tone:** Transparent, community-focused, celebratory
 
 **Do's:**
-- ✅ "Big news: We're adding paid tiers to fund development! But don't worry—everything you love stays free forever."
+- ✅ "Big news: We're adding paid tiers to fund development! But don't worry—the free core stays free."
 - ✅ "Our free tier beats their paid tier. And now we're adding even more for power users. Here's what's coming..."
-- ✅ "Thanks to your support, we can now build professional tools for WorkSafeBC claimants. Free Forever Guarantee still stands."
+- ✅ "Thanks to your support, we can now build professional tools for WorkSafeBC claimants."
 
 **Don'ts:**
 - ❌ "Free tier is ending soon!" (false urgency)
@@ -313,16 +313,16 @@
 
 ### Phase 1: Announcement (Q4 2025)
 
-**Email Subject:** "Pain Tracker's Future: Free Forever + New Paid Tiers"
+**Email Subject:** "Pain Tracker's Future: Free Core + Optional Paid Tiers"
 
 **Email Body:**
 > Hi [Name],
 > 
 > We have exciting news to share about Pain Tracker's future.
 > 
-> **First, the most important part: Our Free Forever Guarantee**
+> **First, the most important part: Our Free Core Commitment**
 > 
-> Everything you use today will always be free. Unlimited pain tracking, advanced analytics, WorkSafeBC Form 6/7 export, empathy-driven features—all staying free forever. No paywalls. No limits.
+> Our current plan is to keep the free core available and avoid paywalling existing core features. Paid tiers are intended to add new capabilities for users who need them.
 > 
 > **Second, what's new: Optional Paid Tiers**
 > 
@@ -348,7 +348,7 @@
 **Social Media Post:**
 > 🎉 Big news: Pain Tracker is growing!
 > 
-> ✅ Our free tier stays free forever (promise!)
+> ✅ Our free core stays free
 > ✅ New paid tiers coming for pros, clinics, and employers
 > ✅ All revenue funds our mission: free pain tracking for all
 > 
@@ -474,7 +474,7 @@
 
 Before any launch communication, verify:
 
-- [ ] **Free Forever Guarantee mentioned prominently?**
+- [ ] **Free core scope described clearly (no guarantees)?**
 - [ ] **No dark patterns** (scarcity, urgency, guilt)?
 - [ ] **Tone is respectful** of financial limitations?
 - [ ] **Value is clear** (what problem does this solve)?
@@ -492,7 +492,7 @@ Before any launch communication, verify:
 **Concern:** "Are you abandoning the free tier?"
 
 **Response:**
-> "Not at all! The free tier is our core mission. We're adding paid tiers to fund continued development of free features. Our Free Forever Guarantee means we'll never paywall existing features."
+> "Not at all! The free tier is our core mission. We're adding paid tiers to fund continued development. Our plan is to avoid paywalling existing core features; paid tiers add new capabilities."
 
 **Concern:** "This feels like a bait-and-switch."
 

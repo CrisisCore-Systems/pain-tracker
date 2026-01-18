@@ -590,7 +590,7 @@ Trauma-informed testing doesn't replace accessibility testing—it builds on top
 
 ### axe-core / @axe-core/react
 
-Automated WCAG compliance checking. Catches the mechanical accessibility issues:
+Automated accessibility checks (WCAG-oriented). Catches the mechanical accessibility issues:
 
 ```typescript
 import { axe, toHaveNoViolations } from 'jest-axe';

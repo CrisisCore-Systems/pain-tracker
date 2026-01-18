@@ -36,7 +36,7 @@ We welcome contributions of all kinds, not just code.
 
 ### 1\. Code Contributions
 
-* **Accessibility Audits:** Help us reach WCAG 2.2 AA compliance.
+* **Accessibility Audits:** Help us validate against a WCAG 2.2 AA target.
     
 * **Performance:** Optimize our Service Worker and IndexedDB queries.
     

@@ -212,7 +212,7 @@ Pre-written captions for each screenshot are included in the metadata. Use these
 ### Example Captions
 - **Pain Entry**: "Track your pain in 30 seconds - no complex interfaces"
 - **Export Modal**: "One click exports your data to WorkSafeBC-ready formats"
-- **Privacy**: "Your data never leaves your device - unlike cloud-based competitors"
+- **Privacy**: "Local-first by default — you control if/when you share via exports"
 - **Analytics**: "Advanced analytics competitors charge for - included free"
 
 ## 🎯 Use Case Mapping

@@ -235,11 +235,11 @@ node scripts/capture-accessibility-screenshots.js --category=navigation
 node scripts/capture-accessibility-screenshots.js --category=cognitive-support
 ```
 
-## Accessibility Standards Compliance
+## Accessibility Standards Alignment
 
-All screenshots demonstrate features that meet or exceed:
+These screenshots demonstrate accessibility and trauma-informed UX features built toward common standards and guidelines (targets, not certifications):
 
-- ✅ WCAG 2.2 Level AA
-- ✅ Section 508 Compliance
-- ✅ EN 301 549 (European Standard)
-- ✅ Trauma-Informed Design Principles
+- ✅ WCAG 2.2 AA target
+- ✅ Section 508 considerations
+- ✅ EN 301 549 considerations
+- ✅ Trauma-informed design principles

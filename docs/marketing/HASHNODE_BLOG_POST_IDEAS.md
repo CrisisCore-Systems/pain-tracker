@@ -11,12 +11,11 @@
 
 Pain Tracker is a sophisticated Progressive Web Application (PWA) that bridges the gap between patient experience and clinical understanding through comprehensive, secure, and accessible pain tracking technology. Built with React 18, TypeScript, and a trauma-informed design philosophy, it offers:
 
-- **31,700+ lines of code** across 580+ TypeScript files
-- **96 comprehensive documentation files**
-- **90%+ test coverage** with Vitest, Playwright, and Stryker mutation testing
-- **Multi-layered security** with HIPAA-aligned practices and WorkSafe BC compliance
-- **Production-ready SaaS** with Stripe integration and 4 subscription tiers
-- **Unique features**: Empathy Intelligence Engine, Fibromyalgia-specific tracking, Trauma-informed UX
+- Repo-sized codebase with comprehensive documentation
+- Test coverage and security posture that should be cited from repo-generated artifacts (e.g., `badges/`) rather than hardcoded numbers
+- Multi-layered security controls with HIPAA-aligned intent (avoid compliance guarantees)
+- Offline-capable, local-first-by-default architecture with user-controlled exports
+- Unique features: Empathy Intelligence Engine, Fibromyalgia-specific tracking, trauma-informed UX
 
 ---
 
@@ -93,7 +92,7 @@ Pain Tracker is a sophisticated Progressive Web Application (PWA) that bridges t
 - Intelligent retry logic prevents server overload
 - Merge strategies for concurrent edits
 - Progress tracking for user transparency
-- HIPAA-compliant audit trails
+- HIPAA-aligned audit trails (log intent without capturing sensitive content)
 
 #### Section 4: PWA Manager & User Experience (2 minutes)
 **Technical Deep Dive**: Progressive enhancement
@@ -113,8 +112,8 @@ Pain Tracker is a sophisticated Progressive Web Application (PWA) that bridges t
 - Accessibility considerations (trauma-informed design)
 
 #### Conclusion & Key Takeaways (1 minute)
-- Lessons learned from 9,600+ lines of PWA code
-- Performance metrics: 420KB gzipped, <1s dev server start
+- Lessons learned from building a non-trivial offline-capable PWA
+- Performance metrics: cite current build outputs (avoid hardcoded numbers)
 - Testing strategy: E2E PWA tests with Playwright
 - Resources and GitHub repository link
 
@@ -248,7 +247,7 @@ Pain Tracker is a sophisticated Progressive Web Application (PWA) that bridges t
 - Trauma-informed design
 - Healthcare UX
 - Accessibility best practices
-- WCAG 2.1 AA compliance
+- WCAG 2.1 AA target
 - Progressive disclosure
 - Empathy-driven development
 - Medical trauma awareness
@@ -581,7 +580,7 @@ interface FibromyalgiaAssessment {
 
 ### 🔑 Key Themes
 - Zero-trust architecture
-- HIPAA compliance
+- HIPAA-aligned controls
 - Encryption at rest and in transit
 - Security automation
 - Threat modeling
@@ -599,49 +598,47 @@ interface FibromyalgiaAssessment {
 
 ```typescript
 // Code example from src/services/EncryptionService.ts
-- AES-256 encryption with CryptoJS
-- Key management and rotation
-- Selective encryption (PHI vs. non-PHI)
-- Secure localStorage for keys (browser keychain integration)
-- AES-GCM encrypted IndexedDB helpers
+- WebCrypto-based encryption helpers (with fallbacks where needed)
+- Key handling and rotation strategy (security-critical; verify current implementation)
+- Selective encryption for sensitive fields (data minimization)
+- Encrypted IndexedDB storage helpers
 ```
 
 **Key Insights**:
 - Encryption at rest for sensitive data
-- Client-side encryption (keys never leave device)
+- Client-side encryption (keys are used on-device; sharing requires explicit user action)
 - Performance optimization: Encrypt only PHI
 - Key rotation strategy (90-day recommended)
 - Browser compatibility: Fallbacks for older browsers
 
-#### Section 2: Audit Trails & HIPAA Compliance (3-4 minutes)
+#### Section 2: Audit Trails & HIPAA-Aligned Controls (3-4 minutes)
 **Technical Deep Dive**: Comprehensive logging
 
 ```typescript
 // Code example from src/services/HIPAACompliance.ts
-- Audit trail for all PHI access (create, read, update, delete)
+- Audit trail for key security-relevant actions (create, read, update, delete)
 - Risk scoring algorithm
-- PHI detection and de-identification
-- Breach assessment and reporting
-- Automated compliance checks
+- PHI detection and de-identification helpers (where applicable)
+- Breach assessment helpers (implementation-dependent)
+- Compliance-oriented checks and documentation (not a compliance claim)
 ```
 
 **Key Insights**:
-- Every data operation logged with timestamp, user, action
+- Security-relevant operations can be logged with timestamp/action/outcome (without sensitive payloads)
 - Risk scoring: High/medium/low based on data sensitivity
 - De-identification for analytics (removes PII)
 - Breach detection: Unusual access patterns
-- Immutable audit logs (append-only IndexedDB table)
+- Audit log integrity goals (implementation-dependent)
 
 #### Section 3: Content Security Policy (CSP) Hardening (2-3 minutes)
 **Technical Deep Dive**: XSS prevention
 
 ```typescript
 // Code example from vite.config.ts
-- Production CSP: No 'unsafe-inline' or 'unsafe-eval'
-- Nonce-based inline scripts
-- Strict 'self' defaults
-- Whitelisted CDNs (fonts, charts)
-- CSP violation reporting
+- CSP configuration and hardening to reduce XSS risk
+- Prefer avoiding 'unsafe-inline'/'unsafe-eval' where feasible
+- Explicit allowlists for required third-party origins (if any)
+- Deployment-specific validation and reporting (if enabled)
 ```
 
 **Key Insights**:
@@ -690,17 +687,17 @@ interface FibromyalgiaAssessment {
 - Community security audit welcome
 
 #### Conclusion & Security Roadmap (1-2 minutes)
-- Current security status: Production-ready
+- Current security status: Controls implemented; production readiness depends on deployment and independent review
 - Known issues: Dev dependency vulnerabilities (non-runtime)
 - Roadmap: Full AES-GCM storage migration, formal security audit
 - Call to action: Security researchers invited to audit
 - Resources: Security documentation and reporting process
 
 ### 🏷️ SEO Keywords
-- HIPAA compliance
+- HIPAA-aligned controls
 - Zero-trust architecture
 - Healthcare security
-- AES-256 encryption
+- AES-GCM (256-bit) encryption
 - Content Security Policy
 - SAST automation
 - Security audit
@@ -763,7 +760,7 @@ interface FibromyalgiaAssessment {
 2. Healthcare software engineering
 3. Offline-first architecture
 4. Trauma-informed design
-5. HIPAA compliance implementation
+5. HIPAA-aligned controls (implementation)
 6. Fibromyalgia tracking
 7. Empathy algorithms
 8. Local-first software
@@ -844,7 +841,7 @@ interface FibromyalgiaAssessment {
 - Tree shaking effectiveness
 - Performance metrics and monitoring
 
-### Post #7: "Testing Healthcare Software: A Case Study in 90%+ Coverage"
+### Post #7: "Testing a Health App (Local-First): Practical Coverage, E2E, and Safety"
 - Unit testing with Vitest
 - E2E testing with Playwright
 - Mutation testing with Stryker
@@ -945,7 +942,7 @@ interface FibromyalgiaAssessment {
 2. **Healthcare Context**: Solving real patient problems
 3. **Open Source**: Complete transparency
 4. **Ethical Focus**: Privacy and empathy prioritized
-5. **Comprehensive Testing**: 90%+ coverage proves quality
+5. **Comprehensive Testing**: Explain the test strategy and cite current coverage from `badges/`
 
 ### Writing Tips for Healthcare Tech
 1. **Balance technical depth with accessibility**

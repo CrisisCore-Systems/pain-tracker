@@ -203,9 +203,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-#### Phase 1.5 Accessibility (WCAG 2.2 AA Compliance)
+#### Phase 1.5 Accessibility (WCAG 2.2 AA Target)
 
-- **AccessiblePainSlider** - Fully accessible pain rating component with:
+- **AccessiblePainSlider** - Accessible pain rating component with:
   - Keyboard navigation (Arrow keys ±1, Home/End 0/10, PageUp/PageDown ±2)
   - ARIA labels and live region announcements for screen readers
   - Optional haptic feedback for mobile devices
@@ -242,7 +242,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Test Coverage
 
-- Added 22 comprehensive tests for WCB export functionality (98.8% coverage)
+- Added a focused test suite for WCB export functionality
 - Tests cover edge cases: empty entries, special characters, large datasets
 
 ### Verified
@@ -260,23 +260,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Current State
 
-This version represents the culmination of extensive development through November 2025, with production-ready
-features and comprehensive SaaS infrastructure.
+This version represents the culmination of extensive development through November 2025, including many in-repo components for a SaaS-style deployment (availability varies by deployment and configuration).
 
 ### Added - Major Features
 
 #### Core Functionality
 
-- **7-Step Pain Assessment Form** - Multi-dimensional tracking across 44+ anatomical locations
+- **7-Step Pain Assessment Form** - Multi-dimensional tracking across anatomical locations
 - **Empathy Intelligence Engine** - Heuristic-based pain pattern analysis with predictive modeling
 - **Trauma-Informed UI** - Comprehensive accessibility system with crisis detection
 - **Customizable Dashboard** - Widget-based layout with user preferences
 - **WorkSafe BC Export** - CSV/JSON exports for claims and clinical reporting
 
-#### Security & Compliance
+#### Security & Compliance (Implementation)
 
-- **Multi-Layer Security Architecture** - AES-256 encryption, CSP, audit trails
-- **HIPAA Compliance Framework** - PHI protection, access controls, breach assessment
+- **Multi-Layer Security Architecture** - Client-side encryption, CSP, audit trails
+- **Compliance-Oriented Controls** - HIPAA-aligned controls and documentation patterns (not a compliance claim)
 - **Zero-Trust Model** - Explicit permission and comprehensive audit logging
 - **Encryption Service** - Local-first encryption with secure key management
 
@@ -285,11 +284,11 @@ features and comprehensive SaaS infrastructure.
 - **Advanced Analytics Engine** - Pattern detection and correlation analysis
 - **Pain Analytics Service** - Trend analysis and visualization
 - **Predictive Pain Modeling** - 7-day forecasting with pattern recognition
-- **Privacy-Preserving Analytics** - Differential privacy implementation
+- **Privacy-Preserving Analytics** - Privacy-preserving approaches and minimization (varies by subsystem)
 
 #### Fibromyalgia Support
 
-- **ACR 2016 Diagnostic Criteria** - WPI and SSS scoring
+- **WPI/SSS-Style Scoring** - Scoring helpers and threshold support (not a diagnosis)
 - **Fibro Fog Tracking** - Cognitive symptom assessment
 - **Flare Pattern Recognition** - Frequency, duration, and trigger correlation
 - **Energy Envelope Management** - Activity pacing tools
@@ -385,7 +384,7 @@ features and comprehensive SaaS infrastructure.
 ### Security
 
 - **Encryption Implementation** - AES-GCM for all sensitive data
-- **Audit Logging** - Comprehensive event tracking for HIPAA compliance
+- **Audit Logging** - Comprehensive event tracking for compliance-oriented auditing (avoid logging sensitive content)
 - **CSP Headers** - Content Security Policy for XSS protection
 - **Input Validation** - Multi-layer validation with Zod schemas
 
@@ -412,7 +411,7 @@ features and comprehensive SaaS infrastructure.
 ### Version 0.1.0-beta Timeline
 
 - **2024 Q2-Q3**: Initial architecture and core features
-- **2024 Q4**: Security hardening and HIPAA compliance
+- **2024 Q4**: Security hardening and compliance-oriented controls
 - **2025 Q1-Q2**: Advanced analytics and empathy engine
 - **2025 Q3**: PWA implementation and trauma-informed UX refinements
 - **2025 Q4**: SaaS infrastructure and production readiness

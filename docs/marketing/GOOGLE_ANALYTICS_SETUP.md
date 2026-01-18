@@ -1,8 +1,11 @@
 # Google Analytics Setup Guide
 
 > **Status**: ✅ Configured (build/deploy gated)  
-> **Tracking ID**: G-X25RTEWBYL  
-> **Last Updated**: 2025-12-24
+> **Measurement ID**: G-X25RTEWBYL  
+> **Stream Name**: Paintracker  
+> **Stream URL**: https://www.paintracker.ca  
+> **Stream ID**: 13006667177  
+> **Last Updated**: 2026-01-17
 
 ## Overview
 
@@ -14,12 +17,14 @@ This document explains how Google Analytics is integrated into the Pain Tracker 
 
 Google Analytics is loaded *conditionally* at runtime by `src/analytics/analytics-loader.ts`.
 
-- `index.html` includes the loader module.
-- The loader appends the remote `gtag.js` script only when `VITE_ENABLE_ANALYTICS === 'true'`.
+- `src/main.tsx` imports the loader module.
+- The loader appends the remote `gtag.js` script only when BOTH:
+   - `VITE_ENABLE_ANALYTICS === 'true'`, AND
+   - user consent is explicitly stored (`pain-tracker:analytics-consent = 'granted'`).
 
 **Locations**:
 - Loader: `src/analytics/analytics-loader.ts`
-- Included by: `index.html`
+- Included by: `src/main.tsx`
 
 ### 2. Content Security Policy (CSP) Configuration
 
@@ -201,7 +206,9 @@ The following domains must be whitelisted in Content Security Policy for Google 
 
 ### Current Implementation
 
-Google Analytics is **build/deploy gated** via `VITE_ENABLE_ANALYTICS`. When enabled, the app currently initializes GA at startup.
+Google Analytics is **build/deploy gated** via `VITE_ENABLE_ANALYTICS` and **runtime gated** via explicit user opt-in (`pain-tracker:analytics-consent = 'granted'`).
+
+Additionally, Pain Tracker uses a safe-enable posture for GA4 event payloads (no health-adjacent event parameters).
 
 For consent-first/GDPR-oriented behavior, consider:
 
@@ -221,16 +228,7 @@ For consent-first/GDPR-oriented behavior, consider:
 
 ### Recommended Enhancements
 
-```javascript
-// Example: Conditional GA loading based on consent
-if (userConsent.analytics) {
-  // Load GA script
-  const script = document.createElement('script');
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=G-X25RTEWBYL';
-  script.async = true;
-  document.head.appendChild(script);
-}
-```
+- Consider adding a clear in-app explanation of what GA is used for and how to revoke consent.
 
 ## Security Considerations
 

@@ -433,7 +433,7 @@ Render Child     Show UpgradePrompt
 
 3. **Compliance & Security**
    - SOC 2 Type II certification preparation
-   - Enhanced HIPAA compliance features
+  - HIPAA-aligned enhancements (deployment-dependent)
    - Data residency options
    - Advanced encryption options
 

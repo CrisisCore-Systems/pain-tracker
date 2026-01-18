@@ -1078,6 +1078,8 @@ The goal isn't to detect every crisis perfectly—it's to be helpful more often 
 
 **Coming Next**: "The Recovery Arc: Detecting when crisis is over without forcing users to declare victory"
 
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
+
 ---
 
 **Tags**: #crisis-detection #accessibility #healthcare #trauma-informed #testing #react #typescript #machine-learning

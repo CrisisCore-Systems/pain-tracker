@@ -50,11 +50,11 @@ The preference persists to localStorage. If you switch it once, it stays. No re-
 
 You can open this app and start tracking your pain in literally 2 seconds. No email. No password. No "sign up to continue." Nothing.
 
-Your data goes straight into IndexedDB on your own device. It never touches our servers—we don't *have* servers for user data. There's nothing to sync because there's nowhere to sync to.
+Your data goes straight into IndexedDB on your own device. In the default configuration, there isn't a backend storing your entries.
 
 Want to create an account later for cross-device sync? Fine. We might build that someday. But you'll never be *forced* to.
 
-The badge on our landing page says "No Account Required" right next to "100% Local & Private." Because the person at 3 AM doesn't need another account. They need to write something down before they forget.
+The badge on our landing page says "No Account Required" right next to "Local-First (Private by Default)." Because the person at 3 AM doesn't need another account. They need to write something down before they forget.
 
 ### 3. No push notifications by default
 

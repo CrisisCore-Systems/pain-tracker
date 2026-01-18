@@ -301,15 +301,14 @@ Follow the same pattern as Section 1 for each:
 ```markdown
 ## Key Takeaways
 
-We built a production-ready healthcare PWA that works everywhere by:
+We built a local-first healthcare PWA that works across modern browsers by:
 
 1. **Dual-persistence strategy**: IndexedDB (truth) + localStorage (cache)
 2. **Smart service workers**: Network-first with offline fallbacks
 3. **Priority sync queues**: High/medium/low with exponential backoff
 4. **Progressive enhancement**: Core tracking works even if PWA features fail
 
-The result: 420KB gzipped, <100ms reads, and 44+ anatomical locations 
-tracked completely offline.
+The result: see current bundle metrics in `badges/` and validate performance in your target devices.
 ```
 
 #### 6.2 Lessons Learned

@@ -116,9 +116,9 @@ Join 1,000+ users who've simplified their pain management.
 Building healthcare software that respects privacy:
 
 Pain Tracker's local-first architecture means:
-• Data never leaves the user's device
-• No cloud storage vulnerabilities
-• HIPAA-aligned practices
+• Data stays local by default; you control exports
+• No required cloud backend for core tracking
+• HIPAA-aligned controls (not a compliance claim)
 • Complete user control
 
 Technical details: [blog link]
@@ -201,7 +201,7 @@ convert screenshot.png -resize 1200x630 screenshot-twitter.png
 **Image:** `privacy-security-settings.png`
 
 **Ad Copy:**
-"Unlike cloud-based competitors, Pain Tracker keeps your medical data on YOUR device. Local storage. Military-grade encryption. Complete privacy.
+"Unlike cloud-based competitors, Pain Tracker is designed to keep your entries local by default. Encrypted storage. You control what you export or share.
 
 Learn more about our security →"
 
@@ -225,7 +225,7 @@ Learn more about our security →"
 ### BC Workers (Primary)
 **Key Messages:**
 - WorkSafe BC integration
-- Free forever (vs competitors)
+- Free core (vs competitors)
 - Built in BC for BC workers
 
 **Best Screenshots:**
@@ -339,7 +339,7 @@ Learn more about our security →"
 5. "Built in BC, for BC. Pain management made simple."
 
 ### Short Form (Facebook/Instagram)
-1. "Managing chronic pain shouldn't mean sacrificing privacy. Pain Tracker keeps your data on YOUR device—no cloud, no tracking, no compromise."
+1. "Managing chronic pain shouldn't mean sacrificing privacy. Pain Tracker is local-first by default—you control what you export or share."
 
 2. "Spent hours filling out WorkSafe BC forms? There's a better way. Track your pain naturally, generate perfect forms automatically."
 
@@ -347,7 +347,7 @@ Learn more about our security →"
 
 ### Long Form (Blog/LinkedIn)
 1. **For Technical Audiences:**
-"Privacy-first architecture isn't just a buzzword for us—it's our foundation. Pain Tracker uses local-first IndexedDB storage with AES-256 encryption, ensuring medical data never leaves the user's device. Our open-source codebase demonstrates our commitment to transparency and user data sovereignty."
+"Privacy-first architecture isn't just a buzzword for us—it's our foundation. Pain Tracker uses local-first storage with client-side encryption, designed to keep health data local by default while giving you control over exports. Our open-source codebase demonstrates our commitment to transparency and user data sovereignty."
 
 2. **For BC Workers:**
 "As BC developers who've worked with WorkSafe BC systems, we understand the pain of manual form filling. We built Pain Tracker to bridge the gap between your daily pain experience and the bureaucratic requirements of workers' compensation claims. One app, one click, perfect forms—every time."

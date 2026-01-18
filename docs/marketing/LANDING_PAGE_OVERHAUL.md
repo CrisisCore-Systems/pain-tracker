@@ -61,7 +61,7 @@ Social proof with real-world impact:
 - **Highlight Badges**: Key achievements (e.g., "Saves 25+ hours/week")
 - **Avatar Emojis**: Diverse representation
 - **Stats Bar**: 
-  - 100% Privacy Protected
+  - Privacy-first (local-first by default)
   - 25+ Hours Saved/Week
   - 8 AI Algorithms
   - 95% Time Reduction
@@ -80,7 +80,7 @@ Professional multi-section footer:
 **Final CTA Section:**
 - Large heading: "Ready to Transform Your Pain Management?"
 - Dual CTAs: "Start as Patient" / "Clinician Login"
-- Trust line: "No credit card • No account required • 100% free forever"
+- Trust line: "No credit card • No account required • Free core"
 
 **Main Footer Grid:**
 - Brand column (Activity icon, description, social links)
@@ -88,13 +88,13 @@ Professional multi-section footer:
 - Key Features list (8 AI Algorithms, WorkSafe BC Reports, etc.)
 
 **Trust Badges Bar:**
-- AES-256 Encrypted (green)
-- WCAG 2.1 AA (rose)
+- Encryption support (green)
+- WCAG 2.x AA target (rose)
 - HIPAA-Aligned (blue)
 - Open Source (purple)
 
 **Privacy Statement Box:**
-- Highlighted guarantee of no data collection
+- Clear statement of local-first defaults (and any optional networked features)
 - Link to verify source code
 - Clear explanation of local-first architecture
 
@@ -130,7 +130,7 @@ Professional multi-section footer:
 4. **Trust Indicators** - Security badges and verification
 5. **Feature Showcase** - Detailed feature list with icons
 6. **Testimonials** - Social proof + stats bar
-7. **Footer** - Final CTAs + resources + privacy guarantee
+7. **Footer** - Final CTAs + resources + privacy commitments
 
 ---
 
@@ -205,7 +205,7 @@ Professional multi-section footer:
 - **Professional Copy**: Clinical-grade language for credibility
 - **Concrete Benefits**: Specific time savings (25+ hours/week)
 - **Social Proof**: Real testimonials with highlights
-- **Transparency**: Privacy guarantees with verification links
+- **Transparency**: Privacy commitments with verification links
 
 ### Navigation
 - **Sticky Header**: Always visible navigation
@@ -256,4 +256,4 @@ Navigate  Understand  Trust      Validate   Convert
 
 ---
 
-**Status**: Ready for production deployment ✅
+**Status**: Ready for implementation; validate before production

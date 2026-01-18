@@ -180,9 +180,9 @@ That's a highly qualified sales lead, generated from your private health diary.
 
 "Developing new products" with your health data. And you can't even export that data without paying.
 
-### Case Study 3: A "HIPAA Compliant" App
+### Case Study 3: A “HIPAA-Compliance” Marketed App
 
-**The marketing:** "HIPAA compliant! Your data is secure!"
+**The marketing:** “HIPAA-compliance! Your data is secure!”
 
 **The reality:** HIPAA only applies to "covered entities" (healthcare providers, insurers, clearinghouses). **Most health apps are NOT covered entities.** They can legally do almost anything with your data.
 
@@ -287,7 +287,7 @@ export async function encryptAndStore(
   value: string
 ): Promise<void> {
   // CRITICAL: Encryption happens BEFORE storage
-  // The key never leaves your device
+  // Key material is kept client-side during normal use
   // Even if someone accessed IndexedDB, they'd see gibberish
   
   if (!vaultService.isUnlocked()) {
@@ -314,8 +314,8 @@ export async function encryptAndStore(
 ```
 
 **Why XChaCha20-Poly1305?**
-- 192-bit nonce eliminates collision risk (unlike AES-GCM)
-- Catastrophic failure if nonce reused? Not possible with this nonce size
+- 192-bit nonce dramatically reduces accidental collision risk (compared to AES-GCM)
+- If a nonce is reused with the same key, many AEAD schemes fail badly; the larger nonce space makes accidental reuse far less likely when implemented correctly
 - Used by Signal, WhatsApp, and other high-security applications
 
 ### Open-Source Verifiability
@@ -545,7 +545,7 @@ Here are options I've personally audited using the checklist above. I'm includin
 
 | Criteria | Status | Evidence |
 |----------|--------|----------|
-| Data storage | ✅ 100% local (IndexedDB) | [Source code](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/storage/) |
+| Data storage | ✅ Local-first by default (IndexedDB) | [Source code](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/storage/) |
 | Encryption | ✅ XChaCha20-Poly1305, client-side | [Encryption code](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/src/lib/storage/encryptedIndexedDB.ts) |
 | Open source | ✅ MIT licensed, full code on GitHub | [Repository](https://github.com/CrisisCore-Systems/pain-tracker) |
 | Free export | ✅ CSV, JSON, PDF — always free | No premium tier gates features |
@@ -560,7 +560,7 @@ Here are options I've personally audited using the checklist above. I'm includin
 
 **Honest limitations:**
 - No cross-device sync yet (data lives on one device)
-- Lose your passphrase = lose your data (true zero-knowledge)
+- Lose your passphrase = you may lose access to encrypted data (user-held keys model)
 - Relatively new project (beta quality in some areas)
 
 ---
@@ -758,7 +758,7 @@ A: Likely, yes. But stopping now prevents future data collection. You can also:
 - Remove your account entirely
 - Consider what data may exist and plan accordingly
 
-**Q: Is "HIPAA compliant" meaningful for health apps?**
+**Q: Is HIPAA marketing meaningful for health apps?**
 
 A: Usually no. HIPAA only applies to "covered entities" (healthcare providers, insurers, clearinghouses). Most consumer health apps are NOT covered entities and can do almost anything with your data, regardless of HIPAA marketing claims.
 
@@ -797,14 +797,14 @@ When an app requires a server to function, that server becomes a point of survei
 **The solution is architectural:**
 
 ```
-Don't promise not to spy → Make spying architecturally impossible
+Don't promise not to spy → Make spying meaningfully harder by design
 
 Don't promise data security → Make data breaches irrelevant (nothing to breach)
 
 Don't promise not to sell → Make there be nothing to sell
 ```
 
-This is what "local-first" and "privacy by design" actually mean. Not policies. Not promises. **Architecture that makes privacy violations impossible by default.**
+This is what “local-first” and “privacy by design” actually mean. Not policies. Not promises. **Architecture that constrains privacy violations by default.**
 
 Open-source developers, privacy advocates, and users who refuse to accept surveillance capitalism are building these alternatives. Tools that respect your autonomy. Software that treats your pain diary like the intimate document it is, not like a data extraction opportunity.
 
@@ -818,7 +818,7 @@ The technology to build privacy-first health apps exists right now. The question
 
 If you're tracking chronic pain and want to see what privacy-respecting software looks like in practice, try [Pain Tracker](https://paintracker.ca). 
 
-It's free, open source, and your data never leaves your device—not because we promise it won't, but because the architecture makes it impossible.
+It's free, open source, and local-first by default—not because of a privacy promise, but because core usage doesn’t require a user-data backend. (Some optional features may make network requests when enabled/configured.)
 
 **Verify it yourself:**
 - 📖 [Read the source code](https://github.com/CrisisCore-Systems/pain-tracker)

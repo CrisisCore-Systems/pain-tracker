@@ -279,7 +279,7 @@ function generateNextSteps(entries: PainEntry[], userGoals: Goal[]): NextStep[] 
 1. **OAuth 2.0 Authentication**: Provider login via hospital credentials
 2. **Observation Resources**: Map PainEntry → FHIR Observation
 3. **Bi-directional Sync**: Import patient demographics, export pain data
-4. **Audit Compliance**: Full HIPAA-compliant logging
+4. **Audit Compliance**: HIPAA-aligned logging utilities (not a compliance claim)
 
 ---
 
@@ -349,7 +349,7 @@ function generateNextSteps(entries: PainEntry[], userGoals: Goal[]): NextStep[] 
 ### Clinical Utility
 - **Report Sharing**: 40%+ users export reports
 - **Provider Adoption**: 50+ clinics using provider portal (by Q3)
-- **Data Quality**: 90%+ entries have location + symptom data
+- **Data Quality**: Target 90%+ entries have location + symptom data
 
 ---
 

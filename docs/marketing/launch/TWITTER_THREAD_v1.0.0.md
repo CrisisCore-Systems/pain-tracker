@@ -16,9 +16,9 @@ Open Source. Local First. Trauma-Informed.
 **Tweet 2 (The Problem & Privacy)**
 Most health apps treat your data as the product. We built differently.
 
-🔒 **Local-First Architecture**: Your health data (Class A) never leaves your device by default.
+🔒 **Local-First by Default**: Core health entries are stored locally; exports are user-controlled.
 🔑 **Client-Side Encryption**: AES-GCM encryption at rest.
-🚫 **No Tracking**: Zero third-party analytics or telemetry.
+🚫 **No Tracking by Default**: No third-party analytics or telemetry enabled by default.
 
 **Tweet 3 (Trauma-Informed Design)**
 UX matters when you're in pain.
@@ -26,14 +26,14 @@ UX matters when you're in pain.
 We use a **Trauma-Informed Design** framework:
 ✅ No "blame language" or gamification of suffering.
 ✅ "Panic Mode" for immediate UI simplification.
-✅ WCAG 2.2 AA Accessibility compliance.
+✅ Built toward a WCAG 2.2 AA accessibility target.
 
 Technology should support you, not overwhelm you.
 
 **Tweet 4 (Clinical Utility)**
 Data is only useful if your doctor accepts it.
 
-📋 **Clinical-Grade Exports**: Generate professional PDF reports compliant with WorkSafeBC standards.
+📋 **Exports**: Generate professional PDF reports oriented around WorkSafeBC workflows (always verify requirements).
 📈 **Trend Analysis**: Visualize pain severity, medication efficacy, and environmental factors locally.
 
 Bridge the gap between your experience and clinical understanding.
@@ -42,14 +42,14 @@ Bridge the gap between your experience and clinical understanding.
 Chronic pain doesn't wait for a good Wi-Fi signal.
 
 📱 **Offline-First PWA**: Full functionality without an internet connection.
-💾 **Resilient Sync**: Data is stored in IndexedDB and syncs only when you choose to export.
+💾 **Local Storage**: Data is stored in IndexedDB; exports are user-initiated.
 
 Install it on your home screen and use it anywhere.
 
 **Tweet 6 (Open Source)**
 Trust is earned through transparency.
 
-Pain Tracker is 100% Open Source under the MIT License.
+Pain Tracker is open source under the MIT License.
 Audit our code, contribute features, or self-host your own instance.
 
 👩‍💻 Built with React 18, TypeScript, Zustand, and Zod.

@@ -749,6 +749,8 @@ The goal isn't perfect simulation—that's impossible. The goal is **knowable im
 
 **Coming Next**: "Testing for Co-Occurrence: When Multiple Crises Happen Simultaneously"
 
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
+
 ---
 
 **Tags**: #validation #simulation #testing #healthcare #trauma-informed #quality-assurance #machine-learning #ground-truth

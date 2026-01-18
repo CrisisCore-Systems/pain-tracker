@@ -11,11 +11,11 @@
 | Metric | Value | Status |
 |--------|-------|--------|
 | **Overall Health** | 9.3/10 | ⭐⭐⭐⭐⭐ Excellent |
-| **Production Ready** | ✅ Yes | Beta deployment ready |
-| **Code Quality** | 90%+ coverage | ⭐⭐⭐⭐⭐ Excellent |
+| **Production Readiness** | Verify | Environment-specific |
+| **Code Quality** | Coverage (see `badges/coverage-badge.json`) | ⭐⭐⭐⭐⭐ Excellent |
 | **Security** | A+ | ⭐⭐⭐⭐☆ Very Good |
 | **Documentation** | 40+ docs | ⭐⭐⭐⭐⭐ Outstanding |
-| **Accessibility** | WCAG 2.2 AA | ⭐⭐⭐⭐⭐ Excellent |
+| **Accessibility** | WCAG 2.2 AA target | ⭐⭐⭐⭐⭐ Excellent |
 | **Bundle Size** | 1.3 MB (420 KB gzip) | ⭐⭐⭐⭐☆ Good |
 | **Dependencies** | 5 dev vulns | ⚠️ Minor issues |
 
@@ -26,7 +26,7 @@
 **Pain Tracker** is a security-first, offline-capable chronic pain tracking application built with empathy for trauma survivors and clinical integration for healthcare providers.
 
 ### Key Differentiators
-- 🔒 **Local-first security** - No cloud dependency, complete user control
+- 🔒 **Local-first security** - No required cloud backend; user-controlled exports
 - 💜 **Trauma-informed design** - Built for those with medical trauma history
 - 🏥 **WorkSafe BC integration** - Automated claims generation
 - 🧠 **Fibromyalgia-specialized** - ACR 2016 diagnostic criteria support
@@ -49,20 +49,20 @@
 
 ### 3. 💎 Exceptional Code Quality
 - TypeScript-first with 76.1% coverage
-- 90%+ test coverage (451 test files)
+- Automated test suite present (see current test results)
 - Modern architecture (React 18, Zustand, Vite)
 - **Impact:** Maintainable, scalable codebase
 
 ### 4. 🎨 Trauma-Informed UX
-- WCAG 2.1 AA compliant accessibility
+- WCAG 2.x AA target accessibility
 - Progressive disclosure reduces cognitive load
 - Crisis detection and panic mode
 - **Impact:** Serves underserved trauma survivor population
 
 ### 5. 🏥 Clinical Integration
-- WorkSafe BC Form 6/7 automation
-- ACR 2016 fibromyalgia criteria calculator
-- FHIR-ready exports for EHR systems
+- WorkSafeBC-oriented exports (verify jurisdiction requirements)
+- WPI/SSS threshold helper (not a clinical validation claim)
+- EHR/interop export ideas (scope-dependent)
 - **Impact:** Real clinical value for patients and providers
 
 ---
@@ -158,18 +158,18 @@
 ### What Makes This Project Exceptional
 
 1. **Rare Combination:** Security-first + empathy-driven is unique in healthcare apps
-2. **Technical Excellence:** World-class codebase with 90%+ test coverage
+2. **Technical Excellence:** Strong codebase with automated tests (see `badges/`)
 3. **Clear Vision:** Strong mission with trauma-informed focus
-4. **Production Ready:** Core features complete, ready for beta deployment
+4. **Beta Readiness:** Core features implemented; validate before production
 5. **Active Development:** Clear roadmap with realistic timelines
 
 ### What Sets It Apart
 
-- **Fibromyalgia specialization** - ACR 2016 compliance rarely seen
-- **WorkSafe BC automation** - Unique regulatory integration
+- **Fibromyalgia helper** - WPI/SSS threshold support (not a compliance claim)
+- **WorkSafeBC-oriented exports** - Workflow-focused export templates
 - **Open source with MIT license** - Builds trust and community
 - **Trauma-informed from ground up** - Not an afterthought
-- **Local-first architecture** - No cloud lock-in or privacy concerns
+- **Local-first architecture** - No required backend; reduces privacy risk surface
 
 ---
 
@@ -180,7 +180,7 @@ Codebase:
 - Lines of Code: ~127,601
 - TypeScript: 76.1% coverage
 - Test Files: 451
-- Test Coverage: 90%+
+- Test Coverage: See `badges/coverage-badge.json`
 - Components: 150+
 - Build Time: ~12 seconds
 
@@ -191,27 +191,27 @@ Quality:
 - Dependencies: Clean (prod), 5 issues (dev)
 
 Features:
-- Core Tracking: 100% complete
-- Security: 95% complete
-- Analytics: 90% complete
-- PWA: 80% complete
-- Clinical Integration: 90% complete
-- Advanced Viz: 60% complete
+- Core Tracking: high completeness (estimate)
+- Security: high completeness (estimate)
+- Analytics: high completeness (estimate)
+- PWA: in progress (estimate)
+- Clinical Integration: in progress (estimate)
+- Advanced Viz: in progress (estimate)
 ```
 
 ---
 
 ## 🎯 Bottom Line
 
-**Pain Tracker is a production-ready, world-class digital health platform** that successfully combines:
+**Pain Tracker is a mature, local-first digital health app** that combines:
 
-✅ Enterprise-grade security  
+✅ Security-focused architecture (validate in your environment)  
 ✅ Trauma-informed empathy  
 ✅ Clinical utility  
 ✅ Technical excellence  
 ✅ Open source collaboration  
 
-**Recommendation:** Deploy to early adopters for beta testing. With 2-3 months of focused refinement on identified improvement areas, this will be the gold standard for chronic pain management applications.
+**Recommendation:** Deploy to early adopters for beta testing. With focused refinement on identified improvement areas, this can become a strong, privacy-oriented chronic pain tracking tool.
 
 **Rating: 9.1/10** - Exceptional project with clear path to 10/10.
 

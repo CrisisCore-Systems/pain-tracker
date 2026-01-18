@@ -724,6 +724,8 @@ When users face cascading crises, our system should be a calm anchor, not anothe
 
 **Coming Next**: "Testing Privacy-Preserving Analytics: Verifying That Insights Don't Leak Identity"
 
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
+
 ---
 
 **Tags**: #crisis-detection #state-machines #testing #healthcare #trauma-informed #complexity #react #typescript

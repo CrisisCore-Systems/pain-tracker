@@ -8,10 +8,10 @@
 
 ## What Was Delivered
 
-### 1. **Production-Ready Accessibility Specification** ✅
+### 1. **Accessibility Specification (Ready for Review)** ✅
 **File**: `docs/accessibility/ACCESSIBILITY_COMFORT_SPEC.md` (28,000+ words)
 
-**Scope**: Complete WCAG 2.2 AA compliance guide with AAA for critical UI
+**Scope**: WCAG 2.2 AA target guide with AAA guidance for critical UI
 
 **Key Sections**:
 - ✅ Design tokens (focus rings, contrast ratios, tap targets)
@@ -84,7 +84,7 @@
 - **Better**: Voice input with explicit trigger (privacy-first)
 
 ### vs. Curable
-- **Better**: WCAG 2.2 compliance (they're AA partial)
+- **Better**: WCAG 2.2 AA target focus (validate across apps)
 - **Better**: One-handed operation (thumb zone primary actions)
 - **Better**: Panic Mode with redaction (they have meditation, no crisis mode)
 
@@ -95,7 +95,7 @@
 
 ---
 
-## Accessibility Compliance Matrix
+## Accessibility Target Matrix
 
 | Standard | Level | Status | Evidence |
 |----------|-------|--------|----------|
@@ -298,17 +298,17 @@ By implementing this accessibility & comfort layer, Pain Tracker will be:
 - ManageMyPain: Clinical but not accessible
 - PainScale: Simple but limited accessibility
 - Curable: Empathetic but AA partial
-- Pain Tracker: **All three + AAA compliance**
+- Pain Tracker: **All three + AAA guidance**
 
 ---
 
 ## Conclusion
 
-We've delivered a **complete, production-ready accessibility specification** that transforms Pain Tracker into the most inclusive pain management platform. Every pattern is:
+We've delivered a complete accessibility specification intended for implementation and review. Every pattern is:
 
 - ✅ **Testable**: 49 checkpoints with clear pass/fail
 - ✅ **Measurable**: KPIs for speed, success rate, compliance
-- ✅ **Compliant**: WCAG 2.2 AA baseline, AAA for critical UI
+- ✅ **Targets**: WCAG 2.2 AA baseline, AAA for critical UI
 - ✅ **Empathetic**: Panic Mode, gentle language, trauma-informed
 - ✅ **Universal**: Works for everyone, excels for those who need it most
 

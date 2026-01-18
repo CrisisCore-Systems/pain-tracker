@@ -8,7 +8,7 @@ This directory contains automated end-to-end tests for the Pain Tracker applicat
 
 ### Regular E2E Tests
 - **`tests/pain-entry-form.spec.ts`**: Form interaction and data persistence
-- **`accessibility.spec.ts`**: Accessibility compliance testing
+- **`accessibility.spec.ts`**: Accessibility checks (a11y regressions)
 
 ### PWA Test Suite ⭐ NEW!
 

@@ -12,7 +12,7 @@ Pain Tracker employs a **Freemium SaaS model** with a strong emphasis on social 
 
 ### Core Principles
 
-1. **Free Forever for Patients** - No subscriptions, no ads, no paywalls
+1. **Free Core for Patients** - No subscriptions, no ads, no paywalls (core)
 2. **Monetize Clinical Value** - Healthcare providers pay for enhanced features
 3. **Enterprise Scale** - Health systems and insurers fund advanced integrations
 4. **Open Source Foundation** - Community-driven development with commercial extensions
@@ -25,7 +25,7 @@ Pain Tracker employs a **Freemium SaaS model** with a strong emphasis on social 
 
 **Target Audience:** Individual patients, WorkSafeBC claimants, chronic pain survivors
 
-**Price:** $0 (Free Forever)
+**Price:** $0 (Core)
 
 **Features Included:**
 
@@ -49,9 +49,9 @@ Pain Tracker employs a **Freemium SaaS model** with a strong emphasis on social 
 
 ✅ **Privacy & Security**
 - Local-first data storage (IndexedDB)
-- AES-256 encryption
+- Client-side encryption for stored data
 - Offline-first functionality
-- Zero cloud dependency
+- No cloud required for core tracking
 
 ✅ **Quality of Life Tracking**
 - Sleep quality monitoring
@@ -60,12 +60,12 @@ Pain Tracker employs a **Freemium SaaS model** with a strong emphasis on social 
 - Medication logging
 
 ✅ **Accessibility**
-- WCAG 2.1 AA compliance
+- WCAG 2.x AA target
 - Trauma-informed UX
 - Crisis detection
 - Multiple language support (planned)
 
-**Revenue Model:** None (this tier is 100% free)
+**Revenue Model:** None (core tier intended to remain free; verify current offering)
 
 **Strategic Value:**
 - User acquisition engine
@@ -301,7 +301,7 @@ Pain Tracker employs a **Freemium SaaS model** with a strong emphasis on social 
 ### Value Propositions by Tier
 
 **vs. ManageMyPain ($3.99/mo):**
-- Pain Tracker Core is 100% free (saves $47.88/year)
+- Pain Tracker Core is free (saves $47.88/year vs. $3.99/mo)
 - Includes WorkSafeBC integration (unavailable in ManageMyPain)
 - Privacy-first (local storage vs. cloud)
 

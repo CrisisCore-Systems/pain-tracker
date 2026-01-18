@@ -2,7 +2,7 @@
 
 ## Overview
 
-Complete backend authentication system for the clinic portal with multi-device support, JWT tokens, session management, and HIPAA-compliant audit logging.
+Backend authentication reference implementation for the clinic portal with multi-device support, JWT tokens, session management, and audit logging (compliance-oriented; not a compliance claim).
 
 ---
 
@@ -13,7 +13,7 @@ Complete backend authentication system for the clinic portal with multi-device s
   - `clinicians` table - Clinician accounts with professional details
   - `clinician_sessions` table - Multi-device session management
   - `clinician_permissions` table - Custom role permissions
-  - `clinician_audit_log` table - HIPAA-compliant audit trail
+  - `clinician_audit_log` table - Audit trail (compliance-oriented; not a compliance claim)
   - `patient_clinician_assignments` table - Patient-clinician relationships
   - Stored procedures for session cleanup, login tracking, etc.
 
@@ -32,7 +32,7 @@ Complete backend authentication system for the clinic portal with multi-device s
   - Email/password authentication
   - Multi-device session creation
   - Account lockout after 5 failed attempts
-  - HIPAA audit logging
+  - Audit logging (compliance-oriented; not a compliance claim)
 
 - **`api/clinic/auth/register.ts`** - POST `/api/clinic/auth/register`
   - New clinician registration
@@ -70,15 +70,12 @@ Complete backend authentication system for the clinic portal with multi-device s
 
 Run the authentication schema:
 
-```bash
-# Connect to your PostgreSQL database
-psql -U postgres -d paintracker
-
+```powershell
 # Run the clinic auth schema
-\i database/clinic-auth-schema.sql
+psql -U postgres -d paintracker -f database/clinic-auth-schema.sql
 
 # Verify tables created
-\dt
+psql -U postgres -d paintracker -c "\dt"
 ```
 
 You should see:
@@ -92,7 +89,7 @@ You should see:
 
 Add to your `.env.local`:
 
-```bash
+```dotenv
 # Database
 DATABASE_URL=postgresql://postgres:password@localhost:5432/paintracker
 
@@ -111,32 +108,14 @@ NODE_ENV=development
 
 #### Register a Clinician
 
-```bash
-curl -X POST http://localhost:3000/api/clinic/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "doctor@clinic.com",
-    "password": "SecurePass123!",
-    "name": "Dr. Sarah Johnson",
-    "role": "physician",
-    "organizationId": "org-001",
-    "organizationName": "Pain Management Clinic",
-    "specialty": "Pain Medicine",
-    "licenseNumber": "BC-12345",
-    "npiNumber": "1234567890"
-  }'
+```powershell
+curl.exe -X POST "http://localhost:3000/api/clinic/auth/register" -H "Content-Type: application/json" -d '{"email":"doctor@clinic.com","password":"SecurePass123!","name":"Dr. Sarah Johnson","role":"physician","organizationId":"org-001","organizationName":"Pain Management Clinic","specialty":"Pain Medicine","licenseNumber":"BC-12345","npiNumber":"1234567890"}'
 ```
 
 #### Login
 
-```bash
-curl -X POST http://localhost:3000/api/clinic/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "doctor@clinic.com",
-    "password": "SecurePass123!",
-    "deviceName": "My Laptop"
-  }'
+```powershell
+curl.exe -X POST "http://localhost:3000/api/clinic/auth/login" -H "Content-Type: application/json" -d '{"email":"doctor@clinic.com","password":"SecurePass123!","deviceName":"My Laptop"}'
 ```
 
 Response:
@@ -159,30 +138,20 @@ Response:
 
 #### Verify Token
 
-```bash
-curl -X GET http://localhost:3000/api/clinic/auth/verify \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```powershell
+curl.exe -X GET "http://localhost:3000/api/clinic/auth/verify" -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 #### Refresh Token
 
-```bash
-curl -X POST http://localhost:3000/api/clinic/auth/refresh \
-  -H "Content-Type: application/json" \
-  -d '{
-    "refreshToken": "YOUR_REFRESH_TOKEN"
-  }'
+```powershell
+curl.exe -X POST "http://localhost:3000/api/clinic/auth/refresh" -H "Content-Type: application/json" -d '{"refreshToken":"YOUR_REFRESH_TOKEN"}'
 ```
 
 #### Logout
 
-```bash
-curl -X POST http://localhost:3000/api/clinic/auth/logout \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -d '{
-    "revokeAllSessions": false
-  }'
+```powershell
+curl.exe -X POST "http://localhost:3000/api/clinic/auth/logout" -H "Content-Type: application/json" -H "Authorization: Bearer YOUR_ACCESS_TOKEN" -d '{"revokeAllSessions":false}'
 ```
 
 ### 4. Frontend Usage
@@ -218,7 +187,7 @@ The frontend is already configured to use the backend. Just navigate to `/clinic
 - **User agent logging** - Track device information
 
 ### Audit Logging
-- **HIPAA-compliant** audit trail
+- Compliance-oriented audit trail (not a compliance claim)
 - Logs all authentication events:
   - Login attempts (success/failure)
   - Session restorations
@@ -419,6 +388,6 @@ export default async function handler(
 
 ---
 
-**Authentication system is production-ready! 🎉**
+**Authentication system reference implementation is documented.**
 
-Remember to complete the production checklist before deploying to live environments.
+Remember to complete the production checklist and perform a dedicated security review before deploying to live environments.

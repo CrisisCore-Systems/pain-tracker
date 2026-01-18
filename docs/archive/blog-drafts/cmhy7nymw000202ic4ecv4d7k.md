@@ -1,7 +1,7 @@
 ---
-title: "Stop Filling WorkSafeBC Forms Manually - This Auto-Generates Them For Free"
-seoTitle: "Auto-Generate WorkSafeBC Forms 6 & 7 | Free BC Pain Tracker"
-seoDescription: "Stop manual WorkSafeBC form filling. Get perfect Form 6 & 7 PDFs automatically from your pain entries. 100% private, completely free forever for BC workers."
+title: "Stop Filling WorkSafeBC Forms Manually — Auto-Generate Them From Your Entries"
+seoTitle: "Auto-Generate WorkSafeBC Forms 6 & 7 | BC Pain Tracker"
+seoDescription: "Reduce manual WorkSafeBC form filling. Generate Form 6 & 7 PDFs from your pain entries. Local-first by default; review your deployment and settings."
 datePublished: Fri Nov 14 2025 02:00:35 GMT+0000 (Coordinated Universal Time)
 cuid: cmhy7nymw000202ic4ecv4d7k
 slug: stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free
@@ -13,7 +13,7 @@ tags: privacy, workers-compensation, chronic-pain, pain-management, british-colu
 
 # I Automated WorkSafeBC Forms 6 & 7 So You Don't Have To
 
-*Stop Wasting Hours on Paperwork - Get Perfect Forms in 2 Clicks, 100% Free*
+*Stop wasting hours on paperwork — generate forms from your entries in a couple of clicks.*
 
 ## The Paperwork Problem Every Claimant Faces
 
@@ -35,22 +35,22 @@ I watched this destroy my father's recovery after a workplace injury. So I built
 ### 🚀 One-Click Form Generation
 
 **Before:** 45+ minutes of manual form filling  
-**After:** 2 clicks → perfect PDFs ready to submit
+**After:** 2 clicks → PDFs ready to review and submit
 
 ### 🔒 Privacy by Design
 
-* Your data **never leaves your device**
+* Your data is stored locally by default
     
-* **Zero cloud storage** (unlike every competitor)
+* No cloud storage is required for core tracking
     
-* **AES-256 encryption** at rest
+* Encrypted storage (implementation details vary by platform/build)
     
-* **You own your data** - we can't access it even if we wanted to
+* You control your data; the default architecture avoids server-side storage of entries
     
 
-### 💸 Truly Free Forever
+### 💸 Pricing and Availability
 
-No "freemium" traps. No feature walls. This is our commitment to BC workers.
+Pain Tracker is open source. If you self-host, your primary cost is your own hosting. If you use a hosted build, pricing and terms depend on the deployment.
 
 ## Why This Changes Everything for BC Claimants
 
@@ -62,7 +62,7 @@ No "freemium" traps. No feature walls. This is our commitment to BC workers.
     
 * ✅ **Protect your privacy** - no data sold or shared
     
-* ✅ **Free forever** - no hidden costs
+* ✅ **Predictable costs** (especially if self-hosting)
     
 
 ### The Technical Advantage No Competitor Can Match:
@@ -74,9 +74,9 @@ No "freemium" traps. No feature walls. This is our commitment to BC workers.
 * **Trauma-informed design** = reduces stress during difficult times
     
 
-## Try It Risk-Free
+## Try It
 
-The app is completely free and requires no sign-up: [**https://crisiscore-systems.github.io/pain-tracker/**](https://crisiscore-systems.github.io/pain-tracker/)
+Try the web app here: [**https://crisiscore-systems.github.io/pain-tracker/**](https://crisiscore-systems.github.io/pain-tracker/)
 
 ## Your Move, BC
 

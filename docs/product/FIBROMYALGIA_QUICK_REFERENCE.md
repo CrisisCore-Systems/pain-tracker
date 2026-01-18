@@ -20,7 +20,7 @@
 
 **Export for Medical Appointments**:
 - Generate clinical summaries
-- Export WorkSafe BC forms (if applicable)
+- Generate WorkSafeBC-oriented exports/reports (if applicable)
 - Print or email reports to providers
 
 ### For Developers
@@ -48,25 +48,23 @@ interface FibromyalgiaEntry {
 
 **Adding Fibro Features**:
 1. Import types: `import type { FibromyalgiaEntry } from '../types/fibromyalgia';`
-2. Use ACR criteria: WPI 0-19, SSS 0-12
+2. Use WPI/SSS scoring + threshold helpers as implemented in code
 3. Follow trauma-informed patterns
 4. Ensure offline-first functionality
 
 ### For Healthcare Providers
 
-**Clinical Standards**:
-- ACR 2016 Revised Diagnostic Criteria
-- WPI (Widespread Pain Index): 0-19 scale
-- SSS (Symptom Severity Scale): 0-12 scale
-- Diagnostic threshold: (WPI ≥7 AND SSS ≥5) OR (WPI 4-6 AND SSS ≥9)
+**Clinical Summary (Implementation Notes)**:
+- WPI/SSS scoring support and diagnostic-threshold helpers are implemented for tracking and communication
+- This is not a diagnostic tool and does not replace clinical judgment
 
 **Data Export Formats**:
 - CSV: Spreadsheet-compatible
 - JSON: EMR/EHR integration (FHIR-aligned)
-- PDF: Printable summaries (planned)
+- PDF: Printable summaries (implemented)
 
 **What's Tracked**:
-- Pain distribution across 18 ACR regions
+- WPI region selection (as implemented)
 - Fatigue, sleep, cognitive function
 - Mood, anxiety, functional capacity
 - Triggers (weather, stress, activity)
@@ -80,24 +78,22 @@ interface FibromyalgiaEntry {
 |---------|--------|----------|
 | WPI (18 regions) | ✅ | `src/types/fibromyalgia.ts` |
 | SSS (0-12 scale) | ✅ | `src/types/fibromyalgia.ts` |
-| ACR criteria calculator | ✅ | `src/components/fibromyalgia/FibromyalgiaTracker.tsx` |
+| WPI/SSS threshold helper | ✅ | `src/components/fibromyalgia/FibromyalgiaTracker.tsx` |
 | Fibro fog tracking | ✅ | SSS cognitive_symptoms |
 | Flare pattern detection | ✅ | `FibromyalgiaAnalytics` interface |
 | Trigger correlation | ✅ | `triggers` object in entry |
 | Energy envelope tools | ✅ | `activity` object in entry |
 | Trauma-informed UI | ✅ | `src/components/accessibility/` |
 | WorkSafe BC export | ✅ | `src/utils/pain-tracker/export.ts` |
-| Privacy (local storage) | ✅ | IndexedDB, no cloud |
+| Local-first storage (default) | ✅ | IndexedDB |
 
 ---
 
 ## 📊 Data Points Tracked
 
 ### Pain Assessment
-- **44+ Anatomical Locations**:
-  - 26 general pain locations
-  - 18 fibromyalgia WPI regions
-- **19 Symptom Quality Types**: sharp, burning, tingling, etc.
+- **Anatomical Locations**: detailed pain location options are defined in `src/utils/constants.ts`
+- **Symptom Descriptors**: symptom descriptors are defined in `src/utils/constants.ts` (currently 20 entries)
 
 ### Fibromyalgia Severity
 - **WPI Score**: 0-19 (painful body regions)
@@ -135,7 +131,7 @@ interface FibromyalgiaEntry {
 
 ## 🔬 Technical Specifications
 
-### ACR 2016 Compliance
+### WPI/SSS Scoring (Implementation)
 
 **Widespread Pain Index (WPI)**:
 ```
@@ -154,15 +150,8 @@ Somatic symptoms:     0 (none) to 3 (severe)
 Total SSS: Sum of above (0-12)
 ```
 
-**Diagnostic Criteria**:
-```
-Fibromyalgia if:
-  (WPI ≥ 7 AND SSS ≥ 5) OR
-  (WPI 4-6 AND SSS ≥ 9)
-AND
-  Symptoms present ≥ 3 months
-  No other explanation for symptoms
-```
+**Diagnostic Threshold Helpers**:
+The app includes threshold helpers based on WPI/SSS scoring. These are informational and intended to support tracking and communication.
 
 ### Data Structure
 
@@ -195,25 +184,6 @@ AND
 
 ## ✅ Verification Summary
 
-**All fibromyalgia claims verified** as of November 16, 2024:
+This document is a quick reference for current implementation. For detailed evidence and source references, see `FIBROMYALGIA_FEATURES.md` and `FIBROMYALGIA_CLAIMS_VERIFICATION.md`.
 
-- ✅ 44+ anatomical locations (exceeds "25+" claim)
-- ✅ 19 symptom quality types (exact match)
-- ✅ ACR 2016 diagnostic criteria implementation
-- ✅ Fibro-specific analytics (WPI, SSS, flare tracking)
-- ✅ Pattern recognition (heuristic-based)
-- ✅ Trauma-informed design (comprehensive system)
-- ✅ WorkSafe BC exports (production-ready)
-- ✅ Offline-first architecture
-- ✅ Privacy-first security (local storage only)
-
-**Planned enhancements** (Q1-Q2 2025):
-- 🔄 Machine learning flare prediction
-- 🔄 Advanced correlation analysis
-- 🔄 Enhanced body heatmaps
-
----
-
-**Version**: 1.0  
-**Last Updated**: November 16, 2024  
-**Status**: All core features verified and documented
+**Last Updated**: January 17, 2026

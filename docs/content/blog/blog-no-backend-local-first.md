@@ -1,7 +1,7 @@
 ---
-title: "Why My Pain App Has No Backend: Lessons from Building 100% Local-First Healthcare Software"
+title: "Why My Pain App Has No Backend: Lessons from Building Local-First Healthcare Software"
 seoTitle: "Building Local-First Healthcare Apps Without a Backend"
-seoDescription: "How I built Pain Tracker with zero backend—100% local storage, client-side encryption, and full offline capability. The architecture decisions, trade-offs, and lessons learned."
+seoDescription: "How I built Pain Tracker with zero backend—local-first storage, client-side encryption, and offline-first capability. The architecture decisions, trade-offs, and lessons learned."
 datePublished: Sat Nov 30 2025 12:00:00 GMT+0000 (Coordinated Universal Time)
 slug: why-my-pain-app-has-no-backend-local-first-healthcare
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1764400000000/local-first-healthcare-cover.png
@@ -9,7 +9,7 @@ tags: webdev, pwa, privacy, healthcare, typescript, indexeddb, local-first, offl
 
 ---
 
-# Why My Pain App Has No Backend: Lessons from Building 100% Local-First Healthcare Software
+# Why My Pain App Has No Backend: Lessons from Building Local-First Healthcare Software
 
 "Where's the backend?" is the first question I get from every developer who reviews [Pain Tracker](https://paintracker.ca). 
 
@@ -69,7 +69,7 @@ graph TD
     style D fill:#3b82f6,color:#fff
 ```
 
-Your data enters through the UI, gets encrypted immediately, and lands in IndexedDB. **It never touches a network.** When you need to share data with a doctor or WorkSafe BC, you explicitly export it—generating PDFs or CSVs entirely in the browser.
+Your data enters through the UI, gets encrypted immediately, and lands in IndexedDB. By design, core usage doesn’t require a backend or a user-data API. When you need to share data with a doctor or WorkSafe BC, you explicitly export it—generating PDFs or CSVs entirely in the browser.
 
 ---
 
@@ -178,10 +178,10 @@ export async function encryptAndStore(
 Why XChaCha20-Poly1305 instead of AES-GCM?
 
 1. **Extended nonce (192-bit)**: Safe to generate randomly without collision concerns
-2. **No IV reuse disasters**: AES-GCM catastrophically fails if you reuse an IV. XChaCha20's larger nonce space makes this effectively impossible.
+2. **Lower collision risk (when implemented correctly)**: AES-GCM fails catastrophically if you reuse an IV. XChaCha20’s larger nonce space is designed to make accidental nonce collisions extremely unlikely when generating nonces correctly.
 3. **libsodium availability**: We use the excellent libsodium-wrappers package, which makes this trivial to implement correctly
 
-The encryption key derives from a user passphrase using Argon2id—the current recommendation for password hashing. The key never leaves the device.
+The encryption key derives from a user passphrase using a memory-hard KDF (for example, Argon2id). Key material is kept client-side during normal use.
 
 ---
 
@@ -199,7 +199,7 @@ Your data lives on one device. Switch phones? You need to export and import manu
 
 Forgot your passphrase? Your data is gone. There's no "reset password" email because there's no account.
 
-**Mitigation**: Clear onboarding explaining this. Optional backup export prompts. The trade-off is intentional—true zero-knowledge means *we* can't recover your data either.
+**Mitigation**: Clear onboarding explaining this. Optional backup export prompts. The trade-off is intentional—if you choose a user-held-keys model, *we* can’t reset or recover encrypted data without the passphrase.
 
 ### ❌ No Server-Side Analytics
 
@@ -229,13 +229,13 @@ Each user's device is their own "server." A million users doesn't mean a million
 
 ### ✅ Regulatory Simplicity
 
-HIPAA compliance for a backend requires:
+Compliance programs for regulated environments often require:
 - Business Associate Agreements
 - Access controls and audit logging
 - Breach notification procedures
 - Regular security assessments
 
-For a local-first app where I *never have access to the data*? The compliance story is dramatically simpler. I can't breach what I don't have.
+For a local-first app where user content is stored on-device by default, the compliance story can be simpler (and different) than a service that routinely collects PHI. Still: requirements depend on your role, deployment, and workflows.
 
 ### ✅ Offline-First is Free
 
@@ -243,7 +243,7 @@ When there's no backend to call, offline support isn't a feature—it's the defa
 
 ### ✅ Trust Through Verifiability
 
-The entire codebase is open source. Users can verify that data stays local by reading the source. No "trust us" required.
+The entire codebase is open source. Users can verify how storage and encryption are implemented and that core usage doesn’t depend on a user-data backend. No “trust us” required.
 
 ---
 

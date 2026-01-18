@@ -6,7 +6,7 @@ This directory contains visual diagrams illustrating Pain Tracker's privacy-firs
 
 ### 1. Architectural Data Flow (`architectural-data-flow.svg`) ⭐ **RECOMMENDED**
 
-**Purpose**: Comprehensive architectural diagram showing Pain Tracker's complete privacy-first data flow contrasted with traditional health apps.
+**Purpose**: High-level diagram showing Pain Tracker's privacy-first data flow contrasted with traditional health apps.
 
 **Use Cases**:
 - **Primary marketing diagram** for landing pages and presentations
@@ -16,18 +16,18 @@ This directory contains visual diagrams illustrating Pain Tracker's privacy-firs
 
 **Top Flow (Pain Tracker - Privacy-First)**:
 - 📱 **Smartphone with Shield**: Your device with built-in security
-- 🔐 **Local Encryption Layer**: AES-GCM encryption, IndexedDB storage, zero-knowledge architecture
+- 🔐 **Local Encryption Layer**: AES-GCM encryption helpers for sensitive local storage (IndexedDB)
 - 📤 **User-Controlled Export**: Manual exports for WorkSafe BC, PDF clinical reports, CSV data
 - 🤝 **Explicit Sharing Choice**: You decide when and where to share (doctor, WorkSafe BC, or keep private)
 
 **Bottom Flow (Traditional Apps - Crossed Out)**:
 - ❌ Device auto-upload → Corporate servers → Data mining → Third-party sharing
-- Giant red X across entire flow emphasizing what we DON'T do
+- Giant red X across the traditional flow emphasizing what this project aims to avoid by default
 
 **Visual Features**:
-- Side-by-side comparison in a single comprehensive view
+- Side-by-side comparison in a single view
 - Clear color coding (green=secure, purple=export, orange=choice, red=danger)
-- Professional layout suitable for technical and non-technical audiences
+- Clean layout suitable for technical and non-technical audiences
 
 ### 2. Privacy-First Flow (`privacy-first-flow.svg`)
 
@@ -40,10 +40,10 @@ This directory contains visual diagrams illustrating Pain Tracker's privacy-firs
 - Educational content about data security
 
 **Highlights**:
-- 🖥️ **Your Device**: 100% local storage, no cloud upload
-- 🔐 **Encryption Layer**: IndexedDB with AES-GCM encryption, zero-knowledge architecture
+- 🖥️ **Your Device**: Local-first storage by default (offline-capable)
+- 🔐 **Encryption Layer**: IndexedDB with AES-GCM encryption helpers
 - 📤 **User-Controlled Export**: Manual exports only for WorkSafe BC and clinical reports
-- ❌ **What We DON'T Do**: No corporate servers, third-party sharing, data mining, or tracking
+- ❌ **Default stance**: No background uploads by default; optional integrations may use network calls when configured
 
 ### 3. Data Flow Comparison (`data-flow-comparison.svg`)
 
@@ -58,7 +58,7 @@ This directory contains visual diagrams illustrating Pain Tracker's privacy-firs
 **Left Side (Pain Tracker)**:
 - Local device storage with encryption
 - User-initiated exports only
-- Clear "NO" to corporate servers and third-party sharing
+- Local-first by default; network integrations (if enabled) are explicitly configured
 
 **Right Side (Traditional Apps)**:
 - Automatic cloud upload
@@ -74,7 +74,7 @@ All diagrams follow these principles:
 2. **Color Coding**:
    - Green: Secure, private, user-controlled actions
    - Purple: Export and user control
-   - Red: Dangers, warnings, what we DON'T do
+   - Red: Dangers and warnings (patterns this project aims to avoid by default)
    - Blue/Indigo: User devices and local processing
 3. **Accessibility**: High contrast, clear labels, readable fonts
 4. **Professional**: Clean design suitable for both technical and non-technical audiences
@@ -98,7 +98,7 @@ These diagrams are available in both **SVG** (vector) and **PNG** (raster) forma
 - Creating presentations (PowerPoint, Keynote)
 - Posting on social media
 - Email newsletters or attachments
-- Need guaranteed compatibility across all platforms
+- Need broad compatibility across platforms
 
 These SVG diagrams can be embedded in:
 - Markdown files (GitHub, documentation sites)

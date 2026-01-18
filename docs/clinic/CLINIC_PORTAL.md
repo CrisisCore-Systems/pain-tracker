@@ -23,7 +23,7 @@ The Clinic Portal is a separate healthcare professional interface for Pain Track
 - Responsive design for desktop and tablet
 
 🚧 **Planned:**
-- HIPAA audit trail integration
+- HIPAA-aligned audit trail integration
 - Role-based authentication (physician, nurse, admin, researcher)
 - Advanced patient search and filtering
 - Appointment scheduling system
@@ -68,7 +68,7 @@ src/
 | `/clinic/patients/:id` | PatientView | Protected | Individual patient details |
 | `/clinic/appointments` | ClinicAppointments | Protected | Schedule management |
 | `/clinic/reports` | ClinicReports | Protected | Clinical reports |
-| `/clinic/compliance` | ClinicCompliance | Admin Only | HIPAA audit logs |
+| `/clinic/compliance` | ClinicCompliance | Admin Only | Audit logs |
 | `/clinic/settings` | ClinicSettings | Protected | Portal configuration |
 
 ---
@@ -141,8 +141,8 @@ Optimized for long reading sessions and data density:
    - Physician, Nurse, Admin, Researcher roles
    - Feature-level permissions
 
-3. **HIPAA Compliance**
-   - Audit logging for all data access
+3. **HIPAA-Aligned Controls (Deployment-Dependent)**
+   - Audit logging for sensitive data access (minimal, non-reconstructive)
    - Automatic de-identification for research
    - Breach detection and reporting
    - Data retention policies (7-year default)

@@ -557,7 +557,7 @@ Add to crontab:
 - 200GB block storage
 - 10TB/month outbound transfer
 
-Stays **free forever** if you:
+Stays within the **Always Free** tier if you:
 - Log in once every ~60 days
 - Don't exceed quotas
 - Keep "Always Free" tier resources
@@ -611,6 +611,6 @@ A: Yes, create a staging branch and duplicate the workflow with different `DEPLO
 
 ---
 
-**Deployment Status**: Ready for production  
+**Deployment Status**: Deployment notes (validate before production)  
 **Last Updated**: November 2024  
 **Maintainer**: CrisisCore-Systems

@@ -32,9 +32,9 @@ Your pain diary shouldn't be someone else's asset.
 PainTracker's architecture:
 
 ✓ IndexedDB (local browser storage)
-✓ AES-256 encryption with keys only YOU hold
-✓ Zero network requests for health data
-✓ Works offline, always
+✓ Client-side encryption for stored data
+✓ No cloud backend required for core tracking
+✓ Works offline for core features
 ✓ Open source — verify it yourself
 
 **Tweet 4/7:**
@@ -263,7 +263,7 @@ RED FLAGS in health app privacy claims:
 ❌ "Bank-level security" (meaningless)
 ❌ "Your data is encrypted" (where? when?)
 ❌ "We take privacy seriously" (no technical details)
-❌ "HIPAA compliant" (doesn't mean they can't access it)
+❌ "Compliance-certified" (e.g., HIPAA/WCAG) (doesn't mean they can't access it)
 
 **Tweet 3/9:**
 WHAT TO ASK:
@@ -278,12 +278,12 @@ Most apps can't answer these.
 **Tweet 4/9:**
 PainTracker's encryption:
 
-✓ AES-256-GCM (same as government classified data)
-✓ Keys generated ON your device
-✓ Keys never transmitted anywhere
-✓ I literally cannot read your data
+✓ Client-side encryption at rest (see code)
+✓ Keys generated/derived client-side
+✓ No server-side storage required for entries by default
+✓ Designed to minimize who can access your data
 
-Not "won't" — CAN'T.
+Avoids "trust us" promises by keeping the default architecture local-first.
 
 **Tweet 5/9:**
 The key management:
@@ -683,9 +683,9 @@ Here's what it actually means in PainTracker — step by step 🧵
 Step 1: Key Generation
 
 When you first use the app:
-- Browser's Web Crypto API generates AES-256 key
-- Key stays in YOUR browser's secure storage
-- Never transmitted. Never backed up (by us).
+- Browser's Web Crypto API generates an AES-GCM (256-bit) key
+- Key handling is client-side
+- Not transmitted by the default configuration
 
 **Tweet 3/8:**
 Step 2: Encryption on Write
@@ -705,24 +705,22 @@ When you view data:
 - Decrypted with YOUR key
 - Displayed to you
 
-Key never leaves memory. Data never leaves device.
+Keys are intended to remain client-side; data stays local by default.
 
 **Tweet 5/8:**
 Why this matters:
 
 Even if someone copies your IndexedDB:
-❌ They can't read it without key
-❌ Brute forcing AES-256 is infeasible
-❌ The key isn't stored with the data
+❌ They can't read it without your key
+❌ The encryption is designed to be cryptographically strong
+❌ The key isn't stored alongside the ciphertext
 
 **Tweet 6/8:**
-What we CAN'T do:
+What we DON'T do by default:
 
-❌ Read your data
-❌ Recover your data if you lose key
-❌ Comply with subpoenas for your data (we don't have it)
-❌ Sell your data
-❌ Train ML on your data
+- We don't require a backend account for core tracking
+- We don't send your entries to a server for processing in normal use
+- We don't rely on third-party analytics/telemetry by default
 
 **Tweet 7/8:**
 Web Crypto API FTW:
@@ -1262,7 +1260,7 @@ PRIVACY:
 - No accounts
 - Local encryption
 - Open source
-- Data never leaves device
+- Data stays local by default
 
 Your pain diary is yours. Period.
 

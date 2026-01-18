@@ -1,13 +1,13 @@
 # 🩺 Fibromyalgia Features Guide
 
-> **Pain Tracker's comprehensive fibromyalgia support system**  
-> Built on ACR 2016 Revised Diagnostic Criteria with trauma-informed design
+> **Pain Tracker's fibromyalgia support system**  
+> WPI/SSS scoring + threshold helpers with trauma-informed design
 
 ---
 
 ## 🎯 Overview
 
-Pain Tracker offers specialized tools and analytics for people with fibromyalgia—a chronic pain condition characterized by widespread pain, fatigue, and complex symptoms. Our fibromyalgia support goes beyond basic pain tracking to provide clinical-grade assessment tools aligned with medical standards.
+Pain Tracker offers specialized tools and analytics for people with fibromyalgia—a chronic pain condition characterized by widespread pain, fatigue, and complex symptoms. This guide documents what is implemented in the codebase and how it maps to common tracking workflows.
 
 ---
 
@@ -15,28 +15,18 @@ Pain Tracker offers specialized tools and analytics for people with fibromyalgia
 
 ### 1. **Multi-Dimensional Symptom Tracking**
 
-#### 📍 **44+ Anatomical Locations**
-Pain Tracker provides comprehensive body coverage through:
+#### 📍 **Anatomical Location Tracking**
+Pain Tracker supports detailed location tracking via:
 
-- **26 General Pain Locations** (`src/utils/constants.ts`):
-  - Head, neck, shoulders, upper/lower back
-  - Chest, abdomen, hips, knees, ankles, feet
-  - Arms, elbows, wrists, hands
-  - Bilateral tracking (left/right leg, foot, toes)
-  - Specific regions (inner/outer leg variants)
+- **General pain locations** (`src/utils/constants.ts`) — a detailed list (including legacy compatibility entries)
+- **Fibromyalgia WPI regions** (`src/types/fibromyalgia.ts`) — region-based selection used for WPI-style scoring
 
-- **18 Fibromyalgia-Specific WPI Regions** (`src/types/fibromyalgia.ts`):
-  - **Upper Body**: Left/right shoulder, upper arm, lower arm
-  - **Lower Body**: Left/right hip, upper leg, lower leg
-  - **Axial**: Jaw, chest, abdomen, upper back, lower back, neck
-
-**Total Coverage**: 44+ distinct anatomical locations, exceeding the "25+" claim and matching ACR fibromyalgia tender points and diagnostic regions.
-
-#### 🔍 **19+ Symptom Quality Types**
-Comprehensive symptom characterization beyond simple pain intensity (`src/utils/constants.ts`):
+#### 🔍 **Symptom Descriptor Types**
+Symptom descriptor options beyond simple pain intensity are defined in `src/utils/constants.ts`.
 
 1. Sharp
 2. Dull
+3. Dull ache
 3. Aching
 4. Burning
 5. Tingling
@@ -55,7 +45,7 @@ Comprehensive symptom characterization beyond simple pain intensity (`src/utils/
 18. Loss of reflexes
 19. Cramping
 
-**Clinical Significance**: These descriptors capture the diverse pain qualities common in fibromyalgia, including neuropathic symptoms (tingling, electric shock), muscle symptoms (spasm, stiffness), and sensory disturbances (hypersensitivity, allodynia).
+These descriptors are intended to support personal tracking and communication with clinicians.
 
 #### 📊 **Severity Gradients & Time Logging**
 
@@ -91,10 +81,10 @@ Comprehensive symptom characterization beyond simple pain intensity (`src/utils/
 **Fibromyalgia Analytics Interface** (`src/types/fibromyalgia.ts`):
 ```typescript
 interface FibromyalgiaAnalytics {
-  // ACR Diagnostic Criteria
-  wpiScore: number;                    // 0-19
+  // WPI/SSS Scoring
+  wpiScore: number;                    // 0-18 (as implemented)
   sssScore: number;                    // 0-12
-  meetsDiagnosticCriteria: boolean;    // Evidence-based assessment
+  meetsDiagnosticCriteria: boolean;    // Threshold helper (not a diagnosis)
   
   // Pattern Analysis
   mostAffectedRegions: Array<{
@@ -214,35 +204,28 @@ interface FibromyalgiaEntry {
 
 ### 4. **Clinical Integration & Export Features**
 
-#### 🏥 **WorkSafe BC Compliance**
+#### 🏥 **WorkSafeBC-Oriented Exports**
 
-**Automated Claims Generation** (`src/utils/pain-tracker/export.ts`, `src/components/pain-tracker/WCBReportPreview.tsx`):
-- **Form 6/7 Auto-Population**: Pain assessment data automatically formatted for WorkSafe BC forms
-- **CSV Export**: Structured data for claims adjusters
-- **JSON Export**: Machine-readable format for digital submission
-- **Clinical Summaries**: Healthcare provider-formatted reports
+**Export & Reporting Utilities** (`src/utils/pain-tracker/export.ts`, `src/utils/pain-tracker/wcb-export.ts`):
+- **CSV Export**: Structured data export
+- **JSON Export**: Machine-readable format
+- **PDF Export**: Printable reports for sharing (user-controlled)
 
-**Regulatory Alignment**:
-- PIPEDA privacy compliance (Canadian privacy law)
-- Provincial privacy legislation support
-- WCAG 2.1 AA accessibility compliance
-- HIPAA-aligned data handling practices
+Note: Export templates are designed to support real workflows, but this documentation does not claim official compliance with any specific form or regulatory requirement.
 
 #### 📋 **Evidence-Based Assessment Scales**
 
-**ACR 2016 Revised Diagnostic Criteria** (`src/types/fibromyalgia.ts`, `src/components/fibromyalgia/FibromyalgiaTracker.tsx`):
+**WPI/SSS Scoring & Threshold Helpers** (`src/types/fibromyalgia.ts`, `src/utils/pain-tracker/fibroDiagnostic.ts`):
 
 **Widespread Pain Index (WPI)**:
-- Scale: 0-19 (number of painful body regions)
-- 18 defined regions matching ACR criteria
-- Interactive body map selection
+- Region-based selection used to compute a WPI-style score
 
 **Symptom Severity Scale (SSS)**:
 - Scale: 0-12 total
 - 4 symptom domains (0-3 each)
-- Validated clinical assessment tool
+- Commonly used clinical assessment scale
 
-**Diagnostic Criteria Calculation**:
+**Diagnostic Threshold Calculation (as implemented)**:
 ```typescript
 // Meets fibromyalgia criteria if:
 (wpiScore >= 7 && sssScore >= 5) || 
@@ -266,10 +249,10 @@ interface FibromyalgiaEntry {
 #### 💾 **Local-First Architecture**
 
 **Implementation**:
-- **IndexedDB Storage**: All data persists locally (`src/utils/pain-tracker/storage.ts`)
-- **No Cloud Dependency**: App fully functional without internet connection
-- **Selective Encryption**: Sensitive data encrypted at rest (AES-GCM)
-- **Sync-Free Design**: No account required, no external servers
+- **IndexedDB Storage**: Data persists locally (`src/utils/pain-tracker/storage.ts`)
+- **Offline-Capable Core**: Core tracking works without internet; some integrations require network
+- **Selective Encryption**: Sensitive data encrypted at rest (AES-GCM helpers)
+- **Sync-Free by Default**: No account required for core tracking
 
 **Benefits for Fibromyalgia Patients**:
 - Track symptoms during flares without connectivity stress
@@ -294,15 +277,11 @@ interface FibromyalgiaEntry {
 **Multi-Layer Security Architecture**:
 
 1. **Data Storage Layer** (`src/services/EncryptionService.ts`):
-   - AES-256 encryption for sensitive fields
-   - Local-only storage (no external transmission)
-   - Encrypted IndexedDB helpers (AES-GCM)
+  - Encryption helpers for sensitive fields
+  - Local-first storage
 
-2. **HIPAA Compliance Service** (`src/services/HIPAACompliance.ts`):
-   - Audit trail for all data access
-   - PHI (Protected Health Information) detection
-   - Risk scoring and breach assessment
-   - De-identification capabilities
+2. **HIPAA-Aligned Controls** (`src/services/HIPAACompliance.ts`):
+  - Compliance-oriented controls and documentation (not a compliance claim)
 
 3. **Security Service** (`src/services/SecurityService.ts`):
    - Event logging and monitoring
@@ -322,13 +301,13 @@ interface FibromyalgiaEntry {
 - No default transmission of Class A health data
 - Optional anonymous usage analytics may be enabled by deploy/build configuration (for example, `VITE_ENABLE_ANALYTICS`)
 - No advertisement or data monetization
-- Complete user data sovereignty
+- User-controlled export/sharing by default
 
 ---
 
 ### 7. **Roadmap: Advanced Fibromyalgia Features**
 
-#### 🤖 **Machine Learning Pattern Recognition** (Planned Q1 2025)
+#### 🤖 **Machine Learning Pattern Recognition** (Planned)
 
 **Planned Capabilities**:
 - Flare prediction 48-72 hours in advance
@@ -337,9 +316,9 @@ interface FibromyalgiaEntry {
 - Treatment response prediction
 
 **Approach**:
-- Local ML models (TensorFlow.js)
+- Local ML models (TBD)
 - Privacy-preserving training on device
-- Federated learning for community insights (opt-in)
+- Federated learning for community insights (opt-in, if ever added)
 - No data leaves device without explicit consent
 
 #### 📊 **Advanced Correlation Analysis** (In Development)
@@ -370,16 +349,16 @@ interface FibromyalgiaEntry {
 
 | Feature | Pain Tracker | Generic Pain Apps | Notes |
 |---------|--------------|-------------------|-------|
-| **ACR WPI Tracking** | ✅ Full 18-region implementation | ❌ Not available | Evidence-based diagnostic tool |
-| **SSS Assessment** | ✅ 0-12 scale, 4 domains | ❌ Generic severity only | Clinical validation tool |
+| **WPI Region Tracking** | ✅ Full 18-region implementation | ❌ Not available | Scoring support (not a diagnosis) |
+| **SSS Assessment** | ✅ 0-12 scale, 4 domains | ❌ Generic severity only | Severity tracking support |
 | **Fibro Fog Tracking** | ✅ Dedicated cognitive metrics | 🟡 Generic "concentration" | Fibromyalgia-specific symptom |
 | **Flare Prediction** | 🟡 Basic pattern detection | ❌ Not available | ML enhancement planned |
 | **Pacing Tools** | ✅ Activity budgeting, rest tracking | 🟡 Basic activity log | Energy envelope management |
 | **Trigger Correlation** | ✅ Weather, stress, sleep, activity | 🟡 Manual note-taking | Automated analysis |
 | **Trauma-Informed UI** | ✅ Comprehensive system | ❌ Standard medical UI | Addresses chronic illness trauma |
-| **Offline Functionality** | ✅ Full app, no connectivity needed | 🟡 Limited offline | Critical for flare management |
-| **Privacy (No Cloud)** | ✅ 100% local storage | ❌ Cloud-required sync | Addresses stigma concerns |
-| **WorkSafe BC Export** | ✅ Automated form generation | ❌ Manual reporting | Unique for BC, Canada |
+| **Offline Functionality** | ✅ Core tracking works offline | 🟡 Limited offline | Helpful during flares |
+| **Privacy (Local-First)** | ✅ Local-first by default | ❌ Cloud-required sync | Addresses stigma concerns |
+| **WorkSafeBC Exports** | ✅ Export/report utilities | ❌ Manual reporting | Workflow-oriented templates |
 
 ---
 
@@ -437,16 +416,15 @@ interface FibromyalgiaEntry {
 2. **Choose Format**: CSV (claims), JSON (digital), PDF (printable)
 3. **Review Summary**: WPI averages, SSS trends, symptom highlights
 4. **Export Data**: Save to device, email to provider, print
-5. **WorkSafe BC Forms**: Auto-populated Forms 6/7 if work-related injury
+5. **WorkSafeBC-Oriented Reports**: Export/report templates for claims/report workflows
 
 ---
 
 ## 🌟 What Makes This Fibromyalgia Support Unique
 
-### 1. **Clinical Validity**
-- Built on **ACR 2016 criteria**, not arbitrary pain scales
-- Evidence-based assessment tools recognized by rheumatologists
-- Aligns with diagnostic standards used in fibromyalgia research
+### 1. **Clinical Usefulness**
+- Implements WPI/SSS scoring and threshold helpers to support consistent tracking
+- Designed for sharing summaries with clinicians (not a diagnostic tool)
 
 ### 2. **Emotional Intelligence**
 - Recognizes fibromyalgia as a **biopsychosocial condition**
@@ -464,9 +442,9 @@ interface FibromyalgiaEntry {
 - Designed for **fatigue**: quick entry modes, saved templates
 
 ### 5. **Regulatory Awareness**
-- **WorkSafe BC integration**: Unique for Canadian workplace injuries
-- WCAG 2.1 AA: Accessible to users with disabilities
-- PIPEDA/HIPAA alignment: Meets healthcare privacy standards
+- **WorkSafeBC-oriented exports**: Designed to support Canadian workplace injury reporting workflows
+- Accessibility is built toward a WCAG 2.2 AA target
+- Privacy/security controls are HIPAA-aligned in intent (not a compliance claim)
 
 ---
 
@@ -475,7 +453,7 @@ interface FibromyalgiaEntry {
 ### Fibromyalgia Knowledge Base (Planned)
 
 **Categories** (`src/types/fibromyalgia.ts` - `FibromyalgiaEducation` interface):
-- **Diagnosis**: Understanding ACR criteria, differential diagnosis
+- **Diagnosis**: Understanding common criteria and clinical workflows
 - **Symptoms**: Comprehensive symptom education, validation
 - **Management**: Pacing strategies, energy envelope theory
 - **Research**: Latest clinical trials, treatment developments
@@ -516,7 +494,7 @@ interface FibromyalgiaEntry {
   timestamp: string;
   userId?: string;
   
-  // ACR Diagnostic Components
+  // WPI/SSS Components
   wpi: { /* 18 body regions */ };
   sss: { /* 4 symptom domains, 0-3 each */ };
   
@@ -553,7 +531,7 @@ interface FibromyalgiaEntry {
 ```
 Fibromyalgia Entry (User Input)
   ↓
-WPI/SSS Calculation (ACR Criteria)
+WPI/SSS Calculation (Implemented thresholds)
   ↓
 Pattern Engine (Trend Detection)
   ↓
@@ -563,7 +541,7 @@ Analytics Store (Insights Generation)
   ↓
 Visualization Layer (Charts, Heatmaps)
   ↓
-Export Pipeline (Clinical Reports, WCB Forms)
+Export Pipeline (Clinical reports, WCB-oriented exports)
 ```
 
 ---
@@ -576,7 +554,7 @@ Export Pipeline (Clinical Reports, WCB Forms)
 - Pattern engine: Comprehensive test suite (`src/utils/pain-tracker/pattern-engine.test.ts`)
 - Trending algorithms: Multiple test scenarios
 - Export functionality: Validated output formats
-- Security: Automated scanning, penetration testing
+- Security: Automated scanning
 
 **Accessibility Testing**:
 - Automated: Axe-core Playwright integration
@@ -595,7 +573,7 @@ Export Pipeline (Clinical Reports, WCB Forms)
    - Select painful body regions (WPI)
    - Rate symptom severity (SSS)
    - Log triggers and interventions
-4. **Review Criteria**: See if entry meets ACR diagnostic thresholds
+4. **Review Thresholds**: See whether the entry meets the implemented WPI/SSS thresholds
 5. **Track Consistently**: Daily or per-flare tracking recommended
 6. **Analyze Patterns**: Review insights after 2+ weeks of data
 7. **Export for Providers**: Generate clinical reports for appointments
@@ -615,7 +593,7 @@ Export Pipeline (Clinical Reports, WCB Forms)
 ### Clinical Integration
 
 **Pain Tracker provides**:
-- ACR 2016 compliant fibromyalgia assessment
+- WPI/SSS-style scoring and threshold helpers (not a diagnosis)
 - Longitudinal symptom data for treatment evaluation
 - Trigger identification for patient education
 - Intervention effectiveness tracking
@@ -631,7 +609,7 @@ Export Pipeline (Clinical Reports, WCB Forms)
 **Data Export Formats**:
 - CSV: Spreadsheet import for analysis
 - JSON: EMR integration (FHIR-aligned structure)
-- PDF: Printable patient summaries (planned)
+- PDF: Printable patient summaries
 
 ---
 
@@ -653,9 +631,9 @@ Export Pipeline (Clinical Reports, WCB Forms)
 
 **Medical Device Status**: Pain Tracker is a wellness and tracking tool, not a medical device. It does not diagnose, treat, or prevent any disease.
 
-**Clinical Use**: While built on evidence-based criteria (ACR 2016), Pain Tracker does not replace professional medical evaluation. Fibromyalgia diagnosis requires clinical assessment by a qualified healthcare provider.
+**Clinical Use**: Pain Tracker is a tracking and scoring aid; it does not replace professional medical evaluation or establish a diagnosis.
 
-**Data Privacy**: All data remains on user's device. Pain Tracker developers have no access to user health information.
+**Data Privacy**: Data is stored locally by default and shared only via user-controlled exports. Some optional features may make network requests when enabled/configured.
 
 ---
 
@@ -668,8 +646,8 @@ Export Pipeline (Clinical Reports, WCB Forms)
 
 ---
 
-**Version**: 1.0  
-**Last Updated**: November 2024  
-**Status**: All claimed features verified and documented
+**Version**: 1.1.3  
+**Last Updated**: January 17, 2026  
+**Status**: Feature documentation (implementation-based; claims are conservative)
 
 **Built with ❤️ for the fibromyalgia community**

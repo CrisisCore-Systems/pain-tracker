@@ -78,7 +78,7 @@ This comprehensive audit evaluated the Pain Tracker project across multiple dime
 - ✅ Multi-layered security architecture
 - ✅ AES-GCM encryption implementation
 - ✅ Content Security Policy (CSP) headers configured
-- ✅ HIPAA compliance service with audit trails
+- ✅ HIPAA-aligned utilities with audit trails (not a compliance claim)
 - ✅ Secure storage abstractions
 - ✅ Secret scanning in CI/CD pipeline
 - ✅ CodeQL static analysis configured
@@ -195,7 +195,7 @@ This comprehensive audit evaluated the Pain Tracker project across multiple dime
 **Summary:**
 - **Test Files:** 123 total (115 passed, 8 failed)
 - **Tests:** 732 total (717 passed, 14 failed, 1 skipped)
-- **Coverage:** ~90%+ (target met)
+- **Coverage:** See `badges/` and/or current `npm run test:coverage` output (avoid hardcoded percentages)
 - **Duration:** 66.44 seconds
 
 ### 3.2 Test Failures Analysis
@@ -490,11 +490,13 @@ This comprehensive audit evaluated the Pain Tracker project across multiple dime
 
 ## 9. Conclusion
 
-The Pain Tracker project demonstrates strong foundations with excellent security architecture, comprehensive testing, and thorough documentation. The project successfully builds and runs, with a test coverage of 90%+.
+The Pain Tracker project demonstrates strong foundations with excellent security architecture, automated testing, and thorough documentation. The project successfully builds and runs; coverage and test results vary by environment and branch.
+
+Note: This report is a historical snapshot (December 2024). For current coverage/test/vulnerability metrics, refer to repo-generated badges in `badges/`.
 
 **Key Strengths:**
 1. Security-first architecture with encryption and audit trails
-2. Comprehensive test coverage (90%+)
+2. Automated test coverage (see `badges/coverage-badge.json`)
 3. Excellent documentation and developer experience
 4. Clean project structure and organization
 5. Modern tech stack (React 18, TypeScript, Vite)
@@ -506,7 +508,7 @@ The Pain Tracker project demonstrates strong foundations with excellent security
 4. Update vulnerable dependencies (4 high/moderate)
 5. Optimize bundle size (2 large chunks)
 
-**Overall Assessment:** The project is in good health and production-ready with minor fixes. The majority of issues are non-blocking and can be addressed incrementally.
+**Overall Assessment:** The project is in good health with minor fixes recommended. Avoid claiming “production-ready” without validating against your deployment threat model.
 
 **Next Steps:**
 1. Implement critical fixes (1-2 days)
@@ -544,8 +546,8 @@ make doctor
 
 | Metric | Value | Benchmark | Status |
 |--------|-------|-----------|--------|
-| Test Coverage | 90%+ | 80% | ✅ Exceeds |
-| Vulnerabilities (High+) | 2 | 0 | 🟡 Acceptable |
+| Test Coverage | See `badges/coverage-badge.json` | 80% | N/A |
+| Vulnerabilities | See `badges/security-badge.json` and `npm run security-full` | 0 | N/A |
 | Linting Errors | 2,948 | <100 | 🔴 Needs Work |
 | TypeScript Errors | 13 | 0 | 🔴 Needs Work |
 | Build Time | 31.7s | <60s | ✅ Excellent |

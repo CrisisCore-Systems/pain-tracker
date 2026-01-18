@@ -53,10 +53,10 @@ await db.put('main-store', key, entryData);
 "Why 'Save Gently' beats 'Submit' when building for chronic pain patients who've faced medical trauma."
 
 ### Key Statistics
-- **WCAG 2.1 AA compliant**
+- **WCAG 2.x AA target**
 - **7-step assessment** reduces cognitive load
-- **Gentle mode default**: 89% of users keep it enabled (test data)
-- **3-5 minute** average completion time
+- **Gentle mode default**: TBD (measure)
+- **Time-to-complete**: TBD (measure)
 
 ### Top 3 Takeaways
 1. **User agency is healing**: Patients control language, complexity, and pacing
@@ -111,26 +111,26 @@ const empathyTrend = calculateMovingAverage(historicalScores, 7);
 ## 🩺 Post #4: Building for Fibromyalgia
 
 ### One-Liner
-"How we implemented ACR 2016 diagnostic criteria in TypeScript—and why fibromyalgia needs specialized tracking."
+"How we implemented WPI/SSS-style scoring and threshold helpers in TypeScript—and why fibromyalgia needs specialized tracking."
 
 ### Key Statistics
-- **ACR 2016 compliant**: Widespread Pain Index (WPI 0-19) + Symptom Severity Scale (SSS 0-12)
-- **44+ anatomical locations**: 18 fibro-specific + 26 general regions
-- **19+ symptom types**: Captures neuropathic, muscle, and sensory disturbances
-- **90% time reduction**: WorkSafe BC form auto-population
+- **WPI/SSS scoring support**: WPI regions + SSS domains used for consistent tracking
+- **Anatomical coverage**: Pain location options + fibromyalgia region tracking (implementation-defined)
+- **Symptom descriptors**: Multiple pain-quality descriptors to support personal tracking
+- **Export/report workflow**: Supports user-controlled exports and reporting
 
 ### Top 3 Takeaways
-1. **Clinical validation**: Real rheumatology input shaped the assessment
+1. **Clinician-friendly structure**: Consistent scoring and summaries support clearer conversations
 2. **Beyond pain intensity**: Fatigue, fibro fog, sleep quality, and somatic symptoms
 3. **Advocacy tool**: Data helps patients be heard by skeptical doctors
 
 ### Clinical Pattern Highlight
 ```typescript
-// ACR 2016 Diagnostic Criteria
+// WPI/SSS threshold helper (informational; not a diagnosis)
 const meetsCriteria = 
   (wpiScore >= 7 && sssScore >= 5) || 
   (wpiScore >= 4 && wpiScore <= 6 && sssScore >= 9);
-// Automated, evidence-based assessment
+// Tracking aid for pattern recognition and communication
 ```
 
 ### Call to Action
@@ -144,25 +144,25 @@ const meetsCriteria =
 "HIPAA-aligned security without the cloud: Implementing encryption, audit trails, and CSP hardening client-side."
 
 ### Key Statistics
-- **AES-256 encryption** for PHI at rest
-- **100% local-first**: No external data transmission
-- **Immutable audit logs** for HIPAA compliance
-- **Zero 'unsafe-inline'** in production CSP
-- **90-day key rotation** recommended
+- **Encryption at rest** for sensitive fields (implementation-dependent)
+- **Local-first by default**: Sharing happens via user-controlled exports; optional features may make network requests when enabled/configured
+- **Audit logging controls** aligned with compliance-oriented needs (not a compliance claim)
+- **CSP hardening** to reduce XSS risk (verify per deployment)
+- **Key rotation strategy** (verify current implementation and policies)
 
 ### Top 3 Takeaways
 1. **Defense in depth**: Encryption + CSP + SAST + audit trails + threat modeling
-2. **Audit everything**: Every PHI access logged with risk scoring
-3. **Automation wins**: Pre-commit hooks prevent 100% of secret leaks in our repo
+2. **Audit key actions**: Log security-relevant events without storing sensitive content
+3. **Automation wins**: Pre-commit hooks help reduce accidental secret commits
 
 ### Security Pattern Highlight
 ```typescript
-// Multi-layer encryption
-const encrypted = await encryptionService.encrypt(phiData);
-await secureIndexedDB.save('encrypted-key', encrypted);
-// + CSP headers prevent XSS
-// + Audit trail logs the operation
-// + CodeQL scans the code in CI
+// Example (pseudocode)
+const encrypted = await encryptionService.encrypt(sensitiveData);
+await storage.saveEncrypted('user-data', encrypted);
+// + CSP configuration helps reduce XSS risk
+// + Audit logging records security-relevant actions (without sensitive payloads)
+// + Automated scans run in CI
 ```
 
 ### Call to Action
@@ -190,7 +190,7 @@ await secureIndexedDB.save('encrypted-key', encrypted);
 2. Healthcare software engineering
 3. Offline-first architecture
 4. Trauma-informed design
-5. HIPAA compliance implementation
+5. HIPAA-aligned controls (implementation)
 6. Fibromyalgia tracking app
 7. Empathy algorithms
 8. Local-first software

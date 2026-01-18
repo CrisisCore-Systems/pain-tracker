@@ -65,9 +65,9 @@ YOUR DEVICE                          THEIR SERVER
 └─────────────────┘                  └─────────────────┘
 ```
 
-The keys never leave your device. The server only sees noise. If they get breached, attackers get noise. If they get subpoenaed, lawyers get noise. If they get acquired by a company that wants to monetize health data, the new owners get noise.
+In a user-held-keys design, keys are generated and kept client-side during normal use. A server (if present) may only see ciphertext. If they get breached, attackers may still only get ciphertext.
 
-This is called **client-side encryption** or **zero-knowledge architecture**.
+This is often called **client-side encryption** or a **user-held-keys** architecture.
 
 ---
 
@@ -83,7 +83,7 @@ Ask your health app these questions:
 2. **Can your engineers access my data for debugging?**
    - If yes → not encrypted
    - If "only with your permission" → not encrypted, just policy
-   - If "no, it's impossible" → maybe actually encrypted
+  - If "no, we can't access it without your key" → maybe actually encrypted
 
 3. **What happens if you get subpoenaed for my data?**
    - If "we comply with legal requests" → they can read it

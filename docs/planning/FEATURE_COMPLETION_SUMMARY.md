@@ -97,7 +97,7 @@ Modal closes, focus returns to button
 ## 2️⃣ Accessibility Infrastructure ✅
 
 ### Overview
-Comprehensive accessibility enhancement system providing WCAG 2.1 AA compliance through utilities, hooks, and global features.
+Comprehensive accessibility enhancement system targeting a WCAG 2.x AA baseline through utilities, hooks, and global features.
 
 ### Components Created
 
@@ -304,23 +304,23 @@ PDF Download
 - **Skipped**: 5 tests
 - **New Tests Needed**: Manual testing + axe-core validation
 
-### Accessibility Compliance
+### Accessibility Targets (Validate in Your Environment)
 | Criterion | Target | Status |
 |-----------|--------|--------|
-| WCAG 2.1 Level A | 100% | ✅ Implemented |
-| WCAG 2.1 Level AA | 100% | ✅ Implemented |
+| WCAG 2.1 Level A | Target | ✅ Implemented (needs validation) |
+| WCAG 2.1 Level AA | Target | ✅ Implemented (needs validation) |
 | Keyboard Navigation | Full Support | ✅ Implemented |
 | Screen Reader Support | Full Support | ✅ Implemented |
 | Focus Management | Full Support | ✅ Implemented |
 | Color Contrast | 4.5:1+ | ⏳ Pending validation |
-| ARIA Best Practices | Full Compliance | ⏳ Pending validation |
+| ARIA Best Practices | Target | ⏳ Pending validation |
 
 ---
 
 ## 🎯 Key Achievements
 
-1. **Clinical Integration**: Created production-ready PDF export system that meets WorkSafe BC requirements
-2. **Accessibility Infrastructure**: Built comprehensive accessibility layer supporting WCAG 2.1 AA compliance
+1. **Clinical Integration**: Implemented PDF export workflows supporting WorkSafeBC-oriented reporting (verify jurisdiction requirements)
+2. **Accessibility Infrastructure**: Built a comprehensive accessibility layer targeting a WCAG 2.x AA baseline
 3. **User Experience**: Trauma-informed design throughout all new features
 4. **Code Quality**: Well-structured, TypeScript-safe, maintainable code
 5. **Documentation**: Comprehensive testing guides and feature documentation
@@ -366,7 +366,7 @@ PDF Download
 ### Medium Term (Next Sprint)
 7. **Browser Compatibility**: Test in Firefox, Safari
 8. **User Acceptance Testing**: Test with actual users
-9. **Security Audit**: Validate HIPAA compliance of PDF export
+9. **Security Audit**: Validate HIPAA-aligned controls of PDF export (deployment-dependent)
 10. **Optimization**: If needed, optimize chart capture and PDF generation
 
 ---

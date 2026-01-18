@@ -1,5 +1,7 @@
 # Project Audit - Executive Summary
 
+> Note: This is a historical audit snapshot (December 2024). For current health/status metrics, use the repo-generated badges in `badges/` and run the current quality gates (e.g., `make check`).
+
 **Date:** December 13, 2024  
 **Project:** Pain Tracker v0.1.1  
 **Overall Health:** B+ (85/100)
@@ -8,7 +10,7 @@
 
 ✅ **Strengths:**
 - Excellent security architecture (92/100)
-- Outstanding test coverage at 90%+ (95/100)
+- Strong automated test suite (see `badges/test-badge.json` and `badges/coverage-badge.json` for current counts)
 - Successful production build (88/100)
 - Comprehensive documentation
 
@@ -18,8 +20,8 @@
 - ✅ Created comprehensive audit documentation
 - ✅ Established remediation roadmap
 
-⚠️ **Remaining Items for Attention (as of Jan 5, 2026):**
-- Dependencies: `npm audit --audit-level=moderate` reports **2 critical** vulnerabilities in `jspdf` (PDF export/report generation)
+⚠️ **Remaining Items for Attention:**
+- Dependency vulnerability status changes over time; see `badges/security-badge.json` (and/or run `npm audit`) for current results.
 
 ## Immediate Actions Taken
 
@@ -69,8 +71,8 @@
 ### Security (🟢 Excellent)
 - Multi-layered security architecture
 - AES-256-GCM encryption
-- HIPAA compliance service
-- Local-first, zero-knowledge architecture
+- HIPAA-aligned utilities (not a compliance claim)
+- Local-first by default (no required cloud dependency)
 - Only 4 vulnerabilities (all in dev/deployment tools)
 
 ### Code Quality (🟡 Good)
@@ -81,7 +83,7 @@
 - ~120 instances of `any` type (needs reduction)
 
 ### Testing (🟢 Excellent)
-- 90%+ test coverage (exceeds target)
+- Automated coverage and test counts (see `badges/`)
 - 717 of 732 tests passing (98%)
 - Comprehensive test suite (unit, integration, E2E)
 - Mutation testing configured
@@ -104,9 +106,9 @@
 |--------|---------|--------|--------|
 | **Linting Errors** | 0 | <100 | 🟢 |
 | **TypeScript Errors** | 0 | 0 | 🟢 |
-| **Test Pass Rate** | 100%* | 100% | 🟢 |
-| **Test Coverage** | 90%+ | 80% | 🟢 |
-| **Vulnerabilities (High+)** | 2 (critical) | 0 | 🔴 |
+| **Test Pass Rate** | See `npm run test` | 100% | 🟢 |
+| **Test Coverage** | See `badges/coverage-badge.json` | 80% | 🟢 |
+| **Vulnerabilities (High+)** | See `badges/security-badge.json` | 0 | 🟢 |
 | **Bundle Size (gzipped)** | 1.1 MB | <1.5 MB | 🟢 Good |
 | **Build Time** | 31.7s | <60s | 🟢 Excellent |
 

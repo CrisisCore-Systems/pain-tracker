@@ -45,7 +45,7 @@ This document describes the accessibility features implemented in Pain Tracker, 
 ## Testing & Audit
 - Automated scans: axe-core, Playwright a11y tests.
 - Manual testing: NVDA, JAWS, VoiceOver, and real disabled users.
-- Target: WCAG 2.1 AA compliance, with AAA contrast option.
+- Target: WCAG 2.x AA baseline, with AAA contrast option.
 
 ---
 

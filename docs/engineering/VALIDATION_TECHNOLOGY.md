@@ -245,7 +245,7 @@ npm test -- progress-tracker
 
 1. Follow trauma-informed UX principles
 2. Maintain user agency in all features
-3. Ensure accessibility compliance
+3. Ensure accessibility alignment/targets
 4. Test with diverse user scenarios
 5. Document user benefits clearly
 

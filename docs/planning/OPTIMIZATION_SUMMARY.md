@@ -10,7 +10,7 @@
 Comprehensive analysis and implementation plan for three medium-priority optimization areas:
 1. **PWA Cross-Browser Testing** - Service worker validation framework
 2. **Bundle Optimization** - Code splitting and dependency management  
-3. **Security Hardening** - Production-ready CSP and headers
+3. **Security Hardening** - CSP and headers hardening (validate in deployment)
 
 ---
 
@@ -67,8 +67,8 @@ Comprehensive analysis and implementation plan for three medium-priority optimiz
 **Current Security Status**:
 - ✅ Basic CSP configured (dev + prod)
 - ✅ Core security headers (X-Frame-Options, X-Content-Type-Options, etc.)
-- ✅ Data encryption (AES-256-GCM, XChaCha20-Poly1305)
-- ✅ HIPAA compliance features (audit trails, PHI detection)
+- ✅ Data encryption (implementations present; verify algorithms in code)
+- ✅ HIPAA-aligned utilities (audit trails, PHI detection; deployment-dependent)
 
 **Gaps Identified**:
 - ⚠️ CSP allows external CDN (cdn.jsdelivr.net)
@@ -84,7 +84,7 @@ Comprehensive analysis and implementation plan for three medium-priority optimiz
 - Phase 4: Service worker security
 - Phase 5: Build-time security (remove source maps, console logs)
 - Phase 6: Runtime monitoring
-- Phase 7: HIPAA compliance enhancements
+- Phase 7: HIPAA-aligned enhancements (deployment-dependent)
 
 ---
 

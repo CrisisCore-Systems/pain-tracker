@@ -245,7 +245,7 @@ If you need help identifying the specific Cloudflare rule causing the issue:
 3. Check the Network tab in DevTools as described above
 4. The "Initiator" column will show if it's a redirect or script
 
-The codebase is production-ready and correctly configured for Cloudflare Pages deployment at the root (`/`).
+The repo contains the configuration needed for Cloudflare Pages deployment at the root (`/`). Validate in your environment before treating this as ready for production use.
 
 ---
 

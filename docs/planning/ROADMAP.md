@@ -31,7 +31,7 @@ Pain Tracker is a **privacy-first, local-only PWA** for chronic pain management 
 - IndexedDB persistence: Custom wrapper in `src/lib/offline-storage.ts`
 - Encryption service: `src/services/EncryptionService.ts` (AES-GCM + PBKDF2)
 - Zod validation schemas: `src/types/pain-entry.ts` with comprehensive schemas
-- WorkSafeBC export: `src/utils/pain-tracker/wcb-export.ts` (Production Ready)
+- WorkSafeBC export: `src/utils/pain-tracker/wcb-export.ts` (implemented; validate)
 - Offline-first capabilities: Service worker + IndexedDB sync queue
 - **Clinical Integration**: FHIR R4 mapping in `src/services/clinical/FhirMapper.ts`
 - **Analytics Service**: Centralized aggregation logic in `src/services/PainAnalyticsService.ts`
@@ -148,7 +148,7 @@ Phase 4: ML Pattern Recognition (In Planning)
 
 ## Phase 2: Security Hardening (Weeks 5-6)
 
-**Goal:** Production-ready security posture.
+**Goal:** Security hardening posture (validate in deployment).
 
 ### Issues:
 - **#TBD: Content Security Policy**
@@ -287,12 +287,10 @@ These features are **explicitly deferred** to future versions:
 | IndexedDB | `src/lib/offline-storage.ts` | ✅ 693 lines, custom wrapper |
 | Encryption | `src/services/EncryptionService.ts` | ✅ 1048 lines, Web Crypto |
 | Validation | `src/types/pain-entry.ts` | ✅ Comprehensive Zod schemas |
-| WCB Export | `src/utils/pain-tracker/wcb-export.ts` | ✅ 98.8% test coverage |
+| WCB Export | `src/utils/pain-tracker/wcb-export.ts` | See current test results |
 | Crisis Detection | `src/components/accessibility/useCrisisDetection.ts` | ✅ Integrated |
 | Empathy Engine | `src/services/EmpathyIntelligenceEngine.ts` | ✅ Heuristic-based |
 
 ### Test Metrics
-- **Total Tests:** 722 passing (1 skipped)
-- **Test Files:** 122
-- **Overall Coverage:** 90.82%
-- **Accessibility:** WCAG 2.2 AA compliant
+- **Tests/Coverage:** See current test output and `badges/coverage-badge.json`
+- **Accessibility:** WCAG 2.2 AA target

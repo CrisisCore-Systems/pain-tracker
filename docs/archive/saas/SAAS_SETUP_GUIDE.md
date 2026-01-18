@@ -1,14 +1,16 @@
 # 💰 SaaS Subscription System - Complete Setup Guide
 
 **Version**: 1.0  
-**Status**: Production-Ready  
+**Status**: Archived Draft (Not Shipping)  
 **Last Updated**: November 19, 2025
 
 ---
 
 ## 🎯 Overview
 
-This guide walks you through setting up the complete SaaS subscription system for Pain Tracker, including Stripe integration, subscription tiers, feature gates, and user management.
+This guide walks you through setting up a proposed SaaS subscription system for Pain Tracker, including Stripe integration, subscription tiers, feature gates, and user management.
+
+Note: This document is archived; the main product direction is local-first/offline-first, and any billing/backend work would require a separate review and threat model.
 
 ### What's Included
 
@@ -160,7 +162,7 @@ Visit:
 **Features**:
 - Predictive insights
 - Clinical PDF export
-- HIPAA compliance
+- HIPAA-aligned deployment considerations (deployment-dependent)
 - Healthcare API access
 - Priority support (4h response)
 - Wearable device integration
@@ -178,7 +180,7 @@ Visit:
 **Features**:
 - Custom integrations
 - White-label options
-- SOC2 compliance
+- SOC 2 alignment goals (requires independent audit)
 - Dedicated support (1h response)
 - Custom training
 - SLA agreements
@@ -555,15 +557,14 @@ vercel --prod
 - [ ] Implement CSRF protection
 - [ ] Use HTTPS only
 - [ ] Regular security audits
-- [ ] PCI compliance (handled by Stripe)
+- [ ] Confirm PCI scope and responsibilities (Stripe can reduce scope; verify with your compliance team)
 
-### HIPAA Compliance (Pro+ Tiers)
+### HIPAA-Aligned Deployment Considerations (Pro+ Concept)
 
-- Enable audit logging
-- Use enterprise encryption
-- Sign BAA with Stripe
-- Implement access controls
-- Regular compliance audits
+- Enable audit logging (minimal, non-reconstructive)
+- Implement strong access controls
+- Define encryption/key-management boundaries appropriate to your deployment
+- Consult counsel on BAAs and operational requirements if operating in a HIPAA-regulated context
 
 ---
 

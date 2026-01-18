@@ -16,7 +16,7 @@ The Pain Tracker supports four text sizes to accommodate different visual needs:
 | **Extra Large** | 20px | Maximum readability for seniors/low vision | `text-size-xl.png` |
 
 **Range**: 142% scaling from smallest to largest (14px → 20px)
-**WCAG Compliance**: Exceeds 200% zoom requirement
+**WCAG Target**: Supports large text settings; validate 200% zoom behavior in your environment
 
 ## Contrast Mode Comparison
 
@@ -30,7 +30,7 @@ Three contrast levels ensure visibility for users with different visual needs:
 | **High** | Enhanced text/background contrast | `contrast-high.png` |
 | **Extra-High** | Maximum contrast for low vision/color blind | `contrast-extra-high.png` |
 
-**WCAG Compliance**: All modes meet or exceed 4.5:1 contrast ratio
+**WCAG Target**: Designed to meet contrast targets; validate ratios in your environment
 
 ## Navigation Complexity Comparison
 
@@ -125,8 +125,8 @@ Highlight inclusive design:
 2. Use `contrast-extra-high.png` for visual diversity
 3. Use `cognitive-support-full.png` for cognitive diversity
 
-### For WCAG Compliance Documentation
-Demonstrate standards compliance:
+### For WCAG Target Documentation
+Demonstrate standards alignment targets:
 1. Text scaling: `text-size-small.png` to `text-size-xl.png`
 2. Contrast ratios: `contrast-high.png` and `contrast-extra-high.png`
 3. Simplified navigation: `navigation-simplified.png`
@@ -134,12 +134,12 @@ Demonstrate standards compliance:
 
 ## Accessibility Statement
 
-All screenshots demonstrate **real, working features** in the Pain Tracker application, not mockups or prototypes. Every feature shown is:
+All screenshots demonstrate **real, working features** in the Pain Tracker application, not mockups or prototypes. Features shown are intended to be:
 
 - ✅ User-configurable
 - ✅ Persistent across sessions
-- ✅ WCAG 2.2 Level AA compliant
-- ✅ Tested with real users
+- ✅ Built toward a WCAG 2.2 AA target (validate in your environment)
+- ✅ Tested during development (details vary by feature)
 - ✅ Documented in user guides
 
 ---

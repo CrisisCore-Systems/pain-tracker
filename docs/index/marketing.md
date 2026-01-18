@@ -31,3 +31,7 @@ Articles:
 
 Blogs:
 - ../content/blog/blog-worksafe-bc-case-study-documentation-time-savings.md
+
+Launch copy (archived drafts):
+- ../marketing/launch/DEVTO_LAUNCH_v1.0.0.md
+- ../marketing/launch/TWITTER_THREAD_v1.0.0.md

@@ -133,9 +133,9 @@ We've transformed the Pain Tracker clinic portal from a basic interface into a *
 
 ### Quality Improvements
 
-✅ **95% reduction** in report generation time
-✅ **80% reduction** in patient review time
-✅ **100% automation** of pattern detection
+✅ **Target**: ~95% reduction in report generation time
+✅ **Target**: ~80% reduction in patient review time
+✅ **Automated** pattern detection (where supported)
 ✅ **Early intervention** via real-time alerts
 ✅ **Evidence-based** treatment decisions
 
@@ -158,7 +158,7 @@ src/
 └── docs/
     └── CLINIC_PORTAL_ENHANCEMENTS.md (350 lines) - Documentation
 
-Total: 2,931 lines of production-ready code
+Total: 2,931 lines of implementation code (per this document)
 ```
 
 ### Dependencies Used
@@ -177,7 +177,7 @@ Total: 2,931 lines of production-ready code
 - **Service-oriented architecture** - Business logic separated from UI
 - **Component composition** - Reusable, focused components
 - **Type-safe** - Full TypeScript throughout
-- **Accessible** - WCAG 2.1 AA compliant
+- **Accessible** - WCAG 2.x AA target
 - **Performance-optimized** - Memoized calculations, efficient re-renders
 
 ---
@@ -222,7 +222,7 @@ Total: 2,931 lines of production-ready code
 
 ---
 
-## 🚀 Ready for Production
+## 🚀 Launch Readiness
 
 ### What's Working Now
 
@@ -231,7 +231,7 @@ Total: 2,931 lines of production-ready code
 ✅ Mock data demonstrates full functionality
 ✅ Dark mode support throughout
 ✅ Mobile responsive design
-✅ HIPAA audit logging integrated
+✅ Audit logging hooks integrated (deployment policies required)
 ✅ Role-based access control
 ✅ Professional medical-grade UI
 
@@ -242,15 +242,15 @@ Total: 2,931 lines of production-ready code
    - WebSocket for true real-time alerts
    - Server-side pattern detection caching
 
-2. **Clinical Validation** (1 week)
-   - Test with real clinicians
-   - Validate AI algorithm accuracy
-   - Collect user feedback
+2. **Clinical Workflow Validation** (timeboxed)
+   - Validate clinician workflows with representative users
+   - Validate heuristic outputs for face validity
+   - Collect usability feedback
 
-3. **Compliance Review** (1 week)
-   - WorkSafe BC template approval
-   - HIPAA audit verification
-   - Legal team review
+3. **Security/Privacy/Compliance Review** (timeboxed)
+   - Review export templates for clarity and jurisdiction fit
+   - Review audit logging and retention policies
+   - Complete a deployment threat-model review
 
 ---
 
@@ -360,11 +360,11 @@ Password: (any password)
 
 ### Quantitative Goals
 
-- [ ] 80%+ reduction in report generation time ✅ (95% achieved)
-- [ ] 50%+ reduction in patient review time ✅ (80% achieved)
-- [ ] 90%+ clinician satisfaction score
+- [ ] Reduce report generation time (set baseline; define target)
+- [ ] Reduce patient review time (set baseline; define target)
+- [ ] Clinician satisfaction score target (define measurement)
 - [ ] 30%+ increase in patients seen per week
-- [ ] HIPAA-aligned controls ✅ (audit logging in place)
+- [ ] HIPAA-aligned controls (audit logging in place; compliance depends on org/process)
 
 ### Qualitative Goals
 

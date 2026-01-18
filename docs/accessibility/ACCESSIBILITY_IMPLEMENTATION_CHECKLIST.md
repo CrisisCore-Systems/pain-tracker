@@ -1,7 +1,7 @@
 # Accessibility Implementation Checklist
 
 **Phase**: 1.5 (Nov 13-26, 2025) - **COMPLETE Dec 8, 2025**  
-**Goal**: WCAG 2.2 AA Compliance + Trauma-Informed Comfort  
+**Goal**: WCAG 2.2 AA target + Trauma-Informed Comfort  
 **Owner**: Engineering + Design  
 **Status**: ✅ Complete
 
@@ -19,7 +19,7 @@ This document contains a mix of “completed” claims and unchecked items.
 ### New Components Added (Dec 8, 2025)
 
 - [x] **AccessiblePainSlider** (`src/components/accessibility/AccessiblePainSlider.tsx`)
-  - WCAG 2.2 AA compliant pain rating slider
+  - WCAG 2.2 AA target pain rating slider
   - Keyboard: Arrow keys (±1), Home/End (0/10), PageUp/PageDown (±2)
   - ARIA labels and live region announcements
   - Optional haptic feedback for mobile
@@ -226,13 +226,13 @@ This document contains a mix of “completed” claims and unchecked items.
 
 ### Phase 1.5 Complete
 
-- ✅ WCAG 2.2 AA compliance verified (automated + manual)
-- ✅ Lighthouse accessibility score ≥95
-- ✅ SR-only user can complete core tasks (95%+ success)
-- ✅ Keyboard-only user can complete core tasks (95%+ success)
+- ✅ WCAG 2.2 AA target validation (automated + manual; verify in your environment)
+- ✅ Lighthouse accessibility score ≥95 (target)
+- ✅ SR-only user can complete core tasks (target: 95%+ success)
+- ✅ Keyboard-only user can complete core tasks (target: 95%+ success)
 - ✅ All QA checkpoints passing
-- ✅ VPAT document completed
-- ✅ Accessibility statement published
+- ✅ VPAT document drafted (if applicable)
+- ✅ Accessibility statement drafted (if applicable)
 
 ---
 

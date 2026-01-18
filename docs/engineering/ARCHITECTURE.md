@@ -5,7 +5,7 @@ _Last updated: 2026-01-09_
 ## 1. Purpose
 
 Pain Tracker is a **local-first, privacy-first** PWA for tracking chronic pain and exporting claim-ready reports (with a focus on **WorkSafeBC** forms).  
-All data stays on the user's device. No backend. No analytics. No dark patterns.
+Data is stored locally by default; sharing happens via user-controlled exports. Core tracking does not require a backend. Optional integrations/features may make network requests when enabled/configured.
 
 ---
 
@@ -13,17 +13,17 @@ All data stays on the user's device. No backend. No analytics. No dark patterns.
 
 ### Privacy-First Data Flow
 
-Our architecture ensures your health data never leaves your device without your explicit action:
+The architecture is designed so health data stays local by default and is only shared via explicit, user-controlled actions (e.g., exports):
 
 <p align="center">
   <img src="diagrams/privacy-first-flow.svg" alt="Privacy-First Data Flow" width="600" />
 </p>
 
 **Key Principles:**
-- **Local-First**: All data storage happens exclusively in the browser's IndexedDB
-- **Zero-Knowledge**: Client-side encryption means we never have access to your data
+- **Local-First (Default)**: Data is stored locally (primarily in the browser's IndexedDB)
+- **Client-Side Protection**: Encryption and security controls are implemented on-device
 - **User-Controlled**: Only YOU decide when to export data for clinical or claims purposes
-- **No Third Parties**: No cloud servers, no analytics, no data sharing, no tracking
+- **No Third-Party Telemetry by Default**: No third-party analytics are enabled by default
 
 [View detailed comparison with traditional health apps →](diagrams/data-flow-comparison.svg)
 
@@ -100,7 +100,7 @@ The **Empathy Intelligence Engine** provides context-aware feedback without send
 - **Purpose**: Detect crisis patterns, validate user pain, and suggest local interventions.
 - **Mechanism**:
   - **Local Heuristics**: Analyzes recent entry velocity, severity spikes, and emotional keywords.
-  - **Privacy**: Differential privacy noise is injected into aggregated metrics before they are displayed or stored in local analytical summaries.
+  - **Privacy**: Differential privacy noise can be applied to aggregated metrics when enabled.
   - **Crisis Detection**: Identifies patterns matching clinical definitions of "flare-up" or "crisis" and triggers local UI adaptions (e.g., simplifying the interface).
 
 ---

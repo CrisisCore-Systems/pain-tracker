@@ -18,9 +18,9 @@ Create a clean architectural diagram showing:
 
 **Top Flow (Privacy-First - Pain Tracker)**:
 1. 📱 **Your Device**: Smartphone with shield icon showing built-in security
-2. 🔐 **Local Encryption Layer**: AES-GCM encryption, IndexedDB storage, zero-knowledge, 100% client-side
-3. 📤 **Export Reports**: WorkSafe BC Forms, PDF Clinical Reports, CSV Data Export, Manual Download Only
-4. 🤝 **Your Control**: Share with Doctor, Submit to WorkSafe BC, Keep Private Locally, 100% Your Decision
+2. 🔐 **Local Encryption Layer**: AES-GCM encryption and IndexedDB storage (local-first by default)
+3. 📤 **Export Reports**: WorkSafeBC-oriented exports, PDF reports, CSV export, manual download
+4. 🤝 **Your Control**: Share with a clinician, submit to WorkSafeBC, or keep data local — your decision
 
 **Bottom Flow (Traditional Apps - Crossed Out)**:
 - Device (auto-upload enabled) → Corporate Servers → Data Mining → Third Parties

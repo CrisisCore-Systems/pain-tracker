@@ -457,6 +457,8 @@ The technical quality of your tests is irrelevant if the ethical quality is abse
 - [HIPAA and Synthetic Data](https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/index.html) — HHS
 - Pain Tracker source: [github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
 
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
+
 ---
 
 *Next in the series: "Offline Crisis Support: What Happens When the Network Dies at the Worst Moment"*

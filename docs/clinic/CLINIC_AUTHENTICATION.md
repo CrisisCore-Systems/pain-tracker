@@ -96,7 +96,7 @@ await login(email, password);
 // Backend validates credentials (simulated in dev)
 // Creates session token
 // Stores user data securely
-// Logs authentication event with HIPAA compliance
+// Logs authentication event (compliance-oriented audit logging; not a compliance claim)
 // Redirects to dashboard
 ```
 
@@ -554,7 +554,7 @@ const uniqueDays = new Set(
 - [x] Implement login page
 - [x] Build protected route component
 - [x] Integrate with ClinicPortal
-- [x] Add HIPAA audit logging
+- [x] Add audit logging (HIPAA-aligned intent; not a compliance claim)
 - [x] Define role-based permissions
 - [x] Create access denied screens
 - [x] Add session management
@@ -564,4 +564,4 @@ const uniqueDays = new Set(
 
 ---
 
-**Authentication system is production-ready for frontend with backend integration required for security.**
+**Status:** Frontend authentication flows are implemented; production readiness depends on backend integration, configuration, and a dedicated security review.

@@ -51,7 +51,7 @@ Based on Pain Tracker branding:
 |  ----------------+----+--------+--------|
 |  Local Storage   | ✓  |   ✗    |   ✗    |
 |  WCB Forms       | ✓  |   ✗    |   ✓    |
-|  Free Forever    | ✓  |   ✗    |   ✗    |
+|  Free core       | ✓  |   ✗    |   ✗    |
 |  Offline Mode    | ✓  |   ✓    |   ✗    |
 |  Trauma-Informed | ✓  |   ✗    |   ✗    |
 |                                          |
@@ -187,7 +187,7 @@ Based on Pain Tracker branding:
 - Show data stays local
 - Highlight encryption
 - Emphasize offline capability
-- Note: No server communication
+- Note: Core tracking works without server communication
 
 ---
 
@@ -198,7 +198,7 @@ Based on Pain Tracker branding:
 **Layout:**
 ```
 +------------------------------------------+
-|  Works Perfectly on Every Device         |
+|  Works Across Phone, Tablet, Desktop     |
 |                                          |
 |   ┌────┐   ┌─────────┐   ┌────────┐    |
 |   │📱 │   │  💻     │   │  🖥️    │    |

@@ -1,16 +1,16 @@
 # Fibromyalgia Claims Verification Report
 
-> **Verification Date**: November 16, 2024  
-> **Codebase Version**: 0.1.0-beta  
-> **Verification Method**: Source code audit, documentation review, feature testing
+> **Verification Date**: January 17, 2026  
+> **Codebase Version**: 1.1.3  
+> **Verification Method**: Source code audit + documentation reconciliation
 
 ---
 
 ## 🎯 Executive Summary
 
-**Verification Result**: ✅ **ALL MAJOR CLAIMS VERIFIED**
+**Verification Result**: ✅ **Major implementation claims verified (conservative wording)**
 
-Pain Tracker's fibromyalgia features are **substantiated by implementation** and **exceed the claims** in several areas. This document provides evidence-based verification of each claim about fibromyalgia support.
+Pain Tracker's fibromyalgia features are substantiated by implementation. This document focuses on what is directly verifiable from the current codebase and avoids legal/clinical compliance claims.
 
 ---
 
@@ -18,10 +18,10 @@ Pain Tracker's fibromyalgia features are **substantiated by implementation** and
 
 ### Claim 1: "25+ anatomical locations"
 
-**Status**: ✅ **VERIFIED - EXCEEDED**
+**Status**: ✅ **VERIFIED**
 
 **Evidence**:
-- **General Pain Locations**: 26 locations in `src/utils/constants.ts`
+- **General Pain Locations**: `PAIN_LOCATIONS` in `src/utils/constants.ts` contains many options (more than 25)
   ```typescript
   export const PAIN_LOCATIONS = [
     'head', 'neck', 'shoulders', 'upper back', 'lower back',
@@ -33,7 +33,7 @@ Pain Tracker's fibromyalgia features are **substantiated by implementation** and
   ] as const;
   ```
 
-- **Fibromyalgia WPI Regions**: 18 ACR-standard regions in `src/types/fibromyalgia.ts`
+- **Fibromyalgia WPI Regions**: region selection for WPI-style scoring is defined in `src/types/fibromyalgia.ts`
   ```typescript
   wpi: {
     // Upper body (12 regions)
@@ -49,15 +49,13 @@ Pain Tracker's fibromyalgia features are **substantiated by implementation** and
   }
   ```
 
-**Total**: 26 + 18 = **44 anatomical locations**
-
-**Conclusion**: Claim of "25+" is **conservative**. Actual implementation provides 44+ distinct trackable locations.
+**Conclusion**: The implementation supports anatomical location tracking well beyond 25 locations.
 
 ---
 
 ### Claim 2: "19+ symptom types"
 
-**Status**: ✅ **VERIFIED - EXACT MATCH**
+**Status**: ✅ **VERIFIED**
 
 **Evidence**: `src/utils/constants.ts` - SYMPTOMS array
 
@@ -85,11 +83,11 @@ export const SYMPTOMS = [
 ] as const;
 ```
 
-**Count**: Exactly **19 symptom types**
+**Count**: The `SYMPTOMS` array currently contains **20** entries.
 
 **Clinical Relevance**: Includes neuropathic (tingling, electric shock), muscle (spasm, stiffness), and sensory (hypersensitivity) symptoms common in fibromyalgia.
 
-**Conclusion**: Claim is **precise and verified**.
+**Conclusion**: Symptom descriptor support is implemented and meets the "19+" claim.
 
 ---
 
@@ -189,7 +187,7 @@ export const SYMPTOMS = [
 
 ### Claim 5: "WorkSafe BC/claim-ready exports"
 
-**Status**: ✅ **VERIFIED**
+**Status**: ✅ **VERIFIED (exports implemented; compliance not asserted)**
 
 **Evidence**:
 
@@ -208,26 +206,19 @@ export const SYMPTOMS = [
    - `VisitSummary.tsx` - Appointment summaries
    - Healthcare provider-formatted data
 
-4. **README Confirmation** (lines 76-79):
-   ```markdown
-   - ✅ **WorkSafe BC Compliance**: Fully functional automated claims generation
-   - ✅ **Healthcare Exports**: Production-ready clinician-formatted data exports
-   ```
-
-**Conclusion**: WorkSafe BC integration is **production-ready** and tested.
+**Conclusion**: WorkSafeBC-oriented exports (CSV/JSON/PDF) are implemented in the repo. This report does not claim official compliance or “production-ready” suitability for any jurisdiction.
 
 ---
 
-### Claim 6: "Evidence-based scales (ACR criteria)"
+### Claim 6: "Evidence-based scales (WPI/SSS thresholds)"
 
-**Status**: ✅ **VERIFIED - CLINICALLY ACCURATE**
+**Status**: ✅ **VERIFIED (implemented scoring + threshold helpers)**
 
 **Evidence**: `src/types/fibromyalgia.ts` & `src/components/fibromyalgia/FibromyalgiaTracker.tsx`
 
 **WPI (Widespread Pain Index)**:
-- Scale: 0-19 (count of painful regions)
-- 18 defined body regions
-- Matches ACR 2016 revised criteria exactly
+- Region-based selection used to compute a WPI-style score
+- WPI region fields are defined in `src/types/fibromyalgia.ts`
 
 **SSS (Symptom Severity Scale)**:
 - Scale: 0-12 total score
@@ -246,9 +237,7 @@ const meetsCriteria =
 - Visual indication when criteria met
 - Educational text explaining diagnostic thresholds
 
-**Clinical Source**: American College of Rheumatology 2016 Revised Fibromyalgia Diagnostic Criteria
-
-**Conclusion**: Assessment tools are **clinically validated** and **evidence-based**.
+**Conclusion**: WPI/SSS scoring and threshold helpers are implemented. This is intended to support tracking and clinician communication; it is not a diagnosis.
 
 ---
 
@@ -278,7 +267,7 @@ const meetsCriteria =
    - Offline caching strategies
    - Testing phase for full PWA features
 
-**Conclusion**: Offline functionality is **fully operational** with local-first architecture.
+**Conclusion**: Core tracking is offline-capable with local-first storage; optional integrations may require network access when configured.
 
 ---
 
@@ -289,15 +278,10 @@ const meetsCriteria =
 **Evidence**:
 
 1. **Encryption Service** (`src/services/EncryptionService.ts`):
-   - AES-256 encryption
-   - Key management
-   - Secure localStorage for keys
+   - Encryption/key-handling implementation exists in-repo
 
-2. **HIPAA Compliance Service** (`src/services/HIPAACompliance.ts`):
-   - Audit trail logging
-   - PHI detection and de-identification
-   - Risk scoring
-   - Breach assessment
+2. **HIPAA-Aligned Controls** (`src/services/HIPAACompliance.ts`):
+   - Compliance-oriented utilities and documentation (implementation exists; no compliance claim)
 
 3. **Security Service** (`src/services/SecurityService.ts`):
    - Event logging and monitoring
@@ -312,12 +296,11 @@ const meetsCriteria =
    - Runtime security (CSP, input validation)
 
 **Privacy Architecture**:
-- No external transmission of Class A health data by default (optional features may make network requests when enabled)
-- No user accounts required
-- No default transmission of Class A health data; optional anonymous usage analytics may be enabled by deploy/build configuration
-- Complete user data sovereignty
+- Local-first by default; some optional features may make network requests when enabled
+- No user accounts required for core tracking
+- User-controlled export/sharing
 
-**Conclusion**: Security is **enterprise-grade** with healthcare-specific compliance features.
+**Conclusion**: Security-related services exist (encryption, audit/event logging, CSP/security tooling). This report does not assert enterprise certification or regulatory compliance.
 
 ---
 
@@ -325,7 +308,7 @@ const meetsCriteria =
 
 ### Claim: "Machine learning models to identify risk of flare-ups (planned)"
 
-**Status**: 🟡 **PLANNED - Q1 2025**
+**Status**: 🟡 **PLANNED**
 
 **Evidence**: README line 385
 ```markdown
@@ -333,7 +316,7 @@ const meetsCriteria =
 - 🎯 Predictive analytics for pain episodes
 ```
 
-**Current State**: Heuristic-based pattern recognition implemented; ML enhancement scheduled.
+**Current State**: Heuristic-based pattern recognition implemented; ML enhancement is a roadmap item.
 
 ---
 
@@ -365,20 +348,20 @@ const meetsCriteria =
 
 | Claim Category | Status | Evidence Quality | Notes |
 |----------------|--------|------------------|-------|
-| **25+ Anatomical Locations** | ✅ Verified (44+) | High | Exceeds claim |
-| **19+ Symptom Types** | ✅ Verified (19) | High | Exact match |
+| **25+ Anatomical Locations** | ✅ Verified | High | Implemented via `PAIN_LOCATIONS` and WPI regions |
+| **19+ Symptom Types** | ✅ Verified | High | `SYMPTOMS` currently contains 20 entries |
 | **Fibro-Specific Analytics** | ✅ Verified | High | Comprehensive implementation |
 | **Pattern Recognition** | ✅ Verified | High | Heuristic-based, ML planned |
 | **Trauma-Informed Design** | ✅ Verified | High | Core architecture |
-| **WorkSafe BC Exports** | ✅ Verified | High | Production-ready |
-| **Evidence-Based Scales** | ✅ Verified | High | ACR 2016 compliant |
+| **WorkSafeBC Exports** | ✅ Verified | High | Export/report utilities implemented; no compliance claim |
+| **WPI/SSS Scoring** | ✅ Verified | High | Scoring + threshold helpers implemented |
 | **Offline-First** | ✅ Verified | High | IndexedDB, no cloud |
 | **Privacy & Security** | ✅ Verified | High | Multi-layer protection |
-| **ML Flare Prediction** | 🟡 Planned | Medium | Q1 2025 roadmap |
+| **ML Flare Prediction** | 🟡 Planned | Medium | Roadmap item |
 | **Advanced Correlation** | 🟡 Partial | Medium | Basic exists, enhancement planned |
 | **Advanced Heatmaps** | 🟡 Partial | Medium | Basic exists, temporal planned |
 
-**Overall Accuracy**: **9/12 fully verified** (75% complete), **3/12 partial/planned** (25% in development)
+**Overall Status**: Core fibromyalgia tracking features are implemented; some roadmap items remain planned/partial.
 
 ---
 
@@ -393,14 +376,14 @@ const meetsCriteria =
 
 ### For Marketing
 
-1. **Highlight Fibro Differentiation**: Emphasize ACR compliance in messaging
+1. **Highlight Fibro Differentiation**: Emphasize WPI/SSS scoring + tracking workflows
 2. **Clinical Credibility**: Use evidence-based language prominently
 3. **Community Testimonials**: Gather fibromyalgia user feedback
 4. **Provider Outreach**: Create materials for rheumatologists
 
 ### For Development
 
-1. **Prioritize ML Features**: Accelerate Q1 2025 roadmap items
+1. **Prioritize ML Features**: Treat as roadmap work with explicit privacy review
 2. **Enhanced Body Heatmaps**: Complete temporal visualization features
 3. **Mobile Optimization**: Ensure fibro tracker works on all devices
 4. **Accessibility Testing**: Validate with fibro fog simulation
@@ -445,30 +428,18 @@ const meetsCriteria =
 - `src/utils/pain-tracker/pattern-engine.test.ts` - 31 tests passing
 - `src/utils/pain-tracker/trending.test.ts`
 - `src/services/AdvancedAnalyticsEngine.test.ts`
-- Overall test coverage: 90%+ (per README)
+Note: overall coverage and test count are tracked via repo-generated badges in `badges/`.
 
 ---
 
 ## ✅ Conclusion
 
-**All major fibromyalgia feature claims are substantiated by code implementation.**
-
-Pain Tracker's fibromyalgia support is:
-- **Clinically grounded**: ACR 2016 criteria compliance
-- **Comprehensively implemented**: 44+ locations, 19 symptom types, full analytics
-- **Privacy-first**: Local storage, encryption, no external transmission
-- **Trauma-aware**: Dedicated accessibility and empathy systems
-- **Production-ready**: WorkSafe BC exports, clinical reports functional
-
-**Claim Accuracy**: **100%** of production features verified  
-**Roadmap Transparency**: Planned features clearly marked as "Q1 2025" or "in development"
-
-**Recommendation**: Claims are **accurate and defensible**. Proceed with confidence in marketing materials.
+This report verifies that core fibromyalgia tracking features are implemented in the repo (WPI/SSS scoring, tracking UI, analytics scaffolding, and exports). It intentionally avoids legal/clinical compliance claims and avoids asserting suitability for any regulated workflow.
 
 ---
 
 **Verified By**: AI Code Audit  
-**Verification Date**: November 16, 2024  
+**Verification Date**: January 17, 2026  
 **Codebase Commit**: Current HEAD  
 **Confidence Level**: **High** (direct source code evidence)
 

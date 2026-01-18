@@ -2,7 +2,7 @@
 
 ## Overview
 
-A comprehensive tiered subscription system has been implemented for Pain Tracker, enabling monetization while maintaining the app's trauma-informed, security-first approach.
+This document describes an archived design/implementation draft for a tiered subscription system for Pain Tracker. It is not a statement of what is currently shipped or deployed.
 
 ## Architecture
 
@@ -41,7 +41,7 @@ Defines four subscription tiers with complete feature matrices:
 - Unlimited entries, unlimited retention
 - Predictive insights
 - Clinical PDF export
-- HIPAA compliance
+- HIPAA-aligned deployment considerations (deployment-dependent)
 - Healthcare API access
 - Priority support (4h response)
 - 30-day free trial
@@ -51,7 +51,7 @@ Defines four subscription tiers with complete feature matrices:
 - Unlimited everything
 - Custom features
 - White-label options
-- SOC2 compliance
+- SOC 2 alignment goals (requires independent audit)
 - Dedicated support (1h response)
 - Custom training
 - 60-day free trial
@@ -355,8 +355,8 @@ export class PaddleService {
 ### Data Protection
 - Subscription data encrypted at rest (VaultService)
 - Audit trail for all billing events
-- HIPAA compliance for Pro+ tiers
-- SOC2 compliance for Enterprise
+- HIPAA-aligned deployment considerations for Pro+ tiers (deployment-dependent)
+- SOC 2 alignment goals for Enterprise (requires independent audit)
 
 ### Access Control
 - Feature gates prevent unauthorized access
@@ -366,7 +366,7 @@ export class PaddleService {
 ### Privacy
 - No sensitive health data in billing systems
 - Separate encryption keys for subscription vs health data
-- GDPR-compliant data handling
+- GDPR-oriented data handling (deployment-dependent)
 
 ## Monitoring & Analytics
 
@@ -429,7 +429,7 @@ interface AdminMetrics {
 - ✅ Zero-trust subscription validation
 - ✅ Sub-100ms feature access checks
 - ✅ Comprehensive audit logging
-- ✅ 100% test coverage for critical paths (pending)
+- ✅ High test coverage for critical paths (target; pending)
 
 ### Business
 - Target: 10% free-to-paid conversion
@@ -440,7 +440,7 @@ interface AdminMetrics {
 
 ## Conclusion
 
-The SaaS subscription system is production-ready at the architecture level. Core services, UI components, and feature gates are implemented and tested. Next steps involve:
+This SaaS subscription system is an archived draft. Some components may be partially implemented, stubbed, or removed in the main branch. If revived, next steps would involve:
 
 1. Integration with existing Pain Tracker features
 2. Payment provider setup (Stripe recommended)

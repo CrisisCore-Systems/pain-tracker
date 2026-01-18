@@ -8,7 +8,7 @@
 
 ## 🎯 Executive Summary
 
-Your Pain Tracker platform sits at a unique intersection: **free/privacy-first personal pain tracking** meets **WorkSafeBC compliance** meets **clinical integration**. None of your competitors fully address this combination, creating a significant market opportunity.
+Your Pain Tracker platform sits at a unique intersection: **free/privacy-first personal pain tracking** meets **WorkSafeBC-oriented workflows/exports** meets **clinical integration**. None of your competitors fully address this combination, creating a significant market opportunity.
 
 ### Key Findings
 
@@ -56,7 +56,7 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 
 #### Competitive Gap
 
-- ❌ No WorkSafeBC compliance or export features
+- ❌ No WorkSafeBC-oriented exports/workflows
 - ❌ No offline-first architecture (requires internet for full functionality)
 - ❌ Subscription fatigue (users pay indefinitely for data they own)
 
@@ -127,7 +127,7 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 #### Competitive Gap
 
 - ❌ **No pain tracking** (focuses on exercises/education, not data logging)
-- ❌ No clinical reporting or WorkSafeBC compliance
+- ❌ No clinical reporting or WorkSafeBC-oriented exports/workflows
 - ❌ Premium pricing excludes low-income users (WorkSafe BC claimants often face financial hardship)
 - ❌ No offline functionality
 
@@ -183,7 +183,7 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 - ✅ **Digital-first WorkSafeBC reporting** (auto-populate Forms 6/7/8/11 from pain logs)
 - ✅ **Longitudinal data** (export 30/60/90-day trends for claims)
 - ✅ **Encrypted, offline-first** (HIPAA-aligned, privacy-first)
-- ✅ **Free for workers** (removes financial barrier to compliance)
+- ✅ **Free core for workers** (reduces financial barriers)
 - ✅ **Clinical integration** (physicians can access pre-filled Form 8/11 data)
 
 ---
@@ -194,7 +194,7 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 
 | Need | ManageMyPain | PainScale | Curable | Epic | **Pain Tracker** |
 |------|--------------|-----------|---------|------|------------------|
-| **Free Forever** | ❌ ($3.99/mo) | ✅ | ❌ ($5.80/mo) | ❌ | ✅ |
+| **Free core ($0)** | ❌ ($3.99/mo) | ✅ | ❌ ($5.80/mo) | ❌ | ✅ |
 | **Offline-First** | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **WorkSafeBC Integration** | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Privacy-First (Local Data)** | ❌ | ❌ | ❌ | ❌ | ✅ |
@@ -213,17 +213,17 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 2. **Privacy-Conscious Chronic Pain Patients**
    - Need: Local data storage, no cloud dependencies
    - Current solution: ManageMyPain (cloud-based), PainScale (Boston Scientific ownership)
-   - Your advantage: **IndexedDB + AES-GCM encryption, zero cloud**
+   - Your advantage: **local-first by default; encryption support; user-controlled exports**
 
 3. **Low-Income/Uninsured Patients**
    - Need: Free, comprehensive pain tracking
    - Current solution: PainScale (free but ad-supported), ManageMyPain Lite (30-day limit)
-   - Your advantage: **Free forever, no paywalls, no ads**
+   - Your advantage: **Free core, no ads**
 
 4. **Small Clinics (<5 Providers)**
    - Need: Affordable patient data integration (can't afford Epic)
    - Current solution: Paper logs, spreadsheets
-   - Your advantage: **Free for clinics, FHIR/HL7 export, lightweight**
+   - Your advantage: **affordable tooling; FHIR/HL7 export (planned)**
 
 5. **Trauma Survivors** (PTSD, abuse, sexual violence)
    - Need: Emotionally safe UX, crisis detection, gentle language
@@ -244,7 +244,7 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 
 ### Why This Works
 
-1. **Free tier captures WorkSafeBC market** (workers never pay)
+1. **Free core captures WorkSafeBC market** (core is $0)
 2. **Clinical tier targets Epic gap** (affordable for small clinics)
 3. **Enterprise tier monetizes at scale** (health systems, insurers)
 
@@ -255,19 +255,19 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 ### Tagline Options
 
 - "Pain tracking that works like you do—offline, private, and WorkSafeBC-ready."
-- "Your pain, your data, your privacy. Free forever."
+- "Your pain, your data, your privacy. Free core."
 - "Clinical-grade pain tracking without the clinic-grade costs."
 
 ### Key Messaging
 
-1. **Privacy First:** "Your health data stays on your device. Always."
+1. **Privacy First:** "Local-first by default, with user-controlled exports."
 2. **WorkSafeBC Made Easy:** "File Form 6 in 3 clicks, not 3 hours."
-3. **Free for Life:** "No subscriptions. No paywalls. No compromises."
+3. **Free core:** "No subscription required for core tracking."
 4. **Trauma-Informed:** "Built with empathy for chronic pain survivors."
 
 ### Distribution Channels
 
-- **WorkSafeBC partnerships** (official recommended app for claimants)
+- **WorkSafeBC-adjacent partnerships** (validate any official endorsement claims)
 - **BC physiotherapy/pain clinics** (white-label clinical tier)
 - **Chronic pain advocacy groups** (Reddit r/chronicpain, Facebook groups)
 - **App stores** (SEO: "WorkSafeBC pain tracker," "free pain diary")

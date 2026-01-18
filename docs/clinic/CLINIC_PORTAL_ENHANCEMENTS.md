@@ -236,20 +236,20 @@ useEffect(() => {
 ### Time Savings
 - **Patient review**: 15 min → 3 min (80% reduction)
 - **Report generation**: 45 min → 2 min (95% reduction)
-- **Pattern identification**: Manual → Automatic (100% automation)
+- **Pattern identification**: Manual → Automatic (where supported)
 - **Alert management**: Reactive → Proactive (preventative care)
 
 ### Quality Improvements
 - **Data-driven decisions**: Quantified medication efficacy
 - **Early intervention**: Real-time alert system
-- **Comprehensive documentation**: Auto-generated compliant reports
+- **Comprehensive documentation**: Auto-generated workflow-oriented reports
 - **Patient engagement**: Visual aids for shared decision-making
 
-### Compliance Benefits
-- **HIPAA audit trails**: All actions logged via `hipaaComplianceService`
-- **WorkSafe BC ready**: Pre-formatted reports with all required fields
+### Auditability & Workflow Benefits
+- **Audit trails**: Log actions with HIPAA-aligned intent (minimize sensitive data)
+- **WorkSafeBC-oriented outputs**: Pre-formatted reports/exports (validate requirements for your workflow)
 - **Evidence-based**: Statistical analysis for treatment justification
-- **Legal protection**: Comprehensive documentation timestamp trail
+- **Documentation support**: Timestamped reporting/audit artifacts
 
 ## 🔧 Technical Implementation
 

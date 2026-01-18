@@ -1,7 +1,7 @@
 ---
 title: "The Day I Decided My Pain App Didn't Need a Server: What I Learned Building Healthcare Software That Lives Entirely on Your Device"
 seoTitle: "Why My Pain App Has No Server (And Why That Makes It Safer)"
-seoDescription: "How I built Pain Tracker as a privacy-first, local-only healthcare app: no servers, no logins, and encrypted data that never leaves your device."
+seoDescription: "How I built Pain Tracker as a privacy-first, local-first healthcare app: no servers by default, no logins, and encrypted data stored on your device."
 datePublished: Mon Dec 01 2025 05:27:43 GMT+0000 (Coordinated Universal Time)
 cuid: cmimpjtgb000302l5dzzt4p59
 slug: the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device
@@ -10,7 +10,7 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764566798340/922fb
 
 ---
 
-> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+> **Try Pain Tracker →** [Start Tracking](https://paintracker.ca)
 
 # "So... where's your backend?"
 
@@ -18,7 +18,7 @@ That's literally the first thing every developer asks when they peek under the h
 
 The answer always catches them off guard: **There isn't one.**
 
-No database humming away in some data center. No API routes handling user requests. No authentication servers to maintain. No cloud bills piling up each month. Just a React app that runs completely in your browser, keeps everything locked away in encrypted local storage, and works perfectly fine when you're offline in the middle of nowhere.
+No database humming away in some data center. No API routes handling user requests. No authentication servers to maintain. No cloud bills piling up each month. Just a React app that runs completely in your browser, stores data locally with encryption, and supports offline use for core tracking.
 
 This wasn't me being lazy or trying to save a few bucks. It was a very deliberate choice that took me months to figure out—and even longer to get right. Here's the story of why I built it this way, how the whole thing actually works, and what I discovered along the journey of creating healthcare software that doesn't need the internet to function.
 
@@ -53,11 +53,11 @@ Pain Tracker runs on React 18 with TypeScript and gets built with Vite. But the 
 ❌ No user accounts (nothing to compromise)
 ❌ No database servers (nothing to hack)
 ❌ No data APIs (nothing to intercept)
-❌ No cloud anything (no third parties poking around)
+❌ No cloud required for core tracking
 ✅ Everything runs in your browser
 ✅ Data lives in IndexedDB on your device
-✅ Military-grade encryption (XChaCha20-Poly1305)
-✅ Works offline without missing a beat
+✅ Encrypted storage (implementation details vary by platform/build)
+✅ Works offline for core features
 ```
 
 The flow is beautifully simple:
@@ -67,7 +67,7 @@ graph TD
     A["You log your pain"] --> B["React updates state"]
     B --> C["Gets encrypted instantly"]
     C --> D["Stored in IndexedDB"]
-    D --> E["Never leaves your device"]
+    D --> E["Stored locally (by default)"]
     
     F["Need to share with doctor?"] --> G["Export happens in-browser"]
     G --> H["You download the file"]
@@ -76,7 +76,7 @@ graph TD
     style D fill:#3b82f6,color:#fff
 ```
 
-Your pain data flows through the interface, gets locked up with encryption immediately, and settles into IndexedDB storage. **It literally never touches a network.** When you need to show your doctor or send something to WorkSafe BC, you hit export—and the browser generates those PDFs or CSV files right there on your machine.
+Your pain data flows through the interface, gets locked up with encryption immediately, and settles into IndexedDB storage. In the default configuration, logging and exports run locally and don't require network calls. When you need to show your doctor or send something to WorkSafe BC, you hit export—and the browser generates those PDFs or CSV files right there on your machine.
 
 ---
 
@@ -134,7 +134,7 @@ This gives us those buttery-smooth sub-100ms response times for UI stuff while m
 
 ---
 
-## Lock It Down: Why We Use Military-Grade Encryption
+## Lock It Down: Why We Use Strong Encryption
 
 Just because your data lives locally doesn't mean it's automatically safe. If someone gets their hands on your device, I definitely don't want your pain journal sitting there in plain text.
 
@@ -191,7 +191,7 @@ You might wonder why XChaCha20-Poly1305 instead of the more common AES-GCM. Thre
 3. **Battle-tested implementation**: We're using libsodium-wrappers, which handles all the crypto correctly so I don't have to
     
 
-Your encryption key comes from your passphrase using Argon2id—currently the gold standard for turning passwords into keys. And that key? It never, ever leaves your device.
+Your encryption key comes from your passphrase using Argon2id. Key handling is client-side; review the code and your deployment/settings for details.
 
 ---
 
@@ -209,7 +209,7 @@ No cross-device sync yet. Your phone breaks? You'll need to export everything an
 
 There's no "forgot password" email because there's no account to begin with. Lose your passphrase, lose your data.
 
-**How we handle it**: Crystal-clear warnings during setup, plus we bug you about making backup exports. It's intentional—true zero-knowledge means even *I* can't get your data back.
+**How we handle it**: Crystal-clear warnings during setup, plus we bug you about making backup exports. If you use passphrase-based locking and lose your passphrase, recovery may not be possible.
 
 ### ❌ I Have No Idea How Many People Use This Thing
 
@@ -235,9 +235,9 @@ No servers means no hosting bills, period. The whole app runs on GitHub Pages wi
 
 Every user basically becomes their own server. A million users doesn't mean managing a million database records—it means a million completely independent IndexedDB instances I don't have to babysit.
 
-### ✅ Regulatory Compliance Gets Way Simpler
+### ✅ Compliance Scope Can Be Simpler (Sometimes)
 
-HIPAA compliance with a traditional backend involves:
+HIPAA-related compliance work with a traditional backend can involve:
 
 * Business Associate Agreements everywhere
     
@@ -248,7 +248,7 @@ HIPAA compliance with a traditional backend involves:
 * Regular expensive security audits
     
 
-With local-first where I *never touch the data*? The compliance story becomes dramatically simpler. Can't breach what you don't have access to.
+With a local-first architecture where the app doesn't store user entries on a server by default, the compliance scope may be reduced. This isn't a certification and it doesn't eliminate risk; validate requirements for your deployment and threat model.
 
 ### ✅ Offline Just... Works
 

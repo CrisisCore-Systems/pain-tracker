@@ -65,9 +65,11 @@ npm run screenshots:accessibility:cognitive    # Cognitive support
 - **Desktop Size**: 1920×1080px
 - **Mobile Size**: 390×844px
 
-## Standards Compliance
+## Standards Alignment
 
-✅ WCAG 2.2 Level AA
-✅ Section 508
-✅ EN 301 549
+Built toward (targets, not certifications):
+
+✅ WCAG 2.2 AA target
+✅ Section 508 considerations
+✅ EN 301 549 considerations
 ✅ Trauma-Informed Design

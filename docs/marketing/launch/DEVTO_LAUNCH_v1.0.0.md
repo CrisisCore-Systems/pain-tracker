@@ -24,13 +24,13 @@ Today, the theory becomes reality.
 
 ## What We Shipped
 
-This isn't just a demo. It is a production-ready PWA designed for people with chronic pain who need clinical-grade data without sacrificing their privacy.
+This isn't just a demo. It's a public v1.0.0 release PWA designed for people with chronic pain who want clinically useful data without sacrificing privacy.
 
 ### 1. The "Black Box" Architecture
-As discussed in *"No Backend, No Excuses"*, we committed to a Zero-Knowledge architecture.
-*   **Class A Data (Health)**: Encrypted AES-GCM. Never leaves the device.
-*   **Analytics**: Minimal, privacy-preserving, and opt-in.
-*   **Sync**: None by default. You own the JSON.
+As discussed in *"No Backend, No Excuses"*, we committed to a local-first architecture with client-side encryption.
+*   **Class A Data (Health)**: Encrypted with AES-GCM at rest; stored locally by default.
+*   **Analytics**: Minimal, privacy-preserving, and optional (when enabled).
+*   **Exports**: User-initiated; you control the JSON.
 
 ### 2. The "Panic Mode" UI
 We implemented the **Trauma-Informed Design** principles from the build logs.
@@ -39,10 +39,10 @@ When you log a pain level of 9 or 10, the app detects a high-cognitive-load stat
 *   Removes non-essential navigation.
 *   Increases contrast and button size.
 
-### 3. WorkSafeBC Compliance
-The goal was utility, not just philosophy. The app now generates **PDF reports** specifically formatted for WorkSafeBC and insurance claims, bridging the gap between patient experience and clinical requirements.
+### 3. WorkSafeBC Workflows
+The goal was utility, not just philosophy. The app can generate **PDF reports** oriented around WorkSafeBC workflows and common insurance-claim documentation.
 
-[Read the Case Study: Saving 15+ Hours on Claims](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
+Always verify requirements and review/edit exports before submitting.
 
 ## The Tech Stack (Final v1.0)
 
@@ -56,7 +56,7 @@ For those following the build, here is where we landed for the stable release:
 
 ## What's Next?
 
-This release (v1.0.1) includes the new **"Ritual" Splash Screen**—a brutalist glitch effect that signals the transition into a secure, private environment.
+Planned next: a new **"Ritual" Splash Screen** that signals the transition into a private, local-first environment.
 
 We are now moving into **Phase 2**:
 1.  Local-only Machine Learning for pattern recognition.

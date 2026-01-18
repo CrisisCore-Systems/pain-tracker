@@ -745,6 +745,8 @@ The ultimate test isn't "did our algorithm fire correctly?" It's "did this perso
 
 **Coming Next**: "Internationalization of Trauma: Testing Across Cultural Contexts"
 
+[![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
+
 ---
 
 **Tags**: #recovery #longitudinal-testing #healthcare #trauma-informed #testing #habit-formation #react #typescript

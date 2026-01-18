@@ -4,7 +4,7 @@ import path from 'node:path';
 import https from 'node:https';
 
 const API_KEY = process.env.DEVTO_API_KEY;
-const FILE_PATH = path.join(process.cwd(), 'marketing', 'DEVTO_LAUNCH_v1.0.0.md');
+const FILE_PATH = path.join(process.cwd(), 'docs', 'marketing', 'launch', 'DEVTO_LAUNCH_v1.0.0.md');
 
 if (!API_KEY) {
   console.error('❌ Error: DEVTO_API_KEY is missing in .env');

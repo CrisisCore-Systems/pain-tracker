@@ -63,14 +63,11 @@ This directory contains comprehensive planning and reference materials for a 5-p
 
 ## 📊 Key Project Statistics (For All Posts)
 
-These statistics are sourced directly from the Pain Tracker codebase and should be cited across blog posts:
+Prefer repo-generated artifacts (e.g., `badges/`) and current test output over hardcoded numbers in posts:
 
 ### Codebase Metrics
-- **31,700+ lines of code** (production TypeScript)
-- **580+ TypeScript files** in `/src`
-- **96 documentation files** (comprehensive guides)
-- **90%+ test coverage** (Vitest + Playwright)
-- **420KB gzipped bundle** (optimized from 2.6MB)
+- Coverage/test/bundle metrics: cite `badges/` outputs
+- Codebase size: cite tooling output (avoid estimates)
 
 ### Feature Completeness
 - **44+ anatomical locations** for pain tracking (26 general + 18 fibro-specific)
@@ -200,7 +197,7 @@ Week 5: Post #5 (Security) + Series Recap
 2. Healthcare software engineering
 3. Offline-first architecture
 4. Trauma-informed design
-5. HIPAA compliance implementation
+5. HIPAA-aligned controls (implementation)
 6. Fibromyalgia tracking app
 7. Empathy algorithms
 8. Local-first software
