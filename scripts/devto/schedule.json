@@ -12,10 +12,47 @@
   },
   "posts": [
     {
+      "key": "devto-series-start-here",
+      "enabled": false,
+      "title": "Start here: local-first, offline-first Pain Tracker (no backend required)",
+      "sourceFile": "docs/content/blog/devto-series-00-start-here.md",
+      "publishAt": "2026-01-22T17:00:00Z",
+      "tags": [
+        "pwa",
+        "privacy",
+        "webdev",
+        "testing"
+      ],
+      "description": "A guided index for the Pain Tracker Dev.to series: local-first architecture, deterministic PWAs, accessibility, and truthful security boundaries.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
+      "key": "devto-series-01-offline-first",
+      "enabled": false,
+      "title": "Offline-first without a backend: a local-first PWA architecture you can trust",
+      "sourceFile": "docs/content/blog/devto-series-01-offline-first-local-first-architecture.md",
+      "publishAt": "2026-01-24T17:00:00Z",
+      "tags": [
+        "pwa",
+        "typescript",
+        "react",
+        "privacy",
+        "accessibility"
+      ],
+      "description": "A practical walkthrough: deterministic offline behavior, local-first storage layering, and honest trust boundaries (using the Pain Tracker repo as a real example).",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": null,
+      "devtoUrl": null,
+      "published": false
+    },
+    {
       "key": "privacy-first-default-standard",
       "enabled": false,
       "title": "Privacy-first, offline-capable, trauma-informed, open-source health tools should be the default",
-      "sourceFile": "article-privacy-first-trauma-informed-open-source-digital-health.md",
+      "sourceFile": "docs/content/articles/article-privacy-first-trauma-informed-open-source-digital-health.md",
       "publishAt": "2026-02-05T17:00:00Z",
       "tags": [
         "healthtech",
@@ -33,7 +70,7 @@
       "key": "privacy-preserving-analytics",
       "enabled": true,
       "title": "Privacy-Preserving Analytics: Proving You Can Measure Without Identity",
-      "sourceFile": "blog-testing-privacy-preserving-analytics.md",
+      "sourceFile": "docs/content/blog/blog-testing-privacy-preserving-analytics.md",
       "publishAt": "2025-12-16T17:00:00Z",
       "tags": [
         "testing",
@@ -51,7 +88,7 @@
       "key": "performance-under-pressure",
       "enabled": true,
       "title": "Performance Under Pressure: Crisis Detection Without UI Lag",
-      "sourceFile": "blog-performance-under-pressure.md",
+      "sourceFile": "docs/content/blog/blog-performance-under-pressure.md",
       "publishAt": "2025-12-18T17:00:00Z",
       "tags": [
         "testing",
@@ -69,7 +106,7 @@
       "key": "testing-across-the-stack",
       "enabled": true,
       "title": "Testing Across the Stack: UI → Storage → Encryption → Offline Resilience",
-      "sourceFile": "blog-testing-across-the-stack.md",
+      "sourceFile": "docs/content/blog/blog-testing-across-the-stack.md",
       "publishAt": "2025-12-23T17:00:00Z",
       "tags": [
         "testing",
@@ -87,7 +124,7 @@
       "key": "testing-co-occurrence",
       "enabled": true,
       "title": "When Crises Stack: Testing Co-Occurrence Without Cascading Failures",
-      "sourceFile": "blog-testing-co-occurrence.md",
+      "sourceFile": "docs/content/blog/blog-testing-co-occurrence.md",
       "publishAt": "2025-12-30T17:00:00Z",
       "tags": [
         "testing",
@@ -105,7 +142,7 @@
       "key": "testing-recovery",
       "enabled": true,
       "title": "Testing Recovery: Proving Your App Helps People Stabilize",
-      "sourceFile": "blog-testing-recovery.md",
+      "sourceFile": "docs/content/blog/blog-testing-recovery.md",
       "publishAt": "2026-01-08T21:00:00Z",
       "tags": [
         "testing",
@@ -123,7 +160,7 @@
       "key": "cross-crisis-calibration",
       "enabled": true,
       "title": "Cross-Crisis Calibration: Panic, Dissociation, Sensory Overload",
-      "sourceFile": "blog-cross-crisis-calibration.md",
+      "sourceFile": "docs/content/blog/blog-cross-crisis-calibration.md",
       "publishAt": "2026-01-13T17:00:00Z",
       "tags": [
         "testing",
@@ -141,7 +178,7 @@
       "key": "ethics-of-simulation",
       "enabled": false,
       "title": "The Ethics of Simulation: How to Test Trauma-Informed Features Without Exploiting Real Pain",
-      "sourceFile": "blog-ethics-of-simulation.md",
+      "sourceFile": "docs/content/blog/blog-ethics-of-simulation.md",
       "publishAt": "2026-01-20T17:00:00Z",
       "tags": [
         "ethics",
@@ -159,7 +196,7 @@
       "key": "testing-the-testing",
       "enabled": true,
       "title": "Test Your Tests: Does Your Crisis Simulation Match Reality?",
-      "sourceFile": "blog-testing-the-testing.md",
+      "sourceFile": "docs/content/blog/blog-testing-the-testing.md",
       "publishAt": "2026-01-07T17:00:00Z",
       "tags": [
         "testing",
@@ -177,7 +214,7 @@
       "key": "internationalization-of-trauma",
       "enabled": true,
       "title": "Internationalizing Trauma-Informed UX: Testing Across Cultures",
-      "sourceFile": "blog-internationalization-of-trauma.md",
+      "sourceFile": "docs/content/blog/blog-internationalization-of-trauma.md",
       "publishAt": "2026-01-15T17:00:00Z",
       "tags": [
         "i18n",
