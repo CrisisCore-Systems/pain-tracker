@@ -35,6 +35,7 @@ import helpers from './helpers/analyticsHelpers';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
 import { LocationHeatmap } from '../pain-tracker/analytics-v2/LocationHeatmap';
+import { NumericCorrelationGraph } from './NumericCorrelationGraph';
 
 interface AdvancedAnalyticsDashboardProps {
   entries: PainEntry[];
@@ -799,6 +800,9 @@ export function AdvancedAnalyticsDashboard({
 
         {/* Activity Correlation */}
         <ActivityCorrelationChart entries={entries} />
+
+        {/* Numeric Correlation Graph */}
+        <NumericCorrelationGraph entries={entries} compact />
       </div>
 
       {/* Time of Day Patterns */}

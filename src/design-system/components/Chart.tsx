@@ -8,7 +8,7 @@ import {
 } from 'chart.js';
 
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { Line, Bar, Doughnut, Radar } from 'react-chartjs-2';
+import { Line, Bar, Doughnut, Radar, Scatter } from 'react-chartjs-2';
 
 import { Card, CardContent } from './Card';
 import { cn } from '../utils';
@@ -18,12 +18,16 @@ import type { ChartPointMeta, ChartPointMetaArray } from '../types/chart';
 import type { TooltipItem } from 'chart.js';
 
 // Local typed dataset matching project usage
+export type ScatterPoint = { x: number; y: number };
+
 export type ChartDataset = {
   label?: string;
   // allow undefined as callers sometimes map undefined -> null at render time
-  data: (number | null | undefined)[];
+  data: (number | null | undefined | ScatterPoint)[];
   yAxisID?: string;
   hidden?: boolean;
+  // Scatter-specific option: draw connecting line through points
+  showLine?: boolean;
   backgroundColor?: string | string[];
   borderColor?: string | string[];
   borderWidth?: number;
@@ -233,6 +237,7 @@ export function Chart({
         type !== 'doughnut' && type !== 'radar'
           ? {
               x: {
+                ...(type === 'scatter' ? { type: 'linear' as const } : null),
                 ticks: {
                   color: colorVar('color-foreground'),
                   maxTicksLimit: typeof window !== 'undefined' && window.innerWidth < 768 ? 5 : 10,
@@ -310,6 +315,13 @@ export function Chart({
                 height={height}
               />
             )}
+            {type === 'scatter' && (
+              <Scatter
+                data={chartData as unknown as ChartJSData<'scatter'>}
+                options={options as unknown as ChartOptions<'scatter'>}
+                height={height}
+              />
+            )}
             {type === 'doughnut' && (
               <Doughnut
                 data={chartData as unknown as ChartJSData<'doughnut'>}
@@ -343,11 +355,11 @@ function generateTooltipLabel(context: TooltipItem<ChartType>) {
     const ds = context.dataset as unknown as ChartDataset & { _meta?: ChartPointMetaArray };
     const idx = context.dataIndex;
     const seriesLabel = context.dataset.label ?? '';
+    const parsed = context.parsed as unknown as { x?: unknown; y?: unknown } | undefined;
     const value =
-      (context.parsed as unknown as { y?: unknown } | undefined)?.y ??
-      (context.parsed as unknown) ??
-      (context.raw as unknown) ??
-      '';
+      (parsed && typeof parsed.x !== 'undefined' && typeof parsed.y !== 'undefined')
+        ? `x=${parsed.x}, y=${parsed.y}`
+        : parsed?.y ?? (context.parsed as unknown) ?? (context.raw as unknown) ?? '';
     let line = `${seriesLabel}: ${value}`;
 
     if (ds._meta && ds._meta[idx]) {
@@ -392,6 +404,10 @@ export function PainDistributionChart(props: Omit<ChartProps, 'type'> & { data: 
 
 export function MultiDimensionalChart(props: Omit<ChartProps, 'type'> & { data: ChartData }) {
   return <Chart type="radar" {...props} />;
+}
+
+export function ScatterPlot(props: Omit<ChartProps, 'type'> & { data: ChartData }) {
+  return <Chart type="scatter" {...props} />;
 }
 
 export default Chart;

@@ -19,6 +19,8 @@ import type { PainEntry } from '../../types';
 import { useAdaptiveCopy } from '../../contexts/useTone';
 import { emptyStates } from '../../content/microcopy';
 import { WeatherCorrelationPanel } from './WeatherCorrelationPanel';
+import { LocationHeatmap } from '../pain-tracker/analytics-v2/LocationHeatmap';
+import { NumericCorrelationGraph } from './NumericCorrelationGraph';
 import '../../design-system/tokens/fused-v2.css';
 
 interface AdvancedAnalyticsViewProps {
@@ -518,6 +520,12 @@ export function AdvancedAnalyticsView({ entries }: AdvancedAnalyticsViewProps) {
 
       {/* Weather Correlations */}
       <WeatherCorrelationPanel entries={entries} />
+
+      {/* Advanced Visualizations */}
+      <div className="space-y-6">
+        <NumericCorrelationGraph entries={entries} />
+        <LocationHeatmap entries={entries} />
+      </div>
     </div>
   );
 }

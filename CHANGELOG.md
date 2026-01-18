@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-18
+
+### Added
+
+- **Advanced Visualizations**: Added a correlation scatter plot (with optional trend line) for pain vs. sleep/mood/stress/activity.
+- **Analytics**: Surfaced the body location heatmap and correlation graph in the advanced analytics view.
+
+### Changed
+
+- **Charts**: The shared Chart wrapper now supports scatter plots.
+
+### Tests
+
+- **Analytics**: Added unit coverage for the correlation graph component.
+
 ## [1.1.3] - 2026-01-13
 
 ### Fixed
