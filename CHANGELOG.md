@@ -250,7 +250,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Clinical recommendations based on patterns
   - Legal disclaimer for WorkSafe BC compliance
   - Multi-page support with professional headers/footers
-  - Patient and claim information fields
+  - Claimant and claim information fields
   - Date range filtering for targeted reporting
 
 - **downloadWorkSafeBCPDF** - One-click PDF download utility
