@@ -10,6 +10,7 @@ import { useToast } from '../components/feedback';
 import { maybeCaptureWeatherForNewEntry } from '../services/weatherAutoCapture';
 import { EmptyStatePanel } from '../components/widgets/EmptyStatePanel';
 import { BrandedLoadingScreen } from '../components/branding/BrandedLoadingScreen';
+import { HistoryPage } from '../components/history/HistoryPage';
 
 // Lazy load heavy components for faster initial load (mobile optimization)
 const PremiumAnalyticsDashboard = lazy(() =>
@@ -35,9 +36,6 @@ const HelpAndSupportPage = lazy(() =>
 );
 const ReportsPage = lazy(() =>
   import('../components/reports').then(m => ({ default: m.ReportsPage }))
-);
-const HistoryPage = lazy(() =>
-  import('../components/history/HistoryPage').then(m => ({ default: m.HistoryPage }))
 );
 
 // Lazy load onboarding and tutorial components (Phase 2 optimization)
