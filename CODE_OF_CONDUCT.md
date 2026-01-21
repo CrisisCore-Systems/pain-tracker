@@ -1,4 +1,6 @@
-Our Standards
+# Code of Conduct
+
+## Our Standards
 
 Examples of behavior that contributes to a positive environment include:
 
@@ -31,21 +33,21 @@ Other conduct which could reasonably be considered inappropriate in a safe, incl
 
 ---
 
-Enforcement Responsibilities
+## Enforcement Responsibilities
 
 Project maintainers are responsible for clarifying and enforcing community standards. They will take fair, appropriate corrective action in response to behavior deemed unacceptable, including temporary or permanent bans.
 
 
 ---
 
-Scope
+## Scope
 
 This Code of Conduct applies both within project spaces (GitHub, Issues, Discussions) and in public spaces when representing the project.
 
 
 ---
 
-Enforcement
+## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by creating an Issue marked “Conduct” or by emailing the maintainers at: crisiscrore.systems@proton.me.
 
@@ -54,15 +56,13 @@ All complaints will be reviewed and investigated promptly and fairly.
 
 ---
 
-Attribution
+## Enforcement Guidelines
 
-This Code of Conduct is adapted from the Contributor Covenant, version 2.1, with additional language for chronic illness and disability inclusion.
+### 1. Correction
 
+**Community Impact**: Use of inappropriate language or other behavior deemed unprofessional or unwelcome in the community.
 
----
-
-violation and an explanation of why the
-behavior was inappropriate. A public apology may be requested.
+**Consequence**: A private, written warning from community leaders, providing clarity around the nature of the violation and an explanation of why the behavior was inappropriate. A public apology may be requested.
 
 ### 2. Warning
 
@@ -98,5 +98,4 @@ the community.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 2.0
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.1, with additional language for chronic illness and disability inclusion.
