@@ -58,10 +58,10 @@ describe('GA4 Events Service', () => {
 
   describe('trackGA4Event', () => {
     it('should call gtag with correct event name and parameters', () => {
-      trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level: 5 });
+      trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level_bucket: 'moderate' });
 
       expect(mockGtag).toHaveBeenCalledWith('event', 'log_pain_entry', expect.objectContaining({
-        pain_level: 5,
+        pain_level_bucket: 'moderate',
         time_of_day: expect.any(String),
       }));
     });
@@ -70,14 +70,14 @@ describe('GA4 Events Service', () => {
       window.gtag = undefined;
 
       expect(() => {
-        trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level: 5 });
+        trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level_bucket: 'moderate' });
       }).not.toThrow();
     });
 
     it('should not emit when consent is not granted', () => {
       localStorage.setItem(CONSENT_KEY, 'declined');
 
-      trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level: 5 });
+      trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level_bucket: 'moderate' });
 
       expect(mockGtag).not.toHaveBeenCalled();
     });
@@ -102,7 +102,7 @@ describe('GA4 Events Service', () => {
       });
 
       expect(mockGtag).toHaveBeenCalledWith('event', 'log_pain_entry', expect.objectContaining({
-        pain_level: 7,
+        pain_level_bucket: 'severe',
         has_location: true,
         has_notes: true,
         location_count: 3,
@@ -118,7 +118,7 @@ describe('GA4 Events Service', () => {
       });
 
       expect(mockGtag).toHaveBeenCalledWith('event', 'log_pain_entry', expect.objectContaining({
-        pain_level: 3,
+        pain_level_bucket: 'moderate',
         has_location: false,
         has_notes: false,
       }));
@@ -199,7 +199,7 @@ describe('GA4 Events Service', () => {
       trackBodyLocationSelected('lower_back');
 
       expect(mockGtag).toHaveBeenCalledWith('event', 'select_body_location', expect.objectContaining({
-        body_region: 'lower_back',
+        time_of_day: expect.any(String),
       }));
     });
   });
@@ -313,7 +313,7 @@ describe('GA4 Events Service', () => {
       trackMoodEntryLogged(8);
 
       expect(mockGtag).toHaveBeenCalledWith('event', 'log_mood_entry', expect.objectContaining({
-        mood_level: 8,
+        time_of_day: expect.any(String),
       }));
     });
   });
@@ -362,7 +362,7 @@ describe('GA4 Events Service', () => {
 
       // Should not throw
       expect(() => {
-        trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level: 5 });
+        trackGA4Event(GA4Events.LOG_PAIN_ENTRY, { pain_level_bucket: 'moderate' });
       }).not.toThrow();
     });
   });

@@ -69,7 +69,8 @@ export type GA4EventName = typeof GA4Events[keyof typeof GA4Events];
  */
 export interface GA4EventParams {
   // Pain entry parameters
-  pain_level?: number;
+  // NOTE: We intentionally avoid raw pain levels (Class A). Use coarse buckets only.
+  pain_level_bucket?: 'mild' | 'moderate' | 'severe' | 'extreme';
   has_location?: boolean;
   has_notes?: boolean;
   location_count?: number;
@@ -89,7 +90,6 @@ export interface GA4EventParams {
   validation_type?: string;
   
   // Body map parameters - REMOVED for Class A Protection
-  // body_region?: string;
   
   // Template parameters
   template_id?: string;
@@ -108,7 +108,6 @@ export interface GA4EventParams {
   milestone_value?: number;
   
   // Mood parameters - REMOVED for Class A Protection
-  // mood_level?: number;
   
   // Generic parameters
   [key: string]: unknown;
@@ -137,19 +136,26 @@ function getTimeOfDay(): string {
   return 'night';
 }
 
+function getPainBucket(level: number): 'mild' | 'moderate' | 'severe' | 'extreme' {
+  if (!Number.isFinite(level)) return 'moderate';
+  if (level <= 2) return 'mild';
+  if (level <= 5) return 'moderate';
+  if (level <= 8) return 'severe';
+  return 'extreme';
+}
+
 /**
- * Send a custom event to GA4
- * 
- * @param eventName - The GA4 event name
- * @param params - Optional event parameters
+ * Track a GA4 event by name.
+ *
+ * This is the canonical low-level sender used across the app to avoid
+ * duplicated gating and drift in privacy rules.
  */
-export function trackGA4Event(eventName: GA4EventName, params?: GA4EventParams): void {
+export function trackGA4EventName(eventName: string, params?: GA4EventParams): void {
   if (!isGA4Available()) {
     return;
   }
 
   try {
-    // Add common parameters
     const enrichedParams: GA4EventParams = {
       ...params,
       time_of_day: params?.time_of_day || getTimeOfDay(),
@@ -159,6 +165,16 @@ export function trackGA4Event(eventName: GA4EventName, params?: GA4EventParams):
   } catch {
     // Silently fail - analytics should never affect user experience
   }
+}
+
+/**
+ * Send a custom event to GA4
+ * 
+ * @param eventName - The GA4 event name
+ * @param params - Optional event parameters
+ */
+export function trackGA4Event(eventName: GA4EventName, params?: GA4EventParams): void {
+  trackGA4EventName(eventName, params);
 }
 
 /**
@@ -172,7 +188,7 @@ export function trackPainEntryLogged(params: {
   symptomCount?: number;
 }): void {
   trackGA4Event(GA4Events.LOG_PAIN_ENTRY, {
-    pain_level: params.painLevel,
+    pain_level_bucket: getPainBucket(params.painLevel),
     has_location: params.hasLocation,
     has_notes: params.hasNotes,
     location_count: params.locationCount,
@@ -239,9 +255,9 @@ export function trackClinicalReportGenerated(format: string): void {
  * Track body location selection
  */
 export function trackBodyLocationSelected(bodyRegion: string): void {
-  trackGA4Event(GA4Events.SELECT_BODY_LOCATION, {
-    body_region: bodyRegion,
-  });
+  // Intentionally ignore bodyRegion (Class A). Event name is sufficient.
+  void bodyRegion;
+  trackGA4Event(GA4Events.SELECT_BODY_LOCATION);
 }
 
 /**
@@ -322,9 +338,9 @@ export function trackCrisisResourceTriggered(): void {
  * Track mood entry logged
  */
 export function trackMoodEntryLogged(moodLevel: number): void {
-  trackGA4Event(GA4Events.LOG_MOOD_ENTRY, {
-    mood_level: moodLevel,
-  });
+  // Intentionally ignore moodLevel (Class A). Event name is sufficient.
+  void moodLevel;
+  trackGA4Event(GA4Events.LOG_MOOD_ENTRY);
 }
 
 /**

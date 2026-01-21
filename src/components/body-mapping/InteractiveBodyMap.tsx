@@ -2,6 +2,7 @@ import { useState, useRef, useMemo, useCallback } from 'react';
 import { RotateCcw, Info, Maximize2, ZoomIn, ZoomOut, Download, User, Eye, HelpCircle } from 'lucide-react';
 import { formatNumber } from '../../utils/formatting';
 import type { PainEntry } from '../../types';
+import { getAllLocations } from '../../types/pain-entry';
 import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
 import { cn } from '../../design-system/utils';
 import { locationsToRegions } from './mapping';
@@ -437,7 +438,7 @@ export function InteractiveBodyMap({
     const painMap = new Map<string, { total: number; max: number; count: number }>();
 
     for (const entry of entries) {
-      const locations = entry.baselineData?.locations;
+      const locations = getAllLocations(entry);
       if (!locations || locations.length === 0) continue;
 
       for (const location of locations) {
@@ -476,7 +477,6 @@ export function InteractiveBodyMap({
 
       // Track body map interaction
       trackUsageEvent('body_map_region_clicked', 'body_mapping', {
-        region: regionId,
         action: isDeselecting ? 'deselected' : 'selected',
         totalSelected: newSelection.length,
       });
@@ -791,7 +791,9 @@ export function InteractiveBodyMap({
       {compact && (
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            {selectedCount} location{selectedCount !== 1 ? 's' : ''} selected
+            {mode === 'heatmap'
+              ? `${affectedRegionsCount} region${affectedRegionsCount !== 1 ? 's' : ''} with recorded pain`
+              : `${selectedCount} location${selectedCount !== 1 ? 's' : ''} selected`}
           </span>
           <div className="flex items-center space-x-2">
             <button
@@ -799,7 +801,11 @@ export function InteractiveBodyMap({
               className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               aria-label={`Switch to ${showFront ? 'back' : 'front'} view`}
             >
-              {showFront ? 'Front' : 'Back'}
+              {mode === 'heatmap'
+                ? `Flip (${showFront ? 'Front' : 'Back'})`
+                : showFront
+                  ? 'Front'
+                  : 'Back'}
             </button>
             {onRequestListView && (
               <button
@@ -1105,6 +1111,9 @@ export function InteractiveBodyMap({
 function normalizeLocationToRegionIds(location: string): string[] {
   const lower = location.trim().toLowerCase().replace(/\s+/g, ' ');
 
+  // If the value already matches a known region ID, accept it.
+  if (BODY_REGIONS.some(r => r.id === lower)) return [lower];
+
   // Handle QuickLogStepper-style tags like "Shoulder (L)"
   const sideMatch = lower.match(/^(.*)\s*\((l|r)\)$/);
   if (sideMatch) {
@@ -1114,6 +1123,50 @@ function normalizeLocationToRegionIds(location: string): string[] {
     if (base === 'hip') return [side === 'l' ? 'left-hip' : 'right-hip'];
     if (base === 'knee') return [side === 'l' ? 'left-knee-outer' : 'right-knee-outer'];
   }
+
+  // Map higher-detail checklist labels (and some legacy buckets) to the closest body-map regions.
+  // The goal is: heatmap should never appear empty just because a different logging UI was used.
+  const multiMap: Record<string, string[]> = {
+    // Spine-specific labels
+    'cervical spine': ['neck'],
+    'thoracic spine': ['upper-back'],
+    'lumbar spine': ['lower-back'],
+
+    // Ambiguous areas: paint the whole segment by covering both halves
+    'left thigh': ['left-thigh-outer', 'left-thigh-inner'],
+    'right thigh': ['right-thigh-outer', 'right-thigh-inner'],
+    'left knee': ['left-knee-outer', 'left-knee-inner'],
+    'right knee': ['right-knee-outer', 'right-knee-inner'],
+    'left shin': ['left-shin-outer', 'left-shin-inner'],
+    'right shin': ['right-shin-outer', 'right-shin-inner'],
+    'left calf': ['left-calf-outer', 'left-calf-inner'],
+    'right calf': ['right-calf-outer', 'right-calf-inner'],
+
+    // Front/back shin tags from detailed checklist
+    'left shin front': ['left-shin-outer', 'left-shin-inner'],
+    'right shin front': ['right-shin-outer', 'right-shin-inner'],
+    'left shin back': ['left-shin-outer', 'left-shin-inner'],
+    'right shin back': ['right-shin-outer', 'right-shin-inner'],
+
+    // Medial/lateral wording variants
+    'left foot medial': ['left-foot-medial'],
+    'right foot medial': ['right-foot-medial'],
+    'left foot lateral': ['left-foot-lateral'],
+    'right foot lateral': ['right-foot-lateral'],
+    'left toes medial': ['left-toes-medial'],
+    'right toes medial': ['right-toes-medial'],
+    'left toes lateral': ['left-toes-lateral'],
+    'right toes lateral': ['right-toes-lateral'],
+
+    // Legacy buckets not represented 1:1 in the body map
+    wrists: ['left-hand', 'right-hand'],
+    'left wrist': ['left-hand'],
+    'right wrist': ['right-hand'],
+    feet: ['left-foot-medial', 'left-foot-lateral', 'right-foot-medial', 'right-foot-lateral'],
+  };
+
+  const multi = multiMap[lower];
+  if (multi) return multi;
 
   // Map common location names to region IDs
   const locationMap: Record<string, string> = {

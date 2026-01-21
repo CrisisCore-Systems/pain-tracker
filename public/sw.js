@@ -3,9 +3,11 @@
 // - In production, never cache navigations with cache-first (stale HTML can break module graphs).
 // - Only cache static assets; always fetch fresh HTML.
 
-const SW_VERSION = '1.1.0';
+const SW_VERSION = '1.2.0';
 const CACHE_NAME = `pain-tracker-static-v${SW_VERSION}`;
-const PRECACHE_URLS = ['/manifest.json', '/offline.html'];
+// We precache a minimal "app shell" so offline navigations can still boot the SPA.
+// Important: we still keep navigations network-first; the cached shell is used only as a fallback.
+const PRECACHE_URLS = ['/', '/manifest.json', '/offline.html'];
 
 const STATIC_PATH_PREFIXES = ['/assets/', '/icons/', '/logos/', '/screenshots/'];
 
@@ -30,12 +32,19 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
-      .catch((err) => {
+    (async () => {
+      try {
+        const cache = await caches.open(CACHE_NAME);
+        // Avoid cache.addAll() because one missing asset would reject the whole precache.
+        const results = await Promise.allSettled(PRECACHE_URLS.map((u) => cache.add(u)));
+        const rejected = results.filter((r) => r.status === 'rejected');
+        if (rejected.length) {
+          console.warn('[sw] precache partially failed', rejected.length);
+        }
+      } catch (err) {
         console.warn('[sw] precache failed', err);
-      })
+      }
+    })()
   );
 });
 
@@ -75,7 +84,13 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request).catch(async () => {
         const cache = await caches.open(CACHE_NAME);
-        return (await cache.match('/offline.html')) || (await cache.match('/')) || new Response(null, { status: 504 });
+
+        // If we're offline, prefer booting the SPA from the cached app shell.
+        // This supports direct offline opens of client-side routes (e.g., /pricing).
+        const appShell = await cache.match('/');
+        if (appShell) return appShell;
+
+        return (await cache.match('/offline.html')) || new Response(null, { status: 504 });
       })
     );
     return;

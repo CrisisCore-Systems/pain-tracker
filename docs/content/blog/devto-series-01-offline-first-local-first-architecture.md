@@ -1,6 +1,6 @@
 ---
-title: "Offline-first without a backend: a local-first PWA architecture you can trust"
-description: "A practical walkthrough: deterministic offline behavior, local-first storage layering, and honest trust boundaries (using the Pain Tracker repo as a real example)."
+title: "Offline-first without a backend: building a local-first PWA you can actually trust"
+description: "A practical walkthrough of deterministic offline behavior, layered local storage, and honest trust boundaries—using the Pain Tracker repo as a real, opinionated example."
 tags:
   - pwa
   - typescript
@@ -11,110 +11,152 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-This post uses the open-source **Pain Tracker** repo as a concrete example.
-It’s not medical advice, and it does not claim regulatory compliance.
+_Series:_ [Start here](./devto-series-00-start-here.md) · **Part 1** · [Part 2](./devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](./devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](./devto-series-04-zod-defensive-parsing.md) · [Part 5](./devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](./devto-series-06-exports-as-a-security-boundary.md) · [Part 7](./devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](./devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](./devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](./devto-series-10-maintaining-truthful-docs-over-time.md)
 
-If you want to follow along in code, these docs are the fastest entry points:
+This post uses the open-source Pain Tracker repo as a concrete reference point.
+It’s not medical advice, and it doesn’t pretend to be compliant with any specific regulation.
 
-- Architecture overview: [docs/engineering/ARCHITECTURE.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/ARCHITECTURE.md)
-- Local data + migrations: [docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
+I’m deliberately grounding this in real code, because “offline-first” means very little unless you can point to exactly where things break… and where they don’t.
 
-Most “offline-capable” apps really mean:
+If you want to follow along, these two docs will get you oriented fast:
 
-> The UI loads without internet, but your work is one network glitch away from
-> disappearing.
+Architecture overview:
+https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/ARCHITECTURE.md
 
-For pain tracking (and other sensitive journaling), that’s not just annoying. It
-changes behavior. People stop recording what matters *when it matters*.
+Local data + migrations:
+https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md
 
-## What we’re building (in plain English)
+Most apps that claim to be “offline-capable” are really saying this:
 
-- **Useful offline by default** (even with bad connectivity)
-- **Local-first data handling** (data stays on-device unless the user exports)
-- **Truthful trust boundaries** (optional integrations are separate and explicit)
+The UI loads without internet, but your data is still one bad request away from disappearing.
 
-### Definitions (so we don’t talk past each other)
+For casual apps, that’s annoying.
+For pain tracking—or any kind of sensitive journaling—it changes how people behave.
+They stop writing things down when they’re tired, foggy, or already overwhelmed. Which is usually when the data matters most.
 
-- **Offline-capable**: the app shell loads; core workflows might still fail.
-- **Offline-first**: core workflows keep working offline; sync is a bonus.
-- **Local-first**: local storage is the source of truth; sharing is explicit.
+## What this architecture is actually trying to do
 
-## 1) Start with the constraints, not the framework
+In plain terms:
 
-When your data is health-adjacent, your threat model isn’t theoretical.
+- Be useful offline by default, even with flaky or nonexistent connectivity
 
-- Lost/stolen devices are plausible.
-- Shoulder surfing is plausible.
-- “Accidental oversharing” via exports is plausible.
-- A compromised OS is possible, but you can’t honestly claim to solve it.
+- Keep data local-first, meaning it stays on the device unless the user explicitly exports it
 
-So the architecture has to be clear about what it *does* protect and what it *doesn’t*.
+- Draw honest trust boundaries, instead of quietly pretending integrations don’t change the risk profile
 
-That’s also why I like repo-grounded writing: you can point at the exact boundary.
+## Terms (so we’re aligned)
 
-## 2) The core pattern: a local-first loop
+These get used interchangeably a lot, and they really shouldn’t be:
 
-Pain Tracker is built around a loop that does not depend on a backend:
+- **Offline-capable:** the app loads, but core workflows may silently fail
 
-1. User input
-2. State update
-3. Persist locally
-4. Derive analytics locally
-5. Export only when the user chooses
+- **Offline-first:** the core workflows work offline; syncing is optional
 
-This design shows up repeatedly in the repo docs and persistence code.
+- **Local-first:** local storage is authoritative; sharing is a conscious act
 
-If you take only one idea from this post, take this:
+If those distinctions don’t show up in the architecture, they’re just marketing.
 
-> Your offline story is only as strong as your local “source of truth”.
+1) Start with constraints, not frameworks
 
-### Offline-first needs more than `localStorage`
+When your data is even adjacent to health, your threat model stops being theoretical.
 
-If your offline story is “we save some state to localStorage,” you’ll hit limits:
+You don’t have to be paranoid to acknowledge that:
 
-- size limits
-- lack of indexing/querying
-- hard-to-migrate schemas
-- higher risk of accidental plaintext exposure
+Devices get lost or stolen
 
-A more durable approach is a layered model:
+People look over shoulders
 
-- local state cache for UI responsiveness
-- IndexedDB for durable, queryable offline storage
-- an encryption boundary for sensitive at-rest protection
+Exports get emailed, uploaded, forwarded
 
-Pain Tracker documents these layers explicitly:
+OS compromise is possible—and pretending otherwise is dishonest
 
-- Zustand persisted store (app state)
-- Offline IndexedDB storage (durability + sync queue)
-- Vault-backed encrypted IndexedDB (encrypted at rest)
+The goal isn’t to “solve everything.”
+It’s to be clear about what you do protect, what you don’t, and where the boundary lives.
 
-See: [docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
+That’s why I like repo-grounded writing. It forces you to stop hand-waving and say:
+this line, this file, this decision—this is the boundary.
 
-That “layers + migrations” framing matters because it lets you evolve the app without
-silently dropping user data.
+2) The core loop: local-first, end to end
 
-## 3) Service workers: deterministic beats clever
+Pain Tracker is built around a loop that never requires a backend to function:
 
-Service workers can make a PWA feel magical, or unreliable.
+User input
 
-A surprisingly sane default for a health-ish PWA is:
+State update
 
-- **Network-first for navigations** (so deploys update cleanly)
-- **Cache static assets** (so the app shell loads and remains fast)
-- **Versioned caches** (so old assets are garbage collected predictably)
+Persist locally
 
-Pain Tracker’s service workers are intentionally minimal and versioned.
-That makes failure modes understandable and debuggable.
+Derive insights locally
 
-The intent is spelled out right in the service worker source:
+Export only when the user decides to
 
-- Base scope: [public/sw.js](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js)
-- GitHub Pages base path: [public/pain-tracker/sw.js](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/pain-tracker/sw.js)
+That pattern shows up everywhere—in the docs, in the persistence layer, and in how features are added.
 
-Here’s the key behavior (short excerpt from the fetch handler):
+If there’s one thing worth taking from this post, it’s this:
 
-```js
+Your offline story lives or dies on what you treat as authoritative locally.
+
+Why localStorage isn’t enough
+
+A lot of “offline” apps quietly mean:
+“We dump some JSON into localStorage and hope nothing goes wrong.”
+
+That breaks down quickly:
+
+tight size limits
+
+no meaningful querying
+
+painful schema changes
+
+accidental plaintext exposure
+
+A more resilient approach is layered on purpose:
+
+a local state cache for UI responsiveness
+
+IndexedDB for durable, queryable storage
+
+a clear encryption boundary for sensitive data at rest
+
+Pain Tracker documents those layers explicitly:
+
+Zustand persisted store (UI state)
+
+Offline IndexedDB (durability, ordering, sync queue)
+
+Vault-backed encrypted IndexedDB (at-rest protection)
+
+See:
+https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md
+
+The migrations piece matters more than people think. It’s the difference between evolving an app and silently corrupting someone’s history.
+
+3) Service workers: boring is a feature
+
+Service workers are one of those tools that can feel magical—or quietly betray you.
+
+For a health-adjacent PWA, I’ve found a boring setup is usually the most honest:
+
+Network-first for navigations, so deploys don’t get stuck
+
+Cached static assets, so the shell loads reliably
+
+Versioned caches, so you know exactly what gets invalidated
+
+Pain Tracker’s service workers are intentionally minimal.
+That’s not a lack of ambition—it’s risk management.
+
+You can see the intent directly in the source:
+
+Base scope:
+https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js
+
+GitHub Pages pathing:
+https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/pain-tracker/sw.js
+
+Key behavior (trimmed):
+
 // Network-first for navigations to avoid stale HTML.
 if (isNavigationRequest(event.request)) {
   event.respondWith(
@@ -129,76 +171,82 @@ if (isNavigationRequest(event.request)) {
   );
   return;
 }
-```
 
-If you’re building your own, aim for behavior you can explain in one paragraph.
 
-## 4) Exports are a trust boundary
+If you can’t explain your service worker behavior to a tired user in a few sentences, it’s probably too clever.
 
-In local-first apps, exports are where privacy breaks *by user choice*.
-That’s good, but it’s also where mistakes happen.
+4) Exports are where trust changes
 
-Practical patterns:
+In a local-first app, exports are the moment privacy intentionally breaks.
 
-- Make exports explicit and deliberate (no background export).
-- Prefer structured exports that minimize reconstructive free text.
-- Keep a minimal audit trail that proves *an export happened* without logging the content.
+That’s not a flaw. It’s a boundary.
 
-Even if your app never sends data to a server, exports can still leak data if you
-don’t treat them as a boundary.
+Some patterns that help avoid regret later:
 
-## 5) Accessibility and trauma-informed UX are architecture
+No background or automatic exports
 
-For pain tracking, you’re often designing for:
+Structured formats over free-form dumps
 
-- cognitive load
-- motor impairment
-- fatigue
-- “I need this to work right now” moments
+A minimal audit signal that an export happened—without storing the content
 
-That means:
+Even apps with zero backends can leak data if exports aren’t treated with care.
 
-- keyboard reachability
-- visible focus
-- gentle error states
-- progressive disclosure
+5) Accessibility and trauma-aware UX aren’t “polish”
 
-If the UX only works when someone is having a good day, it’s not really a health tool.
+For pain tracking, you’re often designing for people who are:
 
-## 6) How to verify the claims (quick checks)
+exhausted
 
-You can sanity-check the offline/PWA behavior without reading the whole codebase.
+cognitively overloaded
 
-### Run locally
+dealing with motor limitations
 
-```powershell
+trying to log something right now before they forget
+
+That pushes requirements upstream:
+
+keyboard reachability isn’t optional
+
+focus states need to be obvious
+
+error states should be calm, not scolding
+
+disclosure should be progressive
+
+If your app only works on someone’s good days, it’s not a health tool. It’s a demo with better branding.
+
+6) Verifying the claims (without trusting me)
+
+You don’t have to take any of this on faith.
+
+Run it locally
 npm install
 npm run dev
-```
 
-### Confirm the service worker registers
+Check the service worker
 
-- Open DevTools → Application → Service Workers
-- Look for the app service worker, and a cache named like `pain-tracker-static-v...`
+DevTools → Application → Service Workers
 
-### Confirm offline fallback works
+Look for a cache like pain-tracker-static-v...
 
-- In DevTools → Network, enable Offline
-- Refresh a route and confirm you get the offline fallback page
+Test offline behavior
 
-### Confirm there are automated checks
+DevTools → Network → Offline
 
-There’s an E2E test suite that exercises PWA expectations:
+Refresh a route and confirm the offline fallback loads
 
-- [e2e/tests/pwa-background-sync.spec.ts](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/e2e/tests/pwa-background-sync.spec.ts)
+Look for automated coverage
 
-## What’s next
+There’s an E2E suite exercising PWA expectations:
 
-In Part 2, we’ll go deeper into the storage layers and why “vault locked vs
-unlocked” state matters for avoiding accidental restoration of sensitive state.
+https://github.com/CrisisCore-Systems/pain-tracker/blob/main/e2e/tests/pwa-background-sync.spec.ts
+
+What’s next
+
+Part 2 goes deeper into the storage layers—specifically why vault locked vs unlocked state matters if you want to avoid accidentally restoring sensitive data into memory.
+
+If you’re building something in this space, I’m genuinely curious what constraints you’re dealing with—offline-only, regulated environments, multi-device sync, or something messier. Those constraints end up shaping architecture far more than any framework decision ever does.
 
 ---
 
-If you’re building something similar, I’d love to hear the constraints you’re working
-under (offline? regulated? multi-device?) — those shape the architecture more than
-any framework choice.
+Next: [Part 2 — Three storage layers (state cache vs offline DB vs encrypted vault)](./devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)

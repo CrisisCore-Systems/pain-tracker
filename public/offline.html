@@ -5,33 +5,183 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pain Tracker - Offline</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin:0; padding:2rem; background:#f1f5f9; color:#0f172a; }
-    .card { max-width:600px; margin:0 auto; background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:2rem; box-shadow:0 4px 12px -2px rgba(0,0,0,0.06); }
-    h1 { font-size:1.5rem; margin-top:0; }
-    p { line-height:1.5; }
-    ul { padding-left:1.2rem; }
-    .status { display:inline-block; background:#e0f2fe; color:#0369a1; padding:.25rem .6rem; border-radius:1rem; font-size:.75rem; font-weight:600; letter-spacing:.5px; }
-    .actions { margin-top:1.5rem; display:flex; gap:.75rem; flex-wrap:wrap; }
-    a.button, button { text-decoration:none; background:#0284c7; color:#fff; padding:.65rem 1rem; border-radius:8px; border:none; cursor:pointer; font-size:.9rem; font-weight:500; display:inline-flex; align-items:center; gap:.4rem; }
-    a.button.secondary, button.secondary { background:#475569; }
-    footer { margin-top:2rem; font-size:.75rem; color:#64748b; text-align:center; }
+    :root {
+      --bg: #0b1220;
+      --card: rgba(2, 6, 23, 0.62);
+      --border: rgba(148, 163, 184, 0.22);
+      --text: #e2e8f0;
+      --muted: rgba(226, 232, 240, 0.72);
+      --accent: #38bdf8;
+      --accent2: #22c55e;
+      --warn: #fb923c;
+    }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+      margin:0;
+      padding:2rem 1rem;
+      background: radial-gradient(1200px 600px at 20% 20%, rgba(56, 189, 248, 0.18), transparent 60%),
+                  radial-gradient(1000px 700px at 80% 70%, rgba(34, 197, 94, 0.14), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.25rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      backdrop-filter: blur(10px);
+    }
+    .top {
+      display:flex;
+      gap: 1rem;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: .25rem 0 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    h1 { font-size: 1.5rem; margin: 0; letter-spacing: -.01em; }
+    h2 { font-size: 1.1rem; margin: 1.5rem 0 .75rem; }
+    p { line-height: 1.55; color: var(--muted); margin: .5rem 0; }
+    a { color: var(--text); }
+    .status {
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      background: rgba(251, 146, 60, 0.12);
+      border: 1px solid rgba(251, 146, 60, 0.35);
+      color: rgba(255, 237, 213, 0.95);
+      padding: .25rem .65rem;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .actions { display:flex; gap:.75rem; flex-wrap:wrap; }
+    button, a.button {
+      text-decoration:none;
+      background: linear-gradient(135deg, rgba(56,189,248,0.95), rgba(2,132,199,0.95));
+      color:#001018;
+      padding: .7rem 1rem;
+      border-radius: 12px;
+      border: none;
+      cursor:pointer;
+      font-size: .95rem;
+      font-weight: 700;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:.45rem;
+      min-height: 44px;
+    }
+    button.secondary, a.button.secondary {
+      background: rgba(148,163,184,0.14);
+      border: 1px solid rgba(148,163,184,0.28);
+      color: var(--text);
+    }
+    .grid { display:grid; grid-template-columns: 1fr; gap: .75rem; }
+    @media (min-width: 760px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .panel {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem;
+    }
+    .kicker { color: rgba(226,232,240,0.92); font-weight: 700; }
+    .bullets { margin: .75rem 0 0; padding-left: 1.1rem; color: var(--muted); }
+    .pricing { display:grid; grid-template-columns: 1fr; gap: .75rem; }
+    @media (min-width: 900px) { .pricing { grid-template-columns: 1fr 1fr 1fr; } }
+    .tier { background: rgba(2,6,23,0.45); border: 1px solid var(--border); border-radius: 16px; padding: 1rem; }
+    .tier h3 { margin: 0 0 .5rem; font-size: 1rem; }
+    .price { font-size: 1.35rem; font-weight: 800; color: rgba(226,232,240,0.95); }
+    .tag { display:inline-block; margin-left: .5rem; font-size: .7rem; font-weight: 800; letter-spacing: .04em; padding: .18rem .5rem; border-radius: 999px; border: 1px solid rgba(34,197,94,0.35); background: rgba(34,197,94,0.12); color: rgba(187,247,208,0.95); }
+    footer { margin-top: 1.2rem; font-size: .8rem; color: rgba(226,232,240,0.6); text-align:center; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <span class="status">OFFLINE MODE</span>
-    <h1>You are offline</h1>
-    <p>Don't worry—your recent pain entries and settings are stored locally. They'll sync once you're back online.</p>
-    <ul>
-      <li>New entries will be queued safely</li>
-      <li>Analytics may be limited until reconnection</li>
-      <li>Emergency resources may require a connection</li>
-    </ul>
-    <div class="actions">
-      <button onclick="location.reload()">Retry Connection</button>
-      <a class="button secondary" href="./">Go to App</a>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div>
+          <div class="status">Offline mode</div>
+          <h1>Pain Tracker</h1>
+          <p>
+            You're offline right now. This page is a lightweight fallback so you still have something useful instead of a blank error.
+          </p>
+        </div>
+        <div class="actions">
+          <button onclick="location.reload()">Retry</button>
+          <a class="button secondary" href="./">Open app</a>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="panel">
+          <div class="kicker">What still works offline</div>
+          <ul class="bullets">
+            <li>If the app shell is cached, you can keep logging and reviewing entries.</li>
+            <li>Your device stores data locally by design; reconnection isn’t required for basic use.</li>
+            <li>Some optional features (like live integrations) may be limited until you’re back online.</li>
+          </ul>
+          <p>
+            Tip: if you want full offline behavior, open the app once while online (or install it) so your browser can cache the app shell.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="kicker">Privacy-first by default</div>
+          <p>
+            Pain Tracker is designed to run locally. Nothing needs a backend just to view your history.
+          </p>
+          <p>
+            This offline fallback does not include any personal data.
+          </p>
+        </div>
+      </div>
+
+      <h2>Pricing (offline snapshot)</h2>
+      <p>
+        Live pricing/checkout may not be available offline. This is a static summary so you can still understand the tiers.
+      </p>
+      <div class="pricing">
+        <div class="tier">
+          <h3>Free</h3>
+          <div class="price">$0</div>
+          <ul class="bullets">
+            <li>Track entries locally</li>
+            <li>Basic review + trends</li>
+            <li>Privacy-first defaults</li>
+          </ul>
+        </div>
+        <div class="tier">
+          <h3>Pro <span class="tag">Most used</span></h3>
+          <div class="price">See online</div>
+          <ul class="bullets">
+            <li>Advanced insights + dashboards</li>
+            <li>Export workflows</li>
+            <li>More customization</li>
+          </ul>
+        </div>
+        <div class="tier">
+          <h3>Teams / Clinic</h3>
+          <div class="price">Contact</div>
+          <ul class="bullets">
+            <li>Shared workflows (as configured)</li>
+            <li>Admin controls (as configured)</li>
+            <li>Deployment support</li>
+          </ul>
+        </div>
+      </div>
+
+      <footer>
+        Offline fallback page — reconnect to load the full app.
+      </footer>
     </div>
-    <footer>Health data is stored locally with enhanced privacy safeguards.</footer>
   </div>
 </body>
 </html>

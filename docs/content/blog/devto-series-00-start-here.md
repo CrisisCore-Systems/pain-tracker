@@ -10,12 +10,15 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-This is the index post for a Dev.to series based on the open-source **Pain Tracker**
-repo.
+If you’ve ever shipped something “offline-capable” and then watched it quietly fall apart the first time someone had spotty internet… yeah. Same.
 
-- It’s not medical advice.
-- It does not claim regulatory compliance.
-- It focuses on *what the code does* and the tradeoffs it makes.
+This is the index post for a Dev.to series based on the open-source **Pain Tracker** repo.
+
+A quick boundary check before we start:
+
+- Not medical advice.
+- Not a regulatory compliance claim.
+- This series sticks to *what the code does* (and what it does not do).
 
 ## What this series is (and isn’t)
 
@@ -31,6 +34,15 @@ It is **not**:
 ## Start with Part 1
 
 - Part 1: [Offline-first without a backend: a local-first PWA architecture you can trust](./devto-series-01-offline-first-local-first-architecture.md)
+- Part 2: [Three storage layers (state cache vs offline DB vs encrypted vault)](./devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
+- Part 3: [Service workers that don’t surprise you](./devto-series-03-service-workers-that-dont-surprise-you.md)
+- Part 4: [Zod + defensive parsing](./devto-series-04-zod-defensive-parsing.md)
+- Part 5: [Trauma-informed UX + accessibility as architecture](./devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
+- Part 6: [Exports as a security boundary](./devto-series-06-exports-as-a-security-boundary.md)
+- Part 7: [WorkSafeBC-oriented workflows (careful language)](./devto-series-07-worksafebc-oriented-workflows-careful-language.md)
+- Part 8: [Analytics without surveillance (explicit consent)](./devto-series-08-analytics-without-surveillance-explicit-consent.md)
+- Part 9: [Quality gates that earn trust](./devto-series-09-quality-gates-that-earn-trust.md)
+- Part 10: [Maintaining truthful docs over time](./devto-series-10-maintaining-truthful-docs-over-time.md)
 
 ## Proof-first reading list (repo anchors)
 

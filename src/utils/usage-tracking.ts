@@ -22,6 +22,58 @@ export interface ExportActivity {
   recordCount: number;
 }
 
+function getPainBucket(level: unknown): 'mild' | 'moderate' | 'severe' | 'extreme' | undefined {
+  if (typeof level !== 'number' || !Number.isFinite(level)) return undefined;
+  if (level <= 2) return 'mild';
+  if (level <= 5) return 'moderate';
+  if (level <= 8) return 'severe';
+  return 'extreme';
+}
+
+function sanitizeUsageMetadata(metadata?: Record<string, unknown>): Record<string, unknown> | undefined {
+  if (!metadata) return undefined;
+
+  const out: Record<string, unknown> = {};
+
+  // Drop / reduce sensitive fields (Class A) that should not live in plaintext localStorage.
+  for (const [key, value] of Object.entries(metadata)) {
+    if (
+      key === 'notes' ||
+      key === 'note' ||
+      key === 'region' ||
+      key === 'bodyRegion' ||
+      key === 'body_region' ||
+      key === 'mood' ||
+      key === 'moodLevel' ||
+      key === 'mood_level' ||
+      key === 'pain' ||
+      key === 'painLevel' ||
+      key === 'pain_level'
+    ) {
+      continue;
+    }
+
+    if (key === 'symptoms' && Array.isArray(value)) {
+      out.symptomCount = value.length;
+      continue;
+    }
+    if (key === 'triggers' && Array.isArray(value)) {
+      out.triggerCount = value.length;
+      continue;
+    }
+
+    out[key] = value;
+  }
+
+  // If the caller provided a raw pain level, keep only a coarse bucket.
+  const painBucket = getPainBucket(metadata.painLevel ?? metadata.pain_level ?? metadata.pain);
+  if (painBucket) {
+    out.painBucket = painBucket;
+  }
+
+  return Object.keys(out).length ? out : undefined;
+}
+
 // ============================================
 // LOCAL STORAGE KEYS
 // ============================================
@@ -65,11 +117,12 @@ export function trackUsageEvent(
   metadata?: Record<string, unknown>
 ): void {
   const events = getStoredData<UsageEvent[]>(STORAGE_KEYS.USAGE_EVENTS, []);
+  const safeMetadata = sanitizeUsageMetadata(metadata);
   const event: UsageEvent = {
     type,
     category,
     timestamp: Date.now(),
-    metadata,
+    metadata: safeMetadata,
   };
 
   // Keep last 500 events to avoid storage bloat

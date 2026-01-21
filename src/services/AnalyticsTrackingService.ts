@@ -15,10 +15,10 @@ declare global {
   }
 }
 
+import { trackGA4EventName } from '../analytics/ga4-events';
 import { isAnalyticsAllowed } from '../analytics/analytics-gate';
 
-// Check if analytics is available
-function isAnalyticsEnabled(): boolean {
+export function isAnalyticsEnabled(): boolean {
   return (
     typeof window !== 'undefined' &&
     typeof window.gtag === 'function' &&
@@ -27,23 +27,11 @@ function isAnalyticsEnabled(): boolean {
   );
 }
 
-// Safe gtag wrapper
-function trackEvent(
-  eventName: string,
-  params: Record<string, string | number | boolean | undefined>
-): void {
-  if (!isAnalyticsEnabled()) return;
-  
-  try {
-    // Filter out undefined values
-    const cleanParams = Object.fromEntries(
-      Object.entries(params).filter(([, v]) => v !== undefined)
-    );
-    
-    window.gtag?.('event', eventName, cleanParams);
-  } catch (e) {
-    console.debug('[Analytics] Event tracking failed:', e);
-  }
+// Canonical sender (single gating + privacy rules).
+function trackEvent(eventName: string, params: Record<string, string | number | boolean | undefined>): void {
+  // Filter out undefined values
+  const cleanParams = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined));
+  trackGA4EventName(eventName, cleanParams);
 }
 
 // ============================================

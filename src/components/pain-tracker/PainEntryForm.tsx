@@ -421,7 +421,14 @@ export function PainEntryForm({ onSubmit }: PainEntryFormProps) {
       }
 
       trackUsageEvent('pain_entry_logged', 'pain_tracking', {
-        painLevel: formData.baselineData.pain,
+        painBucket:
+          formData.baselineData.pain <= 2
+            ? 'mild'
+            : formData.baselineData.pain <= 5
+              ? 'moderate'
+              : formData.baselineData.pain <= 8
+                ? 'severe'
+                : 'extreme',
         locationCount,
         symptomCount,
       });

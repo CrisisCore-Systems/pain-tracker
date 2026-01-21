@@ -103,16 +103,18 @@
 .glass-card-premium {
   background: linear-gradient(
     145deg,
-    rgba(30, 41, 59, 0.9) 0%,
-    rgba(15, 23, 42, 0.95) 100%
+    rgba(30, 41, 59, 0.94) 0%,
+    rgba(15, 23, 42, 0.98) 100%
   );
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
   border-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  background-clip: padding-box;
   box-shadow: 
     0 25px 50px -12px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -122,7 +124,6 @@
   box-shadow: 
     0 35px 60px -15px rgba(0, 0, 0, 0.6),
     0 0 80px rgba(14, 165, 233, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
   border-color: rgba(56, 189, 248, 0.2);
 }
