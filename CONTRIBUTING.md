@@ -3,16 +3,18 @@
 ## Star this repo if...
 
 - You believe healthcare software should be privacy-first by default.
-- You want a local-first, offline-capable pain tracker that doesn’t rely on surveillance.
-- You’ve lived through medical trauma, housing instability, disability, or burnout — and you want tools built with dignity.
+- You want a local-first, offline-capable pain tracker that prioritizes autonomy over surveillance.
+- You've experienced medical trauma, housing instability, disability, or burnout — and you believe technology should be built with dignity and respect for lived experience.
 
-We love your input! We want to make contributing to Pain Tracker as easy and transparent as possible, whether it's:
+We value your input! We want to make contributing to Pain Tracker as welcoming, supportive, and transparent as possible, whether you're:
 
-- Reporting a bug
+- Reporting an issue
 - Discussing the current state of the code
 - Submitting a fix
 - Proposing new features
 - Becoming a maintainer
+
+**Note:** We recognize that chronic pain, disability, and life circumstances can affect your availability and energy. Please contribute at your own pace—your wellbeing comes first.
 
 ## 🚀 Local Development in 5 Minutes
 
@@ -107,7 +109,7 @@ rm -rf node_modules package-lock.json
 npm install
 ```
 
-**Tests failing?**
+**Issues affecting your energy or cognitive function today?**
 ```bash
 # Ensure you're on Node.js 20
 node --version  # Should show v20.x.x
@@ -116,6 +118,8 @@ node --version  # Should show v20.x.x
 export NODE_OPTIONS="--max-old-space-size=4096"
 npm run test
 ```
+
+**Taking a break is valid.** Contributing when your pain levels are manageable is more sustainable than pushing through.
 
 **Need help?**
 - Check the [README.md](README.md) for detailed documentation
@@ -148,20 +152,21 @@ For security-critical changes (crypto/key handling/audit semantics), request hum
 ## Any contributions you make will be under the MIT Software License
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
 
-## Report bugs using Github's [issue tracker](https://github.com/crisiscore-systems/pain-tracker/issues)
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/crisiscore-systems/pain-tracker/issues/new); it's that easy!
+## Report issues using Github's [issue tracker](https://github.com/crisiscore-systems/pain-tracker/issues)
+We use GitHub issues to track public issues and feature requests. Report an issue by [opening a new issue](https://github.com/crisiscore-systems/pain-tracker/issues/new)—and please be as detailed as you can.
 
-## Write bug reports with detail, background, and sample code
+**Note:** If you're experiencing a security issue, please see our [SECURITY.md](SECURITY.md) for responsible disclosure guidelines.
 
-**Great Bug Reports** tend to have:
+## Write issue reports with detail, background, and context
 
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give sample code if you can.
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
+**Helpful Issue Reports** tend to include:
+
+- A clear summary and background context
+- Steps to reproduce (be as specific as possible)
+  - Sample code or screenshots help immensely
+- What you expected to happen
+- What actually happened
+- Notes (your thoughts on why this might be happening, or approaches you've already tried)
 
 ## License
 By contributing, you agree that your contributions will be licensed under its MIT License.
