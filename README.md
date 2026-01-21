@@ -15,7 +15,7 @@
 [![Smoke Tests Workflow Status](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/smoke.yml)
 [![Codecov Code Coverage Report](https://codecov.io/gh/CrisisCore-Systems/pain-tracker/branch/main/graph/badge.svg)](https://codecov.io/gh/CrisisCore-Systems/pain-tracker)
 
-> **A security-first, offline-capable chronic pain tracking application built with empathy and clinical-minded design.**
+> **A security-first, offline-capable chronic pain tracking application built with empathy and person-centered design.**
 
 Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinician-focused exports and WorkSafeBC-oriented reporting utilities.
 
@@ -31,9 +31,12 @@ Some integrations (for example weather correlation, clinic auth, and payments) r
 
 ## 🎯 **Vision & Mission**
 
-**Vision:** Transform chronic pain management through technology that respects patient privacy while delivering clinically useful insights.
+**Mission Statement:**  
+Pain Tracker empowers people living with chronic pain to reclaim autonomy over their health data through a privacy-first, trauma-informed tracking system that honors lived experience while producing clinically useful insights—because your pain is real, your data is yours, and your story deserves to be heard on your terms.
 
-**Mission:** Bridge the gap between patient experience and clinical understanding through secure, accessible, and clinically useful pain tracking.
+**Vision:** Transform chronic pain management through technology that respects individual privacy while delivering clinically useful insights.
+
+**Mission:** Bridge the gap between lived experience and clinical understanding through secure, accessible, and empowering pain tracking.
 
 ---
 
@@ -102,7 +105,7 @@ Pain Tracker includes fibromyalgia-specific tracking and analytics, including WP
 - ✅ **Medical Trauma Awareness**: Designed for those who've faced diagnostic delays and invalidation
 - ✅ **Gentle Workflows**: Progressive disclosure to reduce cognitive load during "fibro fog"
 - ✅ **Privacy Protection**: Local-first storage; sharing is user-controlled via exports
-- ✅ **Empathy-Driven Analytics**: Validates patient experience through biopsychosocial tracking
+- ✅ **Empathy-Driven Analytics**: Validates lived experience through biopsychosocial tracking
 
 ### 📋 **Clinical & Claims Support**
 - ✅ **WorkSafeBC-Oriented Exports**: Templates and exports to support claims/report workflows
@@ -539,7 +542,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 **Acknowledgments**
 
-- **Pain Management Community**: For insights and validation
+- **People Living with Chronic Pain**: For sharing insights and validating our approach
 - **Healthcare Professionals**: For clinical guidance and feedback  
 - **Security Community**: For vulnerability research and hardening advice
 - **Open Source Contributors**: For the foundational technologies that make this possible
