@@ -53,7 +53,7 @@ A reference implementation and documentation for clinic portal authentication (m
 - **Named device sessions** - "My Laptop", "Office Desktop", etc.
 - **Session listing** - View all active sessions
 - **Selective logout** - Logout current session or all sessions
-- **Automatic token refresh** - Seamless session restoration
+- **Automatic token refresh** - Smooth session restoration
 
 ### 📊 Audit & Compliance
 - **Complete audit trail** - Every login, logout, and authentication event

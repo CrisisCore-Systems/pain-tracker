@@ -138,7 +138,7 @@ This design removes entire risk classes:
 * no vendor unilateral policy shift that repurposes user logs
 * no bulk dataset to monetize
 
-The trade-offs are real: no automatic multi-device sync, no seamless EHR integration, and no vendor-managed backups. PainTracker.ca chooses explicit user-controlled export as the ethical default.
+The trade-offs are real: no automatic multi-device sync, no easy EHR integration, and no vendor-managed backups. PainTracker.ca chooses explicit user-controlled export as the ethical default.
 
 ### C. Trauma-informed and crisis-aware UX (local adaptation without spying)
 

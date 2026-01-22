@@ -164,7 +164,7 @@ Imagine you're hiking in the mountains, miles from cell service, and a
 severe pain flare hits. You need to log it—location, intensity, triggers—
 but your phone shows "No Internet Connection." With most health apps, 
 you're out of luck. But what if your app worked perfectly offline, 
-syncing seamlessly when you regain connectivity? That's the promise of 
+syncing smoothly when you regain connectivity? That's the promise of 
 offline-first Progressive Web Apps (PWAs).
 ```
 

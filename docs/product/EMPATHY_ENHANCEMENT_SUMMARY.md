@@ -162,7 +162,7 @@ The Quantified Empathy Metrics system has been completely transformed from a bas
 - **Research contribution** advancing understanding of human empathy development
 
 ### For the Field
-- **Innovative approach** to empathy measurement and development
+- **Novel approach** to empathy measurement and development
 - **AI ethics demonstration** showing responsible use of emotional intelligence
 - **Open source contribution** providing foundations for empathy-focused applications
 - **Research platform** for studying empathy patterns and development strategies

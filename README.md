@@ -190,7 +190,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - ✅ **Hardening Tooling**: CSP configuration + security scans/scripts (CodeQL/SAST/secret scanning)
 - ✅ **Audit/Event Logging**: Minimal, non-reconstructive audit/event logging patterns
 - ✅ **Compliance-Oriented Controls**: HIPAA-aligned controls (not a compliance claim)
-- 🔄 **Full Encryption**: Enterprise-grade encrypted IndexedDB layer in progress
+- 🔄 **Full Encryption**: Production-ready encrypted IndexedDB layer in progress
 
 ### 💊 **Tracking**
 - ✅ **Medication Management**: Dosage tracking and side effect monitoring

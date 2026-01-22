@@ -825,7 +825,7 @@ interface FibromyalgiaAssessment {
 - **Comments**: 50+ meaningful discussions
 
 ### Qualitative Goals
-- Position as thought leader in healthcare PWA development
+- Position as expert in healthcare PWA development
 - Build credibility in trauma-informed design community
 - Attract contributors to open-source project
 - Generate interest from healthcare organizations

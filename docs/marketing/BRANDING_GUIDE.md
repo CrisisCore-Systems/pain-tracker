@@ -144,7 +144,7 @@
 1. **Clinical Excellence**: "Medical-grade pain tracking"
 2. **AI Innovation**: "Predictive insights that matter"
 3. **Patient-Centered**: "Designed by and for pain patients"
-4. **Professional Integration**: "Seamless healthcare workflows"
+4. **Professional Integration**: "Smooth healthcare workflows"
 
 ### Tone Guidelines
 - **Do**: Use clear, supportive language

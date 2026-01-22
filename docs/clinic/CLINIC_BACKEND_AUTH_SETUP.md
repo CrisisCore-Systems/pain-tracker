@@ -336,7 +336,7 @@ CREATE TABLE clinician_sessions (
 
 ## 🤝 Integration with Existing Code
 
-The authentication system integrates seamlessly with your existing code:
+The authentication system integrates smoothly with your existing code:
 
 - **ClinicAuthContext** - Already updated to use backend
 - **ClinicProtectedRoute** - Works with new auth system

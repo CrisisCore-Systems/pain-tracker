@@ -139,7 +139,7 @@ export function FeaturesSection() {
     {
       icon: Stethoscope,
       title: 'FHIR Compliance',
-      description: 'Full HL7 FHIR R4 compliance for seamless healthcare system integration.',
+      description: 'Full HL7 FHIR R4 compliance for easy healthcare system integration.',
       color: 'blue',
     },
     {

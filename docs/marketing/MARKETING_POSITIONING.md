@@ -235,7 +235,7 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 
 ## 📢 Content Marketing Strategy
 
-### Blog Topics (SEO + Thought Leadership)
+### Blog Topics (SEO + Expertise)
 
 1. **"The Complete Guide to WorkSafeBC Claim Filing in BC (2026)"**
    - Target keyword: "WorkSafeBC claim filing"
@@ -254,7 +254,7 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 
 4. **"Trauma-Informed Care: What Your Healthcare App Should Know"**
    - Target keyword: "trauma-informed healthcare technology"
-   - Position as thought leader
+   - Position as expert
    - Academic citations, expert quotes
 
 5. **"Epic EHR Costs $600/Month. Here's a Free Alternative for Small Clinics"**
@@ -295,7 +295,7 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 **Content Mix:**
 - 40% Industry News (WorkSafeBC updates, pain management research)
 - 30% Case Studies (clinic success stories, time savings)
-- 20% Thought Leadership (trauma-informed care, patient-centered tech)
+- 20% Expertise (trauma-informed care, patient-centered tech)
 - 10% Product Features (clinical tier launches)
 
 **Posting Frequency:** 2-3x/week
@@ -371,7 +371,7 @@ We empower chronic pain survivors with clinical-grade tracking tools while respe
 
 **Tactics:**
 1. Reddit AMA in r/chronicpain, r/WorkersComp
-2. LinkedIn thought leadership posts
+2. LinkedIn expert posts
 3. Email outreach to BC physiotherapy clinics
 4. Open-source announcement (Hacker News, GitHub Trending)
 
