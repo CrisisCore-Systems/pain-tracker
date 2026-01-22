@@ -47,7 +47,7 @@
 - Local-only storage by default
 - **Impact:** Suitable for healthcare data handling
 
-### 3. 💎 Exceptional Code Quality
+### 3. 💎 Strong Code Quality
 - TypeScript-first with 76.1% coverage
 - Automated test suite present (see current test results)
 - Modern architecture (React 18, Zustand, Vite)
@@ -155,7 +155,7 @@
 
 ## 💡 Key Insights
 
-### What Makes This Project Exceptional
+### What Makes This Project Notable
 
 1. **Rare Combination:** Security-first + empathy-driven is unique in healthcare apps
 2. **Technical Excellence:** Strong codebase with automated tests (see `badges/`)
@@ -213,7 +213,7 @@ Features:
 
 **Recommendation:** Deploy to early adopters for beta testing. With focused refinement on identified improvement areas, this can become a strong, privacy-oriented chronic pain tracking tool.
 
-**Rating: 9.1/10** - Exceptional project with clear path to 10/10.
+**Rating: 9.1/10** - Strong project with clear path to 10/10.
 
 ---
 

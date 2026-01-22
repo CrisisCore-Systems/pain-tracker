@@ -15,7 +15,7 @@ Your Pain Tracker platform sits at a unique intersection: **free/privacy-first p
 1. **ManageMyPain** and **PainScale** dominate consumer pain tracking but lack WorkSafeBC integration and are either paywalled or ad-supported
 2. **Curable** targets the mind-body/psychology segment with premium pricing ($5.80–$14.99/month)
 3. **Epic EHR** is prohibitively expensive for small clinics ($100K–$1M setup), creating a gap for affordable clinical tools
-4. **WorkSafeBC** reporting is manual, paper-based, and fragmented—ripe for digital disruption
+4. **WorkSafeBC** reporting is manual, paper-based, and fragmented—ready for digital improvement
 
 ---
 
