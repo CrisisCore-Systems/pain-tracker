@@ -199,7 +199,7 @@ reveals how we built it.
 ## The Dual-Persistence Strategy
 
 Most developers choose either IndexedDB or localStorage. We use both, 
-leveraging their complementary strengths: IndexedDB for durability and 
+using their complementary strengths: IndexedDB for durability and 
 structure, localStorage for speed.
 ```
 

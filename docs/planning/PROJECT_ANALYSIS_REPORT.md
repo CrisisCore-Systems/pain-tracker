@@ -759,7 +759,7 @@ Based on 58KB competitive audit document:
 **Go-to-Market Strategy:**
 1. **Community-driven** - Build user base through patient advocacy
 2. **Clinical partnerships** - Partner with pain clinics for validation
-3. **WorkSafe BC** - Leverage regulatory compliance as differentiator
+3. **WorkSafe BC** - Use regulatory compliance as differentiator
 4. **Open source** - Attract contributors and build trust
 
 ---

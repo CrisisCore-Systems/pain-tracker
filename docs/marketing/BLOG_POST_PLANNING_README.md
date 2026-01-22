@@ -186,7 +186,7 @@ Week 5: Post #5 (Security) + Series Recap
 2. Build credibility in trauma-informed design community
 3. Attract open-source contributors
 4. Generate interest from healthcare organizations
-5. Foster ethical health tech discussions
+5. Encourage ethical health tech discussions
 
 ---
 

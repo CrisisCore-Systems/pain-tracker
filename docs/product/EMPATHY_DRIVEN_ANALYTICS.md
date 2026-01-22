@@ -209,7 +209,7 @@ function CustomAnalyticsDashboard({ entries }: { entries: PainEntry[] }) {
 
 ## Conclusion
 
-The Empathy-Driven Analytics system represents a new paradigm in health technology—one that honors the full human experience of living with chronic conditions. By focusing on validation, celebration, agency, and dignity, we create tools that not only track health metrics but actively support the emotional and psychological wellbeing of users.
+The Empathy-Driven Analytics system represents a thoughtful approach to health technology—one that honors the full human experience of living with chronic conditions. By focusing on validation, celebration, agency, and dignity, we create tools that not only track health metrics but actively support the emotional and psychological wellbeing of users.
 
 This system recognizes that healing and wellness involve more than just reducing symptoms—they require feeling heard, understood, empowered, and celebrated for the courage it takes to face each day with chronic pain.
 

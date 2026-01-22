@@ -829,7 +829,7 @@ interface FibromyalgiaAssessment {
 - Build credibility in trauma-informed design community
 - Attract contributors to open-source project
 - Generate interest from healthcare organizations
-- Foster discussions around ethical health tech
+- Encourage discussions around ethical health tech
 
 ---
 
