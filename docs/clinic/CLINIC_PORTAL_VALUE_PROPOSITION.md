@@ -385,7 +385,7 @@ We've built a clinic portal that healthcare providers will **genuinely want to u
 4. **Provides AI-powered insights** (evidence-based decisions)
 5. **Looks professional** (medical-grade UI/UX)
 
-This isn't just a "nice to have" - it's a **game-changer** for busy clinical practices.
+This isn't just a "nice to have" - it's a **significant improvement** for busy clinical practices.
 
 ---
 

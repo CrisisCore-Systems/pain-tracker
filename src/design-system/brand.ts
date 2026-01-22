@@ -143,7 +143,7 @@ export const brand = {
     personality: [
       'Trustworthy and medical-grade reliable',
       'Empathetic to pain experiences',
-      'Innovative with cutting-edge technology',
+      'Modern and innovative technology',
       'Accessible and user-friendly',
       'Evidence-based and scientific',
     ],

@@ -343,7 +343,7 @@ Learn more about our security →"
 
 2. "Spent hours filling out WorkSafe BC forms? There's a better way. Track your pain naturally, generate perfect forms automatically."
 
-3. "Trauma-informed design meets cutting-edge technology. Pain tracking that understands what you're going through."
+3. "Trauma-informed design meets modern technology. Pain tracking that understands what you're going through."
 
 ### Long Form (Blog/LinkedIn)
 1. **For Technical Audiences:**
