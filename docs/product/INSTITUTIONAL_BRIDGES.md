@@ -346,4 +346,4 @@ CMD ["npm", "start"]
 
 ---
 
-*This implementation provides a robust, secure, and compliant foundation for healthcare data integration while maintaining the highest standards of patient privacy and data protection.*
+*This implementation provides a reliable, secure, and compliant foundation for healthcare data integration while maintaining the highest standards of patient privacy and data protection.*

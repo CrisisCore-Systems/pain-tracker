@@ -182,11 +182,11 @@ Week 5: Post #5 (Security) + Series Recap
 | **Newsletter Signups** | 50 | 100 | 250 |
 
 ### Qualitative Goals
-1. Position as thought leader in healthcare PWA development
+1. Position as expert in healthcare PWA development
 2. Build credibility in trauma-informed design community
 3. Attract open-source contributors
 4. Generate interest from healthcare organizations
-5. Foster ethical health tech discussions
+5. Encourage ethical health tech discussions
 
 ---
 

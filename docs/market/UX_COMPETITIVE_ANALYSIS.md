@@ -273,7 +273,7 @@ function generateNextSteps(entries: PainEntry[], userGoals: Goal[]): NextStep[] 
 ---
 
 #### 3.2 SMART-on-FHIR Integration
-**Goal**: Seamless integration with Epic, Cerner, Allscripts
+**Goal**: Smooth integration with Epic, Cerner, Allscripts
 
 **Implementation Plan**:
 1. **OAuth 2.0 Authentication**: Provider login via hospital credentials

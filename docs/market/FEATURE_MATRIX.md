@@ -19,7 +19,7 @@ Status Legend:
 | Emergency Response Panel | @accessibility | High | v1.0 | 2d | Partial | `src/components/accessibility/` | Core panel implemented; integrations pending
 | Crisis Simulation Dashboard | @accessibility | Medium | v1.2 | 3d | Implemented | `src/components/accessibility/CrisisTestingDashboard.tsx` | Adaptive testing
 | Secure Storage Wrapper | @security | High | v1.1 | 1w | Implemented | `src/lib/storage/secureStorage.ts` | Selective encryption implemented; review AES-GCM layer
-| AES-GCM Encrypted IndexedDB Layer | @security | High | v2.0 | 2w | Planned | (future) | Enterprise-grade encrypted layer planned
+| AES-GCM Encrypted IndexedDB Layer | @security | High | v2.0 | 2w | Planned | (future) | Production-ready encrypted layer planned
 | SBOM Generation | @ops | Medium | v1.0 | 1d | Implemented | `security/sbom-latest.json` | Regeneratable
 | Automated Docs Validation | @docs | Low | v1.0 | 1d | Implemented | `.github/workflows/docs-validate.yml` | CI enforced
 | Medication Tracking | @product-owner | Medium | v1.1 | 3d | Implemented | `src/features/treatments/` | 

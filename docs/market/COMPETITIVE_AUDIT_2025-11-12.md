@@ -21,8 +21,8 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 | **Analytics** | ✅ **Superior** | Better (Free) | Better (Empathy Engine) | Better | Comparable |
 | **Clinical Integration** | 🟡 **On Track** | Comparable | Better (WorkSafeBC) | Superior | In Progress |
 | **WorkSafeBC Workflows (Exports/Reports)** | ✅ **Differentiated** | Rare | Rare | Rare | In Progress |
-| **Privacy & Security** | ✅ **Best-in-Class** | Superior | Superior | Superior | Comparable |
-| **Accessibility** | ✅ **Best-in-Class** | Superior | Superior | Superior | Superior |
+| **Privacy & Security** | ✅ **Leading** | Superior | Superior | Superior | Comparable |
+| **Accessibility** | ✅ **Leading** | Superior | Superior | Superior | Superior |
 | **Platform Support** | 🟡 **Developing** | Behind (No Native) | Behind | Behind | Ahead (PWA) |
 
 ---
@@ -520,7 +520,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Privacy-first** (no data leaves device without export)
 - ✅ **Regulatory advantage** (BC privacy laws, HIPAA)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - unique architecture**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - unique architecture**
 
 ---
 
@@ -541,7 +541,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Privacy benefit** (no network requests = no tracking)
 - ✅ **WorkSafeBC value** (works on job sites without WiFi)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - true offline capability**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - true offline capability**
 
 ---
 
@@ -562,7 +562,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Key rotation** (supports key updates)
 - ✅ **User-controlled by default** (local-first; exports are explicit)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - encryption at rest + transit**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - encryption at rest + transit**
 
 ---
 
@@ -627,7 +627,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Transparent** (open architecture, auditable)
 - ✅ **BC privacy laws** (compliant with Canadian data sovereignty)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - user-controlled data**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - user-controlled data**
 
 ---
 
@@ -651,7 +651,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Privacy-preserving** (local-only logs)
 - ✅ **HIPAA-aligned intent** (not a compliance claim)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Superior - free enterprise-grade auditing**
+**Rating:** ⭐⭐⭐⭐⭐ **Superior - free production-ready auditing**
 
 ---
 
@@ -674,7 +674,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Documentation** (clear a11y guidelines)
 - ✅ **Continuous monitoring** (accessibility scanning)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - systematic approach**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - systematic approach**
 
 ---
 
@@ -704,7 +704,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Customizable** (user preferences for trauma responses)
 - ✅ **Free** (no premium tier required)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - unique systematic approach**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - unique systematic approach**
 
 ---
 
@@ -763,7 +763,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Life-saving potential** (connects to crisis resources)
 - ✅ **Free** (no premium tier)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - automated crisis support**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - automated crisis support**
 
 ---
 
@@ -789,7 +789,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **User control** (can expand/collapse as needed)
 - ✅ **Free** (no competitors offer this systematically)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - systematic cognitive load management**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - systematic cognitive load management**
 
 ---
 
@@ -936,7 +936,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Cross-platform** (works everywhere)
 - ✅ **No installation** (barrier-free access)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - web-first approach**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - web-first approach**
 
 ---
 
@@ -956,7 +956,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 - ✅ **Service worker** (caches app for offline use)
 - ✅ **Background tasks ready** (offline queue prepared)
 
-**Rating:** ⭐⭐⭐⭐⭐ **Best-in-class - true offline-first**
+**Rating:** ⭐⭐⭐⭐⭐ **Strong - true offline-first**
 
 ---
 
@@ -1132,7 +1132,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 
 - ✅ **WorkSafeBC integration** (blue ocean, no competition)
 - ✅ **Privacy-first architecture** (unique in market)
-- ✅ **Trauma-informed UX** (best-in-class)
+- ✅ **Trauma-informed UX** (strong)
 - ✅ **Free core model** (core is $0)
 - ✅ **Empathy intelligence** (unique heuristic system)
 
@@ -1149,7 +1149,7 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 The unique combination of:
 1. WorkSafeBC integration (no competition)
 2. Privacy-first architecture (unique)
-3. Trauma-informed UX (best-in-class)
+3. Trauma-informed UX (strong)
 4. Free core model (value)
 
 Creates a defensible market position that **no competitor can easily replicate**.
@@ -1257,7 +1257,7 @@ Creates a defensible market position that **no competitor can easily replicate**
 - WorkSafeBC-focused practices
 
 **Value Proposition:**
-> "Finally, a pain tracking tool that integrates into your clinical workflow. Stop wasting time transcribing patient journals. Get seamless FHIR export, automated WorkSafeBC form completion, and a dashboard to track treatment outcomes."
+> "Finally, a pain tracking tool that integrates into your clinical workflow. Stop wasting time transcribing patient journals. Get easy FHIR export, automated WorkSafeBC form completion, and a dashboard to track treatment outcomes."
 
 **Estimated Market Size (BC):**
 - ~2,000 physiotherapy clinics in BC
@@ -1466,7 +1466,7 @@ export class EntitlementService {
 **Headline:** *"Finally, a Pain Tracking Tool That Integrates Into Your Clinical Workflow."*
 
 **Body:**
-> "Stop wasting time transcribing patient journals. With the Clinical Tier, get seamless FHIR export, automated WorkSafeBC form completion, and a dashboard to track treatment outcomes across your entire caseload."
+> "Stop wasting time transcribing patient journals. With the Clinical Tier, get easy FHIR export, automated WorkSafeBC form completion, and a dashboard to track treatment outcomes across your entire caseload."
 
 **CTA:** "Book a Demo with Our Team"
 

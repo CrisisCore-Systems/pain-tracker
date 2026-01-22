@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Pain Tracker application is now fully optimized for mobile devices, providing a seamless experience across smartphones, tablets, and desktop computers. This document outlines the mobile-first features and optimizations implemented.
+The Pain Tracker application is now fully optimized for mobile devices, providing a smooth experience across smartphones, tablets, and desktop computers. This document outlines the mobile-first features and optimizations implemented.
 
 ## Key Features
 

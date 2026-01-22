@@ -139,11 +139,11 @@ export const brand = {
 
   // Brand Voice
   voice: {
-    tone: 'Professional, Empathetic, Innovative',
+    tone: 'Professional, Empathetic, Modern',
     personality: [
       'Trustworthy and medical-grade reliable',
       'Empathetic to pain experiences',
-      'Innovative with cutting-edge technology',
+      'Modern technology',
       'Accessible and user-friendly',
       'Evidence-based and scientific',
     ],

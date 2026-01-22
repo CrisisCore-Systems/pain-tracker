@@ -63,7 +63,7 @@ The app currently tracks the *crash*. This phase adds tools to prevent it.
 **Theme**: _"Do the thinking for me."_
 **Status**: ✅ Complete (Beta)
 
-Leverage the data we have for strictly local predictive modeling.
+Use the data we have for strictly local predictive modeling.
 
 #### 1. The "Flare Forecast" (Bayesian Model)
 *   **Feature**: A probability indicator for today's risk level.

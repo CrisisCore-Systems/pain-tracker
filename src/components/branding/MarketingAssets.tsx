@@ -35,7 +35,7 @@ export function HeroBanner() {
                 </span>
               </h1>
               <p className="text-xl text-slate-600 dark:text-slate-400 max-w-xl">
-                Revolutionary pain management with predictive AI analytics, clinical integration,
+                Advanced pain management with predictive AI analytics, clinical integration,
                 and evidence-based insights for better health outcomes.
               </p>
             </div>
@@ -139,7 +139,7 @@ export function FeaturesSection() {
     {
       icon: Stethoscope,
       title: 'FHIR Compliance',
-      description: 'Full HL7 FHIR R4 compliance for seamless healthcare system integration.',
+      description: 'Full HL7 FHIR R4 compliance for easy healthcare system integration.',
       color: 'blue',
     },
     {

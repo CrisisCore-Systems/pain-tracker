@@ -18,7 +18,7 @@
 
 2. **Mission Alignment**
    - Monetization *funds* our mission, doesn't betray it
-   - Free tier remains best-in-class
+   - Free tier remains strong
    - Paid features serve real needs, not artificial scarcity
 
 3. **Empathy in Sales**
@@ -154,7 +154,7 @@
 
 #### Body Copy (Short)
 
-> Stop wasting time transcribing patient journals. With the Clinical Tier, get seamless FHIR export, automated WorkSafeBC form completion, and a dashboard to track treatment outcomes across your entire caseload.
+> Stop wasting time transcribing patient journals. With the Clinical Tier, get easy FHIR export, automated WorkSafeBC form completion, and a dashboard to track treatment outcomes across your entire caseload.
 
 #### Body Copy (Long - for pricing page)
 

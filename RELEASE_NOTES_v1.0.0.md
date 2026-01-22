@@ -5,7 +5,7 @@
 
 ## 🚀 Major Milestone: 1.0.0
 
-We are proud to announce the first stable release of **Pain Tracker**. This release marks the transition from beta to a stable baseline, featuring clinician-focused exports, robust offline capabilities, and a security-first architecture.
+We are proud to announce the first stable release of **Pain Tracker**. This release marks the transition from beta to a stable baseline, featuring clinician-focused exports, reliable offline capabilities, and a security-first architecture.
 
 ## ✨ Key Features
 
