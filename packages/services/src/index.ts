@@ -22,4 +22,7 @@ export * from './HIPAACompliance';
 export * from './EmotionalStateTracker';
 export * from './EmotionalValidationService';
 export * from './DataSharingProtocols';
+export * from './RetentionLoopService';
+export * from './DailyRitualService';
+export * from './IdentityLockInService';
 	export const serviceReady = true;
