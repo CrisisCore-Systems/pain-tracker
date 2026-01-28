@@ -26,4 +26,5 @@ export * from './RetentionLoopService';
 export * from './DailyRitualService';
 export * from './IdentityLockInService';
 export * from './AdaptivePromptSelector';
+export * from './TrendAnalysisService';
 	export const serviceReady = true;
