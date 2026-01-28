@@ -27,4 +27,6 @@ export * from './DailyRitualService';
 export * from './IdentityLockInService';
 export * from './AdaptivePromptSelector';
 export * from './TrendAnalysisService';
+export * from './PredictiveInsightsService';
+export * from './MultiVariateAnalysisService';
 	export const serviceReady = true;
