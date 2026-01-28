@@ -25,4 +25,5 @@ export * from './DataSharingProtocols';
 export * from './RetentionLoopService';
 export * from './DailyRitualService';
 export * from './IdentityLockInService';
+export * from './AdaptivePromptSelector';
 	export const serviceReady = true;

@@ -9,6 +9,7 @@
  */
 
 import type { PainEntry } from '../../src/types';
+import { adaptivePromptSelector } from './AdaptivePromptSelector';
 
 export interface RetentionState {
   lastCheckInDate: string | null;
@@ -124,9 +125,9 @@ export class RetentionLoopService {
   }
 
   /**
-   * Get today's daily prompt
+   * Get today's daily prompt (with adaptive selection)
    */
-  getDailyPrompt(): DailyPrompt | null {
+  getDailyPrompt(entries: PainEntry[] = []): DailyPrompt | null {
     const state = this.getState();
     
     if (!state.enabledPrompts) {
@@ -143,7 +144,12 @@ export class RetentionLoopService {
     const prompts = this.getPromptLibrary();
     const hour = new Date().getHours();
     
-    // Filter by time of day
+    // Use adaptive selection if we have entry data
+    if (entries.length > 0) {
+      return adaptivePromptSelector.selectPrompt(prompts, entries, state, hour);
+    }
+    
+    // Fallback to simple time-based selection for new users
     let timing: DailyPrompt['timing'];
     if (hour < 12) {
       timing = 'morning';
@@ -167,12 +173,17 @@ export class RetentionLoopService {
   }
 
   /**
-   * Mark prompt as shown
+   * Mark prompt as shown and record interaction
    */
-  markPromptShown(): void {
+  markPromptShown(promptId?: string, actedUpon: boolean = false): void {
     const state = this.getState();
     state.lastPromptShown = this.getDateString(new Date());
     this.saveState(state);
+    
+    // Record interaction for adaptive learning
+    if (promptId) {
+      adaptivePromptSelector.recordInteraction(promptId, actedUpon);
+    }
   }
 
   /**
