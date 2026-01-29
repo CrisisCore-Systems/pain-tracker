@@ -23,13 +23,21 @@ vi.mock('@pain-tracker/services', () => ({
 }));
 
 // Mock lucide-react icons
-vi.mock('lucide-react', () => ({
-  Heart: () => <div data-testid="heart-icon">Heart</div>,
-  Sparkles: () => <div data-testid="sparkles-icon">Sparkles</div>,
-  TrendingUp: () => <div data-testid="trending-up-icon">TrendingUp</div>,
-  Award: () => <div data-testid="award-icon">Award</div>,
-  Calendar: () => <div data-testid="calendar-icon">Calendar</div>,
-}));
+vi.mock('lucide-react', async (importOriginal) => {
+  const actual = await importOriginal<any>();
+  return {
+    ...actual,
+    Heart: () => <div data-testid="heart-icon">Heart</div>,
+    Sparkles: () => <div data-testid="sparkles-icon">Sparkles</div>,
+    TrendingUp: () => <div data-testid="trending-up-icon">TrendingUp</div>,
+    Award: () => <div data-testid="award-icon">Award</div>,
+    Calendar: () => <div data-testid="calendar-icon">Calendar</div>,
+    CheckCircle: () => <div data-testid="check-circle-icon">CheckCircle</div>,
+    AlertCircle: () => <div data-testid="alert-circle-icon">AlertCircle</div>,
+    AlertTriangle: () => <div data-testid="alert-triangle-icon">AlertTriangle</div>,
+    Info: () => <div data-testid="info-icon">Info</div>,
+  };
+});
 
 describe('IdentityDashboard', () => {
   const mockEntries = [

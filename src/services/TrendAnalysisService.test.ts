@@ -248,18 +248,25 @@ describe('TrendAnalysisService', () => {
     });
 
     it('should find time of day correlation', () => {
-      // Morning entries with lower pain
+      const isoAtLocalHour = (daysAgo: number, hour: number): string => {
+        const date = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
+        date.setHours(hour, 0, 0, 0);
+        return date.toISOString();
+      };
+
+      // Morning entries with lower pain (local time)
       const morningEntries: Partial<PainEntry>[] = [
-        { ...createEntry(7, 4), timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().replace(/T\d\d/, 'T08') },
-        { ...createEntry(6, 4), timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString().replace(/T\d\d/, 'T09') },
-        { ...createEntry(5, 4), timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString().replace(/T\d\d/, 'T10') },
+        { ...createEntry(8, 4), timestamp: isoAtLocalHour(8, 9) },
+        { ...createEntry(7, 4), timestamp: isoAtLocalHour(7, 8) },
+        { ...createEntry(6, 4), timestamp: isoAtLocalHour(6, 9) },
+        { ...createEntry(5, 4), timestamp: isoAtLocalHour(5, 10) },
       ];
 
-      // Evening entries with higher pain
+      // Evening entries with higher pain (local time)
       const eveningEntries: Partial<PainEntry>[] = [
-        { ...createEntry(4, 7), timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString().replace(/T\d\d/, 'T20') },
-        { ...createEntry(3, 7), timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().replace(/T\d\d/, 'T21') },
-        { ...createEntry(2, 7), timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().replace(/T\d\d/, 'T22') },
+        { ...createEntry(4, 7), timestamp: isoAtLocalHour(4, 20) },
+        { ...createEntry(3, 7), timestamp: isoAtLocalHour(3, 21) },
+        { ...createEntry(2, 7), timestamp: isoAtLocalHour(2, 22) },
       ];
 
       const correlations = service.findCorrelations([...morningEntries, ...eveningEntries] as PainEntry[]);

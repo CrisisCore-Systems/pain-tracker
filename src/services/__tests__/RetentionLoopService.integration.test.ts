@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 import type { PainEntry } from '../../types';
 
@@ -49,6 +49,10 @@ describe('RetentionLoopService + Store Integration', () => {
     usePainTrackerStore.getState().syncRetentionState();
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('should record check-in and update store correctly', () => {
     const store = usePainTrackerStore.getState();
     
@@ -65,20 +69,14 @@ describe('RetentionLoopService + Store Integration', () => {
   it('should track 3-day win condition correctly', () => {
     const store = usePainTrackerStore.getState();
     
-    // Simulate 3 consecutive days
+    // Simulate 3 consecutive days via system time.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-15T12:00:00Z'));
     store.recordCheckIn();
-    
-    // Update consecutiveDays to 3 to simulate streak
-    usePainTrackerStore.setState({
-      retention: {
-        ...store.retention,
-        retentionLoop: {
-          ...store.retention.retentionLoop,
-          consecutiveDays: 3,
-          totalCheckIns: 3,
-        },
-      },
-    });
+    vi.setSystemTime(new Date('2024-01-16T12:00:00Z'));
+    store.recordCheckIn();
+    vi.setSystemTime(new Date('2024-01-17T12:00:00Z'));
+    store.recordCheckIn();
     
     const updated = usePainTrackerStore.getState();
     expect(updated.retention.retentionLoop.consecutiveDays).toBe(3);
@@ -92,17 +90,12 @@ describe('RetentionLoopService + Store Integration', () => {
   it('should track 7-day streak win condition', () => {
     const store = usePainTrackerStore.getState();
     
-    // Simulate 7-day streak
-    usePainTrackerStore.setState({
-      retention: {
-        ...store.retention,
-        retentionLoop: {
-          ...store.retention.retentionLoop,
-          consecutiveDays: 7,
-          totalCheckIns: 7,
-        },
-      },
-    });
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-01T12:00:00Z'));
+    for (let i = 0; i < 7; i++) {
+      vi.setSystemTime(new Date(`2024-01-${String(i + 1).padStart(2, '0')}T12:00:00Z`));
+      store.recordCheckIn();
+    }
     
     const updated = usePainTrackerStore.getState();
     expect(updated.retention.retentionLoop.consecutiveDays).toBe(7);

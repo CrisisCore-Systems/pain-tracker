@@ -2,6 +2,7 @@
 
 Docs in `docs/`:
 - ../ops/DEPLOYMENT.md
+- ../ops/DEPLOYMENT_CLOUDFLARE_VERCEL.md
 - ../ops/DEPLOYMENT_GUIDE.md
 - ../ops/DEPLOYMENT_CHECKLIST.md
 - ../ops/DEPLOYMENT_STATUS.md

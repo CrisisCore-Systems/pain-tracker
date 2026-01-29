@@ -77,6 +77,15 @@ export interface SmartRecommendations {
 }
 
 class SmartRecommendationsService {
+  private getEntriesInLastNDays(entries: PainEntry[], days: number): PainEntry[] {
+    const now = Date.now();
+    const windowStart = now - days * 24 * 60 * 60 * 1000;
+    return entries.filter(e => {
+      const t = new Date(e.timestamp).getTime();
+      return Number.isFinite(t) && t >= windowStart && t <= now;
+    });
+  }
+
   private getPainLevel(entry: PainEntry): number {
     return entry?.baselineData?.pain ?? 0;
   }
@@ -248,7 +257,8 @@ class SmartRecommendationsService {
 
     // Tracking consistency
     const recentDays = 7;
-    if (recentEntries.length < recentDays * 0.5) {
+    const entriesInLast7Days = this.getEntriesInLastNDays(entries, recentDays);
+    if (entriesInLast7Days.length < recentDays * 0.5) {
       recommendations.push({
         id: 'tracking-consistency',
         title: 'Improve Tracking Consistency',
@@ -259,7 +269,7 @@ class SmartRecommendationsService {
         expectedBenefit: 'Unlock advanced insights and predictions',
         confidence: 0.65,
         reasoning: [
-          `Only ${recentEntries.length} entries in last 7 days`,
+          `Only ${entriesInLast7Days.length} entries in last 7 days`,
           'More data = better insights',
           'Patterns require consistent tracking'
         ],
@@ -505,8 +515,8 @@ class SmartRecommendationsService {
 
     // Consistency improvement plan
     const recentDays = 7;
-    const recentEntries = entries.slice(-7);
-    if (recentEntries.length < recentDays * 0.6) {
+    const entriesInLast7Days = this.getEntriesInLastNDays(entries, recentDays);
+    if (entriesInLast7Days.length < recentDays * 0.6) {
       plans.push({
         goal: 'Track pain 5+ days per week',
         timeframe: '2 weeks',

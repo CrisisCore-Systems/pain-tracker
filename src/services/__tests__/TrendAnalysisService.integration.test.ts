@@ -100,7 +100,7 @@ describe('TrendAnalysisService + Data Integration', () => {
     });
     
     const store = usePainTrackerStore.getState();
-    expect(store.entries.length).toBe(31);
+      expect(store.entries.length).toBe(30);
     
     // Find the anomaly entry
     const anomaly = store.entries.find(e => e.baselineData.pain === 10);

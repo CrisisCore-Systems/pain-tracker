@@ -1,10 +1,14 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 describe('DailyRitualService + Store Integration', () => {
   beforeEach(() => {
     localStorage.clear();
     usePainTrackerStore.getState().syncRetentionState();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('should setup ritual and update store correctly', () => {
@@ -103,9 +107,13 @@ describe('DailyRitualService + Store Integration', () => {
       ritualTone: 'minimal',
     });
     
-    // Complete multiple times
+    // Complete on multiple different days (same-day completions are deduped).
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-15T12:00:00Z'));
     store.completeRitual();
+    vi.setSystemTime(new Date('2024-01-16T12:00:00Z'));
     store.completeRitual();
+    vi.setSystemTime(new Date('2024-01-17T12:00:00Z'));
     store.completeRitual();
     
     const updated = usePainTrackerStore.getState();

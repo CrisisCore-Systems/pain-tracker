@@ -54,8 +54,9 @@ describe('RetentionLoopService', () => {
     });
 
     it('should not duplicate check-ins on same day', () => {
-      service.recordCheckIn(new Date('2024-01-15T08:00:00'));
-      service.recordCheckIn(new Date('2024-01-15T16:00:00'));
+      // Use explicit UTC timestamps so date normalization is stable across timezones.
+      service.recordCheckIn(new Date('2024-01-15T08:00:00Z'));
+      service.recordCheckIn(new Date('2024-01-15T16:00:00Z'));
       
       const state = service.getState();
       expect(state.totalCheckIns).toBe(1);

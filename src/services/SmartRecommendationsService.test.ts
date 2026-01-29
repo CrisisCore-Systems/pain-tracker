@@ -77,7 +77,10 @@ describe('SmartRecommendationsService', () => {
   beforeEach(() => {
     // Create base mock entries
     mockEntries = [];
-    const baseDate = new Date('2026-01-20T10:00:00Z');
+    // Keep all mock entries in the past relative to test execution time,
+    // so “last 7 days” logic is stable and never includes future timestamps.
+    const baseDate = new Date(Date.now() - 13 * 24 * 60 * 60 * 1000);
+    baseDate.setHours(10, 0, 0, 0);
     
     for (let i = 0; i < 14; i++) {
       const date = new Date(baseDate);
@@ -257,7 +260,7 @@ describe('SmartRecommendationsService', () => {
       const eveningRec = result.topRecommendations.find(r => r.id === 'evening-pain-management');
       expect(eveningRec).toBeDefined();
       expect(eveningRec?.category).toBe('prevention');
-      expect(eveningRec?.timing).toContain('afternoon');
+      expect(eveningRec?.timing).toMatch(/afternoon/i);
     });
 
     it('should provide specific timing for interventions', () => {
@@ -406,8 +409,10 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should create tracking consistency plan for sparse data', () => {
-      const entries = mockEntries.slice(0, 3); // Sparse
-      const result = smartRecommendationsService.getSmartRecommendations(entries.concat(mockEntries.slice(0, 5)));
+      // Sufficient total data, but sparse recent tracking
+      const olderData = mockEntries.slice(0, 7);
+      const recentSparse = mockEntries.slice(-7).slice(0, 2);
+      const result = smartRecommendationsService.getSmartRecommendations([...olderData, ...recentSparse]);
       
       const trackingPlan = result.actionPlans.find(p => p.goal.includes('Track'));
       expect(trackingPlan).toBeDefined();

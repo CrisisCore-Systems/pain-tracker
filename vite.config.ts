@@ -70,7 +70,16 @@ export default defineConfig({
 
         if (fs.existsSync(abs)) walk(abs);
         const metaPath = path.join(abs, 'meta.json');
-        fs.writeFileSync(metaPath, JSON.stringify({ outputs }, null, 2), 'utf8');
+
+        // Best-effort: meta.json is used for badge generation and should never
+        // fail production builds (e.g., on CI providers with unusual FS timing).
+        try {
+          fs.mkdirSync(path.dirname(metaPath), { recursive: true });
+          fs.writeFileSync(metaPath, JSON.stringify({ outputs }, null, 2), 'utf8');
+        } catch (err) {
+          // Avoid throwing here; a missing meta.json should not break deploys.
+          console.warn('[write-bundle-meta] Failed to write meta.json:', (err as Error).message);
+        }
       }
     },
     {

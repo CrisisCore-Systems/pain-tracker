@@ -22,13 +22,21 @@ vi.mock('@pain-tracker/services', () => ({
 }));
 
 // Mock lucide-react icons
-vi.mock('lucide-react', () => ({
-  Clock: () => <div data-testid="clock-icon">Clock</div>,
-  Moon: () => <div data-testid="moon-icon">Moon</div>,
-  Sun: () => <div data-testid="sun-icon">Sun</div>,
-  Zap: () => <div data-testid="zap-icon">Zap</div>,
-  Settings: () => <div data-testid="settings-icon">Settings</div>,
-}));
+vi.mock('lucide-react', async (importOriginal) => {
+  const actual = await importOriginal<any>();
+  return {
+    ...actual,
+    Clock: () => <div data-testid="clock-icon">Clock</div>,
+    Moon: () => <div data-testid="moon-icon">Moon</div>,
+    Sun: () => <div data-testid="sun-icon">Sun</div>,
+    Zap: () => <div data-testid="zap-icon">Zap</div>,
+    Settings: () => <div data-testid="settings-icon">Settings</div>,
+    CheckCircle: () => <div data-testid="check-circle-icon">CheckCircle</div>,
+    AlertCircle: () => <div data-testid="alert-circle-icon">AlertCircle</div>,
+    AlertTriangle: () => <div data-testid="alert-triangle-icon">AlertTriangle</div>,
+    Info: () => <div data-testid="info-icon">Info</div>,
+  };
+});
 
 // Mock design system components
 vi.mock('../../design-system', () => ({
@@ -75,7 +83,6 @@ describe('RitualSetup', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
     vi.mocked(dailyRitualService.getTimingSuggestions).mockReturnValue(mockTimingSuggestions);
     vi.mocked(dailyRitualService.getRitualTemplates).mockReturnValue(mockTemplates);
   });
@@ -453,13 +460,14 @@ describe('RitualSetup', () => {
       expect(morningButton).toHaveClass('border-blue-500');
     });
 
-    it('should show no timing suggestions when array is empty', () => {
+    it('should show no timing suggestions when array is empty', async () => {
+      const user = userEvent.setup({ delay: null });
       vi.mocked(dailyRitualService.getTimingSuggestions).mockReturnValue([]);
       render(<RitualSetup entries={[]} />);
       
       // Navigate to time step
       const continueButton = screen.getAllByTestId('button').find(btn => btn.textContent === 'Continue');
-      continueButton?.click();
+      await user.click(continueButton!);
       
       // Should not show suggestions section
       expect(screen.queryByText('Based on your tracking history:')).not.toBeInTheDocument();
@@ -578,17 +586,16 @@ describe('RitualSetup', () => {
       
       // Complete setup
       await user.click(screen.getAllByTestId('button').find(btn => btn.textContent === 'Continue')!);
-      await waitFor(() => screen.getByText('What time works best?'));
+      await waitFor(() => expect(screen.getByText('What time works best?')).toBeInTheDocument());
       await user.click(screen.getAllByTestId('button').find(btn => btn.textContent === 'Continue')!);
-      await waitFor(() => screen.getByText('How should we remind you?'));
+      await waitFor(() => expect(screen.getByText('How should we remind you?')).toBeInTheDocument());
       await user.click(screen.getAllByTestId('button').find(btn => btn.textContent === 'Complete Setup')!);
-      
-      // Fast-forward time
-      vi.advanceTimersByTime(2000);
-      
-      await waitFor(() => {
-        expect(onComplete).toHaveBeenCalled();
-      });
+
+      await waitFor(() => expect(screen.getByText("You're all set! 🎉")).toBeInTheDocument());
+
+      // Wait for onComplete timeout using real timers (avoids fake-timer + userEvent deadlocks)
+      await new Promise((resolve) => setTimeout(resolve, 2100));
+      expect(onComplete).toHaveBeenCalled();
     });
 
     it('should display selected time in completion message', async () => {
@@ -708,11 +715,10 @@ describe('RitualSetup', () => {
       await user.click(screen.getAllByTestId('button').find(btn => btn.textContent === 'Continue')!);
       await waitFor(() => screen.getByText('How should we remind you?'));
       await user.click(screen.getAllByTestId('button').find(btn => btn.textContent === 'Complete Setup')!);
-      
-      vi.advanceTimersByTime(2000);
-      
-      // Should not error
-      expect(screen.getByText("You're all set! 🎉")).toBeInTheDocument();
+
+      await waitFor(() => {
+        expect(screen.getByText("You're all set! 🎉")).toBeInTheDocument();
+      });
     });
   });
 

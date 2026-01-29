@@ -9,6 +9,11 @@ import type { PainEntry } from '../types';
 describe('DailyRitualService', () => {
   let service: DailyRitualService;
 
+  const isoAtLocalTime = (year: number, monthIndex: number, day: number, hour: number, minute: number): string => {
+    const date = new Date(year, monthIndex, day, hour, minute, 0, 0);
+    return date.toISOString();
+  };
+
   beforeEach(() => {
     service = new DailyRitualService();
     service.resetState();
@@ -49,9 +54,9 @@ describe('DailyRitualService', () => {
 
     it('should suggest times based on entry history', () => {
       const entries: Partial<PainEntry>[] = [
-        { id: 1, timestamp: '2024-01-15T08:30:00Z' },
-        { id: 2, timestamp: '2024-01-16T08:45:00Z' },
-        { id: 3, timestamp: '2024-01-17T08:15:00Z' },
+        { id: 1, timestamp: isoAtLocalTime(2024, 0, 15, 8, 30) },
+        { id: 2, timestamp: isoAtLocalTime(2024, 0, 16, 8, 45) },
+        { id: 3, timestamp: isoAtLocalTime(2024, 0, 17, 8, 15) },
       ];
       
       const suggestions = service.getTimingSuggestions(entries as PainEntry[]);
@@ -63,10 +68,10 @@ describe('DailyRitualService', () => {
 
     it('should identify morning patterns', () => {
       const entries: Partial<PainEntry>[] = [
-        { id: 1, timestamp: '2024-01-15T09:00:00Z' },
-        { id: 2, timestamp: '2024-01-16T09:30:00Z' },
-        { id: 3, timestamp: '2024-01-17T08:45:00Z' },
-        { id: 4, timestamp: '2024-01-18T09:15:00Z' },
+        { id: 1, timestamp: isoAtLocalTime(2024, 0, 15, 9, 0) },
+        { id: 2, timestamp: isoAtLocalTime(2024, 0, 16, 9, 30) },
+        { id: 3, timestamp: isoAtLocalTime(2024, 0, 17, 8, 45) },
+        { id: 4, timestamp: isoAtLocalTime(2024, 0, 18, 9, 15) },
       ];
       
       const suggestions = service.getTimingSuggestions(entries as PainEntry[]);

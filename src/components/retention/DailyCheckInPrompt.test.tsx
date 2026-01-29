@@ -31,11 +31,18 @@ vi.mock('@pain-tracker/services', () => ({
 }));
 
 // Mock lucide-react icons
-vi.mock('lucide-react', () => ({
-  MessageCircle: () => <div data-testid="message-icon">Message</div>,
-  X: () => <div data-testid="x-icon">X</div>,
-  CheckCircle: () => <div data-testid="check-icon">Check</div>,
-}));
+vi.mock('lucide-react', async (importOriginal) => {
+  const actual = await importOriginal<any>();
+  return {
+    ...actual,
+    MessageCircle: () => <div data-testid="message-icon">Message</div>,
+    X: () => <div data-testid="x-icon">X</div>,
+    CheckCircle: () => <div data-testid="check-icon">Check</div>,
+    AlertCircle: () => <div data-testid="alert-circle-icon">AlertCircle</div>,
+    AlertTriangle: () => <div data-testid="alert-triangle-icon">AlertTriangle</div>,
+    Info: () => <div data-testid="info-icon">Info</div>,
+  };
+});
 
 // Mock retention animations
 vi.mock('../../utils/retention-animations', () => ({
@@ -486,21 +493,17 @@ describe('DailyCheckInPrompt', () => {
     });
 
     it('should remove animation class after animation completes', async () => {
-      vi.useFakeTimers();
-      
       render(<DailyCheckInPrompt />);
       
       const card = screen.getByRole('region', { name: /daily check-in prompt/i });
       expect(card).toHaveClass('animate-slide-in-top');
-      
-      // Fast-forward past the 400ms animation duration
-      vi.advanceTimersByTime(500);
-      
-      await waitFor(() => {
-        expect(card).not.toHaveClass('animate-slide-in-top');
-      });
-      
-      vi.useRealTimers();
+
+      await waitFor(
+        () => {
+          expect(card).not.toHaveClass('animate-slide-in-top');
+        },
+        { timeout: 1000 }
+      );
     });
   });
 });

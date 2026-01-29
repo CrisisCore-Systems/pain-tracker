@@ -12,6 +12,8 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '../../design-s
 import { MessageCircle, X, CheckCircle } from 'lucide-react';
 import { getAnimationConfig, celebrateMilestone } from '../../utils/retention-animations';
 
+const EMPTY_ENTRIES: any[] = [];
+
 interface DailyCheckInPromptProps {
   entries?: any[]; // For adaptive prompt selection
   onStartCheckIn?: () => void;
@@ -20,7 +22,7 @@ interface DailyCheckInPromptProps {
 }
 
 export const DailyCheckInPrompt: React.FC<DailyCheckInPromptProps> = ({
-  entries = [],
+  entries = EMPTY_ENTRIES,
   onStartCheckIn,
   onDismiss,
   className = '',
@@ -38,15 +40,28 @@ export const DailyCheckInPrompt: React.FC<DailyCheckInPromptProps> = ({
       setIsVisible(true);
       setIsAnimating(true);
       
-      // Announce to screen readers
-      if (announcementRef.current) {
-        announcementRef.current.textContent = `New check-in prompt: ${dailyPrompt.text}`;
-      }
-      
       // Remove animation class after animation completes
-      setTimeout(() => setIsAnimating(false), 400);
+      const animationConfig = getAnimationConfig('slideInFromTop');
+      const durationMs = (() => {
+        const anyConfig = animationConfig as any;
+        if (typeof anyConfig?.duration === 'number') return anyConfig.duration;
+        if (typeof animationConfig.transition?.duration === 'number') {
+          return Math.round(animationConfig.transition.duration * 1000);
+        }
+        return 400;
+      })();
+
+      const timeoutId = setTimeout(() => setIsAnimating(false), Math.max(0, durationMs));
+
+      return () => clearTimeout(timeoutId);
     }
   }, [entries]);
+
+  useEffect(() => {
+    if (!prompt) return;
+    if (!announcementRef.current) return;
+    announcementRef.current.textContent = `New check-in prompt: ${prompt.text}`;
+  }, [prompt]);
 
   const handleStartCheckIn = () => {
     if (prompt) {

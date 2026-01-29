@@ -9,6 +9,11 @@ import type { PainEntry } from '../types';
 
 describe('AdaptivePromptSelector', () => {
   let selector: AdaptivePromptSelector;
+
+  const isoAtLocalHour = (year: number, monthIndex: number, day: number, hour: number): string => {
+    const date = new Date(year, monthIndex, day, hour, 0, 0, 0);
+    return date.toISOString();
+  };
   
   const mockPrompts: DailyPrompt[] = [
     {
@@ -88,7 +93,7 @@ describe('AdaptivePromptSelector', () => {
       // Create entries mostly in the evening
       const entries: Partial<PainEntry>[] = Array.from({ length: 10 }, (_, i) => ({
         id: i + 1,
-        timestamp: `2024-01-${(i + 1).toString().padStart(2, '0')}T20:00:00Z`,
+        timestamp: isoAtLocalHour(2024, 0, i + 1, 20),
       }));
       
       // Request prompt in morning
@@ -103,7 +108,7 @@ describe('AdaptivePromptSelector', () => {
     it('should detect morning preference', () => {
       const entries: Partial<PainEntry>[] = Array.from({ length: 10 }, (_, i) => ({
         id: i + 1,
-        timestamp: `2024-01-${(i + 1).toString().padStart(2, '0')}T08:00:00Z`,
+        timestamp: isoAtLocalHour(2024, 0, i + 1, 8),
       }));
       
       const prompt = selector.selectPrompt(mockPrompts, entries as PainEntry[], mockRetentionState, 9);
@@ -113,7 +118,7 @@ describe('AdaptivePromptSelector', () => {
     it('should detect evening preference', () => {
       const entries: Partial<PainEntry>[] = Array.from({ length: 10 }, (_, i) => ({
         id: i + 1,
-        timestamp: `2024-01-${(i + 1).toString().padStart(2, '0')}T19:00:00Z`,
+        timestamp: isoAtLocalHour(2024, 0, i + 1, 19),
       }));
       
       const prompt = selector.selectPrompt(mockPrompts, entries as PainEntry[], mockRetentionState, 20);
