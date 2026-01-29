@@ -15,6 +15,10 @@ import {
   retentionLoopService, 
   dailyRitualService, 
   identityLockInService,
+  predictiveInsightsService,
+  multiVariateAnalysisService,
+  enhancedPatternRecognitionService,
+  smartRecommendationsService,
   type RetentionState,
   type RitualState,
   type UserIdentity,
@@ -160,6 +164,12 @@ export interface PainTrackerState {
   getIdentityLanguage: () => ReturnType<typeof identityLockInService.getIdentityLanguage>;
   
   syncRetentionState: () => void;
+  
+  // Phase 3 Intelligence Actions
+  getPredictiveInsights: () => ReturnType<typeof predictiveInsightsService.getPredictiveInsights>;
+  getMultiVariateAnalysis: () => ReturnType<typeof multiVariateAnalysisService.getMultiVariateInsights>;
+  getEnhancedPatterns: () => ReturnType<typeof enhancedPatternRecognitionService.getEnhancedPatternInsights>;
+  getSmartRecommendations: () => ReturnType<typeof smartRecommendationsService.getSmartRecommendations>;
   
   // Reporting
   scheduledReports: import('../types').ScheduledReport[];
@@ -628,6 +638,27 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               state.retention.dailyRitual = dailyRitualService.getState();
               state.retention.userIdentity = identityLockInService.getIdentity();
             });
+          },
+
+          // Phase 3 Intelligence Actions
+          getPredictiveInsights: () => {
+            const state = usePainTrackerStore.getState();
+            return predictiveInsightsService.getPredictiveInsights(state.entries);
+          },
+
+          getMultiVariateAnalysis: () => {
+            const state = usePainTrackerStore.getState();
+            return multiVariateAnalysisService.getMultiVariateInsights(state.entries);
+          },
+
+          getEnhancedPatterns: () => {
+            const state = usePainTrackerStore.getState();
+            return enhancedPatternRecognitionService.getEnhancedPatternInsights(state.entries);
+          },
+
+          getSmartRecommendations: () => {
+            const state = usePainTrackerStore.getState();
+            return smartRecommendationsService.getSmartRecommendations(state.entries);
           },
 
           // Reporting
