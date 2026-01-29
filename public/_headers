@@ -1,8 +1,23 @@
+# Global Headers
 /*
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com; connect-src 'self' ws://localhost:* wss://localhost:* https://api.wcb.gov https://fonts.googleapis.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com; media-src 'self'; object-src 'none'; frame-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()
+  Permissions-Policy: interest-cohort=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Cache Aggressive: Static Assets (JS, CSS, Images)
+# Fingerprinted files (e.g., main.a1b2c3.js) are safe to cache forever.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache Moderate: HTML and Data
+# We want the UI to check for updates but serve stale if the origin is down.
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Trauma-Architect Privacy: Clear Site Data on Logout (Optional route)
+/logout
+  Clear-Site-Data: "cache", "cookies", "storage"
