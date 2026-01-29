@@ -158,7 +158,7 @@
     "libsodium-wrappers-sumo": "^0.7.15",
     "lucide-react": "^0.544.0",
     "micro": "^10.0.1",
-    "otplib": "^12.0.1",
+    "otplib": "^13.2.0",
     "pg": "^8.16.3",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
