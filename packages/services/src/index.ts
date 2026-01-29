@@ -29,4 +29,6 @@ export * from './AdaptivePromptSelector';
 export * from './TrendAnalysisService';
 export * from './PredictiveInsightsService';
 export * from './MultiVariateAnalysisService';
+export * from './EnhancedPatternRecognitionService';
+export * from './SmartRecommendationsService';
 	export const serviceReady = true;
