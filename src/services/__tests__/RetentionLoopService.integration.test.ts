@@ -1,44 +1,52 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { usePainTrackerStore } from '@/stores/pain-tracker-store';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import type { PainEntry } from '../../types';
 
 describe('RetentionLoopService + Store Integration', () => {
+  const createEntry = (i: number, pain = 5): PainEntry => ({
+    id: i + 1,
+    timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
+    baselineData: {
+      pain,
+      locations: [],
+      symptoms: [],
+    },
+    functionalImpact: {
+      limitedActivities: [],
+      assistanceNeeded: [],
+      mobilityAids: [],
+    },
+    medications: {
+      current: [],
+      changes: '',
+      effectiveness: '',
+    },
+    treatments: {
+      recent: [],
+      effectiveness: '',
+      planned: [],
+    },
+    qualityOfLife: {
+      sleepQuality: 5,
+      moodImpact: 5,
+      socialImpact: [],
+    },
+    workImpact: {
+      missedWork: 0,
+      modifiedDuties: [],
+      workLimitations: [],
+    },
+    comparison: {
+      worseningSince: '',
+      newLimitations: [],
+    },
+    notes: '',
+  });
+
   beforeEach(() => {
-    // Reset store to initial state
-    usePainTrackerStore.setState({
-      entries: [],
-      retention: {
-        retentionLoop: {
-          consecutiveDays: 0,
-          totalCheckIns: 0,
-          lastCheckIn: null,
-          winConditions: {
-            firstCheckIn: false,
-            threeDayStreak: false,
-            sevenDayStreak: false,
-            firstWeek: false,
-            firstMonth: false,
-          },
-          pendingInsights: [],
-        },
-        dailyRitual: {
-          ritualEnabled: false,
-          ritualType: 'evening',
-          morningTime: null,
-          eveningTime: '21:00',
-          ritualTone: 'gentle',
-          completionCount: 0,
-          currentStreak: 0,
-          lastCompleted: null,
-        },
-        identityLockIn: {
-          journeyStartDate: null,
-          identityLanguage: null,
-          personalPatterns: [],
-          identityInsights: [],
-          narrativeHistory: [],
-        },
-      },
-    });
+    localStorage.clear();
+    usePainTrackerStore.setState({ entries: [] });
+    usePainTrackerStore.getState().syncRetentionState();
   });
 
   it('should record check-in and update store correctly', () => {
@@ -51,7 +59,7 @@ describe('RetentionLoopService + Store Integration', () => {
     const updated = usePainTrackerStore.getState();
     expect(updated.retention.retentionLoop.totalCheckIns).toBe(1);
     expect(updated.retention.retentionLoop.consecutiveDays).toBeGreaterThan(0);
-    expect(updated.retention.retentionLoop.lastCheckIn).toBeTruthy();
+    expect(updated.retention.retentionLoop.lastCheckInDate).toBeTruthy();
   });
 
   it('should track 3-day win condition correctly', () => {
@@ -75,6 +83,10 @@ describe('RetentionLoopService + Store Integration', () => {
     const updated = usePainTrackerStore.getState();
     expect(updated.retention.retentionLoop.consecutiveDays).toBe(3);
     expect(updated.retention.retentionLoop.totalCheckIns).toBe(3);
+
+    const winConditions = updated.getWinConditions();
+    const streak3 = winConditions.find(w => w.id === '3-day-streak');
+    expect(streak3?.achieved).toBe(true);
   });
 
   it('should track 7-day streak win condition', () => {
@@ -88,33 +100,23 @@ describe('RetentionLoopService + Store Integration', () => {
           ...store.retention.retentionLoop,
           consecutiveDays: 7,
           totalCheckIns: 7,
-          winConditions: {
-            ...store.retention.retentionLoop.winConditions,
-            sevenDayStreak: true,
-          },
         },
       },
     });
     
     const updated = usePainTrackerStore.getState();
     expect(updated.retention.retentionLoop.consecutiveDays).toBe(7);
-    expect(updated.retention.retentionLoop.winConditions.sevenDayStreak).toBe(true);
+
+    const winConditions = updated.getWinConditions();
+    const streak7 = winConditions.find(w => w.id === '7-day-streak');
+    expect(streak7?.achieved).toBe(true);
   });
 
   it('should calculate pending insights correctly', () => {
     const store = usePainTrackerStore.getState();
     
     // Simulate having 5 entries
-    const mockEntries = Array.from({ length: 5 }, (_, i) => ({
-      id: i + 1,
-      timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-      painLevel: 5,
-      mood: 'neutral' as const,
-      activities: [],
-      symptoms: [],
-      medications: [],
-      notes: '',
-    }));
+    const mockEntries: PainEntry[] = Array.from({ length: 5 }, (_, i) => createEntry(i, 5));
     
     usePainTrackerStore.setState({
       entries: mockEntries,
@@ -133,16 +135,7 @@ describe('RetentionLoopService + Store Integration', () => {
     const store = usePainTrackerStore.getState();
     
     // Add some entries for context
-    const mockEntries = Array.from({ length: 10 }, (_, i) => ({
-      id: i + 1,
-      timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-      painLevel: 5,
-      mood: 'neutral' as const,
-      activities: [],
-      symptoms: [],
-      medications: [],
-      notes: '',
-    }));
+    const mockEntries: PainEntry[] = Array.from({ length: 10 }, (_, i) => createEntry(i, 5));
     
     usePainTrackerStore.setState({
       entries: mockEntries,
@@ -161,14 +154,14 @@ describe('RetentionLoopService + Store Integration', () => {
     let updated = usePainTrackerStore.getState();
     expect(updated.retention.retentionLoop.totalCheckIns).toBe(1);
     
-    // Record second check-in
+    // Record second check-in (same day should not double-count)
     store.recordCheckIn();
     updated = usePainTrackerStore.getState();
-    expect(updated.retention.retentionLoop.totalCheckIns).toBe(2);
+    expect(updated.retention.retentionLoop.totalCheckIns).toBe(1);
     
-    // Record third check-in
+    // Record third check-in (same day should not double-count)
     store.recordCheckIn();
     updated = usePainTrackerStore.getState();
-    expect(updated.retention.retentionLoop.totalCheckIns).toBe(3);
+    expect(updated.retention.retentionLoop.totalCheckIns).toBe(1);
   });
 });

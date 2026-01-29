@@ -1,55 +1,66 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { usePainTrackerStore } from '@/stores/pain-tracker-store';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import type { PainEntry } from '../../types';
 
 describe('AdaptivePromptSelector + Services Integration', () => {
-  const mockEntries = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-    painLevel: 3 + (i % 5),
-    mood: ['happy', 'neutral', 'sad'][i % 3] as 'happy' | 'neutral' | 'sad',
-    activities: ['walking', 'working', 'resting'][i % 3] ? ['walking', 'working', 'resting'][i % 3] : [],
-    symptoms: ['headache', 'fatigue'][i % 2] ? ['headache', 'fatigue'][i % 2] : [],
-    medications: [],
-    notes: `Entry ${i + 1}`,
-  }));
+  const createEntry = (i: number): PainEntry => {
+    const pain = 3 + (i % 5);
+    const mood = ['happy', 'neutral', 'sad'][i % 3] as 'happy' | 'neutral' | 'sad';
+    const activity = ['walking', 'working', 'resting'][i % 3];
+    const symptom = ['headache', 'fatigue'][i % 2];
+
+    const timestamp = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString();
+
+    return {
+      id: i + 1,
+      timestamp,
+      baselineData: {
+        pain,
+        locations: [],
+        symptoms: [symptom],
+      },
+      functionalImpact: {
+        limitedActivities: [],
+        assistanceNeeded: [],
+        mobilityAids: [],
+      },
+      medications: {
+        current: [],
+        changes: '',
+        effectiveness: '',
+      },
+      treatments: {
+        recent: [],
+        effectiveness: '',
+        planned: [],
+      },
+      qualityOfLife: {
+        sleepQuality: 5,
+        moodImpact: 5,
+        socialImpact: [],
+      },
+      workImpact: {
+        missedWork: 0,
+        modifiedDuties: [],
+        workLimitations: [],
+      },
+      comparison: {
+        worseningSince: '',
+        newLimitations: [],
+      },
+      notes: `Entry ${i + 1}`,
+      activities: [activity],
+      intensity: pain,
+      mood: mood === 'happy' ? 7 : mood === 'sad' ? 3 : 5,
+    };
+  };
+
+  const mockEntries: PainEntry[] = Array.from({ length: 20 }, (_, i) => createEntry(i));
 
   beforeEach(() => {
-    // Reset store to initial state
-    usePainTrackerStore.setState({
-      entries: [],
-      retention: {
-        retentionLoop: {
-          consecutiveDays: 0,
-          totalCheckIns: 0,
-          lastCheckIn: null,
-          winConditions: {
-            firstCheckIn: false,
-            threeDayStreak: false,
-            sevenDayStreak: false,
-            firstWeek: false,
-            firstMonth: false,
-          },
-          pendingInsights: [],
-        },
-        dailyRitual: {
-          ritualEnabled: false,
-          ritualType: 'evening',
-          morningTime: null,
-          eveningTime: '21:00',
-          ritualTone: 'gentle',
-          completionCount: 0,
-          currentStreak: 0,
-          lastCompleted: null,
-        },
-        identityLockIn: {
-          journeyStartDate: null,
-          identityLanguage: null,
-          personalPatterns: [],
-          identityInsights: [],
-          narrativeHistory: [],
-        },
-      },
-    });
+    localStorage.clear();
+    usePainTrackerStore.setState({ entries: [] });
+    usePainTrackerStore.getState().syncRetentionState();
   });
 
   it('should select prompts based on user data', () => {
@@ -62,7 +73,7 @@ describe('AdaptivePromptSelector + Services Integration', () => {
     
     // Prompt selector would use this data to adapt
     expect(store.entries.length).toBe(20);
-    expect(store.entries[0].painLevel).toBeGreaterThan(0);
+    expect(store.entries[0].baselineData.pain).toBeGreaterThan(0);
     
     // Adaptive selection would consider:
     // - Recent pain levels

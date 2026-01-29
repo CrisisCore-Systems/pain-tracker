@@ -8,7 +8,7 @@
  * Trauma-informed: Insights are presented supportively, not judgmentally.
  */
 
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export interface TrendData {
   direction: 'increasing' | 'stable' | 'decreasing';
@@ -50,6 +50,11 @@ export interface EngagementTrend {
 }
 
 export class TrendAnalysisService {
+  private getPainLevel(entry: PainEntry): number | null {
+    const pain = entry?.baselineData?.pain;
+    return typeof pain === 'number' ? pain : null;
+  }
+
   /**
    * Analyze pain intensity trends
    */
@@ -70,10 +75,10 @@ export class TrendAnalysisService {
 
     // Get pain levels over time
     const painLevels = entries
-      .filter(e => typeof e.currentPainLevel === 'number')
+      .filter(e => this.getPainLevel(e) !== null)
       .map(e => ({
         date: new Date(e.timestamp),
-        level: e.currentPainLevel,
+        level: this.getPainLevel(e) as number,
       }))
       .sort((a, b) => a.date.getTime() - b.date.getTime());
 
@@ -157,10 +162,10 @@ export class TrendAnalysisService {
 
     // Get pain levels with dates
     const painData = entries
-      .filter(e => typeof e.currentPainLevel === 'number')
+      .filter(e => this.getPainLevel(e) !== null)
       .map(e => ({
         date: e.timestamp,
-        level: e.currentPainLevel,
+        level: this.getPainLevel(e) as number,
       }));
 
     if (painData.length < 7) return [];
@@ -329,8 +334,8 @@ export class TrendAnalysisService {
 
     const withMedsAvg = this.average(
       entriesWithMeds
-        .filter(e => typeof e.currentPainLevel === 'number')
-        .map(e => e.currentPainLevel)
+        .filter(e => this.getPainLevel(e) !== null)
+        .map(e => this.getPainLevel(e) as number)
     );
 
     const withoutMeds = entries.filter(
@@ -341,8 +346,8 @@ export class TrendAnalysisService {
 
     const withoutMedsAvg = this.average(
       withoutMeds
-        .filter(e => typeof e.currentPainLevel === 'number')
-        .map(e => e.currentPainLevel)
+        .filter(e => this.getPainLevel(e) !== null)
+        .map(e => this.getPainLevel(e) as number)
     );
 
     const difference = withoutMedsAvg - withMedsAvg;
@@ -382,14 +387,14 @@ export class TrendAnalysisService {
 
     const morningAvg = this.average(
       morningEntries
-        .filter(e => typeof e.currentPainLevel === 'number')
-        .map(e => e.currentPainLevel)
+        .filter(e => this.getPainLevel(e) !== null)
+        .map(e => this.getPainLevel(e) as number)
     );
 
     const eveningAvg = this.average(
       eveningEntries
-        .filter(e => typeof e.currentPainLevel === 'number')
-        .map(e => e.currentPainLevel)
+        .filter(e => this.getPainLevel(e) !== null)
+        .map(e => this.getPainLevel(e) as number)
     );
 
     const difference = eveningAvg - morningAvg;

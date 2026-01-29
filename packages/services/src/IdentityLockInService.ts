@@ -9,7 +9,7 @@
  * Trauma-informed: Empowering, not prescriptive. User owns their narrative.
  */
 
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export interface UserIdentity {
   journeyStartDate: string;

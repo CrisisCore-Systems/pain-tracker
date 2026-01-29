@@ -183,7 +183,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
   devtools(
     persist(
       subscribeWithSelector(
-        immer(set => ({
+        immer<PainTrackerState>((set, get) => ({
           entries: [],
           moodEntries: [],
           fibromyalgiaEntries: [],
@@ -456,7 +456,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           loadSampleData: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             // Prevent concurrent loads
             if (state.isLoading) return;
             
@@ -479,7 +479,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           loadChronicPainTestData: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             // Prevent concurrent loads
             if (state.isLoading) return;
             
@@ -504,7 +504,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           loadComprehensive365DayTestData: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             // Prevent concurrent loads
             if (state.isLoading) return;
 
@@ -548,7 +548,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           getDailyPrompt: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return retentionLoopService.getDailyPrompt(state.entries);
           },
 
@@ -560,12 +560,12 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           getPendingInsights: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return retentionLoopService.getPendingInsights(state.entries);
           },
 
           getWinConditions: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return retentionLoopService.getWinConditions(state.entries);
           },
 
@@ -604,7 +604,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
 
           // Identity Lock-In Actions
           initializeJourney: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             identityLockInService.initializeJourney(state.entries);
             set(s => {
               s.retention.userIdentity = identityLockInService.getIdentity();
@@ -612,22 +612,22 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           generateJourneyNarrative: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return identityLockInService.generateJourneyNarrative(state.entries);
           },
 
           discoverPatterns: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return identityLockInService.discoverPatterns(state.entries);
           },
 
           getIdentityInsights: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return identityLockInService.getIdentityInsights(state.entries);
           },
 
           getIdentityLanguage: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return identityLockInService.getIdentityLanguage(state.entries);
           },
 
@@ -642,22 +642,22 @@ export const usePainTrackerStore = create<PainTrackerState>()(
 
           // Phase 3 Intelligence Actions
           getPredictiveInsights: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return predictiveInsightsService.getPredictiveInsights(state.entries);
           },
 
           getMultiVariateAnalysis: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return multiVariateAnalysisService.getMultiVariateInsights(state.entries);
           },
 
           getEnhancedPatterns: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return enhancedPatternRecognitionService.getEnhancedPatternInsights(state.entries);
           },
 
           getSmartRecommendations: () => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             return smartRecommendationsService.getSmartRecommendations(state.entries);
           },
 
@@ -719,7 +719,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           },
 
           runScheduledReport: async id => {
-            const state = usePainTrackerStore.getState();
+            const state = get();
             const schedule = state.scheduledReports.find(s => s.id === id);
             if (!schedule) return;
 

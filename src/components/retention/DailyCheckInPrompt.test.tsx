@@ -9,6 +9,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DailyCheckInPrompt } from './DailyCheckInPrompt';
 import { retentionLoopService } from '@pain-tracker/services';
+import type { RetentionState } from '@pain-tracker/services';
 
 // Mock the retention loop service
 vi.mock('@pain-tracker/services', () => ({
@@ -17,9 +18,14 @@ vi.mock('@pain-tracker/services', () => ({
     markPromptShown: vi.fn(),
     recordCheckIn: vi.fn(),
     getState: vi.fn(() => ({
+      lastCheckInDate: null,
       consecutiveDays: 0,
       totalCheckIns: 0,
-      lastCheckIn: null,
+      preferredCheckInTime: null,
+      enabledPrompts: true,
+      lastPromptShown: null,
+      pendingInsights: [],
+      completedWinConditions: [],
     })),
   },
 }));
@@ -38,11 +44,24 @@ vi.mock('../../utils/retention-animations', () => ({
 }));
 
 describe('DailyCheckInPrompt', () => {
+  const makeRetentionState = (overrides: Partial<RetentionState> = {}): RetentionState => ({
+    lastCheckInDate: null,
+    consecutiveDays: 0,
+    totalCheckIns: 0,
+    preferredCheckInTime: null,
+    enabledPrompts: true,
+    lastPromptShown: null,
+    pendingInsights: [],
+    completedWinConditions: [],
+    ...overrides,
+  });
+
   const mockPrompt = {
     id: 'prompt-1',
     text: 'How are you feeling today?',
     tone: 'gentle' as const,
     category: 'check-in' as const,
+    timing: 'anytime' as const,
     timestamp: new Date().toISOString(),
   };
 
@@ -232,11 +251,13 @@ describe('DailyCheckInPrompt', () => {
   describe('Milestone Celebrations', () => {
     it('should not celebrate when consecutiveDays is 1', async () => {
       const { celebrateMilestone } = await import('../../utils/retention-animations');
-      vi.mocked(retentionLoopService.getState).mockReturnValue({
-        consecutiveDays: 1,
-        totalCheckIns: 1,
-        lastCheckIn: new Date().toISOString(),
-      });
+      vi.mocked(retentionLoopService.getState).mockReturnValue(
+        makeRetentionState({
+          consecutiveDays: 1,
+          totalCheckIns: 1,
+          lastCheckInDate: new Date().toISOString().split('T')[0],
+        })
+      );
       const user = userEvent.setup();
       
       render(<DailyCheckInPrompt />);
@@ -249,11 +270,13 @@ describe('DailyCheckInPrompt', () => {
 
     it('should celebrate when consecutiveDays reaches 3', async () => {
       const { celebrateMilestone } = await import('../../utils/retention-animations');
-      vi.mocked(retentionLoopService.getState).mockReturnValue({
-        consecutiveDays: 3,
-        totalCheckIns: 3,
-        lastCheckIn: new Date().toISOString(),
-      });
+      vi.mocked(retentionLoopService.getState).mockReturnValue(
+        makeRetentionState({
+          consecutiveDays: 3,
+          totalCheckIns: 3,
+          lastCheckInDate: new Date().toISOString().split('T')[0],
+        })
+      );
       const user = userEvent.setup();
       
       render(<DailyCheckInPrompt />);
@@ -271,11 +294,13 @@ describe('DailyCheckInPrompt', () => {
 
     it('should celebrate when consecutiveDays reaches 7', async () => {
       const { celebrateMilestone } = await import('../../utils/retention-animations');
-      vi.mocked(retentionLoopService.getState).mockReturnValue({
-        consecutiveDays: 7,
-        totalCheckIns: 7,
-        lastCheckIn: new Date().toISOString(),
-      });
+      vi.mocked(retentionLoopService.getState).mockReturnValue(
+        makeRetentionState({
+          consecutiveDays: 7,
+          totalCheckIns: 7,
+          lastCheckInDate: new Date().toISOString().split('T')[0],
+        })
+      );
       const user = userEvent.setup();
       
       render(<DailyCheckInPrompt />);

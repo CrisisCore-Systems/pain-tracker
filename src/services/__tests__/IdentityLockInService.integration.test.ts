@@ -1,55 +1,62 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { usePainTrackerStore } from '@/stores/pain-tracker-store';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import type { PainEntry } from '../../types';
 
 describe('IdentityLockInService + Store Integration', () => {
-  const mockEntries = Array.from({ length: 15 }, (_, i) => ({
-    id: i + 1,
-    timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-    painLevel: 5 + (i % 3),
-    mood: 'neutral' as const,
-    activities: ['walking'],
-    symptoms: ['headache'],
-    medications: [],
-    notes: `Day ${i + 1} notes`,
-  }));
+  const createEntry = (i: number): PainEntry => {
+    const pain = 5 + (i % 3);
+    const timestamp = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString();
+
+    return {
+      id: i + 1,
+      timestamp,
+      baselineData: {
+        pain,
+        locations: [],
+        symptoms: ['headache'],
+      },
+      functionalImpact: {
+        limitedActivities: [],
+        assistanceNeeded: [],
+        mobilityAids: [],
+      },
+      medications: {
+        current: [],
+        changes: '',
+        effectiveness: '',
+      },
+      treatments: {
+        recent: [],
+        effectiveness: '',
+        planned: [],
+      },
+      qualityOfLife: {
+        sleepQuality: 5,
+        moodImpact: 5,
+        socialImpact: [],
+      },
+      workImpact: {
+        missedWork: 0,
+        modifiedDuties: [],
+        workLimitations: [],
+      },
+      comparison: {
+        worseningSince: '',
+        newLimitations: [],
+      },
+      notes: `Day ${i + 1} notes`,
+      activities: ['walking'],
+      intensity: pain,
+      mood: 5,
+    };
+  };
+
+  const mockEntries: PainEntry[] = Array.from({ length: 15 }, (_, i) => createEntry(i));
 
   beforeEach(() => {
-    // Reset store to initial state
-    usePainTrackerStore.setState({
-      entries: [],
-      retention: {
-        retentionLoop: {
-          consecutiveDays: 0,
-          totalCheckIns: 0,
-          lastCheckIn: null,
-          winConditions: {
-            firstCheckIn: false,
-            threeDayStreak: false,
-            sevenDayStreak: false,
-            firstWeek: false,
-            firstMonth: false,
-          },
-          pendingInsights: [],
-        },
-        dailyRitual: {
-          ritualEnabled: false,
-          ritualType: 'evening',
-          morningTime: null,
-          eveningTime: '21:00',
-          ritualTone: 'gentle',
-          completionCount: 0,
-          currentStreak: 0,
-          lastCompleted: null,
-        },
-        identityLockIn: {
-          journeyStartDate: null,
-          identityLanguage: null,
-          personalPatterns: [],
-          identityInsights: [],
-          narrativeHistory: [],
-        },
-      },
-    });
+    localStorage.clear();
+    usePainTrackerStore.setState({ entries: [] });
+    usePainTrackerStore.getState().syncRetentionState();
   });
 
   it('should initialize journey with entries', () => {
@@ -61,10 +68,10 @@ describe('IdentityLockInService + Store Integration', () => {
     });
     
     // Initialize journey (would call initializeJourney in real implementation)
-    store.initializeIdentityJourney();
+    store.initializeJourney();
     
     const updated = usePainTrackerStore.getState();
-    expect(updated.retention.identityLockIn.journeyStartDate).toBeTruthy();
+    expect(updated.retention.userIdentity.journeyStartDate).toBeTruthy();
   });
 
   it('should discover patterns from pain data', () => {
@@ -76,7 +83,7 @@ describe('IdentityLockInService + Store Integration', () => {
     });
     
     // Discover patterns (would call discoverPatterns in real implementation)
-    store.initializeIdentityJourney();
+    store.initializeJourney();
     
     const updated = usePainTrackerStore.getState();
     expect(updated.entries.length).toBe(15);
@@ -91,7 +98,7 @@ describe('IdentityLockInService + Store Integration', () => {
       entries: mockEntries,
     });
     
-    store.initializeIdentityJourney();
+    store.initializeJourney();
     
     const updated = usePainTrackerStore.getState();
     expect(updated.entries.length).toBe(15);
@@ -107,7 +114,7 @@ describe('IdentityLockInService + Store Integration', () => {
       entries: shortEntries,
     });
     
-    store.initializeIdentityJourney();
+    store.initializeJourney();
     
     let updated = usePainTrackerStore.getState();
     expect(updated.entries.length).toBe(3);
@@ -129,7 +136,7 @@ describe('IdentityLockInService + Store Integration', () => {
     expect(updated.entries.length).toBe(15);
   });
 
-  it('should customize identity language', () => {
+  it('should provide identity language', () => {
     const store = usePainTrackerStore.getState();
     
     // Set entries for language generation
@@ -138,22 +145,10 @@ describe('IdentityLockInService + Store Integration', () => {
     });
     
     // Set custom identity language
-    usePainTrackerStore.setState({
-      retention: {
-        ...store.retention,
-        identityLockIn: {
-          ...store.retention.identityLockIn,
-          identityLanguage: {
-            title: 'My Pain Journey',
-            subtitle: 'Understanding my patterns',
-          },
-        },
-      },
-    });
-    
-    const updated = usePainTrackerStore.getState();
-    expect(updated.retention.identityLockIn.identityLanguage).toBeTruthy();
-    expect(updated.retention.identityLockIn.identityLanguage?.title).toBe('My Pain Journey');
+    const language = store.getIdentityLanguage();
+    expect(language.title).toBeTruthy();
+    expect(language.subtitle).toBeTruthy();
+    expect(language.action).toBeTruthy();
   });
 
   it('should update when entries change', () => {
@@ -164,7 +159,7 @@ describe('IdentityLockInService + Store Integration', () => {
       entries: mockEntries.slice(0, 5),
     });
     
-    store.initializeIdentityJourney();
+    store.initializeJourney();
     
     let updated = usePainTrackerStore.getState();
     const initialCount = updated.entries.length;
@@ -178,5 +173,6 @@ describe('IdentityLockInService + Store Integration', () => {
     updated = usePainTrackerStore.getState();
     expect(updated.entries.length).toBe(15);
     expect(updated.entries.length).toBeGreaterThan(initialCount);
+    expect(updated.retention.userIdentity.totalDaysTracked).toBeGreaterThan(0);
   });
 });

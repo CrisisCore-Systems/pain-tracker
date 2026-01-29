@@ -4,10 +4,75 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { smartRecommendationsService } from '../../packages/services/src/SmartRecommendationsService';
-import type { PainEntry } from '@pain-tracker/types';
+import type { PainEntry } from '../types';
 
 describe('SmartRecommendationsService', () => {
   let mockEntries: PainEntry[];
+
+  const medications = (names: string[]) => ({
+    current: names.map(name => ({ name, dosage: '', frequency: '', effectiveness: '' })),
+    changes: '',
+    effectiveness: '',
+  });
+
+  const withPain = (entry: PainEntry, pain: number): PainEntry => ({
+    ...entry,
+    baselineData: {
+      ...entry.baselineData,
+      pain,
+    },
+    intensity: pain,
+  });
+
+  const withMedNames = (entry: PainEntry, names: string[]): PainEntry => ({
+    ...entry,
+    medications: medications(names),
+  });
+
+  const makeEntry = (params: { id: number; timestamp: string; pain?: number; location?: string; quality?: string[]; notes?: string }): PainEntry => {
+    const pain = params.pain ?? 5;
+    const location = params.location ?? 'back';
+    const quality = params.quality ?? ['sharp'];
+
+    return {
+      id: params.id,
+      timestamp: params.timestamp,
+      baselineData: {
+        pain,
+        locations: location ? [location] : [],
+        symptoms: [],
+      },
+      functionalImpact: {
+        limitedActivities: [],
+        assistanceNeeded: [],
+        mobilityAids: [],
+      },
+      medications: medications([]),
+      treatments: {
+        recent: [],
+        effectiveness: '',
+        planned: [],
+      },
+      qualityOfLife: {
+        sleepQuality: 5,
+        moodImpact: 5,
+        socialImpact: [],
+      },
+      workImpact: {
+        missedWork: 0,
+        modifiedDuties: [],
+        workLimitations: [],
+      },
+      comparison: {
+        worseningSince: '',
+        newLimitations: [],
+      },
+      notes: params.notes ?? '',
+      location,
+      quality,
+      intensity: pain,
+    };
+  };
 
   beforeEach(() => {
     // Create base mock entries
@@ -18,17 +83,16 @@ describe('SmartRecommendationsService', () => {
       const date = new Date(baseDate);
       date.setDate(date.getDate() + i);
       
-      mockEntries.push({
-        id: i + 1,
-        timestamp: date.toISOString(),
-        painLevel: 5,
-        location: 'back',
-        quality: ['sharp'],
-        medications: [],
-        notes: '',
-        createdAt: date.toISOString(),
-        updatedAt: date.toISOString()
-      });
+      mockEntries.push(
+        makeEntry({
+          id: i + 1,
+          timestamp: date.toISOString(),
+          pain: 5,
+          location: 'back',
+          quality: ['sharp'],
+          notes: '',
+        })
+      );
     }
   });
 
@@ -54,10 +118,7 @@ describe('SmartRecommendationsService', () => {
 
   describe('High Pain Recommendations', () => {
     it('should recommend intervention for high pain (>6.5)', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i < 7 ? 7 : 7.5
-      }));
+      const entries = mockEntries.map((e, i) => withPain(e, i < 7 ? 7 : 7.5));
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -69,10 +130,7 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should mark as critical if trending up', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i < 7 ? 6 : 8 // Significant increase
-      }));
+      const entries = mockEntries.map((e, i) => withPain(e, i < 7 ? 6 : 8));
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -81,7 +139,7 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should include actionable steps', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 7.5 }));
+      const entries = mockEntries.map(e => withPain(e, 7.5));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       const highPainRec = result.topRecommendations.find(r => r.id === 'high-pain-management');
@@ -92,10 +150,7 @@ describe('SmartRecommendationsService', () => {
 
   describe('Trend-Based Recommendations', () => {
     it('should detect increasing pain trend', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i < 7 ? 4 : 6 // 50% increase
-      }));
+      const entries = mockEntries.map((e, i) => withPain(e, i < 7 ? 4 : 6));
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -106,10 +161,7 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should celebrate decreasing pain trend', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i < 7 ? 6 : 4.5 // Improvement
-      }));
+      const entries = mockEntries.map((e, i) => withPain(e, i < 7 ? 6 : 4.5));
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -119,10 +171,7 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should provide reasoning for trend recommendations', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i < 7 ? 4 : 6
-      }));
+      const entries = mockEntries.map((e, i) => withPain(e, i < 7 ? 4 : 6));
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -134,11 +183,10 @@ describe('SmartRecommendationsService', () => {
 
   describe('Medication Recommendations', () => {
     it('should recommend consistent medication use when effective', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i % 2 === 0 ? 4 : 7, // Lower with meds
-        medications: i % 2 === 0 ? ['ibuprofen'] : []
-      }));
+      const entries = mockEntries.map((e, i) => {
+        const withMaybeMeds = i % 2 === 0 ? withMedNames(e, ['ibuprofen']) : withMedNames(e, []);
+        return withPain(withMaybeMeds, i % 2 === 0 ? 4 : 7);
+      });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -149,11 +197,10 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should require minimum samples for medication recommendations', () => {
-      const entries = mockEntries.slice(0, 7).map((e, i) => ({
-        ...e,
-        painLevel: i % 2 === 0 ? 4 : 7,
-        medications: i % 2 === 0 ? ['ibuprofen'] : []
-      }));
+      const entries = mockEntries.slice(0, 7).map((e, i) => {
+        const withMaybeMeds = i % 2 === 0 ? withMedNames(e, ['ibuprofen']) : withMedNames(e, []);
+        return withPain(withMaybeMeds, i % 2 === 0 ? 4 : 7);
+      });
       // Only 3-4 samples of each
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
@@ -170,7 +217,8 @@ describe('SmartRecommendationsService', () => {
     it('should recommend improved tracking with sparse data', () => {
       const entries = mockEntries.slice(0, 3); // Only 3 entries in 7 days
       entries.forEach((e, i) => {
-        e.painLevel = 6;
+        e.baselineData.pain = 6;
+        e.intensity = 6;
       });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
@@ -201,11 +249,7 @@ describe('SmartRecommendationsService', () => {
         const hour = i % 2 === 0 ? 8 : 20; // Morning vs evening
         date.setHours(hour);
         
-        return {
-          ...e,
-          timestamp: date.toISOString(),
-          painLevel: i % 2 === 0 ? 4 : 7 // Higher in evening
-        };
+        return withPain({ ...e, timestamp: date.toISOString() }, i % 2 === 0 ? 4 : 7);
       });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
@@ -220,11 +264,7 @@ describe('SmartRecommendationsService', () => {
       const entries = mockEntries.map((e, i) => {
         const date = new Date(e.timestamp);
         date.setHours(i % 2 === 0 ? 8 : 20);
-        return {
-          ...e,
-          timestamp: date.toISOString(),
-          painLevel: i % 2 === 0 ? 4 : 7
-        };
+        return withPain({ ...e, timestamp: date.toISOString() }, i % 2 === 0 ? 4 : 7);
       });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
@@ -240,11 +280,7 @@ describe('SmartRecommendationsService', () => {
       const entries = mockEntries.map((e, i) => {
         const date = new Date(e.timestamp);
         date.setHours(8); // Consistent morning timing
-        return {
-          ...e,
-          timestamp: date.toISOString(),
-          medications: ['ibuprofen']
-        };
+        return withMedNames({ ...e, timestamp: date.toISOString() }, ['ibuprofen']);
       });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
@@ -278,11 +314,7 @@ describe('SmartRecommendationsService', () => {
         const hour = i % 2 === 0 ? 9 : 15; // Morning vs afternoon
         date.setHours(hour);
         
-        return {
-          ...e,
-          timestamp: date.toISOString(),
-          painLevel: i % 2 === 0 ? 3 : 6 // Lower in morning
-        };
+        return withPain({ ...e, timestamp: date.toISOString() }, i % 2 === 0 ? 3 : 6);
       });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
@@ -295,11 +327,10 @@ describe('SmartRecommendationsService', () => {
 
   describe('Intervention Rankings', () => {
     it('should rank medication by effectiveness', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i % 2 === 0 ? 4 : 7,
-        medications: i % 2 === 0 ? ['ibuprofen'] : []
-      }));
+      const entries = mockEntries.map((e, i) => {
+        const withMaybeMeds = i % 2 === 0 ? withMedNames(e, ['ibuprofen']) : withMedNames(e, []);
+        return withPain(withMaybeMeds, i % 2 === 0 ? 4 : 7);
+      });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -310,39 +341,37 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should rank rest/sleep by effectiveness', () => {
-      const entries = [];
+      const entries: PainEntry[] = [];
       const baseDate = new Date('2026-01-20T20:00:00Z');
       
       for (let i = 0; i < 10; i++) {
         // Evening entry
         const eveningDate = new Date(baseDate);
         eveningDate.setDate(eveningDate.getDate() + i);
-        entries.push({
-          id: i * 2 + 1,
-          timestamp: eveningDate.toISOString(),
-          painLevel: 6,
-          location: 'back',
-          quality: ['aching'],
-          medications: [],
-          notes: '',
-          createdAt: eveningDate.toISOString(),
-          updatedAt: eveningDate.toISOString()
-        });
+        entries.push(
+          makeEntry({
+            id: i * 2 + 1,
+            timestamp: eveningDate.toISOString(),
+            pain: 6,
+            location: 'back',
+            quality: ['aching'],
+            notes: '',
+          })
+        );
         
         // Morning entry (after sleep)
         const morningDate = new Date(eveningDate);
         morningDate.setHours(morningDate.getHours() + 12);
-        entries.push({
-          id: i * 2 + 2,
-          timestamp: morningDate.toISOString(),
-          painLevel: 4,
-          location: 'back',
-          quality: ['aching'],
-          medications: [],
-          notes: '',
-          createdAt: morningDate.toISOString(),
-          updatedAt: morningDate.toISOString()
-        });
+        entries.push(
+          makeEntry({
+            id: i * 2 + 2,
+            timestamp: morningDate.toISOString(),
+            pain: 4,
+            location: 'back',
+            quality: ['aching'],
+            notes: '',
+          })
+        );
       }
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
@@ -353,11 +382,10 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should provide recommendation level based on effectiveness', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i % 2 === 0 ? 3 : 8, // Strong effect
-        medications: i % 2 === 0 ? ['ibuprofen'] : []
-      }));
+      const entries = mockEntries.map((e, i) => {
+        const withMaybeMeds = i % 2 === 0 ? withMedNames(e, ['ibuprofen']) : withMedNames(e, []);
+        return withPain(withMaybeMeds, i % 2 === 0 ? 3 : 8);
+      });
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -368,7 +396,7 @@ describe('SmartRecommendationsService', () => {
 
   describe('Action Plans', () => {
     it('should create pain reduction plan for high pain', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 7 }));
+      const entries = mockEntries.map(e => withPain(e, 7));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       const painPlan = result.actionPlans.find(p => p.goal.includes('Reduce'));
@@ -386,7 +414,7 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should include step-by-step actions', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 6 }));
+      const entries = mockEntries.map(e => withPain(e, 6));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       if (result.actionPlans.length > 0) {
@@ -400,7 +428,7 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should include estimated impact', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 7 }));
+      const entries = mockEntries.map(e => withPain(e, 7));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       const painPlan = result.actionPlans.find(p => p.goal.includes('Reduce'));
@@ -411,7 +439,7 @@ describe('SmartRecommendationsService', () => {
 
   describe('Summary Metrics', () => {
     it('should calculate summary metrics correctly', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 7 }));
+      const entries = mockEntries.map(e => withPain(e, 7));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       expect(result.summary).toBeDefined();
@@ -421,14 +449,14 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should count critical actions', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 8 }));
+      const entries = mockEntries.map(e => withPain(e, 8));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       expect(result.summary.criticalActions).toBeGreaterThanOrEqual(0);
     });
 
     it('should estimate overall impact', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 7 }));
+      const entries = mockEntries.map(e => withPain(e, 7));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       expect(result.summary.estimatedImpact).toMatch(/high|medium|moderate/);
@@ -437,10 +465,7 @@ describe('SmartRecommendationsService', () => {
 
   describe('Recommendation Prioritization', () => {
     it('should sort recommendations by priority and confidence', () => {
-      const entries = mockEntries.map((e, i) => ({
-        ...e,
-        painLevel: i < 7 ? 4 : 8 // Trending up
-      }));
+      const entries = mockEntries.map((e, i) => withPain(e, i < 7 ? 4 : 8));
 
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
@@ -458,7 +483,7 @@ describe('SmartRecommendationsService', () => {
     });
 
     it('should limit to top recommendations', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 7 }));
+      const entries = mockEntries.map(e => withPain(e, 7));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       expect(result.topRecommendations.length).toBeLessThanOrEqual(8);
@@ -467,7 +492,7 @@ describe('SmartRecommendationsService', () => {
 
   describe('Recommendation Completeness', () => {
     it('should include all required fields', () => {
-      const entries = mockEntries.map(e => ({ ...e, painLevel: 7 }));
+      const entries = mockEntries.map(e => withPain(e, 7));
       const result = smartRecommendationsService.getSmartRecommendations(entries);
       
       if (result.topRecommendations.length > 0) {

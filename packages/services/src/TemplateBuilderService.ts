@@ -78,7 +78,7 @@ export const WorkflowTemplateSchema = BaseTemplateSchema.extend({
     order: z.number().int().positive(),
     type: z.enum(['prompt', 'check', 'recommendation', 'track', 'notify', 'custom']),
     action: z.string().min(1).max(200),
-    data: z.record(z.any()).optional(),
+    data: z.record(z.string(), z.any()).optional(),
   })).min(1),
   goal: z.string().max(200).optional(),
 });
@@ -112,7 +112,7 @@ export interface TemplateFilter {
 export interface ImportResult {
   success: boolean;
   template?: Template;
-  errors?: z.ZodError['errors'];
+  errors?: z.ZodIssue[];
 }
 
 /**
@@ -316,7 +316,7 @@ export class TemplateBuilderService {
       if (error instanceof z.ZodError) {
         return {
           success: false,
-          errors: error.errors,
+          errors: error.issues,
         };
       }
       return {
@@ -429,13 +429,13 @@ export class TemplateBuilderService {
   /**
    * Validate a template without saving
    */
-  validateTemplate(template: any): { valid: boolean; errors?: z.ZodError['errors'] } {
+  validateTemplate(template: any): { valid: boolean; errors?: z.ZodIssue[] } {
     try {
       TemplateSchema.parse(template);
       return { valid: true };
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return { valid: false, errors: error.errors };
+        return { valid: false, errors: error.issues };
       }
       return { valid: false, errors: [{ code: 'custom' as any, message: String(error), path: [] }] };
     }

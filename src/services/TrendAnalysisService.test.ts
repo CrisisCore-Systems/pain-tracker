@@ -12,7 +12,17 @@ describe('TrendAnalysisService', () => {
   const createEntry = (daysAgo: number, painLevel: number): Partial<PainEntry> => ({
     id: Date.now() + Math.random(),
     timestamp: new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000).toISOString(),
-    currentPainLevel: painLevel,
+    baselineData: {
+      pain: painLevel,
+      locations: [],
+      symptoms: [],
+    },
+  });
+
+  const meds = (names: string[]) => ({
+    current: names.map(name => ({ name, dosage: '', frequency: '', effectiveness: '' })),
+    changes: '',
+    effectiveness: '',
   });
 
   describe('Pain Intensity Trend Analysis', () => {
@@ -217,14 +227,14 @@ describe('TrendAnalysisService', () => {
   describe('Correlation Analysis', () => {
     it('should find medication correlation', () => {
       const entries: Partial<PainEntry>[] = [
-        { ...createEntry(10, 8), medications: { current: [] } },
-        { ...createEntry(9, 8), medications: { current: [] } },
-        { ...createEntry(8, 8), medications: { current: [] } },
-        { ...createEntry(7, 5), medications: { current: ['Med A'] } },
-        { ...createEntry(6, 5), medications: { current: ['Med A'] } },
-        { ...createEntry(5, 5), medications: { current: ['Med A'] } },
-        { ...createEntry(4, 5), medications: { current: ['Med A'] } },
-        { ...createEntry(3, 5), medications: { current: ['Med A'] } },
+        { ...createEntry(10, 8), medications: meds([]) },
+        { ...createEntry(9, 8), medications: meds([]) },
+        { ...createEntry(8, 8), medications: meds([]) },
+        { ...createEntry(7, 5), medications: meds(['Med A']) },
+        { ...createEntry(6, 5), medications: meds(['Med A']) },
+        { ...createEntry(5, 5), medications: meds(['Med A']) },
+        { ...createEntry(4, 5), medications: meds(['Med A']) },
+        { ...createEntry(3, 5), medications: meds(['Med A']) },
       ];
 
       const correlations = service.findCorrelations(entries as PainEntry[]);

@@ -12,7 +12,7 @@
  * Actionability: Specific, timely, measurable suggestions
  */
 
-import type { PainEntry } from '@pain-tracker/types';
+import type { PainEntry } from './types';
 
 // Recommendation types
 export interface Recommendation {
@@ -77,6 +77,14 @@ export interface SmartRecommendations {
 }
 
 class SmartRecommendationsService {
+  private getPainLevel(entry: PainEntry): number {
+    return entry?.baselineData?.pain ?? 0;
+  }
+
+  private hasMedication(entry: PainEntry): boolean {
+    return (entry.medications?.current?.length ?? 0) > 0;
+  }
+
   /**
    * Get context-aware recommendations based on current data and patterns
    */
@@ -115,10 +123,10 @@ class SmartRecommendationsService {
   private generateRecommendations(entries: PainEntry[]): Recommendation[] {
     const recommendations: Recommendation[] = [];
     const recentEntries = entries.slice(-7);
-    const avgPain = recentEntries.reduce((sum, e) => sum + e.painLevel, 0) / recentEntries.length;
+    const avgPain = recentEntries.reduce((sum, e) => sum + this.getPainLevel(e), 0) / recentEntries.length;
 
     // Analyze trends
-    const earlierAvg = entries.slice(-14, -7).reduce((sum, e) => sum + e.painLevel, 0) / 7;
+    const earlierAvg = entries.slice(-14, -7).reduce((sum, e) => sum + this.getPainLevel(e), 0) / 7;
     const trendingUp = avgPain > earlierAvg && (avgPain - earlierAvg) / earlierAvg > 0.15;
     const trendingDown = avgPain < earlierAvg && (earlierAvg - avgPain) / earlierAvg > 0.15;
 
@@ -204,12 +212,12 @@ class SmartRecommendationsService {
     }
 
     // Medication analysis
-    const withMed = recentEntries.filter(e => e.medications && e.medications.length > 0);
-    const withoutMed = recentEntries.filter(e => !e.medications || e.medications.length === 0);
+    const withMed = recentEntries.filter(e => this.hasMedication(e));
+    const withoutMed = recentEntries.filter(e => !this.hasMedication(e));
     
     if (withMed.length >= 3 && withoutMed.length >= 3) {
-      const medAvg = withMed.reduce((sum, e) => sum + e.painLevel, 0) / withMed.length;
-      const noMedAvg = withoutMed.reduce((sum, e) => sum + e.painLevel, 0) / withoutMed.length;
+      const medAvg = withMed.reduce((sum, e) => sum + this.getPainLevel(e), 0) / withMed.length;
+      const noMedAvg = withoutMed.reduce((sum, e) => sum + this.getPainLevel(e), 0) / withoutMed.length;
       
       if (noMedAvg - medAvg > 1.5) {
         recommendations.push({
@@ -278,8 +286,8 @@ class SmartRecommendationsService {
     });
 
     if (eveningEntries.length >= 3 && morningEntries.length >= 3) {
-      const eveningAvg = eveningEntries.reduce((sum, e) => sum + e.painLevel, 0) / eveningEntries.length;
-      const morningAvg = morningEntries.reduce((sum, e) => sum + e.painLevel, 0) / morningEntries.length;
+      const eveningAvg = eveningEntries.reduce((sum, e) => sum + this.getPainLevel(e), 0) / eveningEntries.length;
+      const morningAvg = morningEntries.reduce((sum, e) => sum + this.getPainLevel(e), 0) / morningEntries.length;
       
       if (eveningAvg - morningAvg > 1.5) {
         recommendations.push({
@@ -325,7 +333,7 @@ class SmartRecommendationsService {
     const recommendations: TimingRecommendation[] = [];
 
     // Medication timing
-    const withMed = entries.filter(e => e.medications && e.medications.length > 0);
+    const withMed = entries.filter(e => this.hasMedication(e));
     if (withMed.length >= 5) {
       const medTimes = withMed.map(e => new Date(e.timestamp).getHours());
       const avgTime = medTimes.reduce((sum, h) => sum + h, 0) / medTimes.length;
@@ -369,8 +377,8 @@ class SmartRecommendationsService {
     });
 
     if (morningPain.length >= 3 && afternoonPain.length >= 3) {
-      const morningAvg = morningPain.reduce((sum, e) => sum + e.painLevel, 0) / morningPain.length;
-      const afternoonAvg = afternoonPain.reduce((sum, e) => sum + e.painLevel, 0) / afternoonPain.length;
+      const morningAvg = morningPain.reduce((sum, e) => sum + this.getPainLevel(e), 0) / morningPain.length;
+      const afternoonAvg = afternoonPain.reduce((sum, e) => sum + this.getPainLevel(e), 0) / afternoonPain.length;
       
       if (morningAvg < afternoonAvg - 1) {
         recommendations.push({
@@ -393,12 +401,12 @@ class SmartRecommendationsService {
     const rankings: InterventionRanking[] = [];
 
     // Medication effectiveness
-    const withMed = entries.filter(e => e.medications && e.medications.length > 0);
-    const withoutMed = entries.filter(e => !e.medications || e.medications.length === 0);
+    const withMed = entries.filter(e => this.hasMedication(e));
+    const withoutMed = entries.filter(e => !this.hasMedication(e));
     
     if (withMed.length >= 5 && withoutMed.length >= 5) {
-      const medAvg = withMed.reduce((sum, e) => sum + e.painLevel, 0) / withMed.length;
-      const noMedAvg = withoutMed.reduce((sum, e) => sum + e.painLevel, 0) / withoutMed.length;
+      const medAvg = withMed.reduce((sum, e) => sum + this.getPainLevel(e), 0) / withMed.length;
+      const noMedAvg = withoutMed.reduce((sum, e) => sum + this.getPainLevel(e), 0) / withoutMed.length;
       const impact = (noMedAvg - medAvg) / 10; // Normalize to 0-1
       
       if (impact > 0) {
@@ -428,7 +436,7 @@ class SmartRecommendationsService {
       
       if (hoursDiff >= 8 && hoursDiff <= 16) {
         // Likely slept between entries
-        const painChange = prevEntry.painLevel - currEntry.painLevel;
+        const painChange = this.getPainLevel(prevEntry) - this.getPainLevel(currEntry);
         if (painChange > 0) {
           restEffectiveness += painChange;
           restCount++;
@@ -457,7 +465,7 @@ class SmartRecommendationsService {
    */
   private createActionPlans(entries: PainEntry[]): ActionPlan[] {
     const plans: ActionPlan[] = [];
-    const recentAvg = entries.slice(-7).reduce((sum, e) => sum + e.painLevel, 0) / 7;
+    const recentAvg = entries.slice(-7).reduce((sum, e) => sum + this.getPainLevel(e), 0) / 7;
 
     // Pain reduction plan
     if (recentAvg > 5) {

@@ -8,7 +8,7 @@
  */
 
 import type { DailyPrompt, RetentionState } from './RetentionLoopService';
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export interface PromptEffectivenessData {
   promptId: string;

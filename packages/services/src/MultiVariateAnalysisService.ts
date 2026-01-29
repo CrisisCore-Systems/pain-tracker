@@ -8,7 +8,7 @@
  * Explainable: Provides clear reasoning for discovered relationships.
  */
 
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export interface CorrelationPair {
   variable1: string;
@@ -78,6 +78,10 @@ export interface MultiVariateInsights {
 }
 
 export class MultiVariateAnalysisService {
+  private getPainLevel(entry: PainEntry): number {
+    return entry?.baselineData?.pain ?? 0;
+  }
+
   /**
    * Build correlation matrix between all variables
    */
@@ -176,14 +180,14 @@ export class MultiVariateAnalysisService {
     const clusters: ClusterGroup[] = [];
 
     // Define cluster centroids
-    const lowPainMorning = this.findEntriesMatching(entries, e => 
-      e.currentPainLevel < 4 && this.getTimeCategory(e) === 'morning'
+    const lowPainMorning = this.findEntriesMatching(entries, e =>
+      this.getPainLevel(e) < 4 && this.getTimeCategory(e) === 'morning'
     );
     const highPainEvening = this.findEntriesMatching(entries, e =>
-      e.currentPainLevel > 7 && this.getTimeCategory(e) === 'evening'
+      this.getPainLevel(e) > 7 && this.getTimeCategory(e) === 'evening'
     );
     const moderatePain = this.findEntriesMatching(entries, e =>
-      e.currentPainLevel >= 4 && e.currentPainLevel <= 7
+      this.getPainLevel(e) >= 4 && this.getPainLevel(e) <= 7
     );
 
     if (lowPainMorning.length >= 3) {
@@ -193,7 +197,7 @@ export class MultiVariateAnalysisService {
         entries: lowPainMorning.map(e => e.id as number),
         characteristics: ['Low pain level (< 4)', 'Morning time', 'Better functioning'],
         centroid: {
-          painLevel: this.average(lowPainMorning.map(e => e.currentPainLevel)),
+          painLevel: this.average(lowPainMorning.map(e => this.getPainLevel(e))),
           timeOfDay: 'morning',
         },
         size: lowPainMorning.length,
@@ -207,7 +211,7 @@ export class MultiVariateAnalysisService {
         entries: highPainEvening.map(e => e.id as number),
         characteristics: ['High pain level (> 7)', 'Evening time', 'May need intervention'],
         centroid: {
-          painLevel: this.average(highPainEvening.map(e => e.currentPainLevel)),
+          painLevel: this.average(highPainEvening.map(e => this.getPainLevel(e))),
           timeOfDay: 'evening',
         },
         size: highPainEvening.length,
@@ -221,7 +225,7 @@ export class MultiVariateAnalysisService {
         entries: moderatePain.map(e => e.id as number),
         characteristics: ['Moderate pain (4-7)', 'Variable timing', 'Manageable with care'],
         centroid: {
-          painLevel: this.average(moderatePain.map(e => e.currentPainLevel)),
+          painLevel: this.average(moderatePain.map(e => this.getPainLevel(e))),
           timeOfDay: 'varies',
         },
         size: moderatePain.length,
@@ -267,8 +271,8 @@ export class MultiVariateAnalysisService {
   // Helper methods
 
   private correlatePainWithTimeOfDay(entries: PainEntry[]): CorrelationPair | null {
-    const morningPain = entries.filter(e => this.getTimeCategory(e) === 'morning').map(e => e.currentPainLevel);
-    const eveningPain = entries.filter(e => this.getTimeCategory(e) === 'evening').map(e => e.currentPainLevel);
+    const morningPain = entries.filter(e => this.getTimeCategory(e) === 'morning').map(e => this.getPainLevel(e));
+    const eveningPain = entries.filter(e => this.getTimeCategory(e) === 'evening').map(e => this.getPainLevel(e));
 
     if (morningPain.length < 3 || eveningPain.length < 3) return null;
 
@@ -304,8 +308,8 @@ export class MultiVariateAnalysisService {
 
     if (withMeds.length < 3 || withoutMeds.length < 3) return null;
 
-    const withMedsAvg = this.average(withMeds.map(e => e.currentPainLevel));
-    const withoutMedsAvg = this.average(withoutMeds.map(e => e.currentPainLevel));
+    const withMedsAvg = this.average(withMeds.map(e => this.getPainLevel(e)));
+    const withoutMedsAvg = this.average(withoutMeds.map(e => this.getPainLevel(e)));
     const diff = withoutMedsAvg - withMedsAvg;
 
     const correlation = Math.min(Math.abs(diff) / 5, 1) * Math.sign(diff);
@@ -338,8 +342,8 @@ export class MultiVariateAnalysisService {
 
     if (weekdayPain.length < 3 || weekendPain.length < 3) return null;
 
-    const weekdayAvg = this.average(weekdayPain.map(e => e.currentPainLevel));
-    const weekendAvg = this.average(weekendPain.map(e => e.currentPainLevel));
+    const weekdayAvg = this.average(weekdayPain.map(e => this.getPainLevel(e)));
+    const weekendAvg = this.average(weekendPain.map(e => this.getPainLevel(e)));
     const diff = weekendAvg - weekdayAvg;
 
     const correlation = Math.min(Math.abs(diff) / 5, 1) * Math.sign(diff);
@@ -436,8 +440,8 @@ export class MultiVariateAnalysisService {
 
     if (weekendEvening.length < 2 || weekdayEvening.length < 2) return null;
 
-    const weekendAvg = this.average(weekendEvening.map(e => e.currentPainLevel));
-    const weekdayAvg = this.average(weekdayEvening.map(e => e.currentPainLevel));
+    const weekendAvg = this.average(weekendEvening.map(e => this.getPainLevel(e)));
+    const weekdayAvg = this.average(weekdayEvening.map(e => this.getPainLevel(e)));
     const diff = Math.abs(weekendAvg - weekdayAvg);
 
     if (diff < 1.5) return null;
@@ -457,7 +461,7 @@ export class MultiVariateAnalysisService {
   private findWeekendEveningPattern(entries: PainEntry[]): CompoundPattern | null {
     const matches = entries.filter(e => {
       const day = new Date(e.timestamp).getDay();
-      return (day === 0 || day === 6) && this.getTimeCategory(e) === 'evening' && e.currentPainLevel > 6;
+      return (day === 0 || day === 6) && this.getTimeCategory(e) === 'evening' && this.getPainLevel(e) > 6;
     });
 
     if (matches.length < 3) return null;
@@ -481,7 +485,7 @@ export class MultiVariateAnalysisService {
     const matches = entries.filter(e =>
       e.medications && e.medications.current && e.medications.current.length > 0 &&
       this.getTimeCategory(e) === 'morning' &&
-      e.currentPainLevel < 5
+      this.getPainLevel(e) < 5
     );
 
     if (matches.length < 3) return null;
@@ -508,7 +512,7 @@ export class MultiVariateAnalysisService {
 
     let continuations = 0;
     for (let i = 0; i < sorted.length - 1; i++) {
-      if (sorted[i].currentPainLevel > 7 && sorted[i + 1].currentPainLevel > 7) {
+      if (this.getPainLevel(sorted[i]) > 7 && this.getPainLevel(sorted[i + 1]) > 7) {
         continuations++;
       }
     }
@@ -520,7 +524,7 @@ export class MultiVariateAnalysisService {
       conditions: ['high pain day', 'following day'],
       outcome: 'continued_high_pain',
       frequency: continuations,
-      strength: continuations / entries.filter(e => e.currentPainLevel > 7).length,
+      strength: continuations / entries.filter(e => this.getPainLevel(e) > 7).length,
       description: 'High pain days often followed by another high pain day',
       actionable: true,
       recommendation: 'Prepare extended pain management strategy after high pain day',
@@ -541,7 +545,7 @@ export class MultiVariateAnalysisService {
 
       if (current.medications && current.medications.current && current.medications.current.length > 0) {
         medicationEvents++;
-        if (next.currentPainLevel < current.currentPainLevel) {
+        if (this.getPainLevel(next) < this.getPainLevel(current)) {
           improvements++;
         }
       }
@@ -580,7 +584,7 @@ export class MultiVariateAnalysisService {
       const index = sorted.findIndex(e => e.id === medEntry.id);
       if (index >= 0 && index < sorted.length - 1) {
         const next = sorted[index + 1];
-        const improvement = medEntry.currentPainLevel - next.currentPainLevel;
+        const improvement = this.getPainLevel(medEntry) - this.getPainLevel(next);
         if (improvement > 0) {
           totalImprovement += improvement;
           count++;

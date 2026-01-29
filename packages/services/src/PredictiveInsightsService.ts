@@ -8,7 +8,7 @@
  * Trauma-informed: Predictions presented as possibilities with confidence scores.
  */
 
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export interface PainPrediction {
   date: string;
@@ -62,6 +62,10 @@ export interface PredictiveInsights {
 }
 
 export class PredictiveInsightsService {
+  private getPainLevel(entry: PainEntry): number {
+    return entry?.baselineData?.pain ?? 0;
+  }
+
   /**
    * Predict pain level for the next day
    */
@@ -72,14 +76,13 @@ export class PredictiveInsightsService {
 
     // Sort entries by date
     const sortedEntries = [...entries]
-      .filter(e => typeof e.currentPainLevel === 'number')
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
     if (sortedEntries.length < 7) return null;
 
     // Get recent pattern (last 7 days)
     const recent = sortedEntries.slice(-7);
-    const recentLevels = recent.map(e => e.currentPainLevel);
+    const recentLevels = recent.map(e => this.getPainLevel(e));
 
     // Calculate trend
     const trend = this.calculateTrend(recentLevels);
@@ -284,10 +287,9 @@ export class PredictiveInsightsService {
     let next7DaysTrend: PredictiveInsights['next7DaysTrend'] = 'insufficient_data';
     if (entries.length >= 14) {
       const recent14 = entries
-        .filter(e => typeof e.currentPainLevel === 'number')
         .slice(-14);
-      const first7Avg = this.average(recent14.slice(0, 7).map(e => e.currentPainLevel));
-      const last7Avg = this.average(recent14.slice(7).map(e => e.currentPainLevel));
+      const first7Avg = this.average(recent14.slice(0, 7).map(e => this.getPainLevel(e)));
+      const last7Avg = this.average(recent14.slice(7).map(e => this.getPainLevel(e)));
       
       const change = ((last7Avg - first7Avg) / first7Avg) * 100;
       
@@ -355,13 +357,13 @@ export class PredictiveInsightsService {
     // Get historical data for this day of week
     const sameDayEntries = entries.filter(e => {
       const entryDay = new Date(e.timestamp).getDay();
-      return entryDay === tomorrowDay && typeof e.currentPainLevel === 'number';
+      return entryDay === tomorrowDay;
     });
 
     if (sameDayEntries.length < 2) return 0;
 
-    const sameDayAvg = this.average(sameDayEntries.map(e => e.currentPainLevel));
-    const overallAvg = this.average(entries.filter(e => typeof e.currentPainLevel === 'number').map(e => e.currentPainLevel));
+    const sameDayAvg = this.average(sameDayEntries.map(e => this.getPainLevel(e)));
+    const overallAvg = this.average(entries.map(e => this.getPainLevel(e)));
 
     return (sameDayAvg - overallAvg) * 0.3; // Weight adjustment
   }
@@ -399,7 +401,7 @@ export class PredictiveInsightsService {
     }
 
     // Check for recent high pain days
-    const highPainDays = recent.filter(e => e.currentPainLevel > 7);
+    const highPainDays = recent.filter(e => this.getPainLevel(e) > 7);
     if (highPainDays.length > 2) {
       factors.push('recent high pain episodes');
     }
@@ -467,33 +469,34 @@ export class PredictiveInsightsService {
     entries.forEach((entry, index) => {
       if (!entry.medications || !entry.medications.current) return;
 
-      entry.medications.current.forEach(med => {
-        if (!analysis[med]) {
-          analysis[med] = { triedCount: 0, effectiveness: 0, bestTime: 'as needed' };
+      entry.medications.current.forEach((med) => {
+        const medName = med.name;
+        if (!analysis[medName]) {
+          analysis[medName] = { triedCount: 0, effectiveness: 0, bestTime: 'as needed' };
         }
 
-        analysis[med].triedCount++;
+        analysis[medName].triedCount++;
 
         // Look at next entry to see if pain improved
         if (index < entries.length - 1) {
           const nextEntry = entries[index + 1];
           if (
-            typeof entry.currentPainLevel === 'number' &&
-            typeof nextEntry.currentPainLevel === 'number'
+            typeof this.getPainLevel(entry) === 'number' &&
+            typeof this.getPainLevel(nextEntry) === 'number'
           ) {
-            const improvement = entry.currentPainLevel - nextEntry.currentPainLevel;
+            const improvement = this.getPainLevel(entry) - this.getPainLevel(nextEntry);
             if (improvement > 0) {
-              analysis[med].effectiveness += improvement / analysis[med].triedCount;
+              analysis[medName].effectiveness += improvement / analysis[medName].triedCount;
             }
           }
         }
 
         // Determine best time
         const hour = new Date(entry.timestamp).getHours();
-        if (hour >= 6 && hour < 12) analysis[med].bestTime = 'morning';
-        else if (hour >= 12 && hour < 18) analysis[med].bestTime = 'afternoon';
-        else if (hour >= 18 && hour < 22) analysis[med].bestTime = 'evening';
-        else analysis[med].bestTime = 'night';
+        if (hour >= 6 && hour < 12) analysis[medName].bestTime = 'morning';
+        else if (hour >= 12 && hour < 18) analysis[medName].bestTime = 'afternoon';
+        else if (hour >= 18 && hour < 22) analysis[medName].bestTime = 'evening';
+        else analysis[medName].bestTime = 'night';
       });
     });
 

@@ -8,7 +8,7 @@
  * Trauma-informed: User has full control over prompts and can opt-out anytime.
  */
 
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 import { adaptivePromptSelector } from './AdaptivePromptSelector';
 
 export interface RetentionState {

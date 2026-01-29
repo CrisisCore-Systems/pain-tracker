@@ -9,6 +9,12 @@ import type { PainEntry } from '../types';
 describe('MultiVariateAnalysisService', () => {
   const service = new MultiVariateAnalysisService();
 
+  const meds = (names: string[]) => ({
+    current: names.map(name => ({ name, dosage: '', frequency: '', effectiveness: '' })),
+    changes: '',
+    effectiveness: '',
+  });
+
   const createEntry = (
     daysAgo: number,
     painLevel: number,
@@ -28,8 +34,12 @@ describe('MultiVariateAnalysisService', () => {
     return {
       id: Date.now() + Math.random(),
       timestamp: date.toISOString(),
-      currentPainLevel: painLevel,
-      medications: withMeds ? { current: ['Medication A'] } : { current: [] },
+      baselineData: {
+        pain: painLevel,
+        locations: [],
+        symptoms: [],
+      },
+      medications: withMeds ? meds(['Medication A']) : meds([]),
     };
   };
 

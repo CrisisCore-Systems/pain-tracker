@@ -8,7 +8,7 @@
  * Trauma-informed: Flexible, non-judgmental, and supportive language.
  */
 
-import type { PainEntry } from '../../src/types';
+import type { PainEntry } from './types';
 
 export interface RitualState {
   ritualEnabled: boolean;

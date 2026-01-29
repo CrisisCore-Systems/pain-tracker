@@ -1,24 +1,66 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { usePainTrackerStore } from '@/stores/pain-tracker-store';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
+import type { PainEntry } from '../../types';
 
 describe('TrendAnalysisService + Data Integration', () => {
   // Mock entries with trends
-  const trendingEntries = Array.from({ length: 30 }, (_, i) => ({
-    id: i + 1,
-    timestamp: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-    painLevel: 5 + Math.sin(i / 7) * 2, // Weekly pattern
-    mood: 'neutral' as const,
-    activities: i % 2 === 0 ? ['exercise'] : ['rest'],
-    symptoms: ['headache'],
-    medications: [],
-    notes: `Day ${i + 1}`,
-  }));
+  const createEntry = (i: number, overrides: Partial<PainEntry> = {}): PainEntry => {
+    const pain = 5 + Math.sin(i / 7) * 2; // Weekly pattern
+    const activities = i % 2 === 0 ? ['exercise'] : ['rest'];
+    const timestamp = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString();
+
+    return {
+      id: i + 1,
+      timestamp,
+      baselineData: {
+        pain,
+        locations: [],
+        symptoms: ['headache'],
+      },
+      functionalImpact: {
+        limitedActivities: [],
+        assistanceNeeded: [],
+        mobilityAids: [],
+      },
+      medications: {
+        current: [],
+        changes: '',
+        effectiveness: '',
+      },
+      treatments: {
+        recent: [],
+        effectiveness: '',
+        planned: [],
+      },
+      qualityOfLife: {
+        sleepQuality: 5,
+        moodImpact: 5,
+        socialImpact: [],
+      },
+      workImpact: {
+        missedWork: 0,
+        modifiedDuties: [],
+        workLimitations: [],
+      },
+      comparison: {
+        worseningSince: '',
+        newLimitations: [],
+      },
+      notes: `Day ${i + 1}`,
+      activities,
+      intensity: pain,
+      ...overrides,
+    };
+  };
+
+  const trendingEntries: PainEntry[] = Array.from({ length: 30 }, (_, i) => createEntry(i));
 
   beforeEach(() => {
-    // Reset store to initial state
+    localStorage.clear();
     usePainTrackerStore.setState({
       entries: [],
     });
+    usePainTrackerStore.getState().syncRetentionState();
   });
 
   it('should calculate trends accurately', () => {
@@ -30,7 +72,7 @@ describe('TrendAnalysisService + Data Integration', () => {
     
     // Verify data is available for trend analysis
     expect(store.entries.length).toBe(30);
-    expect(store.entries[0].painLevel).toBeGreaterThan(0);
+    expect(store.entries[0].baselineData.pain).toBeGreaterThan(0);
     
     // Trend analysis would calculate:
     // - Overall trend direction (increasing/decreasing/stable)
@@ -43,14 +85,12 @@ describe('TrendAnalysisService + Data Integration', () => {
     const anomalyEntries = [
       ...trendingEntries.slice(0, 10),
       {
-        id: 11,
-        timestamp: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000).toISOString(),
-        painLevel: 10, // Anomaly - much higher than usual
-        mood: 'sad' as const,
-        activities: [],
-        symptoms: ['severe headache'],
-        medications: [],
-        notes: 'Unusual pain spike',
+        ...createEntry(11, {
+          baselineData: { pain: 10, locations: [], symptoms: ['severe headache'] },
+          intensity: 10,
+          activities: [],
+          notes: 'Unusual pain spike',
+        }),
       },
       ...trendingEntries.slice(11),
     ];
@@ -63,9 +103,9 @@ describe('TrendAnalysisService + Data Integration', () => {
     expect(store.entries.length).toBe(31);
     
     // Find the anomaly entry
-    const anomaly = store.entries.find(e => e.painLevel === 10);
+    const anomaly = store.entries.find(e => e.baselineData.pain === 10);
     expect(anomaly).toBeTruthy();
-    expect(anomaly?.painLevel).toBe(10);
+    expect(anomaly?.baselineData.pain).toBe(10);
     
     // Anomaly detection would identify this as unusual
   });
@@ -78,8 +118,8 @@ describe('TrendAnalysisService + Data Integration', () => {
     const store = usePainTrackerStore.getState();
     
     // Count entries with exercise vs rest
-    const exerciseEntries = store.entries.filter(e => e.activities.includes('exercise'));
-    const restEntries = store.entries.filter(e => e.activities.includes('rest'));
+    const exerciseEntries = store.entries.filter(e => e.activities?.includes('exercise'));
+    const restEntries = store.entries.filter(e => e.activities?.includes('rest'));
     
     expect(exerciseEntries.length).toBeGreaterThan(0);
     expect(restEntries.length).toBeGreaterThan(0);
@@ -121,12 +161,11 @@ describe('TrendAnalysisService + Data Integration', () => {
     expect(store.entries.length).toBe(30);
     expect(store.entries[0]).toHaveProperty('id');
     expect(store.entries[0]).toHaveProperty('timestamp');
-    expect(store.entries[0]).toHaveProperty('painLevel');
-    expect(store.entries[0]).toHaveProperty('mood');
+    expect(store.entries[0]).toHaveProperty('baselineData');
     expect(store.entries[0]).toHaveProperty('activities');
     
     // Data transformation for trend analysis:
-    const painLevels = store.entries.map(e => e.painLevel);
+    const painLevels = store.entries.map(e => e.baselineData.pain);
     expect(painLevels.length).toBe(30);
     expect(painLevels.every(p => p >= 0 && p <= 10)).toBe(true);
     

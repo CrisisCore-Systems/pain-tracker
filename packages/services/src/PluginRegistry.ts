@@ -13,7 +13,7 @@
  * Privacy: All plugins execute locally, no external calls
  */
 
-import type { PainEntry } from '@pain-tracker/types';
+import type { PainEntry } from './types';
 
 // ============================================================================
 // Plugin Types

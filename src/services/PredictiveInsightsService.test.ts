@@ -9,6 +9,12 @@ import type { PainEntry } from '../types';
 describe('PredictiveInsightsService', () => {
   const service = new PredictiveInsightsService();
 
+  const meds = (names: string[]) => ({
+    current: names.map(name => ({ name, dosage: '', frequency: '', effectiveness: '' })),
+    changes: '',
+    effectiveness: '',
+  });
+
   const createEntry = (daysAgo: number, painLevel: number, hour = 12, withMeds = false): Partial<PainEntry> => {
     const date = new Date(Date.now() - daysAgo * 24 * 60 * 60 * 1000);
     date.setHours(hour, 0, 0, 0);
@@ -16,8 +22,12 @@ describe('PredictiveInsightsService', () => {
     return {
       id: Date.now() + Math.random(),
       timestamp: date.toISOString(),
-      currentPainLevel: painLevel,
-      medications: withMeds ? { current: ['Medication A'] } : { current: [] },
+      baselineData: {
+        pain: painLevel,
+        locations: [],
+        symptoms: [],
+      },
+      medications: withMeds ? meds(['Medication A']) : meds([]),
     };
   };
 

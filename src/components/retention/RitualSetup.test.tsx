@@ -10,6 +10,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RitualSetup } from './RitualSetup';
 import { dailyRitualService } from '@pain-tracker/services';
+import type { RitualTemplate, TimingSuggestion } from '@pain-tracker/services';
 
 // Mock the daily ritual service
 vi.mock('@pain-tracker/services', () => ({
@@ -48,14 +49,28 @@ describe('RitualSetup', () => {
     { id: '2', timestamp: new Date('2024-01-01T20:00:00').toISOString(), painLevel: 4 },
   ];
 
-  const mockTimingSuggestions = [
-    { time: '20:00', confidence: 0.85, reason: 'You typically check in around this time' },
-    { time: '08:00', confidence: 0.75, reason: 'Morning check-ins have been consistent' },
+  const mockTimingSuggestions: TimingSuggestion[] = [
+    { time: '20:00', confidence: 0.85, reason: 'You typically check in around this time', basedOn: 'history' },
+    { time: '08:00', confidence: 0.75, reason: 'Morning check-ins have been consistent', basedOn: 'history' },
   ];
 
-  const mockTemplates = [
-    { id: 'morning', name: 'Morning Check-In', type: 'morning' },
-    { id: 'evening', name: 'Evening Reflection', type: 'evening' },
+  const mockTemplates: RitualTemplate[] = [
+    {
+      id: 'morning',
+      name: 'Morning Check-In',
+      type: 'morning',
+      description: 'A short morning check-in',
+      estimatedDuration: 5,
+      steps: [],
+    },
+    {
+      id: 'evening',
+      name: 'Evening Reflection',
+      type: 'evening',
+      description: 'A brief evening reflection',
+      estimatedDuration: 5,
+      steps: [],
+    },
   ];
 
   beforeEach(() => {

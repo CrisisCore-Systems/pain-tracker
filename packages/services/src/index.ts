@@ -16,7 +16,15 @@ export * from './HealthcareProviderAPI';
 export * from './FHIRService';
 export * from './HealthcareOAuth';
 export * from './wcb-submission';
-export * from './PainAnalyticsService';
+export {
+	painAnalyticsService,
+} from './PainAnalyticsService';
+export type {
+	PainPattern,
+	PainPrediction as PainAnalyticsPrediction,
+	CorrelationAnalysis,
+	TrendAnalysis,
+} from './PainAnalyticsService';
 export * from './HolisticWellbeingService';
 export * from './HIPAACompliance';
 export * from './EmotionalStateTracker';
@@ -27,8 +35,19 @@ export * from './DailyRitualService';
 export * from './IdentityLockInService';
 export * from './AdaptivePromptSelector';
 export * from './TrendAnalysisService';
-export * from './PredictiveInsightsService';
+export {
+	PredictiveInsightsService,
+	predictiveInsightsService,
+} from './PredictiveInsightsService';
+export type {
+	PainPrediction as PredictivePainPrediction,
+	OptimalTimeRecommendation,
+	EffectivenessForest,
+	PreventiveAction,
+	PredictiveInsights,
+} from './PredictiveInsightsService';
 export * from './MultiVariateAnalysisService';
 export * from './EnhancedPatternRecognitionService';
 export * from './SmartRecommendationsService';
-	export const serviceReady = true;
+
+export const serviceReady = true;

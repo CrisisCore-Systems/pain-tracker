@@ -1,43 +1,10 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { usePainTrackerStore } from '@/stores/pain-tracker-store';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 describe('DailyRitualService + Store Integration', () => {
   beforeEach(() => {
-    // Reset store to initial state
-    usePainTrackerStore.setState({
-      retention: {
-        retentionLoop: {
-          consecutiveDays: 0,
-          totalCheckIns: 0,
-          lastCheckIn: null,
-          winConditions: {
-            firstCheckIn: false,
-            threeDayStreak: false,
-            sevenDayStreak: false,
-            firstWeek: false,
-            firstMonth: false,
-          },
-          pendingInsights: [],
-        },
-        dailyRitual: {
-          ritualEnabled: false,
-          ritualType: 'evening',
-          morningTime: null,
-          eveningTime: '21:00',
-          ritualTone: 'gentle',
-          completionCount: 0,
-          currentStreak: 0,
-          lastCompleted: null,
-        },
-        identityLockIn: {
-          journeyStartDate: null,
-          identityLanguage: null,
-          personalPatterns: [],
-          identityInsights: [],
-          narrativeHistory: [],
-        },
-      },
-    });
+    localStorage.clear();
+    usePainTrackerStore.getState().syncRetentionState();
   });
 
   it('should setup ritual and update store correctly', () => {
@@ -76,9 +43,9 @@ describe('DailyRitualService + Store Integration', () => {
     
     // Verify completion tracked
     const updated = usePainTrackerStore.getState();
-    expect(updated.retention.dailyRitual.completionCount).toBe(1);
+    expect(updated.retention.dailyRitual.totalCompletions).toBe(1);
     expect(updated.retention.dailyRitual.currentStreak).toBeGreaterThan(0);
-    expect(updated.retention.dailyRitual.lastCompleted).toBeTruthy();
+    expect(updated.retention.dailyRitual.lastCompletedDate).toBeTruthy();
   });
 
   it('should maintain streak correctly', () => {
@@ -142,7 +109,7 @@ describe('DailyRitualService + Store Integration', () => {
     store.completeRitual();
     
     const updated = usePainTrackerStore.getState();
-    expect(updated.retention.dailyRitual.completionCount).toBe(3);
+    expect(updated.retention.dailyRitual.totalCompletions).toBe(3);
   });
 
   it('should persist ritual configuration', () => {
