@@ -51,6 +51,11 @@ export default defineConfig({
         const abs = path.isAbsolute(outDir) ? outDir : path.join(process.cwd(), outDir);
         const outputs: Record<string, { bytes: number }> = {};
 
+        // CI safety: ensure output directory exists before writing meta.json.
+        // Vite normally creates this, but some CI environments can run this hook
+        // before the directory is present.
+        fs.mkdirSync(abs, { recursive: true });
+
         function walk(dir: string) {
           for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
             const full = path.join(dir, entry.name);
