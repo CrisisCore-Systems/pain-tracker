@@ -82,8 +82,9 @@ Updated the `_headers` file to add comprehensive caching directives:
 
 3. **Privacy Enhancement** (`/logout`):
    - `Clear-Site-Data: "cache", "cookies", "storage"`
-   - Clears all browser data on logout
-   - Aligns with trauma-informed design principles
+   - Clears all browser data when the /logout route is accessed
+   - Trauma-informed: Helps users who need to quickly hide their usage history for safety
+   - **Note**: This header only works if the app navigates to the `/logout` endpoint. If logout is purely client-side, consider adding a server request to `/logout` during the logout flow to trigger this header.
 
 4. **FLoC Blocking**:
    - Added `interest-cohort=()` to `Permissions-Policy` header
@@ -134,13 +135,17 @@ Cloudflare Pages automatically recognizes these files when deploying the `dist/`
 
 ### Before Deployment
 
-Run the verification script:
+The configuration files can be verified locally:
 
 ```bash
-bash /tmp/verify_cloudflare_config.sh
+# Check that _redirects exists and has correct content
+cat public/_redirects
+
+# Check that _headers has cache directives
+cat public/_headers | grep -A 2 "Cache-Control"
 ```
 
-Expected output: All checks should pass ✅
+All checks should show the expected configuration as documented above.
 
 ### After Deployment
 
@@ -158,8 +163,13 @@ curl -I https://paintracker.ca/settings
 #### 2. Test Cache Headers for Static Assets
 
 ```bash
-# Replace [hash] with the actual hash from your build
-curl -I https://paintracker.ca/assets/index-[hash].js
+# First, find the actual asset filename from the deployed site
+# Option 1: Check the browser's Network tab after visiting the site
+# Option 2: View the source of index.html and look for <script src="/assets/index-[hash].js">
+# Option 3: List files in the deployed dist/assets/ directory
+
+# Then test with the actual filename (example with a typical hash):
+curl -I https://paintracker.ca/assets/index-a1b2c3d4.js
 ```
 
 Look for these headers:
@@ -169,14 +179,16 @@ Cache-Control: public, max-age=31536000, immutable
 
 #### 3. Test Cache Hit Status
 
-Make the same request twice:
+Make the same request twice to verify edge caching:
 
 ```bash
-# First request (likely MISS)
-curl -I https://paintracker.ca/assets/index-[hash].js
+# Find an asset filename as described above, then:
 
-# Second request (should be HIT)
-curl -I https://paintracker.ca/assets/index-[hash].js
+# First request (likely MISS - not in cache yet)
+curl -I https://paintracker.ca/assets/index-a1b2c3d4.js
+
+# Second request (should be HIT - served from cache)
+curl -I https://paintracker.ca/assets/index-a1b2c3d4.js
 ```
 
 Look for:

@@ -19,5 +19,6 @@
   Cache-Control: public, max-age=0, must-revalidate
 
 # Trauma-Informed Privacy: Clear Site Data on Logout (Optional route)
+# Ensures complete data removal for users who may need to quickly hide usage history for safety
 /logout
   Clear-Site-Data: "cache", "cookies", "storage"
