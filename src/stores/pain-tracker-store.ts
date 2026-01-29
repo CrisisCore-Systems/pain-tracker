@@ -11,6 +11,18 @@ import { hipaaComplianceService } from '../services/HIPAACompliance';
 import { migratePainTrackerState } from './pain-tracker-migrations';
 import { trackMoodEntryLogged } from '../analytics/ga4-events';
 import { createEncryptedOfflinePersistStorage } from './encrypted-idb-persist';
+import { 
+  retentionLoopService, 
+  dailyRitualService, 
+  identityLockInService,
+  predictiveInsightsService,
+  multiVariateAnalysisService,
+  enhancedPatternRecognitionService,
+  smartRecommendationsService,
+  type RetentionState,
+  type RitualState,
+  type UserIdentity,
+} from '@pain-tracker/services';
 
 // Error counters for silent failures (prevents data loss blindspots)
 let analyticsErrorCount = 0;
@@ -18,7 +30,7 @@ let auditErrorCount = 0;
 
 type PersistedPainTrackerSlice = Pick<
   PainTrackerState,
-  'entries' | 'moodEntries' | 'emergencyData' | 'activityLogs' | 'scheduledReports'
+  'entries' | 'moodEntries' | 'emergencyData' | 'activityLogs' | 'scheduledReports' | 'retention'
 >;
 
 const encryptedPersistStorage: PersistStorage<PersistedPainTrackerSlice | undefined> =
@@ -32,6 +44,11 @@ const encryptedPersistStorage: PersistStorage<PersistedPainTrackerSlice | undefi
           emergencyData: null,
           activityLogs: [],
           scheduledReports: [],
+          retention: {
+            retentionLoop: retentionLoopService.getState(),
+            dailyRitual: dailyRitualService.getState(),
+            userIdentity: identityLockInService.getIdentity(),
+          },
         },
         version: 2,
       };
@@ -61,6 +78,12 @@ export interface UIState {
   };
 }
 
+export interface RetentionSlice {
+  retentionLoop: RetentionState;
+  dailyRitual: RitualState;
+  userIdentity: UserIdentity;
+}
+
 export interface PainTrackerState {
   // Data
   entries: PainEntry[];
@@ -68,6 +91,9 @@ export interface PainTrackerState {
   fibromyalgiaEntries: FibromyalgiaEntry[];
   emergencyData: EmergencyPanelData | null;
   activityLogs: ActivityLogEntry[];
+
+  // Retention data
+  retention: RetentionSlice;
 
   // UI State
   ui: UIState;
@@ -117,6 +143,34 @@ export interface PainTrackerState {
   loadSampleData: () => void;
   loadChronicPainTestData: () => void;
   loadComprehensive365DayTestData: () => void;
+  
+  // Retention Actions
+  recordCheckIn: () => void;
+  getDailyPrompt: () => ReturnType<typeof retentionLoopService.getDailyPrompt>;
+  markPromptShown: (promptId?: string, actedUpon?: boolean) => void;
+  getPendingInsights: () => ReturnType<typeof retentionLoopService.getPendingInsights>;
+  getWinConditions: () => ReturnType<typeof retentionLoopService.getWinConditions>;
+  setPromptsEnabled: (enabled: boolean) => void;
+  
+  completeRitual: () => void;
+  setupRitual: (config: Partial<RitualState>) => void;
+  getRitualTemplates: () => ReturnType<typeof dailyRitualService.getRitualTemplates>;
+  setRitualEnabled: (enabled: boolean) => void;
+  
+  initializeJourney: () => void;
+  generateJourneyNarrative: () => string;
+  discoverPatterns: () => ReturnType<typeof identityLockInService.discoverPatterns>;
+  getIdentityInsights: () => ReturnType<typeof identityLockInService.getIdentityInsights>;
+  getIdentityLanguage: () => ReturnType<typeof identityLockInService.getIdentityLanguage>;
+  
+  syncRetentionState: () => void;
+  
+  // Phase 3 Intelligence Actions
+  getPredictiveInsights: () => ReturnType<typeof predictiveInsightsService.getPredictiveInsights>;
+  getMultiVariateAnalysis: () => ReturnType<typeof multiVariateAnalysisService.getMultiVariateInsights>;
+  getEnhancedPatterns: () => ReturnType<typeof enhancedPatternRecognitionService.getEnhancedPatternInsights>;
+  getSmartRecommendations: () => ReturnType<typeof smartRecommendationsService.getSmartRecommendations>;
+  
   // Reporting
   scheduledReports: import('../types').ScheduledReport[];
   addScheduledReport: (report: import('../types').ScheduledReport) => void;
@@ -135,6 +189,11 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           fibromyalgiaEntries: [],
           emergencyData: null,
           activityLogs: [],
+          retention: {
+            retentionLoop: retentionLoopService.getState(),
+            dailyRitual: dailyRitualService.getState(),
+            userIdentity: identityLockInService.getIdentity(),
+          },
           ui: {
             showWCBReport: false,
             showOnboarding: false,
@@ -480,6 +539,128 @@ export const usePainTrackerStore = create<PainTrackerState>()(
               });
           },
 
+          // Retention Loop Actions
+          recordCheckIn: () => {
+            retentionLoopService.recordCheckIn();
+            set(state => {
+              state.retention.retentionLoop = retentionLoopService.getState();
+            });
+          },
+
+          getDailyPrompt: () => {
+            const state = usePainTrackerStore.getState();
+            return retentionLoopService.getDailyPrompt(state.entries);
+          },
+
+          markPromptShown: (promptId, actedUpon = false) => {
+            retentionLoopService.markPromptShown(promptId, actedUpon);
+            set(state => {
+              state.retention.retentionLoop = retentionLoopService.getState();
+            });
+          },
+
+          getPendingInsights: () => {
+            const state = usePainTrackerStore.getState();
+            return retentionLoopService.getPendingInsights(state.entries);
+          },
+
+          getWinConditions: () => {
+            const state = usePainTrackerStore.getState();
+            return retentionLoopService.getWinConditions(state.entries);
+          },
+
+          setPromptsEnabled: (enabled) => {
+            retentionLoopService.setPromptsEnabled(enabled);
+            set(state => {
+              state.retention.retentionLoop = retentionLoopService.getState();
+            });
+          },
+
+          // Daily Ritual Actions
+          completeRitual: () => {
+            dailyRitualService.completeRitual();
+            set(state => {
+              state.retention.dailyRitual = dailyRitualService.getState();
+            });
+          },
+
+          setupRitual: (config) => {
+            dailyRitualService.setupRitual(config);
+            set(state => {
+              state.retention.dailyRitual = dailyRitualService.getState();
+            });
+          },
+
+          getRitualTemplates: () => {
+            return dailyRitualService.getRitualTemplates();
+          },
+
+          setRitualEnabled: (enabled) => {
+            dailyRitualService.setRitualEnabled(enabled);
+            set(state => {
+              state.retention.dailyRitual = dailyRitualService.getState();
+            });
+          },
+
+          // Identity Lock-In Actions
+          initializeJourney: () => {
+            const state = usePainTrackerStore.getState();
+            identityLockInService.initializeJourney(state.entries);
+            set(s => {
+              s.retention.userIdentity = identityLockInService.getIdentity();
+            });
+          },
+
+          generateJourneyNarrative: () => {
+            const state = usePainTrackerStore.getState();
+            return identityLockInService.generateJourneyNarrative(state.entries);
+          },
+
+          discoverPatterns: () => {
+            const state = usePainTrackerStore.getState();
+            return identityLockInService.discoverPatterns(state.entries);
+          },
+
+          getIdentityInsights: () => {
+            const state = usePainTrackerStore.getState();
+            return identityLockInService.getIdentityInsights(state.entries);
+          },
+
+          getIdentityLanguage: () => {
+            const state = usePainTrackerStore.getState();
+            return identityLockInService.getIdentityLanguage(state.entries);
+          },
+
+          // Sync retention state from services to store
+          syncRetentionState: () => {
+            set(state => {
+              state.retention.retentionLoop = retentionLoopService.getState();
+              state.retention.dailyRitual = dailyRitualService.getState();
+              state.retention.userIdentity = identityLockInService.getIdentity();
+            });
+          },
+
+          // Phase 3 Intelligence Actions
+          getPredictiveInsights: () => {
+            const state = usePainTrackerStore.getState();
+            return predictiveInsightsService.getPredictiveInsights(state.entries);
+          },
+
+          getMultiVariateAnalysis: () => {
+            const state = usePainTrackerStore.getState();
+            return multiVariateAnalysisService.getMultiVariateInsights(state.entries);
+          },
+
+          getEnhancedPatterns: () => {
+            const state = usePainTrackerStore.getState();
+            return enhancedPatternRecognitionService.getEnhancedPatternInsights(state.entries);
+          },
+
+          getSmartRecommendations: () => {
+            const state = usePainTrackerStore.getState();
+            return smartRecommendationsService.getSmartRecommendations(state.entries);
+          },
+
           // Reporting
           addScheduledReport: schedule => {
             set(state => {
@@ -608,6 +789,11 @@ export const usePainTrackerStore = create<PainTrackerState>()(
             emergencyData: migrated.emergencyData ?? null,
             activityLogs: Array.isArray(migrated.activityLogs) ? migrated.activityLogs : [],
             scheduledReports: Array.isArray(migrated.scheduledReports) ? migrated.scheduledReports : [],
+            retention: migrated.retention || {
+              retentionLoop: retentionLoopService.getState(),
+              dailyRitual: dailyRitualService.getState(),
+              userIdentity: identityLockInService.getIdentity(),
+            },
           };
         },
         partialize: state => ({
@@ -616,6 +802,7 @@ export const usePainTrackerStore = create<PainTrackerState>()(
           emergencyData: state.emergencyData,
           activityLogs: state.activityLogs,
           scheduledReports: state.scheduledReports,
+          retention: state.retention,
         }),
       }
     ),
