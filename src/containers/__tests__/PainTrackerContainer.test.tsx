@@ -7,6 +7,55 @@ import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 vi.mock('../../stores/pain-tracker-store');
 
+// Mock heavy UI surfaces to keep this test fast and deterministic.
+vi.mock('../../design-system/fused-v2', () => ({
+  ClinicalDashboard: ({ onLogNow }: { onLogNow: () => void }) => (
+    <button type="button" onClick={onLogNow}>
+      Quick log pain
+    </button>
+  ),
+}));
+
+vi.mock('../../design-system/fused-v2/QuickLogOneScreen', () => ({
+  default: ({ onComplete }: { onComplete: (data: any) => void }) => {
+    const [checked, setChecked] = React.useState(false);
+    return (
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={checked}
+            onChange={e => setChecked(e.currentTarget.checked)}
+          />
+          Lower back location
+        </label>
+        <button
+          type="button"
+          onClick={() => {
+            if (!checked) return;
+            onComplete({
+              pain: 5,
+              locations: ['Lower back'],
+              symptoms: [],
+              notes: '',
+            });
+          }}
+        >
+          Log pain now
+        </button>
+      </div>
+    );
+  },
+}));
+
+vi.mock('../../data/sampleData', () => ({
+  walkthroughSteps: [],
+}));
+
+vi.mock('../../services/weatherAutoCapture', () => ({
+  maybeCaptureWeatherForNewEntry: async () => null,
+}));
+
 // Mock secureStorage to avoid real storage access
 vi.mock('../../lib/storage/secureStorage', () => ({
   secureStorage: {

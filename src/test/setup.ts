@@ -142,6 +142,13 @@ try {
 
 // Cleanup after each test case
 afterEach(() => {
+  // Some tests enable fake timers; ensure they never leak across tests.
+  // Leaked fake timers can deadlock Testing Library + user-event.
+  try {
+    vi.useRealTimers();
+  } catch {
+    // ignore
+  }
   cleanup();
 });
 
