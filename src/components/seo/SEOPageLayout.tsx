@@ -20,8 +20,7 @@ import {
   CheckCircle, 
   Shield, 
   FileText, 
-  ArrowRight,
-  ExternalLink
+  ArrowRight
 } from 'lucide-react';
 import { LandingFooter } from '../landing/LandingFooter';
 import {
@@ -469,7 +468,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                   </h3>
                   <p className="text-sm text-slate-400 mb-3">{link.description}</p>
                   <span className="text-sm text-primary flex items-center gap-1">
-                    Learn more <ExternalLink className="w-4 h-4" />
+                    Learn more <ArrowRight className="w-4 h-4" />
                   </span>
                 </Link>
               ))}

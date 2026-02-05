@@ -14,7 +14,8 @@ import {
   Scale,
   Heart,
   ArrowRight,
-  Shield
+  Shield,
+  Clock
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
 import '../../styles/pages/landing.css';
@@ -26,52 +27,60 @@ interface ResourceCard {
   icon: React.ReactNode;
   badge?: string;
   category: 'template' | 'guide' | 'tool';
+  implemented: boolean;
 }
 
 const resources: ResourceCard[] = [
-  // Tier 1: Core printable/download intent
+  // Tier 1: Core printable/download intent - IMPLEMENTED
   {
     title: 'Pain Diary Template PDF',
     description: 'Comprehensive daily pain tracking template. Record pain levels, symptoms, medications, and triggers.',
     href: '/resources/pain-diary-template-pdf',
     icon: <FileText className="w-6 h-6" />,
     badge: 'Most Popular',
-    category: 'template'
+    category: 'template',
+    implemented: true
   },
+  // Coming soon resources
   {
     title: 'Daily Pain Tracker Printable',
     description: 'Simple one-page daily tracking sheet for quick, consistent entries.',
     href: '/resources/daily-pain-tracker-printable',
     icon: <Calendar className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
   {
     title: 'Weekly Pain Log PDF',
     description: '7-day spread format showing your pain patterns at a glance.',
     href: '/resources/weekly-pain-log-pdf',
     icon: <ClipboardList className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
   {
     title: 'Monthly Pain Tracker',
     description: 'Monthly overview for tracking long-term pain trends and treatment effectiveness.',
     href: '/resources/monthly-pain-tracker-printable',
     icon: <Calendar className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
   {
     title: 'Pain Scale Chart Printable',
     description: 'Visual pain scale reference chart (0-10 NRS) for consistent pain rating.',
     href: '/resources/pain-scale-chart-printable',
     icon: <Scale className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
   {
     title: 'Symptom Tracker Printable',
     description: 'Track symptoms beyond pain: fatigue, sleep quality, mood, and daily functioning.',
     href: '/resources/symptom-tracker-printable',
     icon: <Heart className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
   
   // Tier 2: Medical & Appointment Intent
@@ -81,14 +90,16 @@ const resources: ResourceCard[] = [
     href: '/resources/how-to-track-pain-for-doctors',
     icon: <BookOpen className="w-6 h-6" />,
     badge: 'Guide',
-    category: 'guide'
+    category: 'guide',
+    implemented: false
   },
   {
     title: 'What to Include in a Pain Journal',
     description: 'Complete guide to the information that makes pain tracking clinically useful.',
     href: '/resources/what-to-include-in-pain-journal',
     icon: <BookOpen className="w-6 h-6" />,
-    category: 'guide'
+    category: 'guide',
+    implemented: false
   },
   
   // Tier 3: Disability/Legal Documentation
@@ -98,14 +109,16 @@ const resources: ResourceCard[] = [
     href: '/resources/documenting-pain-for-disability-claim',
     icon: <Shield className="w-6 h-6" />,
     badge: 'Important',
-    category: 'guide'
+    category: 'guide',
+    implemented: false
   },
   {
     title: 'WorkSafeBC Pain Journal Template',
     description: 'Template specifically designed to meet WorkSafeBC documentation requirements.',
     href: '/resources/worksafebc-pain-journal-template',
     icon: <FileText className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
   
   // Tier 4: Condition-Specific
@@ -114,14 +127,16 @@ const resources: ResourceCard[] = [
     description: 'Specialized template for tracking migraine-specific symptoms, triggers, and auras.',
     href: '/resources/migraine-pain-diary-printable',
     icon: <FileText className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
   {
     title: 'Fibromyalgia Pain Diary',
     description: 'Template designed for tracking fibromyalgia symptoms including widespread pain and fatigue.',
     href: '/resources/fibromyalgia-pain-diary',
     icon: <FileText className="w-6 h-6" />,
-    category: 'template'
+    category: 'template',
+    implemented: false
   },
 ];
 
@@ -139,6 +154,68 @@ export const ResourcesIndexPage: React.FC = () => {
 
   const templates = resources.filter(r => r.category === 'template');
   const guides = resources.filter(r => r.category === 'guide');
+
+  const renderResourceCard = (resource: ResourceCard) => {
+    const cardContent = (
+      <>
+        <div className="flex items-start gap-4">
+          <div className={`w-12 h-12 ${resource.implemented ? 'bg-primary/20' : 'bg-slate-700'} rounded-xl flex items-center justify-center ${resource.implemented ? 'text-primary' : 'text-slate-500'} flex-shrink-0`}>
+            {resource.icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-2">
+              <h3 className={`font-semibold ${resource.implemented ? 'text-white group-hover:text-primary' : 'text-slate-400'} transition-colors truncate`}>
+                {resource.title}
+              </h3>
+              {resource.badge && resource.implemented && (
+                <span className="px-2 py-0.5 text-xs font-medium bg-primary/20 text-primary rounded-full flex-shrink-0">
+                  {resource.badge}
+                </span>
+              )}
+              {!resource.implemented && (
+                <span className="px-2 py-0.5 text-xs font-medium bg-slate-700 text-slate-400 rounded-full flex-shrink-0 flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  Coming Soon
+                </span>
+              )}
+            </div>
+            <p className={`text-sm ${resource.implemented ? 'text-slate-400' : 'text-slate-500'} line-clamp-2`}>{resource.description}</p>
+          </div>
+        </div>
+        <div className="mt-4 flex items-center gap-2 text-sm text-primary">
+          {resource.implemented ? (
+            <>
+              <span>Download free</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </>
+          ) : (
+            <span className="text-slate-500">Available soon</span>
+          )}
+        </div>
+      </>
+    );
+
+    if (resource.implemented) {
+      return (
+        <Link
+          key={resource.href}
+          to={resource.href}
+          className="group p-6 bg-slate-800 hover:bg-slate-750 rounded-xl border border-slate-700 hover:border-primary/50 transition-all"
+        >
+          {cardContent}
+        </Link>
+      );
+    }
+
+    return (
+      <div
+        key={resource.href}
+        className="p-6 bg-slate-800/50 rounded-xl border border-slate-700/50 opacity-75 cursor-not-allowed"
+      >
+        {cardContent}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -209,36 +286,7 @@ export const ResourcesIndexPage: React.FC = () => {
             <h2 className="text-2xl font-bold text-white mb-8">Printable Templates</h2>
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {templates.map((resource) => (
-                <Link
-                  key={resource.href}
-                  to={resource.href}
-                  className="group p-6 bg-slate-800 hover:bg-slate-750 rounded-xl border border-slate-700 hover:border-primary/50 transition-all"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary flex-shrink-0">
-                      {resource.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-white group-hover:text-primary transition-colors truncate">
-                          {resource.title}
-                        </h3>
-                        {resource.badge && (
-                          <span className="px-2 py-0.5 text-xs font-medium bg-primary/20 text-primary rounded-full flex-shrink-0">
-                            {resource.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-slate-400 line-clamp-2">{resource.description}</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex items-center gap-2 text-sm text-primary">
-                    <span>Download free</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              ))}
+              {templates.map(renderResourceCard)}
             </div>
           </div>
         </section>
@@ -249,36 +297,7 @@ export const ResourcesIndexPage: React.FC = () => {
             <h2 className="text-2xl font-bold text-white mb-8">Guides & How-To</h2>
             
             <div className="grid sm:grid-cols-2 gap-6">
-              {guides.map((resource) => (
-                <Link
-                  key={resource.href}
-                  to={resource.href}
-                  className="group p-6 bg-slate-800 hover:bg-slate-750 rounded-xl border border-slate-700 hover:border-primary/50 transition-all"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 flex-shrink-0">
-                      {resource.icon}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-white group-hover:text-primary transition-colors">
-                          {resource.title}
-                        </h3>
-                        {resource.badge && (
-                          <span className="px-2 py-0.5 text-xs font-medium bg-emerald-500/20 text-emerald-400 rounded-full">
-                            {resource.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-slate-400">{resource.description}</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 flex items-center gap-2 text-sm text-primary">
-                    <span>Read guide</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              ))}
+              {guides.map(renderResourceCard)}
             </div>
           </div>
         </section>
