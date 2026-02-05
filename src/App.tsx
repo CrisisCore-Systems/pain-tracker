@@ -37,6 +37,9 @@ const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m
 // SEO Resource Pages - Lazy loaded for code splitting
 const ResourcesIndexPage = lazy(() => import('./pages/resources/ResourcesIndexPage').then(m => ({ default: m.ResourcesIndexPage })));
 const PainDiaryTemplatePdfPage = lazy(() => import('./pages/resources/PainDiaryTemplatePdfPage').then(m => ({ default: m.PainDiaryTemplatePdfPage })));
+const DailyPainTrackerPrintablePage = lazy(() => import('./pages/resources/DailyPainTrackerPrintablePage').then(m => ({ default: m.DailyPainTrackerPrintablePage })));
+const WeeklyPainLogPdfPage = lazy(() => import('./pages/resources/WeeklyPainLogPdfPage').then(m => ({ default: m.WeeklyPainLogPdfPage })));
+const DocumentingPainForDisabilityClaimPage = lazy(() => import('./pages/resources/DocumentingPainForDisabilityClaimPage').then(m => ({ default: m.DocumentingPainForDisabilityClaimPage })));
 
 const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
@@ -161,6 +164,9 @@ function App() {
                     {/* SEO Resource Pages - Public */}
                     <Route path="/resources" element={<ResourcesIndexPage />} />
                     <Route path="/resources/pain-diary-template-pdf" element={<PainDiaryTemplatePdfPage />} />
+                    <Route path="/resources/daily-pain-tracker-printable" element={<DailyPainTrackerPrintablePage />} />
+                    <Route path="/resources/weekly-pain-log-pdf" element={<WeeklyPainLogPdfPage />} />
+                    <Route path="/resources/documenting-pain-for-disability-claim" element={<DocumentingPainForDisabilityClaimPage />} />
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />

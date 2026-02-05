@@ -41,14 +41,13 @@ const resources: ResourceCard[] = [
     category: 'template',
     implemented: true
   },
-  // Coming soon resources
   {
     title: 'Daily Pain Tracker Printable',
     description: 'Simple one-page daily tracking sheet for quick, consistent entries.',
     href: '/resources/daily-pain-tracker-printable',
     icon: <Calendar className="w-6 h-6" />,
     category: 'template',
-    implemented: false
+    implemented: true
   },
   {
     title: 'Weekly Pain Log PDF',
@@ -56,8 +55,9 @@ const resources: ResourceCard[] = [
     href: '/resources/weekly-pain-log-pdf',
     icon: <ClipboardList className="w-6 h-6" />,
     category: 'template',
-    implemented: false
+    implemented: true
   },
+  // Coming soon resources
   {
     title: 'Monthly Pain Tracker',
     description: 'Monthly overview for tracking long-term pain trends and treatment effectiveness.',
@@ -110,7 +110,7 @@ const resources: ResourceCard[] = [
     icon: <Shield className="w-6 h-6" />,
     badge: 'Important',
     category: 'guide',
-    implemented: false
+    implemented: true
   },
   {
     title: 'WorkSafeBC Pain Journal Template',
