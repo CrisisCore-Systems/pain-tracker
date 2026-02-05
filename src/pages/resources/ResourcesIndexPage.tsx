@@ -161,6 +161,94 @@ const resources: ResourceCard[] = [
     category: 'template',
     implemented: true
   },
+  {
+    title: 'Printable Pain Log Sheet',
+    description: 'Simple, clean pain tracking sheet for quick daily documentation.',
+    href: '/resources/printable-pain-log-sheet',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Chronic Pain Diary Template',
+    description: 'Designed for long-term chronic pain tracking with baseline and flare documentation.',
+    href: '/resources/chronic-pain-diary-template',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: '7-Day Pain Diary Template',
+    description: 'One-week format perfect for preparing for doctor appointments.',
+    href: '/resources/7-day-pain-diary-template',
+    icon: <Calendar className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'How Doctors Use Pain Diaries',
+    description: 'Understanding the clinical perspective on pain tracking.',
+    href: '/resources/how-doctors-use-pain-diaries',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Diary for Specialist Appointment',
+    description: 'Prepare effectively for rheumatology, neurology, and pain specialist visits.',
+    href: '/resources/pain-diary-for-specialist-appointment',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Symptom Tracking Before Diagnosis',
+    description: 'Strategic tracking when seeking a diagnosis for unexplained symptoms.',
+    href: '/resources/symptom-tracking-before-diagnosis',
+    icon: <BookOpen className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Pain Journal for Disability Benefits',
+    description: 'Documentation strategies for disability benefit applications.',
+    href: '/resources/pain-journal-for-disability-benefits',
+    icon: <Shield className="w-6 h-6" />,
+    category: 'guide',
+    implemented: true
+  },
+  {
+    title: 'Daily Functioning Log for Disability',
+    description: 'Track functional limitations that disability evaluators need to see.',
+    href: '/resources/daily-functioning-log-for-disability',
+    icon: <Shield className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Endometriosis Pain Log',
+    description: 'Track endo symptoms throughout your cycle: pelvic pain, GI issues, and more.',
+    href: '/resources/endometriosis-pain-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'CRPS Pain Diary Template',
+    description: 'Track Complex Regional Pain Syndrome symptoms: burning, swelling, color changes.',
+    href: '/resources/crps-pain-diary-template',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Neuropathy Symptom Tracker',
+    description: 'Monitor peripheral neuropathy: numbness, tingling, and progression over time.',
+    href: '/resources/neuropathy-symptom-tracker',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
 ];
 
 export const ResourcesIndexPage: React.FC = () => {

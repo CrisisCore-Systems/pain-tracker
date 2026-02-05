@@ -65,6 +65,21 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://paintracker.ca/resources/printable-pain-log-sheet</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/chronic-pain-diary-template</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/7-day-pain-diary-template</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   
   <!-- Tier 2: Medical & Appointment Intent -->
   <url>
@@ -77,6 +92,21 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://paintracker.ca/resources/how-doctors-use-pain-diaries</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/pain-diary-for-specialist-appointment</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/symptom-tracking-before-diagnosis</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   
   <!-- Tier 3: Disability / Legal Documentation -->
   <url>
@@ -86,6 +116,16 @@
   </url>
   <url>
     <loc>https://paintracker.ca/resources/worksafebc-pain-journal-template</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/pain-journal-for-disability-benefits</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/daily-functioning-log-for-disability</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -108,6 +148,21 @@
   </url>
   <url>
     <loc>https://paintracker.ca/resources/nerve-pain-symptom-log</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/endometriosis-pain-log</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/crps-pain-diary-template</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://paintracker.ca/resources/neuropathy-symptom-tracker</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
