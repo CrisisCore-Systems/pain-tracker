@@ -34,6 +34,10 @@ const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => (
 const VaultGate = lazy(() => import('./components/security/VaultGate').then(m => ({ default: m.VaultGate })));
 const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m => ({ default: m.ProtectedAppShell })));
 
+// SEO Resource Pages - Lazy loaded for code splitting
+const ResourcesIndexPage = lazy(() => import('./pages/resources/ResourcesIndexPage').then(m => ({ default: m.ResourcesIndexPage })));
+const PainDiaryTemplatePdfPage = lazy(() => import('./pages/resources/PainDiaryTemplatePdfPage').then(m => ({ default: m.PainDiaryTemplatePdfPage })));
+
 const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
 };
@@ -153,6 +157,10 @@ function App() {
 
                     {/* Submit testimonial/stories */}
                     <Route path="/submit-story" element={<SubmitStoryPage />} />
+
+                    {/* SEO Resource Pages - Public */}
+                    <Route path="/resources" element={<ResourcesIndexPage />} />
+                    <Route path="/resources/pain-diary-template-pdf" element={<PainDiaryTemplatePdfPage />} />
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />
