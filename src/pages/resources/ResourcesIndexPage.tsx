@@ -57,14 +57,13 @@ const resources: ResourceCard[] = [
     category: 'template',
     implemented: true
   },
-  // Coming soon resources
   {
     title: 'Monthly Pain Tracker',
     description: 'Monthly overview for tracking long-term pain trends and treatment effectiveness.',
     href: '/resources/monthly-pain-tracker-printable',
     icon: <Calendar className="w-6 h-6" />,
     category: 'template',
-    implemented: false
+    implemented: true
   },
   {
     title: 'Pain Scale Chart Printable',
@@ -72,7 +71,7 @@ const resources: ResourceCard[] = [
     href: '/resources/pain-scale-chart-printable',
     icon: <Scale className="w-6 h-6" />,
     category: 'template',
-    implemented: false
+    implemented: true
   },
   {
     title: 'Symptom Tracker Printable',
@@ -80,7 +79,15 @@ const resources: ResourceCard[] = [
     href: '/resources/symptom-tracker-printable',
     icon: <Heart className="w-6 h-6" />,
     category: 'template',
-    implemented: false
+    implemented: true
+  },
+  {
+    title: 'Migraine Pain Diary',
+    description: 'Specialized template for tracking migraine-specific symptoms, triggers, and auras.',
+    href: '/resources/migraine-pain-diary-printable',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
   },
   
   // Tier 2: Medical & Appointment Intent
@@ -91,7 +98,7 @@ const resources: ResourceCard[] = [
     icon: <BookOpen className="w-6 h-6" />,
     badge: 'Guide',
     category: 'guide',
-    implemented: false
+    implemented: true
   },
   {
     title: 'What to Include in a Pain Journal',
@@ -99,7 +106,7 @@ const resources: ResourceCard[] = [
     href: '/resources/what-to-include-in-pain-journal',
     icon: <BookOpen className="w-6 h-6" />,
     category: 'guide',
-    implemented: false
+    implemented: true
   },
   
   // Tier 3: Disability/Legal Documentation
@@ -118,25 +125,41 @@ const resources: ResourceCard[] = [
     href: '/resources/worksafebc-pain-journal-template',
     icon: <FileText className="w-6 h-6" />,
     category: 'template',
-    implemented: false
+    implemented: true
   },
   
   // Tier 4: Condition-Specific
-  {
-    title: 'Migraine Pain Diary',
-    description: 'Specialized template for tracking migraine-specific symptoms, triggers, and auras.',
-    href: '/resources/migraine-pain-diary-printable',
-    icon: <FileText className="w-6 h-6" />,
-    category: 'template',
-    implemented: false
-  },
   {
     title: 'Fibromyalgia Pain Diary',
     description: 'Template designed for tracking fibromyalgia symptoms including widespread pain and fatigue.',
     href: '/resources/fibromyalgia-pain-diary',
     icon: <FileText className="w-6 h-6" />,
     category: 'template',
-    implemented: false
+    implemented: true
+  },
+  {
+    title: 'Chronic Back Pain Diary',
+    description: 'Track back pain location, activities, posture, and treatments for spine specialists.',
+    href: '/resources/chronic-back-pain-diary',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Arthritis Pain Tracker',
+    description: 'Monitor joint pain, stiffness, swelling, and mobility across multiple joints.',
+    href: '/resources/arthritis-pain-tracker',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
+  },
+  {
+    title: 'Nerve Pain Symptom Log',
+    description: 'Track burning, tingling, numbness, and shooting pain for neuropathy conditions.',
+    href: '/resources/nerve-pain-symptom-log',
+    icon: <FileText className="w-6 h-6" />,
+    category: 'template',
+    implemented: true
   },
 ];
 

@@ -35,11 +35,29 @@ const VaultGate = lazy(() => import('./components/security/VaultGate').then(m =>
 const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m => ({ default: m.ProtectedAppShell })));
 
 // SEO Resource Pages - Lazy loaded for code splitting
+// Tier 1: Printable/Download Intent
 const ResourcesIndexPage = lazy(() => import('./pages/resources/ResourcesIndexPage').then(m => ({ default: m.ResourcesIndexPage })));
 const PainDiaryTemplatePdfPage = lazy(() => import('./pages/resources/PainDiaryTemplatePdfPage').then(m => ({ default: m.PainDiaryTemplatePdfPage })));
 const DailyPainTrackerPrintablePage = lazy(() => import('./pages/resources/DailyPainTrackerPrintablePage').then(m => ({ default: m.DailyPainTrackerPrintablePage })));
 const WeeklyPainLogPdfPage = lazy(() => import('./pages/resources/WeeklyPainLogPdfPage').then(m => ({ default: m.WeeklyPainLogPdfPage })));
+const MonthlyPainTrackerPrintablePage = lazy(() => import('./pages/resources/MonthlyPainTrackerPrintablePage').then(m => ({ default: m.MonthlyPainTrackerPrintablePage })));
+const PainScaleChartPrintablePage = lazy(() => import('./pages/resources/PainScaleChartPrintablePage').then(m => ({ default: m.PainScaleChartPrintablePage })));
+const SymptomTrackerPrintablePage = lazy(() => import('./pages/resources/SymptomTrackerPrintablePage').then(m => ({ default: m.SymptomTrackerPrintablePage })));
+const MigrainePainDiaryPrintablePage = lazy(() => import('./pages/resources/MigrainePainDiaryPrintablePage').then(m => ({ default: m.MigrainePainDiaryPrintablePage })));
+
+// Tier 2: Medical & Appointment Intent
+const HowToTrackPainForDoctorsPage = lazy(() => import('./pages/resources/HowToTrackPainForDoctorsPage').then(m => ({ default: m.HowToTrackPainForDoctorsPage })));
+const WhatToIncludeInPainJournalPage = lazy(() => import('./pages/resources/WhatToIncludeInPainJournalPage').then(m => ({ default: m.WhatToIncludeInPainJournalPage })));
+
+// Tier 3: Disability / Legal Documentation
 const DocumentingPainForDisabilityClaimPage = lazy(() => import('./pages/resources/DocumentingPainForDisabilityClaimPage').then(m => ({ default: m.DocumentingPainForDisabilityClaimPage })));
+const WorkSafeBCPainJournalTemplatePage = lazy(() => import('./pages/resources/WorkSafeBCPainJournalTemplatePage').then(m => ({ default: m.WorkSafeBCPainJournalTemplatePage })));
+
+// Tier 4: Condition-Specific
+const FibromyalgiaPainDiaryPage = lazy(() => import('./pages/resources/FibromyalgiaPainDiaryPage').then(m => ({ default: m.FibromyalgiaPainDiaryPage })));
+const ChronicBackPainDiaryPage = lazy(() => import('./pages/resources/ChronicBackPainDiaryPage').then(m => ({ default: m.ChronicBackPainDiaryPage })));
+const ArthritisPainTrackerPage = lazy(() => import('./pages/resources/ArthritisPainTrackerPage').then(m => ({ default: m.ArthritisPainTrackerPage })));
+const NervePainSymptomLogPage = lazy(() => import('./pages/resources/NervePainSymptomLogPage').then(m => ({ default: m.NervePainSymptomLogPage })));
 
 const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
@@ -163,10 +181,29 @@ function App() {
 
                     {/* SEO Resource Pages - Public */}
                     <Route path="/resources" element={<ResourcesIndexPage />} />
+                    
+                    {/* Tier 1: Printable/Download Intent */}
                     <Route path="/resources/pain-diary-template-pdf" element={<PainDiaryTemplatePdfPage />} />
                     <Route path="/resources/daily-pain-tracker-printable" element={<DailyPainTrackerPrintablePage />} />
                     <Route path="/resources/weekly-pain-log-pdf" element={<WeeklyPainLogPdfPage />} />
+                    <Route path="/resources/monthly-pain-tracker-printable" element={<MonthlyPainTrackerPrintablePage />} />
+                    <Route path="/resources/pain-scale-chart-printable" element={<PainScaleChartPrintablePage />} />
+                    <Route path="/resources/symptom-tracker-printable" element={<SymptomTrackerPrintablePage />} />
+                    <Route path="/resources/migraine-pain-diary-printable" element={<MigrainePainDiaryPrintablePage />} />
+                    
+                    {/* Tier 2: Medical & Appointment Intent */}
+                    <Route path="/resources/how-to-track-pain-for-doctors" element={<HowToTrackPainForDoctorsPage />} />
+                    <Route path="/resources/what-to-include-in-pain-journal" element={<WhatToIncludeInPainJournalPage />} />
+                    
+                    {/* Tier 3: Disability / Legal Documentation */}
                     <Route path="/resources/documenting-pain-for-disability-claim" element={<DocumentingPainForDisabilityClaimPage />} />
+                    <Route path="/resources/worksafebc-pain-journal-template" element={<WorkSafeBCPainJournalTemplatePage />} />
+                    
+                    {/* Tier 4: Condition-Specific */}
+                    <Route path="/resources/fibromyalgia-pain-diary" element={<FibromyalgiaPainDiaryPage />} />
+                    <Route path="/resources/chronic-back-pain-diary" element={<ChronicBackPainDiaryPage />} />
+                    <Route path="/resources/arthritis-pain-tracker" element={<ArthritisPainTrackerPage />} />
+                    <Route path="/resources/nerve-pain-symptom-log" element={<NervePainSymptomLogPage />} />
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />
