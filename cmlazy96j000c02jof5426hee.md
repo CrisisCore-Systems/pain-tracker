@@ -45,4 +45,8 @@ PainTracker's selective export controls let you choose exactly which data to inc
 
 ---
 
-*[Try PainTracker free](https://blog.paintracker.ca/app) — offline, encrypted, clinician-ready pain tracking.*
+<p class="cta">
+  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">
+    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.
+  </a>
+</p>
