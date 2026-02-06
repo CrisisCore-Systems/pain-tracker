@@ -25,6 +25,11 @@
       "source": "/sponsor",
       "destination": "https://github.com/sponsors/CrisisCore-Systems",
       "permanent": true
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "https://blog.paintracker.ca/:path*",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -35,6 +40,10 @@
     {
       "source": "/api/weather",
       "destination": "https://api.open-meteo.com/v1/forecast"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ],
   "functions": {

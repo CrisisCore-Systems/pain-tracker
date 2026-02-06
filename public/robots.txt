@@ -4,4 +4,4 @@ Allow: /
 Disallow: /app
 Disallow: /api
 
-Sitemap: https://paintracker.ca/sitemap.xml
+Sitemap: https://www.paintracker.ca/sitemap.xml
