@@ -39,4 +39,8 @@ Some patients benefit from a hybrid approach: using a paper template for daily c
 
 ---
 
-*[Try PainTracker free](https://blog.paintracker.ca/app) — offline, encrypted, clinician-ready pain tracking.*
+<p class="cta">
+  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">
+    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.
+  </a>
+</p>
