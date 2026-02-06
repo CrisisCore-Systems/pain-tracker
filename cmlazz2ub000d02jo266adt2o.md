@@ -39,4 +39,8 @@ PainTracker's security relies on standard cryptographic algorithms and defence-i
 
 ---
 
-*[Try PainTracker free](https://blog.paintracker.ca/app) — offline, encrypted, clinician-ready pain tracking.*
+<p class="cta">
+  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">
+    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.
+  </a>
+</p>
