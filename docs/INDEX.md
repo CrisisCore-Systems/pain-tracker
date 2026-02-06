@@ -243,6 +243,11 @@ Suggested reading stance:
 - [Security Audit](security/SECURITY_AUDIT.md)
 - [HIPAA Implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)
 
+**Testing & Validation**:
+- [Validation Protocol](validation/VALIDATION_PROTOCOL.md) - MVP validation strategy
+- [Good Enough Definition](validation/GOOD_ENOUGH_DEFINITION.md) - Ship criteria
+- [Friction Log Template](validation/friction-log-template.md) - Daily testing template
+
 **Analytics & Intelligence**:
 - [Advanced Analytics](product/ADVANCED_ANALYTICS_IMPLEMENTATION.md)
 - [Pattern Engine](product/PATTERN_ENGINE_IMPLEMENTATION.md)
@@ -259,6 +264,7 @@ Suggested reading stance:
 | **Security** | ✅ Complete | October 2024 |
 | **Accessibility** | ✅ Complete | September 2024 |
 | **Deployment** | ✅ Complete | September 2024 |
+| **Validation Protocol** | ✅ Complete | February 2026 |
 | **API Documentation** | 🔄 In Progress | - |
 | **User Guides** | 🔄 In Progress | - |
 
