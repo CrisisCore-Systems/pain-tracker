@@ -13,6 +13,9 @@
 import { describe, it, expect, beforeAll, afterEach, vi } from 'vitest';
 import type { PainEntry } from '../../types';
 import { exportToCSV, exportToJSON } from '../../utils/pain-tracker/export';
+import {
+  generateSyntheticEntries,
+} from './synthetic-data-generator';
 
 // Mock analytics to prevent side effects during synthetic tests
 vi.mock('../../services/PrivacyAnalyticsService', () => ({
@@ -34,96 +37,6 @@ vi.mock('../../lib/debug-logger', () => ({
     swallowed: vi.fn(),
   },
 }));
-
-/**
- * Generate synthetic pain entries that simulate realistic usage patterns
- * @param days Number of days to simulate
- * @param entriesPerDay Average entries per day (with variation)
- */
-function generateSyntheticEntries(days: number, entriesPerDay: number = 3): PainEntry[] {
-  const entries: PainEntry[] = [];
-  const locations = ['head', 'back', 'neck', 'joints', 'chest', 'shoulders', 'knees'];
-  const symptoms = ['stiffness', 'burning', 'aching', 'throbbing', 'sharp pain', 'dull pain'];
-  const activities = ['walking', 'sitting', 'standing', 'lifting', 'bending'];
-
-  const now = Date.now();
-
-  for (let day = 0; day < days; day++) {
-    // Vary entries per day (1 to entriesPerDay+1)
-    const todayEntries = Math.max(1, entriesPerDay + Math.floor(Math.random() * 2) - 1);
-
-    for (let entry = 0; entry < todayEntries; entry++) {
-      const timestamp = new Date(now - day * 86400000 - entry * (86400000 / todayEntries));
-      const painLevel = Math.floor(Math.random() * 10) + 1;
-
-      // Select 1-3 random locations
-      const numLocations = Math.floor(Math.random() * 3) + 1;
-      const selectedLocations: string[] = [];
-      for (let i = 0; i < numLocations; i++) {
-        const loc = locations[Math.floor(Math.random() * locations.length)];
-        if (!selectedLocations.includes(loc)) selectedLocations.push(loc);
-      }
-
-      // Select 1-3 random symptoms
-      const numSymptoms = Math.floor(Math.random() * 3) + 1;
-      const selectedSymptoms: string[] = [];
-      for (let i = 0; i < numSymptoms; i++) {
-        const sym = symptoms[Math.floor(Math.random() * symptoms.length)];
-        if (!selectedSymptoms.includes(sym)) selectedSymptoms.push(sym);
-      }
-
-      // Select 0-2 limited activities
-      const numActivities = Math.floor(Math.random() * 3);
-      const limitedActivities: string[] = [];
-      for (let i = 0; i < numActivities; i++) {
-        const act = activities[Math.floor(Math.random() * activities.length)];
-        if (!limitedActivities.includes(act)) limitedActivities.push(act);
-      }
-
-      entries.push({
-        id: `synthetic-${day}-${entry}`,
-        timestamp: timestamp.toISOString(),
-        baselineData: {
-          pain: painLevel,
-          locations: selectedLocations,
-          symptoms: selectedSymptoms,
-        },
-        functionalImpact: {
-          limitedActivities,
-          assistanceNeeded: [],
-          mobilityAids: [],
-        },
-        medications: {
-          current: [],
-          changes: '',
-          effectiveness: '',
-        },
-        treatments: {
-          recent: [],
-          effectiveness: '',
-          planned: [],
-        },
-        qualityOfLife: {
-          sleepQuality: Math.floor(Math.random() * 10) + 1,
-          moodImpact: Math.floor(Math.random() * 10) + 1,
-          socialImpact: [],
-        },
-        workImpact: {
-          missedWork: Math.random() > 0.8 ? 1 : 0,
-          modifiedDuties: [],
-          workLimitations: [],
-        },
-        comparison: {
-          worseningSince: '',
-          newLimitations: [],
-        },
-        notes: `Synthetic entry day ${day + 1}, entry ${entry + 1}`,
-      });
-    }
-  }
-
-  return entries;
-}
 
 describe('Synthetic Verification - VALIDATION PROTOCOL v1.0', () => {
   beforeAll(() => {

@@ -73,25 +73,58 @@ When collecting feedback, ask:
 
 **Automated testing for what humans would catch.**
 
+### Test Suite Overview
+
+The synthetic testing system includes **90 automated tests** across 5 test files:
+
+| Test File | Tests | Coverage |
+|-----------|-------|----------|
+| `synthetic-verification.test.ts` | 13 | Core data integrity, export roundtrips |
+| `pattern-analysis.test.ts` | 20 | Pattern engine, correlations, trends |
+| `analytics-service.test.ts` | 20 | Heatmaps, predictions, correlations |
+| `wcb-export.test.ts` | 20 | CSV/JSON export, clinical data |
+| `store-persistence.test.ts` | 17 | State management, migrations, queries |
+
 ### Running Synthetic Tests
 
 ```bash
 # Run all synthetic verification tests
+npm run test -- src/test/validation/
+
+# Run specific test file
 npm run test -- src/test/validation/synthetic-verification.test.ts
 
 # Run with verbose output
-npm run test -- src/test/validation/synthetic-verification.test.ts --reporter=verbose
+npm run test -- src/test/validation/ --reporter=verbose
 ```
 
 ### What Synthetic Tests Cover
 
 | Test Category | What It Validates |
 |--------------|-------------------|
-| Data Integrity | Entry generation, field validation, timestamp ordering |
+| Data Generation | Entry generation for normal, crisis, recovery, flare patterns |
+| Profile Simulation | Chronic back pain, fibromyalgia, migraine, arthritis, post-surgical |
+| Data Integrity | Field validation, timestamp ordering, JSON serialization |
 | Export/Import | CSV and JSON export roundtrips, data preservation |
-| Data Recovery | Complete data recovery after export/import cycles |
-| Stress Tests | 1000+ entries, rapid burst logging |
-| Edge Cases | Minimal data, maximum data, special characters |
+| Pattern Analysis | Trends, episodes, correlations, QoL patterns |
+| Analytics | Heatmaps, predictions, medication effectiveness |
+| Store Operations | CRUD operations, filtering, aggregation, migrations |
+| Performance | 1000+ entries, year-long datasets, memory efficiency |
+| Edge Cases | Empty data, minimal data, maximum data, special characters |
+
+### Predefined Test Scenarios
+
+```typescript
+import { PREDEFINED_SCENARIOS } from './synthetic-data-generator';
+
+// Available scenarios:
+PREDEFINED_SCENARIOS.normalUsage30Days()    // 30 days normal usage
+PREDEFINED_SCENARIOS.fullPattern90Days()    // 90 days with all patterns
+PREDEFINED_SCENARIOS.migrainePattern()      // 60 days migraine patient
+PREDEFINED_SCENARIOS.postSurgicalRecovery() // 45 days recovery
+PREDEFINED_SCENARIOS.crisisScenario()       // 14 days high intensity
+PREDEFINED_SCENARIOS.yearLongUsage()        // 365 days stress test
+```
 
 ### Test Output Interpretation
 
@@ -100,6 +133,7 @@ When tests pass, you'll see:
 SYNTHETIC_TEST: Generated 90 entries for 30 days
 SYNTHETIC_TEST: All entries validated - PASS
 SERIALIZATION_TEST: 90 entries roundtrip - PASS
+PERFORMANCE_TEST: 1016 entries analyzed in 7ms - PASS
 ...
 ```
 
@@ -157,11 +191,15 @@ Quick reference:
 ## Validation Test Commands
 
 ```bash
-# Run all validation tests
+# Run all validation tests (90 tests)
 npm run test -- src/test/validation/
 
-# Run synthetic verification only
+# Run specific test suites
 npm run test -- src/test/validation/synthetic-verification.test.ts
+npm run test -- src/test/validation/pattern-analysis.test.ts
+npm run test -- src/test/validation/analytics-service.test.ts
+npm run test -- src/test/validation/wcb-export.test.ts
+npm run test -- src/test/validation/store-persistence.test.ts
 
 # Run with coverage
 npm run test:coverage -- src/test/validation/
