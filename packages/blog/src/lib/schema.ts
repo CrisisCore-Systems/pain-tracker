@@ -124,6 +124,83 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
   };
 }
 
+// ── Article / content page schemas ────────────────────────────────────
+
+/**
+ * Article schema — for pillar and supporting content pages.
+ */
+export function articleJsonLd(opts: {
+  title: string;
+  description: string;
+  url: string;
+  datePublished?: string;
+  dateModified?: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: opts.title,
+    description: opts.description,
+    url: opts.url,
+    datePublished: opts.datePublished ?? new Date().toISOString().split('T')[0],
+    dateModified: opts.dateModified ?? new Date().toISOString().split('T')[0],
+    author: {
+      '@type': 'Organization',
+      name: 'CrisisCore Systems',
+      url: siteConfig.url,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'CrisisCore Systems',
+      logo: { '@type': 'ImageObject', url: `${siteConfig.url}/logo.png` },
+    },
+  };
+}
+
+/**
+ * WebPage schema — for trust / transparency pages.
+ */
+export function webPageJsonLd(opts: {
+  title: string;
+  description: string;
+  url: string;
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: opts.title,
+    description: opts.description,
+    url: opts.url,
+    publisher: {
+      '@type': 'Organization',
+      name: 'CrisisCore Systems',
+      url: siteConfig.url,
+    },
+  };
+}
+
+/**
+ * HowTo schema — for getting-started / instructional pages.
+ */
+export function howToJsonLd(opts: {
+  title: string;
+  description: string;
+  steps: { name: string; text: string }[];
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: opts.title,
+    description: opts.description,
+    step: opts.steps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
+  };
+}
+
 // ── React helper ──────────────────────────────────────────────────────
 
 /**
