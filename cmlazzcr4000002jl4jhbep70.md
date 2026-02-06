@@ -3,6 +3,7 @@ title: "Tracking Recovery After Injury: Documenting Your Healing Journey"
 datePublished: Fri Feb 06 2026 14:45:36 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazzcr4000002jl4jhbep70
 slug: tracking-recovery-after-injury
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770389922012/0958ae12-56a4-4d8b-af57-41cc692c7dba.png
 tags: healthcare, chronic-pain, pain-management, health-tracking
 
 ---
@@ -49,4 +50,4 @@ Yes. Recovery is rarely linear. Setbacks, flares, and daily fluctuations are nor
 
 ---
 
-*[Try PainTracker free](https://blog.paintracker.ca/app) — offline, encrypted, clinician-ready pain tracking.*
+[Try PainTracker free — offline, encrypted, clinician-ready pain tracking.](https://paintracker.ca)
