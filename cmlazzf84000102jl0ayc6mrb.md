@@ -3,6 +3,7 @@ title: "Sharing Symptom Data Safely: Control What You Share and With Whom"
 datePublished: Fri Feb 06 2026 14:45:40 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazzf84000102jl0ayc6mrb
 slug: sharing-symptom-data-safely
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770389625879/eb065ce8-61e4-4756-b8e8-56ea9985c2da.png
 tags: healthcare, chronic-pain, pain-management, health-tracking
 
 ---
@@ -55,4 +56,4 @@ The safest method is to print the PDF and hand it to your doctor in person. If e
 
 ---
 
-*[Try PainTracker free](https://blog.paintracker.ca/app) — offline, encrypted, clinician-ready pain tracking.*
+[Try PainTracker free — offline, encrypted, clinician-ready pain tracking.](https://paintracker.ca)
