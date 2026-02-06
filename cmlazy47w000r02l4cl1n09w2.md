@@ -43,4 +43,8 @@ Bring the report printed if possible, or have it ready on your phone as a PDF. O
 
 ---
 
-*[Try PainTracker free](https://blog.paintracker.ca/app) — offline, encrypted, clinician-ready pain tracking.*
+<p class="cta">
+  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">
+    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.
+  </a>
+</p>
