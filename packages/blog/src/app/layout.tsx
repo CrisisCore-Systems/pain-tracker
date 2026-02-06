@@ -5,6 +5,11 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { BackToTop } from '@/components/BackToTop';
 import { siteConfig } from '@/lib/utils';
+import {
+  organizationJsonLd,
+  softwareApplicationJsonLd,
+  websiteJsonLd,
+} from '@/lib/schema';
 
 const inter = Inter({ 
   subsets: ['latin'], 
@@ -85,6 +90,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        {/* Site-wide JSON-LD structured data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              organizationJsonLd(),
+              softwareApplicationJsonLd(),
+              websiteJsonLd(),
+            ]),
+          }}
+        />
+      </head>
       <body className={`${inter.className} flex min-h-screen flex-col antialiased selection:bg-primary/20 selection:text-primary`}>
         {/* Skip to main content link for accessibility */}
         <a 

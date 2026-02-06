@@ -95,6 +95,24 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/features"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Features
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/use-cases"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Use Cases
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/about"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
@@ -104,16 +122,11 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href={siteConfig.links.app}
-                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center gap-2 group"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/app"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-0 transition-all duration-200" />
-                  Pain Tracker App
-                  <svg className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Open App
                 </Link>
               </li>
             </ul>
@@ -125,6 +138,24 @@ export function Footer() {
               Resources
             </h3>
             <ul className="space-y-4" role="list">
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Privacy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/security"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Security
+                </Link>
+              </li>
               <li>
                 <Link
                   href={siteConfig.links.github}

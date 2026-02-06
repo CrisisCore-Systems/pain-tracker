@@ -51,6 +51,8 @@ export function Header() {
   useEffect(() => {
     const path = window.location.pathname;
     if (path === '/') setActiveSection('articles');
+    else if (path.startsWith('/features')) setActiveSection('features');
+    else if (path.startsWith('/use-cases')) setActiveSection('use-cases');
     else if (path === '/about') setActiveSection('about');
     else setActiveSection(null);
   }, []);
@@ -111,6 +113,32 @@ export function Header() {
             )}
           </Link>
           <Link
+            href="/features"
+            className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
+              activeSection === 'features' 
+                ? 'text-primary bg-primary/10' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            <span className="relative z-10">Features</span>
+            {activeSection === 'features' && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+            )}
+          </Link>
+          <Link
+            href="/use-cases"
+            className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
+              activeSection === 'use-cases' 
+                ? 'text-primary bg-primary/10' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            <span className="relative z-10">Use Cases</span>
+            {activeSection === 'use-cases' && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+            )}
+          </Link>
+          <Link
             href="/about"
             className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
               activeSection === 'about' 
@@ -127,10 +155,8 @@ export function Header() {
           <div className="w-px h-8 bg-border/60 mx-4" aria-hidden="true" />
           
           <Link
-            href={siteConfig.links.app}
+            href="/app"
             className="btn-primary group/btn relative overflow-hidden"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             {/* Shimmer effect */}
             <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -221,6 +247,24 @@ export function Header() {
             Articles
           </Link>
           <Link
+            href="/features"
+            className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
+              activeSection === 'features' ? 'text-primary' : 'text-foreground hover:text-primary'
+            }`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Features
+          </Link>
+          <Link
+            href="/use-cases"
+            className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
+              activeSection === 'use-cases' ? 'text-primary' : 'text-foreground hover:text-primary'
+            }`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Use Cases
+          </Link>
+          <Link
             href="/about"
             className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
               activeSection === 'about' ? 'text-primary' : 'text-foreground hover:text-primary'
@@ -233,10 +277,8 @@ export function Header() {
           <div className="w-32 h-1 bg-gradient-to-r from-primary via-accent to-primary rounded-full my-6" aria-hidden="true" />
           
           <Link
-            href={siteConfig.links.app}
+            href="/app"
             className="btn-primary text-lg px-10 py-4 shadow-xl shadow-primary/20"
-            target="_blank"
-            rel="noopener noreferrer"
           >
             Try Pain Tracker
             <svg
