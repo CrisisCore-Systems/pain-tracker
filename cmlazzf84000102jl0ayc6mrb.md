@@ -56,4 +56,8 @@ The safest method is to print the PDF and hand it to your doctor in person. If e
 
 ---
 
-[Try PainTracker free — offline, encrypted, clinician-ready pain tracking.](https://paintracker.ca)
+<p class="cta">
+  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">
+    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.
+  </a>
+</p>
