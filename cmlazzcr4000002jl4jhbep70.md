@@ -50,4 +50,8 @@ Yes. Recovery is rarely linear. Setbacks, flares, and daily fluctuations are nor
 
 ---
 
-[Try PainTracker free — offline, encrypted, clinician-ready pain tracking.](https://paintracker.ca)
+<p class="cta">
+  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">
+    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.
+  </a>
+</p>
