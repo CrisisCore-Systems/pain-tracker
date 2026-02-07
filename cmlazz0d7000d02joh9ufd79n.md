@@ -3,6 +3,7 @@ title: "Accessibility in Pain Tracking: Inclusive Design for Chronic Pain"
 datePublished: Fri Feb 06 2026 14:45:20 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazz0d7000d02joh9ufd79n
 slug: accessibility-in-pain-tracking
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770444488133/2429fa00-e229-4497-a3bb-aed05048f724.png
 tags: security, accessibility, privacy, open-source
 
 ---
