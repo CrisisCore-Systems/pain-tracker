@@ -3,6 +3,7 @@ title: "Pain Diary Template: What to Record for Effective Symptom Tracking"
 datePublished: Fri Feb 06 2026 14:44:36 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazy1q6000302kyfjc0328f
 slug: pain-diary-template
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770492171034/f8e31986-d88c-47ff-837b-db849befb6c1.png
 tags: security, encryption, privacy, health-data
 
 ---
