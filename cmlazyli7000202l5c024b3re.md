@@ -3,6 +3,7 @@ title: "Identifying Pain Triggers: How Data Reveals What Memory Cannot"
 datePublished: Fri Feb 06 2026 14:45:01 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazyli7000202l5c024b3re
 slug: identifying-pain-triggers
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770455229648/02064d41-0f52-4b68-a298-32551e91819e.png
 tags: chronic-pain, pain-management, chronic-illness, health-tracking
 
 ---
