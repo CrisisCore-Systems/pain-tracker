@@ -1,6 +1,6 @@
 #!/bin/bash
 # Pre-push hook: ensure dynamic badges are up to date on main branch.
-# Skips on non-main branches or if CI environment.
+# Skips on non-main branches, CI, or when badges are already in the push.
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 if [ "$BRANCH" != "main" ]; then
@@ -15,6 +15,15 @@ fi
 
 if ! command -v npm >/dev/null 2>&1; then
   echo "[pre-push] npm not available - skipping." >&2
+  exit 0
+fi
+
+# If badge files were already committed in the push, trust them and skip
+# regeneration. This avoids it re-running badge:all (which re-runs tests),
+# getting slightly different numbers, and blocking the push in a loop.
+BADGES_IN_PUSH=$(git diff --name-only origin/main..HEAD -- badges/*.json 2>/dev/null || true)
+if [ -n "$BADGES_IN_PUSH" ]; then
+  echo "[pre-push] Badge files already updated in this push - skipping regeneration." >&2
   exit 0
 fi
 
