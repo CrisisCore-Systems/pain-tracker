@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from 'react';
-import { GripVertical, HelpCircle } from 'lucide-react';
+import React, { lazy, Suspense, useState } from 'react';
+import { GripVertical, HelpCircle, FileDown, Download, Settings, Plus, Calendar } from 'lucide-react';
 import { Card, CardContent, Button, Badge } from '../../design-system';
 import { cn } from '../../design-system/utils';
 import { TraumaInformedSection } from '../accessibility';
@@ -10,13 +10,23 @@ import { PainHistoryPanel } from '../widgets/PainHistoryPanel';
 import { QuantifiedEmpathyDashboard } from '../analytics/QuantifiedEmpathyDashboard';
 import { IntelligentTriggersManager } from '../notifications/IntelligentTriggersManager';
 import { GoalDashboardWidget } from '../goals/GoalDashboardWidget';
+import { ComparisonDashboardWidget } from '../widgets/ComparisonDashboardWidget';
+import { WeatherCorrelationPanel } from '../analytics/WeatherCorrelationPanel';
+import PredictivePanel from '../PredictivePanel';
 import { formatNumber } from '../../utils/formatting';
+import { isSameLocalDay, localDayStart } from '../../utils/dates';
 import type { WidgetType } from './constants';
 import type { PainEntry } from '../../types';
 
-// Lazy load WCBReportPanel to defer PDF library loading (Phase 3 optimization)
+// Lazy load heavy panels to defer library loading
 const WCBReportPanel = lazy(() =>
   import('../widgets/WCBReportPanel').then(m => ({ default: m.WCBReportPanel }))
+);
+const ClinicalPDFExportButton = lazy(() =>
+  import('../export/ClinicalPDFExportButton').then(m => ({ default: m.ClinicalPDFExportButton }))
+);
+const DataExportModal = lazy(() =>
+  import('../export/DataExportModal').then(m => ({ default: m.DataExportModal }))
 );
 
 type LayoutStyle = 'grid' | 'masonry' | 'list';
@@ -27,6 +37,7 @@ type WidgetRendererContext = {
   onAddEntry: (entry: Omit<PainEntry, 'id' | 'timestamp'>) => void;
   onStartWalkthrough: () => void;
   onOpenGoalManager?: () => void;
+  onNavigate?: (view: string) => void;
 };
 
 type WidgetRenderer = (context: WidgetRendererContext) => React.ReactNode;
@@ -117,7 +128,7 @@ const renderWcbReport: WidgetRenderer = ({ entries }) => (
   </TraumaInformedSection>
 );
 
-const renderCurrentStats: WidgetRenderer = ({ entries }) => {
+const renderCurrentStats: WidgetRenderer = ({ entries, allEntries }) => {
   const totalEntries = entries.length;
   const averagePain =
     totalEntries > 0
@@ -131,6 +142,48 @@ const renderCurrentStats: WidgetRenderer = ({ entries }) => {
       ? new Date(entries[entries.length - 1]?.timestamp || '').toLocaleDateString()
       : '—';
 
+  // Compute 7-day vs prior 7-day trend
+  const now = new Date();
+  const weekAgo = new Date(now);
+  weekAgo.setDate(weekAgo.getDate() - 7);
+  const twoWeeksAgo = new Date(now);
+  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+  const thisWeek = allEntries.filter(e => new Date(e.timestamp) >= weekAgo);
+  const lastWeek = allEntries.filter(
+    e => new Date(e.timestamp) >= twoWeeksAgo && new Date(e.timestamp) < weekAgo
+  );
+
+  const thisWeekAvg =
+    thisWeek.length > 0
+      ? thisWeek.reduce((s, e) => s + e.baselineData.pain, 0) / thisWeek.length
+      : null;
+  const lastWeekAvg =
+    lastWeek.length > 0
+      ? lastWeek.reduce((s, e) => s + e.baselineData.pain, 0) / lastWeek.length
+      : null;
+
+  const trendDelta =
+    thisWeekAvg !== null && lastWeekAvg !== null
+      ? Number((thisWeekAvg - lastWeekAvg).toFixed(1))
+      : null;
+
+  const todayEntries = allEntries.filter(e => isSameLocalDay(new Date(e.timestamp), now)).length;
+
+  // Simple 7-day sparkline
+  const sparkline: number[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const day = new Date(now);
+    day.setDate(day.getDate() - i);
+    const dayEntries = allEntries.filter(e => isSameLocalDay(new Date(e.timestamp), day));
+    const avg =
+      dayEntries.length > 0
+        ? dayEntries.reduce((s, e) => s + e.baselineData.pain, 0) / dayEntries.length
+        : 0;
+    sparkline.push(avg);
+  }
+  const sparkMax = Math.max(...sparkline, 1);
+
   return (
     <div className="flex h-full flex-col gap-5 rounded-2xl bg-background/70 p-6 text-sm shadow-inner shadow-black/5">
       <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
@@ -139,7 +192,7 @@ const renderCurrentStats: WidgetRenderer = ({ entries }) => {
           Live
         </Badge>
       </div>
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Entries recorded</p>
           <p className="text-2xl font-semibold text-foreground">{totalEntries}</p>
@@ -149,10 +202,46 @@ const renderCurrentStats: WidgetRenderer = ({ entries }) => {
           <p className="text-2xl font-semibold text-foreground">{averagePain}</p>
         </div>
         <div className="space-y-1">
+          <p className="text-xs text-muted-foreground">Today</p>
+          <p className="text-2xl font-semibold text-foreground">{todayEntries}</p>
+        </div>
+        <div className="space-y-1">
           <p className="text-xs text-muted-foreground">Last entry</p>
           <p className="text-base font-medium text-foreground/80">{lastEntryDate}</p>
         </div>
       </div>
+      {/* Weekly trend */}
+      {trendDelta !== null && (
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-muted-foreground">Week-over-week:</span>
+          <span
+            className={cn(
+              'font-medium',
+              trendDelta < 0
+                ? 'text-green-600 dark:text-green-400'
+                : trendDelta > 0
+                  ? 'text-red-600 dark:text-red-400'
+                  : 'text-muted-foreground'
+            )}
+          >
+            {trendDelta > 0 ? '+' : ''}
+            {trendDelta} avg pain
+          </span>
+        </div>
+      )}
+      {/* Sparkline */}
+      {sparkline.some(v => v > 0) && (
+        <div className="flex items-end gap-1 h-8">
+          {sparkline.map((val, i) => (
+            <div
+              key={i}
+              className="flex-1 rounded-sm bg-primary/30"
+              style={{ height: `${Math.max((val / sparkMax) * 100, 4)}%` }}
+              title={`Day ${i + 1}: ${val.toFixed(1)}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -162,14 +251,16 @@ const renderQuickActions: WidgetRenderer = ({ onStartWalkthrough }) => (
     <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground/80">
       Quick actions
     </div>
-    <Button
-      variant="outline"
-      className="justify-start"
-      onClick={onStartWalkthrough}
-      leftIcon={<HelpCircle className="h-4 w-4" />}
-    >
-      Help & Tutorial
-    </Button>
+    <div className="grid grid-cols-2 gap-2">
+      <Button
+        variant="outline"
+        className="justify-start"
+        onClick={onStartWalkthrough}
+        leftIcon={<HelpCircle className="h-4 w-4" />}
+      >
+        Help & Tutorial
+      </Button>
+    </div>
   </div>
 );
 
@@ -195,6 +286,93 @@ const renderGoalTracking: WidgetRenderer = ({ onOpenGoalManager }) => (
   </TraumaInformedSection>
 );
 
+const renderComparison: WidgetRenderer = ({ entries }) => (
+  <TraumaInformedSection
+    title="Period Comparison"
+    description="Compare pain trends across different time periods"
+    importance="normal"
+    canCollapse={true}
+  >
+    <ComparisonDashboardWidget entries={entries} />
+  </TraumaInformedSection>
+);
+
+const renderWeatherCorrelation: WidgetRenderer = ({ entries }) => (
+  <TraumaInformedSection
+    title="Weather & Pain"
+    description="How weather conditions may relate to your pain levels"
+    importance="normal"
+    canCollapse={true}
+  >
+    <WeatherCorrelationPanel entries={entries} />
+  </TraumaInformedSection>
+);
+
+const renderPredictiveInsights: WidgetRenderer = ({ entries }) => (
+  <TraumaInformedSection
+    title="Predictive Insights"
+    description="Flare-up risk assessment based on recent patterns"
+    importance="normal"
+    canCollapse={true}
+  >
+    <PredictivePanel entries={entries} />
+  </TraumaInformedSection>
+);
+
+const renderClinicalExport: WidgetRenderer = ({ entries }) => (
+  <TraumaInformedSection
+    title="Clinical PDF Export"
+    description="Generate clinical-grade PDF reports for healthcare providers"
+    importance="normal"
+    canCollapse={true}
+  >
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center p-8" role="status" aria-live="polite">
+          <div className="animate-pulse">Loading Clinical Export...</div>
+        </div>
+      }
+    >
+      <ClinicalPDFExportButton entries={entries} />
+    </Suspense>
+  </TraumaInformedSection>
+);
+
+function DataExportWidget({ entries }: { entries: PainEntry[] }) {
+  const [showModal, setShowModal] = useState(false);
+  return (
+    <>
+      <div className="flex flex-col gap-3 p-2">
+        <p className="text-sm text-muted-foreground">
+          Export {entries.length} entries in CSV, JSON, or PDF format. Your data never leaves your
+          device.
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => setShowModal(true)}
+          leftIcon={<Download className="h-4 w-4" />}
+        >
+          Export Data
+        </Button>
+      </div>
+      <Suspense fallback={null}>
+        {showModal && <DataExportModal isOpen={showModal} entries={entries} onClose={() => setShowModal(false)} />}
+      </Suspense>
+    </>
+  );
+}
+
+const renderDataExport: WidgetRenderer = ({ entries }) => (
+  <TraumaInformedSection
+    title="Data Export"
+    description="Export your data in multiple formats"
+    importance="normal"
+    canCollapse={true}
+  >
+    <DataExportWidget entries={entries} />
+  </TraumaInformedSection>
+);
+
 const WIDGET_RENDERERS: Record<WidgetType, WidgetRenderer> = {
   'dashboard-overview': renderDashboardOverview,
   'pain-entry': renderPainEntry,
@@ -206,11 +384,16 @@ const WIDGET_RENDERERS: Record<WidgetType, WidgetRenderer> = {
   'quick-actions': renderQuickActions,
   'intelligent-triggers': renderIntelligentTriggers,
   'goal-tracking': renderGoalTracking,
+  comparison: renderComparison,
+  'weather-correlation': renderWeatherCorrelation,
+  'predictive-insights': renderPredictiveInsights,
+  'clinical-export': renderClinicalExport,
+  'data-export': renderDataExport,
 };
 
 const sizeClasses = {
   small: 'col-span-1',
-  medium: 'col-span-1 md:col-span-2',
+  medium: 'col-span-1 md:col-span-1',
   large: 'col-span-1 md:col-span-2',
   full: 'col-span-1 md:col-span-2',
 } as const;

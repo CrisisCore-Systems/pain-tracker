@@ -9,7 +9,7 @@ import {
   faqPageJsonLd,
   breadcrumbJsonLd,
 } from '@/lib/schema';
-import { articles, getArticleBySlug } from '@/data/articles';
+import { articles, getArticleBySlug, APP_CTA_URL } from '@/data/articles';
 import type { ArticleData } from '@/data/articles';
 
 // ── Static params for all 30 SEO pages ──────────────────────────────
@@ -158,8 +158,8 @@ export default async function ArticlePage({ params }: Props) {
           {article.description}
         </p>
 
-        {/* Sections */}
-        {article.sections.map((section) => (
+        {/* Sections with mid-article contextual linking */}
+        {article.sections.map((section, sectionIndex) => (
           <section key={section.h2} className="mb-10">
             <h2 className="mb-4 text-2xl font-semibold text-gray-800 dark:text-gray-100">
               {section.h2}
@@ -172,6 +172,38 @@ export default async function ArticlePage({ params }: Props) {
                 {p}
               </p>
             ))}
+
+            {/* Contextual pillar link — injected after the 2nd section (mid-article) */}
+            {sectionIndex === 1 && article.internalLinks && (
+              <aside className="my-6 rounded-lg border border-blue-100 bg-blue-50/50 p-4 dark:border-blue-800/50 dark:bg-blue-900/20">
+                <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <span className="mr-1.5 inline-block text-blue-600 dark:text-blue-400" aria-hidden="true">→</span>
+                  Learn more in our comprehensive guide:{' '}
+                  <a
+                    href={article.internalLinks.pillarUrl}
+                    className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 hover:decoration-blue-500 dark:text-blue-400 dark:decoration-blue-600 dark:hover:text-blue-300"
+                  >
+                    {article.internalLinks.pillarLabel}
+                  </a>
+                </p>
+              </aside>
+            )}
+
+            {/* Related article link — injected after the 4th section (or last if fewer) */}
+            {sectionIndex === Math.min(3, article.sections.length - 1) && article.internalLinks && (
+              <aside className="my-6 rounded-lg border border-gray-100 bg-gray-50/50 p-4 dark:border-gray-700/50 dark:bg-gray-800/30">
+                <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <span className="mr-1.5 inline-block text-gray-500 dark:text-gray-400" aria-hidden="true">📖</span>
+                  Related reading:{' '}
+                  <Link
+                    href={`/${article.internalLinks.relatedSlug}`}
+                    className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 hover:decoration-blue-500 dark:text-blue-400 dark:decoration-blue-600 dark:hover:text-blue-300"
+                  >
+                    {articles.find(a => a.slug === article.internalLinks!.relatedSlug)?.title ?? article.internalLinks.relatedSlug}
+                  </Link>
+                </p>
+              </aside>
+            )}
           </section>
         ))}
 
@@ -194,7 +226,7 @@ export default async function ArticlePage({ params }: Props) {
           </section>
         )}
 
-        {/* CTA */}
+        {/* CTA — links to root domain for authority transfer */}
         <div className="mb-12 rounded-lg border border-blue-200 bg-blue-50 p-6 text-center dark:border-blue-800 dark:bg-blue-900/30">
           <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
             Ready to start tracking?
@@ -202,12 +234,12 @@ export default async function ArticlePage({ params }: Props) {
           <p className="mb-4 text-gray-600 dark:text-gray-300">
             PainTracker is free, private, and works offline. No account required.
           </p>
-          <Link
-            href="/app"
+          <a
+            href={APP_CTA_URL}
             className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700"
           >
             Open PainTracker
-          </Link>
+          </a>
         </div>
 
         {/* Related articles */}

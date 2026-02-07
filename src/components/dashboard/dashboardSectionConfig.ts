@@ -13,8 +13,15 @@ export const SECTION_WIDGETS: Record<DashboardSection, WidgetType[]> = {
     'recent-history',
     'quick-actions',
   ],
-  insights: ['pain-visualization', 'empathy-analytics', 'intelligent-triggers'],
-  reports: ['wcb-report'],
+  insights: [
+    'pain-visualization',
+    'empathy-analytics',
+    'intelligent-triggers',
+    'comparison',
+    'weather-correlation',
+    'predictive-insights',
+  ],
+  reports: ['wcb-report', 'clinical-export', 'data-export'],
 };
 
 export interface DashboardSectionDefinition {

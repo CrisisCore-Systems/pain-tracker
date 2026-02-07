@@ -51,6 +51,7 @@ export function Header() {
   useEffect(() => {
     const path = window.location.pathname;
     if (path === '/') setActiveSection('articles');
+    else if (path.startsWith('/pain-tracking-guides')) setActiveSection('guides');
     else if (path.startsWith('/features')) setActiveSection('features');
     else if (path.startsWith('/use-cases')) setActiveSection('use-cases');
     else if (path === '/about') setActiveSection('about');
@@ -113,6 +114,19 @@ export function Header() {
             )}
           </Link>
           <Link
+            href="/pain-tracking-guides"
+            className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
+              activeSection === 'guides' 
+                ? 'text-primary bg-primary/10' 
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+            }`}
+          >
+            <span className="relative z-10">Guides</span>
+            {activeSection === 'guides' && (
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+            )}
+          </Link>
+          <Link
             href="/features"
             className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
               activeSection === 'features' 
@@ -125,37 +139,19 @@ export function Header() {
               <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
             )}
           </Link>
-          <Link
-            href="/use-cases"
-            className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
-              activeSection === 'use-cases' 
-                ? 'text-primary bg-primary/10' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-            }`}
+          
+          {/* Root-domain pillar links — cross-domain authority transfer */}
+          <a
+            href="https://paintracker.ca/pain-log-for-doctors"
+            className="px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group text-muted-foreground hover:text-foreground hover:bg-muted"
           >
-            <span className="relative z-10">Use Cases</span>
-            {activeSection === 'use-cases' && (
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
-            )}
-          </Link>
-          <Link
-            href="/about"
-            className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group ${
-              activeSection === 'about' 
-                ? 'text-primary bg-primary/10' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-            }`}
-          >
-            <span className="relative z-10">About</span>
-            {activeSection === 'about' && (
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
-            )}
-          </Link>
+            <span className="relative z-10">For Doctors</span>
+          </a>
           
           <div className="w-px h-8 bg-border/60 mx-4" aria-hidden="true" />
           
-          <Link
-            href="/app"
+          <a
+            href="https://paintracker.ca/app"
             className="btn-primary group/btn relative overflow-hidden"
           >
             {/* Shimmer effect */}
@@ -175,7 +171,7 @@ export function Header() {
                 d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
               />
             </svg>
-          </Link>
+          </a>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -247,6 +243,15 @@ export function Header() {
             Articles
           </Link>
           <Link
+            href="/pain-tracking-guides"
+            className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
+              activeSection === 'guides' ? 'text-primary' : 'text-foreground hover:text-primary'
+            }`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Guides
+          </Link>
+          <Link
             href="/features"
             className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
               activeSection === 'features' ? 'text-primary' : 'text-foreground hover:text-primary'
@@ -255,29 +260,18 @@ export function Header() {
           >
             Features
           </Link>
-          <Link
-            href="/use-cases"
-            className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
-              activeSection === 'use-cases' ? 'text-primary' : 'text-foreground hover:text-primary'
-            }`}
+          <a
+            href="https://paintracker.ca/pain-log-for-doctors"
+            className="text-4xl font-bold transition-all duration-300 hover:scale-105 text-foreground hover:text-primary"
             onClick={() => setIsMenuOpen(false)}
           >
-            Use Cases
-          </Link>
-          <Link
-            href="/about"
-            className={`text-4xl font-bold transition-all duration-300 hover:scale-105 ${
-              activeSection === 'about' ? 'text-primary' : 'text-foreground hover:text-primary'
-            }`}
-            onClick={() => setIsMenuOpen(false)}
-          >
-            About
-          </Link>
+            For Doctors
+          </a>
           
           <div className="w-32 h-1 bg-gradient-to-r from-primary via-accent to-primary rounded-full my-6" aria-hidden="true" />
           
-          <Link
-            href="/app"
+          <a
+            href="https://paintracker.ca/app"
             className="btn-primary text-lg px-10 py-4 shadow-xl shadow-primary/20"
           >
             Try Pain Tracker
@@ -295,7 +289,7 @@ export function Header() {
                 d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
               />
             </svg>
-          </Link>
+          </a>
 
           {/* Close hint */}
           <p className="absolute bottom-16 text-sm text-muted-foreground flex items-center gap-2">

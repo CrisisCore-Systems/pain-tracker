@@ -95,6 +95,15 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href="/pain-tracking-guides"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Pain Tracking Guides
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/features"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
@@ -103,41 +112,77 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/use-cases"
-                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
-                >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Use Cases
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
-                >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/app"
+                <a
+                  href="https://paintracker.ca/app"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
                   Open App
-                </Link>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Root-Domain Pillar Pages — cross-domain authority transfer */}
+          <div className="lg:col-span-2">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/70 mb-5">
+              Pillar Guides
+            </h3>
+            <ul className="space-y-4" role="list">
+              <li>
+                <a
+                  href="https://paintracker.ca/offline-pain-diary"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Offline Pain Diary
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://paintracker.ca/private-pain-tracker"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Private Pain Tracker
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://paintracker.ca/pain-log-for-doctors"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Pain Log for Doctors
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://paintracker.ca/track-chronic-pain-symptoms"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Track Chronic Pain
+                </a>
               </li>
             </ul>
           </div>
 
           {/* Resources & Trust Signals */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-2">
             <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/70 mb-5">
               Resources
             </h3>
             <ul className="space-y-4" role="list">
+              <li>
+                <a
+                  href="https://paintracker.ca"
+                  className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
+                >
+                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
+                  Homepage
+                </a>
+              </li>
               <li>
                 <Link
                   href="/privacy"

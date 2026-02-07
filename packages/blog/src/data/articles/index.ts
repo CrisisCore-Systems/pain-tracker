@@ -1,4 +1,4 @@
-export type { SchemaType, ArticleSection, FAQ, HowToStep, ArticleData } from './types';
+export type { SchemaType, ArticleSection, FAQ, HowToStep, ArticleData, InternalLinks } from './types';
 
 import offlinePainDiary from './offline-pain-diary';
 import privatePainTracker from './private-pain-tracker';
@@ -32,6 +32,17 @@ import trackingRecoveryAfterInjury from './tracking-recovery-after-injury';
 import sharingSymptomDataSafely from './sharing-symptom-data-safely';
 
 import type { ArticleData } from './types';
+import { linkingMap, getLinksForArticle, PILLAR_URLS, PILLAR_LABELS, APP_CTA_URL } from './linking-map';
+
+// Re-export linking utilities
+export { linkingMap, getLinksForArticle, PILLAR_URLS, PILLAR_LABELS, APP_CTA_URL };
+
+// ── Build article list with linking data injected ────────────────────
+
+function withLinks(article: ArticleData): ArticleData {
+  const links = getLinksForArticle(article.slug);
+  return links ? { ...article, internalLinks: links } : article;
+}
 
 export const articles: ArticleData[] = [
   // Pillar pages
@@ -71,7 +82,7 @@ export const articles: ArticleData[] = [
   preparingPhysiotherapyPainLogs,
   trackingRecoveryAfterInjury,
   sharingSymptomDataSafely,
-];
+].map(withLinks);
 
 export function getArticleBySlug(slug: string): ArticleData | undefined {
   return articles.find((a) => a.slug === slug);

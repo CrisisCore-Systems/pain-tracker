@@ -55,7 +55,7 @@ interface ModernDashboardProps {
   className?: string;
 }
 
-export function ModernDashboard({ entries, className }: ModernDashboardProps) {
+export function ModernDashboard({ entries, allEntries, className }: ModernDashboardProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [showActions, setShowActions] = useState(false);
 

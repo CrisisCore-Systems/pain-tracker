@@ -21,6 +21,8 @@ import {
   Wind,
   Zap,
   ChevronRight,
+  BookOpen,
+  ExternalLink,
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, useTheme } from '../../design-system';
@@ -317,6 +319,18 @@ export function ModernAppLayout({
                   </button>
                 );
               })}
+              <a
+                href="https://blog.paintracker.ca"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all duration-200"
+              >
+                <div className="flex items-center gap-3">
+                  <BookOpen className="h-4 w-4" />
+                  <span>Blog & Resources</span>
+                </div>
+                <ExternalLink className="h-3 w-3 opacity-50 group-hover:opacity-100 transition-opacity" />
+              </a>
             </nav>
           </div>
 
@@ -431,7 +445,7 @@ export function ModernAppLayout({
                 })}
               </nav>
 
-              {/* Bottom Navigation (Settings, Help) in Mobile Menu */}
+              {/* Bottom Navigation (Settings, Help, Blog) in Mobile Menu */}
               <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                 <nav className="space-y-1">
                   {bottomNavigation.map(item => {
@@ -458,6 +472,19 @@ export function ModernAppLayout({
                       </button>
                     );
                   })}
+                  <a
+                    href="https://blog.paintracker.ca"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-slate-300 transition-all"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <BookOpen className="h-5 w-5 flex-shrink-0" />
+                      <span>Blog & Resources</span>
+                    </div>
+                    <ExternalLink className="h-3 w-3 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  </a>
                 </nav>
               </div>
             </div>

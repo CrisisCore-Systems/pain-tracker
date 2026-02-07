@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid3X3, Plus, Settings, Target } from 'lucide-react';
+import { Grid3X3, Plus, Settings, Target, BarChart3, Cloud, Brain, FileDown, Download } from 'lucide-react';
 
 export type WidgetType =
   | 'dashboard-overview'
@@ -11,7 +11,12 @@ export type WidgetType =
   | 'current-stats'
   | 'quick-actions'
   | 'intelligent-triggers'
-  | 'goal-tracking';
+  | 'goal-tracking'
+  | 'comparison'
+  | 'weather-correlation'
+  | 'predictive-insights'
+  | 'clinical-export'
+  | 'data-export';
 
 export interface WidgetConfig {
   id: string;
@@ -159,6 +164,66 @@ export const AVAILABLE_WIDGETS: Record<WidgetType, WidgetConfig> = {
     canResize: true,
     traumaInformed: true,
   },
+  comparison: {
+    id: 'comparison',
+    type: 'comparison',
+    title: 'Period Comparison',
+    description: 'Compare pain trends across different time periods',
+    icon: <BarChart3 className="h-4 w-4" />,
+    defaultSize: 'large',
+    category: 'analytics',
+    canRemove: true,
+    canResize: true,
+    traumaInformed: true,
+  },
+  'weather-correlation': {
+    id: 'weather-correlation',
+    type: 'weather-correlation',
+    title: 'Weather & Pain',
+    description: 'See how weather conditions correlate with your pain levels',
+    icon: <Cloud className="h-4 w-4" />,
+    defaultSize: 'medium',
+    category: 'analytics',
+    canRemove: true,
+    canResize: true,
+    traumaInformed: true,
+  },
+  'predictive-insights': {
+    id: 'predictive-insights',
+    type: 'predictive-insights',
+    title: 'Predictive Insights',
+    description: 'Flare-up risk assessment and coping strategies',
+    icon: <Brain className="h-4 w-4" />,
+    defaultSize: 'medium',
+    category: 'analytics',
+    canRemove: true,
+    canResize: true,
+    traumaInformed: true,
+  },
+  'clinical-export': {
+    id: 'clinical-export',
+    type: 'clinical-export',
+    title: 'Clinical PDF Export',
+    description: 'Generate clinical-grade PDF reports for healthcare providers',
+    icon: <FileDown className="h-4 w-4" />,
+    defaultSize: 'medium',
+    category: 'reports',
+    canRemove: true,
+    canResize: false,
+    traumaInformed: true,
+  },
+  'data-export': {
+    id: 'data-export',
+    type: 'data-export',
+    title: 'Data Export',
+    description: 'Export your data in CSV, JSON, or PDF format',
+    icon: <Download className="h-4 w-4" />,
+    defaultSize: 'medium',
+    category: 'reports',
+    canRemove: true,
+    canResize: false,
+    traumaInformed: true,
+  },
 };
 
 export const DEFAULT_DASHBOARD_LAYOUT: DashboardLayout = {
@@ -197,6 +262,11 @@ export const DEFAULT_DASHBOARD_LAYOUT: DashboardLayout = {
       visible: false,
     },
     { id: 'wcb-report', type: 'wcb-report', size: 'medium', position: 9, visible: false },
+    { id: 'comparison', type: 'comparison', size: 'large', position: 10, visible: true },
+    { id: 'weather-correlation', type: 'weather-correlation', size: 'medium', position: 11, visible: true },
+    { id: 'predictive-insights', type: 'predictive-insights', size: 'medium', position: 12, visible: true },
+    { id: 'clinical-export', type: 'clinical-export', size: 'medium', position: 13, visible: true },
+    { id: 'data-export', type: 'data-export', size: 'medium', position: 14, visible: true },
   ],
   layout: 'grid',
   columns: 2,

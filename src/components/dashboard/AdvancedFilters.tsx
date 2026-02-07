@@ -820,7 +820,10 @@ export function AdvancedFilters({
                   key={filter.id}
                   variant="outline"
                   size="sm"
-                  onClick={() => onLoadFilter(filter)}
+                  onClick={() => {
+                    setFilters(filter.criteria);
+                    onLoadFilter(filter);
+                  }}
                   className="flex items-center space-x-1"
                 >
                   <Bookmark className="h-3 w-3" />
