@@ -3,6 +3,7 @@ title: "Preparing Pain Logs for Physiotherapy: What Your PT Needs to See"
 datePublished: Fri Feb 06 2026 14:45:33 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazzaa9000602jl3r7l5xa3
 slug: preparing-physiotherapy-pain-logs
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770442237199/54e15d16-e3d4-4140-934b-12b1636c2d2a.png
 tags: healthcare, chronic-pain, pain-management, health-tracking
 
 ---
