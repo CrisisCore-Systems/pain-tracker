@@ -3,6 +3,7 @@ title: "Getting Started with PainTracker: Your First Week of Symptom Tracking"
 datePublished: Fri Feb 06 2026 14:45:27 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazz5b1000502jlc7d03isb
 slug: getting-started
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770444005355/77052022-0ef7-48fd-8256-9b86bf71da91.png
 tags: healthcare, chronic-pain, pain-management, health-tracking
 
 ---
