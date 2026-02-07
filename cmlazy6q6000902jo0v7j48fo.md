@@ -3,6 +3,7 @@ title: "Export Pain Logs to PDF: Share Clinical Data on Your Terms"
 datePublished: Fri Feb 06 2026 14:44:42 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazy6q6000902jo0v7j48fo
 slug: export-pain-logs-pdf
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770488804268/f48ac5d9-744a-477a-b1ca-c35857daf448.png
 tags: healthcare, chronic-pain, medical-records, health-tracking
 
 ---
