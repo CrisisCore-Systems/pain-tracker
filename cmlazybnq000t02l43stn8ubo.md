@@ -3,6 +3,7 @@ title: "How Detailed Should a Pain Diary Be? Finding the Right Balance"
 datePublished: Fri Feb 06 2026 14:44:48 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazybnq000t02l43stn8ubo
 slug: how-detailed-pain-diary
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770488068614/87da7d99-7d6a-4336-a344-ccea93ed255c.png
 tags: healthcare, chronic-pain, medical-records, health-tracking
 
 ---
