@@ -3,6 +3,7 @@ title: "PainTracker for WorkSafeBC Claims: Document Your Workplace Injury"
 datePublished: Fri Feb 06 2026 14:45:30 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazz7sm000002lb83vq5hu7
 slug: paintracker-worksafebc-claims
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770443751596/815dcbec-a78e-4a45-b393-11867fb4a5e3.png
 tags: healthcare, chronic-pain, pain-management, health-tracking
 
 ---
