@@ -3,6 +3,7 @@ title: "Tracking Flare-Ups in Chronic Illness: Patterns, Triggers, and Managemen
 datePublished: Fri Feb 06 2026 14:44:58 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazyj1j000v02l47ptk2f5n
 slug: tracking-flare-ups-chronic-illness
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770455399752/07fd604e-6884-4b8c-9421-5aa3558e07c1.png
 tags: chronic-pain, pain-management, chronic-illness, health-tracking
 
 ---
