@@ -3,6 +3,7 @@ title: "PainTracker Security Architecture: How We Protect Your Health Data"
 datePublished: Fri Feb 06 2026 14:45:11 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazysw5000402l5g6v50pid
 slug: security-architecture
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770445151494/d0890e55-3b74-4594-928f-2466077b24ba.png
 tags: security, accessibility, privacy, open-source
 
 ---
