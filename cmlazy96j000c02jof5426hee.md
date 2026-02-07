@@ -3,6 +3,7 @@ title: "Pain Tracking as Insurance Evidence: Document Symptoms for Claims"
 datePublished: Fri Feb 06 2026 14:44:45 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazy96j000c02jof5426hee
 slug: pain-tracking-insurance-evidence
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770488339527/350e5db4-548f-4a62-ae53-05b8cab477b3.png
 tags: healthcare, chronic-pain, medical-records, health-tracking
 
 ---
