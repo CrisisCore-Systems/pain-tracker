@@ -3,6 +3,7 @@ title: "Why PainTracker Is Open Source: Transparency as a Trust Mechanism"
 datePublished: Fri Feb 06 2026 14:45:24 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazz2ub000d02jo266adt2o
 slug: why-paintracker-is-open-source
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770444240031/a2f90745-4260-4244-9ce6-41c477046a36.png
 tags: security, accessibility, privacy, open-source
 
 ---
