@@ -114,9 +114,11 @@ describe('ReportsPage', () => {
   it('has date range filter', () => {
     render(<ReportsPage entries={[createMockEntry()]} />);
     
-    const dateFilter = screen.getByRole('combobox', { name: /date range/i });
-    expect(dateFilter).toBeInTheDocument();
+    // Date range uses button group, not a combobox
     expect(screen.getByText('All Time')).toBeInTheDocument();
+    expect(screen.getByText('Last 7 Days')).toBeInTheDocument();
+    expect(screen.getByText('Last 30 Days')).toBeInTheDocument();
+    expect(screen.getByText('Last 90 Days')).toBeInTheDocument();
   });
 
   it('filters entries by date range', async () => {
@@ -129,22 +131,16 @@ describe('ReportsPage', () => {
     
     render(<ReportsPage entries={[oldEntry, recentEntry]} />);
     
-    // Default is last 7 days, so only the recent entry is included
-    expect(screen.getByText('1')).toBeInTheDocument();
-    
-    const dateFilter = screen.getByRole('combobox', { name: /date range/i });
-
-    // Change to all time
-    fireEvent.change(dateFilter, { target: { value: 'all' } });
+    // Default is last 7 days — click "All Time" to see both entries
+    fireEvent.click(screen.getByText('All Time'));
 
     await waitFor(() => {
       expect(screen.getByText('2')).toBeInTheDocument();
     });
 
-    // Change to last 30 days
-    fireEvent.change(dateFilter, { target: { value: '30d' } });
-    
-    // Should now show only 1 entry
+    // Click "Last 30 Days" — only recent entry
+    fireEvent.click(screen.getByText('Last 30 Days'));
+
     await waitFor(() => {
       expect(screen.getByText('1')).toBeInTheDocument();
     });

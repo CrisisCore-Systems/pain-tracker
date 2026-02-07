@@ -140,18 +140,18 @@ describe('Pain Analytics Service - Synthetic Testing Suite', () => {
         seed: 55555,
       });
 
-      const timeHeatmap = painAnalyticsService.generateTimeHeatmap(entries);
+      const timeHeatmap = painAnalyticsService.generateTimeHeatmap(entries, 30);
 
       expect(timeHeatmap).toBeDefined();
       expect(Array.isArray(timeHeatmap)).toBe(true);
 
       if (timeHeatmap.length > 0) {
         timeHeatmap.forEach((point, index) => {
-          expect(point.dayOfWeek, `Point ${index} missing dayOfWeek`).toBeDefined();
-          expect(point.dayOfWeek).toBeGreaterThanOrEqual(0);
-          expect(point.dayOfWeek).toBeLessThanOrEqual(6);
-          expect(point.hourOfDay, `Point ${index} missing hourOfDay`).toBeGreaterThanOrEqual(0);
-          expect(point.hourOfDay).toBeLessThanOrEqual(23);
+          expect(point.dayIndex, `Point ${index} missing dayIndex`).toBeDefined();
+          expect(point.dayIndex).toBeGreaterThanOrEqual(0);
+          expect(point.dayIndex).toBeLessThanOrEqual(6);
+          expect(point.hour, `Point ${index} missing hour`).toBeGreaterThanOrEqual(0);
+          expect(point.hour).toBeLessThanOrEqual(23);
           expect(point.avgPain).toBeGreaterThanOrEqual(0);
           expect(point.avgPain).toBeLessThanOrEqual(10);
         });
@@ -166,7 +166,7 @@ describe('Pain Analytics Service - Synthetic Testing Suite', () => {
         seed: 66666,
       });
 
-      const timeHeatmap = painAnalyticsService.generateTimeHeatmap(entries);
+      const timeHeatmap = painAnalyticsService.generateTimeHeatmap(entries, 60);
 
       if (timeHeatmap.length > 10) {
         const avgPains = timeHeatmap.map(p => p.avgPain);

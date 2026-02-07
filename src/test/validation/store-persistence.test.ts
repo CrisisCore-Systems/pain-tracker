@@ -375,9 +375,9 @@ describe('Store Persistence - Synthetic Testing Suite', () => {
         id: e.id || `generated-${Date.now()}`,
         timestamp: e.timestamp || new Date().toISOString(),
         baselineData: {
-          pain: e.baselineData?.pain || 5,
-          locations: e.baselineData?.locations || [],
-          symptoms: e.baselineData?.symptoms || [],
+          pain: (e.baselineData as Record<string, unknown>)?.pain as number || 5,
+          locations: ((e.baselineData as Record<string, unknown>)?.locations as string[]) || [],
+          symptoms: ((e.baselineData as Record<string, unknown>)?.symptoms as string[]) || [],
         },
         functionalImpact: { limitedActivities: [], assistanceNeeded: [], mobilityAids: [] },
         medications: { current: [], changes: '', effectiveness: '' },
@@ -450,7 +450,7 @@ describe('Store Persistence - Synthetic Testing Suite', () => {
       expect(sorted.length).toBe(largeDataset.length);
       
       // Memory increase should be reasonable (less than 100MB for this dataset)
-      if (process.memoryUsage) {
+      if (typeof process.memoryUsage === 'function') {
         expect(memoryIncrease).toBeLessThan(100);
       }
 
