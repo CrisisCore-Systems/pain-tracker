@@ -17,7 +17,11 @@ vi.mock('../../design-system/fused-v2', () => ({
 }));
 
 vi.mock('../../design-system/fused-v2/QuickLogOneScreen', () => ({
-  default: ({ onComplete }: { onComplete: (data: any) => void }) => {
+  default: function QuickLogOneScreenMock({
+    onComplete,
+  }: {
+    onComplete: (data: any) => void;
+  }) {
     const [checked, setChecked] = React.useState(false);
     return (
       <div>

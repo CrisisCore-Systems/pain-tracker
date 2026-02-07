@@ -1,0 +1,9 @@
+# Pain Tracker Blog — robots.txt
+# https://blog.paintracker.ca
+
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /api/
+
+Sitemap: https://blog.paintracker.ca/sitemap.xml

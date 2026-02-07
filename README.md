@@ -20,7 +20,7 @@
 
 **Docs index:** [docs/README.md](docs/README.md)
 
-**Test suite:** 173 tests
+**Test suite:** 190 tests
 
 Pain Tracker provides high-resolution, multidimensional pain tracking with a security-first, local-first architecture. It includes clinician-focused exports and WorkSafeBC-oriented reporting utilities.
 
@@ -159,7 +159,7 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 
 </details>
 
-**[Read More About Our Security →](docs/engineering/ARCHITECTURE.md)** | **[Security Policy →](SECURITY.md)** | **[All Diagrams →](docs/diagrams/README.md)**
+**[Read More About Our Security →](docs/engineering/ARCHITECTURE.md)** | **[Security Policy →](SECURITY.md)** | **[Safety Plan →](docs/SAFETY_PLAN.md)** | **[All Diagrams →](docs/diagrams/README.md)**
 
 ---
 
@@ -179,11 +179,10 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - ✅ **Evidence-Based Metrics**: Evidence-based scales integrated where implemented
 - ✅ **Treatment Correlation**: Outcome tracking and intervention correlation analysis
 
-### 💰 **SaaS Subscription System**
-- ✅ **Stripe Integration (In-Repo)**: Checkout session + webhook endpoints and client helpers
-- ✅ **Feature Gating (In-Repo)**: Conditional rendering utilities/components for tiering
-- 🔄 **Subscription Ops**: Billing workflows vary by deployment and require configuration
-- 🎯 **[Complete SaaS Documentation](docs/archive/saas/SAAS_SETUP_GUIDE.md)**
+### 💛 **Support the Project**
+- ✅ **Sponsorship/Donations**: GitHub Sponsors is the supported funding model today
+- ✅ **No Payments Backend**: Stripe/subscription infrastructure is intentionally not documented as a supported path until a backend architecture exists
+- ✅ **Feature Gating (In-Repo)**: Conditional rendering utilities/components for tiering (billing not included)
 
 ### 🔒 **Security Architecture**
 - ✅ **Local-First Data**: IndexedDB storage with selective encryption (AES-GCM helpers implemented)

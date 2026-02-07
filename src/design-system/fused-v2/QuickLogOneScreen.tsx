@@ -47,6 +47,30 @@ const PAIN_LABELS = [
   'Unbearable',
 ];
 
+/** Returns a Tailwind-friendly severity color set based on pain 0-10 */
+function painSeverityColors(pain: number) {
+  if (pain === 0) return { text: 'text-emerald-400', bg: 'bg-emerald-500/15', ring: 'ring-emerald-500/40', accent: '#34d399' };
+  if (pain <= 2)  return { text: 'text-green-400',   bg: 'bg-green-500/15',   ring: 'ring-green-500/40',   accent: '#4ade80' };
+  if (pain <= 4)  return { text: 'text-amber-400',   bg: 'bg-amber-500/15',   ring: 'ring-amber-500/40',   accent: '#fbbf24' };
+  if (pain <= 6)  return { text: 'text-orange-400',  bg: 'bg-orange-500/15',  ring: 'ring-orange-500/40',  accent: '#fb923c' };
+  if (pain <= 8)  return { text: 'text-red-400',     bg: 'bg-red-500/15',     ring: 'ring-red-500/40',     accent: '#f87171' };
+  return              { text: 'text-red-300',     bg: 'bg-red-500/20',     ring: 'ring-red-500/50',     accent: '#fca5a5' };
+}
+
+/** Shared styled-range slider classes */
+const SLIDER_CLASSES = cn(
+  'w-full h-2 cursor-pointer appearance-none bg-transparent rounded-full',
+  '[&::-webkit-slider-track]:h-2 [&::-webkit-slider-track]:bg-surface-600 [&::-webkit-slider-track]:rounded-full',
+  '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5',
+  '[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-400 [&::-webkit-slider-thumb]:shadow-lg',
+  '[&::-webkit-slider-thumb]:ring-2 [&::-webkit-slider-thumb]:ring-primary-500/50',
+  '[&::-webkit-slider-thumb]:transition-shadow [&::-webkit-slider-thumb]:hover:shadow-primary-500/40',
+  '[&::-moz-range-track]:h-2 [&::-moz-range-track]:bg-surface-600 [&::-moz-range-track]:rounded-full',
+  '[&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full',
+  '[&::-moz-range-thumb]:bg-primary-400 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-lg',
+  'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900'
+);
+
 const LOCATION_TAGS = [
   'Lower back',
   'Upper back',
@@ -400,136 +424,127 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
   return (
     <div className="min-h-screen bg-surface-900 text-ink-100 flex flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-surface-900/95 backdrop-blur-sm border-b border-surface-800">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="sticky top-0 z-10 bg-surface-900/95 backdrop-blur-sm border-b border-surface-700/60">
+        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
             type="button"
             onClick={onCancel}
             className={cn(
-              'flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)]',
+              'flex items-center gap-1.5 px-3 py-2 rounded-[var(--radius-md)]',
               'text-small text-ink-300 hover:text-ink-100 hover:bg-surface-800',
               'transition-colors duration-[var(--duration-fast)]'
             )}
           >
             <ChevronLeft className="w-4 h-4" />
-            Cancel
+            Back
           </button>
-          <div className="text-small text-ink-400 text-mono">Quick Log</div>
-          <div className="w-[88px]" />
+          <h1 className="text-body-medium text-ink-100 font-semibold">Quick Log</h1>
+          <button
+            type="button"
+            onClick={() => setVoiceMode(prev => !prev)}
+            disabled={!voiceSupported}
+            aria-pressed={voiceMode}
+            className={cn(
+              'flex items-center gap-1.5 px-3 py-2 rounded-[var(--radius-md)] text-small',
+              'border border-surface-600 transition-colors duration-[var(--duration-fast)]',
+              voiceMode
+                ? 'bg-primary-500/20 text-primary-400 border-primary-500/40'
+                : 'text-ink-400 hover:text-ink-200 hover:border-surface-500',
+              !voiceSupported && 'opacity-40 cursor-not-allowed'
+            )}
+            title={voiceSupported ? (voiceMode ? 'Disable voice mode' : 'Enable voice mode') : 'Voice not available'}
+          >
+            {voiceMode ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
+            <span className="hidden sm:inline">{voiceMode ? 'Voice On' : 'Voice'}</span>
+          </button>
         </div>
 
-        <div className="px-4 pb-4">
-          <div className="max-w-2xl mx-auto bg-surface-800 border border-surface-700 rounded-[var(--radius-lg)] p-4 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-            <div className="flex gap-3 items-start">
-              {voiceSupported ? (
-                <Mic className="w-5 h-5 text-primary-400 mt-0.5" aria-hidden="true" />
-              ) : (
-                <MicOff className="w-5 h-5 text-ink-500 mt-0.5" aria-hidden="true" />
-              )}
-              <div>
-                <div className="text-body-medium text-ink-100">Voice Mode</div>
-                <p className="text-small text-ink-400">
-                  {voiceSupported
-                    ? connectionStatus
-                    : "Voice mode isn't available in this browser. You can still use your operating system's built-in dictation features."}
-                </p>
-                {voiceError && (
-                  <p className="text-small text-danger-400" role="alert">
-                    {voiceError}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-tiny text-ink-500">
-                {voiceMode ? 'On' : 'Off'} · {voiceSupported ? 'Device speech engine' : 'Unavailable'}
-              </span>
-              <button
-                type="button"
-                onClick={() => setVoiceMode(prev => !prev)}
-                disabled={!voiceSupported}
-                aria-pressed={voiceMode}
-                className={cn(
-                  'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
-                  'border border-surface-600 transition-colors duration-[var(--duration-fast)]',
-                  voiceMode
-                    ? 'bg-primary-500 text-ink-900 border-primary-500'
-                    : 'bg-surface-900 text-ink-200 hover:border-primary-500/60',
-                  !voiceSupported && 'opacity-60 cursor-not-allowed'
-                )}
-              >
-                {voiceMode ? 'Disable' : 'Enable'}
-              </button>
+        {/* Voice error banner — only shown when relevant */}
+        {voiceError && (
+          <div className="px-4 pb-3">
+            <div className="max-w-2xl mx-auto bg-red-500/10 border border-red-500/30 rounded-[var(--radius-md)] px-4 py-2">
+              <p className="text-small text-red-400" role="alert">{voiceError}</p>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-2xl mx-auto space-y-10">
           {/* Pain */}
-          <section className="space-y-6">
+          <section className="space-y-5">
             <div>
-              <h2 className="text-h2 text-ink-50 mb-2">{painLabel}</h2>
+              <h2 className="text-h2 text-ink-50 mb-1">{painLabel}</h2>
               <p className="text-small text-ink-400">{painHint}</p>
             </div>
 
-            <div className="flex items-center justify-center gap-4">
-              <button
-                type="button"
-                onClick={() => handlePainChange(Math.max(0, pain - 1))}
-                aria-label="Decrease pain level"
-                className={cn(
-                  'flex items-center justify-center',
-                  'w-14 h-14 min-w-[56px] min-h-[56px]',
-                  'rounded-[var(--radius-md)]',
-                  'bg-surface-700 hover:bg-surface-600 border border-surface-600',
-                  'text-ink-200 hover:text-ink-100',
-                  'transition-colors duration-[var(--duration-fast)]',
-                  'text-h2 font-medium',
-                  'disabled:opacity-50 disabled:cursor-not-allowed'
-                )}
-                disabled={pain === 0}
-              >
-                −
-              </button>
+            {/* Central pain display — severity-colored */}
+            {(() => {
+              const sc = painSeverityColors(pain);
+              return (
+                <div
+                  className={cn(
+                    'relative rounded-[var(--radius-xl)] border border-surface-700 overflow-hidden',
+                    'bg-surface-800 transition-all duration-300'
+                  )}
+                >
+                  {/* Severity accent bar */}
+                  <div
+                    className="absolute inset-x-0 top-0 h-1 transition-all duration-300"
+                    style={{ backgroundColor: sc.accent, width: `${Math.max((pain / 10) * 100, 4)}%` }}
+                  />
 
-              <div
-                className={cn(
-                  'p-8 rounded-[var(--radius-xl)] text-center flex-1',
-                  'bg-surface-800 border border-surface-700'
-                )}
-                role="status"
-                aria-live="polite"
-              >
-                <div className="text-display text-mono mb-2 text-6xl font-bold text-primary-400">
-                  {pain}
+                  <div className="flex items-center justify-center gap-5 px-6 py-8">
+                    <button
+                      type="button"
+                      onClick={() => handlePainChange(Math.max(0, pain - 1))}
+                      aria-label="Decrease pain level"
+                      className={cn(
+                        'flex items-center justify-center',
+                        'w-12 h-12 min-w-[48px] min-h-[48px]',
+                        'rounded-full',
+                        'bg-surface-700 hover:bg-surface-600 border border-surface-600',
+                        'text-ink-200 hover:text-ink-100',
+                        'transition-colors text-xl font-medium',
+                        'disabled:opacity-40 disabled:cursor-not-allowed'
+                      )}
+                      disabled={pain === 0}
+                    >
+                      −
+                    </button>
+
+                    <div className="text-center" role="status" aria-live="polite">
+                      <div className={cn('text-6xl font-bold tabular-nums mb-1 transition-colors duration-300', sc.text)}>
+                        {pain}
+                      </div>
+                      <div className="text-body-medium text-ink-200">{PAIN_LABELS[pain]}</div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handlePainChange(Math.min(10, pain + 1))}
+                      aria-label="Increase pain level"
+                      className={cn(
+                        'flex items-center justify-center',
+                        'w-12 h-12 min-w-[48px] min-h-[48px]',
+                        'rounded-full',
+                        'bg-surface-700 hover:bg-surface-600 border border-surface-600',
+                        'text-ink-200 hover:text-ink-100',
+                        'transition-colors text-xl font-medium',
+                        'disabled:opacity-40 disabled:cursor-not-allowed'
+                      )}
+                      disabled={pain === 10}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-                <div className="text-body-medium text-ink-100">{PAIN_LABELS[pain]}</div>
-              </div>
+              );
+            })()}
 
-              <button
-                type="button"
-                onClick={() => handlePainChange(Math.min(10, pain + 1))}
-                aria-label="Increase pain level"
-                className={cn(
-                  'flex items-center justify-center',
-                  'w-14 h-14 min-w-[56px] min-h-[56px]',
-                  'rounded-[var(--radius-md)]',
-                  'bg-surface-700 hover:bg-surface-600 border border-surface-600',
-                  'text-ink-200 hover:text-ink-100',
-                  'transition-colors duration-[var(--duration-fast)]',
-                  'text-h2 font-medium',
-                  'disabled:opacity-50 disabled:cursor-not-allowed'
-                )}
-                disabled={pain === 10}
-              >
-                +
-              </button>
-            </div>
-
-            <div className="space-y-2">
+            {/* Slider */}
+            <div className="space-y-3 px-1">
               <label htmlFor="pain-slider" className="sr-only">
                 Pain intensity slider. Use arrow keys or swipe to adjust.
               </label>
@@ -554,45 +569,48 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                 aria-valuemax={10}
                 aria-valuenow={pain}
                 aria-valuetext={`${pain} of 10, ${PAIN_LABELS[pain]}`}
-                className="w-full h-12 cursor-pointer appearance-none bg-transparent
-                  [&::-webkit-slider-track]:h-2 [&::-webkit-slider-track]:bg-[color:var(--surface-600)]
-                  [&::-webkit-slider-track]:rounded-full
-                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6
-                  [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full
-                  [&::-webkit-slider-thumb]:bg-[color:var(--primary-500)] [&::-webkit-slider-thumb]:shadow-lg
-                  [&::-moz-range-track]:h-2 [&::-moz-range-track]:bg-[color:var(--surface-600)]
-                  [&::-moz-range-track]:rounded-full
-                  [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6
-                  [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[color:var(--primary-500)]
-                  [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-lg
-                  focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900"
+                style={{ '--thumb-color': painSeverityColors(pain).accent } as React.CSSProperties}
+                className={cn(
+                  SLIDER_CLASSES,
+                  'h-12',
+                  '[&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6',
+                  '[&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6'
+                )}
               />
 
-              <div className="flex justify-between text-tiny text-ink-400 text-mono px-1">
-                {Array.from({ length: 11 }, (_, i) => (
-                  <button
-                    type="button"
-                    key={i}
-                    onClick={() => handlePainChange(i)}
-                    aria-label={`Set pain level to ${i}, ${PAIN_LABELS[i]}`}
-                    className={cn(
-                      'w-10 h-10 min-w-[40px] min-h-[40px] rounded flex items-center justify-center',
-                      'hover:bg-surface-700 transition-colors',
-                      'focus:outline-none focus:ring-2 focus:ring-primary-500',
-                      i === pain && 'bg-primary-500 text-ink-900 font-bold'
-                    )}
-                  >
-                    {i}
-                  </button>
-                ))}
+              {/* Number grid — wraps gracefully on small screens */}
+              <div className="grid grid-cols-11 gap-1">
+                {Array.from({ length: 11 }, (_, i) => {
+                  const isc = painSeverityColors(i);
+                  return (
+                    <button
+                      type="button"
+                      key={i}
+                      onClick={() => handlePainChange(i)}
+                      aria-label={`Set pain level to ${i}, ${PAIN_LABELS[i]}`}
+                      className={cn(
+                        'aspect-square rounded-[var(--radius-sm)] flex items-center justify-center',
+                        'text-small tabular-nums font-medium',
+                        'transition-all duration-150',
+                        'focus:outline-none focus:ring-2 focus:ring-primary-500',
+                        'min-h-[40px]',
+                        i === pain
+                          ? cn(isc.bg, isc.text, 'ring-2', isc.ring, 'font-bold scale-105')
+                          : 'text-ink-400 hover:bg-surface-700 hover:text-ink-200'
+                      )}
+                    >
+                      {i}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </section>
 
           {/* Locations & Symptoms */}
-          <section className="space-y-8">
+          <section className="space-y-6">
             <div>
-              <h2 className="text-h2 text-ink-50 mb-2">{locationsLabel}</h2>
+              <h2 className="text-h2 text-ink-50 mb-1">{locationsLabel}</h2>
               <p className="text-small text-ink-400">{locationsHint}</p>
             </div>
 
@@ -602,43 +620,61 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                 : 'No locations selected'}
             </div>
 
-            <fieldset>
-              <legend className="sr-only">Pain locations</legend>
-              <div className="flex flex-wrap gap-2">
-                {LOCATION_TAGS.map(tag => (
-                  <button
-                    type="button"
-                    key={tag}
-                    onClick={() => toggleTag(tag, locations, setLocations)}
-                    role="checkbox"
-                    aria-checked={locations.includes(tag)}
-                    aria-label={`${tag} location`}
-                    className={cn(
-                      'px-4 py-3 min-w-[56px] min-h-[56px] rounded-[var(--radius-full)] text-small',
-                      'border-2 transition-all duration-[var(--duration-fast)]',
-                      'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900',
-                      locations.includes(tag)
-                        ? 'bg-primary-500 border-primary-500 text-ink-900 font-medium'
-                        : 'bg-surface-800 border-surface-600 text-ink-200 hover:border-primary-500/50'
-                    )}
-                  >
-                    {locations.includes(tag) && (
-                      <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />
-                    )}
-                    {tag}
-                  </button>
-                ))}
+            {/* Locations card */}
+            <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-body-medium text-ink-200">📍 Where does it hurt?</span>
+                {locations.length > 0 && (
+                  <span className="text-tiny bg-primary-500/15 text-primary-400 rounded-full px-2 py-0.5 tabular-nums">
+                    {locations.length} selected
+                  </span>
+                )}
               </div>
-            </fieldset>
+              <fieldset>
+                <legend className="sr-only">Pain locations</legend>
+                <div className="flex flex-wrap gap-2">
+                  {LOCATION_TAGS.map(tag => (
+                    <button
+                      type="button"
+                      key={tag}
+                      onClick={() => toggleTag(tag, locations, setLocations)}
+                      role="checkbox"
+                      aria-checked={locations.includes(tag)}
+                      aria-label={`${tag} location`}
+                      className={cn(
+                        'px-3.5 py-2.5 min-h-[44px] rounded-[var(--radius-full)] text-small',
+                        'border transition-all duration-[var(--duration-fast)]',
+                        'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900',
+                        locations.includes(tag)
+                          ? 'bg-primary-500/15 border-primary-500/50 text-primary-300 font-medium shadow-sm'
+                          : 'bg-surface-900/50 border-surface-600 text-ink-300 hover:border-primary-500/30 hover:text-ink-200'
+                      )}
+                    >
+                      {locations.includes(tag) && (
+                        <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />
+                      )}
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
 
-            <div>
-              <h3 className="text-body-medium text-ink-200 mb-3">What does it feel like?</h3>
+            {/* Symptoms card */}
+            <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-body-medium text-ink-200">🩺 What does it feel like?</span>
+                {symptoms.length > 0 && (
+                  <span className="text-tiny bg-warn-500/15 text-warn-400 rounded-full px-2 py-0.5 tabular-nums">
+                    {symptoms.length} selected
+                  </span>
+                )}
+              </div>
               <div aria-live="polite" aria-atomic="true" className="sr-only">
                 {symptoms.length > 0
                   ? `${symptoms.length} symptom${symptoms.length > 1 ? 's' : ''} selected: ${symptoms.join(', ')}`
                   : 'No symptoms selected'}
               </div>
-
               <fieldset>
                 <legend className="sr-only">Pain symptoms</legend>
                 <div className="flex flex-wrap gap-2">
@@ -651,12 +687,12 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                       aria-checked={symptoms.includes(tag)}
                       aria-label={`${tag} symptom`}
                       className={cn(
-                        'px-4 py-3 min-w-[56px] min-h-[56px] rounded-[var(--radius-full)] text-small',
-                        'border-2 transition-all duration-[var(--duration-fast)]',
+                        'px-3.5 py-2.5 min-h-[44px] rounded-[var(--radius-full)] text-small',
+                        'border transition-all duration-[var(--duration-fast)]',
                         'focus:outline-none focus:ring-2 focus:ring-warn-500 focus:ring-offset-2 focus:ring-offset-surface-900',
                         symptoms.includes(tag)
-                          ? 'bg-warn-500 border-warn-500 text-ink-900 font-medium'
-                          : 'bg-surface-800 border-surface-600 text-ink-200 hover:border-warn-500/50'
+                          ? 'bg-warn-500/15 border-warn-500/50 text-warn-400 font-medium shadow-sm'
+                          : 'bg-surface-900/50 border-surface-600 text-ink-300 hover:border-warn-500/30 hover:text-ink-200'
                       )}
                     >
                       {symptoms.includes(tag) && (
@@ -671,141 +707,174 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
           </section>
 
           {/* Optional Signals */}
-          <section className="space-y-6">
+          <section className="space-y-5">
             <div>
-              <h2 className="text-h2 text-ink-50 mb-2">Optional signals</h2>
-              <p className="text-small text-ink-400">These help correlations (sleep, activity, food).</p>
+              <h2 className="text-h2 text-ink-50 mb-1">Optional signals</h2>
+              <p className="text-small text-ink-400">Help find correlations between pain, sleep, activity &amp; food.</p>
             </div>
 
-            <div className="surface-card border border-surface-700 bg-surface-800/70 space-y-4">
-              <div>
-                <label htmlFor="sleep-quality" className="block text-body-medium text-ink-200 mb-1">
-                  Sleep quality
-                </label>
-                <div className="flex items-center justify-between gap-3">
-                  <input
-                    id="sleep-quality"
-                    type="range"
-                    min={0}
-                    max={10}
-                    step={1}
-                    value={sleep}
-                    onChange={e => {
-                      setSleep(Number(e.target.value));
-                      setSleepSet(true);
-                    }}
-                    className="w-full"
-                    aria-label="Sleep quality from 0 to 10"
-                  />
-                  <span className="text-small text-ink-300 w-16 text-right" aria-live="polite">
-                    {sleepSet ? sleep : '—'}
+            {/* Slider pair: Sleep + Activity */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="sleep-quality" className="text-body-medium text-ink-200">
+                    💤 Sleep quality
+                  </label>
+                  <span
+                    className={cn(
+                      'text-small tabular-nums font-semibold min-w-[2.5rem] text-center rounded-md px-2 py-0.5',
+                      sleepSet ? 'bg-indigo-500/15 text-indigo-400' : 'text-ink-500'
+                    )}
+                    aria-live="polite"
+                  >
+                    {sleepSet ? `${sleep}/10` : '—'}
                   </span>
                 </div>
-                <p className="text-tiny text-ink-500 mt-1">0 = very poor, 10 = excellent</p>
+                <input
+                  id="sleep-quality"
+                  type="range"
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={sleep}
+                  onChange={e => {
+                    setSleep(Number(e.target.value));
+                    setSleepSet(true);
+                  }}
+                  className={SLIDER_CLASSES}
+                  aria-label="Sleep quality from 0 to 10"
+                />
+                <div className="flex justify-between text-tiny text-ink-500">
+                  <span>Very poor</span>
+                  <span>Excellent</span>
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="activity-level" className="block text-body-medium text-ink-200 mb-1">
-                  Activity level
-                </label>
-                <div className="flex items-center justify-between gap-3">
-                  <input
-                    id="activity-level"
-                    type="range"
-                    min={0}
-                    max={10}
-                    step={1}
-                    value={activityLevel}
-                    onChange={e => {
-                      setActivityLevel(Number(e.target.value));
-                      setActivityLevelSet(true);
-                    }}
-                    className="w-full"
-                    aria-label="Activity level from 0 to 10"
-                  />
-                  <span className="text-small text-ink-300 w-16 text-right" aria-live="polite">
-                    {activityLevelSet ? activityLevel : '—'}
+              <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="activity-level" className="text-body-medium text-ink-200">
+                    🏃 Activity level
+                  </label>
+                  <span
+                    className={cn(
+                      'text-small tabular-nums font-semibold min-w-[2.5rem] text-center rounded-md px-2 py-0.5',
+                      activityLevelSet ? 'bg-emerald-500/15 text-emerald-400' : 'text-ink-500'
+                    )}
+                    aria-live="polite"
+                  >
+                    {activityLevelSet ? `${activityLevel}/10` : '—'}
                   </span>
                 </div>
-                <p className="text-tiny text-ink-500 mt-1">0 = none, 10 = very active</p>
+                <input
+                  id="activity-level"
+                  type="range"
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={activityLevel}
+                  onChange={e => {
+                    setActivityLevel(Number(e.target.value));
+                    setActivityLevelSet(true);
+                  }}
+                  className={SLIDER_CLASSES}
+                  aria-label="Activity level from 0 to 10"
+                />
+                <div className="flex justify-between text-tiny text-ink-500">
+                  <span>Sedentary</span>
+                  <span>Very active</span>
+                </div>
               </div>
+            </div>
 
-              <div>
-                <label htmlFor="med-adherence" className="block text-body-medium text-ink-200 mb-2">
-                  Medication adherence
-                </label>
-                <select
-                  id="med-adherence"
-                  value={medicationAdherence ?? ''}
-                  onChange={e =>
-                    setMedicationAdherence((e.target.value || null) as MedicationAdherence | null)
-                  }
-                  className={cn(
-                    'w-full p-3 rounded-[var(--radius-md)]',
-                    'bg-surface-900 border border-surface-600',
-                    'text-body text-ink-100',
-                    'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent'
-                  )}
-                >
-                  <option value="">Not logged</option>
-                  <option value="as_prescribed">Taken as prescribed</option>
-                  <option value="partial">Partially taken</option>
-                  <option value="missed">Missed</option>
-                  <option value="not_applicable">Not applicable</option>
-                </select>
+            {/* Medication adherence */}
+            <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
+              <label htmlFor="med-adherence" className="block text-body-medium text-ink-200 mb-3">
+                💊 Medication adherence
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                {[
+                  { value: '', label: 'Not logged', icon: '' },
+                  { value: 'as_prescribed', label: 'As prescribed', icon: '✅' },
+                  { value: 'partial', label: 'Partial', icon: '⚠️' },
+                  { value: 'missed', label: 'Missed', icon: '❌' },
+                  { value: 'not_applicable', label: 'N/A', icon: '—' },
+                ].map(opt => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setMedicationAdherence((opt.value || null) as MedicationAdherence | null)}
+                    className={cn(
+                      'px-3 py-2.5 rounded-[var(--radius-md)] text-small text-center',
+                      'border transition-all duration-150',
+                      'focus:outline-none focus:ring-2 focus:ring-primary-500',
+                      (medicationAdherence ?? '') === opt.value
+                        ? 'bg-primary-500/15 border-primary-500/50 text-primary-400 font-medium'
+                        : 'border-surface-600 text-ink-300 hover:border-surface-500 hover:text-ink-200'
+                    )}
+                  >
+                    {opt.icon && <span className="mr-1">{opt.icon}</span>}
+                    {opt.label}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              <div>
+            {/* Text inputs: Activities + Triggers */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
                 <label htmlFor="activities" className="block text-body-medium text-ink-200 mb-2">
-                  Activities/exercise (comma or new line)
+                  🚶 Activities / exercise
                 </label>
                 <textarea
                   id="activities"
                   value={activitiesText}
                   onChange={e => setActivitiesText(e.target.value)}
                   placeholder="e.g., physio, walk, stretching"
+                  rows={3}
                   className={cn(
-                    'w-full h-24 p-3 rounded-[var(--radius-md)]',
+                    'w-full p-3 rounded-[var(--radius-md)]',
                     'bg-surface-900 border border-surface-600',
                     'text-body text-ink-100 placeholder:text-ink-500',
                     'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent',
                     'transition-all duration-[var(--duration-fast)] resize-none'
                   )}
                 />
+                <p className="text-tiny text-ink-500 mt-1.5">Comma or new-line separated</p>
               </div>
 
-              <div>
+              <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
                 <label htmlFor="diet-triggers" className="block text-body-medium text-ink-200 mb-2">
-                  Food/diet triggers (comma or new line)
+                  🍽️ Food / diet triggers
                 </label>
                 <textarea
                   id="diet-triggers"
                   value={dietTriggersText}
                   onChange={e => setDietTriggersText(e.target.value)}
                   placeholder="e.g., caffeine, spicy food, skipped meal"
+                  rows={3}
                   className={cn(
-                    'w-full h-24 p-3 rounded-[var(--radius-md)]',
+                    'w-full p-3 rounded-[var(--radius-md)]',
                     'bg-surface-900 border border-surface-600',
                     'text-body text-ink-100 placeholder:text-ink-500',
                     'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent',
                     'transition-all duration-[var(--duration-fast)] resize-none'
                   )}
                 />
-                <p className="text-tiny text-ink-500 mt-1">Saved as triggers for analytics.</p>
+                <p className="text-tiny text-ink-500 mt-1.5">Saved as triggers for analytics</p>
               </div>
             </div>
           </section>
 
           {/* Notes + Voice */}
-          <section className="space-y-6">
+          <section className="space-y-5">
             <div>
-              <h2 className="text-h2 text-ink-50 mb-2">{notesLabel}</h2>
+              <h2 className="text-h2 text-ink-50 mb-1">{notesLabel}</h2>
               <p className="text-small text-ink-400">Dictation works with your phone keyboard too.</p>
             </div>
 
-            <div>
+            <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
               <label htmlFor="pain-notes" className="block text-body-medium text-ink-200 mb-2">
-                Additional Notes
+                ✏️ Additional notes
               </label>
               <textarea
                 id="pain-notes"
@@ -821,8 +890,8 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                 aria-describedby="notes-hint notes-remaining"
                 maxLength={500}
                 className={cn(
-                  'w-full h-36 p-4 rounded-[var(--radius-xl)]',
-                  'bg-surface-800 border border-surface-600',
+                  'w-full h-32 p-3 rounded-[var(--radius-md)]',
+                  'bg-surface-900 border border-surface-600',
                   'text-body text-ink-100 placeholder:text-ink-500',
                   'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent',
                   'transition-all duration-[var(--duration-fast)]',
@@ -830,14 +899,17 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                 )}
               />
               <div className="flex justify-between items-center mt-2">
-                <span id="notes-hint" className="text-small text-ink-400">
+                <span id="notes-hint" className="text-tiny text-ink-400">
                   {notes.length === 0
                     ? 'No notes yet'
                     : `${notes.length} character${notes.length === 1 ? '' : 's'}`}
                 </span>
                 <span
                   id="notes-remaining"
-                  className="text-small text-ink-500"
+                  className={cn(
+                    'text-tiny tabular-nums',
+                    500 - notes.length < 50 ? 'text-warn-400' : 'text-ink-500'
+                  )}
                   aria-live="polite"
                   aria-atomic="true"
                 >
@@ -982,16 +1054,16 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
       </div>
 
       {/* Footer */}
-      <div className="sticky bottom-0 left-0 right-0 p-4 border-t border-surface-700 bg-surface-900/95 backdrop-blur-sm z-10">
-        <div className="max-w-2xl mx-auto flex gap-3">
+      <div className="sticky bottom-0 left-0 right-0 border-t border-surface-700/60 bg-surface-900/95 backdrop-blur-sm z-10">
+        <div className="max-w-2xl mx-auto flex gap-3 px-4 py-3">
           <button
             type="button"
             onClick={onCancel}
             className={cn(
-              'px-6 py-4 rounded-[var(--radius-xl)]',
-              'min-h-[56px] min-w-[56px]',
-              'bg-surface-800 hover:bg-surface-700',
-              'text-body-medium text-ink-200 font-medium',
+              'px-5 py-3.5 rounded-[var(--radius-xl)]',
+              'min-h-[48px]',
+              'bg-surface-800 hover:bg-surface-700 border border-surface-700',
+              'text-body-medium text-ink-300 font-medium',
               'transition-colors duration-[var(--duration-fast)]',
               'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900'
             )}
@@ -1004,11 +1076,12 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
             onClick={handleSave}
             aria-disabled={!!saveDisabledReason}
             className={cn(
-              'flex-1 px-6 py-4 rounded-[var(--radius-xl)]',
-              'min-h-[56px]',
+              'flex-1 px-6 py-3.5 rounded-[var(--radius-xl)]',
+              'min-h-[48px]',
               'bg-primary-500 hover:bg-primary-400',
               'text-body-medium text-ink-900 font-semibold',
-              'transition-colors duration-[var(--duration-fast)]',
+              'shadow-lg shadow-primary-500/20',
+              'transition-all duration-[var(--duration-fast)]',
               'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900'
             )}
           >

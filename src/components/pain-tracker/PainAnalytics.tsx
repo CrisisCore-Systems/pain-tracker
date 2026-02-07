@@ -219,6 +219,12 @@ export const PainAnalytics: React.FC<PainAnalyticsProps> = ({
           </div>
 
           <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-xl font-semibold mb-2">Narrative Summary</h2>
+            <p className="text-gray-700 dark:text-gray-300">{trends.narrativeSummary}</p>
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">{trends.confidenceNote}</p>
+          </div>
+
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Pain by Time of Day</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">

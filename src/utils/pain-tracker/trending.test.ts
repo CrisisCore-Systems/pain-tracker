@@ -93,6 +93,8 @@ describe('Pain Tracker Trending Analysis', () => {
         locationFrequency: {},
         symptomCorrelations: {},
         painTrends: { increasing: false, averageChange: 0 },
+        narrativeSummary: 'Not enough data yet to summarize trends.',
+        confidenceNote: 'Add a few entries across different days to build a baseline.',
       });
     });
 

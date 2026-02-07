@@ -151,12 +151,12 @@ export function NumericCorrelationGraph({
     };
   }, [entries, variable]);
 
-  // Require enough data points and at least a bit of spread.
-  if (analysis.sampleSize < 6 || analysis.nonEmptyBins < 3) return null;
+  const regression = useMemo(() => {
+    // Compute regression only when we have enough signal.
+    if (analysis.sampleSize < 6 || analysis.nonEmptyBins < 3) return null;
+    return linearRegression(analysis.points);
+  }, [analysis.points, analysis.sampleSize, analysis.nonEmptyBins]);
 
-  const { strength, direction } = describeCorrelation(analysis.r);
-
-  const regression = useMemo(() => linearRegression(analysis.points), [analysis.points]);
   const trendLinePoints = useMemo(() => {
     if (!regression) return null;
     // Keep the line within the visible range.
@@ -169,6 +169,11 @@ export function NumericCorrelationGraph({
       { x: maxX, y: y2 },
     ] satisfies ScatterPoint[];
   }, [regression]);
+
+  // Require enough data points and at least a bit of spread.
+  if (analysis.sampleSize < 6 || analysis.nonEmptyBins < 3) return null;
+
+  const { strength, direction } = describeCorrelation(analysis.r);
 
   const badgeClass =
     direction === 'positive'

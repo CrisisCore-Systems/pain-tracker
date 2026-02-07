@@ -27,6 +27,7 @@ Do not merge without human review if you:
 
 - Run `make doctor`
 - Run `make test` (or at minimum, the most relevant focused tests)
+- Run `npm run -s check-security` (includes privacy gates + consent-gating tests)
 
 ## Checklist
 

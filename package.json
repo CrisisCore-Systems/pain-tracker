@@ -39,6 +39,8 @@
     "test:ci": "vitest run --reporter=json --reporter=default",
     "sbom": "cyclonedx-npm --output-file security/sbom-latest.json --json",
     "docs:validate": "node scripts/validate-docs.js",
+    "privacy-gates": "node scripts/privacy-gates.js",
+    "test:privacy-gates": "vitest run --run src/analytics/analytics-loader.test.ts src/analytics/analytics-gate.test.ts src/analytics/ga4-events.test.ts",
     "diagrams:svg-to-png": "node scripts/svg-to-png.mjs",
     "badge:tests": "node scripts/generate-test-badge.mjs",
     "badge:loc": "node scripts/generate-loc-badge.mjs",
@@ -58,7 +60,7 @@
     "doctor": "node scripts/doctor.js",
     "scan-secrets": "node scripts/scan-secrets.js",
     "check-merge": "node scripts/check-merge-markers.js",
-    "check-security": "npm run scan-secrets && node scripts/check-collapse-vectors.js",
+    "check-security": "npm run scan-secrets && node scripts/check-collapse-vectors.js && npm run -s privacy-gates && npm run -s test:privacy-gates",
     "security-test": "tsx scripts/automated-security-testing.ts",
     "security-audit": "node scripts/security-audit.js",
     "security-full": "npm run security-test && npm run security-audit",
@@ -121,7 +123,12 @@
     "devto:retrofit-published": "node scripts/devto/devto.mjs retrofit-published",
     "devto:retrofit-published:apply": "node scripts/devto/devto.mjs retrofit-published --yes",
     "devto:publish-start-here": "node scripts/devto/devto.mjs publish-start-here --write-md",
-    "devto:publish-start-here:apply": "node scripts/devto/devto.mjs publish-start-here --yes --write --write-md"
+    "devto:publish-start-here:apply": "node scripts/devto/devto.mjs publish-start-here --yes --write --write-md",
+    "pwa:build:app": "node scripts/build-pwa-app.mjs",
+    "pwa:copy": "node scripts/copy-pwa-to-next.mjs",
+    "web:build": "npm --prefix packages/blog run build",
+    "web:dev": "npm --prefix packages/blog run dev",
+    "build:vercel": "npm run build:packages && npm run pwa:build:app && npm run pwa:copy && npm run web:build"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

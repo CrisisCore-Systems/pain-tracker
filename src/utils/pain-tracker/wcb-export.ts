@@ -40,6 +40,21 @@ interface WCBExportOptions {
   includeTrendSummary?: boolean;
 }
 
+export interface WorkSafeBCExportArtifact {
+  reportId: string;
+  dataUri: string;
+  pdfBytes: Uint8Array;
+  sha256: string;
+  entryCount: number;
+}
+
+async function sha256Hex(bytes: Uint8Array): Promise<string> {
+  const hashBuffer = await crypto.subtle.digest('SHA-256', bytes as unknown as BufferSource);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 type TrendPoint = { label: string; value: number };
 
 function toDailyAveragePain(entries: PainEntry[], maxDays: number): TrendPoint[] {
@@ -236,7 +251,7 @@ function getPainTrend(entries: PainEntry[]): string {
 export async function exportWorkSafeBCPDF(
   entries: PainEntry[],
   options: WCBExportOptions
-): Promise<string> {
+): Promise<WorkSafeBCExportArtifact> {
   // Track analytics
   privacyAnalytics.trackDataExport('pdf').catch((error) => {
     analyticsLogger.swallowed(error, { context: 'exportWorkSafeBCPDF', exportType: 'wcb-pdf' });
@@ -687,7 +702,17 @@ export async function exportWorkSafeBCPDF(
     doc.text(`Page ${i} of ${pageCount}`, rightMargin - 20, 289);
   }
 
-  return doc.output('datauristring');
+  const arrayBuffer = doc.output('arraybuffer') as ArrayBuffer;
+  const pdfBytes = new Uint8Array(arrayBuffer);
+  const sha256 = await sha256Hex(pdfBytes);
+
+  return {
+    reportId,
+    dataUri: doc.output('datauristring'),
+    pdfBytes,
+    sha256,
+    entryCount: filteredEntries.length,
+  };
 }
 
 /**
@@ -697,20 +722,56 @@ export async function downloadWorkSafeBCPDF(
   entries: PainEntry[],
   options: WCBExportOptions
 ): Promise<void> {
-  const pdfData = await exportWorkSafeBCPDF(entries, options);
+  const pdf = await exportWorkSafeBCPDF(entries, options);
   
   // Create filename with date range
   const startStr = options.startDate.toISOString().split('T')[0];
   const endStr = options.endDate.toISOString().split('T')[0];
   const filename = `PainTracker-WCB-Report-${startStr}-to-${endStr}.pdf`;
+
+  const manifestFilename = `PainTracker-WCB-Report-${startStr}-to-${endStr}.manifest.json`;
+  const manifest = {
+    schemaVersion: 1,
+    exportType: 'work-safebc-pdf',
+    generatedAt: new Date().toISOString(),
+    reportId: pdf.reportId,
+    startDate: options.startDate.toISOString(),
+    endDate: options.endDate.toISOString(),
+    entryCount: pdf.entryCount,
+    fileName: filename,
+    sha256: pdf.sha256,
+    algorithm: 'SHA-256',
+    byteLength: pdf.pdfBytes.byteLength,
+  };
   
-  // Download the file
-  const link = document.createElement('a');
-  link.href = pdfData;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  // Download the PDF as a Blob so the bytes match the checksum exactly.
+  // Ensure we hand the DOM a Uint8Array backed by an ArrayBuffer (not ArrayBufferLike)
+  // to satisfy strict TS DOM typings.
+  const pdfBytes = new Uint8Array(pdf.pdfBytes);
+  const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  const pdfLink = document.createElement('a');
+  pdfLink.href = pdfUrl;
+  pdfLink.download = filename;
+  document.body.appendChild(pdfLink);
+  pdfLink.click();
+  document.body.removeChild(pdfLink);
+  URL.revokeObjectURL(pdfUrl);
+
+  // Download sidecar manifest
+  const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], {
+    type: 'application/json',
+  });
+  const manifestUrl = URL.createObjectURL(manifestBlob);
+
+  const manifestLink = document.createElement('a');
+  manifestLink.href = manifestUrl;
+  manifestLink.download = manifestFilename;
+  document.body.appendChild(manifestLink);
+  manifestLink.click();
+  document.body.removeChild(manifestLink);
+  URL.revokeObjectURL(manifestUrl);
 }
 
 export default exportWorkSafeBCPDF;

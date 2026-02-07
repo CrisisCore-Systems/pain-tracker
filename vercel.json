@@ -6,6 +6,50 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/blog/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "has": [
+        {
+          "type": "host",
+          "value": "paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/",
+      "permanent": true
+    },
+    {
+      "source": "/sponser",
+      "has": [
+        {
+          "type": "host",
+          "value": "paintracker.ca"
+        }
+      ],
+      "destination": "https://github.com/sponsors/CrisisCore-Systems",
+      "permanent": true
+    },
+    {
+      "source": "/sponsor",
+      "has": [
+        {
+          "type": "host",
+          "value": "paintracker.ca"
+        }
+      ],
+      "destination": "https://github.com/sponsors/CrisisCore-Systems",
+      "permanent": true
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
@@ -29,6 +73,11 @@
     {
       "source": "/blog/:path*",
       "destination": "https://blog.paintracker.ca/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "https://blog.paintracker.ca/",
       "permanent": true
     }
   ],

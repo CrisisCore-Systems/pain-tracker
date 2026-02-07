@@ -21,7 +21,13 @@ const mockJsPDF = {
   addPage: vi.fn().mockReturnThis(),
   getStringUnitWidth: vi.fn().mockReturnValue(50),
   save: vi.fn(),
-  output: vi.fn().mockReturnValue('data:application/pdf;base64,test'),
+  output: vi.fn().mockImplementation((type?: string) => {
+    if (type === 'arraybuffer') {
+      // deterministic 8 bytes for hashing
+      return new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8]).buffer;
+    }
+    return 'data:application/pdf;base64,test';
+  }),
   splitTextToSize: vi.fn().mockImplementation((text: string) => [text]),
   getNumberOfPages: vi.fn().mockReturnValue(1),
   setPage: vi.fn().mockReturnThis(),
@@ -119,8 +125,10 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
-      expect(result).toContain('data:application/pdf');
+      expect(typeof result.dataUri).toBe('string');
+      expect(result.dataUri).toContain('data:application/pdf');
+      expect(typeof result.sha256).toBe('string');
+      expect(result.sha256.length).toBe(64);
     });
 
     it('should handle empty entries array', async () => {
@@ -128,7 +136,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with various pain levels', async () => {
@@ -140,7 +148,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with multiple locations and symptoms', async () => {
@@ -156,7 +164,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries spanning multiple months', async () => {
@@ -171,7 +179,7 @@ describe('WCB Export', () => {
         endDate: new Date('2024-03-31'),
       });
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with work impact data', async () => {
@@ -194,7 +202,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with functional impact data', async () => {
@@ -210,7 +218,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with notes', async () => {
@@ -225,7 +233,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle single entry', async () => {
@@ -233,7 +241,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with mood data', async () => {
@@ -251,7 +259,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should include patient name when provided', async () => {
@@ -262,7 +270,7 @@ describe('WCB Export', () => {
         patientName: 'John Doe',
       });
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
       expect(mockJsPDF.text).toHaveBeenCalled();
     });
 
@@ -274,7 +282,7 @@ describe('WCB Export', () => {
         claimNumber: 'WCB-123456',
       });
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should include healthcare provider when provided', async () => {
@@ -285,7 +293,7 @@ describe('WCB Export', () => {
         healthcareProvider: 'Dr. Smith',
       });
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should include detailed entries when option is enabled', async () => {
@@ -296,7 +304,7 @@ describe('WCB Export', () => {
         includeDetailedEntries: true,
       });
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should include trend summary when option is enabled', async () => {
@@ -307,7 +315,7 @@ describe('WCB Export', () => {
         includeTrendSummary: true,
       });
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('covers pain trend branches: stable', async () => {
@@ -443,7 +451,7 @@ describe('WCB Export', () => {
       ];
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('covers pain severity branch: moderately severe (pain=6)', async () => {
@@ -569,10 +577,17 @@ describe('WCB Export', () => {
     it('should create and trigger download link', async () => {
       const entries: PainEntry[] = [createMockEntry()];
 
+      // Blob URL helpers used by the downloader
+      const originalCreateObjectURL = URL.createObjectURL;
+      const originalRevokeObjectURL = URL.revokeObjectURL;
+      URL.createObjectURL = vi.fn(() => 'blob:mock');
+      URL.revokeObjectURL = vi.fn(() => undefined);
+
       // Mock document methods
       const originalCreateElement = document.createElement.bind(document);
-      const mockLink = originalCreateElement('a');
-      const clickSpy = vi.spyOn(mockLink, 'click').mockImplementation(() => {});
+
+      const createdLinks: HTMLAnchorElement[] = [];
+      const clickSpy = vi.fn();
 
       const appendChildSpy = vi
         .spyOn(document.body, 'appendChild')
@@ -584,20 +599,30 @@ describe('WCB Export', () => {
       const createElementSpy = vi
         .spyOn(document, 'createElement')
         .mockImplementation((tagName: string, options?: ElementCreationOptions) => {
-          if (tagName.toLowerCase() === 'a') return mockLink;
+          if (tagName.toLowerCase() === 'a') {
+            const link = originalCreateElement('a');
+            vi.spyOn(link, 'click').mockImplementation(clickSpy);
+            createdLinks.push(link);
+            return link;
+          }
           return originalCreateElement(tagName, options);
         });
 
       await downloadWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(clickSpy).toHaveBeenCalled();
-      expect(mockLink.download).toContain('PainTracker-WCB-Report');
-      expect(mockLink.download).toContain('.pdf');
+      // One click for the PDF and one for the manifest
+      expect(clickSpy).toHaveBeenCalledTimes(2);
+
+      const downloads = createdLinks.map(l => l.download);
+      expect(downloads.some(d => d.includes('PainTracker-WCB-Report') && d.endsWith('.pdf'))).toBe(true);
+      expect(downloads.some(d => d.includes('PainTracker-WCB-Report') && d.endsWith('.manifest.json'))).toBe(true);
 
       appendChildSpy.mockRestore();
       removeChildSpy.mockRestore();
       createElementSpy.mockRestore();
-      clickSpy.mockRestore();
+
+      URL.createObjectURL = originalCreateObjectURL;
+      URL.revokeObjectURL = originalRevokeObjectURL;
     });
   });
 
@@ -621,7 +646,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with zero pain level', async () => {
@@ -633,7 +658,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle large number of entries', async () => {
@@ -649,7 +674,7 @@ describe('WCB Export', () => {
         endDate: new Date('2024-04-30'),
       });
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with very long notes', async () => {
@@ -662,7 +687,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should handle entries with special characters in notes', async () => {
@@ -674,7 +699,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
 
     it('should filter entries by date range', async () => {
@@ -686,7 +711,7 @@ describe('WCB Export', () => {
 
       const result = await exportWorkSafeBCPDF(entries, defaultOptions);
 
-      expect(typeof result).toBe('string');
+      expect(typeof result.dataUri).toBe('string');
     });
   });
 

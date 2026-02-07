@@ -29,7 +29,7 @@
 1. `@vercel/node` is **ONLY used in `api/` serverless functions**
 2. **NOT bundled** into the main Pain Tracker application
 3. **Not exposed** to end users of the Pain Tracker web app
-4. Only affects **Vercel-hosted Stripe payment endpoints** (optional SaaS feature)
+4. Only affects **Vercel-hosted serverless endpoints** (optional deployment feature)
 
 ---
 
@@ -139,7 +139,7 @@
 **Required Safeguards**:
 1. ✅ Rate limiting on all API endpoints (already implemented)
 2. ✅ Input validation with Zod schemas (already implemented)
-3. ✅ Stripe webhook signature verification (already implemented)
+3. ✅ Webhook signature verification (already implemented)
 4. ⏳ Monitor API logs for unusual activity (configure post-deploy)
 
 ---

@@ -853,6 +853,25 @@ export class PWAManager {
       // Clear IndexedDB
       await offlineStorage.clearAllData();
 
+      // Best-effort: delete additional app-scoped IndexedDB databases.
+      // (Some subsystems maintain their own DBs outside OfflineStorageService.)
+      const deleteDb = (name: string) =>
+        new Promise<void>(resolve => {
+          try {
+            const req = indexedDB.deleteDatabase(name);
+            req.onsuccess = () => resolve();
+            req.onerror = () => resolve();
+            req.onblocked = () => resolve();
+          } catch {
+            resolve();
+          }
+        });
+
+      await Promise.all([
+        // Audio/tone engine persistence
+        deleteDb('pain-tracker-tone'),
+      ]);
+
       // Clear all secureStorage-managed keys (namespaced)
       secureStorage.keys().forEach(k => secureStorage.remove(k));
 

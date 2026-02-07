@@ -5,7 +5,12 @@
     "outDir": "dist",
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "tsBuildInfoFile": "./.tsbuildinfo"
+    "tsBuildInfoFile": "./.tsbuildinfo",
+    "paths": {
+      "@pain-tracker/utils": ["packages/utils/dist/index.d.ts"],
+      "@pain-tracker/utils/*": ["packages/utils/dist/*"]
+    }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "references": [{ "path": "../utils/tsconfig.json" }]
 }

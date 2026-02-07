@@ -489,26 +489,30 @@ export class OfflineStorageService {
 
     return new Promise((resolve, reject) => {
       const transaction = this.db!.transaction(
-        [this.stores.data, this.stores.syncQueue],
+        [this.stores.data, this.stores.syncQueue, this.stores.cache],
         'readwrite'
       );
       let completed = 0;
 
       const complete = () => {
         completed++;
-        if (completed === 2) resolve();
+        if (completed === 3) resolve();
       };
 
       const dataStore = transaction.objectStore(this.stores.data);
       const syncStore = transaction.objectStore(this.stores.syncQueue);
+      const cacheStore = transaction.objectStore(this.stores.cache);
 
       const clearData = dataStore.clear();
       const clearSync = syncStore.clear();
+      const clearCache = cacheStore.clear();
 
       clearData.onsuccess = complete;
       clearSync.onsuccess = complete;
+      clearCache.onsuccess = complete;
       clearData.onerror = () => reject(clearData.error);
       clearSync.onerror = () => reject(clearSync.error);
+      clearCache.onerror = () => reject(clearCache.error);
     });
   }
 

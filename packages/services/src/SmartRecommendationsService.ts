@@ -13,6 +13,7 @@
  */
 
 import type { PainEntry } from './types';
+import { pickVariant } from '@pain-tracker/utils';
 
 // Recommendation types
 export interface Recommendation {
@@ -77,6 +78,129 @@ export interface SmartRecommendations {
 }
 
 class SmartRecommendationsService {
+  private mean(numbers: number[]): number {
+    if (numbers.length === 0) return 0;
+    return numbers.reduce((sum, n) => sum + n, 0) / numbers.length;
+  }
+
+  private formatPoints(value: number): string {
+    if (!Number.isFinite(value)) return '0.0';
+    return value.toFixed(1);
+  }
+
+  private formatPointDelta(delta: number): string {
+    const abs = Math.abs(delta);
+    const rounded = Number.isFinite(abs) ? abs.toFixed(1) : '0.0';
+    return `${rounded} point${abs === 1 ? '' : 's'}`;
+  }
+
+  private formatPercentChange(pct: number | null): string | null {
+    if (pct === null || !Number.isFinite(pct)) return null;
+    return `${Math.round(Math.abs(pct) * 100)}%`;
+  }
+
+  private buildTrendNarrative(args: {
+    avgPain: number;
+    earlierAvg: number;
+    hasBaseline: boolean;
+    trendingUp: boolean;
+    trendingDown: boolean;
+    delta: number;
+    pctChange: number | null;
+  }): { headline: string; because: string[]; caveat?: string } {
+    const { avgPain, earlierAvg, hasBaseline, trendingUp, trendingDown, delta, pctChange } = args;
+    const pct = this.formatPercentChange(pctChange);
+    const absolute = this.formatPointDelta(delta);
+
+    const seed = [
+      hasBaseline ? 'baseline' : 'no-baseline',
+      trendingUp ? 'up' : trendingDown ? 'down' : 'flat',
+      Math.round(avgPain * 10),
+      Math.round(earlierAvg * 10),
+      Math.round(delta * 10),
+    ].join('|');
+
+    if (!hasBaseline) {
+      return {
+        headline: pickVariant(seed, [
+          `Your last 7 entries average ${this.formatPoints(avgPain)}/10.`,
+          `Based on your last 7 entries, your average is ${this.formatPoints(avgPain)}/10.`,
+          `Over your most recent 7 logs, pain averages ${this.formatPoints(avgPain)}/10.`,
+        ]),
+        because: [
+          `Last 7-entry average: ${this.formatPoints(avgPain)}/10`,
+          pickVariant(seed + '|why', [
+            'Not enough earlier data for a week-over-week comparison yet',
+            'You don’t have a full earlier week to compare against yet',
+            'Once you have a bit more history, week-over-week trends will be clearer',
+          ]),
+        ],
+        caveat: 'This is informational and not medical advice.',
+      };
+    }
+
+    if (trendingUp) {
+      return {
+        headline: pickVariant(seed, [
+          `Your average pain increased from ${this.formatPoints(earlierAvg)} to ${this.formatPoints(avgPain)} over the last week.`,
+          `Over the last week, your average shifted upward: ${this.formatPoints(earlierAvg)} → ${this.formatPoints(avgPain)}.`,
+          `Compared to the prior week, your average pain is higher (${this.formatPoints(earlierAvg)} → ${this.formatPoints(avgPain)}).`,
+        ]),
+        because: [
+          `Week-over-week change: +${absolute}${pct ? ` (~${pct})` : ''}`,
+          pickVariant(seed + '|tip', [
+            'Early, small adjustments are often easier than reacting to a full flare',
+            'Catching a rise early can help prevent a bigger spike',
+            'Small course-corrections now may reduce the chance of a flare later',
+          ]),
+        ],
+        caveat: 'Trends describe your data; they do not diagnose a cause.',
+      };
+    }
+
+    if (trendingDown) {
+      return {
+        headline: pickVariant(seed, [
+          `Your average pain decreased from ${this.formatPoints(earlierAvg)} to ${this.formatPoints(avgPain)} over the last week.`,
+          `Over the last week, your average moved down: ${this.formatPoints(earlierAvg)} → ${this.formatPoints(avgPain)}.`,
+          `Compared to the prior week, your average pain is lower (${this.formatPoints(earlierAvg)} → ${this.formatPoints(avgPain)}).`,
+        ]),
+        because: [
+          `Week-over-week change: -${absolute}${pct ? ` (~${pct})` : ''}`,
+          pickVariant(seed + '|tip', [
+            'Keeping the same helpful routines can protect this progress',
+            'Protect the routines that seem to be helping',
+            'This looks like progress — consistency can help it stick',
+          ]),
+        ],
+        caveat: 'Trends describe your data; they do not diagnose a cause.',
+      };
+    }
+
+    return {
+      headline: pickVariant(seed, [
+        `Your average pain has been fairly steady around ${this.formatPoints(avgPain)}/10.`,
+        `Your recent averages are relatively stable at about ${this.formatPoints(avgPain)}/10.`,
+        `So far, your week-over-week average looks steady (~${this.formatPoints(avgPain)}/10).`,
+      ]),
+      because: [
+        `Last week: ${this.formatPoints(earlierAvg)}/10 → this week: ${this.formatPoints(avgPain)}/10`,
+        pickVariant(seed + '|tip', [
+          'Stable doesn’t mean “no change” — keep noting triggers and relief that stand out',
+          'Even with stable averages, individual days can vary — notes help explain the swings',
+          'If something stands out (sleep, stress, activity), capture it — that’s where insights come from',
+        ]),
+      ],
+      caveat: 'Trends describe your data; they do not diagnose a cause.',
+    };
+  }
+
+  private getPainValues(entries: PainEntry[]): number[] {
+    return entries
+      .map(e => this.getPainLevel(e))
+      .filter(n => Number.isFinite(n));
+  }
+
   private getEntriesInLastNDays(entries: PainEntry[], days: number): PainEntry[] {
     const now = Date.now();
     const windowStart = now - days * 24 * 60 * 60 * 1000;
@@ -132,28 +256,48 @@ class SmartRecommendationsService {
   private generateRecommendations(entries: PainEntry[]): Recommendation[] {
     const recommendations: Recommendation[] = [];
     const recentEntries = entries.slice(-7);
-    const avgPain = recentEntries.reduce((sum, e) => sum + this.getPainLevel(e), 0) / recentEntries.length;
+    const avgPain = this.mean(this.getPainValues(recentEntries));
 
     // Analyze trends
-    const earlierAvg = entries.slice(-14, -7).reduce((sum, e) => sum + this.getPainLevel(e), 0) / 7;
-    const trendingUp = avgPain > earlierAvg && (avgPain - earlierAvg) / earlierAvg > 0.15;
-    const trendingDown = avgPain < earlierAvg && (earlierAvg - avgPain) / earlierAvg > 0.15;
+    const earlierWindow = entries.slice(-14, -7);
+    const earlierPainValues = this.getPainValues(earlierWindow);
+    const earlierAvg = this.mean(earlierPainValues);
+
+    // Only compute trends when we have a meaningful baseline window.
+    // Avoid divide-by-zero (earlierAvg === 0) and avoid false “trending up” when there is no baseline.
+    const hasBaseline = earlierPainValues.length >= 5;
+    const delta = avgPain - earlierAvg;
+    const pctChange = earlierAvg > 0.5 ? delta / earlierAvg : null;
+
+    const trendingUp = hasBaseline && delta > 0.5 && (pctChange !== null ? pctChange > 0.15 : delta > 1.5);
+    const trendingDown = hasBaseline && delta < -0.5 && (pctChange !== null ? -pctChange > 0.15 : delta < -1.5);
+
+    const trendNarrative = this.buildTrendNarrative({
+      avgPain,
+      earlierAvg,
+      hasBaseline,
+      trendingUp,
+      trendingDown,
+      delta,
+      pctChange,
+    });
 
     // High pain recommendation
     if (avgPain > 6.5) {
       recommendations.push({
         id: 'high-pain-management',
         title: 'Implement Proactive Pain Management',
-        description: 'Your recent pain levels have been elevated. Consider implementing additional management strategies.',
+        description: `${trendNarrative.headline} That’s in the high range — a proactive plan now can help reduce the chance of a flare.`,
         category: 'intervention',
         priority: trendingUp ? 'critical' : 'high',
         timing: 'Immediately',
-        expectedBenefit: 'Reduce pain by 20-30% within 3-5 days',
+        expectedBenefit: 'Improve day-to-day control and reduce high-pain days',
         confidence: 0.85,
         reasoning: [
-          `Average pain level: ${avgPain.toFixed(1)} (elevated)`,
-          trendingUp ? 'Trending upward - early intervention critical' : 'Sustained high pain',
-          'Evidence-based interventions available'
+          ...trendNarrative.because,
+          `Recent average: ${this.formatPoints(avgPain)}/10 (elevated)`,
+          trendingUp ? 'Trending upward — acting early tends to help' : 'Sustained high pain — consistency matters',
+          'Choose actions that are safe and realistic for today'
         ],
         actionSteps: [
           'Review current medication timing and dosage with healthcare provider',
@@ -171,16 +315,17 @@ class SmartRecommendationsService {
       recommendations.push({
         id: 'address-trend',
         title: 'Address Increasing Pain Trend',
-        description: 'Pain levels have increased by 15%+ recently. Early intervention can prevent further escalation.',
+        description: `${trendNarrative.headline} Acting early can help keep this from snowballing.`,
         category: 'prevention',
         priority: 'high',
         timing: 'Within 24-48 hours',
-        expectedBenefit: 'Prevent further escalation, stabilize pain levels',
+        expectedBenefit: 'Stabilize pain and reduce the likelihood of a larger flare',
         confidence: 0.80,
         reasoning: [
-          `Pain increased from ${earlierAvg.toFixed(1)} to ${avgPain.toFixed(1)}`,
-          'Early intervention more effective than reactive treatment',
-          'Pattern suggests modifiable factors'
+          ...trendNarrative.because,
+          `Change observed: ${this.formatPoints(earlierAvg)}/10 → ${this.formatPoints(avgPain)}/10`,
+          'This is a pattern in your logs, not a diagnosis',
+          'Look for recent shifts you can control (sleep, pacing, stress, routines)'
         ],
         actionSteps: [
           'Identify recent changes (activity, stress, sleep, medication)',
@@ -198,16 +343,17 @@ class SmartRecommendationsService {
       recommendations.push({
         id: 'maintain-progress',
         title: 'Maintain Your Progress',
-        description: 'Great work! Your pain levels have improved. Focus on maintaining these gains.',
+        description: `${trendNarrative.headline} Keep doing what’s been working and protect the routines that support this.`,
         category: 'lifestyle',
         priority: 'medium',
         timing: 'Ongoing',
         expectedBenefit: 'Sustain improvements long-term',
         confidence: 0.75,
         reasoning: [
-          `Pain decreased from ${earlierAvg.toFixed(1)} to ${avgPain.toFixed(1)}`,
-          'Current strategies are working',
-          'Consistency is key to sustained improvement'
+          ...trendNarrative.because,
+          `Change observed: ${this.formatPoints(earlierAvg)}/10 → ${this.formatPoints(avgPain)}/10`,
+          'Your current strategies appear helpful',
+          'Consistency is key to sustaining improvement'
         ],
         actionSteps: [
           'Document what has been working well',
@@ -232,16 +378,17 @@ class SmartRecommendationsService {
         recommendations.push({
           id: 'medication-optimization',
           title: 'Optimize Medication Timing',
-          description: 'Medications show significant benefit. Consider consistent use for better pain control.',
+          description: 'When medication is logged, pain tends to be lower. A consistent schedule may make your days more predictable.',
           category: 'medication',
           priority: 'high',
           timing: 'Daily',
-          expectedBenefit: 'Reduce pain by 1-2 points on average',
+          expectedBenefit: 'More predictable pain control across the day',
           confidence: 0.70,
           reasoning: [
-            `Pain with medication: ${medAvg.toFixed(1)}`,
-            `Pain without medication: ${noMedAvg.toFixed(1)}`,
-            'Consistent use may provide better control'
+            `Avg pain with medication logged: ${this.formatPoints(medAvg)}/10`,
+            `Avg pain without medication logged: ${this.formatPoints(noMedAvg)}/10`,
+            `Typical difference: ${this.formatPointDelta(noMedAvg - medAvg)} lower with medication logged`,
+            'If medication is part of your plan, consistency can reduce variability'
           ],
           actionSteps: [
             'Discuss consistent medication schedule with provider',
@@ -262,7 +409,7 @@ class SmartRecommendationsService {
       recommendations.push({
         id: 'tracking-consistency',
         title: 'Improve Tracking Consistency',
-        description: 'More consistent tracking enables better pattern recognition and personalized insights.',
+        description: 'A steadier tracking rhythm helps the app spot patterns with more confidence (and makes your charts easier to trust).',
         category: 'tracking',
         priority: 'medium',
         timing: 'Daily',
@@ -270,8 +417,8 @@ class SmartRecommendationsService {
         confidence: 0.65,
         reasoning: [
           `Only ${entriesInLast7Days.length} entries in last 7 days`,
-          'More data = better insights',
-          'Patterns require consistent tracking'
+          'More entries = clearer patterns',
+          'Consistency reduces “noise” in trend signals'
         ],
         actionSteps: [
           'Set daily reminder for pain tracking',
@@ -303,16 +450,17 @@ class SmartRecommendationsService {
         recommendations.push({
           id: 'evening-pain-management',
           title: 'Address Evening Pain Increases',
-          description: 'Pain levels increase significantly in evenings. Target this time with specific strategies.',
+          description: `Your evenings run higher than your mornings (${this.formatPoints(eveningAvg)}/10 vs ${this.formatPoints(morningAvg)}/10). Planning ahead can soften the spike.`,
           category: 'prevention',
           priority: 'high',
           timing: 'Afternoons (4-6 PM)',
           expectedBenefit: 'Reduce evening pain spikes',
           confidence: 0.75,
           reasoning: [
-            `Evening pain: ${eveningAvg.toFixed(1)}`,
-            `Morning pain: ${morningAvg.toFixed(1)}`,
-            'Proactive afternoon interventions may help'
+            `Evening average: ${this.formatPoints(eveningAvg)}/10`,
+            `Morning average: ${this.formatPoints(morningAvg)}/10`,
+            `Difference: ${this.formatPointDelta(eveningAvg - morningAvg)} higher in the evening`,
+            'Proactive steps in late afternoon may reduce the evening peak'
           ],
           actionSteps: [
             'Take pain medication before evening spike (around 4-5 PM)',
@@ -353,7 +501,7 @@ class SmartRecommendationsService {
         recommendations.push({
           action: 'Take morning medication',
           optimalTime: `${Math.floor(avgTime)}:00 AM`,
-          reason: 'Historically most consistent timing with good results',
+          reason: 'You most often log medication in the morning around this time',
           confidence: 0.75,
           alternativeTimes: ['7:00 AM', '8:00 AM', '9:00 AM']
         });
@@ -369,7 +517,7 @@ class SmartRecommendationsService {
       recommendations.push({
         action: 'Daily pain tracking',
         optimalTime: `${Math.floor(avgTrackTime)}:00 (${timeOfDay})`,
-        reason: 'Your most consistent tracking time',
+        reason: 'You tend to log around this time; consistency helps comparisons',
         confidence: 0.80,
         alternativeTimes: ['Morning', 'Evening']
       });
@@ -394,7 +542,7 @@ class SmartRecommendationsService {
         recommendations.push({
           action: 'Physical activity or exercise',
           optimalTime: 'Morning (8-11 AM)',
-          reason: 'Pain levels typically lower in morning hours',
+          reason: 'Your morning entries show lower pain than afternoons, so mornings may be a gentler window',
           confidence: 0.70,
           alternativeTimes: ['Mid-morning', 'Late morning']
         });
@@ -475,7 +623,7 @@ class SmartRecommendationsService {
    */
   private createActionPlans(entries: PainEntry[]): ActionPlan[] {
     const plans: ActionPlan[] = [];
-    const recentAvg = entries.slice(-7).reduce((sum, e) => sum + this.getPainLevel(e), 0) / 7;
+    const recentAvg = this.mean(this.getPainValues(entries.slice(-7)));
 
     // Pain reduction plan
     if (recentAvg > 5) {

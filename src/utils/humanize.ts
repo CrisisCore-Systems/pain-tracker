@@ -6,6 +6,7 @@
  */
 
 import type { PainEntry } from '../types';
+import { pickVariant } from '@pain-tracker/utils';
 
 // ============================================
 // Pain Level Descriptions
@@ -480,12 +481,21 @@ const SEGMENT_FRIENDLY: Record<string, string> = {
 
 export function analyzeTimeOfDayPatterns(entries: PainEntry[]): TimeOfDayAnalysis {
   if (entries.length < 5) {
+    const seed = `tod|insufficient|${entries.length}`;
     return {
       patterns: [],
       bestTimeOfDay: null,
       worstTimeOfDay: null,
-      insight: 'We need more entries to analyze your time-of-day patterns.',
-      recommendation: 'Try logging at different times throughout the day.',
+      insight: pickVariant(seed, [
+        'We need more entries to analyze your time-of-day patterns in a meaningful way.',
+        'We need more entries before we can confidently spot time-of-day patterns.',
+        'We need more entries to see whether mornings, afternoons, or evenings tend to differ.',
+      ]),
+      recommendation: pickVariant(seed + '|rec', [
+        'Try logging at different times throughout the day so the pattern is clearer.',
+        'Try logging at a few different times in the day to make patterns easier to detect.',
+        'If you can, add a few entries across different times of day to sharpen this analysis.',
+      ]),
       hasEnoughData: false,
     };
   }
@@ -533,25 +543,62 @@ export function analyzeTimeOfDayPatterns(entries: PainEntry[]): TimeOfDayAnalysi
   const hasMeaningfulDifference = bestSegment && worstSegment && 
     (worstSegment.avg - bestSegment.avg) >= 1;
 
+  const seed = [
+    'tod',
+    bestSegment?.segment ?? 'none',
+    worstSegment?.segment ?? 'none',
+    Math.round((bestSegment?.avg ?? 0) * 10),
+    Math.round((worstSegment?.avg ?? 0) * 10),
+    patterns.length,
+  ].join('|');
+
   let insight: string;
   let recommendation: string;
 
   if (hasMeaningfulDifference && bestSegment && worstSegment) {
     const diff = (worstSegment.avg - bestSegment.avg).toFixed(1);
-    insight = `Your pain tends to be ${diff} points higher in the ${SEGMENT_FRIENDLY[worstSegment.segment]} compared to ${SEGMENT_FRIENDLY[bestSegment.segment]}.`;
+    insight = pickVariant(seed, [
+      `Your pain tends to be ${diff} points higher in the ${SEGMENT_FRIENDLY[worstSegment.segment]} compared to ${SEGMENT_FRIENDLY[bestSegment.segment]}. This is a helpful pattern to plan around.`,
+      `A clear time-of-day pattern shows up: pain is about ${diff} points higher in the ${SEGMENT_FRIENDLY[worstSegment.segment]} than in the ${SEGMENT_FRIENDLY[bestSegment.segment]}.`,
+      `Your logs suggest pain runs higher in the ${SEGMENT_FRIENDLY[worstSegment.segment]} (by ~${diff} points) compared with the ${SEGMENT_FRIENDLY[bestSegment.segment]}.`,
+    ]);
     
     if (worstSegment.segment === 'morning') {
-      recommendation = 'Morning stiffness is common. Gentle stretching before bed or upon waking might help.';
+      recommendation = pickVariant(seed + '|morning', [
+        'Morning stiffness is common. Gentle stretching before bed and/or upon waking might help.',
+        'If mornings are harder, try a gentle warm-up routine before getting moving.',
+        'If mornings are rough, consider a slower start and gentle mobility work.',
+      ]);
     } else if (worstSegment.segment === 'evening') {
-      recommendation = 'Evening pain increases often relate to daily activities. Consider pacing strategies.';
+      recommendation = pickVariant(seed + '|evening', [
+        'Evening pain increases often relate to daily load. Consider pacing and a pre-evening wind-down routine.',
+        'If evenings trend higher, pacing earlier in the day can soften the late-day spike.',
+        'Try planning a lighter late afternoon if evenings are consistently harder.',
+      ]);
     } else if (worstSegment.segment === 'night') {
-      recommendation = 'Night pain can affect sleep quality. Discuss sleep positioning with your care team.';
+      recommendation = pickVariant(seed + '|night', [
+        'Night pain can affect sleep quality. Consider sleep positioning and discuss persistent sleep disruption with your care team.',
+        'If nights are tougher, sleep positioning and a consistent wind-down routine may help.',
+        'If night pain is frequent, consider tracking sleep setup and discussing it with your care team.',
+      ]);
     } else {
-      recommendation = 'Afternoon spikes might relate to activity levels. Try scheduling rest breaks.';
+      recommendation = pickVariant(seed + '|afternoon', [
+        'Afternoon spikes might relate to activity levels. Try scheduling a short rest break before your usual peak.',
+        'If afternoons are higher, a planned pause (even 5–10 minutes) can reduce build-up.',
+        'Consider adding a short break or lighter task block before your typical afternoon peak.',
+      ]);
     }
   } else {
-    insight = 'Your pain levels are relatively consistent throughout the day.';
-    recommendation = 'Consistent patterns suggest steady management. Keep noting any variations.';
+    insight = pickVariant(seed + '|consistent', [
+      'Your pain levels are relatively consistent throughout the day, without a strong time-based swing.',
+      'Your pain looks fairly consistent across different times of day.',
+      'Across the day, your pain seems consistent rather than clustering at a specific time.',
+    ]);
+    recommendation = pickVariant(seed + '|consistent|rec', [
+      'Consistent patterns suggest steady management. Keep noting any variations and what seems to help.',
+      'Since things look consistent, notes about triggers/relief can be especially useful for context.',
+      'Even with consistent averages, outlier days matter — keep logging what was different.',
+    ]);
   }
 
   return {
@@ -589,13 +636,18 @@ const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frid
 
 export function analyzeDayOfWeekPatterns(entries: PainEntry[]): DayOfWeekAnalysis {
   if (entries.length < 7) {
+    const seed = `dow|insufficient|${entries.length}`;
     return {
       patterns: [],
       bestDay: null,
       worstDay: null,
       weekdayAvg: null,
       weekendAvg: null,
-      insight: 'We need at least a week of entries to analyze daily patterns.',
+      insight: pickVariant(seed, [
+        'We need at least a week of entries to analyze daily patterns with confidence.',
+        'We need at least a week of entries before daily patterns are reliable.',
+        'We need at least a week of entries to spot whether certain days tend to run higher or lower.',
+      ]),
       hasEnoughData: false,
     };
   }
@@ -651,22 +703,51 @@ export function analyzeDayOfWeekPatterns(entries: PainEntry[]): DayOfWeekAnalysi
 
   // Generate insight
   let insight: string;
+
+  const seed = [
+    'dow',
+    bestDay?.day ?? 'none',
+    worstDay?.day ?? 'none',
+    Math.round((weekdayAvg ?? 0) * 10),
+    Math.round((weekendAvg ?? 0) * 10),
+    patterns.length,
+  ].join('|');
   
   if (weekdayAvg !== null && weekendAvg !== null) {
     const diff = weekendAvg - weekdayAvg;
     if (Math.abs(diff) >= 1) {
       if (diff > 0) {
-        insight = `Interestingly, your pain averages ${Math.abs(diff).toFixed(1)} points higher on weekends. Activity changes or different routines might be a factor.`;
+        insight = pickVariant(seed, [
+          `Interestingly, your pain averages ${Math.abs(diff).toFixed(1)} points higher on weekends. Activity changes or different routines might be a factor.`,
+          `Weekends run higher by about ${Math.abs(diff).toFixed(1)} points on average. Routine shifts may be contributing.`,
+          `Your weekends look higher (${Math.abs(diff).toFixed(1)} points on average). It may be worth reviewing weekend activities and pacing.`,
+        ]);
       } else {
-        insight = `Good news: weekends tend to be ${Math.abs(diff).toFixed(1)} points better for you. The change in routine seems to help.`;
+        insight = pickVariant(seed, [
+          `Good news: weekends tend to be ${Math.abs(diff).toFixed(1)} points better for you. The change in routine seems to help.`,
+          `Weekends look better by about ${Math.abs(diff).toFixed(1)} points on average — your routine shift may be helping.`,
+          `Your weekends tend to be lower (${Math.abs(diff).toFixed(1)} points on average). Consider what changes on weekends that might be protective.`,
+        ]);
       }
     } else if (bestDay && worstDay && (worstDay.avg - bestDay.avg) >= 1.5) {
-      insight = `${worstDay.day}s tend to be your toughest (${worstDay.avg.toFixed(1)}/10), while ${bestDay.day}s are usually better (${bestDay.avg.toFixed(1)}/10).`;
+      insight = pickVariant(seed, [
+        `${worstDay.day}s tend to be your toughest (${worstDay.avg.toFixed(1)}/10), while ${bestDay.day}s are usually better (${bestDay.avg.toFixed(1)}/10).`,
+        `A day-of-week pattern shows up: ${worstDay.day}s run highest (${worstDay.avg.toFixed(1)}/10) and ${bestDay.day}s run lowest (${bestDay.avg.toFixed(1)}/10).`,
+        `Your logs suggest ${worstDay.day}s are hardest (${worstDay.avg.toFixed(1)}/10) and ${bestDay.day}s are easier (${bestDay.avg.toFixed(1)}/10).`,
+      ]);
     } else {
-      insight = 'Your pain levels are fairly consistent across the week.';
+      insight = pickVariant(seed, [
+        'Your pain levels are fairly consistent across the week.',
+        'Across the week, pain looks relatively consistent day to day.',
+        'No strong day-of-week swing shows up — your week looks fairly consistent.',
+      ]);
     }
   } else {
-    insight = 'Keep tracking to reveal weekly patterns.';
+    insight = pickVariant(seed, [
+      'Keep tracking to reveal weekly patterns.',
+      'Keep logging — weekly patterns often emerge with a bit more history.',
+      'More entries will make weekly patterns easier to detect.',
+    ]);
   }
 
   return {
@@ -702,10 +783,15 @@ export interface TriggerAnalysis {
 
 export function analyzeTriggerPatterns(entries: PainEntry[]): TriggerAnalysis {
   if (entries.length < 10) {
+    const seed = `trigger|insufficient|${entries.length}`;
     return {
       correlations: [],
       topTrigger: null,
-      insight: 'More entries needed to identify trigger patterns.',
+      insight: pickVariant(seed, [
+        'More entries needed to identify trigger patterns.',
+        'More entries needed before trigger patterns are reliable.',
+        'More entries needed — keep logging triggers so patterns can emerge.',
+      ]),
       hasEnoughData: false,
     };
   }
@@ -746,19 +832,43 @@ export function analyzeTriggerPatterns(entries: PainEntry[]): TriggerAnalysis {
       
       let impact: TriggerCorrelation['impact'];
       let humanized: string;
+
+      const seed = [
+        'trigger',
+        trigger,
+        Math.round(avgWithTrigger * 10),
+        Math.round(avgWithoutTrigger * 10),
+        Math.round(impactScore * 10),
+      ].join('|');
       
       if (impactScore >= 2) {
         impact = 'strong';
-        humanized = `When "${trigger}" is present, your pain averages ${impactScore.toFixed(1)} points higher. This is a significant pattern.`;
+        humanized = pickVariant(seed, [
+          `When "${trigger}" is present, your pain averages ${impactScore.toFixed(1)} points higher. This is a significant pattern.`,
+          `"${trigger}" stands out: pain runs about ${impactScore.toFixed(1)} points higher when it’s logged.`,
+          `There’s a strong signal for "${trigger}": about ${impactScore.toFixed(1)} points higher pain on average when it appears.`,
+        ]);
       } else if (impactScore >= 1) {
         impact = 'moderate';
-        humanized = `"${trigger}" tends to coincide with about ${impactScore.toFixed(1)} points more pain.`;
+        humanized = pickVariant(seed, [
+          `"${trigger}" tends to coincide with about ${impactScore.toFixed(1)} points more pain.`,
+          `When "${trigger}" shows up, pain is about ${impactScore.toFixed(1)} points higher on average.`,
+          `"${trigger}" has a moderate association with higher pain (~${impactScore.toFixed(1)} points).`,
+        ]);
       } else if (impactScore >= 0.5) {
         impact = 'weak';
-        humanized = `"${trigger}" shows a slight association with higher pain levels.`;
+        humanized = pickVariant(seed, [
+          `"${trigger}" shows a slight association with higher pain levels.`,
+          `"${trigger}" appears to be linked with a small uptick in pain.`,
+          `A mild signal shows up for "${trigger}", but it’s not strong yet.`,
+        ]);
       } else {
         impact = 'none';
-        humanized = `"${trigger}" doesn't appear to significantly affect your pain levels.`;
+        humanized = pickVariant(seed, [
+          `"${trigger}" doesn't appear to significantly affect your pain levels.`,
+          `"${trigger}" doesn’t show a clear pain difference in your logs so far.`,
+          `No clear change shows up for "${trigger}" yet — keep logging for a stronger signal.`,
+        ]);
       }
 
       correlations.push({
@@ -782,14 +892,34 @@ export function analyzeTriggerPatterns(entries: PainEntry[]): TriggerAnalysis {
   // Generate insight
   let insight: string;
   const strongTriggers = correlations.filter(c => c.impact === 'strong' || c.impact === 'moderate');
+
+  const insightSeed = [
+    'trigger-insight',
+    strongTriggers[0]?.trigger ?? 'none',
+    strongTriggers.length,
+    correlations.length,
+  ].join('|');
   
   if (strongTriggers.length > 0) {
     const topTriggerNames = strongTriggers.slice(0, 3).map(c => `"${c.trigger}"`).join(', ');
-    insight = `Your data suggests ${topTriggerNames} ${strongTriggers.length === 1 ? 'has' : 'have'} the strongest correlation with higher pain levels. Consider discussing trigger management strategies.`;
+    insight = pickVariant(insightSeed, [
+      `Your data suggests ${topTriggerNames} ${strongTriggers.length === 1 ? 'has' : 'have'} the strongest correlation with higher pain levels. Consider discussing trigger management strategies.`,
+      `The strongest trigger signals in your data are ${topTriggerNames}. If these are actionable, planning around them may help.`,
+      `Triggers most linked with higher pain in your logs: ${topTriggerNames}. Consider pacing or mitigation strategies where possible.`,
+    ]);
   } else if (correlations.length > 0) {
-    insight = 'No strong trigger patterns detected yet. Keep logging triggers to build more data.';
+    // Keep required substring for unit tests.
+    insight = pickVariant(insightSeed, [
+      'No strong trigger patterns detected yet. Keep logging triggers to build more data.',
+      'No strong trigger patterns detected yet. More consistent trigger notes will help clarify this.',
+      'No strong trigger patterns detected yet. Keep logging — patterns often need more examples.',
+    ]);
   } else {
-    insight = 'Try adding triggers to your entries to help identify patterns.';
+    insight = pickVariant(insightSeed, [
+      'Try adding triggers to your entries to help identify patterns.',
+      'Try adding one or two triggers when you log — it helps patterns emerge.',
+      'Add triggers when you can; even short notes can help spot patterns over time.',
+    ]);
   }
 
   return {
@@ -832,18 +962,52 @@ export function generateComparativeInsight(
   let humanized: string;
   let encouragement: string;
 
+  const seed = [
+    'compare',
+    Math.round(currentAvg * 10),
+    Math.round(previousAvg * 10),
+    Math.round(change * 10),
+  ].join('|');
+
   if (change <= -1) {
     trend = 'better';
-    humanized = `This week's average (${currentAvg.toFixed(1)}/10) is ${Math.abs(change).toFixed(1)} points lower than last week (${previousAvg.toFixed(1)}/10).`;
-    encouragement = 'Real progress! Your efforts are paying off. Keep noting what helps.';
+    // Keep required substring for unit tests: "lower"
+    humanized = pickVariant(seed, [
+      `This week's average (${currentAvg.toFixed(1)}/10) is ${Math.abs(change).toFixed(1)} points lower than last week (${previousAvg.toFixed(1)}/10).`,
+      `Good news: your weekly average is lower (${currentAvg.toFixed(1)}/10) than last week (${previousAvg.toFixed(1)}/10) by ${Math.abs(change).toFixed(1)} points.`,
+      `Compared with last week (${previousAvg.toFixed(1)}/10), this week is lower at ${currentAvg.toFixed(1)}/10 (down ${Math.abs(change).toFixed(1)} points).`,
+    ]);
+    encouragement = pickVariant(seed + '|enc', [
+      'Real progress! Your efforts are paying off. Keep noting what helps.',
+      'That’s a meaningful shift. Keep tracking what you did differently.',
+      'Nice work — protecting the habits that help can keep this going.',
+    ]);
   } else if (change >= 1) {
     trend = 'worse';
-    humanized = `This week has been tougher—averaging ${currentAvg.toFixed(1)}/10 compared to ${previousAvg.toFixed(1)}/10 last week.`;
-    encouragement = 'Setbacks happen. This data helps identify what to adjust.';
+    // Keep required substring for unit tests: "tougher"
+    humanized = pickVariant(seed, [
+      `This week has been tougher—averaging ${currentAvg.toFixed(1)}/10 compared to ${previousAvg.toFixed(1)}/10 last week.`,
+      `This week looks tougher (${currentAvg.toFixed(1)}/10) than last week (${previousAvg.toFixed(1)}/10).`,
+      `It’s been a tougher week on average: ${currentAvg.toFixed(1)}/10 vs ${previousAvg.toFixed(1)}/10 last week.`,
+    ]);
+    encouragement = pickVariant(seed + '|enc', [
+      'Setbacks happen. This data helps identify what to adjust.',
+      'This is useful information — small adjustments may help bring things back down.',
+      'If this continues, consider reviewing sleep, stress, pacing, and supports with your care team.',
+    ]);
   } else {
     trend = 'same';
-    humanized = `Your average this week (${currentAvg.toFixed(1)}/10) is similar to last week (${previousAvg.toFixed(1)}/10).`;
-    encouragement = 'Consistency is valuable. Stable patterns help with treatment planning.';
+    // Keep required substring for unit tests: "similar"
+    humanized = pickVariant(seed, [
+      `Your average this week (${currentAvg.toFixed(1)}/10) is similar to last week (${previousAvg.toFixed(1)}/10).`,
+      `This week is similar to last week: ${currentAvg.toFixed(1)}/10 vs ${previousAvg.toFixed(1)}/10.`,
+      `Week over week, things look similar (${currentAvg.toFixed(1)}/10 vs ${previousAvg.toFixed(1)}/10).`,
+    ]);
+    encouragement = pickVariant(seed + '|enc', [
+      'Consistency is valuable. Stable patterns help with treatment planning.',
+      'Stability can be a win — keep noting what seems to maintain it.',
+      'A steady week gives you a strong baseline for spotting future changes.',
+    ]);
   }
 
   return {

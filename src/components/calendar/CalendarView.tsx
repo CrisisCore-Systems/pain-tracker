@@ -121,11 +121,11 @@ export function CalendarView({ entries }: CalendarViewProps) {
   }, [calendarData]);
 
   const getPainColor = (pain: number) => {
-    if (pain === 0) return 'bg-gray-100 dark:bg-gray-800 text-gray-400';
+    if (pain === 0) return 'bg-muted/50 text-muted-foreground';
     if (pain <= 3)
-      return 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700';
+      return 'bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700';
     if (pain <= 5)
-      return 'bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-700';
+      return 'bg-amber-100 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-700';
     if (pain <= 7)
       return 'bg-orange-100 dark:bg-orange-950/30 text-orange-700 dark:text-orange-300 border-orange-300 dark:border-orange-700';
     return 'bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-300 border-red-300 dark:border-red-700';
@@ -160,72 +160,92 @@ export function CalendarView({ entries }: CalendarViewProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Calendar View</h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Visual timeline of your pain tracking journey
-          </p>
+      <div className="relative rounded-2xl border border-border/60 bg-gradient-to-b from-primary/[0.04] to-transparent p-6 overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+              <CalendarIcon className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground">Calendar View</h2>
+              <p className="text-sm text-muted-foreground">
+                Visual timeline of your pain tracking journey
+              </p>
+            </div>
+          </div>
+          <Button variant="outline" onClick={goToToday} className="rounded-xl">
+            <CalendarIcon className="h-4 w-4 mr-2" />
+            Today
+          </Button>
         </div>
-        <Button variant="outline" onClick={goToToday} className="rounded-xl">
-          <CalendarIcon className="h-4 w-4 mr-2" />
-          Today
-        </Button>
       </div>
 
       {/* Month Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-2">
-            <Activity className="h-6 w-6 opacity-80" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="rounded-2xl border border-border/60 bg-card/50 p-5 border-l-4 border-l-blue-500">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500/10 ring-1 ring-blue-500/20">
+              <Activity className="h-4 w-4 text-blue-500" />
+            </div>
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Avg Pain</span>
           </div>
-          <div className="text-3xl font-bold mb-1">{monthStats.avgPain.toFixed(1)}</div>
-          <div className="text-sm opacity-90">Avg Pain This Month</div>
+          <div className="text-3xl font-bold tabular-nums text-foreground">{monthStats.avgPain.toFixed(1)}</div>
+          <div className="text-xs text-muted-foreground mt-1">This month</div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-2">
-            <Zap className="h-6 w-6 opacity-80" />
+        <div className="rounded-2xl border border-border/60 bg-card/50 p-5 border-l-4 border-l-purple-500">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/10 ring-1 ring-purple-500/20">
+              <Zap className="h-4 w-4 text-purple-500" />
+            </div>
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Days Tracked</span>
           </div>
-          <div className="text-3xl font-bold mb-1">{monthStats.daysTracked}</div>
-          <div className="text-sm opacity-90">Days Tracked</div>
+          <div className="text-3xl font-bold tabular-nums text-foreground">{monthStats.daysTracked}</div>
+          <div className="text-xs text-muted-foreground mt-1">This month</div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-2">
-            <CheckCircle2 className="h-6 w-6 opacity-80" />
+        <div className="rounded-2xl border border-border/60 bg-card/50 p-5 border-l-4 border-l-emerald-500">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 ring-1 ring-emerald-500/20">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+            </div>
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Best Day</span>
           </div>
-          <div className="text-3xl font-bold mb-1">
+          <div className="text-3xl font-bold tabular-nums text-foreground">
             {monthStats.bestDay ? monthStats.bestDay.avgPain.toFixed(1) : '-'}
           </div>
-          <div className="text-sm opacity-90">Best Day</div>
+          <div className="text-xs text-muted-foreground mt-1">Lowest average</div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-2">
-            <AlertCircle className="h-6 w-6 opacity-80" />
+        <div className="rounded-2xl border border-border/60 bg-card/50 p-5 border-l-4 border-l-orange-500">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500/10 ring-1 ring-orange-500/20">
+              <AlertCircle className="h-4 w-4 text-orange-500" />
+            </div>
+            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Challenging Day</span>
           </div>
-          <div className="text-3xl font-bold mb-1">
+          <div className="text-3xl font-bold tabular-nums text-foreground">
             {monthStats.worstDay ? monthStats.worstDay.avgPain.toFixed(1) : '-'}
           </div>
-          <div className="text-sm opacity-90">Challenging Day</div>
+          <div className="text-xs text-muted-foreground mt-1">Highest average</div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar */}
         <div className="lg:col-span-2">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg p-6">
+          <div className="rounded-2xl border border-border/60 bg-card/50 p-6">
             {/* Calendar Header */}
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{monthName}</h3>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm" onClick={prevMonth} className="rounded-xl">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">{monthName}</h3>
+              <div className="inline-flex items-center gap-1 rounded-xl bg-muted/50 p-1">
+                <button onClick={prevMonth} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
                   <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm" onClick={nextMonth} className="rounded-xl">
+                </button>
+                <button onClick={nextMonth} className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors">
                   <ChevronRight className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
             </div>
 
@@ -234,7 +254,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
               {weekDays.map(day => (
                 <div
                   key={day}
-                  className="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 py-2"
+                  className="text-center text-xs font-medium uppercase tracking-wider text-muted-foreground py-2"
                 >
                   {day}
                 </div>
@@ -254,12 +274,12 @@ export function CalendarView({ entries }: CalendarViewProps) {
                     day.entries.length > 0 && 'cursor-pointer hover:scale-105 border-2',
                     day.entries.length === 0 && 'cursor-default',
                     !day.isCurrentMonth && 'opacity-30',
-                    day.isToday && 'ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-gray-900',
+                    day.isToday && 'ring-2 ring-primary ring-offset-2 ring-offset-background',
                     day.entries.length > 0
                       ? getPainColor(day.avgPain)
-                      : 'bg-gray-50 dark:bg-gray-800/50 text-gray-400',
+                      : 'bg-muted/30 text-muted-foreground',
                     selectedDay?.date.getTime() === day.date.getTime() &&
-                      'ring-2 ring-offset-2 dark:ring-offset-gray-900'
+                      'ring-2 ring-primary/60 ring-offset-2 ring-offset-background'
                   )}
                 >
                   <span className={cn('text-sm font-medium mb-1', day.isToday && 'font-bold')}>
@@ -285,42 +305,42 @@ export function CalendarView({ entries }: CalendarViewProps) {
             </div>
 
             {/* Legend */}
-            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <div className="mt-6 pt-6 border-t border-border/60">
               <div className="space-y-3 text-xs">
                 <div className="flex items-start justify-between gap-4">
-                  <span className="text-gray-600 dark:text-gray-400 font-medium shrink-0">Numbers:</span>
-                  <div className="text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Top</span>: day of month •
-                    <span className="font-medium">Small number</span>: entries logged (shown only when 2+)
+                  <span className="text-muted-foreground font-medium shrink-0">Numbers:</span>
+                  <div className="text-muted-foreground">
+                    <span className="font-medium text-foreground/80">Top</span>: day of month •{' '}
+                    <span className="font-medium text-foreground/80">Small number</span>: entries logged (shown only when 2+)
                   </div>
                 </div>
 
                 <div className="flex items-start justify-between gap-4">
-                  <span className="text-gray-600 dark:text-gray-400 font-medium shrink-0">Markers:</span>
-                  <div className="text-gray-600 dark:text-gray-400">
-                    <span className="font-medium">Dot</span>: at least one entry •
-                    <span className="font-medium">Cell color</span>: average pain for that day
+                  <span className="text-muted-foreground font-medium shrink-0">Markers:</span>
+                  <div className="text-muted-foreground">
+                    <span className="font-medium text-foreground/80">Dot</span>: at least one entry •{' '}
+                    <span className="font-medium text-foreground/80">Cell color</span>: average pain for that day
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400 font-medium">Pain Level:</span>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded bg-green-500" />
-                      <span className="text-gray-600 dark:text-gray-400">Low</span>
+                  <span className="text-muted-foreground font-medium">Pain Level:</span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-md bg-emerald-500" />
+                      <span className="text-muted-foreground">Low</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded bg-yellow-500" />
-                      <span className="text-gray-600 dark:text-gray-400">Mild</span>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-md bg-amber-500" />
+                      <span className="text-muted-foreground">Mild</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded bg-orange-500" />
-                      <span className="text-gray-600 dark:text-gray-400">Moderate</span>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-md bg-orange-500" />
+                      <span className="text-muted-foreground">Moderate</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <div className="w-3 h-3 rounded bg-red-500" />
-                      <span className="text-gray-600 dark:text-gray-400">Severe</span>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-md bg-red-500" />
+                      <span className="text-muted-foreground">Severe</span>
                     </div>
                   </div>
                 </div>
@@ -332,9 +352,9 @@ export function CalendarView({ entries }: CalendarViewProps) {
         {/* Day Details Panel */}
         <div className="lg:col-span-1">
           {selectedDay ? (
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-lg p-6 sticky top-24">
+            <div className="rounded-2xl border border-border/60 bg-card/50 p-6 sticky top-24">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                <h3 className="text-base font-semibold tracking-tight text-foreground">
                   {selectedDay.date.toLocaleDateString('en-US', {
                     weekday: 'long',
                     month: 'short',
@@ -360,12 +380,12 @@ export function CalendarView({ entries }: CalendarViewProps) {
                 {selectedDay.entries.map(entry => (
                   <div
                     key={entry.id}
-                    className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2"
+                    className="rounded-xl border border-border/40 bg-muted/30 p-4 space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                        <Clock className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm font-medium text-foreground">
                           {new Date(entry.timestamp).toLocaleTimeString('en-US', {
                             hour: '2-digit',
                             minute: '2-digit',
@@ -379,7 +399,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
 
                     {entry.baselineData.locations && entry.baselineData.locations.length > 0 && (
                       <div className="flex items-start gap-2">
-                        <MapPin className="h-4 w-4 text-gray-400 dark:text-gray-500 mt-0.5" />
+                        <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                         <div className="flex flex-wrap gap-1">
                           {entry.baselineData.locations.map((loc, i) => (
                             <Badge key={i} variant="outline" className="text-xs rounded-full">
@@ -405,7 +425,7 @@ export function CalendarView({ entries }: CalendarViewProps) {
 
                     {entry.medications?.current && entry.medications.current.length > 0 && (
                       <div className="flex items-start gap-2">
-                        <Pill className="h-4 w-4 text-gray-400 dark:text-gray-500 mt-0.5" />
+                        <Pill className="h-4 w-4 text-muted-foreground mt-0.5" />
                         <div className="flex flex-wrap gap-1">
                           {entry.medications.current.map((med, i) => (
                             <Badge key={i} variant="outline" className="text-xs rounded-full">
@@ -447,24 +467,26 @@ export function CalendarView({ entries }: CalendarViewProps) {
                     )}
 
                     {entry.notes && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+                      <p className="text-sm text-muted-foreground italic">
                         "{entry.notes}"
                       </p>
                     )}
 
                     {/* Extended details: functional impact, work impact, treatments, etc. */}
-                    <ExtendedEntryDetails entry={entry} compact className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700" />
+                    <ExtendedEntryDetails entry={entry} compact className="mt-3 pt-3 border-t border-border/60" />
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-950/20 rounded-2xl border-2 border-dashed border-gray-300 dark:border-gray-700 p-8 text-center">
-              <Info className="h-12 w-12 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <div className="rounded-2xl border-2 border-dashed border-border/60 bg-muted/20 p-8 text-center">
+              <div className="flex h-12 w-12 mx-auto mb-4 items-center justify-center rounded-xl bg-primary/10 ring-1 ring-primary/20">
+                <Info className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="text-base font-semibold text-foreground mb-2">
                 Select a Day
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 Click on any day with entries to view details
               </p>
             </div>

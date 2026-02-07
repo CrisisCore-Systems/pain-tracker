@@ -87,7 +87,7 @@ export function getTagColor(tagName: string): string {
  * Site configuration
  */
 export const siteConfig = {
-  name: process.env.NEXT_PUBLIC_SITE_NAME || 'Pain Tracker Blog',
+  name: process.env.NEXT_PUBLIC_SITE_NAME || 'Pain Tracker',
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
     'Insights on chronic pain management, privacy-first health tech, and building empathetic software.',
@@ -98,7 +98,7 @@ export const siteConfig = {
     github: 'https://github.com/CrisisCore-Systems',
   },
   links: {
-    app: 'https://paintracker.ca',
+    app: 'https://www.paintracker.ca/app',
     github: 'https://github.com/CrisisCore-Systems/pain-tracker',
     twitter: 'https://twitter.com/crisiscore',
   },

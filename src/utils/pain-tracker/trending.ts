@@ -1,4 +1,5 @@
 import type { PainEntry } from '../../types';
+import { pickVariant } from '@pain-tracker/utils';
 
 /**
  * Trend Analysis Module
@@ -18,6 +19,10 @@ export interface TrendAnalysis {
   locationFrequency: { [key: string]: number };
   symptomCorrelations: { [key: string]: number };
   painTrends: { increasing: boolean; averageChange: number };
+  /** Human-friendly summary of what the trends suggest (derived from local-only analysis). */
+  narrativeSummary: string;
+  /** Note about how much data supports the summary. */
+  confidenceNote: string;
   advanced?: AdvancedTrendAnalysis;
 }
 
@@ -128,6 +133,104 @@ function pearsonCorrelation(pairs: Array<{ x: number; y: number }>): number | nu
   return safeDivide(numerator, denominator, 0);
 }
 
+function buildTrendNarrative(args: {
+  entries: PainEntry[];
+  painTrends: { increasing: boolean; averageChange: number };
+  advanced?: AdvancedTrendAnalysis;
+}): { narrativeSummary: string; confidenceNote: string } {
+  const { entries, painTrends, advanced } = args;
+  const total = entries.length;
+  if (total === 0) {
+    return {
+      narrativeSummary: 'Not enough data yet to summarize trends.',
+      confidenceNote: 'Add a few entries across different days to build a baseline.',
+    };
+  }
+
+  const avgPain = safeDivide(
+    entries.reduce((sum, entry) => sum + (entry?.baselineData?.pain ?? 0), 0),
+    total,
+    0
+  );
+
+  const delta = painTrends.averageChange;
+  const trendingUp = delta > 0.1;
+  const trendingDown = delta < -0.1;
+  const direction = trendingUp ? 'up' : trendingDown ? 'down' : 'flat';
+
+  const bestTime = advanced?.bestTimeOfDay?.key;
+  const worstTime = advanced?.worstTimeOfDay?.key;
+  const bestDay = advanced?.bestDayOfWeek?.key;
+  const worstDay = advanced?.worstDayOfWeek?.key;
+
+  const seed = [
+    'trend',
+    total,
+    Math.round(avgPain * 10),
+    Math.round(delta * 10),
+    direction,
+    bestTime ?? 'na',
+    worstTime ?? 'na',
+    bestDay ?? 'na',
+    worstDay ?? 'na',
+  ].join('|');
+
+  const base = pickVariant(seed, [
+    `Across your last ${total} entries, pain averages about ${avgPain.toFixed(1)}/10.`,
+    `Based on your last ${total} check-ins, your average pain is around ${avgPain.toFixed(1)}/10.`,
+    `Looking at ${total} recent logs, pain sits near ${avgPain.toFixed(1)}/10 on average.`,
+  ]);
+
+  const trendLine = trendingUp
+    ? pickVariant(seed + '|dir', [
+        'Overall, pain has been edging upward lately.',
+        'Overall, your recent entries lean higher than earlier ones.',
+        'Overall, there’s an upward drift in recent pain levels.',
+      ])
+    : trendingDown
+      ? pickVariant(seed + '|dir', [
+          'Overall, pain has been trending downward lately.',
+          'Overall, your recent entries lean lower than earlier ones.',
+          'Overall, there’s a gentle downward drift in recent pain levels.',
+        ])
+      : pickVariant(seed + '|dir', [
+          'Overall, things look fairly steady from day to day.',
+          'Overall, your pain levels look relatively stable.',
+          'Overall, there isn’t a strong upward or downward shift right now.',
+        ]);
+
+  const highlights: string[] = [];
+  if (bestTime && worstTime && bestTime !== worstTime) {
+    highlights.push(`Your lowest time-of-day bucket is ${bestTime}, and your highest is ${worstTime}.`);
+  }
+  if (bestDay && worstDay && bestDay !== worstDay) {
+    highlights.push(`Your easier day-of-week bucket is ${bestDay}, and your tougher one is ${worstDay}.`);
+  }
+
+  const highlightLine =
+    highlights.length > 0
+      ? ' ' + pickVariant(seed + '|hi', highlights)
+      : pickVariant(seed + '|hi', [
+          'Keep noting sleep, stress, activity, and relief methods—those details help explain day-to-day swings.',
+          'If you capture triggers and relief alongside pain, patterns usually become clearer faster.',
+          'Small context notes (sleep, stress, movement) can make the trends more actionable.',
+        ]);
+
+  let confidenceNote = '';
+  if (total < 5) {
+    confidenceNote = 'Low confidence: there are only a few entries so far. Adding more check-ins will improve reliability.';
+  } else if (total < 14) {
+    confidenceNote = 'Medium confidence: you have about a week of data. More entries across different days will sharpen patterns.';
+  } else {
+    confidenceNote = 'Higher confidence: you have multiple weeks of data. Keep logging to confirm whether patterns hold.';
+  }
+
+  return {
+    narrativeSummary: `${base} ${trendLine}${highlightLine}`.trim(),
+    confidenceNote,
+  };
+}
+
 export const analyzeTrends = (
   entries: PainEntry[],
   options: TrendAnalysisOptions = {}
@@ -140,6 +243,8 @@ export const analyzeTrends = (
       locationFrequency: {},
       symptomCorrelations: {},
       painTrends: { increasing: false, averageChange: 0 },
+      narrativeSummary: 'Not enough data yet to summarize trends.',
+      confidenceNote: 'Add a few entries across different days to build a baseline.',
     };
   }
 
@@ -362,15 +467,17 @@ export const analyzeTrends = (
     };
   }
 
+  const painTrends = { increasing: averageChange > 0, averageChange };
+  const narrative = buildTrendNarrative({ entries, painTrends, advanced });
+
   return {
     timeOfDayPattern,
     dayOfWeekPattern,
     locationFrequency,
     symptomCorrelations,
-    painTrends: {
-      increasing: averageChange > 0,
-      averageChange,
-    },
+    painTrends,
+    narrativeSummary: narrative.narrativeSummary,
+    confidenceNote: narrative.confidenceNote,
     ...(advanced ? { advanced } : {}),
   };
 };

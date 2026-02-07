@@ -24,11 +24,19 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
     }
   }, [status.state]);
 
-  const resetForm = () => {
+  useEffect(() => {
+    if (status.state === 'uninitialized') {
+      // If the vault resets (e.g., emergency wipe), ensure we don't carry an
+      // "Incorrect passphrase" message into the setup screen.
+      resetForm();
+    }
+  }, [status.state]);
+
+  function resetForm() {
     setPassphrase('');
     setConfirmPassphrase('');
     setError(null);
-  };
+  }
 
   const handleSetup = async (event: React.FormEvent) => {
     event.preventDefault();

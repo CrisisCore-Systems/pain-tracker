@@ -7,57 +7,26 @@
 ## 📋 Pre-Flight Checklist
 
 - [x] **Backend Dependencies**: ✅ Installed (108 packages)
-- [ ] **Stripe CLI**: Install & authenticate
-- [ ] **PostgreSQL**: Database running locally
-- [ ] **Environment Variables**: .env.local configured
-- [ ] **Stripe Products**: Created in dashboard
-- [ ] **Local Testing**: Working checkout flow
+- [ ] **Environment Variables**: .env.local configured (optional)
+- [ ] **PostgreSQL**: Database running locally (optional)
+- [ ] **Local Testing**: Core app workflows verified
 - [ ] **Production Deploy**: Vercel deployment complete
-- [ ] **Webhooks**: Production endpoint configured
 
 
 ## ⚡ 5-Minute Local Setup
 
-### 1. Install Stripe CLI (Windows)
+### 1. Run the app locally
 
 ```powershell
-# Using Scoop
-scoop bucket add stripe https://github.com/stripe/scoop-stripe-cli.git
-scoop install stripe
-
-# Authenticate
-stripe login
+npm install
+npm run dev
 ```
 
-### 2. Create Stripe Products
+Notes:
+- The core app is local-first and does not require a payments/subscriptions backend.
+- If you see historical references to Stripe in older docs, treat them as archived experiments, not a supported path.
 
-```powershell
-# Basic Tier Product
-stripe products create --name="Pain Tracker Basic" --description="Basic pain tracking features"
-# Copy product ID → prod_XXX
-
-# Basic Monthly ($9.99)
-stripe prices create --product=prod_XXX --unit-amount=999 --currency=usd --recurring[interval]=month --nickname="Basic Monthly"
-# Copy price ID → STRIPE_PRICE_BASIC_MONTHLY
-
-# Basic Yearly ($95.90)
-stripe prices create --product=prod_XXX --unit-amount=9590 --currency=usd --recurring[interval]=year --nickname="Basic Yearly"
-# Copy price ID → STRIPE_PRICE_BASIC_YEARLY
-
-# Pro Tier Product
-stripe products create --name="Pain Tracker Pro" --description="Professional pain tracking with HIPAA-aligned controls"
-# Copy product ID → prod_YYY
-
-# Pro Monthly ($24.99)
-stripe prices create --product=prod_YYY --unit-amount=2499 --currency=usd --recurring[interval]=month --nickname="Pro Monthly"
-# Copy price ID → STRIPE_PRICE_PRO_MONTHLY
-
-# Pro Yearly ($239.90)
-stripe prices create --product=prod_YYY --unit-amount=23990 --currency=usd --recurring[interval]=year --nickname="Pro Yearly"
-# Copy price ID → STRIPE_PRICE_PRO_YEARLY
-```
-
-### 3. Setup Local Database
+### 2. Setup Local Database (optional)
 
 ```powershell
 # Create database
@@ -70,27 +39,16 @@ psql -U postgres -d paintracker -f database/schema.sql
 psql -U postgres -d paintracker -c "\dt"
 ```
 
-### 4. Configure Environment (.env.local)
+### 3. Configure Environment (.env.local) (optional)
 
 ```env
-# Get from: https://dashboard.stripe.com/test/apikeys
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_... # From stripe listen (step 5)
-
-# From step 2 above
-STRIPE_PRICE_BASIC_MONTHLY=price_...
-STRIPE_PRICE_BASIC_YEARLY=price_...
-STRIPE_PRICE_PRO_MONTHLY=price_...
-STRIPE_PRICE_PRO_YEARLY=price_...
-
 # Local database
 DATABASE_URL=postgresql://postgres:password@localhost:5432/paintracker
 
 NODE_ENV=development
 ```
 
-### 5. Test Locally
+### 4. Test Locally
 
 ```powershell
 # Terminal 1: Start frontend dev server
@@ -102,19 +60,11 @@ npm run dev
 # This powers clinic auth endpoints via Vite's /api proxy.
 npm run dev:api
 
-# Terminal 3 (optional): Start local Stripe webhook receiver (signature verification + logging)
-# NOTE: Both `dev:api` and `dev:webhook` default to port 3001.
-# If you're running both at the same time, move the webhook server to another port.
-$env:WEBHOOK_DEV_PORT="3002"; npm run dev:webhook
+---
 
-# Forward Stripe events to the webhook dev server
-stripe listen --forward-to localhost:3002/api/stripe/webhook
-# Copy webhook secret → Add to .env.local as STRIPE_WEBHOOK_SECRET
+## 💳 Payments / Subscriptions
 
-# Optional: Full checkout flow
-# The Stripe serverless endpoints (e.g. /api/stripe/create-checkout-session) are implemented for Vercel,
-# but are not currently served by `npm run dev:api`.
-# For end-to-end checkout testing, use a Vercel deployment/preview or a serverless dev runner.
+Payments/subscriptions are intentionally out of scope for this quickstart until a backend architecture exists.
 ```
 
 ---
@@ -131,43 +81,13 @@ vercel login
 # Deploy
 vercel
 
-# Add environment variables (get live keys from Stripe dashboard)
-vercel env add STRIPE_SECRET_KEY # sk_live_...
-vercel env add STRIPE_PUBLISHABLE_KEY # pk_live_...
-vercel env add STRIPE_PRICE_BASIC_MONTHLY
-vercel env add STRIPE_PRICE_BASIC_YEARLY
-vercel env add STRIPE_PRICE_PRO_MONTHLY
-vercel env add STRIPE_PRICE_PRO_YEARLY
-vercel env add DATABASE_URL # Production database
+# Add environment variables
+vercel env add DATABASE_URL # Production database (optional, if using server-side features)
 vercel env add NODE_ENV # production
 
 # Production deploy
 vercel --prod
 ```
-
-### 2. Configure Webhooks
-
-1. Go to: https://dashboard.stripe.com/webhooks
-2. Click "Add endpoint"
-3. URL: `https://your-app.vercel.app/api/stripe/webhook`
-4. Events: Select all `checkout.*`, `customer.subscription.*`, `invoice.*`
-5. Copy signing secret
-6. Add to Vercel:
-
-```powershell
-vercel env add STRIPE_WEBHOOK_SECRET # whsec_...
-vercel --prod # Redeploy
-```
-
----
-
-## 🧪 Test Stripe Cards
-
-| Card Number | Result | Use Case |
-|-------------|--------|----------|
-| 4242 4242 4242 4242 | Success | Normal payment |
-| 4000 0025 0000 3155 | Requires auth | 3D Secure |
-| 4000 0000 0000 9995 | Declined | Payment failure |
 
 ---
 
@@ -181,7 +101,7 @@ psql $DATABASE_URL -c "SELECT * FROM subscriptions ORDER BY created_at DESC LIMI
 vercel logs --follow
 
 # Test API endpoint
-curl https://your-app.vercel.app/api/stripe/create-checkout-session -X POST -H "Content-Type: application/json" -d '{...}'
+curl https://your-app.vercel.app/api/health -X GET
 ```
 
 ---
@@ -190,9 +110,7 @@ curl https://your-app.vercel.app/api/stripe/create-checkout-session -X POST -H "
 
 | Issue | Solution |
 |-------|----------|
-| Webhook signature fails | Verify `STRIPE_WEBHOOK_SECRET` matches dashboard |
 | Database timeout | Check `DATABASE_URL` connection string |
-| Price not found | Verify price IDs in environment variables |
 | 403 CORS error | Add allowed origins in Vercel settings |
 
 ---
@@ -208,15 +126,12 @@ curl https://your-app.vercel.app/api/stripe/create-checkout-session -X POST -H "
 
 ## 🎯 Success Criteria
 
-- [ ] Local checkout works with test card
-- [ ] Webhooks received and logged
-- [ ] Subscription in database
-- [ ] Production checkout works
-- [ ] Quota enforcement active
-- [ ] Usage tracking working
+- [ ] Core app loads and can create entries
+- [ ] Offline-first flows verified
+- [ ] Optional server-side endpoints (if enabled) behave as expected
 
 ---
 
-**Next Step**: Run `stripe login` to begin setup
+**Next Step**: Run `npm run dev` to begin.
 
 **Support**: See `docs/ops/DEPLOYMENT_GUIDE.md` for detailed troubleshooting

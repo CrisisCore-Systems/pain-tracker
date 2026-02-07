@@ -10,6 +10,8 @@ This file captures documentation areas that touch **security/telemetry/exports/c
 - **Potential consent gap**: When `VITE_ENABLE_ANALYTICS === 'true'`, the loader calls `window.gtag('config', 'G-X25RTEWBYL')`. If consent-first behavior is desired, this likely needs design + implementation review (e.g., consent mode / defer script until consent).
 - **Settings toggle wiring**: The Settings UI stores `analyticsConsent` via `src/utils/privacySettings.ts`, but current code does **not** read this value to gate GA script loading or `PrivacyAnalyticsService` event emission.
 
+- **CI gates**: `npm run -s check-security` runs privacy gates (`scripts/privacy-gates.js`) and focused consent-gating tests to fail loudly if remote analytics surfaces drift.
+
 ## 2) Network-capable features beyond exports
 
 - **Weather auto-capture**: `src/services/weatherAutoCapture.ts` can request geolocation and fetch weather data when enabled. Docs should not claim “no network calls” globally.

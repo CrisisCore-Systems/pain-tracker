@@ -841,22 +841,24 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header with accent gradient bar */}
+      <header className="relative border-b border-border/60 bg-gradient-to-b from-primary/[0.04] to-transparent">
+        <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+              <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center ring-1 ring-primary/20">
                 <Sparkles className="w-7 h-7" aria-hidden />
               </div>
               <div>
-                <h1 className="text-3xl font-semibold text-foreground">Premium Analytics</h1>
-                <p className="text-muted-foreground mt-1">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">Premium Analytics</h1>
+                <p className="text-sm text-muted-foreground mt-0.5">
                   Advanced pattern recognition using statistical analysis
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               <Button
                 variant="secondary"
                 size="sm"
@@ -876,7 +878,8 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
             </div>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-2" aria-label="Time range">
+          {/* Time range pills */}
+          <div className="mt-5 inline-flex gap-1 rounded-xl bg-muted/50 p-1" aria-label="Time range">
             {[
               { value: '7d', label: '7 days' },
               { value: '30d', label: '30 days' },
@@ -884,22 +887,28 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
               { value: '1y', label: '1 year' },
               { value: 'all', label: 'All time' },
             ].map(option => (
-              <Button
+              <button
                 key={option.value}
                 type="button"
-                size="sm"
-                variant={timeRange === option.value ? 'secondary' : 'ghost'}
                 aria-pressed={timeRange === option.value}
                 onClick={() => setTimeRange(option.value as typeof timeRange)}
+                className={`
+                  px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
+                  ${timeRange === option.value
+                    ? 'bg-primary/15 text-primary shadow-sm ring-1 ring-primary/20'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                  }
+                `}
               >
                 {option.label}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
       </header>
 
-      <nav className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
+      {/* Sticky nav with pill tabs */}
+      <nav className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-1 overflow-x-auto py-2" aria-label="Analytics sections">
             {[
@@ -913,18 +922,23 @@ export const PremiumAnalyticsDashboard: React.FC<PremiumAnalyticsDashboardProps>
               const Icon = tab.icon;
               const isActive = view === tab.id;
               return (
-                <Button
+                <button
                   key={tab.id}
                   type="button"
-                  size="sm"
-                  variant={isActive ? 'secondary' : 'ghost'}
                   aria-current={isActive ? 'page' : undefined}
-                  leftIcon={<Icon className="w-4 h-4" aria-hidden />}
                   onClick={() => setView(tab.id as typeof view)}
-                  className="whitespace-nowrap"
+                  className={`
+                    inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium
+                    transition-all whitespace-nowrap
+                    ${isActive
+                      ? 'bg-primary/15 text-primary shadow-sm ring-1 ring-primary/20'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                    }
+                  `}
                 >
+                  <Icon className="w-4 h-4" aria-hidden />
                   {tab.label}
-                </Button>
+                </button>
               );
             })}
           </div>
@@ -1058,12 +1072,14 @@ const OverviewView: React.FC<{
         />
       </div>
 
-      <Card>
+      <Card className="rounded-2xl border-border/60">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between gap-4 w-full">
             <div>
               <div className="flex items-center gap-2">
-                <TrendingDown className="w-5 h-5 text-primary" aria-hidden />
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                  <TrendingDown className="w-4 h-4 text-primary" aria-hidden />
+                </div>
                 <CardTitle className="text-lg">Progress since starting</CardTitle>
               </div>
               <CardDescription>
@@ -1165,12 +1181,14 @@ const OverviewView: React.FC<{
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="rounded-2xl border-border/60">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between gap-4 w-full">
             <div>
               <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-primary" aria-hidden />
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                  <Calendar className="w-4 h-4 text-primary" aria-hidden />
+                </div>
                 <CardTitle className="text-lg">Quick comparisons</CardTitle>
               </div>
               <CardDescription>
@@ -1210,12 +1228,12 @@ const OverviewView: React.FC<{
 
       {/* Flare Prediction Alert */}
       {analytics.predictedFlare && (
-        <Card variant="outlined" className="border-destructive/30 bg-destructive/5">
+        <Card variant="outlined" className="rounded-2xl border-red-500/30 bg-red-500/[0.04]">
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between gap-4 w-full">
               <div className="flex items-start gap-3">
-                <div className="h-12 w-12 rounded-lg flex items-center justify-center bg-destructive/10 text-destructive">
-                  <AlertTriangle className="w-6 h-6" aria-hidden />
+                <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-red-500/10 text-red-400 ring-1 ring-red-500/20">
+                  <AlertTriangle className="w-5 h-5" aria-hidden />
                 </div>
                 <div>
                   <CardTitle className="text-xl">Flare alert (pattern-based)</CardTitle>
@@ -1252,10 +1270,12 @@ const OverviewView: React.FC<{
       {/* Top Locations & Triggers */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Pain Locations */}
-        <Card>
+        <Card className="rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-primary" aria-hidden />
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                <MapPin className="w-4 h-4 text-primary" aria-hidden />
+              </div>
               <CardTitle className="text-lg">Most affected areas</CardTitle>
             </div>
           </CardHeader>
@@ -1263,12 +1283,9 @@ const OverviewView: React.FC<{
             <div className="space-y-3">
               {analytics.topLocations.map((loc, idx) => (
                 <div key={idx} className="flex items-center gap-3">
-                  <Badge
-                    variant="secondary"
-                    className="h-8 w-8 justify-center rounded-lg flex-shrink-0"
-                  >
+                  <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-primary/10 text-primary text-xs font-bold ring-1 ring-primary/20 shrink-0">
                     {idx + 1}
-                  </Badge>
+                  </span>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-medium text-foreground capitalize">{loc.location}</span>
@@ -1288,10 +1305,12 @@ const OverviewView: React.FC<{
         </Card>
 
         {/* Top Triggers */}
-        <Card>
+        <Card className="rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-warning" aria-hidden />
+              <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center ring-1 ring-amber-500/20">
+                <Zap className="w-4 h-4 text-amber-400" aria-hidden />
+              </div>
               <CardTitle className="text-lg">Common triggers</CardTitle>
             </div>
           </CardHeader>
@@ -1300,12 +1319,9 @@ const OverviewView: React.FC<{
               {analytics.topTriggers.length > 0 ? (
                 analytics.topTriggers.map((trigger, idx) => (
                   <div key={idx} className="flex items-center gap-3">
-                    <Badge
-                      variant="secondary"
-                      className="h-8 w-8 justify-center rounded-lg flex-shrink-0"
-                    >
+                    <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-bold ring-1 ring-amber-500/20 shrink-0">
                       {idx + 1}
-                    </Badge>
+                    </span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-foreground capitalize">
@@ -1315,7 +1331,7 @@ const OverviewView: React.FC<{
                       </div>
                       <div className="w-full bg-muted rounded-full h-2">
                         <div
-                          className="bg-warning h-2 rounded-full transition-all"
+                          className="bg-amber-500/70 h-2 rounded-full transition-all"
                           style={{ width: `${trigger.percentage}%` }}
                         />
                       </div>
@@ -1333,10 +1349,12 @@ const OverviewView: React.FC<{
       </div>
 
       {/* Time of Day Patterns */}
-      <Card>
+      <Card className="rounded-2xl border-border/60">
         <CardHeader className="pb-4">
           <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-primary" aria-hidden />
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+              <Clock className="w-4 h-4 text-primary" aria-hidden />
+            </div>
             <CardTitle className="text-lg">Pain patterns by time of day</CardTitle>
           </div>
         </CardHeader>
@@ -1382,10 +1400,12 @@ const OverviewView: React.FC<{
 
       {/* Medication Effectiveness */}
       {analytics.medicationEffectiveness.length > 0 && (
-        <Card>
+        <Card className="rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
-              <Heart className="w-5 h-5 text-primary" aria-hidden />
+              <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center ring-1 ring-emerald-500/20">
+                <Heart className="w-4 h-4 text-emerald-400" aria-hidden />
+              </div>
               <CardTitle className="text-lg">Observed relief after medication</CardTitle>
             </div>
             <CardDescription>
@@ -1484,11 +1504,13 @@ const PatternsView: React.FC<{
     <div className="space-y-6">
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Time & Day Patterns */}
-        <Card>
+        <Card className="rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-start justify-between gap-4 w-full">
               <div className="flex items-center gap-2">
-                <Waves className="w-5 h-5 text-primary" aria-hidden />
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                  <Waves className="w-4 h-4 text-primary" aria-hidden />
+                </div>
                 <CardTitle className="text-lg">Time & day patterns</CardTitle>
               </div>
               <Badge variant="info" className="shrink-0">
@@ -1562,11 +1584,13 @@ const PatternsView: React.FC<{
         </Card>
 
         {/* Trigger Impact Matrix */}
-        <Card className="xl:col-span-2">
+        <Card className="xl:col-span-2 rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-start justify-between gap-4 w-full">
               <div className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-primary" aria-hidden />
+                <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                  <BarChart3 className="w-4 h-4 text-primary" aria-hidden />
+                </div>
                 <CardTitle className="text-lg">Trigger impact matrix</CardTitle>
               </div>
               <span
@@ -1641,10 +1665,12 @@ const PatternsView: React.FC<{
 
       {/* Context signals (optional fields) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card>
+        <Card className="rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
-              <Pill className="w-5 h-5 text-primary" aria-hidden />
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                <Pill className="w-4 h-4 text-primary" aria-hidden />
+              </div>
               <CardTitle className="text-lg">Relief methods</CardTitle>
             </div>
           </CardHeader>
@@ -1653,9 +1679,9 @@ const PatternsView: React.FC<{
               <div className="space-y-3">
                 {analytics.topReliefMethods.map((item, idx) => (
                   <div key={`${item.trigger}-${idx}`} className="flex items-center gap-3">
-                    <Badge variant="secondary" className="h-8 w-8 justify-center rounded-lg flex-shrink-0">
+                    <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-primary/10 text-primary text-xs font-bold ring-1 ring-primary/20 shrink-0">
                       {idx + 1}
-                    </Badge>
+                    </span>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
                         <span className="font-medium text-foreground">{item.trigger}</span>
@@ -1679,10 +1705,12 @@ const PatternsView: React.FC<{
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-primary" aria-hidden />
+              <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center ring-1 ring-amber-500/20">
+                <Zap className="w-4 h-4 text-amber-400" aria-hidden />
+              </div>
               <CardTitle className="text-lg">Pain quality</CardTitle>
             </div>
           </CardHeader>
@@ -1703,10 +1731,12 @@ const PatternsView: React.FC<{
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-2xl border-border/60">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2">
-              <Activity className="w-5 h-5 text-primary" aria-hidden />
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                <Activity className="w-4 h-4 text-primary" aria-hidden />
+              </div>
               <CardTitle className="text-lg">Activities</CardTitle>
             </div>
           </CardHeader>
@@ -1728,10 +1758,12 @@ const PatternsView: React.FC<{
         </Card>
       </div>
 
-      <Card>
+      <Card className="rounded-2xl border-border/60">
         <CardHeader className="pb-4">
           <div className="flex items-center gap-2">
-            <Brain className="w-5 h-5 text-primary" aria-hidden />
+            <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center ring-1 ring-purple-500/20">
+              <Brain className="w-4 h-4 text-purple-400" aria-hidden />
+            </div>
             <CardTitle className="text-lg">Stress & activity level</CardTitle>
           </div>
         </CardHeader>
@@ -1778,11 +1810,13 @@ const PatternsView: React.FC<{
       </Card>
 
       {/* Seasonality Insight */}
-      <Card>
+      <Card className="rounded-2xl border-border/60">
         <CardHeader className="pb-4">
           <div className="flex items-start justify-between gap-4 w-full">
             <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-primary" aria-hidden />
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center ring-1 ring-primary/20">
+                <Calendar className="w-4 h-4 text-primary" aria-hidden />
+              </div>
               <CardTitle className="text-lg">Seasonality & cyclical patterns</CardTitle>
             </div>
             <span className="text-xs text-muted-foreground">Based on monthly averages</span>
@@ -3390,12 +3424,25 @@ const MetricCard: React.FC<MetricCardProps> = ({
 }) => {
   const iconToneClassName =
     color === 'red'
-      ? 'bg-destructive/10 text-destructive'
+      ? 'bg-red-500/10 text-red-400 ring-1 ring-red-500/20'
       : color === 'yellow'
-        ? 'bg-warning/10 text-warning'
+        ? 'bg-amber-500/10 text-amber-400 ring-1 ring-amber-500/20'
         : color === 'green'
-          ? 'bg-success/10 text-success'
-          : 'bg-primary/10 text-primary';
+          ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-emerald-500/20'
+          : color === 'purple'
+            ? 'bg-purple-500/10 text-purple-400 ring-1 ring-purple-500/20'
+            : 'bg-primary/10 text-primary ring-1 ring-primary/20';
+
+  const borderAccent =
+    color === 'red'
+      ? 'border-l-red-500/50'
+      : color === 'yellow'
+        ? 'border-l-amber-500/50'
+        : color === 'green'
+          ? 'border-l-emerald-500/50'
+          : color === 'purple'
+            ? 'border-l-purple-500/50'
+            : 'border-l-primary/50';
 
   const hasTrend = typeof trend === 'number' && Number.isFinite(trend);
   const trendValue = hasTrend ? trend : 0;
@@ -3409,17 +3456,17 @@ const MetricCard: React.FC<MetricCardProps> = ({
         : 'secondary';
 
   return (
-    <Card hover="scale">
-      <CardContent className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <div className="text-3xl font-semibold text-foreground mt-1">{value}</div>
-          <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
+    <div className={`rounded-2xl border border-border/60 bg-card/50 border-l-4 ${borderAccent} overflow-hidden hover:border-border/80 transition-colors`}>
+      <div className="p-5 flex items-start justify-between gap-4">
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
+          <div className="text-3xl font-bold text-foreground mt-1 tabular-nums">{value}</div>
+          <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">{subtitle}</p>
         </div>
 
-        <div className="flex flex-col items-end gap-3">
-          <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${iconToneClassName}`}>
-            <Icon className="w-6 h-6" aria-hidden />
+        <div className="flex flex-col items-end gap-2.5">
+          <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${iconToneClassName}`}>
+            <Icon className="w-5 h-5" aria-hidden />
           </div>
           {trendBadgeVariant ? (
             <Badge
@@ -3437,7 +3484,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
             </Badge>
           ) : null}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

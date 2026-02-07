@@ -1,10 +1,46 @@
+import { pickVariant } from '@pain-tracker/utils';
+import { Card, CardHeader, CardTitle, CardContent } from '../design-system/components/Card';
+import type { PainEntry } from '../types';
+import TrendChart from './TrendChart';
+
 // Mock implementations for predictive services
+
 const predictFlareUp = (entries: PainEntry[]) => {
   if (!entries || entries.length === 0) return { score: 0, reason: 'No data available' };
-  const recent = entries.slice(-7);
-  const avg = recent.reduce((sum, e) => sum + e.baselineData.pain, 0) / recent.length;
-  const score = Math.min(1, avg / 10);
-  return { score, reason: score > 0.5 ? 'Elevated pain levels detected' : 'Normal pain levels' };
+  const recent = entries.slice(-7).map(e => e.baselineData.pain);
+  const avg = recent.reduce((s, v) => s + v, 0) / recent.length;
+  const last = recent[recent.length - 1];
+  const max = Math.max(...recent);
+
+  // Simple, deterministic heuristic
+  let score = 0;
+  if (last >= 7) score += 0.5;
+  if (last > avg) score += 0.3;
+  if (max >= 8) score += 0.2;
+  score = Math.min(1, score);
+
+  const factors: string[] = [];
+  if (last >= 7) factors.push('today is in the high range');
+  if (last > avg + 0.5) factors.push(`today is above your recent average (${avg.toFixed(1)}/10)`);
+  if (max >= 8) factors.push('you’ve had at least one very high day recently');
+
+  const seed = `${Math.round(score * 100)}|${Math.round(avg * 10)}|${Math.round(last * 10)}|${Math.round(max * 10)}`;
+  const highPrefix = pickVariant(seed, ['Higher flare-up risk', 'Elevated flare-up risk', 'Stronger flare-up risk signal']);
+  const medPrefix = pickVariant(seed, ['Moderate risk signal', 'Mild-to-moderate risk signal', 'Some risk signal']);
+  const lowMessage = pickVariant(seed, [
+    'No strong flare-up signals in the last week based on pain level alone.',
+    'No clear flare-up pattern shows up in the last week from pain level alone.',
+    'No strong risk signal detected from pain level alone over the last week.',
+  ]);
+
+  const reason =
+    score > 0.6
+      ? `${highPrefix}: ${factors.join(', ')}.`
+      : score > 0.3
+        ? `${medPrefix}: ${factors.length ? factors.join(', ') : 'a mild upward drift'}.`
+        : lowMessage;
+
+  return { score, reason };
 };
 
 const suggestCopingStrategies = (score: number) => {
@@ -15,10 +51,17 @@ const suggestCopingStrategies = (score: number) => {
 };
 
 const riskTrendOverDays = (_entries: PainEntry[], days: number) => {
-  return Array.from({ length: days }, (_, i) => ({
-    label: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),
-    score: Math.floor(Math.random() * 100),
-  }));
+  // Deterministic placeholder: gently follows overall risk level
+  const base = Math.round(predictFlareUp(_entries).score * 100);
+  return Array.from({ length: days }, (_, i) => {
+    const dayOffset = days - 1 - i;
+    const drift = Math.round((dayOffset - (days - 1) / 2) * 2); // small, stable variation
+    const score = Math.max(0, Math.min(100, base + drift));
+    return {
+      label: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      score,
+    };
+  });
 };
 
 const analyzeTriggers = (_entries: PainEntry[], _days: number) => {
@@ -31,9 +74,6 @@ const analyzeTriggers = (_entries: PainEntry[], _days: number) => {
 
 // import { predictFlareUp, suggestCopingStrategies, riskTrendOverDays } from '@pain-tracker/services/predictions';
 // import { analyzeTriggers } from '@pain-tracker/services/triggerAnalysis';
-import { Card, CardHeader, CardTitle, CardContent } from '../design-system/components/Card';
-import type { PainEntry } from '../types';
-import TrendChart from './TrendChart';
 
 export default function PredictivePanel({ entries }: { entries: PainEntry[] }) {
   const { score, reason } = predictFlareUp(entries);

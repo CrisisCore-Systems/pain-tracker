@@ -1,12 +1,15 @@
 import { securityService } from './SecurityService';
 import { secureStorage } from '../lib/storage/secureStorage';
 import { getSodium, getSodiumSync } from '../lib/crypto/sodium';
+import { PRIVACY_SETTINGS_STORAGE_KEY } from '../utils/privacySettings';
 
 type VaultPhase = 'uninitialized' | 'locked' | 'unlocking' | 'unlocked' | 'error';
 
 type Listener = (status: VaultStatus) => void;
 
 const STORAGE_KEY = 'vault:metadata';
+const FAILED_UNLOCK_ATTEMPTS_KEY = 'vault:failed-unlock-attempts';
+const MAX_FAILED_UNLOCK_ATTEMPTS = 3;
 const VAULT_VERSION = '3.0.0';
 const BASE64_VARIANT = 1; // libsodium.base64_variants.ORIGINAL
 
@@ -255,6 +258,9 @@ export class EncryptedVaultService {
       throw new Error('Failed to persist vault metadata.');
     }
 
+    // Successful setup resets any previous failed-unlock counter.
+    this.resetFailedUnlockAttempts();
+
     this.key = key;
     this.status = { state: 'unlocked', metadata, sodiumReady: true };
     this.applyGlobalHooks();
@@ -287,9 +293,12 @@ export class EncryptedVaultService {
     }
 
     if (!isValid) {
-      this.logEvent('warning', 'Vault unlock attempt failed');
+      await this.recordFailedUnlockAttempt();
       throw new Error('Incorrect passphrase.');
     }
+
+    // Successful unlock resets any previous failed-unlock counter.
+    this.resetFailedUnlockAttempts();
 
     const salt = sodium.from_base64(metadata.derivation.salt, BASE64_VARIANT);
     if (!(salt instanceof Uint8Array) || salt.length <= 0) {
@@ -310,6 +319,69 @@ export class EncryptedVaultService {
     await this.migrateLegacyStorage();
     this.logEvent('info', 'Vault unlocked');
     this.emit();
+  }
+
+  private getFailedUnlockAttempts(): number {
+    const n = secureStorage.get<number>(FAILED_UNLOCK_ATTEMPTS_KEY);
+    return Number.isFinite(n) && typeof n === 'number' && n > 0 ? Math.floor(n) : 0;
+  }
+
+  private setFailedUnlockAttempts(n: number): void {
+    secureStorage.set(FAILED_UNLOCK_ATTEMPTS_KEY, Math.max(0, Math.floor(n)));
+  }
+
+  private resetFailedUnlockAttempts(): void {
+    secureStorage.remove(FAILED_UNLOCK_ATTEMPTS_KEY);
+  }
+
+  private isEmergencyWipeOnFailedUnlockEnabled(): boolean {
+    try {
+      const raw = secureStorage.safeJSON<Record<string, unknown>>(PRIVACY_SETTINGS_STORAGE_KEY, {});
+      const value = raw.vaultKillSwitchEnabled;
+      return typeof value === 'boolean' ? value : true;
+    } catch {
+      // Fail-safe: default ON.
+      return true;
+    }
+  }
+
+  private async recordFailedUnlockAttempt(): Promise<void> {
+    const current = this.getFailedUnlockAttempts();
+    const next = current + 1;
+    this.setFailedUnlockAttempts(next);
+    this.logEvent('warning', 'Vault unlock attempt failed', { attempt: next });
+
+    if (next < MAX_FAILED_UNLOCK_ATTEMPTS) {
+      return;
+    }
+
+    if (!this.isEmergencyWipeOnFailedUnlockEnabled()) {
+      this.logEvent('warning', 'Emergency wipe suppressed (user disabled kill switch)', {
+        reason: 'vault_failed_attempts',
+        attempts: next,
+      });
+      return;
+    }
+
+    this.logEvent('warning', 'Emergency wipe triggered', {
+      reason: 'vault_failed_attempts',
+      attempts: next,
+    });
+
+    // Best-effort emergency wipe. Keep this dynamic to avoid hard dependency
+    // cycles and to make test mocking straightforward.
+    try {
+      const { performEmergencyWipe } = await import('./emergency-wipe');
+      await performEmergencyWipe('vault_failed_attempts');
+    } catch {
+      // ignore wipe failures; still clear vault metadata as a minimum
+    }
+
+    try {
+      this.clearAll();
+    } catch {
+      // ignore
+    }
   }
 
   lock(): void {
@@ -458,6 +530,7 @@ export class EncryptedVaultService {
 
   clearAll(): void {
     secureStorage.remove(STORAGE_KEY);
+    this.resetFailedUnlockAttempts();
     this.lock();
     this.status = { state: 'uninitialized', metadata: null, sodiumReady: this.status.sodiumReady };
     this.emit();

@@ -1,4 +1,5 @@
 import type { PainEntry } from '../types';
+import { pickVariant } from '@pain-tracker/utils';
 
 /**
  * Lightweight flare-up predictor using simple heuristics.
@@ -17,19 +18,35 @@ export function predictFlareUp(entries: PainEntry[]): { score: number; reason: s
   if (last > avg) score += 0.3;
   if (max >= 8) score += 0.2;
   score = Math.min(1, score);
+
+  const factors: string[] = [];
+  if (Number.isFinite(last) && last >= 7) factors.push('today is in the high range');
+  if (Number.isFinite(avg) && Number.isFinite(last) && last > avg + 0.5)
+    factors.push(`today is above your recent average (${avg.toFixed(1)}/10)`);
+  if (Number.isFinite(max) && max >= 8) factors.push('you’ve had at least one very high day recently');
+
+  const seed = `${Math.round(score * 100)}|${Math.round(avg * 10)}|${Math.round(last * 10)}|${Math.round(max * 10)}`;
+  const highPrefix = pickVariant(seed, ['Higher flare-up risk', 'Elevated flare-up risk', 'Stronger flare-up risk signal']);
+  const medPrefix = pickVariant(seed, ['Moderate risk signal', 'Mild-to-moderate risk signal', 'Some risk signal']);
+  const lowMessage = pickVariant(seed, [
+    'No strong flare-up signals in the last week based on pain level alone.',
+    'No clear flare-up pattern shows up in the last week from pain level alone.',
+    'No strong risk signal detected from pain level alone over the last week.',
+  ]);
+
   const reason =
     score > 0.6
-      ? 'Recent high pain and upward trend'
+      ? `${highPrefix}: ${factors.join(', ')}.`
       : score > 0.3
-        ? 'Mild upward trend'
-        : 'No immediate risk detected';
+        ? `${medPrefix}: ${factors.length ? factors.join(', ') : 'a mild upward drift'}.`
+        : lowMessage;
   return { score, reason };
 }
 
 export function suggestCopingStrategies(score: number) {
   if (score > 0.7) {
     return [
-      'Consider contacting your care team for medication review',
+      'If you have a care team, consider checking in (especially if symptoms are changing)',
       'Prioritize rest and avoid strenuous activity',
       'Use heat/cold as appropriate for symptom relief',
     ];

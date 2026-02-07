@@ -17,6 +17,9 @@ export default function PrivacySettings() {
       return false;
     }
   });
+  const [vaultKillSwitchEnabled, setVaultKillSwitchEnabled] = useState<boolean>(
+    () => readPrivacySettings().vaultKillSwitchEnabled
+  );
   const [retention, setRetention] = useState<number>(() => readPrivacySettings().retentionDays);
   const [weatherAutoCapture, setWeatherAutoCapture] = useState<boolean>(() => readPrivacySettings().weatherAutoCapture);
 
@@ -24,10 +27,11 @@ export default function PrivacySettings() {
     writePrivacySettings({
       dataSharing: sharing,
       analyticsConsent: analytics,
+      vaultKillSwitchEnabled,
       retentionDays: retention,
       weatherAutoCapture,
     });
-  }, [sharing, analytics, retention, weatherAutoCapture]);
+  }, [sharing, analytics, vaultKillSwitchEnabled, retention, weatherAutoCapture]);
 
   useEffect(() => {
     // Keep the canonical analytics consent state in sync.
@@ -68,6 +72,22 @@ export default function PrivacySettings() {
             type="checkbox" 
             checked={analytics} 
             onChange={e => setAnalytics(e.target.checked)}
+            className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
+          />
+        </label>
+
+        <label className="flex items-center justify-between gap-4">
+          <div>
+            <div className="font-medium text-gray-700 dark:text-slate-200">Emergency wipe on repeated failed unlocks</div>
+            <div className="text-sm text-gray-500 dark:text-slate-400">
+              If enabled, the app will wipe local data after 3 failed vault unlock attempts. This can protect you on a lost/shared device,
+              but it also increases the risk of accidental data loss if someone mistypes your passphrase.
+            </div>
+          </div>
+          <input
+            type="checkbox"
+            checked={vaultKillSwitchEnabled}
+            onChange={e => setVaultKillSwitchEnabled(e.target.checked)}
             className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
           />
         </label>
@@ -115,6 +135,7 @@ export default function PrivacySettings() {
               writePrivacySettings({
                 dataSharing: sharing,
                 analyticsConsent: analytics,
+                vaultKillSwitchEnabled,
                 retentionDays: retention,
                 weatherAutoCapture,
               })
