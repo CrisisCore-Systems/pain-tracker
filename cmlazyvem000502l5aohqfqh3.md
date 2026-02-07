@@ -3,6 +3,7 @@ title: "Local-Only Encryption Explained: How PainTracker Protects Data at Rest"
 datePublished: Fri Feb 06 2026 14:45:14 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazyvem000502l5aohqfqh3
 slug: local-only-encryption-explained
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770444896977/493a571a-2db1-4504-9828-68cbce875776.png
 tags: security, accessibility, privacy, open-source
 
 ---
