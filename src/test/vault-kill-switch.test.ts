@@ -114,13 +114,17 @@ describe('Vault kill switch', () => {
         import('../utils/privacySettings'),
       ]);
 
-    writePrivacySettings({ vaultKillSwitchEnabled: false });
-
     await vaultService.initialize();
     if (vaultService.getStatus().state === 'uninitialized') {
       await vaultService.setupPassphrase(TEST_PASSPHRASE);
     }
     vaultService.lock();
+
+    // Write privacy settings AFTER vault setup+lock so that
+    // migrateLegacyStorage (which re-encrypts all pt: keys) doesn't
+    // encrypt the plain-JSON settings value, making it unreadable by
+    // isEmergencyWipeOnFailedUnlockEnabled (which reads without decrypt).
+    writePrivacySettings({ vaultKillSwitchEnabled: false });
 
     await expect(vaultService.unlock('wrong-passphrase-1')).rejects.toThrow('Incorrect passphrase.');
     await expect(vaultService.unlock('wrong-passphrase-2')).rejects.toThrow('Incorrect passphrase.');
