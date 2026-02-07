@@ -3,6 +3,7 @@ title: "What Doctors Look For in Symptom Journals: A Clinical Perspective"
 datePublished: Fri Feb 06 2026 14:44:39 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazy47w000r02l4cl1n09w2
 slug: what-doctors-look-for-symptom-journals
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770489321056/11bd019f-da84-4e4e-b0a7-f023bd53fcb7.png
 tags: healthcare, chronic-pain, medical-records, health-tracking
 
 ---
