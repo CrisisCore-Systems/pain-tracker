@@ -12,5 +12,6 @@
     }
   },
   "include": ["src/**/*"],
+  "exclude": ["dist"],
   "references": [{ "path": "../utils/tsconfig.json" }]
 }

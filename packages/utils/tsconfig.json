@@ -8,5 +8,6 @@
     "allowImportingTsExtensions": false,
     "tsBuildInfoFile": "./.tsbuildinfo"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["dist"]
 }
