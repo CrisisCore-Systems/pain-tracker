@@ -3,6 +3,7 @@ title: "Migraine Symptom Diary: Track Attacks, Triggers, and Treatment Response"
 datePublished: Fri Feb 06 2026 14:44:55 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazygld000u02l48m4qdhsy
 slug: migraine-symptom-diary
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770469055392/70062fe8-0dd2-43ae-84b2-18429ab1334e.png
 tags: chronic-pain, pain-management, chronic-illness, health-tracking
 
 ---
