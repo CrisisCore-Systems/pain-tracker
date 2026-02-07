@@ -3,6 +3,7 @@ title: "Pain Tracking for Fibromyalgia: Managing Widespread Chronic Pain"
 datePublished: Fri Feb 06 2026 14:44:52 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazye41000402kyaehyf5ly
 slug: pain-tracking-fibromyalgia
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770487420534/57890d65-037e-4f36-8c81-f5280b75bbe4.png
 tags: chronic-pain, pain-management, chronic-illness, health-tracking
 
 ---
