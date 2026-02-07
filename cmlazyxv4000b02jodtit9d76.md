@@ -3,6 +3,7 @@ title: "Health Data Threat Model: What Risks Does Your Pain Diary Face?"
 datePublished: Fri Feb 06 2026 14:45:17 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazyxv4000b02jodtit9d76
 slug: health-data-threat-model
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770444622165/b619c595-5ffe-4fb1-b984-4dc920dbbc7d.png
 tags: security, accessibility, privacy, open-source
 
 ---
