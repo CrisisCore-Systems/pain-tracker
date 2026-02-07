@@ -3,6 +3,7 @@ title: "Paper vs App Pain Diary: Which Is Better for Symptom Tracking?"
 datePublished: Fri Feb 06 2026 14:45:04 GMT+0000 (Coordinated Universal Time)
 cuid: cmlazynyv000302l5howzhk1j
 slug: paper-vs-app-pain-diary
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770455046175/c55f194c-f2e8-4860-92ff-a3408b44c402.png
 tags: chronic-pain, pain-management, health-tracking
 
 ---
