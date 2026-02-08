@@ -1,10 +1,11 @@
 ---
-title: "After Collapse Compiles"
+title: "Understanding Collapse: A Comprehensive Guide"
 seoTitle: "After Collapse Compiles | The Quiet Story Behind Pain Tracker"
-seoDescription: "Not a victory lap. Not a redemption arc. Just the honest truth about building a privacy-first pain tracking app from survival, not ambition — and what happens when other people might need it too."
+seoDescription: "Explore the emotional and technical journey behind building a private, local-first tool for personal resilience and survival"
 datePublished: Sun Feb 08 2026 09:09:24 GMT+0000 (Coordinated Universal Time)
 cuid: cmldiup8y000402jr1s4c15sv
-slug: after-collapse-compiles
+slug: understanding-collapse-a-comprehensive-guide
+cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1770562926892/6533eff1-6131-4f53-81e1-464608bdf64e.png
 tags: privacy, offline-first, healthcare, mental-health, open-source, chronic-illness, developer-stories, trauma-informed
 
 ---
