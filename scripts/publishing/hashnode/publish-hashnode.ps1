@@ -1,6 +1,6 @@
 # Hashnode Publish Script
-$pubId = "6914f549d535ac1991dcb8b2"
-$token = "Ln5Dn15EREw4dqW47rHLY4H5"
+$pubId = $env:HASHNODE_PUB_ID
+$token = $env:HASHNODE_TOKEN
 
 # Read the markdown content
 $content = Get-Content -Path "c:\Users\kay\Documents\Projects\pain-tracker\docs\content\blog\blog-client-side-encryption-healthcare.md" -Raw

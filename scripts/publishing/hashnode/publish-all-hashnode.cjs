@@ -6,7 +6,7 @@
  * with a delay to avoid rate-limiting.
  *
  * Usage:
- *   node publish-all-hashnode.cjs [--dry-run] [--delay=3000] [--start=0]
+ *   node scripts/publishing/hashnode/publish-all-hashnode.cjs [--dry-run] [--delay=3000] [--start=0]
  *
  * Options:
  *   --dry-run   Print what would be published without actually calling the API
@@ -20,7 +20,10 @@ const https = require('https');
 
 // ── Config ────────────────────────────────────────────────────────────
 const TOKEN = process.env.HASHNODE_TOKEN || '';
-const PUBLICATION_ID = process.env.HASHNODE_PUB_ID || '6914f549d535ac1991dcb8b2';
+const PUBLICATION_ID =
+  process.env.HASHNODE_PUB_ID ||
+  process.env.HASHNODE_PUBLICATION_ID ||
+  '6914f549d535ac1991dcb8b2';
 const SITE_URL = 'https://blog.paintracker.ca';
 const DELAY_MS = parseInt(getArg('delay') || '3000', 10);
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -77,8 +80,9 @@ const CLUSTER_TAGS = {
 // them and extract the data with a lightweight parser.
 
 function loadArticles() {
+  const repoRoot = process.cwd();
   const articlesDir = path.join(
-    __dirname,
+    repoRoot,
     'packages',
     'blog',
     'src',
@@ -322,7 +326,9 @@ async function main() {
     console.error('❌ HASHNODE_TOKEN env var is required.');
     console.error('   Generate a token at: https://hashnode.com/settings/developer');
     console.error('   Then run:');
-    console.error('   $env:HASHNODE_TOKEN="your-token-here"; node publish-all-hashnode.cjs');
+    console.error(
+      '   $env:HASHNODE_TOKEN="your-token-here"; node scripts/publishing/hashnode/publish-all-hashnode.cjs'
+    );
     process.exit(1);
   }
 

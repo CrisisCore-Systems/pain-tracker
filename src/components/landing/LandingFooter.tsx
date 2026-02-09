@@ -185,6 +185,7 @@ export const LandingFooter: React.FC = () => {
               </h3>
               <ul className="space-y-4 text-sm">
                 {([
+                  { label: 'Templates & Guides', onClick: () => navigate('/resources') },
                   { label: 'Pricing Plans', onClick: () => navigate('/pricing') },
                   { label: 'Source Code', href: 'https://github.com/CrisisCore-Systems/pain-tracker', icon: Github },
                   { label: 'Documentation', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md' },

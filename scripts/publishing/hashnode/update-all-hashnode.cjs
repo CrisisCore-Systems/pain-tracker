@@ -6,9 +6,9 @@
  * and markdown converter as the publish script.
  *
  * Usage:
- *   $env:HASHNODE_TOKEN="your-token"; node update-all-hashnode.cjs
- *   $env:HASHNODE_TOKEN="your-token"; node update-all-hashnode.cjs --dry-run
- *   $env:HASHNODE_TOKEN="your-token"; node update-all-hashnode.cjs --start=5
+ *   $env:HASHNODE_TOKEN="your-token"; node scripts/publishing/hashnode/update-all-hashnode.cjs
+ *   $env:HASHNODE_TOKEN="your-token"; node scripts/publishing/hashnode/update-all-hashnode.cjs --dry-run
+ *   $env:HASHNODE_TOKEN="your-token"; node scripts/publishing/hashnode/update-all-hashnode.cjs --start=5
  */
 
 const fs = require('fs');
@@ -17,7 +17,10 @@ const https = require('https');
 
 // ── Config ────────────────────────────────────────────────────────────
 const TOKEN = process.env.HASHNODE_TOKEN || '';
-const PUBLICATION_ID = process.env.HASHNODE_PUB_ID || '6914f549d535ac1991dcb8b2';
+const PUBLICATION_ID =
+  process.env.HASHNODE_PUB_ID ||
+  process.env.HASHNODE_PUBLICATION_ID ||
+  '6914f549d535ac1991dcb8b2';
 const DELAY_MS = parseInt(getArg('delay') || '3000', 10);
 const DRY_RUN = process.argv.includes('--dry-run');
 const START_INDEX = parseInt(getArg('start') || '0', 10);
@@ -69,8 +72,9 @@ const CLUSTER_TAGS = {
 
 // ── Article loader (same as publish script) ───────────────────────────
 function loadArticles() {
+  const repoRoot = process.cwd();
   const articlesDir = path.join(
-    __dirname,
+    repoRoot,
     'packages',
     'blog',
     'src',
@@ -325,7 +329,7 @@ async function main() {
   if (!TOKEN && !DRY_RUN) {
     console.error('❌ HASHNODE_TOKEN env var is required.');
     console.error(
-      '   $env:HASHNODE_TOKEN="your-token"; node update-all-hashnode.cjs'
+      '   $env:HASHNODE_TOKEN="your-token"; node scripts/publishing/hashnode/update-all-hashnode.cjs'
     );
     process.exit(1);
   }

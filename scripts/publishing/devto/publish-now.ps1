@@ -1,4 +1,4 @@
-$apiKey = "Ln5Dn15EREw4dqW47rHLY4H5"
+$apiKey = $env:DEVTO_API_KEY
 $content = Get-Content -Path "docs/content/blog/blog-client-side-encryption-healthcare.md" -Raw
 
 $body = @{

@@ -1,6 +1,6 @@
 param(
   [Parameter(Mandatory = $false)]
-  [string]$MarkdownPath = "c:\Users\kay\Documents\Projects\pain-tracker\docs\content\blog\blog-worksafe-bc-case-study-documentation-time-savings.md",
+  [string]$MarkdownPath = "docs\content\blog\blog-worksafe-bc-case-study-documentation-time-savings.md",
 
   [Parameter(Mandatory = $false)]
   [string]$Title = "How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study",
@@ -99,7 +99,8 @@ if ($response.data.publishPost.post) {
   $url = $response.data.publishPost.post.url
   Write-Host "Success!" -ForegroundColor Green
   Write-Host "Post URL: $url"
-  $url | Out-File -FilePath "hashnode-published-url.txt" -Encoding utf8
+  New-Item -ItemType Directory -Force -Path 'artifacts\logs' | Out-Null
+  $url | Out-File -FilePath "artifacts\logs\hashnode-published-url.txt" -Encoding utf8
   exit 0
 }
 

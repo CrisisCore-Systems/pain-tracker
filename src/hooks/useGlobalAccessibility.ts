@@ -21,7 +21,7 @@ export const useGlobalAccessibility = (
 ) => {
   const {
     enableValidation = import.meta.env.DEV,
-    enableAutoLabeling = true,
+    enableAutoLabeling = import.meta.env.DEV,
     announceRouteChanges = true,
   } = options;
 
@@ -31,6 +31,9 @@ export const useGlobalAccessibility = (
 
     // Add missing ARIA labels in development
     if (enableAutoLabeling) {
+      // Run once immediately, then periodically (for dynamic UI updates)
+      addMissingAriaLabels();
+
       const interval = setInterval(() => {
         addMissingAriaLabels();
       }, 5000); // Check every 5 seconds
@@ -42,15 +45,27 @@ export const useGlobalAccessibility = (
   useEffect(() => {
     // Validate ARIA in development
     if (enableValidation) {
+      let lastErrorsKey = '';
+      let lastWarningsKey = '';
+
       const validateInterval = setInterval(() => {
         const { errors, warnings } = validateARIA();
 
-        if (errors.length > 0) {
-          console.error('ARIA Validation Errors:', errors);
+        const errorsKey = errors.join('\n');
+        const warningsKey = warnings.join('\n');
+
+        if (errorsKey !== lastErrorsKey) {
+          lastErrorsKey = errorsKey;
+          if (errors.length > 0) {
+            console.error('ARIA Validation Errors:', errors);
+          }
         }
 
-        if (warnings.length > 0) {
-          console.warn('ARIA Validation Warnings:', warnings);
+        if (warningsKey !== lastWarningsKey) {
+          lastWarningsKey = warningsKey;
+          if (warnings.length > 0) {
+            console.warn('ARIA Validation Warnings:', warnings);
+          }
         }
       }, 10000); // Check every 10 seconds
 

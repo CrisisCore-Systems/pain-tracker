@@ -394,7 +394,7 @@ const config = getAnimationConfig('celebration');
 ### Internal Documentation
 - [`docs/features/RETENTION_LOOP.md`](./RETENTION_LOOP.md) - Core feature documentation
 - [`src/examples/RetentionIntegrationExample.tsx`](../examples/RetentionIntegrationExample.tsx) - Integration examples
-- [`RETENTION_IMPLEMENTATION_SUMMARY.md`](../../RETENTION_IMPLEMENTATION_SUMMARY.md) - Implementation overview
+- [`RETENTION_IMPLEMENTATION_SUMMARY.md`](../implementation/root-summaries/RETENTION_IMPLEMENTATION_SUMMARY.md) - Implementation overview
 
 ### External Resources
 - [Tree of Thought Reasoning](https://arxiv.org/abs/2305.10601) - Research paper

@@ -11,7 +11,7 @@ This folder contains **supporting assets and a checklist** for publishing the co
 ```powershell
 cd C:\Users\kay\Documents\Projects\pain-tracker
 
-# Reuse your existing values from publish-hashnode.ps1 (session-only)
+# Reuse your existing values from scripts/publishing/hashnode/publish-hashnode.ps1 (session-only)
 $env:HASHNODE_TOKEN="<token>"
 $env:HASHNODE_PUBLICATION_ID="<publicationId>"
 

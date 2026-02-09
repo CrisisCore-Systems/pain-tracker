@@ -21,6 +21,18 @@ const prodCsp = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https:
 
 const isProd = process.env.NODE_ENV === 'production';
 
+const stripFrameAncestorsForMeta = (csp: string): string => {
+  // Browsers ignore `frame-ancestors` when delivered via a CSP <meta> tag.
+  // Keep it in HTTP headers (server/preview/Vercel) and omit it from meta to
+  // avoid noisy console errors and a false sense that it's enforced there.
+  return csp
+    .split(';')
+    .map(d => d.trim())
+    .filter(Boolean)
+    .filter(d => !d.toLowerCase().startsWith('frame-ancestors '))
+    .join('; ');
+};
+
 export default defineConfig({
   plugins: [
     react(),
@@ -31,9 +43,10 @@ export default defineConfig({
         // This ensures we don't force 'upgrade-insecure-requests' in dev (which breaks http://localhost)
         // but strictly enforce it in production.
         const csp = isProd ? prodCsp : devCsp;
+        const metaCsp = stripFrameAncestorsForMeta(csp);
         return html.replace(
           /<meta http-equiv="Content-Security-Policy"[\s\S]*?>/,
-          `<meta http-equiv="Content-Security-Policy" content="${csp}" />`
+          `<meta http-equiv="Content-Security-Policy" content="${metaCsp}" />`
         );
       }
     },

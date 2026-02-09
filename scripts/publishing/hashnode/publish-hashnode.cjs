@@ -1,41 +1,19 @@
-// Hashnode Publish Script - Building From Rubble
+// Hashnode Publish Script - Node.js version
 const fs = require('fs');
 const https = require('https');
 
-const token = '3bcede56-cf20-4ce5-885f-d7a3c4b599d0';
+const token = process.env.HASHNODE_TOKEN || '';
 const publicationId = '6914f549d535ac1991dcb8b2';
 
 // Read the markdown file
-let content = fs.readFileSync('docs/content/blog/blog-building-from-rubble.md', 'utf8');
+const content = fs.readFileSync('docs/content/blog/blog-client-side-encryption-healthcare.md', 'utf8');
 
-// Remove the first line if it's just intro text (not the title)
-const lines = content.split('\n');
-// Find where the actual content starts (after any intro text before the ---)
-let startIndex = 0;
-for (let i = 0; i < lines.length; i++) {
-  if (lines[i].trim() === '---') {
-    startIndex = i;
-    break;
-  }
-}
-
-// Get content starting from first ---
-content = lines.slice(startIndex).join('\n');
-
-// Remove the H1 title from content body (find first # heading and remove it)
+// Remove the H1 title from content (first line)
 const contentLines = content.split('\n');
-let titleRemoved = false;
-const finalLines = contentLines.filter(line => {
-  if (!titleRemoved && line.startsWith('# ') && !line.startsWith('## ')) {
-    titleRemoved = true;
-    return false;
-  }
-  return true;
-});
-const contentWithoutTitle = finalLines.join('\n').trim();
+const contentWithoutTitle = contentLines.slice(1).join('\n').trim();
 
-const title = 'Coding Through Collapse: Building Software From Motel Rooms and Concrete Nooks';
-const slug = 'coding-through-collapse';
+const title = 'Keeping Your Health Data Out of Court';
+const slug = 'keeping-your-health-data-out-of-court';
 
 const mutation = `
 mutation PublishPost($input: PublishPostInput!) {
@@ -57,12 +35,12 @@ const variables = {
     contentMarkdown: contentWithoutTitle,
     publicationId: publicationId,
     tags: [
-      { slug: 'mental-health', name: 'Mental Health' },
-      { slug: 'open-source', name: 'Open Source' },
-      { slug: 'personal-story', name: 'Personal Story' },
-      { slug: 'privacy', name: 'Privacy' },
+      { slug: 'encryption', name: 'Encryption' },
       { slug: 'healthcare', name: 'Healthcare' },
-      { slug: 'developer-stories', name: 'Developer Stories' }
+      { slug: 'privacy', name: 'Privacy' },
+      { slug: 'security', name: 'Security' },
+      { slug: 'typescript', name: 'TypeScript' },
+      { slug: 'webcrypto', name: 'Web Crypto' }
     ]
   }
 };
@@ -87,8 +65,7 @@ const options = {
 console.log('Publishing to Hashnode...');
 console.log('Title:', title);
 console.log('Slug:', slug);
-console.log('Content length:', contentWithoutTitle.length, 'characters');
-console.log('---');
+console.log('Content length:', contentWithoutTitle.length);
 
 const req = https.request(options, (res) => {
   let responseData = '';
@@ -106,7 +83,7 @@ const req = https.request(options, (res) => {
       }
       
       if (response.data && response.data.publishPost && response.data.publishPost.post) {
-        console.log('✅ Success!');
+        console.log('Success!');
         console.log('Post URL:', response.data.publishPost.post.url);
         console.log('Post details:', JSON.stringify(response.data.publishPost.post, null, 2));
       } else {

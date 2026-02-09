@@ -260,13 +260,18 @@ export const setupSkipLinks = (): void => {
  * Add ARIA labels to elements missing them
  */
 export const addMissingAriaLabels = (container: HTMLElement = document.body): void => {
+  const warnedElements = getOrCreateWarnedElementsStore();
+
   // Buttons without labels
   const buttons = container.querySelectorAll<HTMLButtonElement>('button:not([aria-label])');
   buttons.forEach(button => {
     if (!button.textContent?.trim() && !button.getAttribute('aria-labelledby')) {
       const iconHint = button.querySelector('[class*="icon"]')?.className || '';
       button.setAttribute('aria-label', `Button with ${iconHint || 'no label'}`);
-      console.warn('Button missing aria-label:', button);
+      if (!warnedElements.has(button)) {
+        warnedElements.add(button);
+        console.warn('Button missing aria-label:', button);
+      }
     }
   });
 
@@ -276,7 +281,10 @@ export const addMissingAriaLabels = (container: HTMLElement = document.body): vo
     if (!link.textContent?.trim() && !link.getAttribute('aria-labelledby')) {
       const href = link.getAttribute('href');
       link.setAttribute('aria-label', `Link to ${href || 'unknown destination'}`);
-      console.warn('Link missing aria-label:', link);
+      if (!warnedElements.has(link)) {
+        warnedElements.add(link);
+        console.warn('Link missing aria-label:', link);
+      }
     }
   });
 
@@ -285,15 +293,37 @@ export const addMissingAriaLabels = (container: HTMLElement = document.body): vo
     'input:not([aria-label]):not([aria-labelledby])'
   );
   inputs.forEach(input => {
+    if (input.type === 'hidden') return;
+    if (input.getAttribute('aria-hidden') === 'true') return;
+    if (input.closest('[aria-hidden="true"]')) return;
+
+    // Consider both explicit and implicit labeling.
+    const hasImplicitLabel = Boolean(input.closest('label'));
+    const hasExplicitLabel = Boolean(input.labels && input.labels.length > 0);
+
     const id = input.getAttribute('id');
     const label = id ? container.querySelector<HTMLLabelElement>(`label[for="${id}"]`) : null;
 
-    if (!label) {
+    if (!label && !hasExplicitLabel && !hasImplicitLabel) {
       const placeholder = input.getAttribute('placeholder');
-      input.setAttribute('aria-label', placeholder || 'Input field');
-      console.warn('Input missing label:', input);
+      const name = input.getAttribute('name');
+      const inferred = placeholder || name || `Input (${input.type || 'text'})`;
+      input.setAttribute('aria-label', inferred);
+      if (!warnedElements.has(input)) {
+        warnedElements.add(input);
+        console.warn('Input missing label:', input);
+      }
     }
   });
+};
+
+const getOrCreateWarnedElementsStore = (): WeakSet<Element> => {
+  const globalKey = '__painTrackerA11yWarnedElements';
+  const w = window as unknown as Record<string, unknown>;
+  if (!w[globalKey]) {
+    w[globalKey] = new WeakSet<Element>();
+  }
+  return w[globalKey] as WeakSet<Element>;
 };
 
 /**
@@ -310,52 +340,79 @@ export const validateARIA = (
 
   // Check for ARIA role validity
   const elementsWithRoles = container.querySelectorAll('[role]');
-  const validRoles = [
+  const validRoles = new Set([
     'alert',
     'alertdialog',
     'application',
     'article',
     'banner',
     'button',
+    'cell',
     'checkbox',
+    'columnheader',
+    'combobox',
+    'complementary',
+    'contentinfo',
     'dialog',
+    'document',
+    'feed',
+    'figure',
+    'form',
     'grid',
     'gridcell',
+    'group',
     'heading',
     'img',
     'link',
     'list',
     'listbox',
     'listitem',
+    'log',
     'main',
+    'marquee',
+    'math',
     'menu',
     'menubar',
     'menuitem',
+    'menuitemcheckbox',
+    'menuitemradio',
+    'meter',
     'navigation',
+    'none',
+    'note',
+    'option',
+    'presentation',
     'progressbar',
     'radio',
     'radiogroup',
     'region',
     'row',
+    'rowgroup',
     'rowheader',
     'search',
+    'searchbox',
+    'separator',
     'slider',
     'spinbutton',
     'status',
+    'switch',
+    'table',
     'tab',
     'tablist',
     'tabpanel',
+    'term',
     'textbox',
     'toolbar',
     'tooltip',
     'tree',
     'treegrid',
     'treeitem',
-  ];
+  ]);
 
   elementsWithRoles.forEach(el => {
-    const role = el.getAttribute('role');
-    if (role && !validRoles.includes(role)) {
+    const roleAttr = el.getAttribute('role');
+    const role = roleAttr?.trim().split(/\s+/)[0];
+    if (role && !validRoles.has(role)) {
       errors.push(`Invalid ARIA role: ${role} on element ${el.tagName}`);
     }
   });

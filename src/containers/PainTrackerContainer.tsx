@@ -34,6 +34,9 @@ const SettingsPage = lazy(() =>
 const HelpAndSupportPage = lazy(() =>
   import('../pages/HelpAndSupportPage').then(m => ({ default: m.default }))
 );
+const BlogResourcesPage = lazy(() =>
+  import('../pages/BlogResourcesPage').then(m => ({ default: m.default }))
+);
 const ReportsPage = lazy(() =>
   import('../components/reports').then(m => ({ default: m.ReportsPage }))
 );
@@ -465,6 +468,13 @@ export function PainTrackerContainer({ initialView }: { initialView?: string } =
         return (
           <Suspense fallback={<ViewLoadingFallback />}>
             <HelpAndSupportPage />
+          </Suspense>
+        );
+
+      case 'blog-resources':
+        return (
+          <Suspense fallback={<ViewLoadingFallback />}>
+            <BlogResourcesPage />
           </Suspense>
         );
 
