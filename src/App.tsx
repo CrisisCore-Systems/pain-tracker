@@ -31,6 +31,8 @@ const ScreenshotShowcase = lazy(() => import('./pages/ScreenshotShowcase').then(
 const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => ({ default: m.ClinicPortal })));
 const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
 const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => ({ default: m.SubmitStoryPage })));
+const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ default: m.DownloadPage })));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const VaultGate = lazy(() => import('./components/security/VaultGate').then(m => ({ default: m.VaultGate })));
 const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m => ({ default: m.ProtectedAppShell })));
 
@@ -189,6 +191,12 @@ function App() {
 
                     {/* Submit testimonial/stories */}
                     <Route path="/submit-story" element={<SubmitStoryPage />} />
+
+                    {/* Download Page - Public */}
+                    <Route path="/download" element={<DownloadPage />} />
+
+                    {/* Privacy Policy - Public */}
+                    <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
                     {/* SEO Resource Pages - Public */}
                     <Route path="/resources" element={<ResourcesIndexPage />} />

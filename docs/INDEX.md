@@ -89,6 +89,12 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 - **[Quickstart Guide](../QUICKSTART.md)** - Fast setup instructions
 - **[Contributing](../CONTRIBUTING.md)** - How to contribute to the project
 
+### User Guides
+- **[Installation Guide](user-guide/INSTALL.md)** - How to install and use Pain Tracker
+- **[Frequently Asked Questions](user-guide/FAQ.md)** - Common questions and answers
+- **[How to Export Data](user-guide/EXPORT_DATA.md)** - Export your data as PDF, CSV, or JSON
+- **[Privacy Policy](../PRIVACY.md)** - How your data is handled
+
 ### Planning & Roadmaps
 - **[Roadmap](planning/ROADMAP.md)** - Current roadmap
 - **[Next-Gen Roadmap](planning/ROADMAP_NEXT_GEN.md)** - 2026 strategy (draft)
@@ -206,6 +212,10 @@ Suggested reading stance:
 ### By User Type
 
 **For End Users**:
+- [Installation Guide](user-guide/INSTALL.md)
+- [FAQ](user-guide/FAQ.md)
+- [How to Export Data](user-guide/EXPORT_DATA.md)
+- [Privacy Policy](../PRIVACY.md)
 - [Fibromyalgia Features Guide](product/FIBROMYALGIA_FEATURES.md)
 - [Quickstart Guide](../QUICKSTART.md)
 - [Accessibility Features](accessibility/ACCESSIBILITY_COMFORT_SPEC.md)
