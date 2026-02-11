@@ -13,6 +13,7 @@ Disallow: /api
 Disallow: /clinic
 Disallow: /subscription
 Disallow: /start
+Crawl-delay: 1
 
 # Googlebot - grant full access to public pages
 User-agent: Googlebot
@@ -29,10 +30,6 @@ Allow: /resources/
 Disallow: /app
 Disallow: /api
 Disallow: /clinic
-
-# Crawl-delay for less aggressive crawlers
-User-agent: *
-Crawl-delay: 1
 
 # Sitemap location
 Sitemap: https://www.paintracker.ca/sitemap.xml

@@ -103,6 +103,9 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
   useEffect(() => {
     document.title = content.metaTitle;
     
+    // Track if we created the canonical link (for cleanup)
+    let createdCanonicalLink: HTMLLinkElement | null = null;
+    
     // Update meta description
     let metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
@@ -120,10 +123,10 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
     if (canonicalLink) {
       canonicalLink.setAttribute('href', canonicalUrl);
     } else {
-      canonicalLink = document.createElement('link');
-      canonicalLink.setAttribute('rel', 'canonical');
-      canonicalLink.setAttribute('href', canonicalUrl);
-      document.head.appendChild(canonicalLink);
+      createdCanonicalLink = document.createElement('link');
+      createdCanonicalLink.setAttribute('rel', 'canonical');
+      createdCanonicalLink.setAttribute('href', canonicalUrl);
+      document.head.appendChild(createdCanonicalLink);
     }
     
     // Update OG tags
@@ -166,6 +169,10 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
       try {
         if (ariaLive && ariaLive.parentNode === document.body) {
           document.body.removeChild(ariaLive);
+        }
+        // Remove canonical link only if we created it
+        if (createdCanonicalLink && createdCanonicalLink.parentNode === document.head) {
+          document.head.removeChild(createdCanonicalLink);
         }
       } catch {
         // Element already removed
