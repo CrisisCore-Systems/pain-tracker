@@ -1,27 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <!-- Main Pages -->
   <url>
     <loc>https://www.paintracker.ca/</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.paintracker.ca/og-image.png</image:loc>
+      <image:title>Pain Tracker Pro - Privacy-First Chronic Pain Tracking</image:title>
+      <image:caption>Comprehensive pain tracking application for medical documentation and disability claims</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.paintracker.ca/main-dashboard.png</image:loc>
+      <image:title>Pain Tracker Pro Dashboard</image:title>
+      <image:caption>Main dashboard showing pain trends and analytics</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://www.paintracker.ca/pricing</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/demo</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/submit-story</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -29,7 +40,7 @@
   <!-- Resources Index -->
   <url>
     <loc>https://www.paintracker.ca/resources</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -37,61 +48,61 @@
   <!-- Tier 1: Printable/Download Intent -->
   <url>
     <loc>https://www.paintracker.ca/resources/pain-diary-template-pdf</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/daily-pain-tracker-printable</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/weekly-pain-log-pdf</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/monthly-pain-tracker-printable</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/pain-scale-chart-printable</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/symptom-tracker-printable</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/migraine-pain-diary-printable</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/printable-pain-log-sheet</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/chronic-pain-diary-template</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/7-day-pain-diary-template</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -99,31 +110,31 @@
   <!-- Tier 2: Medical & Appointment Intent -->
   <url>
     <loc>https://www.paintracker.ca/resources/how-to-track-pain-for-doctors</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/what-to-include-in-pain-journal</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/how-doctors-use-pain-diaries</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/pain-diary-for-specialist-appointment</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/symptom-tracking-before-diagnosis</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -131,25 +142,25 @@
   <!-- Tier 3: Disability / Legal Documentation -->
   <url>
     <loc>https://www.paintracker.ca/resources/documenting-pain-for-disability-claim</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/worksafebc-pain-journal-template</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/pain-journal-for-disability-benefits</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/daily-functioning-log-for-disability</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -157,43 +168,43 @@
   <!-- Tier 4: Condition-Specific -->
   <url>
     <loc>https://www.paintracker.ca/resources/fibromyalgia-pain-diary</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/chronic-back-pain-diary</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/arthritis-pain-tracker</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/nerve-pain-symptom-log</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/endometriosis-pain-log</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/crps-pain-diary-template</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.paintracker.ca/resources/neuropathy-symptom-tracker</loc>
-    <lastmod>2026-02-05</lastmod>
+    <lastmod>2026-02-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

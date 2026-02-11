@@ -97,6 +97,8 @@ interface SEOPageLayoutProps {
 }
 
 export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children }) => {
+  const canonicalUrl = `https://www.paintracker.ca/resources/${content.slug}`;
+  
   // Set document title and meta tags
   useEffect(() => {
     document.title = content.metaTitle;
@@ -113,6 +115,17 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
       metaKeywords.setAttribute('content', content.keywords.join(', '));
     }
     
+    // Update canonical URL
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', canonicalUrl);
+    } else {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      canonicalLink.setAttribute('href', canonicalUrl);
+      document.head.appendChild(canonicalLink);
+    }
+    
     // Update OG tags
     let ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
@@ -122,6 +135,22 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
     let ogDescription = document.querySelector('meta[property="og:description"]');
     if (ogDescription) {
       ogDescription.setAttribute('content', content.metaDescription);
+    }
+    
+    let ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', canonicalUrl);
+    }
+    
+    // Update Twitter Card tags
+    let twitterTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twitterTitle) {
+      twitterTitle.setAttribute('content', content.metaTitle);
+    }
+    
+    let twitterDescription = document.querySelector('meta[name="twitter:description"]');
+    if (twitterDescription) {
+      twitterDescription.setAttribute('content', content.metaDescription);
     }
     
     // Announce page to screen readers
@@ -142,13 +171,13 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         // Element already removed
       }
     };
-  }, [content]);
+  }, [content, canonicalUrl]);
   
   // Generate structured data
   const medicalPageSchema = generateMedicalWebPageSchema({
     name: content.title,
     description: content.metaDescription,
-    url: `https://paintracker.ca/resources/${content.slug}`,
+    url: canonicalUrl,
     keywords: content.keywords
   });
   
