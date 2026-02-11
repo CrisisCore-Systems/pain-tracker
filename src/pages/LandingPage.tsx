@@ -13,11 +13,29 @@ import {
   FAQ,
   LandingFooter,
 } from '../components/landing';
+import {
+  generateOrganizationSchema,
+  generateWebSiteSchema,
+  generateSoftwareApplicationSchema,
+  combineSchemas,
+} from '../lib/seo';
 
 export const LandingPage: React.FC = () => {
+  // Generate structured data for homepage
+  const organizationSchema = generateOrganizationSchema();
+  const webSiteSchema = generateWebSiteSchema();
+  const softwareSchema = generateSoftwareApplicationSchema();
+  const combinedSchema = combineSchemas(organizationSchema, webSiteSchema, softwareSchema);
+
   useEffect(() => {
     // Set page title
     document.title = 'Pain Tracker Pro - Privacy-First Pain Tracking';
+    
+    // Reset canonical URL to homepage
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', 'https://www.paintracker.ca/');
+    }
 
     // Announce page to screen readers
     const announcement =
@@ -44,6 +62,12 @@ export const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: combinedSchema }}
+      />
+      
       {/* Skip to main content link for keyboard navigation */}
       <a
         href="#main-content"

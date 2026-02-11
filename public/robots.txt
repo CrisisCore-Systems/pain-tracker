@@ -1,7 +1,38 @@
 # Pain Tracker - robots.txt
+# Privacy-first, offline-capable chronic pain tracking application
+# https://www.paintracker.ca
+
+# Default rules for all crawlers
 User-agent: *
 Allow: /
+Allow: /resources/
+Allow: /pricing
+Allow: /demo
 Disallow: /app
 Disallow: /api
+Disallow: /clinic
+Disallow: /subscription
+Disallow: /start
+Crawl-delay: 1
 
+# Googlebot - grant full access to public pages
+User-agent: Googlebot
+Allow: /
+Allow: /resources/
+Disallow: /app
+Disallow: /api
+Disallow: /clinic
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Allow: /resources/
+Disallow: /app
+Disallow: /api
+Disallow: /clinic
+
+# Sitemap location
 Sitemap: https://www.paintracker.ca/sitemap.xml
+
+# Host directive (canonical domain)
+Host: https://www.paintracker.ca
