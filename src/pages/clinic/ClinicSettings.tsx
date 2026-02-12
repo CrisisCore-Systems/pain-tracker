@@ -23,7 +23,7 @@ export function ClinicSettings() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-4xl bg-slate-900 min-h-screen">
+    <div className="p-6 space-y-6 max-w-4xl bg-background text-foreground min-h-screen">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />

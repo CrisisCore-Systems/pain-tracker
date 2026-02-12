@@ -277,7 +277,7 @@ export function AccessibleModal({
           ref={modalRef}
           className={`
             relative w-full ${SIZE_CLASSES[size]}
-            bg-slate-900 border border-slate-700 rounded-2xl shadow-xl
+            bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl
             animate-in zoom-in-95 fade-in duration-200
             ${className}
           `}
@@ -287,13 +287,13 @@ export function AccessibleModal({
           aria-describedby={descriptionId}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-slate-700">
-            <h2 id={titleId} className="text-xl font-semibold text-white">
+          <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700">
+            <h2 id={titleId} className="text-xl font-semibold text-slate-900 dark:text-white">
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="w-10 h-10 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"
+              className="w-10 h-10 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-colors"
               aria-label="Close modal"
             >
               <svg
@@ -315,7 +315,7 @@ export function AccessibleModal({
 
           {/* Description (optional) */}
           {description && (
-            <p id={descriptionId} className="px-6 pt-4 text-slate-400">
+            <p id={descriptionId} className="px-6 pt-4 text-slate-600 dark:text-slate-400">
               {description}
             </p>
           )}

@@ -352,35 +352,10 @@ export const PatientPainTimeline: React.FC<PatientPainTimelineProps> = ({
               <YAxis domain={[0, 10]} stroke="#64748b" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: 'none',
+                  backgroundColor: 'rgb(var(--color-card))',
+                  border: '1px solid rgb(var(--color-border))',
                   borderRadius: '8px',
-                  color: '#fff',
-                }}
-              />
-              <Legend />
-              <Area
-                type="monotone"
-                dataKey="painLevel"
-                stroke="#ef4444"
-                fill="url(#painGradient)"
-                strokeWidth={2}
-                name="Pain Level"
-              />
-              <ReferenceLine y={7} stroke="#f59e0b" strokeDasharray="3 3" label="High Pain Threshold" />
-              <Brush dataKey="date" height={30} stroke="#3b82f6" />
-            </AreaChart>
-          ) : viewMode === 'correlation' ? (
-            <ComposedChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="date" stroke="#64748b" />
-              <YAxis domain={[0, 10]} stroke="#64748b" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: 'none',
-                  borderRadius: '8px',
-                  color: '#fff',
+                  color: 'rgb(var(--color-card-foreground))',
                 }}
               />
               <Legend />
@@ -396,10 +371,10 @@ export const PatientPainTimeline: React.FC<PatientPainTimelineProps> = ({
               <YAxis domain={[0, 10]} stroke="#64748b" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: 'none',
+                  backgroundColor: 'rgb(var(--color-card))',
+                  border: '1px solid rgb(var(--color-border))',
                   borderRadius: '8px',
-                  color: '#fff',
+                  color: 'rgb(var(--color-card-foreground))',
                 }}
               />
               <Legend />

@@ -58,7 +58,7 @@ const DEMO_PAIN_ENTRIES: PainEntry[] = [
  */
 export function ExportModalShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
@@ -151,7 +151,7 @@ function FauxWcbFormFrame({
 
 export function BlankWcbFormShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-slate-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-slate-500/10 rounded-full blur-3xl" />
@@ -166,7 +166,7 @@ export function BlankWcbFormShowcase() {
 
 export function ExportProcessShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
@@ -204,7 +204,7 @@ export function ExportProcessShowcase() {
 
 export function Form6PreviewShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-sky-500/10 rounded-full blur-3xl" />
@@ -229,7 +229,7 @@ export function Form6PreviewShowcase() {
 
 export function Form7PreviewShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl" />
@@ -254,7 +254,7 @@ export function Form7PreviewShowcase() {
 
 export function TraumaModeShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
@@ -282,7 +282,7 @@ export function TraumaModeShowcase() {
 
 export function OfflineShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl" />
@@ -314,7 +314,7 @@ export function OfflineShowcase() {
 
 export function BcBrandingShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
@@ -345,7 +345,7 @@ export function BcBrandingShowcase() {
  */
 export function BodyMapShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
@@ -371,7 +371,7 @@ export function BodyMapShowcase() {
  */
 export function PrivacySettingsShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
@@ -499,7 +499,7 @@ export function BenefitsGridShowcase() {
   ];
 
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-500/15 rounded-full blur-3xl" />
@@ -559,7 +559,7 @@ export function ComparisonGridShowcase() {
   ];
 
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
@@ -659,7 +659,7 @@ export function ComparisonGridShowcase() {
  */
 export function CrisisSupportShowcase() {
   return (
-    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8">
+    <main id="main-content" className="min-h-screen bg-slate-900 flex items-center justify-center p-8 landing-always-dark">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl" />
