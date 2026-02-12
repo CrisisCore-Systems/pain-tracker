@@ -10,266 +10,366 @@ tags: mental-health, recovery, chronic-pain, trauma, injury-recovery
 
 ---
 
-There’s a kind of injury that doesn’t stay in the body
+## There’s a kind of injury that doesn’t stay in the body
 
-It starts there—L4–L5, a clean clinical label, a scan result, a neat little “diagnosis”—but then it spreads. It migrates. It leaks into your sleep, your relationships, your ability to feel like yourself in your own skin.
+It starts there—**L4–L5**.  
+A clean clinical label. A scan result. A neat little *diagnosis*.
 
-People talk about workplace injuries like they’re mechanical failures.
+But then it spreads.  
+It migrates.  
+It leaks into your sleep, your relationships, your ability to feel like yourself in your own skin.
 
-As if you replace a part, rest for a while, do physio, then return to normal.
+People talk about workplace injuries like they’re **mechanical failures**—  
+as if you replace a part, rest for a while, do physio, then return to normal.
 
 That wasn’t my experience.
 
-My experience was: the injury became a portal. And on the other side of it, I was still alive—but not intact.
+My experience was this:
 
-Before / After
+**The injury became a portal.**  
+And on the other side of it, I was still alive—  
+**but not intact.**
 
-Before, I was an HVAC&R technician. Not “a job.” A trade. A craft. A place where competence meant something.
+---
 
-I was the guy who could walk onto a site and know what to do. I could solve problems under pressure, read systems, improvise when things didn’t match the manual. I didn’t just work—I functioned.
+## Before / After
+
+Before, I was an **HVAC&R technician**.  
+Not just “a job.” A **trade**. A **craft**.  
+A place where competence meant something.
+
+I was the guy who could walk onto a site and know what to do.  
+Solve problems under pressure.  
+Read systems.  
+Improvise when reality didn’t match the manual.
+
+I didn’t just work.  
+**I functioned.**
 
 And then my back went.
 
-And it wasn’t just pain. It was the sudden loss of the one identity that gave me momentum, structure, and self-respect.
+And it wasn’t just pain.  
+It was the sudden loss of the one identity that gave me:
 
-When your body becomes unreliable, it’s not only your spine that feels unstable.
+* momentum
+    
+* structure
+    
+* self-respect
+    
 
-Your entire life becomes unstable.
+When your body becomes unreliable,  
+it’s not only your spine that feels unstable.
 
-The floor: the smallest kind of exile
+**Your entire life becomes unstable.**
 
-For four months I slept on the living room floor.
+---
 
-Not for drama. Not as a symbolic “rock bottom.”
+## The floor: the smallest kind of exile
 
-Because the floor was firm, and firm hurt less than a bed.
+For **four months**, I slept on the living room floor.
+
+Not for drama.  
+Not as a symbolic “rock bottom.”
+
+Because the floor was **firm**,  
+and firm hurt **less** than a bed.
 
 That’s how recovery started for me:
 
-Not in a clinic. Not with hope. But with a tactical decision—what surface hurts less to exist on?
+Not in a clinic.  
+Not with hope.  
+But with a **tactical decision**—
 
-The floor wasn’t comfort. It was containment.
+> *What surface hurts less to exist on?*
 
-And when your world shrinks to a rectangle of carpet and pain, something else happens:
+The floor wasn’t comfort.  
+It was **containment**.
 
-You stop being a person living a life and start becoming a mind trapped in a body.
+And when your world shrinks to a rectangle of carpet and pain,  
+something else happens:
 
-The isolation that nobody warns you about
+You stop being a person living a life  
+and start becoming  
+**a mind trapped in a body.**
 
-Before the injury, I had daily human contact.
+---
 
-Worksites. Coworkers. Customers. Conversations that weren’t “deep” but still mattered—because they proved you were part of the world.
+## The isolation nobody warns you about
 
-Then that went to zero.
+Before the injury, I had **daily human contact**—  
+worksites, coworkers, customers,  
+conversations that weren’t deep but still mattered  
+because they proved you were part of the world.
 
-Not “less social.” Not “a quiet phase.” Zero.
+Then that went to **zero**.
 
-Four months of silence turns your own mind into a closed room with no oxygen.
+Not “less social.”  
+Not “a quiet phase.”
 
-There’s a specific kind of psychological torture in that: you can’t get away from yourself.
+**Zero.**
 
-No distractions that actually reset you. No external rhythm. No reason to get dressed. No proof that time is moving in a meaningful direction.
+Four months of silence turns your own mind  
+into a closed room with no oxygen.
 
-Just pain and hours.
+You can’t get away from yourself.  
+No rhythm. No reason to get dressed.  
+No proof that time is moving forward.
 
-And pain is not neutral. Pain has gravity. It pulls thoughts toward the worst places.
+Just **pain** and **hours**.
 
-Medication doesn’t just treat symptoms. It changes the person.
+And pain isn’t neutral.  
+Pain has **gravity**.  
+It pulls thoughts toward the worst places.
 
-The depression got heavy, and the doctors responded the way medicine often responds:
+---
 
-Increase dosage.
+## Medication doesn’t just treat symptoms
 
-Seroquel. Then more Seroquel. Up until I was at 150 mg every night.
+### It changes the person
 
-I don’t care how polite the literature is about it—what it did to me felt like being hit with a pharmaceutical bat.
+The depression got heavy.  
+Medicine responded the way medicine often does:
 
-It didn’t simply “help me sleep” or “stabilize mood.”
+**Increase dosage.**
 
-It flattened me.
+Seroquel.  
+Then more Seroquel.  
+Up to **150 mg every night**.
 
-The parts of me that made me me—personality, spark, humor, softness, nuance—got muffled like someone threw a heavy blanket over my soul.
+Polite literature calls it stabilization.  
+What it felt like was being hit  
+with a **pharmaceutical bat**.
 
-And what’s left when you dull a human being down to almost nothing?
+It didn’t just help me sleep.  
+It **flattened** me.
+
+Personality. Humor. Softness. Nuance.  
+Muffled—like someone threw a heavy blanket over my soul.
+
+And what’s left when you dull a human being to almost nothing?
 
 Not peace.
 
-Often, what survives sedation isn’t the good stuff. It’s the primal stuff.
+Often, what survives sedation  
+is the **primal** stuff.
 
-Anger survives.
+**Anger survives.**
 
-So I became this horrifying version of myself:
+So I became a horrifying version of myself:
 
-Zombie-comatose most of the time… but if something hit the wrong nerve, rage would erupt like it was the only emotion still strong enough to move my body.
+Zombie-still most of the time…  
+but if something touched the wrong nerve,  
+**rage erupted** like it was the only emotion strong enough to move my body.
 
-That’s the part people don’t get about being heavily medicated:
+That’s the part people don’t understand about heavy medication:
 
-Sometimes you don’t become “better.” You become less human in a way that makes everyone around you feel unsafe.
+Sometimes you don’t become better.  
+You become **less human** in a way that makes everyone around you feel unsafe.
 
-And then you get blamed for being a person you barely recognize.
+And then you get blamed  
+for being someone  
+you barely recognize.
 
-The Ritalin: the escape hatch that becomes a trap
+---
 
-Somewhere inside that deadened existence, I started abusing my Ritalin.
+## The Ritalin: the escape hatch that becomes a trap
 
-Not because I wanted to party.
+Inside that deadened existence,  
+I started abusing my Ritalin.
 
-Because I couldn’t stand the feeling of being trapped inside my own head, watching my life rot in real time, unable to move forward.
+Not to party.  
+To escape the feeling of being trapped  
+inside my own head,  
+watching my life rot in real time.
 
-When you’re isolated long enough, anything that changes your internal weather starts to feel like salvation.
+When isolation lasts long enough,  
+anything that changes your internal weather  
+feels like **salvation**.
 
 Stimulants can feel like:
 
-movement
+* movement
+    
+* focus
+    
+* purpose
+    
+* life returning
+    
 
-focus
+But when you use them just to survive the unbearable,  
+it stops being medicine  
+and becomes a **lever**.
 
-purpose
+And you keep pulling the lever  
+because the alternative is silence  
+and feeling everything.
 
-life returning
+---
 
-But when you’re using them to survive the unbearable, it stops being medicine and becomes a lever.
+## How the injury reaches your marriage
 
-And you keep pulling the lever because the alternative is to sit in the silence and feel everything.
+This is the part that hurts most to write:
 
-How the injury reaches your marriage
+The injury didn’t just take work from me.  
+It took **me** from the people who loved me.
 
-Here’s the part that hurts the most to write:
+Because injury doesn’t only cause pain.  
+It causes:
 
-The injury didn’t just take work from me.
+* irritability
+    
+* hopelessness
+    
+* exhaustion
+    
+* shame
+    
+* withdrawal
+    
+* dependency
+    
+* identity collapse
+    
 
-It took me from the people who loved me.
+And those don’t stay contained.  
+They **spill**—into conversations, trust, the emotional climate of a home.
 
-Because injury doesn’t only cause pain. It causes:
+Add sedation and chemical flattening on top of that,  
+and you don’t just struggle.
 
-irritability
+You become **hard to live with.  
+Hard to reach.  
+Hard to recognize.**
 
-hopelessness
-
-exhaustion
-
-shame
-
-withdrawal
-
-dependency
-
-identity collapse
-
-And those don’t stay politely contained in the injured person’s body.
-
-They spill.
-
-They spill into conversations. Into trust. Into the emotional climate of the home.
-
-And when you add heavy sedation and chemical flattening on top of that?
-
-You don’t just “struggle.”
-
-You become hard to live with. Hard to reach. Hard to recognize.
-
-I believe—deeply—that this is why I don’t have my wife and my son with me anymore.
-
-Because the version of me that emerged from that period wasn’t the man they built a life with.
-
-It was a man in pain, erased, angry, volatile, not present, not safe.
+I believe—deeply—this is why  
+I don’t have my wife and son with me anymore.
 
 And I hate that.
 
-Not because it makes me look bad.
+Not because it makes me look bad.  
+Because it cost me  
+**the only things that mattered.**
 
-Because it cost me the only things that mattered.
+---
 
-Two years away from the trade that made me proud
+## Two years away from the trade that made me proud
 
-It’s been about two years since I worked in HVAC&R.
+It’s been about **two years** since I worked in HVAC&R.
 
-And that does something very specific to a person who once took pride in competence:
+And that does something brutal to a person  
+who once took pride in competence.
 
-The longer you’re away, the harder it gets to imagine going back.
+The longer you’re away,  
+the harder it is to imagine going back.
 
-You still have the Red Seal. Sure. On paper you’re still qualified.
+You still have the **Red Seal**.  
+On paper, you’re qualified.
 
-But confidence doesn’t live on paper.
+But confidence doesn’t live on paper.  
+Confidence lives in **doing**:
 
-Confidence lives in the muscle-memory of doing.
+* daily reps
+    
+* small wins
+    
+* routine competence
+    
+* showing up
+    
 
-It lives in:
+Without that,  
+your skills feel like they belong  
+to a **past self** you can’t reach.
 
-daily reps
+And the loop becomes vicious:
 
-small wins
+You don’t go back because you lack confidence.  
+You lack confidence because you haven’t gone back.
 
-routine competence
+---
 
-showing up
-
-Without that, you start to feel like your skills belong to a past self you can’t access anymore.
-
-Like you’re watching your own life from outside the glass.
-
-And that creates a brutal loop:
-
-You don’t go back because you don’t feel confident. You don’t feel confident because you haven’t gone back.
-
-The real haunting
+## The real haunting
 
 What haunts me isn’t only the injury.
 
-It’s the realization that the injury became the first domino.
+It’s realizing the injury  
+was the **first domino**.
 
-And the rest of the dominoes were my life.
+And the rest of the dominoes  
+were my life.
 
-I didn’t just lose a job. I lost rhythm. I lost social contact. I lost my sense of myself as reliable. I lost the version of me that felt like a man.
+I lost rhythm.  
+Contact.  
+Identity.  
+Family.
 
-And then I lost my family.
+And I’m left with grief, guilt, and a question:
 
-And now I’m left holding the grief and the guilt and the question:
+> Was that version of me really me,  
+> or what pain and medication did to me?
 
-Was that version of me really “me,” or was it what pain and medication did to me?
+The answer is probably **both**.
 
-The answer is probably both.
+Which is the hardest answer.
 
-Which is the hardest kind of answer.
+---
 
-This isn’t a redemption post
+## This isn’t a redemption post
 
-If you’re reading this expecting a clean arc— a tidy comeback, a motivational ending, a “then I rebuilt my life” paragraph—
+If you’re expecting a tidy comeback,  
+a motivational ending,  
+a clean arc of rebuilding—
 
 I don’t have it.
 
-I’m writing from inside it.
+I’m writing from **inside** it.
 
 What I do have is the truth:
 
-Four months on the floor didn’t just hurt my back.
+Four months on the floor  
+didn’t just hurt my back.
 
-It put me in psychological solitary confinement.
+It put me in **psychological solitary confinement**.  
+Changed my brain chemistry.  
+Changed my relationships.  
+Changed **me**.
 
-It changed my brain chemistry. It changed my personality. It changed my relationships.
+And it’s haunted me ever since.
 
-And it’s been haunting me ever since.
+---
 
-The only honest ending I can offer
+## The only honest ending I can offer
 
 I’m still here.
 
-That’s not a slogan. It’s not positivity.
+Not positivity.  
+Not a slogan.
 
-It’s survival.
+**Survival.**
 
-And if there’s any hope inside this story, it’s this:
+And maybe the smallest piece of hope is this:
 
-The fact that I can name what happened means the “zombie” part isn’t permanent.
+The fact that I can name what happened  
+means the “zombie” part  
+isn’t permanent.
 
-Monsters don’t sit down and tell the truth about what they did.
+Monsters don’t tell the truth  
+about what they did.
 
-They rationalize it. They deny it. They blame everyone else.
+They deny.  
+Blame.  
+Rationalize.
 
 I’m not doing that.
 
-I’m saying: pain, isolation, medication, and shame turned me into someone I don’t recognize— and I’m trying to find my way back.
+I’m saying:
 
-Even if it feels far.
+Pain, isolation, medication, and shame  
+turned me into someone I don’t recognize—
 
+and I’m trying to find my way back.
+
+Even if it feels far.  
 Even if I don’t know how yet.
