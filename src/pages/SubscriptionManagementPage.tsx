@@ -78,7 +78,7 @@ export function SubscriptionManagementPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <RefreshCw className="w-12 h-12 animate-spin text-violet-500 mx-auto mb-4" />
-          <p className="text-slate-400">Loading subscription...</p>
+          <p className="text-muted-foreground">Loading subscription...</p>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ export function SubscriptionManagementPage() {
         <div className="mb-8">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors mb-4 group"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Back
@@ -101,10 +101,10 @@ export function SubscriptionManagementPage() {
               <Crown className="w-8 h-8 text-violet-400" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">
+              <h1 className="text-3xl font-bold text-foreground">
                 Subscription Management
               </h1>
-              <p className="text-slate-400">
+              <p className="text-muted-foreground">
                 Manage your Pain Tracker subscription and billing
               </p>
             </div>
@@ -113,10 +113,9 @@ export function SubscriptionManagementPage() {
 
         {/* Current Plan Card */}
         <div 
-          className="rounded-2xl p-6 mb-8 border border-slate-700/50 relative overflow-hidden"
+          className="rounded-2xl p-6 mb-8 border border-border relative overflow-hidden bg-card"
           style={{
-            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           }}
         >
           {/* Gradient accent line */}
@@ -125,7 +124,7 @@ export function SubscriptionManagementPage() {
           <div className="flex items-start justify-between mb-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
                   <Sparkles className="w-6 h-6 text-amber-400" />
                   {tierBadge.icon} {tierBadge.label} Plan
                 </h2>
@@ -140,14 +139,14 @@ export function SubscriptionManagementPage() {
                   </span>
                 )}
               </div>
-              <p className="text-slate-400">{currentPlan.tagline}</p>
+              <p className="text-muted-foreground">{currentPlan.tagline}</p>
             </div>
 
             <div className="text-right">
               <div className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
                 {currentPlan.pricing.monthly.display}
               </div>
-              <div className="text-sm text-slate-500">per month</div>
+              <div className="text-sm text-muted-foreground">per month</div>
             </div>
           </div>
 
@@ -157,8 +156,8 @@ export function SubscriptionManagementPage() {
               <div className="flex items-center gap-3 p-4 rounded-xl bg-sky-500/10 border border-sky-500/20">
                 <Calendar className="w-5 h-5 text-sky-400" />
                 <div>
-                  <div className="text-sm text-slate-400">Trial Ends</div>
-                  <div className="font-semibold text-white">
+                  <div className="text-sm text-muted-foreground">Trial Ends</div>
+                  <div className="font-semibold text-foreground">
                     {getDaysRemaining(subscription.trialEnd)} days remaining
                   </div>
                 </div>
@@ -166,24 +165,24 @@ export function SubscriptionManagementPage() {
             )}
 
             {subscription?.currentPeriodEnd && (
-              <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-muted border border-border">
                 <Calendar className="w-5 h-5 text-violet-400" />
                 <div>
-                  <div className="text-sm text-slate-400">
+                  <div className="text-sm text-muted-foreground">
                     {subscription.cancelAtPeriodEnd ? 'Access Until' : 'Next Billing'}
                   </div>
-                  <div className="font-semibold text-white">
+                  <div className="font-semibold text-foreground">
                     {new Date(subscription.currentPeriodEnd).toLocaleDateString()}
                   </div>
                 </div>
               </div>
             )}
 
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-800/50 border border-slate-700/50">
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-muted border border-border">
               <Shield className="w-5 h-5 text-emerald-400" />
               <div>
-                <div className="text-sm text-slate-400">Encryption</div>
-                <div className="font-semibold text-white capitalize">
+                <div className="text-sm text-muted-foreground">Encryption</div>
+                <div className="font-semibold text-foreground capitalize">
                   {currentPlan.features.encryption}
                 </div>
               </div>
@@ -193,7 +192,7 @@ export function SubscriptionManagementPage() {
           {/* Usage Stats */}
           {subscription && (
             <div className="border-t border-slate-700/50 pt-6">
-              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-cyan-400" />
                 Usage This Period
               </h3>
@@ -269,7 +268,7 @@ export function SubscriptionManagementPage() {
 
               <button
                 onClick={() => navigate('/settings')}
-                className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-slate-300 border border-slate-600 hover:bg-slate-800 hover:-translate-y-0.5"
+                className="px-5 py-2.5 rounded-xl font-medium transition-all flex items-center gap-2 text-muted-foreground border border-border hover:bg-muted hover:-translate-y-0.5"
               >
                 <Settings className="w-4 h-4" />
                 Account Settings
@@ -280,16 +279,15 @@ export function SubscriptionManagementPage() {
 
         {/* Feature Comparison */}
         <div 
-          className="rounded-2xl p-6 border border-slate-700/50 relative overflow-hidden"
+          className="rounded-2xl p-6 border border-border relative overflow-hidden bg-card"
           style={{
-            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           }}
         >
           {/* Gradient accent line */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-500" />
           
-          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
             <Check className="w-6 h-6 text-emerald-400" />
             Your Plan Features
           </h2>
@@ -297,7 +295,7 @@ export function SubscriptionManagementPage() {
           <div className="space-y-6">
             {Object.entries(FEATURE_COMPARISON).map(([key, section]) => (
               <div key={key}>
-                <h3 className="font-semibold text-white mb-3 text-lg">
+                <h3 className="font-semibold text-foreground mb-3 text-lg">
                   {section.category}
                 </h3>
                 <div className="space-y-2">
@@ -308,21 +306,21 @@ export function SubscriptionManagementPage() {
                     return (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-3 rounded-xl bg-slate-800/50 border border-slate-700/30 hover:border-slate-600/50 transition-colors"
+                        className="flex items-center justify-between p-3 rounded-xl bg-muted border border-slate-700/30 hover:border-border/50 transition-colors"
                       >
-                        <span className="text-slate-300">{item.name}</span>
+                        <span className="text-muted-foreground">{item.name}</span>
                         <div className="flex items-center gap-2">
                           {hasFeature ? (
                             <>
                               <Check className="w-5 h-5 text-emerald-400" />
-                              <span className="text-sm font-medium text-white">
+                              <span className="text-sm font-medium text-foreground">
                                 {typeof currentValue === 'boolean' ? 'Included' : currentValue}
                               </span>
                             </>
                           ) : (
                             <>
-                              <X className="w-5 h-5 text-slate-500" />
-                              <span className="text-sm text-slate-500">Not Available</span>
+                              <X className="w-5 h-5 text-muted-foreground" />
+                              <span className="text-sm text-muted-foreground">Not Available</span>
                             </>
                           )}
                         </div>
@@ -340,20 +338,17 @@ export function SubscriptionManagementPage() {
       {showCancelDialog && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div 
-            className="rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-700/50"
-            style={{
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 1) 100%)'
-            }}
+            className="rounded-2xl shadow-2xl max-w-md w-full p-6 border border-border bg-card"
           >
             <div className="flex items-start gap-4 mb-4">
               <div className="p-2 rounded-lg bg-rose-500/20 border border-rose-500/30">
                 <AlertCircle className="w-6 h-6 text-rose-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   Cancel Subscription?
                 </h3>
-                <p className="text-slate-400 text-sm">
+                <p className="text-muted-foreground text-sm">
                   You will lose access to {tierBadge.label} features at the end of your billing period.
                   Your data will be retained according to the Free tier limits.
                 </p>
@@ -363,7 +358,7 @@ export function SubscriptionManagementPage() {
             <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowCancelDialog(false)}
-                className="px-4 py-2 rounded-lg text-slate-300 border border-slate-600 hover:bg-slate-800 transition-colors"
+                className="px-4 py-2 rounded-lg text-muted-foreground border border-border hover:bg-muted transition-colors"
               >
                 Keep Subscription
               </button>
@@ -412,14 +407,14 @@ function UsageStat({ label, current, limit, unit = '', color = 'sky' }: UsageSta
   };
 
   return (
-    <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700/30">
-      <div className="text-sm text-slate-400 mb-1">{label}</div>
-      <div className="font-semibold text-white">
-        {current} {unit} {!isUnlimited && <span className="text-slate-500">/ {limit} {unit}</span>}
+    <div className="p-4 rounded-xl bg-muted border border-border">
+      <div className="text-sm text-muted-foreground mb-1">{label}</div>
+      <div className="font-semibold text-foreground">
+        {current} {unit} {!isUnlimited && <span className="text-muted-foreground">/ {limit} {unit}</span>}
         {isUnlimited && <span className={`ml-1 ${colorClasses[color].text}`}></span>}
       </div>
       {!isUnlimited && (
-        <div className="mt-2 h-2 bg-slate-700/50 rounded-full overflow-hidden">
+        <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
           <div
             className={`h-full bg-gradient-to-r ${getBarColor()} transition-all rounded-full`}
             style={{ width: `${percentage}%` }}

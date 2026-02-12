@@ -15,7 +15,6 @@ import { PatientPainTimeline } from '../../components/clinic/PatientPainTimeline
 import { PatternDetectionService, DetectedPattern } from '../../services/PatternDetectionService';
 import { ReportGenerationService, ReportPainEntry } from '../../services/ReportGenerationService';
 import type { PainEntry } from '../../types';
-
 /**
  * Convert simplified demo data to canonical PainEntry format for pattern detection
  */
@@ -69,7 +68,6 @@ function createDemoPainEntry(data: ReportPainEntry): PainEntry {
     sleep: data.sleep,
   };
 }
-
 // Mock data - simplified format for demo (replace with real API calls)
 const mockReportEntries: ReportPainEntry[] = [
   {
@@ -194,10 +192,8 @@ const mockReportEntries: ReportPainEntry[] = [
     sleep: 9,
   },
 ];
-
 // Convert to canonical format for pattern detection
 const mockPainEntries: PainEntry[] = mockReportEntries.map(createDemoPainEntry);
-
 const mockInterventions = [
   {
     id: '1',
@@ -216,7 +212,6 @@ const mockInterventions = [
     notes: '2x weekly sessions',
   },
 ];
-
 const mockPatientInfo = {
   id: '1',
   name: 'Sarah Johnson',
@@ -229,7 +224,6 @@ const mockPatientInfo = {
   phone: '(604) 555-0123',
   email: 'sarah.j@email.com',
 };
-
 const mockMedications = [
   {
     name: 'Naproxen',
@@ -246,7 +240,6 @@ const mockMedications = [
     prescriber: 'Dr. Smith',
   },
 ];
-
 const mockClinicalNotes = [
   {
     id: '1',
@@ -264,7 +257,6 @@ const mockClinicalNotes = [
     content: 'Patient responding well to treatment. Pain reduced to 5/10. Continuing physical therapy.',
   },
 ];
-
 export const EnhancedPatientView: React.FC = () => {
   const { patientId } = useParams();
   const navigate = useNavigate();
@@ -272,7 +264,6 @@ export const EnhancedPatientView: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showPatterns, setShowPatterns] = useState(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
-
   useEffect(() => {
     const analyzePatterns = async () => {
       setIsAnalyzing(true);
@@ -288,10 +279,8 @@ export const EnhancedPatientView: React.FC = () => {
         setIsAnalyzing(false);
       }
     };
-
     analyzePatterns();
   }, [patientId]);
-
   const handleGenerateWorkSafeBCReport = async () => {
     setIsGeneratingReport(true);
     try {
@@ -310,7 +299,6 @@ export const EnhancedPatientView: React.FC = () => {
       setIsGeneratingReport(false);
     }
   };
-
   const handleGenerateInsuranceReport = async () => {
     setIsGeneratingReport(true);
     try {
@@ -327,7 +315,6 @@ export const EnhancedPatientView: React.FC = () => {
       setIsGeneratingReport(false);
     }
   };
-
   const handleExportCSV = () => {
     const csv = ReportGenerationService.exportToCSV(mockReportEntries);
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -337,10 +324,8 @@ export const EnhancedPatientView: React.FC = () => {
     a.download = `${mockPatientInfo.name}-pain-data-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
   };
-
   const highConfidencePatterns = patterns.filter((p) => p.confidence === 'high');
   const actionablePatterns = patterns.filter((p) => p.actionable);
-
   return (
     <div className="space-y-6 p-6 bg-background text-foreground min-h-screen">
       {/* Ambient background */}
@@ -348,22 +333,19 @@ export const EnhancedPatientView: React.FC = () => {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/5 rounded-full blur-3xl" />
       </div>
-
       {/* Header */}
       <div 
-        className="relative rounded-2xl border border-slate-700/50 p-6 overflow-hidden"
+        className="relative rounded-2xl border border-border p-6 overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
           boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
         }}
       >
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-violet-500 to-purple-500" />
-        
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate('/clinic')}
-              className="p-2 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all"
+              className="p-2 rounded-xl bg-muted border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
@@ -372,25 +354,24 @@ export const EnhancedPatientView: React.FC = () => {
                 <User className="w-6 h-6 text-sky-400" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">{mockPatientInfo.name}</h1>
-                <p className="text-slate-400">
+                <h1 className="text-2xl font-bold text-foreground">{mockPatientInfo.name}</h1>
+                <p className="text-muted-foreground">
                   Claim #{mockPatientInfo.claimNumber}  {mockPatientInfo.occupation}
                 </p>
               </div>
             </div>
           </div>
-
           <div className="flex gap-3">
             <button
               onClick={handleExportCSV}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 transition-all"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted border border-border text-muted-foreground hover:bg-muted transition-all"
             >
               <Download className="w-4 h-4" />
               Export CSV
             </button>
             <button
               onClick={() => setShowPatterns(!showPatterns)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white font-medium transition-all hover:-translate-y-0.5 shadow-lg shadow-violet-500/25"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-foreground font-medium transition-all hover:-translate-y-0.5 shadow-lg shadow-violet-500/25"
               style={{
                 background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)'
               }}
@@ -400,64 +381,56 @@ export const EnhancedPatientView: React.FC = () => {
             </button>
           </div>
         </div>
-
         {/* Quick stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="p-4 rounded-xl bg-sky-500/10 border border-sky-500/20">
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-5 h-5 text-sky-400" />
-              <span className="text-sm text-slate-400">Data Points</span>
+              <span className="text-sm text-muted-foreground">Data Points</span>
             </div>
-            <p className="text-2xl font-bold text-white">{mockReportEntries.length}</p>
+            <p className="text-2xl font-bold text-foreground">{mockReportEntries.length}</p>
           </div>
-
           <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-5 h-5 text-emerald-400" />
-              <span className="text-sm text-slate-400">Trend</span>
+              <span className="text-sm text-muted-foreground">Trend</span>
             </div>
             <p className="text-2xl font-bold text-emerald-400">Improving</p>
           </div>
-
           <div className="p-4 rounded-xl bg-violet-500/10 border border-violet-500/20">
             <div className="flex items-center gap-2 mb-2">
               <Brain className="w-5 h-5 text-violet-400" />
-              <span className="text-sm text-slate-400">AI Patterns</span>
+              <span className="text-sm text-muted-foreground">AI Patterns</span>
             </div>
-            <p className="text-2xl font-bold text-white">{highConfidencePatterns.length}</p>
+            <p className="text-2xl font-bold text-foreground">{highConfidencePatterns.length}</p>
           </div>
-
           <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
             <div className="flex items-center gap-2 mb-2">
               <AlertCircle className="w-5 h-5 text-amber-400" />
-              <span className="text-sm text-slate-400">Action Items</span>
+              <span className="text-sm text-muted-foreground">Action Items</span>
             </div>
-            <p className="text-2xl font-bold text-white">{actionablePatterns.length}</p>
+            <p className="text-2xl font-bold text-foreground">{actionablePatterns.length}</p>
           </div>
         </div>
       </div>
-
       {/* AI-Detected Patterns */}
       {showPatterns && (
         <div 
-          className="relative rounded-2xl border border-slate-700/50 p-6 overflow-hidden"
+          className="relative rounded-2xl border border-border p-6 overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
             boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
           }}
         >
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500" />
-          
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 rounded-xl bg-violet-500/20 border border-violet-500/30">
               <Brain className="w-5 h-5 text-violet-400" />
             </div>
-            <h2 className="text-xl font-bold text-white">AI-Detected Patterns</h2>
-            {isAnalyzing && <span className="text-sm text-slate-500">Analyzing...</span>}
+            <h2 className="text-xl font-bold text-foreground">AI-Detected Patterns</h2>
+            {isAnalyzing && <span className="text-sm text-muted-foreground">Analyzing...</span>}
           </div>
-
           {patterns.length === 0 ? (
-            <p className="text-slate-400">No significant patterns detected yet. More data needed.</p>
+            <p className="text-muted-foreground">No significant patterns detected yet. More data needed.</p>
           ) : (
             <div className="space-y-4">
               {patterns.slice(0, 5).map((pattern) => (
@@ -468,50 +441,50 @@ export const EnhancedPatientView: React.FC = () => {
                       ? 'bg-emerald-500/10 border-emerald-500'
                       : pattern.confidence === 'medium'
                         ? 'bg-sky-500/10 border-sky-500'
-                        : 'bg-slate-800/50 border-slate-500'
+                        : 'bg-muted border-slate-500'
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-white">{pattern.title}</h3>
+                        <h3 className="font-semibold text-foreground">{pattern.title}</h3>
                         <span
                           className={`px-2 py-0.5 text-xs font-medium rounded-full ${
                             pattern.confidence === 'high'
                               ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                               : pattern.confidence === 'medium'
                                 ? 'bg-sky-500/20 text-sky-400 border border-sky-500/30'
-                                : 'bg-slate-700 text-slate-400'
+                                : 'bg-muted text-muted-foreground'
                           }`}
                         >
                           {pattern.confidence} confidence
                         </span>
                       </div>
-                      <p className="text-sm text-slate-400 mb-2">{pattern.description}</p>
+                      <p className="text-sm text-muted-foreground mb-2">{pattern.description}</p>
                       {pattern.recommendation && (
-                        <div className="flex items-start gap-2 mt-3 p-3 rounded-lg bg-slate-800/50 border border-slate-700/50">
+                        <div className="flex items-start gap-2 mt-3 p-3 rounded-lg bg-muted border border-border">
                           <Sparkles className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
-                          <p className="text-sm text-slate-300">
+                          <p className="text-sm text-muted-foreground">
                             <span className="font-medium text-amber-400">Recommendation:</span> {pattern.recommendation}
                           </p>
                         </div>
                       )}
                     </div>
                     <div className="ml-4 text-right">
-                      <p className="text-sm text-slate-500">Impact</p>
+                      <p className="text-sm text-muted-foreground">Impact</p>
                       <p
                         className={`text-xl font-bold ${
                           pattern.impact > 0
                             ? 'text-emerald-400'
                             : pattern.impact < 0
                               ? 'text-rose-400'
-                              : 'text-slate-400'
+                              : 'text-muted-foreground'
                         }`}
                       >
                         {pattern.impact > 0 ? '+' : ''}
                         {pattern.impact.toFixed(1)}
                       </p>
-                      <p className="text-xs text-slate-500 mt-1">{pattern.occurrences} occurrences</p>
+                      <p className="text-xs text-muted-foreground mt-1">{pattern.occurrences} occurrences</p>
                     </div>
                   </div>
                 </div>
@@ -520,7 +493,6 @@ export const EnhancedPatientView: React.FC = () => {
           )}
         </div>
       )}
-
       {/* Interactive Timeline */}
       <PatientPainTimeline
         patientId={patientId || '1'}
@@ -528,24 +500,20 @@ export const EnhancedPatientView: React.FC = () => {
         entries={mockReportEntries}
         interventions={mockInterventions}
       />
-
       {/* Report Generation */}
       <div 
-        className="relative rounded-2xl border border-slate-700/50 p-6 overflow-hidden"
+        className="relative rounded-2xl border border-border p-6 overflow-hidden"
         style={{
-          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
           boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
         }}
       >
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-500" />
-        
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 rounded-xl bg-sky-500/20 border border-sky-500/30">
             <FileText className="w-5 h-5 text-sky-400" />
           </div>
-          <h2 className="text-xl font-bold text-white">Generate Reports</h2>
+          <h2 className="text-xl font-bold text-foreground">Generate Reports</h2>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <button
             onClick={handleGenerateWorkSafeBCReport}
@@ -554,8 +522,8 @@ export const EnhancedPatientView: React.FC = () => {
           >
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="font-semibold text-white mb-2">WorkSafe BC Report</h3>
-                <p className="text-sm text-slate-400 mb-4">
+                <h3 className="font-semibold text-foreground mb-2">WorkSafe BC Report</h3>
+                <p className="text-sm text-muted-foreground mb-4">
                   Comprehensive medical report with functional assessment and work capacity evaluation
                 </p>
                 <div className="flex items-center gap-2">
@@ -565,7 +533,6 @@ export const EnhancedPatientView: React.FC = () => {
               </div>
             </div>
           </button>
-
           <button
             onClick={handleGenerateInsuranceReport}
             disabled={isGeneratingReport}
@@ -573,8 +540,8 @@ export const EnhancedPatientView: React.FC = () => {
           >
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="font-semibold text-white mb-2">Insurance Claim Report</h3>
-                <p className="text-sm text-slate-400 mb-4">
+                <h3 className="font-semibold text-foreground mb-2">Insurance Claim Report</h3>
+                <p className="text-sm text-muted-foreground mb-4">
                   Detailed medical documentation for insurance claim processing and review
                 </p>
                 <div className="flex items-center gap-2">
@@ -585,7 +552,6 @@ export const EnhancedPatientView: React.FC = () => {
             </div>
           </button>
         </div>
-
         {isGeneratingReport && (
           <div className="mt-4 p-4 rounded-xl bg-sky-500/10 border border-sky-500/20">
             <p className="text-sm text-sky-400">Generating report...</p>

@@ -359,6 +359,31 @@ export const PatientPainTimeline: React.FC<PatientPainTimelineProps> = ({
                 }}
               />
               <Legend />
+              <Area
+                type="monotone"
+                dataKey="painLevel"
+                stroke="#ef4444"
+                fill="url(#painGradient)"
+                strokeWidth={2}
+                name="Pain Level"
+              />
+              <ReferenceLine y={7} stroke="#f59e0b" strokeDasharray="3 3" label="High Pain Threshold" />
+              <Brush dataKey="date" height={30} stroke="#3b82f6" />
+            </AreaChart>
+          ) : viewMode === 'correlation' ? (
+            <ComposedChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="date" stroke="#64748b" />
+              <YAxis domain={[0, 10]} stroke="#64748b" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'rgb(var(--color-card))',
+                  border: '1px solid rgb(var(--color-border))',
+                  borderRadius: '8px',
+                  color: 'rgb(var(--color-card-foreground))',
+                }}
+              />
+              <Legend />
               <Line type="monotone" dataKey="painLevel" stroke="#ef4444" strokeWidth={2} name="Pain Level" />
               <Line type="monotone" dataKey="mood" stroke="#3b82f6" strokeWidth={2} name="Mood" />
               <Line type="monotone" dataKey="sleep" stroke="#10b981" strokeWidth={2} name="Sleep Quality" />

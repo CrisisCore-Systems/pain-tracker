@@ -130,10 +130,9 @@ export const SubmitStoryPage: React.FC = () => {
         </div>
         
         <div 
-          className="relative max-w-md w-full p-8 rounded-2xl text-center border border-slate-700/50"
+          className="relative max-w-md w-full p-8 rounded-2xl text-center border border-border bg-card"
           style={{
-            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           }}
         >
           {/* Success gradient accent */}
@@ -143,15 +142,15 @@ export const SubmitStoryPage: React.FC = () => {
             <CheckCircle2 className="w-8 h-8 text-emerald-400" />
           </div>
           
-          <h1 className="text-2xl font-bold text-white mb-3">Thank you for sharing</h1>
-          <p className="text-slate-400 mb-8">
+          <h1 className="text-2xl font-bold text-foreground mb-3">Thank you for sharing</h1>
+          <p className="text-muted-foreground mb-8">
             Your story means the world to us. We'll review it and reach out if we need permission to publish.
           </p>
           
           <Button 
             onClick={() => navigate('/')} 
             variant="outline"
-            className="border-slate-600 text-slate-300 hover:bg-slate-800"
+            className="border-border text-muted-foreground hover:bg-muted"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
@@ -174,7 +173,7 @@ export const SubmitStoryPage: React.FC = () => {
         {/* Back button */}
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8 group"
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           Back to Home
@@ -185,18 +184,17 @@ export const SubmitStoryPage: React.FC = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500/20 to-pink-500/20 border border-rose-500/30 mb-6">
             <Heart className="w-8 h-8 text-rose-400" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-3">Share Your Story</h1>
-          <p className="text-slate-400 max-w-md mx-auto">
+          <h1 className="text-3xl font-bold text-foreground mb-3">Share Your Story</h1>
+          <p className="text-muted-foreground max-w-md mx-auto">
             Your experience matters. Help others understand they're not alone on their journey.
           </p>
         </div>
 
         {/* Form Card */}
         <div 
-          className="rounded-2xl p-8 border border-slate-700/50 relative overflow-hidden"
+          className="rounded-2xl p-8 border border-border relative overflow-hidden bg-card"
           style={{
-            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
           }}
         >
           {/* Gradient accent line */}
@@ -207,47 +205,47 @@ export const SubmitStoryPage: React.FC = () => {
             <Shield className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
             <div>
               <p className="text-sm text-emerald-300 font-medium">Your privacy matters</p>
-              <p className="text-sm text-slate-400 mt-1">You can choose to anonymize your submission. We'll never share your contact information.</p>
+              <p className="text-sm text-muted-foreground mt-1">You can choose to anonymize your submission. We'll never share your contact information.</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Role</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Role</label>
                 <input
                   type="text"
                   value={role}
                   onChange={e => setRole(e.target.value)}
                   placeholder="e.g. Patient, Clinician"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Email (optional)</label>
+              <label className="block text-sm font-medium text-foreground mb-2">Email (optional)</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="your@email.com"
-                className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
+                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all"
               />
             </div>
 
             <div>
-              <label htmlFor="story-input" className="block text-sm font-medium text-slate-300 mb-2">Your Story</label>
+              <label htmlFor="story-input" className="block text-sm font-medium text-foreground mb-2">Your Story</label>
               <textarea
                 id="story-input"
                 value={quote}
@@ -255,7 +253,7 @@ export const SubmitStoryPage: React.FC = () => {
                 required
                 rows={6}
                 placeholder="Share your experience with chronic pain management..."
-                className="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-muted border border-border text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-500/50 transition-all resize-none"
               />
             </div>
 
@@ -269,11 +267,11 @@ export const SubmitStoryPage: React.FC = () => {
                     onChange={e => setAnonymized(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-5 h-5 rounded border-2 border-slate-600 peer-checked:border-violet-500 peer-checked:bg-violet-500 transition-all flex items-center justify-center">
+                  <div className="w-5 h-5 rounded border-2 border-border peer-checked:border-violet-500 peer-checked:bg-violet-500 transition-all flex items-center justify-center">
                     {anonymized && <Sparkles className="w-3 h-3 text-white" />}
                   </div>
                 </div>
-                <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
+                <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                   Publish anonymously
                 </span>
               </label>
@@ -287,11 +285,11 @@ export const SubmitStoryPage: React.FC = () => {
                     onChange={e => setConsent(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-5 h-5 rounded border-2 border-slate-600 peer-checked:border-emerald-500 peer-checked:bg-emerald-500 transition-all flex items-center justify-center">
+                  <div className="w-5 h-5 rounded border-2 border-border peer-checked:border-emerald-500 peer-checked:bg-emerald-500 transition-all flex items-center justify-center">
                     {consent && <CheckCircle2 className="w-3 h-3 text-white" />}
                   </div>
                 </div>
-                <span className="text-sm text-slate-300 group-hover:text-white transition-colors">
+                <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
                   I consent to my story being reviewed and published
                 </span>
               </label>
@@ -318,7 +316,7 @@ export const SubmitStoryPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="px-6 py-3.5 rounded-xl text-slate-300 border border-slate-600 hover:bg-slate-800 transition-all hover:-translate-y-0.5"
+                className="px-6 py-3.5 rounded-xl text-muted-foreground border border-border hover:bg-muted transition-all hover:-translate-y-0.5"
               >
                 Cancel
               </button>

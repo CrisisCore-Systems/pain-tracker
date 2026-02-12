@@ -1,7 +1,6 @@
 /**
  * Clinic Dashboard - Main overview for healthcare professionals
  */
-
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
@@ -20,10 +19,8 @@ import { ClinicStatCard } from '../../components/clinic/ClinicStatCard';
 import { RecentPatientsTable } from '../../components/clinic/RecentPatientsTable';
 import { UpcomingAppointments } from '../../components/clinic/UpcomingAppointments';
 import { PriorityAlerts } from '../../components/clinic/PriorityAlerts';
-
 export function ClinicDashboard() {
   const navigate = useNavigate();
-  
   // Mock data - in production, fetch from API
   const stats = {
     activePatients: 247,
@@ -37,7 +34,6 @@ export function ClinicDashboard() {
     aiPatternsDetected: 12,
     medicationAdherence: 87
   };
-
   return (
     <div className="p-6 space-y-6 bg-background text-foreground min-h-screen">
       {/* Ambient background */}
@@ -45,7 +41,6 @@ export function ClinicDashboard() {
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-500/5 rounded-full blur-3xl" />
       </div>
-
       {/* Page Header */}
       <div className="relative">
         <div className="flex items-center gap-3 mb-2">
@@ -53,16 +48,15 @@ export function ClinicDashboard() {
             <Activity className="w-6 h-6 text-sky-400" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-foreground">
               Clinical Dashboard
             </h1>
-            <p className="text-slate-400">
+            <p className="text-muted-foreground">
               Welcome back! Here's an overview of your patients and activities.
             </p>
           </div>
         </div>
       </div>
-
       {/* Stats Grid */}
       <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ClinicStatCard
@@ -98,7 +92,6 @@ export function ClinicDashboard() {
           iconColor="bg-violet-500"
         />
       </div>
-
       {/* Feature Highlights - Premium Cards */}
       <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4">
         <button
@@ -113,21 +106,20 @@ export function ClinicDashboard() {
             <div className="p-2 rounded-xl bg-rose-500/20 border border-rose-500/30">
               <Bell className="w-6 h-6 text-rose-400 group-hover:scale-110 transition-transform" />
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-500 text-white">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-500 text-foreground">
               {stats.criticalAlerts} Active
             </span>
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">
+          <h3 className="text-lg font-bold text-foreground mb-2">
             On-Device Monitoring
           </h3>
-          <p className="text-sm text-slate-400 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             Optional, on-device alerts for worsening patterns and missed routines (no server-side clinician monitoring)
           </p>
           <div className="flex items-center gap-2 text-rose-400 font-medium text-sm group-hover:gap-3 transition-all">
             View Dashboard <ArrowRight className="w-4 h-4" />
           </div>
         </button>
-
         <button
           onClick={() => navigate('/clinic/patients/1')}
           className="group p-6 rounded-2xl border border-violet-500/20 transition-all text-left hover:-translate-y-1"
@@ -140,21 +132,20 @@ export function ClinicDashboard() {
             <div className="p-2 rounded-xl bg-violet-500/20 border border-violet-500/30">
               <Brain className="w-6 h-6 text-violet-400 group-hover:scale-110 transition-transform" />
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-violet-500 text-white">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-violet-500 text-foreground">
               {stats.aiPatternsDetected} Insights
             </span>
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">
+          <h3 className="text-lg font-bold text-foreground mb-2">
             Automated Pattern Detection
           </h3>
-          <p className="text-sm text-slate-400 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             Automatic identification of pain triggers, medication efficacy, and treatment correlations
           </p>
           <div className="flex items-center gap-2 text-violet-400 font-medium text-sm group-hover:gap-3 transition-all">
             See Patient Example <ArrowRight className="w-4 h-4" />
           </div>
         </button>
-
         <button
           onClick={() => navigate('/clinic/patients/1')}
           className="group p-6 rounded-2xl border border-sky-500/20 transition-all text-left hover:-translate-y-1"
@@ -167,14 +158,14 @@ export function ClinicDashboard() {
             <div className="p-2 rounded-xl bg-sky-500/20 border border-sky-500/30">
               <Download className="w-6 h-6 text-sky-400 group-hover:scale-110 transition-transform" />
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-sky-500 text-white">
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-sky-500 text-foreground">
               1-Click
             </span>
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">
+          <h3 className="text-lg font-bold text-foreground mb-2">
             Automated Reports
           </h3>
-          <p className="text-sm text-slate-400 mb-4">
+          <p className="text-sm text-muted-foreground mb-4">
             Generate WorkSafe BC and insurance reports in seconds with pre-filled data
           </p>
           <div className="flex items-center gap-2 text-sky-400 font-medium text-sm group-hover:gap-3 transition-all">
@@ -182,32 +173,27 @@ export function ClinicDashboard() {
           </div>
         </button>
       </div>
-
       {/* Two Column Layout */}
       <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Takes 2/3 width */}
         <div className="lg:col-span-2 space-y-6">
           {/* Priority Alerts */}
           <PriorityAlerts />
-
           {/* Recent Patients */}
           <RecentPatientsTable />
         </div>
-
         {/* Right Column - Takes 1/3 width */}
         <div className="space-y-6">
           {/* Upcoming Appointments */}
           <UpcomingAppointments />
-
           {/* Quick Actions */}
           <div 
-            className="rounded-2xl border border-slate-700/50 p-6"
+            className="rounded-2xl border border-border bg-card p-6"
             style={{
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
               boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
             }}
           >
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-400" />
               Quick Actions
             </h3>
@@ -250,32 +236,30 @@ export function ClinicDashboard() {
               </button>
             </div>
           </div>
-
           {/* System Status */}
           <div 
-            className="rounded-2xl border border-slate-700/50 p-6"
+            className="rounded-2xl border border-border bg-card p-6"
             style={{
-              background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%)',
               boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
             }}
           >
-            <h3 className="text-lg font-semibold text-white mb-4">
+            <h3 className="text-lg font-semibold text-foreground mb-4">
               System Status
             </h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-sm text-slate-400">API Status</span>
+                  <span className="text-sm text-muted-foreground">API Status</span>
                 </div>
                 <span className="text-sm font-medium text-emerald-400">Operational</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-sky-400" />
-                  <span className="text-sm text-slate-400">Last Sync</span>
+                  <span className="text-sm text-muted-foreground">Last Sync</span>
                 </div>
-                <span className="text-sm font-medium text-slate-300">2 min ago</span>
+                <span className="text-sm font-medium text-muted-foreground">2 min ago</span>
               </div>
             </div>
           </div>
