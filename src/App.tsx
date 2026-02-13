@@ -28,6 +28,7 @@ const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContaine
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
 const PricingPage = lazy(() => import('./pages/PricingPage').then(m => ({ default: m.PricingPage })));
 const CnetDownloadPage = lazy(() => import('./pages/CnetDownloadPage').then(m => ({ default: m.CnetDownloadPage })));
+const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage').then(m => ({ default: m.WhitepaperPage })));
 const ScreenshotShowcase = lazy(() => import('./pages/ScreenshotShowcase').then(m => ({ default: m.ScreenshotShowcase })));
 const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => ({ default: m.ClinicPortal })));
 const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
@@ -149,6 +150,9 @@ function App() {
 
                       {/* CNET Download URL - Public */}
                       <Route path="/cnet-download" element={<CnetDownloadPage />} />
+
+                      {/* Whitepaper Download - Public */}
+                      <Route path="/whitepaper" element={<WhitepaperPage />} />
 
                       {/* Screenshot Showcase - Public */}
                       <Route path="/demo/*" element={<ScreenshotShowcase />} />
