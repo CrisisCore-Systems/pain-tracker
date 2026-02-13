@@ -33,6 +33,8 @@ vi.mock('recharts', () => {
 
 import { PatientPainTimeline } from '../PatientPainTimeline';
 
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 const mockEntries = [
   {
     id: '1',
@@ -45,7 +47,7 @@ const mockEntries = [
   },
   {
     id: '2',
-    timestamp: new Date(Date.now() - 86400000).toISOString(),
+    timestamp: new Date(Date.now() - ONE_DAY_MS).toISOString(),
     painLevel: 7,
     location: 'neck',
     mood: 4,
