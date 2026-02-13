@@ -149,6 +149,33 @@ Apply (include already-published posts too):
 npm run -s devto:sync-content:apply:allow-published
 ```
 
+## Push local source markdown to DEV
+
+This reads local source markdown files (from `sourceFile` in `schedule.json`) and pushes their full content to the corresponding DEV articles via the API. Use this after editing source files locally (e.g. fixing links) to update the DEV drafts.
+
+- Articles must already exist on DEV (run `create-drafts` first if needed)
+- CTA blocks are injected automatically
+- Series name and front matter are set from schedule config
+- Skips already-published posts by default
+
+Dry run:
+
+```powershell
+npm run -s devto:push-source
+```
+
+Apply (scheduled/unpublished posts only):
+
+```powershell
+npm run -s devto:push-source:apply
+```
+
+Apply (include already-published posts too):
+
+```powershell
+npm run -s devto:push-source:apply:allow-published
+```
+
 ## Retrofit already-published posts (funnels + conversion block)
 
 This is a separate pass for **already-published** articles to make them behave like a funnel:

@@ -1362,6 +1362,112 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished }) {
   }
 }
 
+async function cmdPushSource(schedule, { yes, write, allowPublished }) {
+  const now = new Date();
+  let pushed = 0;
+  let linked = 0;
+  let skipped = 0;
+
+  const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
+  const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
+  const seriesStartUrl = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
+  const seriesName = process.env.DEVTO_SERIES ?? schedule.defaults?.series;
+  const organizationIdRaw = process.env.DEVTO_ORGANIZATION_ID ?? schedule.defaults?.organization_id;
+  const organization_id = organizationIdRaw ? Number(organizationIdRaw) : undefined;
+
+  if (!sponsorUrl || !repoUrl) {
+    throw new Error('Missing sponsor/repo URL. Set DEVTO_SPONSOR_URL and DEVTO_REPO_URL (or schedule.defaults).');
+  }
+
+  const allCache = await listAllUserArticles();
+
+  for (const post of schedule.posts) {
+    if (!post.enabled) continue;
+    if (!post.sourceFile) {
+      console.log(`Skip (no sourceFile): ${post.key}`);
+      skipped += 1;
+      continue;
+    }
+
+    // Resolve article via /articles/me/all.
+    let current = null;
+    if (post.articleId) {
+      current = allCache.find((a) => a?.id === post.articleId) ?? null;
+    }
+
+    if (!current) {
+      const wanted = normalizeTitle(post.title);
+      const matches = allCache.filter((a) => normalizeTitle(a?.title) === wanted);
+      const best = pickBestTitleMatch(matches, post.publishAt, now);
+      if (best?.id) {
+        post.articleId = best.id;
+        post.devtoUrl = best.url ?? post.devtoUrl ?? null;
+        current = best;
+        linked += 1;
+      }
+    }
+
+    if (!current || !post.articleId) {
+      console.log(`Skip (no article on DEV — run create-drafts first): ${post.title}`);
+      skipped += 1;
+      continue;
+    }
+
+    if (!allowPublished && isPublishedInPast(current, now) && !isScheduledForFuture(current, now)) {
+      console.log(`Skip (already published — use --allow-published to force): ${post.title}`);
+      skipped += 1;
+      continue;
+    }
+
+    // Read the local source markdown file.
+    const { md } = await readSourceMarkdown(post.sourceFile);
+    const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
+
+    let body_markdown = injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom });
+
+    if (seriesName) {
+      body_markdown = upsertSeriesInBodyMarkdown(body_markdown, seriesName);
+    }
+
+    if (!yes) {
+      console.log(`DRY RUN: push source for ${post.title}`);
+      console.log(`  id:     ${post.articleId}`);
+      console.log(`  url:    ${current?.url ?? post.devtoUrl ?? '(unknown)'}`);
+      console.log(`  source: ${post.sourceFile}`);
+      continue;
+    }
+
+    const payload = {
+      article: {
+        title: post.title,
+        body_markdown,
+        series: seriesName ?? null,
+        canonical_url: post.canonical_url ?? null,
+        description: post.description ?? undefined,
+        tags: ensureStringArrayTags(post.tags),
+        organization_id: organization_id ?? null,
+      },
+    };
+
+    const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
+    post.devtoUrl = updated?.url ?? post.devtoUrl;
+    pushed += 1;
+    console.log(`Pushed: ${post.title}`);
+    console.log(`  id:  ${post.articleId}`);
+    console.log(`  url: ${post.devtoUrl}`);
+  }
+
+  if (!yes) return;
+
+  console.log('');
+  console.log(`Done. Pushed: ${pushed}. Linked: ${linked}. Skipped: ${skipped}.`);
+
+  if (write) {
+    await saveSchedule(schedule);
+    console.log('Wrote updated article IDs/URLs back into schedule.json');
+  }
+}
+
 async function cmdRetrofitPublished(schedule, { yes }) {
   const now = new Date();
 
@@ -1851,6 +1957,15 @@ async function main() {
 
   if (cmd === 'sync-content') {
     await cmdSyncContent(schedule, {
+      yes: Boolean(args.yes),
+      write: Boolean(args.write),
+      allowPublished: Boolean(args['allow-published']),
+    });
+    return;
+  }
+
+  if (cmd === 'push-source') {
+    await cmdPushSource(schedule, {
       yes: Boolean(args.yes),
       write: Boolean(args.write),
       allowPublished: Boolean(args['allow-published']),
