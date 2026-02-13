@@ -11,7 +11,7 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-_Series:_ [Start here](./devto-series-00-start-here.md) · [Part 1](./devto-series-01-offline-first-local-first-architecture.md) · [Part 2](./devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](./devto-series-03-service-workers-that-dont-surprise-you.md) · **Part 4** · [Part 5](./devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](./devto-series-06-exports-as-a-security-boundary.md) · [Part 7](./devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](./devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](./devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](./devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · **Part 4** · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
 
 This post is Part 4 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
@@ -20,7 +20,7 @@ This post is Part 4 in a Dev.to series grounded in the open-source **Pain Tracke
 - The goal is simple: make the app resilient to bad inputs without quietly accepting nonsense.
 
 If you haven’t read Part 3 yet:
-- Part 3: [Service workers that don’t surprise you](./devto-series-03-service-workers-that-dont-surprise-you.md)
+- Part 3: [Service workers that don’t surprise you](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
 
 ---
 
@@ -147,5 +147,5 @@ A few rules that keep schema-first apps from becoming unmaintainable:
 
 Part 5 covers why trauma-informed UX and accessibility aren’t “polish” in health-adjacent apps — they’re architecture.
 
-Prev: [Part 3 — Service workers that don’t surprise you](./devto-series-03-service-workers-that-dont-surprise-you.md)
-Next: [Part 5 — Trauma-informed UX + accessibility as architecture](./devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
+Prev: [Part 3 — Service workers that don’t surprise you](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
+Next: [Part 5 — Trauma-informed UX + accessibility as architecture](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)

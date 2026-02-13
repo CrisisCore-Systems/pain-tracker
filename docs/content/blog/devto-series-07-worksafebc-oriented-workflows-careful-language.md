@@ -11,7 +11,7 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-_Series:_ [Start here](./devto-series-00-start-here.md) · [Part 1](./devto-series-01-offline-first-local-first-architecture.md) · [Part 2](./devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](./devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](./devto-series-04-zod-defensive-parsing.md) · [Part 5](./devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](./devto-series-06-exports-as-a-security-boundary.md) · **Part 7** · [Part 8](./devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](./devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](./devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · **Part 7** · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
 
 This post is Part 7 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
@@ -20,7 +20,7 @@ This post is Part 7 in a Dev.to series grounded in the open-source **Pain Tracke
 - This is about building *useful documentation outputs* without drifting into unsafe promises.
 
 If you haven’t read Part 6 yet:
-- Part 6: [Exports are a security boundary](./devto-series-06-exports-as-a-security-boundary.md)
+- Part 6: [Exports are a security boundary](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
 
 ---
 
@@ -139,5 +139,5 @@ Pain Tracker’s local-first stance is intentionally narrower.
 
 Part 8 covers analytics without surveillance: how the repo gates outbound analytics behind *both* an env flag and explicit consent, and how it avoids Class A fields in GA4 event params.
 
-Prev: [Part 6 — Exports as a security boundary](./devto-series-06-exports-as-a-security-boundary.md)
-Next: [Part 8 — Analytics without surveillance](./devto-series-08-analytics-without-surveillance-explicit-consent.md)
+Prev: [Part 6 — Exports as a security boundary](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
+Next: [Part 8 — Analytics without surveillance](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md)

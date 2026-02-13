@@ -33,16 +33,16 @@ It is **not**:
 
 ## Start with Part 1
 
-- Part 1: [Offline-first without a backend: a local-first PWA architecture you can trust](./devto-series-01-offline-first-local-first-architecture.md)
-- Part 2: [Three storage layers (state cache vs offline DB vs encrypted vault)](./devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
-- Part 3: [Service workers that don’t surprise you](./devto-series-03-service-workers-that-dont-surprise-you.md)
-- Part 4: [Zod + defensive parsing](./devto-series-04-zod-defensive-parsing.md)
-- Part 5: [Trauma-informed UX + accessibility as architecture](./devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
-- Part 6: [Exports as a security boundary](./devto-series-06-exports-as-a-security-boundary.md)
-- Part 7: [WorkSafeBC-oriented workflows (careful language)](./devto-series-07-worksafebc-oriented-workflows-careful-language.md)
-- Part 8: [Analytics without surveillance (explicit consent)](./devto-series-08-analytics-without-surveillance-explicit-consent.md)
-- Part 9: [Quality gates that earn trust](./devto-series-09-quality-gates-that-earn-trust.md)
-- Part 10: [Maintaining truthful docs over time](./devto-series-10-maintaining-truthful-docs-over-time.md)
+- Part 1: [Offline-first without a backend: a local-first PWA architecture you can trust](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
+- Part 2: [Three storage layers (state cache vs offline DB vs encrypted vault)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
+- Part 3: [Service workers that don’t surprise you](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
+- Part 4: [Zod + defensive parsing](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
+- Part 5: [Trauma-informed UX + accessibility as architecture](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
+- Part 6: [Exports as a security boundary](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
+- Part 7: [WorkSafeBC-oriented workflows (careful language)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md)
+- Part 8: [Analytics without surveillance (explicit consent)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md)
+- Part 9: [Quality gates that earn trust](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
+- Part 10: [Maintaining truthful docs over time](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
 
 ## Proof-first reading list (repo anchors)
 
