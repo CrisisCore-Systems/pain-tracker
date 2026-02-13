@@ -352,10 +352,10 @@ export const PatientPainTimeline: React.FC<PatientPainTimelineProps> = ({
               <YAxis domain={[0, 10]} stroke="#64748b" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: 'none',
+                  backgroundColor: 'rgb(var(--color-card))',
+                  border: '1px solid rgb(var(--color-border))',
                   borderRadius: '8px',
-                  color: '#fff',
+                  color: 'rgb(var(--color-card-foreground))',
                 }}
               />
               <Legend />
@@ -377,10 +377,10 @@ export const PatientPainTimeline: React.FC<PatientPainTimelineProps> = ({
               <YAxis domain={[0, 10]} stroke="#64748b" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: 'none',
+                  backgroundColor: 'rgb(var(--color-card))',
+                  border: '1px solid rgb(var(--color-border))',
                   borderRadius: '8px',
-                  color: '#fff',
+                  color: 'rgb(var(--color-card-foreground))',
                 }}
               />
               <Legend />
@@ -396,10 +396,10 @@ export const PatientPainTimeline: React.FC<PatientPainTimelineProps> = ({
               <YAxis domain={[0, 10]} stroke="#64748b" />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#1e293b',
-                  border: 'none',
+                  backgroundColor: 'rgb(var(--color-card))',
+                  border: '1px solid rgb(var(--color-border))',
                   borderRadius: '8px',
-                  color: '#fff',
+                  color: 'rgb(var(--color-card-foreground))',
                 }}
               />
               <Legend />

@@ -329,7 +329,7 @@ export const ResourcesIndexPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background landing-always-dark">
       {/* Skip to main content */}
       <a
         href="#main-content"

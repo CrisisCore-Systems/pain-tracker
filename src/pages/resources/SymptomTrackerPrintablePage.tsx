@@ -437,7 +437,7 @@ export const SymptomTrackerPrintablePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background landing-always-dark">
       {/* Structured data */}
       <script
         type="application/ld+json"
