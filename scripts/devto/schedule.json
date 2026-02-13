@@ -227,6 +227,24 @@
       "articleId": 3093413,
       "devtoUrl": "https://dev.to/crisiscoresystems/internationalization-of-trauma-testing-across-cultural-contexts-41fe",
       "published": false
+    },
+    {
+      "key": "whitepaper-v1-3-0",
+      "enabled": true,
+      "title": "Pain Tracker whitepaper v1.3.0 (PDF)",
+      "sourceFile": "docs/content/blog/blog-whitepaper-v1.3.0.md",
+      "publishAt": "2026-02-13T00:00:00Z",
+      "tags": [
+        "healthtech",
+        "privacy",
+        "pwa",
+        "opensource"
+      ],
+      "description": "Publication-grade PDF whitepaper for Pain Tracker v1.3.0 (offline-first, local-first by default).",
+      "canonical_url": "https://paintracker.ca/whitepaper",
+      "articleId": 3254751,
+      "devtoUrl": "https://dev.to/crisiscoresystems/pain-tracker-whitepaper-v130-pdf-5054",
+      "published": true
     }
   ]
 }

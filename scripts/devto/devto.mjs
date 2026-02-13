@@ -22,6 +22,24 @@ function parseArgs(argv) {
   return args;
 }
 
+function parseOnlyKeysArg(onlyRaw) {
+  if (!onlyRaw) return null;
+  if (onlyRaw === true) return null;
+  const s = String(onlyRaw).trim();
+  if (!s) return null;
+  const keys = s
+    .split(',')
+    .map((k) => String(k).trim())
+    .filter(Boolean);
+  if (keys.length === 0) return null;
+  return new Set(keys);
+}
+
+function matchesOnlyKeys(post, onlyKeys) {
+  if (!onlyKeys) return true;
+  return onlyKeys.has(String(post?.key ?? ''));
+}
+
 function ensureStringArrayTags(tags) {
   if (!tags) return '';
   if (typeof tags === 'string') return tags;
@@ -729,13 +747,17 @@ async function writePinnedCommentsFile(items) {
   await fs.writeFile(outPath, chunks.join('\n'), 'utf8');
 }
 
-async function cmdDryRun(schedule) {
+async function cmdDryRun(schedule, { onlyKeys } = {}) {
   const now = new Date();
   console.log(`Now: ${now.toISOString()}`);
   console.log(`Schedule: ${SCHEDULE_PATH}`);
+  if (onlyKeys) {
+    console.log(`Only keys: ${Array.from(onlyKeys).join(', ')}`);
+  }
   console.log('');
 
   for (const post of schedule.posts) {
+    if (!matchesOnlyKeys(post, onlyKeys)) continue;
     const due = isDueNow(post.publishAt, now);
     const status = post.enabled ? (due ? 'DUE' : 'pending') : 'disabled';
     console.log(`- ${post.publishAt} | ${status} | ${post.title} (${post.sourceFile})`);
@@ -747,7 +769,7 @@ async function cmdDryRun(schedule) {
   console.log('- If the API rejects direct rescheduling (422), the script can fall back to setting front matter in `body_markdown`.');
 }
 
-async function cmdCreateDrafts(schedule, { write }) {
+async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
   const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
   const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
   const seriesStartUrl = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
@@ -767,6 +789,7 @@ async function cmdCreateDrafts(schedule, { write }) {
   const existingAll = await listAllUserArticles();
 
   for (const post of schedule.posts) {
+    if (!matchesOnlyKeys(post, onlyKeys)) continue;
     if (!post.enabled) continue;
     if (post.articleId) continue;
 
@@ -839,7 +862,7 @@ async function cmdCreateDrafts(schedule, { write }) {
   }
 }
 
-async function cmdPublishDue(schedule, { yes, write }) {
+async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
   if (!yes) {
     throw new Error('Refusing to publish without --yes');
   }
@@ -862,6 +885,7 @@ async function cmdPublishDue(schedule, { yes, write }) {
   const allCache = await listAllUserArticles();
 
   for (const post of schedule.posts) {
+    if (!matchesOnlyKeys(post, onlyKeys)) continue;
     if (!post.enabled) continue;
     if (!isDueNow(post.publishAt, now)) continue;
 
@@ -938,6 +962,7 @@ async function cmdPublishDue(schedule, { yes, write }) {
     const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
 
     post.devtoUrl = updated.url ?? post.devtoUrl;
+    post.published = true;
 
     publishedCount += 1;
 
@@ -1914,10 +1939,12 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const cmd = args._[0] ?? 'dry-run';
 
+  const onlyKeys = parseOnlyKeysArg(args.only);
+
   const schedule = await loadSchedule();
 
   if (cmd === 'dry-run') {
-    await cmdDryRun(schedule);
+    await cmdDryRun(schedule, { onlyKeys });
     return;
   }
 
@@ -1928,12 +1955,12 @@ async function main() {
   }
 
   if (cmd === 'create-drafts') {
-    await cmdCreateDrafts(schedule, { write: Boolean(args.write) });
+    await cmdCreateDrafts(schedule, { write: Boolean(args.write), onlyKeys });
     return;
   }
 
   if (cmd === 'publish-due') {
-    await cmdPublishDue(schedule, { yes: Boolean(args.yes), write: Boolean(args.write) });
+    await cmdPublishDue(schedule, { yes: Boolean(args.yes), write: Boolean(args.write), onlyKeys });
     return;
   }
 
