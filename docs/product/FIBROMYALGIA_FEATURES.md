@@ -280,8 +280,8 @@ Note: Export templates are designed to support real workflows, but this document
   - Encryption helpers for sensitive fields
   - Local-first storage
 
-2. **HIPAA-Aligned Controls** (`src/services/HIPAACompliance.ts`):
-  - Compliance-oriented controls and documentation (not a compliance claim)
+2. **Privacy-aligned security controls** (`src/services/HIPAACompliance.ts`):
+  - Privacy-aligned security controls and documentation (not a compliance claim)
 
 3. **Security Service** (`src/services/SecurityService.ts`):
    - Event logging and monitoring

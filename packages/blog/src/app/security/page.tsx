@@ -40,9 +40,9 @@ export default function SecurityPage() {
                   'Health data is encrypted at rest in IndexedDB using keys derived from a passphrase you set. Key derivation and encryption happen entirely in your browser.',
               },
               {
-                question: 'Is Pain Tracker HIPAA compliant?',
+                question: 'Does Pain Tracker make healthcare compliance claims?',
                 answer:
-                  'Pain Tracker implements HIPAA-aligned controls (encryption at rest, audit logging, access controls), but as a local-first PWA with no cloud backend, traditional HIPAA compliance certification does not directly apply.',
+                  'Pain Tracker implements privacy-aligned security controls (encryption at rest, audit logging, access controls). It is a local-first PWA with no cloud backend, and this is not a compliance certification.',
               },
               {
                 question: 'What happens if my device is lost or stolen?',

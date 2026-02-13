@@ -184,6 +184,14 @@ export const Hero: React.FC = () => {
                 Your data stays on your device.
               </p>
 
+              <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
+                PainTracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
+              </p>
+
+              <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
+                Data is stored locally on your device unless you choose to export it.
+              </p>
+
               {/* Feature Pills */}
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 <div className="badge-glow-sky flex items-center gap-2 text-sm">

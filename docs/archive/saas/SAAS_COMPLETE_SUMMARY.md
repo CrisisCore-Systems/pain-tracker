@@ -68,7 +68,7 @@ Render Feature or Upgrade Prompt
 
 ### Basic Tier ($9.99/month)
 - 500 entries, 1-year retention
-- Advanced analytics, Empathy Intelligence
+- Advanced analytics, Pattern-aware insights
 - PDF & WorkSafe BC reports
 - Family sharing (2 users), Email support (24h)
 - **Trial**: 14 days free
@@ -77,14 +77,14 @@ Render Feature or Upgrade Prompt
 ### Pro Tier ($24.99/month)
 - Unlimited entries, unlimited retention
 - Predictive insights, Clinical PDF export
-- HIPAA-aligned deployment considerations (deployment-dependent), Healthcare API access
+- Privacy-aligned security controls (deployment-dependent), Structured clinical export formats
 - Priority support (4h), Wearable integration
 - **Trial**: 30 days free
 - **Target**: Power users, healthcare coordination
 
 ### Enterprise Tier (Custom pricing)
 - Unlimited everything + Custom features
-- White-label, SOC 2 alignment goals (requires independent audit)
+- Organization-level customization, SOC 2 alignment goals (requires independent audit)
 - Dedicated support (1h), Custom training
 - **Trial**: 60 days free
 - **Target**: Healthcare organizations, clinics

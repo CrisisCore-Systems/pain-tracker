@@ -11,11 +11,11 @@ const faqs: Array<{ q: string; a: React.ReactNode }> = [
     ),
   },
   {
-    q: 'What does “HIPAA-aligned” mean here?',
+    q: 'What do you mean by “privacy-aligned security controls”?',
     a: (
       <>
-        It describes privacy and security controls we aim to follow (data minimization, encryption, access controls), but it does not
-        claim formal HIPAA compliance or that using the app makes an organization compliant.
+        It describes privacy and security controls we aim to follow (data minimization, encryption, access controls). It is not a legal
+        compliance claim, and using the app does not make an organization compliant.
       </>
     ),
   },

@@ -73,7 +73,7 @@ Your data remains on your device. PainTracker is also open source, so the code r
 
 ### Is PainTracker HIPAA compliant?
 
-PainTracker implements HIPAA-aligned controls including encryption at rest and access controls. However, as a local-only tool with no server-side data processing, traditional HIPAA compliance frameworks do not directly apply.
+PainTracker implements privacy-aligned security controls including encryption at rest and access controls. However, as a local-only tool with no server-side data processing, traditional HIPAA compliance frameworks do not directly apply.
 
 ---
 

@@ -21,7 +21,7 @@ export const LandingFooter: React.FC = () => {
   ];
 
   return (
-    <footer className="landing-always-dark relative overflow-hidden">
+    <footer className="relative">
       {/* Final CTA Section - Premium Editorial Design */}
       <div className="relative py-24 overflow-hidden">
         {/* Background with gradient mesh */}
@@ -61,7 +61,7 @@ export const LandingFooter: React.FC = () => {
             
             {/* Subheadline */}
             <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Join patients and clinicians using Pain Tracker Pro to understand, track, and manage chronic pain effectively.
+              Used by patients and healthcare professionals to document, understand, and communicate chronic pain clearly.
             </p>
             
             {/* CTAs */}
@@ -277,7 +277,7 @@ export const LandingFooter: React.FC = () => {
               {[
                 { icon: Shield, label: 'AES-256 Encrypted', color: 'sky' },
                 { icon: Heart, label: 'WCAG 2.2 AA target', color: 'purple' },
-                { icon: Activity, label: 'HIPAA-aligned controls', color: 'emerald' },
+                { icon: Activity, label: 'Privacy-aligned security controls', color: 'emerald' },
                 { icon: Github, label: 'Open Source', color: 'amber' },
               ].map((badge) => {
                 const colors: Record<string, { bg: string; border: string; text: string }> = {

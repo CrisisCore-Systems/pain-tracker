@@ -17,7 +17,7 @@ const HIGHLIGHTS: Record<SubscriptionTier, string[]> = {
   free: ['Unlimited tracking', 'Basic analytics', 'PDF + WorkSafeBC reports (5/mo)'],
   basic: ['Advanced analytics', 'Higher export limit (50/mo)', 'Family sharing (2)'],
   pro: ['Pattern-based alerts', 'Clinical PDF export', 'Audit logs'],
-  enterprise: ['White-label options', 'Dedicated support', 'Custom training'],
+  enterprise: ['Organization-level customization', 'Dedicated support', 'Custom training'],
 };
 
 type ComparisonCellValue = boolean | string | number;
@@ -150,11 +150,15 @@ export const PricingPreview: React.FC = () => {
                       {monthly}
                       {tier !== 'enterprise' && <span className="text-base font-semibold text-slate-300">/mo</span>}
                     </div>
-                    {trialDays > 0 ? (
-                      <div className="text-xs text-emerald-300">Includes a {trialDays}-day trial</div>
-                    ) : (
-                      <div className="text-xs text-slate-400">No credit card required</div>
-                    )}
+                    <div className="text-xs text-slate-400">
+                      {tier === 'free'
+                        ? 'Upgrade anytime. No credit card required.'
+                        : tier === 'enterprise'
+                          ? 'Evaluation access available for organizations.'
+                          : tier === 'basic'
+                            ? 'Advanced tracking, analytics, and structured reports for personal health management.'
+                            : 'Clinical-grade reports, exports, and pattern insights for rehabilitation and insurance documentation.'}
+                    </div>
                   </div>
 
                   <p className="text-sm text-slate-300 leading-relaxed line-clamp-4">{plan.description}</p>

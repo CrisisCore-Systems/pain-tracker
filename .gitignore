@@ -69,3 +69,12 @@ artifacts/
 
 # Locally-generated sample exports (do not commit)
 docs/case-studies/worksafe-bc/generated/*.pdf
+
+# Electron desktop wrapper artifacts (do not commit)
+desktop/app/
+desktop/dist/
+desktop/submission/
+desktop/cnet_submission/
+desktop/cnet_attachments/
+desktop/*.zip
+desktop/screenshots/

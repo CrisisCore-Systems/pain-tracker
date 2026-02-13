@@ -71,7 +71,7 @@ stripe prices create `
 # Create Product
 stripe products create `
   --name="Pain Tracker Pro" `
-  --description="Professional pain tracking with HIPAA-aligned controls and unlimited features"
+  --description="Professional pain tracking with privacy-aligned security controls and unlimited features"
 
 # Note the product ID
 

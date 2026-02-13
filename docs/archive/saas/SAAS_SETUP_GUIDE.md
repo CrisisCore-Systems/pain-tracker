@@ -162,8 +162,8 @@ Visit:
 **Features**:
 - Predictive insights
 - Clinical PDF export
-- HIPAA-aligned deployment considerations (deployment-dependent)
-- Healthcare API access
+- Privacy-aligned security controls (deployment-dependent)
+- Structured clinical export formats
 - Priority support (4h response)
 - Wearable device integration
 
@@ -179,7 +179,7 @@ Visit:
 
 **Features**:
 - Custom integrations
-- White-label options
+- Organization-level customization
 - SOC 2 alignment goals (requires independent audit)
 - Dedicated support (1h response)
 - Custom training

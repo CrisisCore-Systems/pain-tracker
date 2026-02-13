@@ -410,7 +410,7 @@ $env:VITE_REACT_APP_ENABLE_VALIDATION="true"; npm run dev
 - ✅ Added explicit data classification (Class A/B/C) + hard rules
 - ✅ Added threat model snapshot + “no false security claims”
 - ✅ Standardized WCAG target: 2.2 AA
-- ✅ Reframed compliance wording to “HIPAA-aligned controls” (not legal compliance claim)
+- ✅ Reframed compliance wording to “privacy-aligned security controls” (not legal compliance claim)
 - ✅ Clarified local-only analytics/correlations (no network)
 - ✅ Tightened audit logging rules (minimal, non-reconstructive)
 ```

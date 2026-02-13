@@ -48,15 +48,15 @@ export const roadmapLinks = {
   },
   empathyIntelligence: {
     href: matrixAnchor('empathy-intelligence-deep-dives'),
-    label: 'Empathy Intelligence Deep Dives',
-    summary: 'Expanded empathy IQ dashboards will surface granular empathy growth patterns.',
+    label: 'Pattern-aware insights deep dives',
+    summary: 'Expanded insights dashboards will surface granular patterns and progress signals.',
     issueUrl:
       'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+empathy+intelligence',
     issueLabel: 'review empathy IQ roadmap',
   },
   neuralPatterns: {
     href: matrixAnchor('empathy-intelligence-deep-dives'),
-    label: 'Empathy Intelligence Deep Dives',
+    label: 'Pattern-aware insights deep dives',
     summary: 'Neural pattern exploration will unpack simulated mirror neuron signals and trends.',
     issueUrl:
       'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+neural+empathy',
@@ -64,7 +64,7 @@ export const roadmapLinks = {
   },
   wisdomJourney: {
     href: matrixAnchor('empathy-intelligence-deep-dives'),
-    label: 'Empathy Intelligence Deep Dives',
+    label: 'Pattern-aware insights deep dives',
     summary:
       'Wisdom journey timelines will chart insights, learning arcs, and reflection milestones.',
     issueUrl:
@@ -73,24 +73,24 @@ export const roadmapLinks = {
   },
   temporalAnalysis: {
     href: matrixAnchor('empathy-intelligence-deep-dives'),
-    label: 'Empathy Intelligence Deep Dives',
+    label: 'Pattern-aware insights deep dives',
     summary:
-      'Temporal empathy analysis will highlight daily, weekly, and seasonal empathy rhythms.',
+      'Temporal analysis will highlight daily, weekly, and seasonal rhythms.',
     issueUrl:
       'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+temporal+empathy',
     issueLabel: 'monitor temporal analysis work',
   },
   predictiveInsights: {
     href: matrixAnchor('empathy-intelligence-deep-dives'),
-    label: 'Empathy Intelligence Deep Dives',
-    summary: 'Predictive empathy insights will forecast burnout risks and growth windows.',
+    label: 'Pattern-aware insights deep dives',
+    summary: 'Predictive insights will forecast burnout risks and growth windows.',
     issueUrl:
       'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+predictive+empathy',
     issueLabel: 'review predictive roadmap',
   },
   culturalEmpathy: {
     href: matrixAnchor('empathy-intelligence-deep-dives'),
-    label: 'Empathy Intelligence Deep Dives',
+    label: 'Pattern-aware insights deep dives',
     summary: 'Cultural empathy explorers will surface intersectional patterns and guidance.',
     issueUrl:
       'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+cultural+empathy',
@@ -98,8 +98,8 @@ export const roadmapLinks = {
   },
   microMoments: {
     href: matrixAnchor('empathy-intelligence-deep-dives'),
-    label: 'Empathy Intelligence Deep Dives',
-    summary: 'Micro-moment tracking will capture and celebrate quick empathy wins.',
+    label: 'Pattern-aware insights deep dives',
+    summary: 'Micro-moment tracking will capture and celebrate quick wins.',
     issueUrl: 'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+micro+empathy',
     issueLabel: 'follow micro-moment tasks',
   },
@@ -113,7 +113,7 @@ export const roadmapLinks = {
   clinicCompliance: {
     href: matrixAnchor('clinic-portal-expansion'),
     label: 'Compliance Logs',
-    summary: 'HIPAA-aligned audit logging and access tracking for administrative oversight.',
+    summary: 'Privacy-aligned audit logging and access tracking for administrative oversight.',
     issueUrl: 'https://github.com/CrisisCore-Systems/pain-tracker/issues?q=is%3Aopen+clinic+portal',
     issueLabel: 'track portal work',
   },

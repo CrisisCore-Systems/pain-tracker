@@ -566,13 +566,13 @@ Note: This document is an internal analysis draft. Avoid using it as marketing c
 
 ---
 
-### ✅ HIPAA-Aligned Controls (Not a Compliance Claim)
+### ✅ Privacy-aligned security controls (Not a Compliance Claim)
 
-**Competitive Requirement:** HIPAA-aligned controls and/or compliance process (depends on organization and use case)  
+**Competitive Requirement:** privacy-aligned security controls and/or compliance process (depends on organization and use case)  
 **Pain Tracker Status:** ✅ **IMPLEMENTED - Aligned**
 
 **Evidence:**
-- `src/services/HIPAACompliance.ts` - HIPAA-aligned utilities (not a certification)
+- `src/services/HIPAACompliance.ts` - privacy-aligned utilities (not a certification)
 - Audit trails (`logAuditEvent` method)
 - PHI detection and de-identification
 - Breach assessment and reporting capabilities

@@ -290,7 +290,7 @@ This version represents the culmination of extensive development through Novembe
 #### Security & Compliance (Implementation)
 
 - **Multi-Layer Security Architecture** - Client-side encryption, CSP, audit trails
-- **Compliance-Oriented Controls** - HIPAA-aligned controls and documentation patterns (not a compliance claim)
+- **Compliance-Oriented Controls** - privacy-aligned security controls and documentation patterns (not a compliance claim)
 - **Zero-Trust Model** - Explicit permission and comprehensive audit logging
 - **Encryption Service** - Local-first encryption with secure key management
 

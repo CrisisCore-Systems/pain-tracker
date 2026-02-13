@@ -364,7 +364,7 @@ Password: (any password)
 - [ ] Reduce patient review time (set baseline; define target)
 - [ ] Clinician satisfaction score target (define measurement)
 - [ ] 30%+ increase in patients seen per week
-- [ ] HIPAA-aligned controls (audit logging in place; compliance depends on org/process)
+- [ ] Privacy-aligned security controls (audit logging in place; compliance depends on org/process)
 
 ### Qualitative Goals
 

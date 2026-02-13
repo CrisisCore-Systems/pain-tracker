@@ -263,7 +263,7 @@ Based on git commits and documentation analysis:
 
 - ✅ Core pain tracking (2024-Q3)
 - ✅ Empathy intelligence engine (2024-Q3)
-- ✅ Security & HIPAA-aligned controls (2024-Q4)
+- ✅ Security & privacy-aligned security controls (2024-Q4)
 - ✅ WorkSafe BC reporting (2024-Q4)
 - ✅ Trauma-informed UX (2025-Q3)
 - ✅ PWA implementation (2025-Q3)

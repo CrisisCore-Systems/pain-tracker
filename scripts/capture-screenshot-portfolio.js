@@ -387,6 +387,21 @@ async function captureScreenshot(page, screenshot, outputDir) {
       }
     }
 
+    // Optional: wait for a stable, view-specific marker text.
+    // This is especially useful for lazy-loaded views (analytics/reports) so we don't capture the loading screen.
+    if (screenshot.waitForText) {
+      const marker = page.getByText(String(screenshot.waitForText), { exact: false }).first();
+      const ok = await marker
+        .waitFor({ state: 'visible', timeout: 45_000 })
+        .then(() => true)
+        .catch(() => false);
+      if (!ok) {
+        console.log(`   ⚠️  waitForText '${screenshot.waitForText}' not found/visible; continuing`);
+      } else {
+        await page.waitForTimeout(350);
+      }
+    }
+
     if (!dryRun) {
       // Take screenshot
       await page.screenshot({ 

@@ -366,7 +366,7 @@ PDF Download
 ### Medium Term (Next Sprint)
 7. **Browser Compatibility**: Test in Firefox, Safari
 8. **User Acceptance Testing**: Test with actual users
-9. **Security Audit**: Validate HIPAA-aligned controls of PDF export (deployment-dependent)
+9. **Security Audit**: Validate privacy-aligned security controls of PDF export (deployment-dependent)
 10. **Optimization**: If needed, optimize chart capture and PDF generation
 
 ---

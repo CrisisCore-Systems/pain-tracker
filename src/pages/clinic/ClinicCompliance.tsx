@@ -131,7 +131,7 @@ export function ClinicCompliance() {
             Compliance Audit Log
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
-            HIPAA-aligned access tracking and security monitoring
+            Privacy-aligned access tracking and security monitoring
           </p>
         </div>
         <div className="flex items-center gap-3">

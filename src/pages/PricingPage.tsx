@@ -5,6 +5,7 @@
  */
 
 import React, { useState } from 'react';
+import '../styles/pages/landing.css';
 import '../styles/pages/pricing.css';
 import { Check, X, ChevronDown, Crown, Star, Users, Sparkles, Shield, Zap, ArrowRight, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -140,6 +141,14 @@ export const PricingPage: React.FC = () => {
           <p className="landing-subhead text-lg lg:text-xl mb-10 max-w-2xl mx-auto">
             Start free, upgrade when you need more power. All plans include our core 
             privacy-first, offline-capable pain tracking.
+          </p>
+
+          <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10">
+            PainTracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
+          </p>
+
+          <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10">
+            Data is stored locally on your device unless you choose to export it.
           </p>
 
           {/* Current Tier Display */}
@@ -290,10 +299,16 @@ export const PricingPage: React.FC = () => {
                     {isCurrentPlan ? 'Current Plan' : tierKey === 'enterprise' ? 'Contact Sales' : `Get ${plan.name}`}
                   </button>
 
-                  {/* Trial Info */}
-                  {plan.pricing.trial.enabled && !isCurrentPlan && (
+                  {/* Plan Note */}
+                  {!isCurrentPlan && (
                     <p className="text-sm text-center text-slate-500 mb-6">
-                      {plan.pricing.trial.days}-day free trial • No credit card
+                      {tierKey === 'free'
+                        ? 'Upgrade anytime. No credit card required.'
+                        : tierKey === 'enterprise'
+                          ? 'Evaluation access available for organizations.'
+                          : tierKey === 'basic'
+                            ? 'Advanced tracking, analytics, and structured reports for personal health management.'
+                            : 'Clinical-grade reports, exports, and pattern insights for rehabilitation and insurance documentation.'}
                     </p>
                   )}
 
@@ -443,12 +458,12 @@ export const PricingPage: React.FC = () => {
               answer="Your data is always safe. If you exceed limits after downgrading, older entries will be archived but not deleted. You can upgrade again to restore full access."
             />
             <FAQItem
-              question="Is there a free trial?"
-              answer="Yes. Paid plans include a free trial (14/30/60 days). You can also use the Free plan indefinitely—no credit card required."
+              question="Do I need a credit card to start?"
+              answer="No. You can use the Free plan indefinitely. Upgrade anytime when you need additional reporting and structured export capabilities. Organizations can request evaluation access for Enterprise."
             />
             <FAQItem
               question="Is my health data secure?"
-              answer="Absolutely. All plans use local-first storage and encryption at rest. Pro and Enterprise add audit logs and HIPAA-aligned controls; Enterprise customers can request security documentation for organizational review."
+              answer="Absolutely. All plans use local-first storage and encryption at rest. Pro and Enterprise add audit logs and privacy-aligned security controls; Enterprise customers can request security documentation for organizational review."
             />
             <FAQItem
               question="What payment methods do you accept?"
@@ -464,7 +479,7 @@ export const PricingPage: React.FC = () => {
               Ready to start tracking?
             </h3>
             <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-              Join patients and clinicians using Pain Tracker Pro to understand, track, and communicate chronic pain effectively.
+              Used by patients and healthcare professionals to document, understand, and communicate chronic pain clearly.
             </p>
             <button
               onClick={() => navigate('/start')}
@@ -494,21 +509,21 @@ export function getTopFeatures(tier: SubscriptionTier): string[] {
       'Advanced analytics',
       'PDF & WCB reports',
       'Family sharing (2 users)',
-      'Empathy intelligence',
+      'Pattern-aware insights',
       '2FA security',
     ],
     pro: [
       'Unlimited entries',
       'Pattern-based alerts',
       'Clinical PDF export',
-      'HIPAA-aligned controls',
-      'Healthcare API access',
+      'Privacy-aligned security controls',
+      'Structured clinical export formats',
       'Priority support (4h)',
     ],
     enterprise: [
       'Unlimited everything',
       'Custom features',
-      'White-label options',
+      'Organization-level customization',
       'Security documentation support',
       'Dedicated support (1h)',
       'Custom training',

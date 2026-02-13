@@ -8,7 +8,7 @@
 
 ## 🎯 Overview
 
-The clinic portal now includes a comprehensive authentication and authorization system with role-based access control (RBAC), HIPAA-aligned audit logging, and secure session management.
+The clinic portal now includes a comprehensive authentication and authorization system with role-based access control (RBAC), privacy-aligned audit logging, and secure session management.
 
 ### Key Features
 
@@ -24,7 +24,7 @@ The clinic portal now includes a comprehensive authentication and authorization 
 - Route-level protection
 - Feature-level authorization
 
-✅ **HIPAA-Aligned Controls**
+✅ **Privacy-aligned security controls**
 - Automatic audit logging for all authentication events
 - Session tracking with timestamps
 - Failed login attempt monitoring

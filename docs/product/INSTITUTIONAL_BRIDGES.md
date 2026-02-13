@@ -61,7 +61,7 @@ If implemented, this area is security- and privacy-critical (network + health da
 - **Audit Trail**: Complete activity logging
 
 ### Security & Compliance
-- **HIPAA-aligned controls**: Technical, administrative, and physical safeguards
+- **Privacy-aligned security controls**: Technical, administrative, and physical safeguards
 - **PHI Protection**: Automated detection and de-identification
 - **Encryption**: End-to-end data protection
 - **Access Controls**: Role-based permissions

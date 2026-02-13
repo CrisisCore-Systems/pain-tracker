@@ -141,7 +141,7 @@ Optimized for long reading sessions and data density:
    - Physician, Nurse, Admin, Researcher roles
    - Feature-level permissions
 
-3. **HIPAA-Aligned Controls (Deployment-Dependent)**
+3. **Privacy-aligned security controls (Deployment-Dependent)**
    - Audit logging for sensitive data access (minimal, non-reconstructive)
    - Automatic de-identification for research
    - Breach detection and reporting

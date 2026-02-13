@@ -68,7 +68,7 @@ Legend: ████ Complete  ▒▒▒▒ Planned  🔄 In Progress  📅 Road
 │ Local-First Architecture     │ ✅ PASS │ 5.0/5.0  │
 │ Encryption Services          │ ✅ PASS │ 5.0/5.0  │
 │ CSP Headers                  │ ✅ PASS │ 5.0/5.0  │
-│ HIPAA-Aligned Controls       │ ✅ PASS │ 5.0/5.0  │
+│ Privacy-aligned controls     │ ✅ PASS │ 5.0/5.0  │
 │ Audit Trails                 │ ✅ PASS │ 5.0/5.0  │
 │ Input Validation             │ ✅ PASS │ 4.5/5.0  │
 │ Secret Scanning              │ ✅ PASS │ 5.0/5.0  │

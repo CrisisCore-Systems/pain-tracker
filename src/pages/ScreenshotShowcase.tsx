@@ -435,10 +435,10 @@ export function PrivacySettingsShowcase() {
             </div>
             <div>
               <h3 className="font-semibold text-lg text-white mb-1">
-                HIPAA Aligned
+                Privacy-aligned
               </h3>
               <p className="text-slate-400">
-                Built with HIPAA-aligned controls in mind, including audit trails and data protection
+                Built with privacy-aligned security controls in mind, including audit trails and data protection
                 measures (not a formal compliance certification).
               </p>
             </div>

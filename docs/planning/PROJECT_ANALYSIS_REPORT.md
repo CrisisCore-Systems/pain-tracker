@@ -38,14 +38,14 @@ Pain Tracker is a **security-first, offline-capable chronic pain tracking applic
 - **Primary Users**: Chronic pain sufferers, particularly fibromyalgia patients
 - **Secondary Users**: Healthcare providers, clinical researchers
 - **Special Focus**: Trauma survivors and those with medical trauma history
-- **Regulatory Context**: WorkSafeBC workflows, HIPAA-aligned controls (deployment-dependent)
+- **Regulatory Context**: WorkSafeBC workflows, privacy-aligned security controls (deployment-dependent)
 
 ### 1.2 Key Differentiators
 
 #### 🔒 **Security-First Architecture**
 - **Local-first data storage** - Core usage doesn't require cloud; exports are user-controlled
 - **Multi-layer security** - Encryption, CSP headers, automated scanning
-- **Privacy by design** - HIPAA-aligned practices, comprehensive audit trails
+- **Privacy by design** - privacy-aligned security controls, comprehensive audit trails
 - **Zero-trust model** - All data access requires explicit permission
 
 #### 💜 **Trauma-Informed Design**

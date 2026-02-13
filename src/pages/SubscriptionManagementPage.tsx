@@ -37,7 +37,7 @@ export function SubscriptionManagementPage() {
   const tierBadge = useTierBadge();
   const currentPlan = SUBSCRIPTION_PLANS[currentTier];
 
-  // Calculate days remaining in trial
+  // Calculate days remaining in evaluation
   const getDaysRemaining = (endDate: string): number => {
     const end = new Date(endDate);
     const now = new Date();
@@ -130,7 +130,7 @@ export function SubscriptionManagementPage() {
                 </h2>
                 {subscription?.status === 'trialing' && (
                   <span className="px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full text-sm font-medium border border-sky-500/30">
-                    Trial
+                    Evaluation
                   </span>
                 )}
                 {subscription?.cancelAtPeriodEnd && (
@@ -156,7 +156,7 @@ export function SubscriptionManagementPage() {
               <div className="flex items-center gap-3 p-4 rounded-xl bg-sky-500/10 border border-sky-500/20">
                 <Calendar className="w-5 h-5 text-sky-400" />
                 <div>
-                  <div className="text-sm text-muted-foreground">Trial Ends</div>
+                  <div className="text-sm text-muted-foreground">Evaluation Ends</div>
                   <div className="font-semibold text-foreground">
                     {getDaysRemaining(subscription.trialEnd)} days remaining
                   </div>

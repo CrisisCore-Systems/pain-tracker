@@ -8,10 +8,69 @@ export const SCREENSHOT_CATEGORIES = {
   TECHNICAL: 'technical',
   SOCIAL: 'social',
   DOCUMENTATION: 'documentation',
-  WCB_FORMS: 'wcb-forms'
+  WCB_FORMS: 'wcb-forms',
+  CNET: 'cnet'
 };
 
 export const SCREENSHOT_PORTFOLIO = [
+  // CNET Submission Screenshots (in-app views)
+  {
+    id: 'cnet-dashboard',
+    name: 'dashboard.png',
+    category: SCREENSHOT_CATEGORIES.CNET,
+    description: 'Dashboard view (in-app)',
+    caption: 'Dashboard',
+    url: '/app',
+    width: 1280,
+    height: 720,
+    priority: 'phase1',
+    useCase: 'CNET submission screenshot',
+    navTarget: 'dashboard',
+    waitForText: 'Recent entries'
+  },
+  {
+    id: 'cnet-entry',
+    name: 'entry.png',
+    category: SCREENSHOT_CATEGORIES.CNET,
+    description: 'New entry (Quick Log) view',
+    caption: 'New entry',
+    url: '/app',
+    width: 1280,
+    height: 720,
+    priority: 'phase1',
+    useCase: 'CNET submission screenshot',
+    navTarget: 'new-entry',
+    waitForText: 'Quick Log'
+  },
+  {
+    id: 'cnet-trends',
+    name: 'trends.png',
+    category: SCREENSHOT_CATEGORIES.CNET,
+    description: 'Trends / Analytics view',
+    caption: 'Trends',
+    url: '/app',
+    width: 1280,
+    height: 720,
+    priority: 'phase1',
+    useCase: 'CNET submission screenshot',
+    navTarget: 'analytics',
+    waitForText: 'Premium Analytics'
+  },
+  {
+    id: 'cnet-report',
+    name: 'report.png',
+    category: SCREENSHOT_CATEGORIES.CNET,
+    description: 'Reports / Export view',
+    caption: 'Report',
+    url: '/app',
+    width: 1280,
+    height: 720,
+    priority: 'phase1',
+    useCase: 'CNET submission screenshot',
+    navTarget: 'reports',
+    waitForText: 'Reports & Export'
+  },
+
   // BRANCH 1: Problem → Solution Flow
   {
     id: 'blank-wcb-form',

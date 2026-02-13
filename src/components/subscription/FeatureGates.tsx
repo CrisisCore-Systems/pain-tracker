@@ -340,10 +340,10 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({ onUpgrade }) => {
           <Crown className="w-6 h-6" />
           <div>
             <h3 className="font-semibold">
-              {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'} left in your trial
+              {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'} left in your evaluation
             </h3>
             <p className="text-sm opacity-90">
-              Enjoying Pain Tracker Pro? Subscribe now to keep all features.
+              Upgrade anytime to keep full reporting and export features.
             </p>
           </div>
         </div>

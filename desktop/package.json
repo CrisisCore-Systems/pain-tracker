@@ -1,0 +1,62 @@
+{
+  "name": "paintracker-desktop",
+  "version": "1.2.0",
+  "private": true,
+  "main": "electron/main.cjs",
+  "author": "CrisisCore-Systems",
+  "description": "PainTracker Desktop (offline-capable wrapper)",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder -w --x64 --publish never"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "electron": "^40.2.1",
+    "electron-builder": "^26.7.0"
+  },
+  "build": {
+    "appId": "ca.paintracker.desktop",
+    "productName": "PainTracker",
+    "artifactName": "PainTracker-Setup-${version}.exe",
+    "copyright": "Copyright © 2026 CrisisCore-Systems",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "app/**/*",
+      "package.json",
+      "!**/*.map",
+      "!**/README.md",
+      "!**/CHANGELOG*",
+      "!**/test{,s}/**"
+    ],
+    "asar": true,
+    "compression": "maximum",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "signAndEditExecutable": false,
+      "legalTrademarks": "CrisisCore-Systems",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PainTracker",
+      "uninstallDisplayName": "PainTracker",
+      "deleteAppDataOnUninstall": false
+    },
+    "npmRebuild": false,
+    "publish": null
+  }
+}

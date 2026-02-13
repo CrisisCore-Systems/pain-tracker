@@ -184,7 +184,7 @@ export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
 
 /**
  * Clinical PDF Export with Feature Gate
- * Requires Pro tier for HIPAA-compliant clinical exports
+ * Requires Pro tier for clinic-ready clinical exports
  */
 export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }) => {
   return (
@@ -195,7 +195,7 @@ export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }
           Generate clinic-ready clinical reports for healthcare providers.
         </p>
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-          <p>✓ HIPAA-aligned controls</p>
+          <p>✓ Privacy-aligned security controls</p>
           <p>✓ Clinical Formatting</p>
           <p>✓ Standardized Templates</p>
         </div>

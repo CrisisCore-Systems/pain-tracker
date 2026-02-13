@@ -27,6 +27,7 @@ import { isAnalyticsAllowed } from './analytics/analytics-gate';
 const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
 const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ default: m.LandingPage })));
 const PricingPage = lazy(() => import('./pages/PricingPage').then(m => ({ default: m.PricingPage })));
+const CnetDownloadPage = lazy(() => import('./pages/CnetDownloadPage').then(m => ({ default: m.CnetDownloadPage })));
 const ScreenshotShowcase = lazy(() => import('./pages/ScreenshotShowcase').then(m => ({ default: m.ScreenshotShowcase })));
 const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => ({ default: m.ClinicPortal })));
 const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
@@ -145,6 +146,9 @@ function App() {
 
                       {/* Pricing Page - Public */}
                       <Route path="/pricing" element={<PricingPage />} />
+
+                      {/* CNET Download URL - Public */}
+                      <Route path="/cnet-download" element={<CnetDownloadPage />} />
 
                       {/* Screenshot Showcase - Public */}
                       <Route path="/demo/*" element={<ScreenshotShowcase />} />

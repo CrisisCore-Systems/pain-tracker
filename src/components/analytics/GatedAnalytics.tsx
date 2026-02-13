@@ -36,7 +36,7 @@ interface GatedEmpathyAnalyticsProps {
 }
 
 /**
- * Empathy Intelligence Analytics with Feature Gate
+ * Pattern-aware insights analytics with Feature Gate
  * Requires Basic tier or higher
  */
 export const GatedEmpathyAnalytics: React.FC<GatedEmpathyAnalyticsProps> = props => {

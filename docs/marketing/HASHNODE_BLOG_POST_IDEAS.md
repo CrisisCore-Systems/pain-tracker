@@ -568,7 +568,7 @@ interface FibromyalgiaAssessment {
 
 ---
 
-## 📚 Blog Post #5: Zero-Trust Security in Healthcare: Implementing HIPAA-Aligned Architecture
+## 📚 Blog Post #5: Zero-Trust Security in Healthcare: Implementing Privacy-aligned Architecture
 
 ### 🎯 Target Audience
 - **Primary**: Security engineers, DevSecOps professionals
@@ -580,7 +580,7 @@ interface FibromyalgiaAssessment {
 
 ### 🔑 Key Themes
 - Zero-trust architecture
-- HIPAA-aligned controls
+- Privacy-aligned security controls
 - Encryption at rest and in transit
 - Security automation
 - Threat modeling
@@ -591,7 +591,7 @@ interface FibromyalgiaAssessment {
 - Healthcare security landscape in 2025
 - Why local-first doesn't mean security-last
 - Pain Tracker's defense-in-depth approach
-- Compliance without cloud: HIPAA-aligned practices
+- Compliance without cloud: privacy-aligned security controls
 
 #### Section 1: Multi-Layer Encryption Strategy (3-4 minutes)
 **Technical Deep Dive**: AES-GCM implementation
@@ -611,7 +611,7 @@ interface FibromyalgiaAssessment {
 - Key rotation strategy (90-day recommended)
 - Browser compatibility: Fallbacks for older browsers
 
-#### Section 2: Audit Trails & HIPAA-Aligned Controls (3-4 minutes)
+#### Section 2: Audit Trails & Privacy-aligned Security Controls (3-4 minutes)
 **Technical Deep Dive**: Comprehensive logging
 
 ```typescript
@@ -694,7 +694,7 @@ interface FibromyalgiaAssessment {
 - Resources: Security documentation and reporting process
 
 ### 🏷️ SEO Keywords
-- HIPAA-aligned controls
+- Privacy-aligned security controls
 - Zero-trust architecture
 - Healthcare security
 - AES-GCM (256-bit) encryption
@@ -760,7 +760,7 @@ interface FibromyalgiaAssessment {
 2. Healthcare software engineering
 3. Offline-first architecture
 4. Trauma-informed design
-5. HIPAA-aligned controls (implementation)
+5. Privacy-aligned security controls (implementation)
 6. Fibromyalgia tracking
 7. Empathy algorithms
 8. Local-first software

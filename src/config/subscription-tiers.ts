@@ -442,7 +442,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
     name: 'Pro',
     tagline: 'Clinic-ready exports & insights',
     description:
-      'Power users and healthcare coordination. Unlimited entries, pattern-based alerts, clinical PDF exports, and HIPAA-aligned controls.',
+      'Power users and healthcare coordination. Unlimited entries, pattern-based alerts, clinical PDF exports, and privacy-aligned security controls.',
     features: PRO_FEATURES,
     pricing: PRO_PRICING,
     recommended: true,
@@ -461,7 +461,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
     name: 'Enterprise',
     tagline: 'Healthcare organization solution',
     description:
-      'For clinics, healthcare organizations, and large-scale deployments. Custom features, white-label options, and dedicated support.',
+      'For clinics, healthcare organizations, and large-scale deployments. Custom features, organization-level customization, and dedicated support.',
     features: ENTERPRISE_FEATURES,
     pricing: ENTERPRISE_PRICING,
     limits: {
@@ -530,7 +530,7 @@ export const FEATURE_COMPARISON = {
         enterprise: true,
       },
       {
-        name: 'Empathy Intelligence',
+        name: 'Pattern-aware insights',
         free: false,
         basic: true,
         pro: true,
@@ -615,7 +615,7 @@ export const FEATURE_COMPARISON = {
         enterprise: true,
       },
       {
-        name: 'HIPAA-aligned controls',
+        name: 'Privacy-aligned security controls',
         free: false,
         basic: false,
         pro: true,

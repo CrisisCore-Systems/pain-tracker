@@ -280,7 +280,7 @@ const meetsCriteria =
 1. **Encryption Service** (`src/services/EncryptionService.ts`):
    - Encryption/key-handling implementation exists in-repo
 
-2. **HIPAA-Aligned Controls** (`src/services/HIPAACompliance.ts`):
+2. **Privacy-aligned security controls** (`src/services/HIPAACompliance.ts`):
    - Compliance-oriented utilities and documentation (implementation exists; no compliance claim)
 
 3. **Security Service** (`src/services/SecurityService.ts`):

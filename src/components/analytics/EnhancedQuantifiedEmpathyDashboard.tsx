@@ -200,7 +200,7 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
           <div className="text-center">
             <Heart className="w-8 h-8 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
             <p className="text-gray-600 dark:text-gray-400">
-              Building your empathy intelligence profile...
+              Building your insights profile...
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
               Continue tracking to unlock advanced insights!
@@ -231,10 +231,10 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
               </div>
               <div>
                 <CardTitle className="text-2xl text-purple-800">
-                  AI-Enhanced Empathy Intelligence
+                  Pattern-aware insights
                 </CardTitle>
                 <p className="text-purple-600 mt-1">
-                  Your personalized empathy journey with predictive insights
+                  Your personalized journey with predictive insights
                 </p>
               </div>
             </div>
@@ -256,7 +256,7 @@ export const EnhancedQuantifiedEmpathyDashboard: React.FC<EnhancedEmpathyDashboa
         </CardHeader>
       </Card>
 
-      {/* Enhanced Empathy Intelligence Overview */}
+      {/* Enhanced insights overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="border-blue-200 bg-blue-50">
           <CardHeader className="pb-3">

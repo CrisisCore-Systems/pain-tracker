@@ -197,7 +197,7 @@ Week 5: Post #5 (Security) + Series Recap
 2. Healthcare software engineering
 3. Offline-first architecture
 4. Trauma-informed design
-5. HIPAA-aligned controls (implementation)
+5. Privacy-aligned security controls (implementation)
 6. Fibromyalgia tracking app
 7. Empathy algorithms
 8. Local-first software

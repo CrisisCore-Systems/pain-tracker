@@ -3,7 +3,7 @@ import { Shield, Lock, Eye, Code, FileCheck, Users, ArrowRight } from 'lucide-re
 
 const trustBadges = [
   { icon: Shield, title: 'AES-256', description: 'Military-grade', colorClass: 'icon-emerald' },
-  { icon: Lock, title: 'HIPAA-Aligned', description: 'Controls-focused', colorClass: 'icon-sky' },
+  { icon: Lock, title: 'Privacy-aligned', description: 'Controls-focused', colorClass: 'icon-sky' },
   { icon: Eye, title: 'Zero Tracking', description: 'No analytics', colorClass: 'icon-purple' },
   { icon: Code, title: 'Open Source', description: 'Transparent code', colorClass: 'icon-pink' },
   { icon: FileCheck, title: 'WCAG 2.2 AA', description: 'Target', colorClass: 'icon-amber' },

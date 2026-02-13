@@ -2,7 +2,7 @@
 
 ## Analysis Date: 2025-10-04
 ## Current Security Level: Development (Good Foundation)
-## Target: Production-Grade, HIPAA-Aligned Security (deployment-dependent)
+## Target: Production-Grade, Privacy-aligned Security (deployment-dependent)
 
 ---
 
@@ -27,7 +27,7 @@
    - XChaCha20-Poly1305 for vault service
    - libsodium for cryptographic operations
    
-4. **HIPAA-Aligned Controls**
+4. **Privacy-aligned security controls**
    - Audit trail logging
    - Data de-identification
    - PHI detection

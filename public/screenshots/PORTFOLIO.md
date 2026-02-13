@@ -13,13 +13,29 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 ## 📸 Screenshot Inventory
 
 ### Phase 1 (Essential - Week 1)
+- **dashboard.png** - Dashboard view (in-app)
+  - Use Case: CNET submission screenshot
+  - Caption: "Dashboard"
+
+- **entry.png** - New entry (Quick Log) view
+  - Use Case: CNET submission screenshot
+  - Caption: "New entry"
+
+- **trends.png** - Trends / Analytics view
+  - Use Case: CNET submission screenshot
+  - Caption: "Trends"
+
+- **report.png** - Reports / Export view
+  - Use Case: CNET submission screenshot
+  - Caption: "Report"
+
 - **blank-wcb-form-6.png** - Blank WorkSafeBC Form 6 - The Pain Point
   - Use Case: Social media posts, blog introductions
   - Caption: "This is what claimants face - hours of manual form filling"
 
 - **export-modal-solution.png** - Export Modal - The Solution
   - Use Case: Hero image, landing page above the fold
-  - Caption: "This is the alternative - generate forms from your entries"
+  - Caption: "This is the alternative - one click to generate perfect forms"
 
 - **pain-entry-interface.png** - Pain Entry Interface
   - Use Case: Demo sequences, feature explanations
@@ -31,15 +47,15 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **generated-form-6-preview.png** - Generated Form 6 Preview
   - Use Case: Trust-building, result demonstrations
-  - Caption: "Formatted Form 6 preview generated from your entries"
+  - Caption: "Perfectly formatted Form 6, generated automatically from your entries"
 
 - **generated-form-7-preview.png** - Generated Form 7 Preview
   - Use Case: Comprehensive solution showcasing
-  - Caption: "Employer reports generated using the same export pipeline"
+  - Caption: "Employer reports generated with the same accuracy"
 
 - **privacy-security-settings.png** - Privacy/Security Settings
   - Use Case: Privacy-focused marketing, addressing concerns
-  - Caption: "Local-first by default; exports are user-controlled"
+  - Caption: "Your data never leaves your device - unlike cloud-based competitors"
 
 ### Phase 2 (Growth - Weeks 2-3)
 - **body-map-interaction.png** - Body Map Interaction
@@ -52,19 +68,19 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **analytics-dashboard.png** - Analytics Dashboard
   - Use Case: Upsell to power users, feature comparisons
-  - Caption: "Advanced analytics to explore patterns over time"
+  - Caption: "Advanced analytics competitors charge for - included free"
 
 - **comparison-grid.png** - Comparison Grid (App vs Competitors)
   - Use Case: Twitter, Instagram, Facebook posts
-  - Caption: "Compare features and privacy approaches"
+  - Caption: "Why pay for less when you can get more for free?"
 
 - **benefit-icons-grid.png** - Benefit Icons Grid
   - Use Case: Quick social media posts, email headers
-  - Caption: "🔒 Privacy-first ⚡ One-click forms 💾 Local-first by default 🧾 Clinically useful exports"
+  - Caption: "🔒 Privacy First ⚡ One-Click Forms 💸 Free Forever 🏥 Clinical Grade"
 
 - **mobile-responsiveness.png** - Mobile Responsiveness (Phone, Tablet, Desktop)
   - Use Case: PWA promotion, mobile optimization claims
-  - Caption: "Works across phone, tablet, and desktop - no app store required"
+  - Caption: "Works perfectly on every device - no app store required"
 
 ### Phase 3 (Advanced - Month 1)
 - **trauma-informed-mode.png** - Trauma-Informed Mode Comparison
@@ -77,7 +93,7 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **architecture-diagram.png** - Architecture Diagram
   - Use Case: Developer communities, privacy forums
-  - Caption: "Local-first architecture minimizes data leaving the device (deployment and optional features matter)"
+  - Caption: "Local-first architecture means we can't access your data even if we wanted to"
 
 - **built-in-bc.png** - Built in BC Element
   - Use Case: Local marketing, community outreach
@@ -141,4 +157,4 @@ When adding new screenshots:
 
 ---
 
-*Last updated: 1/13/2026*
+*Last updated: 2/10/2026*

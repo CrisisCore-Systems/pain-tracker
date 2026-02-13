@@ -58,9 +58,9 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 **The 5 Blog Posts** (60-70 minutes total reading time):
 1. 🌐 **Building a Healthcare PWA with Offline-First Architecture** (12-15 min) - Full-stack developers
 2. 💜 **Trauma-Informed Design: Software That Heals, Not Harms** (10-12 min) - UX/UI designers
-3. 🧠 **The Empathy Intelligence Engine: Heuristic Algorithms** (15-18 min) - Data scientists
+3. 🧠 **Pattern-aware insights: Heuristic Algorithms** (15-18 min) - Data scientists
 4. 🩺 **Building for Fibromyalgia: Clinically Useful Tracking** (10-12 min) - Healthcare developers
-5. 🔒 **Zero-Trust Security in Healthcare: HIPAA-Aligned Controls** (14-16 min) - Security engineers
+5. 🔒 **Zero-Trust Security in Healthcare: Privacy-aligned security controls** (14-16 min) - Security engineers
 
 ---
 
@@ -128,7 +128,7 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 ### Security & Compliance
 - **[Security Policy](../SECURITY.md)** - Security practices and vulnerability reporting
 - **[Security Audit](security/SECURITY_AUDIT.md)** - Latest security audit results
-- **[HIPAA Audit Implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)** - HIPAA-aligned controls
+- **[Privacy-aligned audit implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)** - Privacy-aligned security controls
 
 ### Deployment & Operations
 - **[Deployment Guide](ops/DEPLOYMENT_GUIDE.md)** - Deployment instructions
@@ -228,7 +228,7 @@ Suggested reading stance:
 
 **For Healthcare Providers**:
 - [Fibromyalgia Features Guide](product/FIBROMYALGIA_FEATURES.md) (Clinical Integration section)
-- [HIPAA-aligned controls](security/AUDIT_HIPAA_IMPLEMENTATION.md)
+- [Privacy-aligned security controls](security/AUDIT_HIPAA_IMPLEMENTATION.md)
 - [WorkSafe BC Export](product/FIBROMYALGIA_FEATURES.md#clinical--export-features)
 
 **For DevOps**:

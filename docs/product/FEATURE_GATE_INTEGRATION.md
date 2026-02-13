@@ -292,15 +292,15 @@ import { CanceledBanner } from './components/subscription/FeatureGates';
 | `pdfReports` | Basic+ | PDF report generation |
 | `wcbReports` | Basic+ | WorkSafe BC reports |
 | `advancedAnalytics` | Basic+ | Advanced analytics dashboards |
-| `empathyIntelligence` | Basic+ | Empathy-driven insights |
+| `empathyIntelligence` | Basic+ | Pattern-aware insights |
 | `customReports` | Basic+ | Customizable report templates |
 | `goalTracking` | Basic+ | Goal setting and tracking |
-| `clinicalPDFExport` | Pro | HIPAA-aligned clinical exports |
+| `clinicalPDFExport` | Pro | Structured clinical export formats |
 | `predictiveInsights` | Pro | Machine learning predictions |
 | `multiUserCollaboration` | Pro | Family/caregiver sharing |
 | `apiAccess` | Pro | REST API access |
 | `fhirIntegration` | Pro | FHIR healthcare integration |
-| `hipaaCompliance` | Pro | HIPAA-aligned controls |
+| `hipaaCompliance` | Pro | Privacy-aligned security controls |
 | `whiteLabel` | Enterprise | Custom branding |
 | `sso` | Enterprise | Single sign-on |
 | `customIntegrations` | Enterprise | Custom API integrations |

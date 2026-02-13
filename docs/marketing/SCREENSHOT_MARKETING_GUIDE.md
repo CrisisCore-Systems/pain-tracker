@@ -118,7 +118,7 @@ Building healthcare software that respects privacy:
 Pain Tracker's local-first architecture means:
 • Data stays local by default; you control exports
 • No required cloud backend for core tracking
-• HIPAA-aligned controls (not a compliance claim)
+• Privacy-aligned security controls (not a compliance claim)
 • Complete user control
 
 Technical details: [blog link]

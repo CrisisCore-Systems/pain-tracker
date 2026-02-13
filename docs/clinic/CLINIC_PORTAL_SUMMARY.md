@@ -330,7 +330,7 @@ Currently using mock data:
 ### 🚧 In Progress
 1. Real data integration
 2. Authentication system
-3. HIPAA-aligned controls
+3. Privacy-aligned security controls
 4. Advanced analytics
 5. Report generation
 

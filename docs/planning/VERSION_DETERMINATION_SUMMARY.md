@@ -43,7 +43,7 @@ However, this version number is **conservative** relative to the actual implemen
 **Major Systems Implemented:**
 - ✅ Core pain tracking (implemented)
 - ✅ Empathy intelligence engine
-- ✅ HIPAA-aligned controls (not a compliance claim)
+- ✅ Privacy-aligned security controls (not a compliance claim)
 - ✅ Trauma-informed accessibility
 - ✅ PWA with offline functionality
 - ✅ Full SaaS infrastructure (Stripe, subscriptions, database)
