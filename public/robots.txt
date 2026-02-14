@@ -35,4 +35,4 @@ Disallow: /clinic
 Sitemap: https://www.paintracker.ca/sitemap.xml
 
 # Host directive (canonical domain)
-Host: https://www.paintracker.ca
+Host: www.paintracker.ca

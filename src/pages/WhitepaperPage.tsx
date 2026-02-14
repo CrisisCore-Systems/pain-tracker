@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Download } from 'lucide-react';
+import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 
 const WHITEPAPER_VERSION = '1.3.0';
 const WHITEPAPER_PDF_FILENAME = `PainTracker-Whitepaper-v${WHITEPAPER_VERSION}.pdf`;
@@ -12,10 +13,22 @@ export function WhitepaperPage() {
     };
   }, []);
 
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Whitepaper', url: '/whitepaper' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    )
+  );
+
   const pdfHref = `${import.meta.env.BASE_URL}assets/${WHITEPAPER_PDF_FILENAME}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-slate-900 focus:rounded-md"

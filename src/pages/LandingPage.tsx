@@ -10,7 +10,7 @@ import {
   Testimonials,
   WorkSafeBCCaseStudy,
   FeaturedBlogPosts,
-  FAQ,
+  FAQ as Faq,
   LandingFooter,
 } from '../components/landing';
 import {
@@ -50,9 +50,7 @@ export const LandingPage: React.FC = () => {
     return () => {
       // Safe cleanup - element may already be removed during fast navigation
       try {
-        if (ariaLive && ariaLive.parentNode === document.body) {
-          document.body.removeChild(ariaLive);
-        }
+        ariaLive?.remove();
       } catch {
         // Element already removed, ignore
       }
@@ -87,7 +85,7 @@ export const LandingPage: React.FC = () => {
         <FeatureShowcase />
         <Testimonials />
         <FeaturedBlogPosts />
-        <FAQ />
+        <Faq />
       </main>
 
       {/* Footer */}

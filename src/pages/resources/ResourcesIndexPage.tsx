@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { LandingFooter } from '../../components/landing/LandingFooter';
 import '../../styles/pages/landing.css';
+import { combineSchemas, generateBreadcrumbSchema } from '../../lib/seo';
 
 interface ResourceCard {
   title: string;
@@ -263,6 +264,16 @@ export const ResourcesIndexPage: React.FC = () => {
     }
   }, []);
 
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Resources', url: '/resources' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    )
+  );
+
   const templates = resources.filter(r => r.category === 'template');
   const guides = resources.filter(r => r.category === 'guide');
 
@@ -330,6 +341,8 @@ export const ResourcesIndexPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background landing-always-dark">
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       {/* Skip to main content */}
       <a
         href="#main-content"

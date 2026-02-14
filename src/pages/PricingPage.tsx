@@ -16,6 +16,7 @@ import { TierBadge } from '../components/subscription/FeatureGates';
 import { useVaultStatus } from '../hooks/useVault';
 import { createCheckoutSession, getTierForCheckout } from '../utils/stripe-checkout';
 import { getLocalUserId } from '../utils/user-identity';
+import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 
 export const PricingPage: React.FC = () => {
   const { currentTier } = useSubscription();
@@ -23,6 +24,16 @@ export const PricingPage: React.FC = () => {
   const navigate = useNavigate();
   const [billingInterval, setBillingInterval] = useState<'monthly' | 'yearly'>('monthly');
   const [isUpgrading, setIsUpgrading] = useState(false);
+
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Pricing', url: '/pricing' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    )
+  );
 
   const handleUpgrade = async (tier: SubscriptionTier) => {
     setIsUpgrading(true);
@@ -88,6 +99,8 @@ export const PricingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
       
@@ -160,7 +173,8 @@ export const PricingPage: React.FC = () => {
           )}
 
           {/* Billing Interval Toggle */}
-          <div className="inline-flex items-center gap-1 p-1.5 rounded-full bg-slate-800/80 border border-white/10 backdrop-blur-sm" role="group" aria-label="Billing interval">
+          <fieldset className="inline-flex items-center gap-1 p-1.5 rounded-full bg-slate-800/80 border border-white/10 backdrop-blur-sm">
+            <legend className="sr-only">Billing interval</legend>
             <button
               onClick={() => setBillingInterval('monthly')}
               aria-pressed={billingInterval === 'monthly'}
@@ -181,12 +195,12 @@ export const PricingPage: React.FC = () => {
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              Yearly
+              <span>Yearly</span>
               <span className="bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
                 -20%
               </span>
             </button>
-          </div>
+          </fieldset>
         </div>
 
         {/* Pricing Cards */}
@@ -196,8 +210,33 @@ export const PricingPage: React.FC = () => {
             const price = billingInterval === 'monthly' ? plan.pricing.monthly : plan.pricing.yearly;
             const isCurrentPlan = currentTier === tierKey;
             const isPro = tierKey === 'pro';
+            const isEnterprise = tierKey === 'enterprise';
             const TierIcon = tierIcons[tierKey];
             const colors = tierColors[tierKey];
+
+            const ctaVariantClassName = (() => {
+              if (isCurrentPlan) return 'bg-slate-700 text-slate-500 cursor-not-allowed';
+              if (isPro) return 'btn-cta-primary';
+              if (isEnterprise) {
+                return 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:shadow-lg hover:shadow-amber-500/30 hover:scale-[1.02]';
+              }
+              return 'bg-white/10 text-white border border-white/20 hover:bg-white/20 hover:border-white/30';
+            })();
+
+            const ctaText = (() => {
+              if (isCurrentPlan) return 'Current Plan';
+              if (isEnterprise) return 'Contact Sales';
+              return `Get ${plan.name}`;
+            })();
+
+            const planNoteByTier: Record<SubscriptionTier, string> = {
+              free: 'Upgrade anytime. No credit card required.',
+              basic: 'Advanced tracking, analytics, and structured reports for personal health management.',
+              pro: 'Clinical-grade reports, exports, and pattern insights for rehabilitation and insurance documentation.',
+              enterprise: 'Evaluation access available for organizations.',
+            };
+
+            const planNote = isCurrentPlan ? null : planNoteByTier[tierKey];
 
             return (
               <div
@@ -256,7 +295,7 @@ export const PricingPage: React.FC = () => {
 
                   {/* Price */}
                   <div className="mb-6">
-                    {tierKey === 'enterprise' ? (
+                    {isEnterprise ? (
                       <div>
                         <div className="text-3xl font-extrabold text-white">Custom</div>
                         <p className="text-sm text-slate-500 mt-1">Contact sales</p>
@@ -286,29 +325,15 @@ export const PricingPage: React.FC = () => {
                   <button
                     onClick={() => handleUpgrade(tierKey)}
                     disabled={isCurrentPlan || isUpgrading}
-                    className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all mb-6 ${
-                      isCurrentPlan
-                        ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                        : isPro
-                          ? 'btn-cta-primary'
-                          : tierKey === 'enterprise'
-                            ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:shadow-lg hover:shadow-amber-500/30 hover:scale-[1.02]'
-                            : 'bg-white/10 text-white border border-white/20 hover:bg-white/20 hover:border-white/30'
-                    }`}
+                    className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all mb-6 ${ctaVariantClassName}`}
                   >
-                    {isCurrentPlan ? 'Current Plan' : tierKey === 'enterprise' ? 'Contact Sales' : `Get ${plan.name}`}
+                    {ctaText}
                   </button>
 
                   {/* Plan Note */}
-                  {!isCurrentPlan && (
+                  {planNote && (
                     <p className="text-sm text-center text-slate-500 mb-6">
-                      {tierKey === 'free'
-                        ? 'Upgrade anytime. No credit card required.'
-                        : tierKey === 'enterprise'
-                          ? 'Evaluation access available for organizations.'
-                          : tierKey === 'basic'
-                            ? 'Advanced tracking, analytics, and structured reports for personal health management.'
-                            : 'Clinical-grade reports, exports, and pattern insights for rehabilitation and insurance documentation.'}
+                      {planNote}
                     </p>
                   )}
 
@@ -318,7 +343,7 @@ export const PricingPage: React.FC = () => {
                   {/* Top Features */}
                   <div className="space-y-3">
                     {getTopFeatures(tierKey).map((feature, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
+                      <div key={`${tierKey}-${feature}`} className="flex items-start gap-3">
                         <div className="mt-0.5 flex-shrink-0">
                           <Check className={`w-4 h-4 ${
                             isPro ? 'text-purple-400' : 'text-emerald-400'
@@ -391,7 +416,7 @@ export const PricingPage: React.FC = () => {
                         {/* Category Items */}
                         {cat.items.map((item, idx) => (
                           <tr
-                            key={idx}
+                            key={`${categoryKey}-${item.name}`}
                             className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
                           >
                             <th scope="row" className="px-6 py-4 text-sm text-slate-400 text-left font-normal">

@@ -1,8 +1,19 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Lock, Eye, Database, Download, Server } from 'lucide-react';
+import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 
 export const PrivacyPolicyPage: React.FC = () => {
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Privacy Policy', url: '/privacy' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    )
+  );
+
   useEffect(() => {
     document.title = 'Privacy Policy — Pain Tracker';
     return () => { document.title = 'Pain Tracker Pro'; };
@@ -10,6 +21,8 @@ export const PrivacyPolicyPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-slate-900 focus:rounded-md"
@@ -53,7 +66,7 @@ export const PrivacyPolicyPage: React.FC = () => {
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold text-slate-200 mb-2">Data You Create</h3>
-              <ul className="space-y-1 text-slate-400 ml-4" role="list">
+              <ul className="space-y-1 text-slate-400 ml-4">
                 <li>• Pain entries — severity, location, symptoms, notes, timestamps</li>
                 <li>• Mood, sleep, and activity logs</li>
                 <li>• Medication and treatment records</li>
@@ -62,7 +75,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             </div>
             <div>
               <h3 className="font-semibold text-slate-200 mb-2">Data Stored Automatically</h3>
-              <ul className="space-y-1 text-slate-400 ml-4" role="list">
+              <ul className="space-y-1 text-slate-400 ml-4">
                 <li>• Application preferences (theme, layout, accessibility settings)</li>
                 <li>• Encryption keys — derived from your passphrase, stored locally</li>
               </ul>
@@ -180,7 +193,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         {/* Encryption */}
         <section className="mb-10 p-6 rounded-xl bg-slate-800/60 border border-cyan-500/20" aria-labelledby="encryption">
           <h2 id="encryption" className="text-xl font-bold mb-3 text-cyan-400">Encryption</h2>
-          <ul className="space-y-2 text-slate-300" role="list">
+          <ul className="space-y-2 text-slate-300">
             <li>• <strong>AES-GCM</strong> encryption via libsodium</li>
             <li>• <strong>Passphrase-derived keys</strong> that never leave your device</li>
             <li>• <strong>Vault-based session management</strong> — data only accessible after you unlock</li>

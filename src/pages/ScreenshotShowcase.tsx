@@ -9,6 +9,7 @@ import { DataExportModal } from '../components/export/DataExportModal';
 import { InteractiveBodyMap } from '../components/body-mapping/InteractiveBodyMap';
 import { Lock, Zap, DollarSign, Heart, Shield, Sparkles, Check, X } from 'lucide-react';
 import type { PainEntry } from '../types';
+import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 
 // Demo data for screenshots
 const DEMO_PAIN_ENTRIES: PainEntry[] = [
@@ -79,7 +80,9 @@ type FauxWcbField = {
   value: string;
 };
 
-function FauxWcbFieldRow({ label, value }: FauxWcbField) {
+const SKELETON_ROW_KEYS = Array.from({ length: 10 }, (_, index) => `skeleton-row-${index + 1}`);
+
+function FauxWcbFieldRow({ label, value }: Readonly<FauxWcbField>) {
   return (
     <div className="flex items-start justify-between gap-6 rounded-lg border border-slate-700/40 bg-slate-900/30 px-4 py-3">
       <div className="text-slate-400 text-sm">{label}</div>
@@ -92,11 +95,11 @@ function FauxWcbFormFrame({
   title,
   subtitle,
   mockFields,
-}: {
+}: Readonly<{
   title: string;
   subtitle: string;
   mockFields?: FauxWcbField[];
-}) {
+}>) {
   return (
     <div className="relative max-w-5xl w-full rounded-2xl overflow-hidden border border-slate-700/50 bg-slate-950/40">
       <div className="p-6 border-b border-slate-700/50">
@@ -134,8 +137,8 @@ function FauxWcbFormFrame({
             <div className="col-span-5">
               <div className="h-6 rounded bg-slate-800/40" />
             </div>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="col-span-12">
+            {SKELETON_ROW_KEYS.map((key) => (
+              <div key={key} className="col-span-12">
                 <div className="h-10 rounded bg-slate-800/30" />
               </div>
             ))}
@@ -523,7 +526,7 @@ export function BenefitsGridShowcase() {
             const Icon = benefit.icon;
             return (
               <div 
-                key={index} 
+                key={benefit.title} 
                 className={`p-8 rounded-2xl ${benefit.bgColor} border ${benefit.borderColor} text-center transition-all hover:-translate-y-1`}
                 style={{
                   boxShadow: '0 15px 40px -10px rgba(0, 0, 0, 0.3)'
@@ -603,8 +606,8 @@ export function ComparisonGridShowcase() {
               </tr>
             </thead>
             <tbody>
-              {features.map((item, index) => (
-                <tr key={index} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+              {features.map((item) => (
+                <tr key={item.feature} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
                   <td className="py-4 px-4 text-slate-300">{item.feature}</td>
                   <td className="text-center py-4 px-4">
                     {item.us ? (
@@ -742,35 +745,67 @@ export function ScreenshotShowcase() {
   const location = useLocation();
   const hash = location.hash;
 
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Demo', url: '/demo' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    )
+  );
+
   // Route to appropriate showcase based on hash
+  let page: React.ReactElement;
   switch (hash) {
     case '#demo-blank-form':
-      return <BlankWcbFormShowcase />;
+      page = <BlankWcbFormShowcase />;
+      break;
     case '#demo-export':
-      return <ExportModalShowcase />;
+      page = <ExportModalShowcase />;
+      break;
     case '#demo-export-modal':
-      return <ExportProcessShowcase />;
+      page = <ExportProcessShowcase />;
+      break;
     case '#demo-form-6':
-      return <Form6PreviewShowcase />;
+      page = <Form6PreviewShowcase />;
+      break;
     case '#demo-form-7':
-      return <Form7PreviewShowcase />;
+      page = <Form7PreviewShowcase />;
+      break;
     case '#demo-body-map':
-      return <BodyMapShowcase />;
+      page = <BodyMapShowcase />;
+      break;
     case '#demo-settings':
-      return <PrivacySettingsShowcase />;
+      page = <PrivacySettingsShowcase />;
+      break;
     case '#demo-offline':
-      return <OfflineShowcase />;
+      page = <OfflineShowcase />;
+      break;
     case '#demo-trauma-mode':
-      return <TraumaModeShowcase />;
+      page = <TraumaModeShowcase />;
+      break;
     case '#demo-comparison':
-      return <ComparisonGridShowcase />;
+      page = <ComparisonGridShowcase />;
+      break;
     case '#demo-crisis':
-      return <CrisisSupportShowcase />;
+      page = <CrisisSupportShowcase />;
+      break;
     case '#demo-bc-branding':
-      return <BcBrandingShowcase />;
+      page = <BcBrandingShowcase />;
+      break;
     case '#demo-benefits':
-      return <BenefitsGridShowcase />;
+      page = <BenefitsGridShowcase />;
+      break;
     default:
-      return <ExportModalShowcase />;
+      page = <ExportModalShowcase />;
+      break;
   }
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
+      {page}
+    </>
+  );
 }

@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./design-system";
 import { ToastProvider } from "./components/feedback";
 import { TraumaInformedProvider } from "./components/accessibility";
+import { CanonicalUrlManager } from './components/seo/CanonicalUrlManager';
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { ToneProvider } from "./contexts/ToneContext";
 import { StartupPromptsProvider } from "./contexts/StartupPromptsContext";
@@ -113,8 +114,12 @@ function App() {
     };
 
     // Use requestIdleCallback if available, otherwise setTimeout
-    if ('requestIdleCallback' in window) {
-      (window as Window & { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(initializeDeferred);
+    const globalWithIdleCallback = globalThis as typeof globalThis & {
+      requestIdleCallback?: (cb: () => void) => void;
+    };
+
+    if (typeof globalWithIdleCallback.requestIdleCallback === 'function') {
+      globalWithIdleCallback.requestIdleCallback(initializeDeferred);
     } else {
       setTimeout(initializeDeferred, 100);
     }
@@ -133,6 +138,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <CanonicalUrlManager />
       {isAnalyticsAllowed() && <Analytics />}
       <ThemeProvider>
         <SubscriptionProvider userId={userId}>

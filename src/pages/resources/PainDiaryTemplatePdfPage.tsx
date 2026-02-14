@@ -16,7 +16,6 @@ import {
   Shield,
   FileText,
   ArrowRight,
-  Clock,
   Printer,
   CalendarDays,
   Activity,
@@ -27,7 +26,6 @@ import {
   ThermometerSun,
   Moon,
   Star,
-  BookOpen,
   Users,
   Stethoscope,
   BadgeCheck,
@@ -42,6 +40,7 @@ import { LandingFooter } from '../../components/landing/LandingFooter';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
+  generateArticleSchema,
   generateSoftwareApplicationSchema,
   generateBreadcrumbSchema,
   combineSchemas,
@@ -343,7 +342,7 @@ const SectionHeading: React.FC<{
   </div>
 );
 
-const FAQ: React.FC<{ question: string; answer: string; defaultOpen?: boolean }> = ({
+const Faq: React.FC<{ question: string; answer: string; defaultOpen?: boolean }> = ({
   question,
   answer,
   defaultOpen,
@@ -392,7 +391,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
     document.body.appendChild(ariaLive);
 
     return () => {
-      try { document.body.removeChild(ariaLive); } catch { /* already removed */ }
+      try { ariaLive?.remove(); } catch { /* already removed */ }
     };
   }, []);
 
@@ -401,12 +400,17 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
     generateMedicalWebPageSchema({
       name: SEO.title,
       description: SEO.metaDescription,
-      url: `https://paintracker.ca/resources/${SEO.slug}`,
+      url: `https://www.paintracker.ca/resources/${SEO.slug}`,
       keywords: SEO.keywords,
+    }),
+    generateArticleSchema({
+      headline: SEO.title,
+      description: SEO.metaDescription,
+      url: `https://www.paintracker.ca/resources/${SEO.slug}`,
     }),
     generateFAQSchema(FAQS),
     generateSoftwareApplicationSchema(),
-    generateBreadcrumbSchema(breadcrumbs),
+    generateBreadcrumbSchema(breadcrumbs, { siteUrl: 'https://www.paintracker.ca' }),
   );
 
   const handleDownload = () => {
@@ -533,10 +537,10 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
             </div>
 
             {downloadCount > 0 && (
-              <p className="mt-4 text-emerald-400 text-sm animate-fade-in" role="status">
+              <output className="mt-4 text-emerald-400 text-sm animate-fade-in">
                 <CheckCircle className="w-4 h-4 inline-block mr-1 -mt-0.5" />
                 Download started — check your downloads folder.
-              </p>
+              </output>
             )}
           </div>
         </section>
@@ -898,7 +902,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
 
             <div className="mt-10 space-y-3">
               {FAQS.map((faq, i) => (
-                <FAQ key={i} question={faq.question} answer={faq.answer} defaultOpen={i === 0} />
+                <Faq key={faq.question} question={faq.question} answer={faq.answer} defaultOpen={i === 0} />
               ))}
             </div>
           </div>

@@ -37,6 +37,7 @@
     "db:migrate:prod": "node scripts/db/apply-schema-prod.js",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --reporter=json --reporter=default",
+    "test:seo": "vitest run --run src/test/seo-breadcrumbs.test.ts src/test/seo-host-consistency.test.ts",
     "sbom": "cyclonedx-npm --output-file security/sbom-latest.json --json",
     "docs:validate": "node scripts/validate-docs.js",
     "privacy-gates": "node scripts/privacy-gates.js",

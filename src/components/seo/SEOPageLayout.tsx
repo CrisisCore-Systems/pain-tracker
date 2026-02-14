@@ -26,6 +26,7 @@ import { LandingFooter } from '../landing/LandingFooter';
 import {
   generateMedicalWebPageSchema,
   generateFAQSchema,
+  generateArticleSchema,
   generateSoftwareApplicationSchema,
   generateBreadcrumbSchema,
   combineSchemas,
@@ -167,13 +168,9 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
     
     return () => {
       try {
-        if (ariaLive && ariaLive.parentNode === document.body) {
-          document.body.removeChild(ariaLive);
-        }
+        ariaLive?.remove();
         // Remove canonical link only if we created it
-        if (createdCanonicalLink && createdCanonicalLink.parentNode === document.head) {
-          document.head.removeChild(createdCanonicalLink);
-        }
+        createdCanonicalLink?.remove();
       } catch {
         // Element already removed
       }
@@ -189,12 +186,20 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
   });
   
   const faqSchema = generateFAQSchema(content.faqs);
+  const articleSchema = generateArticleSchema({
+    headline: content.title,
+    description: content.metaDescription,
+    url: canonicalUrl
+  });
   const softwareSchema = generateSoftwareApplicationSchema();
-  const breadcrumbSchema = generateBreadcrumbSchema(content.breadcrumbs);
+  const breadcrumbSchema = generateBreadcrumbSchema(content.breadcrumbs, {
+    siteUrl: 'https://www.paintracker.ca'
+  });
   
   const combinedSchema = combineSchemas(
     medicalPageSchema,
     faqSchema,
+    articleSchema,
     softwareSchema,
     breadcrumbSchema
   );
@@ -385,8 +390,8 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               <div>
                 <h2 className="text-2xl font-bold text-white mb-4">Who should use it?</h2>
                 <ul className="space-y-3">
-                  {content.whoShouldUse.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
+                  {content.whoShouldUse.map((item) => (
+                    <li key={item} className="flex items-start gap-3">
                       <CheckCircle className="w-6 h-6 text-emerald-400 flex-shrink-0 mt-0.5" />
                       <span className="text-slate-300 text-lg">{item}</span>
                     </li>
@@ -493,9 +498,9 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-8">Related pain tracking resources</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {content.relatedLinks.map((link, index) => (
+              {content.relatedLinks.map((link) => (
                 <Link
-                  key={index}
+                  key={link.href}
                   to={link.href}
                   className="group p-6 bg-slate-800 hover:bg-slate-750 rounded-xl border border-slate-700 hover:border-primary/50 transition-all"
                 >
@@ -519,9 +524,9 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               Frequently Asked Questions
             </h2>
             <div className="space-y-4">
-              {content.faqs.map((faq, index) => (
+              {content.faqs.map((faq) => (
                 <details
-                  key={index}
+                  key={faq.question}
                   className="group bg-slate-800 rounded-xl border border-slate-700"
                 >
                   <summary className="flex items-center justify-between p-6 cursor-pointer list-none">

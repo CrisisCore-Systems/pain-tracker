@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../design-system/components/Button';
 import { Heart, Send, ArrowLeft, Shield, CheckCircle2, Sparkles } from 'lucide-react';
+import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 
 export const SubmitStoryPage: React.FC = () => {
   const navigate = useNavigate();
@@ -17,47 +18,60 @@ export const SubmitStoryPage: React.FC = () => {
   const recaptchaScriptRef = useRef<HTMLScriptElement | null>(null);
   const recaptchaLoadPromiseRef = useRef<Promise<boolean> | null>(null);
 
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Share Your Story', url: '/submit-story' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    )
+  );
+
   type Grecaptcha = {
     execute: (siteKey: string, options: { action: string }) => Promise<string>;
   };
 
+  const getGrecaptcha = (): Grecaptcha | undefined =>
+    (globalThis as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
+
   const ensureRecaptchaLoaded = async (siteKey: string): Promise<boolean> => {
-    const existingGrecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
+    const existingGrecaptcha = getGrecaptcha();
     if (existingGrecaptcha?.execute) return true;
 
     if (recaptchaLoadPromiseRef.current) return recaptchaLoadPromiseRef.current;
 
+    const waitForGrecaptcha = (resolve: (value: boolean) => void) => {
+      const start = Date.now();
+      const interval = globalThis.setInterval(() => {
+        const grecaptcha = getGrecaptcha();
+        if (grecaptcha?.execute) {
+          globalThis.clearInterval(interval);
+          resolve(true);
+          return;
+        }
+        if (Date.now() - start > 3000) {
+          globalThis.clearInterval(interval);
+          resolve(false);
+        }
+      }, 50);
+    };
+
     recaptchaLoadPromiseRef.current = new Promise<boolean>((resolve) => {
       const existingScript = document.querySelector(
         `script[data-recaptcha='${siteKey}']`
-      ) as HTMLScriptElement | null;
-
-      const waitForGrecaptcha = () => {
-        const start = Date.now();
-        const interval = window.setInterval(() => {
-          const grecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
-          if (grecaptcha?.execute) {
-            window.clearInterval(interval);
-            resolve(true);
-            return;
-          }
-          if (Date.now() - start > 3000) {
-            window.clearInterval(interval);
-            resolve(false);
-          }
-        }, 50);
-      };
+      );
 
       if (existingScript) {
-        waitForGrecaptcha();
+        waitForGrecaptcha(resolve);
         return;
       }
 
       const s = document.createElement('script');
       s.async = true;
       s.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
-      s.setAttribute('data-recaptcha', siteKey);
-      s.onload = () => waitForGrecaptcha();
+      s.dataset.recaptcha = siteKey;
+      s.onload = () => waitForGrecaptcha(resolve);
       s.onerror = () => resolve(false);
 
       recaptchaScriptRef.current = s;
@@ -82,7 +96,7 @@ export const SubmitStoryPage: React.FC = () => {
       if (siteKey) {
         try {
           await ensureRecaptchaLoaded(siteKey);
-          const grecaptcha = (window as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
+          const grecaptcha = getGrecaptcha();
           if (grecaptcha?.execute) {
             recaptchaToken = await grecaptcha.execute(siteKey, { action: 'submit_testimonial' });
           }
@@ -110,7 +124,7 @@ export const SubmitStoryPage: React.FC = () => {
       const s = recaptchaScriptRef.current;
       if (!s) return;
       try {
-        document.head.removeChild(s);
+        s.remove();
       } catch (e) {
         console.warn('Failed to remove reCAPTCHA script during cleanup', e);
       } finally {
@@ -123,6 +137,8 @@ export const SubmitStoryPage: React.FC = () => {
   if (success) {
     return (
       <main id="main-content" className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
+        {/* Structured data */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
         {/* Ambient background */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
@@ -162,6 +178,8 @@ export const SubmitStoryPage: React.FC = () => {
 
   return (
     <main id="main-content" className="min-h-screen bg-background text-foreground py-16 px-4">
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl" />
@@ -212,8 +230,9 @@ export const SubmitStoryPage: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Name</label>
+                <label htmlFor="submit-story-name" className="block text-sm font-medium text-foreground mb-2">Name</label>
                 <input
+                  id="submit-story-name"
                   type="text"
                   value={name}
                   onChange={e => setName(e.target.value)}
@@ -222,8 +241,9 @@ export const SubmitStoryPage: React.FC = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Role</label>
+                <label htmlFor="submit-story-role" className="block text-sm font-medium text-foreground mb-2">Role</label>
                 <input
+                  id="submit-story-role"
                   type="text"
                   value={role}
                   onChange={e => setRole(e.target.value)}
@@ -234,8 +254,9 @@ export const SubmitStoryPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">Email (optional)</label>
+              <label htmlFor="submit-story-email" className="block text-sm font-medium text-foreground mb-2">Email (optional)</label>
               <input
+                id="submit-story-email"
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}

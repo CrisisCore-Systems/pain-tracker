@@ -98,7 +98,7 @@ export const siteConfig = {
     github: 'https://github.com/CrisisCore-Systems',
   },
   links: {
-    app: 'https://www.paintracker.ca/app',
+    app: 'https://paintracker.ca/app',
     github: 'https://github.com/CrisisCore-Systems/pain-tracker',
     twitter: 'https://twitter.com/crisiscore',
   },

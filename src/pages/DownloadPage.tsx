@@ -1,8 +1,19 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Download, Github, Shield, Smartphone, Monitor, Globe } from 'lucide-react';
+import { Download, ExternalLink, Shield, Smartphone, Monitor, Globe } from 'lucide-react';
+import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 
 export const DownloadPage: React.FC = () => {
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'Download', url: '/download' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    )
+  );
+
   useEffect(() => {
     document.title = 'Download Pain Tracker — Free Chronic Pain Tracking';
     return () => { document.title = 'Pain Tracker Pro'; };
@@ -10,6 +21,8 @@ export const DownloadPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-slate-900 focus:rounded-md"
@@ -58,7 +71,7 @@ export const DownloadPage: React.FC = () => {
               <h3 className="font-bold text-lg mb-2">Web App</h3>
               <p className="text-sm text-slate-400 mb-4">Use directly in your browser. No install needed.</p>
               <a
-                href="https://paintracker.ca/start"
+                href="https://www.paintracker.ca/start"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all"
               >
                 <Globe className="h-4 w-4" aria-hidden="true" />
@@ -72,7 +85,7 @@ export const DownloadPage: React.FC = () => {
               <h3 className="font-bold text-lg mb-2">Install as App</h3>
               <p className="text-sm text-slate-400 mb-4">Install to your home screen for a native experience.</p>
               <a
-                href="https://paintracker.ca"
+                href="https://www.paintracker.ca/"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 transition-all"
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
@@ -91,7 +104,7 @@ export const DownloadPage: React.FC = () => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-400 hover:to-purple-500 transition-all"
               >
-                <Github className="h-4 w-4" aria-hidden="true" />
+                <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 View on GitHub
               </a>
             </div>
@@ -122,7 +135,7 @@ export const DownloadPage: React.FC = () => {
           </div>
           <div className="space-y-3 text-slate-300">
             <p>Your health data stays on your device. Always.</p>
-            <ul className="space-y-2 ml-4" role="list">
+            <ul className="space-y-2 ml-4">
               <li>✅ All data stored locally and encrypted</li>
               <li>✅ No cloud database, no server-side storage</li>
               <li>✅ No analytics on health data, no telemetry</li>

@@ -1,16 +1,54 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Download } from 'lucide-react';
 import { LandingFooter } from '../components/landing/LandingFooter';
 import '../styles/pages/landing.css';
 import { CNET_DOWNLOAD_URL } from '../config/cnetDownload';
+import { combineSchemas, generateArticleSchema, generateBreadcrumbSchema } from '../lib/seo';
 
 export function CnetDownloadPage() {
   const url = CNET_DOWNLOAD_URL;
   const isHttpUrl = /^https?:\/\//i.test(url);
 
+  const canonicalUrl = 'https://www.paintracker.ca/cnet-download';
+  const metaTitle = 'CNET Download Link | Pain Tracker Pro';
+  const metaDescription = 'Official, stable reference page for the current CNET download location for Pain Tracker Pro.';
+
+  useEffect(() => {
+    document.title = metaTitle;
+
+    const setMeta = (selector: string, attr: string, value: string) => {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute(attr, value);
+    };
+
+    setMeta('meta[name="description"]', 'content', metaDescription);
+    setMeta('meta[property="og:title"]', 'content', metaTitle);
+    setMeta('meta[property="og:description"]', 'content', metaDescription);
+    setMeta('meta[property="og:url"]', 'content', canonicalUrl);
+    setMeta('meta[name="twitter:title"]', 'content', metaTitle);
+    setMeta('meta[name="twitter:description"]', 'content', metaDescription);
+    setMeta('meta[name="twitter:url"]', 'content', canonicalUrl);
+  }, [metaTitle, metaDescription]);
+
+  const schema = combineSchemas(
+    generateBreadcrumbSchema(
+      [
+        { name: 'Home', url: '/' },
+        { name: 'CNET Download', url: '/cnet-download' },
+      ],
+      { siteUrl: 'https://www.paintracker.ca' }
+    ),
+    generateArticleSchema({
+      headline: 'CNET Download Link',
+      description: metaDescription,
+      url: canonicalUrl,
+    })
+  );
+
   return (
     <div className="min-h-screen relative overflow-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: schema }} />
       <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900" />
       <div className="hero-grid-pattern" />
 

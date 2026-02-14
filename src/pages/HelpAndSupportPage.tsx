@@ -10,11 +10,11 @@ export default function HelpAndSupportPage() {
   };
 
   const handleOpenVideoTutorials = () => {
-    window.open('https://paintracker.ca/docs', '_blank', 'noopener');
+    window.open('https://www.paintracker.ca/docs', '_blank', 'noopener');
   };
 
   const handleOpenFaq = () => {
-    window.open('https://paintracker.ca/docs/faq', '_blank', 'noopener');
+    window.open('https://www.paintracker.ca/docs/faq', '_blank', 'noopener');
   };
 
   const handleContactSupport = () => {

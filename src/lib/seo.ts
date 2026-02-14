@@ -25,6 +25,14 @@ export interface BreadcrumbItem {
   url: string;
 }
 
+function normalizeToAbsoluteUrl(url: string, siteUrl: string): string {
+  try {
+    return new URL(url, siteUrl).toString();
+  } catch {
+    return url;
+  }
+}
+
 /**
  * Generate MedicalWebPage structured data (JSON-LD)
  */
@@ -60,10 +68,10 @@ export function generateMedicalWebPageSchema(metadata: {
     publisher: {
       '@type': 'Organization',
       name: 'Pain Tracker Pro',
-      url: 'https://paintracker.ca',
+      url: 'https://www.paintracker.ca',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://paintracker.ca/og-image.png'
+        url: 'https://www.paintracker.ca/og-image.png'
       }
     },
     inLanguage: 'en-CA',
@@ -116,7 +124,7 @@ export function generateSoftwareApplicationSchema(): object {
       'Symptom logging',
       'Medication tracking'
     ],
-    screenshot: 'https://paintracker.ca/main-dashboard.png',
+    screenshot: 'https://www.paintracker.ca/main-dashboard.png',
     softwareVersion: '1.0.0',
     creator: {
       '@type': 'Organization',
@@ -128,7 +136,11 @@ export function generateSoftwareApplicationSchema(): object {
 /**
  * Generate BreadcrumbList structured data (JSON-LD)
  */
-export function generateBreadcrumbSchema(items: BreadcrumbItem[]): object {
+export function generateBreadcrumbSchema(
+  items: BreadcrumbItem[],
+  opts?: { siteUrl?: string }
+): object {
+  const siteUrl = opts?.siteUrl ?? defaultSEOConfig.siteUrl;
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -136,9 +148,55 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]): object {
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: item.url
+      item: {
+        '@id': normalizeToAbsoluteUrl(item.url, siteUrl)
+      }
     }))
   };
+}
+
+/**
+ * Generate Article structured data (JSON-LD)
+ */
+export function generateArticleSchema(metadata: {
+  headline: string;
+  description: string;
+  url: string;
+  datePublished?: string;
+  dateModified?: string;
+  imageUrl?: string;
+}): object {
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': metadata.url
+    },
+    headline: metadata.headline,
+    description: metadata.description,
+    url: metadata.url,
+    author: {
+      '@type': 'Organization',
+      name: defaultSEOConfig.siteName,
+      url: defaultSEOConfig.siteUrl
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: defaultSEOConfig.siteName,
+      url: defaultSEOConfig.siteUrl,
+      logo: {
+        '@type': 'ImageObject',
+        url: defaultSEOConfig.defaultImage
+      }
+    },
+    image: metadata.imageUrl ?? defaultSEOConfig.defaultImage
+  };
+
+  if (metadata.datePublished) schema.datePublished = metadata.datePublished;
+  if (metadata.dateModified) schema.dateModified = metadata.dateModified;
+
+  return schema;
 }
 
 /**
