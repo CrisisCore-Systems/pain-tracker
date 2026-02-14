@@ -1,10 +1,54 @@
 {
   "version": 2,
-  "buildCommand": "export VITE_BUILD_HASH=$(git rev-parse --short HEAD) && node ./node_modules/typescript/bin/tsc -b packages/design-system packages/services packages/utils && npm run build",
+  "buildCommand": "node scripts/vercel-build.mjs",
   "installCommand": "npm install --include=dev",
   "framework": null,
   "outputDirectory": "dist",
   "redirects": [
+    {
+      "source": "/blog/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/",
+      "permanent": true
+    },
+    {
+      "source": "/sponser",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://github.com/sponsors/CrisisCore-Systems",
+      "permanent": true
+    },
+    {
+      "source": "/sponsor",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://github.com/sponsors/CrisisCore-Systems",
+      "permanent": true
+    },
     {
       "source": "/blog/:path*",
       "has": [
@@ -47,17 +91,6 @@
         }
       ],
       "destination": "https://github.com/sponsors/CrisisCore-Systems",
-      "permanent": true
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "paintracker.ca"
-        }
-      ],
-      "destination": "https://www.paintracker.ca/$1",
       "permanent": true
     },
     {
@@ -97,10 +130,10 @@
   ],
   "functions": {
     "api/stripe/**/*.ts": {
-      "runtime": "@vercel/node@3.2.18"
+      "runtime": "@vercel/node@5.6.3"
     },
     "api/health/**/*.ts": {
-      "runtime": "@vercel/node@3.2.18"
+      "runtime": "@vercel/node@5.6.3"
     }
   },
   "headers": [

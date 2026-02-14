@@ -1,0 +1,21 @@
+.git/
+.vercel/
+
+# Generated outputs / caches
+dist/
+coverage/
+test-results/
+artifacts/
+archive/
+accessibility-reports/
+security-reports/
+
+# Desktop app (very large binaries and node_modules)
+desktop/
+
+# Nested project build caches
+packages/blog/.next/
+packages/blog/node_modules/
+
+# Git internals (should not be uploaded)
+.git/
