@@ -26,10 +26,25 @@ export interface BreadcrumbItem {
 }
 
 function normalizeToAbsoluteUrl(url: string, siteUrl: string): string {
+  const rawUrl = (url ?? '').trim();
+  const rawSiteUrl = (siteUrl ?? '').trim();
+  const normalizedSiteUrl = /^https?:\/\//i.test(rawSiteUrl)
+    ? rawSiteUrl
+    : `https://${rawSiteUrl}`;
+
   try {
-    return new URL(url, siteUrl).toString();
+    return new URL(rawUrl, normalizedSiteUrl).toString().trim();
   } catch {
-    return url;
+    // If it's already absolute, keep it.
+    if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+
+    // Best-effort absolute fallback (avoid returning a relative URL in schema).
+    const base = normalizedSiteUrl.replace(/\/$/, '');
+    if (rawUrl.startsWith('/')) return `${base}${rawUrl}`;
+    if (rawUrl.length > 0) return `${base}/${rawUrl}`;
+
+    // Last resort: site root.
+    return `${base}/`;
   }
 }
 
@@ -148,9 +163,7 @@ export function generateBreadcrumbSchema(
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: {
-        '@id': normalizeToAbsoluteUrl(item.url, siteUrl)
-      }
+      item: normalizeToAbsoluteUrl(item.url, siteUrl)
     }))
   };
 }

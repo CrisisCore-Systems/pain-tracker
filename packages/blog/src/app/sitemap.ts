@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { getPosts } from '@/lib/hashnode';
 import { articles } from '@/data/articles';
+import { siteConfig } from '@/lib/utils';
 
-const BLOG_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://blog.paintracker.ca';
+const BLOG_URL = siteConfig.url;
 
 /**
  * Dynamic sitemap for blog.paintracker.ca
@@ -40,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   /* ── Core static pages ── */
   const staticPages: MetadataRoute.Sitemap = [
-    { url: BLOG_URL, lastModified: now, changeFrequency: 'daily', priority: 1.0 },
+    { url: BLOG_URL, lastModified: now, changeFrequency: 'daily', priority: 1 },
     { url: `${BLOG_URL}/pain-tracking-guides`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${BLOG_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${BLOG_URL}/privacy`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
@@ -67,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articleEntries: MetadataRoute.Sitemap = articles.map((a) => ({
     url: `${BLOG_URL}/${a.slug}`,
     lastModified: now,
-    changeFrequency: (a.isPillar ? 'weekly' : 'monthly') as 'weekly' | 'monthly',
+    changeFrequency: a.isPillar ? 'weekly' : 'monthly',
     priority: a.isPillar ? 0.9 : 0.7,
   }));
 

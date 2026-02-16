@@ -99,6 +99,7 @@
     "screenshots:accessibility:cognitive": "node scripts/capture-accessibility-screenshots.js --category=cognitive-support",
     "e2e": "npx playwright test --config=e2e/playwright.config.ts",
     "e2e:debug": "npx playwright test --config=e2e/playwright.config.ts --debug",
+    "e2e:smoke": "npx playwright test e2e/tests/smoke-navigation.spec.ts --project=chromium --project=mobile-chrome --project=mobile-safari --config=e2e/playwright.config.ts --workers=1",
     "e2e:pwa": "npx playwright test e2e/tests/pwa-*.spec.ts --config=e2e/playwright.config.ts",
     "e2e:pwa:chromium": "npx playwright test e2e/tests/pwa-*.spec.ts --project=chromium --config=e2e/playwright.config.ts",
     "e2e:pwa:firefox": "npx playwright test e2e/tests/pwa-*.spec.ts --project=firefox --config=e2e/playwright.config.ts",

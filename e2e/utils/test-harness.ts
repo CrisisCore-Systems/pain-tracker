@@ -1,6 +1,38 @@
 import type { Page } from '@playwright/test';
 
 /**
+ * Best-effort cleanup for transient UI that can intercept clicks and
+ * make smoke tests flaky.
+ *
+ * IMPORTANT: Do not remove arbitrary DOM nodes here. Removing React-managed
+ * nodes can cause runtime errors like `removeChild` when React later unmounts.
+ */
+export async function removeBlockingOverlays(page: Page) {
+  try {
+    // Dismiss any known "Dismiss notification" buttons first.
+    const dismiss = page.locator('button:has-text("Dismiss notification")');
+    const count = await dismiss.count();
+    for (let i = 0; i < Math.min(count, 5); i++) {
+      await dismiss.nth(0).click({ timeout: 1500 }).catch(() => undefined);
+      await page.waitForTimeout(50);
+    }
+  } catch {
+    // ignore
+  }
+
+  // Dismiss PWA install prompt if it appears (bottom-left dialog).
+  try {
+    const pwaDismiss = page.locator('div[role="dialog"][aria-label="Install Pain Tracker"] button[aria-label="Dismiss"]');
+    if (await pwaDismiss.count()) {
+      await pwaDismiss.first().click({ timeout: 1500 }).catch(() => undefined);
+      await page.waitForTimeout(50);
+    }
+  } catch {
+    // ignore
+  }
+}
+
+/**
  * Adds an init script so that when the app loads it sees onboarding as completed.
  */
 export async function disableOnboarding(page: Page) {

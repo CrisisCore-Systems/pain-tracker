@@ -15,7 +15,18 @@ const nextConfig = {
   // handled by the root vercel.json on the www.paintracker.ca deployment.
   // Only blog-specific redirects belong here.
   async redirects() {
-    return [];
+    return [
+      {
+        source: '/start-here',
+        destination: '/page/start-here',
+        permanent: true,
+      },
+      {
+        source: '/start-here/',
+        destination: '/page/start-here',
+        permanent: true,
+      },
+    ];
   },
 
   // ── Rewrites ────────────────────────────────────────────────────────

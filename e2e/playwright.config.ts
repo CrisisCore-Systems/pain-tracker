@@ -5,7 +5,10 @@ export default defineConfig({
   timeout: 180_000,
   // Increase retries on CI for flaky engines (especially WebKit)
   retries: process.env.CI ? 2 : 0,
-  expect: { timeout: 5000 },
+  expect: { timeout: process.env.CI ? 10_000 : 5_000 },
+  forbidOnly: !!process.env.CI,
+  // CI stability > speed: reduce contention on the dev server.
+  workers: process.env.CI ? 1 : undefined,
   fullyParallel: true,
   reporter: [
     ['list'],
@@ -16,8 +19,10 @@ export default defineConfig({
   use: {
     // Dev server runs at root - no /pain-tracker/ prefix needed
     baseURL: 'http://localhost:3000',
-    // Collect full traces for flaky runs to aid debugging
-    trace: 'on',
+    actionTimeout: process.env.CI ? 20_000 : 15_000,
+    navigationTimeout: process.env.CI ? 45_000 : 30_000,
+    // Traces are invaluable, but always-on traces can slow runs and add flakiness.
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
@@ -66,7 +71,7 @@ export default defineConfig({
     command: 'npm run -s dev -- --port 3000 --strictPort',
     url: 'http://localhost:3000/',
     // Reuse existing server if already running (common during development)
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
     // Increase webServer timeout to allow the dev server more time to become fully responsive
     // during CI/slow machines (helps avoid module fetch timeouts observed in traces).
     timeout: 240_000,

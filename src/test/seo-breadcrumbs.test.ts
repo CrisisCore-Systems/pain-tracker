@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { generateBreadcrumbSchema } from '../lib/seo';
 
 describe('generateBreadcrumbSchema', () => {
-  it('normalizes relative breadcrumb URLs to absolute @id URLs', () => {
+  it('normalizes relative breadcrumb URLs to absolute URLs', () => {
     const schema = generateBreadcrumbSchema([
       { name: 'Home', url: '/' },
       { name: 'Resources', url: '/resources' },
@@ -12,13 +12,13 @@ describe('generateBreadcrumbSchema', () => {
     expect(schema['@type']).toBe('BreadcrumbList');
     expect(schema.itemListElement).toHaveLength(3);
 
-    const ids = schema.itemListElement.map((li: any) => li.item['@id']);
+    const ids = schema.itemListElement.map((li: any) => li.item);
     expect(ids[0]).toBe('https://www.paintracker.ca/');
     expect(ids[1]).toBe('https://www.paintracker.ca/resources');
     expect(ids[2]).toBe('https://www.paintracker.ca/resources/what-to-include-in-pain-journal');
   });
 
-  it('supports a siteUrl override for absolute @id URLs', () => {
+  it('supports a siteUrl override for absolute URLs', () => {
     const schema = generateBreadcrumbSchema(
       [
         { name: 'Home', url: '/' },
@@ -27,7 +27,7 @@ describe('generateBreadcrumbSchema', () => {
       { siteUrl: 'https://www.paintracker.ca' }
     ) as any;
 
-    const ids = schema.itemListElement.map((li: any) => li.item['@id']);
+    const ids = schema.itemListElement.map((li: any) => li.item);
     expect(ids[0]).toBe('https://www.paintracker.ca/');
     expect(ids[1]).toBe('https://www.paintracker.ca/resources');
   });
@@ -38,7 +38,7 @@ describe('generateBreadcrumbSchema', () => {
       { name: 'Resources', url: 'https://www.paintracker.ca/resources' },
     ]) as any;
 
-    const ids = schema.itemListElement.map((li: any) => li.item['@id']);
+    const ids = schema.itemListElement.map((li: any) => li.item);
     expect(ids[0]).toBe('https://www.paintracker.ca/');
     expect(ids[1]).toBe('https://www.paintracker.ca/resources');
   });

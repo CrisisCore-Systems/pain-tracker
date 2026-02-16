@@ -6,6 +6,534 @@
   "outputDirectory": "dist",
   "redirects": [
     {
+      "source": "/blog/start-here",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/start-here/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/cross-crisis-calibration",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/cross-crisis-calibration-testing-for-panic-attacks-dissociation-and-sensory-overload-2abi",
+      "permanent": true
+    },
+    {
+      "source": "/blog/cross-crisis-calibration/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/cross-crisis-calibration-testing-for-panic-attacks-dissociation-and-sensory-overload-2abi",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-00-start-here",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-00-start-here/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-01-offline-first-local-first-architecture",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-01-offline-first-local-first-architecture/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-03-service-workers-that-dont-surprise-you",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-03-service-workers-that-dont-surprise-you/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-04-zod-defensive-parsing",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-04-zod-defensive-parsing/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-06-exports-as-a-security-boundary",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-06-exports-as-a-security-boundary/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-07-worksafebc-oriented-workflows-careful-language",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-07-worksafebc-oriented-workflows-careful-language/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-08-analytics-without-surveillance-explicit-consent",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-08-analytics-without-surveillance-explicit-consent/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-09-quality-gates-that-earn-trust",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-09-quality-gates-that-earn-trust/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-10-maintaining-truthful-docs-over-time",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/devto-series-10-maintaining-truthful-docs-over-time/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ethics-of-simulation",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ethics-of-simulation/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/false-positives-calibrating-crisis-detection",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/false-positives-calibrating-crisis-detection/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/internationalization-of-trauma",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/internationalization-of-trauma-testing-across-cultural-contexts-41fe",
+      "permanent": true
+    },
+    {
+      "source": "/blog/internationalization-of-trauma/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/internationalization-of-trauma-testing-across-cultural-contexts-41fe",
+      "permanent": true
+    },
+    {
+      "source": "/blog/launch-v1",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/launch-v1/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/performance-under-pressure",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/performance-under-pressure-ensuring-crisis-detection-doesnt-degrade-user-experience-h4m",
+      "permanent": true
+    },
+    {
+      "source": "/blog/performance-under-pressure/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/performance-under-pressure-ensuring-crisis-detection-doesnt-degrade-user-experience-h4m",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-co-occurrence",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/testing-for-co-occurrence-when-multiple-crises-happen-simultaneously-4dj4",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-co-occurrence/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/testing-for-co-occurrence-when-multiple-crises-happen-simultaneously-4dj4",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-privacy-preserving-analytics",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-privacy-preserving-analytics/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-recovery",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/testing-recovery-verifying-that-systems-actually-help-people-get-better-1o6o",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-recovery/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/testing-recovery-verifying-that-systems-actually-help-people-get-better-1o6o",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-the-testing",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/testing-the-testing-validating-that-your-crisis-simulation-actually-matches-reality-6df",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-the-testing/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://dev.to/crisiscoresystems/testing-the-testing-validating-that-your-crisis-simulation-actually-matches-reality-6df",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-the-untestable",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/testing-the-untestable/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/visual-regression-adaptive-interfaces",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
+      "source": "/blog/visual-regression-adaptive-interfaces/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.paintracker.ca"
+        }
+      ],
+      "destination": "https://blog.paintracker.ca/page/start-here",
+      "permanent": true
+    },
+    {
       "source": "/blog/:path*",
       "has": [
         {
@@ -50,67 +578,14 @@
       "permanent": true
     },
     {
-      "source": "/blog/:path*",
+      "source": "/:path*",
       "has": [
         {
           "type": "host",
           "value": "paintracker.ca"
         }
       ],
-      "destination": "https://blog.paintracker.ca/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/blog",
-      "has": [
-        {
-          "type": "host",
-          "value": "paintracker.ca"
-        }
-      ],
-      "destination": "https://blog.paintracker.ca/",
-      "permanent": true
-    },
-    {
-      "source": "/sponser",
-      "has": [
-        {
-          "type": "host",
-          "value": "paintracker.ca"
-        }
-      ],
-      "destination": "https://github.com/sponsors/CrisisCore-Systems",
-      "permanent": true
-    },
-    {
-      "source": "/sponsor",
-      "has": [
-        {
-          "type": "host",
-          "value": "paintracker.ca"
-        }
-      ],
-      "destination": "https://github.com/sponsors/CrisisCore-Systems",
-      "permanent": true
-    },
-    {
-      "source": "/sponser",
-      "destination": "https://github.com/sponsors/CrisisCore-Systems",
-      "permanent": true
-    },
-    {
-      "source": "/sponsor",
-      "destination": "https://github.com/sponsors/CrisisCore-Systems",
-      "permanent": true
-    },
-    {
-      "source": "/blog/:path*",
-      "destination": "https://blog.paintracker.ca/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/blog",
-      "destination": "https://blog.paintracker.ca/",
+      "destination": "https://www.paintracker.ca/:path*",
       "permanent": true
     }
   ],

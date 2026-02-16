@@ -4,7 +4,9 @@ export default defineConfig({
   testDir: './',
   timeout: 180_000,
   retries: process.env.CI ? 2 : 0,
-  expect: { timeout: 5000 },
+  expect: { timeout: process.env.CI ? 10_000 : 5_000 },
+  forbidOnly: !!process.env.CI,
+  workers: process.env.CI ? 1 : undefined,
   fullyParallel: true,
   reporter: [
     ['list'],
@@ -14,7 +16,9 @@ export default defineConfig({
   ],
   use: {
     baseURL: 'http://localhost:4173/pain-tracker/',
-    trace: 'on',
+    actionTimeout: process.env.CI ? 20_000 : 15_000,
+    navigationTimeout: process.env.CI ? 45_000 : 30_000,
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },

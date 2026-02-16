@@ -4,6 +4,24 @@
 
 import { format, formatDistanceToNow, parseISO } from 'date-fns';
 
+function normalizeBlogSiteUrl(raw: string | undefined): string {
+  const fallback = 'https://blog.paintracker.ca';
+  const trimmed = (raw ?? '').trim();
+  if (!trimmed) return fallback;
+
+  const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    const url = new URL(withProtocol);
+    if (url.hostname === 'paintracker.ca' || url.hostname === 'www.paintracker.ca') {
+      url.hostname = 'blog.paintracker.ca';
+    }
+    // Normalize to no trailing slash for consistency.
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return fallback;
+  }
+}
+
 /**
  * Format a date string for display
  */
@@ -43,9 +61,9 @@ export function truncate(text: string, maxLength: number): string {
 export function slugify(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/--+/g, '-')
+    .replaceAll(/[^\w\s-]/g, '')
+    .replaceAll(/\s+/g, '-')
+    .replaceAll(/--+/g, '-')
     .trim();
 }
 
@@ -53,9 +71,9 @@ export function slugify(text: string): string {
  * Get contrasting text color for a background
  */
 export function getContrastColor(hexColor: string): 'white' | 'black' {
-  const r = parseInt(hexColor.slice(1, 3), 16);
-  const g = parseInt(hexColor.slice(3, 5), 16);
-  const b = parseInt(hexColor.slice(5, 7), 16);
+  const r = Number.parseInt(hexColor.slice(1, 3), 16);
+  const g = Number.parseInt(hexColor.slice(3, 5), 16);
+  const b = Number.parseInt(hexColor.slice(5, 7), 16);
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.5 ? 'black' : 'white';
 }
@@ -78,7 +96,7 @@ export function getTagColor(tagName: string): string {
   // Generate consistent color based on tag name
   let hash = 0;
   for (let i = 0; i < tagName.length; i++) {
-    hash = tagName.charCodeAt(i) + ((hash << 5) - hash);
+    hash = (tagName.codePointAt(i) ?? 0) + ((hash << 5) - hash);
   }
   return colors[Math.abs(hash) % colors.length];
 }
@@ -91,14 +109,14 @@ export const siteConfig = {
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ||
     'Insights on chronic pain management, privacy-first health tech, and building empathetic software.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://blog.paintracker.ca',
+  url: normalizeBlogSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
   author: {
     name: 'CrisisCore Systems',
     twitter: '@crisiscore',
     github: 'https://github.com/CrisisCore-Systems',
   },
   links: {
-    app: 'https://paintracker.ca/app',
+    app: 'https://www.paintracker.ca/app',
     github: 'https://github.com/CrisisCore-Systems/pain-tracker',
     twitter: 'https://twitter.com/crisiscore',
   },

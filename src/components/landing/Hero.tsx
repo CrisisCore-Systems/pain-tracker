@@ -123,6 +123,7 @@ export const Hero: React.FC = () => {
                 onMouseEnter={handlePreload}
                 onFocus={handlePreload}
                 className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
+                data-testid="nav-cta-start"
               >
                 Start Tracking Free
                 <ArrowRight className="h-4 w-4" />
@@ -213,6 +214,7 @@ export const Hero: React.FC = () => {
                 <button
                   onClick={() => navigate('/start')}
                   className="btn-cta-primary text-lg px-8 py-4 flex items-center justify-center gap-3"
+                  data-testid="hero-cta-start"
                 >
                   <span>Start Tracking Free</span>
                   <ArrowRight className="h-5 w-5" />
