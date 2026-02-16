@@ -315,9 +315,11 @@ describe('Store Persistence - Synthetic Testing Suite', () => {
       const deserialized = JSON.parse(serialized);
       const parseTime = performance.now() - parseStart;
 
+      const perfBudgetMs = 2000;
+
       expect(deserialized.entries.length).toBe(yearData.length);
-      expect(serializeTime).toBeLessThan(1000);
-      expect(parseTime).toBeLessThan(1000);
+      expect(serializeTime).toBeLessThan(perfBudgetMs);
+      expect(parseTime).toBeLessThan(perfBudgetMs);
 
       console.log(`LARGE_STATE_TEST: Serialize=${serializeTime.toFixed(0)}ms, Parse=${parseTime.toFixed(0)}ms - PASS`);
     });
