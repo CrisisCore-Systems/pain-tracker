@@ -23,6 +23,7 @@ import { trackSessionStart as trackUsageSessionStart } from './utils/usage-track
 import { Analytics } from "@vercel/analytics/react";
 import { getLocalUserId } from './utils/user-identity';
 import { isAnalyticsAllowed } from './analytics/analytics-gate';
+import AnalyticsConsentPrompt from './components/AnalyticsConsentPrompt';
 
 // Lazy-loaded route components for code splitting
 const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
@@ -146,6 +147,7 @@ function App() {
             <TraumaInformedProvider>
               <ToastProvider>
                 <StartupPromptsProvider>
+                  <AnalyticsConsentPrompt />
                   <Suspense fallback={<LoadingFallback />}>
                     <Routes>
                       {/* Landing Page - Public */}

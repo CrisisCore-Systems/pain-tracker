@@ -2,7 +2,6 @@ import { Suspense, lazy, useEffect } from 'react';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { OfflineBanner } from '../components/pwa/OfflineIndicator';
 import NotificationConsentPrompt from '../components/NotificationConsentPrompt';
-import AnalyticsConsentPrompt from '../components/AnalyticsConsentPrompt';
 import { PWAInstallPrompt } from '../components/pwa/PWAInstallPrompt';
 import { PWAStatusIndicator } from '../components/pwa/PWAStatusIndicator';
 import { ToneStateTester } from '../components/dev/ToneStateTester';
@@ -111,7 +110,6 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
     >
       <OfflineBanner />
       <NotificationConsentPrompt />
-      <AnalyticsConsentPrompt />
 
       <ErrorBoundary fallback={<ErrorFallback />}>
         <Suspense fallback={<LoadingFallback />}>
