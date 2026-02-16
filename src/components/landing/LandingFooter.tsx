@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Github, Heart, Shield, Activity, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
+import { Code, Heart, Shield, Activity, Mail, ArrowRight, BookOpen, Sparkles, ExternalLink, Zap, type LucideIcon } from 'lucide-react';
 import { Button } from '../../design-system/components/Button';
 
 interface ResourceLink {
   label: string;
-  onClick?: () => void;
+  onClick?: () => void | Promise<void>;
   href?: string;
   icon?: LucideIcon;
 }
@@ -15,7 +15,7 @@ export const LandingFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: Github, href: 'https://github.com/CrisisCore-Systems/pain-tracker', label: 'GitHub' },
+    { icon: Code, href: 'https://github.com/CrisisCore-Systems/pain-tracker', label: 'GitHub' },
     { icon: BookOpen, href: 'https://blog.paintracker.ca', label: 'Blog' },
     { icon: Mail, href: 'mailto:support@paintracker.ca', label: 'Email' },
   ];
@@ -105,11 +105,11 @@ export const LandingFooter: React.FC = () => {
             {/* Trust points */}
             <p className="text-slate-500 text-sm flex items-center justify-center gap-4 flex-wrap">
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />{' '}
                 Free forever with unlimited entries
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />{' '}
                 No credit card required
               </span>
             </p>
@@ -186,10 +186,11 @@ export const LandingFooter: React.FC = () => {
               <ul className="space-y-4 text-sm">
                 {([
                   { label: 'Templates & Guides', onClick: () => navigate('/resources') },
+                  { label: 'Whitepaper (PDF)', onClick: () => navigate('/whitepaper') },
                   { label: 'Download', onClick: () => navigate('/download') },
                   { label: 'Pricing Plans', onClick: () => navigate('/pricing') },
                   { label: 'Privacy Policy', onClick: () => navigate('/privacy'), icon: Shield },
-                  { label: 'Source Code', href: 'https://github.com/CrisisCore-Systems/pain-tracker', icon: Github },
+                  { label: 'Source Code', href: 'https://github.com/CrisisCore-Systems/pain-tracker', icon: Code },
                   { label: 'Documentation', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md' },
                   { label: 'Security Policy', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/SECURITY.md', icon: Shield },
                   { label: 'Contributing', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/CONTRIBUTING.md' },
@@ -278,7 +279,7 @@ export const LandingFooter: React.FC = () => {
                 { icon: Shield, label: 'AES-256 Encrypted', color: 'sky' },
                 { icon: Heart, label: 'WCAG 2.2 AA target', color: 'purple' },
                 { icon: Activity, label: 'Privacy-aligned security controls', color: 'emerald' },
-                { icon: Github, label: 'Open Source', color: 'amber' },
+                { icon: Code, label: 'Open Source', color: 'amber' },
               ].map((badge) => {
                 const colors: Record<string, { bg: string; border: string; text: string }> = {
                   sky: { bg: 'rgba(56, 189, 248, 0.1)', border: 'rgba(56, 189, 248, 0.3)', text: '#38bdf8' },

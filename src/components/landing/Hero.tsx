@@ -88,6 +88,14 @@ export const Hero: React.FC = () => {
               >
                 Resources
               </Button>
+
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/whitepaper')}
+                className="hidden lg:flex text-slate-200 hover:text-white hover:bg-white/5"
+              >
+                Whitepaper
+              </Button>
               
               <Button
                 variant="ghost"
