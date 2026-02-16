@@ -235,6 +235,9 @@ Pain Tracker is designed with **your privacy as the foundation**, not an afterth
 - **Temporal Analysis** with trend detection algorithms
 - **Export Pipelines** for clinical and insurance reporting
 
+### **Analytics without surveillance**
+- Local-only usage counters + user-exported report (no network)
+
 ### **Quality Assurance**
 - **Vitest** testing framework with **@testing-library/react**
 - **Stryker Mutator** for mutation testing and code quality

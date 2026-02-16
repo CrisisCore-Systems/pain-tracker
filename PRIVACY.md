@@ -28,6 +28,10 @@ We designed this application from the ground up to keep your information private
 - **Application preferences** — theme, layout, accessibility settings
 - **Encryption keys** — derived from your passphrase, stored locally
 
+The app can optionally store local-only usage counters on your device (sessions and active days). You can reset or export these counters at any time. PainTracker does not transmit usage metrics to any server.
+
+You can disable local usage counters in Settings; when disabled, the app stops recording them.
+
 ---
 
 ## Where Your Data Is Stored
@@ -45,7 +49,7 @@ We designed this application from the ground up to keep your information private
 
 - ❌ **No cloud transmission** — your health data is never sent to our servers
 - ❌ **No analytics on health data** — we do not analyze or profile your pain entries
-- ❌ **No telemetry** — no usage tracking of your health information
+- ❌ **No telemetry to our servers** — PainTracker does not transmit usage metrics to any server
 - ❌ **No third-party data sharing** — your data is never sold or shared
 - ❌ **No advertising** — no ads, no ad tracking, no ad networks
 - ❌ **No account required** — no email, no registration, no identity collection

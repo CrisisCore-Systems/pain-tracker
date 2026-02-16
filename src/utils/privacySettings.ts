@@ -9,6 +9,8 @@ export type PrivacySettings = {
   vaultKillSwitchEnabled: boolean;
   retentionDays: number;
   weatherAutoCapture: boolean;
+  /** If enabled, local-only usage counters may be incremented (no network). */
+  localUsageCountersEnabled: boolean;
 };
 
 const DEFAULT_PRIVACY_SETTINGS: PrivacySettings = {
@@ -17,6 +19,7 @@ const DEFAULT_PRIVACY_SETTINGS: PrivacySettings = {
   vaultKillSwitchEnabled: true,
   retentionDays: 365,
   weatherAutoCapture: false,
+  localUsageCountersEnabled: true,
 };
 
 export function readPrivacySettings(): PrivacySettings {
@@ -35,17 +38,22 @@ export function readPrivacySettings(): PrivacySettings {
       : DEFAULT_PRIVACY_SETTINGS.vaultKillSwitchEnabled;
 
   const retentionCandidate = raw.retentionDays;
-  const retentionDays =
-    typeof retentionCandidate === 'number'
-      ? retentionCandidate
-      : typeof retentionCandidate === 'string'
-        ? Number(retentionCandidate)
-        : DEFAULT_PRIVACY_SETTINGS.retentionDays;
+  let retentionDays: number = DEFAULT_PRIVACY_SETTINGS.retentionDays;
+  if (typeof retentionCandidate === 'number') {
+    retentionDays = retentionCandidate;
+  } else if (typeof retentionCandidate === 'string') {
+    retentionDays = Number(retentionCandidate);
+  }
 
   const weatherAutoCapture =
     typeof raw.weatherAutoCapture === 'boolean'
       ? raw.weatherAutoCapture
       : DEFAULT_PRIVACY_SETTINGS.weatherAutoCapture;
+
+  const localUsageCountersEnabled =
+    typeof raw.localUsageCountersEnabled === 'boolean'
+      ? raw.localUsageCountersEnabled
+      : DEFAULT_PRIVACY_SETTINGS.localUsageCountersEnabled;
 
   return {
     dataSharing,
@@ -53,6 +61,7 @@ export function readPrivacySettings(): PrivacySettings {
     vaultKillSwitchEnabled,
     retentionDays: Number.isFinite(retentionDays) ? retentionDays : DEFAULT_PRIVACY_SETTINGS.retentionDays,
     weatherAutoCapture,
+    localUsageCountersEnabled,
   };
 }
 
