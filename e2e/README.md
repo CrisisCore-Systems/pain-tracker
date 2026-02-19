@@ -54,6 +54,25 @@ npm run e2e:pwa:report
 npm run e2e:debug
 ```
 
+## Overton Level A Evidence Capture (self-assessed)
+
+PainTracker includes an evidence-capture suite for producing a **Level A** evidence packet (screenshots + offline exports + notes) aligned to the Overton v0.2 checklists.
+
+PowerShell (from repo root):
+
+```powershell
+./scripts/run-overton-level-a-evidence.ps1 -EnvName dev
+```
+
+Artifacts are written under `evidence/overton-level-a/<date>_<env>_<git-hash>/`.
+
+Implementation note: the evidence suite writes only when `EVIDENCE_DIR` is set (the script sets this for you). If you run Playwright directly, you can set it yourself:
+
+```powershell
+$env:EVIDENCE_DIR = (Resolve-Path .\evidence\overton-level-a\manual_run).Path
+npx playwright test e2e\tests\overton-level-a-evidence.spec.ts --project=chromium --config=e2e\playwright.config.ts
+```
+
 ## Browser Support Matrix
 
 | Browser | Desktop | Mobile | PWA Support | Background Sync |

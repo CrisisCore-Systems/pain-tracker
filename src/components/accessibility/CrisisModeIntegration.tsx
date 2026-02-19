@@ -178,6 +178,10 @@ export function CrisisModeLayout({
           const supportContact = crisisSettings.emergencyContacts.find(
             (contact: CrisisSettings['emergencyContacts'][0]) => contact.type === 'support'
           );
+        case 'exit_crisis_mode': {
+          deactivateEmergencyMode();
+          break;
+        }
           if (supportContact) {
             window.location.href = `tel:${supportContact.phone}`;
           }

@@ -64,11 +64,29 @@ mobile-test-output.txt
 # Local artifacts (agent runs, screenshots, ad-hoc notes)
 artifacts/
 
+# Overton Level A evidence packets (local-only; may contain sensitive artifacts)
+evidence/
+
+# Standalone Overton Framework repo (tracked separately)
+overton-framework/
+
 # Playwright MCP artifacts (local-only)
 .playwright-mcp/
 
 # Locally-generated sample exports (do not commit)
 docs/case-studies/worksafe-bc/generated/*.pdf
+
+# LaTeX build artifacts (do not commit)
+docs/engineering/*.aux
+docs/engineering/*.bbl
+docs/engineering/*.blg
+docs/engineering/*.out
+docs/engineering/*.toc
+docs/engineering/*.lof
+docs/engineering/*.lot
+docs/engineering/*.synctex.gz
+docs/engineering/*.fdb_latexmk
+docs/engineering/*.fls
 
 # Electron desktop wrapper artifacts (do not commit)
 desktop/app/

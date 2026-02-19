@@ -10,6 +10,7 @@
 [![Lines of Code Count](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/CrisisCore-Systems/pain-tracker/main/badges/loc-badge.json)](https://github.com/CrisisCore-Systems/pain-tracker)
 [![GitHub Stars Count](https://img.shields.io/github/stars/CrisisCore-Systems/pain-tracker?style=social)](https://github.com/CrisisCore-Systems/pain-tracker/stargazers)
 [![MIT License Badge](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18688516.svg)](https://doi.org/10.5281/zenodo.18688516)
 
 <!-- CI / Coverage Badges -->
 [![Continuous Integration Workflow Status](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml)
@@ -21,6 +22,10 @@
 PainTracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
 
 **Docs index:** [docs/README.md](docs/README.md)
+
+**Protective Computing (canonical citation):**
+
+> Overton, K. (2026). *The Overton Framework: Protective Computing in Conditions of Human Vulnerability* (Version 1.3). Zenodo. [https://doi.org/10.5281/zenodo.18688516](https://doi.org/10.5281/zenodo.18688516)
 
 **Test suite:** 190 tests
 

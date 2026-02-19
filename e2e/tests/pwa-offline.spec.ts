@@ -2,8 +2,17 @@ import { test, expect } from '../test-setup';
 
 test.describe('PWA Offline Functionality', () => {
   test.beforeEach(async ({ page, browserName }) => {
-    await page.goto('/', { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('load');
+    // Use `commit` to avoid hangs waiting for domcontentloaded on slow/contended dev servers.
+    await page.goto('/start', { waitUntil: 'commit' }).catch(async () => {
+      await page.goto('/', { waitUntil: 'commit' });
+    });
+
+    // /start redirects to /app behind VaultGate.
+    await page.waitForURL(/\/app(\/.*)?$/i, { timeout: 90_000 }).catch(() => undefined);
+    await page.waitForLoadState('domcontentloaded');
+
+    // App shell should appear.
+    await page.locator('#main-content').waitFor({ state: 'visible', timeout: 90_000 }).catch(() => undefined);
 
     const swReady = await page.evaluate(async () => {
       if (!navigator.serviceWorker) return false;

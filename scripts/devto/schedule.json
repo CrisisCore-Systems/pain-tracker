@@ -245,6 +245,24 @@
       "articleId": 3254751,
       "devtoUrl": "https://dev.to/crisiscoresystems/pain-tracker-whitepaper-v130-pdf-5054",
       "published": true
+    },
+    {
+      "key": "overton-framework-doi-backed",
+      "enabled": true,
+      "title": "The Overton Framework is now DOI-backed",
+      "sourceFile": "docs/content/blog/devto-overton-framework-doi-backed.md",
+      "publishAt": "2026-02-19T00:00:00Z",
+      "tags": [
+        "privacy",
+        "accessibility",
+        "security",
+        "opensource"
+      ],
+      "description": "A citable canon for Protective Computing (v1.3), archived on Zenodo with a minted DOI—plus a reference implementation in Pain Tracker.",
+      "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
+      "articleId": 3267082,
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-2pjh-temp-slug-9117169",
+      "published": true
     }
   ]
 }
