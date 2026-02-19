@@ -7,7 +7,7 @@ tags:
   - security
   - opensource
 canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
-published: false
+published: true
 ---
 
 **The Overton Framework** (Protective Computing) is now archived on Zenodo with a minted DOI.
