@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "installCommand": "cd ../.. && npm install --include=dev",
+  "installCommand": "cd ../.. && npm ci --include=dev",
   "buildCommand": "cd ../.. && npm run build:vercel",
   "outputDirectory": ".next"
 }

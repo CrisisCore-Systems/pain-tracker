@@ -1,7 +1,7 @@
 {
   "version": 2,
   "buildCommand": "node scripts/vercel-build.mjs",
-  "installCommand": "npm install --include=dev",
+  "installCommand": "npm ci --include=dev",
   "framework": null,
   "outputDirectory": "dist",
   "redirects": [

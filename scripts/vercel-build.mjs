@@ -39,7 +39,8 @@ if (tscResult.status !== 0) {
 
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const buildResult = spawnSync(npmCommand, ['run', '-s', 'build'], {
-  stdio: 'inherit'
+  stdio: 'inherit',
+  shell: process.platform === 'win32'
 });
 
 process.exit(buildResult.status ?? 1);

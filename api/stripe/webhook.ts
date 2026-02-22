@@ -376,7 +376,7 @@ async function parseAndVerifyEvent(req: VercelRequest, res: VercelResponse): Pro
   }
 
   if (!WEBHOOK_SECRET) {
-    logError('[WEBHOOK] STRIPE_WEBHOOK_SECRET not configured');
+    logError('[WEBHOOK] STRIPE_WEBHOOK_SECRET not configured', 'missing_webhook_secret');
     res.status(500).json({ error: 'Webhook secret not configured' });
     return null;
   }

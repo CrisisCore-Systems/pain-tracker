@@ -28,6 +28,7 @@ const LandingPage = lazy(() => import('./pages/LandingPage').then(m => ({ defaul
 const PricingPage = lazy(() => import('./pages/PricingPage').then(m => ({ default: m.PricingPage })));
 const CnetDownloadPage = lazy(() => import('./pages/CnetDownloadPage').then(m => ({ default: m.CnetDownloadPage })));
 const WhitepaperPage = lazy(() => import('./pages/WhitepaperPage').then(m => ({ default: m.WhitepaperPage })));
+const OvertonFrameworkPage = lazy(() => import('./pages/OvertonFrameworkPage').then(m => ({ default: m.OvertonFrameworkPage })));
 const ScreenshotShowcase = lazy(() => import('./pages/ScreenshotShowcase').then(m => ({ default: m.ScreenshotShowcase })));
 const ClinicPortal = lazy(() => import('./pages/clinic/ClinicPortal').then(m => ({ default: m.ClinicPortal })));
 const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManagementPage').then(m => ({ default: m.SubscriptionManagementPage })));
@@ -157,6 +158,9 @@ function App() {
 
                       {/* Whitepaper Download - Public */}
                       <Route path="/whitepaper" element={<WhitepaperPage />} />
+
+                      {/* Overton Framework (canonical provenance) - Public */}
+                      <Route path="/overton-framework" element={<OvertonFrameworkPage />} />
 
                       {/* Screenshot Showcase - Public */}
                       <Route path="/demo/*" element={<ScreenshotShowcase />} />
