@@ -22,6 +22,14 @@ export function generateStaticParams() {
 
 type Props = { params: Promise<{ slug: string }> };
 
+function safeJsonLdStringify(value: unknown): string {
+  const json = JSON.stringify(value) ?? 'null';
+  return json
+    .replaceAll('<', String.raw`\u003c`)
+    .replaceAll('\u2028', String.raw`\u2028`)
+    .replaceAll('\u2029', String.raw`\u2029`);
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
@@ -109,7 +117,7 @@ function getRelated(article: ArticleData): ArticleData[] {
 
 // ── Page component ───────────────────────────────────────────────────
 
-export default async function ArticlePage({ params }: Props) {
+export default async function ArticlePage({ params }: Readonly<Props>) {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
   if (!article) notFound();
@@ -122,7 +130,7 @@ export default async function ArticlePage({ params }: Props) {
       {/* JSON-LD */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemas) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLdStringify(schemas) }}
       />
 
       <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
@@ -166,7 +174,7 @@ export default async function ArticlePage({ params }: Props) {
             </h2>
             {section.paragraphs.map((p, i) => (
               <p
-                key={i}
+                key={`${section.h2}-${p}`}
                 className="mb-4 leading-relaxed text-gray-600 dark:text-gray-300"
               >
                 {p}

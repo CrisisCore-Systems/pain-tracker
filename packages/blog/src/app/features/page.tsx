@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/utils';
-import { breadcrumbJsonLd, faqPageJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, faqPageJsonLd, jsonLdScript } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Features',
@@ -88,7 +88,7 @@ export default function FeaturesPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             breadcrumbJsonLd([
               { name: 'Home', url: siteConfig.url },
               { name: 'Features', url: `${siteConfig.url}/features` },
@@ -101,7 +101,7 @@ export default function FeaturesPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             faqPageJsonLd([
               {
                 question: 'Is Pain Tracker free?',

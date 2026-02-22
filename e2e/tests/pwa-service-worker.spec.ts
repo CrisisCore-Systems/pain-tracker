@@ -237,6 +237,58 @@ test.describe('PWA Service Worker', () => {
     expect(assetUrls).toContain('manifest.json');
   });
 
+  test('should never cache /api responses', async ({ page, browserName }) => {
+    test.skip(browserName === 'webkit', 'Service worker tests flaky in WebKit');
+
+    // Wait for service worker first
+    await waitForServiceWorker(page);
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null, { timeout: 15_000 });
+
+    // Provide a deterministic 200 response for an API URL so we can assert it is not cached.
+    await page.route('**/api/test-sw-cache', async (route) => {
+      if (route.request().method() !== 'GET') return route.continue();
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true, ts: Date.now() }),
+        headers: { 'cache-control': 'no-store' },
+      });
+    });
+
+    const apiResult = await page.evaluate(async () => {
+      const res = await fetch('/api/test-sw-cache', { cache: 'no-store' });
+      return { ok: res.ok, status: res.status, json: await res.json() };
+    });
+
+    expect(apiResult.ok).toBe(true);
+    expect(apiResult.status).toBe(200);
+    expect(apiResult.json.ok).toBe(true);
+
+    const cachedApi = await page.evaluate(async () => {
+      if (!('caches' in window)) return { supported: false };
+      const cacheNames = await caches.keys();
+      const staticCacheName = cacheNames.find((name) => name.includes('static') || name.includes('pain-tracker'));
+      if (!staticCacheName) return { supported: true, foundStaticCache: false };
+      const cache = await caches.open(staticCacheName);
+      const keys = await cache.keys();
+      return {
+        supported: true,
+        foundStaticCache: true,
+        staticCacheName,
+        cachedUrls: keys.map((r) => r.url),
+      };
+    });
+
+    if (!cachedApi.supported) {
+      test.skip(true, 'Caches API not supported in this environment');
+      return;
+    }
+
+    expect(cachedApi.foundStaticCache).toBe(true);
+    const joined = (cachedApi.cachedUrls || []).join(' ');
+    expect(joined).not.toContain('/api/test-sw-cache');
+  });
+
   test('should update service worker version', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'Service worker tests flaky in WebKit');
     const isWebKit = await page.evaluate(() => {

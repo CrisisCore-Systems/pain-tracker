@@ -2,6 +2,8 @@
 
 **Status:** working draft (engineering-facing)
 
+See also: `docs/engineering/checklists/paintracker-overton-v1.3-compliance-matrix.md` (living matrix; implemented/evidence/gaps/human-review).
+
 **Purpose:** Map PainTracker’s current implementation surfaces to the Overton v0.2 Companion control families (PC‑1..PC‑6) to support accurate claims, scoped assessments, and remediation planning.
 
 **Non-overclaim rule:** This mapping is descriptive. If a control is not clearly implemented, mark it as **UNKNOWN** or **NOT IMPLEMENTED**.
@@ -84,6 +86,8 @@ Network-capable features (weather capture, WCB submission, Stripe checkout, etc.
   - Evidence anchors:
     - Panic mode component + accessibility tests: `src/components/accessibility/PanicMode.tsx`, `src/test/accessibility.test.tsx`
     - Crisis integration scaffolding: `src/components/accessibility/CrisisModeIntegration.tsx`
+  - Notes:
+    - Panic Mode applies a temporary, non-persistent **Automatic Zoom** override (base font + touch target multiplier) while the overlay is active via `--ti-zoom-multiplier`.
 
 - **PC‑4.2 Suppress nonessential prompts; Safe Exit predictable** — **PARTIALLY IMPLEMENTED**
   - Recent fix:

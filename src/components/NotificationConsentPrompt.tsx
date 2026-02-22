@@ -12,6 +12,13 @@ export default function NotificationConsentPrompt() {
       return null;
     }
   });
+  const [isProtectiveModeActive, setIsProtectiveModeActive] = useState<boolean>(() => {
+    try {
+      return document.body.classList.contains('ti-protective-mode');
+    } catch {
+      return false;
+    }
+  });
   const { bottomLeft } = useToast();
   const { requestPrompt, dismissPrompt, canShowPrompt } = useStartupPrompts();
   // Track whether we've already shown the toast to prevent duplicate toasts
@@ -25,17 +32,34 @@ export default function NotificationConsentPrompt() {
   }, [dismissPrompt]);
 
   useEffect(() => {
-    if (!consent) {
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<{ active?: boolean }>).detail;
+      setIsProtectiveModeActive(Boolean(detail?.active));
+    };
+
+    globalThis.addEventListener('ti-protective-mode-changed', handler as EventListener);
+
+    return () => {
+      globalThis.removeEventListener('ti-protective-mode-changed', handler as EventListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!consent && !isProtectiveModeActive) {
       // Request to show this prompt with priority 2 (after beta warning)
       requestPrompt('notification-consent', 2);
     }
-  }, [consent, requestPrompt]);
+  }, [consent, requestPrompt, isProtectiveModeActive]);
 
   useEffect(() => {
     // Check localStorage directly to avoid race conditions with React state
     const storedConsent = localStorage.getItem(STORAGE_KEY);
     if (storedConsent) {
       // Already have consent stored, don't show toast
+      return;
+    }
+
+    if (isProtectiveModeActive) {
       return;
     }
     
@@ -69,7 +93,9 @@ export default function NotificationConsentPrompt() {
         'We can notify you about important pain pattern alerts and medication reminders. You can change this later in Settings.',
         {
           label: 'Allow',
-          onClick: handleGrant,
+          onClick: () => {
+            void handleGrant();
+          },
         },
         {
           onDismiss: handleDismiss
@@ -80,7 +106,7 @@ export default function NotificationConsentPrompt() {
     // because useToast returns a new object on each render. We use bottomLeft inside the effect
     // but guard against re-execution with hasShownToast ref and localStorage check.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [consent, canShowPrompt]);
+  }, [consent, canShowPrompt, isProtectiveModeActive]);
 
   // Don't render anything - the toast handles the UI
   return null;

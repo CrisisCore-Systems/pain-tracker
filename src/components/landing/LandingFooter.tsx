@@ -190,6 +190,7 @@ export const LandingFooter: React.FC = () => {
                   { label: 'Download', onClick: () => navigate('/download') },
                   { label: 'Pricing Plans', onClick: () => navigate('/pricing') },
                   { label: 'Privacy Policy', onClick: () => navigate('/privacy'), icon: Shield },
+                  { label: 'Tracking & Data Policy', onClick: () => navigate('/tracking-data-policy'), icon: Shield },
                   { label: 'Source Code', href: 'https://github.com/CrisisCore-Systems/pain-tracker', icon: Code },
                   { label: 'Documentation', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/README.md' },
                   { label: 'Security Policy', href: 'https://github.com/CrisisCore-Systems/pain-tracker/blob/main/SECURITY.md', icon: Shield },

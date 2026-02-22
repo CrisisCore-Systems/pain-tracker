@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   TrendingUp,
   Calendar,
@@ -103,6 +103,22 @@ export function DashboardOverview({ entries, allEntries, className, PredictivePa
   const [tab, setTab] = useState<'overview' | 'charts' | 'recent'>('overview');
   const [isExporting, setIsExporting] = useState(false);
   const [liveMessage, setLiveMessage] = useState<string | null>(null);
+  const [pendingClearSeconds, setPendingClearSeconds] = useState<number | null>(null);
+  const clearTimerRef = useRef<number | null>(null);
+  const clearIntervalRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (clearTimerRef.current) {
+        window.clearTimeout(clearTimerRef.current);
+        clearTimerRef.current = null;
+      }
+      if (clearIntervalRef.current) {
+        window.clearInterval(clearIntervalRef.current);
+        clearIntervalRef.current = null;
+      }
+    };
+  }, []);
 
   const metrics = useMemo(() => {
     const activeEntries = entries ?? [];
@@ -336,20 +352,57 @@ export function DashboardOverview({ entries, allEntries, className, PredictivePa
   }, [entries]);
 
   const handleClearData = React.useCallback(async () => {
+    if (pendingClearSeconds !== null) {
+      return;
+    }
+
     if (
       window.confirm(
-        '⚠️ Are you sure you want to delete ALL pain entries? This action cannot be undone.'
+        '⚠️ Delete all locally stored data? You will have 10 seconds to cancel before anything is erased.'
       )
     ) {
-      try {
-        setLiveMessage('Clearing all data...');
-        await clearAllUserData();
-        setLiveMessage('All data cleared successfully.');
-      } catch {
-        setLiveMessage('Failed to clear all data.');
-      }
-      setTimeout(() => setLiveMessage(null), 3000);
+      setPendingClearSeconds(10);
+      setLiveMessage('Scheduled: clearing all data in 10 seconds.');
+
+      clearIntervalRef.current = window.setInterval(() => {
+        setPendingClearSeconds(prev => {
+          if (prev === null) return null;
+          return prev > 0 ? prev - 1 : 0;
+        });
+      }, 1000);
+
+      clearTimerRef.current = window.setTimeout(async () => {
+        try {
+          setLiveMessage('Clearing all data…');
+          await clearAllUserData();
+          setLiveMessage('All data cleared successfully.');
+        } catch {
+          setLiveMessage('Failed to clear all data.');
+        } finally {
+          setPendingClearSeconds(null);
+          if (clearIntervalRef.current) {
+            window.clearInterval(clearIntervalRef.current);
+            clearIntervalRef.current = null;
+          }
+          clearTimerRef.current = null;
+          window.setTimeout(() => setLiveMessage(null), 3000);
+        }
+      }, 10_000);
     }
+  }, [pendingClearSeconds]);
+
+  const cancelPendingClear = React.useCallback(() => {
+    if (clearTimerRef.current) {
+      window.clearTimeout(clearTimerRef.current);
+      clearTimerRef.current = null;
+    }
+    if (clearIntervalRef.current) {
+      window.clearInterval(clearIntervalRef.current);
+      clearIntervalRef.current = null;
+    }
+    setPendingClearSeconds(null);
+    setLiveMessage('Cancelled: data was not cleared.');
+    window.setTimeout(() => setLiveMessage(null), 3000);
   }, []);
 
   function getPainLevelColor(pain: number) {
@@ -472,11 +525,23 @@ export function DashboardOverview({ entries, allEntries, className, PredictivePa
       </PageTransition>
 
       <div aria-live="polite" className="sr-only" role="status">
-        {liveMessage}
+        {pendingClearSeconds !== null ? `Clearing in ${pendingClearSeconds} seconds` : liveMessage}
       </div>
       {liveMessage && (
         <div className="rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary shadow-sm transition-all">
-          {liveMessage}
+          <div className="flex items-center justify-between gap-3">
+            <span>
+              {pendingClearSeconds !== null
+                ? `Clearing all data in ${pendingClearSeconds}s…`
+                : liveMessage}
+            </span>
+
+            {pendingClearSeconds !== null && (
+              <Button type="button" variant="outline" size="sm" onClick={cancelPendingClear}>
+                Cancel
+              </Button>
+            )}
+          </div>
         </div>
       )}
 

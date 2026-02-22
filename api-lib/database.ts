@@ -436,7 +436,12 @@ class NoopDatabaseClient implements DatabaseClientInterface {
     return null;
   }
   async upsertSubscription(data: UpsertSubscriptionInput): Promise<SubscriptionRecord> {
-    console.warn('[DB:NOOP] upsertSubscription', data);
+    console.warn('[DB:NOOP] upsertSubscription', {
+      tier: data.tier,
+      status: data.status,
+      billingInterval: data.billingInterval,
+      hasMetadata: Boolean(data.metadata),
+    });
     return {
       id: 0,
       userId: data.userId,
@@ -459,11 +464,11 @@ class NoopDatabaseClient implements DatabaseClientInterface {
     };
   }
   async updateSubscriptionStatus(_subscriptionId: string, _status: SubscriptionRecord['status'], _cancel?: boolean): Promise<SubscriptionRecord | null> {
-    console.warn('[DB:NOOP] updateSubscriptionStatus', { _subscriptionId, _status, _cancel });
+    console.warn('[DB:NOOP] updateSubscriptionStatus', { status: _status, cancelAtPeriodEnd: Boolean(_cancel) });
     return null;
   }
   async cancelSubscription(_subscriptionId: string, _reason?: string): Promise<SubscriptionRecord | null> {
-    console.warn('[DB:NOOP] cancelSubscription', { _subscriptionId, _reason });
+    console.warn('[DB:NOOP] cancelSubscription');
     return null;
   }
   async trackUsage(_userId: string, _usageType: UsageRecord['usageType'], _amount?: number, _metadata?: Record<string, unknown>): Promise<void> {
@@ -478,7 +483,13 @@ class NoopDatabaseClient implements DatabaseClientInterface {
     return 0;
   }
   async createBillingEvent(data: CreateBillingEventInput): Promise<BillingEventRecord> {
-    console.warn('[DB:NOOP] createBillingEvent', data);
+    console.warn('[DB:NOOP] createBillingEvent', {
+      eventType: data.eventType,
+      amount: data.amount,
+      currency: data.currency,
+      status: data.status,
+      hasMetadata: Boolean(data.metadata),
+    });
     return {
       id: 0,
       subscriptionId: data.subscriptionId,

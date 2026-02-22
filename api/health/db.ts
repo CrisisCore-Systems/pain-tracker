@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../../api-lib/database.js';
+import { enforceRateLimit, getClientIp, logError } from '../../api-lib/http';
 
 /**
  * Simple DB health check
@@ -15,6 +16,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  const ip = getClientIp(req);
+  const ok = await enforceRateLimit({
+    req,
+    res,
+    key: `ip:${ip}:health:db`,
+    limit: Number(process.env.HEALTH_RATE_LIMIT || 60),
+    windowMs: Number(process.env.HEALTH_WINDOW_MS || 60 * 1000),
+  });
+  if (!ok) return;
+
   const hasDb = Boolean(process.env.DATABASE_URL);
 
   if (!hasDb) {
@@ -29,6 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const ok = Array.isArray(rows) && rows.length > 0 ? rows[0].ok === 1 : true;
     res.status(200).json({ ok });
   } catch (error) {
-    res.status(500).json({ ok: false, error: (error as Error)?.message || 'Unknown error' });
+    logError('[health/db] query failed', error);
+    res.status(500).json({ ok: false, error: 'Database health check failed' });
   }
 }

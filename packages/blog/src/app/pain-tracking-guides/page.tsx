@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/utils';
 import { articles, PILLAR_URLS, PILLAR_LABELS, APP_CTA_URL } from '@/data/articles';
-import { breadcrumbJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, jsonLdScript } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Pain Tracking Guides — Complete Resource Library',
@@ -97,7 +97,7 @@ export default function PainTrackingGuidesPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             breadcrumbJsonLd([
               { name: 'Home', url: siteConfig.url },
               { name: 'Pain Tracking Guides', url: `${siteConfig.url}/pain-tracking-guides` },

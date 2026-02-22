@@ -10,6 +10,7 @@ import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import Stripe from 'stripe';
 import { buffer } from 'micro';
 import { db } from '../../api-lib/database.js';
+import { enforceRateLimit, getClientIp, hashForLogs, logError, logWarn } from '../../api-lib/http';
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
@@ -54,7 +55,7 @@ async function logDbTiming<T>(label: string, fn: () => Promise<T>): Promise<T> {
     console.log(`[WEBHOOK][DB] ${label} ms=`, Date.now() - t0);
     return res;
   } catch (err) {
-    console.error(`[WEBHOOK][DB] ${label} failed ms=`, Date.now() - t0, err);
+    logError(`[WEBHOOK][DB] ${label} failed ms=${Date.now() - t0}`, err);
     throw err;
   }
 }
@@ -88,9 +89,9 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
   }
 
   console.log('Checkout completed:', {
-    userId,
-    customerId,
-    subscriptionId,
+    userIdHash: userId ? hashForLogs(String(userId)) : null,
+    customerIdHash: customerId ? hashForLogs(String(customerId)) : null,
+    subscriptionIdHash: subscriptionId ? hashForLogs(String(subscriptionId)) : null,
     tier: session.metadata?.tier,
     interval: session.metadata?.interval,
   });
@@ -125,8 +126,8 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription): Pro
     : undefined;
 
   console.log('Subscription created:', {
-    userId,
-    subscriptionId: subscription.id,
+    userIdHash: userId ? hashForLogs(String(userId)) : null,
+    subscriptionIdHash: subscription.id ? hashForLogs(String(subscription.id)) : null,
     status: subscription.status,
     currentPeriodEnd,
   });
@@ -169,8 +170,8 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription): Pro
   }
 
   console.log('Subscription updated:', {
-    userId,
-    subscriptionId: subscription.id,
+    userIdHash: userId ? hashForLogs(String(userId)) : null,
+    subscriptionIdHash: subscription.id ? hashForLogs(String(subscription.id)) : null,
     status: subscription.status,
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
   });
@@ -197,8 +198,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription): Pro
   }
 
   console.log('Subscription deleted:', {
-    userId,
-    subscriptionId: subscription.id,
+    userIdHash: userId ? hashForLogs(String(userId)) : null,
+    subscriptionIdHash: subscription.id ? hashForLogs(String(subscription.id)) : null,
   });
 
   // Update database
@@ -219,9 +220,9 @@ async function handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {
   const customerId = invoice.customer as string;
 
   console.log('Invoice paid:', {
-    invoiceId: invoice.id,
-    subscriptionId,
-    customerId,
+    invoiceIdHash: invoice.id ? hashForLogs(String(invoice.id)) : null,
+    subscriptionIdHash: subscriptionId ? hashForLogs(String(subscriptionId)) : null,
+    customerIdHash: customerId ? hashForLogs(String(customerId)) : null,
     amountPaid: invoice.amount_paid / 100,
     currency: invoice.currency,
   });
@@ -257,9 +258,9 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice): Promise<void
   const customerId = invoice.customer as string;
 
   console.log('Invoice payment failed:', {
-    invoiceId: invoice.id,
-    subscriptionId,
-    customerId,
+    invoiceIdHash: invoice.id ? hashForLogs(String(invoice.id)) : null,
+    subscriptionIdHash: subscriptionId ? hashForLogs(String(subscriptionId)) : null,
+    customerIdHash: customerId ? hashForLogs(String(customerId)) : null,
     amountDue: invoice.amount_due / 100,
   });
 
@@ -302,13 +303,117 @@ async function handleTrialWillEnd(subscription: Stripe.Subscription): Promise<vo
   const trialEndDate = subscription.trial_end ? new Date(subscription.trial_end * 1000) : null;
 
   console.log('Trial will end:', {
-    userId,
-    subscriptionId: subscription.id,
+    userIdHash: userId ? hashForLogs(String(userId)) : null,
+    subscriptionIdHash: subscription.id ? hashForLogs(String(subscription.id)) : null,
     trialEndDate,
   });
 
   // Planned follow-up: send trial ending notification
   // await sendTrialEndingEmail(userId, trialEndDate);
+}
+
+type SignatureReadResult =
+  | { ok: true; value: string }
+  | { ok: false; reason: 'missing' | 'invalid' };
+
+function readStripeSignatureHeader(req: VercelRequest): SignatureReadResult {
+  const signature = req.headers['stripe-signature'];
+  if (!signature) return { ok: false, reason: 'missing' };
+
+  const value = Array.isArray(signature) ? signature[0] : signature;
+  const signatureValue = String(value || '').trim();
+  if (!signatureValue) return { ok: false, reason: 'invalid' };
+
+  return { ok: true, value: signatureValue };
+}
+
+async function rateLimitInvalidWebhookAttempt(req: VercelRequest, res: VercelResponse, ip: string): Promise<boolean> {
+  return await enforceRateLimit({
+    req,
+    res,
+    key: `ip:${ip}:stripe:webhook:invalid`,
+    limit: Number(process.env.STRIPE_WEBHOOK_INVALID_RATE_LIMIT || 20),
+    windowMs: Number(process.env.STRIPE_WEBHOOK_INVALID_WINDOW_MS || 10 * 60 * 1000),
+  });
+}
+
+const EVENT_HANDLERS: Record<string, (obj: unknown) => Promise<void>> = {
+  'checkout.session.completed': async (obj) => {
+    await handleCheckoutCompleted(obj as Stripe.Checkout.Session);
+  },
+  'customer.subscription.created': async (obj) => {
+    await handleSubscriptionCreated(obj as Stripe.Subscription);
+  },
+  'customer.subscription.updated': async (obj) => {
+    await handleSubscriptionUpdated(obj as Stripe.Subscription);
+  },
+  'customer.subscription.deleted': async (obj) => {
+    await handleSubscriptionDeleted(obj as Stripe.Subscription);
+  },
+  'invoice.paid': async (obj) => {
+    await handleInvoicePaid(obj as Stripe.Invoice);
+  },
+  'invoice.payment_failed': async (obj) => {
+    await handleInvoicePaymentFailed(obj as Stripe.Invoice);
+  },
+  'customer.subscription.trial_will_end': async (obj) => {
+    await handleTrialWillEnd(obj as Stripe.Subscription);
+  },
+};
+
+async function parseAndVerifyEvent(req: VercelRequest, res: VercelResponse): Promise<Stripe.Event | null> {
+  const rawBody = await buffer(req);
+  const ip = getClientIp(req);
+
+  const sig = readStripeSignatureHeader(req);
+  if (!sig.ok) {
+    const ok = await rateLimitInvalidWebhookAttempt(req, res, ip);
+    if (!ok) return null;
+    res.status(400).json({
+      error: sig.reason === 'missing' ? 'Missing stripe-signature header' : 'Invalid stripe-signature header',
+    });
+    return null;
+  }
+
+  if (!WEBHOOK_SECRET) {
+    logError('[WEBHOOK] STRIPE_WEBHOOK_SECRET not configured');
+    res.status(500).json({ error: 'Webhook secret not configured' });
+    return null;
+  }
+
+  return verifyWebhookSignature(rawBody, sig.value, WEBHOOK_SECRET);
+}
+
+async function dispatchStripeEvent(event: Stripe.Event): Promise<void> {
+  console.log('Webhook received:', event.type);
+
+  const handlerFn = EVENT_HANDLERS[event.type];
+  if (handlerFn) {
+    await handlerFn(event.data.object);
+    return;
+  }
+
+  console.log(`Unhandled event type: ${event.type}`);
+}
+
+async function handleWebhookError(req: VercelRequest, res: VercelResponse, error: unknown): Promise<void> {
+  logError('Webhook error:', error);
+
+  const isSignatureError = error instanceof Error && error.message.includes('signature verification');
+  if (!isSignatureError) {
+    res.status(500).json({ error: 'Webhook processing failed' });
+    return;
+  }
+
+  try {
+    const ip = getClientIp(req);
+    const ok = await rateLimitInvalidWebhookAttempt(req, res, ip);
+    if (!ok) return;
+  } catch (e) {
+    logWarn('[WEBHOOK] invalid signature rate limit error', e);
+  }
+
+  res.status(401).json({ error: 'Invalid signature' });
 }
 
 /**
@@ -318,8 +423,6 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> {
-  // Quick visibility into whether a DB is configured in this environment
-  console.log('[WEBHOOK] HAS_DATABASE=', process.env.DATABASE_URL ? 'yes' : 'no');
   // Only allow POST requests
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -327,80 +430,12 @@ export default async function handler(
   }
 
   try {
-    // Get raw body and signature
-    const rawBody = await buffer(req);
-    const signature = req.headers['stripe-signature'];
+    const event = await parseAndVerifyEvent(req, res);
+    if (!event) return;
 
-    if (!signature) {
-      res.status(400).json({ error: 'Missing stripe-signature header' });
-      return;
-    }
-
-    const signatureValue = Array.isArray(signature) ? signature[0] : signature;
-
-    if (!signatureValue) {
-      res.status(400).json({ error: 'Invalid stripe-signature header' });
-      return;
-    }
-
-    if (!WEBHOOK_SECRET) {
-      console.error('STRIPE_WEBHOOK_SECRET not configured');
-      res.status(500).json({ error: 'Webhook secret not configured' });
-      return;
-    }
-
-    // Verify webhook signature
-    const event = verifyWebhookSignature(rawBody, signatureValue, WEBHOOK_SECRET);
-
-    console.log('Webhook received:', event.type);
-
-    // Handle event based on type
-    switch (event.type) {
-      case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
-        break;
-
-      case 'customer.subscription.created':
-        await handleSubscriptionCreated(event.data.object as Stripe.Subscription);
-        break;
-
-      case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
-        break;
-
-      case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
-        break;
-
-      case 'invoice.paid':
-        await handleInvoicePaid(event.data.object as Stripe.Invoice);
-        break;
-
-      case 'invoice.payment_failed':
-        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
-        break;
-
-      case 'customer.subscription.trial_will_end':
-        await handleTrialWillEnd(event.data.object as Stripe.Subscription);
-        break;
-
-      default:
-        console.log(`Unhandled event type: ${event.type}`);
-    }
-
-    // Return success response
+    await dispatchStripeEvent(event);
     res.status(200).json({ received: true, type: event.type });
-
   } catch (error) {
-    console.error('Webhook error:', error);
-
-    if (error instanceof Error && error.message.includes('signature verification')) {
-      res.status(401).json({ error: 'Invalid signature' });
-    } else {
-      res.status(500).json({ 
-        error: 'Webhook processing failed',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      });
-    }
+    await handleWebhookError(req, res, error);
   }
 }

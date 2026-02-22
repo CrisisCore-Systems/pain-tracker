@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/utils';
-import { breadcrumbJsonLd, faqPageJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, faqPageJsonLd, jsonLdScript } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Privacy',
@@ -19,7 +19,7 @@ export default function PrivacyPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             breadcrumbJsonLd([
               { name: 'Home', url: siteConfig.url },
               { name: 'Privacy', url: `${siteConfig.url}/privacy` },
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             faqPageJsonLd([
               {
                 question: 'Does Pain Tracker collect my health data?',
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
             >
               publicly auditable on GitHub
             </a>
-            . You don&apos;t have to trust our words — you can verify our code.
+            {'. '}You don&apos;t have to trust our words — you can verify our code.
           </p>
         </div>
       </section>

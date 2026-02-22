@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/utils';
-import { breadcrumbJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, jsonLdScript } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Use Cases',
@@ -50,7 +50,7 @@ export default function UseCasesPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             breadcrumbJsonLd([
               { name: 'Home', url: siteConfig.url },
               { name: 'Use Cases', url: `${siteConfig.url}/use-cases` },

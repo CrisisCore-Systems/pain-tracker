@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   TrendingUp,
   TrendingDown,
@@ -58,6 +58,22 @@ interface ModernDashboardProps {
 export function ModernDashboard({ entries, allEntries, className }: ModernDashboardProps) {
   const [isExporting, setIsExporting] = useState(false);
   const [showActions, setShowActions] = useState(false);
+  const [pendingClearSeconds, setPendingClearSeconds] = useState<number | null>(null);
+  const clearTimerRef = useRef<number | null>(null);
+  const clearIntervalRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (clearTimerRef.current) {
+        window.clearTimeout(clearTimerRef.current);
+        clearTimerRef.current = null;
+      }
+      if (clearIntervalRef.current) {
+        window.clearInterval(clearIntervalRef.current);
+        clearIntervalRef.current = null;
+      }
+    };
+  }, []);
 
   // Calculate metrics with humanized descriptions
   const metrics = useMemo(() => {
@@ -213,10 +229,49 @@ export function ModernDashboard({ entries, allEntries, className }: ModernDashbo
   };
 
   const handleClearData = async () => {
-    if (window.confirm('⚠️ Delete all entries? This cannot be undone.')) {
-      await clearAllUserData();
-      setShowActions(false);
+    if (pendingClearSeconds !== null) return;
+
+    if (
+      window.confirm(
+        '⚠️ Delete all locally stored data? You will have 10 seconds to cancel before anything is erased.'
+      )
+    ) {
+      setPendingClearSeconds(10);
+      setShowActions(true);
+
+      clearIntervalRef.current = window.setInterval(() => {
+        setPendingClearSeconds(prev => {
+          if (prev === null) return null;
+          return prev > 0 ? prev - 1 : 0;
+        });
+      }, 1000);
+
+      clearTimerRef.current = window.setTimeout(async () => {
+        try {
+          await clearAllUserData();
+        } finally {
+          setPendingClearSeconds(null);
+          setShowActions(false);
+          if (clearIntervalRef.current) {
+            window.clearInterval(clearIntervalRef.current);
+            clearIntervalRef.current = null;
+          }
+          clearTimerRef.current = null;
+        }
+      }, 10_000);
     }
+  };
+
+  const cancelPendingClear = () => {
+    if (clearTimerRef.current) {
+      window.clearTimeout(clearTimerRef.current);
+      clearTimerRef.current = null;
+    }
+    if (clearIntervalRef.current) {
+      window.clearInterval(clearIntervalRef.current);
+      clearIntervalRef.current = null;
+    }
+    setPendingClearSeconds(null);
   };
 
   return (
@@ -299,11 +354,23 @@ export function ModernDashboard({ entries, allEntries, className }: ModernDashbo
                   <div className="absolute right-0 mt-2 w-48 glass-card-premium p-2">
                     <button
                       onClick={handleClearData}
+                      disabled={pendingClearSeconds !== null}
                       className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
-                      Clear All Data
+                      {pendingClearSeconds !== null
+                        ? `Clearing in ${pendingClearSeconds}s…`
+                        : 'Clear All Data'}
                     </button>
+
+                    {pendingClearSeconds !== null && (
+                      <button
+                        onClick={cancelPendingClear}
+                        className="mt-1 flex items-center justify-center w-full px-3 py-2 text-sm text-slate-200 hover:bg-white/5 rounded-lg transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

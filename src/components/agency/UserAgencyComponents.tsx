@@ -3,21 +3,20 @@
  * Emphasizes user control, choice, and empowerment in pain management
  */
 
-import { useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../design-system';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, useTheme } from '../../design-system';
 import {
   Crown,
-  Settings,
   Eye,
   ChevronDown,
   ChevronUp,
   Plus,
   Star,
   Shield,
+  Settings,
   CheckCircle,
   Circle,
 } from 'lucide-react';
-import { useTheme } from '../../design-system';
 import { useTraumaInformed } from '../accessibility/TraumaInformedHooks';
 import { clearAllUserData } from '../../utils/clear-all-user-data';
 
@@ -44,6 +43,57 @@ export function UserControlPanel() {
   const [activeTab, setActiveTab] = useState<'preferences' | 'goals' | 'data' | 'privacy'>(
     'preferences'
   );
+
+  const CLEAR_DELAY_SECONDS = 10;
+  const [pendingClearSeconds, setPendingClearSeconds] = useState<number | null>(null);
+  const hasPendingClear = pendingClearSeconds !== null;
+  const clearTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const cancelPendingClear = useCallback(() => {
+    if (clearTimerRef.current !== null) {
+      globalThis.clearTimeout(clearTimerRef.current);
+      clearTimerRef.current = null;
+    }
+    if (clearIntervalRef.current !== null) {
+      globalThis.clearInterval(clearIntervalRef.current);
+      clearIntervalRef.current = null;
+    }
+    setPendingClearSeconds(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      cancelPendingClear();
+    };
+  }, [cancelPendingClear]);
+
+  const scheduleClear = useCallback(async () => {
+    if (pendingClearSeconds !== null) return;
+
+    if (
+      globalThis.confirm(
+        'Delete all locally stored data? You will have 10 seconds to cancel before anything is erased.'
+      )
+    ) {
+      setPendingClearSeconds(CLEAR_DELAY_SECONDS);
+
+      clearIntervalRef.current = globalThis.setInterval(() => {
+        setPendingClearSeconds(prev => {
+          if (prev === null) return null;
+          return prev > 0 ? prev - 1 : 0;
+        });
+      }, 1000);
+
+      clearTimerRef.current = globalThis.setTimeout(async () => {
+        try {
+          await clearAllUserData();
+        } finally {
+          cancelPendingClear();
+        }
+      }, CLEAR_DELAY_SECONDS * 1000);
+    }
+  }, [CLEAR_DELAY_SECONDS, cancelPendingClear, pendingClearSeconds]);
 
   const userPreferences: UserPreference[] = [
     {
@@ -111,7 +161,7 @@ export function UserControlPanel() {
         if (value === 'light' || value === 'dark' || value === 'high-contrast' || value === 'colorblind') {
           setMode(value);
         } else if (value === 'auto') {
-          setMode(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          setMode(globalThis.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         }
       }
     },
@@ -358,15 +408,30 @@ export function UserControlPanel() {
 
                 <div className="mt-6 pt-4 border-t">
                   <button
-                    className="w-full p-2 text-red-600 border border-red-200 rounded hover:bg-red-50 transition-colors"
-                    onClick={async () => {
-                      if (window.confirm('Delete all locally stored data? This cannot be undone.')) {
-                        await clearAllUserData();
-                      }
+                    className="w-full p-2 text-red-600 border border-red-200 rounded hover:bg-red-50 transition-colors disabled:opacity-60"
+                    onClick={() => {
+                      void scheduleClear();
                     }}
+                    disabled={hasPendingClear}
                   >
-                    Delete All My Data
+                    {hasPendingClear ? `Deleting in ${pendingClearSeconds}s…` : 'Delete All My Data'}
                   </button>
+
+                  {hasPendingClear && (
+                    <output
+                      className="mt-3 flex items-center justify-between gap-3 rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"
+                      aria-live="polite"
+                    >
+                      <span>Scheduled deletion. You can cancel.</span>
+                      <button
+                        className="rounded border border-amber-300 bg-white px-3 py-1 text-sm hover:bg-amber-100"
+                        onClick={cancelPendingClear}
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                    </output>
+                  )}
                 </div>
               </div>
             </div>

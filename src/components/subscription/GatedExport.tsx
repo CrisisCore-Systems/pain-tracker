@@ -3,6 +3,8 @@ import type { PainEntry } from '../../types';
 import { SavePanel } from '../pain-tracker/SavePanel';
 import { FeatureGate, UsageWarning } from './FeatureGates';
 import { checkExportQuota, trackExportUsage } from '../../stores/subscription-actions';
+import { entitlementService } from '../../services/EntitlementService';
+import { UpgradeCard } from '../UpgradeCard';
 
 interface GatedSavePanelProps {
   entries: PainEntry[];
@@ -78,7 +80,7 @@ export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({ entries, userId,
     link.download = filename;
     document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    link.remove();
     URL.revokeObjectURL(url);
 
     // Track usage after successful export
@@ -107,7 +109,6 @@ export const GatedSavePanel: React.FC<GatedSavePanelProps> = ({ entries, userId,
 };
 
 interface GatedWCBReportProps {
-  entries: PainEntry[];
   userId: string;
 }
 
@@ -116,34 +117,36 @@ interface GatedWCBReportProps {
  * Requires Basic tier or higher for WCB reports
  */
 export const GatedWCBReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
+  if (!entitlementService.hasEntitlement('reports_wcb_forms')) {
+    return <UpgradeCard moduleId="reports_wcb_forms" />;
+  }
+
   return (
-    <FeatureGate feature="wcbReports" showUpgradePrompt>
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold mb-4">WorkSafe BC Report</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Generate a comprehensive report for your WorkSafe BC claim submission.
-        </p>
-        {/* WCB Report component would go here */}
-        <button
-          onClick={async () => {
-            // Check export quota
-            const quotaCheck = await checkExportQuota(userId);
-            if (!quotaCheck.success) {
-              alert(quotaCheck.error || 'Export quota exceeded.');
-              return;
-            }
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <h3 className="text-lg font-semibold mb-4">WorkSafe BC Report</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        Generate a comprehensive report for your WorkSafe BC claim submission.
+      </p>
+      {/* WCB Report component would go here */}
+      <button
+        onClick={async () => {
+          // Check export quota
+          const quotaCheck = await checkExportQuota(userId);
+          if (!quotaCheck.success) {
+            alert(quotaCheck.error || 'Export quota exceeded.');
+            return;
+          }
 
-            alert('WorkSafeBC report export is available in Reports & Export.');
+          alert('WorkSafeBC report export is available in Reports & Export.');
 
-            // Track usage
-            await trackExportUsage(userId);
-          }}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Open Reports & Export
-        </button>
-      </div>
-    </FeatureGate>
+          // Track usage
+          await trackExportUsage(userId);
+        }}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Open Reports & Export
+      </button>
+    </div>
   );
 };
 
@@ -187,37 +190,39 @@ export const GatedPDFReport: React.FC<GatedWCBReportProps> = ({ userId }) => {
  * Requires Pro tier for clinic-ready clinical exports
  */
 export const GatedClinicalPDFExport: React.FC<GatedWCBReportProps> = ({ userId }) => {
+  if (!entitlementService.hasEntitlement('reports_clinical_pdf')) {
+    return <UpgradeCard moduleId="reports_clinical_pdf" />;
+  }
+
   return (
-    <FeatureGate feature="clinicalPDFExport" showUpgradePrompt>
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h3 className="text-lg font-semibold mb-4">Clinical PDF Export</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Generate clinic-ready clinical reports for healthcare providers.
-        </p>
-        <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
-          <p>✓ Privacy-aligned security controls</p>
-          <p>✓ Clinical Formatting</p>
-          <p>✓ Standardized Templates</p>
-        </div>
-        <button
-          onClick={async () => {
-            // Check export quota
-            const quotaCheck = await checkExportQuota(userId);
-            if (!quotaCheck.success) {
-              alert(quotaCheck.error || 'Export quota exceeded.');
-              return;
-            }
-
-            alert('Clinical PDF export is available in Reports & Export.');
-
-            // Track usage
-            await trackExportUsage(userId);
-          }}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Open Reports & Export
-        </button>
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <h3 className="text-lg font-semibold mb-4">Clinical PDF Export</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+        Generate clinic-ready clinical reports for healthcare providers.
+      </p>
+      <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+        <p>✓ Privacy-aligned security controls</p>
+        <p>✓ Clinical Formatting</p>
+        <p>✓ Standardized Templates</p>
       </div>
-    </FeatureGate>
+      <button
+        onClick={async () => {
+          // Check export quota
+          const quotaCheck = await checkExportQuota(userId);
+          if (!quotaCheck.success) {
+            alert(quotaCheck.error || 'Export quota exceeded.');
+            return;
+          }
+
+          alert('Clinical PDF export is available in Reports & Export.');
+
+          // Track usage
+          await trackExportUsage(userId);
+        }}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Open Reports & Export
+      </button>
+    </div>
   );
 };

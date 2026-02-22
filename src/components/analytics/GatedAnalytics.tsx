@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { FeatureGate } from '../subscription/FeatureGates';
 import type { PainEntry } from '../../types';
+import { entitlementService } from '../../services/EntitlementService';
+import { UpgradeCard } from '../UpgradeCard';
 
 // Import actual analytics components
 import { AdvancedAnalyticsDashboard } from './AdvancedAnalyticsDashboard';
@@ -21,11 +22,11 @@ interface GatedAdvancedAnalyticsProps {
  * Requires Basic tier or higher
  */
 export const GatedAdvancedAnalytics: React.FC<GatedAdvancedAnalyticsProps> = props => {
-  return (
-    <FeatureGate feature="advancedAnalytics" showUpgradePrompt>
-      <AdvancedAnalyticsDashboard {...props} />
-    </FeatureGate>
-  );
+  if (!entitlementService.hasEntitlement('analytics_advanced')) {
+    return <UpgradeCard moduleId="analytics_advanced" />;
+  }
+
+  return <AdvancedAnalyticsDashboard {...props} />;
 };
 
 interface GatedEmpathyAnalyticsProps {
@@ -40,11 +41,11 @@ interface GatedEmpathyAnalyticsProps {
  * Requires Basic tier or higher
  */
 export const GatedEmpathyAnalytics: React.FC<GatedEmpathyAnalyticsProps> = props => {
-  return (
-    <FeatureGate feature="empathyIntelligence" showUpgradePrompt>
-      <EmpathyAnalyticsDashboard {...props} />
-    </FeatureGate>
-  );
+  if (!entitlementService.hasEntitlement('analytics_advanced')) {
+    return <UpgradeCard moduleId="analytics_advanced" />;
+  }
+
+  return <EmpathyAnalyticsDashboard {...props} />;
 };
 
 /**
@@ -52,9 +53,9 @@ export const GatedEmpathyAnalytics: React.FC<GatedEmpathyAnalyticsProps> = props
  * Shows upgrade prompt for Pro tier
  */
 export const PredictiveInsightsGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return (
-    <FeatureGate feature="predictiveInsights" showUpgradePrompt>
-      {children}
-    </FeatureGate>
-  );
+  if (!entitlementService.hasEntitlement('analytics_advanced')) {
+    return <UpgradeCard moduleId="analytics_advanced" />;
+  }
+
+  return <>{children}</>;
 };

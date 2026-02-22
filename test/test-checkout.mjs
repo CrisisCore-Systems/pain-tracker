@@ -18,7 +18,7 @@ envFile.split('\n').forEach(line => {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 async function testCheckout() {
-  console.log('🔑 Using Stripe key:', process.env.STRIPE_SECRET_KEY.substring(0, 20) + '...');
+  console.log('🔑 Stripe key configured:', Boolean(process.env.STRIPE_SECRET_KEY));
   console.log('💰 Testing with price:', process.env.STRIPE_PRICE_BASIC_MONTHLY);
   
   try {

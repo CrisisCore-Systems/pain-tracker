@@ -18,8 +18,10 @@ async function gotoApp(page: import('@playwright/test').Page) {
     await page.goto('/app', { waitUntil: 'commit' });
   });
 
-  await page.waitForLoadState('domcontentloaded');
-  await expect(page.locator('#main-content')).toBeVisible({ timeout: 45_000 });
+  // Dev-server cold starts can exceed Playwright's default 30s load-state timeout.
+  await page.waitForLoadState('domcontentloaded', { timeout: 90_000 });
+  // Hydration + module loading can be very slow on some machines; keep evidence runs reliable.
+  await expect(page.locator('#main-content')).toBeVisible({ timeout: 120_000 });
 }
 
 test.describe('Overton Level A evidence capture (self-assessed)', () => {
@@ -115,17 +117,105 @@ test.describe('Overton Level A evidence capture (self-assessed)', () => {
 
     // Open panic overlay.
     await page.getByRole('button', { name: /Activate calm breathing mode/i }).click();
-    await page.locator('div[role="dialog"]').first().waitFor({ state: 'visible', timeout: 15_000 });
+    await page.locator('[role="dialog"]').first().waitFor({ state: 'visible', timeout: 15_000 });
 
     ensureEvidenceSubdir('04-crisis-ux');
     await saveEvidenceScreenshot(page, '04-crisis-ux/panic-mode-open.png');
 
     // Close via the visible close button.
-    const dialog = page.locator('div[role="dialog"]').first();
+    const dialog = page.locator('[role="dialog"]').first();
     // PanicMode close button uses adaptive copy and does not include the word "close".
     const closeLabel = /Exit|Done|I'm feeling better/i;
     await dialog.getByRole('button', { name: closeLabel }).first().click({ timeout: 30_000 });
-    await expect(page.locator('div[role="dialog"]')).toHaveCount(0);
+    await expect(page.locator('[role="dialog"]')).toHaveCount(0);
     await saveEvidenceScreenshot(page, '04-crisis-ux/panic-mode-closed.png');
+  });
+
+  test('PC-3 no external egress during essential flows (evidence)', async ({ page }) => {
+    await gotoApp(page);
+
+    const base = new URL(page.url());
+    const allowedHostnames = new Set([base.hostname, 'localhost', '127.0.0.1', '::1']);
+    const allowedPort = base.port;
+    const isAllowedHost = (hostname: string, port: string) => {
+      if (!allowedHostnames.has(hostname)) return false;
+      // If the base URL has a port, require it to match (prevents allowing remote localhost-like hosts).
+      if (allowedPort) return port === allowedPort;
+      return true;
+    };
+
+    const externalRequests: Array<{
+      timestamp: string;
+      method: string;
+      url: string;
+      resourceType: string;
+    }> = [];
+
+    const handler = (req: import('@playwright/test').Request) => {
+      const url = req.url();
+      let parsed: URL;
+      try {
+        parsed = new URL(url);
+      } catch {
+        return;
+      }
+
+      const protocol = parsed.protocol;
+      const isNetworkProtocol = protocol === 'http:' || protocol === 'https:' || protocol === 'ws:' || protocol === 'wss:';
+      if (!isNetworkProtocol) return;
+
+      const port = parsed.port || (protocol === 'https:' || protocol === 'wss:' ? '443' : '80');
+      if (isAllowedHost(parsed.hostname, port)) return;
+
+      externalRequests.push({
+        timestamp: new Date().toISOString(),
+        method: req.method(),
+        url,
+        resourceType: req.resourceType(),
+      });
+    };
+
+    page.on('request', handler);
+
+    // Only measure after initial app boot/module loading.
+    externalRequests.length = 0;
+
+    // Essential flow 1: open + close Panic Mode.
+    await page.getByRole('button', { name: /Activate calm breathing mode/i }).click();
+    await page.locator('[role="dialog"]').first().waitFor({ state: 'visible', timeout: 15_000 });
+    const dialog = page.locator('[role="dialog"]').first();
+    const closeLabel = /Exit|Done|I'm feeling better/i;
+    await dialog.getByRole('button', { name: closeLabel }).first().click({ timeout: 30_000 });
+    await expect(page.locator('[role="dialog"]')).toHaveCount(0);
+
+    // Essential flow 2: export a CSV report.
+    await page.locator('[data-nav-target="reports"]').first().click({ timeout: 45_000 });
+    await expect(page.getByRole('heading', { name: 'Reports & Export' })).toBeVisible({ timeout: 45_000 });
+    const csvButton = page.getByRole('button', { name: /CSV Spreadsheet/i }).first();
+    await expect(csvButton).toBeEnabled();
+    const downloadPromise = page.waitForEvent('download');
+    await csvButton.click();
+    await downloadPromise;
+
+    ensureEvidenceSubdir('03-telemetry');
+      const disallowedRequests = externalRequests;
+
+    writeEvidenceText(
+      '03-telemetry/no-external-egress-essential-flows.json',
+      JSON.stringify(
+        {
+          baseURL: base.toString(),
+          allowedHostnames: Array.from(allowedHostnames),
+          externalRequests,
+          disallowedRequests,
+          note: 'Captured request metadata only (method/url/resourceType); no payloads recorded.',
+        },
+        null,
+        2
+      )
+    );
+
+    // Enforce: no third-party requests unless analytics consent.
+      expect(externalRequests).toHaveLength(0);
   });
 });

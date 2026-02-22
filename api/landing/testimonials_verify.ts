@@ -1,6 +1,8 @@
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import { db } from '../../src/lib/database';
 import verifyAdmin from '../../api-lib/adminAuth';
+import { z } from 'zod';
+import { enforceRateLimit, getClientIp, logError } from '../../api-lib/http';
 
 type TestimonialVerifyBody = {
   id?: unknown;
@@ -9,6 +11,15 @@ type TestimonialVerifyBody = {
   publication_date?: unknown;
 };
 
+const VerifyBodySchema = z
+  .object({
+    id: z.union([z.number().int().positive(), z.string().regex(/^\d+$/).max(20)]),
+    verified: z.boolean(),
+    anonymized: z.boolean().optional(),
+    publication_date: z.union([z.string().max(32), z.null()]).optional(),
+  })
+  .strict();
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method !== 'POST') {
@@ -16,22 +27,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
+    const ip = getClientIp(req);
+    const ok = await enforceRateLimit({
+      req,
+      res,
+      key: `ip:${ip}:landing:testimonials:verify`,
+      limit: Number(process.env.ADMIN_RATE_LIMIT || 120),
+      windowMs: Number(process.env.ADMIN_RATE_WINDOW_MS || 60 * 1000),
+    });
+    if (!ok) return;
+
     const auth = await verifyAdmin(req);
     if (!auth.ok) {
       res.status(401).json({ ok: false, error: 'Unauthorized' });
       return;
     }
 
-    const body = (req.body ?? {}) as TestimonialVerifyBody;
-    const { id, verified, anonymized, publication_date } = body;
-
-    if (!id) {
-      res.status(400).json({ ok: false, error: 'Missing id' });
+    const raw = (req.body ?? {}) as TestimonialVerifyBody;
+    const parsed = VerifyBodySchema.safeParse(raw);
+    if (!parsed.success) {
+      res.status(400).json({ ok: false, error: 'Invalid request body' });
       return;
     }
 
+    const { id, verified, anonymized, publication_date } = parsed.data;
+    const idValue = typeof id === 'string' ? Number(id) : id;
+
     // Update testimonial row
-    const verifiedBy = req.headers['x-admin-user'] || 'admin';
+    const verifiedByRaw = req.headers['x-admin-user'] || 'admin';
+    const verifiedBy = Array.isArray(verifiedByRaw) ? verifiedByRaw[0] : String(verifiedByRaw);
+    const safeActor = verifiedBy.trim().slice(0, 64) || 'admin';
     const verifiedAt = verified ? 'CURRENT_TIMESTAMP' : null;
 
     // Build query
@@ -39,9 +64,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const params = [
       !!verified,
       anonymized === undefined ? null : anonymized,
-      String(verifiedBy),
+      safeActor,
       publication_date ?? null,
-      id,
+      idValue,
     ];
 
     const result = await db.query(q, params);
@@ -53,12 +78,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Audit log
     await db.query(
       `INSERT INTO testimonials_audit (testimonial_id, action, actor, details) VALUES ($1, $2, $3, $4)`,
-      [id, 'verify', String(verifiedBy), JSON.stringify({ verified, anonymized, publication_date })]
+      [idValue, 'verify', safeActor, JSON.stringify({ verified, anonymized, publication_date })]
     );
 
     res.status(200).json({ ok: true, updated: result[0] });
   } catch (err) {
-    console.error('Testimonials verify error:', err);
+    logError('Testimonials verify error:', err);
     res.status(500).json({ ok: false, error: 'Internal server error' });
   }
 }

@@ -117,6 +117,22 @@ describe('Accessibility Tests', () => {
       const liveRegion = container.querySelector('[aria-live="assertive"]');
       expect(liveRegion).toBeDefined();
     });
+
+    it('should enable temporary automatic zoom while active', async () => {
+      const { PanicMode } = await import('../components/accessibility/PanicMode');
+
+      // Ensure a clean baseline for the test.
+      document.documentElement.style.removeProperty('--ti-zoom-multiplier');
+      document.body.classList.remove('ti-protective-mode');
+
+      const { unmount } = render(<PanicMode isActive={true} onClose={() => {}} />);
+      expect(document.documentElement.style.getPropertyValue('--ti-zoom-multiplier')).toBe('1.15');
+      expect(document.body.classList.contains('ti-protective-mode')).toBe(true);
+
+      unmount();
+      expect(document.documentElement.style.getPropertyValue('--ti-zoom-multiplier')).toBe('');
+      expect(document.body.classList.contains('ti-protective-mode')).toBe(false);
+    });
   });
 
   describe('BodyMapAccessible', () => {

@@ -20,10 +20,7 @@ import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
 import { BlackBoxSplashScreen } from './components/branding/BlackBoxSplashScreen';
 import { trackSessionStart as trackUsageSessionStart } from './utils/usage-tracking';
-import { Analytics } from "@vercel/analytics/react";
 import { getLocalUserId } from './utils/user-identity';
-import { isAnalyticsAllowed } from './analytics/analytics-gate';
-import AnalyticsConsentPrompt from './components/AnalyticsConsentPrompt';
 
 // Lazy-loaded route components for code splitting
 const PainTrackerContainer = lazy(() => import('./containers/PainTrackerContainer').then(m => ({ default: m.PainTrackerContainer })));
@@ -37,6 +34,7 @@ const SubscriptionManagementPage = lazy(() => import('./pages/SubscriptionManage
 const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => ({ default: m.SubmitStoryPage })));
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ default: m.DownloadPage })));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
+const TrackingDataPolicyPage = lazy(() => import('./pages/TrackingDataPolicyPage').then(m => ({ default: m.TrackingDataPolicyPage })));
 const VaultGate = lazy(() => import('./components/security/VaultGate').then(m => ({ default: m.VaultGate })));
 const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m => ({ default: m.ProtectedAppShell })));
 
@@ -140,14 +138,12 @@ function App() {
   return (
     <BrowserRouter>
       <CanonicalUrlManager />
-      {isAnalyticsAllowed() && <Analytics />}
       <ThemeProvider>
         <SubscriptionProvider userId={userId}>
           <ToneProvider>
             <TraumaInformedProvider>
               <ToastProvider>
                 <StartupPromptsProvider>
-                  <AnalyticsConsentPrompt />
                   <Suspense fallback={<LoadingFallback />}>
                     <Routes>
                       {/* Landing Page - Public */}
@@ -213,6 +209,9 @@ function App() {
 
                     {/* Privacy Policy - Public */}
                     <Route path="/privacy" element={<PrivacyPolicyPage />} />
+
+                    {/* Tracking & Data Policy - Public */}
+                    <Route path="/tracking-data-policy" element={<TrackingDataPolicyPage />} />
 
                     {/* SEO Resource Pages - Public */}
                     <Route path="/resources" element={<ResourcesIndexPage />} />

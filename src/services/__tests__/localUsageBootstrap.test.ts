@@ -85,7 +85,6 @@ describe('localUsageBootstrap', () => {
         Object.defineProperty(globalThis, 'sessionStorage', originalDescriptor);
       } else {
         // Some environments may not have sessionStorage; remove our stub.
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete (globalThis as unknown as { sessionStorage?: unknown }).sessionStorage;
       }
     }

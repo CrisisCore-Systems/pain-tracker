@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { secureStorage } from '../../lib/storage/secureStorage';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
-import { loadAnalyticsIfAllowed } from '../../analytics/analytics-loader';
 import {
   buildAnonymousLocalUsageReport,
   downloadJsonReport,
@@ -17,13 +16,6 @@ import {
 
 export default function PrivacySettings() {
   const [sharing, setSharing] = useState<boolean>(() => readPrivacySettings().dataSharing);
-  const [analytics, setAnalytics] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('pain-tracker:analytics-consent') === 'granted';
-    } catch {
-      return false;
-    }
-  });
   const [vaultKillSwitchEnabled, setVaultKillSwitchEnabled] = useState<boolean>(
     () => readPrivacySettings().vaultKillSwitchEnabled
   );
@@ -39,26 +31,19 @@ export default function PrivacySettings() {
   useEffect(() => {
     writePrivacySettings({
       dataSharing: sharing,
-      analyticsConsent: analytics,
+      analyticsConsent: false,
       vaultKillSwitchEnabled,
       retentionDays: retention,
       weatherAutoCapture,
       localUsageCountersEnabled,
     });
-  }, [sharing, analytics, vaultKillSwitchEnabled, retention, weatherAutoCapture, localUsageCountersEnabled]);
+  }, [sharing, vaultKillSwitchEnabled, retention, weatherAutoCapture, localUsageCountersEnabled]);
 
   useEffect(() => {
-    // Keep the canonical analytics consent state in sync.
-    // This controls both local-only analytics and any outbound GA events/scripts.
-    if (analytics) {
-      void privacyAnalytics.requestConsent().finally(() => {
-        // Ensure GA4 loads only after opt-in.
-        loadAnalyticsIfAllowed();
-      });
-    } else {
-      privacyAnalytics.revokeConsent();
-    }
-  }, [analytics]);
+    // Outbound analytics/telemetry is disabled (no third-party analytics endpoints are allowed).
+    // Keep the local consent state revoked so no downstream modules attempt network egress.
+    privacyAnalytics.revokeConsent();
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -90,21 +75,6 @@ export default function PrivacySettings() {
             onChange={e => setSharing(e.target.checked)}
             aria-labelledby="privacy-sharing-label"
             aria-describedby="privacy-sharing-desc"
-            className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
-          />
-        </div>
-
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <div id="privacy-analytics-label" className="font-medium text-gray-700 dark:text-slate-200">Analytics & Telemetry</div>
-            <div id="privacy-analytics-desc" className="text-sm text-gray-500 dark:text-slate-400">Allow us to collect anonymous usage statistics to improve features</div>
-          </div>
-          <input
-            type="checkbox"
-            checked={analytics}
-            onChange={e => setAnalytics(e.target.checked)}
-            aria-labelledby="privacy-analytics-label"
-            aria-describedby="privacy-analytics-desc"
             className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
           />
         </div>
@@ -242,7 +212,7 @@ export default function PrivacySettings() {
             onClick={() =>
               writePrivacySettings({
                 dataSharing: sharing,
-                analyticsConsent: analytics,
+                analyticsConsent: false,
                 vaultKillSwitchEnabled,
                 retentionDays: retention,
                 weatherAutoCapture,

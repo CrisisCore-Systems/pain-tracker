@@ -118,7 +118,7 @@ export const PrivacyPolicyPage: React.FC = () => {
             {[
               { label: 'No cloud transmission', desc: 'your health data is never sent to our servers' },
               { label: 'No analytics on health data', desc: 'we do not analyze or profile your pain entries' },
-              { label: 'No telemetry', desc: 'no usage tracking of your health information' },
+              { label: 'No background health telemetry', desc: 'we do not send your entries, notes, or report contents to analytics providers by default' },
               { label: 'No third-party data sharing', desc: 'your data is never sold or shared' },
               { label: 'No advertising', desc: 'no ads, no ad tracking, no ad networks' },
               { label: 'No account required', desc: 'no email, no registration, no identity collection' },
@@ -164,6 +164,13 @@ export const PrivacyPolicyPage: React.FC = () => {
           <p className="text-slate-300 mb-4">
             Some features may make network requests when explicitly enabled.
             These features do <strong className="text-white">not</strong> transmit your health data.
+          </p>
+          <p className="text-slate-500 text-sm mb-4">
+            For details on local usage counters and data handling, see the{' '}
+            <Link to="/tracking-data-policy" className="text-cyan-400 hover:text-cyan-300 underline">
+              Tracking &amp; Data Policy
+            </Link>
+            .
           </p>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left" role="table">
@@ -238,8 +245,8 @@ export const PrivacyPolicyPage: React.FC = () => {
         <section className="mb-12 p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20" aria-labelledby="summary-heading">
           <h2 id="summary-heading" className="font-bold text-emerald-400 mb-2">Summary</h2>
           <p className="text-slate-300 text-sm leading-relaxed">
-            Your data is stored locally, encrypted, and never transmitted. You control all exports and sharing.
-            No accounts, no analytics on health data, no telemetry.
+            Your data is stored locally, encrypted, and never transmitted by default. You control exports and sharing.
+            Third-party analytics is disabled; local usage counters are stored on-device.
           </p>
         </section>
 

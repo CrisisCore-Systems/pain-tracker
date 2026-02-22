@@ -9,7 +9,7 @@ test.describe('PWA Offline Functionality', () => {
 
     // /start redirects to /app behind VaultGate.
     await page.waitForURL(/\/app(\/.*)?$/i, { timeout: 90_000 }).catch(() => undefined);
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('domcontentloaded', { timeout: 90_000 });
 
     // App shell should appear.
     await page.locator('#main-content').waitFor({ state: 'visible', timeout: 90_000 }).catch(() => undefined);
@@ -39,7 +39,7 @@ test.describe('PWA Offline Functionality', () => {
     await page.reload();
     
     // Should still load from cache
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('domcontentloaded', { timeout: 90_000 });
     const offlineTitle = await page.title();
     
     // Page should load even when offline

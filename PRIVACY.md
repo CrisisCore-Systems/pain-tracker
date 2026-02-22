@@ -14,6 +14,14 @@ We designed this application from the ground up to keep your information private
 
 ---
 
+## Monetization (value, not data)
+
+- **Core tracking stays free and local-first**: no account required, no server dependency, no data harvesting.
+- Monetization (when enabled) comes from **optional value-add features** like multi-device backup, structured export packages, specialized report generators, and advanced local analytics.
+- We charge for **functionality**, not for access to (or resale of) health data.
+
+---
+
 ## What Data Is Collected
 
 ### Data You Create

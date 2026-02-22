@@ -3,8 +3,8 @@ import {
   disableOnboarding,
   seedPainEntries,
   seedEncryptedPainEntries,
+  deleteVaultDb,
 } from './utils/test-harness';
-import { deleteVaultDb } from './utils/test-harness';
 
 // Extend the base test with configurable fixtures: seedCount (default 7)
 // and seedEncrypted (default false) to opt into encrypted seeding.
@@ -26,36 +26,13 @@ export const test = baseTest.extend<{
 // Run the harness before each test to reduce flakiness across suites that opt in.
 test.beforeEach(async ({ page, seedCount, seedEncrypted, seedPassphrase }) => {
   await disableOnboarding(page);
-  // Prevent external analytics from loading during E2E runs (stops CSP errors and flakiness)
-  // Block network requests to Google Analytics / Tag Manager and provide a no-op gtag implementation.
+  // NOTE: Do not block third-party requests here.
+  // We want E2E suites (especially Overton evidence tests) to be able to observe
+  // and fail on any unexpected external network egress.
   try {
-    // Block known external analytics hosts to avoid network calls in CI
-    await page.context().route('**://www.googletagmanager.com/**', (route) => route.abort());
-    await page.context().route('**://www.google-analytics.com/**', (route) => route.abort());
-    await page.context().route('**://analytics.google.com/**', (route) => route.abort());
-    await page.context().route('**://region1.analytics.google.com/**', (route) => route.abort());
-    await page.context().route('**://region1.google-analytics.com/**', (route) => route.abort());
-
-    // Block other third-party CDNs used only for optional assets in dev.
-    await page.context().route('**://cdn.jsdelivr.net/**', (route) => route.abort());
-    await page.context().route('**://static.cloudflareinsights.com/**', (route) => route.abort());
-    await page.context().route('**://fonts.googleapis.com/**', (route) => route.abort());
-    await page.context().route('**://fonts.gstatic.com/**', (route) => route.abort());
-
-    // Provide a small init script that creates a no-op gtag and fakes persistent storage
+    // Provide a small init script that fakes persistent storage
     // so app code that requests persistent storage won't log or branch unexpectedly during tests.
     await page.context().addInitScript(() => {
-      const w = window as unknown as {
-        dataLayer?: unknown[][];
-        gtag?: (...args: unknown[]) => void;
-      };
-
-      w.dataLayer = w.dataLayer ?? [];
-      w.gtag = (...args: unknown[]) => {
-        w.dataLayer = w.dataLayer ?? [];
-        w.dataLayer.push(args);
-      };
-
       try {
         // Mock navigator.storage.persist/persisted for tests (so app sees persistent storage as granted)
         const nav = navigator as unknown as {

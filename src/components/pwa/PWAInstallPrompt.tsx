@@ -64,6 +64,7 @@ export function PWAInstallPrompt() {
   return (
     <div
       className="fixed bottom-4 left-4 z-50 max-w-sm w-[min(92%,420px)]"
+      data-nonessential-prompt="true"
       role="dialog"
       aria-label="Install Pain Tracker"
     >

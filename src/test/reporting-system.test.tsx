@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within, act } from '@testing-library/react';
 import { ReportingSystem } from '../components/reporting/ReportingSystem';
 import { usePainTrackerStore } from '../stores/pain-tracker-store';
 
@@ -156,7 +156,9 @@ describe('Reporting System UI', () => {
   });
 
   it('deletes a scheduled report via the UI', async () => {
-    render(<ReportingSystem entries={[]} />);
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
+    try {
+      render(<ReportingSystem entries={[]} />);
 
     // Create a schedule
     const select = screen.getByRole('combobox');
@@ -179,6 +181,9 @@ describe('Reporting System UI', () => {
 
     await waitFor(() => expect(usePainTrackerStore.getState().scheduledReports).toHaveLength(1));
 
+    // Switch to fake timers only for the delayed-delete window.
+    vi.useFakeTimers();
+
     // Delete the schedule via the icon button
     const titleEl = screen.getByText(/Deletable Weekly/i);
     const outer = titleEl.closest('div')?.parentElement;
@@ -188,7 +193,16 @@ describe('Reporting System UI', () => {
     if (!deleteButton) throw new Error('Delete button not found');
     fireEvent.click(deleteButton);
 
-    await waitFor(() => expect(usePainTrackerStore.getState().scheduledReports).toHaveLength(0));
+    // Deletion is delayed to allow an undo window.
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(10_000);
+    });
+
+    expect(usePainTrackerStore.getState().scheduledReports).toHaveLength(0);
+    } finally {
+      confirmSpy.mockRestore();
+      vi.useRealTimers();
+    }
   });
 
   it('runs a scheduled report via the UI', async () => {

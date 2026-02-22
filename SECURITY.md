@@ -1,5 +1,15 @@
 # Security guidance and CSP recommendations
 
+## Vulnerability disclosure
+
+If you believe you’ve found a security vulnerability, please report it privately.
+
+- Preferred: use GitHub’s Private Vulnerability Reporting / Security Advisories for this repository.
+- Please include: impacted area, severity assessment, reproduction steps, and a minimal proof-of-concept.
+- Please do not open public issues for security reports.
+
+**Bounties**: We do not offer monetary bug bounties at this time. We can offer a thank-you and (if you want) public credit after a fix ships.
+
 This repository follows a security-first, defense-in-depth approach. Below are actionable recommendations and troubleshooting steps for Content Security Policy (CSP), security scan triage, and temporary mitigations.
 
 ## Security Change Checklist

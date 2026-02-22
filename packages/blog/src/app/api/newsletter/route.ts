@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { subscribeToNewsletter } from '@/lib/hashnode';
 
+function safeErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  return 'Unknown error';
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -40,7 +45,7 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   } catch (error) {
-    console.error('Newsletter subscription error:', error);
+    console.error('Newsletter subscription error:', safeErrorMessage(error));
     return NextResponse.json(
       { success: false, error: 'Something went wrong. Please try again.' },
       { status: 500 }

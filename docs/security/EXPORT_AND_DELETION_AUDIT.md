@@ -58,10 +58,7 @@ There are currently **multiple CSV pipelines** in the UI:
 ### Zustand store “clear all data”
 
 - `src/stores/pain-tracker-store.ts` → `clearAllData()` clears:
-  - `entries`, `moodEntries`, `activityLogs`, `emergencyData`, `error`.
-- It does **not** clear:
-  - `scheduledReports` (note: `scheduledReports` is included in `persist.partialize`, so it will remain in persisted storage unless explicitly cleared).
-  - `fibromyalgiaEntries` (not persisted, but remains in memory until refresh).
+  - `entries`, `moodEntries`, `fibromyalgiaEntries`, `activityLogs`, `emergencyData`, `scheduledReports`, `error`.
 
 ### PWA “clear data”
 
@@ -70,6 +67,16 @@ There are currently **multiple CSV pipelines** in the UI:
   - IndexedDB via `offlineStorage.clearAllData()`
   - Namespaced `secureStorage` keys: `secureStorage.keys().forEach(k => secureStorage.remove(k))` (default namespace prefix `pt:`)
 - It does **not** clear un-namespaced localStorage keys such as the Zustand persist key `pain-tracker-storage`.
+- It does **not** clear un-namespaced localStorage keys such as the Zustand persist key `pain-tracker-storage`.
+
+### Emergency wipe / “clear all user data”
+
+- `src/services/emergency-wipe.ts` → `performEmergencyWipe(...)` calls `clearAllUserData()`.
+- `src/utils/clear-all-user-data.ts` → `clearAllUserData()` best-effort clears:
+  - in-memory store state via `clearAllData()`
+  - Zustand persisted storage (`persist.clearStorage()` + `localStorage.removeItem('pain-tracker-storage')`)
+  - PWA/offline layers via `PWAManager.clearPWAData()`
+  - legacy raw key `localStorage.removeItem('pain_tracker_entries')`
 
 ### Legacy pain entry storage
 

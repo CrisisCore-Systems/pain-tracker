@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/utils';
-import { breadcrumbJsonLd, faqPageJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, faqPageJsonLd, jsonLdScript } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Security',
@@ -19,7 +19,7 @@ export default function SecurityPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             breadcrumbJsonLd([
               { name: 'Home', url: siteConfig.url },
               { name: 'Security', url: `${siteConfig.url}/security` },
@@ -32,7 +32,7 @@ export default function SecurityPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             faqPageJsonLd([
               {
                 question: 'How is my data encrypted?',

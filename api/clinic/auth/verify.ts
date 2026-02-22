@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '../../../src/types/vercel';
 import crypto from 'node:crypto';
+import { enforceRateLimit, getClientIp } from '../../../api-lib/http';
 
 function getBearerToken(req: VercelRequest): string | null {
   const authHeader = req.headers['authorization'];
@@ -22,6 +23,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(405).json({ ok: false, error: 'Method not allowed' });
     return;
   }
+
+  const ip = getClientIp(req);
+  const ok = await enforceRateLimit({
+    req,
+    res,
+    key: `ip:${ip}:clinic:auth:verify`,
+    limit: Number(process.env.ADMIN_VERIFY_RATE_LIMIT || 30),
+    windowMs: Number(process.env.ADMIN_VERIFY_WINDOW_MS || 5 * 60 * 1000),
+  });
+  if (!ok) return;
 
   const expected = process.env.ADMIN_API_TOKEN;
   if (!expected) {

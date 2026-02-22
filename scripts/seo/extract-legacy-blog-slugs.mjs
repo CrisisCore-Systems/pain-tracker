@@ -43,8 +43,8 @@ for (const root of roots) walk(root, files);
 const slugSet = new Set();
 
 // Match /blog/<slug> where slug is kebab-case-ish
-const relativeBlogSlugRe = /\/blog\/([a-z0-9][a-z0-9-]*)(?=\b|\/|\)|\"|\'|\s)/g;
-const absoluteBlogSlugRe = /https?:\/\/(?:www\.)?paintracker\.ca\/blog\/([a-z0-9][a-z0-9-]*)(?=\b|\/|\)|\"|\'|\s)/g;
+const relativeBlogSlugRe = /\/blog\/([a-z0-9][a-z0-9-]*)(?=\b|\/|\)|"|'|\s)/g;
+const absoluteBlogSlugRe = /https?:\/\/(?:www\.)?paintracker\.ca\/blog\/([a-z0-9][a-z0-9-]*)(?=\b|\/|\)|"|'|\s)/g;
 
 for (const filePath of files) {
   let text;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, Button, Modal, Badge, Input } from '../../design-system';
 import { Calendar, Clock, Trash2, Send } from 'lucide-react';
 import type { PainEntry, ReportTemplate, ScheduledReport } from '../../types';
@@ -27,12 +27,64 @@ function ReportingSystemCore({ entries: _entries }: ReportingSystemProps) {
   const deleteScheduledReport = usePainTrackerStore(state => state.deleteScheduledReport);
   const updateScheduledReport = usePainTrackerStore(state => state.updateScheduledReport);
   const runScheduledReport = usePainTrackerStore(state => state.runScheduledReport);
+  const DELETE_DELAY_SECONDS = 10;
+  const [pendingDelete, setPendingDelete] = useState<{ id: string; name: string } | null>(null);
+  const [pendingDeleteSeconds, setPendingDeleteSeconds] = useState<number | null>(null);
+  const deleteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const deleteIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [scheduleName, setScheduleName] = useState('');
   const [scheduleFrequency, setScheduleFrequency] = useState<ScheduledReport['frequency']>('weekly');
   const [scheduleRecipients, setScheduleRecipients] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(templates[0] || null);
   const [editingSchedule, setEditingSchedule] = useState<ScheduledReport | null>(null);
+
+  const cancelPendingDelete = useCallback(() => {
+    if (deleteTimerRef.current !== null) {
+      globalThis.clearTimeout(deleteTimerRef.current);
+      deleteTimerRef.current = null;
+    }
+    if (deleteIntervalRef.current !== null) {
+      globalThis.clearInterval(deleteIntervalRef.current);
+      deleteIntervalRef.current = null;
+    }
+    setPendingDelete(null);
+    setPendingDeleteSeconds(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      cancelPendingDelete();
+    };
+  }, [cancelPendingDelete]);
+
+  const scheduleDelete = useCallback((schedule: ScheduledReport) => {
+    if (pendingDeleteSeconds !== null || pendingDelete !== null) return;
+
+    if (
+      globalThis.confirm(
+        `Delete scheduled report “${schedule.name}”? You will have ${DELETE_DELAY_SECONDS} seconds to undo before it is deleted.`
+      )
+    ) {
+      setPendingDelete({ id: schedule.id, name: schedule.name });
+      setPendingDeleteSeconds(DELETE_DELAY_SECONDS);
+
+      deleteIntervalRef.current = globalThis.setInterval(() => {
+        setPendingDeleteSeconds(prev => {
+          if (prev === null) return null;
+          return prev > 0 ? prev - 1 : 0;
+        });
+      }, 1000);
+
+      deleteTimerRef.current = globalThis.setTimeout(() => {
+        try {
+          deleteScheduledReport(schedule.id);
+        } finally {
+          cancelPendingDelete();
+        }
+      }, DELETE_DELAY_SECONDS * 1000);
+    }
+  }, [DELETE_DELAY_SECONDS, cancelPendingDelete, deleteScheduledReport, pendingDelete, pendingDeleteSeconds]);
 
   const calculateNextRun = (frequency: ScheduledReport['frequency']) => {
     const d = new Date();
@@ -115,6 +167,19 @@ function ReportingSystemCore({ entries: _entries }: ReportingSystemProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {pendingDelete && pendingDeleteSeconds !== null && (
+              <output
+                className="mb-4 flex items-center justify-between gap-3 rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"
+                aria-live="polite"
+              >
+                <span>
+                  Deleting “{pendingDelete.name}” in {pendingDeleteSeconds}s.
+                </span>
+                <Button variant="outline" size="sm" onClick={cancelPendingDelete}>
+                  Undo
+                </Button>
+              </output>
+            )}
             <div className="space-y-3">
               {scheduledReports.map(schedule => {
                 const template = templates.find(t => t.id === schedule.templateId);
@@ -139,7 +204,15 @@ function ReportingSystemCore({ entries: _entries }: ReportingSystemProps) {
                         setScheduleRecipients((schedule.recipients || []).join(', '));
                         setSelectedTemplate(templates.find(t => t.id === schedule.templateId) || null);
                       }}>Edit</Button>
-                      <Button variant="ghost" size="sm" aria-label={`Delete ${schedule.name}`} onClick={() => deleteScheduledReport(schedule.id)}><Trash2 className="h-4 w-4" /></Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Delete ${schedule.name}`}
+                        onClick={() => scheduleDelete(schedule)}
+                        disabled={pendingDelete?.id === schedule.id}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 );

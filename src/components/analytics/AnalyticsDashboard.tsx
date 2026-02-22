@@ -15,6 +15,8 @@ import type {
 } from '../../services/AdvancedAnalyticsEngine';
 import { trackAnalyticsTabViewed } from '../../analytics/ga4-events';
 import { trackUsageEvent, incrementSessionAction } from '../../utils/usage-tracking';
+import { entitlementService } from '../../services/EntitlementService';
+import { UpgradeCard } from '../UpgradeCard';
 
 // Lazy load UsageAnalyticsDashboard to avoid circular dependencies
 const UsageAnalyticsDashboard = lazy(() =>
@@ -37,6 +39,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
   onCreateFirstEntry,
 }) => {
   const { entries, moodEntries } = usePainTrackerStore();
+  const hasAdvancedAnalytics = entitlementService.hasEntitlement('analytics_advanced');
   const [analytics, setAnalytics] = useState<{
     correlations: CorrelationResult[];
     interventions: InterventionScore[];
@@ -71,6 +74,19 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     const processAnalytics = async () => {
       try {
         setAnalytics(prev => ({ ...prev, loading: true, error: null }));
+
+        if (!hasAdvancedAnalytics) {
+          setAnalytics({
+            correlations: [],
+            interventions: [],
+            triggers: [],
+            indicators: [],
+            brief: null,
+            loading: false,
+            error: null,
+          });
+          return;
+        }
 
         if (entries.length === 0) {
           setAnalytics({
@@ -116,7 +132,11 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     };
 
     void processAnalytics();
-  }, [entries, moodEntries]);
+  }, [entries, moodEntries, hasAdvancedAnalytics]);
+
+  if (!hasAdvancedAnalytics) {
+    return <UpgradeCard moduleId="analytics_advanced" className={className} />;
+  }
 
   const tabs = [
     { id: 'overview' as const, label: 'Overview', icon: '📊' },
@@ -174,7 +194,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
     <div className={className}>
       {/* Tab Navigation */}
       <div className="bg-white dark:bg-gray-800 rounded-t-lg shadow-md">
-        <nav
+        <div
           className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto"
           role="tablist"
           aria-label="Analytics sections"
@@ -196,7 +216,7 @@ export const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <span>{tab.label}</span>
             </button>
           ))}
-        </nav>
+        </div>
       </div>
 
       {/* Tab Panels */}

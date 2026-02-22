@@ -7,6 +7,8 @@
 
 import type { VercelRequest, VercelResponse } from '../../src/types/vercel';
 import Stripe from 'stripe';
+import { z } from 'zod';
+import { enforceRateLimit, getClientIp, isAllowedReturnUrl, logError } from '../../api-lib/http';
 
 // Price IDs from Stripe dashboard (set these in environment variables)
 const PRICE_IDS = {
@@ -16,61 +18,65 @@ const PRICE_IDS = {
   pro_yearly: process.env.STRIPE_PRICE_PRO_YEARLY || '',
 };
 
-interface CreateCheckoutSessionRequest {
-  userId: string;
-  tier: 'basic' | 'pro';
-  interval: 'monthly' | 'yearly';
-  successUrl: string;
-  cancelUrl: string;
-  email?: string;
-}
-
 interface CreateCheckoutSessionResponse {
   sessionId: string;
   url: string;
 }
 
+const CreateCheckoutSessionSchema = z
+  .object({
+    userId: z.string().min(1).max(128),
+    tier: z.enum(['basic', 'pro']),
+    interval: z.enum(['monthly', 'yearly']),
+    successUrl: z.string().url().max(2048),
+    cancelUrl: z.string().url().max(2048),
+    email: z.string().email().max(320).optional(),
+  })
+  .strict();
+
 export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ): Promise<void> {
-  // Re-initialize Stripe per-request so the latest env var is used and we can log a diagnostic
+  // Re-initialize Stripe per-request so the latest env var is used.
   const rawKey = process.env.STRIPE_SECRET_KEY || '';
-  // Re-initialize Stripe with the current env var
-  const stripe = new Stripe(rawKey, { apiVersion: '2025-10-29.clover' });
   // Only allow POST requests
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
 
+  const ip = getClientIp(req);
+  const windowMs = Number(process.env.REQ_RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
+  const limit = Number(process.env.STRIPE_CHECKOUT_RATE_LIMIT || 10);
+  const ok = await enforceRateLimit({
+    req,
+    res,
+    key: `ip:${ip}:stripe:create-checkout-session`,
+    limit,
+    windowMs,
+  });
+  if (!ok) return;
+
+  if (!rawKey) {
+    res.status(501).json({ error: 'Stripe not configured' });
+    return;
+  }
+
+  // Re-initialize Stripe with the current env var
+  const stripe = new Stripe(rawKey, { apiVersion: '2025-10-29.clover' });
+
   try {
-    const {
-      userId,
-      tier,
-      interval,
-      successUrl,
-      cancelUrl,
-      email,
-    } = req.body as CreateCheckoutSessionRequest;
-
-    // Validate required fields
-    if (!userId || !tier || !interval || !successUrl || !cancelUrl) {
-      res.status(400).json({ 
-        error: 'Missing required fields',
-        required: ['userId', 'tier', 'interval', 'successUrl', 'cancelUrl']
-      });
+    const parsed = CreateCheckoutSessionSchema.safeParse(req.body ?? {});
+    if (!parsed.success) {
+      res.status(400).json({ error: 'Invalid request body' });
       return;
     }
 
-    // Validate tier and interval
-    if (!['basic', 'pro'].includes(tier)) {
-      res.status(400).json({ error: 'Invalid tier. Must be "basic" or "pro"' });
-      return;
-    }
+    const { userId, tier, interval, successUrl, cancelUrl, email } = parsed.data;
 
-    if (!['monthly', 'yearly'].includes(interval)) {
-      res.status(400).json({ error: 'Invalid interval. Must be "monthly" or "yearly"' });
+    if (!isAllowedReturnUrl(req, successUrl) || !isAllowedReturnUrl(req, cancelUrl)) {
+      res.status(400).json({ error: 'Invalid return URL' });
       return;
     }
 
@@ -79,10 +85,7 @@ export default async function handler(
     const priceId = PRICE_IDS[priceKey];
 
     if (!priceId) {
-      res.status(500).json({ 
-        error: 'Price ID not configured',
-        message: `Missing STRIPE_PRICE_${tier.toUpperCase()}_${interval.toUpperCase()} environment variable`
-      });
+      res.status(500).json({ error: 'Checkout not configured' });
       return;
     }
 
@@ -127,7 +130,7 @@ export default async function handler(
     res.status(200).json(response);
 
   } catch (error) {
-    console.error('Stripe checkout session creation error:', error);
+    logError('Stripe checkout session creation error:', error);
     
     if (error instanceof Stripe.errors.StripeError) {
       res.status(400).json({ 
@@ -137,8 +140,7 @@ export default async function handler(
       });
     } else {
       res.status(500).json({ 
-        error: 'Internal server error',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        error: 'Internal server error'
       });
     }
   }

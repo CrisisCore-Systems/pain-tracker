@@ -138,7 +138,6 @@ function parseArticleTS(content, fileName) {
     if (js.endsWith(';')) js = js.slice(0, -1);
     js += ')';
 
-    // eslint-disable-next-line no-new-func
     const fn = new Function(js);
     return fn();
   } catch (e) {

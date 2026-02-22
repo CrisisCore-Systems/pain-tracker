@@ -86,7 +86,9 @@ try {
   $telemetry = @()
   $telemetry += "# Telemetry Evidence (PC-3.2)"
   $telemetry += ""
-  $telemetry += "This folder is intentionally NOT populated automatically."
+  $telemetry += "This folder is mostly manual evidence (screenshots), to avoid accidentally capturing Class A payloads."
+  $telemetry += ""
+  $telemetry += "Automated evidence exception: the Playwright evidence suite may write a metadata-only request log (no payloads) to support PC-3 (no external egress during Essential Operations)."
   $telemetry += ""
   $telemetry += "Place screenshots here for the three cases described in the v0.2 Level A checklist:"
   $telemetry += "- Case A: env disabled / consent cleared"

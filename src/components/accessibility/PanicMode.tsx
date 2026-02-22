@@ -46,7 +46,7 @@ export function PanicMode({
   onClose,
   affirmations = DEFAULT_AFFIRMATIONS,
   showRedactionToggle = false,
-}: PanicModeProps) {
+}: Readonly<PanicModeProps>) {
   const [breathingPhase, setBreathingPhase] = useState<'inhale' | 'hold' | 'exhale' | 'pause'>(
     'inhale'
   );
@@ -139,6 +139,40 @@ export function PanicMode({
       setCycleCount(0);
       triggerHaptic('heavy');
     }
+  }, [isActive]);
+
+  // Automatic Zoom (temporary, non-persistent)
+  // In crisis contexts, increase base font + touch target sizes without mutating stored preferences.
+  useEffect(() => {
+    if (!isActive) return;
+
+    const root = document.documentElement;
+    const body = document.body;
+    const previous = root.style.getPropertyValue('--ti-zoom-multiplier');
+    const protectiveClassName = 'ti-protective-mode';
+    const didAddProtectiveClass = !body.classList.contains(protectiveClassName);
+
+    root.style.setProperty('--ti-zoom-multiplier', '1.15');
+
+    body.classList.add(protectiveClassName);
+    globalThis.dispatchEvent(
+      new CustomEvent('ti-protective-mode-changed', { detail: { active: true } })
+    );
+
+    return () => {
+      if (previous) {
+        root.style.setProperty('--ti-zoom-multiplier', previous);
+      } else {
+        root.style.removeProperty('--ti-zoom-multiplier');
+      }
+
+      if (didAddProtectiveClass) {
+        body.classList.remove(protectiveClassName);
+        globalThis.dispatchEvent(
+          new CustomEvent('ti-protective-mode-changed', { detail: { active: false } })
+        );
+      }
+    };
   }, [isActive]);
 
   if (!isActive) return null;
@@ -244,9 +278,7 @@ export function PanicMode({
               'transition-transform duration-[4000ms] ease-in-out',
               getBreathingScale()
             )}
-            role="img"
-            aria-label={`Breathing guide: ${getBreathingInstruction()}`}
-            aria-live="polite"
+            aria-hidden="true"
           >
             {/* Inner glow */}
             <div className="absolute inset-4 rounded-full bg-gradient-to-br from-blue-300/20 to-purple-300/20 blur-xl" />

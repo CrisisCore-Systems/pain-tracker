@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/utils';
-import { breadcrumbJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, jsonLdScript } from '@/lib/schema';
 
 /**
  * Feature detail data — keyed by slug.
@@ -130,11 +130,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function FeatureDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function FeatureDetailPage(
+  { params }: Readonly<{ params: Promise<{ slug: string }> }>,
+) {
   const { slug } = await params;
   const feature = featureDetails[slug];
 
@@ -146,7 +144,7 @@ export default async function FeatureDetailPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             breadcrumbJsonLd([
               { name: 'Home', url: siteConfig.url },
               { name: 'Features', url: `${siteConfig.url}/features` },

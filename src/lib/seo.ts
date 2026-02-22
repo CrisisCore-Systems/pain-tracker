@@ -25,6 +25,15 @@ export interface BreadcrumbItem {
   url: string;
 }
 
+export function safeJsonLdStringify(value: unknown): string {
+  const json = JSON.stringify(value) ?? 'null';
+  // Prevent breaking out of <script> via </script> and avoid legacy JS line-separator hazards.
+  return json
+    .replaceAll('<', String.raw`\u003c`)
+    .replaceAll('\u2028', String.raw`\u2028`)
+    .replaceAll('\u2029', String.raw`\u2029`);
+}
+
 function normalizeToAbsoluteUrl(url: string, siteUrl: string): string {
   const rawUrl = (url ?? '').trim();
   const rawSiteUrl = (siteUrl ?? '').trim();
@@ -242,9 +251,9 @@ export function generateHowToSchema(data: {
  */
 export function combineSchemas(...schemas: object[]): string {
   if (schemas.length === 1) {
-    return JSON.stringify(schemas[0]);
+    return safeJsonLdStringify(schemas[0]);
   }
-  return JSON.stringify({
+  return safeJsonLdStringify({
     '@context': 'https://schema.org',
     '@graph': schemas.map(schema => {
       // Remove @context from individual schemas when combining

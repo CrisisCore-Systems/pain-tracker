@@ -19,6 +19,15 @@ function isNavigationRequest(request) {
   return request.mode === 'navigate' || (request.headers.get('accept') || '').includes('text/html');
 }
 
+function isApiRequest(url) {
+  return (
+    url.pathname === '/api' ||
+    url.pathname.startsWith('/api/') ||
+    url.pathname === '/pain-tracker/api' ||
+    url.pathname.startsWith('/pain-tracker/api/')
+  );
+}
+
 function isCacheableStaticAsset(url) {
   if (!isSameOrigin(url)) return false;
   if (STATIC_PATH_PREFIXES.some((p) => url.pathname.startsWith(p))) return true;
@@ -68,6 +77,10 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
   if (!isSameOrigin(url)) return;
+
+  // Never cache API responses (Class A may transit these endpoints).
+  // Always let the request go to the network directly.
+  if (isApiRequest(url)) return;
 
   // Network-first for navigations to avoid stale HTML.
   if (isNavigationRequest(event.request)) {

@@ -11,13 +11,13 @@
 ### Vercel Production Environment
 All 8 required Stripe environment variables must be set:
 
-- [x] `STRIPE_SECRET_KEY` = `sk_live_51OmJ92KGjXPKI47Z...`
-- [x] `STRIPE_PUBLISHABLE_KEY` = `pk_live_51OmJ92KGjXPKI47Z...`
-- [x] `STRIPE_WEBHOOK_SECRET` = `whsec_0c4Ntv10nQuvQEEjY9IxnfLC7Du0SZ1W`
-- [x] `STRIPE_PRICE_BASIC_MONTHLY` = `price_1SVStcKGjXPKI47ZwvDKfzgz`
-- [x] `STRIPE_PRICE_BASIC_YEARLY` = `price_1SVSvYKGjXPKI47Z6Nezx94O`
-- [x] `STRIPE_PRICE_PRO_MONTHLY` = `price_1SVSx7KGjXPKI47ZclwJTVgS`
-- [x] `STRIPE_PRICE_PRO_YEARLY` = `price_1SVSxcKGjXPKI47ZKXcC1gCr`
+- [x] `STRIPE_SECRET_KEY` = `sk_live_[REDACTED]`
+- [x] `STRIPE_PUBLISHABLE_KEY` = `pk_live_[REDACTED]`
+- [x] `STRIPE_WEBHOOK_SECRET` = `whsec_[REDACTED]`
+- [x] `STRIPE_PRICE_BASIC_MONTHLY` = `price_[REDACTED]`
+- [x] `STRIPE_PRICE_BASIC_YEARLY` = `price_[REDACTED]`
+- [x] `STRIPE_PRICE_PRO_MONTHLY` = `price_[REDACTED]`
+- [x] `STRIPE_PRICE_PRO_YEARLY` = `price_[REDACTED]`
 - [x] `DATABASE_URL` = Neon Postgres connection string
 
 **Verification**: User confirmed via Vercel dashboard screenshot

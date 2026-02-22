@@ -9,7 +9,7 @@
  */
 
 import { readdirSync, readFileSync } from 'node:fs';
-import { join, extname, relative, sep } from 'node:path';
+import { join, extname, relative } from 'node:path';
 
 const ROOT = process.cwd();
 const SRC_ROOT = join(ROOT, 'src');
@@ -21,7 +21,6 @@ const FILE_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']);
  * Keep this list short.
  */
 const ALLOWED_REMOTE_SCRIPT_ORIGINS = [
-  'https://www.googletagmanager.com/',
   'https://js.stripe.com/',
   'https://www.google.com/recaptcha/',
 ];
@@ -31,7 +30,6 @@ const ALLOWED_REMOTE_SCRIPT_ORIGINS = [
  * Prefer allowing a specific file over allowing a whole origin everywhere.
  */
 const ALLOWED_REMOTE_SCRIPT_FILES = new Set([
-  normalizeRel('src/analytics/analytics-loader.ts'),
   normalizeRel('src/services/StripeService.ts'),
   normalizeRel('src/pages/SubmitStoryPage.tsx'),
 ]);
@@ -40,7 +38,7 @@ const ALLOWED_REMOTE_SCRIPT_FILES = new Set([
  * Known GA measurement IDs are allowed only in the loader.
  */
 const ALLOWED_GA_MEASUREMENT_ID_FILES = new Set([
-  normalizeRel('src/analytics/analytics-loader.ts'),
+  // Intentionally empty: third-party analytics is disabled.
 ]);
 
 const GA_MEASUREMENT_ID_RE = /\bG-[A-Z0-9]{6,}\b/g;
@@ -50,6 +48,11 @@ const SCRIPT_SRC_LITERAL_RE = /\b(?:src\s*=\s*|\.src\s*=\s*)(["'`])([^"'`]+)\1/g
 const BEACON_LITERAL_RE = /\bnavigator\.sendBeacon\s*\(\s*(["'`])([^"'`]+)\1/g;
 const WEBSOCKET_LITERAL_RE = /\bnew\s+WebSocket\s*\(\s*(["'`])([^"'`]+)\1/g;
 const IMPORTSCRIPTS_LITERAL_RE = /\bimportScripts\s*\(\s*(["'`])([^"'`]+)\1/g;
+
+// Import-surface heuristics (avoid accidental third-party analytics enablement).
+const DISALLOWED_ANALYTICS_IMPORTS = [
+  '@vercel/analytics',
+];
 
 let failures = 0;
 
@@ -98,6 +101,38 @@ function shouldSkipFile(rel) {
 
 function isLocalhostUrl(url) {
   return /^https?:\/\/(localhost|127\.0\.0\.1)([:/]|$)/i.test(url);
+}
+
+function escapeForRegExp(s) {
+  return s.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+}
+
+function checkNoDisallowedAnalyticsImports(files) {
+  log('🕵️ Privacy gate: disallow third-party analytics imports in src/...');
+
+  for (const file of files) {
+    const rel = fileRel(file);
+    if (shouldSkipFile(rel)) continue;
+    const text = readText(file);
+
+    for (const mod of DISALLOWED_ANALYTICS_IMPORTS) {
+      const m = escapeForRegExp(mod);
+
+      // ESM: import ... from 'mod'
+      const importFrom = new RegExp(
+        String.raw`\bimport\s+(?:type\s+)?[\s\S]*?\s+from\s*(['"])${m}\1`,
+        'g'
+      );
+      // ESM side-effect: import 'mod'
+      const importSideEffect = new RegExp(String.raw`\bimport\s*(['"])${m}\1`, 'g');
+      // CJS: require('mod')
+      const requireRe = new RegExp(String.raw`\brequire\s*\(\s*(['"])${m}\1\s*\)`, 'g');
+
+      if (importFrom.test(text) || importSideEffect.test(text) || requireRe.test(text)) {
+        fail(`Disallowed analytics import found in ${rel}: ${mod}`);
+      }
+    }
+  }
 }
 
 function checkScriptSrcRemote(files) {
@@ -204,6 +239,7 @@ function checkNoBeaconOrWebsocketOrImportScripts(files) {
 function main() {
   const srcFiles = walkFiles(SRC_ROOT);
 
+  checkNoDisallowedAnalyticsImports(srcFiles);
   checkScriptSrcRemote(srcFiles);
   checkGaMeasurementIdPlacement(srcFiles);
   checkFetchHardcodedRemote(srcFiles);

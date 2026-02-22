@@ -85,8 +85,8 @@ export const animationClasses = {
  * Check if user prefers reduced motion
  */
 export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (globalThis.window === undefined) return false;
+  return globalThis.window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 /**
@@ -177,21 +177,19 @@ export function triggerConfetti(element: HTMLElement) {
   // Simple confetti effect using CSS
   const confetti = document.createElement('div');
   confetti.className = 'absolute inset-0 pointer-events-none overflow-hidden';
-  confetti.innerHTML = Array.from({ length: 20 }, (_, i) => {
+
+  for (let i = 0; i < 20; i += 1) {
     const left = Math.random() * 100;
     const delay = Math.random() * 0.5;
     const duration = 1 + Math.random();
-    return `
-      <div 
-        class="absolute w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-        style="
-          left: ${left}%;
-          top: -10px;
-          animation: confetti-fall ${duration}s ease-out ${delay}s forwards;
-        "
-      ></div>
-    `;
-  }).join('');
+
+    const piece = document.createElement('div');
+    piece.className = 'absolute w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full';
+    piece.style.left = `${left}%`;
+    piece.style.top = '-10px';
+    piece.style.animation = `confetti-fall ${duration}s ease-out ${delay}s forwards`;
+    confetti.appendChild(piece);
+  }
   
   element.appendChild(confetti);
   

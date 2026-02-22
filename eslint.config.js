@@ -16,6 +16,12 @@ export default [
       '**/*.config.cjs',
       '**/*.min.js',
       'coverage/**',
+      'packages/blog/public/app/**',
+      // Desktop build outputs (generated artifacts)
+      'desktop/app/**',
+      'desktop/dist/**',
+      'desktop/**/build/**',
+      'desktop/**/out/**',
       'scripts/db/**',
       'e2e/results/**',
       'test-results/**',
@@ -125,7 +131,7 @@ export default [
   },
   {
     // Special config for Service Worker
-    files: ['public/sw.js'],
+    files: ['public/sw.js', 'public/app/sw.js', 'public/pain-tracker/sw.js'],
     languageOptions: {
       globals: {
         ...globals.serviceworker,

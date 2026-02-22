@@ -12,6 +12,15 @@
 
 import { siteConfig } from './utils';
 
+function safeJsonLdStringify(value: unknown): string {
+  const json = JSON.stringify(value) ?? 'null';
+  // Prevent breaking out of <script> via </script> and avoid legacy JS line-separator hazards.
+  return json
+    .replaceAll('<', String.raw`\u003c`)
+    .replaceAll('\u2028', String.raw`\u2028`)
+    .replaceAll('\u2029', String.raw`\u2029`);
+}
+
 // ── Site-wide schemas (inject once in layout.tsx) ─────────────────────
 
 /**
@@ -211,5 +220,5 @@ export function howToJsonLd(opts: {
  *   <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd()]} />
  */
 export function jsonLdScript(data: Record<string, unknown> | Record<string, unknown>[]): string {
-  return JSON.stringify(Array.isArray(data) ? data : data);
+  return safeJsonLdStringify(data);
 }

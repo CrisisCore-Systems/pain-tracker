@@ -6,6 +6,8 @@ import type { PainEntry } from '../../types';
 import type { MoodEntry } from '../../types/quantified-empathy';
 import { hipaaComplianceService } from '../../services/HIPAACompliance';
 import type { AuditTrail } from '../../services/HIPAACompliance';
+import { entitlementService } from '../../services/EntitlementService';
+import { UpgradeCard } from '../UpgradeCard';
 
 type AuditActionType = AuditTrail['actionType'];
 type AuditOutcome = AuditTrail['outcome'];
@@ -29,6 +31,7 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
   className = '',
   variant = 'button',
 }) => {
+  const canExport = entitlementService.hasEntitlement('reports_clinical_pdf');
   const [showModal, setShowModal] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +70,10 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
   );
 
   const handleExportClick = () => {
+    if (!canExport) {
+      return;
+    }
+
     if (entries.length === 0) {
       setError('No pain entries to export');
       void logPdfAudit({
@@ -84,6 +91,10 @@ export const ClinicalPDFExportButton: React.FC<ClinicalPDFExportButtonProps> = (
       details: { step: 'patient-info-modal' },
     });
   };
+
+  if (!canExport) {
+    return <UpgradeCard moduleId="reports_clinical_pdf" className={className} />;
+  }
 
   const handleSubmitPatientInfo = async (patientInfo: PatientClaimInfo) => {
     setIsExporting(true);

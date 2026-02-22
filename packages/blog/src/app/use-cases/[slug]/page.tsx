@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { siteConfig } from '@/lib/utils';
-import { breadcrumbJsonLd } from '@/lib/schema';
+import { breadcrumbJsonLd, jsonLdScript } from '@/lib/schema';
 
 /**
  * Use-case detail data — keyed by slug.
@@ -118,11 +118,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function UseCaseDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function UseCaseDetailPage(
+  { params }: Readonly<{ params: Promise<{ slug: string }> }>,
+) {
   const { slug } = await params;
   const uc = useCaseDetails[slug];
 
@@ -134,7 +132,7 @@ export default async function UseCaseDetailPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
+          __html: jsonLdScript(
             breadcrumbJsonLd([
               { name: 'Home', url: siteConfig.url },
               { name: 'Use Cases', url: `${siteConfig.url}/use-cases` },

@@ -5,6 +5,7 @@
     "lib": ["ESNext", "DOM", "DOM.Iterable", "WebWorker"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "ignoreDeprecations": "6.0",
   "incremental": true,
     "moduleResolution": "bundler",
     

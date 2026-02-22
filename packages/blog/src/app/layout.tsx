@@ -9,6 +9,7 @@ import {
   organizationJsonLd,
   softwareApplicationJsonLd,
   websiteJsonLd,
+  jsonLdScript,
 } from '@/lib/schema';
 
 const inter = Inter({ 
@@ -95,7 +96,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
+            __html: jsonLdScript([
               organizationJsonLd(),
               softwareApplicationJsonLd(),
               websiteJsonLd(),

@@ -2,8 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
+import type { Components } from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
-import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 interface MarkdownContentProps {
@@ -11,139 +11,14 @@ interface MarkdownContentProps {
   className?: string;
 }
 
-export function MarkdownContent({ content, className = '' }: MarkdownContentProps) {
+export function MarkdownContent({ content, className = '' }: Readonly<MarkdownContentProps>) {
   return (
     <div className={`prose-blog ${className}`}>
       <ReactMarkdown
+        skipHtml
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw, rehypeHighlight]}
-        components={{
-          // Custom link handling for external links
-          a: ({ href, children, ...props }) => {
-            const isExternal = href?.startsWith('http');
-            return (
-              <a
-                href={href}
-                target={isExternal ? '_blank' : undefined}
-                rel={isExternal ? 'noopener noreferrer' : undefined}
-                {...props}
-              >
-                {children}
-                {isExternal && (
-                  <svg
-                    className="inline-block ml-1 h-3 w-3 opacity-60"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
-                )}
-              </a>
-            );
-          },
-
-          // Add copy button to code blocks
-          pre: ({ children, ...props }) => {
-            return (
-              <div className="relative group">
-                <pre {...props}>{children}</pre>
-                <CopyButton code={extractCode(children)} />
-              </div>
-            );
-          },
-
-          // Custom image handling with lightbox potential
-          img: ({ src, alt, ...props }) => {
-            if (!src) return null;
-            return (
-              <figure className="my-10">
-                <img
-                  src={src}
-                  alt={alt || ''}
-                  className="rounded-2xl shadow-xl mx-auto transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in"
-                  loading="lazy"
-                  {...props}
-                />
-                {alt && (
-                  <figcaption className="text-center text-sm text-muted-foreground mt-4 italic">
-                    {alt}
-                  </figcaption>
-                )}
-              </figure>
-            );
-          },
-
-          // Enhanced blockquote styling
-          blockquote: ({ children, ...props }) => {
-            return (
-              <blockquote
-                className="border-l-4 border-primary bg-gradient-to-r from-primary/8 to-transparent py-4 px-6 my-8 rounded-r-2xl"
-                {...props}
-              >
-                {children}
-              </blockquote>
-            );
-          },
-
-          // Custom table styling with horizontal scroll
-          table: ({ children, ...props }) => {
-            return (
-              <div className="overflow-x-auto my-8 rounded-xl border border-border shadow-sm">
-                <table className="min-w-full" {...props}>
-                  {children}
-                </table>
-              </div>
-            );
-          },
-
-          // Enhanced heading with anchor links
-          h2: ({ children, ...props }) => {
-            const id = typeof children === 'string' 
-              ? children.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
-              : undefined;
-            return (
-              <h2 id={id} className="scroll-mt-24 group" {...props}>
-                {children}
-                {id && (
-                  <a 
-                    href={`#${id}`} 
-                    className="ml-2 opacity-0 group-hover:opacity-50 hover:!opacity-100 transition-opacity text-primary"
-                    aria-label={`Link to ${children}`}
-                  >
-                    #
-                  </a>
-                )}
-              </h2>
-            );
-          },
-
-          h3: ({ children, ...props }) => {
-            const id = typeof children === 'string' 
-              ? children.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')
-              : undefined;
-            return (
-              <h3 id={id} className="scroll-mt-24 group" {...props}>
-                {children}
-                {id && (
-                  <a 
-                    href={`#${id}`} 
-                    className="ml-2 opacity-0 group-hover:opacity-50 hover:!opacity-100 transition-opacity text-primary"
-                    aria-label={`Link to ${children}`}
-                  >
-                    #
-                  </a>
-                )}
-              </h3>
-            );
-          },
-        }}
+        rehypePlugins={[rehypeHighlight]}
+        components={markdownComponents}
       >
         {content}
       </ReactMarkdown>
@@ -151,10 +26,182 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
   );
 }
 
+function headingIdFromChildren(children: React.ReactNode): string | undefined {
+  if (typeof children !== 'string') return undefined;
+  return children
+    .toLowerCase()
+    .replaceAll(/\s+/g, '-')
+    .replaceAll(/[^\w-]/g, '');
+}
+
+function MarkdownLink({ href, children, ...props }: any) {
+  const safeHref = sanitizeHref(href);
+  if (!safeHref) {
+    return <span {...props}>{children}</span>;
+  }
+
+  const isExternalHttp = /^https?:\/\//i.test(safeHref);
+  return (
+    <a
+      href={safeHref}
+      target={isExternalHttp ? '_blank' : undefined}
+      rel={isExternalHttp ? 'noopener noreferrer' : undefined}
+      {...props}
+    >
+      {children}
+      {isExternalHttp && (
+        <svg
+          className="inline-block ml-1 h-3 w-3 opacity-60"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+          />
+        </svg>
+      )}
+    </a>
+  );
+}
+
+function MarkdownPre({ children, ...props }: any) {
+  return (
+    <div className="relative group">
+      <pre {...props}>{children}</pre>
+      <CopyButton code={extractCode(children)} />
+    </div>
+  );
+}
+
+function MarkdownImage({ src, alt, ...props }: any) {
+  if (!src) return null;
+  return (
+    <figure className="my-10">
+      <img
+        src={src}
+        alt={alt || ''}
+        className="rounded-2xl shadow-xl mx-auto transition-transform duration-300 hover:scale-[1.02] cursor-zoom-in"
+        loading="lazy"
+        {...props}
+      />
+      {alt && (
+        <figcaption className="text-center text-sm text-muted-foreground mt-4 italic">
+          {alt}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
+function MarkdownBlockquote({ children, ...props }: any) {
+  return (
+    <blockquote
+      className="border-l-4 border-primary bg-gradient-to-r from-primary/8 to-transparent py-4 px-6 my-8 rounded-r-2xl"
+      {...props}
+    >
+      {children}
+    </blockquote>
+  );
+}
+
+function MarkdownTable({ children, ...props }: any) {
+  return (
+    <div className="overflow-x-auto my-8 rounded-xl border border-border shadow-sm">
+      <table className="min-w-full" {...props}>
+        {children}
+      </table>
+    </div>
+  );
+}
+
+function MarkdownH2({ children, ...props }: any) {
+  const id = headingIdFromChildren(children);
+  return (
+    <h2 id={id} className="scroll-mt-24 group" {...props}>
+      {children}
+      {id && (
+        <a
+          href={`#${id}`}
+          className="ml-2 opacity-0 group-hover:opacity-50 hover:!opacity-100 transition-opacity text-primary"
+          aria-label={typeof children === 'string' ? `Link to ${children}` : 'Link to section'}
+        >
+          #
+        </a>
+      )}
+    </h2>
+  );
+}
+
+function MarkdownH3({ children, ...props }: any) {
+  const id = headingIdFromChildren(children);
+  return (
+    <h3 id={id} className="scroll-mt-24 group" {...props}>
+      {children}
+      {id && (
+        <a
+          href={`#${id}`}
+          className="ml-2 opacity-0 group-hover:opacity-50 hover:!opacity-100 transition-opacity text-primary"
+          aria-label={typeof children === 'string' ? `Link to ${children}` : 'Link to section'}
+        >
+          #
+        </a>
+      )}
+    </h3>
+  );
+}
+
+const markdownComponents: Components = {
+  a: MarkdownLink,
+  pre: MarkdownPre,
+  img: MarkdownImage,
+  blockquote: MarkdownBlockquote,
+  table: MarkdownTable,
+  h2: MarkdownH2,
+  h3: MarkdownH3,
+};
+
+function sanitizeHref(href: string | undefined): string | undefined {
+  if (!href) return undefined;
+
+  const trimmed = href.trim();
+  if (!trimmed) return undefined;
+
+  // Allow hash and relative URLs.
+  if (
+    trimmed.startsWith('#') ||
+    trimmed.startsWith('/') ||
+    trimmed.startsWith('./') ||
+    trimmed.startsWith('../')
+  ) {
+    return trimmed;
+  }
+
+  // If a scheme is present, only allow a small set.
+  const hasScheme = /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed);
+  if (!hasScheme) return trimmed;
+
+  try {
+    const parsed = new URL(trimmed);
+    const protocol = parsed.protocol.toLowerCase();
+    if (protocol === 'http:' || protocol === 'https:' || protocol === 'mailto:' || protocol === 'tel:') {
+      return trimmed;
+    }
+    return undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * Copy button for code blocks with visual feedback
  */
-function CopyButton({ code }: { code: string }) {
+function CopyButton(props: Readonly<{ code: string }>) {
+  const { code } = props;
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {

@@ -1,4 +1,5 @@
 import type { VercelRequest } from '../src/types/vercel';
+import { getInternalOrigin, logWarn } from './http';
 
 type VerifyAdminResult =
   | { ok: true; user?: unknown }
@@ -7,15 +8,7 @@ type VerifyAdminResult =
 function getInternalApiHost(req: VercelRequest): string {
   const configured = process.env.INTERNAL_API_HOST;
   if (configured) return configured;
-
-  const protoRaw = req.headers['x-forwarded-proto'];
-  const hostRaw = req.headers['host'];
-  const proto = Array.isArray(protoRaw) ? protoRaw[0] : protoRaw;
-  const host = Array.isArray(hostRaw) ? hostRaw[0] : hostRaw;
-
-  if (proto && host) return `${proto}://${host}`;
-  if (host) return `https://${host}`;
-  return 'http://localhost:3000';
+  return getInternalOrigin(req);
 }
 
 export async function verifyAdmin(req: VercelRequest): Promise<VerifyAdminResult> {
@@ -43,7 +36,7 @@ export async function verifyAdmin(req: VercelRequest): Promise<VerifyAdminResult
     }
     return { ok: false, error: 'Not authorized' };
   } catch (e) {
-    console.warn('Admin token verify error:', e);
+    logWarn('Admin token verify error:', e);
     return { ok: false, error: 'Verification error' };
   }
 }

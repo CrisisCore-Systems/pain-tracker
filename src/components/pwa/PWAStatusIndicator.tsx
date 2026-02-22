@@ -74,7 +74,7 @@ export function PWAStatusIndicator() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-50" data-nonessential-prompt="true">
       <div className="bg-white rounded-lg border shadow-lg border-l-4 border-l-blue-500 p-3 max-w-xs">
         <div className="flex items-center space-x-2">
           {!status.isOnline && (

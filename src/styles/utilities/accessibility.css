@@ -15,12 +15,23 @@
 :root {
   --ti-font-size: 1rem;
   --ti-touch-size: 44px;
+  /* Temporary multiplier for crisis/duress accessibility overrides (e.g., Panic Mode). */
+  --ti-zoom-multiplier: 1;
 }
 
 /* ===== FONT SIZE APPLICATION ===== */
 /* Apply the font size to body and form elements */
 body {
-  font-size: var(--ti-font-size, 1rem);
+  font-size: calc(var(--ti-font-size, 1rem) * var(--ti-zoom-multiplier, 1));
+}
+
+/* ===== PROTECTIVE MODE (CRISIS/DURESS) ===== */
+/*
+ * During protective modes (e.g., Panic Mode), suppress nonessential prompts to reduce cognitive load.
+ * Components can opt-in by adding data-nonessential-prompt="true" to their root.
+ */
+body.ti-protective-mode [data-nonessential-prompt='true'] {
+  display: none !important;
 }
 
 /* Ensure form elements inherit the font size */
@@ -42,7 +53,7 @@ button:not(.btn-icon):not(.btn-sm),
 [role="button"]:not(.btn-icon):not(.btn-sm),
 input[type="checkbox"] + label,
 input[type="radio"] + label {
-  min-height: var(--ti-touch-size, 44px);
+  min-height: calc(var(--ti-touch-size, 44px) * var(--ti-zoom-multiplier, 1));
 }
 
 /* ===== CONTRAST LEVELS ===== */

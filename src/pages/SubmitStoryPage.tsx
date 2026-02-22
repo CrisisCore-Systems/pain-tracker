@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../design-system/components/Button';
 import { Heart, Send, ArrowLeft, Shield, CheckCircle2, Sparkles } from 'lucide-react';
@@ -15,8 +15,6 @@ export const SubmitStoryPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const recaptchaScriptRef = useRef<HTMLScriptElement | null>(null);
-  const recaptchaLoadPromiseRef = useRef<Promise<boolean> | null>(null);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(
@@ -28,59 +26,6 @@ export const SubmitStoryPage: React.FC = () => {
     )
   );
 
-  type Grecaptcha = {
-    execute: (siteKey: string, options: { action: string }) => Promise<string>;
-  };
-
-  const getGrecaptcha = (): Grecaptcha | undefined =>
-    (globalThis as unknown as { grecaptcha?: Grecaptcha }).grecaptcha;
-
-  const ensureRecaptchaLoaded = async (siteKey: string): Promise<boolean> => {
-    const existingGrecaptcha = getGrecaptcha();
-    if (existingGrecaptcha?.execute) return true;
-
-    if (recaptchaLoadPromiseRef.current) return recaptchaLoadPromiseRef.current;
-
-    const waitForGrecaptcha = (resolve: (value: boolean) => void) => {
-      const start = Date.now();
-      const interval = globalThis.setInterval(() => {
-        const grecaptcha = getGrecaptcha();
-        if (grecaptcha?.execute) {
-          globalThis.clearInterval(interval);
-          resolve(true);
-          return;
-        }
-        if (Date.now() - start > 3000) {
-          globalThis.clearInterval(interval);
-          resolve(false);
-        }
-      }, 50);
-    };
-
-    recaptchaLoadPromiseRef.current = new Promise<boolean>((resolve) => {
-      const existingScript = document.querySelector(
-        `script[data-recaptcha='${siteKey}']`
-      );
-
-      if (existingScript) {
-        waitForGrecaptcha(resolve);
-        return;
-      }
-
-      const s = document.createElement('script');
-      s.async = true;
-      s.src = `https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(siteKey)}`;
-      s.dataset.recaptcha = siteKey;
-      s.onload = () => waitForGrecaptcha(resolve);
-      s.onerror = () => resolve(false);
-
-      recaptchaScriptRef.current = s;
-      document.head.appendChild(s);
-    });
-
-    return recaptchaLoadPromiseRef.current;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -90,25 +35,13 @@ export const SubmitStoryPage: React.FC = () => {
     }
     setLoading(true);
     try {
-      let recaptchaToken: string | undefined = undefined;
-      const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string | undefined;
-
-      if (siteKey) {
-        try {
-          await ensureRecaptchaLoaded(siteKey);
-          const grecaptcha = getGrecaptcha();
-          if (grecaptcha?.execute) {
-            recaptchaToken = await grecaptcha.execute(siteKey, { action: 'submit_testimonial' });
-          }
-        } catch (err) {
-          console.warn('Failed to execute reCAPTCHA', err);
-        }
-      }
+      // reCAPTCHA (client-side script) is intentionally disabled because production CSP is self-only.
+      // If you want to enable reCAPTCHA, it must be treated as a red-zone CSP change (allowing google.com/gstatic.com).
 
       const res = await fetch('/api/landing/testimonial', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, role, email, quote, anonymized, consent, recaptchaToken }),
+        body: JSON.stringify({ name, role, email, quote, anonymized, consent }),
       });
       if (!res.ok) throw new Error('Failed to submit story');
       setSuccess(true);
@@ -118,21 +51,6 @@ export const SubmitStoryPage: React.FC = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      const s = recaptchaScriptRef.current;
-      if (!s) return;
-      try {
-        s.remove();
-      } catch (e) {
-        console.warn('Failed to remove reCAPTCHA script during cleanup', e);
-      } finally {
-        recaptchaScriptRef.current = null;
-        recaptchaLoadPromiseRef.current = null;
-      }
-    };
-  }, []);
 
   if (success) {
     return (
