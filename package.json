@@ -195,7 +195,7 @@
     "@commitlint/config-conventional": "^20.3.1",
     "@eslint/js": "^9.35.0",
     "@playwright/test": "^1.55.1",
-    "@stryker-mutator/core": "^9.1.1",
+    "@stryker-mutator/core": "^9.5.1",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/dom": "^10.4.1",
@@ -208,8 +208,8 @@
     "@types/node": "^24.3.1",
     "@types/react": "^18.3.25",
     "@types/react-dom": "^18.3.7",
-    "@typescript-eslint/eslint-plugin": "^8.43.0",
-    "@typescript-eslint/parser": "^8.43.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
     "@vitejs/plugin-react": "^5.0.2",
     "@vitest/coverage-v8": "3.2.4",
     "autoprefixer": "^10.4.14",
@@ -249,9 +249,16 @@
   },
   "overrides": {
     "@isaacs/brace-expansion": "5.0.1",
+    "@commitlint/config-validator": {
+      "ajv": "8.18.0"
+    },
+    "@stryker-mutator/core": {
+      "ajv": "8.18.0"
+    },
+    "minimatch": "10.2.2",
     "qs": "6.14.2",
     "glob": {
-      "minimatch": "10.2.1"
+      "minimatch": "10.2.2"
     }
   }
 }
