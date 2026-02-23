@@ -2,6 +2,8 @@ import { securityService } from './SecurityService';
 import { secureStorage } from '../lib/storage/secureStorage';
 import { getSodium, getSodiumSync } from '../lib/crypto/sodium';
 import { PRIVACY_SETTINGS_STORAGE_KEY } from '../utils/privacySettings';
+import { MAX_FAILED_UNLOCK_ATTEMPTS, PENDING_WIPE_WINDOW_MS } from './vaultConstants';
+import { performEmergencyWipe } from './emergency-wipe';
 
 type VaultPhase = 'uninitialized' | 'locked' | 'unlocking' | 'unlocked' | 'error';
 
@@ -9,9 +11,16 @@ type Listener = (status: VaultStatus) => void;
 
 const STORAGE_KEY = 'vault:metadata';
 const FAILED_UNLOCK_ATTEMPTS_KEY = 'vault:failed-unlock-attempts';
-const MAX_FAILED_UNLOCK_ATTEMPTS = 3;
+const PENDING_WIPE_KEY = 'vault:pending-wipe';
 const VAULT_VERSION = '3.0.0';
 const BASE64_VARIANT = 1; // libsodium.base64_variants.ORIGINAL
+
+type PendingWipeReason = 'vault_failed_attempts';
+
+interface PendingWipeState {
+  until: number; // epoch ms
+  reason: PendingWipeReason;
+}
 
 function toBytes(input: unknown): Uint8Array {
   if (input == null) {
@@ -98,6 +107,7 @@ export interface VaultStatus {
   state: VaultPhase;
   metadata: VaultMetadata | null;
   sodiumReady: boolean;
+  pendingWipe: PendingWipeState | null;
 }
 
 export class EncryptedVaultService {
@@ -105,11 +115,13 @@ export class EncryptedVaultService {
     state: 'uninitialized',
     metadata: null,
     sodiumReady: false,
+    pendingWipe: null,
   };
 
   private key: Uint8Array | null = null;
   private listeners = new Set<Listener>();
   private initialized = false;
+  private pendingWipeTimer: ReturnType<typeof setTimeout> | null = null;
 
   async initialize(): Promise<VaultStatus> {
     if (this.initialized) {
@@ -129,9 +141,17 @@ export class EncryptedVaultService {
 
     const metadata = this.loadMetadata();
     if (!metadata) {
-      this.status = { state: 'uninitialized', metadata: null, sodiumReady: true };
+      // No vault means no pending wipe should remain.
+      this.clearPendingWipe();
+      this.status = { state: 'uninitialized', metadata: null, sodiumReady: true, pendingWipe: null };
     } else {
-      this.status = { state: 'locked', metadata, sodiumReady: true };
+      this.status = {
+        state: 'locked',
+        metadata,
+        sodiumReady: true,
+        pendingWipe: this.getPendingWipe(),
+      };
+      this.resumePendingWipeTimer();
     }
 
     this.initialized = true;
@@ -260,9 +280,10 @@ export class EncryptedVaultService {
 
     // Successful setup resets any previous failed-unlock counter.
     this.resetFailedUnlockAttempts();
+    this.clearPendingWipe();
 
     this.key = key;
-    this.status = { state: 'unlocked', metadata, sodiumReady: true };
+    this.status = { state: 'unlocked', metadata, sodiumReady: true, pendingWipe: null };
     this.applyGlobalHooks();
     await this.migrateLegacyStorage();
     this.logEvent('info', 'Vault passphrase initialized');
@@ -297,6 +318,9 @@ export class EncryptedVaultService {
       throw new Error('Incorrect passphrase.');
     }
 
+    // Successful unlock is the only allowed way to abort a pending wipe.
+    this.clearPendingWipe();
+
     // Successful unlock resets any previous failed-unlock counter.
     this.resetFailedUnlockAttempts();
 
@@ -314,11 +338,98 @@ export class EncryptedVaultService {
     );
 
     this.key = key;
-    this.status = { ...this.status, state: 'unlocked' };
+    this.status = { ...this.status, state: 'unlocked', pendingWipe: null };
     this.applyGlobalHooks();
     await this.migrateLegacyStorage();
     this.logEvent('info', 'Vault unlocked');
     this.emit();
+  }
+
+  private getPendingWipe(): PendingWipeState | null {
+    try {
+      const raw = secureStorage.safeJSON<Partial<PendingWipeState>>(PENDING_WIPE_KEY, {});
+      const until = raw.until;
+      const reason = raw.reason;
+
+      if (typeof until !== 'number' || !Number.isFinite(until) || until <= 0) {
+        return null;
+      }
+      if (reason !== 'vault_failed_attempts') {
+        return null;
+      }
+
+      return { until, reason };
+    } catch {
+      return null;
+    }
+  }
+
+  private setPendingWipe(state: PendingWipeState): void {
+    secureStorage.set(PENDING_WIPE_KEY, state);
+    this.status = { ...this.status, pendingWipe: state };
+    this.emit();
+  }
+
+  private clearPendingWipe(): void {
+    if (this.pendingWipeTimer) {
+      clearTimeout(this.pendingWipeTimer);
+      this.pendingWipeTimer = null;
+    }
+    secureStorage.remove(PENDING_WIPE_KEY);
+    if (this.status.pendingWipe) {
+      this.status = { ...this.status, pendingWipe: null };
+      this.emit();
+    }
+  }
+
+  private resumePendingWipeTimer(): void {
+    const pending = this.getPendingWipe();
+    if (!pending) {
+      return;
+    }
+
+    const delay = Math.max(0, pending.until - Date.now());
+    if (this.pendingWipeTimer) {
+      clearTimeout(this.pendingWipeTimer);
+      this.pendingWipeTimer = null;
+    }
+
+    this.pendingWipeTimer = setTimeout(() => this.executePendingWipeIfStillActive(), delay);
+  }
+
+  private async executePendingWipeIfStillActive(): Promise<void> {
+    const pending = this.getPendingWipe();
+    if (!pending) {
+      return;
+    }
+
+    if (!this.isEmergencyWipeOnFailedUnlockEnabled()) {
+      this.logEvent('warning', 'Pending wipe canceled (user disabled kill switch)', {
+        reason: pending.reason,
+      });
+      this.clearPendingWipe();
+      return;
+    }
+
+    this.logEvent('warning', 'Emergency wipe triggered (after pending window)', {
+      reason: pending.reason,
+    });
+
+    try {
+      await this.runEmergencyWipe(pending.reason);
+    } catch {
+      // ignore wipe failures; still clear vault metadata as a minimum
+    }
+
+    try {
+      this.clearAll();
+    } catch {
+      // ignore
+    }
+  }
+
+  private async runEmergencyWipe(reason: PendingWipeReason): Promise<void> {
+    await performEmergencyWipe(reason);
   }
 
   private getFailedUnlockAttempts(): number {
@@ -363,24 +474,20 @@ export class EncryptedVaultService {
       return;
     }
 
-    this.logEvent('warning', 'Emergency wipe triggered', {
-      reason: 'vault_failed_attempts',
-      attempts: next,
-    });
-
-    // Best-effort emergency wipe. Keep this dynamic to avoid hard dependency
-    // cycles and to make test mocking straightforward.
-    try {
-      const { performEmergencyWipe } = await import('./emergency-wipe');
-      await performEmergencyWipe('vault_failed_attempts');
-    } catch {
-      // ignore wipe failures; still clear vault metadata as a minimum
-    }
-
-    try {
-      this.clearAll();
-    } catch {
-      // ignore
+    // Do not wipe immediately: enter a bounded pending-wipe window.
+    // The only way to abort the wipe is a successful unlock during the window.
+    const existing = this.getPendingWipe();
+    if (!existing) {
+      const until = Date.now() + PENDING_WIPE_WINDOW_MS;
+      this.logEvent('warning', 'Emergency wipe armed (pending window started)', {
+        reason: 'vault_failed_attempts',
+        attempts: next,
+        until,
+      });
+      this.setPendingWipe({ until, reason: 'vault_failed_attempts' });
+      this.resumePendingWipeTimer();
+    } else {
+      this.resumePendingWipeTimer();
     }
   }
 
@@ -531,8 +638,14 @@ export class EncryptedVaultService {
   clearAll(): void {
     secureStorage.remove(STORAGE_KEY);
     this.resetFailedUnlockAttempts();
+    this.clearPendingWipe();
     this.lock();
-    this.status = { state: 'uninitialized', metadata: null, sodiumReady: this.status.sodiumReady };
+    this.status = {
+      state: 'uninitialized',
+      metadata: null,
+      sodiumReady: this.status.sodiumReady,
+      pendingWipe: null,
+    };
     this.emit();
   }
 

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useVault } from '../../hooks/useVault';
+import { readPrivacySettings } from '../../utils/privacySettings';
+import { MAX_FAILED_UNLOCK_ATTEMPTS } from '../../services/vaultConstants';
 
 const MIN_PASSPHRASE_LENGTH = 12;
 
@@ -15,6 +17,10 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const passphraseInputRef = useRef<HTMLInputElement>(null);
   const [showPassphrase, setShowPassphrase] = useState(false);
+  const [killSwitchEnabled, setKillSwitchEnabled] = useState<boolean>(
+    () => readPrivacySettings().vaultKillSwitchEnabled
+  );
+  const [pendingSeconds, setPendingSeconds] = useState<number | null>(null);
 
   useEffect(() => {
     if (status.state === 'uninitialized' || status.state === 'locked') {
@@ -23,6 +29,29 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
       }, 50);
     }
   }, [status.state]);
+
+  useEffect(() => {
+    if (status.state === 'locked' || status.state === 'uninitialized') {
+      setKillSwitchEnabled(readPrivacySettings().vaultKillSwitchEnabled);
+    }
+  }, [status.state]);
+
+  useEffect(() => {
+    const pending = status.pendingWipe;
+    if (!pending) {
+      setPendingSeconds(null);
+      return;
+    }
+
+    const tick = () => {
+      const secondsLeft = Math.max(0, Math.ceil((pending.until - Date.now()) / 1000));
+      setPendingSeconds(secondsLeft);
+    };
+
+    tick();
+    const intervalId = globalThis.setInterval(tick, 250);
+    return () => globalThis.clearInterval(intervalId);
+  }, [status.pendingWipe?.until, status.pendingWipe?.reason]);
 
   useEffect(() => {
     if (status.state === 'uninitialized') {
@@ -86,7 +115,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
   };
 
   const handleResetVault = async () => {
-    const confirmed = window.confirm(
+    const confirmed = globalThis.confirm(
       'Resetting the secure vault will permanently remove all locally stored entries and settings. This action cannot be undone. Do you want to continue?'
     );
     if (!confirmed) return;
@@ -207,6 +236,23 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
         </button>
       </div>
 
+      {status.pendingWipe ? (
+        <div
+          role="alert"
+          className="rounded-md bg-red-50 dark:bg-red-900/30 p-3 text-sm text-red-700 dark:text-red-200 border border-red-100 dark:border-red-800"
+        >
+          Vault will wipe in {pendingSeconds ?? 'a few'} seconds due to repeated failed unlock
+          attempts. Enter the correct passphrase now to prevent wipe.
+        </div>
+      ) : null}
+
+      {!status.pendingWipe && killSwitchEnabled ? (
+        <p className="text-xs text-gray-600 dark:text-gray-400">
+          Emergency wipe is enabled: local data may wipe after {MAX_FAILED_UNLOCK_ATTEMPTS} failed
+          unlock attempts.
+        </p>
+      ) : null}
+
       <div className="space-y-4">
         <label className="block" htmlFor="vault-passphrase-unlock">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Passphrase</span>
@@ -319,7 +365,7 @@ export const VaultGate: React.FC<VaultGateProps> = ({ children }) => {
   // flag and a persistent test-mode localStorage key are present. This guards
   // against accidental bypass in interactive dev sessions.
   try {
-    const isTestModeWindow = (window as unknown as { __pt_test_mode?: boolean }).__pt_test_mode;
+    const isTestModeWindow = (globalThis as unknown as { __pt_test_mode?: boolean }).__pt_test_mode;
     const isTestModeLS = typeof localStorage !== 'undefined' && localStorage.getItem('pt:test_mode') === '1';
     if (import.meta.env.DEV && isTestModeWindow && isTestModeLS) {
       return <>{children}</>;
