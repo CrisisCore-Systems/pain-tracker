@@ -23,7 +23,11 @@ PainTracker is a privacy-first, local-data pain documentation system designed to
 
 **Docs index:** [docs/README.md](docs/README.md)
 
-**Protective Computing (canonical citation):**
+**Protective Computing Core v1.0:**
+
+> This project implements **Protective Computing Core v1.0**.
+
+**Protective Computing (canonical provenance / citation):**
 
 > Overton, K. (2026). *The Overton Framework: Protective Computing in Conditions of Human Vulnerability* (Version 1.3). Zenodo. [https://doi.org/10.5281/zenodo.18688516](https://doi.org/10.5281/zenodo.18688516)
 

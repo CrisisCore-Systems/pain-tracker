@@ -187,6 +187,7 @@ export const LandingFooter: React.FC = () => {
                 {([
                   { label: 'Templates & Guides', onClick: () => navigate('/resources') },
                   { label: 'Whitepaper (PDF)', onClick: () => navigate('/whitepaper') },
+                  { label: 'Overton Framework (Canon)', onClick: () => navigate('/overton-framework'), icon: BookOpen },
                   { label: 'Download', onClick: () => navigate('/download') },
                   { label: 'Pricing Plans', onClick: () => navigate('/pricing') },
                   { label: 'Privacy Policy', onClick: () => navigate('/privacy'), icon: Shield },
@@ -338,6 +339,16 @@ export const LandingFooter: React.FC = () => {
               <strong className="text-white">Privacy-first by default:</strong>{' '}
               Core tracking data is stored on your device. Exports and optional backup/sync are user-initiated.{' '}
               Optional analytics can be enabled explicitly and is disabled by default.{' '}
+              Built in accordance with{' '}
+              <a
+                href="https://github.com/CrisisCore-Systems/overton-framework/blob/pc-core-v1.0.0/protective-computing/spec/protective-computing-core-v1.0.md"
+                className="text-sky-400 hover:text-sky-300 transition-colors duration-200"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Protective Computing Core v1.0
+              </a>
+              .{' '}
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker"
                 target="_blank"
