@@ -13,7 +13,6 @@ import {
   readPrivacySettings,
   writePrivacySettings,
 } from '../../utils/privacySettings';
-import { MAX_FAILED_UNLOCK_ATTEMPTS, PENDING_WIPE_WINDOW_MS } from '../../services/vaultConstants';
 
 export default function PrivacySettings() {
   const [sharing, setSharing] = useState<boolean>(() => readPrivacySettings().dataSharing);
@@ -155,10 +154,8 @@ export default function PrivacySettings() {
           <div>
             <div id="privacy-killswitch-label" className="font-medium text-gray-700 dark:text-slate-200">Emergency wipe on repeated failed unlocks</div>
             <div id="privacy-killswitch-desc" className="text-sm text-gray-500 dark:text-slate-400">
-              If enabled, the app will start a {Math.round(PENDING_WIPE_WINDOW_MS / 1000)}-second wipe countdown after{' '}
-              {MAX_FAILED_UNLOCK_ATTEMPTS} failed vault unlock attempts. Entering the correct passphrase during the countdown prevents the
-              wipe. This can protect you on a lost/shared device, but it also increases the risk of accidental data loss if someone mistypes
-              your passphrase.
+              If enabled, the app will wipe local data after 3 failed vault unlock attempts. This can protect you on a lost/shared device,
+              but it also increases the risk of accidental data loss if someone mistypes your passphrase.
             </div>
           </div>
           <input

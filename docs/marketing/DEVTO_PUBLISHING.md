@@ -44,7 +44,7 @@ $env:DEVTO_API_KEY = "your_devto_api_key_here"
 Optional overrides:
 
 ```powershell
-$env:DEVTO_SPONSOR_URL = "https://paintracker.ca/sponsor"
+$env:DEVTO_SPONSOR_URL = "https://github.com/sponsors/CrisisCore-Systems"
 $env:DEVTO_REPO_URL = "https://github.com/CrisisCore-Systems/pain-tracker"
 $env:DEVTO_SERIES_START_URL = "https://dev.to/yourname/your-series"
 $env:DEVTO_SERIES = "Your DEV Series Name"

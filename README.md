@@ -10,7 +10,7 @@
 [![Lines of Code Count](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/CrisisCore-Systems/pain-tracker/main/badges/loc-badge.json)](https://github.com/CrisisCore-Systems/pain-tracker)
 [![GitHub Stars Count](https://img.shields.io/github/stars/CrisisCore-Systems/pain-tracker?style=social)](https://github.com/CrisisCore-Systems/pain-tracker/stargazers)
 [![MIT License Badge](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18688516.svg)](https://doi.org/10.5281/zenodo.18688516)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18887610.svg)](https://doi.org/10.5281/zenodo.18887610)
 
 <!-- CI / Coverage Badges -->
 [![Continuous Integration Workflow Status](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/CrisisCore-Systems/pain-tracker/actions/workflows/ci.yml)
@@ -21,15 +21,26 @@
 
 PainTracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
 
+## Architecture & Design Discipline
+
+**Start here:** [Architecting for Vulnerability: Introducing Protective Computing Core v1.0](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10) — A systems architecture teardown explaining why standard software fails under human degradation, and how PainTracker implements a tested alternative.
+
+PainTracker is the reference implementation for **Protective Computing Core v1.0**, a formal pattern library for building apps that preserve essential utility and user agency during crisis states.
+
+## Research Foundation
+
+PainTracker is a reference implementation within the Protective Computing discipline.
+
+**Canonical paper:**  
+Overton, K. (2026). _Protective Computing Canon v1.0: A Structural Map of the Discipline._  
+Protective Computing Community.  
+DOI: https://doi.org/10.5281/zenodo.18887610
+
 **Docs index:** [docs/README.md](docs/README.md)
 
 **Protective Computing Core v1.0:**
 
 > This project implements **Protective Computing Core v1.0**.
-
-**Protective Computing (canonical provenance / citation):**
-
-> Overton, K. (2026). *The Overton Framework: Protective Computing in Conditions of Human Vulnerability* (Version 1.3). Zenodo. [https://doi.org/10.5281/zenodo.18688516](https://doi.org/10.5281/zenodo.18688516)
 
 **Test suite:** 190 tests
 

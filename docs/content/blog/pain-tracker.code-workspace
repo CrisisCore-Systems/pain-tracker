@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "../../../../overton-framework"
+		}
+	],
+	"settings": {
+		"terminal.integrated.shellIntegration.enabled": true,
+		"powershell.cwd": "pain-tracker"
+	}
+}

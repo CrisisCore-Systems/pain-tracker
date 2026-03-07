@@ -1,6 +1,6 @@
 ---
-title: "Start here: local-first, offline-first Pain Tracker (no backend required)"
-description: "A guided index for the Pain Tracker Dev.to series: local-first architecture, deterministic PWAs, accessibility, and truthful security boundaries."
+title: "Start Here: PainTracker and the CrisisCore Build Log"
+description: "Start here for PainTracker: privacy-first, offline-first architecture patterns and the CrisisCore build log."
 tags:
   - pwa
   - privacy
@@ -10,68 +10,55 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-If you’ve ever shipped something “offline-capable” and then watched it quietly fall apart the first time someone had spotty internet… yeah. Same.
+PainTracker is a privacy first, offline first pain tracker built for the moments that matter.
+No cloud dependency. No surveillance business model. Client side encryption where it counts.
 
-This is the index post for a Dev.to series based on the open-source **Pain Tracker** repo.
+This page is the front door.
+If you are living with chronic pain, you deserve tools that do not trade your safety for engagement.
+If you are building health software, you deserve patterns that survive real pressure.
 
-A quick boundary check before we start:
+## What you will find here
 
-- Not medical advice.
-- Not a regulatory compliance claim.
-- This series sticks to *what the code does* (and what it does not do).
+Practical architecture patterns for offline first apps
+Security choices explained in plain language
+Testing and quality gates that earn trust
+Notes from shipping a real product, not a demo
 
-## What this series is (and isn’t)
+## Start with these three
 
-This series is about building PWAs that stay useful offline and treat sensitive data
-as a hostile surface.
+Trauma Informed React Hooks
+https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n
 
-It is **not**:
+Client Side Encryption for Healthcare Apps
+https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm
 
-- a "perfect security" claim
-- a cloud architecture pitch
-- a stealth analytics funnel
+Building a Healthcare PWA That Actually Works When It Matters
+https://dev.to/crisiscoresystems/building-a-healthcare-pwa-that-actually-works-when-it-matters-md4
 
-## Start with Part 1
+## Read the Foundations series
 
-- Part 1: [Offline-first without a backend: a local-first PWA architecture you can trust](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
-- Part 2: [Three storage layers (state cache vs offline DB vs encrypted vault)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
-- Part 3: [Service workers that don’t surprise you](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
-- Part 4: [Zod + defensive parsing](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
-- Part 5: [Trauma-informed UX + accessibility as architecture](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
-- Part 6: [Exports as a security boundary](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
-- Part 7: [WorkSafeBC-oriented workflows (careful language)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md)
-- Part 8: [Analytics without surveillance (explicit consent)](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md)
-- Part 9: [Quality gates that earn trust](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
-- Part 10: [Maintaining truthful docs over time](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+https://dev.to/crisiscoresystems/series/34468
 
-## Proof-first reading list (repo anchors)
+## Read the CrisisCore Build Log series
 
-If you prefer to verify first and read second:
+https://dev.to/crisiscoresystems/series/34363
 
-- Architecture overview: [docs/engineering/ARCHITECTURE.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/ARCHITECTURE.md)
-- Local data + migrations: [docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/LOCAL_DATA_AND_MIGRATIONS.md)
-- Service worker (base): [public/sw.js](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/sw.js)
-- Service worker (GitHub Pages base path): [public/pain-tracker/sw.js](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/public/pain-tracker/sw.js)
+## Try it or support it
 
-## The series map
+Try PainTracker
+https://paintracker.ca
 
-Each post will link forward/back as it publishes.
+Star the repo
+https://github.com/CrisisCore-Systems/pain-tracker
 
-1. Offline-first without a backend (local-first architecture)
-2. Three storage layers (state cache vs offline DB vs encrypted vault DB)
-3. Service workers that don’t surprise you
-4. Zod + defensive parsing
-5. Trauma-informed UX + accessibility as architecture
-6. Exports as a security boundary
-7. WorkSafeBC-oriented workflows (careful language)
-8. Analytics without surveillance (explicit consent + clear boundaries)
-9. Quality gates that earn trust
-10. Maintaining truthful docs over time
+Sponsor
+https://github.com/sponsors/CrisisCore-Systems
 
-## Support / links
+## One honest note about scope
 
-- Repo: [CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
-- Sponsor: [paintracker.ca/sponsor](https://paintracker.ca/sponsor)
+This is not medical advice.
+This is infrastructure. The goal is to help you track reality without giving away control of your data.
 
-If you’re building something similar, the most useful context to share is your
-constraints: offline requirements, threat model, and who you’re designing for.
+## If you are building something similar
+
+What is the one rule you use to make sure your offline features never surprise the user

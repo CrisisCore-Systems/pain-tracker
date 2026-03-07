@@ -4,7 +4,7 @@ published: false
 description: "After months of build logs and testing, the security-first pain tracker is live. Here is the final stack and how to use it."
 tags: ["showdev", "opensource", "react", "privacy"]
 cover_image: "https://paintracker.ca/og-image.png"
-canonical_url: "https://paintracker.ca/blog/launch-v1"
+canonical_url: "https://blog.paintracker.ca/page/start-here"
 series: "Pain Tracker Launch"
 ---
 

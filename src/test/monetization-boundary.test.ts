@@ -58,9 +58,7 @@ describe('monetization boundary guardrails', () => {
     expect(vi.mocked(globalThis.fetch)).not.toHaveBeenCalled();
   });
 
-  it(
-    'does not import EntitlementService in core tracking modules',
-    async () => {
+  it('does not import EntitlementService in core tracking modules', async () => {
     // If core tracking pulls in EntitlementService, this test will fail.
     // Use doMock (non-hoisted) so other tests in this file can still import EntitlementService.
     vi.resetModules();
@@ -76,9 +74,7 @@ describe('monetization boundary guardrails', () => {
       vi.doUnmock('../services/EntitlementService');
       vi.resetModules();
     }
-    },
-    90_000
-  );
+  });
 
   it('defaults to no entitlements when no tier and no local grants', async () => {
     const { entitlementService } = await import('../services/EntitlementService');

@@ -1,6 +1,6 @@
 ---
-title: "The Overton Framework is now DOI-backed"
-description: "A citable canon for Protective Computing (v1.3), archived on Zenodo with a minted DOI—plus a reference implementation in Pain Tracker."
+title: "Protective Computing Canon v1.0 is now DOI-backed"
+description: "The formal structural paper for Protective Computing is now published with a canonical DOI, with Pain Tracker as a reference implementation."
 tags:
   - privacy
   - accessibility
@@ -10,15 +10,17 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: true
 ---
 
-**The Overton Framework** (Protective Computing) is now archived on Zenodo with a minted DOI.
+The formal structural paper for the discipline is now published as the Protective Computing Canon v1.0.
 
 That means a stable, versioned citation you can use in papers, docs, and reviews—without link rot or “which PDF did you mean?” ambiguity.
 
-What’s new: **a DOI-backed v1.3 canon (Zenodo)** plus a repo-hosted Markdown mirror for review and citation.
+Overton, K. (2026). _Protective Computing Canon v1.0: A Structural Map of the Discipline._  
+Protective Computing Community.  
+DOI: https://doi.org/10.5281/zenodo.18887610
 
 ## Canonical citation (use this exact line)
 
-> Overton, K. (2026). *The Overton Framework: Protective Computing in Conditions of Human Vulnerability* (Version 1.3). Zenodo. [https://doi.org/10.5281/zenodo.18688516](https://doi.org/10.5281/zenodo.18688516)
+> Overton, K. (2026). *Protective Computing Canon v1.0: A Structural Map of the Discipline.* Protective Computing Community. [https://doi.org/10.5281/zenodo.18887610](https://doi.org/10.5281/zenodo.18887610)
 
 ## What the framework is
 
@@ -39,7 +41,7 @@ Boundary notes (because truth matters):
 - This is **not a regulatory compliance claim**.
 - This is **not a claim of perfect security**.
 
-## What’s inside v1.3 (high level)
+## What’s inside the canon (high level)
 
 The canon is intentionally written to be checkable, not inspirational:
 
@@ -50,7 +52,7 @@ The canon is intentionally written to be checkable, not inspirational:
 
 ## Where to read it
 
-- DOI landing page (Zenodo): https://doi.org/10.5281/zenodo.18688516
+- DOI landing page (Zenodo): https://doi.org/10.5281/zenodo.18887610
 
 If you prefer reading in-repo text first:
 
@@ -78,6 +80,6 @@ If you build systems that touch high-vulnerability contexts (health, crisis resp
 
 ## Links
 
-- Canon (DOI): https://doi.org/10.5281/zenodo.18688516
+- Canon (DOI): https://doi.org/10.5281/zenodo.18887610
 - Canon (repo Markdown mirror): https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/engineering/overton-framework-protective-computing-v1.3.md
 - Pain Tracker repo: https://github.com/CrisisCore-Systems/pain-tracker

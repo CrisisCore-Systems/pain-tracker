@@ -5,6 +5,7 @@
 
 import { offlineStorage } from './offline-storage';
 import { secureStorage } from './storage/secureStorage';
+import { ALLOWED_SYNC_ROUTES } from './background-sync-allowlist';
 
 interface SyncResult {
   success: boolean;
@@ -43,9 +44,11 @@ export class BackgroundSyncService {
   private static instance: BackgroundSyncService;
   private isOnline: boolean = navigator.onLine;
   private syncInProgress: boolean = false;
-  private retryTimeouts: Map<number, NodeJS.Timeout> = new Map();
-  private maxRetries: number = 3;
-  private retryDelays: number[] = [1000, 5000, 15000]; // Progressive delays in ms
+  private readonly retryTimeouts: Map<number, NodeJS.Timeout> = new Map();
+  private readonly maxRetries: number = 3;
+  private readonly retryDelays: number[] = [1000, 5000, 15000]; // Progressive delays in ms
+
+  private readonly allowedSyncMatchers: Array<{ method: string; path: RegExp }>;
 
   private getAllowedApiPathPrefixes(): string[] {
     const prefixes = new Set<string>();
@@ -60,21 +63,57 @@ export class BackgroundSyncService {
     return Array.from(prefixes);
   }
 
-  private isAllowedSyncUrl(url: string): boolean {
-    // Resolve relative URLs against current origin.
+  private buildAllowedSyncMatchers(): Array<{ method: string; path: RegExp }> {
+    const escapeRe = (s: string) =>
+      s.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\\$&`);
+    const prefixes = this.getAllowedApiPathPrefixes().map(p => p.replace(/\/+$/, ''));
+    const out: Array<{ method: string; path: RegExp }> = [];
+
+    const compile = (prefix: string, canonicalApiPath: string): RegExp => {
+      // Map canonical `/api/...` path to configured prefix (e.g. `/pain-tracker/api`).
+      const effective = canonicalApiPath.replace(/^\/api/, prefix);
+
+      const segments = effective.split('/').filter(Boolean);
+      const reSegments = segments.map(seg => {
+        if (seg.startsWith(':')) {
+          const name = seg.slice(1);
+          // Governance: only allow numeric IDs unless explicitly expanded.
+          if (name === 'id') return String.raw`\\d+`;
+          throw new Error(`Unsupported sync allowlist param :${name}`);
+        }
+        return escapeRe(seg);
+      });
+
+      return new RegExp(`^/${reSegments.join('/')}$`);
+    };
+
+    // Allowlist: only the routes we explicitly permit for offline replay.
+    // Governance: adding a new route MUST update the pinned allowlist + tests.
+    for (const prefix of prefixes) {
+      for (const route of ALLOWED_SYNC_ROUTES) {
+        if (!route.path.startsWith('/api/')) {
+          throw new Error(`ALLOWED_SYNC_ROUTES path must start with /api/: ${route.path}`);
+        }
+        out.push({ method: route.method, path: compile(prefix, route.path) });
+      }
+    }
+
+    return out;
+  }
+
+  private isAllowedSyncRequest(method: string, url: string): boolean {
     let parsed: URL;
     try {
-      parsed = new URL(url, window.location.origin);
+      parsed = new URL(url, globalThis.location.origin);
     } catch {
       return false;
     }
 
-    // Only allow same-origin replays (prevents exfil to arbitrary origins).
-    if (parsed.origin !== window.location.origin) return false;
+    if (parsed.origin !== globalThis.location.origin) return false;
 
-    // Only allow API endpoints.
+    const m = method.toUpperCase();
     const path = parsed.pathname;
-    return this.getAllowedApiPathPrefixes().some(prefix => path === prefix || path.startsWith(`${prefix}/`));
+    return this.allowedSyncMatchers.some(r => r.method === m && r.path.test(path));
   }
 
   private sanitizeReplayHeaders(headers: Record<string, string>): Record<string, string> {
@@ -90,6 +129,7 @@ export class BackgroundSyncService {
   }
 
   private constructor() {
+    this.allowedSyncMatchers = this.buildAllowedSyncMatchers();
     this.setupEventListeners();
     this.startPeriodicSync();
   }
@@ -103,13 +143,13 @@ export class BackgroundSyncService {
 
   private setupEventListeners(): void {
     // Listen for online/offline events
-    window.addEventListener('online', () => {
+    globalThis.addEventListener('online', () => {
       this.isOnline = true;
       console.log('BackgroundSync: Connection restored, starting sync');
       this.syncAllPendingData();
     });
 
-    window.addEventListener('offline', () => {
+    globalThis.addEventListener('offline', () => {
       this.isOnline = false;
       console.log('BackgroundSync: Connection lost');
     });
@@ -122,10 +162,63 @@ export class BackgroundSyncService {
     });
 
     // Listen for PWA events
-    window.addEventListener('pwa-online', () => {
+    globalThis.addEventListener('pwa-online', () => {
       this.isOnline = true;
       this.syncAllPendingData();
     });
+  }
+
+  private async dropDisallowedReplayItem(item: SyncQueueItemShape, stats: SyncStats): Promise<void> {
+    stats.failureCount++;
+    stats.errors.push(`Blocked sync replay to disallowed URL: ${item.url}`);
+    try {
+      if (item.id != null) await offlineStorage.removeSyncQueueItem(item.id);
+    } catch {
+      // ignore removal errors; we still don't attempt replay
+    }
+  }
+
+  private async handleSyncResult(
+    item: SyncQueueItemShape,
+    result: SyncResult,
+    stats: SyncStats
+  ): Promise<void> {
+    if (result.success) {
+      stats.successCount++;
+      await offlineStorage.removeSyncQueueItem(item.id!);
+      console.log(`BackgroundSync: Successfully synced ${item.method} ${item.url}`);
+      return;
+    }
+
+    if (!result.error) return;
+
+    if ((item.retryCount || 0) >= this.maxRetries) {
+      stats.failureCount++;
+      stats.errors.push(`Max retries exceeded for ${item.url}: ${result.error}`);
+      await offlineStorage.removeSyncQueueItem(item.id!);
+      console.error(`BackgroundSync: Max retries exceeded for ${item.url}`);
+      return;
+    }
+
+    await this.scheduleRetry(item, result);
+    stats.skippedCount++;
+  }
+
+  private async processSyncQueueItem(item: SyncQueueItemShape, stats: SyncStats): Promise<void> {
+    try {
+      // Defense-in-depth: never replay queued requests to unexpected URLs.
+      if (!this.isAllowedSyncRequest(item.method, item.url)) {
+        await this.dropDisallowedReplayItem(item, stats);
+        return;
+      }
+
+      const result = await this.syncItem(item);
+      await this.handleSyncResult(item, result, stats);
+    } catch (error) {
+      stats.failureCount++;
+      stats.errors.push(`Sync error for ${item.url}: ${error}`);
+      console.error(`BackgroundSync: Error syncing ${item.url}:`, error);
+    }
   }
 
   private startPeriodicSync(): void {
@@ -148,7 +241,7 @@ export class BackgroundSyncService {
   ): Promise<void> {
     try {
       // Defense-in-depth: never enqueue requests we would refuse to replay.
-      if (!this.isAllowedSyncUrl(url)) {
+      if (!this.isAllowedSyncRequest(method, url)) {
         console.warn(`BackgroundSync: Refusing to queue disallowed URL: ${url}`);
         return;
       }
@@ -220,42 +313,7 @@ export class BackgroundSyncService {
 
       // Process each item
       for (const item of syncQueue) {
-        try {
-          // Defense-in-depth: never replay queued requests to unexpected URLs.
-          if (!this.isAllowedSyncUrl(item.url)) {
-            stats.failureCount++;
-            stats.errors.push(`Blocked sync replay to disallowed URL: ${item.url}`);
-            try {
-              if (item.id != null) await offlineStorage.removeSyncQueueItem(item.id);
-            } catch {
-              // ignore removal errors; we still don't attempt replay
-            }
-            continue;
-          }
-
-          const result = await this.syncItem(item);
-
-          if (result.success) {
-            stats.successCount++;
-            await offlineStorage.removeSyncQueueItem(item.id!);
-            console.log(`BackgroundSync: Successfully synced ${item.method} ${item.url}`);
-          } else if (result.error) {
-            if ((item.retryCount || 0) >= this.maxRetries) {
-              stats.failureCount++;
-              stats.errors.push(`Max retries exceeded for ${item.url}: ${result.error}`);
-              await offlineStorage.removeSyncQueueItem(item.id!);
-              console.error(`BackgroundSync: Max retries exceeded for ${item.url}`);
-            } else {
-              // Schedule retry
-              await this.scheduleRetry(item, result);
-              stats.skippedCount++;
-            }
-          }
-        } catch (error) {
-          stats.failureCount++;
-          stats.errors.push(`Sync error for ${item.url}: ${error}`);
-          console.error(`BackgroundSync: Error syncing ${item.url}:`, error);
-        }
+        await this.processSyncQueueItem(item, stats);
       }
 
       // Update local store if we synced pain entries
@@ -284,7 +342,7 @@ export class BackgroundSyncService {
         return { success: false, itemId: item.id!, error: 'Offline' };
       }
 
-      if (!this.isAllowedSyncUrl(item.url)) {
+      if (!this.isAllowedSyncRequest(item.method, item.url)) {
         return { success: false, itemId: item.id!, error: 'Disallowed URL' };
       }
 
@@ -331,8 +389,9 @@ export class BackgroundSyncService {
     const delay = result.retryAfter || this.getRetryDelay(item.retryCount || 0);
 
     // Clear existing timeout for this item
-    if (this.retryTimeouts.has(item.id!)) {
-      clearTimeout(this.retryTimeouts.get(item.id!)!);
+    if (item.id != null) {
+      const existing = this.retryTimeouts.get(item.id);
+      if (existing) clearTimeout(existing);
     }
 
     // Update retry count
@@ -356,10 +415,10 @@ export class BackgroundSyncService {
       return this.retryDelays[retryCount];
     }
     // Exponential backoff for higher retry counts
+    const lastDelay = this.retryDelays.at(-1) ?? 15000;
     return Math.min(
       30000,
-      this.retryDelays[this.retryDelays.length - 1] *
-        Math.pow(2, retryCount - this.retryDelays.length)
+      lastDelay * Math.pow(2, retryCount - this.retryDelays.length)
     );
   }
 
@@ -392,7 +451,7 @@ export class BackgroundSyncService {
 
   private dispatchSyncEvent(type: string, detail: unknown): void {
     const event = new CustomEvent(`background-sync-${type}`, { detail });
-    window.dispatchEvent(event);
+    globalThis.dispatchEvent(event);
   }
 
   // Public methods for managing sync
@@ -472,8 +531,8 @@ export class BackgroundSyncService {
 
 // Background sync helper for pain tracker specific operations
 export class PainTrackerSync {
-  private backgroundSync: BackgroundSyncService;
-  private baseUrl: string;
+  private readonly backgroundSync: BackgroundSyncService;
+  private readonly baseUrl: string;
 
   constructor() {
     this.backgroundSync = BackgroundSyncService.getInstance();

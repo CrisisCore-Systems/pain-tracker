@@ -40,6 +40,8 @@ title: |
 
 > Overton, K. (2026). *The Overton Framework: Protective Computing in Conditions of Human Vulnerability* (Version 1.3). Zenodo. [https://doi.org/10.5281/zenodo.18688516](https://doi.org/10.5281/zenodo.18688516)
 
+> This document is part of the Protective Computing corpus. Canonical paper: [https://doi.org/10.5281/zenodo.18887610](https://doi.org/10.5281/zenodo.18887610)
+
 
 *Author note:* “Overton” is the author’s surname. The framework name
 denotes authorship and is not intended as a reference to the political

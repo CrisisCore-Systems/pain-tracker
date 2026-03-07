@@ -5,7 +5,7 @@
   },
   "defaults": {
     "start_here_url": "https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k",
-    "sponsor_url": "https://paintracker.ca/sponsor",
+    "sponsor_url": "https://github.com/sponsors/CrisisCore-Systems",
     "trust_bullets": [
       "Offline-first (works without a connection)",
       "No backend + client-side encryption + open source"

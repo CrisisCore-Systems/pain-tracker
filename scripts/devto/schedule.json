@@ -6,7 +6,7 @@
   "defaults": {
     "series": "CrisisCore Build Log",
     "organization_id": null,
-    "sponsor_url": "https://paintracker.ca/sponsor",
+    "sponsor_url": "https://github.com/sponsors/CrisisCore-Systems",
     "repo_url": "https://github.com/CrisisCore-Systems/pain-tracker",
     "series_start_url": null
   },
@@ -14,7 +14,7 @@
     {
       "key": "devto-series-start-here",
       "enabled": false,
-      "title": "Start here: local-first, offline-first Pain Tracker (no backend required)",
+      "title": "Start Here: PainTracker and the CrisisCore Build Log",
       "sourceFile": "docs/content/blog/devto-series-00-start-here.md",
       "publishAt": "2026-01-22T17:00:00Z",
       "tags": [
@@ -23,17 +23,17 @@
         "webdev",
         "testing"
       ],
-      "description": "A guided index for the Pain Tracker Dev.to series: local-first architecture, deterministic PWAs, accessibility, and truthful security boundaries.",
+      "description": "Start here for PainTracker and the CrisisCore Build Log: privacy-first, offline-first architecture patterns, plain-language security choices, and trust-oriented quality gates.",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
-      "articleId": null,
-      "devtoUrl": null,
-      "published": false
+      "articleId": 3104202,
+      "devtoUrl": "https://dev.to/crisiscoresystems/start-here-paintracker-crisiscore-build-log-privacy-first-offline-first-no-surveillance-3h0k",
+      "published": true
     },
     {
       "key": "devto-series-01-offline-first",
       "enabled": false,
       "title": "Offline-first without a backend: a local-first PWA architecture you can trust",
-      "sourceFile": "docs/content/blog/devto-series-01-offline-first-local-first-architecture.md",
+            "devtoUrl": "https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g",
       "publishAt": "2026-01-24T17:00:00Z",
       "tags": [
         "pwa",
@@ -262,6 +262,43 @@
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": 3267082,
       "devtoUrl": "https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7",
+      "published": true
+    },
+    {
+      "key": "devto-architecting-vulnerability",
+      "enabled": true,
+      "title": "Architecting for Vulnerability: Introducing Protective Computing Core v1.0",
+      "sourceFile": "docs/content/blog/devto-architecting-for-vulnerability.md",
+      "publishAt": "2026-02-24T17:00:00Z",
+      "tags": [
+        "architecture",
+        "privacy",
+        "offlinefirst",
+        "engineering"
+      ],
+      "description": "Why standard software architecture fails under human degradation, and how to build systems that don't.",
+      "injectCtas": false,
+      "canonical_url": "https://github.com/CrisisCore-Systems/overton-framework",
+      "articleId": 3313257,
+      "devtoUrl": "https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g",
+      "published": true
+    },
+    {
+      "key": "anchor-preview-mode-first-agent-plans-as-prs",
+      "enabled": true,
+      "title": "Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)",
+      "sourceFile": "docs/content/blog/anchor-preview-mode-first-agent-plans-as-prs-plan-diff-invariants.md",
+      "publishAt": "2026-03-05T17:00:00Z",
+      "tags": [
+        "ai",
+        "security",
+        "devops",
+        "privacy"
+      ],
+      "description": "Treat agent plans like pull requests: preview first, diff the plan, and block merges when invariants fail.",
+      "canonical_url": null,
+      "articleId": 3313224,
+      "devtoUrl": "https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd",
       "published": true
     }
   ]

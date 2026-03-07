@@ -14,13 +14,6 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-interface OfflineData {
-  entries: unknown[];
-  settings: Record<string, unknown>;
-  timestamp: string;
-  syncQueue?: unknown[];
-}
-
 interface SyncManager {
   register(tag: string): Promise<void>;
 }
@@ -709,40 +702,8 @@ export class PWAManager {
   }
 
   // Enhanced Data Management with Offline Support
-  async exportOfflineData(): Promise<OfflineData> {
-    try {
-      // Combine with localStorage data
-      const localData = {
-        entries: secureStorage.safeJSON('painEntries', []),
-        settings: secureStorage.safeJSON('pain-tracker-settings', {}),
-        timestamp: new Date().toISOString(),
-      };
-
-      return localData;
-    } catch (error) {
-      console.error('PWA: Failed to export offline data:', error);
-      throw error;
-    }
-  }
-
-  async importOfflineData(data: OfflineData): Promise<void> {
-    try {
-      // Import to localStorage
-      if (data.entries) secureStorage.set('painEntries', data.entries);
-      if (data.settings) secureStorage.set('pain-tracker-settings', data.settings);
-
-      // Intentionally ignore data.syncQueue.
-      // Backups should not include pending network operations.
-
-      if (isDev) {
-        console.log('PWA: Data imported successfully');
-      }
-      this.dispatchCustomEvent('pwa-data-imported');
-    } catch (error) {
-      console.error('PWA: Failed to import offline data:', error);
-      throw error;
-    }
-  }
+  // NOTE: Plaintext offline export/import was removed.
+  // Class A export/import must go through the Vault Export artifact.
 
   // Health Data Specific PWA Features
   async enableHealthDataSync(): Promise<boolean> {

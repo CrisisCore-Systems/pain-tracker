@@ -108,6 +108,28 @@ describe('background sync replay guard', () => {
     expect(call[1].headers).toEqual({ 'Content-Type': 'application/json' });
   });
 
+  it('drops same-origin but non-allowlisted queue items', async () => {
+    offlineStorageMocks.getSyncQueue.mockResolvedValueOnce([
+      {
+        id: 3,
+        url: '/api/not-a-real-endpoint',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{"x":1}',
+        priority: 'high',
+        type: 'api-request',
+        retryCount: 0,
+        timestamp: new Date().toISOString(),
+      },
+    ]);
+
+    const stats = await backgroundSync.syncAllPendingData();
+
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+    expect(offlineStorageMocks.removeSyncQueueItem).toHaveBeenCalledWith(3);
+    expect(stats.failureCount).toBe(1);
+  });
+
   it('refuses to enqueue disallowed URLs', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 

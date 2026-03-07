@@ -4,26 +4,20 @@ import { BookOpen, Link as LinkIcon, Shield } from 'lucide-react';
 import { combineSchemas, generateBreadcrumbSchema } from '../lib/seo';
 
 const OVERTON_FRAMEWORK_VERSION = '1.3';
-const OVERTON_FRAMEWORK_DOI = '10.5281/zenodo.18688516';
+const OVERTON_FRAMEWORK_DOI = '10.5281/zenodo.18887610';
 const OVERTON_FRAMEWORK_DOI_URL = `https://doi.org/${OVERTON_FRAMEWORK_DOI}`;
 
-const PAGE_META_DESCRIPTION =
-  'The Overton Framework is a scope-locked canon for Protective Computing: systems-engineering principles for software operating under conditions of human vulnerability.';
-
-const PAINTRACKER_REPO_URL = 'https://github.com/CrisisCore-Systems/pain-tracker';
-const OVERTON_FRAMEWORK_SOURCE_URL = `${PAINTRACKER_REPO_URL}/tree/main/overton-framework`;
-
 const CANONICAL_CITATION =
-  'Overton, K. (2026). *The Overton Framework: Protective Computing in Conditions of Human Vulnerability* (Version 1.3). Zenodo. https://doi.org/10.5281/zenodo.18688516';
+  'Overton, K. (2026). *Protective Computing Canon v1.0: A Structural Map of the Discipline.* Protective Computing Community. https://doi.org/10.5281/zenodo.18887610';
 
 const BIBTEX = `@misc{overton2026overtonframework,
   author    = {Overton, K.},
-  title     = {The Overton Framework: Protective Computing in Conditions of Human Vulnerability},
+  title     = {Protective Computing Canon v1.0: A Structural Map of the Discipline},
   year      = {2026},
-  version   = {1.3},
-  publisher = {Zenodo},
-  doi       = {10.5281/zenodo.18688516},
-  url       = {https://doi.org/10.5281/zenodo.18688516}
+  version   = {1.0},
+  publisher = {Protective Computing Community},
+  doi       = {10.5281/zenodo.18887610},
+  url       = {https://doi.org/10.5281/zenodo.18887610}
 }`;
 
 export const OvertonFrameworkPage: React.FC = () => {
@@ -39,33 +33,6 @@ export const OvertonFrameworkPage: React.FC = () => {
 
   useEffect(() => {
     document.title = 'The Overton Framework — Protective Computing (Canon)';
-
-    // Keep basic meta tags stable for this canonical page.
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', PAGE_META_DESCRIPTION);
-    }
-
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) {
-      ogTitle.setAttribute('content', 'The Overton Framework — Protective Computing (Canon)');
-    }
-
-    const ogDescription = document.querySelector('meta[property="og:description"]');
-    if (ogDescription) {
-      ogDescription.setAttribute('content', PAGE_META_DESCRIPTION);
-    }
-
-    const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-    if (twitterTitle) {
-      twitterTitle.setAttribute('content', 'The Overton Framework — Protective Computing (Canon)');
-    }
-
-    const twitterDescription = document.querySelector('meta[name="twitter:description"]');
-    if (twitterDescription) {
-      twitterDescription.setAttribute('content', PAGE_META_DESCRIPTION);
-    }
-
     return () => {
       document.title = 'Pain Tracker Pro';
     };
@@ -90,9 +57,6 @@ export const OvertonFrameworkPage: React.FC = () => {
             The Overton Framework
           </h1>
           <p className="text-lg text-slate-300">Protective Computing · Canon v{OVERTON_FRAMEWORK_VERSION}</p>
-          <p className="text-sm text-slate-400 mt-3">
-            Author note: “Overton” is the author’s surname (not related to the political term “Overton window”).
-          </p>
         </header>
 
         <section
@@ -106,102 +70,20 @@ export const OvertonFrameworkPage: React.FC = () => {
             The Overton Framework is a systems-engineering discipline for designing software under conditions of human
             vulnerability. PainTracker is its reference implementation.
           </p>
-          <div className="mt-4 flex flex-col sm:flex-row gap-3">
-            <a
-              href={OVERTON_FRAMEWORK_DOI_URL}
-              className="text-cyan-400 hover:text-cyan-300 underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read the Canon (DOI)
-            </a>
-            <a
-              href={OVERTON_FRAMEWORK_SOURCE_URL}
-              className="text-cyan-400 hover:text-cyan-300 underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Source materials (GitHub)
-            </a>
-          </div>
         </section>
 
-        <section className="mb-10" aria-labelledby="stability-assumption">
-          <h2 id="stability-assumption" className="text-2xl font-bold mb-4 flex items-center gap-2">
+        <section className="mb-10" aria-labelledby="concepts">
+          <h2 id="concepts" className="text-2xl font-bold mb-4 flex items-center gap-2">
             <Shield className="h-5 w-5 text-emerald-400" aria-hidden="true" />
-            The Stability Assumption
+            Core concepts
           </h2>
-          <p className="text-slate-300 leading-relaxed mb-4">
-            Modern software often assumes users are operating inside a “stability envelope”. The Canon defines this
-            assumption explicitly so systems can be engineered for what happens when stability degrades.
-          </p>
           <ul className="space-y-2 text-slate-300 ml-4">
-            <li>• Continuous connectivity</li>
-            <li>• Cognitive surplus (enough executive function for complex flows)</li>
-            <li>• Environmental safety (low coercion / surveillance risk)</li>
-            <li>• Institutional trust (platforms are neutral/benevolent)</li>
+            <li>• Stability Assumption</li>
+            <li>• Stability Bias</li>
+            <li>• Vulnerability State Machine</li>
+            <li>• Protective Design Principles</li>
+            <li>• Protective Legitimacy Score (PLS)</li>
           </ul>
-        </section>
-
-        <section className="mb-10" aria-labelledby="principles">
-          <h2 id="principles" className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <Shield className="h-5 w-5 text-emerald-400" aria-hidden="true" />
-            Protective Design Principles (summary)
-          </h2>
-          <p className="text-slate-300 leading-relaxed mb-4">
-            The Canon specifies five normative principles (RFC-style requirement language). This is a short summary;
-            the DOI is the authoritative reference.
-          </p>
-          <div className="space-y-4 text-slate-300">
-            <div>
-              <p className="font-semibold text-slate-200">Principle 1 — Radical Reversibility</p>
-              <p className="leading-relaxed">No irreversible loss from actions taken during vulnerability states.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200">Principle 2 — Minimum Necessary Exposure (Zero-Knowledge Default)</p>
-              <p className="leading-relaxed">Minimize remote exposure; treat remote infrastructure as compellable.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200">Principle 3 — Failure Containment (Local-First Authority)</p>
-              <p className="leading-relaxed">Preserve essential read (and ideally write) utility without the network.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200">Principle 4 — Cognitive Load Preservation</p>
-              <p className="leading-relaxed">Reduce cognitive demand in crisis and avoid non-essential interruptions.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200">Principle 5 — Asymmetric Power Defense</p>
-              <p className="leading-relaxed">Mitigate coercion/surveillance and preserve user sovereignty and portability.</p>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="mb-10 p-6 rounded-xl bg-slate-800/40 border border-slate-700/50"
-          aria-labelledby="reference-implementation"
-        >
-          <h2 id="reference-implementation" className="text-xl font-bold mb-3 text-slate-100">
-            PainTracker as reference implementation
-          </h2>
-          <p className="text-slate-300 leading-relaxed mb-4">
-            PainTracker is designed so the default user experience works without reading the Canon, while still being a
-            concrete implementation of Protective Computing constraints.
-          </p>
-          <ul className="space-y-2 text-slate-300 ml-4">
-            <li>• Local-first operation (offline-capable after first load)</li>
-            <li>• Strong privacy boundary by default (sensitive data stays on-device)</li>
-            <li>• Non-proprietary exports for clinical and WorkSafeBC workflows</li>
-          </ul>
-          <div className="mt-4">
-            <a
-              href={PAINTRACKER_REPO_URL}
-              className="text-cyan-400 hover:text-cyan-300 underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              PainTracker source code
-            </a>
-          </div>
         </section>
 
         <section className="mb-10" aria-labelledby="citation">

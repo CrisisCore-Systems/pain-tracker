@@ -156,49 +156,6 @@ export function usePainTrackerStorage() {
     }
   }, [isOffline, store]);
 
-  const exportOfflineData = useCallback(async () => {
-    try {
-      const { pwaManager } = await import('../utils/pwa-utils');
-      const data = await pwaManager.exportOfflineData();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `pain-tracker-backup-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      return true;
-    } catch (err) {
-      console.error('Failed to export data:', err);
-      store.setError('Failed to export data');
-      return false;
-    }
-  }, [store]);
-
-  const importOfflineData = useCallback(
-    async (file: File) => {
-      try {
-        const text = await file.text();
-        const data = JSON.parse(text);
-        const { pwaManager } = await import('../utils/pwa-utils');
-        // Basic shape validation for OfflineData
-        if (!data || typeof data !== 'object' || !('entries' in data) || !('settings' in data)) {
-          throw new Error('Invalid backup file format');
-        }
-        await pwaManager.importOfflineData(data);
-        store.loadSampleData();
-        return true;
-      } catch (err) {
-        console.error('Failed to import data:', err);
-        store.setError('Failed to import data. Please check the file format.');
-        return false;
-      }
-    },
-    [store]
-  );
-
   const clearOfflineData = useCallback(async () => {
     try {
       const { pwaManager } = await import('../utils/pwa-utils');
@@ -250,8 +207,6 @@ export function usePainTrackerStorage() {
   return {
     addEntryOffline,
     forceSyncAll,
-    exportOfflineData,
-    importOfflineData,
     clearOfflineData,
     storageStats,
     isOffline,

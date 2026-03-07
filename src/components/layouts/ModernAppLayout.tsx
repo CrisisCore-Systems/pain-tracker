@@ -48,6 +48,24 @@ export function ModernAppLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [panicModeActive, setPanicModeActive] = useState(false);
   const { mode, setMode } = useTheme();
+  const isDark = mode === 'dark';
+  const inactiveDesktopNavClass = isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900';
+  const activeBottomNavClass = isDark ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-900';
+  const inactiveBottomNavClass = isDark
+    ? 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
+  const inactiveMobileNavClass = isDark ? 'text-slate-300' : 'text-slate-700';
+  const inactiveMobileBottomNavClass = isDark
+    ? 'text-slate-300 hover:bg-white/5 hover:text-white'
+    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
+
+  const getBadgeTextColor = (badge: string) => {
+    if (badge === 'New') {
+      return isDark ? '#34d399' : '#065f46';
+    }
+
+    return isDark ? '#a855f7' : '#6b21a8';
+  };
 
   const navigation = [
     { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, badge: null, color: 'sky' },
@@ -138,9 +156,12 @@ export function ModernAppLayout({
                     border: '1px solid rgba(56, 189, 248, 0.2)',
                   }}
                 >
-                  <Activity className="h-4 w-4 text-sky-400" />
-                  <span className="text-sm font-semibold text-sky-300">
-                    {stats.avgPain.toFixed(1)} <span className="text-sky-400/70 font-normal">avg</span>
+                  <Activity className={cn('h-4 w-4', isDark ? 'text-sky-400' : 'text-sky-700')} />
+                  <span className={cn('text-sm font-semibold', isDark ? 'text-sky-300' : 'text-sky-700')}>
+                    {stats.avgPain.toFixed(1)}{' '}
+                    <span className={cn('font-normal', isDark ? 'text-sky-400/70' : 'text-sky-700/80')}>
+                      avg
+                    </span>
                   </span>
                 </div>
                 <div 
@@ -150,9 +171,12 @@ export function ModernAppLayout({
                     border: '1px solid rgba(168, 85, 247, 0.2)',
                   }}
                 >
-                  <Sparkles className="h-4 w-4 text-purple-400" />
-                  <span className="text-sm font-semibold text-purple-300">
-                    {stats.streak} <span className="text-purple-400/70 font-normal">day streak</span>
+                  <Sparkles className={cn('h-4 w-4', isDark ? 'text-purple-400' : 'text-purple-700')} />
+                  <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-700')}>
+                    {stats.streak}{' '}
+                    <span className={cn('font-normal', isDark ? 'text-purple-400/70' : 'text-purple-700/80')}>
+                      day streak
+                    </span>
                   </span>
                 </div>
               </div>
@@ -215,17 +239,18 @@ export function ModernAppLayout({
               const Icon = item.icon;
               const isActive = currentView === item.id;
               
-              const colorMap: Record<string, { bg: string; border: string; text: string; glow: string }> = {
-                sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', text: '#38bdf8', glow: 'rgba(56, 189, 248, 0.2)' },
-                emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', text: '#34d399', glow: 'rgba(52, 211, 153, 0.2)' },
-                violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', text: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.2)' },
-                rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', text: '#f43f5e', glow: 'rgba(244, 63, 94, 0.2)' },
-                amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', text: '#f59e0b', glow: 'rgba(245, 158, 11, 0.2)' },
-                cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', text: '#22d3ee', glow: 'rgba(34, 211, 238, 0.2)' },
-                indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', text: '#6366f1', glow: 'rgba(99, 102, 241, 0.2)' },
+              const colorMap: Record<string, { bg: string; border: string; textDark: string; textLight: string; glow: string }> = {
+                sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', textDark: '#38bdf8', textLight: '#0369a1', glow: 'rgba(56, 189, 248, 0.2)' },
+                emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', textDark: '#34d399', textLight: '#047857', glow: 'rgba(52, 211, 153, 0.2)' },
+                violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', textDark: '#8b5cf6', textLight: '#6d28d9', glow: 'rgba(139, 92, 246, 0.2)' },
+                rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', textDark: '#f43f5e', textLight: '#be123c', glow: 'rgba(244, 63, 94, 0.2)' },
+                amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', textDark: '#f59e0b', textLight: '#b45309', glow: 'rgba(245, 158, 11, 0.2)' },
+                cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', textDark: '#22d3ee', textLight: '#0e7490', glow: 'rgba(34, 211, 238, 0.2)' },
+                indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', textDark: '#6366f1', textLight: '#4338ca', glow: 'rgba(99, 102, 241, 0.2)' },
               };
               
               const colors = colorMap[item.color] || colorMap.sky;
+              const activeTextColor = isDark ? colors.textDark : colors.textLight;
 
               return (
                 <button
@@ -234,21 +259,21 @@ export function ModernAppLayout({
                   data-nav-target={item.id}
                   className={cn(
                     'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300',
-                    isActive ? '' : 'text-slate-400 hover:text-white'
+                    isActive ? '' : inactiveDesktopNavClass
                   )}
                   style={isActive ? {
                     background: colors.bg,
                     border: `1px solid ${colors.border}`,
                     boxShadow: `0 4px 20px ${colors.glow}`,
-                    color: colors.text,
+                    color: activeTextColor,
                   } : {
                     background: 'transparent',
                     border: '1px solid transparent',
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
-                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.background = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)';
+                      e.currentTarget.style.borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.12)';
                     }
                   }}
                   onMouseLeave={(e) => {
@@ -267,12 +292,12 @@ export function ModernAppLayout({
                       style={isActive ? {
                         background: colors.bg,
                       } : {
-                        background: 'rgba(255, 255, 255, 0.05)',
+                        background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)',
                       }}
                     >
                       <Icon
                         className="h-4 w-4"
-                        style={{ color: isActive ? colors.text : 'currentColor' }}
+                        style={{ color: isActive ? activeTextColor : 'currentColor' }}
                       />
                     </div>
                     <span className="truncate">{item.name}</span>
@@ -283,7 +308,7 @@ export function ModernAppLayout({
                         className="px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
                         style={{
                           background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
-                          color: item.badge === 'New' ? '#34d399' : '#a855f7',
+                          color: getBadgeTextColor(item.badge),
                           border: item.badge === 'New' ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(168, 85, 247, 0.3)',
                         }}
                       >
@@ -297,7 +322,10 @@ export function ModernAppLayout({
             })}
           </nav>
 
-          <div className="mt-8 pt-8" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+          <div
+            className="mt-8 pt-8"
+            style={{ borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(15, 23, 42, 0.08)' }}
+          >
             <nav className="space-y-1">
               {bottomNavigation.map(item => {
                 const Icon = item.icon;
@@ -309,9 +337,7 @@ export function ModernAppLayout({
                     onClick={() => onNavigate?.(item.id)}
                     className={cn(
                       'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
-                      isActive
-                        ? 'bg-white/10 text-white'
-                        : 'text-slate-500 hover:bg-white/5 hover:text-slate-300'
+                      isActive ? activeBottomNavClass : inactiveBottomNavClass
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -346,13 +372,16 @@ export function ModernAppLayout({
             }}
           >
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-4 w-4 text-purple-400" />
-              <span className="text-sm font-semibold text-purple-300">Upgrade to Pro</span>
+              <Sparkles className={cn('h-4 w-4', isDark ? 'text-purple-400' : 'text-purple-700')} />
+              <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-700')}>Upgrade to Pro</span>
             </div>
-            <p className="text-xs text-slate-400 mb-3">Unlock automated insights, advanced analytics & more</p>
+            <p className={cn('text-xs mb-3', isDark ? 'text-slate-400' : 'text-slate-600')}>Unlock automated insights, advanced analytics & more</p>
             <button 
-              className="w-full py-2 rounded-lg text-xs font-medium text-purple-300 transition-colors hover:bg-purple-500/20"
-              style={{ border: '1px solid rgba(168, 85, 247, 0.3)' }}
+              className={cn(
+                'w-full py-2 rounded-lg text-xs font-medium transition-colors',
+                isDark ? 'text-purple-300 hover:bg-purple-500/20' : 'text-purple-700 hover:bg-purple-100/70'
+              )}
+              style={{ border: isDark ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid rgba(126, 34, 206, 0.35)' }}
             >
               Learn More
             </button>
@@ -372,9 +401,10 @@ export function ModernAppLayout({
             id="mobile-navigation-menu"
             className="fixed inset-y-0 left-0 w-72 shadow-2xl"
             style={{
-              background: 'linear-gradient(180deg, #0f172a 0%, #020617 100%)',
+              background: isDark
+                ? 'linear-gradient(180deg, #0f172a 0%, #020617 100%)'
+                : 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
             }}
-            role="navigation"
             aria-label="Mobile navigation menu"
           >
             <div className="h-full px-4 py-6 pt-20 flex flex-col">
@@ -383,17 +413,18 @@ export function ModernAppLayout({
                   const Icon = item.icon;
                   const isActive = currentView === item.id;
                   
-                  const colorMap: Record<string, { bg: string; border: string; text: string }> = {
-                    sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', text: '#38bdf8' },
-                    emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', text: '#34d399' },
-                    violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', text: '#8b5cf6' },
-                    rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', text: '#f43f5e' },
-                    amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', text: '#f59e0b' },
-                    cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', text: '#22d3ee' },
-                    indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', text: '#6366f1' },
+                  const colorMap: Record<string, { bg: string; border: string; textDark: string; textLight: string }> = {
+                    sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', textDark: '#38bdf8', textLight: '#0369a1' },
+                    emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', textDark: '#34d399', textLight: '#047857' },
+                    violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', textDark: '#8b5cf6', textLight: '#6d28d9' },
+                    rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', textDark: '#f43f5e', textLight: '#be123c' },
+                    amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', textDark: '#f59e0b', textLight: '#b45309' },
+                    cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', textDark: '#22d3ee', textLight: '#0e7490' },
+                    indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', textDark: '#6366f1', textLight: '#4338ca' },
                   };
                   
                   const colors = colorMap[item.color] || colorMap.sky;
+                  const activeTextColor = isDark ? colors.textDark : colors.textLight;
 
                   return (
                     <button
@@ -405,12 +436,12 @@ export function ModernAppLayout({
                       data-nav-target={item.id}
                       className={cn(
                         'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all',
-                        isActive ? '' : 'text-slate-400'
+                        isActive ? '' : inactiveMobileNavClass
                       )}
                       style={isActive ? {
                         background: colors.bg,
                         border: `1px solid ${colors.border}`,
-                        color: colors.text,
+                        color: activeTextColor,
                       } : {}}
                     >
                       <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -422,7 +453,7 @@ export function ModernAppLayout({
                           className="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0"
                           style={{
                             background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
-                            color: item.badge === 'New' ? '#34d399' : '#a855f7',
+                            color: getBadgeTextColor(item.badge),
                           }}
                         >
                           {item.badge}
@@ -434,7 +465,10 @@ export function ModernAppLayout({
               </nav>
 
               {/* Bottom Navigation (Settings, Help, Blog) in Mobile Menu */}
-              <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div
+                className="mt-4 pt-4"
+                style={{ borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(15, 23, 42, 0.12)' }}
+              >
                 <nav className="space-y-1">
                   {bottomNavigation.map(item => {
                     const Icon = item.icon;
@@ -450,9 +484,7 @@ export function ModernAppLayout({
                         data-nav-target={item.id}
                         className={cn(
                           'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
-                          isActive
-                            ? 'bg-white/10 text-white'
-                            : 'text-slate-400 hover:bg-white/5 hover:text-slate-300'
+                          isActive ? activeBottomNavClass : inactiveMobileBottomNavClass
                         )}
                       >
                         <Icon className="h-5 w-5 flex-shrink-0" />

@@ -162,9 +162,6 @@ function App() {
                       {/* Overton Framework (canonical provenance) - Public */}
                       <Route path="/overton-framework" element={<OvertonFrameworkPage />} />
 
-                      {/* Alias (redirect) for canonical page */}
-                      <Route path="/protective-computing" element={<Navigate to="/overton-framework" replace />} />
-
                       {/* Screenshot Showcase - Public */}
                       <Route path="/demo/*" element={<ScreenshotShowcase />} />
 

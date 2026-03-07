@@ -4,6 +4,14 @@ Welcome. If you’ve stumbled onto this blog, you might be a developer intereste
 
 Pain Tracker Pro is a **security-first, offline-first, trauma-informed** application designed to help people track chronic pain without surrendering their privacy.
 
+## Research / Canon
+
+The formal structural paper for the discipline is now published:
+
+Overton, K. (2026). _Protective Computing Canon v1.0: A Structural Map of the Discipline._  
+Protective Computing Community.  
+DOI: https://doi.org/10.5281/zenodo.18887610
+
 Here is the best way to navigate our content based on who you are.
 
 ---

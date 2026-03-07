@@ -47,6 +47,10 @@ function ensureStringArrayTags(tags) {
   return '';
 }
 
+function shouldInjectCtasForPost(post) {
+  return post?.injectCtas !== false;
+}
+
 function buildCtas({ sponsorUrl, repoUrl, seriesStartUrl }) {
   const top = [
     '<!-- pain-tracker:cta-top -->',
@@ -808,7 +812,9 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
     const { md } = await readSourceMarkdown(post.sourceFile);
     const { top, bottom, pinnedComment } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
 
-    const body_markdown = injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom });
+    const body_markdown = shouldInjectCtasForPost(post)
+      ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
+      : md;
 
     const payload = {
       article: {
@@ -900,7 +906,9 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
         const { md } = await readSourceMarkdown(post.sourceFile);
         const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
 
-        const body_markdown = injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom });
+        const body_markdown = shouldInjectCtasForPost(post)
+          ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
+          : md;
 
         const createPayload = {
           article: {
@@ -943,7 +951,9 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
     const { md } = await readSourceMarkdown(post.sourceFile);
     const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
 
-    const body_markdown = injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom });
+    const body_markdown = shouldInjectCtasForPost(post)
+      ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
+      : md;
 
     const payload = {
       article: {
@@ -1310,7 +1320,9 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished }) {
     const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
 
     let body_markdown = current.body_markdown;
-    body_markdown = injectCtasIntoMarkdown(body_markdown, { ctaTop: top, ctaBottom: bottom });
+    body_markdown = shouldInjectCtasForPost(post)
+      ? injectCtasIntoMarkdown(body_markdown, { ctaTop: top, ctaBottom: bottom })
+      : body_markdown;
     body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
       seriesName,
       partLabel,
@@ -1448,7 +1460,9 @@ async function cmdPushSource(schedule, { yes, write, allowPublished }) {
     const { md } = await readSourceMarkdown(post.sourceFile);
     const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
 
-    let body_markdown = injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom });
+    let body_markdown = shouldInjectCtasForPost(post)
+      ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
+      : md;
 
     if (seriesName) {
       body_markdown = upsertSeriesInBodyMarkdown(body_markdown, seriesName);

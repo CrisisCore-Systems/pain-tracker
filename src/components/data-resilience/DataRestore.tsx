@@ -1,25 +1,27 @@
 import React, { useState, useRef } from 'react';
-import { encryptionService } from '../../services/EncryptionService';
 import type { PainEntry } from '../../types';
+import {
+  applyVaultPayloadToStore,
+  decryptVaultExportV1,
+  logVaultExportFailure,
+  VAULT_EXPORT_SCHEMA,
+  VAULT_EXPORT_VERSION,
+  type VaultExportV1,
+} from '../../lib/vault-export/vaultExportPolicy';
 
 interface DataRestoreProps {
   onDataRestore: (entries: PainEntry[]) => void;
 }
 
-interface BackupMetadata {
-  version: string;
-  timestamp: string;
-  entryCount: number;
-  encrypted: boolean;
-}
-
 export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
   const [password, setPassword] = useState('');
+  const [confirmToken, setConfirmToken] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [backupMetadata, setBackupMetadata] = useState<BackupMetadata | null>(null);
+  const [vaultMeta, setVaultMeta] = useState<Pick<VaultExportV1, 'createdAt' | 'manifest'> | null>(
+    null
+  );
   const [restoreStatus, setRestoreStatus] = useState<string>('');
   const [isRestoring, setIsRestoring] = useState(false);
-  const [previewData, setPreviewData] = useState<PainEntry[] | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,80 +30,53 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
 
     setSelectedFile(file);
     setRestoreStatus('');
-    setPreviewData(null);
+    setVaultMeta(null);
 
     try {
       const fileContent = await file.text();
-      const backupData = JSON.parse(fileContent);
-
-      if (backupData.metadata) {
-        setBackupMetadata(backupData.metadata);
-
-        // If not encrypted, show preview
-        if (!backupData.encrypted && backupData.data) {
-          setPreviewData(backupData.data.slice(0, 3)); // Show first 3 entries as preview
-        }
-      } else {
-        setRestoreStatus('Invalid backup file format');
+      const parsed = JSON.parse(fileContent) as unknown;
+      if (!parsed || typeof parsed !== 'object') {
+        setRestoreStatus('Invalid vault export file format');
+        return;
       }
+
+      const rec = parsed as Record<string, unknown>;
+      if (rec.schema !== VAULT_EXPORT_SCHEMA || rec.version !== VAULT_EXPORT_VERSION) {
+        setRestoreStatus('Unsupported vault export file (wrong schema/version)');
+        return;
+      }
+
+      const meta = rec as VaultExportV1;
+      setVaultMeta({ createdAt: meta.createdAt, manifest: meta.manifest });
     } catch {
-      setRestoreStatus('Error reading backup file');
+      setRestoreStatus('Error reading vault export file');
     }
   };
 
   const decryptAndRestore = async () => {
-    if (!selectedFile || !backupMetadata) return;
+    if (!selectedFile) return;
 
     setIsRestoring(true);
     setRestoreStatus('Restoring data...');
 
     try {
       const fileContent = await selectedFile.text();
-      const backupData = JSON.parse(fileContent);
+      const payload = await decryptVaultExportV1({
+        vaultExportJson: fileContent,
+        passphrase: password,
+        confirmToken: confirmToken.trim(),
+      });
 
-      let entries: PainEntry[] = [];
-
-      if (backupData.encrypted) {
-        try {
-          const restored = await encryptionService.restoreFromEncryptedBackup<{
-            data: PainEntry[];
-          }>(fileContent, password);
-          entries = restored.data || [];
-        } catch {
-          setRestoreStatus('Failed to decrypt backup - check your password');
-          setIsRestoring(false);
-          return;
-        }
-      } else {
-        entries = backupData.data || [];
-      }
-
-      // Validate data structure
-      if (!Array.isArray(entries)) {
-        setRestoreStatus('Invalid backup data format');
-        setIsRestoring(false);
-        return;
-      }
-
-      // Basic validation of pain entries
-      const validEntries = entries.filter(
-        entry =>
-          entry &&
-          typeof entry.id === 'number' &&
-          typeof entry.timestamp === 'string' &&
-          entry.baselineData &&
-          typeof entry.baselineData.pain === 'number'
+      const result = applyVaultPayloadToStore({ payload, mode: 'merge' });
+      onDataRestore(payload.entries);
+      setRestoreStatus(
+        `Successfully restored ${payload.entries.length} pain entries (${result.mergedCount} applied)`
       );
-
-      if (validEntries.length !== entries.length) {
-        setRestoreStatus(
-          `Warning: ${entries.length - validEntries.length} invalid entries were skipped`
-        );
-      }
-
-      onDataRestore(validEntries);
-      setRestoreStatus(`Successfully restored ${validEntries.length} pain entries`);
     } catch (error) {
+      logVaultExportFailure({
+        stage: 'import',
+        reason: error instanceof Error ? error.message : 'unknown',
+      });
       setRestoreStatus(
         `Error restoring data: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
@@ -112,10 +87,10 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
 
   const clearSelection = () => {
     setSelectedFile(null);
-    setBackupMetadata(null);
+    setVaultMeta(null);
     setPassword('');
+    setConfirmToken('');
     setRestoreStatus('');
-    setPreviewData(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -127,7 +102,7 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
         <span role="img" aria-label="restore">
           📥
         </span>
-        Restore from Backup
+        Vault Import (Encrypted)
       </h2>
 
       <div className="space-y-6">
@@ -167,63 +142,58 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
         </div>
 
         {/* Backup Information */}
-        {backupMetadata && (
+        {vaultMeta && (
           <div className="bg-blue-50 p-4 rounded">
-            <h3 className="font-medium mb-2">Backup Information</h3>
+            <h3 className="font-medium mb-2">Vault Export Information</h3>
             <div className="text-sm space-y-1">
-              <div>• Created: {new Date(backupMetadata.timestamp).toLocaleString()}</div>
-              <div>• Version: {backupMetadata.version}</div>
-              <div>• Entries: {backupMetadata.entryCount}</div>
-              <div>• Encryption: {backupMetadata.encrypted ? '🔒 Encrypted' : '🔓 Plain text'}</div>
+              <div>• Created: {new Date(vaultMeta.createdAt).toLocaleString()}</div>
+              <div>• Version: {VAULT_EXPORT_VERSION}</div>
+              <div>• Entries: {vaultMeta.manifest?.recordCounts?.entries ?? 'Unknown'}</div>
+              <div>• Encryption: 🔒 Encrypted</div>
             </div>
           </div>
         )}
 
-        {/* Password Input for Encrypted Backups */}
-        {backupMetadata?.encrypted && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Backup Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Enter backup password"
-              className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-              Enter the password used when creating this backup
-            </p>
-          </div>
-        )}
+        {/* Passphrase + Confirm */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Vault Export Passphrase
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="Enter vault export passphrase"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            minLength={12}
+          />
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            Enter the passphrase used when creating this vault export.
+          </p>
+        </div>
 
-        {/* Data Preview */}
-        {previewData && (
-          <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
-            <h3 className="font-medium mb-2">Data Preview</h3>
-            <div className="text-sm space-y-2">
-              {previewData.map((entry, index) => (
-                <div key={index} className="border-b border-gray-200 dark:border-gray-700 pb-1">
-                  <div>Date: {new Date(entry.timestamp).toLocaleDateString()}</div>
-                  <div>Pain Level: {entry.baselineData.pain}/10</div>
-                  <div>Locations: {entry.baselineData?.locations?.join(', ') || 'None'}</div>
-                </div>
-              ))}
-              {backupMetadata && backupMetadata.entryCount > 3 && (
-                <div className="text-gray-500 dark:text-gray-400">
-                  ... and {backupMetadata.entryCount - 3} more entries
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Type IMPORT to confirm
+          </label>
+          <input
+            type="text"
+            value={confirmToken}
+            onChange={e => setConfirmToken(e.target.value)}
+            placeholder="IMPORT"
+            className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            inputMode="text"
+            autoCapitalize="characters"
+            autoCorrect="off"
+            spellCheck={false}
+          />
+        </div>
 
         {/* Restore Button */}
         <div className="space-y-3">
           <button
             onClick={decryptAndRestore}
-            disabled={!selectedFile || isRestoring || (backupMetadata?.encrypted && !password)}
+            disabled={!selectedFile || isRestoring || !password || confirmToken.trim() !== 'IMPORT'}
             className="w-full px-4 py-3 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isRestoring ? (
