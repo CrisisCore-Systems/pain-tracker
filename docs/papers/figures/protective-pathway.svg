@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="180" viewBox="0 0 980 180" role="img" aria-label="Protective pathway diagram">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#166534" />
+    </marker>
+    <style>
+      .box { fill:#f0fdf4; stroke:#166534; stroke-width:2; rx:10; }
+      .text { font-family:Arial, Helvetica, sans-serif; font-size:18px; fill:#14532d; font-weight:600; }
+      .arrow { stroke:#166534; stroke-width:2.5; marker-end:url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="box" x="20" y="50" width="220" height="70" />
+  <text class="text" x="130" y="92" text-anchor="middle">Protective Computing</text>
+
+  <line class="arrow" x1="240" y1="85" x2="300" y2="85" />
+
+  <rect class="box" x="300" y="50" width="220" height="70" />
+  <text class="text" x="410" y="92" text-anchor="middle">Cognitive Interlocks</text>
+
+  <line class="arrow" x1="520" y1="85" x2="580" y2="85" />
+
+  <rect class="box" x="580" y="50" width="200" height="70" />
+  <text class="text" x="680" y="92" text-anchor="middle">Forced Verification</text>
+
+  <line class="arrow" x1="780" y1="85" x2="840" y2="85" />
+
+  <rect class="box" x="840" y="50" width="130" height="70" />
+  <text class="text" x="905" y="92" text-anchor="middle">Integrity</text>
+</svg>

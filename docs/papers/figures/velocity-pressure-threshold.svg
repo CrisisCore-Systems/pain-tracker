@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="280" viewBox="0 0 980 280" role="img" aria-label="Velocity pressure threshold flow">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1e293b" />
+    </marker>
+    <style>
+      .box { fill:#f8fafc; stroke:#1e293b; stroke-width:2; rx:10; }
+      .decision { fill:#fefce8; stroke:#854d0e; stroke-width:2; }
+      .text { font-family:Arial, Helvetica, sans-serif; font-size:17px; fill:#0f172a; font-weight:600; }
+      .arrow { stroke:#1e293b; stroke-width:2.5; marker-end:url(#arrow); }
+      .label { font-family:Arial, Helvetica, sans-serif; font-size:14px; fill:#334155; font-weight:600; }
+    </style>
+  </defs>
+
+  <rect class="box" x="40" y="40" width="220" height="60" />
+  <text class="text" x="150" y="76" text-anchor="middle">Generation Rate Rg</text>
+
+  <rect class="box" x="40" y="170" width="220" height="60" />
+  <text class="text" x="150" y="206" text-anchor="middle">Verification Capacity Cv</text>
+
+  <rect class="box" x="330" y="100" width="260" height="70" />
+  <text class="text" x="460" y="142" text-anchor="middle">Compute Velocity Pressure</text>
+
+  <line class="arrow" x1="260" y1="70" x2="330" y2="120" />
+  <line class="arrow" x1="260" y1="200" x2="330" y2="150" />
+
+  <polygon class="decision" points="680,135 760,80 840,135 760,190" />
+  <text class="text" x="760" y="140" text-anchor="middle">Threshold</text>
+
+  <line class="arrow" x1="590" y1="135" x2="680" y2="135" />
+
+  <rect class="box" x="830" y="35" width="130" height="55" />
+  <text class="text" x="895" y="67" text-anchor="middle">Slow Path</text>
+  <text class="label" x="790" y="72" text-anchor="middle">Warning</text>
+  <line class="arrow" x1="780" y1="100" x2="830" y2="65" />
+
+  <rect class="box" x="830" y="200" width="130" height="55" />
+  <text class="text" x="895" y="232" text-anchor="middle">Interlocks</text>
+  <text class="label" x="790" y="215" text-anchor="middle">Critical</text>
+  <line class="arrow" x1="780" y1="170" x2="830" y2="227" />
+</svg>

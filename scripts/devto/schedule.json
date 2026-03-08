@@ -33,7 +33,7 @@
       "key": "devto-series-01-offline-first",
       "enabled": false,
       "title": "Offline-first without a backend: a local-first PWA architecture you can trust",
-            "devtoUrl": "https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g",
+      "devtoUrl": null,
       "publishAt": "2026-01-24T17:00:00Z",
       "tags": [
         "pwa",
@@ -45,7 +45,6 @@
       "description": "A practical walkthrough: deterministic offline behavior, local-first storage layering, and honest trust boundaries (using the Pain Tracker repo as a real example).",
       "canonical_url": "https://github.com/CrisisCore-Systems/pain-tracker",
       "articleId": null,
-      "devtoUrl": null,
       "published": false
     },
     {
@@ -299,6 +298,24 @@
       "canonical_url": null,
       "articleId": 3313224,
       "devtoUrl": "https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd",
+      "published": true
+    },
+    {
+      "key": "micro-coercion-of-speed",
+      "enabled": true,
+      "title": "The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite",
+      "sourceFile": "docs/content/blog/devto-micro-coercion-of-speed.md",
+      "publishAt": "2026-03-01T00:00:00Z",
+      "tags": [
+        "ai",
+        "softwareengineering",
+        "architecture",
+        "devops"
+      ],
+      "description": "AI-assisted velocity can collapse verification. Protective friction restores engineering integrity.",
+      "canonical_url": null,
+      "articleId": 3325931,
+      "devtoUrl": "https://dev.to/crisiscoresystems/the-micro-coercion-of-speed-why-friction-is-an-engineering-prerequisite-g4j",
       "published": true
     }
   ]

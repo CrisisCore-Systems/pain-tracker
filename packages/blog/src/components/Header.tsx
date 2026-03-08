@@ -142,7 +142,7 @@ export function Header() {
           
           {/* Root-domain pillar links — cross-domain authority transfer */}
           <a
-            href="https://paintracker.ca/pain-log-for-doctors"
+            href="https://www.paintracker.ca/pain-log-for-doctors"
             className="px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative group text-muted-foreground hover:text-foreground hover:bg-muted"
           >
             <span className="relative z-10">For Doctors</span>
@@ -151,7 +151,7 @@ export function Header() {
           <div className="w-px h-8 bg-border/60 mx-4" aria-hidden="true" />
           
           <a
-            href="https://paintracker.ca/app"
+            href="https://www.paintracker.ca/app"
             className="btn-primary group/btn relative overflow-hidden"
           >
             {/* Shimmer effect */}
@@ -261,7 +261,7 @@ export function Header() {
             Features
           </Link>
           <a
-            href="https://paintracker.ca/pain-log-for-doctors"
+            href="https://www.paintracker.ca/pain-log-for-doctors"
             className="text-4xl font-bold transition-all duration-300 hover:scale-105 text-foreground hover:text-primary"
             onClick={() => setIsMenuOpen(false)}
           >
@@ -271,7 +271,7 @@ export function Header() {
           <div className="w-32 h-1 bg-gradient-to-r from-primary via-accent to-primary rounded-full my-6" aria-hidden="true" />
           
           <a
-            href="https://paintracker.ca/app"
+            href="https://www.paintracker.ca/app"
             className="btn-primary text-lg px-10 py-4 shadow-xl shadow-primary/20"
           >
             Try Pain Tracker

@@ -45,6 +45,21 @@ describe('SEO host consistency (www is canonical)', () => {
       mustContain: [WWW],
       mustNotContain: [APEX],
     },
+    {
+      filePath: 'packages/blog/src/components/Header.tsx',
+      mustContain: [WWW],
+      mustNotContain: [APEX],
+    },
+    {
+      filePath: 'packages/blog/src/components/Footer.tsx',
+      mustContain: [WWW],
+      mustNotContain: [APEX],
+    },
+    {
+      filePath: 'packages/blog/src/data/articles/linking-map.ts',
+      mustContain: [WWW],
+      mustNotContain: [APEX],
+    },
   ];
 
   for (const target of targets) {

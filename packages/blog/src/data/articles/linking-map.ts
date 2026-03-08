@@ -16,10 +16,10 @@ import type { InternalLinks } from './types';
 // ── Root-domain pillar URLs ──────────────────────────────────────────
 
 export const PILLAR_URLS = {
-  offline: 'https://paintracker.ca/offline-pain-diary',
-  privacy: 'https://paintracker.ca/private-pain-tracker',
-  clinical: 'https://paintracker.ca/pain-log-for-doctors',
-  chronic: 'https://paintracker.ca/track-chronic-pain-symptoms',
+  offline: 'https://www.paintracker.ca/offline-pain-diary',
+  privacy: 'https://www.paintracker.ca/private-pain-tracker',
+  clinical: 'https://www.paintracker.ca/pain-log-for-doctors',
+  chronic: 'https://www.paintracker.ca/track-chronic-pain-symptoms',
 } as const;
 
 export const PILLAR_LABELS = {
@@ -29,7 +29,7 @@ export const PILLAR_LABELS = {
   chronic: 'Track Chronic Pain Symptoms',
 } as const;
 
-export const APP_CTA_URL = 'https://paintracker.ca/app';
+export const APP_CTA_URL = 'https://www.paintracker.ca/app';
 
 // ── Per-article linking directives ───────────────────────────────────
 

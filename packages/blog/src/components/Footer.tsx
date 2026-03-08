@@ -113,7 +113,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://paintracker.ca/app"
+                  href="https://www.paintracker.ca/app"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
@@ -131,7 +131,7 @@ export function Footer() {
             <ul className="space-y-4" role="list">
               <li>
                 <a
-                  href="https://paintracker.ca/offline-pain-diary"
+                  href="https://www.paintracker.ca/offline-pain-diary"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
@@ -140,7 +140,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://paintracker.ca/private-pain-tracker"
+                  href="https://www.paintracker.ca/private-pain-tracker"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
@@ -149,7 +149,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://paintracker.ca/pain-log-for-doctors"
+                  href="https://www.paintracker.ca/pain-log-for-doctors"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
@@ -158,7 +158,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://paintracker.ca/track-chronic-pain-symptoms"
+                  href="https://www.paintracker.ca/track-chronic-pain-symptoms"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
@@ -176,7 +176,7 @@ export function Footer() {
             <ul className="space-y-4" role="list">
               <li>
                 <a
-                  href="https://paintracker.ca"
+                  href="https://www.paintracker.ca"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
                   <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />

@@ -2,7 +2,7 @@
 
 > Note: Forem API v1 does not expose endpoints to create/pin comments. This file is generated to make manual pinning fast.
 
-## Architecting for Vulnerability: Introducing Protective Computing Core v1.0
+## The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite
 
 ```md
 TL;DR
