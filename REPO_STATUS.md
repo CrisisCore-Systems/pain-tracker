@@ -51,7 +51,7 @@ pain-tracker/
 
 ## 📏 Code Statistics
 
-> **Count methodology:** File counts for `src/`, `packages/`, and `e2e/` are produced by `find <dir> \( -name "*.ts" -o -name "*.tsx" \) | wc -l` (recursive TypeScript scan). The `scripts/` count uses `find scripts/ -maxdepth 1 -type f | wc -l` (79 top-level files; 8 subdirectories with additional scripts also exist but are not included in the table count). LOC figures use the same `find … | xargs wc -l` pipeline. Excludes `node_modules/`, `dist/`, `docs/`, `public/`, and `accessibility-reports/`. Package versions are semver ranges as declared in `package.json`; resolved install versions may differ.
+> **Count methodology:** File counts for `src/`, `packages/`, and `e2e/` are produced by `find <dir> \( -name "*.ts" -o -name "*.tsx" \) | wc -l` (recursive TypeScript scan); their LOC figures use the same recursive `find … | xargs wc -l` pipeline. The `scripts/` file count uses `find scripts/ -maxdepth 1 -type f | wc -l` (79 top-level files; 8 subdirectories with additional scripts also exist but are not included in the table count); the `scripts/` LOC figure is calculated over those same 79 top-level files only. Excludes `node_modules/`, `dist/`, `docs/`, `public/`, and `accessibility-reports/`. Package versions are semver ranges as declared in `package.json`; resolved install versions may differ.
 
 | Scope                             | Files | Lines of Code |
 |-----------------------------------|-------|---------------|
@@ -355,8 +355,10 @@ npm run security-full # Full security audit
 | Fibromyalgia assessments    | ✅ |
 | Panic / safety mode         | ✅ |
 | Multi-language (i18n)       | ✅ |
-| Desktop (Electron wrapper)  | ✅ `desktop/electron/main.cjs` |
+| Desktop (Electron wrapper)  | ✅ |
 | Stripe subscription billing | ✅ |
+
+> Desktop wrapper entry point: `desktop/electron/main.cjs`
 
 ---
 
