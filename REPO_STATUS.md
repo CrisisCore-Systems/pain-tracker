@@ -39,6 +39,7 @@ pain-tracker/
 ├── e2e/                    # Playwright end-to-end tests (7,146 LOC)
 ├── test/                   # Integration test suite
 ├── database/               # PostgreSQL schema + Prisma ORM + migrations
+├── desktop/                # Electron desktop wrapper (desktop/electron/main.cjs)
 ├── docs/                   # Comprehensive documentation (360 markdown files)
 ├── deployment/             # nginx + logrotate deployment configs
 ├── scripts/                # Build, deploy, and automation scripts (18,687 LOC)
@@ -50,15 +51,15 @@ pain-tracker/
 
 ## 📏 Code Statistics
 
-> **Count methodology:** File counts for `src/`, `packages/`, and `e2e/` are produced by `find <dir> -name "*.ts" -o -name "*.tsx" | wc -l`. The `scripts/` count uses `find scripts/ -maxdepth 1 -type f | wc -l` (79 top-level files; 9 subdirectories with additional scripts also exist). LOC figures use the same `find … | xargs wc -l` pipeline. Excludes `node_modules/`, `dist/`, `docs/`, `public/`, and `accessibility-reports/`. Package versions are semver ranges as declared in `package.json`; resolved install versions may differ.
+> **Count methodology:** File counts for `src/`, `packages/`, and `e2e/` are produced by `find <dir> \( -name "*.ts" -o -name "*.tsx" \) | wc -l` (recursive TypeScript scan). The `scripts/` count uses `find scripts/ -maxdepth 1 -type f | wc -l` (79 top-level files; 8 subdirectories with additional scripts also exist but are not included in the table count). LOC figures use the same `find … | xargs wc -l` pipeline. Excludes `node_modules/`, `dist/`, `docs/`, `public/`, and `accessibility-reports/`. Package versions are semver ranges as declared in `package.json`; resolved install versions may differ.
 
 | Scope                             | Files | Lines of Code |
 |-----------------------------------|-------|---------------|
 | `src/` (application)              | 875   | 213,752       |
 | `packages/` (monorepo)            | 113   | 13,679        |
 | `e2e/` (Playwright tests)         | 28    | 7,146         |
-| `scripts/` (automation)           | 79    | 18,687        |
-| **Subtotal (app + pkgs + tests + automation)** | **1,095** | **~253,000** |
+| `scripts/` (top-level automation files) | 79    | 18,687        |
+| **Subtotal (app + pkgs + tests + top-level automation)** | **1,095** | **~253,000** |
 
 Other tracked surfaces not included in the subtotal above: `api/` + `api-lib/` (2,031 LOC), `test/` (40 LOC), `database/` (906 LOC), `.github/workflows/` (YAML), `docs/` (360 Markdown files).
 
