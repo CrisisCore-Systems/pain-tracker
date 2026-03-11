@@ -1,7 +1,7 @@
 # 📊 Pain Tracker — Repository Status & Stats
 
 > **Generated:** 2026-03-11
-> **Branch:** `copilot/assess-repo-stat-status` | **Commit:** `1f6641ada9e0c8760a148d58790a6f6cc80b2cbb`
+> **Branch:** `copilot/assess-repo-stat-status` | **Commit:** `84c0820`
 > **Version:** 1.2.0 | **License:** MIT
 
 ---
@@ -50,15 +50,15 @@ pain-tracker/
 
 ## 📏 Code Statistics
 
-> **Count methodology:** File counts and LOC are produced by `find … -name "*.ts" -o -name "*.tsx"` and `wc -l` over tracked source files. Generated files, `node_modules/`, `dist/`, `docs/`, `public/`, and `accessibility-reports/` are excluded. Versions below are semver ranges as declared in `package.json` (resolved installs may differ).
+> **Count methodology:** File counts for `src/`, `packages/`, and `e2e/` are produced by `find <dir> -name "*.ts" -o -name "*.tsx" | wc -l`. The `scripts/` count uses `find scripts/ -maxdepth 1 -type f | wc -l` (79 top-level files; 9 subdirectories with additional scripts also exist). LOC figures use the same `find … | xargs wc -l` pipeline. Excludes `node_modules/`, `dist/`, `docs/`, `public/`, and `accessibility-reports/`. Package versions are semver ranges as declared in `package.json`; resolved install versions may differ.
 
 | Scope                             | Files | Lines of Code |
 |-----------------------------------|-------|---------------|
 | `src/` (application)              | 875   | 213,752       |
 | `packages/` (monorepo)            | 113   | 13,679        |
 | `e2e/` (Playwright tests)         | 28    | 7,146         |
-| `scripts/` (automation)           | 45+   | 18,687        |
-| **Subtotal (app + pkgs + tests + automation)** | **~1,061** | **~253,000** |
+| `scripts/` (automation)           | 79    | 18,687        |
+| **Subtotal (app + pkgs + tests + automation)** | **1,095** | **~253,000** |
 
 Other tracked surfaces not included in the subtotal above: `api/` + `api-lib/` (2,031 LOC), `test/` (40 LOC), `database/` (906 LOC), `.github/workflows/` (YAML), `docs/` (360 Markdown files).
 
@@ -94,7 +94,7 @@ Other tracked surfaces not included in the subtotal above: `api/` + `api-lib/` (
 | `src/workers/`               | 1        |
 | `src/content/`               | 1        |
 | `src/context/`               | 1        |
-| Root (`src/*.ts`, `src/*.tsx`) | 5      |
+| `src/` root files            | 5        |
 | **Total**                    | **875**  |
 
 ---
@@ -224,7 +224,7 @@ npm run accessibility:scan  # WCAG audit
 |----------------------|---------------------------------------------------|
 | **At-rest encryption** | libsodium (IndexedDB payloads, Class A data)   |
 | **CSP**              | Vite plugin injects strict Content-Security-Policy|
-| **Rate limiting**    | express-rate-limit + Redis across API routes      |
+| **Rate limiting**    | Redis-backed rate limiting for API surfaces via `api-lib/rateLimiter.ts` (Redis with in-memory fallback); `express-rate-limit` is used only in the local dev proxy (`scripts/api-proxy.js`) and is not part of the deployed serverless surface |
 | **Authentication**   | bcrypt + TOTP (otplib) for clinic portals         |
 | **Secret scanning**  | `scripts/scan-secrets.js` + GitHub Actions        |
 | **SBOM**             | CycloneDX generated on each release               |
@@ -354,7 +354,7 @@ npm run security-full # Full security audit
 | Fibromyalgia assessments    | ✅ |
 | Panic / safety mode         | ✅ |
 | Multi-language (i18n)       | ✅ |
-| Desktop (Electron wrapper) | ✅ `desktop/electron/main.cjs` — serves PWA build locally |
+| Desktop (Electron wrapper)  | ✅ `desktop/electron/main.cjs` |
 | Stripe subscription billing | ✅ |
 
 ---
