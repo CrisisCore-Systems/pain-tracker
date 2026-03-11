@@ -95,7 +95,7 @@ Other tracked surfaces not included in the subtotal above: `api/` + `api-lib/` (
 | `src/workers/`               | 1        |
 | `src/content/`               | 1        |
 | `src/context/`               | 1        |
-| `src/` root files            | 5        |
+| root files under `src/`      | 5        |
 | **Total**                    | **875**  |
 
 ---
@@ -358,7 +358,7 @@ npm run security-full # Full security audit
 | Desktop (Electron wrapper)  | ✅ |
 | Stripe subscription billing | ✅ |
 
-> Desktop wrapper entry point: `desktop/electron/main.cjs`
+*Desktop wrapper entry point: `desktop/electron/main.cjs`*
 
 ---
 
