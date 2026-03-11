@@ -1,6 +1,7 @@
 # 📊 Pain Tracker — Repository Status & Stats
 
-> **Generated:** 2026-03-11 | **Branch:** `copilot/assess-repo-stat-status`
+> **Generated:** 2026-03-11
+> **Branch:** `copilot/assess-repo-stat-status` | **Commit:** `1f6641ada9e0c8760a148d58790a6f6cc80b2cbb`
 > **Version:** 1.2.0 | **License:** MIT
 
 ---
@@ -16,7 +17,7 @@
 | **License**         | MIT                                           |
 | **Node.js Target**  | 20.x (LTS)                                    |
 | **Primary Language**| TypeScript                                    |
-| **Architecture**    | Monorepo (4 packages) + Vercel serverless API |
+| **Architecture**    | Monorepo with 4 workspace packages + Vite/React PWA frontend + Vercel serverless API routes. Express is used in local dev server scripts and the Electron desktop wrapper; it is not part of the deployed serverless surface. |
 
 **Description:**  
 A privacy-first, offline-capable chronic pain tracking Progressive Web App (PWA) implementing the *Protective Computing Core v1.0* pattern library. Designed for chronic-pain patients and WorkSafeBC documentation workflows, with local-only encrypted storage and clinician-ready exports.
@@ -49,31 +50,52 @@ pain-tracker/
 
 ## 📏 Code Statistics
 
-| Scope                    | Files         | Lines of Code |
-|--------------------------|---------------|---------------|
-| `src/` (application)     | ~670           | 213,752       |
-| `packages/` (monorepo)   | 113           | 13,679        |
-| `e2e/` (Playwright tests)| 20+           | 7,146         |
-| `scripts/` (automation)  | 45+           | 18,687        |
-| **Total (excl. deps)**   | **~1,979**    | **~253,000**  |
+> **Count methodology:** File counts and LOC are produced by `find … -name "*.ts" -o -name "*.tsx"` and `wc -l` over tracked source files. Generated files, `node_modules/`, `dist/`, `docs/`, `public/`, and `accessibility-reports/` are excluded. Versions below are semver ranges as declared in `package.json` (resolved installs may differ).
 
-### `src/` Breakdown by Directory
+| Scope                             | Files | Lines of Code |
+|-----------------------------------|-------|---------------|
+| `src/` (application)              | 875   | 213,752       |
+| `packages/` (monorepo)            | 113   | 13,679        |
+| `e2e/` (Playwright tests)         | 28    | 7,146         |
+| `scripts/` (automation)           | 45+   | 18,687        |
+| **Subtotal (app + pkgs + tests + automation)** | **~1,061** | **~253,000** |
 
-| Directory              | TypeScript Files |
-|------------------------|-----------------|
-| `src/components/`      | 370             |
-| `src/services/`        | 90              |
-| `src/test/`            | 85              |
-| `src/utils/`           | 70              |
-| `src/design-system/`   | 53              |
-| `src/pages/`           | 54              |
-| `src/types/`           | 27              |
-| `src/hooks/`           | 27              |
-| `src/stores/`          | 10              |
-| `src/lib/`             | 34              |
-| `src/contexts/`        | 7               |
-| `src/api/`             | 7               |
-| `src/analytics/`       | 7               |
+Other tracked surfaces not included in the subtotal above: `api/` + `api-lib/` (2,031 LOC), `test/` (40 LOC), `database/` (906 LOC), `.github/workflows/` (YAML), `docs/` (360 Markdown files).
+
+### `src/` TypeScript File Breakdown (all directories)
+
+| Directory                    | TS Files |
+|------------------------------|----------|
+| `src/components/`            | 370      |
+| `src/services/`              | 90       |
+| `src/test/`                  | 85       |
+| `src/utils/`                 | 70       |
+| `src/pages/`                 | 54       |
+| `src/design-system/`         | 53       |
+| `src/lib/`                   | 34       |
+| `src/hooks/`                 | 27       |
+| `src/types/`                 | 27       |
+| `src/analytics/`             | 7        |
+| `src/api/`                   | 7        |
+| `src/contexts/`              | 7        |
+| `src/config/`                | 5        |
+| `src/data/`                  | 4        |
+| `src/features/`              | 4        |
+| `src/examples/`              | 3        |
+| `src/constants/`             | 2        |
+| `src/containers/`            | 2        |
+| `src/stores/`                | 10       |
+| `src/i18n/`                  | 1        |
+| `src/routes/`                | 1        |
+| `src/schemas/`               | 1        |
+| `src/store/`                 | 1        |
+| `src/tools/`                 | 1        |
+| `src/validation-technology/` | 1        |
+| `src/workers/`               | 1        |
+| `src/content/`               | 1        |
+| `src/context/`               | 1        |
+| Root (`src/*.ts`, `src/*.tsx`) | 5      |
+| **Total**                    | **875**  |
 
 ---
 
@@ -95,14 +117,20 @@ pain-tracker/
 
 ### Backend / API
 
-| Technology              | Version   | Role                              |
-|-------------------------|-----------|-----------------------------------|
-| Express                 | 5.1.0     | API server                        |
-| PostgreSQL (pg)         | 8.16.3    | Relational database               |
-| Prisma ORM              | (schema only, not a direct dep) | Database access layer |
-| Redis                   | 4.3.0     | Session / rate-limit cache        |
-| bcrypt                  | 6.0.0     | Password hashing                  |
-| express-rate-limit      | 8.1.0     | API rate limiting                 |
+The deployed API surface consists of **Vercel serverless functions** (`api/` directory). Express is **not** used in the deployed serverless handlers. It appears in:
+- `scripts/api-dev-server.js` and `scripts/api-proxy.js` — local development servers that mirror Vercel function behaviour
+- `scripts/webhook-dev-server.js` — local webhook testing harness
+- `desktop/electron/main.cjs` — Electron desktop wrapper that uses Express to serve the compiled PWA build locally
+
+| Technology              | Version   | Role                                                   |
+|-------------------------|-----------|--------------------------------------------------------|
+| Vercel Serverless       | —         | Production API runtime (deployed functions)            |
+| Express                 | 5.1.0     | Local dev server scripts + Electron PWA server wrapper |
+| PostgreSQL (pg)         | 8.16.3    | Relational database (clinic/server-side features)      |
+| Prisma ORM              | (schema only, not a direct dep) | Database access layer          |
+| Redis                   | 4.3.0     | Session / rate-limit cache                             |
+| bcrypt                  | 6.0.0     | Password hashing                                       |
+| express-rate-limit      | 8.1.0     | API rate limiting (dev server + Electron paths)        |
 
 ### Security / Encryption
 
@@ -114,13 +142,19 @@ pain-tracker/
 
 ### Testing
 
-| Technology              | Version   | Role                              |
-|-------------------------|-----------|-----------------------------------|
-| Vitest                  | 3.2.4     | Unit & integration testing        |
-| Playwright              | ^1.55.1   | End-to-end testing                |
-| jest-axe                | —         | Accessibility unit testing        |
-| @axe-core/playwright    | —         | Accessibility E2E testing         |
-| Stryker                 | 9.5.1     | Mutation testing                  |
+| Technology              | Version    | Role                              |
+|-------------------------|------------|-----------------------------------|
+| Vitest                  | 3.2.4      | Unit & integration testing        |
+| Playwright              | ^1.55.1    | End-to-end testing                |
+| jest-axe                | ^10.0.0    | Accessibility unit testing        |
+| @axe-core/playwright    | ^4.10.2    | Accessibility E2E testing         |
+| Stryker                 | 9.5.1      | Mutation testing                  |
+
+### Desktop
+
+| Technology  | Version | Role                                                                 |
+|-------------|---------|----------------------------------------------------------------------|
+| Electron    | —       | Desktop wrapper (`desktop/electron/main.cjs`). Serves the compiled PWA build via a local Express static server, providing an offline-capable desktop experience. |
 
 ### DevOps / Tooling
 
@@ -138,12 +172,12 @@ pain-tracker/
 
 ## 🧪 Test Coverage
 
-| Category             | Count | Notes                                        |
-|----------------------|-------|----------------------------------------------|
-| Unit test files      | 205   | `.test.ts` / `.test.tsx` under `src/`        |
-| E2E test files       | 20+   | Playwright (multi-browser, cross-platform)   |
-| Integration tests    | 1     | `test/services/EmpathyIntelligenceEngine.test.ts` |
-| Accessibility audits | 30+   | Stored HTML/JSON reports under `accessibility-reports/` |
+| Category             | Count | Notes                                                                                  |
+|----------------------|-------|----------------------------------------------------------------------------------------|
+| Unit test files      | 205   | `.test.ts` / `.test.tsx` files colocated throughout `src/` (components, services, utils, etc.) and within `src/test/` (85 files). Many are colocated next to the source they test. |
+| E2E test files       | 28    | Playwright tests under `e2e/tests/` (multi-browser, cross-platform)                    |
+| Integration tests    | 1     | `test/services/EmpathyIntelligenceEngine.test.ts` (40 LOC, separate `test/` directory) |
+| Accessibility audits | 30+   | Generated HTML + JSON report artifacts stored under `accessibility-reports/` — not counted in source LOC |
 
 ### Test Commands
 
@@ -195,9 +229,9 @@ npm run accessibility:scan  # WCAG audit
 | **Secret scanning**  | `scripts/scan-secrets.js` + GitHub Actions        |
 | **SBOM**             | CycloneDX generated on each release               |
 | **Audit logging**    | Compliance audit events (action/resource/outcome) |
-| **Privacy gates**    | `npm run test:privacy-gates` verifies no telemetry leaks |
+| **Privacy gates**    | `npm run test:privacy-gates` asserts analytics/telemetry boundaries are not crossed in tested code paths |
 
-**Threat model scope:** lost/stolen device, XSS within origin, malicious browser extensions, shoulder-surfing, coercive dynamics. Does *not* claim protection against OS-level compromise.
+**Threat model scope:** The app is designed to reduce exposure from lost/stolen devices (at-rest encryption), origin-level script injection risks (CSP), coercive dynamics (panic mode, user control), and shoulder-surfing. It considers common browser-side threats but does not claim to fully defend against a privileged browser extension with unrestricted page access — that risk class is outside the scope of a web app's security boundary. The threat model explicitly does *not* claim protection against OS-level compromise, malware with kernel access, or physical device seizure beyond in-app safety controls.
 
 ---
 
@@ -289,8 +323,8 @@ npm run security-full # Full security audit
 | ESLint (TypeScript + React)    | ✅ Configured                  |
 | Prettier formatting            | ✅ Enforced via git hooks       |
 | Conventional commits           | ✅ commitlint enforced          |
-| Unit test suite                | ✅ 205 test files               |
-| E2E test suite                 | ✅ Playwright multi-browser     |
+| Unit test suite                | ✅ 205 test files (colocated + src/test/) |
+| E2E test suite                 | ✅ Playwright multi-browser (28 files)    |
 | Accessibility automation       | ✅ axe-core + WCAG checks       |
 | Mutation testing               | ✅ Stryker configured           |
 | Secret scanning                | ✅ CI workflow + local script   |
@@ -320,7 +354,7 @@ npm run security-full # Full security audit
 | Fibromyalgia assessments    | ✅ |
 | Panic / safety mode         | ✅ |
 | Multi-language (i18n)       | ✅ |
-| Desktop (Electron wrapper)  | ✅ |
+| Desktop (Electron wrapper) | ✅ `desktop/electron/main.cjs` — serves PWA build locally |
 | Stripe subscription billing | ✅ |
 
 ---
