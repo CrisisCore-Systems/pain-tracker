@@ -1,7 +1,7 @@
 ---
 title: "Generate WorkSafeBC-Ready Documentation with Pain Tracker"
-seoTitle: "Auto-Generate WorkSafeBC Forms 6 & 7 | Free BC Pain Tracker"
-seoDescription: "Stop manual WorkSafeBC form filling. Get perfect Form 6 & 7 PDFs automatically from your pain entries. 100% private, completely free forever for BC workers."
+seoTitle: "Generate WorkSafeBC-Ready Documentation with Pain Tracker"
+seoDescription: "Generate WorkSafeBC-ready documentation faster with structured pain logs, export-ready records, and privacy-first local data handling."
 datePublished: Fri Nov 14 2025 02:00:35 GMT+0000 (Coordinated Universal Time)
 cuid: cmhy7nymw000202ic4ecv4d7k
 slug: stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free
