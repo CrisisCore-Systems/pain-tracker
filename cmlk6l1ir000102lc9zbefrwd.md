@@ -1,7 +1,7 @@
 ---
 title: "Pain Tracker: Privacy-First, Trauma-Informed Pain App"
-seoTitle: "PainTracker.ca: A Privacy-First, Trauma-Informed Pain App"
-seoDescription: "Most pain apps feel like surveillance. PainTracker.ca is an offline-first, open-source, trauma-informed pain diary that keeps data encrypted on your device."
+seoTitle: "Pain Tracker: Privacy-First, Trauma-Informed Pain App"
+seoDescription: "Track flares, spot patterns, prepare for appointments, and keep records private. Pain Tracker works offline with no account required."
 datePublished: Fri Feb 13 2026 01:00:22 GMT+0000 (Coordinated Universal Time)
 cuid: cmlk6l1ir000102lc9zbefrwd
 slug: paintracker-privacy-first-trauma-informed-pain-app
