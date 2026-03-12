@@ -14,6 +14,55 @@ This document converts the external “Pain Tracker Pro” requirements list int
 - **WCAG 2.2 AA target**
 - **Security‑critical boundaries require human review**: exports/report formats, crypto/key handling, network calls/telemetry, crisis escalation logic.
 
+## Technical Roadmap Alignment (Phases 2-4)
+
+This implementation track is the active next-step sequence for Pain Tracker.
+
+### Phase 2 (Intelligence)
+
+**Objective**
+- Finalize advanced body heatmaps, machine learning pattern recognition, and predictive pain analytics.
+
+**Execution items**
+- Complete advanced heatmap UX: body-region drilldown, temporal overlays, and cross-filtering by trigger/treatment.
+- Deliver local-only pattern recognition pipeline with transparent feature inputs and confidence scoring.
+- Add predictive episode indicators with explicit uncertainty labeling and minimum-sample safeguards.
+
+**Acceptance criteria**
+- Heatmaps render accurately for all tracked body regions and time windows.
+- Pattern outputs vary based on user data and show "insufficient data" when appropriate.
+- Predictive views include confidence/uncertainty and do not present diagnostic language.
+
+### Phase 3 (Integration)
+
+**Objective**
+- Enable bi-directional sync and EMR/EHR interoperability using FHIR.
+
+**Execution items**
+- Define consent-gated sync flows (patient initiated, revocable, and auditable).
+- Implement bi-directional FHIR mapping updates for clinical resources in scope.
+- Add interoperability validation: schema conformance, mapping tests, and failure-path UX.
+
+**Acceptance criteria**
+- Sync can export and ingest supported FHIR resources with validation pass/fail visibility.
+- Every sync path has explicit consent checkpoints and coarse audit events.
+- Local-first mode remains fully functional when sync is disabled.
+
+### Phase 4 (Ecosystem)
+
+**Objective**
+- Expand platform reach and support privacy-preserving research workflows.
+
+**Execution items**
+- Deliver native-platform roadmap and parity matrix (mobile and desktop core features).
+- Build anonymization pipeline for opt-in research datasets.
+- Add governance checklist: de-identification quality controls and release approval gates.
+
+**Acceptance criteria**
+- Core flows (tracking, crisis safety, export, accessibility) are functionally equivalent across target platforms.
+- Research datasets are de-identified by default with documented transformation steps.
+- Research export remains opt-in and cannot run silently in background.
+
 ## Status Legend
 
 - **Implemented**: exists in product code and is plausibly usable today

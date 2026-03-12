@@ -56,6 +56,55 @@ Phase 4: ML Pattern Recognition (In Planning)
 
 ---
 
+## Technical Roadmap (Phases 2-4)
+
+This section defines the active implementation sequence for the next major workstream.
+Historical phase labels below are retained for audit history, but execution should follow this order.
+
+### Phase 2: Intelligence
+
+**Goal:** Turn existing analytics into actionable, local-only intelligence.
+
+**Priority deliverables**
+- Finalize advanced body heatmaps (region intensity, timeline overlays, trend comparison views).
+- Implement machine learning-assisted pain pattern recognition with strict on-device inference only.
+- Add predictive analytics for near-term pain episodes with explicit confidence and "insufficient data" states.
+
+**Guardrails**
+- No Class A data egress.
+- Any ML model must run locally (browser/device), with no remote inference.
+- Predictions must be framed as informational support, not diagnosis.
+
+### Phase 3: Integration
+
+**Goal:** Bridge local data sovereignty with clinical utility.
+
+**Priority deliverables**
+- Implement bi-directional data sync architecture for clinical workflows (patient-controlled and consent-gated).
+- Expand EMR/EHR integration using HL7 FHIR standards (R4 baseline, extensible mapping profiles).
+- Harden interoperability validation (resource conformance checks, mapping traceability, error visibility).
+
+**Guardrails**
+- All new network surfaces require human review before implementation.
+- Consent, auditability, and data minimization are mandatory for every sync pathway.
+- Keep local-first behavior as the default operating mode.
+
+### Phase 4: Ecosystem
+
+**Goal:** Scale delivery channels while preserving privacy-first principles.
+
+**Priority deliverables**
+- Expand to multi-platform native applications (mobile/desktop) with parity for core safety and accessibility flows.
+- Build research-grade anonymization pipelines for optional larger-scale clinical studies.
+- Establish governance for de-identification quality, re-identification risk checks, and dataset release controls.
+
+**Guardrails**
+- Research export must be opt-in and de-identified by default.
+- Platform expansion cannot regress panic mode, accessibility, or offline reliability.
+- Any research data workflow touching Class A transformations requires human review.
+
+---
+
 ## Phase 1A: Audit MVP Spine ✅ COMPLETE
 
 **Goal:** Verify that claimed features actually work.
