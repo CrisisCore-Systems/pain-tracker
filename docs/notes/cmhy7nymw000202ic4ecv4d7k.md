@@ -1,7 +1,7 @@
 ---
-title: "Stop Filling WorkSafeBC Forms Manually - This Auto-Generates Them For Free"
-seoTitle: "Auto-Generate WorkSafeBC Forms 6 & 7 | Free BC Pain Tracker"
-seoDescription: "Stop manual WorkSafeBC form filling. Get perfect Form 6 & 7 PDFs automatically from your pain entries. 100% private, completely free forever for BC workers."
+title: "Generate WorkSafeBC-Ready Documentation with Pain Tracker"
+seoTitle: "Generate WorkSafeBC-Ready Documentation with Pain Tracker"
+seoDescription: "Generate WorkSafeBC-ready documentation faster with structured pain logs, export-ready records, and privacy-first local data handling."
 datePublished: Fri Nov 14 2025 02:00:35 GMT+0000 (Coordinated Universal Time)
 cuid: cmhy7nymw000202ic4ecv4d7k
 slug: stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free
@@ -14,11 +14,11 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1763006218887/07a02
 <a href="https://www.producthunt.com/products/pain-tracker?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker" target="_blank" rel="noopener noreferrer"><img alt="Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=dark" /></a>
 <!-- pain-tracker:product-hunt-badge:end -->
 
-> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+> **View WorkSafeBC Guide ->** [WorkSafeBC Documentation Workflows](https://blog.paintracker.ca/worksafebc)
 
-# I Automated WorkSafeBC Forms 6 & 7 So You Don't Have To
+# Generate WorkSafeBC-Ready Documentation with Pain Tracker
 
-*Stop Wasting Hours on Paperwork - Get Perfect Forms in 2 Clicks, 100% Free*
+This guide explains how to produce WorkSafeBC-ready documentation from structured pain records while keeping health data local on your device.
 
 ## The Paperwork Problem Every Claimant Faces
 
@@ -37,25 +37,25 @@ I watched this destroy my father's recovery after a workplace injury. So I built
 
 ## How Pain Tracker Solves This Permanently
 
-### 🚀 One-Click Form Generation
+### One-Click Documentation Export
 
 **Before:** 45+ minutes of manual form filling  
-**After:** 2 clicks → perfect PDFs ready to submit
+**After:** 2 clicks -> structured export package ready to review
 
-### 🔒 Privacy by Design
+### Privacy by Design
 
-* Your data **never leaves your device**
+* Your data is stored locally by default
     
-* **Zero cloud storage** (unlike every competitor)
+* No cloud storage is required for core tracking
     
-* **AES-256 encryption** at rest
+* Encrypted storage (implementation details vary by platform/build)
     
-* **You own your data** - we can't access it even if we wanted to
+* You control your data; the default architecture avoids server-side storage of entries
     
 
-### 💸 Truly Free Forever
+### Pricing and Availability
 
-No "freemium" traps. No feature walls. This is our commitment to BC workers.
+Pain Tracker is open source. If you self-host, your primary cost is your own hosting. If you use a hosted build, pricing and terms depend on the deployment.
 
 ## Why This Changes Everything for BC Claimants
 
@@ -79,9 +79,9 @@ No "freemium" traps. No feature walls. This is our commitment to BC workers.
 * **Trauma-informed design** = reduces stress during difficult times
     
 
-## Try It Risk-Free
+## Next Step
 
-The app is completely free and requires no sign-up: [**https://crisiscore-systems.github.io/pain-tracker/**](https://crisiscore-systems.github.io/pain-tracker/)
+Read the WorkSafeBC guide here: [**https://blog.paintracker.ca/worksafebc**](https://blog.paintracker.ca/worksafebc)
 
 ## Your Move, BC
 

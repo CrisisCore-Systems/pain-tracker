@@ -8,6 +8,7 @@ import {
   VAULT_EXPORT_VERSION,
   type VaultExportV1,
 } from '../../lib/vault-export/vaultExportPolicy';
+import { usePainTrackerStore } from '../../stores/pain-tracker-store';
 
 interface DataRestoreProps {
   onDataRestore: (entries: PainEntry[]) => void;
@@ -68,7 +69,8 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
       });
 
       const result = applyVaultPayloadToStore({ payload, mode: 'merge' });
-      onDataRestore(payload.entries);
+      // Use store entries after merge so callback receives normalized IDs.
+      onDataRestore(usePainTrackerStore.getState().entries);
       setRestoreStatus(
         `Successfully restored ${payload.entries.length} pain entries (${result.mergedCount} applied)`
       );

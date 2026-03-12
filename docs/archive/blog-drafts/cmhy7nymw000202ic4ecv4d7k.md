@@ -1,7 +1,7 @@
 ---
-title: "Stop Filling WorkSafeBC Forms Manually — Auto-Generate Them From Your Entries"
-seoTitle: "Auto-Generate WorkSafeBC Forms 6 & 7 | BC Pain Tracker"
-seoDescription: "Reduce manual WorkSafeBC form filling. Generate Form 6 & 7 PDFs from your pain entries. Local-first by default; review your deployment and settings."
+title: "Generate WorkSafeBC-Ready Documentation with Pain Tracker"
+seoTitle: "Generate WorkSafeBC-Ready Documentation with Pain Tracker"
+seoDescription: "Generate WorkSafeBC-ready documentation faster with structured pain logs, export-ready records, and privacy-first local data handling."
 datePublished: Fri Nov 14 2025 02:00:35 GMT+0000 (Coordinated Universal Time)
 cuid: cmhy7nymw000202ic4ecv4d7k
 slug: stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free
@@ -11,9 +11,9 @@ tags: privacy, workers-compensation, chronic-pain, pain-management, british-colu
 
 ---
 
-# I Automated WorkSafeBC Forms 6 & 7 So You Don't Have To
+# Generate WorkSafeBC-Ready Documentation with Pain Tracker
 
-*Stop wasting hours on paperwork — generate forms from your entries in a couple of clicks.*
+This guide explains how to produce WorkSafeBC-ready documentation from structured pain records while keeping health data local on your device.
 
 ## The Paperwork Problem Every Claimant Faces
 
@@ -32,12 +32,12 @@ I watched this destroy my father's recovery after a workplace injury. So I built
 
 ## How Pain Tracker Solves This Permanently
 
-### 🚀 One-Click Form Generation
+### One-Click Documentation Export
 
 **Before:** 45+ minutes of manual form filling  
-**After:** 2 clicks → PDFs ready to review and submit
+**After:** 2 clicks -> structured export package ready to review
 
-### 🔒 Privacy by Design
+### Privacy by Design
 
 * Your data is stored locally by default
     
@@ -48,7 +48,7 @@ I watched this destroy my father's recovery after a workplace injury. So I built
 * You control your data; the default architecture avoids server-side storage of entries
     
 
-### 💸 Pricing and Availability
+### Pricing and Availability
 
 Pain Tracker is open source. If you self-host, your primary cost is your own hosting. If you use a hosted build, pricing and terms depend on the deployment.
 
@@ -74,9 +74,9 @@ Pain Tracker is open source. If you self-host, your primary cost is your own hos
 * **Trauma-informed design** = reduces stress during difficult times
     
 
-## Try It
+## Next Step
 
-Try the web app here: [**https://crisiscore-systems.github.io/pain-tracker/**](https://crisiscore-systems.github.io/pain-tracker/)
+Read the WorkSafeBC guide here: [**https://blog.paintracker.ca/worksafebc**](https://blog.paintracker.ca/worksafebc)
 
 ## Your Move, BC
 

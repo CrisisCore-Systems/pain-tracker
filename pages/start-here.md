@@ -1,60 +1,27 @@
-# Start Here: A Guide to Pain Tracker
+# Start Here
 
-Welcome. If you’ve stumbled onto this blog, you might be a developer interested in offline-first architecture, a chronic pain survivor looking for a tool that doesn’t judge you, or a worker in British Columbia navigating the WorkSafeBC claims process.
+Choose the path that matches your goal: track pain privately, explore the technical architecture, or follow WorkSafeBC documentation workflows.
 
-Pain Tracker Pro is a **security-first, offline-first, trauma-informed** application designed to help people track chronic pain without surrendering their privacy.
+## For Patients
 
-## Research / Canon
+Start here if your goal is day-to-day symptom tracking, appointment prep, and private records.
 
-The formal structural paper for the discipline is now published:
+- [Pain Tracker: Privacy-First, Trauma-Informed Pain App](https://blog.paintracker.ca/paintracker-privacy-first-trauma-informed-pain-app)
+- [Getting Started with PainTracker: Your First Week of Symptom Tracking](https://blog.paintracker.ca/getting-started)
+- [Open the App](https://paintracker.ca/app)
 
-Overton, K. (2026). _Protective Computing Canon v1.0: A Structural Map of the Discipline._  
-Protective Computing Community.  
-DOI: https://doi.org/10.5281/zenodo.18887610
+## For Builders
 
-Here is the best way to navigate our content based on who you are.
+Start here if you want local-first architecture, reliability patterns, and implementation details.
 
----
+- [Why We Built a Local-First Pain App with No Backend](https://blog.paintracker.ca/the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device)
+- [Offline-First PWAs: Why They Matter for Crisis-Responsive Health Tech](https://blog.paintracker.ca/offline-first-pwas-why-they-matter-for-crisis-responsive-health-tech)
+- [View the Source Code](https://github.com/CrisisCore-Systems/pain-tracker)
 
-## 👩‍💻 For Developers & Engineers
+## WorkSafeBC
 
-We are building a high-performance PWA that challenges the "cloud-default" mindset of modern web development.
+Start here if your goal is WorkSafeBC-ready documentation using structured pain records.
 
-*   **The Architecture:** Read [The Day I Decided My Pain App Didn't Need a Server](https://blog.paintracker.ca/the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device) to understand why we chose a local-first architecture.
-*   **The Tech:** Dive into [Offline-First PWAs: Why They Matter](https://blog.paintracker.ca/offline-first-pwas-why-they-matter-for-crisis-responsive-health-tech) for a deep dive into Service Workers, IndexedDB, and background sync.
-*   **The Ethics:** Check out [Trauma-Informed Design](https://blog.paintracker.ca/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design) to see how we code empathy into the UI.
-
-👉 **[View the Source Code on GitHub](https://github.com/CrisisCore-Systems/pain-tracker)**
-
----
-
-## 👷 For BC Workers & Claimants
-
-If you are dealing with a workplace injury in British Columbia, this tool was built specifically to help you.
-
-*   **The Case Study:** Read [How Pain Tracker Pro Streamlines WorkSafeBC Claims](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study) to see how much time you can save.
-*   **The Solution:** Read [Stop Filling WorkSafeBC Forms Manually](https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free) to learn about our export features.
-
-👉 **[Try the App (It's Free)](https://paintracker.ca)**
-
----
-
-## ❤️ For Everyone Else
-
-This project was born out of personal necessity during a period of homelessness and severe chronic pain.
-
-*   **The Origin Story:** [Coding Through Collapse](https://blog.paintracker.ca/coding-through-collapse) explains how this software was built from motel rooms and concrete nooks.
-*   **The Philosophy:** [The Hidden Costs of Health Apps](https://blog.paintracker.ca/the-hidden-costs-of-data-driven-health-apps-what-youre-really-paying-when-healthcare-is-free) explores why privacy matters in healthcare.
-
----
-
-## 📬 Stay Connected
-
-I publish technical deep-dives and project updates regularly.
-
-*   **[Subscribe to the Newsletter](https://blog.paintracker.ca/newsletter)**
-*   **[Follow on Hashnode](https://hashnode.com/@CrisisCore)**
-
----
-
-> **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+- [Generate WorkSafeBC-Ready Documentation with Pain Tracker](https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free)
+- [WorkSafeBC Claims Case Study: Faster Documentation](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
+- [WorkSafeBC Hub](https://blog.paintracker.ca/worksafebc)

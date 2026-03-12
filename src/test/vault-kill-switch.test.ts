@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { PENDING_WIPE_WINDOW_MS } from '../services/vaultConstants';
 
 // @vitest-environment happy-dom
 
@@ -13,6 +14,7 @@ describe('Vault kill switch', () => {
     vi.clearAllMocks();
     localStorage.clear();
     vi.resetModules();
+    vi.useFakeTimers();
 
     // Override the global test mock (src/test/vitest.setup.ts) for this file.
     // The default mock makes verification always succeed, which would prevent
@@ -65,11 +67,21 @@ describe('Vault kill switch', () => {
     expect(secureStorage.get<number>('vault:failed-unlock-attempts')).toBe(2);
 
     await expect(vaultService.unlock('wrong-passphrase-3')).rejects.toThrow('Incorrect passphrase.');
+
+    // Kill switch should arm first (pending wipe), not wipe immediately.
+    expect(performEmergencyWipe).toHaveBeenCalledTimes(0);
+    const statusAfterThirdFailure = vaultService.getStatus();
+    expect(statusAfterThirdFailure.pendingWipe).not.toBeNull();
+    expect(statusAfterThirdFailure.state).toBe('locked');
+
+    await vi.advanceTimersByTimeAsync(PENDING_WIPE_WINDOW_MS + 1);
+
     expect(performEmergencyWipe).toHaveBeenCalledTimes(1);
 
-    // Vault metadata cleared (as minimum guarantee)
+    // Vault metadata cleared after pending-window wipe execution.
     expect(secureStorage.get('vault:metadata')).toBeNull();
     expect(vaultService.getStatus().state).toBe('uninitialized');
+    vi.useRealTimers();
   });
 
   it('does not wipe when the kill switch is disabled (but still counts)', async () => {

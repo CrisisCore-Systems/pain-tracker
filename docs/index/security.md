@@ -19,3 +19,11 @@ Audit snapshots:
 - ../audit/AUDIT_QUICK_REFERENCE.md
 - ../audit/AUDIT_REMEDIATION_PLAN.md
 - ../audit/AUDIT_SUMMARY.md
+
+Trust architecture:
+- ../trust/README.md
+- ../trust/defensibility-packet.md
+- ../trust/threat-model.md
+- ../trust/boundary-statement.md
+- ../trust/release-gating-policy.md
+- ../trust/release-evidence-template.md

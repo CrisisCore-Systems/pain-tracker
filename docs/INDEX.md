@@ -129,6 +129,7 @@ Complete documentation for a 5-part blog post series about Pain Tracker PWA for 
 - **[Security Policy](../SECURITY.md)** - Security practices and vulnerability reporting
 - **[Security Audit](security/SECURITY_AUDIT.md)** - Latest security audit results
 - **[Privacy-aligned audit implementation](security/AUDIT_HIPAA_IMPLEMENTATION.md)** - Privacy-aligned security controls
+- **[Trust Architecture Pack](trust/README.md)** - Verification-first trust docs, release gates, and evidence templates
 
 ### Deployment & Operations
 - **[Deployment Guide](ops/DEPLOYMENT_GUIDE.md)** - Deployment instructions
