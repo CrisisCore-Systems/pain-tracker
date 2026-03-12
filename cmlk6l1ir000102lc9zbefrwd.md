@@ -1,5 +1,5 @@
 ---
-title: "PainTracker.ca: Pain Tracking Without Surveillance"
+title: "Pain Tracker: Privacy-First, Trauma-Informed Pain App"
 seoTitle: "PainTracker.ca: A Privacy-First, Trauma-Informed Pain App"
 seoDescription: "Most pain apps feel like surveillance. PainTracker.ca is an offline-first, open-source, trauma-informed pain diary that keeps data encrypted on your device."
 datePublished: Fri Feb 13 2026 01:00:22 GMT+0000 (Coordinated Universal Time)
@@ -7,19 +7,20 @@ cuid: cmlk6l1ir000102lc9zbefrwd
 slug: paintracker-privacy-first-trauma-informed-pain-app
 cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1765617263232/fd020563-1297-44b0-b508-af094bccb968.jpeg
 ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765619471480/8830908e-4ff4-45f3-a816-4abe1be6edb8.jpeg
-tags: ux, web-development, opensource, privacy, pwa, healthtech, mental-health, chronic-pain
 
 ---
 
 *By CrisisCore Systems*
 
+Pain Tracker helps you track chronic pain privately, identify patterns over time, and prepare for appointments without creating an account.
+
 I built [**PainTracker.ca**](http://PainTracker.ca) because every mainstream pain-tracking app I tried made me want to throw my phone across the room.
 
-Not because pain diaries are useless. The evidence for tracking is solid, and chronic pain is everywhere. But most “tracking” tools don’t feel like care. They feel like surveillance systems wearing a wellness costume: cloud defaults, account gates, analytics, nagging prompts, and UX designed for compliance instead of capacity.
+Not because pain diaries are useless. The evidence for tracking is solid, and chronic pain is everywhere. But most "tracking" tools do not feel like care. They feel like surveillance systems wearing a wellness costume: cloud defaults, account gates, analytics, nagging prompts, and UX designed for compliance instead of capacity.
 
 [**PainTracker.ca**](http://PainTracker.ca) **is a refusal of that trade.**
 
-It’s a privacy-first, offline-capable, trauma-informed Progressive Web App that stores encrypted data locally by default and shares data only when the user deliberately exports it. The code is open-source, because privacy claims shouldn’t be marketing — they should be inspectable.
+It is a privacy-first, offline-capable, trauma-informed Progressive Web App that stores encrypted data locally by default and shares data only when the user deliberately exports it. The code is open-source, because privacy claims should not be marketing - they should be inspectable.
 
 This essay argues that privacy-first, offline-capable, trauma-informed, open-source tools should become the default standard in digital health. They reconcile clinical usefulness with ethical obligations around data governance, user control, and psychological safety — without forcing people in pain to surrender their lives to someone else’s backend.
 
