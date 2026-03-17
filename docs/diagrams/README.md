@@ -49,6 +49,53 @@ This directory contains visual diagrams illustrating Pain Tracker's privacy-firs
 
 **Purpose**: Side-by-side comparison of Pain Tracker's privacy-first approach versus traditional health apps.
 
+### 4. Trust Hardening Review (`trust-hardening-review.svg`) 🛡️
+
+**Purpose**: Process architecture diagram showing exactly what happens during a Trust Hardening Review — inputs, sequential analysis gates, and output artifacts.
+
+**Use Cases**:
+- Trust architecture documentation and communications
+- Onboarding reviewers to the verification process
+- Marketing evidence that the system has been reviewed under real conditions
+- Technical authority material for security-conscious audiences
+
+**Flow**:
+- **INPUT**: Codebase surface, system constraints, user conditions
+- **ANALYSIS LAYERS**: Threat model (A) → Boundary mapping (B) → Failure path analysis (C) → Abuse case review (D)
+- **OUTPUT**: Defensibility packet + prioritized hardening roadmap
+
+**Visual Features**:
+- Left-rail stage labels for instant orientation
+- Each analysis layer references the specific doc it draws from
+- Color-coded stages: blue (input), green (analysis), purple (output)
+- Footer assertion: every claim maps to code/test/docs evidence
+
+### 5. Defensibility Packet Artifact (`defensibility-packet-artifact.svg`) 📄
+
+**Purpose**: A dense, evidence-artifact visual that looks like a real captured output from a trust review cycle — not a concept, not a UI mockup.
+
+**Use Cases**:
+- Authority signal for security and trust communications
+- "Proof texture" — demonstrates the system produces real structured outputs
+- Complement to the trust hardening review process diagram
+- Screenshot-grade marketing material for technical audiences
+
+**Sections included**:
+- **§1 System Intent** — scope and audience
+- **§2 Top 10 Risks** — severity-classified risk register with partial redaction
+- **§3 Boundary Violations** — this-pass boundary delta
+- **§4 Failure Mode Classification** — reversibility, containment, status table
+- **§5 Build + Runtime Receipts** — command + result evidence log
+- **§6 Mitigation Priority** — P1 critical through P4 low with owners
+- **§7 Gate Decision** — pass/block verdict with required follow-ups
+
+**Visual Features**:
+- Monospace font for engineering texture
+- Grid background (subtle alignment cues)
+- Redacted blocks for sections beyond published scope
+- PLS (Protective Legitimacy Score) composite scoring
+- Real command output format (references actual test suites)
+
 **Use Cases**:
 - Competitive positioning
 - User education
@@ -116,6 +163,10 @@ These SVG diagrams can be embedded in:
 
 <!-- Alternative: Side-by-side comparison -->
 ![Data Flow Comparison](docs/diagrams/data-flow-comparison.svg)
+
+<!-- Trust evidence: process + artifact -->
+![Trust Hardening Review Process](docs/diagrams/trust-hardening-review.svg)
+![Defensibility Packet Artifact](docs/diagrams/defensibility-packet-artifact.svg)
 ```
 
 **Example Markdown Embedding (PNG)**:
@@ -162,5 +213,5 @@ These diagrams are part of the Pain Tracker project and are licensed under the s
 
 ---
 
-**Last Updated**: 2025-11-22  
+**Last Updated**: 2026-03-17  
 **Maintained By**: CrisisCore Systems

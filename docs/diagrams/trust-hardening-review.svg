@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="720" viewBox="0 0 960 720" role="img" aria-label="Trust hardening review process flow: inputs flow through analysis layers to produce defensibility outputs">
+  <defs>
+    <marker id="arrowDown" markerWidth="10" markerHeight="10" refX="5" refY="9" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5,9 L10,0 z" fill="#1d4ed8" />
+    </marker>
+    <marker id="arrowRight" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#374151" />
+    </marker>
+    <filter id="shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="1" dy="2" result="offsetblur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.15"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="720" fill="#f8fafc" rx="12"/>
+
+  <!-- Title bar -->
+  <rect width="960" height="56" fill="#1e3a8a" rx="12"/>
+  <rect x="0" y="44" width="960" height="12" fill="#1e3a8a"/>
+  <text x="480" y="28" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" fill="#ffffff">Trust Hardening Review — Process Architecture</text>
+  <text x="480" y="46" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#93c5fd">PainTracker · CrisisCore Systems · Overton Framework v1.3</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- STAGE LABELS (left rail) -->
+  <!-- ═══════════════════════════════════════ -->
+  <rect x="10" y="76" width="80" height="160" rx="6" fill="#dbeafe" stroke="#3b82f6" stroke-width="1"/>
+  <text x="50" y="162" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#1d4ed8" transform="rotate(-90, 50, 162)">INPUT</text>
+
+  <rect x="10" y="256" width="80" height="290" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+  <text x="50" y="405" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#15803d" transform="rotate(-90, 50, 405)">ANALYSIS LAYERS</text>
+
+  <rect x="10" y="566" width="80" height="134" rx="6" fill="#faf5ff" stroke="#7c3aed" stroke-width="1"/>
+  <text x="50" y="634" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#6d28d9" transform="rotate(-90, 50, 634)">OUTPUT</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- INPUT SECTION -->
+  <!-- ═══════════════════════════════════════ -->
+  <text x="480" y="96" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#1e40af" letter-spacing="1.5">WHAT ENTERS THE REVIEW</text>
+
+  <!-- Input card 1: Codebase -->
+  <rect x="105" y="104" width="230" height="96" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="220" y="126" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#1d4ed8">CODEBASE SURFACE</text>
+  <text x="115" y="144" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Security-critical files (red zone)</text>
+  <text x="115" y="159" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Encryption / key handling code</text>
+  <text x="115" y="174" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Export pipeline + storage adapters</text>
+  <text x="115" y="189" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ CSP headers + service worker rules</text>
+
+  <!-- Input card 2: Constraints -->
+  <rect x="360" y="104" width="230" height="96" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="475" y="126" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#1d4ed8">SYSTEM CONSTRAINTS</text>
+  <text x="370" y="144" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Local-first / no default sync</text>
+  <text x="370" y="159" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Class A data never leaves device</text>
+  <text x="370" y="174" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ No telemetry without explicit consent</text>
+  <text x="370" y="189" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Human review gates on red-zone changes</text>
+
+  <!-- Input card 3: User conditions -->
+  <rect x="615" y="104" width="230" height="96" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="730" y="126" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#1d4ed8">USER CONDITIONS</text>
+  <text x="625" y="144" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Vulnerability state: S0 → S3</text>
+  <text x="625" y="159" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Cognitive capacity degradation</text>
+  <text x="625" y="174" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Power asymmetry / coercion risk</text>
+  <text x="625" y="189" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1e40af">▸ Offline / low-resource conditions</text>
+
+  <!-- Arrow from INPUT → ANALYSIS -->
+  <line x1="480" y1="200" x2="480" y2="248" stroke="#1d4ed8" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <rect x="380" y="207" width="200" height="16" rx="4" fill="#dbeafe"/>
+  <text x="480" y="219" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="600" fill="#1d4ed8">enters analysis pipeline →</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- ANALYSIS LAYERS -->
+  <!-- ═══════════════════════════════════════ -->
+  <text x="480" y="272" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#166534" letter-spacing="1.5">ANALYSIS LAYERS — SEQUENTIAL GATES</text>
+
+  <!-- Layer A: Threat Model -->
+  <rect x="105" y="282" width="740" height="58" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="105" y="282" width="4" height="58" rx="2" fill="#16a34a"/>
+  <text x="125" y="302" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#15803d">A — THREAT MODEL</text>
+  <text x="125" y="318" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">Adversaries: XSS-origin, lost/stolen device, malicious extension, legal compulsion, coercer with physical access</text>
+  <text x="125" y="332" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">Entry points: UI forms, import/export boundary, SW/cache boundary, local persistence migration boundary</text>
+  <text x="730" y="314" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="9" font-style="italic" fill="#15803d">→ ref: docs/trust/threat-model.md</text>
+
+  <line x1="480" y1="340" x2="480" y2="360" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrowDown)"/>
+
+  <!-- Layer B: Boundary Mapping -->
+  <rect x="105" y="366" width="740" height="58" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="105" y="366" width="4" height="58" rx="2" fill="#16a34a"/>
+  <text x="125" y="386" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#15803d">B — BOUNDARY MAPPING</text>
+  <text x="125" y="402" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">Trust boundaries: device ↔ encryption ↔ IndexedDB ↔ export. Each boundary has explicit in/out guarantees and non-guarantees.</text>
+  <text x="125" y="416" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">New boundary violations: flagged as blockers. Optional integrations (weather, payments) are separate trust contexts.</text>
+  <text x="730" y="408" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="9" font-style="italic" fill="#15803d">→ ref: docs/trust/boundary-statement.md</text>
+
+  <line x1="480" y1="424" x2="480" y2="444" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrowDown)"/>
+
+  <!-- Layer C: Failure Paths -->
+  <rect x="105" y="450" width="740" height="58" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="105" y="450" width="4" height="58" rx="2" fill="#16a34a"/>
+  <text x="125" y="470" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#15803d">C — FAILURE PATH ANALYSIS</text>
+  <text x="125" y="486" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">Test gates: security-chokepoints-ci (✓), background-sync-guard (✓), offline-queue (✓), accessibility (✓), monetization-boundary (✓)</text>
+  <text x="125" y="500" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">Failure modes classified: reversible / containable / catastrophic. Catastrophic = release blocker.</text>
+  <text x="730" y="492" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="9" font-style="italic" fill="#15803d">→ ref: docs/trust/scenario-test-protocol.md</text>
+
+  <line x1="480" y1="508" x2="480" y2="528" stroke="#16a34a" stroke-width="1.8" marker-end="url(#arrowDown)"/>
+
+  <!-- Layer D: Abuse Cases -->
+  <rect x="105" y="534" width="740" height="22" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="105" y="534" width="4" height="22" rx="2" fill="#16a34a"/>
+  <text x="125" y="549" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534"><tspan font-weight="700">D — ABUSE CASE REVIEW: </tspan>Coercion drills · no-tell scenario · observer protocol · panic mode verification · export oversharing check</text>
+
+  <!-- Arrow to OUTPUT -->
+  <line x1="480" y1="556" x2="480" y2="578" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <rect x="365" y="560" width="230" height="16" rx="4" fill="#ede9fe"/>
+  <text x="480" y="572" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="9" font-weight="600" fill="#7c3aed">gate: pass or blocked → reason documented →</text>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- OUTPUT SECTION -->
+  <!-- ═══════════════════════════════════════ -->
+  <text x="480" y="600" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#6d28d9" letter-spacing="1.5">ARTIFACTS PRODUCED</text>
+
+  <!-- Output 1: Defensibility Packet -->
+  <rect x="105" y="610" width="350" height="90" rx="8" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.8" filter="url(#shadow)"/>
+  <text x="280" y="632" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#4c1d95">DEFENSIBILITY PACKET</text>
+  <text x="115" y="650" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ System intent statement</text>
+  <text x="115" y="665" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Threat model snapshot + boundary delta</text>
+  <text x="115" y="680" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Build + runtime receipts</text>
+  <text x="115" y="695" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ PLS scoring + gate decision</text>
+
+  <!-- Output 2: Prioritized Roadmap -->
+  <rect x="500" y="610" width="345" height="90" rx="8" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.8" filter="url(#shadow)"/>
+  <text x="672" y="632" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#4c1d95">PRIORITIZED HARDENING ROADMAP</text>
+  <text x="510" y="650" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Quick wins — immediate low-risk actions</text>
+  <text x="510" y="665" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Phased execution plan (4–12 week window)</text>
+  <text x="510" y="680" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Gate criteria — hard merge/release gates</text>
+  <text x="510" y="695" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Follow-up blockers + sign-off owners</text>
+
+  <!-- Footer -->
+  <text x="480" y="716" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="#9ca3af">Every claim maps to code/test/docs evidence · No claim without a receipt · Security-critical changes require human review</text>
+</svg>

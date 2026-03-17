@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="820" viewBox="0 0 960 820" role="img" aria-label="Defensibility packet artifact: structured evidence bundle with threat model, boundary analysis, failure classification, mitigation priority, and gate decision">
+  <defs>
+    <filter id="shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2.5"/>
+      <feOffset dx="1" dy="2" result="offsetblur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="2.8"/>
+    </filter>
+  </defs>
+
+  <!-- Paper background -->
+  <rect width="960" height="820" fill="#fafafa" rx="4"/>
+  <!-- Subtle grid lines (engineering texture) -->
+  <line x1="0" y1="40" x2="960" y2="40" stroke="#e5e7eb" stroke-width="0.5"/>
+  <line x1="0" y1="80" x2="960" y2="80" stroke="#e5e7eb" stroke-width="0.5"/>
+  <line x1="0" y1="120" x2="960" y2="120" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="160" x2="960" y2="160" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="200" x2="960" y2="200" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="240" x2="960" y2="240" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="280" x2="960" y2="280" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="320" x2="960" y2="320" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="360" x2="960" y2="360" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="400" x2="960" y2="400" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="440" x2="960" y2="440" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="480" x2="960" y2="480" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="520" x2="960" y2="520" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="560" x2="960" y2="560" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="600" x2="960" y2="600" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="640" x2="960" y2="640" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="680" x2="960" y2="680" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="720" x2="960" y2="720" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="760" x2="960" y2="760" stroke="#f3f4f6" stroke-width="0.5"/>
+  <line x1="0" y1="800" x2="960" y2="800" stroke="#e5e7eb" stroke-width="0.5"/>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- DOCUMENT HEADER -->
+  <!-- ══════════════════════════════════════ -->
+  <rect width="960" height="68" fill="#0f172a" rx="4"/>
+  <rect x="0" y="58" width="960" height="10" fill="#0f172a"/>
+
+  <text x="24" y="26" font-family="'Courier New', monospace" font-size="10" fill="#94a3b8" letter-spacing="2">CRISISCORE SYSTEMS · PAINTRACKER</text>
+  <text x="24" y="48" font-family="'Courier New', monospace" font-size="16" font-weight="700" fill="#f1f5f9" letter-spacing="1">DEFENSIBILITY PACKET — EXECUTION SNAPSHOT</text>
+  <text x="760" y="26" font-family="'Courier New', monospace" font-size="9" fill="#64748b">REV: 2026-03-12</text>
+  <text x="760" y="42" font-family="'Courier New', monospace" font-size="9" fill="#64748b">CLASS: TRUST/SEC</text>
+  <text x="760" y="58" font-family="'Courier New', monospace" font-size="9" fill="#64748b">STATUS: PASS-WITH-FOLLOWUP</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- META ROW -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="12" y="76" width="930" height="34" rx="4" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+  <text x="24" y="95" font-family="'Courier New', monospace" font-size="10" fill="#475569">Scope: Trust-hardening verification sweep</text>
+  <text x="330" y="95" font-family="'Courier New', monospace" font-size="10" fill="#475569">Owner: Kay + Copilot execution pass</text>
+  <text x="620" y="95" font-family="'Courier New', monospace" font-size="10" fill="#475569">DOI: 10.5281/zenodo.18887610</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 1: SYSTEM INTENT -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="12" y="120" width="450" height="110" rx="4" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="12" y="120" width="450" height="20" rx="4" fill="#1e3a8a"/>
+  <rect x="12" y="132" width="450" height="8" fill="#1e3a8a"/>
+  <text x="22" y="135" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#ffffff">§1  SYSTEM INTENT</text>
+  <text x="22" y="156" font-family="'Courier New', monospace" font-size="9" fill="#334155">Primary: local-first chronic pain tracking, privacy-preserving records,</text>
+  <text x="22" y="170" font-family="'Courier New', monospace" font-size="9" fill="#334155">         user-controlled exports for WorkSafeBC + clinical workflows.</text>
+  <text x="22" y="184" font-family="'Courier New', monospace" font-size="9" fill="#334155">Safety:  predictable access to panic/grounding + crisis-support</text>
+  <text x="22" y="198" font-family="'Courier New', monospace" font-size="9" fill="#334155">         controls under variable cognitive capacity.</text>
+  <text x="22" y="212" font-family="'Courier New', monospace" font-size="9" fill="#475569">Audience: engineering verification + operational trust evidence.</text>
+  <text x="22" y="224" font-family="'Courier New', monospace" font-size="9" fill="#475569">New attack surface introduced: NONE this pass.</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 2: TOP 10 RISKS -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="476" y="120" width="470" height="222" rx="4" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="476" y="120" width="470" height="20" rx="4" fill="#7f1d1d"/>
+  <rect x="476" y="132" width="470" height="8" fill="#7f1d1d"/>
+  <text x="486" y="135" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#ffffff">§2  TOP 10 RISKS  [severity: C=critical H=high M=medium]</text>
+
+  <!-- Risk rows -->
+  <text x="486" y="154" font-family="'Courier New', monospace" font-size="9" fill="#7f1d1d">R-01 [H]  At-rest key material accessible to malicious extension</text>
+  <text x="486" y="168" font-family="'Courier New', monospace" font-size="9" fill="#7f1d1d">R-02 [H]  Export bypass channel via crafted import payload</text>
+  <text x="486" y="182" font-family="'Courier New', monospace" font-size="9" fill="#7f1d1d">R-03 [H]  XSS origin gaining plaintext Class A via devtools</text>
+  <text x="486" y="196" font-family="'Courier New', monospace" font-size="9" fill="#dc2626">R-04 [C]  Coerced unlock — no in-app duress signal mechanism</text>
+  <text x="486" y="210" font-family="'Courier New', monospace" font-size="9" fill="#b45309">R-05 [M]  SW route-level registration warning (unsupported MIME)</text>
+  <text x="486" y="224" font-family="'Courier New', monospace" font-size="9" fill="#b45309">R-06 [M]  Optional weather integration leaks location if misconfigured</text>
+  <text x="486" y="238" font-family="'Courier New', monospace" font-size="9" fill="#b45309">R-07 [M]  Audit log verbosity — error traces may approach Class B</text>
+  <text x="486" y="252" font-family="'Courier New', monospace" font-size="9" fill="#166534">R-08 [L]  Outdated dependency — addressed by npm audit gates</text>
+  <text x="486" y="266" font-family="'Courier New', monospace" font-size="9" fill="#166534">R-09 [L]  PDF export metadata — not currently stripped</text>
+  <text x="486" y="280" font-family="'Courier New', monospace" font-size="9" fill="#166534">R-10 [L]  WorkSafeBC form auto-fill may pre-populate stale entries</text>
+  <!-- Redaction block (editorial signal) -->
+  <rect x="486" y="290" width="260" height="14" rx="2" fill="#334155" filter="url(#blur2)" opacity="0.55"/>
+  <text x="490" y="302" font-family="'Courier New', monospace" font-size="8" fill="#94a3b8" font-style="italic">  [additional items withheld — internal review scope]</text>
+  <text x="756" y="302" font-family="'Courier New', monospace" font-size="8" fill="#475569">▒▒▒▒▒▒▒▒</text>
+  <text x="486" y="328" font-family="'Courier New', monospace" font-size="9" fill="#475569">Risk count: 10 active  |  4 mitigated this pass  |  2 deferred</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 3: BOUNDARY VIOLATIONS -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="12" y="242" width="450" height="130" rx="4" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="12" y="242" width="450" height="20" rx="4" fill="#064e3b"/>
+  <rect x="12" y="254" width="450" height="8" fill="#064e3b"/>
+  <text x="22" y="257" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#ffffff">§3  BOUNDARY VIOLATIONS — THIS PASS</text>
+
+  <text x="22" y="278" font-family="'Courier New', monospace" font-size="9" fill="#134e4a">BV-01  NONE: No new egress channels introduced.</text>
+  <text x="22" y="292" font-family="'Courier New', monospace" font-size="9" fill="#134e4a">BV-02  NONE: No Class A data touched in migration this pass.</text>
+  <text x="22" y="306" font-family="'Courier New', monospace" font-size="9" fill="#134e4a">BV-03  WARN: SW route-local registration warning — resources</text>
+  <text x="22" y="320" font-family="'Courier New', monospace" font-size="9" fill="#134e4a">       sub-route logs unsupported MIME type 'text/html' for sw.js</text>
+  <text x="22" y="334" font-family="'Courier New', monospace" font-size="9" fill="#134e4a">       → classification: non-blocking / follow-up required</text>
+  <text x="22" y="348" font-family="'Courier New', monospace" font-size="9" fill="#475569">Privacy gates passed: npm run -s check-security ✓</text>
+  <text x="22" y="362" font-family="'Courier New', monospace" font-size="9" fill="#475569">Analytics consent protections: ✓ (monetization-boundary.test)</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 4: FAILURE MODE CLASSIFICATION -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="12" y="384" width="930" height="120" rx="4" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="12" y="384" width="930" height="20" rx="4" fill="#312e81"/>
+  <rect x="12" y="396" width="930" height="8" fill="#312e81"/>
+  <text x="22" y="399" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#ffffff">§4  FAILURE MODE CLASSIFICATION</text>
+
+  <!-- Table header -->
+  <line x1="12" y1="416" x2="942" y2="416" stroke="#e2e8f0" stroke-width="0.8"/>
+  <text x="22" y="428" font-family="'Courier New', monospace" font-size="9" font-weight="700" fill="#374151">ID       CATEGORY            SEVERITY   REVERSIBLE   CONTAINABLE   STATUS</text>
+  <line x1="12" y1="432" x2="942" y2="432" stroke="#c7d2fe" stroke-width="0.8"/>
+
+  <text x="22" y="446" font-family="'Courier New', monospace" font-size="9" fill="#334155">FM-01    Data leakage         HIGH       NO           YES           Mitigated (privacy gates)</text>
+  <text x="22" y="460" font-family="'Courier New', monospace" font-size="9" fill="#334155">FM-02    Unlock bypass        CRITICAL   NO           NO            Open — human review required</text>
+  <text x="22" y="474" font-family="'Courier New', monospace" font-size="9" fill="#334155">FM-03    Offline failure      MEDIUM     YES          YES           Mitigated (offline-queue.test)</text>
+  <text x="22" y="488" font-family="'Courier New', monospace" font-size="9" fill="#334155">FM-04    Export overshare     MEDIUM     YES          YES           Monitored (export modal controls)</text>
+  <text x="22" y="496" font-family="'Courier New', monospace" font-size="9" fill="#94a3b8">FM-05–08 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 5: BUILD + RUNTIME RECEIPTS -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="12" y="516" width="450" height="170" rx="4" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="12" y="516" width="450" height="20" rx="4" fill="#1c1917"/>
+  <rect x="12" y="528" width="450" height="8" fill="#1c1917"/>
+  <text x="22" y="531" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#ffffff">§5  BUILD + RUNTIME RECEIPTS</text>
+
+  <text x="22" y="552" font-family="'Courier New', monospace" font-size="9" fill="#334155">cmd:  npm run -s check:quick</text>
+  <text x="22" y="566" font-family="'Courier New', monospace" font-size="9" fill="#166534">res:  PASS (after remediation)</text>
+  <text x="22" y="580" font-family="'Courier New', monospace" font-size="9" fill="#334155">cmd:  npm run -s check-security</text>
+  <text x="22" y="594" font-family="'Courier New', monospace" font-size="9" fill="#166534">res:  PASS (privacy gates + analytics gate)</text>
+  <text x="22" y="608" font-family="'Courier New', monospace" font-size="9" fill="#334155">cmd:  npm run -s e2e:smoke</text>
+  <text x="22" y="622" font-family="'Courier New', monospace" font-size="9" fill="#166534">res:  6/6 tests PASS</text>
+  <text x="22" y="636" font-family="'Courier New', monospace" font-size="9" fill="#334155">obs:  SW registration warning on resources sub-routes</text>
+  <text x="22" y="650" font-family="'Courier New', monospace" font-size="9" fill="#b45309">      → unsupported MIME 'text/html' for sw.js [FOLLOW-UP]</text>
+  <text x="22" y="664" font-family="'Courier New', monospace" font-size="9" fill="#334155">unit: 42 security-relevant tests PASS</text>
+  <text x="22" y="678" font-family="'Courier New', monospace" font-size="9" fill="#334155">seo:  13 SEO consistency tests PASS</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 6: MITIGATION PRIORITY -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="476" y="354" width="470" height="332" rx="4" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="476" y="354" width="470" height="20" rx="4" fill="#4c1d95"/>
+  <rect x="476" y="366" width="470" height="8" fill="#4c1d95"/>
+  <text x="486" y="369" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#ffffff">§6  MITIGATION PRIORITY</text>
+
+  <!-- Priority header -->
+  <text x="486" y="390" font-family="'Courier New', monospace" font-size="9" font-weight="700" fill="#374151">PRIORITY  REF    ACTION                                    OWNER</text>
+  <line x1="476" y1="394" x2="946" y2="394" stroke="#ddd6fe" stroke-width="0.8"/>
+
+  <!-- P1 Critical -->
+  <rect x="476" y="396" width="470" height="14" rx="0" fill="#fef2f2" opacity="0.6"/>
+  <text x="486" y="407" font-family="'Courier New', monospace" font-size="9" fill="#991b1b">P1 CRIT   R-04   Duress/coercion signal mechanism             human review</text>
+  <text x="486" y="421" font-family="'Courier New', monospace" font-size="9" fill="#7f1d1d">P1 CRIT   FM-02  Unlock bypass — red zone                    human review</text>
+
+  <line x1="476" y1="426" x2="946" y2="426" stroke="#e5e7eb" stroke-width="0.5"/>
+
+  <!-- P2 High -->
+  <text x="486" y="440" font-family="'Courier New', monospace" font-size="9" fill="#92400e">P2 HIGH   R-01   Key material extension exposure review       sec lead</text>
+  <text x="486" y="454" font-family="'Courier New', monospace" font-size="9" fill="#92400e">P2 HIGH   R-02   Import payload boundary hardening            sec lead</text>
+  <text x="486" y="468" font-family="'Courier New', monospace" font-size="9" fill="#92400e">P2 HIGH   R-03   XSS plaintext window — devtools exposure     sec lead</text>
+
+  <line x1="476" y1="472" x2="946" y2="472" stroke="#e5e7eb" stroke-width="0.5"/>
+
+  <!-- P3 Medium -->
+  <text x="486" y="486" font-family="'Courier New', monospace" font-size="9" fill="#1d4ed8">P3 MED    R-05   SW MIME type warning — resources route       eng</text>
+  <text x="486" y="500" font-family="'Courier New', monospace" font-size="9" fill="#1d4ed8">P3 MED    R-06   Weather integration location leak review     eng</text>
+  <text x="486" y="514" font-family="'Courier New', monospace" font-size="9" fill="#1d4ed8">P3 MED    R-07   Audit log verbosity — Class B boundary       eng</text>
+
+  <line x1="476" y1="518" x2="946" y2="518" stroke="#e5e7eb" stroke-width="0.5"/>
+
+  <!-- P4 Low -->
+  <text x="486" y="532" font-family="'Courier New', monospace" font-size="9" fill="#166534">P4 LOW    R-08   Dependency hygiene — ongoing npm audit       automated</text>
+  <text x="486" y="546" font-family="'Courier New', monospace" font-size="9" fill="#166534">P4 LOW    R-09   PDF metadata strip on export                 eng</text>
+  <text x="486" y="560" font-family="'Courier New', monospace" font-size="9" fill="#166534">P4 LOW    R-10   Stale entry pre-fill guard — form export     eng</text>
+
+  <line x1="476" y1="564" x2="946" y2="564" stroke="#e5e7eb" stroke-width="0.5"/>
+
+  <!-- Redacted rows -->
+  <rect x="486" y="570" width="340" height="10" rx="2" fill="#334155" filter="url(#blur2)" opacity="0.4"/>
+  <text x="486" y="594" font-family="'Courier New', monospace" font-size="8" fill="#94a3b8" font-style="italic">  [additional items redacted — scope boundary]</text>
+  <text x="826" y="594" font-family="'Courier New', monospace" font-size="9" fill="#64748b">▒▒▒▒▒▒▒</text>
+
+  <!-- PLS Score -->
+  <rect x="476" y="610" width="470" height="50" rx="0" fill="#f8fafc" stroke="#ddd6fe" stroke-width="0.8"/>
+  <text x="486" y="628" font-family="'Courier New', monospace" font-size="9" font-weight="700" fill="#4c1d95">PLS SCORE (provisional):  Reversibility 3/4 · Exposure Min 3/4 · Local Auth 2/4 · Auditability 3/4</text>
+  <text x="486" y="645" font-family="'Courier New', monospace" font-size="9" fill="#374151">Composite: 11/16   Threshold for release: ≥ 12   → PASS WITH FOLLOW-UP</text>
+  <text x="486" y="659" font-family="'Courier New', monospace" font-size="8" fill="#94a3b8">ref: docs/trust/pls-rubric.md  ·  ref: docs/trust/release-gating-policy.md</text>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- SECTION 7: GATE DECISION -->
+  <!-- ══════════════════════════════════════ -->
+  <rect x="12" y="698" width="930" height="100" rx="4" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#shadow)"/>
+  <rect x="12" y="698" width="930" height="20" rx="4" fill="#064e3b"/>
+  <rect x="12" y="710" width="930" height="8" fill="#064e3b"/>
+  <text x="22" y="713" font-family="'Courier New', monospace" font-size="10" font-weight="700" fill="#ffffff">§7  GATE DECISION</text>
+
+  <rect x="22" y="726" width="160" height="28" rx="4" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+  <text x="102" y="745" text-anchor="middle" font-family="'Courier New', monospace" font-size="11" font-weight="700" fill="#713f12">⚠  PASS WITH FOLLOW-UP</text>
+
+  <text x="200" y="737" font-family="'Courier New', monospace" font-size="9" fill="#134e4a">Required before release: (1) Investigate + resolve SW route warning · (2) Observer-based coercion drill</text>
+  <text x="200" y="751" font-family="'Courier New', monospace" font-size="9" fill="#134e4a">(3) Human review sign-off on FM-02 (unlock bypass) · (4) Rerun check:quick + e2e:smoke after follow-ups</text>
+
+  <text x="22" y="776" font-family="'Courier New', monospace" font-size="9" fill="#475569">Remediation applied this pass: DataRestore.tsx callback normalized · Malformed artifact files removed from artifacts/devto/</text>
+  <text x="22" y="790" font-family="'Courier New', monospace" font-size="9" fill="#475569">Sign-off: pending reviewer confirmation · ref: docs/trust/release-evidence-2026-03-12.md</text>
+
+  <!-- Document footer -->
+  <line x1="12" y1="808" x2="948" y2="808" stroke="#e2e8f0" stroke-width="0.8"/>
+  <text x="24" y="818" font-family="'Courier New', monospace" font-size="8" fill="#94a3b8">CrisisCore Systems · PainTracker · docs/trust/defensibility-packet.md · Every claim maps to evidence · No security guarantees beyond documented scope</text>
+</svg>

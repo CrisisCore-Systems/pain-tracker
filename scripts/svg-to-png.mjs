@@ -52,6 +52,8 @@ async function convertSvgToPng(svgPath, pngPath, width = null) {
 async function main() {
   const diagramsDir = resolve(__dirname, '../docs/diagrams');
   
+  const figuresDir = resolve(__dirname, '../docs/papers/figures');
+
   const diagrams = [
     {
       svg: resolve(diagramsDir, 'architectural-data-flow.svg'),
@@ -67,6 +69,21 @@ async function main() {
       svg: resolve(diagramsDir, 'data-flow-comparison.svg'),
       png: resolve(diagramsDir, 'data-flow-comparison.png'),
       width: 1200,
+    },
+    {
+      svg: resolve(diagramsDir, 'trust-hardening-review.svg'),
+      png: resolve(diagramsDir, 'trust-hardening-review.png'),
+      width: 960,
+    },
+    {
+      svg: resolve(diagramsDir, 'defensibility-packet-artifact.svg'),
+      png: resolve(diagramsDir, 'defensibility-packet-artifact.png'),
+      width: 960,
+    },
+    {
+      svg: resolve(figuresDir, 'protective-pathway.svg'),
+      png: resolve(figuresDir, 'protective-pathway.png'),
+      width: 900,
     },
   ];
   
