@@ -1,30 +1,125 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="980" height="180" viewBox="0 0 980 180" role="img" aria-label="Protective pathway diagram">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="780" viewBox="0 0 900 780" role="img" aria-label="Protective Computing system map: user under stress flows through device local system and protective layer to output survival function">
   <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#166534" />
+    <marker id="arrowDown" markerWidth="10" markerHeight="10" refX="5" refY="9" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L5,9 L10,0 z" fill="#166534" />
     </marker>
-    <style>
-      .box { fill:#f0fdf4; stroke:#166534; stroke-width:2; rx:10; }
-      .text { font-family:Arial, Helvetica, sans-serif; font-size:18px; fill:#14532d; font-weight:600; }
-      .arrow { stroke:#166534; stroke-width:2.5; marker-end:url(#arrow); }
-    </style>
+    <marker id="arrowRight" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+    </marker>
+    <marker id="arrowStressor" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#b45309" />
+    </marker>
+    <filter id="shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="1" dy="2" result="offsetblur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
   </defs>
 
-  <rect class="box" x="20" y="50" width="220" height="70" />
-  <text class="text" x="130" y="92" text-anchor="middle">Protective Computing</text>
+  <!-- Background -->
+  <rect width="900" height="780" fill="#f8fafc" rx="12"/>
 
-  <line class="arrow" x1="240" y1="85" x2="300" y2="85" />
+  <!-- Title -->
+  <text x="450" y="38" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Protective Computing: System Under Stress</text>
+  <text x="450" y="58" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#64748b">Reference implementation — PainTracker · Overton Framework v1.3</text>
 
-  <rect class="box" x="300" y="50" width="220" height="70" />
-  <text class="text" x="410" y="92" text-anchor="middle">Cognitive Interlocks</text>
+  <!-- ── STRESSOR INPUTS (left column) ── -->
+  <text x="60" y="100" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#b45309" letter-spacing="1">ACTIVE STRESSORS</text>
 
-  <line class="arrow" x1="520" y1="85" x2="580" y2="85" />
+  <!-- Stressor: low battery -->
+  <rect x="20" y="108" width="140" height="30" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="90" y="128" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#92400e">⚡ Low Battery</text>
 
-  <rect class="box" x="580" y="50" width="200" height="70" />
-  <text class="text" x="680" y="92" text-anchor="middle">Forced Verification</text>
+  <!-- Stressor: offline -->
+  <rect x="20" y="148" width="140" height="30" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="90" y="168" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#92400e">📴 Offline / No Signal</text>
 
-  <line class="arrow" x1="780" y1="85" x2="840" y2="85" />
+  <!-- Stressor: coercion -->
+  <rect x="20" y="188" width="140" height="30" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="90" y="208" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#92400e">⚠ Coercion Risk</text>
 
-  <rect class="box" x="840" y="50" width="130" height="70" />
-  <text class="text" x="905" y="92" text-anchor="middle">Integrity</text>
+  <!-- Stressor: cognitive overload -->
+  <rect x="20" y="228" width="140" height="30" rx="5" fill="#fef3c7" stroke="#d97706" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="90" y="248" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#92400e">🧠 Cognitive Overload</text>
+
+  <!-- Stressor arrows → User box -->
+  <line x1="160" y1="123" x2="262" y2="160" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowStressor)"/>
+  <line x1="160" y1="163" x2="262" y2="170" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowStressor)"/>
+  <line x1="160" y1="203" x2="262" y2="180" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowStressor)"/>
+  <line x1="160" y1="243" x2="262" y2="190" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrowStressor)"/>
+
+  <!-- ── LAYER 1: USER UNDER STRESS ── -->
+  <rect x="265" y="100" width="370" height="130" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="124" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#7c2d12">USER UNDER STRESS</text>
+  <text x="450" y="143" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" fill="#9a3412">S0 Stable → S1 Degraded → S2 Acute Crisis → S3 Coercive</text>
+  <!-- Detail annotations -->
+  <text x="285" y="165" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#7c2d12">▸ Reduced cognitive capacity</text>
+  <text x="285" y="181" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#7c2d12">▸ Time-critical documentation needs</text>
+  <text x="285" y="197" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#7c2d12">▸ Potential surveillance / power asymmetry</text>
+  <text x="285" y="213" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#7c2d12">▸ Variable physical + environmental conditions</text>
+
+  <!-- Arrow down: user → device -->
+  <line x1="450" y1="230" x2="450" y2="270" stroke="#166534" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <text x="460" y="255" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">input</text>
+
+  <!-- ── LAYER 2: DEVICE / LOCAL SYSTEM ── -->
+  <!-- Boundary label -->
+  <rect x="265" y="278" width="370" height="18" rx="0" fill="#dcfce7" stroke="none"/>
+  <text x="450" y="291" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#166534" letter-spacing="1.5">◀ LOCAL BOUNDARY — NO DEFAULT SYNC ▶</text>
+
+  <rect x="265" y="296" width="370" height="120" rx="10" fill="#f0fdf4" stroke="#166534" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="320" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#14532d">DEVICE / LOCAL SYSTEM</text>
+  <text x="285" y="342" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">▸ IndexedDB persistence — versioned schema, migration-safe</text>
+  <text x="285" y="358" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">▸ AES-GCM encryption helpers — at-rest Class A protection</text>
+  <text x="285" y="374" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">▸ Offline-first PWA — functional without network</text>
+  <text x="285" y="390" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">▸ Zod schema validation — integrity at every boundary</text>
+  <text x="285" y="406" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">▸ Zustand + Immer state — immutable, auditable updates</text>
+
+  <!-- Arrow down: device → protective -->
+  <line x1="450" y1="416" x2="450" y2="456" stroke="#166534" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <text x="460" y="441" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">controlled</text>
+
+  <!-- ── LAYER 3: PROTECTIVE LAYER ── -->
+  <rect x="265" y="464" width="370" height="140" rx="10" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="488" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#1e3a8a">PROTECTIVE LAYER</text>
+  <text x="285" y="510" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1d4ed8">▸ Panic mode — one-tap crisis exit, always reachable</text>
+  <text x="285" y="526" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1d4ed8">▸ Cognitive interlocks — forced verification gates</text>
+  <text x="285" y="542" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1d4ed8">▸ Trauma-informed UX — gentle language, no blame</text>
+  <text x="285" y="558" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1d4ed8">▸ CSP headers + XSS hardening — origin boundary</text>
+  <text x="285" y="574" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1d4ed8">▸ Non-reconstructive audit log — no Class A in logs</text>
+  <text x="285" y="590" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#1d4ed8">▸ WCAG 2.2 AA accessibility — cognitive + motor support</text>
+
+  <!-- Arrow down: protective → output -->
+  <line x1="450" y1="604" x2="450" y2="644" stroke="#166534" stroke-width="2.5" marker-end="url(#arrowDown)"/>
+  <text x="460" y="629" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#166534">verified</text>
+
+  <!-- ── LAYER 4: OUTPUT / SURVIVAL FUNCTION ── -->
+  <rect x="265" y="652" width="370" height="100" rx="10" fill="#fdf4ff" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="676" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#4c1d95">OUTPUT / SURVIVAL FUNCTION</text>
+  <text x="285" y="698" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ WorkSafeBC Form 6/7 — defensible legal export</text>
+  <text x="285" y="714" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Clinical PDF report — structured evidence for providers</text>
+  <text x="285" y="730" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Crisis support / grounding tools — always available offline</text>
+  <text x="285" y="746" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#6d28d9">▸ Raw CSV/JSON export — user data sovereignty</text>
+
+  <!-- ── BOUNDARY LEGEND (right column) ── -->
+  <text x="670" y="100" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#374151" letter-spacing="1">BOUNDARIES</text>
+
+  <rect x="660" y="108" width="220" height="30" rx="5" fill="#f0fdf4" stroke="#166534" stroke-width="1.5"/>
+  <text x="770" y="128" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#14532d" font-weight="600">LOCAL — device only by default</text>
+
+  <rect x="660" y="148" width="220" height="30" rx="5" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="770" y="168" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#0369a1" font-weight="600">OPTIONAL CLOUD — explicit opt-in only</text>
+
+  <rect x="660" y="188" width="220" height="30" rx="5" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="770" y="208" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#991b1b" font-weight="600">NO DEFAULT SYNC — no silent uploads</text>
+
+  <!-- ── TRUST SIGNAL (bottom right) ── -->
+  <rect x="660" y="640" width="220" height="110" rx="8" fill="#fafafa" stroke="#d1d5db" stroke-width="1"/>
+  <text x="770" y="662" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="10" font-weight="700" fill="#374151">TRUST SIGNAL</text>
+  <text x="675" y="682" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="#6b7280">CI: 190 tests passing</text>
+  <text x="675" y="698" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="#6b7280">Security gates: npm run check-security</text>
+  <text x="675" y="714" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="#6b7280">Smoke: 6/6 e2e passing</text>
+  <text x="675" y="730" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="#6b7280">DOI: 10.5281/zenodo.18887610</text>
+  <text x="675" y="746" font-family="Arial, Helvetica, sans-serif" font-size="9" fill="#6b7280">Open source — auditable</text>
 </svg>
