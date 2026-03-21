@@ -12,7 +12,9 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765619471480/88309
 
 *By CrisisCore Systems*
 
-Pain Tracker helps you track chronic pain privately, identify patterns over time, and prepare for appointments without creating an account.
+Pain Tracker is a private pain tracking app for logging symptoms, spotting flare patterns, and preparing for appointments without creating an account or sending daily records to the cloud.
+
+It is built for people who want practical pain tracking first: daily entries, local-first privacy, offline-capable use, and clinician-friendly exports when they choose to share.
 
 I built [**PainTracker.ca**](http://PainTracker.ca) because every mainstream pain-tracking app I tried made me want to throw my phone across the room.
 
