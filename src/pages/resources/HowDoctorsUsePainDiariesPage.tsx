@@ -115,7 +115,7 @@ const doctorStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'how-doctors-use-pain-diaries',
   title: 'How Doctors Use Pain Diaries',
-  metaTitle: 'How Doctors Use Pain Diaries — The Clinical Perspective | Pain Tracker Pro',
+  metaTitle: 'How Doctors Use Pain Diaries — The Clinical Perspective | PainTracker',
   metaDescription: 'Understand how doctors actually use pain diary data to make treatment decisions. 6 clinical uses, decision timeline, and how to make your tracking clinically useful.',
   keywords: [
     'how doctors use pain diaries', 'pain diary clinical use',

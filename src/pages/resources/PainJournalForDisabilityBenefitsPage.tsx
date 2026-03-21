@@ -134,7 +134,7 @@ const benefitsStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'pain-journal-for-disability-benefits',
   title: 'Pain Journal for Disability Benefits (Free)',
-  metaTitle: 'Pain Journal for Disability Benefits — Free Benefits-Ready Template | Pain Tracker Pro',
+  metaTitle: 'Pain Journal for Disability Benefits — Free Benefits-Ready Template | PainTracker',
   metaDescription: 'Download a free pain journal template designed specifically for disability benefits applications. Covers SSDI, LTD, WorkSafeBC. Includes functional limitation tracking and evidence-ready formatting.',
   keywords: [
     'pain journal for disability benefits', 'disability pain journal',

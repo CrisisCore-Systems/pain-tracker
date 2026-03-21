@@ -27,54 +27,59 @@ class PWAStatusManager {
     this.updateStatus();
     
     // Update status periodically
-    setInterval(() => this.updateStatus(), 30000);
+    globalThis.setInterval(() => this.updateStatus(), 30000);
   }
 
   setupEventListeners() {
-    window.addEventListener('online', () => {
+    const runtime = globalThis;
+
+    runtime.addEventListener('online', () => {
       this.status.isOnline = true;
       this.updateDisplay();
       this.updateStatus();
     });
 
-    window.addEventListener('offline', () => {
+    runtime.addEventListener('offline', () => {
       this.status.isOnline = false;
       this.updateDisplay();
     });
 
     // Listen for PWA events
-    window.addEventListener('pwa-install-available', () => {
+    runtime.addEventListener('pwa-install-available', () => {
       this.showInstallPrompt();
     });
 
-    window.addEventListener('pwa-installed', () => {
+    runtime.addEventListener('pwa-installed', () => {
       this.status.isInstalled = true;
       this.hideInstallPrompt();
     });
 
-    window.addEventListener('background-sync-sync-started', () => {
+    runtime.addEventListener('background-sync-sync-started', () => {
       this.status.isSyncing = true;
       this.updateDisplay();
     });
 
-    window.addEventListener('background-sync-sync-completed', (event) => {
+    runtime.addEventListener('background-sync-sync-completed', (event) => {
       this.status.isSyncing = false;
-      if (event.detail && event.detail.successCount) {
-        this.status.pendingSync = Math.max(0, this.status.pendingSync - event.detail.successCount);
+      const successCount = event.detail?.successCount ?? 0;
+      if (successCount > 0) {
+        this.status.pendingSync = Math.max(0, this.status.pendingSync - successCount);
       }
       this.updateDisplay();
     });
   }
 
   async updateStatus() {
+    const runtime = globalThis;
+
     try {
       // Try to get pending sync count
-      if (window.backgroundSync) {
-        this.status.pendingSync = await window.backgroundSync.getPendingItemsCount();
+      if (runtime.backgroundSync) {
+        this.status.pendingSync = await runtime.backgroundSync.getPendingItemsCount();
       }
     } catch (error) {
       // Background sync not available (expected in some browsers)
-      if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development') {
+      if (process?.env?.NODE_ENV === 'development') {
         console.debug('PWA: backgroundSync getPendingItemsCount unavailable', error);
       }
     }
@@ -154,7 +159,7 @@ class PWAStatusManager {
     content.appendChild(statusText);
 
     while (this.statusElement.firstChild) {
-      this.statusElement.removeChild(this.statusElement.firstChild);
+      this.statusElement.firstChild.remove();
     }
     this.statusElement.appendChild(content);
   }
@@ -208,9 +213,11 @@ class PWAStatusManager {
 
     // Add event listeners
     document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+      const runtime = globalThis;
+
       try {
-        if (window.pwaManager && window.pwaManager.showInstallPrompt) {
-          await window.pwaManager.showInstallPrompt();
+        if (runtime.pwaManager?.showInstallPrompt) {
+          await runtime.pwaManager.showInstallPrompt();
         }
       } catch (error) {
         console.error('Failed to show install prompt:', error);
@@ -232,37 +239,44 @@ class PWAStatusManager {
   }
 }
 
-// PWA Initialization
-async function initializePWA() {
-  try {
-    console.log('PWA: Initializing PWA features...');
+function initializePWA() {
+  const runtime = globalThis;
 
-    // Initialize PWA Manager
-    if (window.pwaManager) {
-      await window.pwaManager.isAppInstalled();
-      console.log('PWA: PWA Manager initialized');
-    }
+  console.log('PWA: Initializing PWA features...');
 
-    // Note: Offline Storage and Background Sync are initialized by the main React app
-    // These features are handled by the TypeScript modules in src/lib/
-    console.log('PWA: Offline storage and background sync handled by main app');
+  const pwaManagerInit = runtime.pwaManager
+    ? Promise.resolve(runtime.pwaManager.isAppInstalled()).then(() => {
+        console.log('PWA: PWA Manager initialized');
+      })
+    : Promise.resolve();
 
-    // Initialize Status Manager
-    new PWAStatusManager();
-    console.log('PWA: Status manager initialized');
+  pwaManagerInit
+    .then(() => {
+      // Note: Offline Storage and Background Sync are initialized by the main React app.
+      // These features are handled by the TypeScript modules in src/lib/.
+      console.log('PWA: Offline storage and background sync handled by main app');
 
-    // Enable health data sync if available
-    if (window.pwaManager && window.pwaManager.enableHealthDataSync) {
-      try {
-        await window.pwaManager.enableHealthDataSync();
-        console.log('PWA: Health data sync enabled');
-      } catch (error) {
-        console.warn('PWA: Health data sync not available:', error);
+      runtime.pwaStatusManager = new PWAStatusManager();
+      console.log('PWA: Status manager initialized');
+    })
+    .then(() => {
+      if (!runtime.pwaManager?.enableHealthDataSync) {
+        return undefined;
       }
-    }
 
-    // Add CSS animations
-    if (!document.getElementById('pwa-styles')) {
+      return Promise.resolve(runtime.pwaManager.enableHealthDataSync())
+        .then(() => {
+          console.log('PWA: Health data sync enabled');
+        })
+        .catch((error) => {
+          console.warn('PWA: Health data sync not available:', error);
+        });
+    })
+    .then(() => {
+      if (document.getElementById('pwa-styles')) {
+        return;
+      }
+
       const style = document.createElement('style');
       style.id = 'pwa-styles';
       style.textContent = `
@@ -270,51 +284,51 @@ async function initializePWA() {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
         }
-        
+
         #pwa-status-indicator {
           transition: all 0.3s ease;
         }
-        
+
         #pwa-install-prompt {
           animation: slideUp 0.3s ease;
         }
-        
+
         @keyframes slideUp {
           from { transform: translateY(100%); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
         }
       `;
       document.head.appendChild(style);
-    }
-
-    console.log('PWA: Initialization complete');
-    
-    // Dispatch initialization event
-    window.dispatchEvent(new CustomEvent('pwa-initialized'));
-
-  } catch (error) {
-    console.error('PWA: Initialization failed:', error);
-  }
+    })
+    .then(() => {
+      console.log('PWA: Initialization complete');
+      globalThis.dispatchEvent(new CustomEvent('pwa-initialized'));
+    })
+    .catch((error) => {
+      console.error('PWA: Initialization failed:', error);
+    });
 }
 
 // Enhanced offline entry management
-window.addPainEntryOffline = async function(entryData) {
+globalThis.addPainEntryOffline = async function(entryData) {
+  const runtime = globalThis;
+
   try {
     // Add entry to local store (assumes Zustand store is available)
-    if (window.usePainTrackerStore) {
-      const store = window.usePainTrackerStore.getState();
+    if (runtime.usePainTrackerStore) {
+      const store = runtime.usePainTrackerStore.getState();
       store.addEntry(entryData);
     }
 
     // Store in IndexedDB if available
-    if (window.offlineStorage) {
-      await window.offlineStorage.storeData('pain-entry', entryData);
+    if (runtime.offlineStorage) {
+      await runtime.offlineStorage.storeData('pain-entry', entryData);
     }
 
     // Queue for sync if offline or background sync available
     const isOffline = !navigator.onLine;
-    if (isOffline && window.backgroundSync) {
-      await window.backgroundSync.queueForSync('/api/pain-entries', 'POST', entryData, 'high');
+    if (isOffline && runtime.backgroundSync) {
+      await runtime.backgroundSync.queueForSync('/api/pain-entries', 'POST', entryData, 'high');
     }
 
     console.log('PWA: Pain entry saved offline');
@@ -326,14 +340,16 @@ window.addPainEntryOffline = async function(entryData) {
 };
 
 // Force sync function
-window.forcePWASync = async function() {
+globalThis.forcePWASync = async function() {
+  const runtime = globalThis;
+
   try {
     if (!navigator.onLine) {
       throw new Error('Cannot sync while offline');
     }
 
-    if (window.backgroundSync) {
-      await window.backgroundSync.forcSync();
+    if (runtime.backgroundSync) {
+      await runtime.backgroundSync.forcSync();
       localStorage.setItem('last-sync-time', new Date().toISOString());
       console.log('PWA: Force sync completed');
       return true;
@@ -346,12 +362,19 @@ window.forcePWASync = async function() {
   }
 };
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializePWA);
-} else {
+function initializePWAWhenReady() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initializePWA();
+    }, { once: true });
+    return;
+  }
+
   initializePWA();
 }
+
+// Initialize when DOM is ready
+initializePWAWhenReady();
 
 // Export for module systems
 if (typeof module !== 'undefined' && module.exports) {

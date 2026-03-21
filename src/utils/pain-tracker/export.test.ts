@@ -1,7 +1,7 @@
 /// <reference types="vitest/globals" />
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
-import { exportToCSV, exportToJSON, downloadData, exportToPDF } from './export';
+import { exportToCSV, exportToJSON, downloadData, exportToPDF, clearExportArtifacts } from './export';
 import type { PainEntry } from '../../types';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { analyticsLogger } from '../../lib/debug-logger';
@@ -101,7 +101,7 @@ describe('Pain Tracker Export', () => {
     it('should handle empty entries', () => {
       const csv = exportToCSV([]);
       expect(csv).toContain('Date,Time,Pain Level,Locations,Symptoms');
-      expect(csv.split('\\n')).toHaveLength(1); // Only headers
+      expect(csv.split(String.raw`\n`)).toHaveLength(1); // Only headers
     });
 
     it('should escape quotes in notes', () => {
@@ -145,7 +145,7 @@ describe('Pain Tracker Export', () => {
     it('should handle multiple entries', () => {
       const multipleEntries = createMockEntries(5);
       const csv = exportToCSV(multipleEntries);
-      const lines = csv.split('\\n');
+      const lines = csv.split(String.raw`\n`);
       expect(lines).toHaveLength(6); // 1 header + 5 entries
     });
 
@@ -167,6 +167,17 @@ describe('Pain Tracker Export', () => {
 
       // Date should be preserved; time column should be empty.
       expect(csv).toContain('2024-01-01,,5');
+    });
+
+    it('should apply minimal redaction policy for CSV', () => {
+      const csv = exportToCSV(mockEntries, 'minimal');
+      const header = csv.split(String.raw`\n`)[0] || '';
+
+      expect(header).toBe('Date,Time,Pain Level,Symptoms,Medication Log');
+      expect(csv).toContain('"Stiffness; Burning"');
+      expect(csv).not.toContain('Locations');
+      expect(csv).not.toContain('Mood Impact');
+      expect(csv).not.toContain('Test note');
     });
   });
 
@@ -200,6 +211,22 @@ describe('Pain Tracker Export', () => {
       const json = exportToJSON(multipleEntries);
       const parsed = JSON.parse(json);
       expect(parsed).toHaveLength(10);
+    });
+
+    it('should apply minimal redaction policy for JSON', () => {
+      const json = exportToJSON(mockEntries, 'minimal');
+      const parsed = JSON.parse(json) as Array<Record<string, unknown>>;
+      const first = parsed[0] || {};
+
+      expect(first).toHaveProperty('timestamp');
+      expect(first).toHaveProperty('painLevel');
+      expect(first).toHaveProperty('symptoms');
+      expect(first).toHaveProperty('medications');
+      expect(first).not.toHaveProperty('notes');
+      expect(first).not.toHaveProperty('baselineData');
+      expect(first).not.toHaveProperty('qualityOfLife');
+      expect(first).not.toHaveProperty('location');
+      expect(first).not.toHaveProperty('mood');
     });
   });
 
@@ -293,10 +320,12 @@ describe('Pain Tracker Export', () => {
   });
 
   describe('downloadData', () => {
-    let originalWindow: typeof window;
+    let originalWindow: typeof globalThis.window;
+    let mockLink: { href: string; download: string; click: ReturnType<typeof vi.fn>; remove: ReturnType<typeof vi.fn> };
 
     beforeEach(() => {
-      originalWindow = { ...window };
+      vi.useFakeTimers();
+      originalWindow = { ...globalThis.window };
 
       // Mock URL methods
       const mockURL = {
@@ -304,16 +333,17 @@ describe('Pain Tracker Export', () => {
         revokeObjectURL: vi.fn(),
       };
 
-      Object.defineProperty(window, 'URL', {
+      Object.defineProperty(globalThis.window, 'URL', {
         value: mockURL,
         writable: true,
       });
 
       // Mock document methods
-      const mockLink = {
+      mockLink = {
         href: '',
         download: '',
         click: vi.fn(),
+        remove: vi.fn(),
       };
 
       vi.spyOn(document, 'createElement').mockImplementation(
@@ -332,8 +362,10 @@ describe('Pain Tracker Export', () => {
     });
 
     afterEach(() => {
+      clearExportArtifacts();
+      vi.useRealTimers();
       // Restore original window
-      Object.defineProperty(window, 'URL', {
+      Object.defineProperty(globalThis.window, 'URL', {
         value: originalWindow.URL,
         writable: true,
       });
@@ -344,30 +376,55 @@ describe('Pain Tracker Export', () => {
       downloadData('test data', 'test.csv');
 
       expect(document.createElement).toHaveBeenCalledWith('a');
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
-      expect(window.URL.revokeObjectURL).toHaveBeenCalled();
+      expect(globalThis.window.URL.createObjectURL).toHaveBeenCalled();
+      expect(globalThis.window.URL.revokeObjectURL).not.toHaveBeenCalled();
       expect(document.body.appendChild).toHaveBeenCalled();
-      expect(document.body.removeChild).toHaveBeenCalled();
+      expect(mockLink.remove).toHaveBeenCalled();
+
+      vi.advanceTimersByTime(60000);
+      expect(globalThis.window.URL.revokeObjectURL).toHaveBeenCalled();
     });
 
     it('should use correct mime type for CSV', () => {
       downloadData('col1,col2\nval1,val2', 'export.csv', 'text/csv;charset=utf-8');
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
+      expect(globalThis.window.URL.createObjectURL).toHaveBeenCalled();
     });
 
     it('should use correct mime type for JSON', () => {
       downloadData('{"key": "value"}', 'export.json', 'application/json;charset=utf-8');
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
+      expect(globalThis.window.URL.createObjectURL).toHaveBeenCalled();
     });
 
     it('should handle data URI format (for PDF)', () => {
       const dataUri = 'data:application/pdf;base64,JVBERi0xLjcKCjEgMCBvYmo=';
       downloadData(dataUri, 'export.pdf');
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
+      expect(globalThis.window.URL.createObjectURL).toHaveBeenCalled();
+    });
+
+    it('revokes object URL when tab visibility changes away from visible', () => {
+      downloadData('test data', 'test.csv');
+      expect(globalThis.window.URL.revokeObjectURL).not.toHaveBeenCalled();
+
+      Object.defineProperty(document, 'visibilityState', {
+        configurable: true,
+        value: 'hidden',
+      });
+      document.dispatchEvent(new Event('visibilitychange'));
+
+      expect(globalThis.window.URL.revokeObjectURL).toHaveBeenCalled();
+    });
+
+    it('clears export artifacts on explicit cleanup', () => {
+      downloadData('test data', 'test.csv');
+      expect(globalThis.window.URL.revokeObjectURL).not.toHaveBeenCalled();
+
+      clearExportArtifacts();
+
+      expect(globalThis.window.URL.revokeObjectURL).toHaveBeenCalled();
     });
 
     it('should return early when window is undefined', () => {
-      const createObjectURL = window.URL.createObjectURL;
+      const createObjectURL = globalThis.window.URL.createObjectURL;
 
       try {
         vi.stubGlobal('window', undefined as any);
@@ -385,7 +442,7 @@ describe('Pain Tracker Export', () => {
       const csv = exportToCSV(entries);
       
       // Verify CSV structure
-      const lines = csv.split('\\n');
+      const lines = csv.split(String.raw`\n`);
       expect(lines[0]).toContain('Date');
       expect(lines[0]).toContain('Pain Level');
       

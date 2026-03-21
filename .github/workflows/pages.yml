@@ -74,15 +74,25 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION || '20' }} }
+        with:
+          node-version: ${{ env.NODE_VERSION || '20' }}
 
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
+
+      - name: Run deployment precheck
+        run: npm run -s deploy:precheck
+        env:
+          NODE_ENV: production
+          CLINIC_AUTH_SECRET: ${{ secrets.CLINIC_AUTH_SECRET }}
+          ALLOW_DEMO_AUTH: 'false'
 
       - name: Build rollback version
         run: npm run build
         env:
           NODE_ENV: production
+          CLINIC_AUTH_SECRET: ${{ secrets.CLINIC_AUTH_SECRET }}
+          ALLOW_DEMO_AUTH: 'false'
           VITE_APP_TITLE: Pain Tracker
           VITE_APP_ENVIRONMENT: ${{ github.event.inputs.environment || 'production' }}
           VITE_APP_VERSION: ${{ github.event.inputs.rollback_to }}
@@ -191,7 +201,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION || '20' }} }
+        with:
+          node-version: ${{ env.NODE_VERSION || '20' }}
       - run: npm ci --legacy-peer-deps
       - name: Security audit
         run: |
@@ -222,7 +233,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: ${{ env.NODE_VERSION || '20' }} }
+        with:
+          node-version: ${{ env.NODE_VERSION || '20' }}
       - run: npm ci --legacy-peer-deps
       - name: Type checking
         run: |
@@ -253,12 +265,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20 }
+        with:
+          node-version: 20
       - run: npm ci --legacy-peer-deps
+      - name: Run deployment precheck
+        run: npm run -s deploy:precheck
+        env:
+          NODE_ENV: production
+          CLINIC_AUTH_SECRET: ${{ secrets.CLINIC_AUTH_SECRET }}
+          ALLOW_DEMO_AUTH: 'false'
       - name: Build
         run: npm run build
         env:
           NODE_ENV: production
+          CLINIC_AUTH_SECRET: ${{ secrets.CLINIC_AUTH_SECRET }}
+          ALLOW_DEMO_AUTH: 'false'
           VITE_APP_TITLE: Pain Tracker
           VITE_APP_ENVIRONMENT: ${{ inputs.environment || 'production' }}
           VITE_APP_VERSION: ${{ inputs.version || github.sha }}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent, screen, act } from '@testing-library/react';
 import AlertsActivityLog, { saveAlert } from '../AlertsActivityLog';
 
 describe('AlertsActivityLog', () => {
@@ -57,5 +57,26 @@ describe('AlertsActivityLog', () => {
     // original alerts restored
     expect(await screen.findByText('One')).toBeTruthy();
     expect(await screen.findByText('Two')).toBeTruthy();
+  });
+
+  test('clearAlerts becomes irreversible after the undo window expires', async () => {
+    saveAlert({ id: 'a1', time: new Date().toISOString(), message: 'One' });
+    saveAlert({ id: 'a2', time: new Date().toISOString(), message: 'Two' });
+    render(<AlertsActivityLog />);
+
+    fireEvent.click(screen.getByText('Recent Alerts'));
+    fireEvent.click(screen.getByText('Clear all'));
+    vi.useFakeTimers();
+    fireEvent.click(screen.getByText('Yes, clear'));
+
+    expect(screen.getByText('Undo')).toBeTruthy();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(6_100);
+    });
+
+    expect(screen.queryByText('Undo')).toBeNull();
+    expect(screen.queryByText('One')).toBeNull();
+    expect(screen.queryByText('Two')).toBeNull();
   });
 });

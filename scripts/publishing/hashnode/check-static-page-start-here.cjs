@@ -5,7 +5,7 @@
  *   node scripts/publishing/hashnode/check-static-page-start-here.cjs
  */
 
-const https = require('https');
+const https = require('node:https');
 
 function gqlRequest(query, variables = {}) {
   return new Promise((resolve, reject) => {

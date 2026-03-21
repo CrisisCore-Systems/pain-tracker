@@ -117,6 +117,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate trust claims baseline
+        run: npm run -s claims:validate
+
+      - name: Validate clinic auth production environment
+        run: npm run -s guard:clinic-auth-env
+        env:
+          NODE_ENV: production
+          CLINIC_AUTH_SECRET: ${{ secrets.CLINIC_AUTH_SECRET }}
+          ALLOW_DEMO_AUTH: 'false'
+
       - name: Run checks
         if: ${{ inputs.skip_tests != 'true' }}
         run: npm run -s check

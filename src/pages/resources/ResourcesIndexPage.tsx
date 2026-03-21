@@ -254,7 +254,7 @@ const resources: ResourceCard[] = [
 
 export const ResourcesIndexPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Free Pain Tracking Resources & Templates | Pain Tracker Pro';
+    document.title = 'Free Pain Tracking Resources & Templates | PainTracker';
     
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
@@ -356,7 +356,7 @@ export const ResourcesIndexPage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">Pain Tracker Pro</span>
+              <span className="landing-brand text-xl">PainTracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -433,14 +433,14 @@ export const ResourcesIndexPage: React.FC = () => {
               Prefer digital tracking?
             </h2>
             <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Pain Tracker Pro does everything these templates do—automatically. 
+              PainTracker does everything these templates do—automatically. 
               Generate medical reports, track patterns, and keep everything private on your device.
             </p>
             <Link
               to="/start"
               className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl inline-flex items-center gap-3"
             >
-              Try Pain Tracker Pro
+              Try PainTracker
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>

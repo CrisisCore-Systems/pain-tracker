@@ -73,6 +73,32 @@ $env:EVIDENCE_DIR = (Resolve-Path .\evidence\overton-level-a\manual_run).Path
 npx playwright test e2e\tests\overton-level-a-evidence.spec.ts --project=chromium --config=e2e\playwright.config.ts
 ```
 
+## Degraded Functionality Signoff Capture
+
+There is also a focused degraded-functionality signoff spec that uses Playwright CDP throttling plus the shared `EVIDENCE_DIR` artifact harness. When `PLAYWRIGHT_V8_OLD_SPACE_SIZE` is set, the spec records a separate heap-cap startup probe while keeping the main signoff flow on the standard Playwright browser fixture.
+
+PowerShell (from repo root):
+
+```powershell
+$evidenceDir = Join-Path $PWD 'evidence\degraded\manual_run'
+New-Item -ItemType Directory -Force -Path $evidenceDir | Out-Null
+$env:EVIDENCE_DIR = (Resolve-Path $evidenceDir).Path
+$env:PLAYWRIGHT_V8_OLD_SPACE_SIZE = '512'
+npx playwright test e2e/tests/signoff-degraded-functionality.spec.ts --project=chromium --config=e2e/playwright.config.ts --workers=1
+```
+
+Artifacts are written under `evidence\degraded\manual_run\degraded\` and include:
+
+- `network-trace.har`
+- `trace.zip`
+- `video\session.webm`
+- `heap-cap-probe.json`
+- `phase-log.txt`
+- `wcag-scan.json`
+- `timings.json`
+- `network-summary.json`
+- `AUDIT_ARTIFACT_DRAFT.md`
+
 ## Browser Support Matrix
 
 | Browser | Desktop | Mobile | PWA Support | Background Sync |

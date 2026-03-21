@@ -86,6 +86,16 @@ jobs:
       
       - name: Install dependencies
         run: npm ci --include=dev --legacy-peer-deps
+
+      - name: Validate trust claims baseline
+        run: npm run -s claims:validate
+
+      - name: Validate clinic auth production guard logic
+        run: npm run -s guard:clinic-auth-env
+        env:
+          NODE_ENV: production
+          CLINIC_AUTH_SECRET: ci-placeholder-secret
+          ALLOW_DEMO_AUTH: 'false'
       
       - name: Run environment diagnostics
         run: node scripts/doctor.js
@@ -124,6 +134,8 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          CLINIC_AUTH_SECRET: ci-placeholder-secret
+          ALLOW_DEMO_AUTH: 'false'
       
       - name: Upload build artifacts (primary version only)
         if: matrix.is-primary

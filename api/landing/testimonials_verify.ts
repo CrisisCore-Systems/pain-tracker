@@ -3,6 +3,7 @@ import { db } from '../../src/lib/database';
 import verifyAdmin from '../../api-lib/adminAuth';
 import { z } from 'zod';
 import { enforceRateLimit, getClientIp, logError } from '../../api-lib/http';
+import { validateCsrfForMutation } from '../../api-lib/csrf';
 
 type TestimonialVerifyBody = {
   id?: unknown;
@@ -43,6 +44,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
+    const csrf = validateCsrfForMutation(req);
+    if (!csrf.ok) {
+      res.status(csrf.status).json({ ok: false, error: csrf.error });
+      return;
+    }
+
     const raw = (req.body ?? {}) as TestimonialVerifyBody;
     const parsed = VerifyBodySchema.safeParse(raw);
     if (!parsed.success) {
@@ -63,7 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const q = `UPDATE testimonials SET verified = $1, anonymized = COALESCE($2, anonymized), verified_by = $3, verified_at = ${verifiedAt || 'NULL'}, publication_date = $4 WHERE id = $5 RETURNING *`;
     const params = [
       !!verified,
-      anonymized === undefined ? null : anonymized,
+      anonymized ?? null,
       safeActor,
       publication_date ?? null,
       idValue,

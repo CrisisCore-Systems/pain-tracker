@@ -106,7 +106,7 @@ export function ProtectedAppShell({ initialView }: { initialView?: string } = {}
     <div
       className="pt-app-shell min-h-screen bg-background transition-colors"
       role="application"
-      aria-label="Pain Tracker Pro Application"
+      aria-label="PainTracker Application"
     >
       <OfflineBanner />
       <NotificationConsentPrompt />

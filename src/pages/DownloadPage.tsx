@@ -16,7 +16,7 @@ export const DownloadPage: React.FC = () => {
 
   useEffect(() => {
     document.title = 'Download Pain Tracker — Free Chronic Pain Tracking';
-    return () => { document.title = 'Pain Tracker Pro'; };
+    return () => { document.title = 'PainTracker'; };
   }, []);
 
   return (

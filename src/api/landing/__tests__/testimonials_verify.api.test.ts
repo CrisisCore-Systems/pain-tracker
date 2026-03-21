@@ -2,12 +2,11 @@ import handler from '../../../../api/landing/testimonials_verify';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { db } from '../../../../src/lib/database';
 
-type MockResBody = unknown;
 type MockRes = {
   _status: number;
-  _body: MockResBody;
+  _body: unknown;
   status: (code: number) => MockRes;
-  json: (payload: MockResBody) => MockRes;
+  json: (payload: unknown) => MockRes;
 };
 
 type MockReq = {
@@ -26,7 +25,7 @@ function createMockRes(): MockRes {
       res._status = code;
       return res;
     },
-    json: (payload: MockResBody) => {
+    json: (payload: unknown) => {
       res._body = payload;
       return res;
     },
@@ -36,6 +35,14 @@ function createMockRes(): MockRes {
 
 describe('POST /api/landing/testimonials_verify', () => {
   let fetchMock: ReturnType<typeof vi.fn>;
+  const authHeaders = {
+    authorization: 'Bearer test-admin-key',
+    host: 'example.test',
+    'x-forwarded-proto': 'https',
+    origin: 'https://example.test',
+    cookie: 'csrfToken=abc123',
+    'x-csrf-token': 'abc123',
+  } as const;
 
   beforeEach(() => {
     fetchMock = vi.fn().mockResolvedValue({ ok: false });
@@ -52,11 +59,65 @@ describe('POST /api/landing/testimonials_verify', () => {
   });
 
   it('returns 400 if id is missing', async () => {
-    const req: MockReq = { method: 'POST', headers: { authorization: 'Bearer test-admin-key' }, body: {} };
+    const req: MockReq = { method: 'POST', headers: { ...authHeaders }, body: {} };
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
     await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
     expect(res._status).toBe(400);
+  });
+
+  it('returns 403 when csrf header is missing', async () => {
+    const req: MockReq = {
+      method: 'POST',
+      headers: {
+        ...authHeaders,
+        'x-csrf-token': undefined,
+      },
+      body: { id: '1', verified: true },
+    };
+    const res = createMockRes();
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+
+    expect(res._status).toBe(403);
+    expect(res._body).toMatchObject({ error: 'Missing CSRF token' });
+  });
+
+  it('returns 403 when csrf token mismatches cookie token', async () => {
+    const req: MockReq = {
+      method: 'POST',
+      headers: {
+        ...authHeaders,
+        'x-csrf-token': 'wrong-token',
+      },
+      body: { id: '1', verified: true },
+    };
+    const res = createMockRes();
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+
+    expect(res._status).toBe(403);
+    expect(res._body).toMatchObject({ error: 'Invalid CSRF token' });
+  });
+
+  it('returns 403 when origin is absent', async () => {
+    const req: MockReq = {
+      method: 'POST',
+      headers: {
+        ...authHeaders,
+        origin: undefined,
+      },
+      body: { id: '1', verified: true },
+    };
+    const res = createMockRes();
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+
+    expect(res._status).toBe(403);
+    expect(res._body).toMatchObject({ error: 'Invalid request origin' });
   });
 
   it('updates testimonial and audits', async () => {
@@ -65,7 +126,14 @@ describe('POST /api/landing/testimonials_verify', () => {
     querySpy
       .mockResolvedValueOnce(fakeResult as unknown as Awaited<ReturnType<typeof db.query>>)
       .mockResolvedValueOnce([] as unknown as Awaited<ReturnType<typeof db.query>>);
-    const req: MockReq = { method: 'POST', headers: { authorization: 'Bearer test-admin-key', 'x-admin-user': 'unit@test' }, body: { id: '1', verified: true } };
+    const req: MockReq = {
+      method: 'POST',
+      headers: {
+        ...authHeaders,
+        'x-admin-user': 'unit@test',
+      },
+      body: { id: '1', verified: true },
+    };
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
     await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);

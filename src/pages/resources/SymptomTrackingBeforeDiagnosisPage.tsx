@@ -133,7 +133,7 @@ const diagnosisStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'symptom-tracking-before-diagnosis',
   title: 'Symptom Tracking Before Diagnosis',
-  metaTitle: 'Symptom Tracking Before Diagnosis — What to Track When You Don\'t Know What\'s Wrong | Pain Tracker Pro',
+  metaTitle: 'Symptom Tracking Before Diagnosis — What to Track When You Don\'t Know What\'s Wrong | PainTracker',
   metaDescription: 'Learn what to track when your pain hasn\'t been diagnosed yet. Pattern recognition guide, pre-diagnosis tracking categories, and doctor-ready summary template.',
   keywords: [
     'symptom tracking before diagnosis', 'pre-diagnosis symptom tracking',

@@ -247,6 +247,7 @@ These are flows that can be easy to miss during review:
 5. **Audit sink fallback to console**
    - Some sinks fall back to console logging when IndexedDB is unavailable.
    - Ensure logged payloads remain non-reconstructive.
+  - For degraded reason-code handling and operator remediation, see [AUDIT_HIPAA_IMPLEMENTATION.md](./AUDIT_HIPAA_IMPLEMENTATION.md).
 
 6. **Speech recognition network ambiguity**
    - Web Speech APIs can involve remote processing depending on platform.

@@ -41,7 +41,7 @@ const article: ArticleData = {
     {
       h2: 'Threat model and honest limitations',
       paragraphs: [
-        'PainTracker defends against realistic threats: lost or stolen devices (at-rest encryption), XSS attacks (CSP plus secure coding), malicious browser extensions (limited plaintext exposure), shoulder-surfing (panic mode, minimal visible data), and coercive access attempts (user-controlled data, quick dismissal).',
+          'PainTracker defends against realistic threats: lost or stolen devices (at-rest encryption), XSS attacks (CSP plus secure coding), malicious browser extensions (limited plaintext exposure), and shoulder-surfing or brief unwanted glances (panic mode, minimal visible data, quick dismissal).',
         'We do not claim to protect against compromised operating systems, root-level malware, hardware keyloggers, or physical coercion beyond in-app safety controls. No application-level security can defeat an adversary who controls the OS. Honest threat modelling means being transparent about what we protect against and what we do not.',
       ],
     },

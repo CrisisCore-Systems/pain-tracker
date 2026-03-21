@@ -317,6 +317,26 @@
       "articleId": 3325931,
       "devtoUrl": "https://dev.to/crisiscoresystems/the-micro-coercion-of-speed-why-friction-is-an-engineering-prerequisite-g4j",
       "published": true
+    },
+    {
+      "key": "proofvault-trust-case-release-artifact",
+      "enabled": true,
+      "title": "How ProofVault turned trust from a documentation claim into a reproducible release artifact",
+      "sourceFile": "docs/content/blog/devto-proofvault-trust-case-release-artifact.md",
+      "publishAt": "2026-03-14T00:00:00Z",
+      "tags": [
+        "architecture",
+        "security",
+        "privacy",
+        "showdev"
+      ],
+      "description": "How ProofVault turned trust from a documentation claim into a reproducible, release-bound artifact.",
+      "injectCtas": false,
+      "main_image": "https://dev-to-uploads.s3.amazonaws.com/uploads/articles/1awypd543rg4724oq3i9.png",
+      "canonical_url": null,
+      "articleId": 3351761,
+      "devtoUrl": "https://dev.to/crisiscoresystems/how-proofvault-turned-trust-from-a-documentation-claim-into-a-reproducible-release-artifact-22pb",
+      "published": true
     }
   ]
 }

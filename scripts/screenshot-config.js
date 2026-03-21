@@ -174,7 +174,7 @@ export const SCREENSHOT_PORTFOLIO = [
     name: 'privacy-security-settings.png',
     category: SCREENSHOT_CATEGORIES.TECHNICAL,
     description: 'Privacy/Security Settings',
-    caption: 'Your data never leaves your device - unlike cloud-based competitors',
+    caption: 'Local by default, with explicit user-controlled sharing actions',
     url: '/demo/#demo-settings',
     width: 1200,
     height: 630,

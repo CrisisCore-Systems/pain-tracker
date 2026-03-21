@@ -14,7 +14,7 @@
  *   $env:HASHNODE_TOKEN="<token>"; node scripts/publishing/hashnode/week1-p0-fix-rendered-metadata.cjs --dry-run
  */
 
-const https = require('https');
+const https = require('node:https');
 
 const TOKEN = process.env.HASHNODE_TOKEN || '';
 const HOST = 'blog.paintracker.ca';

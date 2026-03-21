@@ -150,7 +150,7 @@ const disabilityStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'documenting-pain-for-disability-claim',
   title: 'How to Document Pain for a Disability Claim',
-  metaTitle: 'Documenting Pain for Disability Claim — Complete Evidence Guide | Pain Tracker Pro',
+  metaTitle: 'Documenting Pain for Disability Claim — Complete Evidence Guide | PainTracker',
   metaDescription: 'Learn exactly how to document chronic pain for disability claims. What adjusters look for, 6 mistakes that get claims denied, evidence pyramid, and free templates to build your case.',
   keywords: [
     'documenting pain for disability claim', 'pain diary for disability',

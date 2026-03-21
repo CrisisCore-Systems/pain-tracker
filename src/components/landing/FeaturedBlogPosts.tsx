@@ -15,7 +15,7 @@ const featuredPosts: BlogPost[] = [
   {
     title: "Building a Pain Tracker That Actually Gets It",
     slug: "building-a-pain-tracker-that-actually-gets-it-no-market-research-required",
-    description: "Why lived experience beats market research when building health software. The story behind Pain Tracker Pro.",
+    description: "Why lived experience beats market research when building health software. The story behind PainTracker.",
     coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1731544846794/c8b1a3f0-1b3e-4f3e-8d1e-5a1234567890.png",
     readTime: "8 min",
     tag: "Origin Story",
@@ -33,7 +33,7 @@ const featuredPosts: BlogPost[] = [
   {
     title: "Trauma-Informed Design in Practice",
     slug: "building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design",
-    description: "What trauma-informed design actually means and how it shapes every pixel of Pain Tracker Pro.",
+    description: "What trauma-informed design actually means and how it shapes every pixel of PainTracker.",
     coverImage: "https://cdn.hashnode.com/res/hashnode/image/upload/v1731544846794/trauma-informed-cover.png",
     readTime: "10 min",
     tag: "UX Design",

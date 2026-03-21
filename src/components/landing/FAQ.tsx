@@ -3,53 +3,50 @@ import { HelpCircle, ArrowRight } from 'lucide-react';
 
 const faqs: Array<{ q: string; a: React.ReactNode }> = [
   {
-    q: 'Is my pain data stored in the cloud?',
+    q: 'What is a pain tracker?',
     a: (
       <>
-        No. Pain Tracker stores your health data locally on your device. Data only leaves the device when you export or share it.
+        A pain tracker is a structured log for recording pain, symptoms, triggers, treatments, and daily functioning over time. PainTracker is designed to work as a daily pain diary app and chronic pain tracker without making everyday use depend on the cloud.
       </>
     ),
   },
   {
-    q: 'What do you mean by “privacy-aligned security controls”?',
+    q: 'What is the best pain tracking app to use offline?',
     a: (
       <>
-        It describes privacy and security controls we aim to follow (data minimization, encryption, access controls). It is not a legal
-        compliance claim, and using the app does not make an organization compliant.
+        If offline use and privacy are priorities, look for an app that keeps daily logging available without an account, stores data locally by default, and lets you export your records when you choose. PainTracker is built around that model.
       </>
     ),
   },
   {
-    q: 'Can I export my data and leave anytime?',
+    q: 'Is there a free printable pain diary template?',
     a: (
       <>
-        Yes — export tools are built in. Available formats depend on your plan, and exports are initiated by you.
+        Yes. The site includes printable pain diary and pain log templates under Resources, including daily, weekly, monthly, and condition-specific formats. They are meant to work as paper-first tools or as a bridge into the app.
       </>
     ),
   },
   {
-    q: 'Does it sync across devices?',
+    q: 'Can I share a pain tracker report with my doctor?',
     a: (
       <>
-        Not automatically. Pain Tracker is offline-first and local-only. To move data between devices, use export/import.
+        Yes. PainTracker supports user-initiated exports so you can bring structured records to appointments or share them with a clinician when you decide to. Daily tracking remains local-first by default.
       </>
     ),
   },
   {
-    q: 'What is “trauma-informed design” in the app?',
+    q: 'Is an offline pain tracker more private?',
     a: (
       <>
-        It means the UI is designed to reduce shame, coercion, and cognitive load — with clear consent, gentle language, accessible
-        defaults, and user control.
+        It can be. An offline-first design reduces how often your health data needs to leave your device. PainTracker is built so everyday pain logging works locally, with exports and sharing remaining user-controlled actions.
       </>
     ),
   },
   {
-    q: 'Is WorkSafe BC export only for Canada?',
+    q: 'What is trauma-informed design in a pain tracker app?',
     a: (
       <>
-        WorkSafe BC workflows are Canada-specific. You can still export clinical summaries and data for other regions, but the WCB format
-        is targeted to WorkSafeBC.
+        It means the interface is designed to reduce shame, coercion, and cognitive load with clearer language, accessible defaults, and more user control. In a pain tracker, that matters because the app gets used under fatigue, distress, and interruption.
       </>
     ),
   },

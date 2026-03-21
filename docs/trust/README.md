@@ -13,8 +13,12 @@ Use these files to move from narrative claims to auditable evidence.
 - `verification-interlocks.md`: AI-speed safety controls and review gates
 - `pv-metric.md`: generation/verification pressure metric
 - `pls-rubric.md`: Protective Legitimacy Score framework
+- `reversibility-contract.md`: live destructive/share action inventory, rollback requirements, and honest gaps
+- `reversibility-verification.md`: automated/manual verification procedure and required evidence outputs
 - `release-evidence-template.md`: required evidence bundle per release
 - `release-evidence-2026-03-12.md`: dated execution evidence snapshot
+- `release-evidence-2026-03-19.md`: degraded-functionality evidence packet summary and signoff status
+- `release-evidence-2026-03-20.md`: reversibility verification evidence update for live undo/cancel/import claims
 - `scenario-test-protocol.md`: reproducible runtime drills
 - `release-gating-policy.md`: hard merge/release gates
 - `trust-hardening-roadmap-2026q1.md`: 4-12 week phased execution plan with gate criteria

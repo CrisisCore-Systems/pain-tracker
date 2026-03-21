@@ -78,7 +78,7 @@ export async function encryptAndStore(
 }
 ```
 
-Every pain entry gets encrypted with XChaCha20-Poly1305 before it even touches storage. Your encryption key never leaves your device. There's no "sync to cloud" toggle that could accidentally leak your most vulnerable moments.
+Every pain entry gets encrypted with XChaCha20-Poly1305 before it even touches storage. Encryption keys are generated and stored locally, and there is no background cloud sync for core flows.
 
 ---
 
@@ -321,7 +321,7 @@ Pain Tracker takes a fundamentally different approach: **We can't spy on you bec
 
 * Encryption keys are generated and stored locally
     
-* Health data never leaves your device
+* Core health-data handling is local by default
     
 * Crisis detection runs entirely in your browser
     

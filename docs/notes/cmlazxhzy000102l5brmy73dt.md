@@ -71,7 +71,7 @@ No. Your data is encrypted on your device and never transmitted to any server. T
 
 Your data remains on your device. PainTracker is also open source, so the code remains available for anyone to run independently. Export your data regularly as an additional safeguard.
 
-### Is PainTracker HIPAA compliant?
+### Is PainTracker a HIPAA-covered service?
 
 PainTracker implements privacy-aligned security controls including encryption at rest and access controls. However, as a local-only tool with no server-side data processing, traditional HIPAA compliance frameworks do not directly apply.
 

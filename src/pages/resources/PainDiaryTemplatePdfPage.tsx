@@ -54,7 +54,7 @@ const SEO = {
   slug: 'pain-diary-template-pdf',
   title: 'Printable Pain Diary Template (Free PDF)',
   metaTitle:
-    'Pain Diary Template PDF — Free Clinician-Designed Printable | Pain Tracker Pro',
+    'Pain Diary Template PDF — Free Clinician-Designed Printable | PainTracker',
   metaDescription:
     'Download a free, clinician-designed pain diary template PDF. Tracks pain intensity, location, medications, triggers, sleep, and mood — ready for doctor appointments, WorkSafeBC claims, and disability documentation.',
   keywords: [
@@ -255,12 +255,12 @@ const FAQS = [
   {
     question: 'What if I have too much pain to write?',
     answer:
-      'On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, Pain Tracker Pro\'s digital version lets you log entries with a few taps on your phone.',
+      'On high-pain days, just fill in the number (0-10) and check a few boxes — that takes under 30 seconds. The template is designed so you can capture meaningful data even with minimal effort. If paper is consistently difficult, PainTracker\'s digital version lets you log entries with a few taps on your phone.',
   },
   {
     question: 'Is there a digital version of this template?',
     answer:
-      'Yes. Pain Tracker Pro is the digital companion to this paper diary. It captures the same information with less effort, auto-generates clinical reports (PDF, CSV, JSON), runs entirely offline, and stores everything encrypted on your device. Many users start with paper and migrate to digital once they experience the value of tracking.',
+      'Yes. PainTracker is the digital companion to this paper diary. It captures the same information with less effort, auto-generates clinical reports (PDF, CSV, JSON), runs entirely offline, and stores everything encrypted on your device. Many users start with paper and migrate to digital once they experience the value of tracking.',
   },
   {
     question: 'Can I track multiple pain conditions at once?',
@@ -438,7 +438,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">Pain Tracker Pro</span>
+              <span className="landing-brand text-xl">PainTracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -864,7 +864,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Pain Tracker Pro (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -960,7 +960,7 @@ export const PainDiaryTemplatePdfPage: React.FC = () => {
                 to="/start"
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
-                Open Pain Tracker Pro
+                Open PainTracker
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

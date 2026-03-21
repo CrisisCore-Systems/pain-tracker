@@ -12,6 +12,19 @@ import {
   Stethoscope,
 } from 'lucide-react';
 
+type FeatureItem = {
+  icon: typeof Brain;
+  title: string;
+  description: string;
+  color: 'purple' | 'blue' | 'green' | 'red' | 'yellow' | 'indigo';
+};
+
+type TrustItem = {
+  icon: typeof Shield;
+  title: string;
+  description: string;
+};
+
 // Hero Banner Component
 export function HeroBanner() {
   return (
@@ -29,7 +42,7 @@ export function HeroBanner() {
             {/* Headline */}
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-100 leading-tight">
-                Pain Tracker
+                <span className="block">Pain Tracker</span>
                 <span className="block text-transparent bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text">
                   Pro
                 </span>
@@ -78,7 +91,7 @@ export function HeroBanner() {
                     <PainTrackerIcon size={32} />
                     <div>
                       <div className="font-semibold text-slate-900 dark:text-slate-100">
-                        Pain Tracker Pro
+                        PainTracker
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400">
                         AI-Powered Analytics
@@ -128,7 +141,7 @@ export function HeroBanner() {
 
 // Features Section
 export function FeaturesSection() {
-  const features = [
+  const features: FeatureItem[] = [
     {
       icon: Brain,
       title: 'AI-Powered Predictions',
@@ -168,7 +181,7 @@ export function FeaturesSection() {
     },
   ];
 
-  const colorMap = {
+  const colorMap: Record<FeatureItem['color'], string> = {
     purple: 'from-purple-500 to-purple-600',
     blue: 'from-blue-500 to-blue-600',
     green: 'from-green-500 to-green-600',
@@ -183,9 +196,8 @@ export function FeaturesSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-            Everything You Need for
-            <span className="text-transparent bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text">
-              {' '}
+            <span>Everything You Need for</span>
+            <span className="ml-2 text-transparent bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text">
               Pain Management
             </span>
           </h2>
@@ -197,13 +209,13 @@ export function FeaturesSection() {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <div
-              key={index}
+              key={feature.title}
               className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group"
             >
               <div
-                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${colorMap[feature.color as keyof typeof colorMap]} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+                className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${colorMap[feature.color]} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
               >
                 <feature.icon className="w-8 h-8 text-white" />
               </div>
@@ -223,11 +235,11 @@ export function FeaturesSection() {
 
 // Trust Section
 export function TrustSection() {
-  const trustItems = [
+  const trustItems: TrustItem[] = [
     {
       icon: Shield,
-      title: 'HIPAA Compliant',
-      description: 'Full healthcare data protection compliance',
+      title: 'Privacy-Aligned Controls',
+      description: 'Local-first controls with explicit user-managed sharing',
     },
     {
       icon: Award,
@@ -257,8 +269,8 @@ export function TrustSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {trustItems.map((item, index) => (
-            <div key={index} className="text-center space-y-4">
+          {trustItems.map((item) => (
+            <div key={item.title} className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto bg-blue-800/50 rounded-2xl flex items-center justify-center">
                 <item.icon className="w-8 h-8 text-blue-300" />
               </div>

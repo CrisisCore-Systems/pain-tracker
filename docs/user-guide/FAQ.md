@@ -20,7 +20,7 @@ No. Pain Tracker works entirely on your device. No email, no registration, no ac
 
 ### Where is my data stored?
 
-All data is stored locally on your device using your browser's IndexedDB. Your health data never leaves your device unless you explicitly export it.
+Core tracking data is stored locally on your device using your browser's IndexedDB. Network-assisted features are optional, and exports are user-triggered.
 
 ### Is my data encrypted?
 

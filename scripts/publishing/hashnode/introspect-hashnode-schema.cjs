@@ -5,7 +5,7 @@
  *   node scripts/publishing/hashnode/introspect-hashnode-schema.cjs
  */
 
-const https = require('https');
+const https = require('node:https');
 
 function gqlRequest(query, variables = {}) {
   return new Promise((resolve, reject) => {

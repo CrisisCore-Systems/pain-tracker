@@ -14,9 +14,9 @@
  *   --start=N   Index to start from (for resuming after partial publish)
  */
 
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
+const fs = require('node:fs');
+const path = require('node:path');
+const https = require('node:https');
 
 // ── Config ────────────────────────────────────────────────────────────
 const TOKEN = process.env.HASHNODE_TOKEN || '';
@@ -25,9 +25,9 @@ const PUBLICATION_ID =
   process.env.HASHNODE_PUBLICATION_ID ||
   '6914f549d535ac1991dcb8b2';
 const SITE_URL = 'https://blog.paintracker.ca';
-const DELAY_MS = parseInt(getArg('delay') || '3000', 10);
+const DELAY_MS = Number.parseInt(getArg('delay') || '3000', 10);
 const DRY_RUN = process.argv.includes('--dry-run');
-const START_INDEX = parseInt(getArg('start') || '0', 10);
+const START_INDEX = Number.parseInt(getArg('start') || '0', 10);
 
 // ── Tag mapping per cluster ───────────────────────────────────────────
 const CLUSTER_TAGS = {
@@ -128,8 +128,8 @@ function parseArticleTS(content, fileName) {
   try {
     // Strip the import and type annotations, make it evaluable JS
     let js = content
-      .replace(/import\s+type\s+\{[^}]+\}\s+from\s+'[^']+';?\s*/g, '')
-      .replace(/:\s*ArticleData\s*/g, '')
+      .replaceAll(/import\s+type\s+\{[^}]+\}\s+from\s+'[^']+';?\s*/g, '')
+      .replaceAll(/:\s*ArticleData\s*/g, '')
       .replace(/export\s+default\s+article;?\s*$/, '')
       .replace(/const\s+article\s*=\s*/, 'return (')
       .trim();
@@ -152,51 +152,39 @@ function articleToMarkdown(article) {
 
   // Sections
   for (const section of article.sections) {
-    lines.push(`## ${section.h2}`);
-    lines.push('');
+    lines.push(`## ${section.h2}`, '');
     for (const para of section.paragraphs) {
-      lines.push(para);
-      lines.push('');
+      lines.push(para, '');
     }
   }
 
   // HowTo steps (for getting-started etc.)
   if (article.howToSteps && article.howToSteps.length > 0) {
-    lines.push('## Steps');
-    lines.push('');
+    lines.push('## Steps', '');
     for (let i = 0; i < article.howToSteps.length; i++) {
       const step = article.howToSteps[i];
-      lines.push(`**Step ${i + 1}: ${step.name}**`);
-      lines.push('');
-      lines.push(step.text);
-      lines.push('');
+      lines.push(`**Step ${i + 1}: ${step.name}**`, '', step.text, '');
     }
   }
 
   // FAQ section
   if (article.faqs && article.faqs.length > 0) {
-    lines.push('## Frequently Asked Questions');
-    lines.push('');
+    lines.push('## Frequently Asked Questions', '');
     for (const faq of article.faqs) {
-      lines.push(`### ${faq.question}`);
-      lines.push('');
-      lines.push(faq.answer);
-      lines.push('');
+      lines.push(`### ${faq.question}`, '', faq.answer, '');
     }
   }
 
   // CTA footer
-  lines.push('---');
-  lines.push('');
-  lines.push('<p class="cta">');
   lines.push(
-    '  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">'
+    '---',
+    '',
+    '<p class="cta">',
+    '  <a href="https://paintracker.ca" target="_blank" rel="noopener noreferrer">',
+    '    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.',
+    '  </a>',
+    '</p>',
   );
-  lines.push(
-    '    Try PainTracker free — offline, encrypted, clinician-ready pain tracking.'
-  );
-  lines.push('  </a>');
-  lines.push('</p>');
 
   return lines.join('\n').trim();
 }
@@ -258,11 +246,7 @@ function publishToHashnode(article, markdown) {
               slug: article.slug,
               errors: response.errors,
             });
-          } else if (
-            response.data &&
-            response.data.publishPost &&
-            response.data.publishPost.post
-          ) {
+          } else if (response.data?.publishPost?.post) {
             resolve({
               success: true,
               slug: article.slug,

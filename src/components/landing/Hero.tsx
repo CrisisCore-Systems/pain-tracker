@@ -66,7 +66,7 @@ export const Hero: React.FC = () => {
                 <div className="absolute inset-0 rounded-xl bg-sky-500 blur-xl opacity-40" />
               </div>
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-                Pain Tracker Pro
+                PainTracker
               </span>
             </div>
 
@@ -178,27 +178,23 @@ export const Hero: React.FC = () => {
 
               {/* Headline */}
               <h1 className="landing-headline landing-headline-xl">
-                <span className="text-white">Private Pain</span>
+                <span className="text-white">Private Offline-First</span>
                 <br />
-                <span className="text-white">Tracking for </span>
-                <span className="gradient-text-animated">Everyone</span>
+                <span className="text-white">Pain Tracker App</span>
               </h1>
 
               {/* Subheading */}
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
-                Privacy-first pain tracking with{' '}
-                <span className="text-sky-300 font-semibold">local pattern insights</span>,{' '}
-                <span className="text-sky-300 font-semibold">export to PDF, CSV, or WorkSafeBC format</span>, and{' '}
-                <span className="text-emerald-300 font-semibold">empathy-driven design</span>.{' '}
-                Your data stays on your device.
+                Track pain, symptoms, triggers, flare patterns, and daily functioning on your device.
+                Use it as a pain diary app, chronic pain tracker, or structured log for doctor visits.
               </p>
 
               <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
-                PainTracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
+                PainTracker is built for daily symptom logging, local pattern insight, and clinician-friendly exports without making everyday tracking depend on an account or cloud connection.
               </p>
 
               <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
-                Data is stored locally on your device unless you choose to export it.
+                Data stays local by default unless you deliberately export it.
               </p>
 
               {/* Feature Pills */}
@@ -209,7 +205,7 @@ export const Hero: React.FC = () => {
                 </div>
                 <div className="badge-glow-emerald flex items-center gap-2 text-sm">
                   <Shield className="h-3.5 w-3.5" />
-                  <span>Encrypted</span>
+                  <span>Local-First</span>
                 </div>
                 <div className="badge-glow-purple flex items-center gap-2 text-sm">
                   <Heart className="h-3.5 w-3.5" />
@@ -281,7 +277,7 @@ export const Hero: React.FC = () => {
                 <div className="p-4 lg:p-6">
                   <img
                     src={_env.VITE_LANDING_SCREENSHOT || '/screenshots/marketing/analytics-dashboard.png'}
-                    alt="Pain Tracker Pro Dashboard"
+                    alt="PainTracker Dashboard"
                     width="1200"
                     height="800"
                     className="rounded-xl w-full h-auto shadow-2xl"

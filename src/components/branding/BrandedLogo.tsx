@@ -44,7 +44,7 @@ export function BrandedLogo({
   return (
     <img
       src={logoSrc}
-      alt="Pain Tracker Pro"
+      alt="PainTracker"
       width={dimensions.width}
       height={dimensions.height}
       className={`${className}`}

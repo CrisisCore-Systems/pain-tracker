@@ -396,7 +396,7 @@ export function PrivacySettingsShowcase() {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-white">Privacy & Security</h2>
-              <p className="text-slate-400">Your data is protected by design</p>
+              <p className="text-slate-400">Privacy-first defaults with user-controlled sharing</p>
             </div>
           </div>
         </div>
@@ -411,8 +411,8 @@ export function PrivacySettingsShowcase() {
                 Local Storage Only
               </h3>
               <p className="text-slate-400">
-                Your data is stored locally on your device using encrypted IndexedDB. We cannot
-                access your information even if we wanted to.
+                Entries are stored locally on your device by default using encrypted IndexedDB.
+                Optional network features are explicit and user-triggered.
               </p>
             </div>
           </div>
@@ -426,8 +426,7 @@ export function PrivacySettingsShowcase() {
                 AES-256 Encryption
               </h3>
               <p className="text-slate-400">
-                All sensitive pain data is encrypted using military-grade AES-256 encryption before
-                storage.
+                Sensitive local records are encrypted with AES-256 before persistence.
               </p>
             </div>
           </div>
@@ -449,7 +448,7 @@ export function PrivacySettingsShowcase() {
 
           <div className="text-center pt-4 mt-4 border-t border-slate-700/50">
             <p className="text-slate-400">
-              <span className="text-emerald-400 font-medium">Unlike cloud-based competitors,</span> your medical data never leaves your device.
+              <span className="text-emerald-400 font-medium">Local by default:</span> data stays on-device unless you explicitly use a sharing or submission action.
             </p>
           </div>
         </div>

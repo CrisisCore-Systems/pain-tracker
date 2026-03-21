@@ -7,7 +7,7 @@ vi.mock('../services/emergency-wipe', () => ({
   performEmergencyWipe: vi.fn().mockResolvedValue(undefined),
 }));
 
-const TEST_PASSPHRASE = 'test-vault-passphrase-2025';
+const TEST_UNLOCK_SECRET = 'test-vault-passphrase-2025';
 
 describe('Vault kill switch', () => {
   it('triggers emergency wipe after 3 failed unlock attempts', async () => {
@@ -56,7 +56,7 @@ describe('Vault kill switch', () => {
 
     await vaultService.initialize();
     if (vaultService.getStatus().state === 'uninitialized') {
-      await vaultService.setupPassphrase(TEST_PASSPHRASE);
+      await vaultService.setupPassphrase(TEST_UNLOCK_SECRET);
     }
     vaultService.lock();
 

@@ -91,11 +91,11 @@ export function generateMedicalWebPageSchema(metadata: {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Pain Tracker Pro',
-      url: 'https://www.paintracker.ca',
+      name: defaultSEOConfig.siteName,
+      url: defaultSEOConfig.siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.paintracker.ca/og-image.png'
+        url: defaultSEOConfig.defaultImage
       }
     },
     inLanguage: 'en-CA',
@@ -128,8 +128,8 @@ export function generateSoftwareApplicationSchema(): object {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Pain Tracker Pro',
-    description: 'Privacy-first chronic pain tracking application for medical documentation and disability claims',
+    name: defaultSEOConfig.siteName,
+    description: 'Private offline-first pain tracker app for logging symptoms, triggers, flare patterns, and clinician-ready records.',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web Browser, iOS, Android',
     offers: {
@@ -139,20 +139,20 @@ export function generateSoftwareApplicationSchema(): object {
       availability: 'https://schema.org/InStock'
     },
     featureList: [
-      'Privacy-first local storage',
-      'No cloud dependency',
-      'Medical-grade exports',
-      'WorkSafeBC compatible',
-      'Disability documentation',
-      'Pain scale tracking',
-      'Symptom logging',
-      'Medication tracking'
+      'Offline-first pain tracking',
+      'Local-only by default',
+      'Clinician-friendly exports',
+      'Pain and symptom logging',
+      'Trigger and flare tracking',
+      'Medication tracking',
+      'WorkSafeBC-oriented documentation workflows',
+      'Trauma-informed design'
     ],
     screenshot: 'https://www.paintracker.ca/main-dashboard.png',
     softwareVersion: '1.0.0',
     creator: {
       '@type': 'Organization',
-      name: 'Pain Tracker Pro'
+      name: defaultSEOConfig.siteName
     }
   };
 }
@@ -271,11 +271,11 @@ export function generateOrganizationSchema(): object {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Pain Tracker Pro',
-    alternateName: 'PainTracker',
-    url: 'https://www.paintracker.ca',
-    logo: 'https://www.paintracker.ca/og-image.png',
-    description: 'Privacy-first chronic pain tracking application for medical documentation and disability claims. No cloud dependency, no account required.',
+    name: defaultSEOConfig.siteName,
+    alternateName: 'Pain Tracker Pro',
+    url: defaultSEOConfig.siteUrl,
+    logo: defaultSEOConfig.defaultImage,
+    description: 'Private offline-first pain tracking application for daily symptom logging, clinician-friendly records, and local-first privacy controls.',
     foundingDate: '2024',
     knowsAbout: [
       'Chronic Pain Management',
@@ -304,15 +304,15 @@ export function generateWebSiteSchema(): object {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Pain Tracker Pro',
-    alternateName: 'PainTracker',
-    url: 'https://www.paintracker.ca',
-    description: 'Privacy-first chronic pain tracking application. Track symptoms, generate medical reports, and document for disability claims without cloud dependency.',
+    name: defaultSEOConfig.siteName,
+    alternateName: 'Pain Tracker Pro',
+    url: defaultSEOConfig.siteUrl,
+    description: 'Private offline-first pain tracker app for tracking symptoms, triggers, flare patterns, and clinician-friendly records without making daily use depend on the cloud.',
     inLanguage: 'en-CA',
     publisher: {
       '@type': 'Organization',
-      name: 'Pain Tracker Pro',
-      url: 'https://www.paintracker.ca'
+      name: defaultSEOConfig.siteName,
+      url: defaultSEOConfig.siteUrl
     },
     potentialAction: {
       '@type': 'SearchAction',
@@ -329,10 +329,10 @@ export function generateWebSiteSchema(): object {
  * Default SEO configuration for the site
  */
 export const defaultSEOConfig = {
-  siteName: 'Pain Tracker Pro',
+  siteName: 'PainTracker',
   siteUrl: 'https://www.paintracker.ca',
-  defaultTitle: 'Pain Tracker Pro - Privacy-First Pain Tracking',
-  defaultDescription: 'Track and manage your chronic pain with our privacy-first, offline-capable pain tracking application. Medical-grade exports for doctors and disability claims.',
+  defaultTitle: 'PainTracker - Private Offline-First Pain Tracking App',
+  defaultDescription: 'Track pain, symptoms, triggers, and daily patterns with a private offline-first pain tracker app. Local-first by default, no account required, and clinician-friendly exports when you choose.',
   defaultImage: 'https://www.paintracker.ca/og-image.png',
   twitterHandle: '@paintrackerpro',
   locale: 'en_CA'

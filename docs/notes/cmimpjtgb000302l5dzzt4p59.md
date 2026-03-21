@@ -1,7 +1,7 @@
 ---
 title: "The Day I Decided My Pain App Didn't Need a Server: What I Learned Building Healthcare Software That Lives Entirely on Your Device"
 seoTitle: "Why My Pain App Has No Server (And Why That Makes It Safer)"
-seoDescription: "How I built Pain Tracker as a privacy-first, local-only healthcare app: no servers, no logins, and encrypted data that never leaves your device."
+seoDescription: "How I built Pain Tracker as a privacy-first, local-first healthcare app: no central health-data backend, explicit sharing actions, and encrypted local storage."
 datePublished: Mon Dec 01 2025 05:27:43 GMT+0000 (Coordinated Universal Time)
 cuid: cmimpjtgb000302l5dzzt4p59
 slug: the-day-i-decided-my-pain-app-didnt-need-a-server-what-i-learned-building-healthcare-software-that-lives-entirely-on-your-device
@@ -60,7 +60,7 @@ Pain Tracker runs on React 18 with TypeScript and gets built with Vite. But the 
 ❌ No cloud anything (no third parties poking around)
 ✅ Everything runs in your browser
 ✅ Data lives in IndexedDB on your device
-✅ Military-grade encryption (XChaCha20-Poly1305)
+✅ Strong modern encryption (XChaCha20-Poly1305)
 ✅ Works offline without missing a beat
 ```
 
@@ -71,7 +71,7 @@ graph TD
     A["You log your pain"] --> B["React updates state"]
     B --> C["Gets encrypted instantly"]
     C --> D["Stored in IndexedDB"]
-    D --> E["Never leaves your device"]
+    D --> E["Local by default"]
     
     F["Need to share with doctor?"] --> G["Export happens in-browser"]
     G --> H["You download the file"]
@@ -138,7 +138,7 @@ This gives us those buttery-smooth sub-100ms response times for UI stuff while m
 
 ---
 
-## Lock It Down: Why We Use Military-Grade Encryption
+## Lock It Down: Why We Use Strong Modern Encryption
 
 Just because your data lives locally doesn't mean it's automatically safe. If someone gets their hands on your device, I definitely don't want your pain journal sitting there in plain text.
 

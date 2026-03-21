@@ -13,7 +13,7 @@
  *   node scripts/publishing/hashnode/week1-p0-api-checklist.cjs
  */
 
-const https = require('https');
+const https = require('node:https');
 
 const TOKEN = process.env.HASHNODE_TOKEN || '';
 const HOST = 'blog.paintracker.ca';

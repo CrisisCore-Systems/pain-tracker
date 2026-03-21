@@ -7,7 +7,7 @@ interface WCBReportPreviewProps {
   report: WCBReport;
 }
 
-export function WCBReportPreview({ report }: WCBReportPreviewProps) {
+export function WCBReportPreview({ report }: Readonly<WCBReportPreviewProps>) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<{
     status?: 'pending' | 'approved' | 'rejected' | 'requires_changes';
@@ -19,6 +19,7 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
   const isSubmissionEnabled =
     import.meta.env.VITE_ENABLE_WCB_SUBMISSION === 'true' &&
     Boolean(import.meta.env.VITE_WCB_API_ENDPOINT);
+  const wcbEndpoint = import.meta.env.VITE_WCB_API_ENDPOINT || '(not configured)';
 
   const handleDownload = async () => {
     try {
@@ -104,9 +105,17 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
 
       {!isSubmissionEnabled && (
         <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded text-amber-800">
-          Submission is disabled by default to keep this app local-first. Configure
+          Submission is disabled by default to keep this app local-first. Configure{' '}
           <code className="px-1">VITE_ENABLE_WCB_SUBMISSION</code> and
+          {' '}
           <code className="px-1">VITE_WCB_API_ENDPOINT</code> to enable.
+        </div>
+      )}
+
+      {isSubmissionEnabled && (
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded text-blue-800">
+          Network disclosure: choosing "Submit to WCB" sends this report to{' '}
+          <code className="px-1">{wcbEndpoint}</code>. Downloading PDF remains local to this device.
         </div>
       )}
 
@@ -238,8 +247,8 @@ export function WCBReportPreview({ report }: WCBReportPreviewProps) {
         <h3 className="text-lg font-semibold mb-3">Recommendations</h3>
         <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded">
           <ul className="list-disc list-inside">
-            {report.recommendations.map((recommendation, index) => (
-              <li key={index} className="text-gray-700 dark:text-gray-300 mb-2">
+            {report.recommendations.map(recommendation => (
+              <li key={recommendation} className="text-gray-700 dark:text-gray-300 mb-2">
                 {recommendation}
               </li>
             ))}

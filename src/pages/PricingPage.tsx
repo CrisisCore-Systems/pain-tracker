@@ -125,7 +125,7 @@ export const PricingPage: React.FC = () => {
                 </div>
               </div>
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                Pain Tracker Pro
+                PainTracker
               </span>
             </button>
             <button

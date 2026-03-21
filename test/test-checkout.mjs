@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -9,9 +9,9 @@ const __dirname = dirname(__filename);
 // Load environment variables from .env.development.local
 const envFile = readFileSync(join(__dirname, '.env.development.local'), 'utf8');
 envFile.split('\n').forEach(line => {
-  const match = line.match(/^([^=]+)="?([^"]+)"?$/);
+  const match = /^([^=]+)="?([^"]+)"?$/.exec(line);
   if (match) {
-    process.env[match[1]] = match[2].replace(/^"|"$/g, '');
+    process.env[match[1]] = match[2].replaceAll(/^"|"$/g, '');
   }
 });
 
@@ -55,4 +55,4 @@ async function testCheckout() {
   }
 }
 
-testCheckout();
+await testCheckout();

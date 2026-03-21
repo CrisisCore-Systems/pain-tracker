@@ -28,6 +28,11 @@ export type SettingsBackupImportRow = {
   action: SettingsBackupImportAction;
 };
 
+type SettingsBackupImportSnapshot = {
+  existed: boolean;
+  value: unknown;
+};
+
 function bytesOfJson(value: unknown): number {
   const json = JSON.stringify(value);
   return new TextEncoder().encode(json).length;
@@ -180,10 +185,72 @@ export function planSettingsBackupImport(params: {
   };
 }
 
+function canRollbackSettingsImport(params: {
+  readValue?: (key: string) => unknown;
+  removeValue?: (key: string) => void;
+  existingKeys?: Iterable<string>;
+}): params is {
+  readValue: (key: string) => unknown;
+  removeValue: (key: string) => void;
+  existingKeys: Iterable<string>;
+} {
+  return (
+    typeof params.readValue === 'function' &&
+    typeof params.removeValue === 'function' &&
+    params.existingKeys !== undefined
+  );
+}
+
+function snapshotExistingValue(
+  key: string,
+  existingKeys: Set<string>,
+  readValue: (key: string) => unknown,
+  snapshots: Map<string, SettingsBackupImportSnapshot>
+) {
+  if (snapshots.has(key)) {
+    return;
+  }
+
+  const existed = existingKeys.has(key);
+  snapshots.set(key, {
+    existed,
+    value: existed ? readValue(key) : undefined,
+  });
+}
+
+function rollbackWrittenKeys(params: {
+  written: string[];
+  snapshots: Map<string, SettingsBackupImportSnapshot>;
+  writeValue: (key: string, value: unknown) => void;
+  removeValue: (key: string) => void;
+}) {
+  for (const key of params.written.slice().reverse()) {
+    const snapshot = params.snapshots.get(key);
+    if (!snapshot) continue;
+    try {
+      if (snapshot.existed) {
+        params.writeValue(key, snapshot.value);
+      } else {
+        params.removeValue(key);
+      }
+    } catch {
+      // Best-effort rollback only.
+    }
+  }
+}
+
+function shouldWriteImportKey(key: string, value: unknown) {
+  if (!isSettingsBackupKeyAllowed(key)) return false;
+  return bytesOfJson(value) <= SETTINGS_BACKUP_LIMITS.maxValueBytes;
+}
+
 export function applySettingsBackupImport(params: {
   safeData: Record<string, unknown>;
   confirmToken: string;
   writeValue: (key: string, value: unknown) => void;
+  readValue?: (key: string) => unknown;
+  removeValue?: (key: string) => void;
+  existingKeys?: Iterable<string>;
 }): { written: string[] } {
   if (params.confirmToken !== 'IMPORT') {
     return { written: [] };
@@ -191,13 +258,33 @@ export function applySettingsBackupImport(params: {
 
   const written: string[] = [];
   const keys = Object.keys(params.safeData).slice(0, SETTINGS_BACKUP_LIMITS.maxKeys);
+  const snapshots = new Map<string, { existed: boolean; value: unknown }>();
+  const rollbackEnabled = canRollbackSettingsImport(params);
+  const existingKeys = rollbackEnabled ? new Set(params.existingKeys) : null;
 
-  for (const key of keys) {
-    const value = params.safeData[key];
-    if (!isSettingsBackupKeyAllowed(key)) continue;
-    if (bytesOfJson(value) > SETTINGS_BACKUP_LIMITS.maxValueBytes) continue;
-    params.writeValue(key, value);
-    written.push(key);
+  try {
+    for (const key of keys) {
+      const value = params.safeData[key];
+      if (!shouldWriteImportKey(key, value)) continue;
+
+      if (rollbackEnabled && existingKeys) {
+        snapshotExistingValue(key, existingKeys, params.readValue, snapshots);
+      }
+
+      params.writeValue(key, value);
+      written.push(key);
+    }
+  } catch (error) {
+    if (rollbackEnabled) {
+      rollbackWrittenKeys({
+        written,
+        snapshots,
+        writeValue: params.writeValue,
+        removeValue: params.removeValue,
+      });
+    }
+
+    throw error;
   }
 
   return { written };

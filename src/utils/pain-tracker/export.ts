@@ -1,5 +1,4 @@
 import type { PainEntry } from '../../types';
-// import jsPDF from 'jspdf'; // Moved to dynamic import
 import { formatNumber } from '../formatting';
 import { privacyAnalytics } from '../../services/PrivacyAnalyticsService';
 import { trackDataExported } from '../../analytics/ga4-events';
@@ -8,7 +7,91 @@ import { analyticsLogger } from '../../lib/debug-logger';
 import { FhirMapper } from '../../services/clinical/FhirMapper';
 import type { Fhir } from '../../types/fhir';
 
-export const exportToCSV = (entries: PainEntry[]): string => {
+const EXPORT_URL_TTL_MS = 60_000;
+
+type ExportArtifactHandle = {
+  timeoutId: ReturnType<typeof setTimeout>;
+  onVisibilityChange: () => void;
+};
+
+const activeExportArtifacts = new Map<string, ExportArtifactHandle>();
+
+function revokeExportArtifact(url: string): void {
+  const handle = activeExportArtifacts.get(url);
+  if (handle) {
+    clearTimeout(handle.timeoutId);
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('visibilitychange', handle.onVisibilityChange);
+    }
+    activeExportArtifacts.delete(url);
+  }
+
+  if (globalThis.window !== undefined) {
+    globalThis.URL.revokeObjectURL(url);
+  }
+}
+
+function trackExportArtifact(url: string): void {
+  if (typeof document === 'undefined') {
+    const timeoutId = setTimeout(() => revokeExportArtifact(url), EXPORT_URL_TTL_MS);
+    activeExportArtifacts.set(url, {
+      timeoutId,
+      onVisibilityChange: () => undefined,
+    });
+    return;
+  }
+
+  const onVisibilityChange = () => {
+    if (document.visibilityState !== 'visible') {
+      revokeExportArtifact(url);
+    }
+  };
+
+  document.addEventListener('visibilitychange', onVisibilityChange);
+  const timeoutId = setTimeout(() => revokeExportArtifact(url), EXPORT_URL_TTL_MS);
+  activeExportArtifacts.set(url, { timeoutId, onVisibilityChange });
+}
+
+export function clearExportArtifacts(): void {
+  const urls = Array.from(activeExportArtifacts.keys());
+  urls.forEach(revokeExportArtifact);
+}
+
+export type RedactionPolicy = 'minimal' | 'full';
+
+type MinimalExportEntry = {
+  id: string | number;
+  timestamp: string;
+  painLevel: number;
+  symptoms: string[];
+  medications: Array<{
+    name: string;
+    dosage: string;
+    frequency: string;
+  }>;
+};
+
+function toMedicationLogString(entry: PainEntry): string {
+  return (entry.medications.current || [])
+    .map(med => `${med.name} (${med.dosage}, ${med.frequency})`)
+    .join('; ');
+}
+
+function toMinimalExportEntry(entry: PainEntry): MinimalExportEntry {
+  return {
+    id: entry.id,
+    timestamp: entry.timestamp,
+    painLevel: entry.baselineData.pain,
+    symptoms: [...(entry.baselineData.symptoms || [])],
+    medications: (entry.medications.current || []).map(med => ({
+      name: med.name,
+      dosage: med.dosage,
+      frequency: med.frequency,
+    })),
+  };
+}
+
+export const exportToCSV = (entries: PainEntry[], policy: RedactionPolicy = 'full'): string => {
   // Track export analytics
   privacyAnalytics.trackDataExport('csv').catch((error) => {
     analyticsLogger.swallowed(error, { context: 'exportToCSV', exportType: 'csv' });
@@ -20,23 +103,37 @@ export const exportToCSV = (entries: PainEntry[]): string => {
   // Track local usage
   trackExport('csv', entries.length);
 
-  const headers = [
-    'Date',
-    'Time',
-    'Pain Level',
-    'Locations',
-    'Symptoms',
-    'Limited Activities',
-    'Sleep Quality',
-    'Mood Impact',
-    'Missed Work Days',
-    'Notes',
-  ].join(',');
+  const headers =
+    policy === 'minimal'
+      ? ['Date', 'Time', 'Pain Level', 'Symptoms', 'Medication Log'].join(',')
+      : [
+          'Date',
+          'Time',
+          'Pain Level',
+          'Locations',
+          'Symptoms',
+          'Limited Activities',
+          'Sleep Quality',
+          'Mood Impact',
+          'Missed Work Days',
+          'Notes',
+        ].join(',');
 
   const rows = entries.map(entry => {
     // Use the original ISO timestamp to avoid timezone differences
     const [isoDate, isoTimeWithZone] = entry.timestamp.split('T');
     const time = (isoTimeWithZone || '').slice(0, 5); // HH:mm from HH:mm:ssZ
+
+    if (policy === 'minimal') {
+      return [
+        isoDate,
+        time,
+        entry.baselineData.pain,
+        `"${entry.baselineData.symptoms?.join('; ') || ''}"`,
+        `"${toMedicationLogString(entry).replaceAll('"', '""')}"`,
+      ].join(',');
+    }
+
     return [
       isoDate,
       time,
@@ -47,14 +144,14 @@ export const exportToCSV = (entries: PainEntry[]): string => {
       entry.qualityOfLife?.sleepQuality || '',
       entry.qualityOfLife?.moodImpact || '',
       entry.workImpact?.missedWork || '',
-      `"${entry.notes?.replace(/"/g, '""') || ''}"`,
+      `"${entry.notes?.replaceAll('"', '""') || ''}"`,
     ].join(',');
   });
 
-  return [headers, ...rows].join('\\n');
+  return [headers, ...rows].join(String.raw`\n`);
 };
 
-export const exportToJSON = (entries: PainEntry[]): string => {
+export const exportToJSON = (entries: PainEntry[], policy: RedactionPolicy = 'full'): string => {
   // Track export analytics
   privacyAnalytics.trackDataExport('json').catch((error) => {
     analyticsLogger.swallowed(error, { context: 'exportToJSON', exportType: 'json' });
@@ -65,6 +162,11 @@ export const exportToJSON = (entries: PainEntry[]): string => {
   
   // Track local usage
   trackExport('json', entries.length);
+
+  if (policy === 'minimal') {
+    const minimalEntries = entries.map(toMinimalExportEntry);
+    return JSON.stringify(minimalEntries, null, 2);
+  }
 
   return JSON.stringify(entries, null, 2);
 };
@@ -101,7 +203,7 @@ export const downloadData = (
   filename: string,
   mimeType: string = 'text/plain;charset=utf-8'
 ): void => {
-  if (typeof window === 'undefined') return;
+  if (globalThis.window === undefined) return;
 
   let blob: Blob;
   if (data.startsWith('data:')) {
@@ -112,17 +214,20 @@ export const downloadData = (
     blob = new Blob([data], { type: mimeType });
   }
 
-  const url = window.URL.createObjectURL(blob);
+  const url = globalThis.URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
   link.download = filename;
   document.body.appendChild(link);
   link.click();
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(url);
+  link.remove();
+  trackExportArtifact(url);
 };
 
-export const exportToPDF = async (entries: PainEntry[]): Promise<string> => {
+export const exportToPDF = async (
+  entries: PainEntry[],
+  policy: RedactionPolicy = 'full'
+): Promise<string> => {
   // Track export analytics
   privacyAnalytics.trackDataExport('pdf').catch((error) => {
     analyticsLogger.swallowed(error, { context: 'exportToPDF', exportType: 'pdf' });
@@ -136,6 +241,7 @@ export const exportToPDF = async (entries: PainEntry[]): Promise<string> => {
 
   const { default: jsPDF } = await import('jspdf');
   const doc = new jsPDF();
+  const isMinimalPolicy = policy === 'minimal';
 
   // Title
   doc.setFontSize(20);
@@ -145,29 +251,37 @@ export const exportToPDF = async (entries: PainEntry[]): Promise<string> => {
   doc.setFontSize(12);
   const startDate =
     entries.length > 0 ? new Date(entries[0].timestamp).toLocaleDateString() : 'N/A';
-  const endDate =
-    entries.length > 0
-      ? new Date(entries[entries.length - 1].timestamp).toLocaleDateString()
-      : 'N/A';
+  const lastEntry = entries.at(-1);
+  const endDate = lastEntry ? new Date(lastEntry.timestamp).toLocaleDateString() : 'N/A';
   doc.text(`Report Period: ${startDate} to ${endDate}`, 20, 45);
 
+  let summaryStartY = 55;
+  if (isMinimalPolicy) {
+    doc.setFontSize(11);
+    doc.text('Redacted/Minimal Export: Notes, locations, and context details omitted by user choice.', 20, 53);
+    summaryStartY = 63;
+  }
+
   // Summary statistics
-  doc.text(`Total Entries: ${entries.length}`, 20, 55);
+  doc.setFontSize(12);
+  doc.text(`Total Entries: ${entries.length}`, 20, summaryStartY);
 
   if (entries.length > 0) {
     const avgPain =
       entries.reduce((sum, entry) => sum + entry.baselineData.pain, 0) / entries.length;
-    doc.text(`Average Pain Level: ${formatNumber(avgPain, 1)}/10`, 20, 65);
+      doc.text(`Average Pain Level: ${formatNumber(avgPain, 1)}/10`, 20, summaryStartY + 10);
 
     const mostCommonSymptoms = getMostCommonItems(
       entries.flatMap(entry => entry.baselineData.symptoms || [])
     );
-    const mostCommonLocations = getMostCommonItems(
-      entries.flatMap(entry => entry.baselineData.locations || [])
-    );
+      doc.text(`Most Common Symptoms: ${mostCommonSymptoms.slice(0, 3).join(', ')}`, 20, summaryStartY + 20);
 
-    doc.text(`Most Common Symptoms: ${mostCommonSymptoms.slice(0, 3).join(', ')}`, 20, 75);
-    doc.text(`Most Common Locations: ${mostCommonLocations.slice(0, 3).join(', ')}`, 20, 85);
+    if (!isMinimalPolicy) {
+      const mostCommonLocations = getMostCommonItems(
+        entries.flatMap(entry => entry.baselineData.locations || [])
+      );
+        doc.text(`Most Common Locations: ${mostCommonLocations.slice(0, 3).join(', ')}`, 20, summaryStartY + 30);
+    }
   }
 
   // Detailed entries
@@ -199,12 +313,19 @@ export const exportToPDF = async (entries: PainEntry[]): Promise<string> => {
       yPosition += 8;
     }
 
-    if (entry.baselineData.locations && entry.baselineData.locations.length > 0) {
+    const medicationLog = toMedicationLogString(entry);
+    if (medicationLog.length > 0) {
+      const medicationLines = doc.splitTextToSize(`   Medication Log: ${medicationLog}`, 150);
+      doc.text(medicationLines, 25, yPosition);
+      yPosition += medicationLines.length * 5 + 3;
+    }
+
+    if (!isMinimalPolicy && entry.baselineData.locations && entry.baselineData.locations.length > 0) {
       doc.text(`   Locations: ${entry.baselineData.locations.join(', ')}`, 25, yPosition);
       yPosition += 8;
     }
 
-    if (entry.notes) {
+    if (!isMinimalPolicy && entry.notes) {
       const noteLines = doc.splitTextToSize(`   Notes: ${entry.notes}`, 150);
       doc.text(noteLines, 25, yPosition);
       yPosition += noteLines.length * 5 + 5;

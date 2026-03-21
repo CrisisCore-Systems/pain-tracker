@@ -2,7 +2,7 @@ import React from 'react';
 import { Shield, Lock, Eye, Code, FileCheck, Users, ArrowRight } from 'lucide-react';
 
 const trustBadges = [
-  { icon: Shield, title: 'AES-256', description: 'Military-grade', colorClass: 'icon-emerald' },
+  { icon: Shield, title: 'AES-256', description: 'At-rest encryption', colorClass: 'icon-emerald' },
   { icon: Lock, title: 'Privacy-aligned', description: 'Controls-focused', colorClass: 'icon-sky' },
   { icon: Eye, title: 'Zero Tracking', description: 'No analytics', colorClass: 'icon-purple' },
   { icon: Code, title: 'Open Source', description: 'Transparent code', colorClass: 'icon-pink' },
@@ -27,7 +27,7 @@ export const TrustIndicators: React.FC = () => {
             <span className="gradient-text-animated">You Can Verify</span>
           </h2>
           <p className="landing-subhead text-lg">
-            Your health data deserves the highest level of protection
+            Security posture you can inspect in code and tests
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export const TrustIndicators: React.FC = () => {
           <div className="glass-card-premium p-6 lg:p-8">
             <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
               <strong className="text-white font-semibold">Your data, your device.</strong>{' '}
-              We use local-first architecture with IndexedDB storage. No servers, no cloud, no third parties.{' '}
+              We use local-first architecture with IndexedDB storage. Core tracking works on-device; optional network actions are explicit.{' '}
               Install it like an app (PWA) on desktop or mobile—no app store required.{" "}
               <a
                 href="https://github.com/CrisisCore-Systems/pain-tracker"

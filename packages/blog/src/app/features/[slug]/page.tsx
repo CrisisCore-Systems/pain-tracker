@@ -17,7 +17,7 @@ const featureDetails: Record<
   'offline-first': {
     title: 'Offline-First Architecture',
     description:
-      'Pain Tracker is a Progressive Web App that works fully offline. Your data never leaves your device unless you explicitly export it.',
+      'Pain Tracker is a Progressive Web App that works fully offline for core flows. Network-assisted features are optional, and exports are user-triggered.',
     sections: [
       {
         heading: 'How it works',
@@ -70,7 +70,7 @@ const featureDetails: Record<
       },
       {
         heading: 'Panic mode',
-        body: 'A discreet, always-accessible shortcut that immediately clears the screen and displays neutral content — designed for people in unsafe or coercive situations.',
+          body: 'An always-accessible shortcut that replaces the current interface with a low-stimulus breathing overlay and reduces visible app state. Useful for moments of stress or unwanted glances, but not a neutral decoy screen or a guarantee against active coercion.',
       },
     ],
   },

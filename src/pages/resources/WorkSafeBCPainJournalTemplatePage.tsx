@@ -346,7 +346,7 @@ const pageContent: SEOPageContent = {
   // Meta & SEO
   slug: 'worksafebc-pain-journal-template',
   title: 'WorkSafeBC Pain Journal Template (Free)',
-  metaTitle: 'WorkSafeBC Pain Journal Template - Free BC Workers Comp Pain Diary (2026) | Pain Tracker Pro',
+  metaTitle: 'WorkSafeBC Pain Journal Template - Free BC Workers Comp Pain Diary (2026) | PainTracker',
   metaDescription: 'Download our free 6-page WorkSafeBC pain journal PDF. Designed for BC workplace injury claims — tracks work-related pain, functional capacity, treatment compliance, and return-to-work readiness in the format case managers need.',
   keywords: [
     'worksafebc pain journal template',
@@ -468,8 +468,8 @@ const pageContent: SEOPageContent = {
       answer: 'For the duration of your claim — and ideally beyond. If your claim is active, track daily. If you\'re on graduated return-to-work, track until fully back to pre-injury duties. If you have a permanent partial disability, periodic entries (weekly) create a long-term record. For appeals, maintain the journal through the entire process. WorkSafeBC has a 3-year window for claim reviews, so your records may be relevant for years.',
     },
     {
-      question: 'Can I use the digital version in Pain Tracker Pro for my WCB claim?',
-      answer: 'Yes. Pain Tracker Pro generates WorkSafeBC-specific reports in PDF format, aligned with Form 8 documentation. The digital version adds automatic pain trend analysis, work impact calculations, treatment compliance tracking, and one-click PDF export. Each export includes a SHA-256 integrity hash for verifiability. Many users combine both: the paper diary for daily quick entries (especially at work) and the digital version for analysis, reporting, and export.',
+      question: 'Can I use the digital version in PainTracker for my WCB claim?',
+      answer: 'Yes. PainTracker generates WorkSafeBC-specific reports in PDF format, aligned with Form 8 documentation. The digital version adds automatic pain trend analysis, work impact calculations, treatment compliance tracking, and one-click PDF export. Each export includes a SHA-256 integrity hash for verifiability. Many users combine both: the paper diary for daily quick entries (especially at work) and the digital version for analysis, reporting, and export.',
     },
     {
       question: 'What about the Workers\' Compensation Appeal Tribunal (WCAT)?',
@@ -595,7 +595,7 @@ const WorkSafeBCCustomSections: React.FC = () => (
               <Shield className="w-6 h-6 text-sky-400" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Pain Tracker Pro: Auto-Generate WCB Reports</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">PainTracker: Auto-Generate WCB Reports</h3>
               <p className="text-slate-300 text-sm leading-relaxed mb-4">
                 The digital version automatically calculates pain trends, work impact metrics, treatment compliance rates, and functional capacity changes — then exports a Form 8-aligned PDF report with one click. Each export includes a SHA-256 integrity hash for verifiability. Everything stays encrypted on your device.
               </p>
@@ -617,7 +617,7 @@ const WorkSafeBCCustomSections: React.FC = () => (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-5 text-center">
           <p className="text-xs text-slate-500 leading-relaxed">
-            <strong className="text-slate-400">Disclaimer:</strong> Pain Tracker Pro is not affiliated with, endorsed by, or connected to WorkSafeBC. 
+            <strong className="text-slate-400">Disclaimer:</strong> PainTracker is not affiliated with, endorsed by, or connected to WorkSafeBC. 
             This template provides a documentation framework based on publicly available WCB evaluation criteria. 
             It is not legal advice. For claim-specific guidance, consult a workers&apos; compensation lawyer or workers&apos; advocate.
           </p>

@@ -29,7 +29,7 @@ export function EmptyState({
   secondaryAction,
   illustration,
   className = '',
-}: EmptyStateProps) {
+}: Readonly<EmptyStateProps>) {
   return (
     <div className={`text-center py-12 px-6 ${className}`}>
       <div className="max-w-md mx-auto">
@@ -46,9 +46,13 @@ export function EmptyState({
         {(primaryAction || secondaryAction) && (
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {primaryAction && (
-              <Button onClick={primaryAction.onClick} className="flex items-center space-x-2">
+              <Button
+                onClick={primaryAction.onClick}
+                className="flex items-center space-x-2"
+                style={{ color: '#ffffff' }}
+              >
                 {primaryAction.icon}
-                <span>{primaryAction.label}</span>
+                <span style={{ color: '#ffffff' }}>{primaryAction.label}</span>
               </Button>
             )}
 

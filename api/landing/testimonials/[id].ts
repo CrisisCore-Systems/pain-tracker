@@ -3,6 +3,7 @@ import { db } from '../../../src/lib/database';
 import verifyAdmin from '../../../api-lib/adminAuth';
 import { z } from 'zod';
 import { enforceRateLimit, getClientIp, logError } from '../../../api-lib/http';
+import { validateCsrfForMutation } from '../../../api-lib/csrf';
 
 type TestimonialPatchBody = {
   anonymized?: unknown;
@@ -119,6 +120,12 @@ async function handlePatch(req: VercelRequest, res: VercelResponse, id: number):
   const auth = await verifyAdmin(req);
   if (!auth.ok) {
     res.status(401).json({ ok: false, error: 'Unauthorized' });
+    return;
+  }
+
+  const csrf = validateCsrfForMutation(req);
+  if (!csrf.ok) {
+    res.status(csrf.status).json({ ok: false, error: csrf.error });
     return;
   }
 

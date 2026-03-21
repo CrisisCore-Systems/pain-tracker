@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useClinicAuth } from '../../contexts/ClinicAuthContext';
 import { Stethoscope, Mail, Lock, AlertCircle, Loader2, Shield, Sparkles } from 'lucide-react';
 export function ClinicLogin() {
+  const demoModeEnabled = import.meta.env.VITE_ALLOW_DEMO_AUTH === 'true';
   const navigate = useNavigate();
   const { login, isLoading, error } = useClinicAuth();
   const [email, setEmail] = useState('');
@@ -57,6 +58,15 @@ export function ClinicLogin() {
         >
           {/* Gradient accent line */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-violet-500 to-purple-500" />
+          {demoModeEnabled ? (
+            <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-200">
+              Demo mode is enabled for non-production testing only.
+            </div>
+          ) : (
+            <div className="mb-4 rounded-xl border border-slate-500/30 bg-slate-500/10 p-3 text-sm text-slate-300">
+              Demo authentication is disabled in this build.
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error Message */}
             {error && (
@@ -167,38 +177,39 @@ export function ClinicLogin() {
               )}
             </button>
           </form>
-          {/* Demo Credentials */}
-          <div className="mt-6 pt-6 border-t border-border">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span className="font-medium text-muted-foreground">Demo Credentials (Development Only)</span>
-            </div>
-            <div className="space-y-1.5 text-xs">
-              <p className="text-muted-foreground">
+           {demoModeEnabled && (
+            <div className="mt-6 pt-6 border-t border-border">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+               <Sparkles className="w-4 h-4 text-amber-400" />
+               <span className="font-medium text-muted-foreground">Demo Credentials (Non-Production Only)</span>
+              </div>
+              <div className="space-y-1.5 text-xs">
+               <p className="text-muted-foreground">
                  Physician: <code className="px-1.5 py-0.5 rounded bg-muted text-sky-600 dark:text-sky-400">doctor@clinic.com</code>
-              </p>
-              <p className="text-muted-foreground">
+               </p>
+               <p className="text-muted-foreground">
                  Nurse: <code className="px-1.5 py-0.5 rounded bg-muted text-sky-600 dark:text-sky-400">nurse@clinic.com</code>
-              </p>
-              <p className="text-muted-foreground">
+               </p>
+               <p className="text-muted-foreground">
                  Admin: <code className="px-1.5 py-0.5 rounded bg-muted text-sky-600 dark:text-sky-400">admin@clinic.com</code>
-              </p>
-              <p className="text-muted-foreground">
-                 Password: <code className="px-1.5 py-0.5 rounded bg-muted text-emerald-600 dark:text-emerald-400">any password</code>
-              </p>
+               </p>
+               <p className="text-muted-foreground">
+                 Password: <code className="px-1.5 py-0.5 rounded bg-muted text-emerald-600 dark:text-emerald-400">demo password</code>
+               </p>
+              </div>
             </div>
-          </div>
+           )}
         </div>
         {/* Footer */}
         <div className="text-center mt-8">
           <div className="flex items-center justify-center gap-2 text-muted-foreground mb-2">
             <Shield className="w-4 h-4 text-emerald-400" />
             <p className="text-sm">
-              Pain Tracker Pro &copy; {new Date().getFullYear()}
+              PainTracker &copy; {new Date().getFullYear()}
             </p>
           </div>
           <p className="text-xs text-muted-foreground">
-            HIPAA Compliant | Secure Healthcare Portal
+            Demonstration clinic portal
           </p>
         </div>
       </div>

@@ -3,8 +3,9 @@
  * Manages clinician login, role-based access, and session handling
  */
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, ReactNode } from 'react';
 import { hipaaComplianceService } from '../services/HIPAACompliance';
+import { getCsrfTokenFromCookie } from '../utils/csrf';
 
 export type ClinicUserRole = 'physician' | 'nurse' | 'admin' | 'researcher';
 
@@ -84,7 +85,41 @@ interface ClinicAuthProviderProps {
   children: ReactNode;
 }
 
-export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
+function extractClinicUser(data: unknown): ClinicUser | null {
+  if (typeof data !== 'object' || data === null) return null;
+  const typed = data as {
+    success?: boolean;
+    ok?: boolean;
+    valid?: boolean;
+    user?: ClinicUser;
+  };
+
+  if (!(typed.success || typed.ok) || !typed.valid || !typed.user) {
+    return null;
+  }
+
+  return typed.user;
+}
+
+function buildCsrfHeaders(): Record<string, string> {
+  const csrfToken = getCsrfTokenFromCookie();
+  return {
+    'Content-Type': 'application/json',
+    ...(csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
+  };
+}
+
+function clearLegacyClinicStorage(): void {
+  try {
+    localStorage.removeItem('clinic_access_token');
+    localStorage.removeItem('clinic_refresh_token');
+    localStorage.removeItem('clinic_user_data');
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export function ClinicAuthProvider({ children }: Readonly<ClinicAuthProviderProps>) {
   const [authState, setAuthState] = useState<ClinicAuthState>({
     user: null,
     isAuthenticated: false,
@@ -97,91 +132,72 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
     checkSession();
   }, []);
 
-  const checkSession = async () => {
+  const tryRefreshAndVerifySession = async (): Promise<ClinicUser | null> => {
     try {
-      // Check for stored tokens
-      const accessToken = localStorage.getItem('clinic_access_token');
-      const userData = localStorage.getItem('clinic_user_data');
-      
-      if (!accessToken || !userData) {
-        setAuthState(prev => ({ ...prev, isLoading: false }));
-        return;
+      const refreshResponse = await fetch('/api/clinic/auth/refresh', {
+        method: 'POST',
+        credentials: 'include',
+        headers: buildCsrfHeaders(),
+      });
+
+      if (!refreshResponse.ok) {
+        return null;
       }
 
-      // Verify token with backend
+      const retryResponse = await fetch('/api/clinic/auth/verify', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      const retryData = await retryResponse.json();
+      if (!retryResponse.ok) return null;
+      return extractClinicUser(retryData);
+    } catch (refreshError) {
+      console.error('Session refresh failed:', refreshError);
+      return null;
+    }
+  };
+
+  const checkSession = async () => {
+    try {
+      clearLegacyClinicStorage();
+
       const response = await fetch('/api/clinic/auth/verify', {
         method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
+        credentials: 'include',
       });
 
       const data = await response.json();
+      const verifiedUser = extractClinicUser(data);
 
-      if (response.ok && data.success && data.valid && data.user) {
+      if (response.ok && verifiedUser) {
         // Session is still valid
         await hipaaComplianceService.logAuditEvent({
           actionType: 'read',
           resourceType: 'Session',
-          userId: data.user.id,
-          userRole: data.user.role,
+          userId: verifiedUser.id,
+          userRole: verifiedUser.role,
           outcome: 'success',
           details: { action: 'session_restored' }
         });
 
         setAuthState({
-          user: data.user,
+          user: verifiedUser,
           isAuthenticated: true,
           isLoading: false,
           error: null
         });
       } else {
-        // Token invalid or expired, try refresh
-        const refreshToken = localStorage.getItem('clinic_refresh_token');
-        
-        if (refreshToken) {
-          try {
-            const refreshResponse = await fetch('/api/clinic/auth/refresh', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ refreshToken })
-            });
-
-            const refreshData = await refreshResponse.json();
-
-            if (refreshResponse.ok && refreshData.success && refreshData.accessToken) {
-              // Update access token
-              localStorage.setItem('clinic_access_token', refreshData.accessToken);
-              
-              // Try verification again
-              const retryResponse = await fetch('/api/clinic/auth/verify', {
-                method: 'GET',
-                headers: {
-                  'Authorization': `Bearer ${refreshData.accessToken}`
-                }
-              });
-
-              const retryData = await retryResponse.json();
-
-              if (retryResponse.ok && retryData.success && retryData.valid && retryData.user) {
-                setAuthState({
-                  user: retryData.user,
-                  isAuthenticated: true,
-                  isLoading: false,
-                  error: null
-                });
-                return;
-              }
-            }
-          } catch (refreshError) {
-            console.error('Token refresh failed:', refreshError);
-          }
+        const refreshedUser = await tryRefreshAndVerifySession();
+        if (refreshedUser) {
+          setAuthState({
+            user: refreshedUser,
+            isAuthenticated: true,
+            isLoading: false,
+            error: null,
+          });
+          return;
         }
 
-        // If we get here, session restoration failed
-        localStorage.removeItem('clinic_access_token');
-        localStorage.removeItem('clinic_refresh_token');
-        localStorage.removeItem('clinic_user_data');
         setAuthState(prev => ({ ...prev, isLoading: false }));
       }
     } catch (error) {
@@ -198,6 +214,7 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
       const response = await fetch('/api/clinic/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ 
           email, 
           password,
@@ -211,10 +228,7 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Store tokens
-      localStorage.setItem('clinic_access_token', data.accessToken);
-      localStorage.setItem('clinic_refresh_token', data.refreshToken);
-      localStorage.setItem('clinic_user_data', JSON.stringify(data.user));
+      clearLegacyClinicStorage();
 
       // Log successful login (backend already logged this, but we log client-side too)
       await hipaaComplianceService.logAuditEvent({
@@ -225,7 +239,6 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
         outcome: 'success',
         details: { 
           action: 'login_client',
-          email: data.user.email,
           role: data.user.role,
         }
       });
@@ -248,7 +261,6 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
         outcome: 'failure',
         details: { 
           action: 'login_failed_client',
-          email,
           error: errorMessage
         }
       });
@@ -269,23 +281,14 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
 
     try {
       // Call backend logout API
-      const accessToken = localStorage.getItem('clinic_access_token');
-      
-      if (accessToken) {
-        await fetch('/api/clinic/auth/logout', {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-          },
-          body: JSON.stringify({ revokeAllSessions: false })
-        });
-      }
+      await fetch('/api/clinic/auth/logout', {
+        method: 'POST',
+        headers: buildCsrfHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({ revokeAllSessions: false })
+      });
 
-      // Clear local session
-      localStorage.removeItem('clinic_access_token');
-      localStorage.removeItem('clinic_refresh_token');
-      localStorage.removeItem('clinic_user_data');
+      clearLegacyClinicStorage();
 
       // Log logout
       if (currentUser) {
@@ -308,9 +311,7 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
     } catch (error) {
       console.error('Logout error:', error);
       // Force logout even if API call fails
-      localStorage.removeItem('clinic_access_token');
-      localStorage.removeItem('clinic_refresh_token');
-      localStorage.removeItem('clinic_user_data');
+      clearLegacyClinicStorage();
       
       setAuthState({
         user: null,
@@ -332,13 +333,16 @@ export function ClinicAuthProvider({ children }: ClinicAuthProviderProps) {
     return roles.includes(authState.user.role);
   };
 
-  const contextValue: ClinicAuthContextType = {
-    ...authState,
-    login,
-    logout,
-    hasPermission,
-    hasRole
-  };
+  const contextValue: ClinicAuthContextType = useMemo(
+    () => ({
+      ...authState,
+      login,
+      logout,
+      hasPermission,
+      hasRole,
+    }),
+    [authState]
+  );
 
   return (
     <ClinicAuthContext.Provider value={contextValue}>

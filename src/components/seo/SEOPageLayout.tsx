@@ -38,6 +38,7 @@ import '../../styles/pages/landing.css';
 export interface SEOPageContent {
   // Meta & SEO
   slug: string;
+  canonicalPath?: string;
   title: string;
   metaTitle: string;
   metaDescription: string;
@@ -98,7 +99,7 @@ interface SEOPageLayoutProps {
 }
 
 export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children }) => {
-  const canonicalUrl = `https://www.paintracker.ca/resources/${content.slug}`;
+  const canonicalUrl = `https://www.paintracker.ca${content.canonicalPath ?? `/resources/${content.slug}`}`;
   
   // Set document title and meta tags
   useEffect(() => {
@@ -225,7 +226,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">Pain Tracker Pro</span>
+              <span className="landing-brand text-xl">PainTracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -480,14 +481,14 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
               Want automatic tracking instead of paper?
             </h2>
             <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Pain Tracker Pro automatically logs your symptoms, generates medical reports, 
-              and keeps everything private on your device. No signup required.
+              PainTracker automatically logs pain, symptoms, triggers, and daily patterns,
+              then lets you export clinician-friendly records when you choose. Local-first by default.
             </p>
             <Link
               to="/start"
               className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl inline-flex items-center gap-3"
             >
-              Open Pain Tracker
+              Open PainTracker
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>

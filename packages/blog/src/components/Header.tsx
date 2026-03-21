@@ -14,15 +14,15 @@ export function Header() {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 20);
+        globalThis.requestAnimationFrame(() => {
+          setIsScrolled(globalThis.scrollY > 20);
           ticking = false;
         });
         ticking = true;
       }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    globalThis.addEventListener('scroll', handleScroll, { passive: true });
+    return () => globalThis.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Close menu on escape key
@@ -49,7 +49,7 @@ export function Header() {
 
   // Track active navigation based on URL
   useEffect(() => {
-    const path = window.location.pathname;
+    const path = globalThis.location.pathname;
     if (path === '/') setActiveSection('articles');
     else if (path.startsWith('/pain-tracking-guides')) setActiveSection('guides');
     else if (path.startsWith('/features')) setActiveSection('features');
@@ -203,13 +203,12 @@ export function Header() {
       </div>
 
       {/* Mobile Navigation - Full Screen Overlay */}
-      <div
+      <dialog
         id="mobile-menu"
+        open={isMenuOpen}
         className={`md:hidden fixed inset-0 top-0 z-40 transition-all duration-500 ${
           isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
-        role="dialog"
-        aria-modal="true"
         aria-label="Mobile navigation menu"
       >
         {/* Backdrop with blur */}
@@ -296,7 +295,7 @@ export function Header() {
             Press <kbd className="px-2.5 py-1.5 rounded-lg bg-muted border border-border font-mono text-xs font-semibold shadow-sm">ESC</kbd> to close
           </p>
         </nav>
-      </div>
+      </dialog>
     </header>
   );
 }

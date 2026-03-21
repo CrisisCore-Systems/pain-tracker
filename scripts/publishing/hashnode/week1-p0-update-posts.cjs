@@ -15,9 +15,9 @@
  *   $env:HASHNODE_TOKEN="<token>"; node scripts/publishing/hashnode/week1-p0-update-posts.cjs --dry-run
  */
 
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
+const fs = require('node:fs');
+const path = require('node:path');
+const https = require('node:https');
 
 const TOKEN = process.env.HASHNODE_TOKEN || '';
 const HOST = 'blog.paintracker.ca';
@@ -83,7 +83,7 @@ function parseFrontmatter(markdown) {
     throw new Error('Missing frontmatter block at file start.');
   }
 
-  const normalized = markdown.replace(/\r\n/g, '\n');
+  const normalized = markdown.split('\r\n').join('\n');
   const match = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   if (!match) {
     throw new Error('Could not split frontmatter from markdown body.');
@@ -97,7 +97,7 @@ function parseFrontmatter(markdown) {
     const idx = line.indexOf(':');
     if (idx <= 0) continue;
     const key = line.slice(0, idx).trim();
-    const value = line.slice(idx + 1).trim().replace(/^"|"$/g, '');
+    const value = line.slice(idx + 1).trim().replaceAll(/^"|"$/g, '');
     fields[key] = value;
   }
 

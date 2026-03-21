@@ -37,7 +37,7 @@ const article: ArticleData = {
     {
       h2: 'Privacy features patients actually need',
       paragraphs: [
-        'Beyond encryption, practical privacy requires features that address real-world threats. PainTracker includes a panic mode that quickly hides the application—useful in situations of domestic coercion or workplace surveillance. The app can be dismissed without leaving visible traces of pain tracking on screen.',
+          'Beyond encryption, practical privacy requires features that address real-world threats. PainTracker includes a panic mode that rapidly replaces the current interface with a low-stimulus breathing overlay, which can reduce visible app state during distress or casual observation. It should not be described as a neutral decoy surface or as protection against active coercion.',
         'Selective export controls let you share specific date ranges and data fields without exposing your entire history. This is essential for medical appointments where you need to share relevant data with one provider without giving them access to everything you have ever recorded. You control the granularity: share a week, a month, or a specific set of entries.',
         'The application also avoids creating unnecessary digital artifacts. There are no push notifications that could reveal pain tracking to someone glancing at your phone, no email receipts, and no calendar integrations that leak health information into shared accounts.',
       ],

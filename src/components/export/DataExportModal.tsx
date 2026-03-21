@@ -20,6 +20,8 @@ import {
   exportToJSON,
   exportToPDF,
   downloadData,
+  clearExportArtifacts,
+  type RedactionPolicy,
 } from '../../utils/pain-tracker/export';
 import type { PainEntry } from '../../types';
 import { cn } from '../../design-system/utils';
@@ -40,11 +42,13 @@ export interface ExportFilters {
 }
 
 interface DataExportModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  entries: PainEntry[];
-  title?: string;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly entries: readonly PainEntry[];
+  readonly title?: string;
 }
+
+type ArrayFilterKey = 'symptoms' | 'locations';
 
 export function DataExportModal({
   isOpen,
@@ -53,8 +57,10 @@ export function DataExportModal({
   title = 'Export Pain Data',
 }: DataExportModalProps) {
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('csv');
+  const [redactionPolicy, setRedactionPolicy] = useState<RedactionPolicy>('minimal');
   const [isExporting, setIsExporting] = useState(false);
   const [exportStatus, setExportStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [acknowledgedUnencryptedRisk, setAcknowledgedUnencryptedRisk] = useState(false);
   const [filters, setFilters] = useState<ExportFilters>({
     dateRange: {
       start: '',
@@ -76,7 +82,7 @@ export function DataExportModal({
         entry.baselineData.symptoms.forEach(symptom => symptomSet.add(symptom));
       }
     });
-    return Array.from(symptomSet).sort();
+    return Array.from(symptomSet).sort((a, b) => a.localeCompare(b));
   }, [entries]);
 
   const availableLocations = useMemo(() => {
@@ -86,7 +92,7 @@ export function DataExportModal({
         entry.baselineData.locations.forEach(location => locationSet.add(location));
       }
     });
-    return Array.from(locationSet).sort();
+    return Array.from(locationSet).sort((a, b) => a.localeCompare(b));
   }, [entries]);
 
   // Filter entries based on current filters
@@ -129,6 +135,11 @@ export function DataExportModal({
   }, [entries, filters]);
 
   const handleExport = async () => {
+    if (!acknowledgedUnencryptedRisk) {
+      setExportStatus('error');
+      return;
+    }
+
     if (filteredEntries.length === 0) {
       setExportStatus('error');
       return;
@@ -145,17 +156,17 @@ export function DataExportModal({
 
       switch (selectedFormat) {
         case 'csv':
-          data = exportToCSV(filteredEntries);
+          data = exportToCSV(filteredEntries, redactionPolicy);
           filename = `pain-data-${timestamp}.csv`;
           mimeType = 'text/csv';
           break;
         case 'json':
-          data = exportToJSON(filteredEntries);
+          data = exportToJSON(filteredEntries, redactionPolicy);
           filename = `pain-data-${timestamp}.json`;
           mimeType = 'application/json';
           break;
         case 'pdf':
-          data = await exportToPDF(filteredEntries);
+          data = await exportToPDF(filteredEntries, redactionPolicy);
           filename = `pain-report-${timestamp}.pdf`;
           mimeType = 'application/pdf';
           break;
@@ -165,18 +176,19 @@ export function DataExportModal({
 
       downloadData(data, filename, mimeType);
       setExportStatus('success');
-
-      // Auto-close after successful export
-      setTimeout(() => {
-        onClose();
-        setExportStatus('idle');
-      }, 2000);
     } catch (error) {
       console.error('Export failed:', error);
       setExportStatus('error');
     } finally {
       setIsExporting(false);
     }
+  };
+
+  const handleCloseAndClearExportMemory = () => {
+    clearExportArtifacts();
+    setExportStatus('idle');
+    setAcknowledgedUnencryptedRisk(false);
+    onClose();
   };
 
   const formatOptions = [
@@ -207,15 +219,26 @@ export function DataExportModal({
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  const toggleArrayFilter = <K extends keyof ExportFilters>(key: K, value: string) => {
-    if (!Array.isArray(filters[key])) return;
-
-    const currentArray = filters[key] as string[];
+  const toggleArrayFilter = (key: ArrayFilterKey, value: string) => {
+    const currentArray = filters[key];
     const newArray = currentArray.includes(value)
       ? currentArray.filter(item => item !== value)
       : [...currentArray, value];
 
-    updateFilter(key, newArray as ExportFilters[K]);
+    updateFilter(key, newArray);
+  };
+
+  const getExportStatusMessage = () => {
+    if (exportStatus === 'success') {
+      return `Successfully exported ${filteredEntries.length} entries!`;
+    }
+    if (filteredEntries.length === 0) {
+      return 'No entries match your filters. Please adjust your criteria.';
+    }
+    if (acknowledgedUnencryptedRisk === false) {
+      return 'You must acknowledge the unencrypted export warning before downloading.';
+    }
+    return 'Export failed. Please try again.';
   };
 
   return (
@@ -287,8 +310,11 @@ export function DataExportModal({
             {/* Date Range */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Start Date</label>
+                <label htmlFor="export-start-date" className="block text-sm font-medium mb-2">
+                  Start Date
+                </label>
                 <input
+                  id="export-start-date"
                   type="date"
                   value={filters.dateRange.start}
                   onChange={e =>
@@ -301,8 +327,11 @@ export function DataExportModal({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">End Date</label>
+                <label htmlFor="export-end-date" className="block text-sm font-medium mb-2">
+                  End Date
+                </label>
                 <input
+                  id="export-end-date"
                   type="date"
                   value={filters.dateRange.end}
                   onChange={e =>
@@ -330,7 +359,7 @@ export function DataExportModal({
                   onChange={e =>
                     updateFilter('painLevelRange', {
                       ...filters.painLevelRange,
-                      min: parseInt(e.target.value),
+                      min: Number.parseInt(e.target.value, 10),
                     })
                   }
                   className="flex-1"
@@ -344,7 +373,7 @@ export function DataExportModal({
                   onChange={e =>
                     updateFilter('painLevelRange', {
                       ...filters.painLevelRange,
-                      max: parseInt(e.target.value),
+                      max: Number.parseInt(e.target.value, 10),
                     })
                   }
                   className="flex-1"
@@ -354,8 +383,10 @@ export function DataExportModal({
 
             {/* Symptoms Filter */}
             {availableSymptoms.length > 0 && (
-              <div>
-                <label className="block text-sm font-medium mb-2">Symptoms</label>
+              <fieldset>
+                <legend className="block text-sm font-medium mb-2">
+                  Symptoms
+                </legend>
                 <div className="flex flex-wrap gap-2">
                   {availableSymptoms.map(symptom => (
                     <button
@@ -372,13 +403,15 @@ export function DataExportModal({
                     </button>
                   ))}
                 </div>
-              </div>
+              </fieldset>
             )}
 
             {/* Locations Filter */}
             {availableLocations.length > 0 && (
-              <div>
-                <label className="block text-sm font-medium mb-2">Locations</label>
+              <fieldset>
+                <legend className="block text-sm font-medium mb-2">
+                  Locations
+                </legend>
                 <div className="flex flex-wrap gap-2">
                   {availableLocations.map(location => (
                     <button
@@ -395,8 +428,49 @@ export function DataExportModal({
                     </button>
                   ))}
                 </div>
-              </div>
+              </fieldset>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Redaction Policy */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Data Sensitivity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <label className="flex items-start gap-2">
+                <input
+                  type="radio"
+                  name="redactionPolicy"
+                  value="minimal"
+                  checked={redactionPolicy === 'minimal'}
+                  onChange={() => setRedactionPolicy('minimal')}
+                />
+                <span className="text-sm">
+                  <strong>Minimal (clinical/compliance)</strong>: includes timestamps, pain levels,
+                  symptoms, and medication logs. Excludes notes, locations, mood/context markers.
+                </span>
+              </label>
+              <label className="flex items-start gap-2">
+                <input
+                  type="radio"
+                  name="redactionPolicy"
+                  value="full"
+                  checked={redactionPolicy === 'full'}
+                  onChange={() => setRedactionPolicy('full')}
+                />
+                <span className="text-sm">
+                  <strong>Full (personal/diagnostic)</strong>: includes all available fields.
+                </span>
+              </label>
+              {selectedFormat === 'pdf' && (
+                <p className="text-xs text-muted-foreground">
+                  PDF export respects the selected policy and labels minimal exports as redacted.
+                </p>
+              )}
+            </div>
           </CardContent>
         </Card>
 
@@ -423,16 +497,31 @@ export function DataExportModal({
                     exportStatus === 'success' ? 'text-green-800' : 'text-red-800'
                   )}
                 >
-                  {exportStatus === 'success'
-                    ? `Successfully exported ${filteredEntries.length} entries!`
-                    : filteredEntries.length === 0
-                      ? 'No entries match your filters. Please adjust your criteria.'
-                      : 'Export failed. Please try again.'}
+                  {getExportStatusMessage()}
                 </p>
               </div>
             </CardContent>
           </Card>
         )}
+
+        <Card className="border-amber-300 bg-amber-50">
+          <CardContent className="pt-6 space-y-3">
+            <div className="text-sm font-medium text-amber-900">Unencrypted export warning</div>
+            <ul className="text-sm text-amber-800 space-y-1 list-disc list-inside">
+              <li>This file is not protected by your app passphrase.</li>
+              <li>Delete this file as soon as you are finished sharing it.</li>
+            </ul>
+            <label className="flex items-start gap-2 text-sm text-amber-900">
+              <input
+                type="checkbox"
+                checked={acknowledgedUnencryptedRisk}
+                onChange={e => setAcknowledgedUnencryptedRisk(e.target.checked)}
+                className="mt-0.5"
+              />
+              <span>I understand this export leaves app protection once saved to my device.</span>
+            </label>
+          </CardContent>
+        </Card>
 
         {/* Actions */}
         <div className="flex items-center justify-between pt-4 border-t">
@@ -440,12 +529,12 @@ export function DataExportModal({
             {filteredEntries.length} entries will be exported
           </div>
           <div className="flex space-x-3">
-            <Button variant="outline" onClick={onClose}>
+            <Button variant="outline" onClick={handleCloseAndClearExportMemory}>
               Cancel
             </Button>
             <Button
               onClick={handleExport}
-              disabled={isExporting || filteredEntries.length === 0}
+              disabled={isExporting || filteredEntries.length === 0 || !acknowledgedUnencryptedRisk}
               className="min-w-[120px]"
             >
               {isExporting ? (
@@ -460,6 +549,11 @@ export function DataExportModal({
                 </>
               )}
             </Button>
+            {exportStatus === 'success' && (
+              <Button variant="secondary" onClick={handleCloseAndClearExportMemory}>
+                Close Export & Clear Memory
+              </Button>
+            )}
           </div>
         </div>
       </div>

@@ -139,7 +139,7 @@ const chronicPainStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'chronic-pain-diary-template',
   title: 'Chronic Pain Diary Template (Free)',
-  metaTitle: 'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | Pain Tracker Pro',
+  metaTitle: 'Chronic Pain Diary Template — Free Long-Term Pain Tracker for Flares, Baseline & Trends | PainTracker',
   metaDescription: 'Download a free 6-page chronic pain diary template with baseline/flare tracking, trigger identification, treatment logs, and monthly trend reviews for long-term pain management.',
   keywords: [
     'chronic pain diary template', 'chronic pain tracker template',
@@ -186,7 +186,7 @@ const pageContent: SEOPageContent = {
     { question: 'How do I know what my baseline is?', answer: 'Track daily for 2 weeks without any changes to your routine. Your average pain level during stable (non-flare) periods is your baseline. It\'s usually the level you consider "normal for me" — the background pain that\'s always there.' },
     { question: 'What counts as a flare?', answer: 'A flare is a significant worsening beyond your baseline. If your baseline is 3-4/10 and you spike to 7+, that\'s a flare. If your baseline is 6/10 and you spike to 9, that\'s a flare. The threshold is personal — it\'s when pain disrupts your usual (already limited) function.' },
     { question: 'The weekly summary seems like extra work. Is it worth it?', answer: 'It\'s the most valuable 5 minutes of your tracking. Daily entries capture trees; weekly summaries show the forest. After a month, you can see trends that are invisible day-to-day. Doctors specifically value this summary level of data.' },
-    { question: 'Can I use this alongside digital tracking?', answer: 'Absolutely. Many people use the printable template as a backup or for appointment days, while using Pain Tracker Pro digitally for daily tracking with automatic trend analysis.' },
+    { question: 'Can I use this alongside digital tracking?', answer: 'Absolutely. Many people use the printable template as a backup or for appointment days, while using PainTracker digitally for daily tracking with automatic trend analysis.' },
     { question: 'How long should I maintain a chronic pain diary?', answer: 'Indefinitely, but with decreasing effort. Once you know your patterns (usually 2-3 months), you can shift to a shorter daily entry and focus on flare documentation and monthly summaries. The tracking becomes second nature.' },
     { question: 'My pain doesn\'t have clear flares — it\'s constant. Does this template still work?', answer: 'Yes. For constant pain, you\'ll use the daily tracking and weekly summary pages most. Track variation within your constant pain: is it 4/10 on some days and 6/10 on others? That variation has patterns worth documenting.' },
     { question: 'Should I track things other than pain?', answer: 'The template includes sleep, function, and medication tracking because they directly influence pain outcomes. Fatigue, mood, and activity levels are also valuable. Track what\'s manageable — consistency beats comprehensiveness.' },

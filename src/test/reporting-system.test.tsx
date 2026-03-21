@@ -89,7 +89,7 @@ describe('Reporting System UI', () => {
     const { getAllByRole: getAllByRoleWithin } = within(scheduleCard as HTMLElement);
     const editButton = getAllByRoleWithin('button').find(b => b.textContent?.toLowerCase().includes('edit'));
     if (!editButton) throw new Error('Edit button not found');
-    fireEvent.click(editButton as HTMLElement);
+    fireEvent.click(editButton);
 
     // Modal should be open with values prefilled; change name and frequency
     const modalNameInput = screen.getByPlaceholderText(/e.g., Weekly Summary Report/i);
@@ -137,8 +137,8 @@ describe('Reporting System UI', () => {
   const toggleTitleEl = screen.getByText(/Toggle Weekly/i);
   const toggleCard = toggleTitleEl.closest('div')?.parentElement;
     expect(toggleCard).toBeTruthy();
-  const { getAllByRole: getRolesWithin } = within(toggleCard as HTMLElement);
-  const toggleBtn = getRolesWithin('switch').find(s => (s as HTMLElement).getAttribute('aria-label')?.toLowerCase().includes('toggle schedule'));
+  const { getAllByRole: getRolesWithin } = within(toggleCard);
+  const toggleBtn = getRolesWithin('switch').find(s => s.getAttribute('aria-label')?.toLowerCase().includes('toggle schedule'));
     if (!toggleBtn) throw new Error('Toggle button not found');
 
     // Toggle state
@@ -188,7 +188,7 @@ describe('Reporting System UI', () => {
     const titleEl = screen.getByText(/Deletable Weekly/i);
     const outer = titleEl.closest('div')?.parentElement;
     if (!outer) throw new Error('Schedule container not found');
-    const { getAllByRole } = within(outer as HTMLElement);
+    const { getAllByRole } = within(outer);
     const deleteButton = getAllByRole('button').find(b => (b as HTMLButtonElement).getAttribute('aria-label')?.toLowerCase().includes('delete'));
     if (!deleteButton) throw new Error('Delete button not found');
     fireEvent.click(deleteButton);
@@ -199,6 +199,66 @@ describe('Reporting System UI', () => {
     });
 
     expect(usePainTrackerStore.getState().scheduledReports).toHaveLength(0);
+    } finally {
+      confirmSpy.mockRestore();
+      vi.useRealTimers();
+    }
+  });
+
+  it('keeps a scheduled report when undo is used before expiry', async () => {
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
+    try {
+      render(<ReportingSystem entries={[]} />);
+
+      const select = screen.getByRole('combobox');
+      fireEvent.change(select, { target: { value: 'weekly-summary' } });
+      const titleElements = screen.getAllByText(/Weekly Pain Summary/i);
+      const selectedTitle = titleElements.find(el => el.tagName === 'H4' || el.tagName === 'h4');
+      const selectedContainer = selectedTitle?.closest('div');
+      if (!selectedContainer) throw new Error('Selected template container not found');
+      const { getByRole } = within(selectedContainer as HTMLElement);
+      fireEvent.click(getByRole('button', { name: /Schedule/i }));
+
+      fireEvent.change(screen.getByPlaceholderText(/e.g., Weekly Summary Report/i), {
+        target: { value: 'Undo Weekly' },
+      });
+      fireEvent.change(screen.getByPlaceholderText(/email@example.com/i), {
+        target: { value: 'undo@example.com' },
+      });
+
+      const sendButtons = screen.getAllByRole('button', { name: /Schedule Report/i });
+      const modalSendButton = sendButtons.find(b =>
+        (b as HTMLButtonElement).className.includes('bg-primary') ||
+        (b as HTMLButtonElement).className.includes('text-primary-foreground')
+      );
+      if (!modalSendButton) throw new Error('Modal Schedule Report button not found');
+      fireEvent.click(modalSendButton);
+
+      await waitFor(() => expect(usePainTrackerStore.getState().scheduledReports).toHaveLength(1));
+
+      vi.useFakeTimers();
+
+      const titleEl = screen.getByText(/Undo Weekly/i);
+      const outer = titleEl.closest('div')?.parentElement;
+      if (!outer) throw new Error('Schedule container not found');
+      const { getAllByRole } = within(outer);
+      const deleteButton = getAllByRole('button').find(b =>
+        (b as HTMLButtonElement).getAttribute('aria-label')?.toLowerCase().includes('delete')
+      );
+      if (!deleteButton) throw new Error('Delete button not found');
+      fireEvent.click(deleteButton);
+
+      expect(screen.getByText(/Deleting “Undo Weekly” in 10s\./i)).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /^Undo$/i }));
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(11_000);
+      });
+
+      expect(usePainTrackerStore.getState().scheduledReports).toHaveLength(1);
+      expect(usePainTrackerStore.getState().scheduledReports[0].name).toContain('Undo Weekly');
+      expect(screen.queryByText(/Deleting “Undo Weekly”/i)).not.toBeInTheDocument();
     } finally {
       confirmSpy.mockRestore();
       vi.useRealTimers();
@@ -236,7 +296,7 @@ describe('Reporting System UI', () => {
     const titleEl = screen.getByText(/Runnable Weekly/i);
     const outer = titleEl.closest('div')?.parentElement;
     if (!outer) throw new Error('Schedule container not found');
-    const { getAllByRole } = within(outer as HTMLElement);
+    const { getAllByRole } = within(outer);
     const runButton = getAllByRole('button').find(b => (b as HTMLButtonElement).getAttribute('aria-label')?.toLowerCase().includes('run now'));
     if (!runButton) throw new Error('Run now button not found');
     fireEvent.click(runButton);

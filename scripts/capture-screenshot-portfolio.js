@@ -79,7 +79,7 @@ async function waitForAppContent(page) {
 
 async function waitForProtectedAppShell(page, timeout = 60_000) {
   const appShell = page
-    .locator('[role="application"][aria-label="Pain Tracker Pro Application"], .pt-app-shell[role="application"]')
+    .locator('[role="application"][aria-label="PainTracker Application"], .pt-app-shell[role="application"]')
     .first();
   return appShell
     .waitFor({ state: 'visible', timeout })
@@ -195,7 +195,7 @@ async function ensureVaultUnlocked(page, passphrase) {
   // Be very specific here: the vault screen can also have #main-content.
   // The protected app shell renders a stable role+label.
   const appRoot = page
-    .locator('[role="application"][aria-label="Pain Tracker Pro Application"], .pt-app-shell[role="application"]')
+    .locator('[role="application"][aria-label="PainTracker Application"], .pt-app-shell[role="application"]')
     .first();
   const vaultTitle = page.locator('h1:has-text("Secure vault"), #vault-dialog-title').first();
   const preparingVault = page.getByText(/Preparing secure vault/i).first();

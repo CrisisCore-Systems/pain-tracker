@@ -191,8 +191,16 @@ export default function BackupSettings() {
                     const res = applySettingsBackupImport({
                       safeData: pendingImport.safeData,
                       confirmToken: confirmText,
+                      existingKeys: secureStorage.keys(),
+                      readValue: key => secureStorage.get(key),
+                      removeValue: key => {
+                        secureStorage.remove(key);
+                      },
                       writeValue: (key, value) => {
-                        secureStorage.set(key, value);
+                        const result = secureStorage.set(key, value);
+                        if (!result.success) {
+                          throw new Error(result.error ?? 'SETTINGS_IMPORT_WRITE_FAILED');
+                        }
                       },
                     });
                     setImportError(null);

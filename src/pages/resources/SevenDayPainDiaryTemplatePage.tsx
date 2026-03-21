@@ -124,7 +124,7 @@ const sevenDayStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: '7-day-pain-diary-template',
   title: '7-Day Pain Diary Template (Free)',
-  metaTitle: '7-Day Pain Diary Template — Free One-Week Pain Tracker for Doctor Appointments | Pain Tracker Pro',
+  metaTitle: '7-Day Pain Diary Template — Free One-Week Pain Tracker for Doctor Appointments | PainTracker',
   metaDescription: 'Download a free 7-day pain diary template. One-week format with morning/midday/evening tracking, medication logs, and a doctor-ready weekly summary.',
   keywords: [
     '7 day pain diary template', 'week pain diary',

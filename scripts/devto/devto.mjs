@@ -8,6 +8,7 @@ const DEVTO_API_KEY = process.env.DEVTO_API_KEY;
 const ROOT = process.cwd();
 const SCHEDULE_PATH = path.join(ROOT, 'scripts', 'devto', 'schedule.json');
 const PUBLISHED_RETROFIT_PATH = path.join(ROOT, 'scripts', 'devto', 'published-retrofit.json');
+const FRONT_MATTER_LINE_RE = /^([A-Za-z_]\w*):\s*(.*)$/;
 
 function parseArgs(argv) {
   const args = { _: [] };
@@ -35,6 +36,78 @@ function parseOnlyKeysArg(onlyRaw) {
   return new Set(keys);
 }
 
+function parseFrontMatterLine(line) {
+  const match = FRONT_MATTER_LINE_RE.exec(line);
+  if (!match) return null;
+  return { key: match[1], value: match[2] };
+}
+
+function hasFrontMatterBlock(md, eol) {
+  const body = String(md ?? '');
+  const start = `---${eol}`;
+  const marker = `${eol}---${eol}`;
+  return body.startsWith(start) && body.includes(marker, start.length);
+}
+
+function resolveOrganizationId(raw) {
+  return raw ? Number(raw) : undefined;
+}
+
+function requireSponsorAndRepoUrls({ sponsorUrl, repoUrl }) {
+  if (!sponsorUrl || !repoUrl) {
+    throw new Error('Missing sponsor/repo URL. Set DEVTO_SPONSOR_URL and DEVTO_REPO_URL (or schedule.defaults).');
+  }
+}
+
+function getDevtoPublishConfig(schedule) {
+  const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
+  const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
+  const seriesStartUrl = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
+  const series = process.env.DEVTO_SERIES ?? schedule.defaults?.series;
+  const organizationIdRaw = process.env.DEVTO_ORGANIZATION_ID ?? schedule.defaults?.organization_id;
+  const organization_id = resolveOrganizationId(organizationIdRaw);
+
+  requireSponsorAndRepoUrls({ sponsorUrl, repoUrl });
+
+  return {
+    sponsorUrl,
+    repoUrl,
+    seriesStartUrl,
+    series,
+    organization_id,
+  };
+}
+
+function buildBodyMarkdown(md, post, { sponsorUrl, repoUrl, seriesStartUrl }) {
+  const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
+  const normalizedMd = normalizeBodyMarkdownForDev(md);
+  return shouldInjectCtasForPost(post)
+    ? injectCtasIntoMarkdown(normalizedMd, { ctaTop: top, ctaBottom: bottom })
+    : normalizedMd;
+}
+
+async function readBodyMarkdownForPost(post, config) {
+  const { md } = await readSourceMarkdown(post.sourceFile);
+  return buildBodyMarkdown(md, post, config);
+}
+
+function buildArticleUpsertPayload(post, body_markdown, config, overrides = {}) {
+  return {
+    article: {
+      title: post.title,
+      body_markdown,
+      published: false,
+      series: config.series ?? null,
+      main_image: resolvePostMainImage(post, overrides.currentArticle ?? null),
+      canonical_url: post.canonical_url ?? null,
+      description: post.description ?? undefined,
+      tags: ensureStringArrayTags(post.tags),
+      organization_id: config.organization_id ?? null,
+      ...overrides.article,
+    },
+  };
+}
+
 function matchesOnlyKeys(post, onlyKeys) {
   if (!onlyKeys) return true;
   return onlyKeys.has(String(post?.key ?? ''));
@@ -45,6 +118,20 @@ function ensureStringArrayTags(tags) {
   if (typeof tags === 'string') return tags;
   if (Array.isArray(tags)) return tags.join(', ');
   return '';
+}
+
+function resolvePostMainImage(post, currentArticle = null) {
+  const explicitImage =
+    (typeof post?.main_image === 'string' && post.main_image.trim()) ||
+    (typeof post?.cover_image === 'string' && post.cover_image.trim()) ||
+    null;
+
+  if (explicitImage) return explicitImage;
+
+  const existingImage =
+    (typeof currentArticle?.main_image === 'string' && currentArticle.main_image.trim()) || null;
+
+  return existingImage;
 }
 
 function shouldInjectCtasForPost(post) {
@@ -145,10 +232,10 @@ function upsertFrontMatter(md, updates) {
 
   const seen = new Set();
   const outLines = fmLines.map((line) => {
-    const m = line.match(/^([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$/);
-    if (!m) return line;
-    const key = m[1];
-    if (Object.prototype.hasOwnProperty.call(updates, key)) {
+    const parsed = parseFrontMatterLine(line);
+    if (!parsed) return line;
+    const { key } = parsed;
+    if (Object.hasOwn(updates, key)) {
       seen.add(key);
       return `${key}: ${updates[key]}`;
     }
@@ -210,11 +297,29 @@ function readFrontMatter(md) {
   const fmLines = fmRaw.split(eol);
   const out = {};
   for (const line of fmLines) {
-    const m = line.match(/^([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$/);
-    if (!m) continue;
-    out[m[1]] = m[2];
+    const parsed = parseFrontMatterLine(line);
+    if (!parsed) continue;
+    out[parsed.key] = parsed.value;
   }
   return out;
+}
+
+function stripFrontMatter(md) {
+  const normalized = String(md ?? '');
+  const eol = normalized.includes('\r\n') ? '\r\n' : '\n';
+  const startsWithFrontMatter = normalized.startsWith(`---${eol}`);
+  if (!startsWithFrontMatter) return normalized;
+
+  const endMarker = `${eol}---${eol}`;
+  const start = `---${eol}`;
+  const endIdx = normalized.indexOf(endMarker, start.length);
+  if (endIdx === -1) return normalized;
+
+  return normalized.slice(endIdx + endMarker.length);
+}
+
+function normalizeBodyMarkdownForDev(md) {
+  return stripFrontMatter(md).trimStart();
 }
 
 function hasAllMarkers(md, markers) {
@@ -304,7 +409,7 @@ function normalizeUrl(u = '') {
   return String(u)
     .replace(/^https?:\/\//i, '')
     .replace(/^www\./i, '')
-    .replace(/\/+$/g, '')
+    .replaceAll(/\/+$/g, '')
     .toLowerCase();
 }
 
@@ -334,9 +439,7 @@ function buildNextUpBlock({ article, startHereUrl, sponsorUrl, orderedCollection
   const next = idx >= 0 ? list[idx + 1] : null;
   const first = list[0] ?? null;
 
-  const lines = [];
-  lines.push('---');
-  lines.push('');
+  const lines = ['---', ''];
 
   if (isStartHere) {
     // Avoid “Start here → Start here”
@@ -345,9 +448,8 @@ function buildNextUpBlock({ article, startHereUrl, sponsorUrl, orderedCollection
     } else {
       return null;
     }
-  } else if (next && next?.url) {
-    lines.push(`**Next up →** ${next.url}  `);
-    lines.push(`**Start here →** ${safeStartHere}  `);
+  } else if (next?.url) {
+    lines.push(`**Next up →** ${next.url}  `, `**Start here →** ${safeStartHere}  `);
   } else {
     // Last post in series (or no series): still show Start here funnel
     lines.push(`**Start here →** ${safeStartHere}  `);
@@ -385,57 +487,71 @@ function removeReadingOrderSection(md) {
   // Remove our previous collapsed block, if present.
   s = stripSectionByMarkers(s, '<!-- pain-tracker:reading-order:start -->', '<!-- pain-tracker:reading-order:end -->');
 
-  const lines = s.split(/\r?\n/);
+  s = removeLegacyReadingOrderDetailsBlock(s, eol);
 
-  // Remove a raw <details> reading order block (Option B legacy).
+  const range = findReadingOrderSectionRange(s);
+  if (!range) return { md: s, changed: false };
+
+  // Remove the section, then trim excessive blank lines around the cut.
+  const lines = s.split(/\r?\n/);
+  const before = lines.slice(0, range.startLine).join(eol).replace(/\s*$/, '');
+  const after = lines.slice(range.endLine).join(eol).replace(/^\s*/, '');
+  const out = [before, after].filter(Boolean).join(eol + eol);
+
+  return { md: out, changed: true };
+}
+
+function removeLegacyReadingOrderDetailsBlock(md, eol) {
+  const lines = String(md ?? '').split(/\r?\n/);
   const detailsSummaryRe = /^\s*<summary><strong>\s*reading\s+order\s*<\/strong><\/summary>\s*$/i;
+
   for (let i = 0; i < lines.length; i += 1) {
     if (!/^\s*<details>\s*$/i.test(lines[i])) continue;
-    if (i + 1 >= lines.length) continue;
-    if (!detailsSummaryRe.test(lines[i + 1])) continue;
+    if (i + 1 >= lines.length || !detailsSummaryRe.test(lines[i + 1])) continue;
 
-    let j = i + 2;
-    while (j < lines.length && !/^\s*<\/details>\s*$/i.test(lines[j])) j += 1;
-    if (j < lines.length) {
-      lines.splice(i, j - i + 1);
-      s = lines.join(eol);
+    let endIdx = i + 2;
+    while (endIdx < lines.length && !/^\s*<\/details>\s*$/i.test(lines[endIdx])) endIdx += 1;
+    if (endIdx < lines.length) {
+      lines.splice(i, endIdx - i + 1);
       break;
     }
   }
 
-  const lines2 = s.split(/\r?\n/);
+  return lines.join(eol);
+}
+
+function findReadingOrderSectionRange(md) {
+  const lines = String(md ?? '').split(/\r?\n/);
   const headingRe = /^(#{2,4})\s+.*reading\s+order.*$/i;
   const altRe = /^\*\*.*reading\s+order.*\*\*\s*$/i;
 
   let startLine = -1;
-  for (let i = 0; i < lines2.length; i += 1) {
-    const line = lines2[i];
-    if (headingRe.test(line) || altRe.test(line)) {
+  for (let i = 0; i < lines.length; i += 1) {
+    if (headingRe.test(lines[i]) || altRe.test(lines[i])) {
       startLine = i;
       break;
     }
   }
-  if (startLine === -1) return { md: s, changed: false };
 
-  let endLine = lines2.length;
-  for (let i = startLine + 1; i < lines2.length; i += 1) {
-    const line = lines2[i];
-    if (/^#{1,6}\s+/.test(line)) {
-      endLine = i;
-      break;
-    }
-    if (line.includes('<!-- pain-tracker:cta-bottom -->') || line.includes('<!-- pain-tracker:bottom-next:start -->')) {
+  if (startLine === -1) return null;
+
+  let endLine = lines.length;
+  for (let i = startLine + 1; i < lines.length; i += 1) {
+    if (isReadingOrderBoundaryLine(lines[i])) {
       endLine = i;
       break;
     }
   }
 
-  // Remove the section, then trim excessive blank lines around the cut.
-  const before = lines2.slice(0, startLine).join(eol).replace(/\s*$/, '');
-  const after = lines2.slice(endLine).join(eol).replace(/^\s*/, '');
-  const out = [before, after].filter(Boolean).join(eol + eol);
+  return { startLine, endLine };
+}
 
-  return { md: out, changed: true };
+function isReadingOrderBoundaryLine(line) {
+  return (
+    /^#{1,6}\s+/.test(line) ||
+    line.includes('<!-- pain-tracker:cta-bottom -->') ||
+    line.includes('<!-- pain-tracker:bottom-next:start -->')
+  );
 }
 
 function upsertConversionBlock(md, { hook, startHereUrl, sponsorUrl, tryUrl, trustBullets }) {
@@ -453,7 +569,7 @@ function upsertConversionBlock(md, { hook, startHereUrl, sponsorUrl, tryUrl, tru
   // Insert immediately after front matter if present, else at top.
   const eol = out.includes('\r\n') ? '\r\n' : '\n';
   const fmEnd = `${eol}---${eol}`;
-  const hasFrontMatter = out.startsWith(`---${eol}`) && out.indexOf(fmEnd, `---${eol}`.length) !== -1;
+  const hasFrontMatter = hasFrontMatterBlock(out, eol);
 
   if (hasFrontMatter) {
     const endIdx = out.indexOf(fmEnd, `---${eol}`.length);
@@ -498,7 +614,7 @@ function injectSeriesChainIntoMarkdown(md, { seriesName, partLabel, startHereUrl
   // Insert immediately after front matter if present, else at top.
   const eol = out.includes('\r\n') ? '\r\n' : '\n';
   const fmEnd = `${eol}---${eol}`;
-  const hasFrontMatter = out.startsWith(`---${eol}`) && out.indexOf(fmEnd, `---${eol}`.length) !== -1;
+  const hasFrontMatter = hasFrontMatterBlock(out, eol);
 
   if (hasFrontMatter) {
     const endIdx = out.indexOf(fmEnd, `---${eol}`.length);
@@ -513,10 +629,10 @@ function injectSeriesChainIntoMarkdown(md, { seriesName, partLabel, startHereUrl
     const bottomMarker = '<!-- pain-tracker:cta-bottom -->';
     const idx = out.indexOf(bottomMarker);
     const insertion = `${eol}${footerLine}${eol}`;
-    if (idx !== -1) {
-      out = out.slice(0, idx) + insertion + out.slice(idx);
-    } else {
+    if (idx === -1) {
       out = out.replace(/\s*$/, '') + insertion;
+    } else {
+      out = out.slice(0, idx) + insertion + out.slice(idx);
     }
   }
 
@@ -626,7 +742,7 @@ async function getMe() {
 function normalizeTitle(title) {
   return String(title ?? '')
     .trim()
-    .replace(/\s+/g, ' ')
+    .replaceAll(/\s+/g, ' ')
     .toLowerCase();
 }
 
@@ -634,9 +750,9 @@ function normalizeFunnelKey(title) {
   return String(title ?? '')
     .normalize('NFKD')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, ' ')
+    .replaceAll(/[^a-z0-9]+/g, ' ')
     .trim()
-    .replace(/\s+/g, ' ');
+    .replaceAll(/\s+/g, ' ');
 }
 
 async function getUserAllArticles({ page = 1, per_page = 100 } = {}) {
@@ -729,6 +845,443 @@ function timestampsEqual(a, b) {
   return String(a ?? '') === String(b ?? '');
 }
 
+function isLockedPublishedArticle(article, now = new Date()) {
+  return isPublishedInPast(article, now) && !isScheduledForFuture(article, now);
+}
+
+function resolveCurrentArticleForPost({ post, allCache, now, desiredIso = post.publishAt }) {
+  let current = null;
+  let linked = false;
+  let relinkedFrom = null;
+
+  if (post.articleId) {
+    current = allCache.find((a) => a?.id === post.articleId) ?? null;
+  }
+
+  if (current) {
+    return { current, linked, relinkedFrom };
+  }
+
+  const wanted = normalizeTitle(post.title);
+  const matches = allCache.filter((a) => normalizeTitle(a?.title) === wanted);
+  const best = pickBestTitleMatch(matches, desiredIso, now);
+  if (!best?.id) {
+    return { current: null, linked, relinkedFrom };
+  }
+
+  relinkedFrom = post.articleId && post.articleId !== best.id ? post.articleId : null;
+  post.articleId = best.id;
+  post.devtoUrl = best.url ?? post.devtoUrl ?? null;
+  linked = true;
+  current = best;
+
+  return { current, linked, relinkedFrom };
+}
+
+async function createDraftArticleForPost(post, config) {
+  const body_markdown = await readBodyMarkdownForPost(post, config);
+  const payload = buildArticleUpsertPayload(post, body_markdown, config);
+  const createdArticle = await devtoRequest('POST', '/articles', payload);
+
+  post.articleId = createdArticle.id ?? null;
+  post.devtoUrl = createdArticle.url ?? null;
+
+  return createdArticle;
+}
+
+async function ensureDraftArticleForPost({ post, allCache, now, config }) {
+  const resolved = resolveCurrentArticleForPost({ post, allCache, now });
+  if (resolved.current) {
+    return { current: resolved.current, linked: resolved.linked, created: false, relinkedFrom: resolved.relinkedFrom };
+  }
+
+  const created = await createDraftArticleForPost(post, config);
+  allCache.push(created);
+  return { current: created, linked: false, created: true, relinkedFrom: null };
+}
+
+function buildPublishedPayload(post, current, body_markdown, config) {
+  return buildArticleUpsertPayload(post, body_markdown, config, {
+    currentArticle: current,
+    article: {
+      published: true,
+    },
+  });
+}
+
+async function publishArticleForPost(post, current, config) {
+  const body_markdown = await readBodyMarkdownForPost(post, config);
+  const payload = buildPublishedPayload(post, current, body_markdown, config);
+  const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
+  post.devtoUrl = updated.url ?? post.devtoUrl;
+  post.published = true;
+  return updated;
+}
+
+async function persistScheduleWrite({ write, schedule, onWrite, onSkip }) {
+  if (write) {
+    await saveSchedule(schedule);
+    if (onWrite) console.log(onWrite);
+    return;
+  }
+  if (onSkip) console.log(onSkip);
+}
+
+function buildRetitlePayload(post, current, desiredTitleRaw, body_markdown) {
+  return {
+    article: {
+      title: desiredTitleRaw,
+      ...(body_markdown ? { body_markdown } : null),
+      main_image: resolvePostMainImage(post, current),
+    },
+  };
+}
+
+function buildCountResult({ changed = 0, linked = 0, skipped = 0, pushed = 0 }) {
+  return { changed, linked, skipped, pushed };
+}
+
+function linkedCount(resolved) {
+  return resolved?.linked ? 1 : 0;
+}
+
+function logRelinkIfNeeded(post, resolved) {
+  if (!resolved?.relinkedFrom) return;
+  console.log(`Re-linked stale articleId for: ${post.title}`);
+  console.log(`  from: ${resolved.relinkedFrom}`);
+  console.log(`  to:   ${post.articleId}`);
+}
+
+function resolveArticleOrSkip({ post, allCache, now, desiredIso, missingMessage }) {
+  const resolved = resolveCurrentArticleForPost({ post, allCache, now, desiredIso });
+  logRelinkIfNeeded(post, resolved);
+  if (resolved.current && post.articleId) {
+    return { resolved };
+  }
+
+  console.log(missingMessage);
+  return {
+    result: buildCountResult({ linked: linkedCount(resolved), skipped: 1 }),
+  };
+}
+
+function getScheduleWindowSkipResult(post, allowPast, now) {
+  const desired = post.publishAt;
+  const desiredMs = Date.parse(desired);
+  if (Number.isNaN(desiredMs)) {
+    console.log(`Skip (invalid publishAt): ${post.title}`);
+    return buildCountResult({ skipped: 1 });
+  }
+  if (allowPast || desiredMs > now.getTime()) {
+    return null;
+  }
+
+  console.log(`Skip (publishAt is in the past): ${post.title}`);
+  return buildCountResult({ skipped: 1 });
+}
+
+function getTitleWindowSkipResult(post, allowPublished, now) {
+  if (allowPublished) {
+    return null;
+  }
+
+  const desiredMs = Date.parse(post.publishAt);
+  if (Number.isNaN(desiredMs) || desiredMs > now.getTime()) {
+    return null;
+  }
+
+  console.log(`Skip (publishAt is in the past): ${post.title}`);
+  return buildCountResult({ skipped: 1 });
+}
+
+function getRequiredTitleOrSkip(post) {
+  const desiredTitleRaw = String(post.title ?? '').trim();
+  if (desiredTitleRaw) {
+    return { desiredTitleRaw };
+  }
+
+  console.log('Skip (missing title):', post.key);
+  return { result: buildCountResult({ skipped: 1 }) };
+}
+
+function getNormalizedCurrentBodyOrThrow(post, current, desiredTitleRaw) {
+  if (typeof current?.body_markdown === 'string' && current.body_markdown.length > 0) {
+    return current.body_markdown;
+  }
+  throw new Error(`Cannot sync content for ${desiredTitleRaw}: API did not return body_markdown.`);
+}
+
+function buildSyncContentState({ post, current, config, seriesName, seriesStartUrl, nextUpUrl, partLabel }) {
+  const currentBody = getNormalizedCurrentBodyOrThrow(post, current, String(post.title ?? '').trim());
+  const fm = readFrontMatter(currentBody);
+  const ctaArgs = buildCtaArgs(config);
+  let body_markdown = normalizeBodyMarkdownForDev(currentBody);
+  if (shouldInjectCtasForPost(post)) {
+    body_markdown = injectCtasIntoMarkdown(body_markdown, ctaArgs);
+  }
+  body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
+    seriesName,
+    partLabel,
+    startHereUrl: seriesStartUrl,
+    nextUpUrl,
+  });
+
+  const ctaMarkersOk = hasAllMarkers(currentBody, [
+    '<!-- pain-tracker:cta-top -->',
+    '<!-- pain-tracker:cta-bottom -->',
+  ]);
+  const chainMarkersOk = hasAllMarkers(currentBody, [
+    '<!-- pain-tracker:series-chain:start -->',
+    '<!-- pain-tracker:series-chain:end -->',
+  ]);
+
+  return {
+    body_markdown,
+    currentTitle: String(current?.title ?? '').trim(),
+    currentSeries: String(current?.series ?? '').trim(),
+    hasFrontMatter: Boolean(fm),
+    ctaMarkersOk,
+    chainMarkersOk,
+  };
+}
+
+async function processSyncSchedulePost({ post, allCache, now, yes, allowPast }) {
+  const desired = post.publishAt;
+  const windowSkip = getScheduleWindowSkipResult(post, allowPast, now);
+  if (windowSkip) return windowSkip;
+
+  const articleState = resolveArticleOrSkip({
+    post,
+    allCache,
+    now,
+    desiredIso: desired,
+    missingMessage: `Skip (not found via /articles/me/all): ${post.title}`,
+  });
+  if (articleState.result) return articleState.result;
+
+  const { resolved } = articleState;
+  if (isLockedPublishedArticle(resolved.current, now)) {
+    console.log(`Skip (already published): ${post.title}`);
+    return buildCountResult({ linked: linkedCount(resolved), skipped: 1 });
+  }
+
+  const currentTs = resolved.current?.published_at ?? resolved.current?.published_timestamp ?? null;
+  if (currentTs && timestampsEqual(currentTs, desired)) {
+    console.log(`OK (already scheduled): ${post.title}`);
+    return buildCountResult({ linked: linkedCount(resolved) });
+  }
+
+  if (!yes) {
+    console.log(`DRY RUN: reschedule ${post.title}`);
+    console.log(`  from: ${currentTs ?? '(none)'}`);
+    console.log(`  to:   ${desired}`);
+    console.log(`  id:   ${post.articleId}`);
+    return buildCountResult({ linked: linkedCount(resolved) });
+  }
+
+  await applyScheduleUpdate(post, resolved.current, desired);
+  return buildCountResult({ changed: 1, linked: linkedCount(resolved) });
+}
+
+async function applyScheduleUpdate(post, current, desired) {
+  try {
+    const payload = {
+      article: {
+        published: true,
+        published_at: desired,
+      },
+    };
+    const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
+    post.devtoUrl = updated?.url ?? post.devtoUrl;
+    console.log(`Rescheduled: ${post.title}`);
+    console.log(`  id: ${post.articleId}`);
+    console.log(`  to: ${desired}`);
+    return;
+  } catch (err) {
+    const msg = String(err?.message ?? '');
+    if (!msg.includes('422')) throw err;
+  }
+
+  if (!current?.body_markdown) {
+    throw new Error(
+      `Cannot reschedule ${post.title}: /articles/me/all did not include body_markdown (needed for front-matter fallback). ` +
+        'Try again without front matter fallback (or share the DEV response so we can adjust).',
+    );
+  }
+
+  const body_markdown = upsertScheduleInBodyMarkdown(current.body_markdown, desired);
+  const fallbackPayload = {
+    article: {
+      published: true,
+      body_markdown,
+    },
+  };
+
+  const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, fallbackPayload);
+  post.devtoUrl = updated?.url ?? post.devtoUrl;
+  console.log(`Rescheduled (front matter): ${post.title}`);
+  console.log(`  id: ${post.articleId}`);
+  console.log(`  to: ${desired}`);
+}
+
+async function processSyncTitlePost({ post, allCache, now, yes, allowPublished }) {
+  const titleState = getRequiredTitleOrSkip(post);
+  if (titleState.result) return titleState.result;
+  const { desiredTitleRaw } = titleState;
+
+  const windowSkip = getTitleWindowSkipResult(post, allowPublished, now);
+  if (windowSkip) return windowSkip;
+
+  const articleState = resolveArticleOrSkip({
+    post,
+    allCache,
+    now,
+    desiredIso: post.publishAt,
+    missingMessage: `Skip (not found via /articles/me/all): ${post.title}`,
+  });
+  if (articleState.result) return articleState.result;
+
+  const { resolved } = articleState;
+  if (!allowPublished && isLockedPublishedArticle(resolved.current, now)) {
+    console.log(`Skip (already published): ${desiredTitleRaw}`);
+    return buildCountResult({ linked: linkedCount(resolved), skipped: 1 });
+  }
+
+  const currentTitle = String(resolved.current?.title ?? '').trim();
+  if (currentTitle === desiredTitleRaw) {
+    console.log(`OK (title matches): ${desiredTitleRaw}`);
+    return buildCountResult({ linked: linkedCount(resolved) });
+  }
+
+  if (!yes) {
+    console.log(`DRY RUN: retitle ${currentTitle || '(untitled)'} → ${desiredTitleRaw}`);
+    console.log(`  id:  ${post.articleId}`);
+    console.log(`  url: ${resolved.current?.url ?? post.devtoUrl ?? '(unknown)'}`);
+    return buildCountResult({ linked: linkedCount(resolved) });
+  }
+
+  let body_markdown;
+  if (typeof resolved.current?.body_markdown === 'string' && resolved.current.body_markdown.length > 0) {
+    body_markdown = normalizeBodyMarkdownForDev(resolved.current.body_markdown);
+  }
+
+  const payload = buildRetitlePayload(post, resolved.current, desiredTitleRaw, body_markdown);
+  const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
+  post.devtoUrl = updated?.url ?? post.devtoUrl;
+  console.log(`Retitled: ${desiredTitleRaw}`);
+  console.log(`  id: ${post.articleId}`);
+  return buildCountResult({ changed: 1, linked: linkedCount(resolved) });
+}
+
+async function processPushSourcePost({ post, allCache, now, yes, allowPublished, config }) {
+  if (!post.sourceFile) {
+    console.log(`Skip (no sourceFile): ${post.key}`);
+    return { pushed: 0, linked: 0, skipped: 1 };
+  }
+
+  const resolved = resolveCurrentArticleForPost({ post, allCache, now, desiredIso: post.publishAt });
+  if (!resolved.current || !post.articleId) {
+    console.log(`Skip (no article on DEV — run create-drafts first): ${post.title}`);
+    return { pushed: 0, linked: resolved.linked ? 1 : 0, skipped: 1 };
+  }
+  if (!allowPublished && isLockedPublishedArticle(resolved.current, now)) {
+    console.log(`Skip (already published — use --allow-published to force): ${post.title}`);
+    return { pushed: 0, linked: resolved.linked ? 1 : 0, skipped: 1 };
+  }
+
+  const body_markdown = await readBodyMarkdownForPost(post, config);
+  if (!yes) {
+    console.log(`DRY RUN: push source for ${post.title}`);
+    console.log(`  id:     ${post.articleId}`);
+    console.log(`  url:    ${resolved.current?.url ?? post.devtoUrl ?? '(unknown)'}`);
+    console.log(`  source: ${post.sourceFile}`);
+    return { pushed: 0, linked: resolved.linked ? 1 : 0, skipped: 0 };
+  }
+
+  const payload = buildArticleUpsertPayload(post, body_markdown, config, {
+    currentArticle: resolved.current,
+    article: {
+      series: config.series ?? null,
+    },
+  });
+
+  const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
+  post.devtoUrl = updated?.url ?? post.devtoUrl;
+  console.log(`Pushed: ${post.title}`);
+  console.log(`  id:  ${post.articleId}`);
+  console.log(`  url: ${post.devtoUrl}`);
+  return { pushed: 1, linked: resolved.linked ? 1 : 0, skipped: 0 };
+}
+
+async function processSyncContentPost({ post, allCache, now, yes, allowPublished, config, seriesName, seriesStartUrl, nextUpUrl, partLabel }) {
+  const titleState = getRequiredTitleOrSkip(post);
+  if (titleState.result) return titleState.result;
+  const { desiredTitleRaw } = titleState;
+
+  const articleState = resolveArticleOrSkip({
+    post,
+    allCache,
+    now,
+    desiredIso: post.publishAt,
+    missingMessage: `Skip (not found via /articles/me/all): ${post.title}`,
+  });
+  if (articleState.result) return articleState.result;
+
+  const { resolved } = articleState;
+  if (!allowPublished && isLockedPublishedArticle(resolved.current, now)) {
+    console.log(`Skip (already published): ${desiredTitleRaw}`);
+    return buildCountResult({ linked: linkedCount(resolved), skipped: 1 });
+  }
+
+  const contentState = buildSyncContentState({
+    post,
+    current: resolved.current,
+    config,
+    seriesName,
+    seriesStartUrl,
+    nextUpUrl,
+    partLabel,
+  });
+  const needsTitle = contentState.currentTitle !== desiredTitleRaw;
+  const needsSeries = contentState.currentSeries !== seriesName;
+  const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk) || contentState.hasFrontMatter;
+
+  if (!(needsTitle || needsSeries || needsBody)) {
+    console.log(`OK (content matches): ${desiredTitleRaw}`);
+    return buildCountResult({ linked: linkedCount(resolved) });
+  }
+
+  if (!yes) {
+    console.log(`DRY RUN: sync content for ${desiredTitleRaw}`);
+    console.log(`  id:  ${post.articleId}`);
+    console.log(`  url: ${resolved.current?.url ?? post.devtoUrl ?? '(unknown)'}`);
+    console.log(`  changes: ${buildSyncContentChangeList({ needsTitle, needsSeries, needsBody }).join(', ')}`);
+    return buildCountResult({ linked: linkedCount(resolved) });
+  }
+
+  const payload = buildArticleUpsertPayload(post, contentState.body_markdown, config, {
+    currentArticle: resolved.current,
+    article: {
+      title: desiredTitleRaw,
+      series: seriesName,
+    },
+  });
+  const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
+  post.devtoUrl = updated?.url ?? post.devtoUrl;
+  console.log(`Synced: ${desiredTitleRaw}`);
+  console.log(`  id: ${post.articleId}`);
+  return buildCountResult({ changed: 1, linked: linkedCount(resolved) });
+}
+
+function buildCtaArgs(config) {
+  const { top, bottom } = buildCtas(config);
+  return { ctaTop: top, ctaBottom: bottom };
+}
+
+function buildSyncContentChangeList({ needsTitle, needsSeries, needsBody }) {
+  return [needsTitle ? 'title' : null, needsSeries ? 'series' : null, needsBody ? 'body' : null].filter(Boolean);
+}
+
 async function writePinnedCommentsFile(items) {
   const outPath = path.join(ROOT, 'scripts', 'devto', 'pinned-comments.md');
 
@@ -740,12 +1293,7 @@ async function writePinnedCommentsFile(items) {
   ];
 
   for (const item of items) {
-    chunks.push(`## ${item.title}`);
-    chunks.push('');
-    chunks.push('```md');
-    chunks.push(item.pinnedComment);
-    chunks.push('```');
-    chunks.push('');
+    chunks.push(`## ${item.title}`, '', '```md', item.pinnedComment, '```', '');
   }
 
   await fs.writeFile(outPath, chunks.join('\n'), 'utf8');
@@ -763,7 +1311,10 @@ async function cmdDryRun(schedule, { onlyKeys } = {}) {
   for (const post of schedule.posts) {
     if (!matchesOnlyKeys(post, onlyKeys)) continue;
     const due = isDueNow(post.publishAt, now);
-    const status = post.enabled ? (due ? 'DUE' : 'pending') : 'disabled';
+    let status = 'disabled';
+    if (post.enabled) {
+      status = due ? 'DUE' : 'pending';
+    }
     console.log(`- ${post.publishAt} | ${status} | ${post.title} (${post.sourceFile})`);
   }
 
@@ -774,16 +1325,7 @@ async function cmdDryRun(schedule, { onlyKeys } = {}) {
 }
 
 async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
-  const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
-  const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
-  const seriesStartUrl = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
-  const series = process.env.DEVTO_SERIES ?? schedule.defaults?.series;
-  const organizationIdRaw = process.env.DEVTO_ORGANIZATION_ID ?? schedule.defaults?.organization_id;
-  const organization_id = organizationIdRaw ? Number(organizationIdRaw) : undefined;
-
-  if (!sponsorUrl || !repoUrl) {
-    throw new Error('Missing sponsor/repo URL. Set DEVTO_SPONSOR_URL and DEVTO_REPO_URL (or schedule.defaults).');
-  }
+  const config = getDevtoPublishConfig(schedule);
 
   const pinned = [];
   let created = 0;
@@ -797,11 +1339,8 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
     if (!post.enabled) continue;
     if (post.articleId) continue;
 
-    const wanted = normalizeTitle(post.title);
-    const existing = existingAll.find((a) => normalizeTitle(a?.title) === wanted);
-    if (existing?.id) {
-      post.articleId = existing.id;
-      post.devtoUrl = existing.url ?? null;
+    const resolved = resolveCurrentArticleForPost({ post, allCache: existingAll, now: new Date() });
+    if (resolved.current?.id) {
       linked += 1;
       console.log(`Linked existing draft: ${post.title}`);
       console.log(`  id: ${post.articleId}`);
@@ -809,33 +1348,11 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
       continue;
     }
 
-    const { md } = await readSourceMarkdown(post.sourceFile);
-    const { top, bottom, pinnedComment } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
-
-    const body_markdown = shouldInjectCtasForPost(post)
-      ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
-      : md;
-
-    const payload = {
-      article: {
-        title: post.title,
-        body_markdown,
-        published: false,
-        series: series ?? null,
-        main_image: null,
-        canonical_url: post.canonical_url ?? null,
-        description: post.description ?? undefined,
-        tags: ensureStringArrayTags(post.tags),
-        organization_id: organization_id ?? null,
-      },
-    };
-
-    const createdArticle = await devtoRequest('POST', '/articles', payload);
-
-    post.articleId = createdArticle.id ?? null;
-    post.devtoUrl = createdArticle.url ?? null;
-
+    const createdArticle = await createDraftArticleForPost(post, config);
+    existingAll.push(createdArticle);
     created += 1;
+
+    const { pinnedComment } = buildCtas(config);
     pinned.push({ title: post.title, pinnedComment });
 
     console.log(`Created draft: ${post.title}`);
@@ -845,24 +1362,21 @@ async function cmdCreateDrafts(schedule, { write, onlyKeys } = {}) {
 
   if (created > 0) {
     await writePinnedCommentsFile(pinned);
-
-    if (write) {
-      await saveSchedule(schedule);
-      console.log('');
-      console.log('Wrote updated article IDs back into schedule.json');
-    } else {
-      console.log('');
-      console.log('Drafts created, but schedule.json not modified (run with --write to persist IDs).');
-    }
+    console.log('');
+    await persistScheduleWrite({
+      write,
+      schedule,
+      onWrite: 'Wrote updated article IDs back into schedule.json',
+      onSkip: 'Drafts created, but schedule.json not modified (run with --write to persist IDs).',
+    });
   } else if (linked > 0) {
-    if (write) {
-      await saveSchedule(schedule);
-      console.log('');
-      console.log('Wrote linked article IDs back into schedule.json');
-    } else {
-      console.log('');
-      console.log('Linked drafts, but schedule.json not modified (run with --write to persist IDs).');
-    }
+    console.log('');
+    await persistScheduleWrite({
+      write,
+      schedule,
+      onWrite: 'Wrote linked article IDs back into schedule.json',
+      onSkip: 'Linked drafts, but schedule.json not modified (run with --write to persist IDs).',
+    });
   } else {
     console.log('No drafts to create or link.');
   }
@@ -873,16 +1387,7 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
     throw new Error('Refusing to publish without --yes');
   }
 
-  const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
-  const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
-  const seriesStartUrl = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
-  const series = process.env.DEVTO_SERIES ?? schedule.defaults?.series;
-  const organizationIdRaw = process.env.DEVTO_ORGANIZATION_ID ?? schedule.defaults?.organization_id;
-  const organization_id = organizationIdRaw ? Number(organizationIdRaw) : undefined;
-
-  if (!sponsorUrl || !repoUrl) {
-    throw new Error('Missing sponsor/repo URL. Set DEVTO_SPONSOR_URL and DEVTO_REPO_URL (or schedule.defaults).');
-  }
+  const config = getDevtoPublishConfig(schedule);
 
   const now = new Date();
   let publishedCount = 0;
@@ -895,84 +1400,21 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
     if (!post.enabled) continue;
     if (!isDueNow(post.publishAt, now)) continue;
 
-    // Ensure we have an article ID (link existing draft by title, else create a draft).
-    if (!post.articleId) {
-      const wanted = normalizeTitle(post.title);
-      const existing = allCache.find((a) => normalizeTitle(a?.title) === wanted);
-      if (existing?.id) {
-        post.articleId = existing.id;
-        post.devtoUrl = existing.url ?? null;
-      } else {
-        const { md } = await readSourceMarkdown(post.sourceFile);
-        const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
-
-        const body_markdown = shouldInjectCtasForPost(post)
-          ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
-          : md;
-
-        const createPayload = {
-          article: {
-            title: post.title,
-            body_markdown,
-            published: false,
-            series: series ?? null,
-            main_image: null,
-            canonical_url: post.canonical_url ?? null,
-            description: post.description ?? undefined,
-            tags: ensureStringArrayTags(post.tags),
-            organization_id: organization_id ?? null,
-          },
-        };
-
-        const created = await devtoRequest('POST', '/articles', createPayload);
-        post.articleId = created.id ?? null;
-        post.devtoUrl = created.url ?? null;
-      }
-    }
-
-    if (!post.articleId) {
+    const ensured = await ensureDraftArticleForPost({ post, allCache, now, config });
+    if (!post.articleId || !ensured.current) {
       console.log(`Skip (no article id): ${post.title}`);
       continue;
     }
-
-    // If already published on DEV, skip (automation-safe even without persisting local state).
-    // NOTE: GET /articles/{id} only works for published articles; rely on /articles/me/all.
-    const current = allCache.find((a) => a?.id === post.articleId) ?? null;
-    if (current && isPublishedInPast(current, now)) {
+    if (isLockedPublishedArticle(ensured.current, now)) {
       console.log(`Skip (already published): ${post.title}`);
       continue;
     }
-
-    if (current && isScheduledForFuture(current, now)) {
+    if (isScheduledForFuture(ensured.current, now)) {
       console.log(`Skip (already scheduled): ${post.title}`);
       continue;
     }
 
-    const { md } = await readSourceMarkdown(post.sourceFile);
-    const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
-
-    const body_markdown = shouldInjectCtasForPost(post)
-      ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
-      : md;
-
-    const payload = {
-      article: {
-        title: post.title,
-        body_markdown,
-        published: true,
-        series: series ?? null,
-        main_image: null,
-        canonical_url: post.canonical_url ?? null,
-        description: post.description ?? undefined,
-        tags: ensureStringArrayTags(post.tags),
-        organization_id: organization_id ?? null,
-      },
-    };
-
-    const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
-
-    post.devtoUrl = updated.url ?? post.devtoUrl;
-    post.published = true;
+    await publishArticleForPost(post, ensured.current, config);
 
     publishedCount += 1;
 
@@ -986,14 +1428,13 @@ async function cmdPublishDue(schedule, { yes, write, onlyKeys } = {}) {
     return;
   }
 
-  if (write) {
-    await saveSchedule(schedule);
-    console.log('');
-    console.log('Wrote published flags back into schedule.json');
-  } else {
-    console.log('');
-    console.log('Published posts, but schedule.json not modified (run with --write to persist flags).');
-  }
+  console.log('');
+  await persistScheduleWrite({
+    write,
+    schedule,
+    onWrite: 'Wrote published flags back into schedule.json',
+    onSkip: 'Published posts, but schedule.json not modified (run with --write to persist flags).',
+  });
 }
 
 async function cmdSyncSchedule(schedule, { yes, write, allowPast }) {
@@ -1008,119 +1449,10 @@ async function cmdSyncSchedule(schedule, { yes, write, allowPast }) {
   for (const post of schedule.posts) {
     if (!post.enabled) continue;
 
-    const desired = post.publishAt;
-    const desiredMs = Date.parse(desired);
-    if (Number.isNaN(desiredMs)) {
-      console.log(`Skip (invalid publishAt): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    if (!allowPast && desiredMs <= now.getTime()) {
-      console.log(`Skip (publishAt is in the past): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    // Resolve the target article from /articles/me/all.
-    // Avoid GET /articles/{id} because Forem docs say it only returns *published* articles.
-    let current = null;
-
-    if (post.articleId) {
-      current = allCache.find((a) => a?.id === post.articleId) ?? null;
-    }
-
-    if (!current) {
-      const wanted = normalizeTitle(post.title);
-      const matches = allCache.filter((a) => normalizeTitle(a?.title) === wanted);
-      const best = pickBestTitleMatch(matches, desired, now);
-
-      if (best?.id) {
-        if (post.articleId && post.articleId !== best.id) {
-          console.log(`Re-linked stale articleId for: ${post.title}`);
-          console.log(`  from: ${post.articleId}`);
-          console.log(`  to:   ${best.id}`);
-        }
-        post.articleId = best.id;
-        post.devtoUrl = best.url ?? post.devtoUrl ?? null;
-        current = best;
-        linked += 1;
-      }
-    }
-
-    if (!current || !post.articleId) {
-      console.log(`Skip (not found via /articles/me/all): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    // Don't reschedule already-published posts.
-    if (isPublishedInPast(current, now) && !isScheduledForFuture(current, now)) {
-      console.log(`Skip (already published): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    const currentTs = current?.published_at ?? current?.published_timestamp ?? null;
-    const needsChange = !currentTs || !timestampsEqual(currentTs, desired);
-
-    if (!needsChange) {
-      console.log(`OK (already scheduled): ${post.title}`);
-      continue;
-    }
-
-    if (!yes) {
-      console.log(`DRY RUN: reschedule ${post.title}`);
-      console.log(`  from: ${currentTs ?? '(none)'}`);
-      console.log(`  to:   ${desired}`);
-      console.log(`  id:   ${post.articleId}`);
-      continue;
-    }
-
-    // Try direct published_at first (some Forem instances accept it).
-    try {
-      const payload = {
-        article: {
-          published: true,
-          published_at: desired,
-        },
-      };
-
-      const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
-      post.devtoUrl = updated?.url ?? post.devtoUrl;
-      changed += 1;
-      console.log(`Rescheduled: ${post.title}`);
-      console.log(`  id: ${post.articleId}`);
-      console.log(`  to: ${desired}`);
-      continue;
-    } catch (err) {
-      const msg = String(err?.message ?? '');
-      if (!msg.includes('422')) throw err;
-    }
-
-    // Fallback: patch scheduling into the article's front matter in body_markdown.
-    if (!current?.body_markdown) {
-      throw new Error(
-        `Cannot reschedule ${post.title}: /articles/me/all did not include body_markdown (needed for front-matter fallback). ` +
-          'Try again without front matter fallback (or share the DEV response so we can adjust).',
-      );
-    }
-
-    const body_markdown = upsertScheduleInBodyMarkdown(current.body_markdown, desired);
-
-    const fallbackPayload = {
-      article: {
-        published: true,
-        body_markdown,
-      },
-    };
-
-    const updated2 = await devtoRequest('PUT', `/articles/${post.articleId}`, fallbackPayload);
-    post.devtoUrl = updated2?.url ?? post.devtoUrl;
-    changed += 1;
-    console.log(`Rescheduled (front matter): ${post.title}`);
-    console.log(`  id: ${post.articleId}`);
-    console.log(`  to: ${desired}`);
+    const result = await processSyncSchedulePost({ post, allCache, now, yes, allowPast });
+    changed += result.changed;
+    linked += result.linked;
+    skipped += result.skipped;
   }
 
   if (!yes) return;
@@ -1134,7 +1466,7 @@ async function cmdSyncSchedule(schedule, { yes, write, allowPast }) {
   }
 }
 
-async function cmdSyncTitles(schedule, { yes, write, allowPublished }) {
+async function cmdSyncTitles(schedule, { yes, write, allowPublished, onlyKeys }) {
   const now = new Date();
   let changed = 0;
   let linked = 0;
@@ -1144,88 +1476,13 @@ async function cmdSyncTitles(schedule, { yes, write, allowPublished }) {
   const allCache = await listAllUserArticles();
 
   for (const post of schedule.posts) {
+    if (!matchesOnlyKeys(post, onlyKeys)) continue;
     if (!post.enabled) continue;
 
-    if (!allowPublished) {
-      // If the scheduled timestamp is in the past, treat it as published/locked.
-      const desiredMs = Date.parse(post.publishAt);
-      if (!Number.isNaN(desiredMs) && desiredMs <= now.getTime()) {
-        console.log(`Skip (publishAt is in the past): ${post.title}`);
-        skipped += 1;
-        continue;
-      }
-    }
-
-    const desiredTitleRaw = String(post.title ?? '').trim();
-    if (!desiredTitleRaw) {
-      console.log('Skip (missing title):', post.key);
-      skipped += 1;
-      continue;
-    }
-
-    let current = null;
-    if (post.articleId) {
-      current = allCache.find((a) => a?.id === post.articleId) ?? null;
-    }
-
-    if (!current) {
-      const wanted = normalizeTitle(post.title);
-      const matches = allCache.filter((a) => normalizeTitle(a?.title) === wanted);
-      const best = pickBestTitleMatch(matches, post.publishAt, now);
-      if (best?.id) {
-        post.articleId = best.id;
-        post.devtoUrl = best.url ?? post.devtoUrl ?? null;
-        current = best;
-        linked += 1;
-      }
-    }
-
-    if (!current || !post.articleId) {
-      console.log(`Skip (not found via /articles/me/all): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    // Avoid renaming already-published posts unless explicitly allowed.
-    if (!allowPublished && isPublishedInPast(current, now) && !isScheduledForFuture(current, now)) {
-      console.log(`Skip (already published): ${desiredTitleRaw}`);
-      skipped += 1;
-      continue;
-    }
-
-    const currentTitle = String(current?.title ?? '').trim();
-    const needsChange = currentTitle !== desiredTitleRaw;
-
-    if (!needsChange) {
-      console.log(`OK (title matches): ${desiredTitleRaw}`);
-      continue;
-    }
-
-    if (!yes) {
-      console.log(`DRY RUN: retitle ${currentTitle || '(untitled)'} → ${desiredTitleRaw}`);
-      console.log(`  id:  ${post.articleId}`);
-      console.log(`  url: ${current?.url ?? post.devtoUrl ?? '(unknown)'}`);
-      continue;
-    }
-
-    let body_markdown;
-    if (typeof current?.body_markdown === 'string' && current.body_markdown.length > 0) {
-      // If a front matter exists, it can override JSON params. Patch it to be safe.
-      body_markdown = upsertTitleInBodyMarkdown(current.body_markdown, desiredTitleRaw);
-    }
-
-    const payload = {
-      article: {
-        title: desiredTitleRaw,
-        ...(body_markdown ? { body_markdown } : null),
-      },
-    };
-
-    const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
-    post.devtoUrl = updated?.url ?? post.devtoUrl;
-    changed += 1;
-    console.log(`Retitled: ${desiredTitleRaw}`);
-    console.log(`  id: ${post.articleId}`);
+    const result = await processSyncTitlePost({ post, allCache, now, yes, allowPublished });
+    changed += result.changed;
+    linked += result.linked;
+    skipped += result.skipped;
   }
 
   if (!yes) return;
@@ -1239,22 +1496,14 @@ async function cmdSyncTitles(schedule, { yes, write, allowPublished }) {
   }
 }
 
-async function cmdSyncContent(schedule, { yes, write, allowPublished }) {
+async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }) {
   const now = new Date();
   let changed = 0;
   let linked = 0;
   let skipped = 0;
 
-  const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
-  const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
-  const seriesStartUrlEnv = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
-  const seriesName = process.env.DEVTO_SERIES ?? schedule.defaults?.series;
-  const organizationIdRaw = process.env.DEVTO_ORGANIZATION_ID ?? schedule.defaults?.organization_id;
-  const organization_id = organizationIdRaw ? Number(organizationIdRaw) : undefined;
-
-  if (!sponsorUrl || !repoUrl) {
-    throw new Error('Missing sponsor/repo URL. Set DEVTO_SPONSOR_URL and DEVTO_REPO_URL (or schedule.defaults).');
-  }
+  const config = getDevtoPublishConfig(schedule);
+  const seriesName = config.series;
   if (!seriesName) {
     throw new Error('Missing series name. Set DEVTO_SERIES (or schedule.defaults.series).');
   }
@@ -1268,124 +1517,29 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished }) {
     .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
 
   const seriesStartUrl =
-    seriesStartUrlEnv || (typeof enabled[0]?.devtoUrl === 'string' ? enabled[0].devtoUrl : null) || null;
+    config.seriesStartUrl || (typeof enabled[0]?.devtoUrl === 'string' ? enabled[0].devtoUrl : null) || null;
 
   for (let i = 0; i < enabled.length; i += 1) {
     const post = enabled[i];
-
-    const desiredTitleRaw = String(post.title ?? '').trim();
-    if (!desiredTitleRaw) {
-      console.log('Skip (missing title):', post.key);
-      skipped += 1;
-      continue;
-    }
-
-    // Resolve article via /articles/me/all.
-    let current = null;
-    if (post.articleId) {
-      current = allCache.find((a) => a?.id === post.articleId) ?? null;
-    }
-
-    if (!current) {
-      const wanted = normalizeTitle(post.title);
-      const matches = allCache.filter((a) => normalizeTitle(a?.title) === wanted);
-      const best = pickBestTitleMatch(matches, post.publishAt, now);
-      if (best?.id) {
-        post.articleId = best.id;
-        post.devtoUrl = best.url ?? post.devtoUrl ?? null;
-        current = best;
-        linked += 1;
-      }
-    }
-
-    if (!current || !post.articleId) {
-      console.log(`Skip (not found via /articles/me/all): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    if (!allowPublished && isPublishedInPast(current, now) && !isScheduledForFuture(current, now)) {
-      console.log(`Skip (already published): ${desiredTitleRaw}`);
-      skipped += 1;
-      continue;
-    }
-
-    if (typeof current?.body_markdown !== 'string' || current.body_markdown.length === 0) {
-      throw new Error(`Cannot sync content for ${desiredTitleRaw}: API did not return body_markdown.`);
-    }
-
+    if (!matchesOnlyKeys(post, onlyKeys)) continue;
     const partLabel = `Part ${i + 1}`;
     const nextUpUrl = enabled[i + 1]?.devtoUrl ?? null;
 
-    const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
-
-    let body_markdown = current.body_markdown;
-    body_markdown = shouldInjectCtasForPost(post)
-      ? injectCtasIntoMarkdown(body_markdown, { ctaTop: top, ctaBottom: bottom })
-      : body_markdown;
-    body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
+    const result = await processSyncContentPost({
+      post,
+      allCache,
+      now,
+      yes,
+      allowPublished,
+      config,
       seriesName,
-      partLabel,
-      startHereUrl: seriesStartUrl,
+      seriesStartUrl,
       nextUpUrl,
+      partLabel,
     });
-    body_markdown = upsertTitleInBodyMarkdown(body_markdown, desiredTitleRaw);
-    body_markdown = upsertSeriesInBodyMarkdown(body_markdown, seriesName);
-
-    const desiredSeries = seriesName;
-    const currentTitle = String(current?.title ?? '').trim();
-
-    const fm = readFrontMatter(current.body_markdown);
-    const fmTitleOk = !fm || String(fm.title ?? '').trim() === desiredTitleRaw;
-    const fmSeriesOk = !fm || String(fm.series ?? '').trim() === desiredSeries;
-
-    // If front matter exists, it can override the JSON title. Treat title as OK if front matter is OK.
-    const needsTitle = !fmTitleOk && currentTitle !== desiredTitleRaw;
-
-    const ctaMarkersOk = hasAllMarkers(current.body_markdown, [
-      '<!-- pain-tracker:cta-top -->',
-      '<!-- pain-tracker:cta-bottom -->',
-    ]);
-
-    const chainMarkersOk = hasAllMarkers(current.body_markdown, [
-      '<!-- pain-tracker:series-chain:start -->',
-      '<!-- pain-tracker:series-chain:end -->',
-    ]);
-
-    // If we already have the markers + correct front matter keys, treat it as in-sync.
-    // (DEV may normalize markdown text on write, so strict string equality is unreliable.)
-    const needsBody = !(ctaMarkersOk && chainMarkersOk && fmTitleOk && fmSeriesOk);
-    const needsSeries = !fmSeriesOk;
-
-    const needsAny = needsTitle || needsSeries || needsBody;
-
-    if (!needsAny) {
-      console.log(`OK (content matches): ${desiredTitleRaw}`);
-      continue;
-    }
-
-    if (!yes) {
-      console.log(`DRY RUN: sync content for ${desiredTitleRaw}`);
-      console.log(`  id:  ${post.articleId}`);
-      console.log(`  url: ${current?.url ?? post.devtoUrl ?? '(unknown)'}`);
-      console.log(`  changes: ${[needsTitle ? 'title' : null, needsSeries ? 'series' : null, needsBody ? 'body' : null].filter(Boolean).join(', ')}`);
-      continue;
-    }
-
-    const payload = {
-      article: {
-        title: desiredTitleRaw,
-        series: desiredSeries,
-        body_markdown,
-        organization_id: organization_id ?? null,
-      },
-    };
-
-    const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
-    post.devtoUrl = updated?.url ?? post.devtoUrl;
-    changed += 1;
-    console.log(`Synced: ${desiredTitleRaw}`);
-    console.log(`  id: ${post.articleId}`);
+    changed += result.changed;
+    linked += result.linked;
+    skipped += result.skipped;
   }
 
   if (!yes) return;
@@ -1399,101 +1553,24 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished }) {
   }
 }
 
-async function cmdPushSource(schedule, { yes, write, allowPublished }) {
+async function cmdPushSource(schedule, { yes, write, allowPublished, onlyKeys }) {
   const now = new Date();
   let pushed = 0;
   let linked = 0;
   let skipped = 0;
 
-  const sponsorUrl = process.env.DEVTO_SPONSOR_URL ?? schedule.defaults?.sponsor_url;
-  const repoUrl = process.env.DEVTO_REPO_URL ?? schedule.defaults?.repo_url;
-  const seriesStartUrl = process.env.DEVTO_SERIES_START_URL ?? schedule.defaults?.series_start_url;
-  const seriesName = process.env.DEVTO_SERIES ?? schedule.defaults?.series;
-  const organizationIdRaw = process.env.DEVTO_ORGANIZATION_ID ?? schedule.defaults?.organization_id;
-  const organization_id = organizationIdRaw ? Number(organizationIdRaw) : undefined;
-
-  if (!sponsorUrl || !repoUrl) {
-    throw new Error('Missing sponsor/repo URL. Set DEVTO_SPONSOR_URL and DEVTO_REPO_URL (or schedule.defaults).');
-  }
+  const config = getDevtoPublishConfig(schedule);
 
   const allCache = await listAllUserArticles();
 
   for (const post of schedule.posts) {
+    if (!matchesOnlyKeys(post, onlyKeys)) continue;
     if (!post.enabled) continue;
-    if (!post.sourceFile) {
-      console.log(`Skip (no sourceFile): ${post.key}`);
-      skipped += 1;
-      continue;
-    }
 
-    // Resolve article via /articles/me/all.
-    let current = null;
-    if (post.articleId) {
-      current = allCache.find((a) => a?.id === post.articleId) ?? null;
-    }
-
-    if (!current) {
-      const wanted = normalizeTitle(post.title);
-      const matches = allCache.filter((a) => normalizeTitle(a?.title) === wanted);
-      const best = pickBestTitleMatch(matches, post.publishAt, now);
-      if (best?.id) {
-        post.articleId = best.id;
-        post.devtoUrl = best.url ?? post.devtoUrl ?? null;
-        current = best;
-        linked += 1;
-      }
-    }
-
-    if (!current || !post.articleId) {
-      console.log(`Skip (no article on DEV — run create-drafts first): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    if (!allowPublished && isPublishedInPast(current, now) && !isScheduledForFuture(current, now)) {
-      console.log(`Skip (already published — use --allow-published to force): ${post.title}`);
-      skipped += 1;
-      continue;
-    }
-
-    // Read the local source markdown file.
-    const { md } = await readSourceMarkdown(post.sourceFile);
-    const { top, bottom } = buildCtas({ sponsorUrl, repoUrl, seriesStartUrl });
-
-    let body_markdown = shouldInjectCtasForPost(post)
-      ? injectCtasIntoMarkdown(md, { ctaTop: top, ctaBottom: bottom })
-      : md;
-
-    if (seriesName) {
-      body_markdown = upsertSeriesInBodyMarkdown(body_markdown, seriesName);
-    }
-
-    if (!yes) {
-      console.log(`DRY RUN: push source for ${post.title}`);
-      console.log(`  id:     ${post.articleId}`);
-      console.log(`  url:    ${current?.url ?? post.devtoUrl ?? '(unknown)'}`);
-      console.log(`  source: ${post.sourceFile}`);
-      continue;
-    }
-
-    const payload = {
-      article: {
-        title: post.title,
-        body_markdown,
-        series: seriesName ?? null,
-        canonical_url: post.canonical_url ?? null,
-        description: post.description ?? undefined,
-        tags: ensureStringArrayTags(post.tags),
-        organization_id: organization_id ?? null,
-      },
-    };
-
-    const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
-    post.devtoUrl = updated?.url ?? post.devtoUrl;
-    pushed += 1;
-    console.log(`Pushed: ${post.title}`);
-    console.log(`  id:  ${post.articleId}`);
-    console.log(`  url: ${post.devtoUrl}`);
+    const result = await processPushSourcePost({ post, allCache, now, yes, allowPublished, config });
+    pushed += result.pushed;
+    linked += result.linked;
+    skipped += result.skipped;
   }
 
   if (!yes) return;
@@ -1507,94 +1584,313 @@ async function cmdPushSource(schedule, { yes, write, allowPublished }) {
   }
 }
 
-async function cmdRetrofitPublished(schedule, { yes }) {
-  const now = new Date();
+function matchesAnyFunnelKey(articleKey, matchers) {
+  return matchers.some((matcher) => articleKey === matcher || articleKey.startsWith(matcher) || articleKey.includes(matcher));
+}
 
-  const retrofit = await loadPublishedRetrofitConfig();
-
-  const sponsorUrl =
-    process.env.DEVTO_SPONSOR_URL ?? retrofit?.defaults?.sponsor_url ?? schedule.defaults?.sponsor_url ?? null;
-
-  const tryUrl =
-    process.env.DEVTO_TRY_URL ?? retrofit?.defaults?.try_url ?? schedule.defaults?.try_url ?? 'https://paintracker.ca';
-
+function resolveRetrofitStartHereUrl(retrofit, schedule) {
   const envStartHere = process.env.DEVTO_START_HERE_URL;
   const envIsPlaceholder = /dev\.to\/yourname\//i.test(String(envStartHere ?? ''));
+  const safeEnvStartHere = envIsPlaceholder ? null : envStartHere;
 
-  const startHereUrl =
-    (!envIsPlaceholder ? envStartHere : null) ??
+  return (
+    safeEnvStartHere ??
     retrofit?.defaults?.start_here_url ??
     process.env.DEVTO_SERIES_START_URL ??
     schedule.defaults?.series_start_url ??
-    null;
+    null
+  );
+}
 
+function getRetrofitContext(schedule, retrofit) {
+  const sponsorUrl =
+    process.env.DEVTO_SPONSOR_URL ?? retrofit?.defaults?.sponsor_url ?? schedule.defaults?.sponsor_url ?? null;
+  const tryUrl =
+    process.env.DEVTO_TRY_URL ?? retrofit?.defaults?.try_url ?? schedule.defaults?.try_url ?? 'https://paintracker.ca';
+  const startHereUrl = resolveRetrofitStartHereUrl(retrofit, schedule);
   const trustBullets =
     (Array.isArray(retrofit?.defaults?.trust_bullets) ? retrofit.defaults.trust_bullets : null) ?? [
       'Offline-first (works without a connection)',
       'No backend (data stays on-device)',
       'Client-side encryption + open source',
     ];
-
   const defaultHook =
     String(retrofit?.defaults?.default_hook ?? '').trim() ||
     'For people living with chronic pain (and the devs supporting them): a privacy-first, offline-first pain tracker.';
-
   const lowViewThresholdRaw = retrofit?.defaults?.low_view_threshold;
   const lowViewThreshold = Number.isFinite(Number(lowViewThresholdRaw)) ? Number(lowViewThresholdRaw) : 25;
-
   const funnelASeries = String(retrofit?.defaults?.funnelA_series ?? 'Foundations').trim() || 'Foundations';
   const funnelBSeries =
     String(retrofit?.defaults?.funnelB_series ?? schedule.defaults?.series ?? 'CrisisCore Build Log').trim() ||
     'CrisisCore Build Log';
 
-  const foundationsMatchers = (retrofit?.funnels?.foundations_titles ?? [])
-    .map((t) => normalizeFunnelKey(t))
-    .filter(Boolean);
+  return {
+    sponsorUrl,
+    tryUrl,
+    startHereUrl,
+    trustBullets,
+    defaultHook,
+    lowViewThreshold,
+    funnelASeries,
+    funnelBSeries,
+    foundationsMatchers: (retrofit?.funnels?.foundations_titles ?? []).map((t) => normalizeFunnelKey(t)).filter(Boolean),
+    buildlogMatchers: (retrofit?.funnels?.buildlog_titles ?? []).map((t) => normalizeFunnelKey(t)).filter(Boolean),
+    hooksByTitle: toNormalizedMap(retrofit?.overrides?.hooks_by_title),
+    descByTitle: toNormalizedMap(retrofit?.overrides?.description_by_title),
+    coverByTitle: toNormalizedMap(retrofit?.overrides?.cover_image_by_title),
+  };
+}
 
-  const buildlogMatchers = (retrofit?.funnels?.buildlog_titles ?? [])
-    .map((t) => normalizeFunnelKey(t))
-    .filter(Boolean);
-
-  const matchesAnyFunnel = (articleKey, matchers) =>
-    matchers.some((m) => articleKey === m || articleKey.startsWith(m) || articleKey.includes(m));
-
-  const hooksByTitle = toNormalizedMap(retrofit?.overrides?.hooks_by_title);
-  const descByTitle = toNormalizedMap(retrofit?.overrides?.description_by_title);
-  const coverByTitle = toNormalizedMap(retrofit?.overrides?.cover_image_by_title);
-
-  if (!sponsorUrl) {
+function validateRetrofitContext(context, yes) {
+  if (!context.sponsorUrl) {
     throw new Error('Missing sponsor URL. Set DEVTO_SPONSOR_URL (or retrofit.defaults.sponsor_url).');
   }
-  if (yes && !startHereUrl) {
+  if (yes && !context.startHereUrl) {
     throw new Error(
       'Missing Start Here URL. Set DEVTO_START_HERE_URL (or scripts/devto/published-retrofit.json defaults.start_here_url).',
     );
   }
-  if (yes && /dev\.to\/yourname\//i.test(String(startHereUrl ?? ''))) {
+  if (yes && /dev\.to\/yourname\//i.test(String(context.startHereUrl ?? ''))) {
     throw new Error(
       'Refusing to apply with a placeholder Start Here URL. Set DEVTO_START_HERE_URL to the real DEV URL for your Start Here post.',
     );
   }
-  if (!startHereUrl) {
-    console.warn('Warning: Start Here URL is not set (DEVTO_START_HERE_URL). Dry run will use a placeholder link.');
+  if (context.startHereUrl) {
+    return;
+  }
+  console.warn('Warning: Start Here URL is not set (DEVTO_START_HERE_URL). Dry run will use a placeholder link.');
+}
+
+function getRetrofitThrottleMs(retrofit) {
+  const throttleMsRaw = process.env.DEVTO_THROTTLE_MS ?? retrofit?.defaults?.throttle_ms;
+  return Number.isFinite(Number(throttleMsRaw)) ? Number(throttleMsRaw) : 1200;
+}
+
+function getArticleViews(article) {
+  if (typeof article?.page_views_count === 'number') {
+    return article.page_views_count;
+  }
+  if (typeof article?.page_views_count === 'string') {
+    return Number(article.page_views_count);
+  }
+  return null;
+}
+
+function getDesiredRetrofitSeries(funnelKey, context) {
+  if (matchesAnyFunnelKey(funnelKey, context.foundationsMatchers)) {
+    return context.funnelASeries;
+  }
+  if (matchesAnyFunnelKey(funnelKey, context.buildlogMatchers)) {
+    return context.funnelBSeries;
+  }
+  return null;
+}
+
+function getRetrofitDescriptionAndCover(ntitle, context) {
+  const desiredDescriptionRaw = context.descByTitle.get(ntitle);
+  const desiredCoverRaw = context.coverByTitle.get(ntitle);
+  return {
+    desiredDescription: typeof desiredDescriptionRaw === 'string' ? desiredDescriptionRaw.trim() : null,
+    desiredCover: typeof desiredCoverRaw === 'string' ? desiredCoverRaw.trim() : null,
+  };
+}
+
+function buildRetrofitArticleState(article, context) {
+  const title = String(article?.title ?? '').trim();
+  const ntitle = normalizeTitle(title);
+  if (!title || !ntitle) {
+    return { skip: true, silentSkip: true };
+  }
+  if (typeof article?.body_markdown !== 'string' || article.body_markdown.length === 0) {
+    return { skip: true, title, logMessage: `Skip (missing body_markdown): ${title}` };
   }
 
-  const throttleMsRaw = process.env.DEVTO_THROTTLE_MS ?? retrofit?.defaults?.throttle_ms;
-  const throttleMs = Number.isFinite(Number(throttleMsRaw)) ? Number(throttleMsRaw) : 1200;
+  const funnelKey = normalizeFunnelKey(title);
+  const desiredSeries = getDesiredRetrofitSeries(funnelKey, context);
+  const desiredHook = String(context.hooksByTitle.get(ntitle) ?? context.defaultHook).trim() || context.defaultHook;
+  const { desiredDescription, desiredCover } = getRetrofitDescriptionAndCover(ntitle, context);
+  const fm = readFrontMatter(article.body_markdown);
+  const fmSeriesOk = !desiredSeries || String(fm?.series ?? '').trim() === desiredSeries;
+  const conversionMarkersOk = hasAllMarkers(article.body_markdown, [
+    '<!-- pain-tracker:conversion-block:start -->',
+    '<!-- pain-tracker:conversion-block:end -->',
+  ]);
+  const existingBlock = extractMarkedSection(
+    article.body_markdown,
+    '<!-- pain-tracker:conversion-block:start -->',
+    '<!-- pain-tracker:conversion-block:end -->',
+  );
+  const conversionBlockOk =
+    conversionMarkersOk &&
+    Boolean(existingBlock) &&
+    existingBlock.includes('<!-- pain-tracker:conversion-block:v5 -->') &&
+    existingBlock.includes(context.sponsorUrl) &&
+    existingBlock.includes(String(context.startHereUrl ?? '').trim() || '**Start here →** (link)') &&
+    existingBlock.includes(String(context.tryUrl ?? '').trim() || '**Live demo →** (link)');
+  const hasNextUp = NEXT_UP_BLOCK_RE.test(article.body_markdown);
+  const readingOrderPresent =
+    /(^|\r?\n)#{2,4}\s+.*reading\s+order.*$/im.test(article.body_markdown) ||
+    /(^|\r?\n)\*\*.*reading\s+order.*\*\*\s*$/im.test(article.body_markdown) ||
+    article.body_markdown.includes('<!-- pain-tracker:reading-order:start -->') ||
+    article.body_markdown.includes('<summary><strong>Reading order</strong></summary>');
+  const currentSeriesApi = typeof article?.series === 'string' ? article.series.trim() : null;
+  const currentSeriesFm = String(fm?.series ?? '').trim() || null;
+  const currentSeries = currentSeriesApi ?? currentSeriesFm;
+  const currentDescription = typeof article?.description === 'string' ? article.description.trim() : '';
+  const currentCover = typeof article?.main_image === 'string' ? article.main_image.trim() : '';
+  const views = getArticleViews(article);
+  const isLowView = typeof views === 'number' && Number.isFinite(views) && views < context.lowViewThreshold;
+  const missingMeta = isLowView && (!currentDescription || !currentCover);
+  const needsSeries = Boolean(desiredSeries) && currentSeries !== desiredSeries;
+  const needsBody = !conversionBlockOk || (desiredSeries ? !fmSeriesOk : false) || readingOrderPresent || !hasNextUp;
+  const needsDescription = Boolean(desiredDescription) && currentDescription !== desiredDescription;
+  const needsCover = Boolean(desiredCover) && currentCover !== desiredCover;
 
-  const all = await listAllUserArticles();
-  const published = all.filter((a) => isPublishedInPast(a, now) && !isScheduledForFuture(a, now));
-  const publishedFiltered = published.filter((a) => String(a?.url ?? '') !== String(startHereUrl ?? ''));
+  return {
+    title,
+    desiredSeries,
+    desiredHook,
+    desiredDescription,
+    desiredCover,
+    readingOrderPresent,
+    hasNextUp,
+    views,
+    missingMeta,
+    needsSeries,
+    needsBody,
+    needsDescription,
+    needsCover,
+    needsAny: needsBody || needsSeries || needsDescription || needsCover,
+  };
+}
 
+function buildRetrofitChangeParts(state) {
+  const nextUpMissing = state.hasNextUp ? null : 'next-up';
+  return [
+    state.needsSeries ? 'series' : null,
+    state.needsBody ? 'conversion-block' : null,
+    state.readingOrderPresent ? 'reading-order' : null,
+    nextUpMissing,
+    state.needsDescription ? 'description' : null,
+    state.needsCover ? 'cover' : null,
+  ].filter(Boolean);
+}
+
+function buildRetrofittedBody(article, state, context, orderedCollection) {
+  let body_markdown = article.body_markdown;
+  if (state.desiredSeries) {
+    body_markdown = upsertSeriesInBodyMarkdown(body_markdown, state.desiredSeries);
+  }
+  body_markdown = upsertConversionBlock(body_markdown, {
+    hook: state.desiredHook,
+    startHereUrl: context.startHereUrl,
+    sponsorUrl: context.sponsorUrl,
+    tryUrl: context.tryUrl,
+    trustBullets: context.trustBullets,
+  });
+  body_markdown = stripBuildLogNoiseLines(body_markdown);
+  body_markdown = removeReadingOrderSection(body_markdown).md;
+  const nextUp = buildNextUpBlock({
+    article,
+    startHereUrl: context.startHereUrl,
+    sponsorUrl: context.sponsorUrl,
+    orderedCollection,
+  });
+  return upsertNextUpBlock(body_markdown, nextUp);
+}
+
+function buildRetrofitPayload(article, state, context, orderedCollection) {
+  const body_markdown = buildRetrofittedBody(article, state, context, orderedCollection);
+  return {
+    article: {
+      ...(state.needsSeries ? { series: state.desiredSeries } : null),
+      ...(state.needsBody ? { body_markdown } : null),
+      ...(state.needsDescription ? { description: state.desiredDescription } : null),
+      ...(state.needsCover ? { main_image: state.desiredCover } : null),
+    },
+  };
+}
+
+function logRetrofitDryRun(article, state, context) {
+  const viewNote = typeof state.views === 'number' && Number.isFinite(state.views) ? ` (views: ${state.views})` : '';
+  console.log(`DRY RUN: retrofit ${state.title}${viewNote}`);
+  console.log(`  id:  ${article?.id ?? '(unknown)'}`);
+  console.log(`  url: ${article?.url ?? '(unknown)'}`);
+  console.log(`  changes: ${buildRetrofitChangeParts(state).join(', ')}`);
+  if (!state.missingMeta) {
+    return;
+  }
+  console.log(
+    `  note: low views (<${context.lowViewThreshold}) and missing cover/description (add overrides in ${PUBLISHED_RETROFIT_PATH})`,
+  );
+}
+
+function createCollectionOrderResolver(publishedArticles) {
   const collectionOrderedCache = new Map();
-  const getOrderedFor = (collectionId) => {
+  return (collectionId) => {
     if (!collectionId) return [];
+
     const key = String(collectionId);
-    if (collectionOrderedCache.has(key)) return collectionOrderedCache.get(key);
-    const ordered = getCollectionOrderedArticles({ allPublished: published, collectionId: key });
+    if (collectionOrderedCache.has(key)) {
+      return collectionOrderedCache.get(key);
+    }
+
+    const ordered = getCollectionOrderedArticles({ allPublished: publishedArticles, collectionId: key });
     collectionOrderedCache.set(key, ordered);
     return ordered;
   };
+}
+
+async function processRetrofitArticle({ article, yes, context, getOrderedFor, throttleMs }) {
+  const state = buildRetrofitArticleState(article, context);
+  if (state.silentSkip) {
+    return { updated: 0, skipped: 1, lowViewMissingMeta: 0, funnelAssigned: 0 };
+  }
+  if (state.skip) {
+    console.log(state.logMessage);
+    return { updated: 0, skipped: 1, lowViewMissingMeta: 0, funnelAssigned: 0 };
+  }
+
+  const lowViewMissingMeta = state.missingMeta ? 1 : 0;
+  if (!state.needsAny) {
+    console.log(`OK: ${state.title}`);
+    return { updated: 0, skipped: 0, lowViewMissingMeta, funnelAssigned: 0 };
+  }
+  if (!yes) {
+    logRetrofitDryRun(article, state, context);
+    return { updated: 0, skipped: 0, lowViewMissingMeta, funnelAssigned: 0 };
+  }
+
+  const ordered = getOrderedFor(article?.collection_id);
+  const payload = buildRetrofitPayload(article, state, context, ordered);
+  await devtoRequest('PUT', `/articles/${article.id}`, payload);
+
+  console.log(`Retrofitted: ${state.title}`);
+  console.log(`  id: ${article.id}`);
+
+  if (throttleMs > 0) {
+    await sleep(throttleMs);
+  }
+
+  return {
+    updated: 1,
+    skipped: 0,
+    lowViewMissingMeta,
+    funnelAssigned: state.desiredSeries ? 1 : 0,
+  };
+}
+
+async function cmdRetrofitPublished(schedule, { yes }) {
+  const now = new Date();
+  const retrofit = await loadPublishedRetrofitConfig();
+  const context = getRetrofitContext(schedule, retrofit);
+  validateRetrofitContext(context, yes);
+  const throttleMs = getRetrofitThrottleMs(retrofit);
+
+  const all = await listAllUserArticles();
+  const published = all.filter((a) => isPublishedInPast(a, now) && !isScheduledForFuture(a, now));
+  const publishedFiltered = published.filter((a) => String(a?.url ?? '') !== String(context.startHereUrl ?? ''));
+  const getOrderedFor = createCollectionOrderResolver(published);
 
   let updatedCount = 0;
   let skippedCount = 0;
@@ -1602,161 +1898,11 @@ async function cmdRetrofitPublished(schedule, { yes }) {
   let funnelAssigned = 0;
 
   for (const article of publishedFiltered) {
-    const title = String(article?.title ?? '').trim();
-    const ntitle = normalizeTitle(title);
-    const funnelKey = normalizeFunnelKey(title);
-
-    if (!title || !ntitle) {
-      skippedCount += 1;
-      continue;
-    }
-
-    if (typeof article?.body_markdown !== 'string' || article.body_markdown.length === 0) {
-      console.log(`Skip (missing body_markdown): ${title}`);
-      skippedCount += 1;
-      continue;
-    }
-
-    const desiredSeries = matchesAnyFunnel(funnelKey, foundationsMatchers)
-      ? funnelASeries
-      : matchesAnyFunnel(funnelKey, buildlogMatchers)
-        ? funnelBSeries
-        : null;
-
-    const desiredHook = String(hooksByTitle.get(ntitle) ?? defaultHook).trim() || defaultHook;
-
-    const desiredDescriptionRaw = descByTitle.get(ntitle);
-    const desiredDescription = typeof desiredDescriptionRaw === 'string' ? desiredDescriptionRaw.trim() : null;
-
-    const desiredCoverRaw = coverByTitle.get(ntitle);
-    const desiredCover = typeof desiredCoverRaw === 'string' ? desiredCoverRaw.trim() : null;
-
-    const fm = readFrontMatter(article.body_markdown);
-    const fmSeriesOk = !desiredSeries ? true : String(fm?.series ?? '').trim() === desiredSeries;
-
-    const conversionMarkersOk = hasAllMarkers(article.body_markdown, [
-      '<!-- pain-tracker:conversion-block:start -->',
-      '<!-- pain-tracker:conversion-block:end -->',
-    ]);
-
-    const existingBlock = extractMarkedSection(
-      article.body_markdown,
-      '<!-- pain-tracker:conversion-block:start -->',
-      '<!-- pain-tracker:conversion-block:end -->',
-    );
-
-    const conversionBlockOk =
-      conversionMarkersOk &&
-      Boolean(existingBlock) &&
-      existingBlock.includes('<!-- pain-tracker:conversion-block:v5 -->') &&
-      existingBlock.includes(sponsorUrl) &&
-      existingBlock.includes(String(startHereUrl ?? '').trim() || '**Start here →** (link)') &&
-      existingBlock.includes(String(tryUrl ?? '').trim() || '**Live demo →** (link)');
-
-    const hasNextUp = NEXT_UP_BLOCK_RE.test(article.body_markdown);
-    const readingOrderPresent =
-      /(^|\r?\n)#{2,4}\s+.*reading\s+order.*$/im.test(article.body_markdown) ||
-      /(^|\r?\n)\*\*.*reading\s+order.*\*\*\s*$/im.test(article.body_markdown) ||
-      article.body_markdown.includes('<!-- pain-tracker:reading-order:start -->') ||
-      article.body_markdown.includes('<summary><strong>Reading order</strong></summary>');
-
-    const currentSeriesApi = typeof article?.series === 'string' ? article.series.trim() : null;
-    const currentSeriesFm = String(fm?.series ?? '').trim() || null;
-    const currentSeries = currentSeriesApi ?? currentSeriesFm;
-    const needsSeries = Boolean(desiredSeries) && currentSeries !== desiredSeries;
-
-    const needsBody =
-      !conversionBlockOk ||
-      (desiredSeries ? !fmSeriesOk : false) ||
-      readingOrderPresent ||
-      !hasNextUp;
-
-    const currentDescription = typeof article?.description === 'string' ? article.description.trim() : '';
-    const needsDescription = Boolean(desiredDescription) && currentDescription !== desiredDescription;
-
-    const currentCover = typeof article?.main_image === 'string' ? article.main_image.trim() : '';
-    const needsCover = Boolean(desiredCover) && currentCover !== desiredCover;
-
-    const views =
-      typeof article?.page_views_count === 'number'
-        ? article.page_views_count
-        : typeof article?.page_views_count === 'string'
-          ? Number(article.page_views_count)
-          : null;
-
-    const isLowView = typeof views === 'number' && Number.isFinite(views) && views < lowViewThreshold;
-    const missingMeta = isLowView && (!currentDescription || !currentCover);
-    if (missingMeta) lowViewMissingMeta += 1;
-
-    const needsAny = needsBody || needsSeries || needsDescription || needsCover;
-
-    if (!needsAny) {
-      console.log(`OK: ${title}`);
-      continue;
-    }
-
-    const parts = [
-      needsSeries ? 'series' : null,
-      needsBody ? 'conversion-block' : null,
-      readingOrderPresent ? 'reading-order' : null,
-      !hasNextUp ? 'next-up' : null,
-      needsDescription ? 'description' : null,
-      needsCover ? 'cover' : null,
-    ].filter(Boolean);
-
-    const viewNote = typeof views === 'number' && Number.isFinite(views) ? ` (views: ${views})` : '';
-
-    if (!yes) {
-      console.log(`DRY RUN: retrofit ${title}${viewNote}`);
-      console.log(`  id:  ${article?.id ?? '(unknown)'}`);
-      console.log(`  url: ${article?.url ?? '(unknown)'}`);
-      console.log(`  changes: ${parts.join(', ')}`);
-      if (missingMeta) {
-        console.log(
-          `  note: low views (<${lowViewThreshold}) and missing cover/description (add overrides in ${PUBLISHED_RETROFIT_PATH})`,
-        );
-      }
-      continue;
-    }
-
-    let body_markdown = article.body_markdown;
-    if (desiredSeries) {
-      body_markdown = upsertSeriesInBodyMarkdown(body_markdown, desiredSeries);
-    }
-    body_markdown = upsertConversionBlock(body_markdown, {
-      hook: desiredHook,
-      startHereUrl,
-      sponsorUrl,
-      tryUrl,
-      trustBullets,
-    });
-    body_markdown = stripBuildLogNoiseLines(body_markdown);
-    body_markdown = removeReadingOrderSection(body_markdown).md;
-    {
-      const ordered = getOrderedFor(article?.collection_id);
-      const nextUp = buildNextUpBlock({ article, startHereUrl, sponsorUrl, orderedCollection: ordered });
-      body_markdown = upsertNextUpBlock(body_markdown, nextUp);
-    }
-
-    const payload = {
-      article: {
-        ...(needsSeries ? { series: desiredSeries } : null),
-        ...(needsBody ? { body_markdown } : null),
-        ...(needsDescription ? { description: desiredDescription } : null),
-        ...(needsCover ? { main_image: desiredCover } : null),
-      },
-    };
-
-    await devtoRequest('PUT', `/articles/${article.id}`, payload);
-    updatedCount += 1;
-    if (desiredSeries) funnelAssigned += 1;
-
-    console.log(`Retrofitted: ${title}`);
-    console.log(`  id: ${article.id}`);
-
-    if (throttleMs > 0) {
-      await sleep(throttleMs);
-    }
+    const result = await processRetrofitArticle({ article, yes, context, getOrderedFor, throttleMs });
+    updatedCount += result.updated;
+    skippedCount += result.skipped;
+    lowViewMissingMeta += result.lowViewMissingMeta;
+    funnelAssigned += result.funnelAssigned;
   }
 
   if (!yes) {
@@ -1765,7 +1911,7 @@ async function cmdRetrofitPublished(schedule, { yes }) {
     console.log('Notes:');
     console.log('- Funnel assignment applies only to the configured title lists.');
     console.log(
-      `- Low-view posts (<${lowViewThreshold}) missing cover/description: ${lowViewMissingMeta} (fill overrides in ${PUBLISHED_RETROFIT_PATH})`,
+      `- Low-view posts (<${context.lowViewThreshold}) missing cover/description: ${lowViewMissingMeta} (fill overrides in ${PUBLISHED_RETROFIT_PATH})`,
     );
     return;
   }
@@ -1775,37 +1921,112 @@ async function cmdRetrofitPublished(schedule, { yes }) {
 }
 
 function buildStartHereMarkdown({ title, promiseLines, pillarLinks, buildLogLink, sponsorUrl, repoUrl, tryUrl }) {
-  const lines = [];
-
-  lines.push(`# ${title}`);
-  lines.push('');
-
-  for (const line of promiseLines) {
-    lines.push(line);
-  }
-
-  lines.push('');
-  lines.push('## Start with these 3 posts');
-  lines.push('');
-  for (const l of pillarLinks) lines.push(`- ${l}`);
-
-  lines.push('');
-  lines.push('## Follow the build log');
-  lines.push('');
-  lines.push(`- ${buildLogLink}`);
-
-  lines.push('');
-  lines.push('---');
-  lines.push('## Support / Try it');
-  lines.push('');
-  lines.push(`- Sponsor → ${sponsorUrl}`);
-  lines.push(`- Star → ${repoUrl}`);
-  lines.push(`- Try PainTracker → ${tryUrl}`);
-  lines.push('');
-  lines.push('> If you’re building healthcare software, these posts are written for the moments when things go wrong — offline, under stress, and with privacy on the line.');
-  lines.push('');
+  const lines = [
+    `# ${title}`,
+    '',
+    ...promiseLines,
+    '',
+    '## Start with these 3 posts',
+    '',
+    ...pillarLinks.map((link) => `- ${link}`),
+    '',
+    '## Follow the build log',
+    '',
+    `- ${buildLogLink}`,
+    '',
+    '---',
+    '## Support / Try it',
+    '',
+    `- Sponsor → ${sponsorUrl}`,
+    `- Star → ${repoUrl}`,
+    `- Try PainTracker → ${tryUrl}`,
+    '',
+    '> If you’re building healthcare software, these posts are written for the moments when things go wrong — offline, under stress, and with privacy on the line.',
+    '',
+  ];
 
   return lines.join('\n');
+}
+
+async function runCommand(cmd, schedule, args, onlyKeys) {
+  if (cmd === 'dry-run') {
+    await cmdDryRun(schedule, { onlyKeys });
+    return;
+  }
+  if (cmd === 'auth-check') {
+    const me = await getMe();
+    console.log(`OK: authenticated as ${me?.username ?? me?.name ?? '(unknown)'}`);
+    return;
+  }
+  if (cmd === 'create-drafts') {
+    await cmdCreateDrafts(schedule, { write: Boolean(args.write), onlyKeys });
+    return;
+  }
+  if (cmd === 'publish-due') {
+    await cmdPublishDue(schedule, { yes: Boolean(args.yes), write: Boolean(args.write), onlyKeys });
+    return;
+  }
+  if (cmd === 'sync-schedule') {
+    await cmdSyncSchedule(schedule, {
+      yes: Boolean(args.yes),
+      write: Boolean(args.write),
+      allowPast: Boolean(args['allow-past']),
+    });
+    return;
+  }
+  if (cmd === 'sync-titles') {
+    await cmdSyncTitles(schedule, {
+      yes: Boolean(args.yes),
+      write: Boolean(args.write),
+      allowPublished: Boolean(args['allow-published']),
+      onlyKeys,
+    });
+    return;
+  }
+  if (cmd === 'sync-content') {
+    await cmdSyncContent(schedule, {
+      yes: Boolean(args.yes),
+      write: Boolean(args.write),
+      allowPublished: Boolean(args['allow-published']),
+      onlyKeys,
+    });
+    return;
+  }
+  if (cmd === 'push-source') {
+    await cmdPushSource(schedule, {
+      yes: Boolean(args.yes),
+      write: Boolean(args.write),
+      allowPublished: Boolean(args['allow-published']),
+      onlyKeys,
+    });
+    return;
+  }
+  if (cmd === 'retrofit-published') {
+    await cmdRetrofitPublished(schedule, { yes: Boolean(args.yes) });
+    return;
+  }
+  if (cmd === 'publish-start-here') {
+    await cmdPublishStartHere(schedule, {
+      yes: Boolean(args.yes),
+      write: Boolean(args.write),
+      writeMd: Boolean(args['write-md']),
+    });
+    return;
+  }
+
+  throw new Error(`Unknown command: ${cmd}`);
+}
+
+function logAuthTroubleshooting(message) {
+  if (!String(message ?? '').includes('401 Unauthorized')) {
+    return;
+  }
+
+  console.error('');
+  console.error('Auth troubleshooting:');
+  console.error('- Confirm DEVTO_API_KEY is the full key (no quotes/spaces)');
+  console.error('- Confirm the key is from dev.to Settings → Extensions');
+  console.error('- Try: node scripts/devto/devto.mjs auth-check');
 }
 
 async function cmdPublishStartHere(schedule, { yes, write, writeMd }) {
@@ -1952,98 +2173,18 @@ async function cmdPublishStartHere(schedule, { yes, write, writeMd }) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const cmd = args._[0] ?? 'dry-run';
-
   const onlyKeys = parseOnlyKeysArg(args.only);
-
   const schedule = await loadSchedule();
-
-  if (cmd === 'dry-run') {
-    await cmdDryRun(schedule, { onlyKeys });
-    return;
-  }
-
-  if (cmd === 'auth-check') {
-    const me = await getMe();
-    console.log(`OK: authenticated as ${me?.username ?? me?.name ?? '(unknown)'}`);
-    return;
-  }
-
-  if (cmd === 'create-drafts') {
-    await cmdCreateDrafts(schedule, { write: Boolean(args.write), onlyKeys });
-    return;
-  }
-
-  if (cmd === 'publish-due') {
-    await cmdPublishDue(schedule, { yes: Boolean(args.yes), write: Boolean(args.write), onlyKeys });
-    return;
-  }
-
-  if (cmd === 'sync-schedule') {
-    await cmdSyncSchedule(schedule, {
-      yes: Boolean(args.yes),
-      write: Boolean(args.write),
-      allowPast: Boolean(args['allow-past']),
-    });
-    return;
-  }
-
-  if (cmd === 'sync-titles') {
-    await cmdSyncTitles(schedule, {
-      yes: Boolean(args.yes),
-      write: Boolean(args.write),
-      allowPublished: Boolean(args['allow-published']),
-    });
-    return;
-  }
-
-  if (cmd === 'sync-content') {
-    await cmdSyncContent(schedule, {
-      yes: Boolean(args.yes),
-      write: Boolean(args.write),
-      allowPublished: Boolean(args['allow-published']),
-    });
-    return;
-  }
-
-  if (cmd === 'push-source') {
-    await cmdPushSource(schedule, {
-      yes: Boolean(args.yes),
-      write: Boolean(args.write),
-      allowPublished: Boolean(args['allow-published']),
-    });
-    return;
-  }
-
-  if (cmd === 'retrofit-published') {
-    await cmdRetrofitPublished(schedule, {
-      yes: Boolean(args.yes),
-    });
-    return;
-  }
-
-  if (cmd === 'publish-start-here') {
-    await cmdPublishStartHere(schedule, {
-      yes: Boolean(args.yes),
-      write: Boolean(args.write),
-      writeMd: Boolean(args['write-md']),
-    });
-    return;
-  }
-
-  throw new Error(`Unknown command: ${cmd}`);
+  await runCommand(cmd, schedule, args, onlyKeys);
 }
 
-main().catch((err) => {
+try {
+  await main();
+} catch (err) {
   console.error(err?.message ?? err);
   if (err?.details) {
     console.error(JSON.stringify(err.details, null, 2));
   }
-  if (String(err?.message ?? '').includes('401 Unauthorized')) {
-    console.error('');
-    console.error('Auth troubleshooting:');
-    console.error('- Confirm DEVTO_API_KEY is the full key (no quotes/spaces)');
-    console.error('- Confirm the key is from dev.to Settings → Extensions');
-    console.error('- Try: node scripts/devto/devto.mjs auth-check');
-  }
+  logAuthTroubleshooting(err?.message);
   process.exitCode = 1;
-});
+}

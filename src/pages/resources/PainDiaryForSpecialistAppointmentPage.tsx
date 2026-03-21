@@ -124,7 +124,7 @@ const specialistStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'pain-diary-for-specialist-appointment',
   title: 'Pain Diary for Specialist Appointment',
-  metaTitle: 'Pain Diary for Specialist Appointment — What to Track & Bring | Pain Tracker Pro',
+  metaTitle: 'Pain Diary for Specialist Appointment — What to Track & Bring | PainTracker',
   metaDescription: 'Prepare for your specialist appointment with the right pain diary data. What pain specialists, rheumatologists, neurologists, and surgeons need. Free one-page summary template.',
   keywords: [
     'pain diary for specialist appointment', 'pain diary for specialist',

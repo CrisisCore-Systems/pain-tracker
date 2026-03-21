@@ -6,6 +6,7 @@
 import { offlineStorage } from './offline-storage';
 import { secureStorage } from './storage/secureStorage';
 import { ALLOWED_SYNC_ROUTES } from './background-sync-allowlist';
+import { SyncMaintenanceLogger } from './sync-maintenance-logger';
 
 interface SyncResult {
   success: boolean;
@@ -40,8 +41,19 @@ interface SyncQueueItemShape {
 type GenericRecord = Record<string, unknown>;
 type QueuePayload = GenericRecord | FormData | string | number | boolean | null | undefined;
 
+function requireSyncQueueItemId(item: SyncQueueItemShape): number {
+  if (item.id == null) {
+    throw new Error(`Sync queue item is missing an id for ${item.method} ${item.url}`);
+  }
+
+  return item.id;
+}
+
 export class BackgroundSyncService {
   private static instance: BackgroundSyncService;
+  private readonly syncEnabled = false;
+  private readonly localOnlyReason = 'Sync disabled: No authorized destination.';
+  private readonly maintenanceLogger = new SyncMaintenanceLogger();
   private isOnline: boolean = navigator.onLine;
   private syncInProgress: boolean = false;
   private readonly retryTimeouts: Map<number, NodeJS.Timeout> = new Map();
@@ -132,6 +144,34 @@ export class BackgroundSyncService {
     this.allowedSyncMatchers = this.buildAllowedSyncMatchers();
     this.setupEventListeners();
     this.startPeriodicSync();
+    // Drain any stale queue entries after initialization without blocking construction.
+    setTimeout(() => {
+      void this.clearQueueForLocalOnlyMode();
+    }, 0);
+  }
+
+  private async clearQueueForLocalOnlyMode(): Promise<number> {
+    if (this.syncEnabled) return 0;
+
+    try {
+      const syncQueue = await offlineStorage.getSyncQueue();
+      if (syncQueue.length === 0) {
+        this.maintenanceLogger.localOnlyNoDestination();
+        this.dispatchSyncEvent('local-only', { message: this.localOnlyReason, clearedItems: 0 });
+        return 0;
+      }
+
+      await Promise.all(syncQueue.map(item => offlineStorage.removeSyncQueueItem(requireSyncQueueItemId(item))));
+      this.maintenanceLogger.localOnlyQueueCleared(syncQueue.length);
+      this.dispatchSyncEvent('local-only', {
+        message: this.localOnlyReason,
+        clearedItems: syncQueue.length,
+      });
+      return syncQueue.length;
+    } catch (error) {
+      this.maintenanceLogger.localOnlyQueueClearFailed(error);
+      return 0;
+    }
   }
 
   static getInstance(): BackgroundSyncService {
@@ -185,7 +225,7 @@ export class BackgroundSyncService {
   ): Promise<void> {
     if (result.success) {
       stats.successCount++;
-      await offlineStorage.removeSyncQueueItem(item.id!);
+      await offlineStorage.removeSyncQueueItem(requireSyncQueueItemId(item));
       console.log(`BackgroundSync: Successfully synced ${item.method} ${item.url}`);
       return;
     }
@@ -195,7 +235,7 @@ export class BackgroundSyncService {
     if ((item.retryCount || 0) >= this.maxRetries) {
       stats.failureCount++;
       stats.errors.push(`Max retries exceeded for ${item.url}: ${result.error}`);
-      await offlineStorage.removeSyncQueueItem(item.id!);
+      await offlineStorage.removeSyncQueueItem(requireSyncQueueItemId(item));
       console.error(`BackgroundSync: Max retries exceeded for ${item.url}`);
       return;
     }
@@ -239,6 +279,11 @@ export class BackgroundSyncService {
     data?: QueuePayload,
     priority: 'high' | 'medium' | 'low' = 'medium'
   ): Promise<void> {
+    if (!this.syncEnabled) {
+      this.maintenanceLogger.localOnlyQueueAttemptBlocked();
+      return;
+    }
+
     try {
       // Defense-in-depth: never enqueue requests we would refuse to replay.
       if (!this.isAllowedSyncRequest(method, url)) {
@@ -278,6 +323,17 @@ export class BackgroundSyncService {
   }
 
   async syncAllPendingData(): Promise<SyncStats> {
+    if (!this.syncEnabled) {
+      const clearedItems = await this.clearQueueForLocalOnlyMode();
+      return {
+        totalItems: clearedItems,
+        successCount: 0,
+        failureCount: 0,
+        skippedCount: clearedItems,
+        errors: [this.localOnlyReason],
+      };
+    }
+
     if (this.syncInProgress) {
       console.log('BackgroundSync: Sync already in progress');
       return this.getEmptyStats();
@@ -339,11 +395,11 @@ export class BackgroundSyncService {
     try {
       // Check if we're still online
       if (!this.isOnline) {
-        return { success: false, itemId: item.id!, error: 'Offline' };
+        return { success: false, itemId: requireSyncQueueItemId(item), error: 'Offline' };
       }
 
       if (!this.isAllowedSyncRequest(item.method, item.url)) {
-        return { success: false, itemId: item.id!, error: 'Disallowed URL' };
+        return { success: false, itemId: requireSyncQueueItemId(item), error: 'Disallowed URL' };
       }
 
       const headers = this.sanitizeReplayHeaders(item.headers);
@@ -355,7 +411,7 @@ export class BackgroundSyncService {
       });
 
       if (response.ok) {
-        return { success: true, itemId: item.id! };
+        return { success: true, itemId: requireSyncQueueItemId(item) };
       } else {
         let errorMessage = `HTTP ${response.status}`;
 
@@ -371,7 +427,7 @@ export class BackgroundSyncService {
 
         return {
           success: false,
-          itemId: item.id!,
+          itemId: requireSyncQueueItemId(item),
           error: errorMessage,
           retryAfter: shouldRetry ? this.getRetryDelay(item.retryCount || 0) : undefined,
         };
@@ -379,7 +435,7 @@ export class BackgroundSyncService {
     } catch (error) {
       return {
         success: false,
-        itemId: item.id!,
+        itemId: requireSyncQueueItemId(item),
         error: error instanceof Error ? error.message : 'Network error',
       };
     }
@@ -395,17 +451,19 @@ export class BackgroundSyncService {
     }
 
     // Update retry count
-    await offlineStorage.updateSyncQueueItem(item.id!, {
+    const itemId = requireSyncQueueItemId(item);
+
+    await offlineStorage.updateSyncQueueItem(itemId, {
       retryCount: (item.retryCount || 0) + 1,
     });
 
     // Schedule retry
     const timeout = setTimeout(() => {
-      this.retryTimeouts.delete(item.id!);
+      this.retryTimeouts.delete(itemId);
       this.syncAllPendingData();
     }, delay);
 
-    this.retryTimeouts.set(item.id!, timeout);
+    this.retryTimeouts.set(itemId, timeout);
 
     console.log(`BackgroundSync: Scheduled retry for ${item.url} in ${delay}ms`);
   }
@@ -471,7 +529,7 @@ export class BackgroundSyncService {
       const syncQueue = await offlineStorage.getSyncQueue();
       const failedItems = syncQueue.filter(item => (item.retryCount || 0) >= this.maxRetries);
 
-      await Promise.all(failedItems.map(item => offlineStorage.removeSyncQueueItem(item.id!)));
+      await Promise.all(failedItems.map(item => offlineStorage.removeSyncQueueItem(requireSyncQueueItemId(item))));
 
       console.log(`BackgroundSync: Cleared ${failedItems.length} failed items`);
     } catch (error) {
@@ -492,12 +550,21 @@ export class BackgroundSyncService {
   getSyncStatus(): { isOnline: boolean; isSyncing: boolean } {
     return {
       isOnline: this.isOnline,
-      isSyncing: this.syncInProgress,
+      isSyncing: this.syncEnabled ? this.syncInProgress : false,
     };
+  }
+
+  isSyncEnabled(): boolean {
+    return this.syncEnabled;
   }
 
   // Emergency sync for critical data
   async emergencySync(data: QueuePayload, endpoint: string): Promise<boolean> {
+    if (!this.syncEnabled) {
+      this.maintenanceLogger.localOnlyQueueAttemptBlocked();
+      return false;
+    }
+
     if (!this.isOnline) {
       await this.queueForSync(endpoint, 'POST', data, 'high');
       return false;
@@ -570,6 +637,7 @@ export class PainTrackerSync {
     lastSync: string | null;
     isOnline: boolean;
     isSyncing: boolean;
+    syncEnabled: boolean;
   }> {
     const syncQueue = await offlineStorage.getSyncQueue();
     const painEntryQueue = syncQueue.filter(item => item.url.includes('/pain-entries'));
@@ -582,6 +650,7 @@ export class PainTrackerSync {
       lastSync: lastSyncTime,
       isOnline,
       isSyncing,
+      syncEnabled: this.backgroundSync.isSyncEnabled(),
     };
   }
 

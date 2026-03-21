@@ -95,7 +95,7 @@ Translation: your most intimate medical details are up for grabs, and there's pr
 
 This is where I have to be upfront about my bias—I built [Pain Tracker](https://paintracker.ca) specifically because I was horrified by what I discovered about health app privacy. But let me show you what it means when an app actually respects your data:
 
-### Your Data Never Leaves Your Device
+### Local by Default Data Handling
 
 With most apps, your information goes: You → Their Servers → Data Brokers → Whoever Pays the Most.
 
@@ -157,7 +157,7 @@ Some things should make you uninstall immediately:
 
 Here are some options that pass the privacy test:
 
-For pain tracking specifically, there's [Pain Tracker](https://paintracker.ca)—yes, my project, so take this recommendation with appropriate skepticism. But it's 100% local storage, fully encrypted, completely open source, and works entirely offline. Your data never leaves your device.
+For pain tracking specifically, there's [Pain Tracker](https://paintracker.ca)—yes, my project, so take this recommendation with appropriate skepticism. Core data handling is local by default, encrypted storage is used for sensitive surfaces, it's completely open source, and it works entirely offline for core flows.
 
 For general health tracking, look into **Gadgetbridge** if you use fitness trackers—it's open source and keeps all your data local instead of sending it to corporate servers.
 

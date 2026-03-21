@@ -33,6 +33,23 @@ interface QuickLogOneScreenProps {
   onCancel: () => void;
 }
 
+type SelectionKind = 'location' | 'symptom';
+
+type VoiceNotesState = {
+  voiceSupported: boolean;
+  voiceMode: boolean;
+  isListening: boolean;
+  transcript: string;
+  connectionStatus: string;
+  voiceError: string | null;
+  startListening: () => void;
+  stopListening: () => void;
+  resetTranscript: () => void;
+  handleInsertTranscript: () => void;
+};
+
+const EMPTY_CAPTION_TRACK = 'data:text/vtt;charset=utf-8,WEBVTT%0A%0A';
+
 const PAIN_LABELS = [
   'No pain',
   'Very mild',
@@ -49,12 +66,12 @@ const PAIN_LABELS = [
 
 /** Returns a Tailwind-friendly severity color set based on pain 0-10 */
 function painSeverityColors(pain: number) {
-  if (pain === 0) return { text: 'text-emerald-400', bg: 'bg-emerald-500/15', ring: 'ring-emerald-500/40', accent: '#34d399' };
-  if (pain <= 2)  return { text: 'text-green-400',   bg: 'bg-green-500/15',   ring: 'ring-green-500/40',   accent: '#4ade80' };
-  if (pain <= 4)  return { text: 'text-amber-400',   bg: 'bg-amber-500/15',   ring: 'ring-amber-500/40',   accent: '#fbbf24' };
-  if (pain <= 6)  return { text: 'text-orange-400',  bg: 'bg-orange-500/15',  ring: 'ring-orange-500/40',  accent: '#fb923c' };
-  if (pain <= 8)  return { text: 'text-red-400',     bg: 'bg-red-500/15',     ring: 'ring-red-500/40',     accent: '#f87171' };
-  return              { text: 'text-red-300',     bg: 'bg-red-500/20',     ring: 'ring-red-500/50',     accent: '#fca5a5' };
+  if (pain === 0) return { displayText: 'text-emerald-700 dark:text-emerald-400', selectedText: 'text-white', bg: 'bg-emerald-700 dark:bg-emerald-500/30', ring: 'ring-emerald-500/40', accent: '#34d399' };
+  if (pain <= 2)  return { displayText: 'text-green-700 dark:text-green-400', selectedText: 'text-white', bg: 'bg-green-700 dark:bg-green-500/30', ring: 'ring-green-500/40', accent: '#4ade80' };
+  if (pain <= 4)  return { displayText: 'text-amber-800 dark:text-amber-400', selectedText: 'text-white', bg: 'bg-amber-800 dark:bg-amber-500/30', ring: 'ring-amber-500/40', accent: '#fbbf24' };
+  if (pain <= 6)  return { displayText: 'text-orange-800 dark:text-orange-400', selectedText: 'text-white', bg: 'bg-orange-800 dark:bg-orange-500/30', ring: 'ring-orange-500/40', accent: '#fb923c' };
+  if (pain <= 8)  return { displayText: 'text-red-700 dark:text-red-400', selectedText: 'text-white', bg: 'bg-red-700 dark:bg-red-500/30', ring: 'ring-red-500/40', accent: '#f87171' };
+  return              { displayText: 'text-red-800 dark:text-red-300', selectedText: 'text-white', bg: 'bg-red-800 dark:bg-red-500/35', ring: 'ring-red-500/50', accent: '#fca5a5' };
 }
 
 /** Shared styled-range slider classes */
@@ -102,6 +119,378 @@ type SpeechRecognitionWindow = Window & {
   SpeechRecognition?: SpeechRecognitionConstructor;
 };
 
+function getSelectionSummary(kind: SelectionKind, values: string[]) {
+  if (values.length === 0) {
+    return kind === 'location' ? 'No locations selected' : 'No symptoms selected';
+  }
+
+  const label = kind === 'location' ? 'location' : 'symptom';
+  const pluralSuffix = values.length === 1 ? '' : 's';
+  return `${values.length} ${label}${pluralSuffix} selected: ${values.join(', ')}`;
+}
+
+function getNotesSummary(notes: string) {
+  if (notes.length === 0) {
+    return 'No notes yet';
+  }
+
+  const suffix = notes.length === 1 ? '' : 's';
+  return `${notes.length} character${suffix}`;
+}
+
+function getVoiceToggleTitle(voiceSupported: boolean, voiceMode: boolean) {
+  if (!voiceSupported) {
+    return 'Voice not available';
+  }
+
+  return voiceMode ? 'Disable voice mode' : 'Enable voice mode';
+}
+
+function getVoiceToggleLabel(voiceMode: boolean) {
+  return voiceMode ? 'Voice On' : 'Voice';
+}
+
+function getQuickLogHeading(mode: 'new' | 'edit') {
+  return mode === 'edit' ? 'Edit Log' : 'Quick Log';
+}
+
+function getVoiceNoteFileName() {
+  const timestamp = new Date().toISOString().slice(0, 19).replaceAll(':', '-').replaceAll('T', '-');
+  return `pain-voice-note-${timestamp}.webm`;
+}
+
+function applyInitialData(
+  initialData: Partial<QuickLogOneScreenData>,
+  setters: {
+    setPain: (value: number) => void;
+    setLocations: (value: string[]) => void;
+    setSymptoms: (value: string[]) => void;
+    setNotes: (value: string) => void;
+    setSleep: (value: number) => void;
+    setSleepSet: (value: boolean) => void;
+    setActivityLevel: (value: number) => void;
+    setActivityLevelSet: (value: boolean) => void;
+    setMedicationAdherence: (value: MedicationAdherence | null) => void;
+    setActivitiesText: (value: string) => void;
+    setDietTriggersText: (value: string) => void;
+  }
+) {
+  if (typeof initialData.pain === 'number') setters.setPain(initialData.pain);
+  if (Array.isArray(initialData.locations)) setters.setLocations(initialData.locations);
+  if (Array.isArray(initialData.symptoms)) setters.setSymptoms(initialData.symptoms);
+  if (typeof initialData.notes === 'string') setters.setNotes(initialData.notes);
+
+  setters.setSleepSet(typeof initialData.sleep === 'number');
+  if (typeof initialData.sleep === 'number') setters.setSleep(initialData.sleep);
+
+  setters.setActivityLevelSet(typeof initialData.activityLevel === 'number');
+  if (typeof initialData.activityLevel === 'number') setters.setActivityLevel(initialData.activityLevel);
+
+  setters.setMedicationAdherence(
+    typeof initialData.medicationAdherence === 'string' ? initialData.medicationAdherence : null
+  );
+  setters.setActivitiesText(
+    Array.isArray(initialData.activities) && initialData.activities.length > 0
+      ? initialData.activities.join(', ')
+      : ''
+  );
+  setters.setDietTriggersText(
+    Array.isArray(initialData.triggers) && initialData.triggers.length > 0
+      ? initialData.triggers.join(', ')
+      : ''
+  );
+}
+
+function SelectionChipCard({
+  accentClassName,
+  ariaLabelSuffix,
+  emptySummary,
+  label,
+  selected,
+  selectedBadgeClassName,
+  tags,
+  toggleTag,
+}: Readonly<{
+  accentClassName: string;
+  ariaLabelSuffix: string;
+  emptySummary: string;
+  label: string;
+  selected: string[];
+  selectedBadgeClassName: string;
+  tags: string[];
+  toggleTag: (tag: string) => void;
+}>) {
+  return (
+    <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-body-medium text-ink-200">{label}</span>
+        {selected.length > 0 && (
+          <span className={`text-tiny rounded-full px-2 py-0.5 tabular-nums ${selectedBadgeClassName}`}>
+            {selected.length} selected
+          </span>
+        )}
+      </div>
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {emptySummary}
+      </div>
+      <fieldset>
+        <legend className="sr-only">{label}</legend>
+        <div className="flex flex-wrap gap-2">
+          {tags.map(tag => {
+            const isSelected = selected.includes(tag);
+
+            return (
+              <label
+                key={tag}
+                className={cn(
+                  'px-3.5 py-2.5 min-h-[44px] rounded-[var(--radius-full)] text-small',
+                  'border transition-all duration-[var(--duration-fast)] cursor-pointer inline-flex items-center',
+                  'focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-surface-900',
+                  isSelected
+                    ? accentClassName
+                    : 'bg-surface-900/50 border-surface-600 text-ink-300 hover:border-primary-500/30 hover:text-ink-200'
+                )}
+              >
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={isSelected}
+                  onChange={() => toggleTag(tag)}
+                  aria-label={`${tag} ${ariaLabelSuffix}`}
+                />
+                {isSelected && <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />}
+                {tag}
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
+    </div>
+  );
+}
+
+function NotesVoiceSection({
+  audioRecorder,
+  connectionStatus,
+  handleInsertTranscript,
+  isListening,
+  notes,
+  notesLabel,
+  notesPlaceholder,
+  resetTranscript,
+  setNotes,
+  startListening,
+  stopListening,
+  transcript,
+  voiceError,
+  voiceMode,
+  voiceSupported,
+}: Readonly<{
+  audioRecorder: ReturnType<typeof useAudioNoteRecorder>;
+  connectionStatus: string;
+  handleInsertTranscript: () => void;
+  isListening: boolean;
+  notes: string;
+  notesLabel: string;
+  notesPlaceholder: string;
+  resetTranscript: () => void;
+  setNotes: (value: string | ((prev: string) => string)) => void;
+  startListening: () => void;
+  stopListening: () => void;
+  transcript: string;
+  voiceError: string | null;
+  voiceMode: boolean;
+  voiceSupported: boolean;
+}>) {
+  const notesSummary = getNotesSummary(notes);
+  const remainingCharacters = 500 - notes.length;
+
+  return (
+    <section className="space-y-5">
+      <div>
+        <h2 className="text-h2 text-ink-50 mb-1">{notesLabel}</h2>
+        <p className="text-small text-ink-400">Dictation works with your phone keyboard too.</p>
+      </div>
+
+      <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
+        <label htmlFor="pain-notes" className="block text-body-medium text-ink-200 mb-2">
+          ✏️ Additional notes
+        </label>
+        <textarea
+          id="pain-notes"
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+          placeholder={notesPlaceholder}
+          inputMode="text"
+          autoComplete="on"
+          autoCorrect="on"
+          autoCapitalize="sentences"
+          enterKeyHint="done"
+          aria-label="Additional notes about pain"
+          aria-describedby="notes-hint notes-remaining"
+          maxLength={500}
+          className={cn(
+            'w-full h-32 p-3 rounded-[var(--radius-md)]',
+            'bg-surface-900 border border-surface-600',
+            'text-body text-ink-100 placeholder:text-ink-500',
+            'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent',
+            'transition-all duration-[var(--duration-fast)]',
+            'resize-none'
+          )}
+        />
+        <div className="flex justify-between items-center mt-2">
+          <span id="notes-hint" className="text-tiny text-ink-400">
+            {notesSummary}
+          </span>
+          <span
+            id="notes-remaining"
+            className={cn('text-tiny tabular-nums', remainingCharacters < 50 ? 'text-warn-400' : 'text-ink-300')}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {remainingCharacters} remaining
+          </span>
+        </div>
+      </div>
+
+      {voiceMode && voiceSupported && (
+        <div className="surface-card border border-surface-700 bg-surface-800/70">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="text-body-medium text-ink-100">Voice mode (speech-to-text)</div>
+              <p className="text-small text-ink-400">
+                Uses your device speech service. {connectionStatus}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={isListening ? stopListening : startListening}
+              className={cn(
+                'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                'border border-surface-600 transition-colors duration-[var(--duration-fast)] flex items-center gap-2',
+                isListening ? 'bg-danger-500 text-ink-900 border-danger-500' : 'bg-primary-500 text-ink-900 border-primary-500'
+              )}
+              aria-pressed={isListening}
+              aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
+            >
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              {isListening ? 'Stop' : 'Start'}
+            </button>
+          </div>
+
+          {transcript && (
+            <div className="mt-3 p-3 rounded-[var(--radius-md)] bg-surface-900 border border-surface-700">
+              <div className="text-small text-ink-300 mb-1">Heard</div>
+              <p className="text-body text-ink-100 mb-3" aria-live="polite">
+                {transcript}
+              </p>
+              <div className="flex gap-2 flex-wrap">
+                <button
+                  type="button"
+                  onClick={handleInsertTranscript}
+                  className={cn(
+                    'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                    'bg-primary-500 text-ink-900 hover:bg-primary-400 transition-colors'
+                  )}
+                >
+                  Insert into notes
+                </button>
+                <button
+                  type="button"
+                  onClick={resetTranscript}
+                  className={cn(
+                    'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                    'bg-surface-900 text-ink-200 border border-surface-600 hover:border-primary-500/60 transition-colors'
+                  )}
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="surface-card border border-surface-700 bg-surface-800/70">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-body-medium text-ink-100">Voice note (audio)</div>
+            <p className="text-small text-ink-400">
+              Records audio on your device. This note is not saved into the entry yet — download if you want to keep it.
+            </p>
+            {audioRecorder.error && (
+              <p className="text-small text-danger-400" role="alert">
+                {audioRecorder.error}
+              </p>
+            )}
+            {voiceError && !voiceMode && (
+              <p className="text-small text-danger-400" role="alert">
+                {voiceError}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={audioRecorder.isRecording ? audioRecorder.stop : audioRecorder.start}
+              disabled={!audioRecorder.isSupported}
+              className={cn(
+                'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                'border border-surface-600 transition-colors duration-[var(--duration-fast)] flex items-center gap-2',
+                audioRecorder.isRecording ? 'bg-danger-500 text-ink-900 border-danger-500' : 'bg-primary-500 text-ink-900 border-primary-500',
+                !audioRecorder.isSupported && 'opacity-60 cursor-not-allowed'
+              )}
+              aria-pressed={audioRecorder.isRecording}
+              aria-label={audioRecorder.isRecording ? 'Stop audio recording' : 'Start audio recording'}
+            >
+              {audioRecorder.isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              {audioRecorder.isRecording ? 'Stop' : 'Record'}
+            </button>
+            {audioRecorder.audioUrl && (
+              <button
+                type="button"
+                onClick={audioRecorder.clear}
+                className={cn(
+                  'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                  'bg-surface-900 text-ink-200 border border-surface-600 hover:border-primary-500/60 transition-colors'
+                )}
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+
+        {!audioRecorder.isSupported && (
+          <p className="mt-3 text-small text-ink-400">
+            Audio recording isn't supported in this browser. You can still use dictation or Voice Mode.
+          </p>
+        )}
+
+        {audioRecorder.audioUrl && (
+          <div className="mt-4 space-y-3">
+            <audio controls src={audioRecorder.audioUrl} className="w-full">
+              <track kind="captions" src={EMPTY_CAPTION_TRACK} srcLang="en" label="No captions available" />
+            </audio>
+            <div className="flex gap-2 flex-wrap">
+              <a
+                href={audioRecorder.audioUrl}
+                download={getVoiceNoteFileName()}
+                className={cn(
+                  'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
+                  'bg-primary-500 text-ink-900 hover:bg-primary-400 transition-colors inline-flex items-center'
+                )}
+              >
+                Download voice note
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function useQuickVoiceNotes() {
   const [isSupported, setIsSupported] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -111,9 +500,9 @@ function useQuickVoiceNotes() {
   const lastTranscriptRef = useRef('');
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (globalThis.window === undefined) return;
 
-    const speechWindow = window as unknown as SpeechRecognitionWindow;
+    const speechWindow = globalThis.window as SpeechRecognitionWindow;
     const SpeechRecognitionCtor =
       speechWindow.webkitSpeechRecognition || speechWindow.SpeechRecognition;
 
@@ -209,7 +598,7 @@ function useAudioNoteRecorder() {
 
   useEffect(() => {
     const supported =
-      typeof window !== 'undefined' &&
+      globalThis.window !== undefined &&
       typeof navigator !== 'undefined' &&
       !!navigator.mediaDevices?.getUserMedia &&
       typeof MediaRecorder !== 'undefined';
@@ -293,7 +682,12 @@ function useAudioNoteRecorder() {
   };
 }
 
-export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLogOneScreenProps) {
+export function QuickLogOneScreen({
+  mode = 'new',
+  initialData,
+  onComplete,
+  onCancel,
+}: Readonly<QuickLogOneScreenProps>) {
   const [pain, setPain] = useState(5);
   const [locations, setLocations] = useState<string[]>([]);
   const [symptoms, setSymptoms] = useState<string[]>([]);
@@ -311,42 +705,19 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
   useEffect(() => {
     if (!initialData) return;
 
-    if (typeof initialData.pain === 'number') setPain(initialData.pain);
-    if (Array.isArray(initialData.locations)) setLocations(initialData.locations);
-    if (Array.isArray(initialData.symptoms)) setSymptoms(initialData.symptoms);
-    if (typeof initialData.notes === 'string') setNotes(initialData.notes);
-
-    if (typeof initialData.sleep === 'number') {
-      setSleep(initialData.sleep);
-      setSleepSet(true);
-    } else {
-      setSleepSet(false);
-    }
-
-    if (typeof initialData.activityLevel === 'number') {
-      setActivityLevel(initialData.activityLevel);
-      setActivityLevelSet(true);
-    } else {
-      setActivityLevelSet(false);
-    }
-
-    if (typeof initialData.medicationAdherence === 'string') {
-      setMedicationAdherence(initialData.medicationAdherence);
-    } else {
-      setMedicationAdherence(null);
-    }
-
-    if (Array.isArray(initialData.activities) && initialData.activities.length > 0) {
-      setActivitiesText(initialData.activities.join(', '));
-    } else {
-      setActivitiesText('');
-    }
-
-    if (Array.isArray(initialData.triggers) && initialData.triggers.length > 0) {
-      setDietTriggersText(initialData.triggers.join(', '));
-    } else {
-      setDietTriggersText('');
-    }
+    applyInitialData(initialData, {
+      setPain,
+      setLocations,
+      setSymptoms,
+      setNotes,
+      setSleep,
+      setSleepSet,
+      setActivityLevel,
+      setActivityLevelSet,
+      setMedicationAdherence,
+      setActivitiesText,
+      setDietTriggersText,
+    });
   }, [initialData]);
 
   // Adaptive copy based on patient state
@@ -380,6 +751,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
   };
 
   const handlePainChange = (value: number) => setPain(value);
+  const quickLogHeading = getQuickLogHeading(mode);
 
   const hasNavigator = typeof navigator !== 'undefined';
   const isOffline = hasNavigator && navigator.onLine === false;
@@ -438,7 +810,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
             <ChevronLeft className="w-4 h-4" />
             Back
           </button>
-          <h1 className="text-body-medium text-ink-100 font-semibold">Quick Log</h1>
+          <h1 className="text-body-medium text-ink-100 font-semibold">{quickLogHeading}</h1>
           <button
             type="button"
             onClick={() => setVoiceMode(prev => !prev)}
@@ -452,10 +824,10 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                 : 'text-ink-400 hover:text-ink-200 hover:border-surface-500',
               !voiceSupported && 'opacity-40 cursor-not-allowed'
             )}
-            title={voiceSupported ? (voiceMode ? 'Disable voice mode' : 'Enable voice mode') : 'Voice not available'}
+            title={getVoiceToggleTitle(voiceSupported, voiceMode)}
           >
             {voiceMode ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}
-            <span className="hidden sm:inline">{voiceMode ? 'Voice On' : 'Voice'}</span>
+            <span className="hidden sm:inline">{getVoiceToggleLabel(voiceMode)}</span>
           </button>
         </div>
 
@@ -515,7 +887,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                     </button>
 
                     <div className="text-center" role="status" aria-live="polite">
-                      <div className={cn('text-6xl font-bold tabular-nums mb-1 transition-colors duration-300', sc.text)}>
+                      <div className={cn('text-6xl font-bold tabular-nums mb-1 transition-colors duration-300', sc.displayText)}>
                         {pain}
                       </div>
                       <div className="text-body-medium text-ink-200">{PAIN_LABELS[pain]}</div>
@@ -595,7 +967,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                         'focus:outline-none focus:ring-2 focus:ring-primary-500',
                         'min-h-[40px]',
                         i === pain
-                          ? cn(isc.bg, isc.text, 'ring-2', isc.ring, 'font-bold scale-105')
+                          ? cn(isc.bg, isc.selectedText, 'ring-2', isc.ring, 'font-bold scale-105')
                           : 'text-ink-400 hover:bg-surface-700 hover:text-ink-200'
                       )}
                     >
@@ -615,50 +987,20 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
             </div>
 
             <div aria-live="polite" aria-atomic="true" className="sr-only">
-              {locations.length > 0
-                ? `${locations.length} location${locations.length > 1 ? 's' : ''} selected: ${locations.join(', ')}`
-                : 'No locations selected'}
+              {getSelectionSummary('location', locations)}
             </div>
 
             {/* Locations card */}
-            <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-body-medium text-ink-200">📍 Where does it hurt?</span>
-                {locations.length > 0 && (
-                  <span className="text-tiny bg-primary-500/15 text-primary-400 rounded-full px-2 py-0.5 tabular-nums">
-                    {locations.length} selected
-                  </span>
-                )}
-              </div>
-              <fieldset>
-                <legend className="sr-only">Pain locations</legend>
-                <div className="flex flex-wrap gap-2">
-                  {LOCATION_TAGS.map(tag => (
-                    <button
-                      type="button"
-                      key={tag}
-                      onClick={() => toggleTag(tag, locations, setLocations)}
-                      role="checkbox"
-                      aria-checked={locations.includes(tag)}
-                      aria-label={`${tag} location`}
-                      className={cn(
-                        'px-3.5 py-2.5 min-h-[44px] rounded-[var(--radius-full)] text-small',
-                        'border transition-all duration-[var(--duration-fast)]',
-                        'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900',
-                        locations.includes(tag)
-                          ? 'bg-primary-500/15 border-primary-500/50 text-primary-300 font-medium shadow-sm'
-                          : 'bg-surface-900/50 border-surface-600 text-ink-300 hover:border-primary-500/30 hover:text-ink-200'
-                      )}
-                    >
-                      {locations.includes(tag) && (
-                        <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />
-                      )}
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
-            </div>
+            <SelectionChipCard
+              accentClassName="bg-primary-500/15 border-primary-500/50 text-primary-300 font-medium shadow-sm focus-within:ring-primary-500"
+              ariaLabelSuffix="location"
+              emptySummary={getSelectionSummary('location', locations)}
+              label="📍 Where does it hurt?"
+              selected={locations}
+              selectedBadgeClassName="bg-primary-500/15 text-primary-400"
+              tags={LOCATION_TAGS}
+              toggleTag={(tag) => toggleTag(tag, locations, setLocations)}
+            />
 
             {/* Symptoms card */}
             <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
@@ -671,38 +1013,18 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                 )}
               </div>
               <div aria-live="polite" aria-atomic="true" className="sr-only">
-                {symptoms.length > 0
-                  ? `${symptoms.length} symptom${symptoms.length > 1 ? 's' : ''} selected: ${symptoms.join(', ')}`
-                  : 'No symptoms selected'}
+                {getSelectionSummary('symptom', symptoms)}
               </div>
-              <fieldset>
-                <legend className="sr-only">Pain symptoms</legend>
-                <div className="flex flex-wrap gap-2">
-                  {SYMPTOM_TAGS.map(tag => (
-                    <button
-                      type="button"
-                      key={tag}
-                      onClick={() => toggleTag(tag, symptoms, setSymptoms)}
-                      role="checkbox"
-                      aria-checked={symptoms.includes(tag)}
-                      aria-label={`${tag} symptom`}
-                      className={cn(
-                        'px-3.5 py-2.5 min-h-[44px] rounded-[var(--radius-full)] text-small',
-                        'border transition-all duration-[var(--duration-fast)]',
-                        'focus:outline-none focus:ring-2 focus:ring-warn-500 focus:ring-offset-2 focus:ring-offset-surface-900',
-                        symptoms.includes(tag)
-                          ? 'bg-warn-500/15 border-warn-500/50 text-warn-400 font-medium shadow-sm'
-                          : 'bg-surface-900/50 border-surface-600 text-ink-300 hover:border-warn-500/30 hover:text-ink-200'
-                      )}
-                    >
-                      {symptoms.includes(tag) && (
-                        <Check className="w-3 h-3 inline mr-1" aria-hidden="true" />
-                      )}
-                      {tag}
-                    </button>
-                  ))}
-                </div>
-              </fieldset>
+              <SelectionChipCard
+                accentClassName="bg-warn-500/15 border-warn-500/50 text-warn-400 font-medium shadow-sm focus-within:ring-warn-500"
+                ariaLabelSuffix="symptom"
+                emptySummary={getSelectionSummary('symptom', symptoms)}
+                label="🩺 What does it feel like?"
+                selected={symptoms}
+                selectedBadgeClassName="bg-warn-500/15 text-warn-400"
+                tags={SYMPTOM_TAGS}
+                toggleTag={(tag) => toggleTag(tag, symptoms, setSymptoms)}
+              />
             </div>
           </section>
 
@@ -744,7 +1066,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                   className={SLIDER_CLASSES}
                   aria-label="Sleep quality from 0 to 10"
                 />
-                <div className="flex justify-between text-tiny text-ink-500">
+                <div className="flex justify-between text-tiny text-ink-300">
                   <span>Very poor</span>
                   <span>Excellent</span>
                 </div>
@@ -779,7 +1101,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                   className={SLIDER_CLASSES}
                   aria-label="Activity level from 0 to 10"
                 />
-                <div className="flex justify-between text-tiny text-ink-500">
+                <div className="flex justify-between text-tiny text-ink-300">
                   <span>Sedentary</span>
                   <span>Very active</span>
                 </div>
@@ -808,7 +1130,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                       'border transition-all duration-150',
                       'focus:outline-none focus:ring-2 focus:ring-primary-500',
                       (medicationAdherence ?? '') === opt.value
-                        ? 'bg-primary-500/15 border-primary-500/50 text-primary-400 font-medium'
+                        ? 'bg-primary-100 dark:bg-primary-500/15 border-primary-500/50 text-slate-900 dark:text-primary-200 font-medium'
                         : 'border-surface-600 text-ink-300 hover:border-surface-500 hover:text-ink-200'
                     )}
                   >
@@ -839,7 +1161,7 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                     'transition-all duration-[var(--duration-fast)] resize-none'
                   )}
                 />
-                <p className="text-tiny text-ink-500 mt-1.5">Comma or new-line separated</p>
+                <p className="text-tiny text-ink-300 mt-1.5">Comma or new-line separated</p>
               </div>
 
               <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
@@ -860,196 +1182,28 @@ export function QuickLogOneScreen({ initialData, onComplete, onCancel }: QuickLo
                     'transition-all duration-[var(--duration-fast)] resize-none'
                   )}
                 />
-                <p className="text-tiny text-ink-500 mt-1.5">Saved as triggers for analytics</p>
+                <p className="text-tiny text-ink-300 mt-1.5">Saved as triggers for analytics</p>
               </div>
             </div>
           </section>
 
-          {/* Notes + Voice */}
-          <section className="space-y-5">
-            <div>
-              <h2 className="text-h2 text-ink-50 mb-1">{notesLabel}</h2>
-              <p className="text-small text-ink-400">Dictation works with your phone keyboard too.</p>
-            </div>
-
-            <div className="rounded-[var(--radius-xl)] border border-surface-700 bg-surface-800 p-5">
-              <label htmlFor="pain-notes" className="block text-body-medium text-ink-200 mb-2">
-                ✏️ Additional notes
-              </label>
-              <textarea
-                id="pain-notes"
-                value={notes}
-                onChange={e => setNotes(e.target.value)}
-                placeholder={notesPlaceholder}
-                inputMode="text"
-                autoComplete="on"
-                autoCorrect="on"
-                autoCapitalize="sentences"
-                enterKeyHint="done"
-                aria-label="Additional notes about pain"
-                aria-describedby="notes-hint notes-remaining"
-                maxLength={500}
-                className={cn(
-                  'w-full h-32 p-3 rounded-[var(--radius-md)]',
-                  'bg-surface-900 border border-surface-600',
-                  'text-body text-ink-100 placeholder:text-ink-500',
-                  'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-surface-900 focus:border-transparent',
-                  'transition-all duration-[var(--duration-fast)]',
-                  'resize-none'
-                )}
-              />
-              <div className="flex justify-between items-center mt-2">
-                <span id="notes-hint" className="text-tiny text-ink-400">
-                  {notes.length === 0
-                    ? 'No notes yet'
-                    : `${notes.length} character${notes.length === 1 ? '' : 's'}`}
-                </span>
-                <span
-                  id="notes-remaining"
-                  className={cn(
-                    'text-tiny tabular-nums',
-                    500 - notes.length < 50 ? 'text-warn-400' : 'text-ink-500'
-                  )}
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  {500 - notes.length} remaining
-                </span>
-              </div>
-            </div>
-
-            {voiceMode && voiceSupported && (
-              <div className="surface-card border border-surface-700 bg-surface-800/70">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <div className="text-body-medium text-ink-100">Voice mode (speech-to-text)</div>
-                    <p className="text-small text-ink-400">
-                      Uses your device speech service. {connectionStatus}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={isListening ? stopListening : startListening}
-                    className={cn(
-                      'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
-                      'border border-surface-600 transition-colors duration-[var(--duration-fast)] flex items-center gap-2',
-                      isListening
-                        ? 'bg-danger-500 text-ink-900 border-danger-500'
-                        : 'bg-primary-500 text-ink-900 border-primary-500'
-                    )}
-                    aria-pressed={isListening}
-                    aria-label={isListening ? 'Stop voice input' : 'Start voice input'}
-                  >
-                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                    {isListening ? 'Stop' : 'Start'}
-                  </button>
-                </div>
-
-                {transcript && (
-                  <div className="mt-3 p-3 rounded-[var(--radius-md)] bg-surface-900 border border-surface-700">
-                    <div className="text-small text-ink-300 mb-1">Heard</div>
-                    <p className="text-body text-ink-100 mb-3" aria-live="polite">
-                      {transcript}
-                    </p>
-                    <div className="flex gap-2 flex-wrap">
-                      <button
-                        type="button"
-                        onClick={handleInsertTranscript}
-                        className={cn(
-                          'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
-                          'bg-primary-500 text-ink-900 hover:bg-primary-400 transition-colors'
-                        )}
-                      >
-                        Insert into notes
-                      </button>
-                      <button
-                        type="button"
-                        onClick={resetTranscript}
-                        className={cn(
-                          'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
-                          'bg-surface-900 text-ink-200 border border-surface-600 hover:border-primary-500/60 transition-colors'
-                        )}
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="surface-card border border-surface-700 bg-surface-800/70">
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="text-body-medium text-ink-100">Voice note (audio)</div>
-                  <p className="text-small text-ink-400">
-                    Records audio on your device. This note is not saved into the entry yet — download if you want to keep it.
-                  </p>
-                  {audioRecorder.error && (
-                    <p className="text-small text-danger-400" role="alert">
-                      {audioRecorder.error}
-                    </p>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={audioRecorder.isRecording ? audioRecorder.stop : audioRecorder.start}
-                    disabled={!audioRecorder.isSupported}
-                    className={cn(
-                      'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
-                      'border border-surface-600 transition-colors duration-[var(--duration-fast)] flex items-center gap-2',
-                      audioRecorder.isRecording
-                        ? 'bg-danger-500 text-ink-900 border-danger-500'
-                        : 'bg-primary-500 text-ink-900 border-primary-500',
-                      !audioRecorder.isSupported && 'opacity-60 cursor-not-allowed'
-                    )}
-                    aria-pressed={audioRecorder.isRecording}
-                    aria-label={audioRecorder.isRecording ? 'Stop audio recording' : 'Start audio recording'}
-                  >
-                    {audioRecorder.isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                    {audioRecorder.isRecording ? 'Stop' : 'Record'}
-                  </button>
-                  {audioRecorder.audioUrl && (
-                    <button
-                      type="button"
-                      onClick={audioRecorder.clear}
-                      className={cn(
-                        'px-4 py-2 rounded-[var(--radius-md)] text-small font-medium',
-                        'bg-surface-900 text-ink-200 border border-surface-600 hover:border-primary-500/60 transition-colors'
-                      )}
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {!audioRecorder.isSupported && (
-                <p className="mt-3 text-small text-ink-400">
-                  Audio recording isnt supported in this browser. You can still use dictation or Voice Mode.
-                </p>
-              )}
-
-              {audioRecorder.audioUrl && (
-                <div className="mt-4 space-y-3">
-                  <audio controls src={audioRecorder.audioUrl} className="w-full" />
-                  <div className="flex gap-2 flex-wrap">
-                    <a
-                      href={audioRecorder.audioUrl}
-                      download={`pain-voice-note-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.webm`}
-                      className={cn(
-                        'px-3 py-2 rounded-[var(--radius-md)] text-small font-medium',
-                        'bg-primary-500 text-ink-900 hover:bg-primary-400 transition-colors inline-flex items-center'
-                      )}
-                    >
-                      Download voice note
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
+          <NotesVoiceSection
+            audioRecorder={audioRecorder}
+            connectionStatus={connectionStatus}
+            handleInsertTranscript={handleInsertTranscript}
+            isListening={isListening}
+            notes={notes}
+            notesLabel={notesLabel}
+            notesPlaceholder={notesPlaceholder}
+            resetTranscript={resetTranscript}
+            setNotes={setNotes}
+            startListening={startListening}
+            stopListening={stopListening}
+            transcript={transcript}
+            voiceError={voiceError}
+            voiceMode={voiceMode}
+            voiceSupported={voiceSupported}
+          />
         </div>
       </div>
 

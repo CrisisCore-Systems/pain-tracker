@@ -1,7 +1,11 @@
 import React from 'react';
-import { render, screen, within } from '../../../test/test-utils'; // Use custom render with providers
+import { render, screen, within, fireEvent, act } from '../../../test/test-utils'; // Use custom render with providers
 import { vi } from 'vitest';
 import PredictivePanelMock from '../../PredictivePanel';
+const mockClearAllUserData = vi.fn().mockResolvedValue(undefined);
+vi.mock('../../../utils/clear-all-user-data', () => ({
+  clearAllUserData: () => mockClearAllUserData(),
+}));
 // Mock PredictivePanel (lazy-loaded) so Suspense doesn't delay tests
 vi.mock('../../PredictivePanel', () => ({
   __esModule: true,
@@ -80,6 +84,11 @@ function makeEntry(id: string, iso: string, pain: number) {
 }
 
 describe('DashboardOverview', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.useRealTimers();
+  });
+
   it('predictive panel mock mounts in isolation', async () => {
     const Pre = (await import('../../PredictivePanel')).default;
     render(<Pre entries={[]} />);
@@ -185,5 +194,42 @@ describe('DashboardOverview', () => {
     expect(screen.getByText(/mocked insight summary/i)).toBeInTheDocument();
     expect(screen.getByText(/Confidence ~72%/)).toBeInTheDocument();
     expect(mockGenerateDashboardAIInsights).toHaveBeenCalled();
+  });
+
+  it('cancels clear-all before the destructive timer executes', async () => {
+    const confirmSpy = vi.spyOn(globalThis, 'confirm').mockReturnValue(true);
+
+    const today = new Date();
+    const entries = [makeEntry('1', today.toISOString(), 6)];
+
+    try {
+      render(
+        <DashboardOverview
+          entries={entries as unknown as PainEntry[]}
+          allEntries={entries as unknown as PainEntry[]}
+          PredictivePanelOverride={PredictivePanelMock}
+        />
+      );
+      expect(screen.getByTestId('predictive-panel-mock')).toBeInTheDocument();
+
+      vi.useFakeTimers();
+
+      fireEvent.click(screen.getByRole('button', { name: /delete all pain entries/i }));
+
+      expect(screen.getByText(/Clearing all data in 10s/i)).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: /^cancel$/i }));
+
+      expect(screen.getAllByText(/Cancelled: data was not cleared\./i).length).toBeGreaterThan(0);
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(11_000);
+      });
+
+      expect(mockClearAllUserData).not.toHaveBeenCalled();
+    } finally {
+      confirmSpy.mockRestore();
+      vi.useRealTimers();
+    }
   });
 });

@@ -1,4 +1,4 @@
-import type { ModuleId } from '../../config/modules';
+import { MODULES, type ModuleId } from '../../config/modules';
 import type { EntitlementProvider } from './EntitlementProvider';
 
 const LOCAL_ENTITLEMENTS_KEY = 'pain-tracker:entitlements-v1';
@@ -8,6 +8,10 @@ type LocalEntitlements = {
   updatedAt: string; // ISO
 };
 
+function isModuleId(value: unknown): value is ModuleId {
+  return typeof value === 'string' && Object.hasOwn(MODULES, value);
+}
+
 function readLocalEntitlements(): LocalEntitlements | null {
   if (globalThis.window === undefined) return null;
 
@@ -16,8 +20,9 @@ function readLocalEntitlements(): LocalEntitlements | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<LocalEntitlements>;
     if (!parsed || !Array.isArray(parsed.modules)) return null;
+    const modules = parsed.modules.filter(isModuleId);
     return {
-      modules: parsed.modules as ModuleId[],
+      modules,
       updatedAt: typeof parsed.updatedAt === 'string' ? parsed.updatedAt : new Date(0).toISOString(),
     };
   } catch {

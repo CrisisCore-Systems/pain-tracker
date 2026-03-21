@@ -5,7 +5,7 @@ const benefits = [
   {
     icon: Lock,
     title: '100% Local & Private',
-    description: 'Your pain data never leaves your device. No cloud uploads. No telemetry by default. Encrypted at rest.',
+    description: 'Local-first by default. No background cloud sync and no telemetry by default. Optional sharing actions are explicit and user-triggered.',
     stat: 'Zero cloud storage',
     iconClass: 'icon-emerald',
     statClass: 'stat-counter-emerald',
@@ -80,7 +80,7 @@ export const BenefitsGrid: React.FC = () => {
           
           <h2 className="landing-headline landing-headline-lg mb-6">
             <span className="text-white">Why Choose </span>
-            <span className="gradient-text-animated">Pain Tracker Pro?</span>
+            <span className="gradient-text-animated">PainTracker?</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
             Features designed with your privacy, security, and well-being in mind.

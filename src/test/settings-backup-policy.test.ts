@@ -103,6 +103,55 @@ describe('settings backup policy', () => {
     expect(writeValue).not.toHaveBeenCalled();
   });
 
+  it('rolls back already written keys when a later write fails', () => {
+    const store = new Map<string, unknown>([
+      ['theme:mode', 'light'],
+      ['prefs:contrast', 'normal'],
+    ]);
+
+    const envelope = parseSettingsBackupEnvelopeJson(
+      JSON.stringify({
+        schema: SETTINGS_BACKUP_SCHEMA,
+        version: SETTINGS_BACKUP_VERSION,
+        createdAt: '2026-02-27T00:00:00.000Z',
+        data: {
+          'theme:mode': 'dark',
+          'prefs:contrast': 'high',
+          'prefs:text-size': 'large',
+        },
+      })
+    );
+
+    const { safeData } = planSettingsBackupImport({
+      envelope,
+      existingKeys: Array.from(store.keys()),
+    });
+
+    const writeValue = vi.fn((key: string, value: unknown) => {
+      if (key === 'prefs:contrast' && value === 'high') {
+        throw new Error('WRITE_FAILED');
+      }
+      store.set(key, value);
+    });
+
+    expect(() =>
+      applySettingsBackupImport({
+        safeData,
+        confirmToken: 'IMPORT',
+        existingKeys: Array.from(store.keys()),
+        readValue: key => store.get(key),
+        removeValue: key => {
+          store.delete(key);
+        },
+        writeValue,
+      })
+    ).toThrow('WRITE_FAILED');
+
+    expect(store.get('theme:mode')).toBe('light');
+    expect(store.get('prefs:contrast')).toBe('normal');
+    expect(store.has('prefs:text-size')).toBe(false);
+  });
+
   it('key allow/deny keeps prototype keys blocked', () => {
     expect(isSettingsBackupKeyAllowed('__proto__')).toBe(false);
     expect(isSettingsBackupKeyAllowed('constructor')).toBe(false);

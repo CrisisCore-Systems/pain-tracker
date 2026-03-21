@@ -14,6 +14,23 @@ interface DataRestoreProps {
   onDataRestore: (entries: PainEntry[]) => void;
 }
 
+function getRestoreStatusTone(restoreStatus: string) {
+  if (
+    restoreStatus.includes('Error') ||
+    restoreStatus.includes('Invalid') ||
+    restoreStatus.includes('Failed')
+  ) {
+    return 'bg-red-100 text-red-700';
+  }
+  if (restoreStatus.includes('Successfully')) {
+    return 'bg-green-100 text-green-700';
+  }
+  if (restoreStatus.includes('Warning')) {
+    return 'bg-yellow-100 text-yellow-700';
+  }
+  return 'bg-blue-100 text-blue-700';
+}
+
 export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
   const [password, setPassword] = useState('');
   const [confirmToken, setConfirmToken] = useState('');
@@ -104,17 +121,18 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
         <span role="img" aria-label="restore">
           📥
         </span>
-        Vault Import (Encrypted)
+        <span>Vault Import (Encrypted)</span>
       </h2>
 
       <div className="space-y-6">
         {/* File Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="vault-import-file" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Select Backup File
           </label>
           <div className="flex items-center gap-3">
             <input
+              id="vault-import-file"
               ref={fileInputRef}
               type="file"
               accept=".json"
@@ -158,10 +176,11 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
 
         {/* Passphrase + Confirm */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="vault-export-passphrase" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Vault Export Passphrase
           </label>
           <input
+            id="vault-export-passphrase"
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
@@ -175,10 +194,11 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="vault-import-confirm-token" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Type IMPORT to confirm
           </label>
           <input
+            id="vault-import-confirm-token"
             type="text"
             value={confirmToken}
             onChange={e => setConfirmToken(e.target.value)}
@@ -208,25 +228,13 @@ export const DataRestore: React.FC<DataRestoreProps> = ({ onDataRestore }) => {
                 <span role="img" aria-hidden="true">
                   📂
                 </span>
-                Restore Data
+                <span>Restore Data</span>
               </>
             )}
           </button>
 
           {restoreStatus && (
-            <div
-              className={`p-3 rounded text-sm ${
-                restoreStatus.includes('Error') ||
-                restoreStatus.includes('Invalid') ||
-                restoreStatus.includes('Failed')
-                  ? 'bg-red-100 text-red-700'
-                  : restoreStatus.includes('Successfully')
-                    ? 'bg-green-100 text-green-700'
-                    : restoreStatus.includes('Warning')
-                      ? 'bg-yellow-100 text-yellow-700'
-                      : 'bg-blue-100 text-blue-700'
-              }`}
-            >
+            <div className={`p-3 rounded text-sm ${getRestoreStatusTone(restoreStatus)}`}>
               {restoreStatus}
             </div>
           )}

@@ -8,129 +8,117 @@ const safeWaitForTimeout = async (page: Page, ms: number) => {
   await page.waitForTimeout(ms);
 };
 
-const waitForServiceWorker = async (page: Page, maxRetries = 3, baseTimeout = 30000) => {
-  const isWebKit = await page.evaluate(() =>
-    /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium/.test(navigator.userAgent)
+const isWebKitPage = (page: Page) =>
+  page.evaluate(() => /AppleWebKit/.test(navigator.userAgent) && !/Chrome|Chromium/.test(navigator.userAgent));
+
+function getServiceWorkerWaitConfig(isWebKit: boolean, maxRetries: number, baseTimeout: number) {
+  return {
+    timeout: isWebKit ? baseTimeout * 2 : baseTimeout,
+    retries: isWebKit ? maxRetries + 2 : maxRetries,
+  };
+}
+
+async function waitForServiceWorkerApi(page: Page, timeout: number) {
+  await page.waitForFunction(() => 'serviceWorker' in navigator, { timeout: Math.min(timeout, 10000) });
+}
+
+async function waitForServiceWorkerHandshake(page: Page, timeout: number) {
+  await page.waitForFunction(
+    () => {
+      const scope = globalThis as typeof globalThis & { __pwa_sw_ready?: boolean };
+      return scope.__pwa_sw_ready === true;
+    },
+    { timeout: Math.min(timeout, 5000) },
   );
+  return getRegistrationInfo(page);
+}
 
-  // WebKit needs more time and retries
-  const timeout = isWebKit ? baseTimeout * 2 : baseTimeout;
-  const retries = isWebKit ? maxRetries + 2 : maxRetries;
+async function waitForServiceWorkerEventInfo(page: Page, timeout: number) {
+  await Promise.race([
+    page.context().waitForEvent('serviceworker', { timeout: Math.min(timeout, 10000) }),
+    page.waitForEvent('close').then(() => {
+      throw new Error('Page closed during service worker wait');
+    }),
+  ] as Array<Promise<unknown>>);
+  return getRegistrationInfo(page);
+}
 
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      if (page.isClosed()) throw new Error('Page closed before service worker registration');
+async function getRegistrationInfo(page: Page) {
+  return page.evaluate(async () => {
+    if (!('serviceWorker' in navigator)) return null;
+    const registrations = await navigator.serviceWorker.getRegistrations().catch(() => []);
+    const reg = registrations[0];
+    if (!reg) return null;
+    return {
+      scope: reg.scope,
+      active: !!reg.active,
+      state: reg.active?.state || 'unknown',
+      ready: true,
+    };
+  });
+}
 
-      // Wait briefly for the serviceWorker API to be available
-      await page.waitForFunction(() => 'serviceWorker' in navigator, { timeout: Math.min(timeout, 10000) });
+async function getReadyServiceWorkerInfo(page: Page) {
+  return page.evaluate(async () => {
+    const ready = await navigator.serviceWorker.ready.catch(() => null);
+    if (!ready) return null;
+    return {
+      scope: ready.scope,
+      active: !!ready.active,
+      state: ready.active?.state || 'unknown',
+      ready: true,
+    };
+  });
+}
 
-      // Prefer explicit handshake if the app exposes one
-      try {
-        await page.waitForFunction(() => {
-          const w = window as unknown as { __pwa_sw_ready?: boolean };
-          return w.__pwa_sw_ready === true;
-        }, { timeout: Math.min(timeout, 5000) });
-        return await getRegistrationInfo(page);
-      } catch {
-        // No handshake, fall through
+async function tryWaitForServiceWorker(page: Page, timeout: number, isLastAttempt: boolean) {
+  if (page.isClosed()) throw new Error('Page closed before service worker registration');
+
+  await waitForServiceWorkerApi(page, timeout);
+
+  const handshakeInfo = await waitForServiceWorkerHandshake(page, timeout).catch(() => null);
+  if (handshakeInfo?.ready) return handshakeInfo;
+
+  const eventInfo = await waitForServiceWorkerEventInfo(page, timeout).catch(() => null);
+  if (eventInfo?.ready) return eventInfo;
+
+  const registrationInfo = await getRegistrationInfo(page);
+  if (registrationInfo?.ready) return registrationInfo;
+
+  if (!isLastAttempt) return null;
+  return getReadyServiceWorkerInfo(page);
+}
+
+async function runServiceWorkerAttempt(page: Page, timeout: number, isLastAttempt: boolean) {
+  try {
+    const info = await tryWaitForServiceWorker(page, timeout, isLastAttempt);
+    return { info, errorMessage: null };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    return { info: null, errorMessage };
+  }
+}
+
+const waitForServiceWorker = async (page: Page, maxRetries = 3, baseTimeout = 30000) => {
+  const config = getServiceWorkerWaitConfig(await isWebKitPage(page), maxRetries, baseTimeout);
+
+  for (let attempt = 1; attempt <= config.retries; attempt += 1) {
+    const result = await runServiceWorkerAttempt(page, config.timeout, attempt === config.retries);
+    if (result.info?.ready) return result.info;
+
+    if (result.errorMessage) {
+      if (attempt === config.retries) {
+        throw new Error(`Service worker never became ready: ${result.errorMessage}`);
       }
-
-      // Race between context serviceworker event and page close to avoid hanging
-      try {
-        const swEvent = await Promise.race([
-          page.context().waitForEvent('serviceworker', { timeout: Math.min(timeout, 10000) }),
-          page.waitForEvent('close').then(() => { throw new Error('Page closed during service worker wait'); }),
-        ] as Array<Promise<unknown>>);
-
-        // If we received a service worker event, verify activation state
-        if (swEvent) {
-          try {
-            // swEvent may not be serializable, so inspect registration via page.evaluate
-            const info = await getRegistrationInfo(page);
-            if (info?.ready) return info;
-          } catch {
-            // swallow and continue to other checks
-          }
-        }
-      } catch {
-        // event wait timed out or page closed; we'll try other fallbacks
-      }
-
-      // Try getRegistrations (non-blocking)
-      const regInfo = await page.evaluate(async () => {
-        try {
-          if (!('serviceWorker' in navigator)) return null;
-          const registrations = await navigator.serviceWorker.getRegistrations();
-          const reg = registrations[0];
-          if (reg && reg.active) {
-            return {
-              scope: reg.scope,
-              active: true,
-              state: reg.active.state,
-              ready: true,
-            };
-          }
-        } catch {
-          // swallow
-        }
-        return null;
-      });
-
-      if (regInfo?.ready) return regInfo;
-
-      // Final fallback: navigator.serviceWorker.ready (only on last attempt)
-      if (attempt === retries) {
-        try {
-          const readyInfo = await page.evaluate(async () => {
-            try {
-              const ready = await navigator.serviceWorker.ready;
-              return {
-                scope: ready.scope,
-                active: !!ready.active,
-                state: ready.active?.state || 'unknown',
-                ready: true,
-              };
-            } catch {
-              return null;
-            }
-          });
-
-          if (readyInfo) return readyInfo;
-        } catch {
-          // swallow
-        }
-      }
-
-      if (attempt < retries) await safeWaitForTimeout(page, 2000);
-    } catch (err) {
-      if (attempt === retries) throw new Error(`Service worker never became ready: ${err?.message || err}`);
       if (page.isClosed()) throw new Error('Page closed while waiting for service worker');
+    }
+
+    if (attempt < config.retries) {
       await safeWaitForTimeout(page, 2000);
     }
   }
 
   throw new Error('Service worker never became ready');
-};
-
-// Helper to get registration info safely
-const getRegistrationInfo = async (page: Page) => {
-  return await page.evaluate(() => {
-    if (!('serviceWorker' in navigator)) return null;
-    try {
-      return navigator.serviceWorker.getRegistrations().then((regs) => {
-        const reg = regs[0];
-        if (!reg) return null;
-        return {
-          scope: reg.scope,
-          active: !!reg.active,
-          state: reg.active?.state || 'unknown',
-          ready: true,
-        };
-      }).catch(() => null);
-    } catch {
-      return null;
-    }
-  });
 };
 
 // Helper: check SW support
@@ -147,10 +135,7 @@ test.describe('PWA Service Worker', () => {
   });
   test.beforeEach(async ({ page }) => {
     // WebKit can be slow / flaky — increase per-test timeout and add diagnostics
-    const isWebKit = await page.evaluate(() => {
-      const ua = navigator.userAgent || '';
-      return /AppleWebKit/.test(ua) && !/Chrome|Chromium/.test(ua);
-    });
+    const isWebKit = await isWebKitPage(page);
 
     if (isWebKit) {
       test.setTimeout(180_000);
@@ -175,10 +160,7 @@ test.describe('PWA Service Worker', () => {
 
   test('should register service worker successfully', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'Service worker tests flaky in WebKit');
-    const isWebKit = await page.evaluate(() => {
-      const ua = navigator.userAgent || '';
-      return /AppleWebKit/.test(ua) && !/Chrome|Chromium/.test(ua);
-    });
+    const isWebKit = await isWebKitPage(page);
 
     const swRegistration = await waitForServiceWorker(page, isWebKit ? 5 : 3, isWebKit ? 45000 : 30000);
 
@@ -210,7 +192,7 @@ test.describe('PWA Service Worker', () => {
     await waitForServiceWorker(page, isWebKit ? 5 : 3, isWebKit ? 45000 : 30000);
 
     const cachedAssets = await page.evaluate(async () => {
-      if (!('caches' in window)) return { supported: false };
+      if (!('caches' in globalThis)) return { supported: false };
       const cacheNames = await caches.keys();
       const staticCache = cacheNames.find((name) => name.includes('static') || name.includes('pain-tracker'));
       if (!staticCache) return { supported: true, found: false, assets: [], count: 0 };
@@ -265,7 +247,7 @@ test.describe('PWA Service Worker', () => {
     expect(apiResult.json.ok).toBe(true);
 
     const cachedApi = await page.evaluate(async () => {
-      if (!('caches' in window)) return { supported: false };
+      if (!('caches' in globalThis)) return { supported: false };
       const cacheNames = await caches.keys();
       const staticCacheName = cacheNames.find((name) => name.includes('static') || name.includes('pain-tracker'));
       if (!staticCacheName) return { supported: true, foundStaticCache: false };
@@ -291,10 +273,7 @@ test.describe('PWA Service Worker', () => {
 
   test('should update service worker version', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'Service worker tests flaky in WebKit');
-    const isWebKit = await page.evaluate(() => {
-      const ua = navigator.userAgent || '';
-      return /AppleWebKit/.test(ua) && !/Chrome|Chromium/.test(ua);
-    });
+    const isWebKit = await isWebKitPage(page);
 
     // Wait for initial service worker
     await waitForServiceWorker(page, isWebKit ? 5 : 3, isWebKit ? 45000 : 30000);
@@ -333,11 +312,9 @@ test.describe('PWA Service Worker', () => {
     page.on('pageerror', (err) => errors.push(err.message));
 
     await page.evaluate(async () => {
-      try {
-        await fetch('/non-existent-endpoint');
-      } catch {
+      await fetch('/non-existent-endpoint').catch(() => {
         // expected to fail
-      }
+      });
     });
 
     await page.waitForTimeout(1000);
@@ -355,9 +332,11 @@ test.describe('PWA Service Worker', () => {
     const swText = swResponse.ok()
       ? await swResponse.text()
       : await (await page.request.get('/pain-tracker/sw.js')).text();
-    const versionMatch = swText.match(/const\s+SW_VERSION\s*=\s*'([^']+)'/);
-    expect(versionMatch, 'Expected SW_VERSION in service worker script').not.toBeNull();
-    const expectedCacheName = `pain-tracker-static-v${versionMatch![1]}`;
+    const versionMatch = /const\s+SW_VERSION\s*=\s*'([^']+)'/.exec(swText);
+    if (!versionMatch) {
+      throw new Error('Expected SW_VERSION in service worker script');
+    }
+    const expectedCacheName = `pain-tracker-static-v${versionMatch[1]}`;
 
     await expect
       .poll(
@@ -384,10 +363,7 @@ test.describe('PWA Service Worker - Advanced Features', () => {
 
   test('should support skipWaiting for immediate activation', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'Service worker tests flaky in WebKit');
-    const isWebKit = await page.evaluate(() => {
-      const ua = navigator.userAgent || '';
-      return /AppleWebKit/.test(ua) && !/Chrome|Chromium/.test(ua);
-    });
+    const isWebKit = await isWebKitPage(page);
 
     await waitForServiceWorker(page, isWebKit ? 5 : 3, isWebKit ? 45000 : 30000);
 
@@ -402,10 +378,7 @@ test.describe('PWA Service Worker - Advanced Features', () => {
 
   test('should claim clients immediately on activation', async ({ page, browserName }) => {
     test.skip(browserName === 'webkit', 'Service worker tests flaky in WebKit');
-    const isWebKit = await page.evaluate(() => {
-      const ua = navigator.userAgent || '';
-      return /AppleWebKit/.test(ua) && !/Chrome|Chromium/.test(ua);
-    });
+    const isWebKit = await isWebKitPage(page);
 
     await waitForServiceWorker(page, isWebKit ? 5 : 3, isWebKit ? 45000 : 30000);
 

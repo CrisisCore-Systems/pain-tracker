@@ -1,6 +1,15 @@
 import Link from 'next/link';
 import { siteConfig } from '@/lib/utils';
 
+function FooterLinkAccent() {
+  return (
+    <span
+      aria-hidden="true"
+      className="w-0 shrink-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200"
+    />
+  );
+}
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -83,14 +92,14 @@ export function Footer() {
             <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/70 mb-5">
               Navigation
             </h3>
-            <ul className="space-y-4" role="list">
+            <ul className="space-y-4">
               <li>
                 <Link
                   href="/"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Articles
+                  <FooterLinkAccent />
+                  <span>Articles</span>
                 </Link>
               </li>
               <li>
@@ -98,8 +107,8 @@ export function Footer() {
                   href="/pain-tracking-guides"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Pain Tracking Guides
+                  <FooterLinkAccent />
+                  <span>Pain Tracking Guides</span>
                 </Link>
               </li>
               <li>
@@ -107,8 +116,8 @@ export function Footer() {
                   href="/features"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Features
+                  <FooterLinkAccent />
+                  <span>Features</span>
                 </Link>
               </li>
               <li>
@@ -116,8 +125,8 @@ export function Footer() {
                   href="https://www.paintracker.ca/app"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Open App
+                  <FooterLinkAccent />
+                  <span>Open App</span>
                 </a>
               </li>
             </ul>
@@ -128,14 +137,14 @@ export function Footer() {
             <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/70 mb-5">
               Pillar Guides
             </h3>
-            <ul className="space-y-4" role="list">
+            <ul className="space-y-4">
               <li>
                 <a
                   href="https://www.paintracker.ca/offline-pain-diary"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Offline Pain Diary
+                  <FooterLinkAccent />
+                  <span>Offline Pain Diary</span>
                 </a>
               </li>
               <li>
@@ -143,8 +152,8 @@ export function Footer() {
                   href="https://www.paintracker.ca/private-pain-tracker"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Private Pain Tracker
+                  <FooterLinkAccent />
+                  <span>Private Pain Tracker</span>
                 </a>
               </li>
               <li>
@@ -152,8 +161,8 @@ export function Footer() {
                   href="https://www.paintracker.ca/pain-log-for-doctors"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Pain Log for Doctors
+                  <FooterLinkAccent />
+                  <span>Pain Log for Doctors</span>
                 </a>
               </li>
               <li>
@@ -161,8 +170,8 @@ export function Footer() {
                   href="https://www.paintracker.ca/track-chronic-pain-symptoms"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Track Chronic Pain
+                  <FooterLinkAccent />
+                  <span>Track Chronic Pain</span>
                 </a>
               </li>
             </ul>
@@ -173,14 +182,14 @@ export function Footer() {
             <h3 className="text-xs font-bold uppercase tracking-widest text-foreground/70 mb-5">
               Resources
             </h3>
-            <ul className="space-y-4" role="list">
+            <ul className="space-y-4">
               <li>
                 <a
                   href="https://www.paintracker.ca"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Homepage
+                  <FooterLinkAccent />
+                  <span>Homepage</span>
                 </a>
               </li>
               <li>
@@ -188,8 +197,8 @@ export function Footer() {
                   href="/privacy"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Privacy
+                  <FooterLinkAccent />
+                  <span>Privacy</span>
                 </Link>
               </li>
               <li>
@@ -197,8 +206,8 @@ export function Footer() {
                   href="/security"
                   className="text-muted-foreground hover:text-primary transition-colors duration-200 font-medium inline-flex items-center group"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-2 transition-all duration-200" />
-                  Security
+                  <FooterLinkAccent />
+                  <span>Security</span>
                 </Link>
               </li>
               <li>
@@ -208,8 +217,11 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span className="w-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-0 transition-all duration-200" />
-                  Open Source on GitHub
+                  <span
+                    aria-hidden="true"
+                    className="w-0 shrink-0 group-hover:w-2 h-0.5 bg-primary mr-0 group-hover:mr-0 transition-all duration-200"
+                  />
+                  <span>Open Source on GitHub</span>
                   <svg className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
@@ -247,12 +259,12 @@ export function Footer() {
             © {currentYear} {siteConfig.author.name}. All rights reserved.
           </p>
           <p className="text-sm text-muted-foreground flex items-center gap-2">
-            Built with
+            <span>Built with</span>
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-gradient-to-br from-red-500 to-pink-500 shadow-lg shadow-pink-500/20 animate-pulse" style={{ animationDuration: '2s' }}>
               <span className="text-white text-xs" aria-hidden="true">❤️</span>
             </span>
             <span className="sr-only">love</span>
-            for the chronic pain community
+            <span>for the chronic pain community</span>
           </p>
         </div>
       </div>

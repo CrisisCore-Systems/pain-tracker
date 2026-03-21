@@ -164,6 +164,38 @@ Pick a coherent posture and enforce it:
 
 ---
 
+## 9) `src/services/SecureAuditSink.ts` + `src/components/security/AuditSinkAlertBridge.tsx`
+
+### Invariants
+
+- **Retryable initialization**: transient IndexedDB open failures must not permanently disable audit persistence.
+- **Cooldown lockout is explicit**: repeated init failures can trigger a short retry cooldown, but must emit a machine-readable degraded reason.
+- **Quota recovery is bounded**: on quota pressure, prune oldest audit entries (bounded percentage) and retry once.
+- **Truthful degraded telemetry**: degraded events emit reason codes, not raw low-level storage details.
+- **Teardown-aware lifecycle**: sink shutdown is callable before IndexedDB deletion to reduce blocked wipe failures.
+
+### Reason Codes and Operator Actions
+
+- `INDEXEDDB_UNAVAILABLE`: Browser/session cannot use IndexedDB; advise using a supported browser mode.
+- `INIT_OPEN_FAILED`: Temporary storage-open failure; app should auto-retry.
+- `INIT_LOCKOUT`: Cooldown active after repeated failures; wait briefly, then retry.
+- `SIGNING_KEY_UNAVAILABLE`: Crypto key unavailable; app restart may recover state.
+- `QUOTA_RECOVERY_FAILED`: Storage full and prune+retry did not recover; free device storage.
+- `WRITE_FAILED`: Non-quota write failure; treat as degraded and monitor for recovery.
+- `UNKNOWN`: Fallback code when the failure class cannot be safely identified.
+
+### Regression tests
+
+- `src/services/__tests__/secure-audit-sink.degradation.test.ts` must keep:
+  - init failure emits `INIT_OPEN_FAILED`
+  - cooldown path emits `INIT_LOCKOUT`
+  - quota prune failure emits `QUOTA_RECOVERY_FAILED`
+  - shutdown closes DB handles and clears in-memory sink refs
+- `src/utils/__tests__/TeardownCoordinator.test.ts` must keep:
+  - pre-indexeddb teardown hook executes before database deletion
+
+---
+
 ## Tiny CI guardrail
 
 We keep small unit tests that fail if:

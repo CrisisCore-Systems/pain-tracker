@@ -67,7 +67,7 @@ for (const filePath of files) {
   }
 }
 
-const slugs = Array.from(slugSet).sort();
+const slugs = Array.from(slugSet).sort((left, right) => left.localeCompare(right));
 
 const outDir = path.join(repoRoot, 'artifacts');
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });

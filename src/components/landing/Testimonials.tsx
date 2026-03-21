@@ -90,7 +90,7 @@ export const Testimonials: React.FC = () => {
             <span className="gradient-text-animated">Patients & Clinicians</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
-            Representative scenarios showing how people use Pain Tracker Pro.
+            Representative scenarios showing how people use PainTracker.
           </p>
           <p className="text-sm text-slate-500 mt-2">
             These are illustrative examples, not verified customer quotes.

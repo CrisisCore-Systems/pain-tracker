@@ -1,5 +1,8 @@
-<!doctype html><html><head>
-<meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/">
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Page Not Found</title>
 <style>
   .visually-hidden {
     position: absolute;
@@ -16,6 +19,10 @@
 <script>
   // Simple redirect to root for SPA routing
   // Let React Router handle the 404 page
-  location.replace('/');
+  globalThis.location.replace('/');
 </script>
-</head><body><h1 class="visually-hidden">Page Not Found</h1></body></html> 
+</head>
+<body>
+<h1 class="visually-hidden">Page Not Found</h1>
+</body>
+</html>

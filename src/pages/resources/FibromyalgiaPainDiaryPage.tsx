@@ -129,7 +129,7 @@ const FlareTriggerGrid: React.FC = () => {
 const pageContent: SEOPageContent = {
   slug: 'fibromyalgia-pain-diary',
   title: 'Fibromyalgia Pain Diary (Free)',
-  metaTitle: 'Fibromyalgia Pain Diary — Free 6-Page Fibro Symptom Tracker | Pain Tracker Pro',
+  metaTitle: 'Fibromyalgia Pain Diary — Free 6-Page Fibro Symptom Tracker | PainTracker',
   metaDescription: 'Download a free fibromyalgia pain diary that tracks all 6 symptom domains: widespread pain, fatigue, fibro fog, sleep, sensitivity, and mood. Designed for ACR criteria and rheumatology appointments.',
   keywords: [
     'fibromyalgia pain diary', 'fibro symptom tracker', 'fibromyalgia journal',

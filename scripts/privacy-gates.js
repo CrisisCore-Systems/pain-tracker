@@ -103,6 +103,38 @@ function isLocalhostUrl(url) {
   return /^https?:\/\/(localhost|127\.0\.0\.1)([:/]|$)/i.test(url);
 }
 
+function isRelativeOrLocalUrl(url) {
+  if (url.startsWith('/')) return true;
+  if (url.startsWith('./') || url.startsWith('../')) return true;
+  return isLocalhostUrl(url);
+}
+
+function checkHardcodedRemoteUrls(files, patterns, description) {
+  log(description);
+
+  for (const file of files) {
+    const rel = fileRel(file);
+    if (shouldSkipFile(rel)) continue;
+    const text = readText(file);
+
+    scanHardcodedRemoteUrls(rel, text, patterns);
+  }
+}
+
+function scanHardcodedRemoteUrls(rel, text, patterns) {
+  for (const pattern of patterns) {
+    let match;
+    while ((match = pattern.re.exec(text)) !== null) {
+      const url = match[2];
+      if (isRelativeOrLocalUrl(url)) continue;
+
+      if (/^https?:\/\//i.test(url) || /^wss?:\/\//i.test(url)) {
+        fail(`${pattern.name} uses hard-coded remote URL in ${rel}: ${url}`);
+      }
+    }
+  }
+}
+
 function escapeForRegExp(s) {
   return s.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 }
@@ -178,62 +210,23 @@ function checkGaMeasurementIdPlacement(files) {
 }
 
 function checkFetchHardcodedRemote(files) {
-  log('🌐 Privacy gate: fetch() must not hardcode remote origins...');
-
-  for (const file of files) {
-    const rel = fileRel(file);
-    if (shouldSkipFile(rel)) continue;
-    const text = readText(file);
-
-    let m;
-    while ((m = FETCH_LITERAL_RE.exec(text)) !== null) {
-      const url = m[2];
-
-      // Allow relative URLs (same-origin).
-      if (url.startsWith('/')) continue;
-      if (url.startsWith('./') || url.startsWith('../')) continue;
-
-      // Allow localhost in dev tooling.
-      if (isLocalhostUrl(url)) continue;
-
-      // Flag any other protocol usage.
-      if (/^https?:\/\//i.test(url)) {
-        fail(`fetch() uses hard-coded remote URL in ${rel}: ${url}`);
-      }
-    }
-  }
+  checkHardcodedRemoteUrls(
+    files,
+    [{ re: FETCH_LITERAL_RE, name: 'fetch()' }],
+    '🌐 Privacy gate: fetch() must not hardcode remote origins...'
+  );
 }
 
 function checkNoBeaconOrWebsocketOrImportScripts(files) {
-  log('🚫 Privacy gate: disallow sendBeacon/WebSocket/importScripts remote use...');
-
-  for (const file of files) {
-    const rel = fileRel(file);
-    if (shouldSkipFile(rel)) continue;
-    const text = readText(file);
-
-    const patterns = [
+  checkHardcodedRemoteUrls(
+    files,
+    [
       { re: BEACON_LITERAL_RE, name: 'navigator.sendBeacon' },
       { re: WEBSOCKET_LITERAL_RE, name: 'WebSocket' },
       { re: IMPORTSCRIPTS_LITERAL_RE, name: 'importScripts' },
-    ];
-
-    for (const p of patterns) {
-      let m;
-      while ((m = p.re.exec(text)) !== null) {
-        const url = m[2];
-
-        // Allow relative URLs; flag remote.
-        if (url.startsWith('/')) continue;
-        if (url.startsWith('./') || url.startsWith('../')) continue;
-        if (isLocalhostUrl(url)) continue;
-
-        if (/^https?:\/\//i.test(url) || /^wss?:\/\//i.test(url)) {
-          fail(`${p.name} uses hard-coded remote URL in ${rel}: ${url}`);
-        }
-      }
-    }
-  }
+    ],
+    '🚫 Privacy gate: disallow sendBeacon/WebSocket/importScripts remote use...'
+  );
 }
 
 function main() {

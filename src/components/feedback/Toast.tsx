@@ -32,7 +32,7 @@ export function Toast({
   action,
   customOnDismiss,
   onDismiss,
-}: ToastProps) {
+}: Readonly<ToastProps>) {
   const [isVisible, setIsVisible] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
   const isMountedRef = useRef(true);
@@ -131,14 +131,14 @@ export function Toast({
       <div className="flex items-start space-x-3">
         <div className="flex-shrink-0">{getIcon()}</div>
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 pr-2">
           <h4 className="text-sm font-semibold text-foreground">{title}</h4>
-          {message && <p className="text-sm text-muted-foreground mt-1">{message}</p>}
+          {message && <p className="mt-1 text-sm text-slate-700 dark:text-slate-200">{message}</p>}
 
           {action && (
             <button
               onClick={action.onClick}
-              className="pointer-events-auto text-sm font-medium text-primary hover:text-primary/80 mt-2 block"
+              className="pointer-events-auto mt-2 block text-sm font-medium text-primary hover:text-primary/80"
             >
               {action.label}
             </button>

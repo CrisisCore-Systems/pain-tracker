@@ -9,7 +9,7 @@ import { usePainTrackerStore } from '../stores/pain-tracker-store';
 import type { PainEntry } from '../types';
 
 interface OfflineEntry extends PainEntry {
-  syncStatus?: 'pending' | 'synced' | 'error';
+  syncStatus?: 'pending' | 'synced' | 'error' | 'local-only';
   lastModified?: string;
 }
 
@@ -23,6 +23,8 @@ interface StorageStats {
 
 export function usePainTrackerStorage() {
   const store = usePainTrackerStore();
+  // Remote replay endpoints are intentionally disabled until server routes exist.
+  const remoteSyncEnabled = false;
   const [storageStats, setStorageStats] = useState<StorageStats>({
     totalEntries: 0,
     syncedEntries: 0,
@@ -40,7 +42,9 @@ export function usePainTrackerStorage() {
       try {
         const entries = store.entries;
         const offlineEntries = entries as OfflineEntry[];
-        const syncedCount = offlineEntries.filter(e => e.syncStatus === 'synced').length;
+        const syncedCount = offlineEntries.filter(
+          e => e.syncStatus === 'synced' || e.syncStatus === 'local-only'
+        ).length;
         const pendingCount = offlineEntries.filter(e => e.syncStatus === 'pending').length;
         const entriesSize = new Blob([JSON.stringify(entries)]).size;
         const lastSync = secureStorage.get<string>('last-sync-time');
@@ -57,14 +61,14 @@ export function usePainTrackerStorage() {
       }
     };
 
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
+    globalThis.addEventListener('online', updateOnlineStatus);
+    globalThis.addEventListener('offline', updateOnlineStatus);
     updateStorageStats();
 
     const unsubscribe = usePainTrackerStore.subscribe(s => s.entries, updateStorageStats);
     return () => {
-      window.removeEventListener('online', updateOnlineStatus);
-      window.removeEventListener('offline', updateOnlineStatus);
+      globalThis.removeEventListener('online', updateOnlineStatus);
+      globalThis.removeEventListener('offline', updateOnlineStatus);
       unsubscribe();
     };
   }, [store]);
@@ -83,14 +87,16 @@ export function usePainTrackerStorage() {
       } else if (['string', 'number', 'boolean'].includes(typeof data)) {
         payload = data as string | number | boolean;
       } else {
-        // Fallback: serialize other types to string
-        payload = String(data);
+        // Drop unsupported payload types instead of coercing to ambiguous string values.
+        payload = null;
       }
 
       await offlineStorage.storeData(type, payload as unknown as never);
-      const { backgroundSync } = await import('../lib/background-sync');
-      if (backgroundSync && typeof backgroundSync.queueForSync === 'function') {
-        await backgroundSync.queueForSync('/api/pain-entries', 'POST', payload, 'high');
+      if (remoteSyncEnabled) {
+        const { backgroundSync } = await import('../lib/background-sync');
+        if (backgroundSync && typeof backgroundSync.queueForSync === 'function') {
+          await backgroundSync.queueForSync('/api/pain-entries', 'POST', payload, 'high');
+        }
       }
       return true;
     } catch (err) {
@@ -100,6 +106,10 @@ export function usePainTrackerStorage() {
   }, []);
 
   const syncEntry = useCallback(async (entry: Partial<OfflineEntry>) => {
+    if (!remoteSyncEnabled) {
+      return true;
+    }
+
     try {
       const { painTrackerSync } = await import('../lib/background-sync');
       if (painTrackerSync && typeof painTrackerSync.syncPainEntry === 'function') {
@@ -110,19 +120,24 @@ export function usePainTrackerStorage() {
       console.error('Failed to sync entry:', err);
       return false;
     }
-  }, []);
+  }, [remoteSyncEnabled]);
 
   const addEntryOffline = useCallback(
     async (entryData: Omit<PainEntry, 'id' | 'timestamp'>) => {
       try {
+        let syncStatus: OfflineEntry['syncStatus'] = 'local-only';
+        if (remoteSyncEnabled) {
+          syncStatus = isOffline ? 'pending' : 'synced';
+        }
+
         const enhancedEntry: Omit<OfflineEntry, 'id' | 'timestamp'> = {
           ...entryData,
-          syncStatus: isOffline ? 'pending' : 'synced',
+          syncStatus,
           lastModified: new Date().toISOString(),
         };
 
         store.addEntry(enhancedEntry as unknown as PainEntry); // store expects PainEntry shape
-        if (isOffline) await queueForBackgroundSync('pain-entry', enhancedEntry);
+        if (isOffline && remoteSyncEnabled) await queueForBackgroundSync('pain-entry', enhancedEntry);
         else await syncEntry(enhancedEntry);
         return true;
       } catch (err) {
@@ -131,7 +146,7 @@ export function usePainTrackerStorage() {
         return false;
       }
     },
-    [isOffline, store, queueForBackgroundSync, syncEntry]
+    [isOffline, remoteSyncEnabled, store, queueForBackgroundSync, syncEntry]
   );
 
   const forceSyncAll = useCallback(async () => {
@@ -193,6 +208,9 @@ export function usePainTrackerStorage() {
       health = 'warning';
       issues.push('High storage usage');
     }
+    if (!remoteSyncEnabled) {
+      issues.push('Remote sync is disabled; entries are stored locally on this device only');
+    }
     if (isOffline) {
       issues.push('Currently offline');
     }
@@ -202,7 +220,7 @@ export function usePainTrackerStorage() {
       syncRatio: Math.round(syncRatio * 100),
       storageMB: Math.round(storageMB * 100) / 100,
     };
-  }, [storageStats, isOffline]);
+  }, [storageStats, isOffline, remoteSyncEnabled]);
 
   return {
     addEntryOffline,
@@ -210,6 +228,8 @@ export function usePainTrackerStorage() {
     clearOfflineData,
     storageStats,
     isOffline,
+    isRemoteSyncEnabled: remoteSyncEnabled,
+    syncMode: remoteSyncEnabled ? 'remote' : 'local-only',
     getStorageHealth: getStorageHealth(),
     entries: store.entries,
     isLoading: store.isLoading,

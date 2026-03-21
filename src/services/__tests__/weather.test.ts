@@ -1,17 +1,17 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { fetchWeatherData, fetchBarometricPressure, formatWeatherSummary, type WeatherData } from '../weather';
+import { fetchWeatherData, formatWeatherSummary, type WeatherData } from '../weather';
 
 describe('Weather Service', () => {
   const mockFetch = vi.fn();
-  const originalFetch = global.fetch;
+  const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
-    global.fetch = mockFetch;
+    globalThis.fetch = mockFetch;
     mockFetch.mockReset();
   });
 
   afterEach(() => {
-    global.fetch = originalFetch;
+    globalThis.fetch = originalFetch;
   });
 
   describe('fetchWeatherData', () => {
@@ -31,6 +31,15 @@ describe('Weather Service', () => {
       });
 
       const result = await fetchWeatherData(49.2827, -123.1207);
+
+      expect(mockFetch).toHaveBeenCalledWith(
+        '/api/weather?latitude=49.28&longitude=-123.12&current=temperature_2m,relative_humidity_2m,weather_code,pressure_msl&timezone=auto',
+        {
+          credentials: 'omit',
+          referrerPolicy: 'no-referrer',
+          cache: 'no-store',
+        }
+      );
 
       expect(result).toEqual({
         temperature: 18.5,
@@ -214,35 +223,6 @@ describe('Weather Service', () => {
 
       expect(result?.condition).toBe('unknown');
       expect(result?.isRaining).toBe(false);
-    });
-  });
-
-  describe('fetchBarometricPressure (legacy)', () => {
-    it('should return pressure from full weather data', async () => {
-      const mockResponse = {
-        current: {
-          temperature_2m: 20,
-          pressure_msl: 1013.25,
-          weather_code: 0,
-        },
-      };
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(mockResponse),
-      });
-
-      const result = await fetchBarometricPressure(49.2827, -123.1207);
-
-      expect(result).toBe(1013.25);
-    });
-
-    it('should return null when fetch fails', async () => {
-      mockFetch.mockResolvedValueOnce({ ok: false });
-
-      const result = await fetchBarometricPressure(49.2827, -123.1207);
-
-      expect(result).toBeNull();
     });
   });
 

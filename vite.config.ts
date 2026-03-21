@@ -33,6 +33,58 @@ const stripFrameAncestorsForMeta = (csp: string): string => {
     .join('; ');
 };
 
+const DEV_PUBLIC_FILES = new Set([
+  'sw.js',
+  'manifest.json',
+  'favicon.ico',
+  'favicon.svg',
+  'apple-touch-icon.png',
+]);
+
+function getAssetContentType(filePath: string): string {
+  const ext = path.extname(filePath).toLowerCase();
+
+  switch (ext) {
+    case '.json':
+      return 'application/json';
+    case '.js':
+      return 'application/javascript';
+    case '.png':
+      return 'image/png';
+    case '.svg':
+      return 'image/svg+xml';
+    case '.ico':
+      return 'image/x-icon';
+    default:
+      return 'application/octet-stream';
+  }
+}
+
+function tryServePublicAsset(
+  req: { url?: string },
+  res: { setHeader: (name: string, value: string) => void; end: (data: Buffer) => void },
+  prefix: string
+): boolean {
+  if (!req.url?.startsWith(prefix)) {
+    return false;
+  }
+
+  const relPath = req.url.slice(prefix.length);
+  if (!DEV_PUBLIC_FILES.has(relPath)) {
+    return false;
+  }
+
+  const publicFile = path.join(process.cwd(), 'public', relPath);
+  if (!fs.existsSync(publicFile)) {
+    return false;
+  }
+
+  res.setHeader('Content-Type', getAssetContentType(publicFile));
+  res.setHeader('Cache-Control', 'no-store');
+  res.end(fs.readFileSync(publicFile));
+  return true;
+}
+
 export default defineConfig({
   plugins: [
     react(),
@@ -75,7 +127,7 @@ export default defineConfig({
             if (entry.isDirectory()) walk(full);
             else if (/\.(js|css|map)$/.test(entry.name)) {
               const stat = fs.statSync(full);
-              const rel = path.relative(abs, full).replace(/\\/g, '/');
+              const rel = path.relative(abs, full).replaceAll('\\', '/');
               outputs[rel] = { bytes: stat.size };
             }
           }
@@ -135,24 +187,9 @@ export default defineConfig({
           const prefix = base.endsWith('/') ? base : base + '/';
           server.middlewares.use((req, res, next) => {
             try {
-              if (!req.url || !req.url.startsWith(prefix)) return next();
-
-              const relPath = req.url.slice(prefix.length);
-              // only serve top-level public files (manifest.json, sw.js, icons)
-              const allowed = ['sw.js', 'manifest.json', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png'];
-              if (!allowed.includes(relPath)) return next();
-
-              const publicFile = path.join(process.cwd(), 'public', relPath);
-              if (!fs.existsSync(publicFile)) return next();
-
-              // Set a minimal content-type mapping
-              const ext = path.extname(publicFile).toLowerCase();
-              const ct = ext === '.json' ? 'application/json' : ext === '.js' ? 'application/javascript' : ext === '.png' ? 'image/png' : ext === '.svg' ? 'image/svg+xml' : ext === '.ico' ? 'image/x-icon' : 'application/octet-stream';
-              res.setHeader('Content-Type', ct);
-              res.setHeader('Cache-Control', 'no-store');
-              const data = fs.readFileSync(publicFile);
-              res.end(data);
-              return;
+              if (tryServePublicAsset(req, res, prefix)) {
+                return;
+              }
             } catch {
               // swallow and continue to next middleware
             }
@@ -281,15 +318,6 @@ export default defineConfig({
       'Cross-Origin-Resource-Policy': 'same-origin'
     },
     proxy: {
-      // Weather proxy to keep browser requests same-origin under strict CSP.
-      // /api/weather?... -> https://api.open-meteo.com/v1/forecast?...
-      // NOTE: Keep this entry before '/api' so it wins prefix matching.
-      '/api/weather': {
-        target: 'https://api.open-meteo.com',
-        changeOrigin: true,
-        secure: true,
-        rewrite: p => p.replace(/^\/api\/weather/, '/v1/forecast'),
-      },
       // Proxy API routes to development webhook server
       '/api': {
         target: 'http://localhost:3001',

@@ -305,7 +305,7 @@ export function SubscriptionManagementPage() {
 
                     return (
                       <div
-                        key={index}
+                        key={item.name}
                         className="flex items-center justify-between p-3 rounded-xl bg-muted border border-slate-700/30 hover:border-border/50 transition-colors"
                       >
                         <span className="text-muted-foreground">{item.name}</span>
@@ -389,7 +389,7 @@ interface UsageStatProps {
   color?: 'sky' | 'violet' | 'emerald' | 'amber';
 }
 
-function UsageStat({ label, current, limit, unit = '', color = 'sky' }: UsageStatProps) {
+function UsageStat({ label, current, limit, unit = '', color = 'sky' }: Readonly<UsageStatProps>) {
   const percentage = limit === -1 ? 0 : Math.min(100, (current / limit) * 100);
   const isUnlimited = limit === -1;
 

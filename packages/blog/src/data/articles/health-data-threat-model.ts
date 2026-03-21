@@ -42,7 +42,7 @@ const article: ArticleData = {
       h2: 'Threat: coercive situations and surveillance',
       paragraphs: [
         'Some patients track pain in situations where others—a controlling partner, an intrusive employer, a family member—monitor their digital activity. The mere visibility of a pain tracking app can be problematic in coercive domestic situations.',
-        'PainTracker\'s defence: panic mode allows quick dismissal of the application without leaving visible traces. The app runs as a Progressive Web App that can be named anything on the home screen. There are no push notifications that reveal pain tracking activity, no email receipts, and no calendar integrations that could expose health information through shared accounts.',
+          'PainTracker\'s current defence is narrower than full deniability: panic mode allows quick dismissal of the current interface and reduces visible app state with a low-stimulus overlay. The app runs as a Progressive Web App that can be named anything on the home screen. There are no push notifications that reveal pain tracking activity, no email receipts, and no calendar integrations that could expose health information through shared accounts.',
       ],
     },
     {

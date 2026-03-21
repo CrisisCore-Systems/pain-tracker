@@ -9,7 +9,7 @@ interface BrandedLoadingScreenProps {
 }
 
 export function BrandedLoadingScreen({
-  message = 'Loading Pain Tracker Pro...',
+  message = 'Loading PainTracker...',
   progress,
   showProgress = false,
   className = '',
@@ -172,7 +172,7 @@ export function BrandedSuccessScreen({ onContinue }: { onContinue: () => void })
         <div className="space-y-4">
           <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Ready to Go!</h2>
           <p className="text-slate-600 dark:text-slate-400">
-            Pain Tracker Pro is loaded and ready to help you manage your pain with AI-powered
+            PainTracker is loaded and ready to help you manage your pain with AI-powered
             insights.
           </p>
         </div>

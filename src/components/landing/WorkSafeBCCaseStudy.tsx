@@ -17,7 +17,7 @@ export const WorkSafeBCCaseStudy: React.FC = () => {
           </div>
 
           <h2 className="landing-headline landing-headline-lg mb-6">
-            <span className="text-white">How Pain Tracker Pro saves </span>
+            <span className="text-white">How PainTracker saves </span>
             <span className="gradient-text-animated">15+ hours</span>
             <span className="text-white"> on claim documentation</span>
           </h2>
@@ -96,7 +96,7 @@ export const WorkSafeBCCaseStudy: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-500 mt-5">
-              Composite example based on common usage patterns. Pain Tracker Pro is not affiliated with,
+              Composite example based on common usage patterns. PainTracker is not affiliated with,
               endorsed by, or connected to WorkSafeBC.
             </p>
           </div>

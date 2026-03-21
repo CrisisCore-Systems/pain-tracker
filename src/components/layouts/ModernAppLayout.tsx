@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../design-system/utils';
 import { Button, useTheme } from '../../design-system';
+import type { ThemeMode } from '../../design-system/theme';
 import { PanicMode } from '../accessibility/PanicMode';
 import CrisisBanner from '../crisis/CrisisBanner';
 
@@ -39,50 +40,425 @@ interface ModernAppLayoutProps {
   };
 }
 
+type NavigationItem = {
+  id: string;
+  name: string;
+  icon: typeof LayoutDashboard;
+  badge: string | null;
+  color?: 'sky' | 'emerald' | 'violet' | 'rose' | 'amber' | 'cyan' | 'indigo';
+};
+
+type BottomNavigationItem = {
+  id: string;
+  name: string;
+  icon: typeof Settings;
+};
+
+const NAVIGATION_ITEMS: NavigationItem[] = [
+  { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, badge: null, color: 'sky' },
+  { id: 'new-entry', name: 'New Entry', icon: Plus, badge: null, color: 'emerald' },
+  { id: 'history', name: 'History', icon: History, badge: null, color: 'sky' },
+  { id: 'body-map', name: 'Body Map', icon: User, badge: null, color: 'violet' },
+  { id: 'fibromyalgia', name: 'Fibromyalgia Hub', icon: Heart, badge: 'New', color: 'rose' },
+  { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Pro', color: 'amber' },
+  { id: 'calendar', name: 'Calendar', icon: Calendar, badge: null, color: 'cyan' },
+  { id: 'reports', name: 'Reports', icon: FileText, badge: null, color: 'indigo' },
+  { id: 'blog-resources', name: 'Blog & Resources', icon: BookOpen, badge: null, color: 'sky' },
+];
+
+const BOTTOM_NAVIGATION_ITEMS: BottomNavigationItem[] = [
+  { id: 'settings', name: 'Settings', icon: Settings },
+  { id: 'help', name: 'Help', icon: HelpCircle },
+];
+
+const DESKTOP_COLOR_MAP: Record<string, { bg: string; border: string; textDark: string; textLight: string; glow: string }> = {
+  sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', textDark: '#38bdf8', textLight: '#0369a1', glow: 'rgba(56, 189, 248, 0.2)' },
+  emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', textDark: '#34d399', textLight: '#047857', glow: 'rgba(52, 211, 153, 0.2)' },
+  violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', textDark: '#8b5cf6', textLight: '#6d28d9', glow: 'rgba(139, 92, 246, 0.2)' },
+  rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', textDark: '#f43f5e', textLight: '#be123c', glow: 'rgba(244, 63, 94, 0.2)' },
+  amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', textDark: '#f59e0b', textLight: '#b45309', glow: 'rgba(245, 158, 11, 0.2)' },
+  cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', textDark: '#22d3ee', textLight: '#0e7490', glow: 'rgba(34, 211, 238, 0.2)' },
+  indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', textDark: '#6366f1', textLight: '#4338ca', glow: 'rgba(99, 102, 241, 0.2)' },
+};
+
+const MOBILE_COLOR_MAP: Record<string, { bg: string; border: string; textDark: string; textLight: string }> = {
+  sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', textDark: '#38bdf8', textLight: '#0369a1' },
+  emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', textDark: '#34d399', textLight: '#047857' },
+  violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', textDark: '#8b5cf6', textLight: '#6d28d9' },
+  rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', textDark: '#f43f5e', textLight: '#be123c' },
+  amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', textDark: '#f59e0b', textLight: '#b45309' },
+  cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', textDark: '#22d3ee', textLight: '#0e7490' },
+  indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', textDark: '#6366f1', textLight: '#4338ca' },
+};
+
+function getDesktopNavColors(color: NavigationItem['color']) {
+  return DESKTOP_COLOR_MAP[color ?? 'sky'] || DESKTOP_COLOR_MAP.sky;
+}
+
+function getMobileNavColors(color: NavigationItem['color']) {
+  return MOBILE_COLOR_MAP[color ?? 'sky'] || MOBILE_COLOR_MAP.sky;
+}
+
+function getBadgeTextColor(badge: string, isDark: boolean) {
+  if (badge === 'New') {
+    return isDark ? '#34d399' : '#065f46';
+  }
+
+  return isDark ? '#a855f7' : '#6b21a8';
+}
+
+function getLayoutThemeClasses(isDark: boolean) {
+  return {
+    inactiveDesktopNavClass: isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900',
+    activeBottomNavClass: isDark ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-900',
+    inactiveBottomNavClass: isDark
+      ? 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
+      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+    inactiveMobileNavClass: isDark ? 'text-slate-300' : 'text-slate-700',
+    inactiveMobileBottomNavClass: isDark
+      ? 'text-slate-300 hover:bg-white/5 hover:text-white'
+      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900',
+  };
+}
+
+function getThemeToggleProps(mode: ThemeMode) {
+  const isLightMode = mode === 'light';
+  const nextMode = isLightMode ? 'dark' : 'light';
+
+  return {
+    label: `Switch to ${nextMode} mode`,
+    icon: isLightMode ? Moon : Sun,
+  };
+}
+
+function QuickStats({
+  avgPain,
+  isDark,
+  streak,
+}: Readonly<{
+  avgPain: number;
+  isDark: boolean;
+  streak: number;
+}>) {
+  return (
+    <div className="hidden md:flex items-center gap-3">
+      <div
+        className="flex items-center gap-2 px-4 py-2 rounded-xl"
+        style={{
+          background: 'rgba(56, 189, 248, 0.1)',
+          border: '1px solid rgba(56, 189, 248, 0.2)',
+        }}
+      >
+        <Activity className={cn('h-4 w-4', isDark ? 'text-sky-400' : 'text-sky-800')} />
+        <span className={cn('text-sm font-semibold', isDark ? 'text-sky-300' : 'text-sky-900')}>
+          {avgPain.toFixed(1)}{' '}
+          <span className={cn('font-normal', isDark ? 'text-sky-300/80' : 'text-sky-900')}>
+            avg
+          </span>
+        </span>
+      </div>
+      <div
+        className="flex items-center gap-2 px-4 py-2 rounded-xl"
+        style={{
+          background: 'rgba(168, 85, 247, 0.1)',
+          border: '1px solid rgba(168, 85, 247, 0.2)',
+        }}
+      >
+        <Sparkles className={cn('h-4 w-4', isDark ? 'text-purple-400' : 'text-purple-800')} />
+        <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-900')}>
+          {streak}{' '}
+          <span className={cn('font-normal', isDark ? 'text-purple-300/80' : 'text-purple-900')}>
+            day streak
+          </span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function DesktopSidebar({
+  currentView,
+  isDark,
+  onNavigate,
+  bottomNavigation,
+  navigation,
+  inactiveDesktopNavClass,
+  activeBottomNavClass,
+  inactiveBottomNavClass,
+  getBadgeTextColor,
+}: Readonly<{
+  currentView: string;
+  isDark: boolean;
+  onNavigate?: (view: string) => void;
+  bottomNavigation: BottomNavigationItem[];
+  navigation: NavigationItem[];
+  inactiveDesktopNavClass: string;
+  activeBottomNavClass: string;
+  inactiveBottomNavClass: string;
+  getBadgeTextColor: (badge: string) => string;
+}>) {
+  return (
+    <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-72 lg:pt-16">
+      <div className="h-full px-4 py-6 bg-background/95 backdrop-blur-xl border-r border-border/20">
+        <nav className="space-y-1.5">
+          {navigation.map(item => {
+            const Icon = item.icon;
+            const isActive = currentView === item.id;
+            const colors = getDesktopNavColors(item.color);
+            const activeTextColor = isDark ? colors.textDark : colors.textLight;
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => onNavigate?.(item.id)}
+                data-nav-target={item.id}
+                className={cn(
+                  'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300',
+                  isActive ? '' : inactiveDesktopNavClass,
+                )}
+                style={isActive ? {
+                  background: colors.bg,
+                  border: `1px solid ${colors.border}`,
+                  boxShadow: `0 4px 20px ${colors.glow}`,
+                  color: activeTextColor,
+                } : {
+                  background: 'transparent',
+                  border: '1px solid transparent',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)';
+                    e.currentTarget.style.borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.12)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.borderColor = 'transparent';
+                  }
+                }}
+              >
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div
+                    className={cn('p-2 rounded-lg transition-all duration-300 flex-shrink-0', isActive ? '' : 'group-hover:scale-110')}
+                    style={isActive ? { background: colors.bg } : { background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)' }}
+                  >
+                    <Icon className="h-4 w-4" style={{ color: isActive ? activeTextColor : 'currentColor' }} />
+                  </div>
+                  <span className="truncate">{item.name}</span>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {item.badge && (
+                    <span
+                      className="px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
+                      style={{
+                        background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
+                        color: getBadgeTextColor(item.badge),
+                        border: item.badge === 'New' ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(168, 85, 247, 0.3)',
+                      }}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                  {isActive && <ChevronRight className="h-4 w-4 opacity-50" />}
+                </div>
+              </button>
+            );
+          })}
+        </nav>
+
+        <div
+          className="mt-8 pt-8"
+          style={{ borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(15, 23, 42, 0.08)' }}
+        >
+          <nav className="space-y-1">
+            {bottomNavigation.map(item => {
+              const Icon = item.icon;
+              const isActive = currentView === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onNavigate?.(item.id)}
+                  className={cn(
+                    'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
+                    isActive ? activeBottomNavClass : inactiveBottomNavClass,
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{item.name}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="mt-8">
+          <button
+            onClick={() => onNavigate?.('new-entry')}
+            className="group w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-white font-medium transition-all duration-300 hover:scale-[1.02]"
+            style={{
+              background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
+              boxShadow: '0 8px 25px rgba(14, 165, 233, 0.3)',
+            }}
+          >
+            <Zap className="h-4 w-4 transition-transform group-hover:scale-110" />
+            Quick Entry
+          </button>
+        </div>
+
+        <div className={cn('mt-6 p-4 rounded-xl border', isDark ? 'bg-purple-500/10 border-purple-500/20' : 'bg-purple-50 border-purple-200')}>
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className={cn('h-4 w-4', isDark ? 'text-purple-400' : 'text-purple-800')} />
+            <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-900')}>Upgrade to Pro</span>
+          </div>
+          <p className={cn('text-xs mb-3', isDark ? 'text-slate-300' : 'text-slate-800')}>Unlock automated insights, advanced analytics & more</p>
+          <button
+            className={cn(
+              'w-full py-2 rounded-lg text-xs font-medium transition-colors border',
+              isDark ? 'text-purple-200 border-purple-400/40 hover:bg-purple-500/20' : 'bg-white text-purple-900 border-purple-300 hover:bg-purple-100',
+            )}
+          >
+            Learn More
+          </button>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function MobileSidebar({
+  sidebarOpen,
+  currentView,
+  isDark,
+  onNavigate,
+  bottomNavigation,
+  navigation,
+  inactiveMobileNavClass,
+  activeBottomNavClass,
+  inactiveMobileBottomNavClass,
+  getBadgeTextColor,
+  onClose,
+}: Readonly<{
+  sidebarOpen: boolean;
+  currentView: string;
+  isDark: boolean;
+  onNavigate?: (view: string) => void;
+  bottomNavigation: BottomNavigationItem[];
+  navigation: NavigationItem[];
+  inactiveMobileNavClass: string;
+  activeBottomNavClass: string;
+  inactiveMobileBottomNavClass: string;
+  getBadgeTextColor: (badge: string) => string;
+  onClose: () => void;
+}>) {
+  if (!sidebarOpen) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-40 lg:hidden">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <aside
+        id="mobile-navigation-menu"
+        className="fixed inset-y-0 left-0 w-72 shadow-2xl"
+        style={{
+          background: isDark
+            ? 'linear-gradient(180deg, #0f172a 0%, #020617 100%)'
+            : 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+        }}
+        aria-label="Mobile navigation menu"
+      >
+        <div className="h-full px-4 py-6 pt-20 flex flex-col">
+          <nav className="space-y-1.5 flex-1">
+            {navigation.map(item => {
+              const Icon = item.icon;
+              const isActive = currentView === item.id;
+              const colors = getMobileNavColors(item.color);
+              const activeTextColor = isDark ? colors.textDark : colors.textLight;
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    onNavigate?.(item.id);
+                    onClose();
+                  }}
+                  data-nav-target={item.id}
+                  className={cn(
+                    'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all',
+                    isActive ? '' : inactiveMobileNavClass,
+                  )}
+                  style={isActive ? { background: colors.bg, border: `1px solid ${colors.border}`, color: activeTextColor } : {}}
+                >
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <span className="truncate">{item.name}</span>
+                  </div>
+                  {item.badge && (
+                    <span
+                      className="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0"
+                      style={{
+                        background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
+                        color: getBadgeTextColor(item.badge),
+                      }}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div
+            className="mt-4 pt-4"
+            style={{ borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(15, 23, 42, 0.12)' }}
+          >
+            <nav className="space-y-1">
+              {bottomNavigation.map(item => {
+                const Icon = item.icon;
+                const isActive = currentView === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      onNavigate?.(item.id);
+                      onClose();
+                    }}
+                    data-nav-target={item.id}
+                    className={cn(
+                      'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
+                      isActive ? activeBottomNavClass : inactiveMobileBottomNavClass,
+                    )}
+                  >
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <span>{item.name}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
 export function ModernAppLayout({
   children,
   onNavigate,
   currentView = 'dashboard',
   stats,
-}: ModernAppLayoutProps) {
+}: Readonly<ModernAppLayoutProps>) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [panicModeActive, setPanicModeActive] = useState(false);
-  const { mode, setMode } = useTheme();
+  const { mode, toggleMode } = useTheme();
   const isDark = mode === 'dark';
-  const inactiveDesktopNavClass = isDark ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-slate-900';
-  const activeBottomNavClass = isDark ? 'bg-white/10 text-white' : 'bg-slate-100 text-slate-900';
-  const inactiveBottomNavClass = isDark
-    ? 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
-    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
-  const inactiveMobileNavClass = isDark ? 'text-slate-300' : 'text-slate-700';
-  const inactiveMobileBottomNavClass = isDark
-    ? 'text-slate-300 hover:bg-white/5 hover:text-white'
-    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900';
-
-  const getBadgeTextColor = (badge: string) => {
-    if (badge === 'New') {
-      return isDark ? '#34d399' : '#065f46';
-    }
-
-    return isDark ? '#a855f7' : '#6b21a8';
-  };
-
-  const navigation = [
-    { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, badge: null, color: 'sky' },
-    { id: 'new-entry', name: 'New Entry', icon: Plus, badge: null, color: 'emerald' },
-    { id: 'history', name: 'History', icon: History, badge: null, color: 'sky' },
-    { id: 'body-map', name: 'Body Map', icon: User, badge: null, color: 'violet' },
-    { id: 'fibromyalgia', name: 'Fibromyalgia Hub', icon: Heart, badge: 'New', color: 'rose' },
-    { id: 'analytics', name: 'Analytics', icon: TrendingUp, badge: 'Pro', color: 'amber' },
-    { id: 'calendar', name: 'Calendar', icon: Calendar, badge: null, color: 'cyan' },
-    { id: 'reports', name: 'Reports', icon: FileText, badge: null, color: 'indigo' },
-    { id: 'blog-resources', name: 'Blog & Resources', icon: BookOpen, badge: null, color: 'sky' },
-  ];
-
-  const bottomNavigation = [
-    { id: 'settings', name: 'Settings', icon: Settings },
-    { id: 'help', name: 'Help', icon: HelpCircle },
-  ];
+  const themeClasses = getLayoutThemeClasses(isDark);
+  const themeToggle = getThemeToggleProps(mode);
+  const ThemeToggleIcon = themeToggle.icon;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -139,7 +515,7 @@ export function ModernAppLayout({
                 </div>
                 <div className="hidden sm:block text-left">
                   <h1 className="text-lg font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-                    Pain Tracker Pro
+                    PainTracker
                   </h1>
                   <p className="text-[11px] text-muted-foreground">Pain management insights</p>
                 </div>
@@ -147,40 +523,7 @@ export function ModernAppLayout({
             </div>
 
             {/* Quick Stats - Premium Glass Cards */}
-            {stats && (
-              <div className="hidden md:flex items-center gap-3">
-                <div 
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl"
-                  style={{
-                    background: 'rgba(56, 189, 248, 0.1)',
-                    border: '1px solid rgba(56, 189, 248, 0.2)',
-                  }}
-                >
-                  <Activity className={cn('h-4 w-4', isDark ? 'text-sky-400' : 'text-sky-700')} />
-                  <span className={cn('text-sm font-semibold', isDark ? 'text-sky-300' : 'text-sky-700')}>
-                    {stats.avgPain.toFixed(1)}{' '}
-                    <span className={cn('font-normal', isDark ? 'text-sky-400/70' : 'text-sky-700/80')}>
-                      avg
-                    </span>
-                  </span>
-                </div>
-                <div 
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl"
-                  style={{
-                    background: 'rgba(168, 85, 247, 0.1)',
-                    border: '1px solid rgba(168, 85, 247, 0.2)',
-                  }}
-                >
-                  <Sparkles className={cn('h-4 w-4', isDark ? 'text-purple-400' : 'text-purple-700')} />
-                  <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-700')}>
-                    {stats.streak}{' '}
-                    <span className={cn('font-normal', isDark ? 'text-purple-400/70' : 'text-purple-700/80')}>
-                      day streak
-                    </span>
-                  </span>
-                </div>
-              </div>
-            )}
+            {stats ? <QuickStats avgPain={stats.avgPain} isDark={isDark} streak={stats.streak} /> : null}
 
             {/* Actions */}
             <div className="flex items-center gap-2">
@@ -210,11 +553,11 @@ export function ModernAppLayout({
 
               <button
                 className="p-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all duration-200"
-                onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')}
-                aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
-                title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}
+                onClick={toggleMode}
+                aria-label={themeToggle.label}
+                title={themeToggle.label}
               >
-                {mode === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                <ThemeToggleIcon className="h-4 w-4" />
               </button>
 
               <div 
@@ -231,273 +574,31 @@ export function ModernAppLayout({
         </div>
       </header>
 
-      {/* Sidebar - Desktop - Premium Dark Theme */}
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-72 lg:pt-16">
-        <div className="h-full px-4 py-6 bg-background/95 backdrop-blur-xl border-r border-border/20">
-          <nav className="space-y-1.5">
-            {navigation.map(item => {
-              const Icon = item.icon;
-              const isActive = currentView === item.id;
-              
-              const colorMap: Record<string, { bg: string; border: string; textDark: string; textLight: string; glow: string }> = {
-                sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', textDark: '#38bdf8', textLight: '#0369a1', glow: 'rgba(56, 189, 248, 0.2)' },
-                emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', textDark: '#34d399', textLight: '#047857', glow: 'rgba(52, 211, 153, 0.2)' },
-                violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', textDark: '#8b5cf6', textLight: '#6d28d9', glow: 'rgba(139, 92, 246, 0.2)' },
-                rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', textDark: '#f43f5e', textLight: '#be123c', glow: 'rgba(244, 63, 94, 0.2)' },
-                amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', textDark: '#f59e0b', textLight: '#b45309', glow: 'rgba(245, 158, 11, 0.2)' },
-                cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', textDark: '#22d3ee', textLight: '#0e7490', glow: 'rgba(34, 211, 238, 0.2)' },
-                indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', textDark: '#6366f1', textLight: '#4338ca', glow: 'rgba(99, 102, 241, 0.2)' },
-              };
-              
-              const colors = colorMap[item.color] || colorMap.sky;
-              const activeTextColor = isDark ? colors.textDark : colors.textLight;
+      <DesktopSidebar
+        currentView={currentView}
+        isDark={isDark}
+        onNavigate={onNavigate}
+        bottomNavigation={BOTTOM_NAVIGATION_ITEMS}
+        navigation={NAVIGATION_ITEMS}
+        inactiveDesktopNavClass={themeClasses.inactiveDesktopNavClass}
+        activeBottomNavClass={themeClasses.activeBottomNavClass}
+        inactiveBottomNavClass={themeClasses.inactiveBottomNavClass}
+        getBadgeTextColor={(badge) => getBadgeTextColor(badge, isDark)}
+      />
 
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onNavigate?.(item.id)}
-                  data-nav-target={item.id}
-                  className={cn(
-                    'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300',
-                    isActive ? '' : inactiveDesktopNavClass
-                  )}
-                  style={isActive ? {
-                    background: colors.bg,
-                    border: `1px solid ${colors.border}`,
-                    boxShadow: `0 4px 20px ${colors.glow}`,
-                    color: activeTextColor,
-                  } : {
-                    background: 'transparent',
-                    border: '1px solid transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.background = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)';
-                      e.currentTarget.style.borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.12)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.background = 'transparent';
-                      e.currentTarget.style.borderColor = 'transparent';
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div 
-                      className={cn(
-                        'p-2 rounded-lg transition-all duration-300 flex-shrink-0',
-                        isActive ? '' : 'group-hover:scale-110'
-                      )}
-                      style={isActive ? {
-                        background: colors.bg,
-                      } : {
-                        background: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.05)',
-                      }}
-                    >
-                      <Icon
-                        className="h-4 w-4"
-                        style={{ color: isActive ? activeTextColor : 'currentColor' }}
-                      />
-                    </div>
-                    <span className="truncate">{item.name}</span>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    {item.badge && (
-                      <span 
-                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
-                        style={{
-                          background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
-                          color: getBadgeTextColor(item.badge),
-                          border: item.badge === 'New' ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(168, 85, 247, 0.3)',
-                        }}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                    {isActive && <ChevronRight className="h-4 w-4 opacity-50" />}
-                  </div>
-                </button>
-              );
-            })}
-          </nav>
-
-          <div
-            className="mt-8 pt-8"
-            style={{ borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.05)' : '1px solid rgba(15, 23, 42, 0.08)' }}
-          >
-            <nav className="space-y-1">
-              {bottomNavigation.map(item => {
-                const Icon = item.icon;
-                const isActive = currentView === item.id;
-
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => onNavigate?.(item.id)}
-                    className={cn(
-                      'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200',
-                      isActive ? activeBottomNavClass : inactiveBottomNavClass
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span>{item.name}</span>
-                  </button>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* Quick Add Button - Premium Gradient */}
-          <div className="mt-8">
-            <button
-              onClick={() => onNavigate?.('new-entry')}
-              className="group w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-white font-medium transition-all duration-300 hover:scale-[1.02]"
-              style={{
-                background: 'linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%)',
-                boxShadow: '0 8px 25px rgba(14, 165, 233, 0.3)',
-              }}
-            >
-              <Zap className="h-4 w-4 transition-transform group-hover:scale-110" />
-              Quick Entry
-            </button>
-          </div>
-
-          {/* Pro Upgrade Banner */}
-          <div 
-            className="mt-6 p-4 rounded-xl"
-            style={{
-              background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)',
-              border: '1px solid rgba(168, 85, 247, 0.2)',
-            }}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className={cn('h-4 w-4', isDark ? 'text-purple-400' : 'text-purple-700')} />
-              <span className={cn('text-sm font-semibold', isDark ? 'text-purple-300' : 'text-purple-700')}>Upgrade to Pro</span>
-            </div>
-            <p className={cn('text-xs mb-3', isDark ? 'text-slate-400' : 'text-slate-600')}>Unlock automated insights, advanced analytics & more</p>
-            <button 
-              className={cn(
-                'w-full py-2 rounded-lg text-xs font-medium transition-colors',
-                isDark ? 'text-purple-300 hover:bg-purple-500/20' : 'text-purple-700 hover:bg-purple-100/70'
-              )}
-              style={{ border: isDark ? '1px solid rgba(168, 85, 247, 0.3)' : '1px solid rgba(126, 34, 206, 0.35)' }}
-            >
-              Learn More
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* Mobile Sidebar - Premium Dark */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setSidebarOpen(false)}
-            aria-hidden="true"
-          />
-          <aside 
-            id="mobile-navigation-menu"
-            className="fixed inset-y-0 left-0 w-72 shadow-2xl"
-            style={{
-              background: isDark
-                ? 'linear-gradient(180deg, #0f172a 0%, #020617 100%)'
-                : 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
-            }}
-            aria-label="Mobile navigation menu"
-          >
-            <div className="h-full px-4 py-6 pt-20 flex flex-col">
-              <nav className="space-y-1.5 flex-1">
-                {navigation.map(item => {
-                  const Icon = item.icon;
-                  const isActive = currentView === item.id;
-                  
-                  const colorMap: Record<string, { bg: string; border: string; textDark: string; textLight: string }> = {
-                    sky: { bg: 'rgba(56, 189, 248, 0.15)', border: 'rgba(56, 189, 248, 0.3)', textDark: '#38bdf8', textLight: '#0369a1' },
-                    emerald: { bg: 'rgba(52, 211, 153, 0.15)', border: 'rgba(52, 211, 153, 0.3)', textDark: '#34d399', textLight: '#047857' },
-                    violet: { bg: 'rgba(139, 92, 246, 0.15)', border: 'rgba(139, 92, 246, 0.3)', textDark: '#8b5cf6', textLight: '#6d28d9' },
-                    rose: { bg: 'rgba(244, 63, 94, 0.15)', border: 'rgba(244, 63, 94, 0.3)', textDark: '#f43f5e', textLight: '#be123c' },
-                    amber: { bg: 'rgba(245, 158, 11, 0.15)', border: 'rgba(245, 158, 11, 0.3)', textDark: '#f59e0b', textLight: '#b45309' },
-                    cyan: { bg: 'rgba(34, 211, 238, 0.15)', border: 'rgba(34, 211, 238, 0.3)', textDark: '#22d3ee', textLight: '#0e7490' },
-                    indigo: { bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.3)', textDark: '#6366f1', textLight: '#4338ca' },
-                  };
-                  
-                  const colors = colorMap[item.color] || colorMap.sky;
-                  const activeTextColor = isDark ? colors.textDark : colors.textLight;
-
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        onNavigate?.(item.id);
-                        setSidebarOpen(false);
-                      }}
-                      data-nav-target={item.id}
-                      className={cn(
-                        'group flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all',
-                        isActive ? '' : inactiveMobileNavClass
-                      )}
-                      style={isActive ? {
-                        background: colors.bg,
-                        border: `1px solid ${colors.border}`,
-                        color: activeTextColor,
-                      } : {}}
-                    >
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <Icon className="h-5 w-5 flex-shrink-0" />
-                        <span className="truncate">{item.name}</span>
-                      </div>
-                      {item.badge && (
-                        <span 
-                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold flex-shrink-0"
-                          style={{
-                            background: item.badge === 'New' ? 'rgba(52, 211, 153, 0.2)' : 'rgba(168, 85, 247, 0.2)',
-                            color: getBadgeTextColor(item.badge),
-                          }}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </nav>
-
-              {/* Bottom Navigation (Settings, Help, Blog) in Mobile Menu */}
-              <div
-                className="mt-4 pt-4"
-                style={{ borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(15, 23, 42, 0.12)' }}
-              >
-                <nav className="space-y-1">
-                  {bottomNavigation.map(item => {
-                    const Icon = item.icon;
-                    const isActive = currentView === item.id;
-
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          onNavigate?.(item.id);
-                          setSidebarOpen(false);
-                        }}
-                        data-nav-target={item.id}
-                        className={cn(
-                          'group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all',
-                          isActive ? activeBottomNavClass : inactiveMobileBottomNavClass
-                        )}
-                      >
-                        <Icon className="h-5 w-5 flex-shrink-0" />
-                        <span>{item.name}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-            </div>
-          </aside>
-        </div>
-      )}
+      <MobileSidebar
+        sidebarOpen={sidebarOpen}
+        currentView={currentView}
+        isDark={isDark}
+        onNavigate={onNavigate}
+        bottomNavigation={BOTTOM_NAVIGATION_ITEMS}
+        navigation={NAVIGATION_ITEMS}
+        inactiveMobileNavClass={themeClasses.inactiveMobileNavClass}
+        activeBottomNavClass={themeClasses.activeBottomNavClass}
+        inactiveMobileBottomNavClass={themeClasses.inactiveMobileBottomNavClass}
+        getBadgeTextColor={(badge) => getBadgeTextColor(badge, isDark)}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       {/* Main Content */}
       <CrisisBanner />
@@ -518,7 +619,6 @@ export function ModernAppLayout({
         <Plus className="h-6 w-6 text-white" />
       </button>
 
-      {/* Panic Mode Button - Floating, High Priority */}
       <button
         onClick={() => setPanicModeActive(true)}
         className={cn(

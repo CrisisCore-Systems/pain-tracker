@@ -34,7 +34,7 @@ export const OvertonFrameworkPage: React.FC = () => {
   useEffect(() => {
     document.title = 'The Overton Framework — Protective Computing (Canon)';
     return () => {
-      document.title = 'Pain Tracker Pro';
+      document.title = 'PainTracker';
     };
   }, []);
 

@@ -117,7 +117,7 @@ const journalStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'what-to-include-in-pain-journal',
   title: 'What to Include in a Pain Journal',
-  metaTitle: 'What to Include in a Pain Journal — Complete Content Guide | Pain Tracker Pro',
+  metaTitle: 'What to Include in a Pain Journal — Complete Content Guide | PainTracker',
   metaDescription: 'Complete guide to what to include in a pain journal: 6 content categories, time-detail trade-offs, sample entries, and printable templates. Track the right things the right way.',
   keywords: [
     'what to include in pain journal', 'pain journal content guide',

@@ -13,7 +13,7 @@ const getAssetUrl = (path: string): string => {
 
 export const brand = {
   // Brand Identity
-  name: 'Pain Tracker Pro',
+  name: 'PainTracker',
   tagline: 'Privacy-First Pain Tracking',
   description: 'Local-first pain tracking with insights and shareable exports',
 

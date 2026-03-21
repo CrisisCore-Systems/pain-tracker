@@ -56,7 +56,7 @@ const SEO = {
   slug: 'monthly-pain-tracker-printable',
   title: 'Monthly Pain Tracker Printable (Free)',
   metaTitle:
-    'Monthly Pain Tracker Printable — Free 30-Day Template | Pain Tracker Pro',
+    'Monthly Pain Tracker Printable — Free 30-Day Template | PainTracker',
   metaDescription:
     'Download a free monthly pain tracker printable. 8-section 30-day template tracks daily pain calendar, sleep, medications, functional impact, triggers, mood, and monthly summary — ideal for treatment reviews and disability claims.',
   keywords: [
@@ -290,7 +290,7 @@ const FAQS = [
   {
     question: 'Can I use this alongside the digital app?',
     answer:
-      'Absolutely. Paper monthly logs work well alongside Pain Tracker Pro. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it\'s satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you\'re tracking the same clinical dimensions.',
+      'Absolutely. Paper monthly logs work well alongside PainTracker. The app captures daily detail with less effort, auto-generates monthly reports, and detects patterns. Many people use paper for the calendar overview (it\'s satisfying to see a full month at a glance) and the app for the analysis and convenience. The data is compatible — you\'re tracking the same clinical dimensions.',
   },
   {
     question: 'Is my privacy protected?',
@@ -453,7 +453,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">Pain Tracker Pro</span>
+              <span className="landing-brand text-xl">PainTracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -883,7 +883,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Pain Tracker Pro (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -980,7 +980,7 @@ export const MonthlyPainTrackerPrintablePage: React.FC = () => {
                 to="/start"
                 className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
               >
-                Open Pain Tracker Pro
+                Open PainTracker
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

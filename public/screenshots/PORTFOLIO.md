@@ -55,7 +55,7 @@ This directory contains a comprehensive screenshot portfolio for the Pain Tracke
 
 - **privacy-security-settings.png** - Privacy/Security Settings
   - Use Case: Privacy-focused marketing, addressing concerns
-  - Caption: "Your data never leaves your device - unlike cloud-based competitors"
+  - Caption: "Local by default, with explicit user-controlled sharing actions"
 
 ### Phase 2 (Growth - Weeks 2-3)
 - **body-map-interaction.png** - Body Map Interaction

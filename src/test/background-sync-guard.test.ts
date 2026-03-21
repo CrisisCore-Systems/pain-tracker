@@ -42,7 +42,7 @@ function okResponse() {
   } as unknown as Response;
 }
 
-describe('background sync replay guard', () => {
+describe('background sync local-only guard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
@@ -61,7 +61,7 @@ describe('background sync replay guard', () => {
     vi.stubGlobal('fetch', fetchMock as unknown as typeof fetch);
   });
 
-  it('drops and never replays cross-origin queue items', async () => {
+  it('clears queued items during sync when local-only mode is active', async () => {
     offlineStorageMocks.getSyncQueue.mockResolvedValueOnce([
       {
         id: 1,
@@ -80,10 +80,11 @@ describe('background sync replay guard', () => {
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
     expect(offlineStorageMocks.removeSyncQueueItem).toHaveBeenCalledWith(1);
-    expect(stats.failureCount).toBe(1);
+    expect(stats.skippedCount).toBe(1);
+    expect(stats.errors[0]).toContain('Sync disabled: No authorized destination.');
   });
 
-  it('replays same-origin /api queue items', async () => {
+  it('does not replay even allowlisted /api queue items in local-only mode', async () => {
     offlineStorageMocks.getSyncQueue.mockResolvedValueOnce([
       {
         id: 2,
@@ -98,42 +99,17 @@ describe('background sync replay guard', () => {
       },
     ]);
 
-    await backgroundSync.syncAllPendingData();
-
-    expect(globalThis.fetch).toHaveBeenCalledTimes(1);
-    const call = (globalThis.fetch as unknown as { mock: { calls: Array<[string, RequestInit]> } }).mock.calls[0];
-    expect(call[0]).toBe('/api/pain-entries');
-
-    // Ensure header sanitization drops unexpected headers.
-    expect(call[1].headers).toEqual({ 'Content-Type': 'application/json' });
-  });
-
-  it('drops same-origin but non-allowlisted queue items', async () => {
-    offlineStorageMocks.getSyncQueue.mockResolvedValueOnce([
-      {
-        id: 3,
-        url: '/api/not-a-real-endpoint',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{"x":1}',
-        priority: 'high',
-        type: 'api-request',
-        retryCount: 0,
-        timestamp: new Date().toISOString(),
-      },
-    ]);
-
     const stats = await backgroundSync.syncAllPendingData();
 
     expect(globalThis.fetch).not.toHaveBeenCalled();
-    expect(offlineStorageMocks.removeSyncQueueItem).toHaveBeenCalledWith(3);
-    expect(stats.failureCount).toBe(1);
+    expect(offlineStorageMocks.removeSyncQueueItem).toHaveBeenCalledWith(2);
+    expect(stats.skippedCount).toBe(1);
   });
 
-  it('refuses to enqueue disallowed URLs', async () => {
+  it('refuses to enqueue any URL in local-only mode', async () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
-    await backgroundSync.queueForSync('https://evil.example/collect', 'POST', { x: 1 }, 'high');
+    await backgroundSync.queueForSync('/api/pain-entries', 'POST', { x: 1 }, 'high');
 
     expect(offlineStorageMocks.addToSyncQueue).not.toHaveBeenCalled();
     expect(warn).toHaveBeenCalled();

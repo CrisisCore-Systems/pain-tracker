@@ -3,17 +3,107 @@ import { db } from '../../src/lib/database';
 import { z } from 'zod';
 import { enforceRateLimit, getClientIp, logError, logWarn, parseBodyWithZod } from '../../api-lib/http';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const TestimonialRequestSchema = z
   .object({
     name: z.string().max(255).optional(),
     role: z.string().max(255).optional(),
-    email: z.string().email().max(320).optional(),
+    email: z.string().max(320).optional(),
     quote: z.string().min(1).max(10_000),
     anonymized: z.boolean().optional(),
     consent: z.boolean(),
     recaptchaToken: z.string().max(4096).optional(),
   })
   .strict();
+
+type ParsedTestimonialRequest = {
+  name?: string;
+  role?: string;
+  email?: string;
+  quote: string;
+  anonymized?: boolean;
+  consent: boolean;
+  recaptchaToken?: string;
+};
+
+function normalizeOptionalField(value: string | undefined): string | null {
+  if (typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.length > 255) return null;
+  return trimmed;
+}
+
+async function verifyRecaptchaToken(recaptchaToken?: string): Promise<{ ok: true } | { ok: false; error: string }> {
+  if (!process.env.RECAPTCHA_SECRET) return { ok: true };
+
+  if (process.env.RECAPTCHA_REQUIRED === 'true' && !recaptchaToken) {
+    return { ok: false, error: 'reCAPTCHA token required' };
+  }
+
+  if (!recaptchaToken) return { ok: true };
+
+  try {
+    const verification = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        secret: process.env.RECAPTCHA_SECRET,
+        response: String(recaptchaToken),
+      }),
+    }).then(r => r.json());
+
+    if (!verification.success) {
+      return { ok: false, error: 'reCAPTCHA verification failed' };
+    }
+  } catch (error) {
+    logWarn('reCAPTCHA verification error:', error);
+  }
+
+  return { ok: true };
+}
+
+async function notifyTestimonialSlack(params: {
+  normalizedQuote: string;
+  isAnonymized: boolean;
+  sanitizedEmail: string | null;
+  sanitizedRole: string | null;
+}): Promise<void> {
+  if (!process.env.ADMIN_SLACK_WEBHOOK) return;
+
+  const { normalizedQuote, isAnonymized, sanitizedEmail, sanitizedRole } = params;
+  const text = [
+    'New testimonial submitted',
+    `anonymized=${String(isAnonymized)}`,
+    `hasEmail=${String(Boolean(sanitizedEmail))}`,
+    `hasRole=${String(Boolean(sanitizedRole))}`,
+    `quoteChars=${String(normalizedQuote.length)}`,
+  ].join(' | ');
+
+  try {
+    await fetch(process.env.ADMIN_SLACK_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+  } catch (error) {
+    logWarn('Failed to notify Slack', error);
+  }
+}
+
+async function notifyFatalSlack(): Promise<void> {
+  if (!process.env.ADMIN_SLACK_WEBHOOK) return;
+
+  try {
+    await fetch(process.env.ADMIN_SLACK_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: 'Fatal error in submissions API: /api/landing/testimonial' }),
+    });
+  } catch (error) {
+    logWarn('Slack notify failed', error);
+  }
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -22,15 +112,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const parsed = parseBodyWithZod<{ 
-      name?: string;
-      role?: string;
-      email?: string;
-      quote: string;
-      anonymized?: boolean;
-      consent: boolean;
-      recaptchaToken?: string;
-    }>(TestimonialRequestSchema, req.body ?? {});
+    const parsed = parseBodyWithZod<ParsedTestimonialRequest>(TestimonialRequestSchema, req.body ?? {});
 
     if (!parsed.ok) {
       res.status(400).json({ ok: false, error: 'Invalid request body' });
@@ -58,14 +140,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const normalizeOptionalField = (value: string | undefined): string | null => {
-      if (typeof value !== 'string') return null;
-      const trimmed = value.trim();
-      if (!trimmed) return null;
-      if (trimmed.length > 255) return null;
-      return trimmed;
-    };
-
     // Consent required
     if (!consent) {
       res.status(400).json({ error: 'Consent is required to submit a testimonial' });
@@ -77,80 +151,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const sanitizedRole = normalizeOptionalField(role);
     const sanitizedEmail = normalizeOptionalField(email);
 
-    // Optional reCAPTCHA verification. In production, set RECAPTCHA_REQUIRED=true to enforce it.
-    if (process.env.RECAPTCHA_SECRET) {
-      if (process.env.RECAPTCHA_REQUIRED === 'true' && !recaptchaToken) {
-        res.status(400).json({ ok: false, error: 'reCAPTCHA token required' });
-        return;
-      }
-      if (!recaptchaToken) {
-        // Not provided and not required
-      } else {
-        try {
-          const verification = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ secret: process.env.RECAPTCHA_SECRET, response: String(recaptchaToken) }),
-        }).then(r => r.json());
-        if (!verification.success) {
-          res.status(400).json({ ok: false, error: 'reCAPTCHA verification failed' });
-          return;
-        }
-        } catch (e) {
-          logWarn('reCAPTCHA verification error:', e);
-        }
-      }
+    if (sanitizedEmail && !EMAIL_REGEX.test(sanitizedEmail)) {
+      res.status(400).json({ ok: false, error: 'Invalid email format' });
+      return;
     }
 
-    const result = await db.query(
-      `INSERT INTO testimonials (name, role, email, quote, anonymized, verified, metadata, request_ip)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    const recaptchaResult = await verifyRecaptchaToken(recaptchaToken);
+    if (!recaptchaResult.ok) {
+      res.status(400).json({ ok: false, error: recaptchaResult.error });
+      return;
+    }
+
+    await db.query(
+      `INSERT INTO testimonials (name, role, email, quote, anonymized, verified, metadata)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id`,
-      [sanitizedName, sanitizedRole, sanitizedEmail, normalizedQuote, isAnonymized, false, null, ipStr]
+      [sanitizedName, sanitizedRole, sanitizedEmail, normalizedQuote, isAnonymized, false, null]
     );
 
-    // Notify admin via Slack if configured
-    if (process.env.ADMIN_SLACK_WEBHOOK) {
-      try {
-        // Metadata-only: do NOT forward user-provided strings (quote/name/email/role) to Slack.
-        const createdId = (result?.[0] as { id?: unknown } | undefined)?.id;
-        const quoteChars = normalizedQuote.length;
-        const hasEmail = Boolean(sanitizedEmail);
-        const hasRole = Boolean(sanitizedRole);
+    await notifyTestimonialSlack({
+      normalizedQuote,
+      isAnonymized,
+      sanitizedEmail,
+      sanitizedRole,
+    });
 
-        const text = [
-          'New testimonial submitted',
-          createdId ? `id=${String(createdId)}` : undefined,
-          `anonymized=${String(isAnonymized)}`,
-          `hasEmail=${String(hasEmail)}`,
-          `hasRole=${String(hasRole)}`,
-          `quoteChars=${String(quoteChars)}`,
-        ]
-          .filter(Boolean)
-          .join(' | ');
-
-        await fetch(process.env.ADMIN_SLACK_WEBHOOK, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
-        });
-      } catch (e) {
-        logWarn('Failed to notify Slack', e);
-      }
-    }
     res.status(201).json({ ok: true });
   } catch (err) {
     logError('Testimonial submission error:', err);
-      try {
-        if (process.env.ADMIN_SLACK_WEBHOOK) {
-          // Avoid forwarding raw error strings to Slack (they may include sensitive data).
-          await fetch(process.env.ADMIN_SLACK_WEBHOOK, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: 'Fatal error in submissions API: /api/landing/testimonial' }),
-          });
-        }
-      } catch (e) { logWarn('Slack notify failed', e); }
-      res.status(500).json({ ok: false, error: 'Internal server error' });
+    await notifyFatalSlack();
+    res.status(500).json({ ok: false, error: 'Internal server error' });
   }
 }

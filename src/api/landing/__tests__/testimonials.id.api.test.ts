@@ -2,12 +2,11 @@ import handler from '../../../../api/landing/testimonials/[id]';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { db } from '../../../../src/lib/database';
 
-type MockResBody = unknown;
 type MockRes = {
   _status: number;
-  _body: MockResBody;
+  _body: unknown;
   status: (code: number) => MockRes;
-  json: (payload: MockResBody) => MockRes;
+  json: (payload: unknown) => MockRes;
 };
 
 type MockReq = {
@@ -27,7 +26,7 @@ function createMockRes(): MockRes {
       res._status = code;
       return res;
     },
-    json: (payload: MockResBody) => {
+    json: (payload: unknown) => {
       res._body = payload;
       return res;
     },
@@ -37,6 +36,14 @@ function createMockRes(): MockRes {
 
 describe('PATCH /api/landing/testimonials/[id]', () => {
   let fetchMock: ReturnType<typeof vi.fn>;
+  const authHeaders = {
+    authorization: 'Bearer test-admin-key',
+    host: 'example.test',
+    'x-forwarded-proto': 'https',
+    origin: 'https://example.test',
+    cookie: 'csrfToken=abc123',
+    'x-csrf-token': 'abc123',
+  } as const;
 
   beforeEach(() => {
     fetchMock = vi.fn().mockResolvedValue({ ok: false });
@@ -52,11 +59,68 @@ describe('PATCH /api/landing/testimonials/[id]', () => {
   });
 
   it('returns 400 no changes', async () => {
-    const req: MockReq = { method: 'PATCH', headers: { authorization: 'Bearer test-admin-key' }, query: { id: '1' }, body: {} };
+    const req: MockReq = { method: 'PATCH', headers: { ...authHeaders }, query: { id: '1' }, body: {} };
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
     await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
     expect(res._status).toBe(400);
+  });
+
+  it('returns 403 when csrf header is missing', async () => {
+    const req: MockReq = {
+      method: 'PATCH',
+      headers: {
+        ...authHeaders,
+        'x-csrf-token': undefined,
+      },
+      query: { id: '1' },
+      body: { anonymized: true },
+    };
+    const res = createMockRes();
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+
+    expect(res._status).toBe(403);
+    expect(res._body).toMatchObject({ error: 'Missing CSRF token' });
+  });
+
+  it('returns 403 when csrf token mismatches cookie token', async () => {
+    const req: MockReq = {
+      method: 'PATCH',
+      headers: {
+        ...authHeaders,
+        'x-csrf-token': 'wrong-token',
+      },
+      query: { id: '1' },
+      body: { anonymized: true },
+    };
+    const res = createMockRes();
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+
+    expect(res._status).toBe(403);
+    expect(res._body).toMatchObject({ error: 'Invalid CSRF token' });
+  });
+
+  it('returns 403 when origin is missing', async () => {
+    const req: MockReq = {
+      method: 'PATCH',
+      headers: {
+        ...authHeaders,
+        origin: undefined,
+      },
+      query: { id: '1' },
+      body: { anonymized: true },
+    };
+    const res = createMockRes();
+    fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
+
+    await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);
+
+    expect(res._status).toBe(403);
+    expect(res._body).toMatchObject({ error: 'Invalid request origin' });
   });
 
   it('updates and audits on change', async () => {
@@ -65,7 +129,15 @@ describe('PATCH /api/landing/testimonials/[id]', () => {
     spy
       .mockResolvedValueOnce(fakeResult as unknown as Awaited<ReturnType<typeof db.query>>)
       .mockResolvedValueOnce([] as unknown as Awaited<ReturnType<typeof db.query>>);
-    const req: MockReq = { method: 'PATCH', headers: { authorization: 'Bearer test-admin-key', 'x-admin-user': 'unit@test' }, query: { id: '1' }, body: { name: 'updated' } };
+    const req: MockReq = {
+      method: 'PATCH',
+      headers: {
+        ...authHeaders,
+        'x-admin-user': 'unit@test',
+      },
+      query: { id: '1' },
+      body: { name: 'updated' },
+    };
     const res = createMockRes();
     fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ user: { role: 'admin' } }) });
     await handler(req as unknown as Parameters<Handler>[0], res as unknown as Parameters<Handler>[1]);

@@ -280,7 +280,7 @@ export function TraumaInformedPainTrackerLayout({
               </div>
               <div className="text-left">
                 <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent">
-                  Pain Tracker Pro
+                  PainTracker
                 </h1>
                 <div className="text-xs leading-tight sm:leading-normal text-muted-foreground font-medium tracking-wider uppercase hidden xs:block">
                   Privacy-First Pain Tracking
@@ -591,7 +591,7 @@ export function TraumaInformedPainTrackerLayout({
             <div className="text-sm text-muted-foreground text-center md:text-left">
               {preferences.gentleLanguage
                 ? "Your health journey matters. You're doing great by tracking your symptoms."
-                : 'Pain Tracker Pro - Manage your health information with confidence'}
+                : 'PainTracker - Manage your health information with confidence'}
             </div>
 
             <div className="flex items-center space-x-4">

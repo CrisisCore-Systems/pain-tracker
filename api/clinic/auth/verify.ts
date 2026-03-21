@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '../../../src/types/vercel';
 import crypto from 'node:crypto';
 import { enforceRateLimit, getClientIp } from '../../../api-lib/http';
+import { readClinicSession, isClinicAuthConfigured } from '../../../api-lib/clinicAuthSession';
 
 function getBearerToken(req: VercelRequest): string | null {
   const authHeader = req.headers['authorization'];
@@ -20,7 +21,7 @@ function safeEqual(a: string, b: string): boolean {
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
-    res.status(405).json({ ok: false, error: 'Method not allowed' });
+    res.status(405).json({ ok: false, success: false, error: 'Method not allowed' });
     return;
   }
 
@@ -34,22 +35,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   });
   if (!ok) return;
 
+  if (!isClinicAuthConfigured()) {
+    res.status(503).json({
+      ok: false,
+      success: false,
+      valid: false,
+      error: 'Clinic authentication is not configured on this server',
+      code: 'CLINIC_AUTH_MISCONFIGURED',
+    });
+    return;
+  }
+
   const expected = process.env.ADMIN_API_TOKEN;
-  if (!expected) {
-    res.status(501).json({ ok: false, error: 'Admin auth not configured' });
-    return;
-  }
-
   const token = getBearerToken(req);
-  if (!token) {
-    res.status(401).json({ ok: false, error: 'Unauthorized' });
+
+  // Internal admin-to-admin verification path (bearer token).
+  if (expected && token) {
+    if (!safeEqual(token, expected)) {
+      res.status(401).json({ ok: false, success: false, valid: false, error: 'Unauthorized' });
+      return;
+    }
+
+    const user = {
+      id: 'admin',
+      email: 'admin@clinic.com',
+      name: 'Clinic Admin',
+      role: 'admin',
+      organizationId: 'demo-clinic',
+      organizationName: 'Pain Tracker Clinic Demo',
+      permissions: ['manage:users', 'view:audit_logs', 'export:data', 'configure:system'],
+    };
+
+    res.status(200).json({ ok: true, success: true, valid: true, user });
     return;
   }
 
-  if (!safeEqual(token, expected)) {
-    res.status(401).json({ ok: false, error: 'Unauthorized' });
+  // Browser clinic session verification path (httpOnly cookie).
+  const sessionUser = readClinicSession(req);
+  if (!sessionUser) {
+    res.status(401).json({ ok: false, success: false, valid: false, error: 'Unauthorized' });
     return;
   }
 
-  res.status(200).json({ ok: true, user: { id: 'admin', role: 'admin' } });
+  res.status(200).json({ ok: true, success: true, valid: true, user: sessionUser });
 }

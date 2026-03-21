@@ -137,7 +137,7 @@ export const LandingFooter: React.FC = () => {
                   <Activity className="h-6 w-6 text-white" />
                 </div>
                 <span className="font-bold text-2xl bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                  Pain Tracker Pro
+                  PainTracker
                 </span>
               </div>
               <p className="text-slate-300 max-w-md leading-relaxed">

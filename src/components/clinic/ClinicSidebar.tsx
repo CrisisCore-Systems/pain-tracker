@@ -52,7 +52,7 @@ export function ClinicSidebar({
           {!collapsed && (
             <div className="min-w-0">
               <h1 className="text-base sm:text-lg font-semibold truncate">Clinic Portal</h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Pain Tracker Pro</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">PainTracker</p>
             </div>
           )}
         </div>

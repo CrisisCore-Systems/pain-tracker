@@ -15,6 +15,7 @@ import { CanonicalUrlManager } from './components/seo/CanonicalUrlManager';
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { ToneProvider } from "./contexts/ToneContext";
 import { StartupPromptsProvider } from "./contexts/StartupPromptsContext";
+import { AuditSinkAlertBridge } from './components/security/AuditSinkAlertBridge';
 import { initializeToneEngine } from "./services/ToneEngine";
 import { useGlobalAccessibility } from "./hooks/useGlobalAccessibility";
 import './i18n/config';
@@ -36,6 +37,10 @@ const SubmitStoryPage = lazy(() => import('./pages/SubmitStoryPage').then(m => (
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ default: m.DownloadPage })));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const TrackingDataPolicyPage = lazy(() => import('./pages/TrackingDataPolicyPage').then(m => ({ default: m.TrackingDataPolicyPage })));
+const PainTrackerAppPage = lazy(() => import('./pages/PainTrackerAppPage').then(m => ({ default: m.PainTrackerAppPage })));
+const PainDiaryTemplatePage = lazy(() => import('./pages/PainDiaryTemplatePage').then(m => ({ default: m.PainDiaryTemplatePage })));
+const PainTrackingAppsComparisonPage = lazy(() => import('./pages/PainTrackingAppsComparisonPage').then(m => ({ default: m.PainTrackingAppsComparisonPage })));
+const PrivacyOfflineFirstPainTrackerPage = lazy(() => import('./pages/PrivacyOfflineFirstPainTrackerPage').then(m => ({ default: m.PrivacyOfflineFirstPainTrackerPage })));
 const VaultGate = lazy(() => import('./components/security/VaultGate').then(m => ({ default: m.VaultGate })));
 const ProtectedAppShell = lazy(() => import('./routes/ProtectedAppShell').then(m => ({ default: m.ProtectedAppShell })));
 
@@ -144,6 +149,7 @@ function App() {
           <ToneProvider>
             <TraumaInformedProvider>
               <ToastProvider>
+                <AuditSinkAlertBridge />
                 <StartupPromptsProvider>
                   <Suspense fallback={<LoadingFallback />}>
                     <Routes>
@@ -152,6 +158,12 @@ function App() {
 
                       {/* Pricing Page - Public */}
                       <Route path="/pricing" element={<PricingPage />} />
+
+                      {/* Category and intent pages - Public */}
+                      <Route path="/pain-tracker-app" element={<PainTrackerAppPage />} />
+                      <Route path="/pain-diary-template" element={<PainDiaryTemplatePage />} />
+                      <Route path="/pain-tracking-apps-comparison" element={<PainTrackingAppsComparisonPage />} />
+                      <Route path="/privacy-offline-first-pain-tracker" element={<PrivacyOfflineFirstPainTrackerPage />} />
 
                       {/* CNET Download URL - Public */}
                       <Route path="/cnet-download" element={<CnetDownloadPage />} />

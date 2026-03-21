@@ -175,6 +175,9 @@ export default function PrivacySettings() {
               If enabled, the app may ask for location access to fetch current weather from Open‑Meteo. Only a short summary (e.g.,
               “12°C, cloudy, 65% humidity”) is stored with the entry — coordinates are not saved.
             </div>
+            <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+              Network disclosure: enabling this sends rounded latitude/longitude (approximate location) to the same-origin weather proxy route (`/api/weather`) so it can request weather data from Open-Meteo.
+            </div>
           </div>
           <input
             type="checkbox"
@@ -184,6 +187,15 @@ export default function PrivacySettings() {
             aria-describedby="privacy-weather-desc"
             className="h-5 w-5 rounded border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-emerald-500 focus:ring-emerald-500/50 focus:ring-offset-white dark:focus:ring-offset-slate-900"
           />
+        </div>
+
+        <div className="rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-slate-900/30 p-3">
+          <div className="font-medium text-gray-700 dark:text-slate-200">WCB submission disclosure</div>
+          <div className="text-sm text-gray-500 dark:text-slate-400 mt-1">
+            WCB report download/export stays local. Using "Submit to WCB" sends report content to the configured endpoint when
+            {' '}
+            <code className="px-1">VITE_ENABLE_WCB_SUBMISSION</code> is enabled.
+          </div>
         </div>
 
         <div>

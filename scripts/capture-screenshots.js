@@ -35,7 +35,7 @@ const SCREENSHOTS = [
 
 async function ensureVaultUnlocked(page, passphrase) {
   const appRoot = page
-    .locator('[role="application"][aria-label="Pain Tracker Pro Application"], .pt-app-shell[role="application"]')
+    .locator('[role="application"][aria-label="PainTracker Application"], .pt-app-shell[role="application"]')
     .first();
   const vaultTitle = page.locator('h1:has-text("Secure vault"), #vault-dialog-title').first();
   const preparingVault = page.getByText(/Preparing secure vault/i).first();
@@ -88,7 +88,7 @@ async function ensureDarkMode(page) {
 async function ensureChronicPainTestDataLoaded(page, minEntries = 10) {
   // The loader is installed by ProtectedAppShell in DEV.
   const appShellVisible = await page
-    .locator('[role="application"][aria-label="Pain Tracker Pro Application"], .pt-app-shell[role="application"]')
+    .locator('[role="application"][aria-label="PainTracker Application"], .pt-app-shell[role="application"]')
     .first()
     .waitFor({ state: 'visible', timeout: 60_000 })
     .then(() => true)
@@ -230,7 +230,7 @@ async function captureScreenshots() {
 
         // Ensure the protected app is actually mounted before continuing.
         const mounted = await page
-          .locator('[role="application"][aria-label="Pain Tracker Pro Application"], .pt-app-shell[role="application"]')
+          .locator('[role="application"][aria-label="PainTracker Application"], .pt-app-shell[role="application"]')
           .first()
           .waitFor({ state: 'visible', timeout: 60_000 })
           .then(() => true)

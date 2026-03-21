@@ -129,7 +129,7 @@ const arthritisStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'arthritis-pain-tracker',
   title: 'Arthritis Pain Tracker (Free)',
-  metaTitle: 'Arthritis Pain Tracker — Free 6-Page Joint Pain Diary | Pain Tracker Pro',
+  metaTitle: 'Arthritis Pain Tracker — Free 6-Page Joint Pain Diary | PainTracker',
   metaDescription: 'Download a free arthritis pain tracker for RA, OA, PsA, and gout. Track morning stiffness, joint-by-joint pain, swelling, functional impact, and treatment response.',
   keywords: [
     'arthritis pain tracker', 'joint pain diary', 'rheumatoid arthritis tracker',

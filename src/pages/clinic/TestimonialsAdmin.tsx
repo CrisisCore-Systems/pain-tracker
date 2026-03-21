@@ -2,16 +2,17 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { ClinicProtectedRoute } from '../../components/clinic/ClinicProtectedRoute';
 import { useClinicAuth } from '../../contexts/ClinicAuthContext';
 import { MessageSquare, CheckCircle2, EyeOff, Eye, AlertCircle, Loader2 } from 'lucide-react';
+import { getCsrfTokenFromCookie } from '../../utils/csrf';
 export const TestimonialsAdmin: React.FC = () => {
-  const { user } = useClinicAuth();
+  const { user, isAuthenticated } = useClinicAuth();
   const [loading, setLoading] = useState(false);
   const [testimonials, setTestimonials] = useState<Array<{ id: number; name?: string; anonymized: boolean; quote: string; role?: string; created_at: string }>>([]);
   const fetchTestimonials = useCallback(async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('clinic_access_token');
-      const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {};
-      const res = await fetch('/api/landing/testimonials?verified=false', { headers });
+      const res = await fetch('/api/landing/testimonials?verified=false', {
+        credentials: 'include',
+      });
       if (!res.ok) throw new Error('Failed to load');
       const data = await res.json();
       setTestimonials(data.testimonials || []);
@@ -24,17 +25,34 @@ export const TestimonialsAdmin: React.FC = () => {
   useEffect(() => { fetchTestimonials(); }, [fetchTestimonials]);
   const handleVerify = async (id: number) => {
     const date = new Date().toISOString();
-    const token = localStorage.getItem('clinic_access_token');
-    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}`, 'x-admin-user': user?.email || user?.name || 'admin' } : { 'Content-Type': 'application/json' };
-    const res = await fetch('/api/landing/testimonials_verify', { method: 'POST', headers, body: JSON.stringify({ id, verified: true, publication_date: date }) });
+    const csrfToken = getCsrfTokenFromCookie();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-admin-user': user?.name || 'admin',
+      ...(csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
+    };
+    const res = await fetch('/api/landing/testimonials_verify', {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ id, verified: true, publication_date: date }),
+    });
     if (res.ok) fetchTestimonials();
   };
   const handleAnonymize = async (id: number) => {
     const t = testimonials.find(tt => tt.id === id);
     if (!t) return;
-    const token = localStorage.getItem('clinic_access_token');
-    const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
-    const res = await fetch(`/api/landing/testimonials/${id}`, { method: 'PATCH', headers, body: JSON.stringify({ anonymized: !t.anonymized }) });
+    const csrfToken = getCsrfTokenFromCookie();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...(csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
+    };
+    const res = await fetch(`/api/landing/testimonials/${id}`, {
+      method: 'PATCH',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ anonymized: !t.anonymized }),
+    });
     if (res.ok) fetchTestimonials();
   };
   return (
@@ -61,7 +79,7 @@ export const TestimonialsAdmin: React.FC = () => {
             </div>
           </div>
         </div>
-        {!localStorage.getItem('clinic_access_token') && (
+        {!isAuthenticated && (
           <div className="relative mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
             <p className="text-amber-300">Please log in with your clinic account (admin role) to manage testimonials.</p>

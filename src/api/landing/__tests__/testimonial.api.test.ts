@@ -156,4 +156,22 @@ describe('Testimonial submission API', () => {
     expect(payload.text).toBe('Fatal error in submissions API: /api/landing/testimonial');
     expect(payload.text).not.toContain(quote);
   });
+
+  it('does not persist request IP in testimonial rows', async () => {
+    const querySpy = vi.spyOn(db, 'query');
+    querySpy.mockReset();
+    querySpy.mockResolvedValueOnce([{ id: 42 }]);
+
+    const res = createMockRes();
+    await handler(makeReq({ quote: 'local-first app', consent: true }, '10.10.10.10') as never, res as never);
+
+    expect(res._status).toBe(201);
+    expect(querySpy).toHaveBeenCalledTimes(1);
+
+    const sql = String(querySpy.mock.calls[0]?.[0] || '');
+    const params = (querySpy.mock.calls[0]?.[1] as unknown[]) || [];
+    expect(sql).not.toMatch(/request_ip/i);
+    expect(params).toHaveLength(7);
+    expect(params).not.toContain('10.10.10.10');
+  });
 });

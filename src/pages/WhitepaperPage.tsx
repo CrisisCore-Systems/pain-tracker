@@ -11,7 +11,7 @@ export function WhitepaperPage() {
   useEffect(() => {
     document.title = 'Pain Tracker Whitepaper (PDF)';
     return () => {
-      document.title = 'Pain Tracker Pro';
+      document.title = 'PainTracker';
     };
   }, []);
 

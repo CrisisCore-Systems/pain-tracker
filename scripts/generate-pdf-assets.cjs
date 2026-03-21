@@ -1,5 +1,5 @@
 /**
- * Generate Styled PDF Assets for Pain Tracker Pro
+ * Generate Styled PDF Assets for PainTracker
  * 
  * Creates all 26 downloadable PDF templates referenced by SEO resource pages.
  * Each PDF is print-ready (US Letter), branded, and contains real tracking tables/content.
@@ -62,7 +62,7 @@ function drawHeader(doc, title, subtitle, badge) {
   doc.setTextColor(...COLORS.white);
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('Pain Tracker Pro', 36, 28);
+  doc.text('PainTracker', 36, 28);
 
   // Website
   doc.setFont('helvetica', 'normal');
@@ -132,7 +132,7 @@ function drawFooter(doc) {
     doc.setFontSize(7.5);
     doc.setTextColor(...COLORS.light);
     doc.setFont('helvetica', 'normal');
-    doc.text('Pain Tracker Pro  •  paintracker.ca  •  Privacy-First Pain Tracking', 36, ph - 34);
+    doc.text('PainTracker  •  paintracker.ca  •  Private Offline-First Pain Tracking', 36, ph - 34);
     doc.text(`Page ${i} of ${pages}`, pw - 36, ph - 34, { align: 'right' });
     doc.text('This template is free to use, print, and share. Not medical advice.', 36, ph - 22);
   }
@@ -424,7 +424,7 @@ const pdfDefinitions = [
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.primaryDark);
-      doc.text('Prefer digital? Try Pain Tracker Pro — paintracker.ca', 48, y + 18);
+      doc.text('Prefer digital? Try PainTracker — paintracker.ca', 48, y + 18);
       doc.setFontSize(8.5);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.medium);
@@ -613,7 +613,7 @@ const pdfDefinitions = [
       doc.setFontSize(8);
       doc.setTextColor(...COLORS.medium);
       doc.text('Rate pain at the moment it happens, not from memory.  |  Track good days too — they show what works.', 48, y + 28);
-      doc.text('Bring this sheet to appointments.  |  Try the Pain Tracker Pro app for automatic charts and reports.', 48, y + 40);
+      doc.text('Bring this sheet to appointments.  |  Try the PainTracker app for automatic charts and reports.', 48, y + 40);
     },
   },
 
@@ -785,7 +785,7 @@ const pdfDefinitions = [
       doc.setTextColor(...COLORS.medium);
       doc.text('Fill in each evening -- 2 minutes keeps the data accurate.  |  Print 4 copies for a full month of weekly tracking.', 48, y + 30);
       doc.text('Lay weeks side by side to spot repeating patterns.  |  Bring completed sheets to every appointment.', 48, y + 42);
-      doc.text('Rate pain in the moment, not from memory.  |  Try Pain Tracker Pro (paintracker.ca) for automatic charts and insights.', 48, y + 54);
+      doc.text('Rate pain in the moment, not from memory.  |  Try PainTracker (paintracker.ca) for automatic charts and insights.', 48, y + 54);
     },
   },
 
@@ -990,7 +990,7 @@ const pdfDefinitions = [
       doc.setTextColor(...COLORS.medium);
       doc.text('Record your daily pain number each evening -- 30 seconds keeps a full month of data accurate.', 48, y + 30);
       doc.text('Circle flare days on the calendar so patterns are visible at a glance when reviewing with your provider.', 48, y + 42);
-      doc.text('Compare month-over-month to judge treatment effectiveness.  |  Try Pain Tracker Pro (paintracker.ca) for automatic analysis.', 48, y + 54);
+      doc.text('Compare month-over-month to judge treatment effectiveness.  |  Try PainTracker (paintracker.ca) for automatic analysis.', 48, y + 54);
     },
   },
 
@@ -1445,7 +1445,7 @@ const pdfDefinitions = [
       doc.setFontSize(7.5);
       doc.text('Track at the same time daily (evening is best). On bad days, rate just pain and fatigue — partial data beats no data.', 48, y + 26);
       doc.text('Focus on 6-10 symptoms max. Review weekly for clusters. Create a one-page summary for appointments.', 48, y + 38);
-      doc.text('Good days are as important as bad days — they show your baseline and what helps.  |  Try Pain Tracker Pro: paintracker.ca', 48, y + 50);
+      doc.text('Good days are as important as bad days — they show your baseline and what helps.  |  Try PainTracker: paintracker.ca', 48, y + 50);
     },
   },
 
@@ -2104,7 +2104,7 @@ const pdfDefinitions = [
       doc.setFontSize(7);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(...COLORS.light);
-      doc.text('Disclaimer: Pain Tracker Pro is not affiliated with, endorsed by, or connected to WorkSafeBC. This template provides a documentation', 44, y + 12);
+      doc.text('Disclaimer: PainTracker is not affiliated with, endorsed by, or connected to WorkSafeBC. This template provides a documentation', 44, y + 12);
       doc.text('framework based on publicly available WCB evaluation criteria. It is not legal advice. Consult a workers\' compensation lawyer for claim-specific guidance.', 44, y + 24);
     },
   },
@@ -2590,7 +2590,7 @@ const pdfDefinitions = [
 async function main() {
   ensureDir(OUTPUT_DIR);
 
-  console.log(`\n  📄 Pain Tracker Pro — PDF Asset Generator`);
+  console.log(`\n  📄 PainTracker — PDF Asset Generator`);
   console.log(`  ─────────────────────────────────────────`);
   console.log(`  Output: ${OUTPUT_DIR}\n`);
 

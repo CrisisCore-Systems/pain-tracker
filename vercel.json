@@ -661,10 +661,6 @@
       "destination": "/api/$1"
     },
     {
-      "source": "/api/weather",
-      "destination": "https://api.open-meteo.com/v1/forecast"
-    },
-    {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }

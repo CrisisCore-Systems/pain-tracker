@@ -52,7 +52,7 @@ const useCaseDetails: Record<
       },
       {
         heading: 'Privacy during claims',
-        body: 'You choose what to export and when. Data never leaves your device until you explicitly generate a report.',
+        body: 'You choose what to export and when. Core data handling is local by default, and sharing/report actions are explicit and user-triggered.',
       },
     ],
   },

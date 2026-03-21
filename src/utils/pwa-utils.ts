@@ -4,6 +4,7 @@
 import { formatNumber } from './formatting';
 import { secureStorage } from '../lib/storage/secureStorage';
 import { offlineStorage } from '../lib/offline-storage';
+import { TeardownCoordinator } from './TeardownCoordinator';
 
 const isDev = import.meta.env.DEV;
 
@@ -32,13 +33,36 @@ interface PWACapabilities {
   fullscreen: boolean;
 }
 
+function normalizeAppPath(path: string): string {
+  return path.replaceAll(/\/+/g, '/');
+}
+
+function getConnectionQuality(latency: number): 'good' | 'moderate' | 'poor' {
+  if (latency < 100) {
+    return 'good';
+  }
+
+  if (latency < 500) {
+    return 'moderate';
+  }
+
+  return 'poor';
+}
+
+function getNotificationAssets(baseUrl: string) {
+  return {
+    icon: normalizeAppPath(`${baseUrl}icons/icon-192x192.png`),
+    badge: normalizeAppPath(`${baseUrl}icons/badge-72x72.png`),
+  };
+}
+
 export class PWAManager {
   private static instance: PWAManager;
   private installPromptEvent: BeforeInstallPromptEvent | null = null;
   private isInstalled = false;
   private swRegistration: ServiceWorkerRegistration | null = null;
   private isInitialized = false;
-  private capabilities: PWACapabilities = {
+  private readonly capabilities: PWACapabilities = {
     serviceWorker: false,
     pushNotifications: false,
     backgroundSync: false,
@@ -48,19 +72,28 @@ export class PWAManager {
   };
 
   private constructor() {
-    // Delayed initialization to ensure DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => this.init());
-    } else {
-      this.init();
-    }
+    // Initialization is scheduled from getInstance to avoid async work in the constructor.
   }
 
   static getInstance(): PWAManager {
     if (!PWAManager.instance) {
       PWAManager.instance = new PWAManager();
+      PWAManager.instance.scheduleInit();
     }
     return PWAManager.instance;
+  }
+
+  private scheduleInit(): void {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        void this.init();
+      }, { once: true });
+      return;
+    }
+
+    queueMicrotask(() => {
+      void this.init();
+    });
   }
 
   private async init() {
@@ -84,10 +117,10 @@ export class PWAManager {
   // Capability Detection
   private async detectCapabilities(): Promise<void> {
     this.capabilities.serviceWorker = 'serviceWorker' in navigator;
-    this.capabilities.pushNotifications = 'Notification' in window && 'PushManager' in window;
+    this.capabilities.pushNotifications = 'Notification' in globalThis && 'PushManager' in globalThis;
     this.capabilities.backgroundSync =
-      'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype;
-    this.capabilities.installPrompt = 'BeforeInstallPromptEvent' in window;
+      'serviceWorker' in navigator && 'sync' in globalThis.ServiceWorkerRegistration.prototype;
+    this.capabilities.installPrompt = 'BeforeInstallPromptEvent' in globalThis;
     this.capabilities.fullscreen = 'requestFullscreen' in document.documentElement;
 
     // Check for persistent storage
@@ -143,7 +176,7 @@ export class PWAManager {
       // Prefer explicit Vite-provided base override (VITE_BASE) for test runs,
       // otherwise fall back to Vite's BASE_URL and finally '/'.
       const _env = import.meta.env as unknown as Record<string, string | undefined>;
-      let baseUrl = (_env.VITE_BASE as string) || (import.meta.env.BASE_URL as string) || '/';
+      let baseUrl = _env.VITE_BASE || import.meta.env.BASE_URL || '/';
 
       // Normalise cases where Vite gives a relative './' base (e.g. relative build).
       // In test/dev servers the runtime location.pathname usually reflects the actual base
@@ -200,12 +233,12 @@ export class PWAManager {
         // responds to PING with PONG). This provides a reliable readiness signal for tests.
         navigator.serviceWorker.addEventListener('message', (ev) => {
           try {
-            const data = (ev && ev.data) || {};
+            const data = ev?.data || {};
             if (data.type === 'SW_READY' || data.type === 'PONG') {
               // Mark page-level readiness for tests/tools that await this flag.
               // Use a typed-free assignment to avoid TSC strict-any lint errors.
-              (window as unknown as Record<string, unknown>).__pwa_sw_ready = true;
-              (window as unknown as Record<string, unknown>).__pwa_sw_version = data.version || (this.swRegistration && (this.swRegistration as unknown as Record<string, unknown>).__SW_VERSION) || null;
+              (globalThis as Record<string, unknown>).__pwa_sw_ready = true;
+              (globalThis as Record<string, unknown>).__pwa_sw_version = data.version || ((this.swRegistration as unknown as Record<string, unknown> | null)?.__SW_VERSION ?? null);
             }
           } catch {
             // ignore
@@ -216,15 +249,16 @@ export class PWAManager {
         // if we get a response. Don't block init if this fails.
         (async () => {
           try {
-            if (this.swRegistration && this.swRegistration.active) {
+            if (this.swRegistration?.active) {
               try {
-                this.swRegistration.active.postMessage({ type: 'PING' });
+                this.swRegistration.active?.postMessage({ type: 'PING' });
               } catch {
                 // ignore
               }
               // Also set the flag optimistically if the active worker exists
-              (window as unknown as Record<string, unknown>).__pwa_sw_ready = true;
-              (window as unknown as Record<string, unknown>).__pwa_sw_version = (this.swRegistration.active && (this.swRegistration as unknown as Record<string, unknown>).__SW_VERSION) || null;
+              (globalThis as Record<string, unknown>).__pwa_sw_ready = true;
+              (globalThis as Record<string, unknown>).__pwa_sw_version =
+                ((this.swRegistration as unknown as Record<string, unknown> | null)?.__SW_VERSION ?? null);
             }
           } catch {
             // ignore
@@ -291,7 +325,7 @@ export class PWAManager {
     });
 
     // Report performance metrics periodically
-    setInterval(() => {
+    globalThis.setInterval(() => {
       const total = cacheHits + cacheMisses;
       if (total > 0) {
         const hitRatio = (cacheHits / total) * 100;
@@ -310,7 +344,7 @@ export class PWAManager {
   // Install Prompt Management
   private setupInstallPromptListener(): void {
     // cspell:ignore beforeinstallprompt appinstalled
-    window.addEventListener('beforeinstallprompt', e => {
+    globalThis.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       this.installPromptEvent = e as BeforeInstallPromptEvent;
       if (isDev) {
@@ -319,7 +353,7 @@ export class PWAManager {
       this.dispatchCustomEvent('pwa-install-available');
     });
 
-    window.addEventListener('appinstalled', () => {
+    globalThis.addEventListener('appinstalled', () => {
       this.isInstalled = true;
       this.installPromptEvent = null;
       if (isDev) {
@@ -343,12 +377,13 @@ export class PWAManager {
           console.log('PWA: User accepted install prompt');
         }
         return true;
-      } else {
-        if (isDev) {
-          console.log('PWA: User dismissed install prompt');
-        }
-        return false;
       }
+
+      if (isDev) {
+        console.log('PWA: User dismissed install prompt');
+      }
+
+      return false;
     } catch (error) {
       console.error('PWA: Error showing install prompt:', error);
       return false;
@@ -362,12 +397,12 @@ export class PWAManager {
   // Installation Status
   private checkInstallStatus(): void {
     // Check if running as PWA
-    if (window.matchMedia('(display-mode: standalone)').matches) {
+    if (globalThis.matchMedia('(display-mode: standalone)').matches) {
       this.isInstalled = true;
     }
 
     // Check if running in mobile app mode
-    if ((window.navigator as Navigator & { standalone?: boolean }).standalone) {
+    if ((globalThis.navigator as Navigator & { standalone?: boolean }).standalone) {
       this.isInstalled = true;
     }
   }
@@ -378,7 +413,7 @@ export class PWAManager {
 
   // Enhanced Online/Offline Management with Background Sync Integration
   private setupOnlineOfflineListeners(): void {
-    window.addEventListener('online', async () => {
+    globalThis.addEventListener('online', async () => {
       if (isDev) {
         console.log('PWA: Back online');
       }
@@ -386,7 +421,7 @@ export class PWAManager {
       this.dispatchCustomEvent('pwa-online');
     });
 
-    window.addEventListener('offline', () => {
+    globalThis.addEventListener('offline', () => {
       if (isDev) {
         console.log('PWA: Gone offline');
       }
@@ -468,22 +503,22 @@ export class PWAManager {
     setInterval(async () => {
       if (!navigator.onLine) return;
 
-      const startTime = performance.now();
+      const startTime = globalThis.performance.now();
       try {
         // Use the correct base URL for manifest.json
         const baseUrl = import.meta.env.BASE_URL || '/';
-        const manifestUrl = `${baseUrl}manifest.json`.replace(/\/+/g, '/');
+        const manifestUrl = normalizeAppPath(`${baseUrl}manifest.json`);
 
-        await fetch(manifestUrl, {
+        await globalThis.fetch(manifestUrl, {
           mode: 'cors',
           cache: 'no-cache',
         });
-        const endTime = performance.now();
+        const endTime = globalThis.performance.now();
         const latency = endTime - startTime;
 
         this.dispatchCustomEvent('pwa-connection-test', {
           latency,
-          quality: latency < 100 ? 'good' : latency < 500 ? 'moderate' : 'poor',
+          quality: getConnectionQuality(latency),
         });
       } catch {
         this.dispatchCustomEvent('pwa-connection-test', {
@@ -496,13 +531,15 @@ export class PWAManager {
 
   private setupPerformanceMonitoring(): void {
     // Monitor PWA performance metrics
-    if ('performance' in window) {
+    if ('performance' in globalThis) {
       // Monitor navigation timing
-      window.addEventListener('load', () => {
+      globalThis.addEventListener('load', () => {
         setTimeout(() => {
-          const navigation = performance.getEntriesByType(
-            'navigation'
-          )[0] as PerformanceNavigationTiming;
+          const [navigation] = globalThis.performance.getEntriesByType('navigation');
+
+          if (!(navigation instanceof PerformanceNavigationTiming)) {
+            return;
+          }
 
           this.dispatchCustomEvent('pwa-performance-metrics', {
             loadTime: navigation.loadEventEnd - navigation.fetchStart,
@@ -514,7 +551,7 @@ export class PWAManager {
       });
 
       // Monitor resource timing
-      const observer = new PerformanceObserver(list => {
+      const observer = new globalThis.PerformanceObserver(list => {
         const entries = list.getEntries();
         const slowResources = entries.filter(entry => entry.duration > 1000);
 
@@ -537,7 +574,7 @@ export class PWAManager {
   }
 
   private getFirstPaint(): number {
-    const paintEntries = performance.getEntriesByType('paint');
+    const paintEntries = globalThis.performance.getEntriesByType('paint');
     const firstPaint = paintEntries.find(entry => entry.name === 'first-paint');
     return firstPaint ? firstPaint.startTime : 0;
   }
@@ -546,7 +583,7 @@ export class PWAManager {
     // This would be populated by service worker messages
     // Non-sensitive metric; avoid encryption overhead
     const ratio = secureStorage.get<string>('pwa-cache-hit-ratio');
-    return parseFloat(ratio || '0');
+    return Number.parseFloat(ratio || '0');
   }
 
   isOnline(): boolean {
@@ -555,7 +592,7 @@ export class PWAManager {
 
   // Push Notifications
   async requestNotificationPermission(): Promise<NotificationPermission> {
-    if (!('Notification' in window)) {
+    if (!('Notification' in globalThis)) {
       console.warn('PWA: This browser does not support notifications');
       return 'denied';
     }
@@ -580,23 +617,17 @@ export class PWAManager {
         return null;
       }
 
-      const applicationServerKey = (import.meta as unknown as { env?: Record<string, string> }).env
-        ?.VITE_VAPID_PUBLIC_KEY;
+      const applicationServerKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
       if (!applicationServerKey) {
         console.error('PWA: VAPID public key not found');
         return null;
       }
 
-      const subscription = await this.swRegistration.pushManager.subscribe({
+      return await this.swRegistration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: this.urlBase64ToUint8Array(applicationServerKey)
           .buffer as ArrayBuffer,
       });
-
-      if (isDev) {
-        console.log('PWA: Push subscription created:', subscription);
-      }
-      return subscription;
     } catch (error) {
       console.error('PWA: Failed to subscribe to push notifications:', error);
       return null;
@@ -605,17 +636,18 @@ export class PWAManager {
 
   // Medication Reminders
   async scheduleNotification(title: string, body: string, delay: number): Promise<void> {
-    if (!('Notification' in window)) return;
+    if (!('Notification' in globalThis)) return;
 
     const permission = await this.requestNotificationPermission();
     if (permission !== 'granted') return;
 
-    setTimeout(() => {
+    globalThis.setTimeout(() => {
       const baseUrl = import.meta.env.BASE_URL || '/';
+      const assets = getNotificationAssets(baseUrl);
       new Notification(title, {
         body,
-        icon: `${baseUrl}icons/icon-192x192.png`.replace(/\/+/g, '/'),
-        badge: `${baseUrl}icons/badge-72x72.png`.replace(/\/+/g, '/'),
+        icon: assets.icon,
+        badge: assets.badge,
         tag: 'pain-tracker-reminder',
         requireInteraction: true,
       });
@@ -628,10 +660,11 @@ export class PWAManager {
       if (isDev) {
         console.log('PWA: Background sync is supported');
       }
-    } else {
-      if (isDev) {
-        console.log('PWA: Background sync is not supported');
-      }
+      return;
+    }
+
+    if (isDev) {
+      console.log('PWA: Background sync is not supported');
     }
   }
 
@@ -652,7 +685,7 @@ export class PWAManager {
         registration.waiting.postMessage({ type: 'SKIP_WAITING' });
 
         // Reload the page to activate the new service worker
-        window.location.reload();
+        globalThis.location.reload();
       }
     }
   }
@@ -660,25 +693,25 @@ export class PWAManager {
   // Utility Methods
   private dispatchCustomEvent(type: string, detail?: unknown): void {
     const event = new CustomEvent(type, { detail });
-    window.dispatchEvent(event);
+    globalThis.dispatchEvent(event);
   }
 
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const base64 = (base64String + padding).replaceAll('-', '+').replaceAll('_', '/');
 
-    const rawData = window.atob(base64);
+    const rawData = globalThis.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
 
     for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
+      outputArray[i] = rawData.codePointAt(i) ?? 0;
     }
     return outputArray;
   }
 
   // Cache Management
   async clearCaches(): Promise<void> {
-    if ('caches' in window) {
+    if ('caches' in globalThis) {
       const cacheNames = await caches.keys();
       await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
       if (isDev) {
@@ -735,7 +768,7 @@ export class PWAManager {
   }
 
   async scheduleHealthReminder(title: string, body: string, triggerTime: Date): Promise<void> {
-    if (!('Notification' in window)) {
+    if (!('Notification' in globalThis)) {
       console.warn('PWA: Notifications not supported');
       return;
     }
@@ -756,7 +789,7 @@ export class PWAManager {
     }
 
     // Schedule for future
-    setTimeout(() => {
+    globalThis.setTimeout(() => {
       this.showNotification(title, body);
     }, delay);
 
@@ -767,14 +800,15 @@ export class PWAManager {
 
   private showNotification(title: string, body: string): void {
     const baseUrl = import.meta.env.BASE_URL || '/';
+    const assets = getNotificationAssets(baseUrl);
     new Notification(title, {
       body,
-      icon: `${baseUrl}icons/icon-192x192.png`.replace(/\/+/g, '/'),
-      badge: `${baseUrl}icons/badge-72x72.png`.replace(/\/+/g, '/'),
+      icon: assets.icon,
+      badge: assets.badge,
       tag: 'health-reminder',
       requireInteraction: true,
       data: {
-        url: `${baseUrl}?reminder=true`.replace(/\/+/g, '/'),
+        url: normalizeAppPath(`${baseUrl}?reminder=true`),
         timestamp: new Date().toISOString(),
       },
     });
@@ -808,40 +842,34 @@ export class PWAManager {
 
   async clearPWAData(): Promise<void> {
     try {
-      // Clear service worker caches
-      await this.clearCaches();
-
-      // Clear IndexedDB
-      await offlineStorage.clearAllData();
-
-      // Best-effort: delete additional app-scoped IndexedDB databases.
-      // (Some subsystems maintain their own DBs outside OfflineStorageService.)
-      const deleteDb = (name: string) =>
-        new Promise<void>(resolve => {
-          try {
-            const req = indexedDB.deleteDatabase(name);
-            req.onsuccess = () => resolve();
-            req.onerror = () => resolve();
-            req.onblocked = () => resolve();
-          } catch {
-            resolve();
-          }
-        });
-
-      await Promise.all([
-        // Audio/tone engine persistence
-        deleteDb('pain-tracker-tone'),
-      ]);
-
-      // Clear all secureStorage-managed keys (namespaced)
-      secureStorage.keys().forEach(k => secureStorage.remove(k));
+      const coordinator = new TeardownCoordinator();
+      const report = await coordinator.run({
+        canaryKey: 'pain-tracker-storage',
+        beforeIndexedDbTeardown: async () => {
+          const { secureAuditSink } = await import('../services/SecureAuditSink');
+          await secureAuditSink.shutdown?.();
+        },
+        clearSecureStorage: () => {
+          secureStorage.keys().forEach(k => secureStorage.remove(k));
+        },
+      });
 
       if (isDev) {
-        console.log('PWA: All PWA data cleared');
+        console.log('PWA: Teardown report', report);
       }
-      this.dispatchCustomEvent('pwa-data-cleared');
+
+      if (report.ok) {
+        this.dispatchCustomEvent('pwa-data-cleared', report);
+        return;
+      }
+
+      this.dispatchCustomEvent('pwa-data-clear-degraded', report);
     } catch (error) {
       console.error('PWA: Failed to clear PWA data:', error);
+      this.dispatchCustomEvent('pwa-data-clear-degraded', {
+        fatal: true,
+        message: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   }
@@ -850,8 +878,8 @@ export class PWAManager {
   async resetServiceWorker(): Promise<void> {
     try {
       // Unregister all service workers
-      if ('serviceWorker' in navigator) {
-        const registrations = await navigator.serviceWorker.getRegistrations();
+      if ('serviceWorker' in globalThis.navigator) {
+        const registrations = await globalThis.navigator.serviceWorker.getRegistrations();
         await Promise.all(registrations.map(reg => reg.unregister()));
         if (isDev) {
           console.log('PWA: All service workers unregistered');
@@ -881,11 +909,11 @@ export class PWAManager {
       await this.clearCaches();
 
       // Force reload without cache
-      window.location.reload();
+      globalThis.location.reload();
     } catch (error) {
       console.error('PWA: Failed to force refresh:', error);
       // Fallback to normal reload
-      window.location.reload();
+      globalThis.location.reload();
     }
   }
 
