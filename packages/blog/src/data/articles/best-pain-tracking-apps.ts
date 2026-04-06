@@ -2,18 +2,40 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'best-pain-tracking-apps',
-  title: 'Best Pain Tracking Apps in 2025: Privacy-Focused Comparison',
+  title: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and What Matters',
   description:
-    'Compare the best pain tracking apps of 2025 with a focus on privacy, clinical utility, offline capability, and data ownership. Find the right app for your needs.',
-  h1: 'Best Pain Tracking Apps in 2025: A Privacy-First Comparison',
+    'Compare pain tracking apps based on privacy, offline access, symptom logging, export options, and how usable they are during flares, appointments, and disrupted routines.',
+  h1: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and What Matters',
   cluster: 'comparison',
   isPillar: false,
   schemaTypes: ['Article'],
+  resourceLinks: [
+    {
+      title: 'Daily Pain Tracker Printable',
+      href: 'https://www.paintracker.ca/resources/daily-pain-tracker-printable',
+      description: 'Use a one-page printable if you want low-friction daily tracking instead of an app.',
+    },
+    {
+      title: 'Monthly Pain Tracker Printable',
+      href: 'https://www.paintracker.ca/resources/monthly-pain-tracker-printable',
+      description: 'Track longer patterns, treatment changes, and flare cycles on a monthly sheet.',
+    },
+    {
+      title: 'What to Include in a Pain Journal',
+      href: 'https://www.paintracker.ca/resources/what-to-include-in-pain-journal',
+      description: 'See the exact fields that make pain records more useful at appointments.',
+    },
+    {
+      title: 'Download PainTracker',
+      href: 'https://www.paintracker.ca/download',
+      description: 'Open the offline-first app if you want digital tracking with user-controlled exports.',
+    },
+  ],
   sections: [
     {
       h2: 'What to look for in a pain tracking app',
       paragraphs: [
-        'Choosing a pain tracking app involves balancing several competing priorities: clinical utility, privacy protection, ease of use, offline capability, and long-term data ownership. Most apps excel at one or two of these while neglecting the others. Understanding your own priorities—whether privacy is non-negotiable, whether you need offline access, whether clinical export formats matter—helps narrow the field.',
+        'The best pain tracking app is the one that stays usable on a bad day, keeps your records where you expect them to be, and helps you bring clearer information to appointments. This comparison focuses on privacy, offline access, symptom logging, export quality, and how much friction each tool adds when life is already hard.',
         'The most important question to ask any pain app is: where does my data go? Cloud-based apps store your health data on remote servers. Local-only apps keep everything on your device. Hybrid apps may store locally but sync or back up to the cloud. Each model carries different privacy implications that should inform your choice.',
       ],
     },
@@ -28,7 +50,7 @@ const article: ArticleData = {
       h2: 'Privacy as a differentiator',
       paragraphs: [
         'Privacy is where pain tracking apps diverge most significantly. Many popular apps collect analytics, require account creation, and store data on company servers. Some share data with third parties for research or advertising purposes—practices that may be disclosed in lengthy terms of service but are rarely highlighted to users.',
-        'PainTracker is built on a zero-knowledge architecture: no accounts, no servers receiving health data, no analytics collecting personal information, and no third-party SDKs with access to your entries. This approach is architecturally different from adding a "privacy mode" to a cloud app—when there is no server-side data store, there is nothing to breach, subpoena, or monetise.',
+        'PainTracker is designed for local-first use: no account is required for daily tracking, records stay on your device by default, and exports happen only when you choose to create them. That is materially different from adding a privacy toggle to a cloud app that still depends on routine server-side storage.',
       ],
     },
     {

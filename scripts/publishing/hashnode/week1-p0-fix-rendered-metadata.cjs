@@ -23,9 +23,9 @@ const DRY_RUN = process.argv.includes('--dry-run');
 const TARGETS = [
   {
     slug: 'paintracker-privacy-first-trauma-informed-pain-app',
-    title: 'Pain Tracker: Privacy-First, Trauma-Informed Pain App',
+    title: 'Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life',
     description:
-      'Track flares, spot patterns, prepare for appointments, and keep records private. Pain Tracker works offline with no account required.',
+      'Looking for a private pain tracking app? This guide covers offline use, symptom logging, export options, and what makes a local-first tool easier to use.',
   },
   {
     slug: 'stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free',

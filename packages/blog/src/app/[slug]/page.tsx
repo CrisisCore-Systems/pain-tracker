@@ -166,13 +166,38 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
           {article.description}
         </p>
 
+        {article.resourceLinks && article.resourceLinks.length > 0 && (
+          <aside className="mb-10 rounded-xl border border-emerald-100 bg-emerald-50/70 p-5 dark:border-emerald-900/60 dark:bg-emerald-950/20">
+            <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+              Helpful printables and next steps
+            </h2>
+            <ul className="mt-4 space-y-3">
+              {article.resourceLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 hover:decoration-blue-500 dark:text-blue-400 dark:decoration-blue-600 dark:hover:text-blue-300"
+                  >
+                    {link.title}
+                  </a>
+                  {link.description && (
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                      {link.description}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </aside>
+        )}
+
         {/* Sections with mid-article contextual linking */}
         {article.sections.map((section, sectionIndex) => (
           <section key={section.h2} className="mb-10">
             <h2 className="mb-4 text-2xl font-semibold text-gray-800 dark:text-gray-100">
               {section.h2}
             </h2>
-            {section.paragraphs.map((p, i) => (
+            {section.paragraphs.map((p) => (
               <p
                 key={`${section.h2}-${p}`}
                 className="mb-4 leading-relaxed text-gray-600 dark:text-gray-300"

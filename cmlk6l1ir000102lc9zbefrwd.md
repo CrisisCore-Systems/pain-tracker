@@ -1,7 +1,7 @@
 ---
-title: "Pain Tracker: Privacy-First, Trauma-Informed Pain App"
-seoTitle: "Pain Tracker: Privacy-First, Trauma-Informed Pain App"
-seoDescription: "Track flares, spot patterns, prepare for appointments, and keep records private. Pain Tracker works offline with no account required."
+title: "Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life"
+seoTitle: "Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life"
+seoDescription: "Looking for a private pain tracking app? This guide covers offline use, symptom logging, export options, and what makes a local-first tool easier to use."
 datePublished: Fri Feb 13 2026 01:00:22 GMT+0000 (Coordinated Universal Time)
 cuid: cmlk6l1ir000102lc9zbefrwd
 slug: paintracker-privacy-first-trauma-informed-pain-app
@@ -12,9 +12,11 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765619471480/88309
 
 *By CrisisCore Systems*
 
-Pain Tracker is a private pain tracking app for logging symptoms, spotting flare patterns, and preparing for appointments without creating an account or sending daily records to the cloud.
+This guide explains what to look for in a private pain tracking app: offline use, symptom logging that stays low-friction during flares, export options for appointments, and local-first defaults that do not require routine cloud storage.
 
-It is built for people who want practical pain tracking first: daily entries, local-first privacy, offline-capable use, and clinician-friendly exports when they choose to share.
+If you want printable options first, start with the [Daily Pain Tracker Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable), the [Monthly Pain Tracker Printable](https://www.paintracker.ca/resources/monthly-pain-tracker-printable), and [What to Include in a Pain Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal). If you want the full app, go to the [PainTracker download page](https://www.paintracker.ca/download).
+
+Pain Tracker is built for people who want practical pain tracking first: daily entries, local-first privacy, offline-capable use, and clinician-friendly exports when they choose to share.
 
 I built [**PainTracker.ca**](http://PainTracker.ca) because every mainstream pain-tracking app I tried made me want to throw my phone across the room.
 

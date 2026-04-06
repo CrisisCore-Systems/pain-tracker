@@ -27,7 +27,7 @@ const TARGETS = [
   {
     slug: 'paintracker-privacy-first-trauma-informed-pain-app',
     sourcePath: 'cmlk6l1ir000102lc9zbefrwd.md',
-    expectedTitle: 'Pain Tracker: Privacy-First, Trauma-Informed Pain App',
+    expectedTitle: 'Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life',
   },
   {
     slug: 'stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free',

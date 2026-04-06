@@ -31,6 +31,29 @@ interface ResourceCard {
   implemented: boolean;
 }
 
+const featuredResources = [
+  {
+    title: 'Daily Pain Tracker Printable',
+    description: 'A one-page daily pain log for quick symptom tracking.',
+    href: '/resources/daily-pain-tracker-printable',
+  },
+  {
+    title: 'Monthly Pain Tracker Printable',
+    description: 'A monthly printable for spotting longer-term pain patterns.',
+    href: '/resources/monthly-pain-tracker-printable',
+  },
+  {
+    title: 'What to Include in a Pain Journal',
+    description: 'A practical guide to what doctors and specialists need to see.',
+    href: '/resources/what-to-include-in-pain-journal',
+  },
+  {
+    title: 'Download PainTracker',
+    description: 'Use the offline-first app when you want digital tracking and exports.',
+    href: '/download',
+  },
+] as const;
+
 const resources: ResourceCard[] = [
   // Tier 1: Core printable/download intent - IMPLEMENTED
   {
@@ -254,14 +277,30 @@ const resources: ResourceCard[] = [
 
 export const ResourcesIndexPage: React.FC = () => {
   useEffect(() => {
-    document.title = 'Free Pain Tracking Resources & Templates | PainTracker';
-    
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 
-        'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for medical documentation. Perfect for doctor appointments and disability claims.'
-      );
-    }
+    const meta = {
+      title: 'Pain Diary Templates, Printables & Symptom Trackers | PainTracker',
+      description:
+        'Download pain diary templates, daily and monthly pain trackers, symptom journals, and doctor-visit guides. Free printable resources, no signup required.',
+      keywords:
+        'pain diary template, pain tracker printable, symptom tracker printable, pain journal template, pain scale chart printable, migraine tracker printable',
+    };
+
+    document.title = meta.title;
+
+    const updateMeta = (selector: string, content: string) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.setAttribute('content', content);
+      }
+    };
+
+    updateMeta('meta[name="description"]', meta.description);
+    updateMeta('meta[name="keywords"]', meta.keywords);
+    updateMeta('meta[property="og:title"]', meta.title);
+    updateMeta('meta[property="og:description"]', meta.description);
+    updateMeta('meta[property="og:site_name"]', 'PainTracker');
+    updateMeta('meta[name="twitter:title"]', meta.title);
+    updateMeta('meta[name="twitter:description"]', meta.description);
   }, []);
 
   const schema = combineSchemas(
@@ -393,18 +432,51 @@ export const ResourcesIndexPage: React.FC = () => {
               <span>Free Resources</span>
             </div>
             
-            <h1 className="landing-headline landing-headline-lg text-white mb-6">
-              Free Pain Tracking Templates & Guides
-            </h1>
-            
-            <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto">
-              Download printable pain diaries, symptom trackers, and guides designed for 
-              medical documentation and disability claims. All free, no signup required.
-            </p>
-          </div>
-        </section>
-        
-        {/* Templates Section */}
+             <h1 className="landing-headline landing-headline-lg text-white mb-6">
+               Pain Diary Templates, Printables &amp; Symptom Trackers
+             </h1>
+             
+             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto">
+               Download daily and monthly pain trackers, symptom journals, pain scale charts,
+               and doctor-visit guides. Free printable resources, no signup required.
+             </p>
+           </div>
+         </section>
+
+         <section className="py-12 bg-slate-950/80 border-y border-slate-800">
+           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div className="flex items-end justify-between gap-4 mb-6">
+               <div>
+                 <h2 className="text-2xl font-bold text-white">Start with the highest-intent resources</h2>
+                 <p className="text-slate-400 mt-2 max-w-3xl">
+                   These pages match the most common search needs: a daily printable, a monthly tracker,
+                   a clear pain-journal guide, and the full offline app download.
+                 </p>
+               </div>
+             </div>
+
+             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+               {featuredResources.map((resource) => (
+                 <Link
+                   key={resource.href}
+                   to={resource.href}
+                   className="group rounded-xl border border-slate-800 bg-slate-900 p-5 transition-all hover:border-primary/50 hover:bg-slate-900/80"
+                 >
+                   <h3 className="text-base font-semibold text-white group-hover:text-primary transition-colors">
+                     {resource.title}
+                   </h3>
+                   <p className="mt-2 text-sm text-slate-400">{resource.description}</p>
+                   <div className="mt-4 inline-flex items-center gap-2 text-sm text-primary">
+                     <span>Open resource</span>
+                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                   </div>
+                 </Link>
+               ))}
+             </div>
+           </div>
+         </section>
+         
+         {/* Templates Section */}
         <section className="py-16 bg-slate-900">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-8">Printable Templates</h2>
