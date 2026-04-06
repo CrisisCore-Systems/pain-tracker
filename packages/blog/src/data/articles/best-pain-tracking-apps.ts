@@ -2,19 +2,41 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'best-pain-tracking-apps',
-  title: 'Best Pain Tracking Apps in 2025: Privacy-Focused Comparison',
+  title: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and What Actually Matters',
   description:
-    'Compare the best pain tracking apps of 2025 with a focus on privacy, clinical utility, offline capability, and data ownership. Find the right app for your needs.',
-  h1: 'Best Pain Tracking Apps in 2025: A Privacy-First Comparison',
+    'Compare pain tracking apps by privacy, offline access, symptom logging, export options, and day-to-day usability. See which tools stay useful when real life is messy.',
+  h1: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and What Actually Matters',
   cluster: 'comparison',
   isPillar: false,
   schemaTypes: ['Article'],
+  resourceLinks: [
+    {
+      href: 'https://www.paintracker.ca/resources/daily-pain-tracker-printable',
+      label: 'Daily Pain Tracker Printable',
+      description: 'Use a one-page daily tracker if you want a fast, low-friction option before committing to an app.'
+    },
+    {
+      href: 'https://www.paintracker.ca/resources/monthly-pain-tracker-printable',
+      label: 'Monthly Pain Tracker Printable',
+      description: 'See longer trends across flare cycles, treatment changes, and functional impact.'
+    },
+    {
+      href: 'https://www.paintracker.ca/resources/what-to-include-in-pain-journal',
+      label: 'What to Include in a Pain Journal',
+      description: 'Review the core details that make symptom records more useful in appointments.'
+    },
+    {
+      href: 'https://www.paintracker.ca/download',
+      label: 'Try PainTracker',
+      description: 'Open the app or download the installable experience without sending daily records to the cloud.'
+    }
+  ],
   sections: [
     {
       h2: 'What to look for in a pain tracking app',
       paragraphs: [
-        'Choosing a pain tracking app involves balancing several competing priorities: clinical utility, privacy protection, ease of use, offline capability, and long-term data ownership. Most apps excel at one or two of these while neglecting the others. Understanding your own priorities—whether privacy is non-negotiable, whether you need offline access, whether clinical export formats matter—helps narrow the field.',
-        'The most important question to ask any pain app is: where does my data go? Cloud-based apps store your health data on remote servers. Local-only apps keep everything on your device. Hybrid apps may store locally but sync or back up to the cloud. Each model carries different privacy implications that should inform your choice.',
+        'This guide compares pain tracking apps based on privacy, offline access, symptom logging, export quality, and how usable each option feels during real-world health disruption. Instead of treating feature lists as the whole story, it focuses on whether a tool still helps when you are tired, interrupted, in a waiting room, or dealing with unstable connectivity.',
+        'The fastest way to narrow the field is to ask where your data lives, whether you can keep logging without internet, and how easily you can bring records into appointments. Those answers tell you more than screenshots, app-store ratings, or abstract wellness promises.'
       ],
     },
     {

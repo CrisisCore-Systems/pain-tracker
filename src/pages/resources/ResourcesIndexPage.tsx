@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   FileText, 
   Download, 
@@ -253,6 +253,9 @@ const resources: ResourceCard[] = [
 ];
 
 export const ResourcesIndexPage: React.FC = () => {
+  const location = useLocation();
+  const searchQuery = new URLSearchParams(location.search).get('q')?.trim() ?? '';
+
   useEffect(() => {
     document.title = 'Free Pain Tracking Resources & Templates | PainTracker';
     
@@ -262,7 +265,37 @@ export const ResourcesIndexPage: React.FC = () => {
         'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for medical documentation. Perfect for doctor appointments and disability claims.'
       );
     }
-  }, []);
+
+    const existingRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const createdRobots = !existingRobots;
+    const robotsMeta = existingRobots ?? document.createElement('meta');
+    const previousRobotsContent = robotsMeta.getAttribute('content');
+
+    if (createdRobots) {
+      robotsMeta.setAttribute('name', 'robots');
+      document.head.appendChild(robotsMeta);
+    }
+
+    if (searchQuery) {
+      robotsMeta.setAttribute('content', 'noindex, follow');
+    } else if (createdRobots) {
+      robotsMeta.remove();
+    } else if (previousRobotsContent) {
+      robotsMeta.setAttribute('content', previousRobotsContent);
+    } else {
+      robotsMeta.removeAttribute('content');
+    }
+
+    return () => {
+      if (createdRobots) {
+        robotsMeta.remove();
+      } else if (previousRobotsContent) {
+        robotsMeta.setAttribute('content', previousRobotsContent);
+      } else {
+        robotsMeta.removeAttribute('content');
+      }
+    };
+  }, [searchQuery]);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(

@@ -313,14 +313,6 @@ export function generateWebSiteSchema(): object {
       '@type': 'Organization',
       name: defaultSEOConfig.siteName,
       url: defaultSEOConfig.siteUrl
-    },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: 'https://www.paintracker.ca/resources?q={search_term_string}'
-      },
-      'query-input': 'required name=search_term_string'
     }
   };
 }
