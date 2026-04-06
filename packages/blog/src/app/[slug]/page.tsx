@@ -166,15 +166,39 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
           {article.description}
         </p>
 
+        {article.resourceLinks && article.resourceLinks.length > 0 && (
+          <section className="mb-10 rounded-lg border border-blue-100 bg-blue-50/60 p-6 dark:border-blue-800/50 dark:bg-blue-900/20">
+            <h2 className="mb-3 text-xl font-semibold text-gray-900 dark:text-white">
+              Helpful printables and next steps
+            </h2>
+            <p className="mb-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+              If you are comparing tools, these resource pages give you direct templates, clinician-facing guidance, and a low-friction way to try PainTracker.
+            </p>
+            <ul className="space-y-3">
+              {article.resourceLinks.map((link) => (
+                <li key={link.href} className="rounded-lg border border-white/70 bg-white/80 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+                  <a
+                    href={link.href}
+                    className="font-medium text-blue-600 underline decoration-blue-300 underline-offset-2 hover:text-blue-800 hover:decoration-blue-500 dark:text-blue-400 dark:decoration-blue-600 dark:hover:text-blue-300"
+                  >
+                    {link.label}
+                  </a>
+                  <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{link.description}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {/* Sections with mid-article contextual linking */}
         {article.sections.map((section, sectionIndex) => (
           <section key={section.h2} className="mb-10">
             <h2 className="mb-4 text-2xl font-semibold text-gray-800 dark:text-gray-100">
               {section.h2}
             </h2>
-            {section.paragraphs.map((p, i) => (
+            {section.paragraphs.map((p, paragraphIndex) => (
               <p
-                key={`${section.h2}-${p}`}
+                key={`${sectionIndex}-${paragraphIndex}`}
                 className="mb-4 leading-relaxed text-gray-600 dark:text-gray-300"
               >
                 {p}

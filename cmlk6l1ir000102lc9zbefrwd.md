@@ -1,7 +1,7 @@
 ---
-title: "Pain Tracker: Privacy-First, Trauma-Informed Pain App"
-seoTitle: "Pain Tracker: Privacy-First, Trauma-Informed Pain App"
-seoDescription: "Track flares, spot patterns, prepare for appointments, and keep records private. Pain Tracker works offline with no account required."
+title: "Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life"
+seoTitle: "Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life"
+seoDescription: "Compare a private pain tracking app built for offline use, symptom logging, appointment prep, and low-friction daily tracking without an account."
 datePublished: Fri Feb 13 2026 01:00:22 GMT+0000 (Coordinated Universal Time)
 cuid: cmlk6l1ir000102lc9zbefrwd
 slug: paintracker-privacy-first-trauma-informed-pain-app
@@ -14,7 +14,9 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1765619471480/88309
 
 Pain Tracker is a private pain tracking app for logging symptoms, spotting flare patterns, and preparing for appointments without creating an account or sending daily records to the cloud.
 
-It is built for people who want practical pain tracking first: daily entries, local-first privacy, offline-capable use, and clinician-friendly exports when they choose to share.
+This page explains what the app helps with, how offline use and local-first storage work, and why those defaults matter when pain tracking has to survive real life instead of ideal conditions.
+
+If you want something immediately practical, start with the [Daily Pain Tracker Printable](https://www.paintracker.ca/resources/daily-pain-tracker-printable), the [Monthly Pain Tracker Printable](https://www.paintracker.ca/resources/monthly-pain-tracker-printable), [What to Include in a Pain Journal](https://www.paintracker.ca/resources/what-to-include-in-pain-journal), or open the [PainTracker download page](https://www.paintracker.ca/download).
 
 I built [**PainTracker.ca**](http://PainTracker.ca) because every mainstream pain-tracking app I tried made me want to throw my phone across the room.
 

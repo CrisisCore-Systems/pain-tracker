@@ -57,4 +57,10 @@ export interface ArticleData {
   howToSteps?: HowToStep[];
   /** Cross-domain + internal linking directives (required for SEO) */
   internalLinks?: InternalLinks;
+  /** High-intent utility links rendered near the opening copy */
+  resourceLinks?: Array<{
+    href: string;
+    label: string;
+    description: string;
+  }>;
 }

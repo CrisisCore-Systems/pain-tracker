@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   FileText, 
   Download, 
@@ -29,6 +29,40 @@ interface ResourceCard {
   badge?: string;
   category: 'template' | 'guide' | 'tool';
   implemented: boolean;
+}
+
+function useRobotsMeta(content: string | null) {
+  useEffect(() => {
+    const existingRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const createdRobots = !existingRobots;
+    const robotsMeta = existingRobots ?? document.createElement('meta');
+    const previousRobotsContent = robotsMeta.getAttribute('content');
+
+    if (createdRobots) {
+      robotsMeta.setAttribute('name', 'robots');
+      document.head.appendChild(robotsMeta);
+    }
+
+    if (content) {
+      robotsMeta.setAttribute('content', content);
+    } else if (createdRobots) {
+      robotsMeta.remove();
+    } else if (previousRobotsContent) {
+      robotsMeta.setAttribute('content', previousRobotsContent);
+    } else {
+      robotsMeta.removeAttribute('content');
+    }
+
+    return () => {
+      if (createdRobots) {
+        robotsMeta.remove();
+      } else if (previousRobotsContent) {
+        robotsMeta.setAttribute('content', previousRobotsContent);
+      } else {
+        robotsMeta.removeAttribute('content');
+      }
+    };
+  }, [content]);
 }
 
 const resources: ResourceCard[] = [
@@ -253,6 +287,11 @@ const resources: ResourceCard[] = [
 ];
 
 export const ResourcesIndexPage: React.FC = () => {
+  const location = useLocation();
+  const searchQuery = new URLSearchParams(location.search).get('q')?.trim() ?? '';
+
+  useRobotsMeta(searchQuery ? 'noindex, follow' : null);
+
   useEffect(() => {
     document.title = 'Free Pain Tracking Resources & Templates | PainTracker';
     
