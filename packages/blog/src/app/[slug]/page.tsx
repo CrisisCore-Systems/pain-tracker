@@ -199,7 +199,7 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             </h2>
             {section.paragraphs.map((p, paragraphIndex) => (
               <p
-                key={`${sectionIndex}-${paragraphIndex}`}
+                key={`${section.h2}-${sectionIndex}-${paragraphIndex}-${p}`}
                 className="mb-4 leading-relaxed text-gray-600 dark:text-gray-300"
               >
                 {p}

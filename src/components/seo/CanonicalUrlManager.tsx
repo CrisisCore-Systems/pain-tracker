@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const SITE_URL = 'https://www.paintracker.ca';
+const NOINDEX_QUERY_STATE_PATHS = new Set(['/resources']);
 
 export function toCanonicalUrl(pathname: string): string {
   if (!pathname || pathname === '/') {
@@ -14,7 +15,7 @@ export function toCanonicalUrl(pathname: string): string {
 }
 
 export function shouldNoindexRoute(pathname: string, search: string): boolean {
-  return pathname === '/resources' && search.trim().length > 0;
+  return NOINDEX_QUERY_STATE_PATHS.has(pathname) && search.trim().length > 0;
 }
 
 function setRobotsMetaTag(name: 'robots' | 'googlebot', shouldNoindex: boolean) {
