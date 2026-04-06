@@ -17,6 +17,28 @@ export function shouldNoindexRoute(pathname: string, search: string): boolean {
   return pathname === '/resources' && search.trim().length > 0;
 }
 
+function setRobotsMetaTag(name: 'robots' | 'googlebot', shouldNoindex: boolean) {
+  let robotsMeta = document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
+  const managedByCanonicalManager =
+    robotsMeta?.getAttribute('data-managed-by') === 'CanonicalUrlManager';
+
+  if (shouldNoindex) {
+    if (!robotsMeta) {
+      robotsMeta = document.createElement('meta');
+      robotsMeta.setAttribute('name', name);
+      document.head.appendChild(robotsMeta);
+    }
+
+    robotsMeta.setAttribute('content', 'noindex,follow');
+    robotsMeta.setAttribute('data-managed-by', 'CanonicalUrlManager');
+    return;
+  }
+
+  if (managedByCanonicalManager) {
+    robotsMeta?.remove();
+  }
+}
+
 /**
  * Keeps canonical + OG URL deterministic across SPA route changes.
  *
@@ -48,24 +70,8 @@ export function CanonicalUrlManager() {
       twitterUrl.setAttribute('content', canonicalUrl);
     }
 
-    for (const name of ['robots', 'googlebot']) {
-      let robotsMeta = document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
-      const managedByCanonicalManager =
-        robotsMeta?.getAttribute('data-managed-by') === 'CanonicalUrlManager';
-
-      if (noindexRoute) {
-        if (!robotsMeta) {
-          robotsMeta = document.createElement('meta');
-          robotsMeta.setAttribute('name', name);
-          document.head.appendChild(robotsMeta);
-        }
-
-        robotsMeta.setAttribute('content', 'noindex,follow');
-        robotsMeta.setAttribute('data-managed-by', 'CanonicalUrlManager');
-      } else if (managedByCanonicalManager) {
-        robotsMeta?.remove();
-      }
-    }
+    setRobotsMetaTag('robots', noindexRoute);
+    setRobotsMetaTag('googlebot', noindexRoute);
   }, [location.pathname, location.search]);
 
   return null;
