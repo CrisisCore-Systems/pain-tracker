@@ -433,7 +433,7 @@ export const ResourcesIndexPage: React.FC = () => {
             </div>
             
              <h1 className="landing-headline landing-headline-lg text-white mb-6">
-               Pain Diary Templates, Printables &amp; Symptom Trackers
+               Pain Diary Templates, Printables & Symptom Trackers
              </h1>
              
              <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto">
