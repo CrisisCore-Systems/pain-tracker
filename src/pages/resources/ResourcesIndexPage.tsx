@@ -31,6 +31,40 @@ interface ResourceCard {
   implemented: boolean;
 }
 
+function useRobotsMeta(content: string | null) {
+  useEffect(() => {
+    const existingRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const createdRobots = !existingRobots;
+    const robotsMeta = existingRobots ?? document.createElement('meta');
+    const previousRobotsContent = robotsMeta.getAttribute('content');
+
+    if (createdRobots) {
+      robotsMeta.setAttribute('name', 'robots');
+      document.head.appendChild(robotsMeta);
+    }
+
+    if (content) {
+      robotsMeta.setAttribute('content', content);
+    } else if (createdRobots) {
+      robotsMeta.remove();
+    } else if (previousRobotsContent) {
+      robotsMeta.setAttribute('content', previousRobotsContent);
+    } else {
+      robotsMeta.removeAttribute('content');
+    }
+
+    return () => {
+      if (createdRobots) {
+        robotsMeta.remove();
+      } else if (previousRobotsContent) {
+        robotsMeta.setAttribute('content', previousRobotsContent);
+      } else {
+        robotsMeta.removeAttribute('content');
+      }
+    };
+  }, [content]);
+}
+
 const resources: ResourceCard[] = [
   // Tier 1: Core printable/download intent - IMPLEMENTED
   {
@@ -256,6 +290,8 @@ export const ResourcesIndexPage: React.FC = () => {
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get('q')?.trim() ?? '';
 
+  useRobotsMeta(searchQuery ? 'noindex, follow' : null);
+
   useEffect(() => {
     document.title = 'Free Pain Tracking Resources & Templates | PainTracker';
     
@@ -265,37 +301,7 @@ export const ResourcesIndexPage: React.FC = () => {
         'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for medical documentation. Perfect for doctor appointments and disability claims.'
       );
     }
-
-    const existingRobots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
-    const createdRobots = !existingRobots;
-    const robotsMeta = existingRobots ?? document.createElement('meta');
-    const previousRobotsContent = robotsMeta.getAttribute('content');
-
-    if (createdRobots) {
-      robotsMeta.setAttribute('name', 'robots');
-      document.head.appendChild(robotsMeta);
-    }
-
-    if (searchQuery) {
-      robotsMeta.setAttribute('content', 'noindex, follow');
-    } else if (createdRobots) {
-      robotsMeta.remove();
-    } else if (previousRobotsContent) {
-      robotsMeta.setAttribute('content', previousRobotsContent);
-    } else {
-      robotsMeta.removeAttribute('content');
-    }
-
-    return () => {
-      if (createdRobots) {
-        robotsMeta.remove();
-      } else if (previousRobotsContent) {
-        robotsMeta.setAttribute('content', previousRobotsContent);
-      } else {
-        robotsMeta.removeAttribute('content');
-      }
-    };
-  }, [searchQuery]);
+  }, []);
 
   const schema = combineSchemas(
     generateBreadcrumbSchema(
