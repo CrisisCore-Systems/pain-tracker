@@ -1,6 +1,6 @@
 ---
-title: "Private Pain Tracking App: Offline, Trauma Informed, and Built for Real Life"
-seoTitle: "Private Pain Tracking App: Offline, Trauma Informed, and Built for Real Life"
+title: "Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life"
+seoTitle: "Private Pain Tracking App: Offline, Trauma-Informed, and Built for Real Life"
 seoDescription: "Compare a private pain tracking app built for offline use, symptom logging, appointment prep, and low-friction daily tracking without an account."
 datePublished: Fri Feb 13 2026 01:00:22 GMT+0000 (Coordinated Universal Time)
 cuid: cmlk6l1ir000102lc9zbefrwd

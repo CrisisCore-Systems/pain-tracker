@@ -196,9 +196,9 @@ export default async function ArticlePage({ params }: Readonly<Props>) {
             <h2 className="mb-4 text-2xl font-semibold text-gray-800 dark:text-gray-100">
               {section.h2}
             </h2>
-            {section.paragraphs.map((p) => (
+            {section.paragraphs.map((p, paragraphIndex) => (
               <p
-                key={`${section.h2}-${p}`}
+                key={`${section.h2}-${paragraphIndex}`}
                 className="mb-4 leading-relaxed text-gray-600 dark:text-gray-300"
               >
                 {p}
