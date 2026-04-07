@@ -719,6 +719,8 @@ function RecoveryTestingDashboard() {
 }
 ```
 
+That crisis-frequency metric is only meaningful if the detector behind it is well-calibrated, which is why [The False Positive Problem](/blog/false-positives-calibrating-crisis-detection) sits underneath this recovery work.
+
 ## Conclusion
 
 Testing recovery is fundamentally different from testing features. We're not checking if a button works—we're checking if a human trajectory improves over time.
@@ -744,6 +746,8 @@ The ultimate test isn't "did our algorithm fire correctly?" It's "did this perso
 *This is Part 8 of our series on building trauma-informed healthcare applications. Previous posts covered [crisis detection](/blog/false-positives-calibrating-crisis-detection), [testing strategies](/blog/testing-the-untestable), [visual regression](/blog/visual-regression-adaptive-interfaces), [ethics of simulation](/blog/ethics-of-simulation), [performance](/blog/performance-under-pressure), and [cross-crisis calibration](/blog/cross-crisis-calibration).*
 
 **Coming Next**: "Internationalization of Trauma: Testing Across Cultural Contexts"
+
+If you want the validation layer that checks whether these longitudinal recovery simulations still match reality, continue with [Testing the Testing](/blog/testing-the-testing).
 
 [![Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=light)](https://www.producthunt.com/products/pain-tracker?utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker)
 

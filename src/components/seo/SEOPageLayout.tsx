@@ -7,9 +7,9 @@
  * 2. Instant utility block (download/tool preview)
  * 3. Ultra-clear explanation (what, who, how, why)
  * 4. Clinical & legal trust signals
- * 5. Soft conversion into the app
- * 6. Internal authority links
- * 7. FAQ block
+ * 5. Internal authority links
+ * 6. FAQ block
+ * 7. Patient-first CTA stack
  * 8. Structured data (invisible SEO)
  */
 
@@ -33,6 +33,7 @@ import {
   type FAQItem,
   type BreadcrumbItem
 } from '../../lib/seo';
+import { ResourceCtaStack } from './ResourceCtaStack';
 import '../../styles/pages/landing.css';
 
 export interface SEOPageContent {
@@ -226,7 +227,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -239,7 +240,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
                 to="/start"
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Open App
+                Use the app free
               </Link>
             </div>
           </div>
@@ -474,27 +475,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
           </section>
         )}
         
-        {/* ===== SECTION 5: Soft Conversion ===== */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Want automatic tracking instead of paper?
-            </h2>
-            <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              PainTracker automatically logs pain, symptoms, triggers, and daily patterns,
-              then lets you export clinician-friendly records when you choose. Local-first by default.
-            </p>
-            <Link
-              to="/start"
-              className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl inline-flex items-center gap-3"
-            >
-              Open PainTracker
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </section>
-        
-        {/* ===== SECTION 6: Internal Authority Links ===== */}
+        {/* ===== SECTION 5: Internal Authority Links ===== */}
         <section className="py-16 bg-slate-900">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-8">Related pain tracking resources</h2>
@@ -518,7 +499,7 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
           </div>
         </section>
         
-        {/* ===== SECTION 7: FAQ Block ===== */}
+        {/* ===== SECTION 6: FAQ Block ===== */}
         <section className="py-16 bg-slate-800/50 border-t border-slate-700">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-white mb-8 text-center">
@@ -556,6 +537,8 @@ export const SEOPageLayout: React.FC<SEOPageLayoutProps> = ({ content, children 
             </div>
           </div>
         </section>
+
+        <ResourceCtaStack />
       </main>
       
       <LandingFooter />

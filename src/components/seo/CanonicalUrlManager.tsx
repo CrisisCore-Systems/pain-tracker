@@ -24,6 +24,7 @@ export function CanonicalUrlManager() {
 
   useEffect(() => {
     const canonicalUrl = toCanonicalUrl(location.pathname);
+    const shouldNoindex = location.search.trim().length > 0;
 
     let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonicalLink) {
@@ -42,7 +43,32 @@ export function CanonicalUrlManager() {
     if (twitterUrl) {
       twitterUrl.setAttribute('content', canonicalUrl);
     }
-  }, [location.pathname]);
+
+    const upsertMeta = (name: 'robots' | 'googlebot', content: string) => {
+      let metaTag = document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('name', name);
+        document.head.appendChild(metaTag);
+      }
+      metaTag.setAttribute('content', content);
+    };
+
+    const removeManagedMeta = (name: 'robots' | 'googlebot') => {
+      const metaTag = document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
+      if (metaTag?.getAttribute('content') === 'noindex,follow') {
+        metaTag.remove();
+      }
+    };
+
+    if (shouldNoindex) {
+      upsertMeta('robots', 'noindex,follow');
+      upsertMeta('googlebot', 'noindex,follow');
+    } else {
+      removeManagedMeta('robots');
+      removeManagedMeta('googlebot');
+    }
+  }, [location.pathname, location.search]);
 
   return null;
 }

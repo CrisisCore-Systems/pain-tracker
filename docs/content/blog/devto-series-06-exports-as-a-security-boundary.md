@@ -11,7 +11,18 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · **Part 6** · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md)
+· [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
+· [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
+· [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
+· [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
+· [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
+· **Part 6**
+· [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md)
+· [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md)
+· [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
+· [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
 
 This post is Part 6 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
 
@@ -20,6 +31,7 @@ This post is Part 6 in a Dev.to series grounded in the open-source **Pain Tracke
 - This post is about *trust boundaries*, not “features.”
 
 If you haven’t read Part 5 yet:
+
 - Part 5: [Trauma-informed UX + accessibility as architecture](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
 
 ---
@@ -58,10 +70,10 @@ The UI that invokes them (with filters) is here:
 
 The pattern is intentionally boring:
 
-1) user chooses a format (CSV/JSON/PDF)
-2) user optionally filters the date range / symptoms / locations
-3) app generates a string (or PDF data URI)
-4) app downloads it via a normal browser download
+1. user chooses a format (CSV/JSON/PDF)
+1. user optionally filters the date range / symptoms / locations
+1. app generates a string (or PDF data URI)
+1. app downloads it via a normal browser download
 
 No background exporting, no scheduled exports, no “send to provider” button that quietly turns into a network feature.
 
@@ -120,10 +132,13 @@ Pain Tracker uses two kinds of tracking around exports:
 
 It also sanitizes metadata so Class A fields aren’t stored in plaintext localStorage.
 
-2) **Optional GA4 events**
+1. **Optional GA4 events**
 
 - export utilities call `trackDataExported(format, entryCount)`
 - those events are gated behind env + explicit consent (covered in Part 8)
+
+Part 8 walks through the full gating model behind those events:
+[Analytics without surveillance: explicit consent, layered gates, and never sending Class A data](https://dev.to/crisiscoresystems/analytics-without-surveillance-explicit-consent-layered-gates-and-never-sending-class-a-data-59f1).
 
 The key point is what’s *not* tracked:
 
@@ -148,6 +163,9 @@ Good export UX in sensitive apps is mostly about preventing regret:
 - no surprise side effects
 
 If you add “share” features later, treat them as new boundaries: they turn a local file into network exposure.
+
+For a concrete paperwork-oriented example built on top of this boundary, see
+[How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://dev.to/crisiscoresystems/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study-4ce8).
 
 ---
 

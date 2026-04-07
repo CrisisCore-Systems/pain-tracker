@@ -11,15 +11,33 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · **Part 7** · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md)
+· [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
+· [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
+· [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
+· [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
+· [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
+· [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
+· **Part 7**
+· [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md)
+· [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
+· [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
 
 This post is Part 7 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
+
+For the short reading path around this specific workflow cluster, start with [WorkSafeBC Documentation Workflows: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-worksafebc-documentation-workflows-start-here.md).
+
+If you want the worked example after the philosophy, read the companion case study next:
+
+- [How Pain Tracker Pro Streamlines WorkSafeBC Claims: A Composite Case Study](https://blog.paintracker.ca/how-pain-tracker-pro-streamlines-worksafebc-claims-a-composite-case-study)
 
 - Not medical advice.
 - Not a compliance claim.
 - This is about building *useful documentation outputs* without drifting into unsafe promises.
 
 If you haven’t read Part 6 yet:
+
 - Part 6: [Exports are a security boundary](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
 
 ---
@@ -72,9 +90,17 @@ This is the kind of thing that’s easy to forget when you’re writing product 
 
 Pain Tracker bakes the non-claims into the PDF output.
 
-The report includes an explicit disclaimer section (verbatim from the generator):
+The report includes an explicit disclaimer section (verbatim from the
+generator):
 
-> This report is a structured summary of self-reported pain data for WorkSafe BC reference only. It does not constitute medical advice, diagnosis, or treatment. This document should be reviewed with a qualified healthcare provider. Pain Tracker Pro is not affiliated with WorkSafe BC.
+> This report is a structured summary of self-reported pain data for WorkSafe
+> BC reference only. It does not constitute medical advice, diagnosis, or
+> treatment. This document should be reviewed with a qualified healthcare
+> provider. Pain Tracker Pro is not affiliated with WorkSafe BC.
+> This report is a structured summary of self-reported pain data for WorkSafe BC
+> reference only. It does not constitute medical advice, diagnosis, or
+> treatment. This document should be reviewed with a qualified healthcare
+> provider. Pain Tracker Pro is not affiliated with WorkSafe BC.
 
 That disclaimer is not “marketing.”
 
@@ -83,6 +109,8 @@ It’s a boundary:
 - what the report is
 - what it is not
 - who should interpret it
+
+That same “say only what the code earns” posture is the broader theme of [Maintaining truthful docs over time: how to keep security claims honest](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778).
 
 ---
 
@@ -137,7 +165,9 @@ Pain Tracker’s local-first stance is intentionally narrower.
 
 ## Next up
 
-Part 8 covers analytics without surveillance: how the repo gates outbound analytics behind *both* an env flag and explicit consent, and how it avoids Class A fields in GA4 event params.
+Part 8 covers analytics without surveillance: how the repo gates outbound
+analytics behind *both* an env flag and explicit consent, and how it avoids
+Class A fields in GA4 event params.
 
 Prev: [Part 6 — Exports as a security boundary](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
 Next: [Part 8 — Analytics without surveillance](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md)

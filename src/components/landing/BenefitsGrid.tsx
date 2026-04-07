@@ -80,7 +80,7 @@ export const BenefitsGrid: React.FC = () => {
           
           <h2 className="landing-headline landing-headline-lg mb-6">
             <span className="text-white">Why Choose </span>
-            <span className="gradient-text-animated">PainTracker?</span>
+            <span className="gradient-text-animated">Pain Tracker?</span>
           </h2>
           <p className="landing-subhead text-lg lg:text-xl">
             Features designed with your privacy, security, and well-being in mind.

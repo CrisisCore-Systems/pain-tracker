@@ -79,7 +79,7 @@ export const LandingFooter: React.FC = () => {
               >
                 <span className="relative z-10 flex items-center gap-2">
                   <Zap className="h-5 w-5" />
-                  Start Tracking Free
+                  Use the app free
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </span>
               </Button>
@@ -137,7 +137,7 @@ export const LandingFooter: React.FC = () => {
                   <Activity className="h-6 w-6 text-white" />
                 </div>
                 <span className="font-bold text-2xl bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-                  PainTracker
+                  Pain Tracker
                 </span>
               </div>
               <p className="text-slate-300 max-w-md leading-relaxed">

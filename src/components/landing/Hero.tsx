@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../design-system/components/Button';
-import { Activity, Shield, Heart, Stethoscope, LogIn, ArrowRight, Sparkles, Zap, Star } from 'lucide-react';
+import { Activity, Shield, Heart, ArrowRight, Sparkles, FileText, Download } from 'lucide-react';
 
 // Preload the main app chunks when user shows intent to navigate
 const preloadAppChunks = () => {
@@ -66,21 +66,12 @@ export const Hero: React.FC = () => {
                 <div className="absolute inset-0 rounded-xl bg-sky-500 blur-xl opacity-40" />
               </div>
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-                PainTracker
+                Pain Tracker
               </span>
             </div>
 
             {/* Navigation Actions */}
             <div className="flex items-center gap-2 md:gap-3">
-              <a
-                href="https://blog.paintracker.ca"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hidden lg:flex items-center px-4 py-2 text-sm font-medium text-slate-200 hover:text-white transition-colors rounded-lg hover:bg-white/5"
-              >
-                Blog
-              </a>
-
               <Button
                 variant="ghost"
                 onClick={() => navigate('/resources')}
@@ -91,39 +82,10 @@ export const Hero: React.FC = () => {
 
               <Button
                 variant="ghost"
-                onClick={() => navigate('/whitepaper')}
+                onClick={() => navigate('/download')}
                 className="hidden lg:flex text-slate-200 hover:text-white hover:bg-white/5"
               >
-                Whitepaper
-              </Button>
-              
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/pricing')}
-                className="hidden lg:flex text-slate-200 hover:text-white hover:bg-white/5"
-              >
-                Pricing
-              </Button>
-
-              <Button
-                variant="ghost"
-                onClick={() => navigate('/start')}
-                onMouseEnter={handlePreload}
-                onFocus={handlePreload}
-                className="hidden md:flex text-slate-200 hover:text-white hover:bg-white/5"
-              >
-                <LogIn className="h-4 w-4 mr-2" />
-                Sign In
-              </Button>
-
-              <Button
-                variant="outline"
-                onClick={() => navigate('/clinic')}
-                className="border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10 hover:border-emerald-300 transition-all"
-                aria-label="Clinic Tools"
-              >
-                <Stethoscope className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Clinic Tools</span>
+                Download
               </Button>
 
               <button
@@ -133,7 +95,7 @@ export const Hero: React.FC = () => {
                 className="btn-cta-primary flex items-center gap-2 text-sm px-5 py-2.5"
                 data-testid="nav-cta-start"
               >
-                Start Tracking Free
+                Use the app free
                 <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -144,23 +106,6 @@ export const Hero: React.FC = () => {
       {/* Hero Content */}
       <div className="relative z-10 flex-1 flex items-center">
         <div className="container mx-auto px-4 py-16 lg:py-24">
-          {/* New Blog Announcement Banner */}
-          <a
-            href="https://blog.paintracker.ca/coding-through-collapse"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mb-8 mx-auto lg:mx-0 max-w-fit flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-red-500/20 border border-amber-500/30 hover:border-amber-400/50 transition-all group"
-          >
-            <span className="flex items-center gap-1.5 text-amber-300 font-semibold text-sm">
-              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-              NEW
-            </span>
-            <span className="text-slate-100 text-sm">
-              Coding Through Collapse—Why This App Forgets You Exist
-            </span>
-            <ArrowRight className="h-4 w-4 text-slate-300 group-hover:text-amber-300 group-hover:translate-x-1 transition-all" />
-          </a>
-
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 xl:gap-24 items-center">
             {/* Left Column: Content */}
             <div className="space-y-8 text-center lg:text-left stagger-fade-up">
@@ -168,7 +113,7 @@ export const Hero: React.FC = () => {
               <div className="inline-flex items-center gap-3">
                 <span className="badge-glow-sky flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
-                  <span>100% Local & Private</span>
+                  <span>Private by default</span>
                 </span>
                 <span className="hidden sm:flex items-center gap-2 text-sm text-slate-300">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -178,75 +123,76 @@ export const Hero: React.FC = () => {
 
               {/* Headline */}
               <h1 className="landing-headline landing-headline-xl">
-                <span className="text-white">Private Offline-First</span>
+                <span className="text-white">Track pain privately.</span>
                 <br />
-                <span className="text-white">Pain Tracker App</span>
+                <span className="text-white">No account. Works offline.</span>
+                <br />
+                <span className="text-white">Bring better records to appointments.</span>
               </h1>
 
               {/* Subheading */}
               <p className="landing-subhead text-lg lg:text-xl max-w-xl mx-auto lg:mx-0">
-                Track pain, symptoms, triggers, flare patterns, and daily functioning on your device.
-                Use it as a pain diary app, chronic pain tracker, or structured log for doctor visits.
+                Pain Tracker helps you log pain, symptoms, flare patterns, and daily function in a way that stays useful on bad days and readable when it is time to show a doctor what has actually been happening.
               </p>
 
               <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
-                PainTracker is built for daily symptom logging, local pattern insight, and clinician-friendly exports without making everyday tracking depend on an account or cloud connection.
-              </p>
-
-              <p className="text-sm text-slate-400 max-w-xl mx-auto lg:mx-0">
-                Data stays local by default unless you deliberately export it.
+                Daily tracking stays local by default unless you deliberately export a record.
               </p>
 
               {/* Feature Pills */}
               <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
                 <div className="badge-glow-sky flex items-center gap-2 text-sm">
-                  <Zap className="h-3.5 w-3.5" />
-                  <span>Pattern Analysis</span>
+                  <Shield className="h-3.5 w-3.5" />
+                  <span>Works offline</span>
                 </div>
                 <div className="badge-glow-emerald flex items-center gap-2 text-sm">
-                  <Shield className="h-3.5 w-3.5" />
-                  <span>Local-First</span>
+                  <Heart className="h-3.5 w-3.5" />
+                  <span>No account</span>
                 </div>
                 <div className="badge-glow-purple flex items-center gap-2 text-sm">
-                  <Heart className="h-3.5 w-3.5" />
-                  <span>Trauma-Informed</span>
+                  <FileText className="h-3.5 w-3.5" />
+                  <span>Doctor-ready records</span>
                 </div>
               </div>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 justify-center lg:justify-start pt-2">
                 <button
                   onClick={() => navigate('/start')}
                   className="btn-cta-primary text-lg px-8 py-4 flex items-center justify-center gap-3"
                   data-testid="hero-cta-start"
                 >
-                  <span>Start Tracking Free</span>
+                  <span>Use the app free</span>
                   <ArrowRight className="h-5 w-5" />
                 </button>
 
                 <button
-                  onClick={() => navigate('/pricing')}
+                  onClick={() => navigate('/resources/pain-diary-template-pdf')}
                   className="btn-cta-outline text-lg px-8 py-4"
                 >
-                  View Pricing
+                  <span className="inline-flex items-center gap-2"><Download className="h-5 w-5" />Download a printable</span>
+                </button>
+
+                <button
+                  onClick={() => navigate('/share-pain-records-with-doctor-without-giving-an-app-your-data')}
+                  className="btn-cta-outline text-lg px-8 py-4"
+                >
+                  <span className="inline-flex items-center gap-2"><FileText className="h-5 w-5" />Prepare records</span>
                 </button>
               </div>
 
               {/* Trust Line */}
               <div className="space-y-3 text-sm pt-4">
                 <p className="flex items-center gap-3 justify-center lg:justify-start text-slate-200">
-                  <span className="flex items-center gap-1.5 text-emerald-300">
-                    <Star className="h-3.5 w-3.5 fill-current" />
-                    Free Forever
-                  </span>
+                  <span className="flex items-center gap-1.5 text-emerald-300">Use the app free</span>
                   <span className="text-slate-400">•</span>
-                  <span>Unlimited entries</span>
+                  <span>Download printables</span>
                   <span className="text-slate-400">•</span>
-                  <span>No credit card</span>
+                  <span>Prepare records for appointments</span>
                 </p>
                 <p className="flex items-center gap-2 justify-center lg:justify-start text-slate-200">
-                  <span className="text-sky-300 font-medium">Optional upgrades:</span>
-                  <span>Automated insights • Clinical PDF export • Audit logs</span>
+                  <span className="text-sky-300 font-medium">Patient-first hierarchy:</span>
+                  <span>Resources and appointment prep first. Builder and architecture content lower in the hierarchy.</span>
                 </p>
               </div>
             </div>

@@ -149,9 +149,14 @@ Apply (include already-published posts too):
 npm run -s devto:sync-content:apply:allow-published
 ```
 
+<!-- markdownlint-disable-file MD013 -->
+
 ## Push local source markdown to DEV
 
-This reads local source markdown files (from `sourceFile` in `schedule.json`) and pushes their full content to the corresponding DEV articles via the API. Use this after editing source files locally (e.g. fixing links) to update the DEV drafts.
+This reads local source markdown files (from `sourceFile` in
+`schedule.json`) and pushes their full content to the corresponding DEV
+articles via the API. Use this after editing source files locally
+(e.g. fixing links) to update the DEV drafts.
 
 - Articles must already exist on DEV (run `create-drafts` first if needed)
 - CTA blocks are injected automatically

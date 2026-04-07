@@ -91,15 +91,40 @@ async function readBodyMarkdownForPost(post, config) {
   return buildBodyMarkdown(md, post, config);
 }
 
+function inferPublishedStateForExistingArticle(currentArticle) {
+  if (!currentArticle || typeof currentArticle !== 'object') return false;
+  if (typeof currentArticle.published === 'boolean') return currentArticle.published;
+  return Boolean(currentArticle.published_at ?? currentArticle.published_timestamp);
+}
+
+function resolvePostSeriesName(post, config) {
+  if (post && Object.hasOwn(post, 'series')) {
+    return post.series ?? null;
+  }
+  return config.series ?? null;
+}
+
+function resolvePostSeriesChain(post) {
+  if (!post || !Object.hasOwn(post, 'seriesChain')) return null;
+  return post.seriesChain ?? null;
+}
+
 function buildArticleUpsertPayload(post, body_markdown, config, overrides = {}) {
+  const explicitPublished = overrides.article && Object.hasOwn(overrides.article, 'published')
+    ? overrides.article.published
+    : undefined;
+  const explicitCanonical = overrides.article && Object.hasOwn(overrides.article, 'canonical_url')
+    ? overrides.article.canonical_url
+    : undefined;
+
   return {
     article: {
       title: post.title,
       body_markdown,
-      published: false,
-      series: config.series ?? null,
+      published: explicitPublished ?? inferPublishedStateForExistingArticle(overrides.currentArticle),
+      series: resolvePostSeriesName(post, config),
       main_image: resolvePostMainImage(post, overrides.currentArticle ?? null),
-      canonical_url: post.canonical_url ?? null,
+      canonical_url: resolvePostCanonicalUrl(post, overrides.currentArticle ?? null, explicitCanonical),
       description: post.description ?? undefined,
       tags: ensureStringArrayTags(post.tags),
       organization_id: config.organization_id ?? null,
@@ -132,6 +157,17 @@ function resolvePostMainImage(post, currentArticle = null) {
     (typeof currentArticle?.main_image === 'string' && currentArticle.main_image.trim()) || null;
 
   return existingImage;
+}
+
+function resolvePostCanonicalUrl(post, currentArticle = null, explicitCanonical = undefined) {
+  if (explicitCanonical !== undefined) return explicitCanonical;
+
+  const existingCanonical =
+    (typeof currentArticle?.canonical_url === 'string' && currentArticle.canonical_url.trim()) || null;
+
+  if (existingCanonical) return existingCanonical;
+
+  return (typeof post?.canonical_url === 'string' && post.canonical_url.trim()) || null;
 }
 
 function shouldInjectCtasForPost(post) {
@@ -1011,7 +1047,7 @@ function getNormalizedCurrentBodyOrThrow(post, current, desiredTitleRaw) {
   throw new Error(`Cannot sync content for ${desiredTitleRaw}: API did not return body_markdown.`);
 }
 
-function buildSyncContentState({ post, current, config, seriesName, seriesStartUrl, nextUpUrl, partLabel }) {
+function buildSyncContentState({ post, current, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel }) {
   const currentBody = getNormalizedCurrentBodyOrThrow(post, current, String(post.title ?? '').trim());
   const fm = readFrontMatter(currentBody);
   const ctaArgs = buildCtaArgs(config);
@@ -1019,18 +1055,20 @@ function buildSyncContentState({ post, current, config, seriesName, seriesStartU
   if (shouldInjectCtasForPost(post)) {
     body_markdown = injectCtasIntoMarkdown(body_markdown, ctaArgs);
   }
-  body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
-    seriesName,
-    partLabel,
-    startHereUrl: seriesStartUrl,
-    nextUpUrl,
-  });
+  if (desiredSeries && partLabel) {
+    body_markdown = injectSeriesChainIntoMarkdown(body_markdown, {
+      seriesName: desiredSeries,
+      partLabel,
+      startHereUrl: seriesStartUrl,
+      nextUpUrl,
+    });
+  }
 
   const ctaMarkersOk = hasAllMarkers(currentBody, [
     '<!-- pain-tracker:cta-top -->',
     '<!-- pain-tracker:cta-bottom -->',
   ]);
-  const chainMarkersOk = hasAllMarkers(currentBody, [
+  const chainMarkersOk = !desiredSeries || hasAllMarkers(currentBody, [
     '<!-- pain-tracker:series-chain:start -->',
     '<!-- pain-tracker:series-chain:end -->',
   ]);
@@ -1038,11 +1076,50 @@ function buildSyncContentState({ post, current, config, seriesName, seriesStartU
   return {
     body_markdown,
     currentTitle: String(current?.title ?? '').trim(),
-    currentSeries: String(current?.series ?? '').trim(),
+    currentSeries: typeof current?.series === 'string' ? current.series.trim() : '',
     hasFrontMatter: Boolean(fm),
     ctaMarkersOk,
     chainMarkersOk,
   };
+}
+
+function getPostsForSync(schedule, onlyKeys) {
+  if (onlyKeys) {
+    return schedule.posts
+      .filter((post) => matchesOnlyKeys(post, onlyKeys))
+      .slice()
+      .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+  }
+
+  return schedule.posts
+    .filter((post) => post?.enabled)
+    .slice()
+    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+}
+
+function getSeriesChainContext({ schedule, post, config }) {
+  const desiredSeries = resolvePostSeriesName(post, config);
+  const chainKey = resolvePostSeriesChain(post);
+
+  if (!desiredSeries) {
+    return { desiredSeries, partLabel: null, nextUpUrl: null, seriesStartUrl: null };
+  }
+
+  if (!chainKey) {
+    return { desiredSeries, partLabel: null, nextUpUrl: null, seriesStartUrl: null };
+  }
+
+  const chainPosts = schedule.posts
+    .filter((entry) => resolvePostSeriesChain(entry) === chainKey)
+    .slice()
+    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+
+  const index = chainPosts.findIndex((entry) => entry?.key === post?.key);
+  const partLabel = index >= 0 ? `Part ${index + 1}` : null;
+  const nextUpUrl = index >= 0 ? chainPosts[index + 1]?.devtoUrl ?? null : null;
+  const seriesStartUrl = chainPosts[0]?.devtoUrl ?? null;
+
+  return { desiredSeries, partLabel, nextUpUrl, seriesStartUrl };
 }
 
 async function processSyncSchedulePost({ post, allCache, now, yes, allowPast }) {
@@ -1213,7 +1290,7 @@ async function processPushSourcePost({ post, allCache, now, yes, allowPublished,
   return { pushed: 1, linked: resolved.linked ? 1 : 0, skipped: 0 };
 }
 
-async function processSyncContentPost({ post, allCache, now, yes, allowPublished, config, seriesName, seriesStartUrl, nextUpUrl, partLabel }) {
+async function processSyncContentPost({ post, allCache, now, yes, allowPublished, config, desiredSeries, seriesStartUrl, nextUpUrl, partLabel }) {
   const titleState = getRequiredTitleOrSkip(post);
   if (titleState.result) return titleState.result;
   const { desiredTitleRaw } = titleState;
@@ -1237,13 +1314,14 @@ async function processSyncContentPost({ post, allCache, now, yes, allowPublished
     post,
     current: resolved.current,
     config,
-    seriesName,
+    desiredSeries,
     seriesStartUrl,
     nextUpUrl,
     partLabel,
   });
   const needsTitle = contentState.currentTitle !== desiredTitleRaw;
-  const needsSeries = contentState.currentSeries !== seriesName;
+  const currentSeries = contentState.currentSeries || null;
+  const needsSeries = currentSeries !== desiredSeries;
   const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk) || contentState.hasFrontMatter;
 
   if (!(needsTitle || needsSeries || needsBody)) {
@@ -1263,7 +1341,7 @@ async function processSyncContentPost({ post, allCache, now, yes, allowPublished
     currentArticle: resolved.current,
     article: {
       title: desiredTitleRaw,
-      series: seriesName,
+      series: desiredSeries,
     },
   });
   const updated = await devtoRequest('PUT', `/articles/${post.articleId}`, payload);
@@ -1503,27 +1581,16 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }
   let skipped = 0;
 
   const config = getDevtoPublishConfig(schedule);
-  const seriesName = config.series;
-  if (!seriesName) {
+  if (!config.series) {
     throw new Error('Missing series name. Set DEVTO_SERIES (or schedule.defaults.series).');
   }
 
   const allCache = await listAllUserArticles();
 
-  // Determine ordering for Part X and Next up links.
-  const enabled = schedule.posts
-    .filter((p) => p?.enabled)
-    .slice()
-    .sort((a, b) => Date.parse(a.publishAt) - Date.parse(b.publishAt));
+  const syncPosts = getPostsForSync(schedule, onlyKeys);
 
-  const seriesStartUrl =
-    config.seriesStartUrl || (typeof enabled[0]?.devtoUrl === 'string' ? enabled[0].devtoUrl : null) || null;
-
-  for (let i = 0; i < enabled.length; i += 1) {
-    const post = enabled[i];
-    if (!matchesOnlyKeys(post, onlyKeys)) continue;
-    const partLabel = `Part ${i + 1}`;
-    const nextUpUrl = enabled[i + 1]?.devtoUrl ?? null;
+  for (const post of syncPosts) {
+    const chainContext = getSeriesChainContext({ schedule, post, config });
 
     const result = await processSyncContentPost({
       post,
@@ -1532,10 +1599,10 @@ async function cmdSyncContent(schedule, { yes, write, allowPublished, onlyKeys }
       yes,
       allowPublished,
       config,
-      seriesName,
-      seriesStartUrl,
-      nextUpUrl,
-      partLabel,
+      desiredSeries: chainContext.desiredSeries,
+      seriesStartUrl: chainContext.seriesStartUrl,
+      nextUpUrl: chainContext.nextUpUrl,
+      partLabel: chainContext.partLabel,
     });
     changed += result.changed;
     linked += result.linked;

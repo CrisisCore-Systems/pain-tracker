@@ -23,6 +23,10 @@ They **shift the burden of verification**.
 
 And that shift creates a form of micro-coercion.
 
+If you want the short reading path that connects this piece to the doctrine and
+the concrete agent workflow pattern, start with
+[AI Agents Under Protective Computing: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-ai-agents-protective-computing-start-here.md).
+
 ---
 
 ## The Illusion of Velocity
@@ -91,7 +95,9 @@ They assume speed pressure will override caution.
 
 So they design systems where certain mistakes are **physically impossible**.
 
-In industrial maintenance this appears in practices such as lockout and tagout, formalized in standards like OSHA 29 CFR 1910.147. Machines must be physically isolated from power before service begins.
+In industrial maintenance this appears in practices such as lockout and
+tagout, formalized in standards like OSHA 29 CFR 1910.147. Machines must be
+physically isolated from power before service begins.
 
 The point is not trust.
 
@@ -105,13 +111,16 @@ A rushed technician can bypass that switch with a jumper wire. The compressor st
 
 For a moment.
 
-But the triggering pressure is still present. The compressor runs outside its safe envelope. Bearings overheat. Oil degrades. Failure arrives later.
+But the triggering pressure is still present. The compressor runs outside its
+safe envelope. Bearings overheat. Oil degrades. Failure arrives later.
 
 The shortcut did not remove the problem.
 
 It **deferred the failure**.
 
-Physical engineering disciplines treat this pattern as dangerous enough to embed prevention directly into system design: safety interlocks, pressure relief, thermal cutoffs, and keyed disconnects.
+Physical engineering disciplines treat this pattern as dangerous enough to
+embed prevention directly into system design: safety interlocks, pressure
+relief, thermal cutoffs, and keyed disconnects.
 
 Speed cannot bypass them.
 
@@ -155,7 +164,10 @@ If physical engineering survives by enforcing interlocks, software must engineer
 
 We cannot rely on developers always being rested, skeptical, and careful. Systems must introduce friction at the architectural level.
 
-Within the Overton Framework these mechanisms are called **Protective Controls**.
+Within the Overton Framework these mechanisms are called
+**Protective Controls**. If you want the doctrine-level framing behind that
+term, start with
+[Protective Computing Is Not Privacy Theater](https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job).
 
 They are not intended to slow development.
 
@@ -190,6 +202,11 @@ Generation occurs in a sandbox.
 Integration requires explicit human checkpoints.
 
 The tool can propose solutions, but it cannot merge high-impact paths without deliberate approval.
+
+For a concrete implementation pattern, see
+[Preview Mode First: Agent Plans as PRs (Plan Diff + Invariants)](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd),
+which applies friction to AI agent pipelines through plan-diff review and
+invariant checks.
 
 Before code enters the system, the developer must demonstrate understanding.
 

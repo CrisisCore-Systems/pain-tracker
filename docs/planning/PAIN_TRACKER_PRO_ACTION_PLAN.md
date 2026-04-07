@@ -1,5 +1,7 @@
 # Pain Tracker Pro — Comprehensive Action Plan (Engineering)
 
+<!-- markdownlint-disable-file MD007 MD013 MD029 MD032 MD036 -->
+
 _Last Updated: 2025-12-22_
 
 This document converts the external “Pain Tracker Pro” requirements list into an executable plan for this repository, with:

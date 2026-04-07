@@ -9,9 +9,13 @@ tags: webdev, pwa, privacy, healthcare, typescript, indexeddb, local-first, offl
 
 ---
 
-# Why My Pain App Has No Backend: Lessons from Building Local-First Healthcare Software
+<!-- markdownlint-disable-file MD013 MD025 MD032 MD040 MD009 -->
 
-"Where's the backend?" is the first question I get from every developer who reviews [Pain Tracker](https://paintracker.ca). 
+> Related reading:
+> For the offline reliability case, read [Offline-First PWAs: Why They Matter for Crisis-Responsive Health Tech](https://blog.paintracker.ca/offline-first-pwas-crisis-responsive-health-tech)
+> For the fuller 2026 blueprint, read [Local-First Pain Tracking: A Practical Blueprint for Private Health Data](https://blog.paintracker.ca/local-first-pain-tracking-practical-blueprint-private-health-data)
+
+"Where's the backend?" is the first question I get from every developer who reviews [Pain Tracker](https://paintracker.ca).
 
 The answer surprises them: **There isn't one.**
 
@@ -175,6 +179,8 @@ export async function encryptAndStore(
 }
 ```
 
+If you want the complete client-side encryption implementation behind that storage boundary, read [Client-Side Encryption for Healthcare Apps](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm).
+
 Why XChaCha20-Poly1305 instead of AES-GCM?
 
 1. **Extended nonce (192-bit)**: Safe to generate randomly without collision concerns
@@ -203,7 +209,7 @@ Forgot your passphrase? Your data is gone. There's no "reset password" email bec
 
 ### ❌ No Server-Side Analytics
 
-I can't tell you how many users I have, which features they use, or where they drop off. 
+I can't tell you how many users I have, which features they use, or where they drop off.
 
 **Mitigation**: Privacy-preserving analytics through optional, anonymized telemetry (not implemented yet). For now, I rely on GitHub issues and direct user feedback.
 
@@ -221,7 +227,7 @@ A doctor can't see your pain journal in real-time. You have to export and share.
 
 ### ✅ Zero Infrastructure Costs
 
-No servers = no hosting bills. The entire app runs on GitHub Pages (free) with a custom domain. My monthly infrastructure cost is literally $0.
+No servers = no hosting bills. The entire app runs on GitHub Pages (free) with a custom domain. My monthly infrastructure cost is literally $0. For the broader healthcare-PWA architecture that this caching and deployment model fits into, read [Building a Healthcare PWA That Actually Works When It Matters](https://dev.to/crisiscoresystems/building-a-healthcare-pwa-that-actually-works-when-it-matters-md4).
 
 ### ✅ Infinite Scalability (Sort Of)
 

@@ -14,6 +14,9 @@ cover: https://cdn.hashnode.com/res/hashnode/image/upload/v1766648528086/043e6b0
 <!-- pain-tracker:product-hunt-badge:end -->
 
 > **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+>
+> **Read this second:** this post is the worked example.
+> Read first: [Generate WorkSafeBC-Ready Documentation with Pain Tracker](https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free)
 
 *This case study is a composite example based on common usage patterns of Pain Tracker Pro users preparing workers’ compensation documentation in British Columbia. It is illustrative, not a guarantee of outcomes. Individual results vary.*
 

@@ -15,6 +15,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1764566798340/922fb
 <!-- pain-tracker:product-hunt-badge:end -->
 
 > **Try Pain Tracker →** [Start Tracking (Free & Private)](https://paintracker.ca)
+>
+> **Related reading:** for the offline reliability argument that grows out of this architecture choice, read [Offline-First PWAs: Why They Matter for Crisis-Responsive Health Tech](https://blog.paintracker.ca/offline-first-pwas-why-they-matter-for-crisis-responsive-health-tech)
 
 # "So... where's your backend?"
 

@@ -12,12 +12,14 @@ import {
   WorkSafeBCCaseStudy,
   FeaturedBlogPosts,
   FAQ as Faq,
+  landingFaqs,
   LandingFooter,
 } from '../components/landing';
 import {
   generateOrganizationSchema,
   generateWebSiteSchema,
   generateSoftwareApplicationSchema,
+  generateFAQSchema,
   combineSchemas,
 } from '../lib/seo';
 
@@ -26,15 +28,18 @@ export const LandingPage: React.FC = () => {
   const organizationSchema = generateOrganizationSchema();
   const webSiteSchema = generateWebSiteSchema();
   const softwareSchema = generateSoftwareApplicationSchema();
-  const combinedSchema = combineSchemas(organizationSchema, webSiteSchema, softwareSchema);
+  const faqSchema = generateFAQSchema(landingFaqs.map((faq) => ({
+    question: faq.question,
+    answer: faq.answer,
+  })));
+  const combinedSchema = combineSchemas(organizationSchema, webSiteSchema, softwareSchema, faqSchema);
 
   useEffect(() => {
     const meta = {
-      title: 'PainTracker - Private Offline-First Pain Tracking App',
-      description:
-        'Track pain, symptoms, triggers, and daily patterns with a private offline-first pain tracker app. Local-first by default, no account required, and clinician-friendly exports when you choose.',
+      title: 'Track Pain Privately. No Account. Works Offline. | Pain Tracker',
+      description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
       keywords:
-        'pain tracker, pain tracker app, pain tracking app, chronic pain tracker, pain diary app, pain journal app, pain diary template, pain log template',
+        'pain tracker, pain tracker app, pain tracking app, pain management tracker, pain diary template, symptom tracker printable, doctor pain records',
     };
 
     document.title = meta.title;
@@ -50,7 +55,7 @@ export const LandingPage: React.FC = () => {
     updateMeta('meta[name="keywords"]', meta.keywords);
     updateMeta('meta[property="og:title"]', meta.title);
     updateMeta('meta[property="og:description"]', meta.description);
-    updateMeta('meta[property="og:site_name"]', 'PainTracker');
+    updateMeta('meta[property="og:site_name"]', 'Pain Tracker');
     updateMeta('meta[name="twitter:title"]', meta.title);
     updateMeta('meta[name="twitter:description"]', meta.description);
     
@@ -62,7 +67,7 @@ export const LandingPage: React.FC = () => {
 
     // Announce page to screen readers
     const announcement =
-      'Welcome to PainTracker. A private offline-first pain tracker app.';
+      'Welcome to Pain Tracker. Track pain privately with no account required and better records for appointments.';
     const ariaLive = document.createElement('div');
     ariaLive.setAttribute('role', 'status');
     ariaLive.setAttribute('aria-live', 'polite');
@@ -77,30 +82,30 @@ export const LandingPage: React.FC = () => {
       } catch {
         // Element already removed, ignore
       }
-      document.title = 'PainTracker';
+      document.title = 'Pain Tracker';
     };
   }, []);
 
   const intentPages = [
     {
-      title: 'Pain Tracker App',
-      description: 'See the core app page for daily logging, symptom tracking, and clinician-friendly exports.',
-      href: '/pain-tracker-app',
+      title: 'Use the app free',
+      description: 'Start daily pain tracking in the app with no account required and local-first privacy by default.',
+      href: '/start',
     },
     {
-      title: 'Pain Diary Template',
-      description: 'Start with a printable pain diary template, pain log, or paper-first tracking workflow.',
-      href: '/pain-diary-template',
+      title: 'Download a printable',
+      description: 'Get a pain diary template, daily pain tracker, or symptom log you can print today.',
+      href: '/resources/pain-diary-template-pdf',
     },
     {
-      title: 'Pain Tracking Apps Comparison',
-      description: 'Compare privacy, offline use, doctor-visit readiness, and what to look for before choosing an app.',
-      href: '/pain-tracking-apps-comparison',
+      title: 'Prepare for appointments',
+      description: 'Use the private sharing workflow to bring pain records to a doctor without handing an app your day-to-day data.',
+      href: '/share-pain-records-with-doctor-without-giving-an-app-your-data',
     },
     {
-      title: 'Privacy and Offline Use',
-      description: 'Read how PainTracker approaches local-first use, privacy, and trauma-informed design.',
-      href: '/privacy-offline-first-pain-tracker',
+      title: 'Prepare documentation',
+      description: 'Build records for disability, insurance, or WorkSafeBC workflows using the patient-first resource funnel.',
+      href: '/resources/documenting-pain-for-disability-claim',
     },
   ];
 
@@ -128,11 +133,11 @@ export const LandingPage: React.FC = () => {
           <div className="relative container mx-auto px-4">
             <div className="text-center mb-10 max-w-3xl mx-auto stagger-fade-up">
               <h2 className="landing-headline landing-headline-md mb-4">
-                <span className="text-white">Choose the page that matches </span>
-                <span className="gradient-text-animated">what you searched</span>
+                <span className="text-white">Start with the patient lane, </span>
+                <span className="gradient-text-animated">not the doctrine lane</span>
               </h2>
               <p className="landing-subhead text-lg">
-                Google is already testing the site for several pain-tracking intents. These pages make each answer explicit.
+                The public front door should help people in pain do the next useful thing fast: use the app, print a tracker, or prepare records for appointments and documentation.
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 stagger-fade-up">

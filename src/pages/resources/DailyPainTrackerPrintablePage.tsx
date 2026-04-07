@@ -3,7 +3,7 @@
  * 
  * Target keyword: "daily pain tracker printable"
  * Search intent: User wants a quick daily tracking sheet to print
- * Conversion goal: Download template → discover Pain Tracker Pro
+ * Conversion goal: Download template → discover Pain Tracker
  * 
  * Fully custom layout for maximum conversion & engagement.
  */
@@ -47,6 +47,7 @@ import {
   generateBreadcrumbSchema,
   combineSchemas,
 } from '../../lib/seo';
+import { ResourceCtaStack } from '../../components/seo';
 import '../../styles/pages/landing.css';
 
 // ---------------------------------------------------------------------------
@@ -56,7 +57,7 @@ const SEO = {
   slug: 'daily-pain-tracker-printable',
   title: 'Daily Pain Tracker Printable (Free)',
   metaTitle:
-    'Daily Pain Tracker Printable — Free Comprehensive PDF | PainTracker',
+    'Daily Pain Tracker Printable — Free Comprehensive PDF | Pain Tracker',
   metaDescription:
     'Download a free daily pain tracker printable. Tracks morning check-in, pain episodes, medications, activity impact, mood, and end-of-day summary — everything your provider needs from one day.',
   keywords: [
@@ -290,7 +291,7 @@ const FAQS = [
   {
     question: 'Is there a digital version?',
     answer:
-      'Yes. PainTracker is the digital companion that captures the same information with fewer taps, auto-generates clinical reports, detects patterns, and encrypts everything on your device. Many people start with paper to build the habit, then switch to digital for the analysis and convenience.',
+      'Yes. Pain Tracker is the digital companion that captures the same information with fewer taps, auto-generates clinical reports, detects patterns, and encrypts everything on your device. Many people start with paper to build the habit, then switch to digital for the analysis and convenience.',
   },
   {
     question: 'Is my privacy protected?',
@@ -453,7 +454,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
@@ -466,7 +467,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                 to="/start"
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Open App
+                Use the app free
               </Link>
             </div>
           </div>
@@ -880,7 +881,7 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
                   <div className="w-10 h-10 bg-primary/15 rounded-lg flex items-center justify-center">
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">PainTracker (Digital)</h3>
+                  <h3 className="text-xl font-bold text-white">Pain Tracker (Digital)</h3>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {[
@@ -951,37 +952,10 @@ export const DailyPainTrackerPrintablePage: React.FC = () => {
           </div>
         </section>
 
-        {/* ═══ FINAL CTA ═══ */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800" aria-label="Final call to action">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <AlertCircle className="w-8 h-8 text-sky-400 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Five minutes today can change your next appointment
-            </h2>
-            <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              Every day you track is a data point your provider can use to help you.
-              Start today — even a partial entry is better than none.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="/assets/daily-pain-tracker.pdf"
-                download="daily-pain-tracker.pdf"
-                onClick={handleDownload}
-                className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl flex items-center gap-3"
-              >
-                <Download className="w-5 h-5" />
-                Download Free PDF
-              </a>
-              <Link
-                to="/start"
-                className="px-8 py-4 text-lg font-medium text-slate-300 hover:text-white border border-slate-600 hover:border-slate-500 rounded-xl transition-all flex items-center gap-2"
-              >
-                Open PainTracker
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          </div>
-        </section>
+        <ResourceCtaStack
+          heading="Keep the patient funnel moving"
+          body="Use the app free, download a printable, or prepare records for appointments and documentation. The last step on the page should still match the real reason people searched."
+        />
 
       </main>
 

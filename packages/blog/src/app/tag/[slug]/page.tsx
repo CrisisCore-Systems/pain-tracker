@@ -7,23 +7,35 @@ interface TagPageProps {
   params: Promise<{ slug: string }>;
 }
 
+function toTagName(slug: string): string {
+  return slug.replaceAll('-', ' ').replaceAll(/\b\w/g, (char) => char.toUpperCase());
+}
+
 export async function generateMetadata({ params }: TagPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const tagName = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const tagName = toTagName(slug);
 
   return {
     title: `Posts tagged "${tagName}"`,
     description: `Browse all articles tagged with ${tagName}`,
+    robots: {
+      index: false,
+      follow: true,
+      googleBot: {
+        index: false,
+        follow: true,
+      },
+    },
   };
 }
 
 // Revalidate every hour
 export const revalidate = 3600;
 
-export default async function TagPage({ params }: TagPageProps) {
+export default async function TagPage({ params }: Readonly<TagPageProps>) {
   const { slug } = await params;
   const posts = await getPostsByTag(slug, 20);
-  const tagName = slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  const tagName = toTagName(slug);
 
   return (
     <div className="container-blog py-12">

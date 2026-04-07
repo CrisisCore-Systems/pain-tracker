@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, Clock, Calendar,
+  CheckCircle, Clock, Calendar,
   TrendingUp, FileText, Target, Stethoscope,
   ClipboardList, Zap, Sun, Moon
 } from 'lucide-react';
@@ -124,7 +124,7 @@ const sevenDayStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: '7-day-pain-diary-template',
   title: '7-Day Pain Diary Template (Free)',
-  metaTitle: '7-Day Pain Diary Template — Free One-Week Pain Tracker for Doctor Appointments | PainTracker',
+  metaTitle: '7-Day Pain Diary Template — Free One-Week Pain Tracker for Doctor Appointments | Pain Tracker',
   metaDescription: 'Download a free 7-day pain diary template. One-week format with morning/midday/evening tracking, medication logs, and a doctor-ready weekly summary.',
   keywords: [
     '7 day pain diary template', 'week pain diary',

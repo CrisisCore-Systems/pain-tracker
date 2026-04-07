@@ -6,9 +6,9 @@ const pageContent: SEOPageContent = {
   slug: 'privacy-offline-first-pain-tracker',
   canonicalPath: '/privacy-offline-first-pain-tracker',
   title: 'Private Offline-First Pain Tracker',
-  metaTitle: 'Private Offline-First Pain Tracker with Trauma-Informed Design | PainTracker',
+  metaTitle: 'Private Offline-First Pain Tracker with Trauma-Informed Design | Pain Tracker',
   metaDescription:
-    'Learn how PainTracker approaches local-first use, privacy, offline pain tracking, and trauma-informed design for daily symptom logging and clinician-friendly records.',
+    'Learn how Pain Tracker approaches local-first use, privacy, offline pain tracking, and trauma-informed design for daily symptom logging and clinician-friendly records.',
   keywords: [
     'offline pain tracker',
     'private pain tracker',
@@ -20,9 +20,9 @@ const pageContent: SEOPageContent = {
   badge: 'Privacy Explainer',
   headline: 'Private Offline-First Pain Tracker for Real-Life Instability',
   subheadline:
-    'PainTracker is designed so routine pain logging stays useful without ideal conditions. Local-first use, deliberate sharing, and trauma-informed design matter because people do not track pain only when life is neat.',
+    'Pain Tracker is designed so routine pain logging stays useful without ideal conditions. Local-first use, deliberate sharing, and trauma-informed design matter because people do not track pain only when life is neat.',
   primaryCTA: {
-    text: 'Open PainTracker',
+    text: 'Use the app free',
     href: '/start',
     download: false,
   },
@@ -34,7 +34,7 @@ const pageContent: SEOPageContent = {
     type: 'tool-embed',
   },
   whatIsThis:
-    'This page explains the privacy and offline-first positioning of PainTracker. It is not a vague promise page. It describes why local-first design, user-controlled exports, and lower-pressure workflows matter for a health app used under fatigue, interruption, and stress.',
+    'This page explains the privacy and offline-first positioning of Pain Tracker. It is not a vague promise page. It describes why local-first design, user-controlled exports, and lower-pressure workflows matter for a health app used under fatigue, interruption, and stress.',
   whoShouldUse: [
     'People who are specifically looking for an offline pain tracker instead of an account-centric app.',
     'Users who care about privacy and want clearer boundaries around when data leaves their device.',
@@ -68,7 +68,7 @@ const pageContent: SEOPageContent = {
   faqs: [
     {
       question: 'Is an offline pain tracker more private?',
-      answer: 'It often is, because daily records do not need to leave your device just to remain usable. PainTracker is designed around that local-first posture.',
+      answer: 'It often is, because daily records do not need to leave your device just to remain usable. Pain Tracker is designed around that local-first posture.',
     },
     {
       question: 'What does trauma-informed design mean in this app?',

@@ -9,7 +9,11 @@ tags: pwa, offline-first, healthcare, service-worker, indexeddb, javascript, typ
 
 ---
 
-# Offline-First PWAs: Why They Matter for Crisis-Responsive Health Tech
+<!-- markdownlint-disable-file MD013 MD025 MD028 MD032 MD040 MD060 -->
+
+> Related reading:
+> Start with the origin story: [Why My Pain App Has No Backend: Lessons from Building Local-First Healthcare Software](https://blog.paintracker.ca/why-my-pain-app-has-no-backend-local-first-healthcare)
+> Then read the architecture follow-up: [Local-First Pain Tracking: A Practical Blueprint for Private Health Data](https://blog.paintracker.ca/local-first-pain-tracking-practical-blueprint-private-health-data)
 
 > **TL;DR:** Health apps fail when users need them most—in hospitals with spotty WiFi, rural areas without coverage, or during emergencies when networks are overloaded. This guide shows you how to build offline-first PWAs using Service Workers and IndexedDB, with real code from a production health app, so your users can track their health data even when the internet can't.
 
@@ -201,7 +205,7 @@ self.addEventListener('fetch', (event) => {
 
 ### Cache Strategies for Health Apps
 
-Different types of requests need different caching strategies. Here's the pattern I use:
+Different types of requests need different caching strategies. Here's the pattern I use. For the more opinionated deterministic version that avoids stale HTML and service worker surprises, see [Service workers that don’t surprise you](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md):
 
 ```javascript
 // public/sw.js - Continued

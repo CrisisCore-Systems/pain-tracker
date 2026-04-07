@@ -5,9 +5,9 @@ const pageContent: SEOPageContent = {
   slug: 'pain-diary-template',
   canonicalPath: '/pain-diary-template',
   title: 'Pain Diary Template',
-  metaTitle: 'Free Pain Diary Template and Printable Pain Log | PainTracker',
+  metaTitle: 'Free Pain Diary Template and Printable Pain Log | Pain Tracker',
   metaDescription:
-    'Download a free pain diary template and printable pain log, then compare paper tracking with PainTracker for daily symptom logging and clinician-friendly records.',
+    'Download a free pain diary template and printable pain log, then compare paper tracking with Pain Tracker for daily symptom logging and clinician-friendly records.',
   keywords: [
     'pain diary template',
     'free printable pain diary template',
@@ -21,7 +21,7 @@ const pageContent: SEOPageContent = {
   badge: 'Printable Template',
   headline: 'Free Pain Diary Template and Printable Pain Log',
   subheadline:
-    'Start with a printable pain diary template if paper is the easiest way to begin. Use it on its own or as the bridge into PainTracker when you want search, structure, and clinician-friendly exports.',
+    'Start with a printable pain diary template if paper is the easiest way to begin. Use it on its own or as the bridge into Pain Tracker when you want search, structure, and clinician-friendly exports.',
   primaryCTA: {
     text: 'Download Free PDF',
     href: '/assets/pain-diary-template.pdf',
@@ -58,14 +58,14 @@ const pageContent: SEOPageContent = {
     {
       step: 3,
       title: 'Move to digital only if it helps',
-      description: 'If paper starts feeling limiting, use PainTracker for faster daily logging and structured exports without losing the same basic tracking dimensions.',
+      description: 'If paper starts feeling limiting, use Pain Tracker for faster daily logging and structured exports without losing the same basic tracking dimensions.',
     },
   ],
   whyItMatters:
     'Printable tracking is often the easiest top-of-funnel tool because it lowers the commitment needed to begin. Many people search for a free printable pain tracker first, then realize they need something more consistent, searchable, and easier to export later.',
   trustSignals: {
     medicalNote: 'A structured paper record is still more useful in appointments than trying to summarize from memory alone.',
-    privacyNote: 'Printable tracking keeps the first step simple and low-exposure. PainTracker extends that with local-first digital use.',
+    privacyNote: 'Printable tracking keeps the first step simple and low-exposure. Pain Tracker extends that with local-first digital use.',
     legalNote: 'Consistent logs can support documentation workflows better than sporadic retrospective notes.',
   },
   faqs: [
@@ -82,7 +82,7 @@ const pageContent: SEOPageContent = {
       answer: 'Paper is useful when you want the lowest-friction way to start, need a screen break, or want a physical sheet for appointments. Many people later move to an app for consistency and export convenience.',
     },
     {
-      question: 'Can I use the printable template with PainTracker?',
+      question: 'Can I use the printable template with Pain Tracker?',
       answer: 'Yes. The printable template and the app are compatible approaches to the same core tracking job. Many people use paper first and move to the app when they want pattern review and structured exports.',
     },
   ],

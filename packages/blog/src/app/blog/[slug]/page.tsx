@@ -8,6 +8,7 @@ import { PostCard } from '@/components/PostCard';
 import { ShareButtons } from '@/components/ShareButtons';
 import { ReadingProgress } from '@/components/ReadingProgress';
 import { TableOfContents } from '@/components/TableOfContents';
+import { findReadingPathsForSlug } from '@/lib/reading-paths';
 import { formatDate, formatReadingTime, getTagColor, siteConfig } from '@/lib/utils';
 
 interface BlogPostPageProps {
@@ -67,6 +68,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // Get related posts
   const relatedPosts = await getRelatedPosts(slug, post.tags);
+  const readingPaths = findReadingPathsForSlug(slug);
 
   return (
     <article className="relative">
@@ -232,6 +234,53 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         
         <MarkdownContent content={post.content.markdown} />
       </div>
+
+      {readingPaths.length > 0 && (
+        <section className="container-blog mb-16" aria-labelledby="reading-path-heading">
+          <div className="card p-6 md:p-8 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-accent/6" aria-hidden="true" />
+            <div className="relative">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary mb-3">
+                Reading Path
+              </p>
+              <h2 id="reading-path-heading" className="text-2xl md:text-3xl font-bold mb-3">
+                Continue this series on purpose
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-6 max-w-2xl">
+                This article belongs to one of the larger editorial paths on the site. If you want the surrounding context instead of a single post in isolation, start at the path entry point below.
+              </p>
+
+              <div className="grid grid-cols-1 gap-4">
+                {readingPaths.map((path) => (
+                  <div key={path.slug} className="rounded-2xl border border-border/70 bg-background/80 p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                      <div>
+                        <p className="text-sm font-bold text-foreground mb-1">{path.title}</p>
+                        <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">{path.description}</p>
+                      </div>
+                      <div className="text-sm text-muted-foreground shrink-0">{path.postCount} posts</div>
+                    </div>
+                    <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <p className="text-sm text-muted-foreground">
+                        Start with <span className="font-semibold text-foreground">{path.startLabel}</span>
+                      </p>
+                      <Link
+                        href={path.startHref}
+                        className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300"
+                      >
+                        Open reading path
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Share Section */}
       <section className="container-blog">

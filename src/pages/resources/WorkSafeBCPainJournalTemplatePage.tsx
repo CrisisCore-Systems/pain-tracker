@@ -346,7 +346,7 @@ const pageContent: SEOPageContent = {
   // Meta & SEO
   slug: 'worksafebc-pain-journal-template',
   title: 'WorkSafeBC Pain Journal Template (Free)',
-  metaTitle: 'WorkSafeBC Pain Journal Template - Free BC Workers Comp Pain Diary (2026) | PainTracker',
+  metaTitle: 'WorkSafeBC Pain Journal Template - Free BC Workers Comp Pain Diary (2026) | Pain Tracker',
   metaDescription: 'Download our free 6-page WorkSafeBC pain journal PDF. Designed for BC workplace injury claims — tracks work-related pain, functional capacity, treatment compliance, and return-to-work readiness in the format case managers need.',
   keywords: [
     'worksafebc pain journal template',
@@ -617,7 +617,7 @@ const WorkSafeBCCustomSections: React.FC = () => (
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-xl border border-slate-700 bg-slate-800/50 p-5 text-center">
           <p className="text-xs text-slate-500 leading-relaxed">
-            <strong className="text-slate-400">Disclaimer:</strong> PainTracker is not affiliated with, endorsed by, or connected to WorkSafeBC. 
+            <strong className="text-slate-400">Disclaimer:</strong> Pain Tracker is not affiliated with, endorsed by, or connected to WorkSafeBC. 
             This template provides a documentation framework based on publicly available WCB evaluation criteria. 
             It is not legal advice. For claim-specific guidance, consult a workers&apos; compensation lawyer or workers&apos; advocate.
           </p>

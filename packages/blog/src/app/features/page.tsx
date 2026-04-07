@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${siteConfig.url}/features`,
   },
+  robots: {
+    index: false,
+    follow: true,
+    googleBot: {
+      index: false,
+      follow: true,
+    },
+  },
 };
 
 const features = [

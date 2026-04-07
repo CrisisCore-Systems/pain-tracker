@@ -130,7 +130,7 @@ const functioningStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'daily-functioning-log-for-disability',
   title: 'Daily Functioning Log for Disability (Free)',
-  metaTitle: 'Daily Functioning Log for Disability — Free Functional Capacity Tracker | PainTracker',
+  metaTitle: 'Daily Functioning Log for Disability — Free Functional Capacity Tracker | Pain Tracker',
   metaDescription: 'Download a free daily functioning log designed for disability claims. Track self-care, household, work, social, and physical activities with capacity ratings evaluators use.',
   keywords: [
     'daily functioning log for disability', 'functional capacity log',

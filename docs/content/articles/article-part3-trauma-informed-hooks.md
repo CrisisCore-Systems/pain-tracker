@@ -9,6 +9,8 @@ canonical_url:
 
 # Trauma-Informed React Hooks
 
+> For the full reading path around this work, start with [Trauma-Informed Design: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-trauma-informed-design-start-here.md)
+
 Early testing feedback: "The interface was unusable when I needed it most."
 
 During pain flares—exactly when they needed the app—cognitive fog, trembling hands, and emotional distress made the UI impossible.

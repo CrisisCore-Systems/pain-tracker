@@ -38,6 +38,10 @@ const DownloadPage = lazy(() => import('./pages/DownloadPage').then(m => ({ defa
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })));
 const TrackingDataPolicyPage = lazy(() => import('./pages/TrackingDataPolicyPage').then(m => ({ default: m.TrackingDataPolicyPage })));
 const PainTrackerAppPage = lazy(() => import('./pages/PainTrackerAppPage').then(m => ({ default: m.PainTrackerAppPage })));
+const PainTrackingAppPage = lazy(() => import('./pages/PainTrackingAppPage').then(m => ({ default: m.PainTrackingAppPage })));
+const PainManagementTrackerPage = lazy(() => import('./pages/PainManagementTrackerPage').then(m => ({ default: m.PainManagementTrackerPage })));
+const PainLocatorAppPage = lazy(() => import('./pages/PainLocatorAppPage').then(m => ({ default: m.PainLocatorAppPage })));
+const SharePainRecordsPrivatelyPage = lazy(() => import('./pages/SharePainRecordsPrivatelyPage').then(m => ({ default: m.SharePainRecordsPrivatelyPage })));
 const PainDiaryTemplatePage = lazy(() => import('./pages/PainDiaryTemplatePage').then(m => ({ default: m.PainDiaryTemplatePage })));
 const PainTrackingAppsComparisonPage = lazy(() => import('./pages/PainTrackingAppsComparisonPage').then(m => ({ default: m.PainTrackingAppsComparisonPage })));
 const PrivacyOfflineFirstPainTrackerPage = lazy(() => import('./pages/PrivacyOfflineFirstPainTrackerPage').then(m => ({ default: m.PrivacyOfflineFirstPainTrackerPage })));
@@ -161,6 +165,10 @@ function App() {
 
                       {/* Category and intent pages - Public */}
                       <Route path="/pain-tracker-app" element={<PainTrackerAppPage />} />
+                      <Route path="/pain-tracking-app" element={<PainTrackingAppPage />} />
+                      <Route path="/pain-management-tracker" element={<PainManagementTrackerPage />} />
+                      <Route path="/pain-locator-app" element={<PainLocatorAppPage />} />
+                      <Route path="/share-pain-records-with-doctor-without-giving-an-app-your-data" element={<SharePainRecordsPrivatelyPage />} />
                       <Route path="/pain-diary-template" element={<PainDiaryTemplatePage />} />
                       <Route path="/pain-tracking-apps-comparison" element={<PainTrackingAppsComparisonPage />} />
                       <Route path="/privacy-offline-first-pain-tracker" element={<PrivacyOfflineFirstPainTrackerPage />} />

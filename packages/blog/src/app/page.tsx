@@ -1,8 +1,10 @@
 import { getPosts } from '@/lib/hashnode';
 import { PostCard } from '@/components/PostCard';
 import { NewsletterForm } from '@/components/NewsletterForm';
+import { readingPaths } from '@/lib/reading-paths';
 import { siteConfig } from '@/lib/utils';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -92,6 +94,67 @@ export default async function HomePage() {
           <PostCard post={featuredPost} featured priority />
         </section>
       )}
+
+      <section className="container-blog-wide py-12 md:py-16" aria-labelledby="reading-paths-heading">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 mb-10">
+          <div>
+            <h2 id="reading-paths-heading" className="text-3xl md:text-4xl font-bold mb-2">
+              Reading <span className="gradient-text">Paths</span>
+            </h2>
+            <p className="text-muted-foreground max-w-2xl">
+              Follow the major threads in the writing without having to infer the series structure post by post.
+            </p>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Verified public starting points for the main editorial clusters
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {readingPaths.map((path, index) => (
+            <article
+              key={path.slug}
+              className="card card-interactive h-full p-6 md:p-7 animate-fade-in-up"
+              style={{ animationDelay: `${index * 80}ms` }}
+            >
+              <div className="flex items-center justify-between gap-3 mb-5">
+                <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-primary">
+                  Reading Path
+                </span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  {path.postCount} posts
+                </span>
+              </div>
+
+              <h3 className="text-2xl font-bold leading-tight mb-3">{path.title}</h3>
+              <p className="text-muted-foreground leading-relaxed mb-6 flex-1">{path.description}</p>
+
+              <div className="rounded-2xl border border-border/70 bg-background/70 p-4 mb-5">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground mb-2">
+                  Start With
+                </p>
+                <p className="font-semibold text-foreground text-sm leading-relaxed">{path.startLabel}</p>
+              </div>
+
+              <Link
+                href={path.startHref}
+                className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all duration-300"
+              >
+                Open reading path
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
 
       {/* Posts Grid */}
       {restPosts.length > 0 && (

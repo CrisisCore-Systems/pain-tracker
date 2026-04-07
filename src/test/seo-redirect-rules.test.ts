@@ -10,6 +10,15 @@ const readUtf8 = (relativePath: string) =>
   fs.readFileSync(path.join(projectRoot, relativePath), 'utf8');
 
 describe('SEO redirect rules consistency', () => {
+  it('root vercel config permanently redirects apex host to www host', () => {
+    const vercelConfig = readUtf8('vercel.json');
+
+    expect(vercelConfig).toContain('"type": "host"');
+    expect(vercelConfig).toContain('"value": "paintracker.ca"');
+    expect(vercelConfig).toContain('"destination": "https://www.paintracker.ca/:path*"');
+    expect(vercelConfig).toContain('"permanent": true');
+  });
+
   it('root vercel redirects apex /blog directly to blog subdomain', () => {
     const vercelConfig = readUtf8('vercel.json');
 

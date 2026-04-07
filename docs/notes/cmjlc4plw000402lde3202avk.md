@@ -10,6 +10,8 @@ ogImage: https://cdn.hashnode.com/res/hashnode/image/upload/v1767292787211/c615c
 
 ---
 
+<!-- markdownlint-disable-file MD013 MD033 -->
+
 <!-- pain-tracker:product-hunt-badge:start -->
 <a href="https://www.producthunt.com/products/pain-tracker?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-pain-tracker" target="_blank" rel="noopener noreferrer"><img alt="Pain Tracker - Privacy-first PWA for chronic pain tracking & management | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1063103&theme=dark" /></a>
 <!-- pain-tracker:product-hunt-badge:end -->

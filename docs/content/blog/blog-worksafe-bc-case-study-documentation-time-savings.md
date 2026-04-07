@@ -2,6 +2,8 @@
 
 *This case study is a composite example based on common usage patterns of Pain Tracker Pro users preparing workers’ compensation documentation in British Columbia. It is illustrative, not a guarantee of outcomes. Individual results vary.*
 
+If you want the short reading path behind this workflow, start with [WorkSafeBC Documentation Workflows: Start Here](/blog/worksafebc-documentation-workflows-start-here).
+
 ---
 
 WorkSafeBC paperwork is hard enough when you’re injured.

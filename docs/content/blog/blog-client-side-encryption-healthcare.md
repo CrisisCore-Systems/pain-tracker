@@ -1,6 +1,9 @@
 # Keeping Your Health Data Out of Court
 
-I've had my pain journal read aloud in a courtroom. Not as evidence FOR me—against me. Lawyers twisted my worst days into proof I was unstable. 
+<!-- markdownlint-disable MD013 MD040 -->
+
+I've had my pain journal read aloud in a courtroom. Not as evidence FOR
+me-against me. Lawyers twisted my worst days into proof I was unstable.
 
 That's why I encrypt everything. That's why 150,000 iterations. That's why the key dies before I let anyone brute-force it cheap.
 
@@ -10,7 +13,9 @@ This isn't theory. It's the code that keeps my data out of custody battles and i
 
 ## The Web Crypto Advantage
 
-Forget crypto-js. That's another dependency to explain to forensic analysts. Web Crypto API ships with every browser. No install, no audit trail, no "whoops we found a vulnerability" emails.
+Forget crypto-js. That's another dependency to explain to forensic analysts.
+Web Crypto API ships with every browser. No install, no audit trail, no
+"whoops we found a vulnerability" emails.
 
 ```typescript
 const subtle = crypto.subtle;
@@ -26,7 +31,9 @@ That's it. Hardware-accelerated, NIST-approved, zero supply chain risk.
 const iv = crypto.getRandomValues(new Uint8Array(12));
 ```
 
-Every. Single. Time. Reuse an IV with AES-GCM and your security doesn't degrade—it collapses completely. I've seen production apps hardcode this value. Those developers have clearly never sat across from opposing counsel.
+Every. Single. Time. Reuse an IV with AES-GCM and your security doesn't
+degrade-it collapses completely. I've seen production apps hardcode this
+value. Those developers have clearly never sat across from opposing counsel.
 
 ---
 
@@ -66,7 +73,15 @@ async function lockItUp<T>(
 }
 ```
 
-Why HMAC the ciphertext? Because you verify integrity BEFORE attempting decryption. Tampered data fails fast. No wasted cycles on corrupted input.
+> Series: Client-Side Encryption for Health Apps
+> Part 1 of 3.
+> Start here: [Client-Side Encryption for Health Apps: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-client-side-encryption-health-apps-start-here.md)
+> Read next: [If Your Health App Can't Explain Its Encryption, It Doesn't Have Any](https://blog.paintracker.ca/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any)
+> Then: [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps)
+> Related: [Exports are a security boundary: the moment local-first becomes shareable](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
+
+Why HMAC the ciphertext? Because you verify integrity BEFORE attempting
+decryption. Tampered data fails fast. No wasted cycles on corrupted input.
 
 ---
 
@@ -91,7 +106,9 @@ Non-extractable means it can't be exported, only used. Page reload? It's gone. T
 
 ## PBKDF2: Making Brute-Force a Career
 
-Password-protected backups get 150,000 iterations minimum. Export files get 310,000. That's not arbitrary—that's how long I need to burn the key if someone seizes my hardware.
+Password-protected backups get 150,000 iterations minimum. Export files get
+310,000. That's not arbitrary-that's how long I need to burn the key if
+someone seizes my hardware.
 
 ```typescript
 async function stretchPassword(
@@ -124,13 +141,17 @@ async function stretchPassword(
 }
 ```
 
+If you want the full implementation walkthrough behind this derivation and storage model, read [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps).
+
 When OWASP bumps their recommendations, I bump my iteration count. Old backups still work. New ones get harder to crack.
 
 ---
 
 ## Key Rotation: Because Shit Happens
 
-Sometimes you need to make everything before a certain date unrecoverable. Maybe your laptop got stolen. Maybe you had to assume compromise. Maybe opposing counsel is getting creative.
+Sometimes you need to make everything before a certain date unrecoverable.
+Maybe your laptop got stolen. Maybe you had to assume compromise. Maybe
+opposing counsel is getting creative.
 
 ```typescript
 async function burnAndReplace(keyId: string): Promise<void> {
@@ -237,7 +258,7 @@ function bufferToBase64(buffer: ArrayBuffer): string {
 
 ## The Architecture
 
-```
+```text
 Your Device Only
 ├── React UI (plaintext)
 ├── Zustand Store (state)
@@ -251,20 +272,30 @@ Export: PDF/CSV/JSON (your choice)
 NO SERVERS. NO CLOUD. NO SHARING.
 ```
 
-Data enters as plaintext, gets encrypted immediately, stored as ciphertext. Keys stay wrapped except during use. Everything logged locally.
+Data enters as plaintext, gets encrypted immediately, and is stored as
+ciphertext. Keys stay wrapped except during use. Everything is logged locally.
 
 ---
 
 ## Why This Matters
 
-I built this in a motel room with eviction papers on my passenger seat. Not for fun—because my health data got weaponized in court. Pain journals became "evidence of instability." Treatment-seeking became "drug-seeking behavior."
+I built this in a motel room with eviction papers on my passenger seat. Not
+for fun-because my health data got weaponized in court. Pain journals became
+"evidence of instability." Treatment-seeking became "drug-seeking behavior."
 
-If you're building for people the system's already decided to distrust, you can't trust the system with their data. No good faith assumptions. No hoping the admin stays ethical. No trusting the company won't get bought.
+If you're building for people the system's already decided to distrust, you
+can't trust the system with their data. No good faith assumptions. No hoping
+the admin stays ethical. No trusting the company won't get bought.
 
-You encrypt client-side. Keys never leave the device. Iteration counts that make brute-force expensive. And you document it well enough that others can verify without trusting you either.
+You encrypt client-side. Keys never leave the device. Iteration counts that
+make brute-force expensive. And you document it well enough that others can
+verify without trusting you either.
 
 ---
 
-Code's at github.com/CrisisCore-Systems/pain-tracker. Read it. Audit it. Find what I missed.
+Code's at github.com/CrisisCore-Systems/pain-tracker. Read it. Audit it. Find
+what I missed. Then read [If Your Health App Can't Explain Its Encryption, It
+Doesn't Have Any](https://blog.paintracker.ca/if-your-health-app-cant-explain-its-encryption-it-doesnt-have-any)
+for the audit questions that separate real encryption from marketing copy.
 
 Still unstable housing. Still shipping code. Take what works, build something better.

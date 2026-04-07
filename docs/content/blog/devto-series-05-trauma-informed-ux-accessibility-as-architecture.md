@@ -11,15 +11,36 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · **Part 5** · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md) · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md)
+· [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
+· [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
+· [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
+· [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
+· **Part 5**
+· [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
+· [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md)
+· [Part 8](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-08-analytics-without-surveillance-explicit-consent.md)
+· [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
+· [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
 
 This post is Part 5 in a Dev.to series grounded in the open-source **Pain Tracker** repo.
+
+For the full reading path around this design layer, start with [Trauma-Informed Design: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-trauma-informed-design-start-here.md).
+
+It also serves as the architecture anchor for the broader Trauma-Informed
+Design reading path alongside
+[Two People, Same Body](https://dev.to/crisiscoresystems/two-people-same-body-a-developers-crisis-architecture-25ko),
+[Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n),
+and
+[Building Software That Actually Gives a Damn](https://dev.to/crisiscoresystems/building-software-that-actually-gives-a-damn-my-journey-with-trauma-informed-design-12h3).
 
 - Not medical advice.
 - Not a compliance claim.
 - This is about building for bad days: pain flares, brain fog, tremor, and overload.
 
 If you haven’t read Part 4 yet:
+
 - Part 4: [Zod + defensive parsing](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
 
 ---
@@ -58,6 +79,8 @@ A single provider manages preferences, and the rest of the UI reads from that co
 You can see the provider here:
 
 - `src/components/accessibility/TraumaInformedContext.tsx`
+
+If you want the hook-level implementation behind that provider boundary, read [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n).
 
 The important architectural move is not any single toggle.
 
@@ -119,11 +142,17 @@ The key point isn’t “we ran it once.”
 
 It’s that the repo has a command you can run any time to catch obvious regressions.
 
+And if you want the visual contract that verifies crisis mode actually looks
+different once those preferences are applied, read
+[Visual Regression for Adaptive Interfaces: Testing That Crisis Mode Actually Looks Different](/blog/visual-regression-adaptive-interfaces).
+
 ---
 
 ## Next up (requires human review)
 
-The next posts in the series touch **explicit trust boundaries** (exports, WorkSafeBC workflows, and analytics). Those drafts are best treated as “reviewed writing,” not autopilot content.
+The next posts in the series touch **explicit trust boundaries**: exports,
+WorkSafeBC workflows, and analytics. Those drafts are best treated as
+“reviewed writing,” not autopilot content.
 
 Prev: [Part 4 — Zod + defensive parsing](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
 Next: [Part 6 — Exports as a security boundary](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)

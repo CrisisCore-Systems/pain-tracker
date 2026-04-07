@@ -1,5 +1,7 @@
 # Pain Tracker - Product Roadmap
 
+<!-- markdownlint-disable-file MD013 MD022 MD026 MD032 MD036 MD040 MD058 MD060 -->
+
 See also: `docs/planning/PAIN_TRACKER_PRO_ACTION_PLAN.md` (maps external requirements to repo reality + risk gates).
 
 _Last Updated: 2025-12-24_  

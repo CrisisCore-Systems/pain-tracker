@@ -20,6 +20,7 @@ import {
 import { LandingFooter } from '../../components/landing/LandingFooter';
 import '../../styles/pages/landing.css';
 import { combineSchemas, generateBreadcrumbSchema } from '../../lib/seo';
+import { ResourceCtaStack } from '../../components/seo';
 
 interface ResourceCard {
   title: string;
@@ -293,13 +294,16 @@ export const ResourcesIndexPage: React.FC = () => {
   useRobotsMeta(searchQuery ? 'noindex, follow' : null);
 
   useEffect(() => {
-    document.title = 'Free Pain Tracking Resources & Templates | PainTracker';
+    document.title = 'Free Pain Tracking Printables, Guides, and Appointment Prep | Pain Tracker';
     
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', 
-        'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for medical documentation. Perfect for doctor appointments and disability claims.'
-      );
+      metaDescription.setAttribute('content', 'Free downloadable pain diary templates, printable pain logs, symptom trackers, and guides for appointments, disability documentation, and WorkSafeBC workflows.');
+    }
+
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      canonicalLink.setAttribute('href', 'https://www.paintracker.ca/resources');
     }
   }, []);
 
@@ -395,20 +399,20 @@ export const ResourcesIndexPage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <span className="landing-brand text-xl">PainTracker</span>
+              <span className="landing-brand text-xl">Pain Tracker</span>
             </Link>
             <div className="flex items-center gap-4">
               <Link
-                to="/pricing"
+                to="/download"
                 className="text-sm text-slate-300 hover:text-white transition-colors"
               >
-                Pricing
+                Download
               </Link>
               <Link
                 to="/start"
                 className="btn-cta-primary px-4 py-2 text-sm font-medium rounded-lg"
               >
-                Open App
+                Use the app free
               </Link>
             </div>
           </div>
@@ -429,16 +433,15 @@ export const ResourcesIndexPage: React.FC = () => {
           <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div className="inline-flex items-center gap-2 landing-badge mb-6">
               <Download className="w-4 h-4" />
-              <span>Free Resources</span>
+              <span>Patient Resources</span>
             </div>
             
             <h1 className="landing-headline landing-headline-lg text-white mb-6">
-              Free Pain Tracking Templates & Guides
+              Start with the pain tracking help you need today
             </h1>
             
             <p className="landing-subhead text-lg sm:text-xl max-w-2xl mx-auto">
-              Download printable pain diaries, symptom trackers, and guides designed for 
-              medical documentation and disability claims. All free, no signup required.
+              Download a printable, prepare records for appointments, or work toward disability and WorkSafeBC documentation without having to sort through builder content first.
             </p>
           </div>
         </section>
@@ -465,25 +468,10 @@ export const ResourcesIndexPage: React.FC = () => {
           </div>
         </section>
         
-        {/* CTA Section */}
-        <section className="py-16 bg-gradient-to-b from-slate-900 to-slate-800 border-t border-slate-700">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Prefer digital tracking?
-            </h2>
-            <p className="text-slate-400 text-lg mb-8 max-w-2xl mx-auto">
-              PainTracker does everything these templates do—automatically. 
-              Generate medical reports, track patterns, and keep everything private on your device.
-            </p>
-            <Link
-              to="/start"
-              className="btn-cta-primary px-8 py-4 text-lg font-semibold rounded-xl inline-flex items-center gap-3"
-            >
-              Try PainTracker
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </section>
+        <ResourceCtaStack
+          heading="Use the resource funnel that matches real-life pain tracking"
+          body="The patient lane starts with utility: use the app free, print a tracker, or prepare records for doctors, disability, or WorkSafeBC workflows."
+        />
       </main>
       
       <LandingFooter />

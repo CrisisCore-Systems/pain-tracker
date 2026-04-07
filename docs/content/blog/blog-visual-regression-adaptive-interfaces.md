@@ -18,6 +18,8 @@ State management is easy to test. Visual transformation is not. And in a crisis,
 
 This post covers how I verify that emergency mode isn't just flipping booleans—it's actually changing the experience.
 
+If you want the architecture underneath those visual state changes, start with [Trauma-informed UX + accessibility as architecture (not polish)](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg).
+
 ---
 
 ## The Visual Verification Gap
@@ -662,7 +664,7 @@ Both are required.
 
 ---
 
-*Next in the series: "Offline Crisis Support: What Happens When the Network Dies at the Worst Moment"*
+For the broader testing sequence this visual work belongs to, start with [Testing Trauma-Informed Systems: Start Here](/blog/testing-trauma-informed-systems-start-here).
 
 ---
 

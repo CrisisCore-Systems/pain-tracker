@@ -2,7 +2,7 @@
 
 > Note: Forem API v1 does not expose endpoints to create/pin comments. This file is generated to make manual pinning fast.
 
-## The Micro-Coercion of Speed: Why Friction Is an Engineering Prerequisite
+## The Stability Assumption: The Hidden Defect Source
 
 ```md
 TL;DR
@@ -13,5 +13,5 @@ TL;DR
 Why this matters
 - (one line)
 
-Sponsor the build → https://github.com/sponsors/CrisisCore-Systems
+Sponsor the build → https://paintracker.ca/sponsor
 ```

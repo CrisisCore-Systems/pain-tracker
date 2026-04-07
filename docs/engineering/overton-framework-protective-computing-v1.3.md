@@ -38,6 +38,8 @@ title: |
   A Canon for Protective Computing in Conditions of Human Vulnerability
 ---
 
+<!-- markdownlint-disable-file MD012 MD025 MD028 MD030 MD033 MD036 MD060 -->
+
 > Overton, K. (2026). *The Overton Framework: Protective Computing in Conditions of Human Vulnerability* (Version 1.3). Zenodo. [https://doi.org/10.5281/zenodo.18688516](https://doi.org/10.5281/zenodo.18688516)
 
 > This document is part of the Protective Computing corpus. Canonical paper: [https://doi.org/10.5281/zenodo.18887610](https://doi.org/10.5281/zenodo.18887610)

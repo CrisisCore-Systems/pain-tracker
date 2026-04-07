@@ -1,5 +1,7 @@
 # Week 1 P0 Execution Payload
 
+<!-- markdownlint-disable MD013 -->
+
 Date: 2026-03-11  
 Owner: Kay  
 Source tracker: `docs/seo/BLOG_EXECUTION_TRACKER.md`
@@ -18,7 +20,9 @@ Platform constraint override (confirmed in live publication):
 ## 1) `https://blog.paintracker.ca/` (Homepage)
 
 - SEO Title: `Pain Tracker Blog: Private, Offline-First Chronic Pain Tracking`
-- Meta Description: `Privacy-first chronic pain tracking with no accounts and local-only data. Learn how to track flares, spot patterns, and prepare for appointments.`
+- Meta Description:
+  `Privacy-first chronic pain tracking with no accounts and local-only data.
+  Learn how to track flares, spot patterns, and prepare for appointments.`
 
 If homepage structure is locked, treat this as metadata-only plus route-path verification:
 
@@ -59,10 +63,15 @@ Post-change tracker updates:
 ## 3) `https://blog.paintracker.ca/page/why-pain-tracker` (Why Page Replacement)
 
 - SEO Title: `Why Pain Tracker: Privacy-First, Offline-First by Design`
-- Meta Description: `Why Pain Tracker was built: private, offline-first pain tracking with no accounts, local-first storage, and practical support for real-world care workflows.`
+- Meta Description:
+  `Why Pain Tracker was built: private, offline-first pain tracking with no
+  accounts, local-first storage, and practical support for real-world care
+  workflows.`
 - H1: `Why Pain Tracker`
 - Intro paragraph (snippet-safe):
-  `Pain Tracker was built to keep pain records private, reliable offline, and useful in real care workflows without requiring accounts or centralized data collection.`
+  `Pain Tracker was built to keep pain records private, reliable offline, and
+  useful in real care workflows without requiring accounts or centralized data
+  collection.`
 - CTA behavior:
   - Keep one clear path to `https://blog.paintracker.ca/page/start-here` or `https://paintracker.ca/app`.
   - Avoid overclaim language and affiliation implications.
@@ -90,7 +99,9 @@ Post-change tracker updates:
 ## 4) `https://blog.paintracker.ca/stop-filling-worksafebc-forms-manually-this-auto-generates-them-for-free`
 
 - SEO Title: `Generate WorkSafeBC-Ready Documentation with Pain Tracker`
-- Meta Description: `Generate WorkSafeBC-ready documentation faster with structured pain logs, export-ready records, and privacy-first local data handling.`
+- Meta Description:
+  `Generate WorkSafeBC-ready documentation faster with structured pain logs,
+  export-ready records, and privacy-first local data handling.`
 - H1: `Generate WorkSafeBC-Ready Documentation with Pain Tracker`
 - Intro paragraph (snippet-safe):
   `This guide explains how to produce WorkSafeBC-ready documentation from structured pain records while keeping health data local on your device.`
@@ -112,7 +123,9 @@ Post-change tracker updates:
 ## 5) `https://blog.paintracker.ca/paintracker-privacy-first-trauma-informed-pain-app`
 
 - SEO Title: `Pain Tracker: Privacy-First, Trauma-Informed Pain App`
-- Meta Description: `Track flares, spot patterns, prepare for appointments, and keep records private. Pain Tracker works offline with no account required.`
+- Meta Description:
+  `Track flares, spot patterns, prepare for appointments, and keep records
+  private. Pain Tracker works offline with no account required.`
 - H1: `Pain Tracker: Privacy-First, Trauma-Informed Pain App`
 - Intro paragraph (snippet-safe):
   `Pain Tracker helps you track chronic pain privately, identify patterns over time, and prepare for appointments without creating an account.`

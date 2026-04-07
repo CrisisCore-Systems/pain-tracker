@@ -1,5 +1,7 @@
 # Testing the Untestable: How to Simulate Pain Flares and Cognitive Fog in Automated Tests
 
+<!-- markdownlint-disable-file MD013 MD032 MD036 MD040 MD060 -->
+
 *Part of the CrisisCore Build Log - quality assurance for systems that need to work when humans can't*
 
 ---
@@ -11,6 +13,10 @@ How do you assert that your UI correctly detected cognitive fog, when cognitive 
 This is the testing challenge I face with Pain Tracker. The features that matter most—crisis detection, stress-adaptive UI, trauma-informed responses—are triggered by human states that can't be directly simulated in code.
 
 Here's how I approach it.
+
+If you want the full map of this work before diving into individual posts, start with [Testing Trauma-Informed Systems: Start Here](/blog/testing-trauma-informed-systems-start-here).
+
+Before the tactics in this post, read [The Ethics of Simulation](/blog/ethics-of-simulation) for the constraints on synthetic crisis data and why the test suite should never be built by extracting real pain.
 
 ---
 
@@ -666,7 +672,7 @@ test('emergency UI maintains accessibility', async ({ page }) => {
 
 ---
 
-*Next in the series: "Offline Crisis Support: What Happens When the Network Dies at the Worst Moment"*
+And once the signal-injection strategy makes sense, continue with [The False Positive Problem](/blog/false-positives-calibrating-crisis-detection) for the calibration work that decides when those simulated signals should actually trigger support.
 
 ---
 

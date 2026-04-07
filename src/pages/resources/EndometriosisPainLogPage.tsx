@@ -114,7 +114,7 @@ const endoStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'endometriosis-pain-log',
   title: 'Endometriosis Pain Log (Free)',
-  metaTitle: 'Endometriosis Pain Log — Free 6-Page Endo Symptom Tracker | PainTracker',
+  metaTitle: 'Endometriosis Pain Log — Free 6-Page Endo Symptom Tracker | Pain Tracker',
   metaDescription: 'Download a free endometriosis pain log that tracks pelvic pain, cycle phases, GI symptoms, fatigue, and treatment response. Designed to shorten the 7-year diagnostic wait.',
   keywords: [
     'endometriosis pain log', 'endo symptom tracker', 'endometriosis diary',

@@ -7,12 +7,17 @@
 
 import React from 'react';
 import {
-  ArrowRight, CheckCircle, Clock, TrendingUp,
+  CheckCircle, Clock, TrendingUp,
   FileText, Activity, Pill, Brain, CloudRain,
-  MonitorSmartphone, Utensils, Moon
+  MonitorSmartphone, Moon
 } from 'lucide-react';
-import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
-import type { StatItem } from '../../components/seo';
+import {
+  SEOPageLayout,
+  type SEOPageContent,
+  StatsBanner,
+  BottomCTACallout,
+  type StatItem,
+} from '../../components/seo';
 
 /* ── Custom Visual Components ─────────────────────────────────────────────── */
 
@@ -26,6 +31,13 @@ const JournalContentMap: React.FC = () => {
     { icon: Brain, label: 'Mood & Mental Health', items: ['Overall mood (1-5 scale)', 'Anxiety level', 'Frustration / hopelessness', 'Social isolation', 'Coping strategies used'], priority: 'Important', color: 'bg-purple-50 border-purple-200' },
     { icon: CloudRain, label: 'Triggers & Environment', items: ['Weather / barometric pressure', 'Physical activities before pain changed', 'Stress events', 'Body position (sitting, standing, lying)', 'Foods or drinks'], priority: 'Helpful', color: 'bg-amber-50 border-amber-200' },
   ];
+
+  const getPriorityClasses = (priority: string) => {
+    if (priority === 'Essential') return 'bg-red-100 text-red-700';
+    if (priority === 'Important') return 'bg-blue-100 text-blue-700';
+    return 'bg-amber-100 text-amber-700';
+  };
+
   return (
     <div className="my-10">
       <h3 className="text-xl font-bold text-slate-800 mb-2">The Complete Pain Journal Content Guide</h3>
@@ -38,7 +50,7 @@ const JournalContentMap: React.FC = () => {
                 <c.icon className="w-5 h-5 text-slate-600" aria-hidden="true" />
                 <h4 className="font-bold text-slate-800 text-sm">{c.label}</h4>
               </div>
-              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${c.priority === 'Essential' ? 'bg-red-100 text-red-700' : c.priority === 'Important' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>{c.priority}</span>
+              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getPriorityClasses(c.priority)}`}>{c.priority}</span>
             </div>
             <ul className="space-y-1.5">
               {c.items.map((item) => (
@@ -117,8 +129,8 @@ const journalStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'what-to-include-in-pain-journal',
   title: 'What to Include in a Pain Journal',
-  metaTitle: 'What to Include in a Pain Journal — Complete Content Guide | PainTracker',
-  metaDescription: 'Complete guide to what to include in a pain journal: 6 content categories, time-detail trade-offs, sample entries, and printable templates. Track the right things the right way.',
+  metaTitle: 'What to Include in a Pain Journal: Symptoms, Triggers, Meds, and Daily Function | Pain Tracker',
+  metaDescription: 'Use this pain journal checklist to track symptoms, flare triggers, medications, sleep, and daily functioning more clearly.',
   keywords: [
     'what to include in pain journal', 'pain journal content guide',
     'pain diary what to write', 'pain journal template content',
@@ -131,8 +143,8 @@ const pageContent: SEOPageContent = {
   badge: 'Guide',
   headline: 'What to Include in a Pain Journal',
   subheadline: 'You don\'t need to track everything. You need to track the RIGHT things. Here\'s exactly what to include, organized by priority, with time estimates and sample entries — so your journal is clinically useful without being overwhelming.',
-  primaryCTA: { text: 'Get Free Journal Templates', href: '/resources/pain-diary-template-pdf' },
-  secondaryCTA: { text: 'Start Digital Tracking', href: '/start' },
+  primaryCTA: { text: 'Download a printable', href: '/resources/pain-diary-template-pdf' },
+  secondaryCTA: { text: 'Use the app free', href: '/start' },
   utilityBlock: { type: 'download', downloadUrl: '/assets/pain-journal-checklist.pdf', downloadFileName: 'pain-journal-checklist.pdf' },
   whatIsThis: 'A complete guide to what belongs in a pain journal — and what doesn\'t. Most people either track too little (just pain numbers) or try to track everything (and quit after 3 days). This guide organizes pain journal content into 6 prioritized categories: 3 essential ones you should always track, and 3 additional ones for when you have time. It includes sample entries at different time commitments (1 minute, 3 minutes, 5 minutes) so you can match your journaling to your day.',
   whoShouldUse: [

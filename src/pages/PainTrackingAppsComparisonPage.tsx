@@ -6,9 +6,9 @@ const pageContent: SEOPageContent = {
   slug: 'pain-tracking-apps-comparison',
   canonicalPath: '/pain-tracking-apps-comparison',
   title: 'Pain Tracking Apps Comparison',
-  metaTitle: 'Pain Tracking Apps Comparison: Privacy, Offline Use, and Doctor Visits | PainTracker',
+  metaTitle: 'Pain Tracking Apps Comparison: Privacy, Offline Use, and Doctor Visits | Pain Tracker',
   metaDescription:
-    'Compare pain tracking apps by privacy, offline use, doctor-visit readiness, exports, and daily usability. See how PainTracker approaches local-first tracking and clinician-friendly records.',
+    'Compare pain tracking apps by privacy, offline use, doctor-visit readiness, exports, and daily usability. See how Pain Tracker approaches local-first tracking and clinician-friendly records.',
   keywords: [
     'pain tracking apps',
     'pain management apps',
@@ -23,7 +23,7 @@ const pageContent: SEOPageContent = {
   subheadline:
     'If you are comparing pain tracking apps, do not stop at screenshots. Compare privacy, offline use, clinician-ready exports, and whether the app still works when you are tired, interrupted, or offline.',
   primaryCTA: {
-    text: 'Open PainTracker',
+    text: 'Use the app free',
     href: '/start',
     download: false,
   },
@@ -80,14 +80,14 @@ const pageContent: SEOPageContent = {
       answer: 'Because the point of tracking is often to review patterns later or share a structured record with a clinician. If the data cannot leave the app cleanly, your control is weaker.',
     },
     {
-      question: 'How does PainTracker position itself in that comparison?',
-      answer: 'PainTracker is built around local-first daily tracking, user-controlled exports, and clinician-friendly records rather than account-first engagement loops.',
+      question: 'How does Pain Tracker position itself in that comparison?',
+      answer: 'Pain Tracker is built around local-first daily tracking, user-controlled exports, and clinician-friendly records rather than account-first engagement loops.',
     },
   ],
   relatedLinks: [
     {
       title: 'Pain Tracker App',
-      description: 'Read the direct category page for PainTracker itself.',
+      description: 'Read the direct category page for Pain Tracker itself.',
       href: '/pain-tracker-app',
     },
     {
@@ -115,17 +115,17 @@ const pageContent: SEOPageContent = {
 const comparisonPoints = [
   {
     title: 'Where does daily data live?',
-    description: 'PainTracker keeps day-to-day tracking local-first by default instead of making routine use depend on a remote account.',
+    description: 'Pain Tracker keeps day-to-day tracking local-first by default instead of making routine use depend on a remote account.',
     icon: Shield,
   },
   {
     title: 'Can I still log pain offline?',
-    description: 'PainTracker is built so daily logging remains available without treating network access as a prerequisite.',
+    description: 'Pain Tracker is built so daily logging remains available without treating network access as a prerequisite.',
     icon: WifiOff,
   },
   {
     title: 'Can I bring records to a doctor visit?',
-    description: 'PainTracker focuses on exports and structured records that support later review rather than trapping the data inside the app.',
+    description: 'Pain Tracker focuses on exports and structured records that support later review rather than trapping the data inside the app.',
     icon: FileText,
   },
   {

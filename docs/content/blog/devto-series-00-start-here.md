@@ -26,33 +26,93 @@ Notes from shipping a real product, not a demo
 
 ## Start with these three
 
-Trauma Informed React Hooks
-https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n
+- Trauma Informed React Hooks:
+  [dev.to/crisiscoresystems/trauma-informed-react-hooks-483n](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n)
 
-Client Side Encryption for Healthcare Apps
-https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm
+- Client Side Encryption for Healthcare Apps:
+  [dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm](https://dev.to/crisiscoresystems/client-side-encryption-for-healthcare-apps-dhm)
 
-Building a Healthcare PWA That Actually Works When It Matters
-https://dev.to/crisiscoresystems/building-a-healthcare-pwa-that-actually-works-when-it-matters-md4
+- Building a Healthcare PWA That Actually Works When It Matters:
+  [dev.to/crisiscoresystems/building-a-healthcare-pwa-that-actually-works-when-it-matters-md4](https://dev.to/crisiscoresystems/building-a-healthcare-pwa-that-actually-works-when-it-matters-md4)
 
 ## Read the Foundations series
 
-https://dev.to/crisiscoresystems/series/34468
+[dev.to/crisiscoresystems/series/34468](https://dev.to/crisiscoresystems/series/34468)
 
 ## Read the CrisisCore Build Log series
 
-https://dev.to/crisiscoresystems/series/34363
+[dev.to/crisiscoresystems/series/34363](https://dev.to/crisiscoresystems/series/34363)
+
+## Named reading paths
+
+Testing Trauma-Informed Systems
+
+- Start here:
+  [github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-testing-trauma-informed-systems-start-here.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-testing-trauma-informed-systems-start-here.md)
+
+WorkSafeBC Documentation Workflows
+
+- Start here:
+  [github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-worksafebc-documentation-workflows-start-here.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-worksafebc-documentation-workflows-start-here.md)
+
+AI Agents Under Protective Computing
+
+- Start here:
+  [github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-ai-agents-protective-computing-start-here.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-ai-agents-protective-computing-start-here.md)
+
+Trauma-Informed Design
+
+- Start here:
+  [github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-trauma-informed-design-start-here.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-trauma-informed-design-start-here.md)
+
+Documentation Integrity / Verifiable Trust
+
+- Start here:
+  [github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-documentation-integrity-verifiable-trust-start-here.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-documentation-integrity-verifiable-trust-start-here.md)
+
+Client-Side Encryption for Health Apps
+
+- Start here:
+  [github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-client-side-encryption-health-apps-start-here.md](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-client-side-encryption-health-apps-start-here.md)
+
+Protective Computing Doctrine
+
+- Start with Protective Computing Is Not Privacy Theater:
+  [dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job](https://dev.to/crisiscoresystems/protective-computing-is-not-privacy-theater-2job)
+
+- Then read The Stability Assumption: The Hidden Defect Source:
+  [dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd](https://dev.to/crisiscoresystems/the-stability-assumption-the-hidden-defect-source-5cpd)
+
+- Then read Architecting for Vulnerability: Introducing Protective Computing Core v1.0:
+  [dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g](https://dev.to/crisiscoresystems/architecting-for-vulnerability-introducing-protective-computing-core-v10-91g)
+
+- Then read Protective Computing Canon v1.0 is now DOI-backed:
+  [dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
+
+## If you want the trust and verification path
+
+Quality Gates That Earn Trust
+[dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+
+Maintaining Truthful Docs Over Time
+[dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778](https://dev.to/crisiscoresystems/maintaining-truthful-docs-over-time-how-to-keep-security-claims-honest-2778)
+
+Preview Mode First: Agent Plans as PRs
+[dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd](https://dev.to/crisiscoresystems/preview-mode-first-agent-plans-as-prs-plan-diff-invariants-4ikd)
+
+Protective Computing Canon v1.0 is now DOI-backed
+[dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7](https://dev.to/crisiscoresystems/the-overton-framework-is-now-doi-backed-ko7)
 
 ## Try it or support it
 
 Try PainTracker
-https://paintracker.ca
+[paintracker.ca](https://paintracker.ca)
 
 Star the repo
-https://github.com/CrisisCore-Systems/pain-tracker
+[github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
 
 Sponsor
-https://github.com/sponsors/CrisisCore-Systems
+[github.com/sponsors/CrisisCore-Systems](https://github.com/sponsors/CrisisCore-Systems)
 
 ## One honest note about scope
 

@@ -12,6 +12,8 @@ A Japanese user's crisis looked like excessive apologies. A British user's distr
 
 This is the story of how we learned to test trauma-informed systems across cultural contexts.
 
+If you want the trauma-informed UX architecture these cultural tests are exercising, start with [Trauma-informed UX + accessibility as architecture (not polish)](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg).
+
 ## The Cultural Signal Problem
 
 What constitutes a "distress signal" varies dramatically across cultures:
@@ -813,6 +815,8 @@ The goal isn't cultural perfection—it's cultural awareness. Every test we writ
 ---
 
 *This is Part 9 of our series on building trauma-informed healthcare applications. Previous posts covered [crisis detection](/blog/false-positives-calibrating-crisis-detection), [testing strategies](/blog/testing-the-untestable), [recovery testing](/blog/testing-recovery), and [cross-crisis calibration](/blog/cross-crisis-calibration).*
+
+Related reading: [Cross-Crisis Calibration](/blog/cross-crisis-calibration) covers how crisis detection has to vary across crisis types as well as across cultures.
 
 **Coming Next**: "Testing the Testing: Validating That Your Crisis Simulation Actually Matches Reality"
 

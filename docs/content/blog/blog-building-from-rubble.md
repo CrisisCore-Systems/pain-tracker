@@ -16,6 +16,14 @@ Real fire. Real concrete. Real desperation.
 
 I’m telling you this so you understand **who** writes code like this, and **why**.
 
+For the full reading path around this work, start with [Trauma-Informed Design: Start Here](/blog/trauma-informed-design-start-here).
+
+This sits inside a broader Trauma-Informed Design reading path: lived experience in [Two People, Same Body](https://dev.to/crisiscoresystems/two-people-same-body-a-developers-crisis-architecture-25ko), implementation in [Trauma-informed UX + accessibility as architecture (not polish)](https://dev.to/crisiscoresystems/trauma-informed-ux-accessibility-as-architecture-not-polish-22jg), and component patterns in [Trauma-Informed React Hooks](https://dev.to/crisiscoresystems/trauma-informed-react-hooks-483n).
+
+For the tighter personal origin story behind this trauma-informed design work, read [Two People, Same Body](https://dev.to/crisiscoresystems/two-people-same-body-a-developers-crisis-architecture-25ko).
+
+For the product philosophy that sits underneath the architecture, read [Building a Pain Tracker That Actually Gets It — No Market Research Required](https://dev.to/crisiscoresystems/building-a-pain-tracker-that-actually-gets-it-no-market-research-required-4511).
+
 ---
 
 ## When Everything Goes Sideways

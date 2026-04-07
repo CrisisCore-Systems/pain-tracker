@@ -11,7 +11,18 @@ canonical_url: "https://github.com/CrisisCore-Systems/pain-tracker"
 published: false
 ---
 
-**Series:** [Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md) · [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md) · [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md) · [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md) · [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md) · [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md) · [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md) · [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md) · **Part 8** · [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md) · [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
+**Series:**
+[Start here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-00-start-here.md)
+· [Part 1](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-01-offline-first-local-first-architecture.md)
+· [Part 2](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-02-three-storage-layers-state-cache-offline-db-encrypted-vault.md)
+· [Part 3](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-03-service-workers-that-dont-surprise-you.md)
+· [Part 4](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-04-zod-defensive-parsing.md)
+· [Part 5](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-05-trauma-informed-ux-accessibility-as-architecture.md)
+· [Part 6](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-06-exports-as-a-security-boundary.md)
+· [Part 7](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-07-worksafebc-oriented-workflows-careful-language.md)
+· **Part 8**
+· [Part 9](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-09-quality-gates-that-earn-trust.md)
+· [Part 10](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/devto-series-10-maintaining-truthful-docs-over-time.md)
 
 Analytics in health-adjacent apps has a special failure mode:
 
@@ -36,13 +47,17 @@ This post is grounded in the repo’s implementation:
 - `src/components/settings/PrivacySettings.tsx`
 - `src/utils/usage-tracking.ts`
 
+For the broader reading path around this architecture, start here: [Start Here: PainTracker and the CrisisCore Build Log](https://dev.to/crisiscoresystems/start-here-paintracker-and-the-crisiscore-build-log-3d2m).
+
 ---
 
 ## Rule 1: analytics is a capability, not a background assumption
 
 The first gate is deployment-level: an environment flag.
 
-In this repo, analytics is controlled with a Vite env var (e.g. `VITE_ENABLE_ANALYTICS`). When disabled, the app should behave as if analytics does not exist.
+In this repo, analytics is controlled with a Vite env var such as
+`VITE_ENABLE_ANALYTICS`. When disabled, the app should behave as if analytics
+does not exist.
 
 This is a small architectural choice with big impact:
 
@@ -83,7 +98,8 @@ This is how you keep “disabled means no-op” true.
 
 ## Rule 4: analytics payloads must be designed to exclude Class A data
 
-If your app stores Class A data (pain entries, symptoms, meds, free-text notes), assume it will leak unless you deliberately design against it.
+If your app stores Class A data such as pain entries, symptoms, meds, and
+free-text notes, assume it will leak unless you deliberately design against it.
 
 Pain Tracker’s event helpers aim to only send coarse information:
 
@@ -105,7 +121,8 @@ It’s a pragmatic engineering rule: analytics should be useful without being in
 
 ## Prefer local-only tracking when it can do the job
 
-The repo also includes local usage tracking utilities (stored on-device) intended for lightweight UX behavior and product insight without shipping data off-device.
+The repo also includes local usage tracking utilities stored on-device for
+lightweight UX behavior and product insight without shipping data off-device.
 
 You still need to be careful here:
 
@@ -117,6 +134,10 @@ But local-only tracking can cover a surprising amount:
 
 - “has the user seen this onboarding tip?”
 - “how often is export used?” (as a count, not content)
+
+That export example is intentional: Part 6 shows how export telemetry is kept
+separate and minimal at the exact point local-first data becomes shareable:
+[Exports are a security boundary](https://dev.to/crisiscoresystems/exports-are-a-security-boundary-the-moment-local-first-becomes-shareable-5ee4).
 
 ---
 

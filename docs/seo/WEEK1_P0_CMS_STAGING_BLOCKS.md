@@ -1,5 +1,7 @@
 # Week 1 P0 CMS Staging Blocks
 
+<!-- markdownlint-disable-file MD013 -->
+
 Date: 2026-03-11  
 Owner: Kay  
 Purpose: Source-controlled staging copy for live Hashnode publication.

@@ -4,10 +4,14 @@ published: true
 description: "Most 'encrypted' health apps are lying. Here's how to tell the difference, and what real client-side encryption actually looks like."
 tags: ["security", "privacy", "healthtech", "webdev"]
 cover_image: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/encryption-transparency-cover.png
-canonical_url: 
+canonical_url:
 ---
 
-# If Your Health App Can't Explain Its Encryption, It Doesn't Have Any
+> Series: Client-Side Encryption for Health Apps
+> Part 2 of 3.
+> Start here: [Client-Side Encryption for Health Apps: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-client-side-encryption-health-apps-start-here.md)
+> Read first: [Keeping Your Health Data Out of Court](https://blog.paintracker.ca/keeping-your-health-data-out-of-court)
+> Read next: [Client-Side Encryption for Healthcare Apps](https://blog.paintracker.ca/client-side-encryption-for-healthcare-apps)
 
 "Your data is encrypted."
 
@@ -19,13 +23,21 @@ Every health app says this. Almost none of them mean what you think they mean.
 
 Here's what "encrypted" usually means in health apps:
 
-**HTTPS** - Your data is encrypted *in transit*. Between your phone and their server. That's it. The moment it arrives, they decrypt it. They read it. They store it in plaintext or with keys they control. They sell it. They leak it. They hand it over when lawyers ask.
+**HTTPS** means your data is encrypted *in transit* between your phone and the
+server. That's it. The moment it arrives, they decrypt it. They read it. They
+store it in plaintext or with keys they control. They sell it. They leak it.
+They hand it over when lawyers ask.
 
-**Encrypted at rest** - Your data sits encrypted on their servers. They hold the keys. They can decrypt it whenever they want. For "customer support." For "product improvement." For "legal compliance."
+**Encrypted at rest** means your data sits encrypted on their servers, but they
+hold the keys. They can decrypt it whenever they want: for customer support,
+product improvement, or legal compliance.
 
-**"Bank-level encryption"** - Marketing term. Meaningless. Banks get breached constantly. Banks also have your data in plaintext on the backend. "Bank-level" means they bought an SSL certificate.
+**Bank-level encryption** is a marketing term. It is meaningless. Banks get
+breached constantly. Banks also have your data in plaintext on the backend.
+"Bank-level" usually means they bought an SSL certificate.
 
-None of this protects you from the company itself. None of this protects you from subpoenas. None of this protects you from the inevitable breach.
+None of this protects you from the company itself. None of it protects you from
+subpoenas. None of it protects you from the inevitable breach.
 
 ---
 
@@ -33,17 +45,21 @@ None of this protects you from the company itself. None of this protects you fro
 
 Your pain journal isn't just data. It's:
 
-- Evidence in disability hearings
-- Ammunition in custody battles
-- "Pre-existing conditions" for insurers
-- "Drug-seeking behavior" for doctors who don't believe you
-- A liability for employers looking for reasons
+- evidence in disability hearings
+- ammunition in custody battles
+- "pre-existing conditions" for insurers
+- "drug-seeking behavior" for doctors who don't believe you
+- a liability for employers looking for reasons
 
-I know because I've had my health data used against me. In actual court. By actual lawyers. Reading entries I wrote during pain flares, reframed as evidence of instability.
+I know because I've had my health data used against me. In actual court. By
+actual lawyers. Reading entries I wrote during pain flares and reframing them as
+evidence of instability.
 
 "But I consented to the privacy policy."
 
-You consented to a document designed to be unreadable. A document that says they can share your data with "partners" and "service providers" and "as required by law." A document that changes whenever they want.
+You consented to a document designed to be unreadable. A document that says they
+can share your data with partners, service providers, and anyone else required
+by law. A document that changes whenever they want.
 
 Consent isn't protection. Architecture is protection.
 
@@ -51,23 +67,24 @@ Consent isn't protection. Architecture is protection.
 
 ## What Real Encryption Looks Like
 
-Real encryption means **the company cannot read your data**. Not "won't." Cannot.
+Real encryption means **the company cannot read your data**. Not "won't."
+Cannot.
 
-```
+```text
 YOUR DEVICE                          THEIR SERVER
-┌─────────────────┐                  ┌─────────────────┐
-│                 │                  │                 │
-│  Plaintext      │                  │  Ciphertext     │
-│  (readable)     │  ──encrypted──►  │  (noise)        │
-│                 │                  │                 │
-│  Keys stay here │                  │  No keys here   │
-│                 │                  │                 │
-└─────────────────┘                  └─────────────────┘
++-----------------+                  +-----------------+
+| Plaintext       | --encrypted-->   | Ciphertext      |
+| (readable)      |                  | (noise)         |
+| Keys stay here  |                  | No keys here    |
++-----------------+                  +-----------------+
 ```
 
-In a user-held-keys design, keys are generated and kept client-side during normal use. A server (if present) may only see ciphertext. If they get breached, attackers may still only get ciphertext.
+In a user-held-keys design, keys are generated and kept client-side during
+normal use. A server, if present, may only see ciphertext. If they get
+breached, attackers may still only get ciphertext.
 
-This is often called **client-side encryption** or a **user-held-keys** architecture.
+This is often called **client-side encryption** or a **user-held-keys**
+architecture.
 
 ---
 
@@ -75,35 +92,40 @@ This is often called **client-side encryption** or a **user-held-keys** architec
 
 Ask your health app these questions:
 
-1. **Where are the encryption keys stored?**
-   - If they say "on our servers" → they can read your data
-   - If they say "we use AWS KMS" → Amazon can read your data
-   - If they can't answer → they don't know, which is worse
+### 1. Where are the encryption keys stored?
 
-2. **Can your engineers access my data for debugging?**
-   - If yes → not encrypted
-   - If "only with your permission" → not encrypted, just policy
-  - If "no, we can't access it without your key" → maybe actually encrypted
+- If they say "on our servers," they can read your data.
+- If they say "we use AWS KMS," Amazon can read your data.
+- If they can't answer, they don't know, which is worse.
 
-3. **What happens if you get subpoenaed for my data?**
-   - If "we comply with legal requests" → they can read it
-   - If "we can only provide encrypted blobs" → maybe real
-   - If they look confused → run
+### 2. Can your engineers access my data for debugging?
 
-4. **Can I export my data and verify the encryption myself?**
-   - If no → you're trusting them completely
-   - If yes but it's plaintext → not encrypted
-   - If yes and it's ciphertext you can decrypt locally → real
+- If yes, it's not encrypted.
+- If they say "only with your permission," it's not encrypted, just policy.
+- If they say "no, we can't access it without your key," it may be real.
 
-5. **Is your encryption implementation open source?**
-   - If no → you can't verify anything
-   - If yes → check it. Or find someone who can.
+### 3. What happens if you get subpoenaed for my data?
+
+- If they say "we comply with legal requests," they can read it.
+- If they say "we can only provide encrypted blobs," it may be real.
+- If they look confused, run.
+
+### 4. Can I export my data and verify the encryption myself?
+
+- If no, you're trusting them completely.
+- If yes but it's plaintext, it's not encrypted.
+- If yes and it's ciphertext you can decrypt locally, it's real.
+
+### 5. Is your encryption implementation open source?
+
+- If no, you can't verify anything.
+- If yes, check it, or find someone who can.
 
 ---
 
 ## How I Built It Different
 
-Pain Tracker uses client-side encryption. Here's what that actually means:
+Pain Tracker uses client-side encryption. Here's what that actually means.
 
 ### Key Generation (On Your Device)
 
@@ -115,7 +137,8 @@ const encryptionKey = await crypto.subtle.generateKey(
 );
 ```
 
-This key is generated in your browser. It never touches a network. It never goes to any server. It exists only on your device.
+This key is generated in your browser. It never touches a network. It never
+goes to any server. It exists only on your device.
 
 ### Encryption (Before Anything Leaves)
 
@@ -129,32 +152,28 @@ const ciphertext = await crypto.subtle.encrypt(
 );
 ```
 
-Fresh IV every time. AES-GCM authenticated encryption. If someone tampers with the ciphertext, decryption fails. No silent corruption.
+Fresh IV every time. AES-GCM authenticated encryption. If someone tampers with
+the ciphertext, decryption fails. No silent corruption.
 
 ### Storage (Local Only)
 
 ```typescript
 await indexedDB.put('pain-entries', {
   id: crypto.randomUUID(),
-  data: ciphertext,  // Encrypted blob
-  iv: iv,            // Needed for decryption
+  data: ciphertext,
+  iv,
   timestamp: Date.now()
 });
 ```
 
-The plaintext never exists outside your browser's memory. The database stores noise.
+The plaintext never exists outside your browser's memory. The database stores
+noise.
 
 ### The Part Most Apps Skip
 
 ```typescript
-// HMAC verification - detect tampering
-const hmac = await crypto.subtle.sign(
-  'HMAC',
-  hmacKey,
-  ciphertext
-);
+const hmac = await crypto.subtle.sign('HMAC', hmacKey, ciphertext);
 
-// Before decryption, verify HMAC first
 const isValid = await crypto.subtle.verify(
   'HMAC',
   hmacKey,
@@ -167,22 +186,24 @@ if (!isValid) {
 }
 ```
 
-Belt and suspenders. If someone modifies the encrypted data, we know before we try to decrypt it.
+If someone modifies the encrypted data, we know before we try to decrypt it.
 
 ---
 
-## "But What About Sync?"
+## But What About Sync?
 
-I get this question a lot. "How do I sync between devices without a server?"
+I get this question a lot. How do you sync between devices without a server?
 
 You don't. That's the point.
 
 Sync requires either:
-1. A server that can read your data (not encrypted)
-2. A server that stores encrypted blobs + key exchange between devices (complex, still requires trusting the server for key exchange)
-3. Direct device-to-device transfer (limited, but actually secure)
 
-I chose local-only. Your data lives on your device. If you want to share it with your doctor, you export a file. You hand them the file. No intermediary.
+- a server that can read your data
+- a server that stores encrypted blobs plus key exchange between devices
+- direct device-to-device transfer
+
+I chose local-only. Your data lives on your device. If you want to share it
+with your doctor, you export a file and hand them the file. No intermediary.
 
 Is this inconvenient? Yes.
 
@@ -192,16 +213,18 @@ Trade-offs.
 
 ---
 
-## "What If I Lose My Device?"
+## What If I Lose My Device?
 
 Then your data is gone.
 
-This is the honest answer that no "encrypted" health app will give you. Real encryption means real consequences.
+This is the honest answer that no "encrypted" health app will give you. Real
+encryption means real consequences.
 
 You can mitigate this:
-- **Encrypted exports** - Password-protected backups you control
-- **Key escrow** - Store an encrypted copy of your key somewhere you control (not their servers)
-- **Accept the trade-off** - Some data is better lost than leaked
+
+- **Encrypted exports**: password-protected backups you control
+- **Key escrow**: store an encrypted copy of your key somewhere you control
+- **Accept the trade-off**: some data is better lost than leaked.
 
 I chose encrypted exports with PBKDF2 key derivation:
 
@@ -209,9 +232,9 @@ I chose encrypted exports with PBKDF2 key derivation:
 const backupKey = await crypto.subtle.deriveKey(
   {
     name: 'PBKDF2',
-    salt: salt,
-    iterations: 150000,  // Brute-force resistant
-    hash: 'SHA-256',
+    salt,
+    iterations: 150000,
+    hash: 'SHA-256'
   },
   passwordKey,
   { name: 'AES-GCM', length: 256 },
@@ -220,13 +243,14 @@ const backupKey = await crypto.subtle.deriveKey(
 );
 ```
 
-150,000 iterations. If someone steals your backup file, they need months to crack a decent password. Months you can use to change your life situation, if that's what this is about.
+If someone steals your backup file, they need serious brute-force effort to
+crack a decent password. That's time you can use to respond.
 
 ---
 
 ## The Audit Trail They Don't Want You To Have
 
-Real apps log what they do with your data. Locally.
+Real apps log what they do with your data locally.
 
 ```typescript
 function logSecurityEvent(event: SecurityEvent): void {
@@ -239,16 +263,15 @@ function logSecurityEvent(event: SecurityEvent): void {
   saveLocalAuditLog(log);
 }
 
-// Every decrypt operation
 logSecurityEvent({ type: 'decrypt', details: { entryId, reason: 'user_view' } });
-
-// Every export
 logSecurityEvent({ type: 'export', details: { format: 'pdf', count: entries.length } });
 ```
 
-If someone asks what the app did with my data, I can show them. From my device. Without asking anyone's permission.
+If someone asks what the app did with my data, I can show them from my device,
+without asking anyone's permission.
 
-Try asking your health app for this log. They don't have it. Or they have it on their servers, which defeats the purpose.
+Try asking your health app for this log. They don't have it. Or they have it on
+their servers, which defeats the purpose.
 
 ---
 
@@ -256,22 +279,26 @@ Try asking your health app for this log. They don't have it. Or they have it on 
 
 Don't trust me either. Verify.
 
-1. **Open DevTools** → Network tab → Use the app → Watch for requests
-   - If your pain data appears in request bodies, it's not encrypted
-   - If you see Base64 blobs that look random, maybe encrypted
+### 1. Open DevTools and watch the network tab while you use the app
 
-2. **Check IndexedDB** → Application tab → IndexedDB → Look at stored data
-   - Readable JSON? Not encrypted.
-   - Binary blobs? Possibly encrypted.
+- If your pain data appears in request bodies, it's not encrypted.
+- If you see random-looking blobs, it may be encrypted.
 
-3. **Read the source code**
-   - Is it open source? Can you find the encryption implementation?
-   - Do they use Web Crypto API or a library? Which one?
-   - Where do they store keys?
+### 2. Check IndexedDB in the application tab
 
-4. **Export your data**
-   - Is it plaintext? Not encrypted at rest.
-   - Is it ciphertext you can decrypt with a key you control? Real.
+- Readable JSON means not encrypted.
+- Binary blobs mean maybe encrypted.
+
+### 3. Read the source code
+
+- Is it open source?
+- Can you find the encryption implementation?
+- Where do they store keys?
+
+### 4. Export your data
+
+- If it is plaintext, it's not encrypted at rest.
+- If it is ciphertext you can decrypt with a key you control, it's real.
 
 ---
 
@@ -279,48 +306,57 @@ Don't trust me either. Verify.
 
 Most health apps don't want to give you real encryption because:
 
-1. **They can't monetize encrypted data** - Can't sell what you can't read
-2. **Customer support is harder** - "I can see your account" isn't possible
-3. **Legal requests are harder** - "We can't comply" is uncomfortable
-4. **It's more engineering work** - Actually secure systems are complex
+1. they can't monetize encrypted data
+2. customer support gets harder
+3. legal requests get harder
+4. actually secure systems take more work
 
-Real encryption is a business decision that costs them money. They won't make it unless users demand it.
+Real encryption is a business decision that costs them money. They won't make
+it unless users demand it.
 
 ---
 
 ## What You Can Do
 
-**For users:**
-- Ask the questions above before trusting a health app
-- Prefer apps that are open source and verifiable
-- Assume any data that leaves your device can be read
+### For users
 
-**For developers:**
-- Implement client-side encryption if you handle sensitive data
-- Open source your encryption implementation
-- Be honest about your threat model
+- ask the questions above before trusting a health app
+- prefer apps that are open source and verifiable
+- assume any data that leaves your device can be read
 
-**For everyone:**
-- Stop accepting "your data is encrypted" as meaningful
-- Demand specifics: where are the keys, who can access them, what's the implementation
-- Remember that "encrypted" is a spectrum, and most apps are at the wrong end
+### For developers
+
+- implement client-side encryption if you handle sensitive data
+- open source your encryption implementation
+- be honest about your threat model
+
+### For everyone
+
+- stop accepting "your data is encrypted" as meaningful
+- demand specifics: where are the keys, who can access them, what is the implementation
+- remember that encrypted is a spectrum, and most apps are at the wrong end
 
 ---
 
 ## The Standard Should Be Higher
 
-I built Pain Tracker because I needed something I could trust with data that had been used against me.
+I built Pain Tracker because I needed something I could trust with data that had
+been used against me.
 
-Not "trust the company's privacy policy." Not "trust their security team." Not "trust that the acquisition won't change anything."
+Not trust-the-company's-privacy-policy. Not trust-their-security-team. Not trust
+that the acquisition won't change anything.
 
 Trust the math. Trust the architecture. Trust code I can read and you can audit.
 
-If your health app can't explain its encryption in technical terms you can verify, it doesn't have encryption. It has marketing.
+If your health app can't explain its encryption in technical terms you can
+verify, it doesn't have encryption. It has marketing.
 
 ---
 
-**Repository**: [github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
+**Repository**:
+[github.com/CrisisCore-Systems/pain-tracker](https://github.com/CrisisCore-Systems/pain-tracker)
 
-The encryption implementation is in `src/services/EncryptionService.ts`. It's not perfect. It's auditable. That's the point.
+The encryption implementation is in `src/services/EncryptionService.ts`. It's
+not perfect. It's auditable. That's the point.
 
 Read it. Tell me what I missed. Build something better.

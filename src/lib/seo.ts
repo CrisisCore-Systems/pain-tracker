@@ -129,7 +129,7 @@ export function generateSoftwareApplicationSchema(): object {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
     name: defaultSEOConfig.siteName,
-    description: 'Private offline-first pain tracker app for logging symptoms, triggers, flare patterns, and clinician-ready records.',
+    description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web Browser, iOS, Android',
     offers: {
@@ -272,7 +272,6 @@ export function generateOrganizationSchema(): object {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: defaultSEOConfig.siteName,
-    alternateName: 'Pain Tracker Pro',
     url: defaultSEOConfig.siteUrl,
     logo: defaultSEOConfig.defaultImage,
     description: 'Private offline-first pain tracking application for daily symptom logging, clinician-friendly records, and local-first privacy controls.',
@@ -305,9 +304,8 @@ export function generateWebSiteSchema(): object {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: defaultSEOConfig.siteName,
-    alternateName: 'Pain Tracker Pro',
     url: defaultSEOConfig.siteUrl,
-    description: 'Private offline-first pain tracker app for tracking symptoms, triggers, flare patterns, and clinician-friendly records without making daily use depend on the cloud.',
+    description: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
     inLanguage: 'en-CA',
     publisher: {
       '@type': 'Organization',
@@ -321,10 +319,10 @@ export function generateWebSiteSchema(): object {
  * Default SEO configuration for the site
  */
 export const defaultSEOConfig = {
-  siteName: 'PainTracker',
+  siteName: 'Pain Tracker',
   siteUrl: 'https://www.paintracker.ca',
-  defaultTitle: 'PainTracker - Private Offline-First Pain Tracking App',
-  defaultDescription: 'Track pain, symptoms, triggers, and daily patterns with a private offline-first pain tracker app. Local-first by default, no account required, and clinician-friendly exports when you choose.',
+  defaultTitle: 'Track Pain Privately. No Account. Works Offline. | Pain Tracker',
+  defaultDescription: 'Track pain privately. No account. Works offline. Bring better records to appointments.',
   defaultImage: 'https://www.paintracker.ca/og-image.png',
   twitterHandle: '@paintrackerpro',
   locale: 'en_CA'

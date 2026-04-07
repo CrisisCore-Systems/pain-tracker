@@ -6,9 +6,9 @@ const pageContent: SEOPageContent = {
   slug: 'pain-tracker-app',
   canonicalPath: '/pain-tracker-app',
   title: 'Pain Tracker App',
-  metaTitle: 'Pain Tracker App That Works Offline and Protects Privacy | PainTracker',
+  metaTitle: 'Pain Tracker App That Works Offline and Protects Privacy | Pain Tracker',
   metaDescription:
-    'PainTracker is a private offline-first pain tracker app for daily symptom logging, trigger tracking, flare patterns, and clinician-friendly exports when you choose.',
+    'Pain Tracker is a private offline-first pain tracker app for daily symptom logging, trigger tracking, flare patterns, and clinician-friendly exports when you choose.',
   keywords: [
     'pain tracker',
     'pain tracker app',
@@ -24,7 +24,7 @@ const pageContent: SEOPageContent = {
   subheadline:
     'Track pain, symptoms, triggers, flare patterns, and daily functioning on your device. Use clinician-friendly exports when you choose instead of making daily tracking depend on the cloud.',
   primaryCTA: {
-    text: 'Open PainTracker',
+    text: 'Use the app free',
     href: '/start',
     download: false,
   },
@@ -36,7 +36,7 @@ const pageContent: SEOPageContent = {
     type: 'tool-embed',
   },
   whatIsThis:
-    'PainTracker is a pain tracking app designed for daily use under unstable conditions. It helps you record pain levels, symptoms, triggers, treatments, and functional impact in a structured format that remains useful for your own pattern tracking and for appointments.',
+    'Pain Tracker is a pain tracking app designed for daily use under unstable conditions. It helps you record pain levels, symptoms, triggers, treatments, and functional impact in a structured format that remains useful for your own pattern tracking and for appointments.',
   whoShouldUse: [
     'People who want a chronic pain tracker that works offline for daily logging.',
     'Anyone who needs clinician-friendly records without handing routine tracking to a third-party account system.',
@@ -77,12 +77,12 @@ const pageContent: SEOPageContent = {
       answer: 'Structured entries make your records easier to compare over time, easier to bring to appointments, and less dependent on memory when you are tired or in pain.',
     },
     {
-      question: 'Can I use PainTracker as a chronic pain tracker?',
+      question: 'Can I use Pain Tracker as a chronic pain tracker?',
       answer: 'Yes. It is suitable for ongoing symptom logging, flare documentation, treatment changes, and daily functioning records over time.',
     },
     {
       question: 'Does a pain tracker app have to use the cloud?',
-      answer: 'No. PainTracker is built so everyday pain logging remains local-first by default instead of making routine tracking depend on network access or account creation.',
+      answer: 'No. Pain Tracker is built so everyday pain logging remains local-first by default instead of making routine tracking depend on network access or account creation.',
     },
   ],
   relatedLinks: [
@@ -98,7 +98,7 @@ const pageContent: SEOPageContent = {
     },
     {
       title: 'Privacy and Offline Use',
-      description: 'Read how PainTracker approaches local-first use and trauma-informed design.',
+      description: 'Read how Pain Tracker approaches local-first use and trauma-informed design.',
       href: '/privacy-offline-first-pain-tracker',
     },
     {

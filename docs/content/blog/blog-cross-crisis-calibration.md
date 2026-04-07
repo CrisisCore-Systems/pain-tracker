@@ -12,6 +12,8 @@ That's when we realized: **crisis isn't monolithic**. A pain flare looks nothing
 
 This is the story of how we built—and more importantly, tested—multi-modal crisis detection.
 
+Before adding multiple crisis types, it helps to understand the baseline single-detector calibration problem in [The False Positive Problem](/blog/false-positives-calibrating-crisis-detection).
+
 ## The Many Faces of Crisis
 
 Before writing any code, we mapped the behavioral signatures of different crisis states:

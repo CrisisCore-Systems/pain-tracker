@@ -18,8 +18,8 @@ Reference: `docs/trust/threat-model.md`
 - Adversaries considered during checks: XSS-origin compromise assumptions, replay/route widening risks, telemetry leakage risks.
 - New attack surface introduced: none in this execution pass.
 - Mitigations verified:
-	- Privacy gates and analytics consent protections passed via `npm run -s check-security`.
-	- Chokepoint CI tests passed (`security-chokepoints`, background sync guardrails).
+  - Privacy gates and analytics consent protections passed via `npm run -s check-security`.
+  - Chokepoint CI tests passed (`security-chokepoints`, background sync guardrails).
 
 ## 3) Boundary Statement Delta
 
@@ -34,8 +34,8 @@ Reference: `docs/trust/boundary-statement.md`
 - Baseline quality command: `npm run -s check:quick`
 - Result: passed after remediation.
 - Remediation applied:
-	- `src/components/data-resilience/DataRestore.tsx`: callback now receives normalized store entries after merge.
-	- Removed malformed temporary artifact files that were causing lint parse errors in `artifacts/devto/`.
+  - `src/components/data-resilience/DataRestore.tsx`: callback now receives normalized store entries after merge.
+  - Removed malformed temporary artifact files that were causing lint parse errors in `artifacts/devto/`.
 - Security gate command: `npm run -s check-security`
 - Result: passed (privacy gates + analytics gate tests).
 
@@ -44,18 +44,19 @@ Reference: `docs/trust/boundary-statement.md`
 Reference: `docs/trust/scenario-test-protocol.md`
 
 - Scenario-relevant unit tests (all passed, 42 tests):
-	- `src/test/security-chokepoints-ci.test.ts`
-	- `src/test/background-sync-guard.test.ts`
-	- `src/test/offline-queue.test.ts`
-	- `src/test/accessibility.test.tsx`
-	- `src/test/monetization-boundary.test.ts`
+  - `src/test/security-chokepoints-ci.test.ts`
+  - `src/test/background-sync-guard.test.ts`
+  - `src/test/offline-queue.test.ts`
+  - `src/test/accessibility.test.tsx`
+  - `src/test/monetization-boundary.test.ts`
 - SEO consistency tests (all passed, 13 tests):
-	- `src/test/seo-breadcrumbs.test.ts`
-	- `src/test/seo-host-consistency.test.ts`
-	- `src/test/seo-redirect-rules.test.ts`
+  - `src/test/seo-breadcrumbs.test.ts`
+  - `src/test/seo-host-consistency.test.ts`
+  - `src/test/seo-redirect-rules.test.ts`
 - Runtime smoke (Playwright): `npm run -s e2e:smoke`
-	- Result: 6/6 tests passed.
-	- Observation: resources sub-routes log service worker registration warnings (`unsupported MIME type 'text/html'` for route-local `sw.js` lookups).
+  - Result: 6/6 tests passed.
+  - Observation: resources sub-routes log service worker registration warnings
+    (`unsupported MIME type 'text/html'` for route-local `sw.js` lookups).
 
 ## 6) PLS Scoring (provisional)
 
@@ -74,9 +75,9 @@ Reference: `docs/trust/release-gating-policy.md`
 - Gate status: `blocked for release` due to failing baseline quality gate.
 - Gate status: `pass with follow-up`.
 - Required follow-ups before release:
-	- Investigate and either suppress or resolve route-local SW registration warnings on resources pages.
-	- Run observer-based coercion/no-tell scenario drills per `docs/trust/scenario-test-protocol.md`.
+  - Investigate and either suppress or resolve route-local SW registration warnings on resources pages.
+  - Run observer-based coercion/no-tell scenario drills per `docs/trust/scenario-test-protocol.md`.
 - Verification reruns complete:
-	- `npm run -s check:quick` passed.
-	- `npm run -s e2e:smoke` passed (6/6).
+  - `npm run -s check:quick` passed.
+  - `npm run -s e2e:smoke` passed (6/6).
 - Sign-off: pending reviewer confirmation of SW warning disposition and observer drill completion.

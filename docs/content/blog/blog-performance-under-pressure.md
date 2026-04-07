@@ -731,6 +731,8 @@ performance:
 
 ## Conclusion
 
+Related reading: [Testing Across the Stack](/blog/testing-across-the-stack) covers the full integration path that complements these benchmarks and performance budgets.
+
 Performance testing for trauma-informed applications isn't about raw speed—it's about **reliability under pressure**. When users most need our help, the app must be at its most responsive.
 
 Key takeaways:

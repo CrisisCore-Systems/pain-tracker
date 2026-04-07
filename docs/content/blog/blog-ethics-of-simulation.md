@@ -1,3 +1,5 @@
+<!-- markdownlint-disable-file MD013 MD032 MD036 MD040 MD060 -->
+
 # The Ethics of Simulation: How to Test Trauma-Informed Features Without Exploiting Real Pain
 
 *Part of the CrisisCore Build Log - when the testing strategy becomes a moral question*
@@ -9,6 +11,8 @@
 Here's a question nobody asks in the testing literature:
 
 **Where does your test data come from?**
+
+If you want the full reading path around this question, start with [Testing Trauma-Informed Systems: Start Here](/blog/testing-trauma-informed-systems-start-here).
 
 For most applications, nobody cares. Mock users. Fake addresses. Random strings.
 
@@ -147,7 +151,7 @@ That's not compensation—that's a discount on a product you're asking them to i
 
 **✅ Clear opt-in with informed consent**
 
-```
+```text
 PARTICIPANT INFORMATION SHEET
 
 What we're asking:
@@ -451,6 +455,8 @@ The technical quality of your tests is irrelevant if the ethical quality is abse
 
 ## Resources
 
+Related reading: if you want to validate that ethically constructed simulations still resemble reality, read [Testing the Testing](/blog/testing-the-testing).
+
 - [Trauma-Informed Design Research](https://www.nngroup.com/articles/trauma-informed-research/) — NNGroup
 - [Differential Privacy](https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf) — Dwork & Roth (academic)
 - [Ethical UX Research](https://www.smashingmagazine.com/2022/06/ethics-ux-research/) — Smashing Magazine
@@ -461,7 +467,7 @@ The technical quality of your tests is irrelevant if the ethical quality is abse
 
 ---
 
-*Next in the series: "Offline Crisis Support: What Happens When the Network Dies at the Worst Moment"*
+For the companion piece that applies these ethics in concrete fixture, state-injection, and flow-testing techniques, read [Testing the Untestable](/blog/testing-the-untestable).
 
 ---
 

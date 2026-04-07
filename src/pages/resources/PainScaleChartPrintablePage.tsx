@@ -14,7 +14,7 @@ const pageContent: SEOPageContent = {
   slug: 'pain-scale-chart-printable',
   title: 'Pain Scale Chart Printable (Free)',
   metaTitle:
-    'Pain Scale Chart Printable — Free 0-10 NRS Visual Reference | PainTracker',
+    'Pain Scale Chart Printable — Free 0-10 NRS Visual Reference | Pain Tracker',
   metaDescription:
     'Download a free printable pain scale chart. Visual 0-10 Numeric Rating Scale with descriptors, faces, colors, and functional impact — the clinical standard for consistent pain reporting.',
   keywords: [
@@ -159,7 +159,7 @@ const pageContent: SEOPageContent = {
     {
       question: 'Is there a digital version?',
       answer:
-        'Yes. PainTracker includes a built-in pain scale with the same 0-10 NRS, color-coded and with functional descriptors. The digital version automatically records your rating with a timestamp, tracks changes over time, and generates clinical reports — all encrypted and stored only on your device.',
+        'Yes. Pain Tracker includes a built-in pain scale with the same 0-10 NRS, color-coded and with functional descriptors. The digital version automatically records your rating with a timestamp, tracks changes over time, and generates clinical reports — all encrypted and stored only on your device.',
     },
   ],
 

@@ -125,7 +125,7 @@ export const PricingPage: React.FC = () => {
                 </div>
               </div>
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                PainTracker
+                Pain Tracker
               </span>
             </button>
             <button
@@ -157,7 +157,7 @@ export const PricingPage: React.FC = () => {
           </p>
 
           <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10">
-            PainTracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
+            Pain Tracker is a privacy-first, local-data pain documentation system designed to help patients record symptoms and provide clinicians with clear, structured reports.
           </p>
 
           <p className="text-sm text-slate-400 max-w-3xl mx-auto mb-10">
@@ -510,7 +510,7 @@ export const PricingPage: React.FC = () => {
               onClick={() => navigate('/start')}
               className="btn-cta-primary text-lg px-10 py-4 inline-flex items-center gap-3"
             >
-              Start Tracking Free
+              Use the app free
               <ArrowRight className="h-5 w-5" />
             </button>
             <p className="text-sm text-slate-500 mt-4">

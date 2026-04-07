@@ -3,7 +3,7 @@
 // - Navigations stay network-first to avoid stale HTML/module graph issues.
 // - Only static GET assets are cached.
 
-const SW_VERSION = '1.10.0';
+const SW_VERSION = '1.10.1';
 const CACHE_NAME = `pain-tracker-static-v${SW_VERSION}`;
 
 // Keep precache paths scope-safe for both root and /pain-tracker deployments.
@@ -36,6 +36,7 @@ function isApiRequest(url) {
 
 function isCacheableStaticAsset(url) {
   if (!isSameOrigin(url)) return false;
+  if (url.pathname === '/sw-register.js') return false;
   if (STATIC_PATH_PREFIXES.some((pathPrefix) => url.pathname.startsWith(pathPrefix))) return true;
 
   // Allow common static extensions outside known prefixes.

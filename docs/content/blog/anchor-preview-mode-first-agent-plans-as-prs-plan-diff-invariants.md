@@ -12,6 +12,10 @@ published: true
 If you’re using AI agents in delivery workflows, the safest default is not “let it run.”
 It’s **Preview Mode First**.
 
+If you want the short reading path around this topic instead of a single post, start with [AI Agents Under Protective Computing: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-ai-agents-protective-computing-start-here.md).
+
+For the broader trust-and-verifiability path this also belongs to, start with [Documentation Integrity / Verifiable Trust: Start Here](https://github.com/CrisisCore-Systems/pain-tracker/blob/main/docs/content/blog/blog-documentation-integrity-verifiable-trust-start-here.md).
+
 Think of every agent run as a PR proposal:
 
 - it has a plan
@@ -130,6 +134,10 @@ Plan diffs show you what changed.
 Invariants stop the run when it crosses a line.
 
 That’s the whole trick.
+
+Related reading:
+[Quality gates that earn trust](https://dev.to/crisiscoresystems/quality-gates-that-earn-trust-checks-you-can-run-not-promises-you-cant-58a3)
+covers the same “checks you can run” posture at the repo level.
 
 ---
 

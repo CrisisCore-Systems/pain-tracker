@@ -287,7 +287,7 @@ export const UseCases: React.FC = () => {
             >
               <span className="relative z-10 flex items-center gap-2">
                 <Sparkles className="h-5 w-5" />
-                Start Tracking Free
+                Use the app free
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </span>
             </Button>

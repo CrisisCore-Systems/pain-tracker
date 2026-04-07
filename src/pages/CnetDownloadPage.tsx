@@ -11,8 +11,8 @@ export function CnetDownloadPage() {
   const isHttpUrl = /^https?:\/\//i.test(url);
 
   const canonicalUrl = 'https://www.paintracker.ca/cnet-download';
-  const metaTitle = 'CNET Download Link | PainTracker';
-  const metaDescription = 'Official, stable reference page for the current CNET download location for PainTracker.';
+  const metaTitle = 'CNET Download Link | Pain Tracker';
+  const metaDescription = 'Official, stable reference page for the current CNET download location for Pain Tracker.';
 
   useEffect(() => {
     document.title = metaTitle;

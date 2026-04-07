@@ -1,5 +1,7 @@
 # The False Positive Problem: Calibrating Crisis Detection Without Becoming The Boy Who Cried Wolf
 
+<!-- markdownlint-disable-file MD013 MD032 MD036 MD060 -->
+
 *Part of the CrisisCore Build Log - trauma-informed systems engineering*
 
 **Important:** This is not mental-health diagnosis; it's UX safety + reliability.
@@ -12,6 +14,8 @@ When I built crisis detection into Pain Tracker, I knew the stakes were high in 
 **Trigger on normal behavior** → The system becomes annoying noise, users disable it, and then you've lost them when it actually matters.
 
 This is the calibration problem. Here's how I approached it.
+
+If you want the origin story and design philosophy behind building crisis detection at all, start with [Two People, Same Body](https://dev.to/crisiscoresystems/two-people-same-body-a-developers-crisis-architecture-25ko).
 
 ---
 
@@ -321,7 +325,7 @@ That's the engineering. The empathy is remembering that behind every data point 
 
 ---
 
-*Next in the series: "Offline Crisis Support: What Happens When the Network Dies at the Worst Moment"*
+For the full stress formula, threshold logic, and privacy-preserving implementation details behind this calibration work, read [Trauma-informed design left everyone asking: "How does it actually know I'm struggling without spying?"](https://dev.to/crisiscoresystems/trauma-informed-design-left-everyone-asking-how-does-it-actually-know-im-struggling-without-26a0).
 
 ---
 

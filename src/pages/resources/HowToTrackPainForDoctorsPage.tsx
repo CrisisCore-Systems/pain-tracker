@@ -7,9 +7,9 @@
 
 import React from 'react';
 import {
-  ArrowRight, Stethoscope, CheckCircle, Clock, MessageSquare,
-  FileText, AlertTriangle, TrendingUp, ClipboardList,
-  MonitorSmartphone, XCircle, Target
+  Stethoscope, CheckCircle, Clock, MessageSquare,
+  AlertTriangle, TrendingUp, ClipboardList,
+  MonitorSmartphone
 } from 'lucide-react';
 import { SEOPageLayout, type SEOPageContent, StatsBanner, BottomCTACallout } from '../../components/seo';
 import type { StatItem } from '../../components/seo';
@@ -44,45 +44,6 @@ const DoctorVsPatient: React.FC = () => {
             <p className="text-xs text-slate-500">→ {r.why}</p>
           </div>
         ))}
-      </div>
-    </div>
-  );
-};
-
-/** The 7 things to track */
-const SevenThingsToTrack: React.FC = () => {
-  const items = [
-    { num: 1, label: 'Pain Level (0-10)', desc: 'Rate at consistent times: morning, afternoon, evening. Patterns matter more than individual numbers.', icon: Target },
-    { num: 2, label: 'Pain Location & Type', desc: 'Where exactly? Burning, aching, stabbing, throbbing? Does it radiate? This narrows the differential diagnosis.', icon: Stethoscope },
-    { num: 3, label: 'Triggers & Aggravators', desc: 'What makes it worse? Sitting, standing, weather, stress, specific movements? Triggers guide treatment planning.', icon: AlertTriangle },
-    { num: 4, label: 'Medication Response', desc: 'What did you take, when, and did it help? Pain before dose vs. after. Duration of relief. Side effects.', icon: ClipboardList },
-    { num: 5, label: 'Sleep Quality', desc: 'Hours slept, times woken, time to fall asleep, how you felt on waking. Sleep is clinical gold.', icon: Clock },
-    { num: 6, label: 'Functional Impact', desc: 'What could you do? What couldn\'t you? How far could you walk? How long could you sit? Be specific.', icon: TrendingUp },
-    { num: 7, label: 'Mood & Mental Health', desc: 'Pain affects mood; mood affects pain. Brief daily note. This guides whether adjunct treatments are needed.', icon: MessageSquare },
-  ];
-  return (
-    <div className="my-10">
-      <h3 className="text-xl font-bold text-slate-800 mb-2">The 7 Things Your Doctor Actually Needs from Your Tracking</h3>
-      <p className="text-sm text-slate-500 mb-6">Track these consistently and your 15-minute appointment becomes 10x more productive.</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items.slice(0, 6).map((item) => (
-          <div key={item.num} className="rounded-xl border border-slate-200 bg-white p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <span className="w-8 h-8 rounded-full bg-sky-100 flex items-center justify-center text-sm font-bold text-sky-700">{item.num}</span>
-              <item.icon className="w-5 h-5 text-sky-600" aria-hidden="true" />
-            </div>
-            <h4 className="font-bold text-slate-800 text-sm mb-1">{item.label}</h4>
-            <p className="text-sm text-slate-600">{item.desc}</p>
-          </div>
-        ))}
-        <div className="rounded-xl border-2 border-dashed border-sky-200 bg-sky-50 p-5 flex flex-col justify-center">
-          <div className="flex items-center gap-3 mb-3">
-            <span className="w-8 h-8 rounded-full bg-sky-200 flex items-center justify-center text-sm font-bold text-sky-700">7</span>
-            {React.createElement(items[6].icon, { className: 'w-5 h-5 text-sky-600', 'aria-hidden': 'true' })}
-          </div>
-          <h4 className="font-bold text-slate-800 text-sm mb-1">{items[6].label}</h4>
-          <p className="text-sm text-slate-600">{items[6].desc}</p>
-        </div>
       </div>
     </div>
   );
@@ -147,7 +108,7 @@ const trackingStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'how-to-track-pain-for-doctors',
   title: 'How to Track Pain for Doctors',
-  metaTitle: 'How to Track Pain for Doctors — What Your Doctor Actually Needs | PainTracker',
+  metaTitle: 'How to Track Pain for Doctors — What Your Doctor Actually Needs | Pain Tracker',
   metaDescription: 'Learn exactly what to track and how to present pain data to your doctor in 15-minute appointments. 7 key data points, appointment prep checklist, and free tracking templates.',
   keywords: [
     'how to track pain for doctors', 'pain tracking for doctor appointment',
