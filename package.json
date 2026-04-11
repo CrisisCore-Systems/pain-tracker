@@ -124,6 +124,7 @@
     "devto:sync-content": "node scripts/devto/devto.mjs sync-content",
     "devto:sync-content:apply": "node scripts/devto/devto.mjs sync-content --yes --write",
     "devto:sync-content:apply:allow-published": "node scripts/devto/devto.mjs sync-content --yes --write --allow-published",
+    "test:devto-verifier": "node --test test/devto-sync-verifier.test.mjs",
     "devto:push-source": "node scripts/devto/devto.mjs push-source",
     "devto:push-source:apply": "node scripts/devto/devto.mjs push-source --yes --write",
     "devto:push-source:apply:allow-published": "node scripts/devto/devto.mjs push-source --yes --write --allow-published",

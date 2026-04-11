@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const ACCEPT = 'application/vnd.forem.api-v1+json, application/json';
 const DEVTO_API_BASE = process.env.DEVTO_API_BASE ?? 'https://dev.to/api';
@@ -782,6 +783,16 @@ function normalizeTitle(title) {
     .toLowerCase();
 }
 
+function normalizeDevComparableTitle(title) {
+  return String(title ?? '')
+    .normalize('NFKD')
+    .replaceAll(/[\u2190-\u21FF\u27F0-\u27FF\u2900-\u297F]/g, ' ')
+    .replaceAll(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+    .replaceAll(/\s+/g, ' ')
+    .toLowerCase();
+}
+
 function normalizeFunnelKey(title) {
   return String(title ?? '')
     .normalize('NFKD')
@@ -1064,11 +1075,13 @@ function buildSyncContentState({ post, current, config, desiredSeries, seriesSta
     });
   }
 
-  const ctaMarkersOk = hasAllMarkers(currentBody, [
+  const shouldHaveCtas = shouldInjectCtasForPost(post);
+  const shouldHaveSeriesChain = Boolean(desiredSeries && partLabel);
+  const ctaMarkersOk = !shouldHaveCtas || hasAllMarkers(currentBody, [
     '<!-- pain-tracker:cta-top -->',
     '<!-- pain-tracker:cta-bottom -->',
   ]);
-  const chainMarkersOk = !desiredSeries || hasAllMarkers(currentBody, [
+  const chainMarkersOk = !shouldHaveSeriesChain || hasAllMarkers(currentBody, [
     '<!-- pain-tracker:series-chain:start -->',
     '<!-- pain-tracker:series-chain:end -->',
   ]);
@@ -1225,7 +1238,7 @@ async function processSyncTitlePost({ post, allCache, now, yes, allowPublished }
   }
 
   const currentTitle = String(resolved.current?.title ?? '').trim();
-  if (currentTitle === desiredTitleRaw) {
+  if (normalizeDevComparableTitle(currentTitle) === normalizeDevComparableTitle(desiredTitleRaw)) {
     console.log(`OK (title matches): ${desiredTitleRaw}`);
     return buildCountResult({ linked: linkedCount(resolved) });
   }
@@ -1319,9 +1332,9 @@ async function processSyncContentPost({ post, allCache, now, yes, allowPublished
     nextUpUrl,
     partLabel,
   });
-  const needsTitle = contentState.currentTitle !== desiredTitleRaw;
+  const needsTitle = normalizeDevComparableTitle(contentState.currentTitle) !== normalizeDevComparableTitle(desiredTitleRaw);
   const currentSeries = contentState.currentSeries || null;
-  const needsSeries = currentSeries !== desiredSeries;
+  const needsSeries = shouldTreatSeriesAsDrift({ currentSeries, desiredSeries });
   const needsBody = !(contentState.ctaMarkersOk && contentState.chainMarkersOk) || contentState.hasFrontMatter;
 
   if (!(needsTitle || needsSeries || needsBody)) {
@@ -1358,6 +1371,12 @@ function buildCtaArgs(config) {
 
 function buildSyncContentChangeList({ needsTitle, needsSeries, needsBody }) {
   return [needsTitle ? 'title' : null, needsSeries ? 'series' : null, needsBody ? 'body' : null].filter(Boolean);
+}
+
+function shouldTreatSeriesAsDrift({ currentSeries, desiredSeries }) {
+  if (!desiredSeries) return false;
+  if (!currentSeries) return false;
+  return currentSeries !== desiredSeries;
 }
 
 async function writePinnedCommentsFile(items) {
@@ -2245,13 +2264,23 @@ async function main() {
   await runCommand(cmd, schedule, args, onlyKeys);
 }
 
-try {
-  await main();
-} catch (err) {
-  console.error(err?.message ?? err);
-  if (err?.details) {
-    console.error(JSON.stringify(err.details, null, 2));
+const isDirectRun = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+export {
+  buildSyncContentState,
+  normalizeDevComparableTitle,
+  shouldTreatSeriesAsDrift,
+};
+
+if (isDirectRun) {
+  try {
+    await main();
+  } catch (err) {
+    console.error(err?.message ?? err);
+    if (err?.details) {
+      console.error(JSON.stringify(err.details, null, 2));
+    }
+    logAuthTroubleshooting(err?.message);
+    process.exitCode = 1;
   }
-  logAuthTroubleshooting(err?.message);
-  process.exitCode = 1;
 }
