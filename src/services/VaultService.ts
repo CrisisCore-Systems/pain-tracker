@@ -192,15 +192,6 @@ export class EncryptedVaultService {
       }
     })();
 
-    if (!isTest) {
-      console.log('[VaultService] Sodium instance retrieved:', {
-        sodiumType: typeof sodium,
-        hasCryptoPwhash: typeof sodium.crypto_pwhash,
-        hasCryptoPwhashStr: typeof sodium.crypto_pwhash_str,
-        saltBytes: sodium.crypto_pwhash_SALTBYTES,
-      });
-    }
-
     // Defensive: crypto_pwhash_SALTBYTES must be a valid positive integer
     const configuredSaltBytes = sodium.crypto_pwhash_SALTBYTES as unknown;
     const saltBytes =
@@ -225,17 +216,6 @@ export class EncryptedVaultService {
       
     const keyLength = sodium.crypto_aead_xchacha20poly1305_ietf_KEYBYTES;
 
-    if (!isTest) {
-      console.log('[VaultService] Creating vault with:', {
-        passphraseType: typeof passphrase,
-        passphraseLength: passphrase?.length,
-        keyLength,
-        opslimit,
-        memlimit,
-        saltLength: salt.length,
-      });
-    }
-
     const key = sodium.crypto_pwhash(
       keyLength,
       passphrase,
@@ -244,12 +224,7 @@ export class EncryptedVaultService {
       memlimit,
       sodium.crypto_pwhash_ALG_ARGON2ID13
     );
-
-    if (!isTest) console.log('[VaultService] Key derived, creating verification hash...');
-
     const verificationHash = sodium.crypto_pwhash_str(passphrase, opslimit, memlimit);
-
-    if (!isTest) console.log('[VaultService] Verification hash created:', verificationHash?.length);
 
     const metadata: VaultMetadata = {
       version: VAULT_VERSION,
