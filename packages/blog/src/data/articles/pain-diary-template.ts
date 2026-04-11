@@ -4,7 +4,7 @@ const article: ArticleData = {
   slug: 'pain-diary-template',
   title: 'Pain Diary Template: What to Record for Effective Symptom Tracking',
   description:
-    'A structured pain diary template that captures what actually matters — intensity, location, timing, medications, and functional impact — without demanding more than you can give.',
+    'A structured pain diary template that captures what actually matters: intensity, location, timing, medications, and functional impact. Without demanding more than you can give.',
   h1: 'Pain Diary Template: A Structured Approach to Symptom Tracking',
   cluster: 'privacy',
   isPillar: false,

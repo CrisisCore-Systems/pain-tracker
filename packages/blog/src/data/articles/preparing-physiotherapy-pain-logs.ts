@@ -4,24 +4,24 @@ const article: ArticleData = {
   slug: 'preparing-physiotherapy-pain-logs',
   title: 'Preparing Pain Logs for Physiotherapy: What Your PT Needs to See',
   description:
-    'Create pain logs that help your physiotherapist assess progress, adjust treatment, and document outcomes. Structured tracking for productive PT appointments.',
+    'Your physiotherapist needs functional context, not just pain numbers. Here is what to track between sessions and how to bring it into appointments.',
   h1: 'Preparing Pain Logs for Physiotherapy Appointments',
   cluster: 'utility',
   isPillar: false,
   schemaTypes: ['WebPage', 'FAQPage'],
   sections: [
     {
-      h2: 'What physiotherapists need from pain data',
+      h2: 'What your PT is actually looking for',
       paragraphs: [
-        'Physiotherapists assess treatment effectiveness through functional outcomes—what you can do, how much, and how pain responds to activity. A pain log that captures only intensity misses the functional context that PTs rely on. Recording what activities you attempted, how your pain responded, and whether prescribed exercises helped or worsened symptoms gives your physiotherapist the data they need to adjust your treatment plan.',
+        'Physiotherapists assess treatment effectiveness through functional outcomes: what you can do, how much, and how pain responds to activity. A pain log that captures only intensity misses the functional context that PTs rely on. Recording what activities you attempted, how your pain responded, and whether prescribed exercises helped or worsened symptoms gives your physiotherapist the data they need to actually adjust your treatment plan.',
         'PTs also use between-session data to monitor compliance with home exercise programs. If your physiotherapist prescribed daily stretches and your log shows consistent tracking alongside those exercises, it demonstrates engagement and provides objective data about whether the program is working.',
       ],
     },
     {
       h2: 'Tracking exercise response',
       paragraphs: [
-        'Record your pain levels before and after prescribed exercises. Note which exercises you completed, any modifications you made, and whether specific movements consistently worsen or improve symptoms. This exercise-response data is extraordinarily valuable for PTs: it shows not just whether you are doing the exercises, but how your body responds to them.',
-        'PainTracker\'s notes and tags fields let you annotate entries with exercise details. Over several sessions, patterns emerge: certain exercises may consistently reduce pain, while others may need modification. This data helps your PT fine-tune your program without waiting for you to recall details during an appointment.',
+        'Record your pain levels before and after prescribed exercises. Note which exercises you completed, any modifications you made, and whether specific movements consistently worsen or improve symptoms. This exercise-response data is valuable for PTs: it shows not just whether you are doing the exercises, but how your body responds to them.',
+        'PainTracker\'s notes and tags fields let you annotate entries with exercise details. Over several sessions, patterns emerge. Certain exercises may consistently reduce pain. Others may need modification. This data helps your PT fine-tune your program without waiting for you to recall details during a pressured appointment.',
       ],
     },
     {
@@ -35,13 +35,13 @@ const article: ArticleData = {
       h2: 'Preparing your export for PT appointments',
       paragraphs: [
         'Before your physiotherapy appointment, export a report covering the period since your last visit. PainTracker\'s PDF export provides the summary statistics and trend charts that give your PT an instant overview. Highlight any changes in pain patterns, functional improvements or declines, and your response to prescribed exercises.',
-        'Bring the report printed or on your phone. Start the session by handing it to your physiotherapist with a brief verbal summary: "Pain has decreased on average since we started the new exercises, but I am still getting sharp pain in the left shoulder when I reach overhead." This combination of structured data and specific verbal context makes the appointment more productive.',
+        'Bring the report printed or on your phone. Start the session by handing it to your physiotherapist with a brief verbal summary: "Pain has decreased on average since we started the new exercises, but I am still getting sharp pain in the left shoulder when I reach overhead." That combination of structured data and specific verbal context makes the appointment more productive.',
       ],
     },
     {
-      h2: 'Long-term PT outcome tracking',
+      h2: 'Long-term tracking across a full PT course',
       paragraphs: [
-        'Physiotherapy courses often span weeks to months, and progress can be gradual. Daily tracking creates a continuous record that shows improvement trends even when individual appointments feel similar. Reviewing three months of data might reveal that your average pain has decreased from 6 to 4, your functional capacity has doubled, and flare frequency has halved—improvements that are obvious in data but imperceptible day to day.',
+        'Physiotherapy courses often span weeks to months, and progress can be gradual. Daily tracking creates a continuous record that shows improvement trends even when individual appointments feel similar. Reviewing three months of data might reveal that your average pain has decreased from 6 to 4, your functional capacity has doubled, and flare frequency has halved, improvements that are obvious in data but imperceptible day to day.',
         'This longitudinal evidence is also valuable for insurance claims and workplace return-to-work planning. Documented functional improvement supported by consistent data strengthens the case for ongoing treatment when coverage is reviewed.',
       ],
     },
