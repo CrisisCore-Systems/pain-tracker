@@ -4,17 +4,17 @@ const article: ArticleData = {
   slug: 'export-pain-logs-pdf',
   title: 'Export Pain Logs to PDF: Share Clinical Data on Your Terms',
   description:
-    'Learn how to export your pain tracking data as professional PDF reports for doctors, physiotherapists, and insurance claims. User-controlled, private, and clinical-grade.',
+    'Export your pain tracking data as professional PDF reports for doctors, physiotherapists, and insurance claims. User-controlled, private, and formatted for clinical use.',
   h1: 'Export Pain Logs to PDF: Clinical Reports You Control',
   cluster: 'clinical',
   isPillar: false,
   schemaTypes: ['Article'],
   sections: [
     {
-      h2: 'Why PDF export matters for pain management',
+      h2: 'A log that cannot be shared is just a journal',
       paragraphs: [
-        'A pain log that cannot be shared is a personal journal—valuable for self-awareness but limited in clinical impact. The ability to export structured pain data as a professional PDF report transforms your diary into a communication tool between you and your healthcare providers, insurance reviewers, and legal advocates.',
-        'PDF is the universally accepted document format in healthcare. It prints cleanly, displays consistently across devices, can be attached to medical records, and is accepted by insurance companies and legal proceedings. Unlike proprietary app formats or screenshots, a PDF export provides a self-contained, professional document that stands on its own.',
+        'A pain log that cannot be shared is a personal journal. Valuable for self-awareness, limited in clinical impact. The ability to export structured pain data as a professional PDF report transforms your diary into a communication tool between you and your healthcare providers, insurance reviewers, and legal advocates.',
+        'PDF is the universally accepted document format in healthcare. It prints cleanly, displays consistently across devices, can be attached to medical records, and is accepted by insurance companies and legal proceedings. Unlike screenshots or proprietary app formats, a PDF export is a self-contained, professional document that stands on its own.',
       ],
     },
     {
@@ -25,10 +25,10 @@ const article: ArticleData = {
       ],
     },
     {
-      h2: 'User-controlled data sharing',
+      h2: 'You decide what leaves your device',
       paragraphs: [
-        'Every PainTracker export is user-initiated. Nothing leaves your device automatically, and you control exactly what is included. Select a date range, choose which data fields appear in the report, and generate the PDF locally. The export process runs entirely in your browser—no server processes your data at any point.',
-        'This control matters because different providers need different data. Your physiotherapist might need functional impact details and body location maps. Your prescribing physician needs medication-response correlations. An insurance reviewer needs consistent intensity documentation and timeline evidence. PainTracker lets you tailor each export to its intended audience.',
+        'Every PainTracker export is user-initiated. Nothing leaves your device automatically, and you control exactly what is included. Select a date range, choose which data fields appear in the report, and generate the PDF locally. The export process runs entirely in your browser. No server processes your data at any point.',
+        'This control matters because different providers need different data. Your physiotherapist needs functional impact details and body location maps. Your prescribing physician needs medication-response correlations. An insurance reviewer needs consistent intensity documentation and timeline evidence. PainTracker lets you tailor each export to its intended audience.',
       ],
     },
     {
@@ -42,14 +42,14 @@ const article: ArticleData = {
       h2: 'WorkSafeBC-specific exports',
       paragraphs: [
         'Workers\' compensation claims in British Columbia require specific documentation that demonstrates the relationship between a workplace injury and ongoing symptoms. PainTracker includes a WorkSafeBC export template that structures your pain data according to the documentation expectations of WCB adjudicators.',
-        'The template emphasises timeline evidence linking injury dates to symptom onset, consistent documentation of pain levels and functional limitations, medication management records, and treatment compliance evidence. This structured approach helps ensure that your claim is supported by the kind of documentation that reviewers expect and understand.',
+        'The template emphasises timeline evidence linking injury dates to symptom onset, consistent documentation of pain levels and functional limitations, medication management records, and treatment compliance evidence. This structured approach helps ensure your claim is supported by the kind of documentation reviewers expect.',
       ],
     },
     {
       h2: 'Best practices for exporting and sharing',
       paragraphs: [
-        'Export reports before your appointment so you can review them first. Check that the date range covers the relevant period and that the data tells the story you want your provider to understand. Print the report if your clinic works with paper records, or save it to your phone for electronic sharing.',
-        'Remember that exported PDF and CSV files are not encrypted—they are designed to be human-readable. Handle them with the same care you would give any medical document. Do not email them over unsecured channels if the content is sensitive, and delete copies from shared devices after use.',
+        'Export before your appointment so you can review the report yourself first. Check that the date range covers the relevant period and that the data tells the story you need your provider to understand. Print the report if your clinic works with paper records, or save it to your phone for electronic sharing.',
+        'Exported PDF and CSV files are not encrypted. They are designed to be human-readable. Handle them with the same care you would give any medical document. Do not email them over unsecured channels if the content is sensitive, and delete copies from shared devices after use.',
       ],
     },
   ],
