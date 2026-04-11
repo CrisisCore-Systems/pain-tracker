@@ -2,65 +2,65 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'private-pain-tracker',
-  title: 'Private Pain Tracker: Secure Symptom Logging Without Surveillance',
+  title: 'Private Pain Tracker: Symptom Logging Without Surveillance',
   description:
-    'Use a private pain tracker that keeps your health data entirely on your device. No accounts, no cloud, no surveillance—just secure, personal symptom tracking.',
-  h1: 'Private Pain Tracker: Symptom Logging That Respects Your Privacy',
+    'A private pain tracker that keeps your health data on your device. No accounts, no cloud, no third parties, just encrypted, local symptom tracking you actually control.',
+  h1: 'Private Pain Tracker: No Accounts, No Cloud, No One Watching',
   cluster: 'pillar',
   isPillar: true,
   schemaTypes: ['Article', 'FAQPage'],
   sections: [
     {
-      h2: 'What makes a pain tracker truly private',
+      h2: 'Privacy is architecture, not a settings menu',
       paragraphs: [
-        'Privacy in health apps is not a feature toggle—it is an architectural decision that shapes every layer of the application. A truly private pain tracker stores no data on external servers, requires no account creation, and cannot be subpoenaed because there is nothing to subpoena. The data lives on your device, encrypted with your passphrase, and leaves only when you explicitly export it.',
-        'Many apps claim privacy while collecting analytics, usage metrics, or crash reports that contain identifiable health information. A private tracker must go further: no telemetry by default, no third-party SDKs that phone home, and no advertising identifiers. PainTracker achieves this through a zero-knowledge architecture where the server serves static files and has no database, no user accounts, and no API endpoints that receive health data.',
-        'The distinction matters because health data privacy is not abstract. Your pain diary may contain information about medication use, mental health, functional limitations, or workplace injuries—all of which can affect employment, insurance, custody, and legal proceedings if exposed.',
+        'Most apps that call themselves private have a privacy settings menu. That is not privacy, that is a checkbox. A truly private pain tracker never had the data to begin with. It stores nothing on external servers, collects no analytics, and contains no third-party SDKs that phone home. The privacy is structural. There is no company database to breach, no admin panel where your entries are visible, no cloud backup sitting somewhere you cannot see or control.',
+        'A lot of apps claim privacy while quietly collecting crash reports, usage metrics, and behavioral analytics that contain identifiable health information. They call it aggregate data. They call it anonymized. They are often wrong on both counts. PainTracker achieves privacy through not collecting. The server delivers static files. That is its entire job. Your health data is not involved in that transaction at any point.',
+        'This matters because your pain diary is not abstract. It contains information about your medications, your functional limitations, your worst days and what you could not do on them. That information can affect employment. Insurance. Custody. Legal proceedings. If it leaks, it does not leak in a vacuum. It leaks into situations you did not choose and did not ask for.',
       ],
     },
     {
       h2: 'Encryption that protects your entries',
       paragraphs: [
-        'PainTracker encrypts all health data at rest using a key derived from your passphrase through a standard key derivation function. The encryption happens entirely in your browser before data is written to IndexedDB. No plaintext health data is ever stored persistently.',
-        'This means that even if someone gains physical access to your device, your pain entries are protected by your passphrase. The encryption key is never stored—it is re-derived each time you unlock the app. There is no "forgot password" option because there is no server that holds a copy of your key. This is a trade-off: you must remember your passphrase, but in exchange, no one else can ever access your data without it.',
-        'The encryption implementation is open source, auditable, and uses standard Web Crypto APIs rather than custom cryptographic code. Security through obscurity has no place in health data protection—PainTracker relies on proven algorithms and transparent implementation.',
+        'PainTracker encrypts everything before it is written to storage. Your passphrase generates a cryptographic key through a derivation function. That key exists in memory during your session and nowhere else. The encryption runs in your browser using the Web Crypto API, a standard library maintained by browser vendors and reviewed by security researchers worldwide. Not something we invented.',
+        'There is no password recovery. No "forgot passphrase" email. Because there is no server that holds a copy of your key. This is the trade-off: you are responsible for remembering your passphrase. In exchange, nobody, not the developers, not a court order, not a data breach, can access your entries without it.',
+        'The implementation is open source. Anyone can read it. Security researchers, developers, people who simply want to verify the claim. The encryption is not trustworthy because we say so. It is trustworthy because the code is there.',
       ],
     },
     {
-      h2: 'Why cloud-based trackers compromise privacy',
+      h2: 'What you are actually agreeing to with cloud apps',
       paragraphs: [
-        'Cloud-based pain trackers create a persistent copy of your health data on someone else\'s infrastructure. Even with encryption in transit, the data typically exists in plaintext on the server side—accessible to employees, subject to law enforcement requests, and vulnerable to breaches. Many health apps have been found sharing data with advertisers, analytics companies, or data brokers despite privacy policies that suggest otherwise.',
-        'The fundamental problem is incentive alignment. Companies that operate cloud infrastructure need revenue to pay for servers, and health data is extraordinarily valuable to advertisers, insurers, and employers. Even well-intentioned companies face pressure to monetise data or may be acquired by entities with different privacy commitments.',
-        'A local-only tracker eliminates this entire category of risk. There is no server to breach, no employee who can peek at records, and no business model that depends on data access. The incentive alignment is clean: the app exists to serve you, not to extract value from your health information.',
+        'Cloud-based pain trackers store your data on someone else\'s infrastructure. Even if they encrypt it in transit, the data typically exists in readable form on the server, accessible to employees, subject to law enforcement requests, and vulnerable to the next breach. Multiple major health apps have been found sharing data with advertisers and analytics companies despite privacy policies that suggested otherwise. Policies are aspirational. Code does what code does.',
+        'The fundamental problem is alignment. Companies with cloud infrastructure need revenue to pay for servers. Health data is genuinely valuable to advertisers, insurers, and employers. Even well-intentioned companies face pressure to monetize, and companies that get acquired inherit new priorities without your consent. A business model built on cloud infrastructure will always be tempted by the data living there.',
+        'A local-only tracker removes the category of risk. No server to breach. No employee with database access. No business model that depends on your records. The incentive is simple: the app exists to serve you. That is it.',
       ],
     },
     {
-      h2: 'Privacy features patients actually need',
+      h2: 'Privacy that does something when it matters',
       paragraphs: [
-          'Beyond encryption, practical privacy requires features that address real-world threats. PainTracker includes a panic mode that rapidly replaces the current interface with a low-stimulus breathing overlay, which can reduce visible app state during distress or casual observation. It should not be described as a neutral decoy surface or as protection against active coercion.',
-        'Selective export controls let you share specific date ranges and data fields without exposing your entire history. This is essential for medical appointments where you need to share relevant data with one provider without giving them access to everything you have ever recorded. You control the granularity: share a week, a month, or a specific set of entries.',
-        'The application also avoids creating unnecessary digital artifacts. There are no push notifications that could reveal pain tracking to someone glancing at your phone, no email receipts, and no calendar integrations that leak health information into shared accounts.',
+        'Beyond encryption, real privacy means features that address actual threats. PainTracker includes a panic mode, a rapid overlay that replaces the app interface to reduce visible app state during distress or unwanted observation. It is one layer of a set of controls that give you options in situations where options matter.',
+        'Selective export lets you share a specific date range without handing over your entire history. A month for your physiotherapist. Six weeks for your prescriber. The WorkSafeBC period for your claim. Each recipient gets what is relevant. Nothing more. That is the difference between sharing data and surrendering it.',
+        'No push notifications. No email receipts. No calendar integrations that expose health information through shared accounts. These are not missing features. They are deliberate omissions. Every notification is a potential visibility event. PainTracker does not generate them.',
       ],
     },
     {
-      h2: 'Accessibility and private tracking',
+      h2: 'Who most needs privacy, and who access usually excludes',
       paragraphs: [
-        'Privacy and accessibility are not competing concerns—they reinforce each other. People with disabilities are disproportionately affected by health data exposure, facing discrimination in employment, housing, and insurance. A private pain tracker that is also accessible ensures that the people most in need of privacy are not locked out by poor design.',
-        'PainTracker targets WCAG 2.2 AA compliance with keyboard-navigable interfaces, screen-reader support, sufficient colour contrast, and touch targets sized for users with motor impairments. The trauma-informed design philosophy means the app avoids blame language, reduces cognitive load, and offers user control over the tracking experience.',
+        'People with disabilities are disproportionately affected by health data exposure, facing discrimination in employment, housing, and insurance when their records circulate into the wrong places. A private pain tracker that is also inaccessible has failed the people who need its protection most. Privacy and accessibility are not competing values. They are the same commitment pointing in different directions.',
+        'PainTracker targets WCAG 2.2 AA compliance: keyboard navigation, screen reader support, contrast ratios that hold up in sunlight, touch targets sized for motor impairment. The trauma-informed design philosophy means non-shaming language, reduced cognitive load, and user control over the tracking experience, because people tracking chronic pain are often doing so at reduced capacity, in pain, under difficult circumstances. The interface should not make that worse.',
       ],
     },
     {
       h2: 'Open source as a privacy guarantee',
       paragraphs: [
-        'Privacy claims are only as trustworthy as their verifiability. PainTracker is fully open source, meaning anyone can inspect the code, verify that no data is sent to external servers, and confirm that the encryption implementation is sound. This transparency is not a marketing gesture—it is a structural commitment to accountability.',
-        'Open source also means the community can identify and report vulnerabilities, suggest improvements, and fork the project if the original maintainers ever compromise on privacy. Your trust is not placed in a company\'s promises but in code that anyone can read.',
+        'Privacy claims are only as trustworthy as their verifiability. PainTracker is fully open source. Anyone can read the code, verify that no data is transmitted, and confirm that the encryption implementation is what we say it is. This is not a gesture. It is accountability. The community can identify vulnerabilities, report them publicly, and hold the project to its stated principles in a way that closed-source apps can never be held.',
+        'Open source also means no permanent dependency on the current maintainers. If this project changes direction, the code can be forked, the data format is documented, and the export tools keep working. You are not placing trust in a company\'s promises. You are relying on code that exists and can be read by anyone with the interest to look.',
       ],
     },
     {
       h2: 'Building a private health record over time',
       paragraphs: [
-        'A private pain tracker becomes more valuable the longer you use it. Months or years of consistent entries reveal patterns that no single appointment can capture—seasonal variations, medication effectiveness trends, activity-pain correlations, and recovery trajectories. This longitudinal data is clinically powerful and deeply personal.',
-        'Because PainTracker stores data locally and exports in standard formats, your long-term records are not locked into a proprietary ecosystem. You can export your entire history at any time, maintain backups on your own terms, and share data with new providers as your care team evolves. Privacy and portability are both served by the same local-first architecture.',
+        'Months or years of consistent tracking reveal what no single appointment can, seasonal patterns, medication trends over time, activity-pain relationships, the arc of a recovery or a slow decline. This longitudinal data is both clinically powerful and deeply personal. It is the clearest record that exists of what your life has been like while you were managing this.',
+        'Because PainTracker stores locally and exports in standard formats, your history is not locked into anyone\'s ecosystem. Export anytime. Keep copies on your own terms. Share with new providers as your care team changes. Privacy and portability are served by the same architecture. Neither requires a compromise.',
       ],
     },
   ],
@@ -68,22 +68,22 @@ const article: ArticleData = {
     {
       question: 'Does PainTracker collect any personal data?',
       answer:
-        'No. PainTracker has no server-side database, no user accounts, and no analytics that collect personal information. All health data stays on your device.',
+        'No. No server-side database, no user accounts, no analytics collecting personal information. Your health data stays on your device. That is the complete answer.',
     },
     {
       question: 'Can my employer access my pain tracking data?',
       answer:
-        'No. Your data is encrypted on your device and never transmitted to any server. There is no database for anyone to request access to, including employers and insurers.',
+        'No. Your data is encrypted on your device and never transmitted to any server. There is nothing for anyone to request access to, not employers, not insurers, not us.',
     },
     {
       question: 'What happens if PainTracker shuts down?',
       answer:
-        'Your data remains on your device. PainTracker is also open source, so the code remains available for anyone to run independently. Export your data regularly as an additional safeguard.',
+        'Your data stays on your device. PainTracker is open source, the code stays public and forkable regardless of what happens to the project. Export your data regularly as an additional layer of protection.',
     },
     {
       question: 'Does PainTracker make healthcare compliance claims?',
       answer:
-        'PainTracker implements privacy-aligned security controls including encryption at rest and access controls. As a local-only tool with no server-side data processing, this is not a compliance certification.',
+        'PainTracker implements privacy-aligned security controls: encryption at rest, local-only data storage, no server-side processing. It is a local tool, not a compliance-certified platform. Those are different things, and we say so directly.',
     },
   ],
 };

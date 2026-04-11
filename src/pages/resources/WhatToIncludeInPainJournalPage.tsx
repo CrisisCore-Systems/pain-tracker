@@ -129,8 +129,8 @@ const journalStats: StatItem[] = [
 const pageContent: SEOPageContent = {
   slug: 'what-to-include-in-pain-journal',
   title: 'What to Include in a Pain Journal',
-  metaTitle: 'What to Include in a Pain Journal: Symptoms, Triggers, Meds, and Daily Function | Pain Tracker',
-  metaDescription: 'Use this pain journal checklist to track symptoms, flare triggers, medications, sleep, and daily functioning more clearly.',
+  metaTitle: 'What to Include in a Pain Journal: 6-Category Checklist Your Doctor Will Actually Use',
+  metaDescription: 'Exact list of what to track in your pain journal, organized by priority. Pain levels, meds, functional impact, sleep, and triggers — with time estimates so even your worst days are covered.',
   keywords: [
     'what to include in pain journal', 'pain journal content guide',
     'pain diary what to write', 'pain journal template content',
