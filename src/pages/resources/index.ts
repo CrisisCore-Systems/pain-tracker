@@ -28,7 +28,11 @@ export { WorkSafeBCPainJournalTemplatePage } from './WorkSafeBCPainJournalTempla
 export { PainJournalForDisabilityBenefitsPage } from './PainJournalForDisabilityBenefitsPage';
 export { DailyFunctioningLogForDisabilityPage } from './DailyFunctioningLogForDisabilityPage';
 
-// Tier 4: Condition-Specific
+// Tier 5: Journaling / Appointment Intent (new cluster)
+export { PainDiaryForDoctorVisitsPage } from './PainDiaryForDoctorVisitsPage';
+export { SymptomJournalTemplatePage } from './SymptomJournalTemplatePage';
+export { ChronicPainLogPrintablePage } from './ChronicPainLogPrintablePage';
+export { PainJournalExamplesPage } from './PainJournalExamplesPage';
 export { FibromyalgiaPainDiaryPage } from './FibromyalgiaPainDiaryPage';
 export { ChronicBackPainDiaryPage } from './ChronicBackPainDiaryPage';
 export { ArthritisPainTrackerPage } from './ArthritisPainTrackerPage';

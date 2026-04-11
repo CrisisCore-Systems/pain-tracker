@@ -30,6 +30,7 @@ import paintrackerWorksafebcClaims from './paintracker-worksafebc-claims';
 import preparingPhysiotherapyPainLogs from './preparing-physiotherapy-pain-logs';
 import trackingRecoveryAfterInjury from './tracking-recovery-after-injury';
 import sharingSymptomDataSafely from './sharing-symptom-data-safely';
+import buildingAHealthcarePwa from './building-a-healthcare-pwa-that-actually-works-when-it-matters';
 
 import type { ArticleData } from './types';
 import { linkingMap, getLinksForArticle, PILLAR_URLS, PILLAR_LABELS, APP_CTA_URL } from './linking-map';
@@ -82,6 +83,7 @@ export const articles: ArticleData[] = [
   preparingPhysiotherapyPainLogs,
   trackingRecoveryAfterInjury,
   sharingSymptomDataSafely,
+  buildingAHealthcarePwa,
 ].map(withLinks);
 
 export function getArticleBySlug(slug: string): ArticleData | undefined {

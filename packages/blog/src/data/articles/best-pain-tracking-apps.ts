@@ -2,10 +2,10 @@ import type { ArticleData } from './types';
 
 const article: ArticleData = {
   slug: 'best-pain-tracking-apps',
-  title: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and Doctor-Friendly Logs',
+  title: 'Best Pain Tracking Apps in 2026: No Account, No Cloud, Doctor-Ready Reports',
   description:
-    'Compare pain tracking apps for privacy, symptom logging, offline access, and doctor-friendly reports. See how PainTracker differs from typical health apps.',
-  h1: 'Best Pain Tracking Apps in 2026: Privacy, Offline Use, and Doctor-Friendly Logs',
+    'Compare the best pain tracking apps that work fully offline, keep your health data on your device, and export reports your doctor can actually use — free, no account required.',
+  h1: 'Best Pain Tracking Apps in 2026: No Account, No Cloud, Doctor-Ready Reports',
   cluster: 'comparison',
   isPillar: false,
   schemaTypes: ['Article'],

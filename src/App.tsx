@@ -83,6 +83,10 @@ const NervePainSymptomLogPage = lazy(() => import('./pages/resources/NervePainSy
 const EndometriosisPainLogPage = lazy(() => import('./pages/resources/EndometriosisPainLogPage').then(m => ({ default: m.EndometriosisPainLogPage })));
 const CRPSPainDiaryTemplatePage = lazy(() => import('./pages/resources/CRPSPainDiaryTemplatePage').then(m => ({ default: m.CRPSPainDiaryTemplatePage })));
 const NeuropathySymptomTrackerPage = lazy(() => import('./pages/resources/NeuropathySymptomTrackerPage').then(m => ({ default: m.NeuropathySymptomTrackerPage })));
+const PainDiaryForDoctorVisitsPage = lazy(() => import('./pages/resources/PainDiaryForDoctorVisitsPage').then(m => ({ default: m.PainDiaryForDoctorVisitsPage })));
+const SymptomJournalTemplatePage = lazy(() => import('./pages/resources/SymptomJournalTemplatePage').then(m => ({ default: m.SymptomJournalTemplatePage })));
+const ChronicPainLogPrintablePage = lazy(() => import('./pages/resources/ChronicPainLogPrintablePage').then(m => ({ default: m.ChronicPainLogPrintablePage })));
+const PainJournalExamplesPage = lazy(() => import('./pages/resources/PainJournalExamplesPage').then(m => ({ default: m.PainJournalExamplesPage })));
 
 const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
@@ -273,6 +277,10 @@ function App() {
                     <Route path="/resources/endometriosis-pain-log" element={<EndometriosisPainLogPage />} />
                     <Route path="/resources/crps-pain-diary-template" element={<CRPSPainDiaryTemplatePage />} />
                     <Route path="/resources/neuropathy-symptom-tracker" element={<NeuropathySymptomTrackerPage />} />
+                    <Route path="/resources/pain-diary-for-doctor-visits" element={<PainDiaryForDoctorVisitsPage />} />
+                    <Route path="/resources/symptom-journal-template" element={<SymptomJournalTemplatePage />} />
+                    <Route path="/resources/chronic-pain-log-printable" element={<ChronicPainLogPrintablePage />} />
+                    <Route path="/resources/pain-journal-examples" element={<PainJournalExamplesPage />} />
 
                     {/* Fallback - redirect to landing */}
                     <Route path="*" element={<Navigate to="/" replace />} />
