@@ -92,15 +92,34 @@ const LoadingFallback = () => {
   return <BlackBoxSplashScreen message="Loading..." />;
 };
 
+function isDevTestModeEnabled(): boolean {
+  if (!import.meta.env.DEV) {
+    return false;
+  }
+
+  try {
+    return (
+      (globalThis as unknown as { __pt_test_mode?: boolean }).__pt_test_mode === true ||
+      localStorage.getItem('pt:test_mode') === '1'
+    );
+  } catch {
+    return false;
+  }
+}
+
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(() => !isDevTestModeEnabled());
   const userId = getLocalUserId();
 
   // Ritual: Show splash screen for at least 2.5s on startup
   useEffect(() => {
+    if (!showSplash) {
+      return undefined;
+    }
+
     const timer = setTimeout(() => setShowSplash(false), 2500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [showSplash]);
 
   // Initialize global accessibility features
   useGlobalAccessibility({
