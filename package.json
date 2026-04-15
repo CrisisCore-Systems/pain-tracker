@@ -37,7 +37,7 @@
     "db:migrate:prod": "node scripts/db/apply-schema-prod.js",
     "test:coverage": "vitest run --coverage",
     "test:ci": "vitest run --reporter=json --reporter=default",
-    "test:seo": "vitest run --run src/test/seo-breadcrumbs.test.ts src/test/seo-host-consistency.test.ts src/test/seo-redirect-rules.test.ts src/test/seo-rich-results.test.ts",
+    "test:seo": "vitest run --run src/test/seo-breadcrumbs.test.ts src/test/seo-entrypoint-consistency.test.ts src/test/seo-host-consistency.test.ts src/test/seo-redirect-rules.test.ts src/test/seo-rich-results.test.ts",
     "sbom": "cyclonedx-npm --output-file security/sbom-latest.json --json",
     "docs:validate": "node scripts/validate-docs.js",
     "claims:validate": "node scripts/validate-trust-claims.js",

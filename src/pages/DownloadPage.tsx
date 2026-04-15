@@ -158,7 +158,7 @@ export const DownloadPage: React.FC = () => {
               <h3 className="font-bold text-lg mb-2">Install as App</h3>
               <p className="text-sm text-slate-400 mb-4">Install to your home screen for a native experience.</p>
               <a
-                href="https://www.paintracker.ca/"
+                href={defaultSEOConfig.appUrl}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 transition-all"
               >
                 <Download className="h-4 w-4" aria-hidden="true" />

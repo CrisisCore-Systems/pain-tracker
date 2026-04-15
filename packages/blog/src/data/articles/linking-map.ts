@@ -29,7 +29,7 @@ export const PILLAR_LABELS = {
   chronic: 'Track Chronic Pain Symptoms',
 } as const;
 
-export const APP_CTA_URL = 'https://www.paintracker.ca/download';
+export const APP_CTA_URL = 'https://www.paintracker.ca/start';
 
 // ── Per-article linking directives ───────────────────────────────────
 
