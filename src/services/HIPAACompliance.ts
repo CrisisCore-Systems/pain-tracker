@@ -718,8 +718,6 @@ export class HIPAAComplianceService {
   private async flagSuspiciousActivity(event: AuditTrail): Promise<void> {
     // Flag suspicious activity for review
     console.warn('Suspicious activity detected:', {
-      eventId: event.eventId,
-      userId: event.userId,
       riskScore: event.riskScore,
       actionType: event.actionType,
     });

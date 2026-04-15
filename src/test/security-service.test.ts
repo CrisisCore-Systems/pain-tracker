@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import { SecurityService } from '../services/SecurityService';
 
 // Provide a minimal localStorage shim if not present (jsdom should have it)
@@ -7,6 +7,10 @@ describe('SecurityService core behaviors', () => {
   let svc: SecurityService;
   beforeAll(() => {
     svc = new SecurityService(undefined, { consentRequired: true });
+  });
+
+  beforeEach(() => {
+    localStorage.clear();
   });
 
   it('logs events and trims when exceeding limit', () => {
@@ -33,5 +37,21 @@ describe('SecurityService core behaviors', () => {
   it('decryptData errors without key', async () => {
     const tmp = new SecurityService();
     await expect(tmp.decryptData('notvalid')).rejects.toThrow(/Decryption key not available/);
+  });
+
+  it('clears only keys managed by secure storage', async () => {
+    await svc.initializeMasterKey();
+    const store = svc.createSecureStorage();
+
+    localStorage.setItem('unrelated-key', 'leave-me-alone');
+    await store.store('managed-key', { alpha: 1 }, true);
+
+    expect(localStorage.getItem('managed-key')).toBeTruthy();
+    expect(localStorage.getItem('unrelated-key')).toBe('leave-me-alone');
+
+    await store.clear();
+
+    expect(localStorage.getItem('managed-key')).toBeNull();
+    expect(localStorage.getItem('unrelated-key')).toBe('leave-me-alone');
   });
 });

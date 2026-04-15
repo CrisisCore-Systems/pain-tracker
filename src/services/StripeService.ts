@@ -334,7 +334,7 @@ export class StripeService {
       await subscriptionService.upgradeTier(userId, tier, true);
     }
 
-    console.log(`Checkout completed for user ${userId}: ${tier} tier`);
+    console.log(`Checkout completed: ${tier} tier`);
   }
 
   /**
@@ -347,7 +347,7 @@ export class StripeService {
     const subscription = event.data.object;
     const tier = (subscription.metadata?.tier as SubscriptionTier) || 'basic';
 
-    console.log(`Subscription created for user ${userId}: ${tier} tier`);
+    console.log(`Subscription created: ${tier} tier`);
   }
 
   /**
@@ -364,7 +364,7 @@ export class StripeService {
       await subscriptionService.upgradeTier(userId, tier, true);
     }
 
-    console.log(`Subscription updated for user ${userId}`);
+    console.log('Subscription updated');
   }
 
   /**
@@ -375,7 +375,7 @@ export class StripeService {
     userId: string
   ): Promise<void> {
     await subscriptionService.cancelSubscription(userId, true);
-    console.log(`Subscription canceled for user ${userId}`);
+    console.log('Subscription canceled');
   }
 
   /**
@@ -383,7 +383,7 @@ export class StripeService {
    */
   private async handleInvoicePaid(event: StripeWebhookEvent, userId: string): Promise<void> {
     const invoice = event.data.object;
-    console.log(`Invoice paid for user ${userId}: ${invoice.id}`);
+    console.log('Invoice paid');
   }
 
   /**
@@ -398,7 +398,7 @@ export class StripeService {
       subscription.status = 'past_due';
     }
 
-    console.log(`Payment failed for user ${userId}: ${invoice.id}`);
+    console.log('Payment failed');
   }
 
   /**
@@ -406,7 +406,7 @@ export class StripeService {
    */
   private async handleTrialEnding(event: StripeWebhookEvent, userId: string): Promise<void> {
     // Send notification to user
-    console.log(`Trial ending soon for user ${userId}`);
+    console.log('Trial ending soon');
   }
 
   /**

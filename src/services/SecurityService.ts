@@ -90,6 +90,7 @@ export interface SecureStorage {
  * Handles all security-related operations including encryption, auditing, and monitoring
  */
 export class SecurityService {
+  private static readonly SECURE_STORAGE_INDEX_KEY = '__pain_tracker_secure_storage_index__';
   private events: SecurityEvent[] = [];
   private encryptionConfig: EncryptionConfig;
   private privacyConfig: PrivacyConfig;
@@ -173,6 +174,47 @@ export class SecurityService {
       timestamp: new Date(),
       sessionId: this.sessionId,
     });
+  }
+
+  private getManagedStorageKeys(): string[] {
+    try {
+      const raw = localStorage.getItem(SecurityService.SECURE_STORAGE_INDEX_KEY);
+      if (!raw) {
+        return [];
+      }
+
+      const parsed = JSON.parse(raw) as unknown;
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+
+      return parsed.filter((key): key is string => typeof key === 'string');
+    } catch {
+      return [];
+    }
+  }
+
+  private persistManagedStorageKeys(keys: string[]): void {
+    if (keys.length === 0) {
+      localStorage.removeItem(SecurityService.SECURE_STORAGE_INDEX_KEY);
+      return;
+    }
+
+    localStorage.setItem(
+      SecurityService.SECURE_STORAGE_INDEX_KEY,
+      JSON.stringify(Array.from(new Set(keys)).sort())
+    );
+  }
+
+  private trackManagedStorageKey(key: string): void {
+    const keys = this.getManagedStorageKeys();
+    keys.push(key);
+    this.persistManagedStorageKeys(keys);
+  }
+
+  private untrackManagedStorageKey(key: string): void {
+    const keys = this.getManagedStorageKeys().filter(existingKey => existingKey !== key);
+    this.persistManagedStorageKeys(keys);
   }
 
   /**
@@ -428,6 +470,8 @@ export class SecurityService {
           localStorage.setItem(key, serialized);
         }
 
+        this.trackManagedStorageKey(key);
+
         this.logSecurityEvent({
           type: 'data_access',
           level: 'info',
@@ -460,6 +504,7 @@ export class SecurityService {
 
       delete: async (key: string) => {
         localStorage.removeItem(key);
+        this.untrackManagedStorageKey(key);
         this.logSecurityEvent({
           type: 'data_access',
           level: 'info',
@@ -470,11 +515,16 @@ export class SecurityService {
       },
 
       clear: async () => {
-        localStorage.clear();
+        const managedKeys = this.getManagedStorageKeys();
+        for (const key of managedKeys) {
+          localStorage.removeItem(key);
+        }
+        localStorage.removeItem(SecurityService.SECURE_STORAGE_INDEX_KEY);
         this.logSecurityEvent({
           type: 'data_access',
           level: 'warning',
-          message: 'All local storage cleared',
+          message: 'Managed secure storage cleared',
+          metadata: { clearedKeys: managedKeys.length },
           timestamp: new Date(),
           sessionId: this.sessionId,
         });
